@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\tools\validation\native_classic_cdc_compile.py", line 233, in <module>
+    NativeCompile_Run(parser.parse_args())
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\tools\validation\native_classic_cdc_compile.py", line 103, in NativeCompile_Run
+    probe=output/"Generated/Src/native_abi_probe.c"; probe.parent.mkdir(parents=True)
+                                                     ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 1016, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+FileExistsError: [WinError 183] 当文件已存在时，无法创建该文件。: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-halclock-f103-10b\\Generated\\Src'

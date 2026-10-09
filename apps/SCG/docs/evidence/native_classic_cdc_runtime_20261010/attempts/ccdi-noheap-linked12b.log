@@ -1,0 +1,13 @@
+
+build/native.elf:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+08004b3e <_sbrk>:
+ 8004b3e:	b508      	push	{r3, lr}
+ 8004b40:	f004 fa4a 	bl	8008fd8 <__errno>
+ 8004b44:	230c      	movs	r3, #12
+ 8004b46:	6003      	str	r3, [r0, #0]
+ 8004b48:	f04f 30ff 	mov.w	r0, #4294967295
+ 8004b4c:	bd08      	pop	{r3, pc}

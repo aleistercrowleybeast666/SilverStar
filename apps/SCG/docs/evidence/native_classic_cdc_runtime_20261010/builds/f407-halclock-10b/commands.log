@@ -1,0 +1,1189 @@
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "--version"]
+arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623
+Copyright (C) 2024 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/main.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/main.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/main.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/main.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/main.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/main.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/main.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/main.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/gpio.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/adc.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/adc.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/adc.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/adc.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/adc.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/adc.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/adc.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/adc.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/dma.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/spi.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/usart.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_it.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_it.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_it.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_it.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_it.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_it.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_it.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_it.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_msp.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_msp.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_msp.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_msp.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_msp.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_msp.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_msp.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_msp.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_timebase_tim.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_timebase_tim.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_timebase_tim.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_timebase_tim.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_timebase_tim.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_timebase_tim.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_timebase_tim.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_timebase_tim.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.o", "-S", "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.c", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.s", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.o", "-S", "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.c", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.s", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.o", "-S", "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.c", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.s", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.o", "-S", "HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.c", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.s", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.d", "-MT", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.o", "-S", "HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c", "-o", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.gas.d", "-c", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.s", "-o", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.d", "-MT", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o", "-S", "HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c", "-o", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.gas.d", "-c", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.s", "-o", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f4xx.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f4xx.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f4xx.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f4xx.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f4xx.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f4xx.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f4xx.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f4xx.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o", "-S", "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o", "-S", "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o", "-S", "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o", "-S", "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/sysmem.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/sysmem.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/sysmem.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/sysmem.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/sysmem.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/sysmem.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/sysmem.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/sysmem.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.s"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.o"]
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-readelf", "-A", "build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.o"]
+Attribute Section: aeabi
+File Attributes
+  Tag_CPU_name: "7E-M"
+  Tag_CPU_arch: v7E-M
+  Tag_CPU_arch_profile: Microcontroller
+  Tag_THUMB_ISA_use: Thumb-2
+  Tag_FP_arch: VFPv4-D16
+  Tag_ABI_PCS_wchar_t: 4
+  Tag_ABI_FP_denormal: Needed
+  Tag_ABI_FP_exceptions: Needed
+  Tag_ABI_FP_number_model: IEEE 754
+  Tag_ABI_align_needed: 8-byte
+  Tag_ABI_align_preserved: 8-byte, except leaf SP
+  Tag_ABI_enum_size: small
+  Tag_ABI_HardFP_use: SP only
+  Tag_ABI_VFP_args: VFP registers
+  Tag_ABI_optimization_goals: Aggressive Size
+  Tag_CPU_unaligned_access: v6
+
+EXIT 0
+["D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc", "-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-Wextra", "-Wpedantic", "-Werror", "-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wundef", "-Wformat=2", "-Wdouble-promotion", "-Wcast-align", "-Wcast-qual", "-Wstrict-prototypes", "-Wmissing-prototypes", "-Wswitch-enum", "-Wvla", "-MD", "-MP", "-MF", "build/Generated/Src/native_abi_probe.d", "-MT", "build/Generated/Src/native_abi_probe.o", "-S", "Generated/Src/native_abi_probe.c", "-o", "build/Generated/Src/native_abi_probe.s"]
+In file included from HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h:28,
+                 from HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h:28,
+                 from Generated/Src/native_abi_probe.c:2:
+HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h:300:35: error: "USBD_CLASS_BOS_ENABLED" is not defined, evaluates to 0 [-Werror=undef]
+  300 | #if ((USBD_LPM_ENABLED == 1U) || (USBD_CLASS_BOS_ENABLED == 1))
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~
+HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h:394:6: error: "USBD_USER_REGISTER_CALLBACK" is not defined, evaluates to 0 [-Werror=undef]
+  394 | #if (USBD_USER_REGISTER_CALLBACK == 1U)
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h:399:6: error: "USBD_USER_REGISTER_CALLBACK" is not defined, evaluates to 0 [-Werror=undef]
+  399 | #if (USBD_USER_REGISTER_CALLBACK == 1U)
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h:29:
+HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h:89:6: error: "USBD_USER_REGISTER_CALLBACK" is not defined, evaluates to 0 [-Werror=undef]
+   89 | #if (USBD_USER_REGISTER_CALLBACK == 1U)
+      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+cc1.exe: all warnings being treated as errors
+
+EXIT 1

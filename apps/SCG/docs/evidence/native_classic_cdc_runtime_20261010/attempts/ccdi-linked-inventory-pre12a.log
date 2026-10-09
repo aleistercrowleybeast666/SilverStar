@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\ccdi_link_inventory_pre12.py", line 7, in <module>
+    assert member['object'] != '*', 'Linker wildcard is not a retained archive member: '+str(member)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Linker wildcard is not a retained archive member: {'archive': 'libc.a', 'object': '*'}

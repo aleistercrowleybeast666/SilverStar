@@ -5,7 +5,8 @@ import re
 import struct
 
 
-def NativeAssemblyDirectives_Validate(text: str, *, core: str, fpu: str) -> None:
+def NativeAssemblyDirectives_Validate(text: str, *, core: str, fpu: str,
+                                     reviewed_assert_trap: bool = False) -> None:
     arch = {"cortex-m0": "armv6-m", "cortex-m0plus": "armv6-m",
             "cortex-m3": "armv7-m", "cortex-m4": "armv7e-m"}[core]
     clean = re.sub(r"/\*.*?\*/|//[^\r\n]*|^[ \t]*@[^\r\n]*", "", text, flags=re.S | re.M)
@@ -15,8 +16,18 @@ def NativeAssemblyDirectives_Validate(text: str, *, core: str, fpu: str) -> None
                    "fpu": {"softvfp", *([fpu] if fpu else [])}}[kind]
         if value not in allowed:
             raise ValueError("Native CPU directive contradicts independent device facts: ." + kind + " " + value)
-    if re.search(r"(?<!\w)\.(?:inst|inst\.n|inst\.w)\b", clean):
-        raise ValueError("Native raw instruction encoding requires a separately reviewed instruction contract")
+    raw = list(re.finditer(r"(?<!\w)\.inst(?:\.[nw])?\b[^\r\n]*", clean))
+    if raw:
+        # GCC emits the established __builtin_trap as Thumb UDF #255 (0xdeff).
+        # This exact opcode is available on all admitted M profiles. Only the
+        # unchanged owned assertion unit can request this check; native startup
+        # and arbitrary inline assembly cannot use it to bypass ISA validation.
+        trap = re.search(r"(?ms)^SilverStarAssert_Fail:\s*\n(.*?)^[ \t]*\.size\s+"
+                         r"SilverStarAssert_Fail\s*,", clean)
+        if (not reviewed_assert_trap or trap is None or len(raw) != 1 or
+                not trap.start(1) <= raw[0].start() < trap.end(1) or
+                not re.fullmatch(r"\s*\.inst\s+0xdeff\s*", raw[0][0])):
+            raise ValueError("Native raw instruction encoding requires a separately reviewed instruction contract")
 
 
 def NativeArmAttributes_Validate(attributes: str, *, core: str, fpu: str, hard_float: bool,

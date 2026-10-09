@@ -1,7 +1,8 @@
 """Compile an admitted native project in a NEW isolated output, never its Makefile.
 
-This is source/ABI/closure validation, not a Ground runtime adapter or hardware
-acceptance. The descriptor is supplied by the trusted operator, outside input.
+This validates source/ABI/closure and optionally a private generated Ground
+runtime candidate, never hardware acceptance. The descriptor is supplied by
+the trusted operator, outside input. Normal native generation remains blocked.
 """
 from pathlib import Path
 from datetime import datetime, timezone
@@ -19,6 +20,9 @@ SCG=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(SCG/"src"))
 from silverstar_fccg.hardware.native_classic_cdc import NativeDeviceFacts, NativeMemoryRegion, NativeClassicCdc_Inspect, NATIVE_PREFIX
 from silverstar_fccg.hardware.native_machine_contract import NativeAssemblyDirectives_Validate, NativeArmAttributes_Validate, NativeIndependentVectors_Validate
+from silverstar_fccg.generator.native_hal import NativeHalDerivatives_Render
+from silverstar_fccg.generator.native_clock import NativeClock_FilesRender, NativeClockSourceContract_Validate
+from silverstar_fccg.generator.native_ground import NativeGroundCandidate_Render
 
 
 def NativeCompile_Run(args):
@@ -35,6 +39,19 @@ def NativeCompile_Run(args):
     original_hashes={p:hashlib.sha256(b).hexdigest() for p,b in files.items()}
     for p,b in files.items():
         dest=output/NATIVE_PREFIX/p; dest.parent.mkdir(parents=True,exist_ok=True); dest.write_bytes(b)
+    snapshot_modules=[Path(__file__),SCG/"src/silverstar_fccg/hardware/native_classic_cdc.py",
+        SCG/"src/silverstar_fccg/hardware/native_machine_contract.py",
+        SCG/"src/silverstar_fccg/generator/native_hal.py",SCG/"src/silverstar_fccg/generator/native_clock.py"]
+    if args.runtime_project is not None:
+        snapshot_modules += [SCG/('src/silverstar_fccg/generator/'+name+'.py') for name in ('native_ground','native_platform','native_runtime','native_no_heap','native_pc','native_usb_data','native_radio')]
+        snapshot_modules += list((SCG/'tests').glob('test_native*.py'))
+        snapshot_modules += [SCG/('plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/'+name+'.py') for name in ('check_ground','check_native_ground')]
+    (output/"source-snapshot.json").write_text(json.dumps({
+        "source_commit":subprocess.check_output(["git","-C",str(SCG),"rev-parse","HEAD"],text=True).strip(),
+        "dirty_diff":subprocess.check_output(["git","-C",str(SCG),"diff","--binary"],text=True),
+        "modules":{str(p.relative_to(SCG)):{"sha256":hashlib.sha256(p.read_bytes()).hexdigest(),
+                  "source":p.read_text(encoding="utf-8")} for p in snapshot_modules},
+        "input_sha256":original_hashes,"facts":facts_json},indent=2),encoding="utf-8")
     tools=SCG/"plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools"
     spec=importlib.util.spec_from_file_location("native_dependency_contract",tools/"ground_artifact_contract.py")
     dependencies=importlib.util.module_from_spec(spec); spec.loader.exec_module(dependencies)
@@ -42,6 +59,49 @@ def NativeCompile_Run(args):
            "asm_sources":[NATIVE_PREFIX+p for p in proof["build"]["asm_sources"]],
            "include_dirs":[NATIVE_PREFIX+p for p in proof["build"]["include_dirs"]],
            "required_irq_handlers":proof["required_irq_handlers"],"linker_script":NATIVE_PREFIX+proof["build"]["linker_script"]}
+    experiments={}
+    experimental_files={}
+    if args.runtime_project is not None:
+        if args.clock_hz is None or args.reviewed_hal:
+            raise ValueError('Private Ground candidate needs --clock-hz; HAL derivatives are included once')
+        from silverstar_fccg.plugins.catalog import PluginCatalog
+        from silverstar_fccg.project.model import ProjectModel_Load
+        model=ProjectModel_Load(args.runtime_project)
+        catalog=PluginCatalog(SCG/'plugins/builtin',SCG/'plugins/installed');catalog.Scan()
+        experimental_files,graph,records=NativeGroundCandidate_Render(files,proof,inventory,model,catalog,hclk_hz=args.clock_hz)
+        experiments['native_ground']=records
+        experimental_files['candidate_config.ssproject']=args.runtime_project.read_bytes()
+    elif args.reviewed_hal:
+        derived,replacements,manifest=NativeHalDerivatives_Render(files,proof["build"]["sources"])
+        experimental_files.update(derived)
+        graph["sources"]=[replacements.get(p,p) for p in graph["sources"]]
+        experiments["reviewed_hal"]=manifest
+    if args.clock_hz is not None and args.runtime_project is None:
+        experiments["clock"]=NativeClockSourceContract_Validate(files,proof["build"]["sources"],hclk_hz=args.clock_hz)
+        experimental_files.update(NativeClock_FilesRender(hclk_hz=args.clock_hz))
+        api=SCG/"plugins/builtin/silverstar_platform_api/payload/Platform/Inc"
+        for path in api.glob("*.h"):
+            experimental_files["Platform/Inc/"+path.name]=path.read_bytes()
+        core=SCG/"plugins/builtin/silverstar_core_0_1_0/payload"
+        for path in ("Common/Inc/silverstar_assert.h","Common/Inc/silverstar_compiler.h","Common/Src/silverstar_assert.c"):
+            experimental_files[path]=(core/path).read_bytes()
+        from silverstar_fccg.generator.multi_target import _UserSection_Insert
+        main=files[proof["cdc"]["owners"]["main.c"]].decode("utf-8-sig")
+        main=_UserSection_Insert(main,"Includes",'#include "native_clock.h"\n#include "platform_time.h"',empty=True)
+        main=_UserSection_Insert(main,"2","  if (PlatformTime_Init() != PLATFORM_OK) { Error_Handler(); }",empty=True)
+        loop=re.findall(r"/\* USER CODE BEGIN 3 \*/(.*?)/\* USER CODE END 3 \*/",main,re.S)
+        if len(loop)!=1 or loop[0].strip()!="}" or main.count("HAL_Init();")!=1:
+            raise ValueError("Unreviewed native main clock probe hook")
+        main=main.replace("HAL_Init();","if (HAL_Init() != HAL_OK) { Error_Handler(); }",1)
+        main=main.replace("/* USER CODE BEGIN 3 */","/* USER CODE BEGIN 3 */\n    uint64_t now_us;\n    if (NativeClock_Read(&now_us) != NativeClockResult_Ok) { Error_Handler(); }",1)
+        main_path="HardwareGenerated/ReviewedNativeEntry/Core/Src/main.c"
+        experimental_files[main_path]=main.encode("utf-8")
+        graph["sources"]=[main_path if p==NATIVE_PREFIX+proof["cdc"]["owners"]["main.c"] else p for p in graph["sources"]]
+        graph["sources"].extend([p for p in experimental_files if p.startswith("Generated/") and p.endswith(".c")])
+        graph["sources"].append("Common/Src/silverstar_assert.c")
+        graph["include_dirs"].extend(["Generated/Inc","Platform/Inc","Common/Inc"])
+    for path,content in experimental_files.items():
+        dest=output/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
     compiler=args.toolchain_prefix+"gcc"
     environment=os.environ.copy()
     for name in ("CPATH","C_INCLUDE_PATH","CPLUS_INCLUDE_PATH","OBJC_INCLUDE_PATH","DEPENDENCIES_OUTPUT","SUNPRO_DEPENDENCIES","GCC_EXEC_PREFIX","COMPILER_PATH"):
@@ -65,7 +125,7 @@ def NativeCompile_Run(args):
     core={"cortex-m0":0,"cortex-m0plus":0,"cortex-m3":3,"cortex-m4":4}[facts.core]
     tx_qualifier="const " if proof["spi_abi"]["tx_buffer_const"] else ""
     fpu_probe='_Static_assert(__FPU_PRESENT == 1U, "independent FPU facts must match native CMSIS");' if facts.fpu else ''
-    probe=output/"Generated/Src/native_abi_probe.c"; probe.parent.mkdir(parents=True)
+    probe=output/"Generated/Src/native_abi_probe.c"; probe.parent.mkdir(parents=True,exist_ok=True)
     probe.write_text(f'''#include "main.h"
 #include "usbd_cdc.h"
 #include "usbd_cdc_if.h"
@@ -82,6 +142,25 @@ uint32_t HAL_GetTick(void);
 uint8_t CDC_Transmit_FS(uint8_t *, uint16_t);
 ''',encoding="utf-8")
     graph["sources"].append("Generated/Src/native_abi_probe.c")
+    if args.runtime_project is not None:
+        # The validation ABI probe is part of the actual compiled graph. Keep
+        # emitted Make and its machine-readable graph truthful about that scope.
+        from types import SimpleNamespace
+        from silverstar_fccg.generator.multi_target import _Makefile_Render
+        experimental_files['Generated/ground_source_graph.json']=json.dumps(graph,indent=2).encode('utf-8')
+        (output/'Generated/ground_source_graph.json').write_bytes(experimental_files['Generated/ground_source_graph.json'])
+        candidate_make=_Makefile_Render(tuple(graph['sources']),tuple(graph['asm_sources']),tuple(graph['include_dirs']),
+            tuple(graph['defines']),SimpleNamespace(**graph),model.ground_target.build.toolchain_prefix)
+        candidate_make=candidate_make.replace('-Wl,--gc-sections,','-Wl,-u,_sbrk -Wl,--gc-sections,',1)
+        candidate_make=candidate_make.replace('$(PYTHON) Tools/check_ground.py architecture','$(PYTHON) Tools/check_native_ground.py')
+        candidate_make=candidate_make.replace('$(PYTHON) Tools/check_ground.py host','$(PYTHON) Tools/check_native_ground.py host')
+        candidate_make=candidate_make.replace('$(PYTHON) Tools/check_ground.py artifact','$(PYTHON) Tools/check_native_ground.py artifact')
+        experimental_files['Makefile']=candidate_make.encode('utf-8')
+        experimental_files['Generated/Src/native_abi_probe.c']=probe.read_bytes()
+        records['compiled_owned_sha256']['Generated/Src/native_abi_probe.c']=hashlib.sha256(probe.read_bytes()).hexdigest()
+        experimental_files['Generated/native_ground_contract.json']=json.dumps(records,indent=2).encode('utf-8')
+        (output/'Generated/native_ground_contract.json').write_bytes(experimental_files['Generated/native_ground_contract.json'])
+        (output/'Makefile').write_bytes(experimental_files['Makefile'])
     objects=[]
     started=datetime.now(timezone.utc).isoformat()
     try:
@@ -93,10 +172,14 @@ uint8_t CDC_Transmit_FS(uint8_t *, uint16_t);
                 rel=obj.relative_to(output).as_posix(); asm=obj.with_suffix(".s").relative_to(output).as_posix()
                 common=[compiler,*flags,"-std=c11","-Os","-ffunction-sections","-fdata-sections","-fstack-usage", "-Wall","-Werror=implicit-function-declaration","-Werror=incompatible-pointer-types","-Werror=return-type"]
                 if analyzer: common.append("-fanalyzer")
-                if source.startswith("Generated/"):common += ["-Wextra","-Wpedantic","-Werror"]
+                if source.startswith(("Generated/","Common/","Ground/","Devices/","Platform/")):common += ["-Wextra","-Wpedantic","-Werror",
+                    "-Wconversion","-Wsign-conversion","-Wshadow","-Wundef","-Wformat=2",
+                    "-Wdouble-promotion","-Wcast-align","-Wcast-qual","-Wstrict-prototypes","-Wmissing-prototypes","-Wswitch-enum","-Wvla"]
                 run([*common,"-MD","-MP","-MF",rel.removesuffix(".o")+".d","-MT",rel,"-S",source,"-o",asm])
                 dependencies.AssemblerSource_Prepare(output,graph,source,build_dir)
-                NativeAssemblyDirectives_Validate((output/asm).read_text(encoding="utf-8"),core=facts.core,fpu=facts.fpu)
+                NativeAssemblyDirectives_Validate((output/asm).read_text(encoding="utf-8"),core=facts.core,fpu=facts.fpu,
+                    reviewed_assert_trap=(source=="Common/Src/silverstar_assert.c" and
+                        (output/source).read_bytes()==(SCG/"plugins/builtin/silverstar_core_0_1_0/payload/Common/Src/silverstar_assert.c").read_bytes()))
                 run([compiler,*graph["mcu_flags"],"-x","assembler","-Wa,--MD,"+rel.removesuffix(".o")+".gas.d","-c",asm,"-o",rel])
                 NativeArmAttributes_Validate(run([args.toolchain_prefix+"readelf","-A",rel]),
                     core=facts.core,fpu=facts.fpu,hard_float="-mfloat-abi=hard" in graph["mcu_flags"])
@@ -111,7 +194,7 @@ uint8_t CDC_Transmit_FS(uint8_t *, uint16_t);
                 dependencies.DependencyClosure_Validate(output,graph,compiler,build_dir=build_dir,source=source)
                 objects.append(rel)
             elf=build_dir+"/native.elf"
-            run([compiler,*objects,*graph["mcu_flags"],"-Wl,--gc-sections,-Map="+build_dir+"/native.map","-T"+graph["linker_script"],"-specs=nano.specs","-lc","-lm","-lnosys","-o",elf])
+            run([compiler,*objects,*graph["mcu_flags"],*["-Wl,-u,"+symbol for symbol in graph.get('required_link_symbols',[])],"-Wl,--gc-sections,-Map="+build_dir+"/native.map","-T"+graph["linker_script"],"-specs=nano.specs","-lc","-lm","-lnosys","-o",elf])
             NativeArmAttributes_Validate(run([args.toolchain_prefix+"readelf","-A",elf]),
                 core=facts.core,fpu=facts.fpu,hard_float="-mfloat-abi=hard" in graph["mcu_flags"])
             symbols=run([args.toolchain_prefix+"nm","-n",elf])
@@ -169,12 +252,20 @@ uint8_t CDC_Transmit_FS(uint8_t *, uint16_t);
           "import_module_source":(SCG/"src/silverstar_fccg/hardware/native_classic_cdc.py").read_text(encoding="utf-8"),
           "machine_contract_source":(SCG/"src/silverstar_fccg/hardware/native_machine_contract.py").read_text(encoding="utf-8"),
           "machine_contract_sha256":hashlib.sha256((SCG/"src/silverstar_fccg/hardware/native_machine_contract.py").read_bytes()).hexdigest(),
+          "experimental_modules":{p:{"sha256":hashlib.sha256((SCG/p).read_bytes()).hexdigest(),"source":(SCG/p).read_text(encoding="utf-8")}
+              for p in ("src/silverstar_fccg/generator/native_hal.py","src/silverstar_fccg/generator/native_clock.py",
+                        "src/silverstar_fccg/generator/native_platform.py","src/silverstar_fccg/generator/native_runtime.py",
+                        "src/silverstar_fccg/generator/native_ground.py","src/silverstar_fccg/generator/native_no_heap.py",
+                        "src/silverstar_fccg/generator/native_pc.py","src/silverstar_fccg/generator/native_usb_data.py",
+                        "src/silverstar_fccg/generator/native_radio.py")},
+          "experimental_files_sha256":{p:hashlib.sha256(b).hexdigest() for p,b in experimental_files.items()},
+          "experiments":experiments,
           "toolchain_version":locals().get("version"),
           "warning_diagnostics":warning_diagnostics,
           "no_warning_gate":"FAIL" if warning_diagnostics else "NO_RECORDED_WARNING",
           "facts":facts_json,"contract":proof,"commands":commands,"graph":graph,"input_sha256":original_hashes,
           "output_artifact_sha256":{str(p.relative_to(output)):hashlib.sha256(p.read_bytes()).hexdigest() for p in output.rglob("*") if p.is_file() and p.suffix in {".elf",".map",".o",".su",".d",".s",".bin"}},
-          "failure":locals().get("failure"),"limits":"NOT PROVEN: Ground runtime adapter, critical contracts, async lifecycle/rearm/EP0, physical memory authority beyond caller review, tick liveness, radio us timing, stack/WCET/hardware. No board access. This is not generated Ground firmware."}
+          "failure":locals().get("failure"),"limits":"PRIVATE CANDIDATE ONLY. NOT PROVEN: manual critical-contract acceptance, complete EP0/async lifecycle, physical memory authority beyond caller review, MCU tick/radio timing, whole-program stack/WCET and hardware. Source/ABI closure and private generated Ground compilation are recorded only for this snapshot. Normal native generation remains blocked; no board access."}
         (output/"receipt.json").write_text(json.dumps(receipt,indent=2),encoding="utf-8")
     print(status,output,flush=True)
 
@@ -187,4 +278,7 @@ if __name__=="__main__":
     parser.add_argument("--spi",required=True)
     parser.add_argument("--gpio",nargs="+",required=True)
     parser.add_argument("--toolchain-prefix",default="arm-none-eabi-")
+    parser.add_argument("--reviewed-hal",action="store_true",help="Private recognized HAL derivatives, originals preserved; not runtime acceptance")
+    parser.add_argument("--clock-hz",type=int,help="Private linked native SysTick clock probe; not a Ground runtime")
+    parser.add_argument("--runtime-project",type=Path,help="Read-only isolated candidate configuration; native Ground runtime experiment, not acceptance")
     NativeCompile_Run(parser.parse_args())

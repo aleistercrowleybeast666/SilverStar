@@ -5,7 +5,7 @@ import subprocess
 from test_native_classic_cdc import native
 from silverstar_fccg.hardware.cubemx import CubeMxImportError
 from silverstar_fccg.hardware.native_classic_cdc import NativeClassicCdc_Inspect
-from silverstar_fccg.hardware.native_machine_contract import NativeArmAttributes_Validate, NativeIndependentVectors_Validate
+from silverstar_fccg.hardware.native_machine_contract import NativeArmAttributes_Validate, NativeIndependentVectors_Validate, NativeAssemblyDirectives_Validate
 
 
 def test_startup_cpu_override_rejected(native):
@@ -52,3 +52,14 @@ def test_binary_vector_exchange_rejected_independently():
     vector[35*4:37*4]=vector[36*4:37*4]+vector[35*4:36*4]
     with pytest.raises(ValueError,match='independent IRQn binding'):
         NativeIndependentVectors_Validate(vector,symbols,slots)
+
+
+def test_reviewed_assertion_udf_is_exact_and_scoped():
+    text='.cpu cortex-m3\nSilverStarAssert_Fail:\n .inst 0xdeff\n .size SilverStarAssert_Fail, .-SilverStarAssert_Fail\n'
+    with pytest.raises(ValueError,match='raw instruction'):
+        NativeAssemblyDirectives_Validate(text,core='cortex-m3',fpu='')
+    NativeAssemblyDirectives_Validate(text,core='cortex-m3',fpu='',reviewed_assert_trap=True)
+    for changed in (text.replace('0xdeff','0xf381fa82'),text.replace('SilverStarAssert_Fail:','Other:'),
+                    text+' .inst 0xdeff\n'):
+        with pytest.raises(ValueError,match='raw instruction'):
+            NativeAssemblyDirectives_Validate(changed,core='cortex-m3',fpu='',reviewed_assert_trap=True)

@@ -1,0 +1,105 @@
+.F                                                                       [100%]
+================================== FAILURES ===================================
+____________________ test_clock_port_and_critical_contexts ____________________
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-clock-pre-freq-10b/test_clock_port_and_critical_c_d901cf64')
+
+    def test_clock_port_and_critical_contexts(tmp_path):
+        compiler=shutil.which('gcc')
+        if compiler is None:pytest.skip('Host GCC unavailable')
+        for p,b in NativeClock_FilesRender(hclk_hz=72_000_000).items():
+            dest=tmp_path/p;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(b)
+        api=Path(__file__).resolve().parents[1]/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        (tmp_path/'silverstar_assert.h').write_text('''#include <stdlib.h>
+    #define SILVERSTAR_ASSERT_MODULE_GENERATED 1U
+    #define SILVERSTAR_ASSERT_REASON_STATE_INVARIANT 1U
+    #define SILVERSTAR_ASSERT(p,m,r) do { if (!(p)) { abort(); } } while (0)
+    ''',encoding='utf-8')
+        (tmp_path/'main.h').write_text('''#include <stdint.h>
+    typedef struct { uint32_t CTRL, LOAD, VAL; } SysTickType;
+    typedef struct { uint32_t ICSR; } ScbType;
+    extern SysTickType tick_regs;
+    extern ScbType scb_regs;
+    extern uint32_t SystemCoreClock, mask, exception, hclk, hal_tick, changed, tick_frequency;
+    #define HAL_TICK_FREQ_1KHZ 1U
+    #define SysTick (&tick_regs)
+    #define SCB (&scb_regs)
+    #define SysTick_CTRL_ENABLE_Msk 1U
+    #define SysTick_CTRL_TICKINT_Msk 2U
+    #define SysTick_CTRL_CLKSOURCE_Msk 4U
+    #define SCB_ICSR_PENDSTSET_Msk 0x04000000U
+    static inline uint32_t __get_PRIMASK(void) { return mask; }
+    static inline uint32_t __get_IPSR(void) { return exception; }
+    static inline void __disable_irq(void) { mask=1U; }
+    static inline void __set_PRIMASK(uint32_t saved) { mask=saved; }
+    static inline void __DMB(void) { }
+    static inline uint32_t HAL_RCC_GetHCLKFreq(void) { return hclk; }
+    static inline uint32_t HAL_GetTickFreq(void) { return tick_frequency; }
+    uint32_t HAL_GetTick(void);
+    ''',encoding='utf-8')
+        harness=tmp_path/'test_port.c'
+        harness.write_text('''#include "native_clock.h"
+    #include "platform_critical.h"
+    #include "main.h"
+    #include <assert.h>
+    SysTickType tick_regs={7U,71999U,71000U};
+    ScbType scb_regs;
+    uint32_t SystemCoreClock=72000000U, hclk=72000000U, mask, exception, hal_tick=10U, changed, tick_frequency=1U;
+    uint32_t HAL_GetTick(void)
+    {
+        if (changed != 0U) { scb_regs.ICSR ^= SCB_ICSR_PENDSTSET_Msk; }
+        return hal_tick;
+    }
+    int main(void)
+    {
+        NativeClockSnapshot sample={99U,99U};
+        assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_Ok);
+        assert(sample.tick_ms==10U && sample.elapsed_cycles==999U && mask==0U);
+        scb_regs.ICSR=SCB_ICSR_PENDSTSET_Msk;
+        assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_Ok && sample.tick_ms==11U);
+        hal_tick=UINT32_MAX;
+        assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_Ok && sample.tick_ms==0U);
+        sample.tick_ms=99U; mask=1U;
+        assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_InvalidContext && mask==1U && sample.tick_ms==99U);
+        PlatformCriticalState saved=PlatformCritical_Enter();
+        assert(saved==1U && mask==1U); PlatformCritical_Exit(saved); assert(mask==1U);
+        mask=0U; saved=PlatformCritical_Enter(); assert(saved==0U && mask==1U);
+        PlatformCritical_Exit(saved); assert(mask==0U);
+        exception=15U;
+        assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_InvalidContext && mask==0U);
+        exception=0U; hclk=36000000U;
+        assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_InvalidConfiguration);
+        hclk=72000000U; tick_frequency=10U; sample.tick_ms=99U;
+        assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_InvalidConfiguration && sample.tick_ms==99U);
+        tick_frequency=1U; tick_regs.VAL=0U;
+        assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_UnstableSnapshot && mask==0U);
+        tick_regs.VAL=71000U; changed=1U;
+        assert(NativeClockPort_SnapshotGet(&sample)==NativeClockResult_UnstableSnapshot && mask==0U);
+        return 0;
+    }
+    ''',encoding='utf-8')
+        executable=tmp_path/'test_port.exe'
+        command=[compiler,'-std=c11','-Wall','-Wextra','-Werror','-Wpedantic','-fanalyzer',
+            '-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),
+            str(tmp_path/'Generated/Src/native_clock_port.c'),str(tmp_path/'Generated/Src/native_critical.c'),
+            str(harness),'-o',str(executable)]
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+        assert result.returncode==0,result.stdout+result.stderr
+        run=subprocess.run([str(executable)],capture_output=True,text=True,timeout=30)
+>       assert run.returncode==0,run.stdout+run.stderr
+E       AssertionError: Assertion failed: NativeClockPort_SnapshotGet(&sample)==NativeClockResult_InvalidConfiguration && sample.tick_ms==99U, file C:\Users\chdxm\AppData\Local\Temp\sscdc-clock-pre-freq-10b\test_clock_port_and_critical_c_d901cf64\test_port.c, line 33
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-clock-pre-freq-10b\\test_clock_port_and_critical...hdxm\\AppData\\Local\\Temp\\sscdc-clock-pre-freq-10b\\test_clock_port_and_critical_c_d901cf64\\test_port.c, line 33\n').returncode
+
+apps\SCG\tests\test_native_clock.py:173: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_native_clock.py::test_clock_port_and_critical_contexts
+1 failed, 1 passed, 10 deselected, 1 warning in 6.21s

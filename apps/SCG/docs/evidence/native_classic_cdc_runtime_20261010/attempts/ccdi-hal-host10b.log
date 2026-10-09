@@ -1,0 +1,79 @@
+FF.......                                                                [100%]
+================================== FAILURES ===================================
+_______ test_derivative_profile_originals_and_reproducible_patch[f103] ________
+
+hal_sources = {'Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c': b'/**\n  ****************************************************..._OVER8 */\n}\n\n/**\n  * @}\n  */\n\n#endif /* HAL_UART_MODULE_ENABLED */\n/**\n  * @}\n  */\n\n/**\n  * @}\n  */\n\n'}
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-hal-host-10b/test_derivative_profile_origin_4ac13dc0')
+
+    def test_derivative_profile_originals_and_reproducible_patch(hal_sources, tmp_path):
+        from silverstar_fccg.hardware.native_classic_cdc import NATIVE_PREFIX
+        originals = dict(hal_sources)
+        rendered, replacements, manifest = NativeHalDerivatives_Render(hal_sources, list(hal_sources))
+        assert hal_sources == originals and len(replacements) == 2
+        assert all(old not in rendered and new in rendered for old, new in replacements.items())
+        for entry in manifest["entries"]:
+            original = originals[entry["original"].removeprefix(NATIVE_PREFIX)]
+            assert hashlib.sha256(original).hexdigest() == entry["original_sha256"]
+            assert hashlib.sha256(rendered[entry["derived"]]).hexdigest() == entry["derived_sha256"]
+            # Native Windows Git works without the MSYS signal-pipe service.
+            patch = shutil.which("git")
+            if patch is None:
+                pytest.fail("Git is needed for derivative patch reproducibility")
+            source = tmp_path / entry["original"]
+            source.parent.mkdir(parents=True, exist_ok=True)
+            source.write_bytes(original)
+            result = subprocess.run([patch, "apply", "--no-index", "-p0", "-"],
+                                    input=rendered[entry["patch"]], cwd=tmp_path,
+                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=30)
+            assert result.returncode == 0, result.stdout.decode(errors="replace")
+>           assert source.read_bytes() == rendered[entry["derived"]]
+E           AssertionError: assert b'/**\r\n  **...n  */\r\n\r\n' == b'/**\n  ****... @}\n  */\n\n'
+E             
+E             At index 3 diff: b'\r' != b'\n'
+E             Use -v to get more diff
+
+apps\SCG\tests\test_native_hal.py:75: AssertionError
+_______ test_derivative_profile_originals_and_reproducible_patch[f407] ________
+
+hal_sources = {'Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c': b'/**\n  ****************************************************...te);\n  }\n}\n\n/**\n  * @}\n  */\n\n#endif /* HAL_UART_MODULE_ENABLED */\n/**\n  * @}\n  */\n\n/**\n  * @}\n  */\n\n'}
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-hal-host-10b/test_derivative_profile_origin_f46a6fbb')
+
+    def test_derivative_profile_originals_and_reproducible_patch(hal_sources, tmp_path):
+        from silverstar_fccg.hardware.native_classic_cdc import NATIVE_PREFIX
+        originals = dict(hal_sources)
+        rendered, replacements, manifest = NativeHalDerivatives_Render(hal_sources, list(hal_sources))
+        assert hal_sources == originals and len(replacements) == 2
+        assert all(old not in rendered and new in rendered for old, new in replacements.items())
+        for entry in manifest["entries"]:
+            original = originals[entry["original"].removeprefix(NATIVE_PREFIX)]
+            assert hashlib.sha256(original).hexdigest() == entry["original_sha256"]
+            assert hashlib.sha256(rendered[entry["derived"]]).hexdigest() == entry["derived_sha256"]
+            # Native Windows Git works without the MSYS signal-pipe service.
+            patch = shutil.which("git")
+            if patch is None:
+                pytest.fail("Git is needed for derivative patch reproducibility")
+            source = tmp_path / entry["original"]
+            source.parent.mkdir(parents=True, exist_ok=True)
+            source.write_bytes(original)
+            result = subprocess.run([patch, "apply", "--no-index", "-p0", "-"],
+                                    input=rendered[entry["patch"]], cwd=tmp_path,
+                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=30)
+            assert result.returncode == 0, result.stdout.decode(errors="replace")
+>           assert source.read_bytes() == rendered[entry["derived"]]
+E           AssertionError: assert b'/**\r\n  **...n  */\r\n\r\n' == b'/**\n  ****... @}\n  */\n\n'
+E             
+E             At index 3 diff: b'\r' != b'\n'
+E             Use -v to get more diff
+
+apps\SCG\tests\test_native_hal.py:75: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_native_hal.py::test_derivative_profile_originals_and_reproducible_patch[f103]
+FAILED apps\SCG\tests\test_native_hal.py::test_derivative_profile_originals_and_reproducible_patch[f407]
+2 failed, 7 passed, 4 deselected, 1 warning in 10.45s

@@ -132,7 +132,7 @@ def Architecture_Check(root: Path) -> dict:
     return graph
 
 
-def Host_Check(root: Path, compiler: str) -> None:
+def Host_Check(root: Path, compiler: str, *, extra_usb_sources: tuple[str, ...] = ()) -> None:
     # Execute generated bridge sources with bounded RX and PC busy/error injection.
     build = root / 'build/ground-host'
     build.mkdir(parents=True, exist_ok=True)
@@ -166,6 +166,10 @@ def Host_Check(root: Path, compiler: str) -> None:
     else:
         raise ValueError('No host harness for selected PC transport; acceptance blocked')
     for name, sources, harness in cases:
+        if name.startswith('usb_'):
+            # Native runtime publication has its own lifecycle Host harness;
+            # these existing transport cases exercise an already-ready owner.
+            sources = sources + list(extra_usb_sources)
         if name == 'usb_session':
             shutil.copyfile(tests / 'usb_session_main.h', build / 'main.h')
         if name == 'usb_backpressure':
