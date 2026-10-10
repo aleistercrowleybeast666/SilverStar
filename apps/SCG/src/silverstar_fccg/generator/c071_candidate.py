@@ -37,6 +37,8 @@ def C071Candidate_Render(native, inventory, model, catalog, snapshot, profile):
     from pathlib import Path
     files['Tools/native_machine_contract.py']=(Path(__file__).resolve().parents[1]/'hardware/native_machine_contract.py').read_bytes()
     graph=json.loads(files['Generated/ground_source_graph.json'])
+    from silverstar_fccg.generator.c071_lifecycle import C071Lifecycle_Integrate
+    lifecycle=C071Lifecycle_Integrate(files,graph)
     graph['sources'].append('Generated/Src/native_no_heap.c')
     # Reuse the existing bare-metal single radio owner repair. DIO ISR only
     # records a flag; tick and USB must remain live during radio SPI/Busy waits.
@@ -89,6 +91,7 @@ def C071Candidate_Render(native, inventory, model, catalog, snapshot, profile):
     records={'format_version':1,'scope':'PRIVATE_C071_GROUND_RUNTIME_CANDIDATE',
         'original_sha256':{p:hashlib.sha256(b).hexdigest() for p,b in native.items()},
         'payload_derivatives':payload_derivatives,'native_hal_derivatives':hal_derivatives,
+        'ordinary_lifecycle_derivatives':lifecycle,
         'compiled_owned_sha256':{p:hashlib.sha256(files[p]).hexdigest() for p in graph['sources']},
         'input_kind':'native_pcd_plus_pinned_classic_cdc','native_cdc':False,
         'no_heap':'Rejecting _sbrk ABI; static class block; original sysmem retained, uncompiled',
@@ -96,4 +99,15 @@ def C071Candidate_Render(native, inventory, model, catalog, snapshot, profile):
         'limits':'EP0/async lifecycle, manual critical contracts, stack/WCET and hardware NOT PROVEN'}
     files['Generated/ground_source_graph.json']=json.dumps(graph,indent=2).encode()
     files['Generated/native_ground_contract.json']=json.dumps(records,indent=2).encode()
+    # Export uses the final ownership graph too, including explicit ordinary
+    # lifecycle/HAL derivatives and the rejecting heap owner.
+    from types import SimpleNamespace
+    from silverstar_fccg.generator.multi_target import _Makefile_Render
+    make=_Makefile_Render(tuple(graph['sources']),tuple(graph['asm_sources']),tuple(graph['include_dirs']),
+        tuple(graph['defines']),SimpleNamespace(**graph),model.ground_target.build.toolchain_prefix)
+    make=make.replace('-Wl,--gc-sections,','-Wl,-u,_sbrk -Wl,--gc-sections,',1)
+    for mode in ('architecture','host','artifact'):
+        make=make.replace('$(PYTHON) Tools/check_ground.py '+mode,
+            '$(PYTHON) Tools/check_c071_candidate.py'+('' if mode=='architecture' else ' '+mode))
+    files['Makefile']=make.encode()
     return files,graph,records

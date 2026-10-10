@@ -204,8 +204,16 @@ def test_real_c071_unified_build(c071,tmp_path_factory):
     built=service.UsbGroundCandidate_Build(result.model,project,output,independent_irq_header=header,companion_root=companion)
     if os.environ.get('SILVERSTAR_USB_BACKEND_BUILD_INDEX'):
         with Path(os.environ['SILVERSTAR_USB_BACKEND_BUILD_INDEX']).open('a',encoding='utf8') as stream:
-            stream.write(json.dumps({'part':'STM32C071FBP6','output':str(output),'result':built.result.value})+'\n')
+            stream.write(json.dumps({'part':'STM32C071FBP6','output':str(output),'result':built.result.value,
+                'project_root':str(project.resolve()),'runtime_project':str((project/'SilverStar.ssproject').resolve()),
+                'snapshot_root':str((service.hardware_importer.cache_root/result.model.ground_target.hardware.snapshot_id/'UsbGroundNative').resolve()),
+                'backend_receipt_sha256':built.receipt_sha256,'compile_receipt_sha256':hashlib.sha256((output/'receipt.json').read_bytes()).hexdigest() if (output/'receipt.json').is_file() else None})+'\n')
     assert built.result == NativeGroundBackendResult.CompiledCandidate,built.detail
     receipt=json.loads((output/'receipt.json').read_text())
     assert receipt['facts']['core']=='cortex-m0plus' and not receipt['warning_diagnostics']
     assert receipt['graph']['formal_release'] is False
+    backend=json.loads(built.receipt.read_text())
+    assert backend['project_root']==str(project.resolve())
+    assert backend['runtime_project']==str((project/'SilverStar.ssproject').resolve())
+    assert backend['runtime_project_sha256']==hashlib.sha256((project/'SilverStar.ssproject').read_bytes()).hexdigest()
+    assert Path(backend['snapshot_root']).is_dir()

@@ -39,6 +39,16 @@ def NativeF103Control_Integrate(files,native,proof,replacements,callback_owned,b
             for function in ('USBD_Init','USBD_Start','USBD_ClrClassConfig','USBD_Stop'):
                 start,_opening,end=NativeC_FunctionSpanGet(bulk_text,function)
                 text=_Replace(text,function,bulk_text[start:end])
+            text=_Replace(text,'USBD_DeInit',"""USBD_StatusTypeDef USBD_DeInit(USBD_HandleTypeDef *pdev)
+{
+  USBD_StatusTypeDef result;
+  if (pdev == NULL) { return USBD_FAIL; }
+  result = USBD_Stop(pdev);
+  if (result != USBD_OK) { return result; }
+  return USBD_LL_DeInit(pdev);
+}""")
+            start,opening,end=NativeC_FunctionSpanGet(text,'USBD_Init')
+            text=text[:opening+1]+"\n  if ((pdev == NULL) || (pdev->pClassData != NULL)) { return USBD_FAIL; }\n"+text[opening+1:]
             for stage in ('DataIn','DataOut'):
                 old='    pdev->pClass->'+stage+'(pdev, epnum);'
                 new=('    uint8_t result = pdev->pClass->'+stage+'(pdev, epnum);\n'

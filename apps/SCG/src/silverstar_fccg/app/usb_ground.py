@@ -391,6 +391,8 @@ def _C071Candidate_Build(importer,catalog,model,project_root,output,plan,*,indep
     compilation=destination/'receipt.json'
     receipt=_Receipt_Write(destination,{'status':result.value,'scope':'PRIVATE_C071_GROUND_BACKEND',
         'model_sha256':plan.model_sha256,'snapshot_id':plan.source_snapshot_id,
+        'project_root':str(project_root.resolve()),'runtime_project':str(args.runtime_project.resolve()),
+        'runtime_project_sha256':_Hash_Get(args.runtime_project.read_bytes()),'snapshot_root':str(snapshot.resolve()),
         'compile_receipt_sha256':_Hash_Get(compilation.read_bytes()) if compilation.is_file() else None,
         'failure':failure,'limits':C071_LIMITS})
     return NativeGroundCandidateOutputResult(result,destination,receipt,_Hash_Get(receipt.read_bytes()),failure or C071_LIMITS)

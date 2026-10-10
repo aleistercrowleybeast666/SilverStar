@@ -47,9 +47,26 @@ def C071Architecture_Validate(root, graph):
             if path.is_symlink() or hashlib.sha256(path.read_bytes()).hexdigest() != digest:
                 raise ValueError('C071 frozen source changed: ' + prefix + relative)
     sources = graph['sources']
+    lifecycle=graph.get('ordinary_lifecycle_derivatives',[])
+    if [Path(e['derived']).name for e in lifecycle]!=['usbd_cdc.c','usbd_core.c']:
+        raise ValueError('C071 ordinary lifecycle derivative inventory differs')
+    lifecycle_map={e['original']:e['derived'] for e in lifecycle}
+    pinned={p['derived_path']:p for p in companion['vendor_patches']}
+    for entry in lifecycle:
+        original,derived=entry['original'],entry['derived']
+        if original not in pinned or derived!='HardwareGenerated/ReviewedC071Lifecycle/'+Path(original).name:
+            raise ValueError('C071 lifecycle base or derived owner differs')
+        if entry['original_sha256']!=companion['files_sha256'][original] or original in sources or sources.count(derived)!=1:
+            raise ValueError('C071 lifecycle compiled base/provenance differs')
+        for kind in ('original','derived','patch'):
+            if hashlib.sha256((root/entry[kind]).read_bytes()).hexdigest()!=entry[kind+'_sha256']:
+                raise ValueError('C071 lifecycle derivative hash changed')
+        delta=''.join(difflib.unified_diff((root/original).read_bytes().decode().splitlines(True),
+            (root/derived).read_bytes().decode().splitlines(True),fromfile=original,tofile=derived)).encode()
+        if delta!=(root/entry['patch']).read_bytes():raise ValueError('C071 lifecycle patch not reproducible')
     for patch in companion['vendor_patches']:
         original, derived = patch['original_path'], patch['derived_path']
-        if original in sources or sources.count(derived) != 1:
+        if original in sources or sources.count(lifecycle_map.get(derived,derived)) != 1:
             raise ValueError('C071 vendor patch source selection differs: ' + patch['id'])
         delta = ''.join(difflib.unified_diff(
             (root/original).read_text(encoding='utf8').splitlines(keepends=True),
@@ -57,7 +74,7 @@ def C071Architecture_Validate(root, graph):
             fromfile=original, tofile=derived)).encode()
         if delta != (root/patch['patch_path']).read_bytes():
             raise ValueError('C071 vendor patch is not reproducible: ' + patch['id'])
-    if graph['vendor_patch_sources'] != [patch['derived_path'] for patch in companion['vendor_patches']]:
+    if graph['vendor_patch_sources'] != [lifecycle_map.get(patch['derived_path'],patch['derived_path']) for patch in companion['vendor_patches']]:
         raise ValueError('C071 compiled vendor patch inventory changed')
     for name in ('main.c', 'stm32c0xx_hal_msp.c', 'usbd_conf.c', 'usbd_cdc_if.c'):
         expected = 'Platform/STM32C0/Src/' + name
