@@ -1,0 +1,9 @@
+{
+  "status": "CompiledCandidate",
+  "scope": "PRIVATE_C071_GROUND_BACKEND",
+  "model_sha256": "4075ac29bb1b2e23ad82a5e0e1d9c70e75ea8feab4a5f2bc0c6f4bf74597a73d",
+  "snapshot_id": "751f3d0065e4b0336f4c32eeedbba043d14f7a8a779da52d27865bd6560d72a6",
+  "compile_receipt_sha256": "1137ab1a99903e71b925da13f9d199813112c617816ad3dcdf937240997d82ac",
+  "failure": null,
+  "limits": "PRIVATE C071 native PCD plus pinned classic CDC companion Ground candidate. Formal USB release BLOCKED: b66 independent review has no passed outcome and must not be retried or bypassed. Full EP0/async lifecycle, critical contracts, stack/WCET and hardware NOT PROVEN."
+}

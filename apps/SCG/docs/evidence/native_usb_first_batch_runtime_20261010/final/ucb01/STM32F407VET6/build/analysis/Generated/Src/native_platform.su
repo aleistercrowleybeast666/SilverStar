@@ -1,0 +1,11 @@
+Generated/Src/native_platform.c:102:23:NativeSpi_Exchange	40	static
+Generated/Src/native_platform.c:23:16:NativePlatform_Init	16	static
+Generated/Src/native_platform.c:44:6:NativePlatform_Quiesce	8	static
+Generated/Src/native_platform.c:52:16:PlatformGpio_Write	8	static
+Generated/Src/native_platform.c:63:16:PlatformGpio_Read	8	static
+Generated/Src/native_platform.c:73:6:HAL_GPIO_EXTI_Callback	0	static
+Generated/Src/native_platform.c:78:9:PlatformGpio_IrqConsume	8	static
+Generated/Src/native_platform.c:130:16:PlatformSpi_WriteObserved	24	static
+Generated/Src/native_platform.c:134:16:PlatformSpi_TransferObserved	24	static
+Generated/Src/native_platform.c:138:16:PlatformSpi_Write	16	static
+Generated/Src/native_platform.c:142:16:PlatformSpi_Transfer	16	static

@@ -1,0 +1,27 @@
+{
+  "command": [
+    "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+    "-B",
+    "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\backend_pytest.py",
+    "apps/SCG/tests/test_native_control_normal.py",
+    "apps/SCG/tests/test_native_machine_contract.py",
+    "apps/SCG/tests/test_native_clock_tim_phase.py",
+    "apps/SCG/tests/test_native_no_heap.py",
+    "apps/SCG/tests/test_native_radio.py",
+    "apps/SCG/tests/test_native_runtime.py",
+    "apps/SCG/tests/test_build_progress.py",
+    "apps/SCG/tests/test_build_audit.py",
+    "apps/SCG/tests/test_native_classic_cdc.py::test_import_preservation_and_reload",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/Users/chdxm/AppData/Local/Temp/ucr03",
+    "-q"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\.work\\ccdi",
+  "source_commit": "838f148059020b05d0de4a735332abf830f8b953",
+  "changed_files_sha256": {},
+  "started_utc": "2026-10-10T02:22:59.774617+00:00",
+  "scope": "Ordinary valid control, model, clock, no-heap, radio, CPU/IRQ and build regression only; no malformed USB or blocked independent safety review",
+  "exit": 0,
+  "finished_utc": "2026-10-10T02:24:27.310364+00:00"
+}

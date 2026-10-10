@@ -1,0 +1,5 @@
+Generated/Src/native_runtime.c:29:28:NativeRuntime_Abort	16	static
+Generated/Src/native_runtime.c:18:6:NativeRuntime_TransportFaultRecord	0	static
+Generated/Src/native_runtime.c:21:9:NativeRuntime_ReadyGet	16	static
+Generated/Src/native_runtime.c:51:21:NativeRuntime_Init	32	static
+Generated/Src/native_runtime.c:83:21:NativeRuntime_Process	24	static

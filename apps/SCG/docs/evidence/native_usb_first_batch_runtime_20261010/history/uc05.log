@@ -1,0 +1,87 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+________________________ test_real_c071_unified_build _________________________
+
+c071 = (<silverstar_fccg.app.service.FccgService object at 0x00000239911D2510>, NativeGroundProjectImportResult(result=<Nativ...), WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST'))
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/uc05'), _trace=<pluggy._tracing.TagTrac...DE07CE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/uc05'), _retention_count=3, _retention_policy='all')
+
+    def test_real_c071_unified_build(c071,tmp_path_factory):
+        assert os.environ.get('SILVERSTAR_USB_BACKEND_ARM')=='1'
+        service,result,header,companion,_source=c071
+        project=tmp_path_factory.mktemp('p');output=tmp_path_factory.mktemp('o')/'b'
+        service.ProjectRoot_Save(result.model,project,create_new=True)
+>       built=service.UsbGroundCandidate_Build(result.model,project,output,independent_irq_header=header,companion_root=companion)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_usb_ground_backend.py:204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\app\service.py:973: in UsbGroundCandidate_Build
+    return UsbGroundCandidate_Build(self.hardware_importer, self.catalog, model, project_root, output, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\app\usb_ground.py:330: in UsbGroundCandidate_Build
+    plan = UsbGroundCandidate_Plan(importer, catalog, model,
+apps\SCG\src\silverstar_fccg\app\usb_ground.py:293: in UsbGroundCandidate_Plan
+    files, graph, records = C071Candidate_Render(native, inventory, model, catalog, snapshot, profile)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+native = {'Core/Inc/gpio.h': b'/* USER CODE BEGIN Header */\r\n/**\r\n  *******************************************************...32C0xx_HAL_CONF_H */\r\n\r\n/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/\r\n', ...}
+inventory = HardwareInventory(mcu_part='STM32C071FBP6', mcu_name='STM32C071FBPx', mcu_family='STM32C0', package='TSSOP20_GP', core...='', card_detect_pin='', target_sources=(), errors=()), issues=('inventory.dma_missing',), sdio_shared_dma_bound=False)
+model = ProjectModel(identity=ProjectIdentity(name='NativeGroundPrivate10a', firmware_version='0.1.2', build_target='SilverSta...ile', 'project_sources'], component_provenance={}, reference_provenance={}, feature_tier_presets={}, format_version=14)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000239911D2A50>
+snapshot = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/uc05/u_d1ffd5f9/i/751f3d0065e4b0336f4c32eeedbba043d14f7a8a779da52d27865bd6560d72a6/UsbGroundNative')
+profile = {'mcu': 'STM32C071FBP6', 'package': 'TSSOP20_GP', 'ioc_sha256': 'e855fb3da0e0e0943c1f51445cddb8df22c128de5bba24a7896d8...491d8', 'Core/Inc/stm32c0xx_hal_conf.h': 'a94c5feaf516df85b8069fec5235e31ac25b627d0945c139c3674d275394879a', ...}, ...}
+
+    def C071Candidate_Render(native, inventory, model, catalog, snapshot, profile):
+        inputs=GroundCubeInputs_Get(snapshot, 'STM32C071FBP6')
+        companion=C071Native_Validate(snapshot)
+        from silverstar_fccg.project.model import HardwareResource
+        resources=inventory.HardwareResources_Get()+(HardwareResource('USB_CDC','usb_cdc',{
+            'capabilities':['usb.device','usb.cdc'],
+            'physical_resource':'C071 USB Device classic CDC companion',
+            'pins':{'dm':'PA11','dp':'PA12'},'interrupt':'USB_DRD_FS_IRQn',
+            'source_kind':'registered_companion','companion_profile':companion['profile'],'native_cdc':False}),)
+        data=inventory.Dictionary_Get()
+        data.update(ground_cubemx_base={'format_version':1,'mcu_flags':list(inputs.flags),
+            'required_irq_handlers':list(inputs.irq_handlers), 'build_manifest':'Makefile',
+            'artifact_hashes':{p:hashlib.sha256(b).hexdigest() for p,b in native.items()}},
+            native_usb_cdc=data['usb_cdc'],usb_cdc=True,c071_companion=companion,
+            package_pad_identity=C071PadIdentity_Get(native[model.ground_target.hardware.ioc_file].decode('utf8')))
+        build=profile['effective_build']
+        hardware=replace(model.ground_target.hardware, inventory=data, resources=resources,
+            capabilities=tuple(sorted({'peripheral.'+r.kind for r in resources})),
+            build_sources=tuple(build['build_sources']),include_dirs=tuple(build['include_dirs']),
+            asm_sources=tuple(build['asm_sources']),defines=tuple(build['defines']),linker_script=build['linker_script'])
+        internal=deepcopy(model)
+        roles={'radio_bus':'SPI1','radio_nss':'RADIO_NSS','radio_reset':'RADIO_RESET',
+            'radio_busy':'RADIO_BUSY','radio_dio1':'RADIO_DIO1','time':'SYSTEM_TIME'}
+        internal.ground_target=replace(internal.ground_target,mcu='silverstar.mcu.stm32c071fbp6',
+            hardware=hardware,pc_resource='USB_CDC',resource_assignments={'radio0:'+k:v for k,v in roles.items()})
+        files=C071Recipe_Render(internal,catalog,native)
+        files.update(NativeNoHeap_FilesRender(native['Core/Src/sysmem.c']))
+        from pathlib import Path
+        files['Tools/native_machine_contract.py']=(Path(__file__).resolve().parents[1]/'hardware/native_machine_contract.py').read_bytes()
+        graph=json.loads(files['Generated/ground_source_graph.json'])
+        graph['sources'].append('Generated/Src/native_no_heap.c')
+        # Reuse the existing bare-metal single radio owner repair. DIO ISR only
+        # records a flag; tick and USB must remain live during radio SPI/Busy waits.
+        from silverstar_fccg.generator.native_radio import NativeRadioHal_Derive,NativeRadioDevice_Derive
+        import difflib
+        payload_derivatives=[]
+        radio_hal='Devices/Telemetry/SX1281/Hal/sx1280_hal.c'
+        candidates=[p for p in files if p.endswith('/sx1280_hal.c')]
+>       if len(candidates)!=1:raise ValueError('C071 radio HAL owner is not unique')
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: C071 radio HAL owner is not unique
+
+apps\SCG\src\silverstar_fccg\generator\c071_candidate.py:48: ValueError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_usb_ground_backend.py::test_real_c071_unified_build
+1 failed, 21 deselected, 1 warning in 5.86s

@@ -1,0 +1,27 @@
+{
+  "command": [
+    "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+    "-B",
+    "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\backend_pytest.py",
+    "apps/SCG/tests/test_native_ground_backend.py",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/Users/chdxm/AppData/Local/Temp/ucb01",
+    "-q"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\.work\\ccdi",
+  "started_utc": "2026-10-10T02:24:02.612686+00:00",
+  "scope": "Ordinary backend import/model/render/build flow; no malformed USB, owner expressions, blocked review or hardware",
+  "source_commit": "838f148059020b05d0de4a735332abf830f8b953",
+  "source_sha256": {
+    "apps/SCG/src/silverstar_fccg/app/native_ground.py": "eb9a0f64df4b2fe48daafbf617b6a09de4f0c596c572d86b41dd9d586e02c63c",
+    "apps/SCG/src/silverstar_fccg/app/service.py": "b342708d93c2e198eaa194fbe4bd434fbe2646947de9750e952edd2656e19ca4",
+    "apps/SCG/src/silverstar_fccg/build/native_compile.py": "b0b58ddfc99867f67e5c84216a30605d6ac0570ec1543d31150b98f402a3c33a",
+    "apps/SCG/src/silverstar_fccg/project/model.py": "a86452b4e35b471b33d43aabd3f5e20f8e882521eb8a65679ba2f4e38a2bf519",
+    "apps/SCG/tools/validation/native_classic_cdc_compile.py": "0d7cd96e3dd72d31cc900307f2f81294e77932a64f00720478efab62d65f9370",
+    "apps/SCG/tests/test_native_ground_backend.py": "ee9808df8e76a850e09f37a0b2605305801c5c4e32d69b73f1f26952be0afc7e"
+  },
+  "auditable_dirty_diff": "",
+  "exit": 0,
+  "finished_utc": "2026-10-10T02:28:13.909108+00:00"
+}

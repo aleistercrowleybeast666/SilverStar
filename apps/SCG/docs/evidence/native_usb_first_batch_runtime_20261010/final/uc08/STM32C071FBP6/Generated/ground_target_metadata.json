@@ -1,0 +1,17 @@
+{
+  "silverstar_version": "0.1.2",
+  "firmware_version": "0.1.2",
+  "target_role": "ground_station",
+  "air_profile": "air.m0",
+  "radio_module": "e28_2g4m12sx",
+  "radio_family": "sx128x",
+  "frequency_hz": 2473000000,
+  "phy": {
+    "mode": "lora",
+    "spreading_factor": 10,
+    "bandwidth_hz": 800000,
+    "coding_rate": "4/5"
+  },
+  "pc_interface": "usb_cdc",
+  "hardware_fingerprint": "751f3d0065e4b0336f4c32eeedbba043d14f7a8a779da52d27865bd6560d72a6"
+}

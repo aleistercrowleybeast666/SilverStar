@@ -130,3 +130,6 @@ qualification remain NOT PROVEN. Ordinary local review of this increment is not
 an independent review or critical-contract acceptance. Neither original Power
 of Ten compliance nor NASA certification nor generic native runtime usability
 is claimed.
+
+
+Version note: this report retains its original snapshot scope. The later exact F103/C071 private runtime increment and shared F103 ordinary control integration are recorded in [NATIVE_USB_FIRST_BATCH_RUNTIME_20261010.md](NATIVE_USB_FIRST_BATCH_RUNTIME_20261010.md), tested code `838f148059020b05d0de4a735332abf830f8b953`. Independent USB safety review still has NO PASSED OUTCOME; formal generation remains blocked.

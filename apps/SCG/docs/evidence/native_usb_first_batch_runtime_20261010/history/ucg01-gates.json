@@ -1,0 +1,66 @@
+[
+  {
+    "part": "STM32C071FBP6",
+    "mode": "architecture",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\uc07\\o_8fc1ec40\\b",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_c071_candidate.py"
+    ],
+    "started_utc": "2026-10-10T02:18:42.528766+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T02:18:43.497066+00:00",
+    "log_sha256": "e80508501ca6200f30ff0b1370e5c5f4a0efaaebf7a722fb6b7ebc321cabfe3f"
+  },
+  {
+    "part": "STM32C071FBP6",
+    "mode": "host",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\uc07\\o_8fc1ec40\\b",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_c071_candidate.py",
+      "host",
+      "--host-cc",
+      "gcc"
+    ],
+    "started_utc": "2026-10-10T02:18:43.504321+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T02:18:51.154320+00:00",
+    "log_sha256": "7f98f47af2c7d5dc589ea58fbb3a5652f5ad17692f028d5259594f917975a7e3"
+  },
+  {
+    "part": "STM32C071FBP6",
+    "mode": "artifact",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\uc07\\o_8fc1ec40\\b",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_c071_candidate.py",
+      "artifact",
+      "--prefix",
+      "arm-none-eabi-"
+    ],
+    "started_utc": "2026-10-10T02:18:51.167147+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T02:18:56.921243+00:00",
+    "log_sha256": "0fe993e424ea49f335a6abba5566ee2c85d8a46e319c93b96ff3cec060cea4ea"
+  },
+  {
+    "part": "STM32C071FBP6",
+    "mode": "power10",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\uc07\\o_8fc1ec40\\b",
+    "command": [
+      "powershell",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "Tools/check_power_of_ten.ps1",
+      "-TargetKind",
+      "Ground"
+    ],
+    "started_utc": "2026-10-10T02:18:56.933142+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T02:18:59.303142+00:00",
+    "log_sha256": "7a90605db7add37e4f16568196a35b8005f8a944b44651dd882ecd527483d5ba"
+  }
+]

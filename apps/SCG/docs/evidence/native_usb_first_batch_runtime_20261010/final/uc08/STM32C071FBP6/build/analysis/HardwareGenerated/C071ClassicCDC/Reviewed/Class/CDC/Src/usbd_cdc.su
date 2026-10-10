@@ -1,0 +1,15 @@
+HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c:687:10:USBD_CDC_GetDeviceQualifierDescriptor	0	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c:594:17:USBD_CDC_GetFSCfgDesc	24	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c:656:17:USBD_CDC_GetOtherSpeedCfgDesc	8	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c:625:17:USBD_CDC_GetHSCfgDesc	24	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c:557:16:USBD_CDC_DataOut	16	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c:516:16:USBD_CDC_DataIn	32	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c:583:16:USBD_CDC_EP0_RxReady	8	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c:436:16:USBD_CDC_Setup	16	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c:392:16:USBD_CDC_DeInit	16	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c:291:16:USBD_CDC_Init	24	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c:700:9:USBD_CDC_RegisterInterface	0	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c:728:9:USBD_CDC_SetTxBuffer	0	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c:751:9:USBD_CDC_SetRxBuffer	0	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c:778:9:USBD_CDC_TransmitPacket	8	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c:818:9:USBD_CDC_ReceivePacket	8	static

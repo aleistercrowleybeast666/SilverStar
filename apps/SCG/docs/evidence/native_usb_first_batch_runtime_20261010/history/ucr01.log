@@ -1,0 +1,23 @@
+E..................                                                      [100%]
+=================================== ERRORS ====================================
+______ ERROR at setup of test_valid_f103_control_flow_and_preserved_bulk ______
+file D:\python_software\SilverStar\.work\ccdi\apps\SCG\tests\test_native_control_normal.py, line 70
+  def test_valid_f103_control_flow_and_preserved_bulk(bound,tmp_path):
+file D:\python_software\SilverStar\.work\ccdi\apps\SCG\tests\test_native_ground_backend.py, line 22
+  @pytest.fixture
+  def bound(native, tmp_path_factory, builtin_catalog):
+E       fixture 'native' not found
+>       available fixtures: _QtTestWindows_Dispose, bound, builtin_catalog, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, monkeypatch, pytestconfig, qapp, record_property, record_testsuite_property, record_xml_attribute, recwarn, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory, workspace_root
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+D:\python_software\SilverStar\.work\ccdi\apps\SCG\tests\test_native_ground_backend.py:22
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+ERROR apps\SCG\tests\test_native_control_normal.py::test_valid_f103_control_flow_and_preserved_bulk
+18 passed, 1 warning, 1 error in 21.94s

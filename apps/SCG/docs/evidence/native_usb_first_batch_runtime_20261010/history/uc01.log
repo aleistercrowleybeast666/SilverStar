@@ -1,0 +1,168 @@
+F.......F............                                                    [100%]
+================================== FAILURES ===================================
+____________ test_c071_save_reload_recipe_and_source_preservation _____________
+
+c071 = (<silverstar_fccg.app.service.FccgService object at 0x000001BCE203A510>, NativeGroundProjectImportResult(result=<Nativ...), WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST'))
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/uc01'), _trace=<pluggy._tracing.TagTrac...EC57CE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/uc01'), _retention_count=3, _retention_policy='all')
+
+    def test_c071_save_reload_recipe_and_source_preservation(c071, tmp_path_factory):
+        service, result, header, companion, source = c071
+        hashes = {p: hashlib.sha256((source / p).read_bytes()).hexdigest()
+            for p in result.model.ground_target.hardware.inventory[C071_KEY]['native_files_sha256']}
+        project = tmp_path_factory.mktemp('p')
+        service.ProjectRoot_Save(result.model, project, create_new=True)
+        model = ProjectModel_Load(project / 'SilverStar.ssproject')
+        reloaded = FccgService(service.workspace_root)
+        reloaded.hardware_importer = CubeMxImporter(reloaded.policy, service.hardware_importer.cache_root)
+        reloaded.catalog = service.catalog
+>       plan = reloaded.UsbGroundCandidate_Plan(model, independent_irq_header=header, companion_root=companion)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_usb_ground_backend.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\app\service.py:965: in UsbGroundCandidate_Plan
+    return UsbGroundCandidate_Plan(self.hardware_importer, self.catalog, model, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\app\usb_ground.py:293: in UsbGroundCandidate_Plan
+    files, graph, records = C071Candidate_Render(native, inventory, model, catalog, snapshot, profile)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\c071_candidate.py:33: in C071Candidate_Render
+    files=C071Recipe_Render(internal,catalog,native)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\c071_recipe.py:61: in C071Recipe_Render
+    C071GroundModel_Validate(model, catalog)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='NativeGroundPrivate10a', firmware_version='0.1.2', build_target='SilverSta...ile', 'project_sources'], component_provenance={}, reference_provenance={}, feature_tier_presets={}, format_version=14)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001BCE203AA50>
+
+    def C071GroundModel_Validate(model, catalog) -> None:
+        from dataclasses import asdict
+        from silverstar_fccg.project.model import GroundRadioConfigurations_Get
+        ground = model.ground_target
+        hardware = ground.hardware
+        if (ground.mcu != "silverstar.mcu.stm32c071fbp6" or hardware.mcu != PART or
+                hardware.mode != "custom" or ground.board or ground.pc_interface != "usb_cdc" or
+                hardware.hal_cmsis_source_policy != "imported_tree_authoritative"):
+            raise ValueError("C071 mini requires exact MCU, complete native custom input and USB CDC")
+        radios = GroundRadioConfigurations_Get(ground)
+        if (model.air_link.radio_family != "sx128x" or len(radios) != 1 or
+                radios[0].plugin != "silverstar.device.telemetry.sx1281" or
+                radios[0].module_variant != "e28_2g4m12sx" or radios[0].instance_id != "radio0"):
+            raise ValueError("C071 mini requires its single reviewed E28 SX1281 radio")
+        expected = {"radio0:" + role: value for role, value in {
+            "radio_bus": "SPI1", "radio_nss": "RADIO_NSS", "radio_reset": "RADIO_RESET",
+            "radio_busy": "RADIO_BUSY", "radio_dio1": "RADIO_DIO1", "time": "SYSTEM_TIME"}.items()}
+        if ground.resource_assignments != expected:
+            raise ValueError("C071 mini fixed radio/resource binding changed")
+        companion = hardware.inventory.get("c071_companion", {})
+        if (companion.get("profile") != PROFILE or companion.get("component") != COMPANION or companion.get("version") != "0.1.1" or
+                companion.get("manifest_sha256") != _EXPECTED["companion-manifest.json"] or
+                companion.get("native_profile_sha256") != _EXPECTED["native-profile.json"] or
+                companion.get("native_cdc") is not False or
+                companion.get("input_kind") != "native_pcd_plus_pinned_classic_cdc"):
+            raise ValueError("C071 registered companion provenance missing or changed; reimport")
+        profile = C071Profile_Get("native-profile.json")
+        def digest(value):
+            return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+        ignore = {"ground_cubemx_base", "c071_companion", "package_pad_identity", "native_usb_cdc", "usb_cdc"}
+        inventory = {k: v for k, v in hardware.inventory.items() if k not in ignore}
+        if hardware.inventory.get("package_pad_identity") != profile["package_pad_identity"]:
+            raise ValueError("C071 shared physical pad identity changed; reimport")
+        if (digest([asdict(r) for r in hardware.resources]) != profile["resources_sha256"] or
+                digest(inventory) != profile["native_inventory_sha256"]):
+>           raise ValueError("C071 native resource/pin/clock inventory changed; reimport")
+E           ValueError: C071 native resource/pin/clock inventory changed; reimport
+
+apps\SCG\src\silverstar_fccg\hardware\c071_mini.py:148: ValueError
+_______________ test_c071_all_output_routes_block_before_write ________________
+
+c071 = (<silverstar_fccg.app.service.FccgService object at 0x000001BCE2656050>, NativeGroundProjectImportResult(result=<Nativ...), WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST'))
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/uc01'), _trace=<pluggy._tracing.TagTrac...EC57CE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/uc01'), _retention_count=3, _retention_policy='all')
+
+    def test_c071_all_output_routes_block_before_write(c071, tmp_path_factory):
+        service, result, header, companion, _source = c071
+        model = result.model
+        project = tmp_path_factory.mktemp('p')
+        service.ProjectRoot_Save(model, project, create_new=True)
+        output = tmp_path_factory.mktemp('o') / 'candidate'
+        for operation in (
+            lambda: service.UsbGroundCandidate_Export(model, output, independent_irq_header=header, companion_root=companion),
+            lambda: service.UsbGroundCandidate_Build(model, project, output, independent_irq_header=header, companion_root=companion),
+        ):
+            with pytest.raises(CubeMxImportError, match='NOT IMPLEMENTED'):
+>               operation()
+
+apps\SCG\tests\test_usb_ground_backend.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\tests\test_usb_ground_backend.py:99: in <lambda>
+    lambda: service.UsbGroundCandidate_Export(model, output, independent_irq_header=header, companion_root=companion),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\app\service.py:969: in UsbGroundCandidate_Export
+    return UsbGroundCandidate_Export(self.hardware_importer, self.catalog, model, output, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\app\usb_ground.py:306: in UsbGroundCandidate_Export
+    plan = UsbGroundCandidate_Plan(importer, catalog, model,
+apps\SCG\src\silverstar_fccg\app\usb_ground.py:293: in UsbGroundCandidate_Plan
+    files, graph, records = C071Candidate_Render(native, inventory, model, catalog, snapshot, profile)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\c071_candidate.py:33: in C071Candidate_Render
+    files=C071Recipe_Render(internal,catalog,native)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\c071_recipe.py:61: in C071Recipe_Render
+    C071GroundModel_Validate(model, catalog)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='NativeGroundPrivate10a', firmware_version='0.1.2', build_target='SilverSta...ile', 'project_sources'], component_provenance={}, reference_provenance={}, feature_tier_presets={}, format_version=14)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001BCE203AA50>
+
+    def C071GroundModel_Validate(model, catalog) -> None:
+        from dataclasses import asdict
+        from silverstar_fccg.project.model import GroundRadioConfigurations_Get
+        ground = model.ground_target
+        hardware = ground.hardware
+        if (ground.mcu != "silverstar.mcu.stm32c071fbp6" or hardware.mcu != PART or
+                hardware.mode != "custom" or ground.board or ground.pc_interface != "usb_cdc" or
+                hardware.hal_cmsis_source_policy != "imported_tree_authoritative"):
+            raise ValueError("C071 mini requires exact MCU, complete native custom input and USB CDC")
+        radios = GroundRadioConfigurations_Get(ground)
+        if (model.air_link.radio_family != "sx128x" or len(radios) != 1 or
+                radios[0].plugin != "silverstar.device.telemetry.sx1281" or
+                radios[0].module_variant != "e28_2g4m12sx" or radios[0].instance_id != "radio0"):
+            raise ValueError("C071 mini requires its single reviewed E28 SX1281 radio")
+        expected = {"radio0:" + role: value for role, value in {
+            "radio_bus": "SPI1", "radio_nss": "RADIO_NSS", "radio_reset": "RADIO_RESET",
+            "radio_busy": "RADIO_BUSY", "radio_dio1": "RADIO_DIO1", "time": "SYSTEM_TIME"}.items()}
+        if ground.resource_assignments != expected:
+            raise ValueError("C071 mini fixed radio/resource binding changed")
+        companion = hardware.inventory.get("c071_companion", {})
+        if (companion.get("profile") != PROFILE or companion.get("component") != COMPANION or companion.get("version") != "0.1.1" or
+                companion.get("manifest_sha256") != _EXPECTED["companion-manifest.json"] or
+                companion.get("native_profile_sha256") != _EXPECTED["native-profile.json"] or
+                companion.get("native_cdc") is not False or
+                companion.get("input_kind") != "native_pcd_plus_pinned_classic_cdc"):
+            raise ValueError("C071 registered companion provenance missing or changed; reimport")
+        profile = C071Profile_Get("native-profile.json")
+        def digest(value):
+            return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+        ignore = {"ground_cubemx_base", "c071_companion", "package_pad_identity", "native_usb_cdc", "usb_cdc"}
+        inventory = {k: v for k, v in hardware.inventory.items() if k not in ignore}
+        if hardware.inventory.get("package_pad_identity") != profile["package_pad_identity"]:
+            raise ValueError("C071 shared physical pad identity changed; reimport")
+        if (digest([asdict(r) for r in hardware.resources]) != profile["resources_sha256"] or
+                digest(inventory) != profile["native_inventory_sha256"]):
+>           raise ValueError("C071 native resource/pin/clock inventory changed; reimport")
+E           ValueError: C071 native resource/pin/clock inventory changed; reimport
+
+apps\SCG\src\silverstar_fccg\hardware\c071_mini.py:148: ValueError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_usb_ground_backend.py::test_c071_save_reload_recipe_and_source_preservation
+FAILED apps\SCG\tests\test_usb_ground_backend.py::test_c071_all_output_routes_block_before_write
+2 failed, 19 passed, 1 warning in 100.77s (0:01:40)
