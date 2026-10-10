@@ -87,6 +87,21 @@ covariance, innovation, NIS, measurement diagnostics, and a generic update-event
 `StateGroupSpec`/`MeasurementGroupSpec`. Pure INS has no estimator visualization spec. Future
 ESKF_15/24 state or sensor groups are plugin metadata changes, not page changes.
 
+The GNSS horizontal consistency page and PNG export share a display-only
+revision-3 evidence model. Recorded sources use `NAV_QUALITY` evaluation times,
+valid window closure and actual variance multipliers directly. Recomputed sources
+use only their own `window_evidence` with an explicit MCU plotting timestamp;
+missing evidence never falls back to recorded rows or the revision-2 stream.
+The selected recomputation's policy switch binds its effective multiplier;
+disabled weighting is shown as one and an unknown switch leaves it unavailable.
+Non-finite window coordinates remain gaps. The view reports the last row and
+selected-interval coverage/peaks separately, rather than treating an end-state
+`NORMAL` event as whole-mission health. It does not draw retired recovery thresholds
+or old horizontal reset markers. Receiver precision is independent recorded
+information; vertical consistency remains explicitly offline, with gray lines
+identified as local reference resets. No new historical display compatibility is
+provided, and none of these presentation rules change estimator/replay numerics.
+
 Recorded KF6 barometer diagnostics use independent `BARO_MEASUREMENT` operations,
 ordered at `estimator_present_timestamp_us`. Innovation/NIS require the recorded valid
 bit and an accepted, soft-weighted or NIS-rejected result; invalid/numeric-error outcomes

@@ -8,6 +8,7 @@ import pytest
 
 from silverstar_flp.analysis.geodesy import GeoLocal_ToEnu
 from silverstar_flp.analysis.gnss_integrity_stream import GnssIntegrityStream_Build
+from silverstar_flp.analysis.gnss_integrity_display import HorizontalQuality_Build
 from silverstar_flp.analysis.gnss_vertical_consistency import GnssVerticalConsistency_Build
 from silverstar_flp.core.dataset import DecodedRecord, FlightDataset
 from silverstar_flp.core.diagnostics import ParserDiagnostics
@@ -54,6 +55,17 @@ def Dataset_Build(
         Path("synthetic.bin"), 0, {}, ParserDiagnostics(),
         {"INITIAL_STATE": (initial,), "GNSS_NATIVE": tuple(native)}, {},
     )
+
+
+
+def CurrentDataset_Build():
+    dataset = Dataset_Build()
+    quality = tuple(DecodedRecord(39, "NAV_QUALITY", 1, 100, index, r.timestamp_us, 0, {
+        "quality_revision": 3, "evaluation_us": r.timestamp_us,
+        "evidence_valid": int(index > 0), "closure_norm_m": .5,
+        "closure_en_m": (.3, .4), "variance_scale": 1.2,
+    }, 0) for index, r in enumerate(dataset.Records_Get("GNSS_NATIVE")))
+    return replace(dataset, records={**dataset.records, "NAV_QUALITY": quality})
 
 
 
@@ -109,8 +121,8 @@ def test_invalid_origin_is_rejected_by_both_diagnostics():
 
 @pytest.mark.parametrize("language", (ExportLanguage.EN, ExportLanguage.ZH))
 def test_integrity_export_has_exactly_three_current_pages(tmp_path, language):
-    dataset = Dataset_Build()
-    horizontal = GnssIntegrityStream_Build(dataset)
+    dataset = CurrentDataset_Build()
+    horizontal = HorizontalQuality_Build(dataset)
     vertical = GnssVerticalConsistency_Build(dataset)
     exporter = FlightExporter()
     for kind in ("GNSS_Horizontal_Consistency_Error",
@@ -140,7 +152,7 @@ def test_integrity_gui_three_combo_views_and_shared_time_range(theme, language, 
     font.setPointSize(max(8, font.pointSize() * font_scale))
     page.setFont(font)
     page.Theme_Apply(theme)
-    page.Dataset_Set(Dataset_Build())
+    page.Dataset_Set(CurrentDataset_Build())
     page.resize(1000, 700)
     page.show()
     app.processEvents()
@@ -153,7 +165,8 @@ def test_integrity_gui_three_combo_views_and_shared_time_range(theme, language, 
     assert len(page.vertical_plot.listDataItems()) == 1
     assert len(page.quality_plot.listDataItems()) == 2
     assert len(page.satellite_plot.listDataItems()) == 1
-    assert "Offline" in page.status_label.text() or "离线" in page.status_label.text()
+    assert "Recorded" in page.status_label.text() or "飞控记录" in page.status_label.text()
+    assert len(page.weight_plot.listDataItems()) == 1
     page.TimeRange_Set(3.0, 8.0)
     for plot in page.plots:
         low, high = plot.getViewBox().viewRange()[0]
@@ -166,26 +179,22 @@ def test_integrity_gui_three_combo_views_and_shared_time_range(theme, language, 
     page.close()
 
 
-def test_integrity_status_labels_recorded_event_separately_from_offline_replay():
+def test_current_window_status_is_not_replaced_by_legacy_normal_event():
     import os
     os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
     from PySide6.QtWidgets import QApplication
-
     from silverstar_flp.core.i18n import Translator
     from silverstar_flp.ui.gnss_integrity import GnssIntegrityPage
-
     app = QApplication.instance() or QApplication([])
-    dataset = Dataset_Build()
+    dataset = CurrentDataset_Build()
+    event = DecodedRecord(0, "EVENT", 1, 0, 1, 1_000_000, 0,
+                          {"event_id": 0x2E, "arg0": 0}, 0)
+    dataset = replace(dataset, records={**dataset.records, "EVENT": (event,)})
     page = GnssIntegrityPage(Translator("en_US"))
     page.Dataset_Set(dataset)
     page.TimeRange_Set(0.0, 2.0)
-    assert "Offline diagnostic state" in page.status_label.text()
-    event = DecodedRecord(0, "EVENT", 1, 0, 1, 1_000_000, 0, {
-        "event_id": 0x2E, "arg0": 1 << 8,
-    }, 0)
-    dataset = replace(dataset, records={**dataset.records, "EVENT": (event,)})
-    page.Dataset_Set(dataset)
-    page.TimeRange_Set(0.0, 2.0)
-    assert page.status_label.text() == "Recorded current state: SUSPECT"
+    assert "Recorded · revision 3" in page.status_label.text()
+    assert "multiplier 1.2" in page.status_label.text()
+    assert "NORMAL" not in page.status_label.text()
     page.close()
     app.processEvents()

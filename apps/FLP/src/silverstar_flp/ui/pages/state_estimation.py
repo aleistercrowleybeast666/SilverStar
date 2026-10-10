@@ -311,10 +311,10 @@ class StateEstimationPage(QWidget):
     ) -> None:
         self._dataset = dataset
         self._resolver = resolver or ChannelResolver(dataset, ReplayResultStore())
+        self.gnss_integrity.Dataset_Set(dataset)
         self._Estimator_Select()
         for panel in self.navigation_diagnostics.values():
             panel.Dataset_Set(dataset, self._resolver)
-        self.gnss_integrity.Dataset_Set(dataset)
 
     def _Estimator_Select(self) -> None:
         if self._dataset is None or self._resolver is None:
@@ -361,14 +361,14 @@ class StateEstimationPage(QWidget):
         self.source_value_label.setText(
             _Source_Label(self._translator, self._resolver, selected.source_id)
         )
-        self.gnss_integrity.Parameters_Set(self._source_parameters)
         entry = self._resolver.store.SourceEntry_Get(selected.source_id)
-        from silverstar_flp.decoder_profiles.eskf15_records import NavigationWindows_Get
-
         windows = entry.diagnostics.get("window_evidence") if entry is not None else None
-        if selected.recorded_solution_id == "eskf15" and self._dataset.Records_Get("NAV_QUALITY"):
-            windows = NavigationWindows_Get(self._dataset.Records_Get("NAV_QUALITY"))
-        self.gnss_integrity.WindowEvidence_Set(windows)
+        self.gnss_integrity.Source_Set(
+            self._source_parameters,
+            source_kind=("recorded" if selected.kind == AnalysisSourceKind.RECORDED
+                         else "recomputed"),
+            window_evidence=windows,
+        )
         self._Selectors_Refresh()
         # Restore only IDs still published by this primary's visualization.
         # Unavailable sources return above with cleared selectors, so a later

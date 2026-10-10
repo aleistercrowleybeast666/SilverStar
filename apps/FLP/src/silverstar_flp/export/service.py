@@ -15,7 +15,9 @@ from typing import Any
 
 import numpy as np
 
-from silverstar_flp.analysis.gnss_integrity_stream import GnssIntegrityStream_Build
+from silverstar_flp.analysis.gnss_integrity_display import (
+    HorizontalQuality_Build, HorizontalQualitySummary_Get, ReceiverInformation_Build,
+)
 from silverstar_flp.analysis.gnss_vertical_consistency import GnssVerticalConsistency_Build
 from silverstar_flp.analysis.overview import FlightSummary_Build
 from silverstar_flp.core.analysis_source import (
@@ -567,11 +569,17 @@ class FlightExporter:
         if (requested.include_plots and dataset.Records_Get("GNSS_NATIVE")
                 and self._EstimatorSelection_Get(resolver) is not None):
             try:
-                source = resolver.Source_Get()
+                source = self._EstimatorSelection_Get(resolver)[0]
                 integrity_parameters = dict(self._SourceParameters_Get(dataset, resolver, source))
-                integrity_parameters["gnss_integrity_enable"] = 1
-                integrity_result = GnssIntegrityStream_Build(
-                    dataset, integrity_parameters)
+                entry = resolver.store.SourceEntry_Get(source.source_id)
+                windows = entry.diagnostics.get("window_evidence") if entry is not None else None
+                integrity_result = HorizontalQuality_Build(
+                    dataset,
+                    source_kind=("recorded" if source.kind == AnalysisSourceKind.RECORDED
+                                 else "recomputed"),
+                    window_evidence=windows,
+                    integrity_enabled=integrity_parameters.get("gnss_integrity_enable"),
+                )
                 vertical_result = GnssVerticalConsistency_Build(
                     dataset,
                     max_gap_ms=int(integrity_parameters.get("gnss_integrity_max_gap_ms", 120)),
@@ -2280,10 +2288,13 @@ class FlightExporter:
         from matplotlib import pyplot as plt
         background, foreground, _ = self._Plot_Configure(theme)
         label = Translator(language.value).Text_Get
-        origin = dataset.start_timestamp_us or int(result.timestamp_us[0])
+        origin = dataset.start_timestamp_us or dataset.diagnostics.first_timestamp_us or 0
+        receiver = ReceiverInformation_Build(dataset)
         time = (result.timestamp_us.astype(np.float64) - origin) * 1e-6
         keep = (time >= page_start) & (time <= page_end)
         if kind == "GNSS_Receiver_Information":
+            time = (receiver.timestamp_us.astype(np.float64) - origin) * 1e-6
+            keep = (time >= page_start) & (time <= page_end)
             figure, axes = plt.subplots(2, 1, figsize=(11, 7), dpi=140, sharex=True)
             for axis in axes:
                 self._Axes_Style(figure, axis, theme)
@@ -2291,11 +2302,11 @@ class FlightExporter:
             speed_axis = accuracy.twinx()
             for index, key, color in ((0, "integrity.hacc", "#2b77c2"),
                                       (1, "integrity.vacc", "#1a9d6c")):
-                accuracy.plot(time[keep], result.quality[keep, index], color=color,
+                accuracy.plot(time[keep], receiver.quality[keep, index], color=color,
                               linewidth=1.2, label=label(key))
-            speed_axis.plot(time[keep], result.quality[keep, 2], color="#ec8a20",
+            speed_axis.plot(time[keep], receiver.quality[keep, 2], color="#ec8a20",
                             linewidth=1.2, label=label("integrity.sacc"))
-            satellites.plot(time[keep], result.quality[keep, 3], color="#9467bd",
+            satellites.plot(time[keep], receiver.quality[keep, 3], color="#9467bd",
                             linewidth=1.2, label=label("integrity.satellites_label"))
             accuracy.set_title(label("integrity.receiver_precision"), color=foreground)
             satellites.set_title(label("integrity.satellites_label"), color=foreground)
@@ -2309,40 +2320,49 @@ class FlightExporter:
             satellites.legend(facecolor=background, labelcolor=foreground)
             satellites.set_xlim(page_start, max(page_end, page_start + .001))
         else:
+            if kind == "GNSS_Horizontal_Consistency_Error":
+                figure, axes = plt.subplots(2, 1, figsize=(11, 7), dpi=140, sharex=True)
+                axis, weight = axes
+                for item in axes:
+                    self._Axes_Style(figure, item, theme)
+                style = ({"drawstyle": "steps-post"} if result.source_kind == "recorded"
+                         else {"linestyle": "None", "marker": "."})
+                axis.plot(time[keep], result.closure_norm_m[keep], color="#2b77c2",
+                          linewidth=1.2, label=label("integrity.window_error"), **style)
+                threshold = parameters.get("gnss_integrity_error_threshold_m")
+                if threshold is not None and np.isfinite(float(threshold)):
+                    axis.axhline(float(threshold), color="#d84a4a", linestyle="--",
+                                 linewidth=1, label=label("integrity.window_threshold"))
+                weight.plot(time[keep], result.variance_scale[keep], color="#1a9d6c",
+                            linewidth=1.2, label=label("integrity.window_scale"), **style)
+                summary = HorizontalQualitySummary_Get(result, origin, page_start, page_end)
+                def number(value):
+                    return "—" if value is None or not np.isfinite(value) else f"{value:.2f}"
+                end = label("integrity.end_valid" if summary["end_evidence_valid"]
+                            else "integrity.end_unavailable")
+                subtitle = label("integrity.interval_summary",
+                    source=label("integrity.source." + result.source_kind), end=end,
+                    time=number(summary["end_time_s"]),
+                    scale=number(summary["end_scale"]), valid=summary["valid_samples"],
+                    samples=summary["samples"], error=number(summary["maximum_closure_m"]),
+                    peak=number(summary["maximum_scale"]), weighted=summary["weighted_samples"])
+                axis.set_title(label("integrity.horizontal_title") + "\n" + subtitle,
+                               color=foreground, fontsize=10)
+                axis.set_ylabel("m", color=foreground)
+                weight.set_ylabel(label("integrity.scale_unit"), color=foreground)
+                weight.set_xlabel(label("timeline.time"), color=foreground)
+                weight.set_xlim(page_start, max(page_end, page_start + .001))
+                for item in axes:
+                    item.legend(facecolor=background, labelcolor=foreground)
+                figure.text(.01, .01, label("integrity.revision3_explanation"),
+                            color=foreground, fontsize=8, wrap=True)
+                figure.tight_layout(rect=(0, .065, 1, 1))
+                figure.savefig(path, facecolor=background)
+                plt.close(figure)
+                return
             figure, axis = plt.subplots(figsize=(11, 5), dpi=140)
             self._Axes_Style(figure, axis, theme)
-            if kind == "GNSS_Horizontal_Consistency_Error":
-                values = result.closure_norm_m[keep].copy()
-                values[result.chain_reset[keep]] = np.nan
-                axis.plot(time[keep], values, color="#2b77c2", linewidth=1.2,
-                          label=label("integrity.horizontal_error"))
-                for threshold, key, color in (
-                    (parameters.get("gnss_integrity_error_threshold_m", 10.0),
-                     "integrity.error_threshold", "#d84a4a"),
-                    (parameters.get("gnss_integrity_recovery_threshold_m", 4.0),
-                     "integrity.recovery_threshold", "#1a9d6c"),
-                ):
-                    axis.axhline(float(threshold), color=color, linestyle="--",
-                                 linewidth=1, label=label(key))
-                for timestamp in time[keep][result.chain_reset[keep]]:
-                    axis.axvline(timestamp, color="#9299a5", linewidth=.8)
-                events = tuple(record for record in dataset.Records_Get("EVENT")
-                               if int(record.payload.get("event_id", -1)) == 0x2E)
-                if events:
-                    transitions = (((record.timestamp_us - origin) * 1e-6,
-                                    (int(record.payload.get("arg0", 0)) >> 8) & 0xFF)
-                                   for record in events)
-                else:
-                    transitions = ((time[index], int(result.state[index]))
-                                   for index in range(1, len(result.state))
-                                   if result.state[index] != result.state[index - 1])
-                for timestamp, state in transitions:
-                    if page_start <= timestamp <= page_end and state in (0, 1, 2):
-                        axis.axvline(timestamp,
-                                     color=("#1a9d6c", "#ec8a20", "#d84a4a")[state],
-                                     linewidth=1.2)
-                axis.set_title(label("integrity.horizontal_title"), color=foreground)
-            elif kind == "GNSS_Vertical_Consistency_Error":
+            if kind == "GNSS_Vertical_Consistency_Error":
                 if vertical_result is None:
                     vertical_result = GnssVerticalConsistency_Build(dataset)
                 vertical_time = (vertical_result.timestamp_us.astype(np.float64)
@@ -2360,6 +2380,8 @@ class FlightExporter:
                 ]:
                     axis.axvline(timestamp, color="#9299a5", linewidth=.8)
                 axis.set_title(label("integrity.vertical_title"), color=foreground)
+                figure.text(.01, .01, label("integrity.vertical_display_explanation"),
+                            color=foreground, fontsize=8, wrap=True)
                 axis.text(.01, .01, label("integrity.vertical_offline_only"),
                           transform=axis.transAxes, color=foreground, fontsize=8)
             else:
