@@ -136,6 +136,13 @@ def test_real_gui_success_build_and_quality(usb_window,qapp,tmp_path_factory,mon
     monkeypatch.setattr(QFileDialog,'getOpenFileName',lambda *a:(compiler,''))
     assert current._ToolchainBrowse('compiler')
     assert not errors,errors
+    # Selecting a location does not establish detected tool availability.
+    # Use the existing real detector, not fabricated ToolStatus entries.
+    assert current.build_page.detect_button.isEnabled()
+    current.build_page.detect_button.click()
+    _Wait(qapp,lambda:current._active_worker is None)
+    assert not errors,errors
+    assert any(view.tool_id=='compiler' and view.status=='found' for view in current.build_page._tools)
     # Exercise the real enabled button after the ordinary Generate operation.
     current.ground_target_page.generate_button.click()
     _Wait(qapp,lambda:current._active_worker is None)

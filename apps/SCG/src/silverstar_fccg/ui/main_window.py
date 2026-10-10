@@ -2154,6 +2154,12 @@ class MainWindow(QMainWindow):
         if not selected:
             return
         model, project, service = deepcopy(self._model), self._project_root, self._service
+        if not (model.ground_target.enabled and model.ground_target.pc_interface == 'usb_cdc'):
+            # Preserve the established UART/legacy callback API.
+            self.Task_Run(lambda context: service.CubeMxProject_Import(
+                Path(selected), model, risk_acknowledged=True, target="ground"),
+                self._GroundCubeMxImport_Complete)
+            return
         def complete(result):
             if self._UsbGroundRequest_Current(model, project):
                 self._GroundCubeMxImport_Complete(result)
@@ -2161,10 +2167,7 @@ class MainWindow(QMainWindow):
             if self._UsbGroundRequest_Current(model, project):
                 self._Error_Show(exception)
         self.Task_Run(
-            lambda context: (UsbGroundFlow_Import(service, Path(selected), model, context)
-                if model.ground_target.enabled and model.ground_target.pc_interface == 'usb_cdc'
-                else service.CubeMxProject_Import(
-                    Path(selected), model, risk_acknowledged=True, target="ground")),
+            lambda context: UsbGroundFlow_Import(service, Path(selected), model, context),
             complete, error,
         )
 
