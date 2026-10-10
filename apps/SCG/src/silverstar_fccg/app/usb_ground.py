@@ -302,7 +302,7 @@ def UsbGroundCandidate_Plan(importer, catalog, model, *, independent_irq_header,
 
 
 
-def UsbGroundCandidate_Export(importer, catalog, model, output, *, independent_irq_header, companion_root=None):
+def UsbGroundCandidate_Export(importer, catalog, model, output, *, independent_irq_header, companion_root=None, task_context=None):
     plan = UsbGroundCandidate_Plan(importer, catalog, model,
         independent_irq_header=independent_irq_header, companion_root=companion_root)
     if plan.result != UsbGroundPlanResult.RenderedCandidate:
@@ -317,7 +317,12 @@ def UsbGroundCandidate_Export(importer, catalog, model, output, *, independent_i
                 raise CubeMxImportError('Select a shorter candidate output path')
         destination.mkdir(parents=True)
         try:
-            for path,body in plan.native_plan.files.items(): policy.Bytes_AtomicWrite(path,body)
+            for index, (path, body) in enumerate(plan.native_plan.files.items(), 1):
+                if task_context is not None:
+                    task_context.Cancel_RaiseIfRequested()
+                policy.Bytes_AtomicWrite(path,body)
+                if task_context is not None:
+                    task_context.Progress_Report(0.1 + 0.8 * index / len(plan.native_plan.files), 'status.generation_running')
             checked=UsbGroundCandidate_Plan(importer,catalog,model,independent_irq_header=independent_irq_header,companion_root=companion_root)
             if checked.model_sha256 != plan.model_sha256:
                 raise CubeMxImportError('C071 model changed during private export')
@@ -329,22 +334,22 @@ def UsbGroundCandidate_Export(importer, catalog, model, output, *, independent_i
             raise
         return NativeGroundCandidateOutputResult(NativeGroundBackendResult.RenderedCandidate,destination,receipt,_Hash_Get(receipt.read_bytes()),C071_LIMITS)
     facts = UsbGroundDeviceFacts_Get(plan.part, independent_irq_header)
-    return NativeGroundCandidate_Export(importer, catalog, model, output, device_facts=facts)
+    return NativeGroundCandidate_Export(importer, catalog, model, output, device_facts=facts, task_context=task_context)
 
 
-def UsbGroundCandidate_Build(importer, catalog, model, project_root, output, *, independent_irq_header, companion_root=None):
+def UsbGroundCandidate_Build(importer, catalog, model, project_root, output, *, independent_irq_header, companion_root=None, task_context=None):
     plan = UsbGroundCandidate_Plan(importer, catalog, model,
         independent_irq_header=independent_irq_header, companion_root=companion_root)
     if plan.result != UsbGroundPlanResult.RenderedCandidate:
         raise CubeMxImportError(plan.detail)
     if plan.part == C071_PART:
         return _C071Candidate_Build(importer,catalog,model,project_root,output,plan,
-            independent_irq_header=independent_irq_header,companion_root=companion_root)
+            independent_irq_header=independent_irq_header,companion_root=companion_root,task_context=task_context)
     facts = UsbGroundDeviceFacts_Get(plan.part, independent_irq_header)
-    return NativeGroundCandidate_Build(importer, catalog, model, project_root, output, device_facts=facts)
+    return NativeGroundCandidate_Build(importer, catalog, model, project_root, output, device_facts=facts, task_context=task_context)
 
 
-def _C071Candidate_Build(importer,catalog,model,project_root,output,plan,*,independent_irq_header,companion_root):
+def _C071Candidate_Build(importer,catalog,model,project_root,output,plan,*,independent_irq_header,companion_root,task_context=None):
     from silverstar_fccg.project.model import ProjectModel_Load
     from silverstar_fccg.build.native_compile import NativeCompile_Run
     from silverstar_fccg.hardware.cubemx_ground import GroundCubeInputs_Get
@@ -373,7 +378,7 @@ def _C071Candidate_Build(importer,catalog,model,project_root,output,plan,*,indep
     token=secrets.token_hex(16)
     args=SimpleNamespace(input=snapshot,output=destination,spi='SPI1',gpio=[],clock_hz=48_000_000,
         runtime_project=project_root/'SilverStar.ssproject', toolchain_prefix=saved.ground_target.build.toolchain_prefix,
-        reviewed_hal=False,native_timer_probe=False,backend_owner_token=token)
+        reviewed_hal=False,native_timer_probe=False,backend_owner_token=token,task_context=task_context)
     failure=None
     try:
         receipt=NativeCompile_Run(args,device_facts=facts,runtime_catalog=catalog,
@@ -395,4 +400,6 @@ def _C071Candidate_Build(importer,catalog,model,project_root,output,plan,*,indep
         'runtime_project_sha256':_Hash_Get(args.runtime_project.read_bytes()),'snapshot_root':str(snapshot.resolve()),
         'compile_receipt_sha256':_Hash_Get(compilation.read_bytes()) if compilation.is_file() else None,
         'failure':failure,'limits':C071_LIMITS})
+    if task_context is not None:
+        task_context.Cancel_RaiseIfRequested()
     return NativeGroundCandidateOutputResult(result,destination,receipt,_Hash_Get(receipt.read_bytes()),failure or C071_LIMITS)

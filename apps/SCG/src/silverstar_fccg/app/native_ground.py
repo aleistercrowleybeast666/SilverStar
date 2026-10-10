@@ -222,7 +222,7 @@ def _Receipt_Write(output: Path, data: dict) -> Path:
 
 def NativeGroundCandidate_Export(importer: CubeMxImporter, catalog: PluginCatalog,
                                  model: ProjectModel, output: Path, *,
-                                 device_facts: NativeDeviceFacts) -> NativeGroundCandidateOutputResult:
+                                 device_facts: NativeDeviceFacts, task_context=None) -> NativeGroundCandidateOutputResult:
     plan = NativeGroundCandidate_Plan(importer, catalog, model, device_facts=device_facts)
     destination = _Output_Validate(importer, model, output)
     for path in plan.files:
@@ -232,8 +232,12 @@ def NativeGroundCandidate_Export(importer: CubeMxImporter, catalog: PluginCatalo
     destination.mkdir(parents=True)
     policy = WorkspacePolicy(destination)
     try:
-        for path, content in plan.files.items():
+        for index, (path, content) in enumerate(plan.files.items(), 1):
+            if task_context is not None:
+                task_context.Cancel_RaiseIfRequested()
             policy.Bytes_AtomicWrite(path, content)
+            if task_context is not None:
+                task_context.Progress_Report(0.1 + 0.8 * index / len(plan.files), 'status.generation_running')
         _Snapshot_Inspect(importer, model, device_facts)
         if _Hash_Get(_Json_Encode(model.Dictionary_Get())) != plan.model_sha256:
             raise CubeMxImportError("Native model changed during candidate render")
@@ -253,7 +257,7 @@ def NativeGroundCandidate_Export(importer: CubeMxImporter, catalog: PluginCatalo
 
 def NativeGroundCandidate_Build(importer: CubeMxImporter, catalog: PluginCatalog,
                                 model: ProjectModel, project_root: Path, output: Path, *,
-                                device_facts: NativeDeviceFacts) -> NativeGroundCandidateOutputResult:
+                                device_facts: NativeDeviceFacts, task_context=None) -> NativeGroundCandidateOutputResult:
     saved = ProjectModel_Load(project_root / "SilverStar.ssproject")
     if _Json_Encode(saved.Dictionary_Get()) != _Json_Encode(model.Dictionary_Get()):
         raise CubeMxImportError("Save the exact bound native project before candidate build")
@@ -267,7 +271,7 @@ def NativeGroundCandidate_Build(importer: CubeMxImporter, catalog: PluginCatalog
         spi=binding["spi"], gpio=binding["gpio"], clock_hz=binding["hclk_hz"],
         runtime_project=project_root / "SilverStar.ssproject",
         toolchain_prefix=saved.ground_target.build.toolchain_prefix,
-        reviewed_hal=False, native_timer_probe=False)
+        reviewed_hal=False, native_timer_probe=False, task_context=task_context)
     owner_token = secrets.token_hex(16)
     args.backend_owner_token = owner_token
     started = datetime.now(timezone.utc).isoformat()
@@ -298,5 +302,7 @@ def NativeGroundCandidate_Build(importer: CubeMxImporter, catalog: PluginCatalog
             "compile_receipt_sha256": _Hash_Get(compile_receipt.read_bytes()) if compile_receipt.is_file() else None,
             "binding": binding, "failure": failure, "limits": LIMITS}
     receipt = _Receipt_Write(destination, data)
+    if task_context is not None:
+        task_context.Cancel_RaiseIfRequested()
     return NativeGroundCandidateOutputResult(result, destination, receipt,
         _Hash_Get(receipt.read_bytes()), failure or LIMITS)

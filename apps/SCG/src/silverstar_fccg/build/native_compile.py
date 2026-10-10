@@ -14,6 +14,8 @@ import os
 import re
 import struct
 import subprocess
+import time
+from silverstar_fccg.core.task import TaskCancelledError
 
 SCG=Path(__file__).resolve().parents[3]
 from silverstar_fccg.hardware.native_classic_cdc import NativeDeviceFacts, NativeMemoryRegion, NativeClassicCdc_Inspect, NATIVE_PREFIX
@@ -25,6 +27,11 @@ from silverstar_fccg.generator.native_clock_probe import NativeTimerProbe_FilesR
 
 
 def NativeCompile_Run(args, *, device_facts=None, runtime_catalog=None, prepared_candidate=None):
+    context = getattr(args, 'task_context', None)
+    def cancelled_check():
+        if context is not None:
+            context.Cancel_RaiseIfRequested()
+    cancelled_check()
     timer_probe=getattr(args,'native_timer_probe',False)
     if timer_probe and (args.clock_hz is None or args.runtime_project is not None or args.reviewed_hal):
         raise ValueError('Private timer probe needs --clock-hz, includes HAL once, and is separate from Ground runtime')
@@ -55,6 +62,7 @@ def NativeCompile_Run(args, *, device_facts=None, runtime_catalog=None, prepared
         (output/'backend-owner.json').write_text(json.dumps({'token':args.backend_owner_token}),encoding='utf-8')
     original_hashes={p:hashlib.sha256(b).hexdigest() for p,b in files.items()}
     for p,b in files.items():
+        cancelled_check()
         dest=output/native_prefix/p; dest.parent.mkdir(parents=True,exist_ok=True); dest.write_bytes(b)
     snapshot_modules=[Path(__file__),SCG/"tools/validation/native_classic_cdc_compile.py",
         SCG/"src/silverstar_fccg/app/native_ground.py",SCG/"src/silverstar_fccg/app/service.py",
@@ -72,6 +80,10 @@ def NativeCompile_Run(args, *, device_facts=None, runtime_catalog=None, prepared
     if prepared_candidate is not None:
         snapshot_modules += [p for p in (SCG/'src/silverstar_fccg').rglob('*.py') if p.is_file()]
         snapshot_modules += list((SCG/'tests').glob('test_usb*.py'))
+    if args.runtime_project is not None:
+        snapshot_modules += [SCG/('src/silverstar_fccg/'+p) for p in (
+            'app/usb_ground.py', 'app/usb_ground_flow.py', 'generator/native_control.py',
+            'generator/c071_candidate.py', 'generator/c071_lifecycle.py')]
     snapshot_modules=list(dict.fromkeys(snapshot_modules))
     (output/"source-snapshot.json").write_text(json.dumps({
         "source_commit":subprocess.check_output(["git","-C",str(SCG),"rev-parse","HEAD"],text=True).strip(),
@@ -139,9 +151,19 @@ def NativeCompile_Run(args, *, device_facts=None, runtime_catalog=None, prepared
         graph["sources"].append("Common/Src/silverstar_assert.c")
         graph["include_dirs"].extend(["Generated/Inc","Platform/Inc","Common/Inc"])
     for path,content in experimental_files.items():
+        cancelled_check()
         dest=output/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
     compiler=args.toolchain_prefix+"gcc"
     environment=os.environ.copy()
+    if args.runtime_project is not None:
+        from copy import deepcopy
+        from silverstar_fccg.build.runner import BuildRunner, BuildAction
+        from silverstar_fccg.core.workspace import WorkspacePolicy
+        selected = deepcopy(model)
+        from dataclasses import replace
+        selected.build = replace(selected.ground_target.build, tool_paths={
+            **model.build.tool_paths, **selected.ground_target.build.tool_paths})
+        environment = BuildRunner(WorkspacePolicy(output))._Environment_Get(selected, BuildAction.BUILD)
     for name in ("CPATH","C_INCLUDE_PATH","CPLUS_INCLUDE_PATH","OBJC_INCLUDE_PATH","DEPENDENCIES_OUTPUT","SUNPRO_DEPENDENCIES","GCC_EXEC_PREFIX","COMPILER_PATH"):
         environment.pop(name,None)
     commands=[]
@@ -149,13 +171,46 @@ def NativeCompile_Run(args, *, device_facts=None, runtime_catalog=None, prepared
     log=output/"commands.log"
 
     def run(command):
-        result=subprocess.run(command,cwd=output,env=environment,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=120)
+        cancelled_check()
+        process = subprocess.Popen(command, cwd=output, env=environment, text=True,
+            encoding='utf-8', errors='replace', stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        deadline = time.monotonic() + 120
+        interrupted = None
+        while True:
+            try:
+                stdout, _ = process.communicate(timeout=0.1)
+                break
+            except subprocess.TimeoutExpired:
+                try:
+                    cancelled_check()
+                    if time.monotonic() >= deadline:
+                        raise TimeoutError('Native compiler command exceeded 120 seconds')
+                except (TaskCancelledError, TimeoutError) as error:
+                    interrupted = error
+                    # This PID belongs to the compiler started immediately above.
+                    # On Windows retire its cc1/as children before collecting output.
+                    if os.name == 'nt':
+                        subprocess.run(['taskkill', '/PID', str(process.pid), '/T', '/F'],
+                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=10)
+                    else:
+                        process.kill()
+                    stdout, _ = process.communicate(timeout=10)
+                    break
         with log.open("a",encoding="utf-8") as stream:
-            stream.write(json.dumps(command)+"\n"+result.stdout+"\nEXIT "+str(result.returncode)+"\n")
-        commands.append({"command":command,"exit":result.returncode})
-        warning_diagnostics.extend(line for line in result.stdout.splitlines() if "warning:" in line)
-        if result.returncode: raise ValueError("native validation command failed; see "+str(log))
-        return result.stdout
+            stream.write(json.dumps(command)+"\n"+stdout+"\nEXIT "+str(process.returncode)+"\n")
+        commands.append({"command":command,"exit":process.returncode,
+                         "interrupted":type(interrupted).__name__ if interrupted else None})
+        warning_diagnostics.extend(line for line in stdout.splitlines() if "warning:" in line)
+        if context is not None and interrupted is None:
+            context.Line_Report('> ' + ' '.join(command))
+            for line in stdout.splitlines():
+                context.Line_Report(line)
+            context.Progress_Report(min(0.99, len(commands) / command_total), 'status.build_running')
+        if interrupted is not None:
+            raise interrupted
+        cancelled_check()
+        if process.returncode: raise ValueError("native validation command failed; see "+str(log))
+        return stdout
 
     flags=[*graph["mcu_flags"],*["-I"+p for p in graph["include_dirs"]],*["-D"+d for d in graph["defines"]]]
     # Declarations must agree with actual headers, and the compiler must select
@@ -210,6 +265,10 @@ uint8_t CDC_Transmit_FS(uint8_t *, uint16_t);
     if timer_probe:
         for path,content in experimental_files.items():
             dest=output/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+    command_total = 1 + 2 * (3 * len(graph['sources']) + 2 * len(graph['asm_sources']) + 5)
+    if context is not None:
+        context.Progress_Report(0.0, 'status.build_running')
+        context.Line_Report(f'USB native compiler plan: {command_total} commands including analyzer, ELF/CPU/IRQ audits')
     objects=[]
     started=datetime.now(timezone.utc).isoformat()
     try:
@@ -289,7 +348,7 @@ uint8_t CDC_Transmit_FS(uint8_t *, uint16_t);
         if warning_diagnostics:
             raise ValueError("Native warning diagnostics require independent review; strict no-warning acceptance FAILED")
     except Exception as error:
-        status="FAILED"; failure=str(error)
+        status="CANCELLED" if isinstance(error, TaskCancelledError) else "FAILED"; failure=str(error)
         raise
     finally:
         receipt={"status":status,"started_utc":started,"finished_utc":datetime.now(timezone.utc).isoformat(),
@@ -321,7 +380,7 @@ uint8_t CDC_Transmit_FS(uint8_t *, uint16_t);
           "toolchain_version":locals().get("version"),
           "warning_diagnostics":warning_diagnostics,
           "no_warning_gate":"FAIL" if warning_diagnostics else "NO_RECORDED_WARNING",
-          "facts":facts_json,"contract":proof,"commands":commands,"graph":graph,"input_sha256":original_hashes,
+          "planned_command_total":command_total,"facts":facts_json,"contract":proof,"commands":commands,"graph":graph,"input_sha256":original_hashes,
           "output_artifact_sha256":{str(p.relative_to(output)):hashlib.sha256(p.read_bytes()).hexdigest() for p in output.rglob("*") if p.is_file() and p.suffix in {".elf",".map",".o",".su",".d",".s",".bin"}},
           "failure":locals().get("failure"),"limits":"PRIVATE CANDIDATE ONLY. NOT PROVEN: manual critical-contract acceptance, complete EP0/async lifecycle, physical memory authority beyond caller review, MCU tick/radio timing, whole-program stack/WCET and hardware. Source/ABI closure and private generated Ground compilation are recorded only for this snapshot. Normal native generation remains blocked; no board access."}
         (output/"receipt.json").write_text(json.dumps(receipt,indent=2),encoding="utf-8")
