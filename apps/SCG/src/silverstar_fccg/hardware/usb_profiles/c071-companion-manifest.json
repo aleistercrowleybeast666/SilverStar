@@ -1,0 +1,105 @@
+{
+  "profile": "C071FBP6_MINI_USB_V1",
+  "source_commits": [
+    {
+      "repo": "https://github.com/STMicroelectronics/stm32c0-classic-coremw-apps",
+      "commit": "334655ed5eb719db18fa5990a5044332eeca59dc",
+      "prefix": ""
+    },
+    {
+      "repo": "https://github.com/STMicroelectronics/cmsis-device-c0",
+      "commit": "311fc3cfd91898974a583ce15261fd7aacb8cf2f",
+      "prefix": "Drivers/CMSIS/Device/ST/STM32C0xx/"
+    },
+    {
+      "repo": "https://github.com/STMicroelectronics/stm32c0xx-hal-driver",
+      "commit": "a8515e2d45fa28201fe769b3b27fe1bbdf237c50",
+      "prefix": "Drivers/STM32C0xx_HAL_Driver/"
+    },
+    {
+      "repo": "https://github.com/STMicroelectronics/stm32-mw-usb-device",
+      "commit": "947131e000d1ecebc260f22010fa75486c50b423",
+      "prefix": "Middlewares/ST/STM32_USB_Device_Library/"
+    }
+  ],
+  "files_sha256": {
+    "HardwareGenerated/C071ClassicCDC/Upstream/LICENSE.md": "effc9e8a8ebe8de11cef6d0afc2cad395c8fd039aa6b522495c4f99c71f2a796",
+    "HardwareGenerated/C071ClassicCDC/USB_Device/App/usb_device.c": "a9f8c728661aedd10724a2ff1938a28a69ce0308cfd5359a8534f95afda25993",
+    "HardwareGenerated/C071ClassicCDC/USB_Device/App/usb_device.h": "e9e59db9ef7b117940d7f3a7c7e56c321ddd45cd50e4845648942b6eaf76751f",
+    "HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_cdc_if.c": "917736bf53803912785894fef3d78408a2ed5612345952b9432eb8fcc0ab2af5",
+    "HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_cdc_if.h": "1833c814cff004bb16dd5ff2698bf0209eb72493b62759685772d9b665ff9e5c",
+    "HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_desc.c": "cb4a5f84594d7ff44fd2b772a83a8e9bff07a110be846f372b2df3cc7a000c05",
+    "HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_desc.h": "1c6b04d788a92da35def548a68ad74ee5a6bc9a95bd286b431f4ce361895a2ab",
+    "HardwareGenerated/C071ClassicCDC/USB_Device/Target/usbd_conf.c": "8135a146b684745bac67a69d8ca257101c0855d7ce187a423c00f7e1255b4e3b",
+    "HardwareGenerated/C071ClassicCDC/USB_Device/Target/usbd_conf.h": "352473d22d7ddb5da5a6a443effe9b0d4591122f73ed4bf1cab01a7e012ffaf0",
+    "HardwareGenerated/C071ClassicCDC/Upstream/README.md": "a2d8c5ccd48fa3d55445b5ddb0c9c54e27cca6321b4e39771e1e26c09c34da5d",
+    "HardwareGenerated/C071ClassicCDC/Upstream/Release_Notes.html": "f5467658b7cd75abb53602c8c2bf3a3247f3e99c1ee31ffa4ec50c2d6ae6bb84",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h": "3ea35b19e264217c3bd1d433c75f4e093930ea83cdf63aa88aee77748a9fc7dc",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc_if_template.h": "6ea2d95f93f3393c84a72a96a99e2534d176337295a69b6692b189dfdfeeb05f",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c": "5229bac9e3df38c7602b3d8790e73ebfff4395da011fb8fac57aaea48a48b407",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc_if_template.c": "fecdea035bf4662755b18fb53f528e4d6ff58ee138d3f823e447b3b8210909e9",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_conf_template.h": "e699363b680368bbd4d2e034a2b0b723ee839581a27b10a88c717302a02ce118",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h": "a6c2dfc99fabefe4db7c4c145b4ab87d6b992e3fbd15cc65ecc1c7f9d2086f78",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h": "f8897c9b47f97b6ca78c72b857d20fb2a2b0d85091a2362799165cdfa863e3cc",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h": "1588736a66291a09de7aa69a5945574566413fefb84c0a7896dc088d174086a9",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_desc_template.h": "4802cc5149b8a5ac414d10b83e5023a5d8501634d3a02e5e2dcedf0299e5602a",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h": "8a2d44f0cc1c34c21eb75e01cec568b45b901678fba9ca2dc3b0c9a9f0364e7c",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_conf_template.c": "ba1530b4ddb11b3f4b3f03c0c9d270110f9eb40f21f32b1038bd85f8c0692e9d",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c": "21647e3c0537a8d56cd67cc67951206f7a84501acd74d0c8a827c13e192183c5",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c": "5f1c211ed991e074589c82bc52571357a268f36776111d99a85539df53fd80f0",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_desc_template.c": "5bc71ab2e28075699d4e808bd3c33cdaaaa5daa1ed9513b6c473b1a02f32cd42",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c": "7df0e6888230c6e0e4af31278853ae1accdf5728288ab2d1a1190a5692157038",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/LICENSE.md": "2925956f5c102172a6ee52deb66a6e878a9940062d82aeef3841647e21596501",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/README.md": "6055dcc368ca2b6a49e617470a20baf04f482f890322c789c1d5a471449d2f37",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Release_Notes.html": "1fb25224779455645ae94416380923936ca6449165242ae33217d52120261974",
+    "HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c": "aef992bfe1774b750790e8e5dc0dc1b8aae97f9a05084f03f9530bd81db53dde",
+    "HardwareGenerated/C071ClassicCDC/Reviewed/Patches/usbd_cdc-ep0-v1.patch": "96d9c89e79f30999b92b983bc7461ce3129d3eaf6ee44e2972491e2650124c10",
+    "HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_core.c": "e1091db93fd530c8dd05c58b7ec5544ad12a832b0f5847d41ff5647890b78f77",
+    "HardwareGenerated/C071ClassicCDC/Reviewed/Patches/usbd_core-ep0-v1.patch": "b778b780d734d7de23e257adf9a2d7ac99e5f1436aa6a822d217e8099103fb11",
+    "HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_ioreq.c": "2613da8858008ccbcf47669845ac6a7d1dd7c5075b19f946fa16399d86d508a2",
+    "HardwareGenerated/C071ClassicCDC/Reviewed/Patches/usbd_ioreq-ep0-v1.patch": "96c12dde975cf95fadd2075555a3d0e88020a93c4e8a0596f04158aa400ec9ef"
+  },
+  "native_hal_cmsis_startup_linker_in_companion": false,
+  "version": "0.1.1",
+  "vendor_patches": [
+    {
+      "id": "usbd_cdc-ep0-v1",
+      "owner": "SilverStar C071 fixed mini integration",
+      "reason": "P2 control-result propagation, bounded fresh response and EP0 ordinary rejection",
+      "upstream_commit": "947131e000d1ecebc260f22010fa75486c50b423",
+      "original_path": "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c",
+      "original_sha256": "5229bac9e3df38c7602b3d8790e73ebfff4395da011fb8fac57aaea48a48b407",
+      "derived_path": "HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c",
+      "derived_sha256": "aef992bfe1774b750790e8e5dc0dc1b8aae97f9a05084f03f9530bd81db53dde",
+      "patch_path": "HardwareGenerated/C071ClassicCDC/Reviewed/Patches/usbd_cdc-ep0-v1.patch",
+      "patch_sha256": "96d9c89e79f30999b92b983bc7461ce3129d3eaf6ee44e2972491e2650124c10",
+      "diff_encoding": "UTF-8; original CRLF normalized to LF before unified diff; original payload bytes unchanged"
+    },
+    {
+      "id": "usbd_core-ep0-v1",
+      "owner": "SilverStar C071 fixed mini integration",
+      "reason": "P2 control-result propagation, bounded fresh response and EP0 ordinary rejection",
+      "upstream_commit": "947131e000d1ecebc260f22010fa75486c50b423",
+      "original_path": "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c",
+      "original_sha256": "21647e3c0537a8d56cd67cc67951206f7a84501acd74d0c8a827c13e192183c5",
+      "derived_path": "HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_core.c",
+      "derived_sha256": "e1091db93fd530c8dd05c58b7ec5544ad12a832b0f5847d41ff5647890b78f77",
+      "patch_path": "HardwareGenerated/C071ClassicCDC/Reviewed/Patches/usbd_core-ep0-v1.patch",
+      "patch_sha256": "b778b780d734d7de23e257adf9a2d7ac99e5f1436aa6a822d217e8099103fb11",
+      "diff_encoding": "UTF-8; original CRLF normalized to LF before unified diff; original payload bytes unchanged"
+    },
+    {
+      "id": "usbd_ioreq-ep0-v1",
+      "owner": "SilverStar C071 fixed mini integration",
+      "reason": "P2 control-result propagation, bounded fresh response and EP0 ordinary rejection",
+      "upstream_commit": "947131e000d1ecebc260f22010fa75486c50b423",
+      "original_path": "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c",
+      "original_sha256": "7df0e6888230c6e0e4af31278853ae1accdf5728288ab2d1a1190a5692157038",
+      "derived_path": "HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_ioreq.c",
+      "derived_sha256": "2613da8858008ccbcf47669845ac6a7d1dd7c5075b19f946fa16399d86d508a2",
+      "patch_path": "HardwareGenerated/C071ClassicCDC/Reviewed/Patches/usbd_ioreq-ep0-v1.patch",
+      "patch_sha256": "96c12dde975cf95fadd2075555a3d0e88020a93c4e8a0596f04158aa400ec9ef",
+      "diff_encoding": "UTF-8; original CRLF normalized to LF before unified diff; original payload bytes unchanged"
+    }
+  ]
+}

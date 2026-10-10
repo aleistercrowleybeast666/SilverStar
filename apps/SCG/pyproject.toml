@@ -24,7 +24,7 @@ where = ["src"]
 version = {attr = "silverstar_fccg.app.version.__version__"}
 
 [tool.setuptools.package-data]
-silverstar_fccg = ["i18n/*.json", "ui/assets/*.svg"]
+silverstar_fccg = ["i18n/*.json", "ui/assets/*.svg", "hardware/usb_profiles/*.json"]
 
 [tool.pytest.ini_options]
 addopts = "-ra --basetemp=.work/pytest"
