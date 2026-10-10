@@ -1,0 +1,44 @@
+--- HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c
++++ HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_core.c
+@@ -572,6 +572,7 @@
+       break;
+   }
+ 
++  if (ret != USBD_OK) { USBD_CtlError(pdev, &pdev->request); }
+   return ret;
+ }
+ 
+@@ -630,20 +631,19 @@
+             break;
+         }
+ 
+-        if (idx < USBD_MAX_SUPPORTED_CLASS)
+-        {
+-          /* Setup the class ID and route the request to the relative class function */
+-          if (pdev->dev_state == USBD_STATE_CONFIGURED)
+-          {
+-            if (pdev->pClass[idx]->EP0_RxReady != NULL)
+-            {
+-              pdev->classId = idx;
+-              pdev->pClass[idx]->EP0_RxReady(pdev);
+-            }
+-          }
+-        }
+-
+-        (void)USBD_CtlSendStatus(pdev);
++        ret = USBD_FAIL;
++        if ((idx < USBD_MAX_SUPPORTED_CLASS) && (pdev->dev_state == USBD_STATE_CONFIGURED) &&
++            (pdev->pClass[idx] != NULL) && (pdev->pClass[idx]->EP0_RxReady != NULL))
++        {
++          pdev->classId = idx;
++          ret = (USBD_StatusTypeDef)pdev->pClass[idx]->EP0_RxReady(pdev);
++        }
++        if (ret != USBD_OK)
++        {
++          USBD_CtlError(pdev, &pdev->request);
++          return ret; /* Failed or late OUT completion must never receive a status ACK. */
++        }
++        ret = USBD_CtlSendStatus(pdev);
+       }
+     }
+   }

@@ -1,0 +1,60 @@
+{
+  "source_commit": "80db26338bba77950a9b8e9bbc03d8a77e33567b",
+  "evidence_commit": "c55bdc3a16514f62c9a92b6a7582a7bbcdf132a3",
+  "scope": "ordinary valid single-FS lifecycle and public cleanup failures; archive-only",
+  "p1": [],
+  "p2": [
+    {
+      "title": "F103 Reset/Disconnect discard class DeInit failure and report USBD_OK",
+      "introduced_by_this_increment": false,
+      "newly_confirmed_in_review": true,
+      "locations": [
+        "Generated F103 usbd_core.c:462",
+        "Generated F103 usbd_core.c:592",
+        "apps/SCG/src/silverstar_fccg/generator/native_control.py:39"
+      ],
+      "trigger": "Valid configured session followed by ordinary Reset/Disconnect and one CloseEP failure",
+      "actual": "USBD_OK=0 while allocated=1, frees_delta=0, DEFAULT and class retained; session invalid and writes BUSY",
+      "expected": "Non-OK public result, retaining class/bytes until cleanup retry",
+      "minimal_fix": "Propagate class DeInit result in owning generator; retain resource path and validate fresh output",
+      "evidence": "independent-public-return/evidence.json"
+    }
+  ],
+  "closed_prior_p3": "C071 saved-project/snapshot paths and hashes match fixed archived model/index/receipts",
+  "independent_original_scenarios": {
+    "F103": {
+      "passed": 12,
+      "failed": 0
+    },
+    "C071": {
+      "passed": 12,
+      "failed": 0
+    }
+  },
+  "independent_supplemental": {
+    "F103": {
+      "passed": 0,
+      "failed": 2
+    },
+    "C071": {
+      "passed": 2,
+      "failed": 0
+    }
+  },
+  "manifest_verified": 604,
+  "archive_git_files": 605,
+  "formal_usb": "BLOCKED",
+  "independent_safety_review": "NO_PASSED_OUTCOME",
+  "no_hardware_or_current_worktree_reads": true,
+  "no_code_changes_or_merge": true,
+  "uncovered": [
+    "native HAL/PCD/PMA/IRQ",
+    "LL Stop/DeInit failure injection",
+    "complete EP0/async lifecycle",
+    "all IRQ/main interleavings",
+    "manual critical contracts",
+    "stack/WCET",
+    "hardware"
+  ],
+  "source_snapshot_retention_gap": "Full generated source-snapshot.json absent from c55 subset; new lifecycle module byte-snapshot coverage not independently complete"
+}

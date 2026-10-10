@@ -1,0 +1,14 @@
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc_ex.c:95:19:HAL_RCCEx_PeriphCLKConfig	40	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc_ex.c:253:6:HAL_RCCEx_GetPeriphCLKConfig	0	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc_ex.c:309:10:HAL_RCCEx_GetPeriphCLKFreq	8	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc_ex.c:520:6:HAL_RCCEx_EnableLSCO	40	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc_ex.c:545:6:HAL_RCCEx_DisableLSCO	0	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc_ex.c:627:6:HAL_RCCEx_CRSConfig	0	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc_ex.c:669:6:HAL_RCCEx_CRSSoftwareSynchronizationGenerate	0	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc_ex.c:679:6:HAL_RCCEx_CRSGetSynchronizationInfo	0	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc_ex.c:712:10:HAL_RCCEx_CRSWaitSynchronization	32	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc_ex.c:860:13:HAL_RCCEx_CRS_SyncOkCallback	0	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc_ex.c:871:13:HAL_RCCEx_CRS_SyncWarnCallback	0	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc_ex.c:882:13:HAL_RCCEx_CRS_ExpectedSyncCallback	0	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc_ex.c:898:13:HAL_RCCEx_CRS_ErrorCallback	0	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc_ex.c:795:6:HAL_RCCEx_CRS_IRQHandler	8	static

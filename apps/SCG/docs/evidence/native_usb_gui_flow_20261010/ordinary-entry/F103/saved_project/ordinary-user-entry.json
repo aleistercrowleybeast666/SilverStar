@@ -1,0 +1,9 @@
+{
+  "part": "F103",
+  "scope": "ProjectDraft_Create default, existing USB combo/import-directory button/save/reload/generate button",
+  "source": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\usb-validation\\cube-f103-usb",
+  "output": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ue01\\usb-726ce676673c",
+  "backend_loaded_private_model": false,
+  "formal_release": false,
+  "build_route": "Same existing ground Build handler exercised by ug08; no new ARM build claimed here"
+}
