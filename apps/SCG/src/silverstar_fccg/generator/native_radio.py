@@ -4,12 +4,12 @@ import re
 from silverstar_fccg.generator.native_hal import NativeC_FunctionSpanGet
 
 
-def NativeRadioHal_Derive(original: bytes) -> bytes:
+def NativeRadioHal_Derive(original: bytes, *, context_header="native_clock.h", context_expression="NativeClock_ContextAllowedGet()") -> bytes:
     if hashlib.sha256(original).hexdigest() != 'b8caf4dd85dd3307897fa8f923adcaf7153b0d4c91a787eb58537d0b34eb783d':
         raise ValueError('Native radio HAL payload profile changed; review its ownership contract')
     source = original.decode('utf-8-sig')
     source = source.replace('#include "platform_time.h"',
-        '#include "platform_time.h"\n#include "native_clock.h"',1)
+        '#include "platform_time.h"\n#include "'+context_header+'"',1)
     start,_opening,end=NativeC_FunctionSpanGet(source,'SX1280HalWakeup')
     function=source[start:end]
     enter='    PlatformCriticalState critical_state = PlatformCritical_Enter();'
@@ -21,6 +21,7 @@ def NativeRadioHal_Derive(original: bytes) -> bytes:
     SILVERSTAR_ASSERT(NativeClock_ContextAllowedGet() != 0U,
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);''',1)
     function=function.replace(exit,'',1)
+    function=function.replace('NativeClock_ContextAllowedGet()',context_expression)
     return (source[:start]+function+source[end:]).encode('utf-8')
 
 

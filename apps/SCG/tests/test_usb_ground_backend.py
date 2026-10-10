@@ -50,14 +50,14 @@ def test_c071_save_reload_recipe_and_source_preservation(c071, tmp_path_factory)
     reloaded.hardware_importer = CubeMxImporter(reloaded.policy, service.hardware_importer.cache_root)
     reloaded.catalog = service.catalog
     plan = reloaded.UsbGroundCandidate_Plan(model, independent_irq_header=header, companion_root=companion)
-    assert plan.result == UsbGroundPlanResult.BlockedFirmwareIntegration
-    assert plan.native_plan is None
+    assert plan.result == UsbGroundPlanResult.RenderedCandidate
+    assert plan.native_plan is not None
     assert plan.capability_facts == {'native_pcd': True, 'native_classic_cdc': False,
         'companion_source_identity_verified': True, 'cdc_runtime_accepted': False, 'formal_release': False}
     assert plan.source_snapshot_id == result.imported.hardware.snapshot_id
     assert plan.model_sha256 == hashlib.sha256(json.dumps(model.Dictionary_Get(), sort_keys=True,
         separators=(',', ':'), ensure_ascii=False).encode()).hexdigest()
-    assert plan.recipe_plan['firmware_files_rendered'] is False
+    assert plan.recipe_plan['firmware_files_rendered'] is True
     assert 'HardwareGenerated/STM32CubeMX/Core/Src/usb.c' in plan.recipe_plan['effective_build_to_integrate']['build_sources']
     assert 'HardwareGenerated/STM32CubeMX/startup_stm32c071xx.s' in plan.recipe_plan['effective_build_to_integrate']['asm_sources']
     assert model.ground_target.hardware.capabilities == ('usb.native_pcd',)
@@ -95,13 +95,11 @@ def test_c071_all_output_routes_block_before_write(c071, tmp_path_factory):
     project = tmp_path_factory.mktemp('p')
     service.ProjectRoot_Save(model, project, create_new=True)
     output = tmp_path_factory.mktemp('o') / 'candidate'
-    for operation in (
-        lambda: service.UsbGroundCandidate_Export(model, output, independent_irq_header=header, companion_root=companion),
-        lambda: service.UsbGroundCandidate_Build(model, project, output, independent_irq_header=header, companion_root=companion),
-    ):
-        with pytest.raises(CubeMxImportError, match='NOT IMPLEMENTED'):
-            operation()
-        assert not output.exists()
+    exported=service.UsbGroundCandidate_Export(model,output,independent_irq_header=header,companion_root=companion)
+    assert exported.result == NativeGroundBackendResult.RenderedCandidate
+    assert (output/'Generated/ground_source_graph.json').is_file()
+    with pytest.raises(CubeMxImportError,match='new|disjoint|exist'):
+        service.UsbGroundCandidate_Build(model,project,output,independent_irq_header=header,companion_root=companion)
     with pytest.raises(FccgError, match='formal build remains blocked'):
         service.GenerationPlan_Create(model, project)
     with pytest.raises(FccgError, match='formal build remains blocked'):
@@ -196,3 +194,18 @@ def test_real_unified_backend_build_exact_first_batch(bound, tmp_path_factory):
     with Path(os.environ['SILVERSTAR_USB_BACKEND_BUILD_INDEX']).open('a', encoding='utf-8') as stream:
         stream.write(json.dumps({'part':facts.part,'output':str(output),'project':str(project),
             'backend_receipt_sha256':result.receipt_sha256}) + '\n')
+
+
+def test_real_c071_unified_build(c071,tmp_path_factory):
+    assert os.environ.get('SILVERSTAR_USB_BACKEND_ARM')=='1'
+    service,result,header,companion,_source=c071
+    project=tmp_path_factory.mktemp('p');output=tmp_path_factory.mktemp('o')/'b'
+    service.ProjectRoot_Save(result.model,project,create_new=True)
+    built=service.UsbGroundCandidate_Build(result.model,project,output,independent_irq_header=header,companion_root=companion)
+    if os.environ.get('SILVERSTAR_USB_BACKEND_BUILD_INDEX'):
+        with Path(os.environ['SILVERSTAR_USB_BACKEND_BUILD_INDEX']).open('a',encoding='utf8') as stream:
+            stream.write(json.dumps({'part':'STM32C071FBP6','output':str(output),'result':built.result.value})+'\n')
+    assert built.result == NativeGroundBackendResult.CompiledCandidate,built.detail
+    receipt=json.loads((output/'receipt.json').read_text())
+    assert receipt['facts']['core']=='cortex-m0plus' and not receipt['warning_diagnostics']
+    assert receipt['graph']['formal_release'] is False

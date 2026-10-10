@@ -241,7 +241,10 @@ class HardwareInventory:
                 pin_expression = f"GPIO_PIN_{physical_match.group(2)}"
             irq = None
             if pin.exti_line is not None:
-                if pin.exti_line <= 4:
+                if self.mcu_part == "STM32C071FBP6":
+                    irq_name = ("EXTI0_1_IRQn" if pin.exti_line <= 1 else
+                                "EXTI2_3_IRQn" if pin.exti_line <= 3 else "EXTI4_15_IRQn")
+                elif pin.exti_line <= 4:
                     irq_name = f"EXTI{pin.exti_line}_IRQn"
                 elif pin.exti_line <= 9:
                     irq_name = "EXTI9_5_IRQn"
@@ -892,7 +895,8 @@ def _TimebaseInventory_Get(
     if not re.fullmatch(r"TIM\d+", expected_instance):
         if (
             not expected_instance
-            and values.get("Mcu.Family", "").upper() == "STM32F1"
+            and (values.get("Mcu.Family", "").upper() == "STM32F1"
+                 or values.get("Mcu.CPN") == "STM32C071FBP6")
             and values.get("VP_SYS_VS_Systick.Mode", "").casefold() == "systick"
             and values.get("NVIC.SysTick_IRQn", "").casefold().startswith("true")
         ):
@@ -900,10 +904,14 @@ def _TimebaseInventory_Get(
                 "SysTick_Handler" in text and "HAL_IncTick()" in text
                 for text in generated_files.values()
             )
+            if values.get("Mcu.CPN") == "STM32C071FBP6":
+                irq_source = generated_files.get("Core/Src/stm32c0xx_it.c", "")
+                handler = re.search(r"void\s+SysTick_Handler\s*\(void\)\s*\{([^}]+)\}", irq_source)
+                handler_valid = handler is not None and "HAL_IncTick();" in handler[1]
             return TimebaseInventory(
                 kind="systick", irq="SysTick_IRQn", tick_frequency_hz=1000,
                 errors=() if handler_valid else (
-                    "Generated F1 SysTick handler does not advance HAL tick",
+                    "Generated SysTick handler does not advance HAL tick",
                 ),
             )
         return TimebaseInventory(
@@ -1186,7 +1194,11 @@ def CubeMxInventory_Parse(
         if not key.endswith(".Signal"):
             continue
         pin = key[: -len(".Signal")]
-        if not re.fullmatch(r"P[A-K][0-9]+(?:-[A-Z0-9_]+)*", pin):
+        logical_pin = pin
+        if values.get("Mcu.CPN") == "STM32C071FBP6":
+            logical_pin = {("PA11 [PA9]", "USB_DM"): "PA11",
+                           ("PA12 [PA10]", "USB_DP"): "PA12"}.get((pin, signal), pin)
+        if not re.fullmatch(r"P[A-K][0-9]+(?:-[A-Z0-9_]+)*", logical_pin):
             continue
         exti_match = re.search(r"(?:GPXTI|EXTI)(\d+)", signal, re.IGNORECASE)
         mode_value = values.get(
@@ -1200,7 +1212,7 @@ def CubeMxInventory_Parse(
         output_default_value = values.get(f"{pin}.PinState", "")
         pins.append(
             PinInventory(
-                pin=pin,
+                pin=logical_pin,
                 signal=signal,
                 label=values.get(f"{pin}.GPIO_Label", ""),
                 mode=mode_value,

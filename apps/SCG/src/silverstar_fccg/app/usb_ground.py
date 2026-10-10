@@ -1,8 +1,8 @@
 """First-batch USB backend selection and C071 native/companion model binding.
 
 The registry is backend-owned. Project flags, part names and capability labels
-are not admission or release authority. C071 source identity can be bound while
-its firmware renderer/build integration and USB acceptance remain blocked.
+are not admission or release authority. C071 exact native PCD plus companion
+can be rendered and compiled through a private recipe; formal USB acceptance remains blocked.
 Existing F407 private APIs remain available outside this first-batch dispatcher.
 """
 from __future__ import annotations
@@ -20,6 +20,7 @@ from silverstar_fccg.app.native_ground import (
     BINDING_KEY, NativeGroundProjectImportResult, NativeGroundBackendResult,
     NativeGroundProject_Import, NativeGroundCandidate_Plan,
     NativeGroundCandidate_Export, NativeGroundCandidate_Build, _Resources_Get,
+    NativeGroundCandidatePlan, NativeGroundCandidateOutputResult, _Output_Validate, _Receipt_Write,
 )
 from silverstar_fccg.hardware.cubemx import CubeMxImportError, CubeMxImportResult
 from silverstar_fccg.hardware.inventory import CubeMxInventory_Parse
@@ -34,9 +35,8 @@ C071_KEY = "usb_ground_c071_native"
 C071_PROFILE = "C071FBP6_MINI_USB_V1"
 C071_PREFIX = "HardwareGenerated/UsbGroundNative/"
 FIRST_BATCH_PARTS = ("STM32F103C8T6", C071_PART)
-C071_LIMITS = ("C071 native PCD/companion identity and model plan only; firmware "
-    "render/build integration NOT IMPLEMENTED in this backend. Formal USB release "
-    "BLOCKED: b66 independent review has no passed outcome and must not be retried "
+C071_LIMITS = ("PRIVATE C071 native PCD plus pinned classic CDC companion Ground candidate. "
+    "Formal USB release BLOCKED: b66 independent review has no passed outcome and must not be retried "
     "or bypassed. Full EP0/async lifecycle, critical contracts, stack/WCET and hardware NOT PROVEN.")
 _PROFILE_HASHES = {
     "f103-device-facts.json": "7c4ec3cb53e16dc856fdfcc6f87f0be8889df2403e870d719b65b0f4329f3126",
@@ -233,7 +233,7 @@ def UsbGroundProject_Import(importer, catalog, input_path, model, *, part,
         "spi": spi_resource, "gpio": list(gpio_resources), "formal_generation": "BLOCKED"}
     identity, destination = _Snapshot_Store(importer, files, proof)
     candidate = deepcopy(model)
-    binding = {"format_version": 2, "scope": "PRIVATE_USB_GROUND_C071_BINDING",
+    binding = {"format_version": 3, "scope": "PRIVATE_USB_GROUND_C071_RUNTIME",
         "snapshot_id": identity, "profile": C071_PROFILE, "hclk_hz": hclk_hz,
         "formal_generation": "BLOCKED"}
     # No USB CDC runtime capability is granted from a PCD-only native project.
@@ -286,14 +286,20 @@ def UsbGroundCandidate_Plan(importer, catalog, model, *, independent_irq_header,
     expected = result.model.Dictionary_Get()
     expected["ground_target"]["hardware"]["source_label"] = hardware.source_label
     if _Json_Encode(expected) != _Json_Encode(model.Dictionary_Get()):
-        raise CubeMxImportError("C071 saved model/source/resource/capability binding changed")
+        raise CubeMxImportError("C071 saved model/source/resource/capability binding changed; reimport phase-1 models")
     profile = _Profile_Load("c071-native-profile.json")
-    return UsbGroundCandidatePlan(UsbGroundPlanResult.BlockedFirmwareIntegration, part, C071_PROFILE,
-        _Hash_Get(_Json_Encode(model.Dictionary_Get())), identity,
+    from silverstar_fccg.generator.c071_candidate import C071Candidate_Render
+    native, inventory, _ioc, _profile = _C071Native_Inspect(snapshot)
+    files, graph, records = C071Candidate_Render(native, inventory, model, catalog, snapshot, profile)
+    native_plan=NativeGroundCandidatePlan(_Hash_Get(_Json_Encode(model.Dictionary_Get())),
+        identity,C071_PROFILE,files,graph,records)
+    return UsbGroundCandidatePlan(UsbGroundPlanResult.RenderedCandidate, part, C071_PROFILE,
+        native_plan.model_sha256, identity,
         {"native_pcd": True, "native_classic_cdc": False, "companion_source_identity_verified": True,
-         "cdc_runtime_accepted": False, "formal_release": False}, None,
+         "cdc_runtime_accepted": False, "formal_release": False}, native_plan,
         {"effective_build_to_integrate": profile["effective_build"], "companion": proof["companion"],
-         "firmware_files_rendered": False, "native_hal_cmsis_startup_linker_pcd_ownership": "PRESERVED"}, C071_LIMITS)
+         "firmware_files_rendered": True, "native_hal_cmsis_startup_linker_pcd_ownership": "PRESERVED"}, C071_LIMITS)
+
 
 
 def UsbGroundCandidate_Export(importer, catalog, model, output, *, independent_irq_header, companion_root=None):
@@ -301,6 +307,27 @@ def UsbGroundCandidate_Export(importer, catalog, model, output, *, independent_i
         independent_irq_header=independent_irq_header, companion_root=companion_root)
     if plan.result != UsbGroundPlanResult.RenderedCandidate:
         raise CubeMxImportError(plan.detail)
+    if plan.part == C071_PART:
+        destination=_Output_Validate(importer,model,output)
+        from silverstar_fccg.core.workspace import WorkspacePolicy
+        policy=WorkspacePolicy(destination)
+        for path in plan.native_plan.files:
+            policy.RelativePath_Validate(path)
+            if os.name == 'nt' and len(str(destination/path)) >= 248:
+                raise CubeMxImportError('Select a shorter candidate output path')
+        destination.mkdir(parents=True)
+        try:
+            for path,body in plan.native_plan.files.items(): policy.Bytes_AtomicWrite(path,body)
+            checked=UsbGroundCandidate_Plan(importer,catalog,model,independent_irq_header=independent_irq_header,companion_root=companion_root)
+            if checked.model_sha256 != plan.model_sha256:
+                raise CubeMxImportError('C071 model changed during private export')
+            receipt=_Receipt_Write(destination,{'status':'RENDERED_NOT_COMPILED', 'scope':'PRIVATE_C071_GROUND_BACKEND',
+                'model_sha256':plan.model_sha256,'snapshot_id':plan.source_snapshot_id,
+                'files_sha256':{p:_Hash_Get(b) for p,b in plan.native_plan.files.items()},'limits':C071_LIMITS})
+        except Exception as error:
+            _Receipt_Write(destination,{'status':'FAILED_RENDER','failure':str(error),'limits':C071_LIMITS})
+            raise
+        return NativeGroundCandidateOutputResult(NativeGroundBackendResult.RenderedCandidate,destination,receipt,_Hash_Get(receipt.read_bytes()),C071_LIMITS)
     facts = UsbGroundDeviceFacts_Get(plan.part, independent_irq_header)
     return NativeGroundCandidate_Export(importer, catalog, model, output, device_facts=facts)
 
@@ -310,5 +337,60 @@ def UsbGroundCandidate_Build(importer, catalog, model, project_root, output, *, 
         independent_irq_header=independent_irq_header, companion_root=companion_root)
     if plan.result != UsbGroundPlanResult.RenderedCandidate:
         raise CubeMxImportError(plan.detail)
+    if plan.part == C071_PART:
+        return _C071Candidate_Build(importer,catalog,model,project_root,output,plan,
+            independent_irq_header=independent_irq_header,companion_root=companion_root)
     facts = UsbGroundDeviceFacts_Get(plan.part, independent_irq_header)
     return NativeGroundCandidate_Build(importer, catalog, model, project_root, output, device_facts=facts)
+
+
+def _C071Candidate_Build(importer,catalog,model,project_root,output,plan,*,independent_irq_header,companion_root):
+    from silverstar_fccg.project.model import ProjectModel_Load
+    from silverstar_fccg.build.native_compile import NativeCompile_Run
+    from silverstar_fccg.hardware.cubemx_ground import GroundCubeInputs_Get
+    from types import SimpleNamespace
+    import secrets
+    project_root=Path(project_root)
+    saved=ProjectModel_Load(project_root/'SilverStar.ssproject')
+    if _Json_Encode(saved.Dictionary_Get()) != _Json_Encode(model.Dictionary_Get()):
+        raise CubeMxImportError('Save the exact bound C071 model before private build')
+    destination=_Output_Validate(importer,saved,output,project_root)
+    for path in plan.native_plan.files:
+        if os.name == 'nt' and len(str(destination/path)) >= 248:
+            raise CubeMxImportError('Select a shorter candidate output path')
+    snapshot=importer.cache_root/plan.source_snapshot_id/'UsbGroundNative'
+    native,inventory,_ioc,_profile=_C071Native_Inspect(snapshot)
+    facts=UsbGroundDeviceFacts_Get(C071_PART,independent_irq_header)
+    inputs=GroundCubeInputs_Get(snapshot,C071_PART)
+    irqs=dict(facts.irq_numbers)
+    slots={handler:irqs['SysTick_IRQn' if handler=='SysTick_Handler' else handler.removesuffix('_IRQHandler')+'_IRQn']
+        for handler in inputs.irq_handlers}
+    g=plan.native_plan.graph
+    proof={'build':{'sources':[], 'asm_sources':[], 'include_dirs':[], 'defines':g['defines'],
+        'mcu_flags':g['mcu_flags'],'linker_script':'STM32C071XX_FLASH.ld'},
+        'required_irq_handlers':g['required_irq_handlers'], 'independent_irq_slots':slots,
+        'spi_abi':{'tx_buffer_const':True},'gpio_abi':{'read_port_const':True},'scope':'PRIVATE_C071_GROUND_RUNTIME_CANDIDATE'}
+    token=secrets.token_hex(16)
+    args=SimpleNamespace(input=snapshot,output=destination,spi='SPI1',gpio=[],clock_hz=48_000_000,
+        runtime_project=project_root/'SilverStar.ssproject', toolchain_prefix=saved.ground_target.build.toolchain_prefix,
+        reviewed_hal=False,native_timer_probe=False,backend_owner_token=token)
+    failure=None
+    try:
+        receipt=NativeCompile_Run(args,device_facts=facts,runtime_catalog=catalog,
+            prepared_candidate=(proof,inventory,native,dict(plan.native_plan.files),deepcopy(g),deepcopy(plan.native_plan.contract)))
+        if receipt['status'] != 'NATIVE_SOURCE_CPP_GAS_ARM_LINK_AND_ANALYZER_EXECUTED' or receipt['runtime_model_sha256'] != plan.model_sha256:
+            raise CubeMxImportError('C071 shared compiler did not prove the exact saved model')
+        UsbGroundCandidate_Plan(importer,catalog,saved,independent_irq_header=independent_irq_header,companion_root=companion_root)
+        if _Json_Encode(ProjectModel_Load(args.runtime_project).Dictionary_Get()) != _Json_Encode(saved.Dictionary_Get()):
+            raise CubeMxImportError('Saved C071 model changed during build')
+        result=NativeGroundBackendResult.CompiledCandidate
+    except Exception as error:
+        failure=str(error);result=NativeGroundBackendResult.FailedCandidate
+        owner=destination/'backend-owner.json'
+        if not owner.is_file() or json.loads(owner.read_text())['token'] != token: raise
+    compilation=destination/'receipt.json'
+    receipt=_Receipt_Write(destination,{'status':result.value,'scope':'PRIVATE_C071_GROUND_BACKEND',
+        'model_sha256':plan.model_sha256,'snapshot_id':plan.source_snapshot_id,
+        'compile_receipt_sha256':_Hash_Get(compilation.read_bytes()) if compilation.is_file() else None,
+        'failure':failure,'limits':C071_LIMITS})
+    return NativeGroundCandidateOutputResult(result,destination,receipt,_Hash_Get(receipt.read_bytes()),failure or C071_LIMITS)

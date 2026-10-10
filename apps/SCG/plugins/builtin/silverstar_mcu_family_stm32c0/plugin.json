@@ -1,0 +1,181 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.mcu_family.stm32c0",
+  "name": "STM32C071 mini Ground USB backend",
+  "type": "mcu_family",
+  "class": "stm32c0",
+  "version": "0.1.1",
+  "description": "Exact C071FBP6 fixed mini profile; native CubeMX HAL/CMSIS ownership and pinned classic CDC companion. Experimental software support only.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.platform.api",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "platform.stm32c0"
+  ],
+  "build": {
+    "sources": [
+      "Platform/STM32C0/Src/platform_critical_stm32c0.c"
+    ],
+    "include_dirs": [
+      "Platform/STM32C0/Inc"
+    ]
+  },
+  "payload": {
+    "roots": [
+      "Platform/STM32C0"
+    ]
+  },
+  "metadata": {
+    "vendor": "STM32",
+    "family": "STM32C0",
+    "source_policy": "imported_tree_authoritative",
+    "reference": {
+      "vendor_package": "STM32Cube FW_C0 V1.4.1",
+      "validated_software_commit": "df36e89370128378b1fb08f7b982746bfc35dfb4"
+    },
+    "display_names": {
+      "zh_CN": "STM32C0 系列后端",
+      "en_US": "STM32C0 Family Backend"
+    },
+    "usb_control_policy": "GET current seven-byte prefix bounded by host IN maximum; SET setup/data exact-seven validation; real EP0 failures stall without success ACK"
+  },
+  "platform": {
+    "abi": {
+      "id": "silverstar.platform.resources",
+      "major": 1,
+      "minor": 0
+    },
+    "provider": "stm32_cubemx",
+    "build_target": {
+      "profile": "STM32C0"
+    },
+    "match_rules": [
+      {
+        "vendor": "STM32",
+        "exact_part": "STM32C071FBP6",
+        "package_pattern": "TSSOP20_GP",
+        "priority": 10,
+        "specificity": 1000,
+        "verification": "experimental"
+      }
+    ],
+    "resource_binding": {
+      "header": "platform_stm32c0_resources.h",
+      "bindings": {
+        "spi": {
+          "collection": "spis",
+          "include_header": "spi.h",
+          "entry_kind": "handle",
+          "id_type": "PlatformSpiId",
+          "count_symbol": "PLATFORM_SPI_COUNT",
+          "table_symbol": "s_spi_handles",
+          "getter": "PlatformStm32c0Resource_SpiHandleGet",
+          "struct_type": ""
+        },
+        "gpio": {
+          "collection": "gpios",
+          "include_header": "main.h",
+          "entry_kind": "gpio",
+          "id_type": "PlatformGpioId",
+          "count_symbol": "PLATFORM_GPIO_COUNT",
+          "table_symbol": "s_gpio_resources",
+          "getter": "PlatformStm32c0Resource_GpioGet",
+          "struct_type": "PlatformStm32c0GpioResource"
+        },
+        "time": {
+          "collection": "timebases",
+          "include_header": "main.h",
+          "entry_kind": "systick",
+          "id_type": "PlatformTimeId",
+          "count_symbol": "PLATFORM_TIME_COUNT",
+          "table_symbol": "s_time_resources",
+          "getter": "PlatformStm32c0Resource_TimeGet",
+          "struct_type": "PlatformStm32c0TimeResource"
+        }
+      }
+    },
+    "resource_backends": {
+      "spi": {
+        "maturity": "supported",
+        "inventory_kinds": [
+          "spi"
+        ],
+        "sources": [
+          "Platform/STM32C0/Src/platform_spi_stm32c0.c"
+        ],
+        "provider_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "spi.master_blocking"
+        ],
+        "ownership": "shared"
+      },
+      "gpio": {
+        "maturity": "supported",
+        "inventory_kinds": [
+          "gpio_input",
+          "gpio_output",
+          "gpio_interrupt"
+        ],
+        "sources": [
+          "Platform/STM32C0/Src/platform_gpio_stm32c0.c"
+        ],
+        "provider_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "gpio.digital",
+          "gpio.exti"
+        ],
+        "ownership": "single_owner"
+      },
+      "time": {
+        "maturity": "supported",
+        "inventory_kinds": [
+          "time"
+        ],
+        "sources": [
+          "Platform/STM32C0/Src/platform_time_stm32c0.c"
+        ],
+        "provider_sources": [],
+        "include_dirs": [],
+        "defines": [],
+        "capabilities": [
+          "time.monotonic_ms"
+        ],
+        "ownership": "shared"
+      }
+    },
+    "module_providers": {},
+    "compatibility": {
+      "cubemx_versions": [
+        "6.15.0"
+      ],
+      "firmware_packages": [
+        "STM32Cube FW_C0 V1.4.1"
+      ],
+      "source_policy": "imported_tree_authoritative"
+    },
+    "support": {
+      "level": "experimental",
+      "limitations": [
+        "Only STM32C071FBP6 mini fixed pins, Ground classic CDC USB mode",
+        "No Flight, UART PC transport, USBX or general C0 promise",
+        "USB suspend power and hardware validation remain unproven"
+      ]
+    }
+  }
+}

@@ -132,17 +132,19 @@ def Architecture_Check(root: Path) -> dict:
     return graph
 
 
-def Host_Check(root: Path, compiler: str, *, extra_usb_sources: tuple[str, ...] = ()) -> None:
+def Host_Check(root: Path, compiler: str, *, extra_usb_sources: tuple[str, ...] = (), extra_bridge_sources: tuple[str, ...] = (), extra_includes: tuple[str, ...] = ()) -> None:
     # Execute generated bridge sources with bounded RX and PC busy/error injection.
     build = root / 'build/ground-host'
     build.mkdir(parents=True, exist_ok=True)
     tests = root / 'Tests/Host'
     includes = [build, root / 'Ground/Core/Inc', root / 'Ground/Protocol/Inc', root / 'Common/Inc', root / 'Generated/Inc', root / 'Platform/Inc']
+    includes += [root/path for path in extra_includes]
     common = [compiler, '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wvla',
               *['-I' + str(path) for path in includes]]
     bridge = [str(root / path) for path in (
         'Ground/Core/Src/ground_bridge.c', 'Ground/Protocol/Src/gsp_min_protocol.c',
         'Ground/Protocol/Src/protocol_crc16.c', 'Common/Src/silverstar_assert.c')]
+    bridge += list(extra_bridge_sources)
     cases = [('bridge_bounds', bridge + [str(tests / 'pc_session_uart.c')], tests / 'ground_bridge_bounds.c')]
     cases.append(('backpressure', bridge, tests / 'ground_backpressure.c'))
     adapter = root / 'Generated/Src/pc_byte_stream.c'

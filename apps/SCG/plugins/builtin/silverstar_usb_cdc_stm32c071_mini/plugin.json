@@ -1,0 +1,40 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.usb_cdc.stm32c071_mini",
+  "name": "C071 mini pinned classic CDC companion",
+  "type": "platform_api",
+  "class": "usb_cdc",
+  "version": "0.1.1",
+  "description": "Reviewed official classic CDC companion to complete native PCD input; no second HAL/CMSIS/startup/linker. Software only.",
+  "requires": {
+    "components": [],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "usb.classic_cdc.c071_mini"
+  ],
+  "build": {
+    "sources": [],
+    "include_dirs": [],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "HardwareGenerated/C071ClassicCDC"
+    ]
+  },
+  "metadata": {
+    "input_kind": "native_pcd_plus_pinned_classic_cdc",
+    "profile": "C071FBP6_MINI_USB_V1",
+    "support_maturity": "experimental",
+    "companion_manifest_sha256": "8835f4c76e6ea94ceeccf742ec59665157ddf2a089a4a361ad25b2671afcc6d7",
+    "native_profile_sha256": "5c9ad2ccaae3b0bd4a81c00e5c450610f48c82b7d5958c9587b921be82d29589",
+    "vendor_patch_policy": "Original ST bytes retained; three explicit derived sources plus reproducible patches; owned control policy remains Platform first-party"
+  }
+}

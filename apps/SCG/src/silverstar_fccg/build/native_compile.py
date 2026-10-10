@@ -24,7 +24,7 @@ from silverstar_fccg.generator.native_ground import NativeGroundCandidate_Render
 from silverstar_fccg.generator.native_clock_probe import NativeTimerProbe_FilesRender, NativeTimerProbe_MakeRender
 
 
-def NativeCompile_Run(args, *, device_facts=None, runtime_catalog=None):
+def NativeCompile_Run(args, *, device_facts=None, runtime_catalog=None, prepared_candidate=None):
     timer_probe=getattr(args,'native_timer_probe',False)
     if timer_probe and (args.clock_hz is None or args.runtime_project is not None or args.reviewed_hal):
         raise ValueError('Private timer probe needs --clock-hz, includes HAL once, and is separate from Ground runtime')
@@ -42,26 +42,37 @@ def NativeCompile_Run(args, *, device_facts=None, runtime_catalog=None):
             raise ValueError("trusted independent NativeDeviceFacts required")
         facts=device_facts
         facts_json=json.loads(json.dumps(asdict(facts)))
-    proof,inventory,files=NativeClassicCdc_Inspect(root,device_facts=facts,spi_resource=args.spi,gpio_resources=tuple(args.gpio))
+    if prepared_candidate is None:
+        proof,inventory,files=NativeClassicCdc_Inspect(root,device_facts=facts,spi_resource=args.spi,gpio_resources=tuple(args.gpio))
+        native_prefix=NATIVE_PREFIX
+    else:
+        # Prepared input comes only from the backend after exact native/companion/model checks.
+        proof,inventory,files,prepared_files,prepared_graph,prepared_records=prepared_candidate
+        native_prefix='HardwareGenerated/STM32CubeMX/'
+        facts.Facts_Validate()
     output.mkdir(parents=True)
     if getattr(args, 'backend_owner_token', None):
         (output/'backend-owner.json').write_text(json.dumps({'token':args.backend_owner_token}),encoding='utf-8')
     original_hashes={p:hashlib.sha256(b).hexdigest() for p,b in files.items()}
     for p,b in files.items():
-        dest=output/NATIVE_PREFIX/p; dest.parent.mkdir(parents=True,exist_ok=True); dest.write_bytes(b)
+        dest=output/native_prefix/p; dest.parent.mkdir(parents=True,exist_ok=True); dest.write_bytes(b)
     snapshot_modules=[Path(__file__),SCG/"tools/validation/native_classic_cdc_compile.py",
         SCG/"src/silverstar_fccg/app/native_ground.py",SCG/"src/silverstar_fccg/app/service.py",
         SCG/"src/silverstar_fccg/project/model.py",SCG/"src/silverstar_fccg/hardware/native_classic_cdc.py",
         SCG/"src/silverstar_fccg/hardware/native_machine_contract.py",
         SCG/"src/silverstar_fccg/generator/native_hal.py",SCG/"src/silverstar_fccg/generator/native_clock.py"]
     if args.runtime_project is not None:
-        snapshot_modules += [SCG/('src/silverstar_fccg/generator/'+name+'.py') for name in ('native_ground','native_platform','native_runtime','native_no_heap','native_pc','native_usb_data','native_radio','native_clock_tim','native_usb_config','native_usb_indexed')]
+        snapshot_modules += [SCG/('src/silverstar_fccg/generator/'+name+'.py') for name in ('native_ground','native_platform','native_runtime','native_no_heap','native_pc','native_usb_data','native_radio','native_clock_tim','native_usb_config','native_usb_indexed','native_control','ground_usb_control')]
         snapshot_modules += list((SCG/'tests').glob('test_native*.py'))
         snapshot_modules += [SCG/('plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/'+name+'.py') for name in ('check_ground','check_native_ground','check_native_probe')]
     if timer_probe:
         snapshot_modules += [SCG/('src/silverstar_fccg/generator/'+name+'.py') for name in ('native_clock_tim','native_clock_probe','native_usb_config','native_no_heap')]
         snapshot_modules += list((SCG/'tests').glob('test_native*.py'))
         snapshot_modules += [SCG/('plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/'+name+'.py') for name in ('check_native_ground','check_native_probe')]
+    if prepared_candidate is not None:
+        snapshot_modules += [p for p in (SCG/'src/silverstar_fccg').rglob('*.py') if p.is_file()]
+        snapshot_modules += list((SCG/'tests').glob('test_usb*.py'))
+    snapshot_modules=list(dict.fromkeys(snapshot_modules))
     (output/"source-snapshot.json").write_text(json.dumps({
         "source_commit":subprocess.check_output(["git","-C",str(SCG),"rev-parse","HEAD"],text=True).strip(),
         "dirty_diff":subprocess.check_output(["git","-C",str(SCG),"diff","--binary"],text=True),
@@ -71,13 +82,19 @@ def NativeCompile_Run(args, *, device_facts=None, runtime_catalog=None):
     tools=SCG/"plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools"
     spec=importlib.util.spec_from_file_location("native_dependency_contract",tools/"ground_artifact_contract.py")
     dependencies=importlib.util.module_from_spec(spec); spec.loader.exec_module(dependencies)
-    graph={**proof["build"],"sources":[NATIVE_PREFIX+p for p in proof["build"]["sources"]],
-           "asm_sources":[NATIVE_PREFIX+p for p in proof["build"]["asm_sources"]],
-           "include_dirs":[NATIVE_PREFIX+p for p in proof["build"]["include_dirs"]],
-           "required_irq_handlers":proof["required_irq_handlers"],"linker_script":NATIVE_PREFIX+proof["build"]["linker_script"]}
+    graph={**proof["build"],"sources":[native_prefix+p for p in proof["build"]["sources"]],
+           "asm_sources":[native_prefix+p for p in proof["build"]["asm_sources"]],
+           "include_dirs":[native_prefix+p for p in proof["build"]["include_dirs"]],
+           "required_irq_handlers":proof["required_irq_handlers"],"linker_script":native_prefix+proof["build"]["linker_script"]}
     experiments={}
     experimental_files={}
-    if timer_probe:
+    if prepared_candidate is not None:
+        from silverstar_fccg.project.model import ProjectModel_Load
+        model=ProjectModel_Load(args.runtime_project)
+        experimental_files,graph,records=prepared_files,prepared_graph,prepared_records
+        experiments['c071_ground']=records
+        experimental_files['candidate_config.ssproject']=args.runtime_project.read_bytes()
+    elif timer_probe:
         experimental_files,graph,records=NativeTimerProbe_FilesRender(files,proof,hclk_hz=args.clock_hz,scg_root=SCG)
         experiments['native_timer_probe']=records
     elif args.runtime_project is not None:
@@ -145,6 +162,7 @@ def NativeCompile_Run(args, *, device_facts=None, runtime_catalog=None):
     # the expected Cortex/32-bit pointer ABI. This test source is never executed.
     core={"cortex-m0":0,"cortex-m0plus":0,"cortex-m3":3,"cortex-m4":4}[facts.core]
     tx_qualifier="const " if proof["spi_abi"]["tx_buffer_const"] else ""
+    gpio_read_qualifier='const ' if proof.get('gpio_abi',{}).get('read_port_const',False) else ''
     fpu_probe='_Static_assert(__FPU_PRESENT == 1U, "independent FPU facts must match native CMSIS");' if facts.fpu else ''
     probe=output/"Generated/Src/native_abi_probe.c"; probe.parent.mkdir(parents=True,exist_ok=True)
     probe.write_text(f'''#include "main.h"
@@ -158,7 +176,7 @@ _Static_assert(sizeof(((USBD_CDC_HandleTypeDef *)0)->TxState) == sizeof(uint32_t
 HAL_StatusTypeDef HAL_SPI_Transmit(SPI_HandleTypeDef *, {tx_qualifier}uint8_t *, uint16_t, uint32_t);
 HAL_StatusTypeDef HAL_SPI_TransmitReceive(SPI_HandleTypeDef *, {tx_qualifier}uint8_t *, uint8_t *, uint16_t, uint32_t);
 void HAL_GPIO_WritePin(GPIO_TypeDef *, uint16_t, GPIO_PinState);
-GPIO_PinState HAL_GPIO_ReadPin(GPIO_TypeDef *, uint16_t);
+GPIO_PinState HAL_GPIO_ReadPin({gpio_read_qualifier}GPIO_TypeDef *, uint16_t);
 uint32_t HAL_GetTick(void);
 uint8_t CDC_Transmit_FS(uint8_t *, uint16_t);
 ''',encoding="utf-8")
@@ -179,9 +197,10 @@ uint8_t CDC_Transmit_FS(uint8_t *, uint16_t);
         candidate_make=_Makefile_Render(tuple(graph['sources']),tuple(graph['asm_sources']),tuple(graph['include_dirs']),
             tuple(graph['defines']),SimpleNamespace(**graph),model.ground_target.build.toolchain_prefix)
         candidate_make=candidate_make.replace('-Wl,--gc-sections,','-Wl,-u,_sbrk -Wl,--gc-sections,',1)
-        candidate_make=candidate_make.replace('$(PYTHON) Tools/check_ground.py architecture','$(PYTHON) Tools/check_native_ground.py')
-        candidate_make=candidate_make.replace('$(PYTHON) Tools/check_ground.py host','$(PYTHON) Tools/check_native_ground.py host')
-        candidate_make=candidate_make.replace('$(PYTHON) Tools/check_ground.py artifact','$(PYTHON) Tools/check_native_ground.py artifact')
+        checker='check_c071_candidate.py' if prepared_candidate is not None else 'check_native_ground.py'
+        candidate_make=candidate_make.replace('$(PYTHON) Tools/check_ground.py architecture','$(PYTHON) Tools/'+checker)
+        candidate_make=candidate_make.replace('$(PYTHON) Tools/check_ground.py host','$(PYTHON) Tools/'+checker+' host')
+        candidate_make=candidate_make.replace('$(PYTHON) Tools/check_ground.py artifact','$(PYTHON) Tools/'+checker+' artifact')
         experimental_files['Makefile']=candidate_make.encode('utf-8')
         experimental_files['Generated/Src/native_abi_probe.c']=probe.read_bytes()
         records['compiled_owned_sha256']['Generated/Src/native_abi_probe.c']=hashlib.sha256(probe.read_bytes()).hexdigest()
@@ -265,7 +284,7 @@ uint8_t CDC_Transmit_FS(uint8_t *, uint16_t);
         # Identity, physical bounds and read-only input preservation remain
         # separately recorded from unproved USB/radio/task runtime behavior.
         for p,b in files.items():
-            if (root/p).read_bytes()!=b or (output/NATIVE_PREFIX/p).read_bytes()!=b:raise ValueError("native inputs changed during validation")
+            if (root/p).read_bytes()!=b or (output/native_prefix/p).read_bytes()!=b:raise ValueError("native inputs changed during validation")
         status="NATIVE_SOURCE_CPP_GAS_ARM_LINK_AND_ANALYZER_EXECUTED"
         if warning_diagnostics:
             raise ValueError("Native warning diagnostics require independent review; strict no-warning acceptance FAILED")

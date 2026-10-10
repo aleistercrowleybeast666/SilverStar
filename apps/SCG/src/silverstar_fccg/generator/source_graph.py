@@ -102,6 +102,8 @@ def _ModuleProviderActive_Is(
 
 
 def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGraph:
+    if model.mcu == "silverstar.mcu.stm32c071fbp6" and model.core != "silverstar.core.ground.0_1_0":
+        raise SourceGraphError("Exact C071 mini backend supports only its private Ground recipe")
     catalog = catalog.ProjectView_Get(model)
     ground_base = model.hardware.inventory.get("ground_cubemx_base", {})
     imported_ground = (

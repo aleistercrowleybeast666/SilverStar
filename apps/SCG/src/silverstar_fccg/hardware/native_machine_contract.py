@@ -7,7 +7,7 @@ import struct
 
 def NativeAssemblyDirectives_Validate(text: str, *, core: str, fpu: str,
                                      reviewed_assert_trap: bool = False) -> None:
-    arch = {"cortex-m0": "armv6-m", "cortex-m0plus": "armv6-m",
+    arch = {"cortex-m0": "armv6-m", "cortex-m0plus": "armv6s-m",
             "cortex-m3": "armv7-m", "cortex-m4": "armv7e-m"}[core]
     clean = re.sub(r"/\*.*?\*/|//[^\r\n]*|^[ \t]*@[^\r\n]*", "", text, flags=re.S | re.M)
     for kind, value in re.findall(r"(?<!\w)\.(cpu|arch|arch_extension|fpu)\s+([A-Za-z0-9_.+-]+)", clean):

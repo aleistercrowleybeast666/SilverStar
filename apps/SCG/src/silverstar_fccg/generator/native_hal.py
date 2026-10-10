@@ -93,9 +93,9 @@ def _SpiBounded_Apply(source: str) -> str:
     return source
 
 
-def _UartPointer_Apply(source: str) -> str:
-    for name, state in (("HAL_UART_Transmit", "gState"),
-                        ("HAL_UARTEx_ReceiveToIdle", "RxState")):
+def _UartPointer_Apply(source: str, *, functions=(("HAL_UART_Transmit", "gState"),
+                        ("HAL_UARTEx_ReceiveToIdle", "RxState"))) -> str:
+    for name, state in functions:
         start, _opening, end = NativeC_FunctionSpanGet(source, name)
         function = source[start:end]
         visible = NativeC_VisibleGet(function)

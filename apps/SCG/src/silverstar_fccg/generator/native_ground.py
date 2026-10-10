@@ -281,6 +281,10 @@ SystemDeviceResult ProjectSx1281Resources_Get(uint8_t instance,ProjectSx1281Reso
     callback_owned = 'HardwareGenerated/ReviewedNativeData/'+callback
     files[callback_owned] = _Callback_Integrate(native_files[callback].decode('utf-8-sig'),indexed).encode()
     replacements[NATIVE_PREFIX+callback] = callback_owned
+    control = None
+    if not indexed:
+        from silverstar_fccg.generator.native_control import NativeF103Control_Integrate
+        control = NativeF103Control_Integrate(files,native_files,proof,replacements,callback_owned,bulk)
     sources = [replacements.get(NATIVE_PREFIX+p,NATIVE_PREFIX+p) for p in proof['build']['sources']]
     sources.extend(p for p in files if p.endswith('.c') and p.startswith(('Generated/','Common/')) and p not in sources)
     for owner in (core,radio):
@@ -313,7 +317,8 @@ SystemDeviceResult ProjectSx1281Resources_Get(uint8_t instance,ProjectSx1281Reso
             'contract':'Main-owned timestamps sampled immediately before existing IRQ locks; state/queue guards retained; actual generated first-party driver remains in Devices and Power10 scope'}],
         'compiled_owned_sha256':{path:hashlib.sha256(files[path]).hexdigest() for path in graph['sources'] if path in files},
         'original_sha256':{path:hashlib.sha256(content).hexdigest() for path,content in native_files.items()},
-        'ep0_review':'NOT PROVEN: shared owner patch independent review blocked; no EP0 repair integrated',
+        'ep0_review':('NOT PROVEN: F103 shared control ordinary code integrated; independent safety review has NO PASSED OUTCOME' if control else 'NOT PROVEN: shared owner patch independent review blocked; no EP0 repair integrated'),
+        'usb_control':control,
         'critical_contract_review':'NOT PROVEN: private bulk propagation increment requires manual acceptance; complete EP0/async lifecycle, call graph, stack/WCET/hardware unavailable',
         'publication':'PRIVATE CANDIDATE ONLY; normal generation remains blocked'}
     if indexed:

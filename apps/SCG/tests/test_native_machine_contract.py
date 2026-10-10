@@ -63,3 +63,22 @@ def test_reviewed_assertion_udf_is_exact_and_scoped():
                     text+' .inst 0xdeff\n'):
         with pytest.raises(ValueError,match='raw instruction'):
             NativeAssemblyDirectives_Validate(changed,core='cortex-m3',fpu='',reviewed_assert_trap=True)
+
+
+def test_real_cortex_m0plus_compiler_directives_and_object(tmp_path):
+    compiler=shutil.which('arm-none-eabi-gcc');readelf=shutil.which('arm-none-eabi-readelf')
+    assert compiler and readelf
+    source=tmp_path/'normal.c';assembly=tmp_path/'normal.s';obj=tmp_path/'normal.o'
+    source.write_text('unsigned Normal_Add(unsigned value) { return value + 1U; }\n')
+    flags=[compiler,'-mcpu=cortex-m0plus','-mthumb','-mfloat-abi=soft']
+    result=subprocess.run([*flags,'-S',str(source),'-o',str(assembly)],capture_output=True,text=True,timeout=30)
+    assert result.returncode==0,result.stdout+result.stderr
+    text=assembly.read_text()
+    assert '.arch armv6s-m' in text
+    NativeAssemblyDirectives_Validate(text,core='cortex-m0plus',fpu='')
+    result=subprocess.run([*flags,'-c',str(assembly),'-o',str(obj)],capture_output=True,text=True,timeout=30)
+    assert result.returncode==0,result.stdout+result.stderr
+    attributes=subprocess.check_output([readelf,'-A',str(obj)],text=True)
+    NativeArmAttributes_Validate(attributes,core='cortex-m0plus',fpu='',hard_float=False)
+    with pytest.raises(ValueError,match='CPU directive'):
+        NativeAssemblyDirectives_Validate(text.replace('.arch armv6s-m','.arch armv7-m'),core='cortex-m0plus',fpu='')

@@ -906,7 +906,8 @@ class FccgService:
     @staticmethod
     def _NativeFormalGeneration_Reject(model: ProjectModel) -> None:
         inventory = model.ground_target.hardware.inventory
-        if any(key in inventory for key in ("native_complete_classic_cdc", "native_ground_backend", "usb_ground_c071_native")):
+        if (model.ground_target.hardware.mcu == "STM32C071FBP6" or
+                any(key in inventory for key in ("native_complete_classic_cdc", "native_ground_backend", "usb_ground_c071_native"))):
             raise FccgError("error.native_formal_generation_blocked", {},
                 "Native classic CDC formal build remains blocked by pending lifecycle/critical-contract acceptance; "
                 "use the explicitly private candidate backend. No flash/start action is permitted.")
