@@ -36,6 +36,25 @@ mathematics and UI layout remain outside the edit scope. No hardware or publicat
 
 ## Validation evidence
 
+Ordinary review of `24462e4` identified a further P2: raw `exact_part` strings
+could look disjoint while the runtime matcher treats case and separators as equal.
+The original matcher token implementation is now shared from `core/platform_tokens.py`
+without semantic changes. Catalog domains, collision owners and identity keys use
+that same function, reject empty canonical tokens and retain all prior broad/missing/
+optional/wildcard guards. Three spelling collisions are rejected by production Scan
+before publication and demonstrated to match the same real runtime part; a distinct
+normalized F103 part remains admissible. Trial `srnorm02` passes fourteen checks,
+including the complete physical identity module and the existing matcher ambiguity
+case. Trial `srnorm01` retains a new import-cycle setup error before collection;
+moving the shared module from hardware to core avoids that dependency cycle.
+
+Initial complete Flight run `srf01` retains 215 passes, five failures and ten skips.
+Those five failures are a missing GSHC parser and two missing committed historical
+fixtures in the sparse checkout, confirmed by actual tracebacks. Exact committed
+dependencies have been checked out in this isolated worktree, with no GSHC code change.
+Complete affected groups and actual first-batch builds will rerun on the final P2
+commit; neither these failures nor earlier-version pass results are relabeled.
+
 The original six failures, twelve skips, all commands and logs remain in the
 prior checkpoint `SCG_FREEZE_VERIFICATION_20261010.json` and classification report
 in the calling task directory. Initial repair trial `srpre01` retains eleven

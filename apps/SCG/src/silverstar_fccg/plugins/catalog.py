@@ -6,6 +6,7 @@ from dataclasses import replace
 from pathlib import Path
 
 from silverstar_fccg.core.errors import FccgError
+from silverstar_fccg.core.platform_tokens import PlatformToken_Get
 
 from silverstar_fccg.plugins.manifest import (
     PluginManifest,
@@ -186,7 +187,8 @@ class PluginCatalog:
         if not rules or any(not rule.exact_part or
                 any(token in rule.exact_part for token in "*?[]") for rule in rules):
             return frozenset()
-        return frozenset(rule.exact_part for rule in rules)
+        parts = frozenset(PlatformToken_Get(rule.exact_part) for rule in rules)
+        return parts if all(parts) else frozenset()
 
     @staticmethod
     def _PhysicalDeviceErrors_Get(manifests) -> tuple[str, ...]:

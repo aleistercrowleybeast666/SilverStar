@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 from silverstar_fccg.core.errors import FccgError
 from silverstar_fccg.hardware.inventory import HardwareInventory
+from silverstar_fccg.core.platform_tokens import PlatformToken_Get as _Token_Get
 from silverstar_fccg.plugins.catalog import PluginCatalog
 from silverstar_fccg.plugins.manifest import PlatformMatchRule, PluginManifest
 
@@ -118,10 +119,6 @@ def DetectedMcuFacts_FromInventory(
         core=inventory.core,
         provider=provider,
     )
-
-
-def _Token_Get(value: str) -> str:
-    return re.sub(r"[^A-Z0-9]", "", value.upper())
 
 
 def _Pattern_Get(value: str) -> str:

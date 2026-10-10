@@ -35,7 +35,9 @@ Physical identity is `(vendor, model, chipset)`, independent of transport and
 platform implementation. Transport/profile choices of one driver remain variants
 within one component. The same physical hardware may have separate platform
 implementations only when each has exactly one mandatory MCU/family dependency
-whose match rules prove a finite, disjoint set of exact target parts. Catalog scan
+whose match rules prove a finite, disjoint set of exact target parts. Exact parts
+use the same canonical token function as runtime platform matching, so case and
+separators cannot invent separate domains; empty canonical tokens are rejected. Catalog scan
 rejects overlapping parts, broad rules and unproven platform domains before
 publishing the catalog. Component IDs or renamed physical labels are not proof of
 exclusivity; target dependency and source ownership checks still apply.
