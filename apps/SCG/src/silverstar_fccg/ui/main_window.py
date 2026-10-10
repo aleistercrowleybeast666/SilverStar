@@ -1884,7 +1884,9 @@ class MainWindow(QMainWindow):
         if UsbGroundBound_Is(model):
             # The private runtime uses its own exact role ABI. Display those
             # imported fixed bindings rather than inventing legacy plugin roles.
-            requirements['resources'] = tuple((key, 'spi' if key.endswith(':spi') else 'gpio')
+            kinds = {'spi': 'spi', 'nss': 'gpio_output', 'reset': 'gpio_output',
+                     'busy': 'gpio_input', 'dio1': 'gpio_interrupt'}
+            requirements['resources'] = tuple((key, kinds.get(key.rsplit(':', 1)[-1], 'unsupported'))
                                               for key in model.ground_target.resource_assignments)
             requirements['fixed_resources'] = dict(model.ground_target.resource_assignments)
         flight_instance = model.DeviceInstance_Get(model.air_link.flight_radio_instance)
