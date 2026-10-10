@@ -118,7 +118,7 @@ def test_imported_documentation_replay_is_idempotent(tmp_path, workspace_root):
 
     relative = Path("silverstar_protocol_logging_sslog_0_0/docs/STORAGE_AND_FLIGHT_LOG.md")
     destination = tmp_path / relative
-    policy = WorkspacePolicy(workspace_root)
+    policy = WorkspacePolicy(tmp_path)
     policy.File_Copy(workspace_root / "plugins/builtin" / relative, destination)
     _ImportedDocumentation_Adapt(tmp_path, policy)
     first = destination.read_bytes()

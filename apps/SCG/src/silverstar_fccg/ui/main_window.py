@@ -4,6 +4,7 @@ import json
 from silverstar_fccg.app.usb_ground_flow import (
     UsbGroundBound_Is, UsbGroundFlow_Import, UsbGroundFlow_Run,
     UsbGroundOutput_Get, UsbGroundQuality_Run, UsbGroundRefresh_Inspect, RELEASE_NOTICE, RELEASE_STATUS,
+    UsbGroundReimportIssue_Get,
 )
 from silverstar_fccg.app.native_ground import NativeGroundProjectImportResult
 import logging
@@ -884,11 +885,12 @@ class MainWindow(QMainWindow):
             else:
                 self.algorithm_parameters_page.RatePlan_Set(rate_plan)
             project_root = self._project_root
+            usb_reimport_issue = UsbGroundReimportIssue_Get(display.model)
             self.build_page.Targets_Set(
                 flight_generated=bool(
                     project_root and (project_root / "Flight_Controller" / "Makefile").is_file()
                 ),
-                ground_enabled=display.model.ground_target.enabled,
+                ground_enabled=display.model.ground_target.enabled and not usb_reimport_issue,
                 usb_candidate=UsbGroundBound_Is(display.model),
                 ground_generated=bool(
                     project_root and not UsbGroundBound_Is(display.model)
@@ -902,7 +904,7 @@ class MainWindow(QMainWindow):
             self.build_page.QualityResults_Set(display.quality_results)
             self._TargetQualityResults_Refresh(display.model)
             if UsbGroundBound_Is(display.model):
-                self.build_page.target_status_labels['ground'].setText(RELEASE_STATUS)
+                self.build_page.target_status_labels['ground'].setText(usb_reimport_issue or RELEASE_STATUS)
             self.power10_export_button.setEnabled(
                 self._project_root is not None and Power10Report_Load(self._project_root / FLIGHT_DIRECTORY) is not None)
             self.legacy_migration_button.setVisible(bool(ReleaseCompatibilityIssues_Get(display.model)))
@@ -1941,8 +1943,9 @@ class MainWindow(QMainWindow):
             platform = replace(platform, timebase_status="SysTick / HAL_IncTick")
         self.ground_target_page.Platform_Set(platform)
         if UsbGroundBound_Is(model):
-            self.ground_target_page.generate_button.setEnabled(ground.enabled)
-            self.ground_target_page.generate_button.setToolTip(RELEASE_NOTICE)
+            issue = UsbGroundReimportIssue_Get(model)
+            self.ground_target_page.generate_button.setEnabled(ground.enabled and not issue)
+            self.ground_target_page.generate_button.setToolTip(issue or RELEASE_NOTICE)
 
     def _AirLink_Change(self, field: str, value: object) -> None:
         if field == "radio_family" and value == "nrf24":
@@ -3540,8 +3543,11 @@ class MainWindow(QMainWindow):
         self._UsbGroundRefresh_Invalidate()
         self.build_page.TargetQualityResults_Set('ground', (),
             {task: 'unavailable' for task in QUALITY_TASKS})
-        self.build_page.target_quality_status['ground'].setText(RELEASE_STATUS)
-        self.build_page.target_quality_status['ground'].setToolTip(RELEASE_NOTICE)
+        issue = UsbGroundReimportIssue_Get(model)
+        self.build_page.target_quality_status['ground'].setText(issue or RELEASE_STATUS)
+        self.build_page.target_quality_status['ground'].setToolTip(issue or RELEASE_NOTICE)
+        if issue:
+            return
         if self._project_root is None or self._close_after_worker:
             return
         self._usb_refresh_pending = (self._usb_refresh_epoch,
@@ -3585,6 +3591,10 @@ class MainWindow(QMainWindow):
             self._Error_Show(self._translator.Text_Get("error.background_task_active"))
             return
         selected = self.build_page.QualityTargets_Get()
+        issue = UsbGroundReimportIssue_Get(self._model)
+        if 'ground' in selected and issue:
+            self._Error_Show(issue)
+            return
         self._TargetQualityResults_Refresh()
         if not selected:
             self.status_label.setText(self._translator.Text_Get("quality.target.none"))
@@ -3719,6 +3729,10 @@ class MainWindow(QMainWindow):
     def _UsbGroundOperation_Request(self, operation: str) -> None:
         if self._active_worker is not None:
             return
+        issue = UsbGroundReimportIssue_Get(self._model)
+        if issue:
+            self._Error_Show(issue)
+            return
         if self.algorithm_parameters_page.alignment_editor.draft_dirty:
             self._Error_Show(self._translator.Text_Get('alignment.confirm_before_generation'))
             return
@@ -3743,6 +3757,10 @@ class MainWindow(QMainWindow):
                       complete, error, line_callback=self._BuildLine_Append)
 
     def _UsbGroundTargetAction_Request(self, operation: str) -> None:
+        issue = UsbGroundReimportIssue_Get(self._model)
+        if issue:
+            self._Error_Show(issue)
+            return
         if operation == 'build':
             self._UsbGroundOperation_Request('build')
             return

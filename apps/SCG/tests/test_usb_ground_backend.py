@@ -7,7 +7,7 @@ import json
 import os
 import pytest
 
-from test_native_ground_backend import bound
+from test_native_ground_backend import bound as legacy_bound
 from test_native_classic_cdc import native
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.app.usb_ground import (
@@ -19,6 +19,54 @@ from silverstar_fccg.core.errors import FccgError
 from silverstar_fccg.generator.multi_target import GroundFiles_Render
 from silverstar_fccg.hardware.cubemx import CubeMxImportError, CubeMxImporter
 from silverstar_fccg.project.model import ProjectModel_Load
+
+
+@pytest.fixture
+def bound(native, tmp_path_factory, builtin_catalog):
+    """Unified positive flows use the unified authority, not a legacy fixture."""
+    source, args = native
+    service = FccgService(tmp_path_factory.mktemp('w'))
+    service.catalog = builtin_catalog
+    model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+    facts = args['device_facts']
+    if facts.part == 'STM32F407VET6':
+        imported = service.NativeClassicCdcGroundProject_Import(source, model,
+            **args, hclk_hz=168_000_000, risk_acknowledged=True)
+    else:
+        header = Path(facts.irq_evidence_source)
+        imported = service.UsbGroundProject_Import(source, model,
+            part=facts.part, independent_irq_header=header, hclk_hz=72_000_000,
+            spi_resource=args['spi_resource'], gpio_resources=args['gpio_resources'],
+            risk_acknowledged=True)
+        args = {**args, 'device_facts': UsbGroundDeviceFacts_Get(facts.part, header)}
+    return service, imported, args, source
+
+
+@pytest.mark.parametrize('native', ['f103-usb'], indirect=True)
+def test_legacy_authority_requires_reimport_without_relabeling(legacy_bound, tmp_path_factory):
+    from silverstar_fccg.app.usb_ground import F103_REIMPORT_REQUIRED, UsbGroundReimportIssue_Get
+    from silverstar_fccg.app.usb_ground_flow import UsbGroundBound_Is
+    service, imported, args, source = legacy_bound
+    facts = args['device_facts']
+    assert facts.part == 'STM32F103C8T6'
+    before = deepcopy(imported.model.Dictionary_Get())
+    assert UsbGroundBound_Is(imported.model)
+    assert UsbGroundReimportIssue_Get(imported.model) == F103_REIMPORT_REQUIRED
+    assert service.NativeClassicCdcGroundCandidate_Plan(imported.model,
+        device_facts=facts).profile == 'f103-systick-classic-v1'
+    header = Path(facts.irq_evidence_source)
+    output = tmp_path_factory.mktemp('o') / 'not-created'
+    with pytest.raises(CubeMxImportError, match='F103_UNIFIED_REIMPORT_REQUIRED'):
+        service.UsbGroundCandidate_Export(imported.model, output, independent_irq_header=header)
+    assert not output.exists()
+    assert imported.model.Dictionary_Get() == before
+    rebound = service.UsbGroundProject_Import(source, imported.model, part=facts.part,
+        independent_irq_header=header, hclk_hz=72_000_000,
+        spi_resource=args['spi_resource'], gpio_resources=args['gpio_resources'], risk_acknowledged=True)
+    assert not UsbGroundReimportIssue_Get(rebound.model)
+    assert rebound.model.Dictionary_Get() != before
+    assert service.UsbGroundCandidate_Plan(rebound.model,
+        independent_irq_header=header).result == UsbGroundPlanResult.RenderedCandidate
 
 
 @pytest.fixture

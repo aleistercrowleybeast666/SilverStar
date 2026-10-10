@@ -169,10 +169,64 @@ class PluginCatalog:
         errors.extend(self._ProtocolAssetsErrors_Get(manifests))
         errors.extend(self._PlatformAssetsErrors_Get(manifests))
         errors.extend(self._SharedParameterErrors_Get(manifests))
+        errors.extend(self._PhysicalDeviceErrors_Get(manifests))
         if errors:
             raise PluginCatalogError("\n".join(errors))
         self._components = manifests
         return self.All_Get()
+
+    @staticmethod
+    def _PhysicalDeviceParts_Get(manifest, manifests) -> frozenset[str]:
+        platforms = [manifests[item.component_id] for item in manifest.dependencies
+            if not item.optional and item.component_id in manifests
+            and manifests[item.component_id].component_type in {"mcu", "mcu_family"}]
+        if len(platforms) != 1 or platforms[0].platform is None:
+            return frozenset()
+        rules = platforms[0].platform.match_rules
+        if not rules or any(not rule.exact_part or
+                any(token in rule.exact_part for token in "*?[]") for rule in rules):
+            return frozenset()
+        return frozenset(rule.exact_part for rule in rules)
+
+    @staticmethod
+    def _PhysicalDeviceErrors_Get(manifests) -> tuple[str, ...]:
+        """Same hardware may have mutually exclusive platform implementations.
+
+        A different component id, interface or family label is not proof of
+        exclusivity. Duplicate physical facts require finite, disjoint exact
+        parts from one mandatory platform dependency for every implementation.
+        Broad/missing rules and overlapping target parts remain errors.
+        """
+        groups = defaultdict(list)
+        for manifest in manifests.values():
+            device = manifest.physical_device
+            if manifest.component_type == "device" and device is not None:
+                groups[(device.vendor, device.model, device.chipset)].append(manifest)
+        errors = []
+        for identity, implementations in groups.items():
+            if len(implementations) == 1:
+                continue
+            owners = {}
+            for manifest in implementations:
+                parts = PluginCatalog._PhysicalDeviceParts_Get(manifest, manifests)
+                if not parts:
+                    errors.append(f"Physical device {identity}: {manifest.component_id} "
+                                  "has no proven exact platform variant domain")
+                for part in sorted(parts):
+                    if part in owners:
+                        errors.append(f"Duplicate physical device {identity} on {part}: "
+                                      f"{owners[part]} and {manifest.component_id}")
+                    owners[part] = manifest.component_id
+        return tuple(errors)
+
+    def PhysicalDeviceIdentityKeys_Get(self, manifest) -> tuple[tuple[str, ...], ...]:
+        """Hardware facts plus implementation target, never invented chip names."""
+        device = manifest.physical_device
+        if device is None:
+            raise PluginCatalogError("Physical device facts unavailable")
+        physical = (device.vendor, device.model, device.chipset)
+        parts = self._PhysicalDeviceParts_Get(manifest, self._components)
+        return tuple((*physical, part) for part in sorted(parts or {"*"}))
 
     @staticmethod
     def _ProtocolAssetsErrors_Get(

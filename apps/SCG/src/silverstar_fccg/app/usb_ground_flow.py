@@ -16,6 +16,7 @@ from silverstar_fccg.app.native_ground import BINDING_KEY, NativeGroundBackendRe
 from silverstar_fccg.app.usb_ground import (
     C071_PART, _Profile_Load, _Json_Encode,
     UsbGroundDeviceFacts_Get, UsbGroundTarget_Validate,
+    UsbGroundReimportIssue_Get,
 )
 from silverstar_fccg.build.runner import BuildAction, BuildResult, BuildRunner
 from silverstar_fccg.core.task import TaskCancelledError
@@ -37,6 +38,8 @@ RELEASE_NOTICE = (
 
 
 def UsbGroundBound_Is(model):
+    # Recognition only: retained even for legacy models refused by admission,
+    # preventing fallback to ordinary/formal firmware generation.
     return BINDING_KEY in model.ground_target.hardware.inventory
 
 
@@ -226,6 +229,9 @@ def UsbGroundRefresh_Inspect(service, model, project, context):
     output = None
     records = ()
     try:
+        issue = UsbGroundReimportIssue_Get(model)
+        if issue:
+            raise CubeMxImportError(issue)
         before = _Pointer_Path(project).read_bytes()
         output = UsbGroundOutput_Get(service, model, project, task_context=context)
         pointer = json.loads(before)

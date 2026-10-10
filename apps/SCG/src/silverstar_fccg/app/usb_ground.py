@@ -44,6 +44,13 @@ _PROFILE_HASHES = {
     "c071-native-profile.json": "5c9ad2ccaae3b0bd4a81c00e5c450610f48c82b7d5958c9587b921be82d29589",
     "c071-companion-manifest.json": "8835f4c76e6ea94ceeccf742ec59665157ddf2a089a4a361ad25b2671afcc6d7",
 }
+F103_REIMPORT_REQUIRED = (
+    "F103_UNIFIED_REIMPORT_REQUIRED: This legacy F103 private model uses a different "
+    "facts authority. In Ground Station Hardware, import the original native F103 "
+    "CubeMX directory again, save the project, then generate/build the USB candidate. "
+    "旧 F103 私有模型需要重新导入：在地面站硬件页导入原始 F103 CubeMX 工程目录，"
+    "保存后重新生成/构建 USB 候选。Formal USB release remains BLOCKED."
+)
 
 
 class UsbGroundPlanResult(str, Enum):
@@ -103,6 +110,22 @@ def UsbGroundDeviceFacts_Get(part: str, independent_irq_header: Path) -> NativeD
     if _Hash_Get(body) != facts.irq_header_sha256 or enumerators != facts.irq_numbers:
         raise CubeMxImportError("Independent SDK IRQ bytes/enumerators differ from backend facts")
     return facts
+
+
+def UsbGroundReimportIssue_Get(model) -> str:
+    """Reject legacy authority early; this preflight never grants admission.
+
+    Bound recognition remains separate, so refused private models cannot fall
+    through to formal generation. Plan still verifies the SDK, immutable source
+    snapshot and every existing binding/configuration guard afterwards.
+    """
+    hardware = model.ground_target.hardware
+    binding = hardware.inventory.get(BINDING_KEY)
+    if hardware.mcu == FIRST_BATCH_PARTS[0] and isinstance(binding, dict):
+        facts = _Profile_Load("f103-device-facts.json")
+        if binding.get("facts_sha256") != _Hash_Get(_Json_Encode(facts)):
+            return F103_REIMPORT_REQUIRED
+    return ""
 
 
 def _IndependentHeader_Validate(header, root):
@@ -258,6 +281,9 @@ def UsbGroundProject_Import(importer, catalog, input_path, model, *, part,
 
 
 def UsbGroundCandidate_Plan(importer, catalog, model, *, independent_irq_header, companion_root=None):
+    issue = UsbGroundReimportIssue_Get(model)
+    if issue:
+        raise CubeMxImportError(issue)
     hardware = model.ground_target.hardware
     part = hardware.mcu
     facts = UsbGroundDeviceFacts_Get(part, independent_irq_header)

@@ -31,6 +31,15 @@ WorkspacePolicy + atomic staging
 ```
 
 ## 2. Device / Capability / Canonical Source
+Physical identity is `(vendor, model, chipset)`, independent of transport and
+platform implementation. Transport/profile choices of one driver remain variants
+within one component. The same physical hardware may have separate platform
+implementations only when each has exactly one mandatory MCU/family dependency
+whose match rules prove a finite, disjoint set of exact target parts. Catalog scan
+rejects overlapping parts, broad rules and unproven platform domains before
+publishing the catalog. Component IDs or renamed physical labels are not proof of
+exclusivity; target dependency and source ownership checks still apply.
+
 Physical Device Instance 与 plugin type 分离。一个物理设备可提供多个 Capability Endpoint；算法声明消费能力，不声明具体型号。只有至少两个物理实例能满足同一能力时，项目才保存显式source override；单一来源由解析器直接确定。官方JY901B、M9N、SX1281支持同插件最多4实例；driver state和资源必须实例隔离。
 
 所有IMU/GNSS实例持续处理并可记录native数据；Canonical IMU在Calibration/Alignment前选择后锁定，GNSS可按基础liveness向后续备用单向切换。AIR只使用一个active telemetry，连续10次真实TX timeout才向后续备用切换，success清零，无备用继续周期有界重试。

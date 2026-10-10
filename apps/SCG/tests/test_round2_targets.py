@@ -100,13 +100,9 @@ def test_one_bmi088_plugin_resolves_mixed_interfaces_without_duplicate_sources(
     physical = {}
     for manifest in builtin_catalog.Type_Get("device"):
         assert manifest.physical_device is not None
-        key = (
-            manifest.physical_device.vendor,
-            manifest.physical_device.model,
-            manifest.physical_device.chipset,
-        )
-        assert key not in physical, (physical.get(key), manifest.component_id)
-        physical[key] = manifest.component_id
+        for key in builtin_catalog.PhysicalDeviceIdentityKeys_Get(manifest):
+            assert key not in physical, (physical.get(key), manifest.component_id)
+            physical[key] = manifest.component_id
     model = ReferenceProject_Create("MixedBmi088", catalog=builtin_catalog)
     model.device_instances.extend((
         DeviceInstance("bmi_i2c", "silverstar.device.imu.bmi088", "i2c", "raw_200_hz"),

@@ -15,6 +15,8 @@ from silverstar_fccg.project.model import ProjectModel_Load
 from silverstar_fccg.ui.main_window import MainWindow
 from silverstar_fccg.build.runner import BuildAction
 from PySide6.QtCore import QTimer
+from test_native_classic_cdc import native
+from test_native_ground_backend import bound as legacy_bound
 
 
 def _Wait(qapp, condition):
@@ -67,6 +69,58 @@ def _Import(qapp,window):
     assert current._model.ground_target.hardware.mcu==('STM32F103C8T6' if part=='F103' else 'STM32C071FBP6')
     assert current.progress_bar.property('taskState')=='success'
     return deepcopy(current._model.Dictionary_Get())
+
+
+@pytest.mark.parametrize('native', ['f103-usb'], indirect=True)
+def test_saved_legacy_f103_is_refused_before_gui_work_then_reimports(
+        legacy_bound, qapp, tmp_path_factory, monkeypatch):
+    from silverstar_fccg.app.usb_ground import F103_REIMPORT_REQUIRED, UsbGroundReimportIssue_Get
+    from silverstar_fccg.hardware.cubemx import CubeMxImportError
+    service, imported, args, source = legacy_bound
+    service.assembler.catalog = service.catalog
+    project = tmp_path_factory.mktemp('p')
+    service.ProjectRoot_Save(imported.model, project, create_new=True)
+    saved_before = (project/'SilverStar.ssproject').read_bytes()
+    current = MainWindow(SettingsStore(service.workspace_root/'settings.ini'), service=service)
+    current._MessageBox_Exec = lambda *a,**k: QMessageBox.StandardButton.Discard
+    errors = []
+    monkeypatch.setattr(current, '_Error_Show', lambda *a: errors.append(a))
+    try:
+        current._Project_Open(project)
+        _Wait(qapp, lambda: current._active_worker is None)
+        assert not errors, errors
+        assert UsbGroundReimportIssue_Get(current._model) == F103_REIMPORT_REQUIRED
+        assert not current.ground_target_page.generate_button.isEnabled()
+        assert not current.build_page.action_buttons['ground_build'].isEnabled()
+        assert current.build_page.target_status_labels['ground'].text() == F103_REIMPORT_REQUIRED
+        assert F103_REIMPORT_REQUIRED in current.ground_target_page.generate_button.toolTip()
+        assert not current._usb_refresh_timer.isActive() and current._usb_refresh_pending is None
+        task_run = current.Task_Run
+        def forbidden_task(*a,**k):
+            raise AssertionError('Legacy rejection must happen before starting a worker')
+        monkeypatch.setattr(current, 'Task_Run', forbidden_task)
+        current._UsbGroundOperation_Request('generate')
+        current._UsbGroundTargetAction_Request('build')
+        assert errors == [(F103_REIMPORT_REQUIRED,), (F103_REIMPORT_REQUIRED,)]
+        with pytest.raises(CubeMxImportError, match='F103_UNIFIED_REIMPORT_REQUIRED'):
+            service.UsbGroundCandidate_Plan(current._model,
+                independent_irq_header=Path(args['device_facts'].irq_evidence_source))
+        assert (project/'SilverStar.ssproject').read_bytes() == saved_before
+        monkeypatch.setattr(current, 'Task_Run', task_run)
+        errors.clear()
+        monkeypatch.setattr(QFileDialog,'getExistingDirectory',lambda *a: str(source))
+        current._GroundCubeMxImport_Request(True)
+        _Wait(qapp, lambda: current._active_worker is None)
+        assert not errors, errors
+        assert not UsbGroundReimportIssue_Get(current._model)
+        assert current.ground_target_page.generate_button.isEnabled()
+        assert current._model.Dictionary_Get() != imported.model.Dictionary_Get()
+        assert service.UsbGroundCandidate_Plan(current._model,
+            **UsbGroundOptions_Get('STM32F103C8T6')).result.value == 'RenderedCandidate'
+    finally:
+        current._Task_Cancel()
+        _Wait(qapp,lambda:current._active_worker is None)
+        current.close();qapp.processEvents()
 
 def test_real_gui_import_save_reload_export_and_artifact_state(usb_window,qapp,tmp_path_factory):
     current,source,errors,part=usb_window
