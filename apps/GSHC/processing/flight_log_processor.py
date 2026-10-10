@@ -644,6 +644,7 @@ class FlightLogProcessor:
                         ),
                         plotter.text("axis_position"),
                         data.parachute_time_s,
+                        position_samples=True,
                     ),
                 ),
                 (

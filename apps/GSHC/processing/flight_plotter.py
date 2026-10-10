@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import math
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Generator, Optional
 
@@ -21,6 +21,11 @@ from .horizontal_trajectory import (
     LABEL_IDS,
     HorizontalTrajectory_Build,
     HorizontalTrajectory_Draw,
+)
+from .position_display import (
+    PositionDisplay_Build,
+    PositionDisplay_History,
+    PositionDisplay_PointAt,
 )
 from .time_ranges import GifPlan_Build
 
@@ -135,11 +140,18 @@ class FlightPlotter:
         return template.format(**params)
 
     def plot_horizontal_trajectory(self, output_path: Path, data) -> None:
+        display = PositionDisplay_Build(data.pos, self.config.gap_threshold_s)
         trajectory = HorizontalTrajectory_Build(
-            [sample.time_s for sample in data.pos], [sample.values[:3] for sample in data.pos],
+            display.times_s, display.points_enu, valid=display.valid,
             time_range=self.page_range, deploy_time_s=data.parachute_time_s,
-            gap_threshold_s=self.config.gap_threshold_s,
+            gap_threshold_s=display.gap_threshold_s,
         )
+        if trajectory.deploy_enu is not None:
+            # Preserve the geometry's view-range visibility, then resolve the
+            # epoch with the same last-row validity rule as static 3D and GIF.
+            trajectory = replace(trajectory, deploy_enu=PositionDisplay_PointAt(
+                display, data.parachute_time_s,
+            ))
         catalog = ZH_CN if self.config.language is Language.ZH_CN else EN_US
         figure = plt.figure(figsize=(8, 6))
         labels = {key: catalog["horizontal." + key] for key in LABEL_IDS}
@@ -206,6 +218,8 @@ class FlightPlotter:
         labels: tuple[str, str, str],
         ylabel: str,
         parachute_time_s: float | None = None,
+        *,
+        position_samples: bool = False,
     ) -> None:
         if self.page_range is not None:
             samples = [s for s in samples if self.page_range[0] <= s.time_s <= self.page_range[1]]
@@ -233,6 +247,8 @@ class FlightPlotter:
 
         t = np.array([s.time_s for s in samples], dtype=float)
         y = np.array([s.values[:3] for s in samples], dtype=float)
+        if position_samples:
+            y = PositionDisplay_Build(samples, self.config.gap_threshold_s).points_enu
 
         for i, (ax, label) in enumerate(zip(axes, labels)):
             tt, yy = self._insert_nan_gaps(t, y[:, i])
@@ -454,14 +470,13 @@ class FlightPlotter:
         figure.tight_layout()
         figure.subplots_adjust(left=0.10, right=0.96, bottom=0.08, top=0.88,
                                wspace=0.12)
-        times = np.asarray([sample.time_s for sample in data.pos], dtype=float)
-        points = np.asarray([sample.values[:3] for sample in data.pos], dtype=float).reshape(-1, 3)
+        display = PositionDisplay_Build(data.pos, self.config.gap_threshold_s)
         return dict(
             figure=figure, attitude=attitude, trajectory=trajectory,
             vertices=vertices, faces=faces, rocket=rocket, clock=clock,
             before=before, after=after, current=current,
             chute=chute, chute_label=chute_label,
-            times=times, points=points,
+            display=display,
         )
 
     @staticmethod
@@ -477,9 +492,9 @@ class FlightPlotter:
         quaternion = self._sample_interpolated(
             data.quat, t, (1, 0, 0, 0), is_quat=True
         )
-        position = np.asarray(self._sample_interpolated(
-            data.pos, t, (0, 0, 0), is_quat=False
-        )[:3], dtype=float)
+        before_points, after_points, position = PositionDisplay_History(
+            renderer["display"], t, data.parachute_time_s
+        )
         vertices = renderer["vertices"] @ self._quat_to_rot(tuple(quaternion[:4])).T
         renderer["rocket"].set_verts(
             [[vertices[i] for i in face] for face in renderer["faces"]]
@@ -488,28 +503,11 @@ class FlightPlotter:
         renderer["attitude"].set_title(f"{self.text('attitude')} - {phase}")
         renderer["trajectory"].set_title(f"{self.text('trajectory')} - {phase}")
         renderer["clock"].set_text(self.text("time_value", time=t))
-        times = renderer["times"]
-        points = renderer["points"]
-        end = int(np.searchsorted(times, t, side="right"))
-        history = points[:end]
-        if end == 0 or times[end - 1] < t:
-            history = np.vstack((history, position))
-            history_times = np.append(times[:end], t)
-        else:
-            history_times = times[:end]
         deploy = data.parachute_time_s
-        if deploy is None:
-            before_points = history
-            after_points = np.empty((0, 3))
-        else:
-            split = int(np.searchsorted(history_times, deploy, side="left"))
-            before_points = history[:split]
-            after_points = history[max(0, split - 1):] if split < len(history) else np.empty((0, 3))
-            if split >= len(history):
-                after_points = np.empty((0, 3))
         self._GifLine_Set(renderer["before"], before_points)
         self._GifLine_Set(renderer["after"], after_points)
-        self._GifLine_Set(renderer["current"], position.reshape(1, 3))
+        self._GifLine_Set(renderer["current"],
+                          position.reshape(1, 3) if position is not None else np.empty((0, 3)))
         after_deploy = deploy is not None and t >= deploy
         renderer["current"].set_color("blue" if after_deploy else "red")
         if renderer["chute"] is not None:
@@ -604,16 +602,11 @@ class FlightPlotter:
     def _draw_motion(self, ax, data, t: float, pos: tuple[float, float, float], motion_limits) -> None:
         from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
-        history = [(s.time_s, tuple(s.values[:3])) for s in data.pos if s.time_s <= t]
-        if history:
-            if history[-1][0] < t:
-                history.append((t, pos))
-        else:
-            history = [(t, pos)]
-
+        display = PositionDisplay_Build(data.pos, self.config.gap_threshold_s)
+        before_points, after_points, position = PositionDisplay_History(
+            display, t, data.parachute_time_s
+        )
         parachute_t = data.parachute_time_s
-        before_points = [p for tt, p in history if parachute_t is None or tt < parachute_t]
-        after_points = [p for tt, p in history if parachute_t is not None and tt >= parachute_t]
 
         xlim, ylim, zlim = motion_limits
 
@@ -632,19 +625,15 @@ class FlightPlotter:
         )
         ax.add_collection3d(plane_coll)
 
-        if before_points:
-            arr_before = np.array(before_points, dtype=float)
-            ax.plot(arr_before[:, 0], arr_before[:, 1], arr_before[:, 2], linewidth=1.5, color="red")
+        if before_points.size:
+            ax.plot(before_points[:, 0], before_points[:, 1], before_points[:, 2], linewidth=1.5, color="red")
 
-        if after_points:
-            arr_after = np.array(after_points, dtype=float)
-            if before_points:
-                bridge = np.array([before_points[-1], after_points[0]], dtype=float)
-                ax.plot(bridge[:, 0], bridge[:, 1], bridge[:, 2], linewidth=1.2, color="blue")
-            ax.plot(arr_after[:, 0], arr_after[:, 1], arr_after[:, 2], linewidth=1.5, color="blue")
+        if after_points.size:
+            ax.plot(after_points[:, 0], after_points[:, 1], after_points[:, 2], linewidth=1.5, color="blue")
 
         point_color = "blue" if parachute_t is not None and t >= parachute_t else "red"
-        ax.scatter([pos[0]], [pos[1]], [pos[2]], s=35, color=point_color)
+        if position is not None:
+            ax.scatter([position[0]], [position[1]], [position[2]], s=35, color=point_color)
 
         chute_point = self._get_chute_point(data)
         if chute_point is not None and parachute_t is not None and t >= parachute_t:
@@ -664,14 +653,16 @@ class FlightPlotter:
         t = getattr(data, "parachute_time_s", None)
         if t is None or not data.pos:
             return None
-        nearest = min(data.pos, key=lambda s: abs(float(s.time_s) - float(t)))
-        return tuple(float(v) for v in nearest.values[:3])
+        return PositionDisplay_PointAt(
+            PositionDisplay_Build(data.pos, self.config.gap_threshold_s), float(t)
+        )
 
     def _trajectory_limits(self, data):
-        if not data.pos:
+        display = PositionDisplay_Build(data.pos, self.config.gap_threshold_s)
+        pts = display.points_enu[display.valid]
+        if not len(pts):
             pts = np.zeros((1, 3), dtype=float)
         else:
-            pts = np.array([s.values[:3] for s in data.pos], dtype=float)
             pts = np.vstack([pts, np.array([[pts[:, 0].mean(), pts[:, 1].mean(), 0.0]])])
         return self._equal_limits(pts)
 
