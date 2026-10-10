@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "silverstar-fccg"
+dynamic = ["version"]
+description = "SilverStar System Configuration & Generation"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["PySide6>=6.8", "PyYAML>=6.0,<7"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3"]
+
+[project.scripts]
+silverstar-scg = "silverstar_fccg.app.application:main"
+silverstar-fccg = "silverstar_fccg.app.application:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.dynamic]
+version = {attr = "silverstar_fccg.app.version.__version__"}
+
+[tool.setuptools.package-data]
+silverstar_fccg = ["i18n/*.json", "ui/assets/*.svg", "hardware/usb_profiles/*.json"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --basetemp=.work/pytest"
+testpaths = ["tests"]
+pythonpath = ["src"]
+cache_dir = ".work/pytest-cache"
+norecursedirs = [
+    ".pytest-cache",
+    ".pytest-cache-*",
+    ".pytest-work",
+    ".pytest-work-*",
+    ".cache-*",
+    ".pycache-*",
+    ".w-*",
+    ".work-*",
+    ".c*",
+    ".tmp",
+    ".tmp-*",
+    ".vscode-*",
+    "tmp*",
+    "acceptance_*",
+    "acceptance_current",
+    "acceptance_smoke",
+    "generated_projects",
+    "reference_copy",
+    "artifacts",
+]

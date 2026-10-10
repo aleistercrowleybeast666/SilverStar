@@ -1,0 +1,19 @@
+{
+  "command": [
+    "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+    "-B",
+    "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\backend_pytest.py",
+    "apps/SCG/tests/test_native_classic_cdc.py::test_import_preservation_and_reload",
+    "apps/SCG/tests/test_build_progress.py",
+    "apps/SCG/tests/test_build_audit.py",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/Users/chdxm/AppData/Local/Temp/ubr01",
+    "-q"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\.work\\ccdi",
+  "started_utc": "2026-10-10T01:41:18.169917+00:00",
+  "scope": "Preserved static native import/model roundtrip and ordinary build tooling unit tests only",
+  "exit": 0,
+  "finished_utc": "2026-10-10T01:41:42.908194+00:00"
+}

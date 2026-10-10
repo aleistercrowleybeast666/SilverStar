@@ -1,0 +1,66 @@
+F..................                                                      [100%]
+================================== FAILURES ===================================
+____________ test_c071_save_reload_recipe_and_source_preservation _____________
+
+c071 = (<silverstar_fccg.app.service.FccgService object at 0x000002B9F34DA3C0>, NativeGroundProjectImportResult(result=<Nativ...), WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST'))
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ub01'), _trace=<pluggy._tracing.TagTrac...0107CE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ub01'), _retention_count=3, _retention_policy='all')
+
+    def test_c071_save_reload_recipe_and_source_preservation(c071, tmp_path_factory):
+        service, result, header, companion, source = c071
+        hashes = {p: hashlib.sha256((source / p).read_bytes()).hexdigest()
+            for p in result.model.ground_target.hardware.inventory[C071_KEY]['native_files_sha256']}
+        project = tmp_path_factory.mktemp('p')
+        service.ProjectRoot_Save(result.model, project, create_new=True)
+        model = ProjectModel_Load(project / 'SilverStar.ssproject')
+        reloaded = FccgService(service.workspace_root)
+        reloaded.catalog = service.catalog
+>       plan = reloaded.UsbGroundCandidate_Plan(model, independent_irq_header=header, companion_root=companion)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_usb_ground_backend.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\app\service.py:964: in UsbGroundCandidate_Plan
+    return UsbGroundCandidate_Plan(self.hardware_importer, self.catalog, model, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\app\usb_ground.py:281: in UsbGroundCandidate_Plan
+    result = UsbGroundProject_Import(importer, catalog, snapshot, model, part=part,
+apps\SCG\src\silverstar_fccg\app\usb_ground.py:219: in UsbGroundProject_Import
+    root, _ioc = importer._Input_Resolve(input_path)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x000002B9F3A84550>
+input_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ub01/u_3ef7c45a/.fccg/hardware_imports/751f3d0065e4b0336f4c32eeedbba043d14f7a8a779da52d27865bd6560d72a6/UsbGroundNative')
+
+    def _Input_Resolve(self, input_path: Path) -> tuple[Path, Path]:
+        selected = input_path.resolve(strict=False)
+        if selected.is_symlink():
+            raise CubeMxImportError("CubeMX input symlinks are not accepted")
+        if selected.is_file():
+            if selected.suffix.casefold() != ".ioc":
+                raise CubeMxImportError("Select a CubeMX .ioc file or generated project directory")
+            root = selected.parent.resolve()
+            ioc_path = selected
+        elif selected.is_dir():
+            root = selected.resolve()
+            ioc_files = sorted(root.glob("*.ioc"))
+            if len(ioc_files) != 1:
+                raise CubeMxImportError(
+                    "CubeMX project directory must contain exactly one root .ioc file"
+                )
+            ioc_path = ioc_files[0]
+        else:
+>           raise CubeMxImportError(f"CubeMX input does not exist: {selected}")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: CubeMX input does not exist: C:\Users\chdxm\AppData\Local\Temp\ub01\u_3ef7c45a\.fccg\hardware_imports\751f3d0065e4b0336f4c32eeedbba043d14f7a8a779da52d27865bd6560d72a6\UsbGroundNative
+
+apps\SCG\src\silverstar_fccg\hardware\cubemx.py:266: CubeMxImportError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_usb_ground_backend.py::test_c071_save_reload_recipe_and_source_preservation
+1 failed, 18 passed, 1 warning in 31.37s

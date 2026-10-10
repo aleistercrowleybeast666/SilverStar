@@ -1,0 +1,27 @@
+{
+  "command": [
+    "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+    "-B",
+    "-m",
+    "pip",
+    "wheel",
+    "--no-deps",
+    "--no-build-isolation",
+    "--no-index",
+    "--wheel-dir",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\usb-ground-wheel-20261010",
+    "D:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG"
+  ],
+  "started_utc": "2026-10-10T01:43:32.161593+00:00",
+  "pyproject_sha256": "f440e3dd9b630bed71a9780ff0e31c0dcff00502447ab0ad029652219afbb599",
+  "exit": 0,
+  "finished_utc": "2026-10-10T01:43:41.302484+00:00",
+  "wheel": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\usb-ground-wheel-20261010\\silverstar_fccg-0.1.2-py3-none-any.whl",
+  "wheel_sha256": "e8e97de9f7f0db582f7c6f376cd57c27ef432d4f19f630da4bf306556fd31cea",
+  "profile_sha256": {
+    "silverstar_fccg/hardware/usb_profiles/c071-companion-manifest.json": "8835f4c76e6ea94ceeccf742ec59665157ddf2a089a4a361ad25b2671afcc6d7",
+    "silverstar_fccg/hardware/usb_profiles/c071-device-facts.json": "b48d9ea209c362f7ba0a662a8c695a8ec0e3d659bd26b96b7700d962d397a014",
+    "silverstar_fccg/hardware/usb_profiles/c071-native-profile.json": "5c9ad2ccaae3b0bd4a81c00e5c450610f48c82b7d5958c9587b921be82d29589",
+    "silverstar_fccg/hardware/usb_profiles/f103-device-facts.json": "7c4ec3cb53e16dc856fdfcc6f87f0be8889df2403e870d719b65b0f4329f3126"
+  }
+}

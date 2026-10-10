@@ -1,0 +1,70 @@
+[
+  {
+    "family": "f103",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ub03\\o_69f0e848\\b",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_native_ground.py"
+    ],
+    "started_utc": "2026-10-10T01:41:51.224881+00:00",
+    "emitted_makefile_sha256": "f197a7cab7fce52fe363d862d398a97f715d262e40df468b80c5e2b4acebcbca",
+    "exit": 0,
+    "finished_utc": "2026-10-10T01:41:51.679006+00:00",
+    "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\ub03-f103-architecture.log",
+    "log_sha256": "6485185fa97ba47a0d74957b601d4b6f3ee9985456c658ca6a7d06f8bac09f97"
+  },
+  {
+    "family": "f103",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ub03\\o_69f0e848\\b",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_native_ground.py",
+      "host",
+      "--host-cc",
+      "gcc"
+    ],
+    "started_utc": "2026-10-10T01:41:51.685615+00:00",
+    "emitted_makefile_sha256": "f197a7cab7fce52fe363d862d398a97f715d262e40df468b80c5e2b4acebcbca",
+    "exit": 0,
+    "finished_utc": "2026-10-10T01:41:59.963919+00:00",
+    "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\ub03-f103-host.log",
+    "log_sha256": "aef7da329bb79938e4c096fe5eef9898f29251c6f32867f946e9280f693d2ffb"
+  },
+  {
+    "family": "f103",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ub03\\o_69f0e848\\b",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_native_ground.py",
+      "artifact",
+      "--prefix",
+      "arm-none-eabi-"
+    ],
+    "started_utc": "2026-10-10T01:41:59.973729+00:00",
+    "emitted_makefile_sha256": "f197a7cab7fce52fe363d862d398a97f715d262e40df468b80c5e2b4acebcbca",
+    "exit": 0,
+    "finished_utc": "2026-10-10T01:42:04.578163+00:00",
+    "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\ub03-f103-artifact.log",
+    "log_sha256": "5f467671999eca10ea112a8debd0aeb2dfd55bfa237d59dc09577cc7e87723c0"
+  },
+  {
+    "family": "f103",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ub03\\o_69f0e848\\b",
+    "command": [
+      "powershell",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "Tools/check_power_of_ten.ps1",
+      "-TargetKind",
+      "Ground"
+    ],
+    "started_utc": "2026-10-10T01:42:04.588065+00:00",
+    "emitted_makefile_sha256": "f197a7cab7fce52fe363d862d398a97f715d262e40df468b80c5e2b4acebcbca",
+    "exit": 0,
+    "finished_utc": "2026-10-10T01:42:07.106047+00:00",
+    "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\ub03-f103-power10.log",
+    "log_sha256": "6010c5a067e109af4f1c2ae59dfd6d80233ef2ad14cdc31796532526e8f3f091"
+  }
+]

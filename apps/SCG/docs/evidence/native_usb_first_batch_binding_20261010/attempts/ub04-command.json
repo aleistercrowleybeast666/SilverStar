@@ -1,0 +1,27 @@
+{
+  "command": [
+    "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+    "-B",
+    "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\backend_pytest.py",
+    "apps/SCG/tests/test_native_ground_backend.py",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/Users/chdxm/AppData/Local/Temp/ub04",
+    "-q"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\.work\\ccdi",
+  "started_utc": "2026-10-10T01:41:08.950070+00:00",
+  "scope": "Ordinary backend import/model/render/build flow; no malformed USB, owner expressions, blocked review or hardware",
+  "source_commit": "ed9ff651f0b6d8483378889009811ab572dff109",
+  "source_sha256": {
+    "apps/SCG/src/silverstar_fccg/app/native_ground.py": "fee452b3b05fcc2d35bc210df83403e00dacd795e6b4c3e7b0a0b54772339ee4",
+    "apps/SCG/src/silverstar_fccg/app/service.py": "90c92f8e69e0d7b9fe05de29408ad7e7bdd7a5290fdea57c61be1abc416c11f0",
+    "apps/SCG/src/silverstar_fccg/build/native_compile.py": "881d980ab70a03de98c98c7deea44959763f659a0a9bbf23d2f1c7bd06cbfbef",
+    "apps/SCG/src/silverstar_fccg/project/model.py": "a86452b4e35b471b33d43aabd3f5e20f8e882521eb8a65679ba2f4e38a2bf519",
+    "apps/SCG/tools/validation/native_classic_cdc_compile.py": "0d7cd96e3dd72d31cc900307f2f81294e77932a64f00720478efab62d65f9370",
+    "apps/SCG/tests/test_native_ground_backend.py": "ee9808df8e76a850e09f37a0b2605305801c5c4e32d69b73f1f26952be0afc7e"
+  },
+  "auditable_dirty_diff": "diff --git a/apps/SCG/src/silverstar_fccg/app/service.py b/apps/SCG/src/silverstar_fccg/app/service.py\nindex 3e79e81..2895507 100644\n--- a/apps/SCG/src/silverstar_fccg/app/service.py\n+++ b/apps/SCG/src/silverstar_fccg/app/service.py\n@@ -906,7 +906,7 @@ class FccgService:\n     @staticmethod\n     def _NativeFormalGeneration_Reject(model: ProjectModel) -> None:\n         inventory = model.ground_target.hardware.inventory\n-        if \"native_complete_classic_cdc\" in inventory or \"native_ground_backend\" in inventory:\n+        if any(key in inventory for key in (\"native_complete_classic_cdc\", \"native_ground_backend\", \"usb_ground_c071_native\")):\n             raise FccgError(\"error.native_formal_generation_blocked\", {},\n                 \"Native classic CDC formal build remains blocked by pending lifecycle/critical-contract acceptance; \"\n                 \"use the explicitly private candidate backend. No flash/start action is permitted.\")\n@@ -953,6 +953,24 @@ class FccgService:\n         return NativeGroundCandidate_Build(self.hardware_importer, self.catalog,\n             model, project_root, output, device_facts=device_facts)\n \n+    def UsbGroundProject_Import(self, input_path: Path, model: ProjectModel, **options):\n+        \"\"\"Bind only the exact first-batch F103/C071 target; no GUI or release.\"\"\"\n+        from silverstar_fccg.app.usb_ground import UsbGroundProject_Import\n+        return UsbGroundProject_Import(self.hardware_importer, self.catalog, input_path, model, **options)\n+\n+    def UsbGroundCandidate_Plan(self, model: ProjectModel, **options):\n+        \"\"\"Recheck backend facts and source identity; C071 reports its block.\"\"\"\n+        from silverstar_fccg.app.usb_ground import UsbGroundCandidate_Plan\n+        return UsbGroundCandidate_Plan(self.hardware_importer, self.catalog, model, **options)\n+\n+    def UsbGroundCandidate_Export(self, model: ProjectModel, output: Path, **options):\n+        from silverstar_fccg.app.usb_ground import UsbGroundCandidate_Export\n+        return UsbGroundCandidate_Export(self.hardware_importer, self.catalog, model, output, **options)\n+\n+    def UsbGroundCandidate_Build(self, model: ProjectModel, project_root: Path, output: Path, **options):\n+        from silverstar_fccg.app.usb_ground import UsbGroundCandidate_Build\n+        return UsbGroundCandidate_Build(self.hardware_importer, self.catalog, model, project_root, output, **options)\n+\n     def HardwareProviderForMcu_Get(self, mcu_id: str) -> str:\n         mcu = self.catalog.Component_Get(mcu_id)\n         vendor = str(mcu.metadata.get(\"vendor\", \"\"))\ndiff --git a/apps/SCG/src/silverstar_fccg/generator/multi_target.py b/apps/SCG/src/silverstar_fccg/generator/multi_target.py\nindex 77ccc37..c7d8942 100644\n--- a/apps/SCG/src/silverstar_fccg/generator/multi_target.py\n+++ b/apps/SCG/src/silverstar_fccg/generator/multi_target.py\n@@ -358,7 +358,8 @@ $(BUILD_DIR)/%.o: %.s\n def GroundFiles_Render(\n     model: ProjectModel, catalog: PluginCatalog, internal_policy: WorkspacePolicy,\n ) -> dict[str, bytes]:\n-    if \"native_complete_classic_cdc\" in model.ground_target.hardware.inventory:\n+    if any(key in model.ground_target.hardware.inventory for key in\n+            (\"native_complete_classic_cdc\", \"native_ground_backend\", \"usb_ground_c071_native\")):\n         raise ValueError(\"Native complete classic CDC admission is experimental; \"\n                          \"runtime adapter/compiled closure/ABI/radio timing NOT PROVEN. \"\n                          \"Normal firmware generation is blocked; legacy import is unchanged.\")\n",
+  "exit": 0,
+  "finished_utc": "2026-10-10T01:45:12.093134+00:00"
+}

@@ -1,0 +1,30 @@
+{
+  "format_version": 1,
+  "status": "CompiledCandidate",
+  "scope": "PRIVATE_NATIVE_GROUND_BACKEND",
+  "started_utc": "2026-10-10T01:43:59.632189+00:00",
+  "finished_utc": "2026-10-10T01:45:06.046617+00:00",
+  "model_sha256": "1441f4d92d407cf254b467775c59350e84c5993707cd68e87cd5785d1a397cbe",
+  "project_root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ub04\\p_bd44f051",
+  "snapshot_id": "027cb258b8b32ebc7ebb2aaac00b7ca0f4bf7c5ff02820c5acbcfa0858255f8e",
+  "profile": "f407-tim1-indexed-v1",
+  "compile_receipt_sha256": "d3f3012e5d2f525ea9407917b9ee32b17a0b50cc1e593b061014a68e24de679b",
+  "binding": {
+    "format_version": 1,
+    "scope": "PRIVATE_NATIVE_GROUND_BACKEND",
+    "profile": "f407-tim1-indexed-v1",
+    "hclk_hz": 168000000,
+    "facts_sha256": "cc4f62e0d538c56be518d9bdda27b7d5224206a270bb6fb5cb43d572940e8c5a",
+    "snapshot_id": "027cb258b8b32ebc7ebb2aaac00b7ca0f4bf7c5ff02820c5acbcfa0858255f8e",
+    "spi": "SPI1",
+    "gpio": [
+      "RADIO_NSS",
+      "RADIO_RST",
+      "RADIO_BUSY",
+      "RADIO_DIO1"
+    ],
+    "formal_generation": "BLOCKED"
+  },
+  "failure": null,
+  "limits": "PRIVATE CANDIDATE ONLY; formal generation BLOCKED. NOT PROVEN: complete EP0/async lifecycle, manual critical contracts, whole-program stack/WCET and physical timing/hardware. No shared EP0 repair integrated."
+}

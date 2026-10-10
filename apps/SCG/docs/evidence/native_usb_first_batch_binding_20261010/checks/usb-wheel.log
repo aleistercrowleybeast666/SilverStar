@@ -1,0 +1,9 @@
+Processing d:\python_software\silverstar\.work\ccdi\apps\scg
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: silverstar-fccg
+  Building wheel for silverstar-fccg (pyproject.toml): started
+  Building wheel for silverstar-fccg (pyproject.toml): finished with status 'done'
+  Created wheel for silverstar-fccg: filename=silverstar_fccg-0.1.2-py3-none-any.whl size=527714 sha256=e8e97de9f7f0db582f7c6f376cd57c27ef432d4f19f630da4bf306556fd31cea
+  Stored in directory: C:\Users\chdxm\AppData\Local\Temp\pip-ephem-wheel-cache-ttld7s2o\wheels\0e\5e\52\ca38b400158320e53cefa700e4d6a56c7ad38ad80b3c8899f2
+Successfully built silverstar-fccg
