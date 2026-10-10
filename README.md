@@ -166,7 +166,7 @@ FLP 的解码包是声明式数据，不执行包内 Python。容器插件与算
 
 原创 SilverStar 源码使用根 [Apache License 2.0](LICENSE)。第三方材料保留自己的版权头和条款：FreeRTOS MIT、CMSIS Apache-2.0、ST HAL/device 相应包条款、FatFs 文件头条款、Bosch 相应 BSD 条款等，均不能被根 LICENSE 改写。
 
-已有来源审计仍列出 Semtech SX1280lib 引用的 `LICENSE.TXT` 缺失、ST 精确包来源与第一方权利人署名待核事项。当前只准备本地源码候选包；**公开分发及二进制/Qt 打包仍需关闭这些已知事项**。不附第三方 Python/Qt 二进制，也未执行 Windows 安装器许可审计。详见 [本版分发说明](docs/public/releases/0.1.2.md)。
+当前补充候选已加入经核实的 ST HAL 完整许可正文、CMSIS/startup 与 C071 SLA0044 来源映射，详见 [第三方来源与许可材料](docs/public/licenses/README.md)。Semtech SX1280lib 匹配 `LICENSE.TXT`、42 个 board 生成模板的适用许可及一份 C0 适配的导入记录仍未闭合；不能宣称已完成公开分发许可核验。第一方准确权利人署名是待确认项，不等同于已证明的公开禁令。当前仅本地候选，不附 Python/Qt 二进制；Windows EXE/安装器许可审计未执行。详见 [本版分发说明](docs/public/releases/0.1.2.md)。
 
 包采用文件白名单，不含 `.git`、`.venv`、缓存、临时目录、开发验收证据、原始用户日志或用户项目，也不附带固件最终交付物。来源路径字段的可移植处理以及文档链接范围会逐项记录在 `RELEASE_MANIFEST.json`；源文件及分发内容分别计算 SHA256，不能将处理后的元数据谎称与 Git blob 完全一致。
 
