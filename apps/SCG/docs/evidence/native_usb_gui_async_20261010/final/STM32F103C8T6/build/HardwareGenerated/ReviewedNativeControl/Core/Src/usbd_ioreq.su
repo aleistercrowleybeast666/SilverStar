@@ -1,0 +1,7 @@
+HardwareGenerated/ReviewedNativeControl/Core/Src/usbd_ioreq.c:87:20:USBD_CtlSendData	4	static
+HardwareGenerated/ReviewedNativeControl/Core/Src/usbd_ioreq.c:107:20:USBD_CtlContinueSendData	8	static
+HardwareGenerated/ReviewedNativeControl/Core/Src/usbd_ioreq.c:124:20:USBD_CtlPrepareRx	4	static
+HardwareGenerated/ReviewedNativeControl/Core/Src/usbd_ioreq.c:144:20:USBD_CtlContinueRx	8	static
+HardwareGenerated/ReviewedNativeControl/Core/Src/usbd_ioreq.c:158:20:USBD_CtlSendStatus	0	static
+HardwareGenerated/ReviewedNativeControl/Core/Src/usbd_ioreq.c:173:20:USBD_CtlReceiveStatus	0	static
+HardwareGenerated/ReviewedNativeControl/Core/Src/usbd_ioreq.c:189:10:USBD_GetRxCount	0	static

@@ -1,0 +1,29 @@
+{
+  "command": [
+    "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+    "-B",
+    "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\backend_pytest.py",
+    "apps/SCG/tests/test_ground_gui_cubemx_import.py",
+    "apps/SCG/tests/test_ground_gui_acceptance_20261009.py",
+    "apps/SCG/tests/test_task_progress_busy.py",
+    "apps/SCG/tests/test_target_compile_progress.py",
+    "apps/SCG/tests/test_build_progress.py",
+    "apps/SCG/tests/test_native_control_normal.py",
+    "apps/SCG/tests/test_native_machine_contract.py",
+    "apps/SCG/tests/test_native_clock_tim_phase.py",
+    "apps/SCG/tests/test_native_no_heap.py",
+    "apps/SCG/tests/test_native_radio.py",
+    "apps/SCG/tests/test_native_runtime.py",
+    "apps/SCG/tests/test_build_audit.py",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/Users/chdxm/AppData/Local/Temp/ugr03",
+    "-q"
+  ],
+  "source_commit": "640a0d3fb6c717b541062d4aa8794841e3e5191c",
+  "dirty": "",
+  "started_utc": "2026-10-10T04:43:03.397472+00:00",
+  "scope": "Preserved ordinary GUI/target progress/build and native control/clock/radio/ABI/runtime regression; no hardware",
+  "exit": 1,
+  "finished_utc": "2026-10-10T04:46:11.702203+00:00"
+}

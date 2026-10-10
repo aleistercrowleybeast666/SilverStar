@@ -1,0 +1,54 @@
+[
+  {
+    "function": "<lambda>",
+    "seconds": 2.226580599999579
+  },
+  {
+    "function": "detect",
+    "seconds": 0.21357999999599997
+  },
+  {
+    "function": "inspect",
+    "seconds": 0.0021906000038143247
+  },
+  {
+    "function": "<lambda>",
+    "seconds": 8.933200300001772
+  },
+  {
+    "function": "inspect",
+    "seconds": 3.309962999999698
+  },
+  {
+    "function": "<lambda>",
+    "seconds": 65.30459680000058
+  },
+  {
+    "function": "inspect",
+    "seconds": 2.363740600005258
+  },
+  {
+    "function": "validate",
+    "seconds": 2.2500861000007717
+  },
+  {
+    "function": "quality_run",
+    "seconds": 4.922813199998927
+  },
+  {
+    "function": "inspect",
+    "seconds": 1.9399695999964024
+  },
+  {
+    "function": "quality_run",
+    "seconds": 8.87487549999787
+  },
+  {
+    "function": "inspect",
+    "seconds": 1.9848133999985293
+  },
+  {
+    "function": "validate",
+    "seconds": 1.3496782000001986
+  }
+]

@@ -1,0 +1,71 @@
+FF............                                                           [100%]
+================================== FAILURES ===================================
+_ test_complete_refresh_shares_one_plan_and_keeps_qt_responsive[STM32F103C8T6] _
+
+completed_window = (<silverstar_fccg.ui.main_window.MainWindow(0x1dcf3a41d00) at 0x000001DCF5453540>, WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug08/usb-2815bba4e9b5'), [], 'STM32F103C8T6')
+qapp = <PySide6.QtWidgets.QApplication(0x1dcf1145db0) at 0x000001DCF4FF43C0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001DCF50B1480>
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ur01/test_complete_refresh_shares_o_be572d0c')
+
+    def test_complete_refresh_shares_one_plan_and_keeps_qt_responsive(completed_window,qapp,monkeypatch,tmp_path):
+        current,output,errors,part=completed_window
+        plans=[];owner=get_ident();original=current._service.UsbGroundCandidate_Plan
+        def plan(*a,**k):
+            plans.append(get_ident());return original(*a,**k)
+        monkeypatch.setattr(current._service,'UsbGroundCandidate_Plan',plan)
+        ticks=[];timer=QTimer();timer.setInterval(20);timer.timeout.connect(lambda:ticks.append(time.monotonic()))
+        timer.start();start=time.monotonic()
+        try:
+            current._Project_Refresh()
+            immediate=time.monotonic()-start
+            assert immediate<.75,immediate
+            _Wait(qapp,lambda:_Idle(current))
+        finally:timer.stop()
+        gaps=[b-a for a,b in zip([start]+ticks,ticks+[time.monotonic()])]
+        assert len(ticks)>=10,len(ticks)
+>       assert max(gaps)<.5,max(gaps)
+E       AssertionError: 0.6910045000040554
+E       assert 0.6910045000040554 < 0.5
+E        +  where 0.6910045000040554 = max([0.6910045000040554, 0.04790140000113752, 0.0073999999949592166, 0.032565200002864, 0.031299700000090525, 0.031181199999991804, ...])
+
+apps\SCG\tests\test_usb_gui_async.py:70: AssertionError
+_ test_complete_refresh_shares_one_plan_and_keeps_qt_responsive[STM32C071FBP6] _
+
+completed_window = (<silverstar_fccg.ui.main_window.MainWindow(0x1dcf67796c0) at 0x000001DCF7A45580>, WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug08/usb-9a125184f556'), [], 'STM32C071FBP6')
+qapp = <PySide6.QtWidgets.QApplication(0x1dcf1145db0) at 0x000001DCF4FF43C0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001DCF55EFCE0>
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ur01/test_complete_refresh_shares_o_bb49fba4')
+
+    def test_complete_refresh_shares_one_plan_and_keeps_qt_responsive(completed_window,qapp,monkeypatch,tmp_path):
+        current,output,errors,part=completed_window
+        plans=[];owner=get_ident();original=current._service.UsbGroundCandidate_Plan
+        def plan(*a,**k):
+            plans.append(get_ident());return original(*a,**k)
+        monkeypatch.setattr(current._service,'UsbGroundCandidate_Plan',plan)
+        ticks=[];timer=QTimer();timer.setInterval(20);timer.timeout.connect(lambda:ticks.append(time.monotonic()))
+        timer.start();start=time.monotonic()
+        try:
+            current._Project_Refresh()
+            immediate=time.monotonic()-start
+            assert immediate<.75,immediate
+            _Wait(qapp,lambda:_Idle(current))
+        finally:timer.stop()
+        gaps=[b-a for a,b in zip([start]+ticks,ticks+[time.monotonic()])]
+        assert len(ticks)>=10,len(ticks)
+>       assert max(gaps)<.5,max(gaps)
+E       AssertionError: 0.5983548000003793
+E       assert 0.5983548000003793 < 0.5
+E        +  where 0.5983548000003793 = max([0.5983548000003793, 0.023398199999064673, 0.026624400001310278, 0.03255920000083279, 0.03243909999582684, 0.030997800000477582, ...])
+
+apps\SCG\tests\test_usb_gui_async.py:70: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_usb_gui_async.py::test_complete_refresh_shares_one_plan_and_keeps_qt_responsive[STM32F103C8T6]
+FAILED apps\SCG\tests\test_usb_gui_async.py::test_complete_refresh_shares_one_plan_and_keeps_qt_responsive[STM32C071FBP6]
+2 failed, 12 passed, 1 warning in 44.91s

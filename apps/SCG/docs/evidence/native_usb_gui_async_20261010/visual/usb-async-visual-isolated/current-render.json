@@ -1,0 +1,16 @@
+[
+  {
+    "label": "current",
+    "page": "ground",
+    "sha256": "a0fddf1f1605bdf15a799685ce76fc9e491f244c93768510b218004c20eaba1b",
+    "width": 1280,
+    "height": 820
+  },
+  {
+    "label": "current",
+    "page": "build",
+    "sha256": "ba3eeeba41fded5edf572601732ef6ba32d6285427af2725d38a6cc77fae1486",
+    "width": 1280,
+    "height": 820
+  }
+]

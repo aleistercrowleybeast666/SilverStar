@@ -1,0 +1,33 @@
+{
+  "format_version": 1,
+  "entries": [
+    {
+      "original": "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c",
+      "original_sha256": "9bf6b6c49a7faab7bdc465dae5df52bcc878720bd354c8596b51e16d6e210ecb",
+      "derived": "HardwareGenerated/ReviewedNativeControl/Class/CDC/Src/usbd_cdc.c",
+      "derived_sha256": "093a9bbc83529320eb0df6ebd72c07695189215930c154d691da673694ae1053",
+      "patch": "HardwareGenerated/ReviewedNativeControl/Patches/usbd_cdc.c.patch",
+      "patch_sha256": "6663430f1df08d4a96e55929fefe3c9b24f5c457d4aa661284daa1536deecd47"
+    },
+    {
+      "original": "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c",
+      "original_sha256": "9696a4d61c9e05cd7989936792b15b88f9b7be567d2a927b4feeb0685f1a73a2",
+      "derived": "HardwareGenerated/ReviewedNativeControl/Core/Src/usbd_core.c",
+      "derived_sha256": "be411e20447ea6416d49db25c008693daf7b68e820e09c54519b9b7c711b0846",
+      "patch": "HardwareGenerated/ReviewedNativeControl/Patches/usbd_core.c.patch",
+      "patch_sha256": "c22482de5477e1bfa236154583625d63a329dcdce2212da5451fa41606eca255"
+    },
+    {
+      "original": "HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.c",
+      "original_sha256": "effe29562b9d655026d6127a87a988af13d05744d5d6d70356faefe5004d0f87",
+      "derived": "HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.c",
+      "derived_sha256": "b4a00d9a75a405e44410e0c082eec340ec379eb4af243640983ea56ff213d0d3",
+      "patch": "HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.c.patch",
+      "patch_sha256": "a84c6f64b14a7e40045405e1ce77f31f0b8255f22d9ece71841bc6d70f24941b"
+    }
+  ],
+  "scope": "Private F1 vendor source profile, FS single CDC, 70-byte SCG TX and 64-byte RX; not an MCU admission list",
+  "ownership": "Keep TX ownership on ambiguous LL failure; failed endpoint closure retains class block and blocks reinitialization",
+  "ep0": "Shared F103 control ordinary code integrated; independent safety review has NO PASSED OUTCOME; complete EP0/async lifecycle NOT PROVEN",
+  "exceptions": "Vendor fixed callbacks and one static class allocation retained; no heap/runtime registry introduced"
+}

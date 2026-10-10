@@ -1,0 +1,13 @@
+Generated/Src/pc_byte_stream.c:29:6:PcByteStream_OnUsbReset	0	static
+Generated/Src/pc_byte_stream.c:23:24:PcByteStream_Init	8	static
+Generated/Src/pc_byte_stream.c:41:9:PcByteStream_ResetPending_Get	0	static
+Generated/Src/pc_byte_stream.c:52:6:PcByteStream_OnUsbReceive	40	static
+Generated/Src/pc_byte_stream.c:82:10:PcByteStream_ReadSession	40	static
+Generated/Src/pc_byte_stream.c:76:10:PcByteStream_Read	16	static
+Generated/Src/pc_byte_stream.c:113:25:PcByteStream_WriteSession	16	static
+Generated/Src/pc_byte_stream.c:107:25:PcByteStream_Write	8	static
+Generated/Src/pc_byte_stream.c:152:10:PcByteStream_OverflowCount_Get	0	static
+Generated/Src/pc_byte_stream.c:157:10:PcByteStream_Session_Get	0	static
+Generated/Src/pc_byte_stream.c:159:9:PcByteStream_Session_Check	0	static
+Generated/Src/pc_byte_stream.c:164:9:PcByteStream_Session_Enter	16	static
+Generated/Src/pc_byte_stream.c:176:6:PcByteStream_Session_Exit	0	static

@@ -1,0 +1,63 @@
+{
+  "baseline": "bf22bdcd56e76687e8be40d5f221cb3c29668ec1",
+  "scope": "Widget/layout/style source+AST only; owned Qt timer/worker state is new backend lifecycle logic",
+  "changed": [
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/main_window.py",
+      "changed_methods": [
+        "_GroundCubeMxImport_Request",
+        "_Project_Display",
+        "_QualityChecks_Request",
+        "_TargetQualityResults_Refresh",
+        "_Task_Cancel",
+        "_Task_Finish",
+        "_UsbGroundOperation_Request",
+        "_UsbGroundRefresh_Invalidate",
+        "_UsbGroundRefresh_Request",
+        "_UsbGroundRefresh_Start",
+        "_UsbGroundRequest_Current",
+        "_UsbGroundTargetAction_Request",
+        "__init__",
+        "closeEvent"
+      ],
+      "baseline_sha256": "5082847fab1c0b6d5240bb75c1aa38f8c22a6319e83eaab9865ca884f02b1886",
+      "current_sha256": "36d932a099a4683d22b54c37b2e8079d559433615a2d80b4946c02cabfb9db3a",
+      "constructor_layout_widgets_styles_identical_after_only_owned_timer_fields_removed": true
+    }
+  ],
+  "unchanged_ui_files": [
+    "apps/SCG/src/silverstar_fccg/ui/__init__.py",
+    "apps/SCG/src/silverstar_fccg/ui/assets/check_white.svg",
+    "apps/SCG/src/silverstar_fccg/ui/assets/spin_minus_dark.svg",
+    "apps/SCG/src/silverstar_fccg/ui/assets/spin_minus_light.svg",
+    "apps/SCG/src/silverstar_fccg/ui/assets/spin_plus_dark.svg",
+    "apps/SCG/src/silverstar_fccg/ui/assets/spin_plus_light.svg",
+    "apps/SCG/src/silverstar_fccg/ui/committed_spin.py",
+    "apps/SCG/src/silverstar_fccg/ui/device_initialization.py",
+    "apps/SCG/src/silverstar_fccg/ui/dialogs/__init__.py",
+    "apps/SCG/src/silverstar_fccg/ui/dialogs/new_project.py",
+    "apps/SCG/src/silverstar_fccg/ui/ground_radio_instances.py",
+    "apps/SCG/src/silverstar_fccg/ui/message_box.py",
+    "apps/SCG/src/silverstar_fccg/ui/pages/__init__.py",
+    "apps/SCG/src/silverstar_fccg/ui/pages/algorithm_parameters.py",
+    "apps/SCG/src/silverstar_fccg/ui/pages/base.py",
+    "apps/SCG/src/silverstar_fccg/ui/pages/build.py",
+    "apps/SCG/src/silverstar_fccg/ui/pages/components.py",
+    "apps/SCG/src/silverstar_fccg/ui/pages/navigation_alignment.py",
+    "apps/SCG/src/silverstar_fccg/ui/pages/plugins.py",
+    "apps/SCG/src/silverstar_fccg/ui/pages/targets.py",
+    "apps/SCG/src/silverstar_fccg/ui/telemetry_card.py",
+    "apps/SCG/src/silverstar_fccg/ui/theme.py",
+    "apps/SCG/src/silverstar_fccg/ui/touch_scroll.py",
+    "apps/SCG/src/silverstar_fccg/ui/widgets.py",
+    "apps/SCG/src/silverstar_fccg/ui/workers.py"
+  ],
+  "owned_timer_additions": [
+    "self._usb_refresh_epoch = 0",
+    "self._usb_refresh_pending = None",
+    "self._usb_refresh_timer = QTimer(self)",
+    "self._usb_refresh_timer.setSingleShot(True)",
+    "self._usb_refresh_timer.timeout.connect(self._UsbGroundRefresh_Start)",
+    "self._usb_refresh_worker = None"
+  ]
+}

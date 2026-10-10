@@ -1,0 +1,38 @@
+....................F................................................... [ 72%]
+...........................                                              [100%]
+================================== FAILURES ===================================
+_____ test_one_visible_directory_import_entry_retains_legacy_api[ground] ______
+
+window = <silverstar_fccg.ui.main_window.MainWindow(0x1a91e7a9810) at 0x000001A922E82500>
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ugr03/test_one_visible_directory_imp_aa18e0e0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001A923454F50>
+target = 'ground'
+
+    @pytest.mark.parametrize('target',['flight','ground'])
+    def test_one_visible_directory_import_entry_retains_legacy_api(window,tmp_path,monkeypatch,target):
+        page=window.board_hardware_page if target=='flight' else window.ground_target_page
+        assert page.import_ioc_button.isHidden()
+        assert not page.import_directory_button.isHidden()
+        assert page.import_directory_button.text()==window._translator.Text_Get('action.import_cubemx_project')
+        selected=tmp_path/'selected_project'
+        selected.mkdir()
+        monkeypatch.setattr(QFileDialog,'getExistingDirectory',lambda *args:str(selected))
+        monkeypatch.setattr(window,'_MessageBox_Exec',lambda *args,**kwargs:QMessageBox.StandardButton.Ok)
+        tasks=[]
+        monkeypatch.setattr(window,'Task_Run',lambda run,callback,*args,**kwargs:tasks.append((run,callback)))
+        page.import_directory_button.click()
+        assert len(tasks)==1
+>       assert tasks[0][1]==(window._CubeMxImport_Complete if target=='flight' else window._GroundCubeMxImport_Complete)
+E       assert <function MainWindow._GroundCubeMxImport_Request.<locals>.complete at 0x000001A9234FC1A0> == _GroundCubeMxImport_Complete
+
+apps\SCG\tests\test_ground_gui_acceptance_20261009.py:155: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_ground_gui_acceptance_20261009.py::test_one_visible_directory_import_entry_retains_legacy_api[ground]
+1 failed, 98 passed, 1 warning in 186.20s (0:03:06)

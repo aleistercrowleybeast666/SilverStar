@@ -1,0 +1,20 @@
+[
+  {
+    "part": "STM32F103C8T6",
+    "refresh_seconds": 6.750068000001193,
+    "qt_timer_ticks_during_refresh": 0,
+    "qt_timer_ticks_after_events_processed": 1,
+    "ground_build_enabled": false,
+    "ground_open_enabled": true,
+    "quality_record_count": 2
+  },
+  {
+    "part": "STM32C071FBP6",
+    "refresh_seconds": 9.26177170000301,
+    "qt_timer_ticks_during_refresh": 0,
+    "qt_timer_ticks_after_events_processed": 1,
+    "ground_build_enabled": false,
+    "ground_open_enabled": true,
+    "quality_record_count": 2
+  }
+]

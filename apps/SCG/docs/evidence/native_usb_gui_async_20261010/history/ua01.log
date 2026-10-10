@@ -1,0 +1,93 @@
+FF........                                                               [100%]
+================================== FAILURES ===================================
+______ test_real_gui_import_save_reload_export_and_artifact_state[F103] _______
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x1834d551a90) at 0x000001834F075C80>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation/cube-f103-usb'), [], 'F103')
+qapp = <PySide6.QtWidgets.QApplication(0x1834af4ac20) at 0x000001834F04FB00>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ua01'), _trace=<pluggy._tracing.TagTrac...B65FCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ua01'), _retention_count=3, _retention_policy='all')
+
+    def test_real_gui_import_save_reload_export_and_artifact_state(usb_window,qapp,tmp_path_factory):
+        current,source,errors,part=usb_window
+        before={p.relative_to(source).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in source.rglob('*') if p.is_file()}
+        model=_Import(qapp,usb_window)
+        project=tmp_path_factory.mktemp('p')
+        current._project_root=project
+        current._Project_Save()
+        assert not errors,errors
+        (project/'before-save.json').write_text(json.dumps(model,indent=2),encoding='utf8')
+        assert json.dumps(ProjectModel_Load(project/'SilverStar.ssproject').Dictionary_Get(),sort_keys=True)==json.dumps(model,sort_keys=True)
+        current._Project_Open(project)
+        assert not errors,errors
+        assert json.dumps(current._model.Dictionary_Get(),sort_keys=True)==json.dumps(model,sort_keys=True)
+        assert current.ground_target_page.generate_button.isEnabled()
+        current.ground_target_page.generate_button.click()
+>       _Wait(qapp,lambda:current._active_worker is None)
+
+apps\SCG\tests\test_usb_gui_flow.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+qapp = <PySide6.QtWidgets.QApplication(0x1834af4ac20) at 0x000001834F04FB00>
+condition = <function test_real_gui_import_save_reload_export_and_artifact_state.<locals>.<lambda> at 0x000001835187DFE0>
+
+    def _Wait(qapp, condition):
+        deadline = time.monotonic() + 10
+        while not condition() and time.monotonic() < deadline:
+            qapp.processEvents()
+            time.sleep(0.005)
+>       assert condition(), "bounded worker wait expired"
+E       AssertionError: bounded worker wait expired
+E       assert False
+E        +  where False = <function test_real_gui_import_save_reload_export_and_artifact_state.<locals>.<lambda> at 0x000001835187DFE0>()
+
+apps\SCG\tests\test_task_progress_busy.py:15: AssertionError
+______ test_real_gui_import_save_reload_export_and_artifact_state[C071] _______
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x18350447080) at 0x000001834EDFC440>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST'), [], 'C071')
+qapp = <PySide6.QtWidgets.QApplication(0x1834af4ac20) at 0x000001834F04FB00>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ua01'), _trace=<pluggy._tracing.TagTrac...B65FCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ua01'), _retention_count=3, _retention_policy='all')
+
+    def test_real_gui_import_save_reload_export_and_artifact_state(usb_window,qapp,tmp_path_factory):
+        current,source,errors,part=usb_window
+        before={p.relative_to(source).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in source.rglob('*') if p.is_file()}
+        model=_Import(qapp,usb_window)
+        project=tmp_path_factory.mktemp('p')
+        current._project_root=project
+        current._Project_Save()
+        assert not errors,errors
+        (project/'before-save.json').write_text(json.dumps(model,indent=2),encoding='utf8')
+        assert json.dumps(ProjectModel_Load(project/'SilverStar.ssproject').Dictionary_Get(),sort_keys=True)==json.dumps(model,sort_keys=True)
+        current._Project_Open(project)
+        assert not errors,errors
+        assert json.dumps(current._model.Dictionary_Get(),sort_keys=True)==json.dumps(model,sort_keys=True)
+        assert current.ground_target_page.generate_button.isEnabled()
+        current.ground_target_page.generate_button.click()
+>       _Wait(qapp,lambda:current._active_worker is None)
+
+apps\SCG\tests\test_usb_gui_flow.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+qapp = <PySide6.QtWidgets.QApplication(0x1834af4ac20) at 0x000001834F04FB00>
+condition = <function test_real_gui_import_save_reload_export_and_artifact_state.<locals>.<lambda> at 0x000001835193F320>
+
+    def _Wait(qapp, condition):
+        deadline = time.monotonic() + 10
+        while not condition() and time.monotonic() < deadline:
+            qapp.processEvents()
+            time.sleep(0.005)
+>       assert condition(), "bounded worker wait expired"
+E       AssertionError: bounded worker wait expired
+E       assert False
+E        +  where False = <function test_real_gui_import_save_reload_export_and_artifact_state.<locals>.<lambda> at 0x000001835193F320>()
+
+apps\SCG\tests\test_task_progress_busy.py:15: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_import_save_reload_export_and_artifact_state[F103]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_import_save_reload_export_and_artifact_state[C071]
+2 failed, 8 passed, 2 deselected, 1 warning in 80.78s (0:01:20)

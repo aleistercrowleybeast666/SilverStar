@@ -1,0 +1,15 @@
+{
+    "recommendations": [
+        "cl.eide",
+        "keroc.hex-fmt",
+        "xiaoyongdong.srecord",
+        "hars.cppsnippets",
+        "zixuanwang.linkerscript",
+        "redhat.vscode-yaml",
+        "IBM.output-colorizer",
+        "cschlosser.doxdocgen",
+        "ms-vscode.vscode-serial-monitor",
+        "dan-c-underwood.arm",
+        "marus25.cortex-debug"
+    ]
+}

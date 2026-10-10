@@ -1,0 +1,6 @@
+Generated/Src/pc_usb_control.c:14:32:ClassData_Get	0	static
+Generated/Src/pc_usb_control.c:21:8:PcUsbControl_Control	0	static
+Generated/Src/pc_usb_control.c:39:6:PcUsbControl_Cancel	8	static
+Generated/Src/pc_usb_control.c:44:20:PcUsbControl_Dispatch	24	static
+Generated/Src/pc_usb_control.c:56:20:PcUsbControl_Setup	16	static
+Generated/Src/pc_usb_control.c:88:20:PcUsbControl_RxReady	16	static
