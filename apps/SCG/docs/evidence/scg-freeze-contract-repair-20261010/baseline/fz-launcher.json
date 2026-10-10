@@ -1,0 +1,15 @@
+{
+  "command": [
+    "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+    "-B",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\SCG.py",
+    "--version"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "source_commit": "2b3d4ae8889f1fb0924ee18631c6a346e5822b98",
+  "exit": 0,
+  "stdout": "0.1.2\n",
+  "stderr": "",
+  "recorded_utc": "2026-10-10T10:02:42.934077+00:00",
+  "scope": "Actual default system Python public launcher version; no writable user state or hardware"
+}

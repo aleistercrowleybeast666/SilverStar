@@ -1,0 +1,72 @@
+{
+  "started_utc": "2026-10-10T13:21:02.145642+00:00",
+  "head": "819eec98347e96aa6548012be159e6a6c58bd435",
+  "status_before": "clean",
+  "scope": "Only ordinary catalog normalization P2 closure: three equivalent actual matcher parts rejected before fresh Scan publication; distinct normalized target positive; empty token negative; existing no-match/tied matcher behavior. No USB security review, ARM/Host/analyzer build, hardware or other apps.",
+  "command": [
+    "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+    "-B",
+    "-m",
+    "pytest",
+    "-c",
+    "apps/SCG/pyproject.toml",
+    "apps/SCG/tests/test_physical_device_platform_identity.py::test_equivalent_matched_parts_collide_before_scan_publication",
+    "apps/SCG/tests/test_physical_device_platform_identity.py::test_distinct_normalized_part_keeps_real_platform_variant_domain",
+    "apps/SCG/tests/test_physical_device_platform_identity.py::test_duplicate_hardware_requires_proven_disjoint_domains[empty_token]",
+    "apps/SCG/tests/test_internal_platform_refactor.py::test_platform_matching_reports_zero_and_tied_candidates",
+    "-q",
+    "--basetemp=D:\\Codex_Work\\2026-10-09\\task-2\\scg-review-819-catalog\\pytest-temp",
+    "-o",
+    "cache_dir=D:\\Codex_Work\\2026-10-09\\task-2\\scg-review-819-catalog\\pytest-cache",
+    "--junitxml=D:\\Codex_Work\\2026-10-09\\task-2\\scg-review-819-catalog\\tests.xml"
+  ],
+  "cwd": "D:\\Codex_Work\\2026-10-10\\task\\r",
+  "test_environment_overrides": {
+    "TEMP": "D:\\Codex_Work\\2026-10-09\\task-2\\scg-review-819-catalog\\temp",
+    "TMP": "D:\\Codex_Work\\2026-10-09\\task-2\\scg-review-819-catalog\\temp",
+    "TMPDIR": "D:\\Codex_Work\\2026-10-09\\task-2\\scg-review-819-catalog\\temp",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONPATH": "D:\\Codex_Work\\2026-10-10\\task\\r\\apps\\SCG\\src",
+    "QT_QPA_PLATFORM": "offscreen",
+    "MPLCONFIGDIR": "D:\\Codex_Work\\2026-10-09\\task-2\\scg-review-819-catalog\\mpl",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1"
+  },
+  "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+  "old_counterexample_evidence": "D:\\Codex_Work\\2026-10-09\\task-2\\scg-review-244\\audit.json",
+  "old_counterexample_sha256": "607a9f33e439362abfcac81fba12bf7a0dafe4aac7c0d694c473c22c4078a016",
+  "old_token_function_ast_identical": true,
+  "runtime_token_is_shared_function": true,
+  "token_samples": {
+    "STM32F407VET6": "STM32F407VET6",
+    "stm32f407vet6": "STM32F407VET6",
+    "STM32-F407VET6": "STM32F407VET6",
+    "STM32 F407VET6": "STM32F407VET6",
+    "stm32 f103re-t6": "STM32F103RET6",
+    " -- ": "",
+    "STM32F103RFT6": "STM32F103RFT6"
+  },
+  "source_sha256": {
+    "apps/SCG/src/silverstar_fccg/core/platform_tokens.py": "d229727637c7ef73fa81fa45267fd1449b0cb256aca39ad9e6b35b7240873d71",
+    "apps/SCG/src/silverstar_fccg/hardware/platform.py": "e34c8fc6c18cb570bbc4ffa72b38386f87cfee1bc213583e29572f6bd9acef0d",
+    "apps/SCG/src/silverstar_fccg/plugins/catalog.py": "8d94d9f7cae33071f38c9ba37e821b30265a5bf2cdfc527f445212c9ad8c9742",
+    "apps/SCG/tests/test_physical_device_platform_identity.py": "f107102b0c84bb5579cf85004cd8df5d131b72051eb312de4ff72be62dc89951",
+    "apps/SCG/tests/test_internal_platform_refactor.py": "a2fcae4ccfc8ee5f1fcf2184b254f4bf5c33a4a6142471b9bb0e718f427e2f8b",
+    "apps/SCG/tests/conftest.py": "9ac586c3771423e1a89f96bcc94df2ffc4b0c899869865438ae4b9c72bc27a13",
+    "apps/SCG/pyproject.toml": "c3e7c61c4194acee25b1e94685079e15811428d7fcdbfd86f669748ab5947caf"
+  },
+  "exit": 0,
+  "ended_utc": "2026-10-10T13:21:12.682888+00:00",
+  "ending_head": "819eec98347e96aa6548012be159e6a6c58bd435",
+  "ending_status": "",
+  "source_hashes_unchanged": {
+    "apps/SCG/src/silverstar_fccg/core/platform_tokens.py": true,
+    "apps/SCG/src/silverstar_fccg/hardware/platform.py": true,
+    "apps/SCG/src/silverstar_fccg/plugins/catalog.py": true,
+    "apps/SCG/tests/test_physical_device_platform_identity.py": true,
+    "apps/SCG/tests/test_internal_platform_refactor.py": true,
+    "apps/SCG/tests/conftest.py": true,
+    "apps/SCG/pyproject.toml": true
+  },
+  "log_sha256": "43bbea996a2e9e3d680e14e0cf1d79ba9d13e24d29abbb5c7fd01f80cf049d30",
+  "junit_sha256": "7934a95e0f1ab0783711e02f4716507c1409dd4f34ee1e23ce4379b5b45d479d"
+}

@@ -1,0 +1,15 @@
+fzlegacy-GroundUART-host-tests 0
+ppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\build\\ground-host\\backpressure.exe", "queued-reset"]
+PASS queued-reset forwarded=5 ACK=1 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\build\\ground-host\\backpressure.exe", "budget"]
+PASS budget forwarded=1 ACK=1 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\build\\ground-host\\backpressure.exe", "error"]
+PASS error forwarded=0 ACK=0 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\build\\ground-host\\backpressure.exe", "error-reset"]
+PASS error-reset forwarded=0 ACK=0 radio=0 status=1
+PASS host backpressure
+COMMAND ["gcc", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wvla", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\build\\ground-host", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\Ground\\Core\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\Ground\\Protocol\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\Common\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\Generated\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\Platform\\Inc", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\Generated\\Src\\pc_byte_stream.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\Common\\Src\\silverstar_assert.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\build\\ground-host\\uart_dma.c", "-o", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\build\\ground-host\\uart_dma.exe"]
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\build\\ground-host\\uart_dma.exe"]
+PASS host uart_dma
+PASS 3 generated-source host executables; HAL/radio are mocks, no MCU recovery proof
+

@@ -1,0 +1,84 @@
+.F                                                                       [100%]
+================================== FAILURES ===================================
+______________ test_imported_documentation_replay_is_idempotent _______________
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/SCG'))
+path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/fztools01/test_imported_documentation_re_6740aeab/silverstar_protocol_logging_sslog_0_0/docs/STORAGE_AND_FLIGHT_LOG.md')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -> Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+>           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\src\silverstar_fccg\core\workspace.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/fztools01/test_imported_documentation_re_6740aeab/silverstar_protocol_logging_sslog_0_0/docs/STORAGE_AND_FLIGHT_LOG.md')
+other = WindowsPath('D:/python_software/SilverStar/apps/SCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+>               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\fztools01\\test_imported_documentation_re_6740aeab\\silverstar_protocol_logging_sslog_0_0\\docs\\STORAGE_AND_FLIGHT_LOG.md' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\SCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/fztools01/test_imported_documentation_re_6740aeab')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+
+>   ???
+
+D:\python_software\SilverStar\apps\FCCG\tests\test_runtime_safety.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\core\workspace.py:148: in File_Copy
+    target = self.Path_Resolve(destination, allow_root=False)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/SCG'))
+path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/fztools01/test_imported_documentation_re_6740aeab/silverstar_protocol_logging_sslog_0_0/docs/STORAGE_AND_FLIGHT_LOG.md')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -> Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+>           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: C:\Users\chdxm\AppData\Local\Temp\fztools01\test_imported_documentation_re_6740aeab\silverstar_protocol_logging_sslog_0_0\docs\STORAGE_AND_FLIGHT_LOG.md
+
+apps\SCG\src\silverstar_fccg\core\workspace.py:73: WorkspacePolicyError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_runtime_safety.py::test_imported_documentation_replay_is_idempotent
+1 failed, 1 passed, 1 warning in 2.07s

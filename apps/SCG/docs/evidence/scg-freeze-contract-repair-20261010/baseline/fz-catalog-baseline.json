@@ -1,0 +1,80 @@
+{
+  "silverstar_device_storage_sd_sdio_fatfs": {
+    "path": "apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs/plugin.json",
+    "current_sha256": "67075dc32277311ca845adf95c990865208ed038673db8a0e3253647653e8286",
+    "physical_device": {
+      "vendor": "Generic",
+      "model": "SD/TF Card",
+      "chipset": "STM32 SDIO",
+      "driver": "CubeMX FatFs"
+    },
+    "requires_components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      },
+      {
+        "id": "silverstar.mcu.stm32f407vet6",
+        "optional": false
+      }
+    ],
+    "prior_commit": "56448bd35736221d7885a26704f2f953b0fe5055",
+    "prior_exit": 0,
+    "prior_physical_device": {
+      "vendor": "Generic",
+      "model": "SD/TF Card",
+      "chipset": "STM32 SDIO",
+      "driver": "CubeMX FatFs"
+    },
+    "prior_requires_components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      },
+      {
+        "id": "silverstar.mcu.stm32f407vet6",
+        "optional": false
+      }
+    ],
+    "prior_normalized_equal_current": true
+  },
+  "silverstar_device_storage_sd_sdio_fatfs_f1": {
+    "path": "apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs_f1/plugin.json",
+    "current_sha256": "7dd3b1eef65d67a2ed4f6aa485b6654e8ac1d0203e9b249fb59bac39ee7dce98",
+    "physical_device": {
+      "vendor": "Generic",
+      "model": "SD/TF Card",
+      "chipset": "STM32 SDIO",
+      "driver": "CubeMX FatFs"
+    },
+    "requires_components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      },
+      {
+        "id": "silverstar.mcu_family.stm32f1_flight",
+        "optional": false
+      }
+    ],
+    "prior_commit": "56448bd35736221d7885a26704f2f953b0fe5055",
+    "prior_exit": 0,
+    "prior_physical_device": {
+      "vendor": "Generic",
+      "model": "SD/TF Card",
+      "chipset": "STM32 SDIO",
+      "driver": "CubeMX FatFs"
+    },
+    "prior_requires_components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      },
+      {
+        "id": "silverstar.mcu_family.stm32f1_flight",
+        "optional": false
+      }
+    ],
+    "prior_normalized_equal_current": true
+  }
+}

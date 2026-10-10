@@ -1,0 +1,21 @@
+{
+  "command": [
+    "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\daily_backend_pytest.py",
+    "apps/SCG/tests/test_usb_gui_async.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/Users/chdxm/AppData/Local/Temp/fza01",
+    "--junitxml=C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\fza01.xml"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "source_commit": "2b3d4ae8889f1fb0924ee18631c6a346e5822b98",
+  "dirty_diff": "",
+  "test_sha256": "5a40819d5501df5365986c90ecdf4ded808eaf0aa9941db70d9a201ee0599b02",
+  "started_utc": "2026-10-10T10:00:50.103737+00:00",
+  "scope": "Actual completed F103/C071 candidate full audit on worker, one Plan per refresh, live Qt timers, pending/superseded requests, cancellation, owned close/destruction and ordinary late import; original artifacts remain unchanged",
+  "exit": 0,
+  "finished_utc": "2026-10-10T10:01:54.344632+00:00"
+}

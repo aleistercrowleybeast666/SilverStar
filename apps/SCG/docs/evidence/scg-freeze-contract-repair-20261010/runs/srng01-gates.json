@@ -1,0 +1,146 @@
+[
+  {
+    "part": "STM32F103C8T6",
+    "mode": "architecture",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\srgui01\\usb-e726963f29ab",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_native_ground.py"
+    ],
+    "compile_source_commit": "819eec98347e96aa6548012be159e6a6c58bd435",
+    "compile_receipt_sha256": "7aaad14ab07545427a794a63e7e0e18eb61a979af7efdf4b4143aed3af0e553a",
+    "started_utc": "2026-10-10T11:29:31.879024+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T11:29:32.461081+00:00",
+    "log_sha256": "6485185fa97ba47a0d74957b601d4b6f3ee9985456c658ca6a7d06f8bac09f97"
+  },
+  {
+    "part": "STM32F103C8T6",
+    "mode": "host",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\srgui01\\usb-e726963f29ab",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_native_ground.py",
+      "host",
+      "--host-cc",
+      "gcc"
+    ],
+    "compile_source_commit": "819eec98347e96aa6548012be159e6a6c58bd435",
+    "compile_receipt_sha256": "7aaad14ab07545427a794a63e7e0e18eb61a979af7efdf4b4143aed3af0e553a",
+    "started_utc": "2026-10-10T11:29:32.472419+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T11:29:42.487094+00:00",
+    "log_sha256": "63ef0b2bf8b2f8fb3fc82fb4e1d09fdc05fb02ff596bafcd4306f448e18967a6"
+  },
+  {
+    "part": "STM32F103C8T6",
+    "mode": "artifact",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\srgui01\\usb-e726963f29ab",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_native_ground.py",
+      "artifact",
+      "--prefix",
+      "arm-none-eabi-"
+    ],
+    "compile_source_commit": "819eec98347e96aa6548012be159e6a6c58bd435",
+    "compile_receipt_sha256": "7aaad14ab07545427a794a63e7e0e18eb61a979af7efdf4b4143aed3af0e553a",
+    "started_utc": "2026-10-10T11:29:42.499802+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T11:29:47.402460+00:00",
+    "log_sha256": "b7bac413429cbb84b328b2fdc25e7b5ba0bac07b8cf85839221929c29a9c6f26"
+  },
+  {
+    "part": "STM32F103C8T6",
+    "mode": "power10",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\srgui01\\usb-e726963f29ab",
+    "command": [
+      "powershell",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "Tools/check_power_of_ten.ps1",
+      "-TargetKind",
+      "Ground"
+    ],
+    "compile_source_commit": "819eec98347e96aa6548012be159e6a6c58bd435",
+    "compile_receipt_sha256": "7aaad14ab07545427a794a63e7e0e18eb61a979af7efdf4b4143aed3af0e553a",
+    "started_utc": "2026-10-10T11:29:47.415570+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T11:29:50.108039+00:00",
+    "log_sha256": "8772397c520dfe4a0e324cd205100d4b040bd92a9a0e483e06a22057ed512503"
+  },
+  {
+    "part": "STM32C071FBP6",
+    "mode": "architecture",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\srgui01\\usb-4b090a3e59d4",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_c071_candidate.py"
+    ],
+    "compile_source_commit": "819eec98347e96aa6548012be159e6a6c58bd435",
+    "compile_receipt_sha256": "5eb340014e59705188973a779df4028bba143cab7d1f462aaea78189133c66a3",
+    "started_utc": "2026-10-10T11:29:50.138389+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T11:29:50.849133+00:00",
+    "log_sha256": "e80508501ca6200f30ff0b1370e5c5f4a0efaaebf7a722fb6b7ebc321cabfe3f"
+  },
+  {
+    "part": "STM32C071FBP6",
+    "mode": "host",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\srgui01\\usb-4b090a3e59d4",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_c071_candidate.py",
+      "host",
+      "--host-cc",
+      "gcc"
+    ],
+    "compile_source_commit": "819eec98347e96aa6548012be159e6a6c58bd435",
+    "compile_receipt_sha256": "5eb340014e59705188973a779df4028bba143cab7d1f462aaea78189133c66a3",
+    "started_utc": "2026-10-10T11:29:50.862599+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T11:30:00.767675+00:00",
+    "log_sha256": "1077cef1f094f6b89c1ea5c64b3f923d2d9bb474e809c20989d4805248acf445"
+  },
+  {
+    "part": "STM32C071FBP6",
+    "mode": "artifact",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\srgui01\\usb-4b090a3e59d4",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_c071_candidate.py",
+      "artifact",
+      "--prefix",
+      "arm-none-eabi-"
+    ],
+    "compile_source_commit": "819eec98347e96aa6548012be159e6a6c58bd435",
+    "compile_receipt_sha256": "5eb340014e59705188973a779df4028bba143cab7d1f462aaea78189133c66a3",
+    "started_utc": "2026-10-10T11:30:00.782547+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T11:30:07.706510+00:00",
+    "log_sha256": "1a39f9d16baac6ee1d5cf65d889f7abddd6369bf1ff775b43933da98e36dfdab"
+  },
+  {
+    "part": "STM32C071FBP6",
+    "mode": "power10",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\srgui01\\usb-4b090a3e59d4",
+    "command": [
+      "powershell",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "Tools/check_power_of_ten.ps1",
+      "-TargetKind",
+      "Ground"
+    ],
+    "compile_source_commit": "819eec98347e96aa6548012be159e6a6c58bd435",
+    "compile_receipt_sha256": "5eb340014e59705188973a779df4028bba143cab7d1f462aaea78189133c66a3",
+    "started_utc": "2026-10-10T11:30:07.723193+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T11:30:10.777691+00:00",
+    "log_sha256": "7a90605db7add37e4f16568196a35b8005f8a944b44651dd882ecd527483d5ba"
+  }
+]

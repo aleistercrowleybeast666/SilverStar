@@ -1,0 +1,70 @@
+........F.................ssssssssss..........FFF....................... [ 33%]
+........................................................................ [ 67%]
+....................................................................     [100%]
+================================== FAILURES ===================================
+_ test_one_bmi088_plugin_resolves_mixed_interfaces_without_duplicate_sources __
+
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000210DB727D90>
+
+    def test_one_bmi088_plugin_resolves_mixed_interfaces_without_duplicate_sources(
+        builtin_catalog,
+    ) -> None:
+        physical = {}
+        for manifest in builtin_catalog.Type_Get("device"):
+            assert manifest.physical_device is not None
+            key = (
+                manifest.physical_device.vendor,
+                manifest.physical_device.model,
+                manifest.physical_device.chipset,
+            )
+>           assert key not in physical, (physical.get(key), manifest.component_id)
+E           AssertionError: ('silverstar.device.storage.sd_sdio_fatfs', 'silverstar.device.storage.sd_sdio_fatfs_f1')
+E           assert ('Generic', 'SD/TF Card', 'STM32 SDIO') not in {('SilverStar', 'SS0.5 P_CONTROL1', 'SS0.5 GPIO Output'): 'silverstar.device.actuator.launch_ignition', ('SilverStar',...ilverstar.device.barometer.bmp280', ('Bosch Sensortec', 'BMP390', 'BMP390'): 'silverstar.device.barometer.bmp390', ...}
+
+apps\SCG\tests\test_round2_targets.py:108: AssertionError
+________________ test_runtime_sources_survive_reference_import ________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000210DB28F0B0>
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools'
+
+D:\python_software\SilverStar\apps\FCCG\tests\test_runtime_safety.py:92: ModuleNotFoundError
+______________ test_imported_documentation_replay_is_idempotent _______________
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/fzf01/test_imported_documentation_re_ebb0439e')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+
+>   ???
+E   ModuleNotFoundError: No module named 'tools'
+
+D:\python_software\SilverStar\apps\FCCG\tests\test_runtime_safety.py:116: ModuleNotFoundError
+________________ test_runtime_generation_includes_stack_report ________________
+
+runtime_project = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/fzf01/runtime_58b46173'), SourceGraph(sources=('APP/Src/device_task.c'...TM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c'), linker_script='STM32F407XX_FLASH.ld', toolchain_prefix='arm-none-eabi-'))
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+
+>   ???
+E   assert b'"""Conserva...t(main())\r\n' == b'"""Conserva...t(main())\r\n'
+E     
+E     At index 151950 diff: b'-' != b' '
+E     Use -v to get more diff
+
+D:\python_software\SilverStar\apps\FCCG\tests\test_runtime_safety.py:136: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+SKIPPED [2] apps\FCCG\tests\test_firmware_artifact_protocols.py:44: Explicit real ARM Release artifact fixture required
+SKIPPED [2] apps\FCCG\tests\test_firmware_artifact_protocols.py:50: Explicit real ARM Release artifact fixture required
+SKIPPED [6] apps\FCCG\tests\test_firmware_artifact_protocols.py:63: Explicit real ARM Release artifact fixture required
+FAILED apps\SCG\tests\test_round2_targets.py::test_one_bmi088_plugin_resolves_mixed_interfaces_without_duplicate_sources
+FAILED apps\SCG\tests\test_runtime_safety.py::test_runtime_sources_survive_reference_import
+FAILED apps\SCG\tests\test_runtime_safety.py::test_imported_documentation_replay_is_idempotent
+FAILED apps\SCG\tests\test_runtime_safety.py::test_runtime_generation_includes_stack_report
+4 failed, 198 passed, 10 skipped, 1 warning in 536.71s (0:08:56)

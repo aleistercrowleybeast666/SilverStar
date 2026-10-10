@@ -1,0 +1,29 @@
+srf01 1
+= {'r' : 'rb', 'w': 'w+b', 'x': 'x+b', 'a' : 'r+b',
+                        'r+b': 'w+b', 'w+b': 'wb', 'x+b': 'xb'}
+            filemode = modeDict[mode]
+            while True:
+                try:
+>                   self.fp = io.open(file, filemode)
+                              ^^^^^^^^^^^^^^^^^^^^^^^
+E                   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\r\\docs\\evidence\\scg_decoder_binding_20261008\\evidence.zip'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\zipfile\__init__.py:1440: FileNotFoundError
+============================== warnings summary ===============================
+..\..\..\..\..\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+SKIPPED [2] apps\SCG\tests\test_firmware_artifact_protocols.py:44: Explicit real ARM Release artifact fixture required
+SKIPPED [2] apps\SCG\tests\test_firmware_artifact_protocols.py:50: Explicit real ARM Release artifact fixture required
+SKIPPED [6] apps\SCG\tests\test_firmware_artifact_protocols.py:63: Explicit real ARM Release artifact fixture required
+FAILED apps\SCG\tests\test_flight_state_scheduler_generated_host.py::test_generated_flight_scheduler[contended]
+FAILED apps\SCG\tests\test_stack_budget.py::test_product_metadata_binding_accepts_only_authorized_complete_source[digest]
+FAILED apps\SCG\tests\test_stack_budget.py::test_product_metadata_binding_accepts_only_authorized_complete_source[function]
+FAILED apps\SCG\tests\test_stack_budget.py::test_product_decoder_binding_accepts_only_authorized_complete_source[digest]
+FAILED apps\SCG\tests\test_stack_budget.py::test_product_decoder_binding_accepts_only_authorized_complete_source[function]
+5 failed, 215 passed, 10 skipped, 1 warning in 655.42s (0:10:55)
+

@@ -1,0 +1,14 @@
+{
+  "source_commit": "819eec98347e96aa6548012be159e6a6c58bd435",
+  "exit": 0,
+  "ticks": 37,
+  "errors": [],
+  "started_utc": "2026-10-10T11:30:15.581476+00:00",
+  "finished_utc": "2026-10-10T11:30:17.930453+00:00",
+  "workspace": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\daily-scg-startup-up9drzx9",
+  "scope": "Actual merged daily application.main and MainWindow show/event loop/normal shutdown with exact daily declarative catalog; writable settings/log/workspace isolated in Temp. No hardware or user preference changes.",
+  "source_files": {
+    "apps/SCG/src/silverstar_fccg/app/application.py": "d6a39fe02a925d228b6a9216a460d29fad49d80a73c3e41cbf194727bc98d687",
+    "apps/SCG/src/silverstar_fccg/ui/main_window.py": "a10a343719b38f613b7608e59e504bb997dcb49eb274975455a8a159b3ebe263"
+  }
+}

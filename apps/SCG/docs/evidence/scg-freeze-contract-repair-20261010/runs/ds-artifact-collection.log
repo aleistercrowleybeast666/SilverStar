@@ -1,0 +1,207 @@
+{
+  "native": [
+    {
+      "part": "STM32F103C8T6",
+      "commands": 339,
+      "files": {
+        "receipt.json": "7aaad14ab07545427a794a63e7e0e18eb61a979af7efdf4b4143aed3af0e553a",
+        "backend-receipt.json": "a3204c0ed5b42e20ed2203365fc9af5c48af36dc3ecf9a476aeed7ff1280b2d7",
+        "build\\native.elf": "fde957fe80fdf038f4c5c6640bc851446e8ef7acb7605258fd94dca87c81240b",
+        "build\\vectors.bin": "d60953ba530332b230d30448faf37dc95fd5642d6cb23e53fec2a1c5fe8c11ff",
+        "build\\analysis\\native.elf": "fde957fe80fdf038f4c5c6640bc851446e8ef7acb7605258fd94dca87c81240b",
+        "build\\analysis\\vectors.bin": "d60953ba530332b230d30448faf37dc95fd5642d6cb23e53fec2a1c5fe8c11ff"
+      }
+    },
+    {
+      "part": "STM32C071FBP6",
+      "commands": 351,
+      "files": {
+        "receipt.json": "5eb340014e59705188973a779df4028bba143cab7d1f462aaea78189133c66a3",
+        "backend-receipt.json": "7cb307697b01a95fe0a14a155838bbdf185c6a50982beeb267a7a6490fb14c73",
+        "build\\native.elf": "ee90e6871f5f5723982701e8b6783dd2638f4bd76f352f5099d2d38e031028b9",
+        "build\\vectors.bin": "42f4075a29357b802c45c2e76a4c6e27ac8bd10b881565738e07c9b73f92c73a",
+        "build\\analysis\\native.elf": "ee90e6871f5f5723982701e8b6783dd2638f4bd76f352f5099d2d38e031028b9",
+        "build\\analysis\\vectors.bin": "42f4075a29357b802c45c2e76a4c6e27ac8bd10b881565738e07c9b73f92c73a"
+      }
+    },
+    {
+      "part": "STM32F103C8T6",
+      "commands": 339,
+      "files": {
+        "receipt.json": "b6f5f734e4bba30cd90220bbd150dd23597d0a34215be3e28d4def6e002cd29e",
+        "backend-receipt.json": "5a977357f0c1ec3ed2303c1bb7e943e18580b37521ae903b489d6b77a5872224",
+        "build\\native.elf": "fde957fe80fdf038f4c5c6640bc851446e8ef7acb7605258fd94dca87c81240b",
+        "build\\vectors.bin": "d60953ba530332b230d30448faf37dc95fd5642d6cb23e53fec2a1c5fe8c11ff",
+        "build\\analysis\\native.elf": "fde957fe80fdf038f4c5c6640bc851446e8ef7acb7605258fd94dca87c81240b",
+        "build\\analysis\\vectors.bin": "d60953ba530332b230d30448faf37dc95fd5642d6cb23e53fec2a1c5fe8c11ff"
+      }
+    },
+    {
+      "part": "STM32F407VET6",
+      "commands": 387,
+      "files": {
+        "receipt.json": "c2fb1a81016e6ea1b62ee08dd60386acba329b9d1eb28de3ed46236da2848e89",
+        "backend-receipt.json": "7bbe4842b8123ea085a8404ffe7bdbcaeba3e3f22074f966465ba23aa21802fc",
+        "build\\native.elf": "5a9414e97a5e7f3f02d2e001266145304b711c600c16639e05e7e7a79aa44bf8",
+        "build\\vectors.bin": "e1b0324fa9ae2a1b5d3f9bfbc23c4d3e49f0f9703405b4f0ae3b7192df5250c7",
+        "build\\analysis\\native.elf": "5a9414e97a5e7f3f02d2e001266145304b711c600c16639e05e7e7a79aa44bf8",
+        "build\\analysis\\vectors.bin": "e1b0324fa9ae2a1b5d3f9bfbc23c4d3e49f0f9703405b4f0ae3b7192df5250c7"
+      }
+    },
+    {
+      "part": "STM32F103C8T6",
+      "commands": 339,
+      "files": {
+        "receipt.json": "03829fec835074754b23ae0996a973910b8eb59c705e35d0a86f749f6ea93e25",
+        "backend-receipt.json": "bda3eba6c7fc87eca850e2aa18d284301dce5e784c8532a3cdb31906e9b048f3",
+        "build\\native.elf": "fde957fe80fdf038f4c5c6640bc851446e8ef7acb7605258fd94dca87c81240b",
+        "build\\vectors.bin": "d60953ba530332b230d30448faf37dc95fd5642d6cb23e53fec2a1c5fe8c11ff",
+        "build\\analysis\\native.elf": "fde957fe80fdf038f4c5c6640bc851446e8ef7acb7605258fd94dca87c81240b",
+        "build\\analysis\\vectors.bin": "d60953ba530332b230d30448faf37dc95fd5642d6cb23e53fec2a1c5fe8c11ff"
+      }
+    },
+    {
+      "part": "STM32C071FBP6",
+      "commands": 351,
+      "files": {
+        "receipt.json": "4457f5a039749c3db33a1ded60d83a0b66ec342058eab0424862a2eaa9b084cd",
+        "backend-receipt.json": "a297481ceeb05398c1465e2d892ae6e29babb2ef358f1b3c49d09f92f32d1dfb",
+        "build\\native.elf": "ee90e6871f5f5723982701e8b6783dd2638f4bd76f352f5099d2d38e031028b9",
+        "build\\vectors.bin": "42f4075a29357b802c45c2e76a4c6e27ac8bd10b881565738e07c9b73f92c73a",
+        "build\\analysis\\native.elf": "ee90e6871f5f5723982701e8b6783dd2638f4bd76f352f5099d2d38e031028b9",
+        "build\\analysis\\vectors.bin": "42f4075a29357b802c45c2e76a4c6e27ac8bd10b881565738e07c9b73f92c73a"
+      }
+    },
+    {
+      "part": "STM32F407VET6",
+      "commands": 387,
+      "files": {
+        "receipt.json": "e4801bd27a7689350f6c4a294fa2acd536da495a1c931ad907235ea4cc9433dc",
+        "backend-receipt.json": "99e436ccbfb5759a4e270ab14fc6510e1ed68cac8560276b7f1934ca9eb250ac",
+        "build\\native.elf": "5a9414e97a5e7f3f02d2e001266145304b711c600c16639e05e7e7a79aa44bf8",
+        "build\\vectors.bin": "e1b0324fa9ae2a1b5d3f9bfbc23c4d3e49f0f9703405b4f0ae3b7192df5250c7",
+        "build\\analysis\\native.elf": "5a9414e97a5e7f3f02d2e001266145304b711c600c16639e05e7e7a79aa44bf8",
+        "build\\analysis\\vectors.bin": "e1b0324fa9ae2a1b5d3f9bfbc23c4d3e49f0f9703405b4f0ae3b7192df5250c7"
+      }
+    },
+    {
+      "part": "STM32F103C8T6",
+      "commands": 339,
+      "files": {
+        "receipt.json": "b1e5836e8716b7b4ad43022562aadc853ffe5cee718dc3f0560595a4c37484e3",
+        "backend-receipt.json": "737823a61e5f073337d3e557b0ed63264db0aa0298ec12f6a5f4c485ecfed683",
+        "build\\native.elf": "fde957fe80fdf038f4c5c6640bc851446e8ef7acb7605258fd94dca87c81240b",
+        "build\\vectors.bin": "d60953ba530332b230d30448faf37dc95fd5642d6cb23e53fec2a1c5fe8c11ff",
+        "build\\analysis\\native.elf": "fde957fe80fdf038f4c5c6640bc851446e8ef7acb7605258fd94dca87c81240b",
+        "build\\analysis\\vectors.bin": "d60953ba530332b230d30448faf37dc95fd5642d6cb23e53fec2a1c5fe8c11ff"
+      }
+    },
+    {
+      "part": "STM32F103C8T6",
+      "commands": 339,
+      "files": {
+        "receipt.json": "e685c9ffe994964f8c8ac3fe5ab4246fcded73b17169b069cf4d52888382a374",
+        "backend-receipt.json": "b056e56e798961803c7bb0bd9c525f42fc938f28586146255b82d260917c3823",
+        "build\\native.elf": "fde957fe80fdf038f4c5c6640bc851446e8ef7acb7605258fd94dca87c81240b",
+        "build\\vectors.bin": "d60953ba530332b230d30448faf37dc95fd5642d6cb23e53fec2a1c5fe8c11ff",
+        "build\\analysis\\native.elf": "fde957fe80fdf038f4c5c6640bc851446e8ef7acb7605258fd94dca87c81240b",
+        "build\\analysis\\vectors.bin": "d60953ba530332b230d30448faf37dc95fd5642d6cb23e53fec2a1c5fe8c11ff"
+      }
+    },
+    {
+      "part": "STM32C071FBP6",
+      "commands": 351,
+      "files": {
+        "receipt.json": "e39ea753d47fc433c468e28cbff65bea994e1e92de78f5dcf96f601c998edfab",
+        "backend-receipt.json": "625180ecc3fa2ad479bd5e0adde0484cb44f537a15b0bd16c6efdd923570a78a",
+        "build\\native.elf": "ee90e6871f5f5723982701e8b6783dd2638f4bd76f352f5099d2d38e031028b9",
+        "build\\vectors.bin": "42f4075a29357b802c45c2e76a4c6e27ac8bd10b881565738e07c9b73f92c73a",
+        "build\\analysis\\native.elf": "ee90e6871f5f5723982701e8b6783dd2638f4bd76f352f5099d2d38e031028b9",
+        "build\\analysis\\vectors.bin": "42f4075a29357b802c45c2e76a4c6e27ac8bd10b881565738e07c9b73f92c73a"
+      }
+    }
+  ],
+  "legacy": [
+    {
+      "kind": "Flight",
+      "elf": {
+        "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_2.elf": "c3f97585bfcf496e63216aca20c7b091bec8960347971941eae4872f1a882d06",
+        "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.elf": "e66e2249dd63ca6c0db7a19511c355cddc0ac5074873979e5f1ff0798466abd6"
+      }
+    },
+    {
+      "kind": "GroundUART",
+      "elf": {
+        "build/ground.elf": "5aef8446cc40c2b305801853f3f49202643033802a7ba6943117f4650cc250db",
+        "build/analysis/ground.elf": "5aef8446cc40c2b305801853f3f49202643033802a7ba6943117f4650cc250db"
+      }
+    }
+  ],
+  "diagnostics": [
+    {
+      "target": "ds-Flight-artifact-check",
+      "warning_count": 0,
+      "analyzer_commands": 0
+    },
+    {
+      "target": "ds-Flight-static-analysis",
+      "warning_count": 0,
+      "analyzer_commands": 108
+    },
+    {
+      "target": "srlegacy-Flight-all",
+      "warning_count": 0,
+      "analyzer_commands": 0
+    },
+    {
+      "target": "srlegacy-Flight-architecture-check",
+      "warning_count": 0,
+      "analyzer_commands": 0
+    },
+    {
+      "target": "srlegacy-Flight-host-tests",
+      "warning_count": 1,
+      "analyzer_commands": 0
+    },
+    {
+      "target": "srlegacy-Flight-power10-check",
+      "warning_count": 0,
+      "analyzer_commands": 0
+    },
+    {
+      "target": "srlegacy-Flight-static-analysis",
+      "warning_count": 0,
+      "analyzer_commands": 30
+    },
+    {
+      "target": "srlegacy-GroundUART-all",
+      "warning_count": 4,
+      "analyzer_commands": 0
+    },
+    {
+      "target": "srlegacy-GroundUART-architecture-check",
+      "warning_count": 0,
+      "analyzer_commands": 0
+    },
+    {
+      "target": "srlegacy-GroundUART-artifact-check",
+      "warning_count": 0,
+      "analyzer_commands": 0
+    },
+    {
+      "target": "srlegacy-GroundUART-host-tests",
+      "warning_count": 0,
+      "analyzer_commands": 0
+    },
+    {
+      "target": "srlegacy-GroundUART-power10-check",
+      "warning_count": 0,
+      "analyzer_commands": 0
+    },
+    {
+      "target": "srlegacy-GroundUART-static-analysis",
+      "warning_count": 4,
+      "analyzer_commands": 15
+    }
+  ]
+}

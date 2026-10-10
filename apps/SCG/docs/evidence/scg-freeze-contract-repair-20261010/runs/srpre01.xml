@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="12" time="53.776" timestamp="2026-10-10T18:35:43.364600+08:00" hostname="CHD"><testcase classname="tests.test_physical_device_platform_identity" name="test_real_platform_variants_keep_physical_facts_and_distinct_exact_parts" time="4.089" /><testcase classname="tests.test_physical_device_platform_identity" name="test_duplicate_hardware_requires_proven_disjoint_domains[same_platform]" time="0.002" /><testcase classname="tests.test_physical_device_platform_identity" name="test_duplicate_hardware_requires_proven_disjoint_domains[overlapping_other_platform]" time="0.002" /><testcase classname="tests.test_physical_device_platform_identity" name="test_duplicate_hardware_requires_proven_disjoint_domains[optional_platform]" time="0.002" /><testcase classname="tests.test_physical_device_platform_identity" name="test_duplicate_hardware_requires_proven_disjoint_domains[missing_platform]" time="0.001" /><testcase classname="tests.test_physical_device_platform_identity" name="test_duplicate_hardware_requires_proven_disjoint_domains[broad_rule]" time="0.002" /><testcase classname="tests.test_physical_device_platform_identity" name="test_scan_refuses_overlap_before_publishing_catalog" time="2.483" /><testcase classname="tests.test_runtime_safety" name="test_runtime_sources_survive_reference_import" time="0.320" /><testcase classname="tests.test_runtime_safety" name="test_imported_documentation_replay_is_idempotent" time="0.049" /><testcase classname="tests.test_runtime_safety" name="test_runtime_generation_includes_stack_report" time="26.805" /><testcase classname="tests.test_usb_ground_backend" name="test_legacy_authority_requires_reimport_without_relabeling[f103-usb]" time="12.058" /><testcase classname="tests.test_usb_gui_flow" name="test_saved_legacy_f103_is_refused_before_gui_work_then_reimports[f103-usb]" time="3.535"><failure message="silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: C:\Users\chdxm\AppData\Local\Temp\srpre01\s_1829799f\path_preferences.json">self = WorkspacePolicy(root=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/srpre01/w_d173c730'))
+path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/srpre01/s_1829799f/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+&gt;           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\src\silverstar_fccg\core\workspace.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/srpre01/s_1829799f/path_preferences.json')
+other = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/srpre01/w_d173c730')
+walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+&gt;               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\srpre01\\s_1829799f\\path_preferences.json' is not in the subpath of 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\srpre01\\w_d173c730'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+legacy_bound = (&lt;silverstar_fccg.app.service.FccgService object at 0x0000024842246E90&gt;, NativeGroundProjectImportResult(result=&lt;Nativ...RADIO_DIO1')}, WindowsPath('C:/Users/chdxm/AppData/Local/Temp/srpre01/test_saved_legacy_f103_is_refu_f7f3a4c4/native'))
+qapp = &lt;PySide6.QtWidgets.QApplication(0x2483e4017b0) at 0x00000248419F6F80&gt;
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/srpre01'), _trace=&lt;pluggy._tracing.TagT...BCE0&gt;, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/srpre01'), _retention_count=3, _retention_policy='all')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x00000248424BBE30&gt;
+
+    @pytest.mark.parametrize('native', ['f103-usb'], indirect=True)
+    def test_saved_legacy_f103_is_refused_before_gui_work_then_reimports(
+            legacy_bound, qapp, tmp_path_factory, monkeypatch):
+        from silverstar_fccg.app.usb_ground import F103_REIMPORT_REQUIRED, UsbGroundReimportIssue_Get
+        from silverstar_fccg.hardware.cubemx import CubeMxImportError
+        service, imported, args, source = legacy_bound
+        service.assembler.catalog = service.catalog
+        project = tmp_path_factory.mktemp('p')
+        service.ProjectRoot_Save(imported.model, project, create_new=True)
+        saved_before = (project/'SilverStar.ssproject').read_bytes()
+&gt;       current = MainWindow(SettingsStore(tmp_path_factory.mktemp('s')/'settings.ini'), service=service)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_usb_gui_flow.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\ui\main_window.py:224: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/srpre01/w_d173c730'))
+path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/srpre01/s_1829799f/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -&gt; Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+&gt;           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: C:\Users\chdxm\AppData\Local\Temp\srpre01\s_1829799f\path_preferences.json
+
+apps\SCG\src\silverstar_fccg\core\workspace.py:73: WorkspacePolicyError</failure></testcase></testsuite></testsuites>

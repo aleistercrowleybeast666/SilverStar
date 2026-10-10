@@ -1,0 +1,25 @@
+fzlegacy-Flight-power10-check 0
+locking|manual_review_required
+POWER10_RULE5_FUNCTION|Flight|System\Src\system_time.c|156|SystemTime_GetMissionUsAt|31|1
+POWER10_FUNCTION_SCOPE|Flight|System\Src\system_time.c|156|190|SystemTime_GetMissionUsAt
+POWER10_RULE5_FUNCTION|Flight|System\Src\system_time.c|192|SystemTime_GetMissionUs|6|0
+POWER10_FUNCTION_SCOPE|Flight|System\Src\system_time.c|192|198|SystemTime_GetMissionUs
+POWER10_RULE5_FUNCTION|Flight|System\Src\system_time.c|200|SystemTime_UpdateUtcMapping|24|1
+POWER10_FUNCTION_SCOPE|Flight|System\Src\system_time.c|200|225|SystemTime_UpdateUtcMapping
+POWER10_RULE5_FUNCTION|Flight|System\Src\system_time.c|227|SystemTime_GetUtc|17|0
+POWER10_FUNCTION_SCOPE|Flight|System\Src\system_time.c|227|245|SystemTime_GetUtc
+POWER10_RULE5_RECOMMENDATION|System\Src\system_time.c|227|SystemTime_GetUtc|17|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Flight|System\Src\system_time.c|247|SystemTime_MeasurementTimestampResolve|20|0
+POWER10_FUNCTION_SCOPE|Flight|System\Src\system_time.c|247|266|SystemTime_MeasurementTimestampResolve
+POWER10_RULE5_RECOMMENDATION|System\Src\system_time.c|247|SystemTime_MeasurementTimestampResolve|20|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Flight|System\User\system_user_inertial_config.c|43|SystemUserInertial_ConfigGet|4|0
+POWER10_FUNCTION_SCOPE|Flight|System\User\system_user_inertial_config.c|43|46|SystemUserInertial_ConfigGet
+POWER10_RULE5_FUNCTION|Flight|Targets\SilverStar_F407\Src\freertos_target_irq.c|8|SysTick_Handler|7|0
+POWER10_FUNCTION_SCOPE|Flight|Targets\SilverStar_F407\Src\freertos_target_irq.c|8|14|SysTick_Handler
+POWER10_RULE5|Flight|files=111|functions=2761|eligible_assertions=1675|average=0.606664|informational|policy=fprime_inspired_c|semantic_review=required
+POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending
+FCCG_PROGRESS|POWER10|DONE|112|113|function_rules
+FCCG_PROGRESS|POWER10|BEGIN|113|113|build_policy
+Power of Ten project text checks passed: 6329 checks, 111 first-party C files, 2761 functions; 815 assertion recommendations. Critical-contract review NOT PROVEN; manual acceptance pending.
+FCCG_PROGRESS|POWER10|DONE|113|113|build_policy
+

@@ -1,0 +1,58 @@
+srlegacy-Flight-host-tests 0
+n exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_44|record unsupported by selected profile; rejection exercised
+SPARSE_PREFLIGHT pre_s=120 samples=14100 start_us=120593140 landing_us=140592000 final_us=141656000 native=1 corrected=1
+LOGGER_QUEUE_OBSERVED normal=13/80 estimator=6/48 drops=0 producer_failures=0 jitter_count=0
+LOGGER_SAME_EPOCH_PEAK normal=0 estimator=0 period_us=5000
+LOGGER_OVERLOAD_RECOVERY sampled_frame=1500 sampled_drops=0 final_drops=0 last_drop_frame=0
+LOGGER_STORAGE accepted=23223 drops=0 hwm=13/6 max_write_us=30000 max_sync_us=8000 max_iteration_us=336260
+LOGGER_RATE pre_steps=1000 pre_us=120001120 post_steps=39000 post_us=20990540 pre_accepted=16861
+LOGGER_BOOTSTRAP suppressed=60 ready_us=995980 first_delay_ticks=2 slot_bytes=200 depth=80/48
+LOGGER_JITTER count=0 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=0 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=14622 steps=14100/14100
+{
+  "file_bytes": 2203895,
+  "header_crc_ok": true,
+  "records": 23275,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 55,
+    "STATS": 141,
+    "CALIBRATION_RESULT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 2,
+    "DEVICE_DESCRIPTOR": 24,
+    "ALGORITHM_DESCRIPTOR": 8,
+    "LOG_STREAM_DESCRIPTOR": 80,
+    "IMU_CORRECTED": 14059,
+    "BARO_NATIVE": 3514,
+    "GNSS_NATIVE": 1757,
+    "ALIGNMENT_RESULT": 1,
+    "POWER": 140,
+    "HEALTH": 140,
+    "MISSION_CONFIG": 1,
+    "INITIAL_STATE": 1,
+    "ESTIMATOR": 500,
+    "KF6_DIAGNOSTIC": 500,
+    "KF6_FULL_P": 100,
+    "BARO_MEASUREMENT": 1000,
+    "INERTIAL_INCREMENT": 1000,
+    "GNSS_MEASUREMENT": 250
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 2203895,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|4|4|logger-integrity
+SilverStar host summary: executables=80 checks=4446469 failures=0 compile_pass_cases=11 expected_compile_failures=18 not_applicable=8
+All SilverStar host tests passed.
+

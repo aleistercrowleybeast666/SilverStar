@@ -1,0 +1,328 @@
+D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe Tools/check_ground.py dependencies --build-dir build --compiler "arm-none-eabi-gcc"
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe Tools/check_ground.py artifact --prefix "arm-none-eabi-"
+PASS Ground declared source graph (39 sources), ownership and startup
+Critical-contract manual review, call graph, stack and MCU timing: NOT PROVEN
+COMMAND ["arm-none-eabi-readelf", "-h", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\build\\ground.elf"]
+ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF32
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              EXEC (Executable file)
+  Machine:                           ARM
+  Version:                           0x1
+  Entry point address:               0x8006375
+  Start of program headers:          52 (bytes into file)
+  Start of section headers:          54144 (bytes into file)
+  Flags:                             0x5000200, Version5 EABI, soft-float ABI
+  Size of this header:               52 (bytes)
+  Size of program headers:           32 (bytes)
+  Number of program headers:         4
+  Size of section headers:           40 (bytes)
+  Number of section headers:         19
+  Section header string table index: 18
+COMMAND ["arm-none-eabi-nm", "-g", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\build\\ground.elf"]
+0800011c T __adddf3
+080008ac T __aeabi_d2uiz
+0800011c T __aeabi_dadd
+080006dc T __aeabi_ddiv
+08000488 T __aeabi_dmul
+08000110 T __aeabi_drsub
+08000118 T __aeabi_dsub
+080003d8 T __aeabi_f2d
+080003b4 T __aeabi_i2d
+0800091c W __aeabi_idiv0
+0800042c T __aeabi_l2d
+0800091c W __aeabi_ldiv0
+08000394 T __aeabi_ui2d
+0800041c T __aeabi_ul2d
+080008ec T __aeabi_uldivmod
+200015ac B __bss_end__
+20000010 B __bss_start__
+080006dc T __divdf3
+08006bf8 R __exidx_end
+08006bf0 R __exidx_start
+080003d8 T __extendsfdf2
+080008ac T __fixunsdfsi
+0800042c T __floatdidf
+080003b4 T __floatsidf
+0800041c T __floatundidf
+08000394 T __floatunsidf
+080063d0 T __libc_init_array
+08000488 T __muldf3
+08000118 T __subdf3
+2000000c D __TMC_END__
+08006434 T __udivmoddi4
+200015ac B _ebss
+2000000c D _edata
+20005000 R _estack
+08006740 T _etext
+08006734 T _fini
+08006728 T _init
+00000000 A _Min_Heap_Size
+00000400 A _Min_Stack_Size
+20000010 B _sbss
+20000000 D _sdata
+08006c00 A _sidata
+080063bc W ADC1_2_IRQHandler
+0800686b R AHBPrescTable
+08006863 R APBPrescTable
+080030e6 T BusFault_Handler
+080063bc W CAN1_RX1_IRQHandler
+080063bc W CAN1_SCE_IRQHandler
+080030ec T DebugMon_Handler
+080063bc T Default_Handler
+080063bc W DMA1_Channel1_IRQHandler
+080063bc W DMA1_Channel2_IRQHandler
+080063bc W DMA1_Channel3_IRQHandler
+080030fc T DMA1_Channel4_IRQHandler
+08003108 T DMA1_Channel5_IRQHandler
+080063bc W DMA1_Channel6_IRQHandler
+080063bc W DMA1_Channel7_IRQHandler
+200015b0 B end
+08002fdc T Error_Handler
+080030f4 T EXTI0_IRQHandler
+080063bc W EXTI1_IRQHandler
+080063bc W EXTI15_10_IRQHandler
+080063bc W EXTI2_IRQHandler
+080063bc W EXTI3_IRQHandler
+080063bc W EXTI4_IRQHandler
+080063bc W EXTI9_5_IRQHandler
+080063bc W FLASH_IRQHandler
+08000000 R g_pfnVectors
+08005318 T GpioRead
+080054c4 T GpioWaitLow
+0800530c T GpioWrite
+08000c70 T GroundBridge_Init
+080009ac T GroundBridge_PcReset
+08000d04 T GroundBridge_Process
+08000fd0 T GroundRadio_Init
+08000fcc T GroundRadio_MetricsSupportedGet
+08000ffa T GroundRadio_Process
+08001018 T GroundRadio_RxDequeue
+08001036 T GroundRadio_StatsGet
+08001000 T GroundRadio_TxEnqueue
+08001274 T GspMin_BuildAckFrame
+080012e8 T GspMin_BuildAirRxFrame
+080011f4 T GspMin_BuildFrame
+08001298 T GspMin_BuildGsStatusFrame
+08001358 T GspMin_BuildNrf24AirRxFrame
+0800108e T GspMinParser_GetCrcErrorCount
+08001076 T GspMinParser_Init
+08001094 T GspMinParser_InputByte
+08001494 W HAL_Delay
+08001d2c T HAL_DMA_Abort
+08001d6c T HAL_DMA_Abort_IT
+08001f20 T HAL_DMA_GetError
+08001c54 T HAL_DMA_Init
+08001df8 T HAL_DMA_IRQHandler
+08001cb4 T HAL_DMA_Start_IT
+08001488 W HAL_GetTick
+08002dd6 T HAL_GPIO_EXTI_Callback
+08001c3c T HAL_GPIO_EXTI_IRQHandler
+08001a7c T HAL_GPIO_Init
+08001c24 T HAL_GPIO_ReadPin
+08001c30 T HAL_GPIO_WritePin
+08001470 W HAL_IncTick
+0800144c T HAL_Init
+08001404 W HAL_InitTick
+0800309c T HAL_MspInit
+0800153c T HAL_NVIC_EnableIRQ
+080014dc T HAL_NVIC_SetPriority
+080014b8 T HAL_NVIC_SetPriorityGrouping
+08001904 T HAL_RCC_ClockConfig
+08001a3c T HAL_RCC_GetPCLK1Freq
+08001a5c T HAL_RCC_GetPCLK2Freq
+080018b8 T HAL_RCC_GetSysClockFreq
+08001580 T HAL_RCC_OscConfig
+0800280c T HAL_SPI_Init
+08003028 T HAL_SPI_MspInit
+080028bc T HAL_SPI_Transmit
+08002a1c T HAL_SPI_TransmitReceive
+08001558 T HAL_SYSTICK_Config
+080020c8 T HAL_UART_AbortReceive
+08006230 T HAL_UART_ErrorCallback
+08001ff4 T HAL_UART_Init
+08002398 T HAL_UART_IRQHandler
+0800315c T HAL_UART_MspInit
+080021be W HAL_UART_RxCpltCallback
+080021c0 W HAL_UART_RxHalfCpltCallback
+08002054 T HAL_UART_Transmit_DMA
+08006218 T HAL_UART_TxCpltCallback
+080021b2 W HAL_UART_TxHalfCpltCallback
+080026c4 T HAL_UARTEx_ReceiveToIdle_DMA
+08006154 T HAL_UARTEx_RxEventCallback
+080030e2 T HardFault_Handler
+20000a20 B hdma_usart1_rx
+200009dc B hdma_usart1_tx
+20000984 B hspi1
+20000a64 B huart1
+080063bc W I2C1_ER_IRQHandler
+080063bc W I2C1_EV_IRQHandler
+080063bc W I2C2_ER_IRQHandler
+080063bc W I2C2_EV_IRQHandler
+08003da8 T Lora_ApplyDefaultConfig
+080051a8 T Lora_GetStats
+08003ea0 T Lora_Init
+08004204 T Lora_Process
+08005088 T Lora_RxDequeue
+08003e50 T Lora_ScheduleRoleSet
+08004064 T Lora_StartRx
+0800418c T Lora_TxEnqueue
+08002fae T main
+08006418 T memcpy
+080030e4 T MemManage_Handler
+080063be T memset
+08002e04 T MX_DMA_Init
+08002e44 T MX_GPIO_Init
+08002fe0 T MX_SPI1_Init
+08003124 T MX_USART1_UART_Init
+080030e0 T NMI_Handler
+08006114 T PcByteStream_Init
+08006250 T PcByteStream_Read
+0800635c T PcByteStream_ReadSession
+08006340 T PcByteStream_Session_Check
+08006348 T PcByteStream_Session_Enter
+0800635a T PcByteStream_Session_Exit
+0800633c T PcByteStream_Session_Get
+080062bc T PcByteStream_Write
+0800636a T PcByteStream_WriteSession
+080030ee T PendSV_Handler
+080013f4 T PlatformCritical_Enter
+080013fc T PlatformCritical_Exit
+08002da8 T PlatformGpio_IrqConsume
+08002d84 T PlatformGpio_Read
+08002d64 T PlatformGpio_Write
+08002c8c T PlatformSpi_TransferObserved
+08002c14 T PlatformSpi_WriteObserved
+080060a8 T PlatformStm32f1Resource_GpioGet
+08006094 T PlatformStm32f1Resource_SpiHandleGet
+08002e00 T PlatformTime_DelayMs
+08002dfc T PlatformTime_Ms
+08006078 T ProjectSx1281Resources_Get
+08001398 T ProtocolCrc16_CcittFalse
+080063bc W PVD_IRQHandler
+080063bc W RCC_IRQHandler
+08006374 W Reset_Handler
+080063bc W RTC_Alarm_IRQHandler
+080063bc W RTC_IRQHandler
+08006014 T SilverStarAssert_Check
+08005fe4 T SilverStarAssert_Fail
+0800602a T SilverStarAssert_ObjectCheck
+080063bc W SPI1_IRQHandler
+080063bc W SPI2_IRQHandler
+08005334 T SpiIn
+080053f0 T SpiInOut
+080030ea T SVC_Handler
+08005b0a T SX1280ClearIrqStatus
+080055b0 T SX1280GetFirmwareVersion
+08005af0 T SX1280GetIrqStatus
+080058c0 T SX1280GetPacketStatus
+08005648 T SX1280GetPacketType
+08005b44 T SX1280GetPayload
+08005aa0 T SX1280GetRssiInst
+08005858 T SX1280GetRxBufferStatus
+080055d0 T SX1280GetStatus
+08005ce0 T SX1280HalInit
+08005f44 T SX1280HalReadBuffer
+08005d68 T SX1280HalReadCommand
+08005eb0 T SX1280HalReadRegister
+08005e08 T SX1280HalReadRegisters
+08005ca6 T SX1280HalReset
+08005c90 T SX1280HalWaitOnBusy
+08005ecc T SX1280HalWriteBuffer
+08005ce4 T SX1280HalWriteCommand
+080055ac T SX1280Init
+08005bdc T SX1280SendPayload
+080056b4 T SX1280SetBufferBaseAddresses
+08005ac2 T SX1280SetDioIrqParams
+080056d0 T SX1280SetModulationParams
+08005770 T SX1280SetPacketParams
+08005620 T SX1280SetPacketType
+08005b3a T SX1280SetPayload
+08005b74 T SX1280SetRangingRole
+08005b22 T SX1280SetRegulatorMode
+08005658 T SX1280SetRfFrequency
+08005bf4 T SX1280SetRx
+080055f0 T SX1280SetStandby
+08005b8c T SX1280SetTx
+08005698 T SX1280SetTxParams
+080052dc T Sx1281Bus_BusyGet
+080052f4 T Sx1281Bus_Dio1Get
+08005290 T Sx1281Bus_Init
+080052ac T Sx1281Bus_NssGet
+080052c4 T Sx1281Bus_ResetGet
+08005588 T Sx1281Bus_StatusGet
+08002f50 T SystemClock_Config
+20000008 D SystemCoreClock
+08003120 T SystemInit
+080030f0 T SysTick_Handler
+080063bc W TAMPER_IRQHandler
+080063bc W TIM1_BRK_IRQHandler
+080063bc W TIM1_CC_IRQHandler
+080063bc W TIM1_TRG_COM_IRQHandler
+080063bc W TIM1_UP_IRQHandler
+080063bc W TIM2_IRQHandler
+080063bc W TIM3_IRQHandler
+080063bc W TIM4_IRQHandler
+0800262c T UART_Start_Receive_DMA
+080030e8 T UsageFault_Handler
+08003114 T USART1_IRQHandler
+080063bc W USART2_IRQHandler
+080063bc W USART3_IRQHandler
+080063bc W USB_HP_CAN1_TX_IRQHandler
+080063bc W USB_LP_CAN1_RX0_IRQHandler
+080063bc W USBWakeUp_IRQHandler
+20000200 B uwTick
+20000000 D uwTickFreq
+20000004 D uwTickPrio
+080063bc W WWDG_IRQHandler
+COMMAND ["arm-none-eabi-objcopy", "-j", ".isr_vector", "-O", "binary", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\build\\ground.elf", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\build\\ground-vector.bin"]
+Legacy Ground IRQ contract: NOT PROVEN (no complete-import IRQ inventory)
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+Legacy Ground effective clock macro contract: NOT PROVEN
+COMMAND ["arm-none-eabi-objdump", "-h", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\build\\ground.elf"]
+
+C:\Users\chdxm\AppData\Local\Temp\scg-freeze-legacy-nl6vxkda\Ground_Station\build\ground.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   0000010c  08000000  08000000  00001000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  1 .text         00006630  08000110  08000110  00001110  2**3
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       000004b0  08006740  08006740  00007740  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .ARM.extab    00000000  08006bf0  08006bf0  0000800c  2**0
+                  CONTENTS, READONLY
+  4 .ARM          00000008  08006bf0  08006bf0  00007bf0  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  5 .preinit_array 00000000  08006bf8  08006bf8  0000800c  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  08006bf8  08006bf8  00007bf8  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  7 .fini_array   00000004  08006bfc  08006bfc  00007bfc  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  8 .data         0000000c  20000000  08006c00  00008000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .bss          0000159c  20000010  08006c0c  00008010  2**3
+                  ALLOC
+ 10 ._user_heap_stack 00000404  200015ac  08006c0c  000085ac  2**0
+                  ALLOC
+ 11 .ARM.attributes 00000029  00000000  00000000  0000800c  2**0
+                  CONTENTS, READONLY
+ 12 .comment      00000046  00000000  00000000  00008035  2**0
+                  CONTENTS, READONLY
+ 13 .debug_frame  000001f4  00000000  00000000  0000807c  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 14 .debug_line_str 000000de  00000000  00000000  00008270  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+COMMAND ["arm-none-eabi-objcopy", "-O", "binary", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\build\\ground.elf", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station\\build\\ground-artifact.bin"]
+SHA256 C:\Users\chdxm\AppData\Local\Temp\scg-freeze-legacy-nl6vxkda\Ground_Station\build\ground.elf 5aef8446cc40c2b305801853f3f49202643033802a7ba6943117f4650cc250db
+SHA256 C:\Users\chdxm\AppData\Local\Temp\scg-freeze-legacy-nl6vxkda\Ground_Station\build\ground.bin 2d508b90c9eca280481180112a429fb27f0d56d24f804797eb7fd815b6292d00
+PASS ARM ELF/BIN identity, declared memory bounds, required symbols and linked source graph
+Metadata version is configuration provenance; embedded product version NOT PROVEN
+Actual task/ISR stack margin, radio timing and hardware qualification: NOT PROVEN

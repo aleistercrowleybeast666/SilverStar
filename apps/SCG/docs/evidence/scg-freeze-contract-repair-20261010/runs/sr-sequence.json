@@ -1,0 +1,277 @@
+[
+  {
+    "name": "backend",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_repair_group.py",
+      "backend",
+      "srb01"
+    ],
+    "started_utc": "2026-10-10T10:41:58.292669+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T10:51:55.696025+00:00"
+  },
+  {
+    "name": "gui_native",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_repair_group.py",
+      "gui_native",
+      "srgn01"
+    ],
+    "started_utc": "2026-10-10T10:51:55.697583+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T10:58:42.827573+00:00"
+  },
+  {
+    "name": "uart",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_repair_group.py",
+      "uart",
+      "sru01"
+    ],
+    "started_utc": "2026-10-10T10:58:42.829192+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:03:35.346533+00:00"
+  },
+  {
+    "name": "flight",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_repair_group.py",
+      "flight",
+      "srf01"
+    ],
+    "started_utc": "2026-10-10T11:03:35.347651+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:14:35.059941+00:00"
+  },
+  {
+    "name": "usb_gui",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_repair_usb_gui.py",
+      "srgui01",
+      "all"
+    ],
+    "started_utc": "2026-10-10T11:14:35.061044+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:28:25.786948+00:00"
+  },
+  {
+    "name": "usb_async",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_repair_async.py",
+      "sra01"
+    ],
+    "started_utc": "2026-10-10T11:28:25.788504+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:29:31.557893+00:00"
+  },
+  {
+    "name": "native_gates",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_usb_candidate_gates.py",
+      "srng01",
+      "srgui01"
+    ],
+    "started_utc": "2026-10-10T11:29:31.559448+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:30:10.811135+00:00"
+  },
+  {
+    "name": "startup",
+    "command": [
+      "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "-B",
+      "repair_scg_startup_check.py"
+    ],
+    "started_utc": "2026-10-10T11:30:10.812134+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:30:18.087937+00:00"
+  },
+  {
+    "name": "launcher",
+    "command": [
+      "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "-B",
+      "repair_scg_launcher.py"
+    ],
+    "started_utc": "2026-10-10T11:30:18.089136+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:30:20.559416+00:00"
+  },
+  {
+    "name": "generate_legacy",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "generate_scg_repair_legacy.py"
+    ],
+    "started_utc": "2026-10-10T11:30:20.560528+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:30:47.306607+00:00"
+  },
+  {
+    "name": "srlegacy-GroundUART-power10-check",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_repair_legacy_gate.py",
+      "GroundUART",
+      "power10-check",
+      "srlegacy-GroundUART-power10-check"
+    ],
+    "started_utc": "2026-10-10T11:30:47.307865+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:30:50.839919+00:00"
+  },
+  {
+    "name": "srlegacy-GroundUART-architecture-check",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_repair_legacy_gate.py",
+      "GroundUART",
+      "architecture-check",
+      "srlegacy-GroundUART-architecture-check"
+    ],
+    "started_utc": "2026-10-10T11:30:50.841457+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:30:52.281934+00:00"
+  },
+  {
+    "name": "srlegacy-GroundUART-host-tests",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_repair_legacy_gate.py",
+      "GroundUART",
+      "host-tests",
+      "srlegacy-GroundUART-host-tests"
+    ],
+    "started_utc": "2026-10-10T11:30:52.284321+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:30:58.396096+00:00"
+  },
+  {
+    "name": "srlegacy-GroundUART-all",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_repair_legacy_gate.py",
+      "GroundUART",
+      "all",
+      "srlegacy-GroundUART-all"
+    ],
+    "started_utc": "2026-10-10T11:30:58.397094+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:31:33.224795+00:00"
+  },
+  {
+    "name": "srlegacy-GroundUART-static-analysis",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_repair_legacy_gate.py",
+      "GroundUART",
+      "static-analysis",
+      "srlegacy-GroundUART-static-analysis"
+    ],
+    "started_utc": "2026-10-10T11:31:33.226011+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:32:11.848827+00:00"
+  },
+  {
+    "name": "srlegacy-GroundUART-artifact-check",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_repair_legacy_gate.py",
+      "GroundUART",
+      "artifact-check",
+      "srlegacy-GroundUART-artifact-check"
+    ],
+    "started_utc": "2026-10-10T11:32:11.850306+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:32:17.867880+00:00"
+  },
+  {
+    "name": "srlegacy-Flight-power10-check",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_repair_legacy_gate.py",
+      "Flight",
+      "power10-check",
+      "srlegacy-Flight-power10-check"
+    ],
+    "started_utc": "2026-10-10T11:32:17.869032+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:32:44.511740+00:00"
+  },
+  {
+    "name": "srlegacy-Flight-architecture-check",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_repair_legacy_gate.py",
+      "Flight",
+      "architecture-check",
+      "srlegacy-Flight-architecture-check"
+    ],
+    "started_utc": "2026-10-10T11:32:44.513316+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:33:09.942804+00:00"
+  },
+  {
+    "name": "srlegacy-Flight-host-tests",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_repair_legacy_gate.py",
+      "Flight",
+      "host-tests",
+      "srlegacy-Flight-host-tests"
+    ],
+    "started_utc": "2026-10-10T11:33:09.944466+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:41:26.170109+00:00"
+  },
+  {
+    "name": "srlegacy-Flight-all",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_repair_legacy_gate.py",
+      "Flight",
+      "all",
+      "srlegacy-Flight-all"
+    ],
+    "started_utc": "2026-10-10T11:41:26.171739+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:43:13.057221+00:00"
+  },
+  {
+    "name": "srlegacy-Flight-static-analysis",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_repair_legacy_gate.py",
+      "Flight",
+      "static-analysis",
+      "srlegacy-Flight-static-analysis"
+    ],
+    "started_utc": "2026-10-10T11:43:13.058748+00:00"
+  }
+]

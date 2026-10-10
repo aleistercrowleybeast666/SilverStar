@@ -1,0 +1,37 @@
+{
+  "source_commit": "819eec98347e96aa6548012be159e6a6c58bd435",
+  "projects": [
+    {
+      "kind": "Flight",
+      "root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-repair-legacy-a5joy2gh\\Flight_Controller",
+      "targets": [
+        "all",
+        "clean",
+        "clean-all",
+        "rebuild",
+        "list-sources",
+        "list-build-config",
+        "stack-report",
+        "host-tests",
+        "architecture-check",
+        "power10-check",
+        "static-analysis",
+        "artifact-check",
+        "memory-report"
+      ]
+    },
+    {
+      "kind": "GroundUART",
+      "root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-repair-legacy-a5joy2gh\\Ground_Station",
+      "targets": [
+        "all",
+        "dependency-check",
+        "static-analysis",
+        "architecture-check",
+        "host-tests",
+        "artifact-check",
+        "power10-check"
+      ]
+    }
+  ]
+}

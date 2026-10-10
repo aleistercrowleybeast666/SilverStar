@@ -1,0 +1,23 @@
+INTERNALERROR> Traceback (most recent call last):
+INTERNALERROR>   File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\main.py", line 326, in wrap_session
+INTERNALERROR>     config._do_configure()
+INTERNALERROR>     ~~~~~~~~~~~~~~~~~~~~^^
+INTERNALERROR>   File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py", line 1205, in _do_configure
+INTERNALERROR>     self.hook.pytest_configure.call_historic(kwargs=dict(config=self))
+INTERNALERROR>     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+INTERNALERROR>   File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_hooks.py", line 534, in call_historic
+INTERNALERROR>     res = self._hookexec(self.name, self._hookimpls.copy(), kwargs, False)
+INTERNALERROR>   File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_manager.py", line 120, in _hookexec
+INTERNALERROR>     return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+INTERNALERROR>            ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+INTERNALERROR>   File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 167, in _multicall
+INTERNALERROR>     raise exception
+INTERNALERROR>   File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\pluggy\_callers.py", line 121, in _multicall
+INTERNALERROR>     res = hook_impl.function(*args)
+INTERNALERROR>   File "D:\python_software\SilverStar\docs\evidence\nightly_software_20261008\normal_test_paths.py", line 15, in pytest_configure
+INTERNALERROR>     root.mkdir(parents=True, exist_ok=False)
+INTERNALERROR>     ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+INTERNALERROR>   File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 1016, in mkdir
+INTERNALERROR>     os.mkdir(self, mode)
+INTERNALERROR>     ~~~~~~~~^^^^^^^^^^^^
+INTERNALERROR> FileExistsError: [WinError 183] 当文件已存在时，无法创建该文件。: 'D:\\Codex_Work\\task-temp\\scg-final-819eec9\\ds-async01'

@@ -1,0 +1,60 @@
+{
+  "recorded_utc": "2026-10-10T09:48:34.337608+00:00",
+  "tools": [
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "Python 3.14.0\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "GNU Make 4.4.1\nBuilt for x86_64-w64-mingw32\nCopyright (C) 1988-2023 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\gcc.exe",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "gcc.exe (Rev5, Built by MSYS2 project) 16.1.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-gcc.exe",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "arm-none-eabi-gcc.exe (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-g++.exe",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "arm-none-eabi-g++.exe (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-readelf.exe",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "GNU readelf (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 2.44.0.20250616\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis program is free software; you may redistribute it under the terms of\nthe GNU General Public License version 3 or (at your option) any later version.\nThis program has absolutely no warranty.\n",
+      "stderr": ""
+    }
+  ],
+  "prior_capture": "Initial bare make lookup unavailable; no product test executed by that capture. Resolved actual Windows mingw32-make executable."
+}

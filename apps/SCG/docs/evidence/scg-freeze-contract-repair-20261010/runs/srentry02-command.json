@@ -1,0 +1,19 @@
+{
+  "command": [
+    "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+    "-B",
+    "-m",
+    "pytest",
+    "apps/SCG/tests/test_runtime_safety.py::test_runtime_sources_survive_reference_import",
+    "apps/SCG/tests/test_runtime_safety.py::test_imported_documentation_replay_is_idempotent",
+    "-q",
+    "--basetemp=C:/Users/chdxm/AppData/Local/Temp/srentry02",
+    "--junitxml=C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\srentry02.xml"
+  ],
+  "cwd": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\r",
+  "source_commit": "819eec98347e96aa6548012be159e6a6c58bd435",
+  "started_utc": "2026-10-10T11:21:25.020091+00:00",
+  "scope": "Direct monorepo python -m pytest, no custom import shim, no PYTHONPATH, original importer and documentation assertions.",
+  "exit": 0,
+  "finished_utc": "2026-10-10T11:21:28.610660+00:00"
+}

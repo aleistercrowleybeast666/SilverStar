@@ -1,0 +1,15 @@
+{
+  "command": [
+    "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+    "-B",
+    "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\r\\apps\\SCG\\SCG.py",
+    "--version"
+  ],
+  "cwd": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\r",
+  "source_commit": "819eec98347e96aa6548012be159e6a6c58bd435",
+  "exit": 0,
+  "stdout": "0.1.2\n",
+  "stderr": "",
+  "recorded_utc": "2026-10-10T11:30:20.539880+00:00",
+  "scope": "Actual default system Python public launcher version; no writable user state or hardware"
+}

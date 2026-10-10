@@ -1,0 +1,17 @@
+{
+  "command": [
+    "D:/msys64/ucrt64/bin/mingw32-make.exe",
+    "-j2",
+    "host-tests",
+    "PYTHON=D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe"
+  ],
+  "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Flight_Controller",
+  "target": "host-tests",
+  "kind": "Flight",
+  "source_commit": "2b3d4ae8889f1fb0924ee18631c6a346e5822b98",
+  "makefile_sha256": "1841161e6ca078e43e46f6e0824d787d89116a2171922c4d5a64a1c3bfbeebd4",
+  "started_utc": "2026-10-10T10:05:10.487055+00:00",
+  "scope": "Exactly emitted Make target on fresh normal reference output, no patched gate/firmware or hardware",
+  "exit": 0,
+  "finished_utc": "2026-10-10T10:13:30.442202+00:00"
+}

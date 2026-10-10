@@ -1,0 +1,9 @@
+{
+  "daily_sha256": "3119226ecc59a45bb022019146eebacdcef5b57a9ff612fb058e33b70e426bcc",
+  "private_sha256": "aa496ae4ea80316dab19e06b15009b139ba115a7d76fd6a97ef2aa59aea3f7c0",
+  "normalized_equal": true,
+  "json_values_equal": true,
+  "daily_crlf": 100,
+  "private_crlf": 105,
+  "json_diff": []
+}

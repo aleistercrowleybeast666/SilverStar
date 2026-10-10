@@ -1,0 +1,47 @@
+[
+  {
+    "kind": "entry",
+    "label": "ds-entry01",
+    "source_commit": "819eec98347e96aa6548012be159e6a6c58bd435",
+    "scg_tree": "a6af448ddd8c9aa1f067179e8a0c30dfa3e5bea4",
+    "source_status": "",
+    "started_utc": "2026-10-10T13:32:17.300689+00:00",
+    "disk_free_before": 13538156544,
+    "process_TEMP": "D:\\Codex_Work\\task-temp\\scg-final-819eec9",
+    "scope": "Migrated final software verification, serial jobs, D outputs only; no hardware, gate relaxation, safety-review retry or cleanup.",
+    "complete_modules": [
+      "apps/SCG/tests/test_physical_device_platform_identity.py",
+      "apps/SCG/tests/test_internal_platform_refactor.py::test_platform_matching_reports_zero_and_tied_candidates",
+      "apps/SCG/tests/test_runtime_safety.py::test_runtime_sources_survive_reference_import",
+      "apps/SCG/tests/test_runtime_safety.py::test_imported_documentation_replay_is_idempotent"
+    ],
+    "test_sha256": {
+      "apps/SCG/tests/test_physical_device_platform_identity.py": "f107102b0c84bb5579cf85004cd8df5d131b72051eb312de4ff72be62dc89951",
+      "apps/SCG/tests/test_internal_platform_refactor.py::test_platform_matching_reports_zero_and_tied_candidates": "a2fcae4ccfc8ee5f1fcf2184b254f4bf5c33a4a6142471b9bb0e718f427e2f8b",
+      "apps/SCG/tests/test_runtime_safety.py::test_runtime_sources_survive_reference_import": "e72111805714b51d8cff92162363fbc48729ef0d7eacd1450c68243ae90866ec",
+      "apps/SCG/tests/test_runtime_safety.py::test_imported_documentation_replay_is_idempotent": "e72111805714b51d8cff92162363fbc48729ef0d7eacd1450c68243ae90866ec"
+    },
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "-m",
+      "pytest",
+      "apps/SCG/tests/test_physical_device_platform_identity.py",
+      "apps/SCG/tests/test_internal_platform_refactor.py::test_platform_matching_reports_zero_and_tied_candidates",
+      "apps/SCG/tests/test_runtime_safety.py::test_runtime_sources_survive_reference_import",
+      "apps/SCG/tests/test_runtime_safety.py::test_imported_documentation_replay_is_idempotent",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--basetemp=D:\\Codex_Work\\task-temp\\scg-final-819eec9\\ds-entry01",
+      "--junitxml=D:\\Codex_Work\\2026-10-10\\task\\ds-entry01.xml"
+    ],
+    "cwd": "D:\\Codex_Work\\2026-10-10\\task\\r",
+    "owned_pid": 16516,
+    "exit": 0,
+    "finished_utc": "2026-10-10T13:32:29.317057+00:00",
+    "ending_head": "819eec98347e96aa6548012be159e6a6c58bd435",
+    "disk_free_after": 13538156544,
+    "log_sha256": "4f97d3cfc79a3c727b7924b8df16172cdd888cc34554cac60b3acf25751a6d3b"
+  }
+]

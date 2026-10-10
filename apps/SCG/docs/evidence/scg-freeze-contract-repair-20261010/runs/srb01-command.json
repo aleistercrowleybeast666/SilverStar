@@ -1,0 +1,34 @@
+{
+  "command": [
+    "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\repair_backend_pytest.py",
+    "apps/SCG/tests/test_usb_ground_backend.py",
+    "apps/SCG/tests/test_native_ground_backend.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/Users/chdxm/AppData/Local/Temp/srb01",
+    "--junitxml=C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\srb01.xml"
+  ],
+  "cwd": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\r",
+  "source_commit": "a0afca6a11a9cf7066baf62afecf95fd549c9736",
+  "scg_tree": "bb58528d6372d0b23f198d1fb4c35b64c138bd0f",
+  "group": "backend",
+  "complete_modules": [
+    "apps/SCG/tests/test_usb_ground_backend.py",
+    "apps/SCG/tests/test_native_ground_backend.py"
+  ],
+  "source_status": [],
+  "test_sha256": {
+    "apps/SCG/tests/test_usb_ground_backend.py": "1f7439d0d2778bf8f84b31c8bfede9bbb6c325d3cdad0a6385ff491ec423fdf0",
+    "apps/SCG/tests/test_native_ground_backend.py": "bba0fd680bbfba261ece864fb1b767caae41f005dc6b7ab577bff92d7f12a275"
+  },
+  "scope": "Authorized isolated code repair, all cases in explicitly listed normal product modules, no -k or deselection. Temp/offscreen only. Blocked malformed USB/owner-expression review modules deliberately excluded. No source edits/hardware.",
+  "known_baseline": "Original six failures/twelve skips at 2b3d4ae retained in fz receipts; repaired producer/consumer contracts and setup are tested, no xfail or guard relaxation",
+  "started_utc": "2026-10-10T10:41:59.620100+00:00",
+  "exit": 0,
+  "finished_utc": "2026-10-10T10:51:55.511528+00:00",
+  "ending_head": "a0afca6a11a9cf7066baf62afecf95fd549c9736",
+  "ending_scg_tree": "bb58528d6372d0b23f198d1fb4c35b64c138bd0f"
+}

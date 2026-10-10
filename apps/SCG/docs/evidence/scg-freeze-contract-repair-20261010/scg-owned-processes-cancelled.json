@@ -1,0 +1,76 @@
+[
+  {
+    "Id": 8816,
+    "Name": "python.exe",
+    "IdentityRechecked": true,
+    "Result": "cancelled by explicit owner instruction"
+  },
+  {
+    "Id": 15336,
+    "Result": "already exited"
+  },
+  {
+    "Id": 14676,
+    "Name": "python.exe",
+    "IdentityRechecked": true,
+    "Result": "cancelled by explicit owner instruction"
+  },
+  {
+    "Id": 9180,
+    "Result": "already exited"
+  },
+  {
+    "Id": 4468,
+    "Name": "python.exe",
+    "IdentityRechecked": true,
+    "Result": "cancelled by explicit owner instruction"
+  },
+  {
+    "Id": 25608,
+    "Result": "already exited"
+  },
+  {
+    "Id": 400,
+    "Name": "python.exe",
+    "IdentityRechecked": true,
+    "Result": "cancelled by explicit owner instruction"
+  },
+  {
+    "Id": 25604,
+    "Result": "already exited"
+  },
+  {
+    "Id": 28612,
+    "Name": "python.exe",
+    "IdentityRechecked": true,
+    "Result": "cancelled by explicit owner instruction"
+  },
+  {
+    "Id": 27680,
+    "Result": "already exited"
+  },
+  {
+    "Id": 11860,
+    "Name": "mingw32-make.exe",
+    "IdentityRechecked": true,
+    "Result": "cancelled by explicit owner instruction"
+  },
+  {
+    "Id": 29856,
+    "Name": "mingw32-make.exe",
+    "IdentityRechecked": true,
+    "Result": "cancelled by explicit owner instruction"
+  },
+  {
+    "Id": 29368,
+    "Name": "arm-none-eabi-gcc.exe",
+    "IdentityRechecked": true,
+    "Result": "cancelled by explicit owner instruction"
+  },
+  {
+    "Id": 10416,
+    "Name": "cc1.exe",
+    "IdentityRechecked": true,
+    "Result": "cancelled by explicit owner instruction"
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "command": [
+    "D:/msys64/ucrt64/bin/mingw32-make.exe",
+    "-j2",
+    "power10-check",
+    "PYTHON=D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe"
+  ],
+  "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-repair-legacy-a5joy2gh\\Flight_Controller",
+  "target": "power10-check",
+  "kind": "Flight",
+  "source_commit": "819eec98347e96aa6548012be159e6a6c58bd435",
+  "makefile_sha256": "1841161e6ca078e43e46f6e0824d787d89116a2171922c4d5a64a1c3bfbeebd4",
+  "started_utc": "2026-10-10T11:32:18.140154+00:00",
+  "scope": "Exactly emitted Make target on fresh normal reference output, no patched gate/firmware or hardware",
+  "exit": 0,
+  "finished_utc": "2026-10-10T11:32:44.465073+00:00"
+}

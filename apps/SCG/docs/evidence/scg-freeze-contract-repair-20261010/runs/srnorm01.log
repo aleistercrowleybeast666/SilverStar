@@ -1,0 +1,12 @@
+ImportError while loading conftest 'C:\Users\chdxm\Documents\Codex\2026-10-10\task\r\apps\SCG\tests\conftest.py'.
+apps\SCG\tests\conftest.py:14: in <module>
+    from silverstar_fccg.plugins.catalog import PluginCatalog
+apps\SCG\src\silverstar_fccg\plugins\__init__.py:1: in <module>
+    from silverstar_fccg.plugins.catalog import PluginCatalog
+apps\SCG\src\silverstar_fccg\plugins\catalog.py:9: in <module>
+    from silverstar_fccg.hardware.platform_tokens import PlatformToken_Get
+apps\SCG\src\silverstar_fccg\hardware\__init__.py:9: in <module>
+    from silverstar_fccg.hardware.platform import (
+apps\SCG\src\silverstar_fccg\hardware\platform.py:10: in <module>
+    from silverstar_fccg.plugins.catalog import PluginCatalog
+E   ImportError: cannot import name 'PluginCatalog' from partially initialized module 'silverstar_fccg.plugins.catalog' (most likely due to a circular import) (C:\Users\chdxm\Documents\Codex\2026-10-10\task\r\apps\SCG\src\silverstar_fccg\plugins\catalog.py)

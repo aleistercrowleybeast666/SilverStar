@@ -1,0 +1,33 @@
+{
+  "kind": "artifact",
+  "label": "ds-Flight-artifact-check",
+  "source_commit": "819eec98347e96aa6548012be159e6a6c58bd435",
+  "scg_tree": "a6af448ddd8c9aa1f067179e8a0c30dfa3e5bea4",
+  "source_status": "",
+  "started_utc": "2026-10-10T13:39:18.376890+00:00",
+  "disk_free_before": 13522436096,
+  "process_TEMP": "D:\\Codex_Work\\task-temp\\scg-final-819eec9",
+  "scope": "Migrated final software verification, serial jobs, D outputs only; no hardware, gate relaxation, safety-review retry or cleanup. Existing exact generated project reused; analyzer -B forces real complete recompile without copying vendor or cleaning. Artifact gate is the original emitted target.",
+  "makefile_sha256": "1841161e6ca078e43e46f6e0824d787d89116a2171922c4d5a64a1c3bfbeebd4",
+  "target": "artifact-check",
+  "normal_elf_before": {
+    "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_2.elf": "585c6c716b611768c12f3eddae96a951c1db3d55c2a7fd4f5e87b1a5fccf705b"
+  },
+  "command": [
+    "D:/msys64/ucrt64/bin/mingw32-make.exe",
+    "-j1",
+    "artifact-check",
+    "PYTHON=D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe"
+  ],
+  "cwd": "D:\\Codex_Work\\task-temp\\scg-repair-legacy-a5joy2gh\\Flight_Controller",
+  "owned_pid": 4468,
+  "exit": 0,
+  "finished_utc": "2026-10-10T13:41:28.434379+00:00",
+  "ending_head": "819eec98347e96aa6548012be159e6a6c58bd435",
+  "disk_free_after": 13514776576,
+  "log_sha256": "a378623ad5d422b564bb8eea72d09bb990c7fd27f69c592e6e227e35b49904db",
+  "elf_after": {
+    "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_2.elf": "c3f97585bfcf496e63216aca20c7b091bec8960347971941eae4872f1a882d06",
+    "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.elf": "e66e2249dd63ca6c0db7a19511c355cddc0ac5074873979e5f1ff0798466abd6"
+  }
+}

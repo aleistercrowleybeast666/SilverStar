@@ -1,0 +1,24 @@
+fzlegacy-GroundUART-power10-check 0
+atform\STM32F1\Src\platform_uart_stm32f1.c|124|PlatformUart_RxStop|5|0
+POWER10_FUNCTION_SCOPE|Ground|Platform\STM32F1\Src\platform_uart_stm32f1.c|124|128|PlatformUart_RxStop
+POWER10_RULE5_FUNCTION|Ground|Platform\STM32F1\Src\platform_uart_stm32f1.c|130|PlatformUart_RxRestart|5|0
+POWER10_FUNCTION_SCOPE|Ground|Platform\STM32F1\Src\platform_uart_stm32f1.c|130|134|PlatformUart_RxRestart
+POWER10_RULE5_FUNCTION|Ground|Platform\STM32F1\Src\platform_uart_stm32f1.c|136|PlatformUart_BaudSet|10|0
+POWER10_FUNCTION_SCOPE|Ground|Platform\STM32F1\Src\platform_uart_stm32f1.c|136|145|PlatformUart_BaudSet
+POWER10_RULE5_FUNCTION|Ground|Platform\STM32F1\Src\platform_uart_stm32f1.c|147|PlatformUart_BaudGet|10|0
+POWER10_FUNCTION_SCOPE|Ground|Platform\STM32F1\Src\platform_uart_stm32f1.c|147|156|PlatformUart_BaudGet
+POWER10_RULE5_FUNCTION|Ground|Platform\STM32F1\Src\platform_uart_stm32f1.c|158|PlatformUart_RxCountGet|9|0
+POWER10_FUNCTION_SCOPE|Ground|Platform\STM32F1\Src\platform_uart_stm32f1.c|158|166|PlatformUart_RxCountGet
+POWER10_RULE5_FUNCTION|Ground|Platform\STM32F1\Src\platform_uart_stm32f1.c|168|PlatformUart_TxCountGet|6|0
+POWER10_FUNCTION_SCOPE|Ground|Platform\STM32F1\Src\platform_uart_stm32f1.c|168|173|PlatformUart_TxCountGet
+POWER10_RULE5_FUNCTION|Ground|Platform\STM32F1\Src\platform_uart_stm32f1.c|175|PlatformUart_DiagnosticsGet|10|0
+POWER10_FUNCTION_SCOPE|Ground|Platform\STM32F1\Src\platform_uart_stm32f1.c|175|184|PlatformUart_DiagnosticsGet
+POWER10_RULE5_FUNCTION|Ground|Platform\STM32F1\Src\platform_uart_stm32f1.c|186|PlatformUart_Process|4|0
+POWER10_FUNCTION_SCOPE|Ground|Platform\STM32F1\Src\platform_uart_stm32f1.c|186|189|PlatformUart_Process
+POWER10_RULE5|Ground|files=16|functions=188|eligible_assertions=127|average=0.675532|informational|policy=fprime_inspired_c|semantic_review=required
+POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending
+FCCG_PROGRESS|POWER10|DONE|17|18|function_rules
+FCCG_PROGRESS|POWER10|BEGIN|18|18|build_policy
+Power of Ten project text checks passed: 511 checks, 16 first-party C files, 188 functions; 49 assertion recommendations. Critical-contract review NOT PROVEN; manual acceptance pending.
+FCCG_PROGRESS|POWER10|DONE|18|18|build_policy
+

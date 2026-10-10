@@ -1,0 +1,14 @@
+fzlegacy-GroundUART-all 0
+bage collection into account
+D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(libc_a-lseekr.o): in function `_lseek_r':
+lseekr.c:(.text._lseek_r+0x10): warning: _lseek is not implemented and will always fail
+D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(libc_a-lseekr.o): note: the message above does not take linker garbage collection into account
+D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(libc_a-readr.o): in function `_read_r':
+readr.c:(.text._read_r+0x10): warning: _read is not implemented and will always fail
+D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(libc_a-readr.o): note: the message above does not take linker garbage collection into account
+D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(libc_a-writer.o): in function `_write_r':
+writer.c:(.text._write_r+0x10): warning: _write is not implemented and will always fail
+D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld.exe: D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a(libc_a-writer.o): note: the message above does not take linker garbage collection into account
+arm-none-eabi-objcopy -O binary build/ground.elf build/ground.bin
+arm-none-eabi-size build/ground.elf > build/ground.size
+

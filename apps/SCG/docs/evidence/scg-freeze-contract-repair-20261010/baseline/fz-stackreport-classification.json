@@ -1,0 +1,106 @@
+{
+  "files": {
+    "generated": {
+      "path": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\fzf01\\runtime_58b46173\\Tools\\check_task_stacks.py",
+      "sha256": "8de5e90798c76a53c3acd3f178726cf6d0a94ed06b996ea717e892748c23bb47",
+      "length": 183658,
+      "crlf": 1913,
+      "lf": 1913
+    },
+    "reference_overlay": {
+      "path": "D:\\python_software\\SilverStar\\apps\\SCG\\tools\\reference_overlays\\check_task_stacks.py",
+      "sha256": "394c3d3b977d0b02efcd663b0d31ad1004235abe7f8ea38db06929e9bd065576",
+      "length": 182242,
+      "crlf": 1889,
+      "lf": 1889
+    },
+    "silverstar_core_0_1_0": {
+      "path": "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tools\\check_task_stacks.py",
+      "sha256": "8de5e90798c76a53c3acd3f178726cf6d0a94ed06b996ea717e892748c23bb47",
+      "length": 183658,
+      "crlf": 1913,
+      "lf": 1913
+    }
+  },
+  "normalized_generated_overlay_equal": false,
+  "normalized_diff": [
+    "--- reference_overlay\n",
+    "+++ generated\n",
+    "@@ -1406,6 +1406,28 @@\n",
+    "  'System/Src/system_startup.c': ['306f41f9b584d3fc51c7e1f82ca6b300736db37e96a5a390820330a01799ecb7']}",
+    " ",
+    " ",
+    "+# Exact-source review v10, explicitly authorized by the user on 2026-10-08.",
+    "+# This is the frozen f045d8c static-bench identity, not arbitrary metadata.",
+    "+# All 155 compiled dependency graphs match existing reviewed graphs. Metadata",
+    "+# differs from the confirmed configuration by an identity digest and blank line;",
+    "+# decoder C differs by two identity hash arrays. Callback bodies, targets,",
+    "+# compilation-input coverage, stack limits and unknown-input rejection stay.",
+    "+BINDING_SOURCE_STATIC_BENCH_V10 = {",
+    "+    'Generated/Src/project_metadata.c': ['ae4706ff828b966e517972f147eee2d5ca938a144ff437ef3b71d32a9f186181'],",
+    "+    'Generated/Src/project_log_decoder_profile.c': ['e66c2a4581505fdb114a88f7ff65c866c0e2c0b9b4c99186d0922960bbe98da4'],",
+    "+}",
+    "+",
+    "+",
+    "+# Exact-source review v11, explicitly authorized by the user on 2026-10-08.",
+    "+# Only the finalized health-publisher boundary in estimator_task.c changes.",
+    "+# Linked indirect sites and the other 154 compiled sources match the reviewed",
+    "+# bench. The new direct getter restores IRQ state before return; push races",
+    "+# retain their checked error path. Limits and unknown-input rejection stay.",
+    "+BINDING_SOURCE_HEALTH_FINALIZATION_V11 = {",
+    "+    'APP/Src/estimator_task.c': ['98df5cb8cefc0a2e5632bf51fd73319cef033d5a7bb511390c246dafb5b64610'],",
+    "+}",
+    "+",
+    "+",
+    " # Exact version-header review v12, explicitly authorized on 2026-10-08.",
+    " # Only PATCH 0 -> 2 and LOG_BUILD_TAG SILV0100 -> SILV0102 differ in this input.",
+    " # All runtime settings, callbacks, limits and unknown-input rejection remain.",
+    "@@ -1446,6 +1468,8 @@\n",
+    "             BINDING_SOURCE_HEALTH_V6.get(path, []) + BINDING_SOURCE_POWER_V7.get(path, []) +",
+    "             BINDING_SOURCE_MINIMAL_QUEUE_V8.get(path, []) +",
+    "             BINDING_SOURCE_RF_QUEUE_V9.get(path, []) +",
+    "+            BINDING_SOURCE_STATIC_BENCH_V10.get(path, []) +",
+    "+            BINDING_SOURCE_HEALTH_FINALIZATION_V11.get(path, []) +",
+    "             BINDING_SOURCE_PRODUCT_PATCH_V12.get(path, []) +",
+    "             BINDING_SOURCE_PRODUCT_METADATA_V13.get(path, []) +",
+    "             BINDING_SOURCE_PRODUCT_DECODER_V14.get(path, []) +"
+  ],
+  "prior_blobs": {
+    "56448bd35736221d7885a26704f2f953b0fe5055": {
+      "reference_overlay": {
+        "exit": 0,
+        "sha256": "343c3f3d1885fa3af56c3106b00a2dfdfe8bcb6a4a5e4be473e592b1162328b4",
+        "normalized_equal_current": true
+      },
+      "silverstar_core_0_1_0": {
+        "exit": 0,
+        "sha256": "012e657d1b37cf8e68a6dfd938bf9ddfad49a888ad5aecc9cdcc4fa0e5a77f2b",
+        "normalized_equal_current": true
+      }
+    },
+    "2016a1279fa529c96d5b108d7d67326e2fda3653": {
+      "reference_overlay": {
+        "exit": 0,
+        "sha256": "343c3f3d1885fa3af56c3106b00a2dfdfe8bcb6a4a5e4be473e592b1162328b4",
+        "normalized_equal_current": true
+      },
+      "silverstar_core_0_1_0": {
+        "exit": 0,
+        "sha256": "012e657d1b37cf8e68a6dfd938bf9ddfad49a888ad5aecc9cdcc4fa0e5a77f2b",
+        "normalized_equal_current": true
+      }
+    },
+    "e1357b417ee98df5990a1fff18c55d6b35183896": {
+      "reference_overlay": {
+        "exit": 0,
+        "sha256": "343c3f3d1885fa3af56c3106b00a2dfdfe8bcb6a4a5e4be473e592b1162328b4",
+        "normalized_equal_current": true
+      },
+      "silverstar_core_0_1_0": {
+        "exit": 0,
+        "sha256": "012e657d1b37cf8e68a6dfd938bf9ddfad49a888ad5aecc9cdcc4fa0e5a77f2b",
+        "normalized_equal_current": true
+      }
+    }
+  }
+}

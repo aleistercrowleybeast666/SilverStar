@@ -1,0 +1,22 @@
+{
+  "command": [
+    "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\freeze_app_root_pytest.py",
+    "apps/SCG/tests/test_runtime_safety.py::test_runtime_sources_survive_reference_import",
+    "apps/SCG/tests/test_runtime_safety.py::test_imported_documentation_replay_is_idempotent",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/Users/chdxm/AppData/Local/Temp/fztools01",
+    "--junitxml=C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\fztools01.xml"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "source_commit": "2b3d4ae8889f1fb0924ee18631c6a346e5822b98",
+  "started_utc": "2026-10-10T10:14:35.796611+00:00",
+  "only_change": "External C-task test launcher adds apps/SCG application root to sys.path. Product/test/gate files unchanged.",
+  "original_launcher_sha256": "bccf0187ae26d2b8664c5af9e0ee86299c76ce67ee9d7c3ce5d5abdc1de66482",
+  "diagnostic_launcher_sha256": "38faba64856a761129cac4b28fce74333ccd33f59b78f5ca12bfe5a3c5896722",
+  "exit": 1,
+  "finished_utc": "2026-10-10T10:14:40.610995+00:00"
+}

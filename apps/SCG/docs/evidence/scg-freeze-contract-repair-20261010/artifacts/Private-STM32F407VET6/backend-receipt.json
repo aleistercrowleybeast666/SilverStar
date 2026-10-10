@@ -1,0 +1,30 @@
+{
+  "format_version": 1,
+  "status": "CompiledCandidate",
+  "scope": "PRIVATE_NATIVE_GROUND_BACKEND",
+  "started_utc": "2026-10-10T11:29:20.524880+00:00",
+  "finished_utc": "2026-10-10T11:30:48.022851+00:00",
+  "model_sha256": "caae7ef6ade22f59b2076a23ce6d24931b60182414737ab1681de5adc9cba21c",
+  "project_root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\srb02\\p_c0087bc3",
+  "snapshot_id": "d6a36ded538ccc51b4ddffa2cab7089b15ae7b9333ef85e606789fbb51de50f0",
+  "profile": "f407-tim1-indexed-v1",
+  "compile_receipt_sha256": "c2fb1a81016e6ea1b62ee08dd60386acba329b9d1eb28de3ed46236da2848e89",
+  "binding": {
+    "format_version": 1,
+    "scope": "PRIVATE_NATIVE_GROUND_BACKEND",
+    "profile": "f407-tim1-indexed-v1",
+    "hclk_hz": 168000000,
+    "facts_sha256": "0f27094e2debafbc4d832c86688f76a9d9f0e794a1b26e3459e476f7083a1270",
+    "snapshot_id": "d6a36ded538ccc51b4ddffa2cab7089b15ae7b9333ef85e606789fbb51de50f0",
+    "spi": "SPI1",
+    "gpio": [
+      "RADIO_NSS",
+      "RADIO_RST",
+      "RADIO_BUSY",
+      "RADIO_DIO1"
+    ],
+    "formal_generation": "BLOCKED"
+  },
+  "failure": null,
+  "limits": "PRIVATE CANDIDATE ONLY; formal generation BLOCKED. NOT PROVEN: complete EP0/async lifecycle, manual critical contracts, whole-program stack/WCET and physical timing/hardware. F103 shared control ordinary integration only; independent USB safety review has no passed outcome. F407 shared EP0 repair not integrated."
+}

@@ -1,0 +1,95 @@
+.................F.F..........................ss..                       [100%]
+================================== FAILURES ===================================
+_________ test_f103_dispatch_reuses_plan_f407_stays_private[f103-usb] _________
+
+bound = (<silverstar_fccg.app.service.FccgService object at 0x0000022C24E6B850>, NativeGroundProjectImportResult(result=<Nativ... 'RADIO_DIO1')}, WindowsPath('C:/Users/chdxm/AppData/Local/Temp/fzb01/test_f103_dispatch_reuses_plan_3831a390/native'))
+
+    def test_f103_dispatch_reuses_plan_f407_stays_private(bound):
+        service, imported, args, _source = bound
+        facts = args['device_facts']
+        if facts.part == 'STM32F407VET6':
+            with pytest.raises(CubeMxImportError, match='Unsupported first-batch'):
+                service.UsbGroundCandidate_Plan(imported.model, independent_irq_header=Path(facts.irq_evidence_source))
+            old = service.NativeClassicCdcGroundCandidate_Plan(imported.model, device_facts=facts)
+            assert old.profile == 'f407-tim1-indexed-v1'
+        else:
+            rebound = service.UsbGroundProject_Import(_source, imported.model, part=facts.part,
+                independent_irq_header=Path(facts.irq_evidence_source), hclk_hz=72_000_000,
+                spi_resource=args['spi_resource'], gpio_resources=args['gpio_resources'], risk_acknowledged=True)
+>           assert rebound.model.Dictionary_Get() == imported.model.Dictionary_Get()
+E           AssertionError: assert {'format_vers...'Tilt']}, ...} == {'format_vers...'Tilt']}, ...}
+E             
+E             Omitting 19 identical items, use -vv to show
+E             Differing items:
+E             {'ground_target': {'enabled': True, 'mcu': '', 'board': '', 'hardware': {'mode': 'custom', 'source_kind': 'manual_impo..._provider.stm32_cubemx', 'snapshot_id': 'ddb85510395b43fcb4d4227f6b6330d96c599348c5139de3b19e5b5a9ceaf628', ...}, ...}} != {'ground_target': {'enabled': True, 'mcu': '', 'board': '', 'hardware': {'mode': 'custom', 'source_kind': 'manual_impo..._provider.stm32_cubemx', 'snapshot_id': '8a76c3b886f89137d1c9d7d75f7e59e58f728a5f6e71b385be3bae338d807932', ...}, ...}}
+E             Use -v to get more diff
+
+apps\SCG\tests\test_usb_ground_backend.py:162: AssertionError
+_________ test_real_unified_backend_build_exact_first_batch[f103-usb] _________
+
+bound = (<silverstar_fccg.app.service.FccgService object at 0x0000022C253E7450>, NativeGroundProjectImportResult(result=<Nativ... 'RADIO_DIO1')}, WindowsPath('C:/Users/chdxm/AppData/Local/Temp/fzb01/test_real_unified_backend_buil_49403037/native'))
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/fzb01'), _trace=<pluggy._tracing.TagTra...98FCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/fzb01'), _retention_count=3, _retention_policy='all')
+
+    def test_real_unified_backend_build_exact_first_batch(bound, tmp_path_factory):
+        assert os.environ.get('SILVERSTAR_USB_BACKEND_ARM') == '1'
+        service, imported, args, _source = bound
+        facts = args['device_facts']
+        project = tmp_path_factory.mktemp('p')
+        output = tmp_path_factory.mktemp('o') / 'b'
+        service.ProjectRoot_Save(imported.model, project, create_new=True)
+        if facts.part == 'STM32F407VET6':
+            with pytest.raises(CubeMxImportError, match='Unsupported first-batch'):
+                service.UsbGroundCandidate_Build(imported.model, project, output,
+                    independent_irq_header=Path(facts.irq_evidence_source))
+            assert not output.exists()
+            return
+>       exported = service.UsbGroundCandidate_Export(imported.model, tmp_path_factory.mktemp('o') / 'r',
+            independent_irq_header=Path(facts.irq_evidence_source))
+
+apps\SCG\tests\test_usb_ground_backend.py:183: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\app\service.py:969: in UsbGroundCandidate_Export
+    return UsbGroundCandidate_Export(self.hardware_importer, self.catalog, model, output, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\app\usb_ground.py:306: in UsbGroundCandidate_Export
+    plan = UsbGroundCandidate_Plan(importer, catalog, model,
+apps\SCG\src\silverstar_fccg\app\usb_ground.py:267: in UsbGroundCandidate_Plan
+    plan = NativeGroundCandidate_Plan(importer, catalog, model, device_facts=facts)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\app\native_ground.py:195: in NativeGroundCandidate_Plan
+    _snapshot, proof, inventory, native, binding = _Snapshot_Inspect(importer, model, device_facts)
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x0000022C2660E870>
+model = ProjectModel(identity=ProjectIdentity(name='NativeGroundPrivate10a', firmware_version='0.1.2', build_target='SilverSta...ile', 'project_sources'], component_provenance={}, reference_provenance={}, feature_tier_presets={}, format_version=14)
+facts = NativeDeviceFacts(part='STM32F103C8T6', core='cortex-m3', device_macro='STM32F103xB', startup='startup_stm32f103xb.s',...s\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h')
+
+    def _Snapshot_Inspect(importer: CubeMxImporter, model: ProjectModel, facts: NativeDeviceFacts):
+        hardware = model.ground_target.hardware
+        binding = hardware.inventory.get(BINDING_KEY)
+        expected = {"format_version", "scope", "profile", "hclk_hz", "facts_sha256",
+                    "snapshot_id", "spi", "gpio", "formal_generation"}
+        if not isinstance(binding, dict) or set(binding) != expected:
+            raise CubeMxImportError("Native Ground backend binding is missing or unsupported")
+        profile = _Profile_Get(facts, binding["hclk_hz"])
+        if (type(binding["format_version"]) is not int or binding["format_version"] != 1 or
+                binding["scope"] != "PRIVATE_NATIVE_GROUND_BACKEND" or
+                binding["formal_generation"] != "BLOCKED" or binding["profile"] != profile or
+                binding["facts_sha256"] != _Hash_Get(_Json_Encode(asdict(facts)))):
+>           raise CubeMxImportError("Native Ground binding differs from trusted facts/profile")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native Ground binding differs from trusted facts/profile
+
+apps\SCG\src\silverstar_fccg\app\native_ground.py:154: CubeMxImportError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+SKIPPED [2] apps\SCG\tests\test_native_ground_backend.py:181: Explicit real ARM/analyzer backend flow execution not requested
+FAILED apps\SCG\tests\test_usb_ground_backend.py::test_f103_dispatch_reuses_plan_f407_stays_private[f103-usb]
+FAILED apps\SCG\tests\test_usb_ground_backend.py::test_real_unified_backend_build_exact_first_batch[f103-usb]
+2 failed, 46 passed, 2 skipped, 1 warning in 318.25s (0:05:18)

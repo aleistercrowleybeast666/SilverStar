@@ -1,0 +1,3 @@
+D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe Tools/check_ground.py architecture
+PASS Ground declared source graph (39 sources), ownership and startup
+Critical-contract manual review, call graph, stack and MCU timing: NOT PROVEN

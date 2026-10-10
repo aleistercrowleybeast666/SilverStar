@@ -1,0 +1,53 @@
+{
+  "recorded_utc": "2026-10-10T10:06:42.561453+00:00",
+  "temporary_root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\fzid-_auzj464",
+  "source": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\usb-validation\\cube-f103-usb",
+  "header": "D:\\Tools\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h",
+  "facts_differences": {
+    "/evidence_sha256": {
+      "generic": "3119226ecc59a45bb022019146eebacdcef5b57a9ff612fb058e33b70e426bcc",
+      "unified": "aa496ae4ea80316dab19e06b15009b139ba115a7d76fd6a97ef2aa59aea3f7c0"
+    },
+    "/evidence_source": {
+      "generic": "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_mcu_stm32f103c8t6\\plugin.json",
+      "unified": "D:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_mcu_stm32f103c8t6\\plugin.json"
+    }
+  },
+  "generic_native_plan_profile": "f103-systick-classic-v1",
+  "gui_bound_predicate_for_saved_generic_model": true,
+  "rejections": {
+    "generic_model": "Native Ground binding differs from trusted facts/profile",
+    "saved_generic_model": "Native Ground binding differs from trusted facts/profile",
+    "generic_export": "Native Ground binding differs from trusted facts/profile"
+  },
+  "rejected_export_output_exists": false,
+  "unified_reimport_result": "RenderedCandidate",
+  "full_model_equal": false,
+  "model_differences": {
+    "/ground_target/hardware/inventory/native_complete_classic_cdc/device_facts/evidence_sha256": {
+      "generic": "3119226ecc59a45bb022019146eebacdcef5b57a9ff612fb058e33b70e426bcc",
+      "unified": "aa496ae4ea80316dab19e06b15009b139ba115a7d76fd6a97ef2aa59aea3f7c0"
+    },
+    "/ground_target/hardware/inventory/native_complete_classic_cdc/device_facts/evidence_source": {
+      "generic": "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_mcu_stm32f103c8t6\\plugin.json",
+      "unified": "D:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_mcu_stm32f103c8t6\\plugin.json"
+    },
+    "/ground_target/hardware/inventory/native_ground_backend/facts_sha256": {
+      "generic": "2277238d2d278f3c876e9f33efb3f940ae7420ae195fe756c940f87fd8550c8d",
+      "unified": "0ee5e3f4aeb470f2978049b512172c0b4b77c2509f7bd3b9a9dbb5b82e0093bc"
+    },
+    "/ground_target/hardware/inventory/native_ground_backend/snapshot_id": {
+      "generic": "8a76c3b886f89137d1c9d7d75f7e59e58f728a5f6e71b385be3bae338d807932",
+      "unified": "ddb85510395b43fcb4d4227f6b6330d96c599348c5139de3b19e5b5a9ceaf628"
+    },
+    "/ground_target/hardware/snapshot_id": {
+      "generic": "8a76c3b886f89137d1c9d7d75f7e59e58f728a5f6e71b385be3bae338d807932",
+      "unified": "ddb85510395b43fcb4d4227f6b6330d96c599348c5139de3b19e5b5a9ceaf628"
+    },
+    "/ground_target/hardware/source_digest": {
+      "generic": "8a76c3b886f89137d1c9d7d75f7e59e58f728a5f6e71b385be3bae338d807932",
+      "unified": "ddb85510395b43fcb4d4227f6b6330d96c599348c5139de3b19e5b5a9ceaf628"
+    }
+  },
+  "scope": "Only normal admitted input, immutable imports, save/reload, Plan and expected Export rejection. No malformed USB, owner-expression research, compile/hardware or source/test/gate edits."
+}

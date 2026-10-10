@@ -1,0 +1,5 @@
+{
+  "scope": "Importing orchestration helper incorrectly executed its top-level default jobs, overwriting ds-entry01/ds-async01 command and log files. Entry repeated 16 passed; async aborted before collection due existing basetemp. Original ds-async01 XML remains (12 passed/4 failed), original command and log hash retained in ds-resume-sequence.json. Original raw log bytes are unavailable; no claim of matching its original log hash. Sideeffect files and reconstructed original metadata archived. Runner now uses main guard; no product source/test changes.",
+  "original_sequence_sha256": "3a0e2b8845b76bdd4d6e0ee95b122c7be2764e161a6ef3f6279428963292b9d4",
+  "async_original_xml_sha256": "d1671cbab83b4b8681471327347232e1f719e22fe9a95cd1499e9a9e833131a2"
+}

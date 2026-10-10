@@ -1,0 +1,62 @@
+{
+  "command": [
+    "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\daily_backend_pytest.py",
+    "apps/SCG/tests/test_generator_integration.py",
+    "apps/SCG/tests/test_round2_targets.py",
+    "apps/SCG/tests/test_flight_state_scheduler_generated_host.py",
+    "apps/SCG/tests/test_firmware_identity_gate.py",
+    "apps/SCG/tests/test_firmware_artifact_protocols.py",
+    "apps/SCG/tests/test_runtime_safety.py",
+    "apps/SCG/tests/test_stack_budget.py",
+    "apps/SCG/tests/test_power_of_ten_checker_paths.py",
+    "apps/SCG/tests/test_quality_manual_acceptance.py",
+    "apps/SCG/tests/test_target_quality_checks.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/Users/chdxm/AppData/Local/Temp/fzf01",
+    "--junitxml=C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\fzf01.xml"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "source_commit": "2b3d4ae8889f1fb0924ee18631c6a346e5822b98",
+  "scg_tree": "e03ca99998df2d9d75ad3e817d25d83daba2bd8a",
+  "group": "flight",
+  "complete_modules": [
+    "apps/SCG/tests/test_generator_integration.py",
+    "apps/SCG/tests/test_round2_targets.py",
+    "apps/SCG/tests/test_flight_state_scheduler_generated_host.py",
+    "apps/SCG/tests/test_firmware_identity_gate.py",
+    "apps/SCG/tests/test_firmware_artifact_protocols.py",
+    "apps/SCG/tests/test_runtime_safety.py",
+    "apps/SCG/tests/test_stack_budget.py",
+    "apps/SCG/tests/test_power_of_ten_checker_paths.py",
+    "apps/SCG/tests/test_quality_manual_acceptance.py",
+    "apps/SCG/tests/test_target_quality_checks.py"
+  ],
+  "source_status": [
+    "?? work_build_candidates_20261006.csv",
+    "?? work_inventory_20261006.txt",
+    "?? work_subtree_classification_20261006.csv"
+  ],
+  "test_sha256": {
+    "apps/SCG/tests/test_generator_integration.py": "f27aa288ab1dc2e6fde28ef1775b17f26ed1501d19819cfd09f0eac2b77c7ef7",
+    "apps/SCG/tests/test_round2_targets.py": "ea0722d0e13b584f4e84cd2288c48cd7ad773756541568d46da680a2a6d307e9",
+    "apps/SCG/tests/test_flight_state_scheduler_generated_host.py": "9479ea833c41c2886da5305906e561e4fb861c6643aa08f8b09614e3302bbb52",
+    "apps/SCG/tests/test_firmware_identity_gate.py": "b15ec72c62400afd26d24bbed5d32e3d31134b0812d3cc1236b492bfa44d89b4",
+    "apps/SCG/tests/test_firmware_artifact_protocols.py": "deb9018f8b6c4685dcb869eecff4f40f8acf1ebf44ce88f5c6b2449bf1c8f5fc",
+    "apps/SCG/tests/test_runtime_safety.py": "ef4d43e3056bc5c507fd1d1b11e88e10b9d8534713f579bf257165b81c7357db",
+    "apps/SCG/tests/test_stack_budget.py": "fc89b506b90d39da24cfac21151e4cfcec9824f58f1960307232a66c171fb531",
+    "apps/SCG/tests/test_power_of_ten_checker_paths.py": "623129fe0a061c11c6a8fdc65dae28dfb7a610241e7acde337c653a8066b6ebc",
+    "apps/SCG/tests/test_quality_manual_acceptance.py": "103f1e1308d0cf4ef17b8409df96f6b228684e55e1c970246e4bf9f9b31f4989",
+    "apps/SCG/tests/test_target_quality_checks.py": "4b4a6c8b8ad93f1d4a94909c134e6fccca5b4c6260d8bc45b0d79d69ba07ace5"
+  },
+  "scope": "All cases in explicitly listed normal product modules, no -k or deselection. Temp/offscreen only. Blocked malformed USB/owner-expression review modules deliberately excluded. No source edits/hardware.",
+  "known_baseline": "F103 generic-to-pinned full model equality mismatch in test_usb_ground_backend at accepted 2b3d4ae; retained, not xfailed or patched",
+  "started_utc": "2026-10-10T09:44:53.892887+00:00",
+  "exit": 1,
+  "finished_utc": "2026-10-10T09:53:53.146117+00:00",
+  "ending_head": "2b3d4ae8889f1fb0924ee18631c6a346e5822b98",
+  "ending_scg_tree": "e03ca99998df2d9d75ad3e817d25d83daba2bd8a"
+}

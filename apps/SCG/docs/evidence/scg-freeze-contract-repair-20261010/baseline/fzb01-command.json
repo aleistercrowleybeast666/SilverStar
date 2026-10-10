@@ -1,0 +1,38 @@
+{
+  "command": [
+    "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\daily_backend_pytest.py",
+    "apps/SCG/tests/test_usb_ground_backend.py",
+    "apps/SCG/tests/test_native_ground_backend.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/Users/chdxm/AppData/Local/Temp/fzb01",
+    "--junitxml=C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\fzb01.xml"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "source_commit": "2b3d4ae8889f1fb0924ee18631c6a346e5822b98",
+  "scg_tree": "e03ca99998df2d9d75ad3e817d25d83daba2bd8a",
+  "group": "backend",
+  "complete_modules": [
+    "apps/SCG/tests/test_usb_ground_backend.py",
+    "apps/SCG/tests/test_native_ground_backend.py"
+  ],
+  "source_status": [
+    "?? work_build_candidates_20261006.csv",
+    "?? work_inventory_20261006.txt",
+    "?? work_subtree_classification_20261006.csv"
+  ],
+  "test_sha256": {
+    "apps/SCG/tests/test_usb_ground_backend.py": "a07374b1422928ab3f3d84433076b393834dfa3d140e9fbdf81e4263a63f051c",
+    "apps/SCG/tests/test_native_ground_backend.py": "bba0fd680bbfba261ece864fb1b767caae41f005dc6b7ab577bff92d7f12a275"
+  },
+  "scope": "All cases in explicitly listed normal product modules, no -k or deselection. Temp/offscreen only. Blocked malformed USB/owner-expression review modules deliberately excluded. No source edits/hardware.",
+  "known_baseline": "F103 generic-to-pinned full model equality mismatch in test_usb_ground_backend at accepted 2b3d4ae; retained, not xfailed or patched",
+  "started_utc": "2026-10-10T09:26:20.863583+00:00",
+  "exit": 1,
+  "finished_utc": "2026-10-10T09:31:42.015329+00:00",
+  "ending_head": "2b3d4ae8889f1fb0924ee18631c6a346e5822b98",
+  "ending_scg_tree": "e03ca99998df2d9d75ad3e817d25d83daba2bd8a"
+}

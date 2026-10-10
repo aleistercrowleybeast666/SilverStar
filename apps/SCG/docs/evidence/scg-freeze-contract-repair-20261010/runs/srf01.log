@@ -1,0 +1,292 @@
+................................F...........ssssssssss.................. [ 31%]
+.............FFFF....................................................... [ 62%]
+........................................................................ [ 93%]
+..............                                                           [100%]
+================================== FAILURES ===================================
+_________________ test_generated_flight_scheduler[contended] __________________
+
+flight_scheduler_executable = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/srf01/flight-scheduler-build_78fb014a/scheduler.exe'), WindowsPath('C:/Users/chdxm/AppData/Local/Temp/srf01/flight-scheduler-generated_df5ed0e1/Flight_Controller'))
+scenario = 'contended'
+
+    @pytest.mark.parametrize("scenario", ["contended", "no_navigation", "unavailable",
+        "no_imu", "recovery", "outside_mission"])
+    def test_generated_flight_scheduler(flight_scheduler_executable, scenario):
+        executable, project = flight_scheduler_executable
+        result = subprocess.run([str(executable), scenario], cwd=project, capture_output=True,
+                                text=True, encoding="utf8", errors="replace", timeout=30)
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert "0 failures" in result.stdout
+        if scenario == "contended":
+            # Use the actual generated C payload bytes in the unchanged GSHC parser.
+            import struct
+            import sys
+            gshc = Path(__file__).resolve().parents[2] / "GSHC"
+            sys.path.insert(0, str(gshc))
+            try:
+>               from protocol.air import AirFlightStateMessage, parse_air_frame
+E               ModuleNotFoundError: No module named 'protocol'
+
+apps\SCG\tests\test_flight_state_scheduler_generated_host.py:63: ModuleNotFoundError
+_ test_product_metadata_binding_accepts_only_authorized_complete_source[digest] _
+
+path = WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-10/task/r/docs/evidence/logger_health_retest_20261008/generated_config.ssproject')
+
+    def ProjectModel_Load(path: Path) -> ProjectModel:
+        try:
+>           data = json.loads(path.read_text(encoding="utf-8"))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\src\silverstar_fccg\project\model.py:2066: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:792: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-10/task/r/docs/evidence/logger_health_retest_20261008/generated_config.ssproject')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\r\\docs\\evidence\\logger_health_retest_20261008\\generated_config.ssproject'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:776: FileNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000239AAA0E120>
+mutation = 'digest'
+
+    @pytest.mark.parametrize('mutation', ['digest', 'function'])
+    def test_product_metadata_binding_accepts_only_authorized_complete_source(builtin_catalog, mutation):
+        from silverstar_fccg.project.model import ProjectModel_Load
+        from silverstar_fccg.generator.render import _MetadataSource_Render
+        source = Path(__file__).resolve().parents[3] / 'docs/evidence/logger_health_retest_20261008/generated_config.ssproject'
+>       text = _MetadataSource_Render(ProjectModel_Load(source), builtin_catalog)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_budget.py:198: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-10/task/r/docs/evidence/logger_health_retest_20261008/generated_config.ssproject')
+
+    def ProjectModel_Load(path: Path) -> ProjectModel:
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+>           raise ProjectModelError(f"Cannot read project file {path}: {error}") from error
+E           silverstar_fccg.project.model.ProjectModelError: Cannot read project file C:\Users\chdxm\Documents\Codex\2026-10-10\task\r\docs\evidence\logger_health_retest_20261008\generated_config.ssproject: [Errno 2] No such file or directory: 'C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\r\\docs\\evidence\\logger_health_retest_20261008\\generated_config.ssproject'
+
+apps\SCG\src\silverstar_fccg\project\model.py:2068: ProjectModelError
+_ test_product_metadata_binding_accepts_only_authorized_complete_source[function] _
+
+path = WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-10/task/r/docs/evidence/logger_health_retest_20261008/generated_config.ssproject')
+
+    def ProjectModel_Load(path: Path) -> ProjectModel:
+        try:
+>           data = json.loads(path.read_text(encoding="utf-8"))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\src\silverstar_fccg\project\model.py:2066: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:792: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-10/task/r/docs/evidence/logger_health_retest_20261008/generated_config.ssproject')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\r\\docs\\evidence\\logger_health_retest_20261008\\generated_config.ssproject'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:776: FileNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000239AAA0E120>
+mutation = 'function'
+
+    @pytest.mark.parametrize('mutation', ['digest', 'function'])
+    def test_product_metadata_binding_accepts_only_authorized_complete_source(builtin_catalog, mutation):
+        from silverstar_fccg.project.model import ProjectModel_Load
+        from silverstar_fccg.generator.render import _MetadataSource_Render
+        source = Path(__file__).resolve().parents[3] / 'docs/evidence/logger_health_retest_20261008/generated_config.ssproject'
+>       text = _MetadataSource_Render(ProjectModel_Load(source), builtin_catalog)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_budget.py:198: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-10/task/r/docs/evidence/logger_health_retest_20261008/generated_config.ssproject')
+
+    def ProjectModel_Load(path: Path) -> ProjectModel:
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+>           raise ProjectModelError(f"Cannot read project file {path}: {error}") from error
+E           silverstar_fccg.project.model.ProjectModelError: Cannot read project file C:\Users\chdxm\Documents\Codex\2026-10-10\task\r\docs\evidence\logger_health_retest_20261008\generated_config.ssproject: [Errno 2] No such file or directory: 'C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\r\\docs\\evidence\\logger_health_retest_20261008\\generated_config.ssproject'
+
+apps\SCG\src\silverstar_fccg\project\model.py:2068: ProjectModelError
+_ test_product_decoder_binding_accepts_only_authorized_complete_source[digest] _
+
+mutation = 'digest'
+
+    @pytest.mark.parametrize('mutation', ['digest', 'function'])
+    def test_product_decoder_binding_accepts_only_authorized_complete_source(mutation):
+        # v14 approves exact archived bytes, not every later renderer's identity.
+        source = Path(__file__).resolve().parents[3] / 'docs/evidence/scg_decoder_binding_20261008/evidence.zip'
+        relative = 'Generated/Src/project_log_decoder_profile.c'
+>       with zipfile.ZipFile(source) as archive:
+             ^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_budget.py:214: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <zipfile.ZipFile [closed]>
+file = 'C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\r\\docs\\evidence\\scg_decoder_binding_20261008\\evidence.zip'
+mode = 'r', compression = 0, allowZip64 = True, compresslevel = None
+strict_timestamps = True, metadata_encoding = None
+
+    def __init__(self, file, mode="r", compression=ZIP_STORED, allowZip64=True,
+                 compresslevel=None, *, strict_timestamps=True, metadata_encoding=None):
+        """Open the ZIP file with mode read 'r', write 'w', exclusive create 'x',
+        or append 'a'."""
+        if mode not in ('r', 'w', 'x', 'a'):
+            raise ValueError("ZipFile requires mode 'r', 'w', 'x', or 'a'")
+    
+        _check_compression(compression)
+    
+        self._allowZip64 = allowZip64
+        self._didModify = False
+        self.debug = 0  # Level of printing: 0 through 3
+        self.NameToInfo = {}    # Find file info given name
+        self.filelist = []      # List of ZipInfo instances for archive
+        self.compression = compression  # Method of compression
+        self.compresslevel = compresslevel
+        self.mode = mode
+        self.pwd = None
+        self._comment = b''
+        self._strict_timestamps = strict_timestamps
+        self.metadata_encoding = metadata_encoding
+    
+        # Check that we don't try to write with nonconforming codecs
+        if self.metadata_encoding and mode != 'r':
+            raise ValueError(
+                "metadata_encoding is only supported for reading files")
+    
+        # Check if we were passed a file-like object
+        if isinstance(file, os.PathLike):
+            file = os.fspath(file)
+        if isinstance(file, str):
+            # No, it's a filename
+            self._filePassed = 0
+            self.filename = file
+            modeDict = {'r' : 'rb', 'w': 'w+b', 'x': 'x+b', 'a' : 'r+b',
+                        'r+b': 'w+b', 'w+b': 'wb', 'x+b': 'xb'}
+            filemode = modeDict[mode]
+            while True:
+                try:
+>                   self.fp = io.open(file, filemode)
+                              ^^^^^^^^^^^^^^^^^^^^^^^
+E                   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\r\\docs\\evidence\\scg_decoder_binding_20261008\\evidence.zip'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\zipfile\__init__.py:1440: FileNotFoundError
+_ test_product_decoder_binding_accepts_only_authorized_complete_source[function] _
+
+mutation = 'function'
+
+    @pytest.mark.parametrize('mutation', ['digest', 'function'])
+    def test_product_decoder_binding_accepts_only_authorized_complete_source(mutation):
+        # v14 approves exact archived bytes, not every later renderer's identity.
+        source = Path(__file__).resolve().parents[3] / 'docs/evidence/scg_decoder_binding_20261008/evidence.zip'
+        relative = 'Generated/Src/project_log_decoder_profile.c'
+>       with zipfile.ZipFile(source) as archive:
+             ^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_stack_budget.py:214: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <zipfile.ZipFile [closed]>
+file = 'C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\r\\docs\\evidence\\scg_decoder_binding_20261008\\evidence.zip'
+mode = 'r', compression = 0, allowZip64 = True, compresslevel = None
+strict_timestamps = True, metadata_encoding = None
+
+    def __init__(self, file, mode="r", compression=ZIP_STORED, allowZip64=True,
+                 compresslevel=None, *, strict_timestamps=True, metadata_encoding=None):
+        """Open the ZIP file with mode read 'r', write 'w', exclusive create 'x',
+        or append 'a'."""
+        if mode not in ('r', 'w', 'x', 'a'):
+            raise ValueError("ZipFile requires mode 'r', 'w', 'x', or 'a'")
+    
+        _check_compression(compression)
+    
+        self._allowZip64 = allowZip64
+        self._didModify = False
+        self.debug = 0  # Level of printing: 0 through 3
+        self.NameToInfo = {}    # Find file info given name
+        self.filelist = []      # List of ZipInfo instances for archive
+        self.compression = compression  # Method of compression
+        self.compresslevel = compresslevel
+        self.mode = mode
+        self.pwd = None
+        self._comment = b''
+        self._strict_timestamps = strict_timestamps
+        self.metadata_encoding = metadata_encoding
+    
+        # Check that we don't try to write with nonconforming codecs
+        if self.metadata_encoding and mode != 'r':
+            raise ValueError(
+                "metadata_encoding is only supported for reading files")
+    
+        # Check if we were passed a file-like object
+        if isinstance(file, os.PathLike):
+            file = os.fspath(file)
+        if isinstance(file, str):
+            # No, it's a filename
+            self._filePassed = 0
+            self.filename = file
+            modeDict = {'r' : 'rb', 'w': 'w+b', 'x': 'x+b', 'a' : 'r+b',
+                        'r+b': 'w+b', 'w+b': 'wb', 'x+b': 'xb'}
+            filemode = modeDict[mode]
+            while True:
+                try:
+>                   self.fp = io.open(file, filemode)
+                              ^^^^^^^^^^^^^^^^^^^^^^^
+E                   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\r\\docs\\evidence\\scg_decoder_binding_20261008\\evidence.zip'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\zipfile\__init__.py:1440: FileNotFoundError
+============================== warnings summary ===============================
+..\..\..\..\..\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+SKIPPED [2] apps\SCG\tests\test_firmware_artifact_protocols.py:44: Explicit real ARM Release artifact fixture required
+SKIPPED [2] apps\SCG\tests\test_firmware_artifact_protocols.py:50: Explicit real ARM Release artifact fixture required
+SKIPPED [6] apps\SCG\tests\test_firmware_artifact_protocols.py:63: Explicit real ARM Release artifact fixture required
+FAILED apps\SCG\tests\test_flight_state_scheduler_generated_host.py::test_generated_flight_scheduler[contended]
+FAILED apps\SCG\tests\test_stack_budget.py::test_product_metadata_binding_accepts_only_authorized_complete_source[digest]
+FAILED apps\SCG\tests\test_stack_budget.py::test_product_metadata_binding_accepts_only_authorized_complete_source[function]
+FAILED apps\SCG\tests\test_stack_budget.py::test_product_decoder_binding_accepts_only_authorized_complete_source[digest]
+FAILED apps\SCG\tests\test_stack_budget.py::test_product_decoder_binding_accepts_only_authorized_complete_source[function]
+5 failed, 215 passed, 10 skipped, 1 warning in 655.42s (0:10:55)

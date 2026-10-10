@@ -1,0 +1,17 @@
+{
+  "command": [
+    "D:/msys64/ucrt64/bin/mingw32-make.exe",
+    "-j2",
+    "all",
+    "PYTHON=D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe"
+  ],
+  "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-freeze-legacy-nl6vxkda\\Ground_Station",
+  "target": "all",
+  "kind": "GroundUART",
+  "source_commit": "2b3d4ae8889f1fb0924ee18631c6a346e5822b98",
+  "makefile_sha256": "49baa015ebdb03b321d4191fee595df717b2611337daf471e31c374cee471330",
+  "started_utc": "2026-10-10T10:02:55.622907+00:00",
+  "scope": "Exactly emitted Make target on fresh normal reference output, no patched gate/firmware or hardware",
+  "exit": 0,
+  "finished_utc": "2026-10-10T10:03:32.070067+00:00"
+}

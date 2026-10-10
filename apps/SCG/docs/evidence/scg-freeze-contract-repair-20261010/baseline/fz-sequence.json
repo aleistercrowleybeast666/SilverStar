@@ -1,0 +1,243 @@
+[
+  {
+    "name": "flight_modules",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_freeze_group.py",
+      "flight",
+      "fzf01"
+    ],
+    "started_utc": "2026-10-10T09:44:52.919955+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T09:53:53.394295+00:00"
+  },
+  {
+    "name": "usb_gui",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_freeze_usb_gui.py",
+      "fzgui01",
+      "all"
+    ],
+    "started_utc": "2026-10-10T09:53:53.395913+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T10:00:49.529207+00:00"
+  },
+  {
+    "name": "usb_async",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_freeze_async.py",
+      "fza01"
+    ],
+    "started_utc": "2026-10-10T10:00:49.530566+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T10:01:54.396343+00:00"
+  },
+  {
+    "name": "native_gates",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_usb_candidate_gates.py",
+      "fzng01",
+      "fzgui01"
+    ],
+    "started_utc": "2026-10-10T10:01:54.398593+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T10:02:35.161334+00:00"
+  },
+  {
+    "name": "startup",
+    "command": [
+      "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "-B",
+      "freeze_scg_startup_check.py"
+    ],
+    "started_utc": "2026-10-10T10:02:35.163374+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T10:02:41.142610+00:00"
+  },
+  {
+    "name": "launcher",
+    "command": [
+      "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "-B",
+      "freeze_scg_launcher.py"
+    ],
+    "started_utc": "2026-10-10T10:02:41.144317+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T10:02:42.945964+00:00"
+  },
+  {
+    "name": "fzlegacy-GroundUART-power10-check",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_freeze_legacy_gate.py",
+      "GroundUART",
+      "power10-check",
+      "fzlegacy-GroundUART-power10-check"
+    ],
+    "started_utc": "2026-10-10T10:02:42.947742+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T10:02:47.365709+00:00"
+  },
+  {
+    "name": "fzlegacy-GroundUART-architecture-check",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_freeze_legacy_gate.py",
+      "GroundUART",
+      "architecture-check",
+      "fzlegacy-GroundUART-architecture-check"
+    ],
+    "started_utc": "2026-10-10T10:02:47.367335+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T10:02:48.956610+00:00"
+  },
+  {
+    "name": "fzlegacy-GroundUART-host-tests",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_freeze_legacy_gate.py",
+      "GroundUART",
+      "host-tests",
+      "fzlegacy-GroundUART-host-tests"
+    ],
+    "started_utc": "2026-10-10T10:02:48.957797+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T10:02:55.342816+00:00"
+  },
+  {
+    "name": "fzlegacy-GroundUART-all",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_freeze_legacy_gate.py",
+      "GroundUART",
+      "all",
+      "fzlegacy-GroundUART-all"
+    ],
+    "started_utc": "2026-10-10T10:02:55.344294+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T10:03:32.103411+00:00"
+  },
+  {
+    "name": "fzlegacy-GroundUART-static-analysis",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_freeze_legacy_gate.py",
+      "GroundUART",
+      "static-analysis",
+      "fzlegacy-GroundUART-static-analysis"
+    ],
+    "started_utc": "2026-10-10T10:03:32.104949+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T10:04:15.201629+00:00"
+  },
+  {
+    "name": "fzlegacy-GroundUART-artifact-check",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_freeze_legacy_gate.py",
+      "GroundUART",
+      "artifact-check",
+      "fzlegacy-GroundUART-artifact-check"
+    ],
+    "started_utc": "2026-10-10T10:04:15.203112+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T10:04:21.864066+00:00"
+  },
+  {
+    "name": "fzlegacy-Flight-power10-check",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_freeze_legacy_gate.py",
+      "Flight",
+      "power10-check",
+      "fzlegacy-Flight-power10-check"
+    ],
+    "started_utc": "2026-10-10T10:04:21.865133+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T10:04:47.856935+00:00"
+  },
+  {
+    "name": "fzlegacy-Flight-architecture-check",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_freeze_legacy_gate.py",
+      "Flight",
+      "architecture-check",
+      "fzlegacy-Flight-architecture-check"
+    ],
+    "started_utc": "2026-10-10T10:04:47.858235+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T10:05:10.219520+00:00"
+  },
+  {
+    "name": "fzlegacy-Flight-host-tests",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_freeze_legacy_gate.py",
+      "Flight",
+      "host-tests",
+      "fzlegacy-Flight-host-tests"
+    ],
+    "started_utc": "2026-10-10T10:05:10.221385+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T10:13:30.471213+00:00"
+  },
+  {
+    "name": "fzlegacy-Flight-all",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_freeze_legacy_gate.py",
+      "Flight",
+      "all",
+      "fzlegacy-Flight-all"
+    ],
+    "started_utc": "2026-10-10T10:13:30.472645+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T10:15:18.150887+00:00"
+  },
+  {
+    "name": "fzlegacy-Flight-static-analysis",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_freeze_legacy_gate.py",
+      "Flight",
+      "static-analysis",
+      "fzlegacy-Flight-static-analysis"
+    ],
+    "started_utc": "2026-10-10T10:15:18.152264+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T10:17:48.929980+00:00"
+  },
+  {
+    "name": "fzlegacy-Flight-artifact-check",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_freeze_legacy_gate.py",
+      "Flight",
+      "artifact-check",
+      "fzlegacy-Flight-artifact-check"
+    ],
+    "started_utc": "2026-10-10T10:17:48.931448+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T10:17:54.900098+00:00"
+  }
+]

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="16" time="46.501" timestamp="2026-10-10T21:21:57.477533+08:00" hostname="CHD"><testcase classname="tests.test_usb_gui_async" name="test_complete_refresh_shares_one_plan_and_keeps_qt_responsive[STM32F103C8T6]" time="5.297"><failure message="assert False">completed_window = (&lt;silverstar_fccg.ui.main_window.MainWindow(0x2c6b06ed1c0) at 0x000002C6B21C7500&gt;, WindowsPath('C:/Users/chdxm/AppData/Local/Temp/srgui01/usb-e726963f29ab'), [], 'STM32F103C8T6')
+qapp = &lt;PySide6.QtWidgets.QApplication(0x2c6adc9a210) at 0x000002C6B1D7BF80&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002C6B1E216E0&gt;
+tmp_path = WindowsPath('D:/Codex_Work/task-temp/scg-final-819eec9/ds-async01/test_complete_refresh_shares_o_03bda558')
+
+    def test_complete_refresh_shares_one_plan_and_keeps_qt_responsive(completed_window,qapp,monkeypatch,tmp_path):
+        current,output,errors,part=completed_window
+        plans=[];owner=get_ident();original=current._service.UsbGroundCandidate_Plan
+        def plan(*a,**k):
+            plans.append(get_ident());return original(*a,**k)
+        monkeypatch.setattr(current._service,'UsbGroundCandidate_Plan',plan)
+        ticks=[];timer=QTimer();timer.setInterval(20);timer.timeout.connect(lambda:ticks.append(time.monotonic()))
+        timer.start();start=time.monotonic()
+        try:
+            current._Project_Refresh()
+            immediate=time.monotonic()-start
+            assert immediate&lt;.75,immediate
+            # Record view rendering separately from the async audit interval.
+            # The unchanged legacy view population has its own measured cost.
+            worker_start=time.monotonic();ticks.clear()
+            _Wait(qapp,lambda:_Idle(current))
+        finally:timer.stop()
+        gaps=[b-a for a,b in zip([worker_start]+ticks,ticks+[time.monotonic()])]
+        assert len(ticks)&gt;=10,len(ticks)
+        assert max(gaps)&lt;.5,max(gaps)
+        assert len(plans)==1 and all(p!=owner for p in plans),plans
+        assert not errors,errors
+&gt;       assert current.build_page._target_generated['ground']
+E       assert False
+
+apps\SCG\tests\test_usb_gui_async.py:76: AssertionError</failure></testcase><testcase classname="tests.test_usb_gui_async" name="test_complete_refresh_shares_one_plan_and_keeps_qt_responsive[STM32C071FBP6]" time="4.565"><failure message="assert False">completed_window = (&lt;silverstar_fccg.ui.main_window.MainWindow(0x2c6b3305c10) at 0x000002C6B22E69C0&gt;, WindowsPath('C:/Users/chdxm/AppData/Local/Temp/srgui01/usb-4b090a3e59d4'), [], 'STM32C071FBP6')
+qapp = &lt;PySide6.QtWidgets.QApplication(0x2c6adc9a210) at 0x000002C6B1D7BF80&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002C6B2370050&gt;
+tmp_path = WindowsPath('D:/Codex_Work/task-temp/scg-final-819eec9/ds-async01/test_complete_refresh_shares_o_4cf1cfff')
+
+    def test_complete_refresh_shares_one_plan_and_keeps_qt_responsive(completed_window,qapp,monkeypatch,tmp_path):
+        current,output,errors,part=completed_window
+        plans=[];owner=get_ident();original=current._service.UsbGroundCandidate_Plan
+        def plan(*a,**k):
+            plans.append(get_ident());return original(*a,**k)
+        monkeypatch.setattr(current._service,'UsbGroundCandidate_Plan',plan)
+        ticks=[];timer=QTimer();timer.setInterval(20);timer.timeout.connect(lambda:ticks.append(time.monotonic()))
+        timer.start();start=time.monotonic()
+        try:
+            current._Project_Refresh()
+            immediate=time.monotonic()-start
+            assert immediate&lt;.75,immediate
+            # Record view rendering separately from the async audit interval.
+            # The unchanged legacy view population has its own measured cost.
+            worker_start=time.monotonic();ticks.clear()
+            _Wait(qapp,lambda:_Idle(current))
+        finally:timer.stop()
+        gaps=[b-a for a,b in zip([worker_start]+ticks,ticks+[time.monotonic()])]
+        assert len(ticks)&gt;=10,len(ticks)
+        assert max(gaps)&lt;.5,max(gaps)
+        assert len(plans)==1 and all(p!=owner for p in plans),plans
+        assert not errors,errors
+&gt;       assert current.build_page._target_generated['ground']
+E       assert False
+
+apps\SCG\tests\test_usb_gui_async.py:76: AssertionError</failure></testcase><testcase classname="tests.test_usb_gui_async" name="test_pending_refresh_coalesces_and_project_switch_drops_old_result[STM32F103C8T6]" time="3.417" /><testcase classname="tests.test_usb_gui_async" name="test_pending_refresh_coalesces_and_project_switch_drops_old_result[STM32C071FBP6]" time="4.051" /><testcase classname="tests.test_usb_gui_async" name="test_refresh_cancel_or_close_uses_owned_worker[STM32F103C8T6-cancel]" time="2.543" /><testcase classname="tests.test_usb_gui_async" name="test_refresh_cancel_or_close_uses_owned_worker[STM32F103C8T6-close]" time="2.471" /><testcase classname="tests.test_usb_gui_async" name="test_refresh_cancel_or_close_uses_owned_worker[STM32C071FBP6-cancel]" time="3.140" /><testcase classname="tests.test_usb_gui_async" name="test_refresh_cancel_or_close_uses_owned_worker[STM32C071FBP6-close]" time="3.252" /><testcase classname="tests.test_usb_gui_async" name="test_queued_refresh_close_never_starts_after_destruction[STM32F103C8T6]" time="1.459" /><testcase classname="tests.test_usb_gui_async" name="test_queued_refresh_close_never_starts_after_destruction[STM32C071FBP6]" time="1.405" /><testcase classname="tests.test_usb_gui_async" name="test_actual_artifact_action_validation_runs_off_gui_thread[STM32F103C8T6]" time="1.872"><failure message="AssertionError: [(CubeMxImportError('USB candidate output alias rejected'),)]&#10;assert not [(CubeMxImportError('USB candidate output alias rejected'),)]">completed_window = (&lt;silverstar_fccg.ui.main_window.MainWindow(0x2c6b3306480) at 0x000002C6B6CB87C0&gt;, WindowsPath('C:/Users/chdxm/AppData/Local/Temp/srgui01/usb-e726963f29ab'), [(CubeMxImportError('USB candidate output alias rejected'),)], 'STM32F103C8T6')
+qapp = &lt;PySide6.QtWidgets.QApplication(0x2c6adc9a210) at 0x000002C6B1D7BF80&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002C6B1A97AF0&gt;
+
+    def test_actual_artifact_action_validation_runs_off_gui_thread(completed_window,qapp,monkeypatch):
+        current,output,errors,part=completed_window
+        owner=get_ident();calls=[];original=current._service.UsbGroundCandidate_Plan
+        def plan(*a,**k):
+            calls.append(get_ident());return original(*a,**k)
+        monkeypatch.setattr(current._service,'UsbGroundCandidate_Plan',plan)
+        start=time.monotonic();current._TargetAction_Request('ground_artifact_check')
+        assert time.monotonic()-start&lt;.25
+        _Wait(qapp,lambda:_Idle(current))
+        assert calls and all(c!=owner for c in calls)
+&gt;       assert not errors,errors
+E       AssertionError: [(CubeMxImportError('USB candidate output alias rejected'),)]
+E       assert not [(CubeMxImportError('USB candidate output alias rejected'),)]
+
+apps\SCG\tests\test_usb_gui_async.py:149: AssertionError</failure></testcase><testcase classname="tests.test_usb_gui_async" name="test_actual_artifact_action_validation_runs_off_gui_thread[STM32C071FBP6]" time="2.582"><failure message="AssertionError: [(CubeMxImportError('USB candidate output alias rejected'),)]&#10;assert not [(CubeMxImportError('USB candidate output alias rejected'),)]">completed_window = (&lt;silverstar_fccg.ui.main_window.MainWindow(0x2c6b33067e0) at 0x000002C6B7DEB480&gt;, WindowsPath('C:/Users/chdxm/AppData/Local/Temp/srgui01/usb-4b090a3e59d4'), [(CubeMxImportError('USB candidate output alias rejected'),)], 'STM32C071FBP6')
+qapp = &lt;PySide6.QtWidgets.QApplication(0x2c6adc9a210) at 0x000002C6B1D7BF80&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002C6B81F72B0&gt;
+
+    def test_actual_artifact_action_validation_runs_off_gui_thread(completed_window,qapp,monkeypatch):
+        current,output,errors,part=completed_window
+        owner=get_ident();calls=[];original=current._service.UsbGroundCandidate_Plan
+        def plan(*a,**k):
+            calls.append(get_ident());return original(*a,**k)
+        monkeypatch.setattr(current._service,'UsbGroundCandidate_Plan',plan)
+        start=time.monotonic();current._TargetAction_Request('ground_artifact_check')
+        assert time.monotonic()-start&lt;.25
+        _Wait(qapp,lambda:_Idle(current))
+        assert calls and all(c!=owner for c in calls)
+&gt;       assert not errors,errors
+E       AssertionError: [(CubeMxImportError('USB candidate output alias rejected'),)]
+E       assert not [(CubeMxImportError('USB candidate output alias rejected'),)]
+
+apps\SCG\tests\test_usb_gui_async.py:149: AssertionError</failure></testcase><testcase classname="tests.test_usb_gui_async" name="test_late_import_cannot_overwrite_switched_project[STM32F103C8T6-success]" time="3.562" /><testcase classname="tests.test_usb_gui_async" name="test_late_import_cannot_overwrite_switched_project[STM32F103C8T6-error]" time="1.279" /><testcase classname="tests.test_usb_gui_async" name="test_late_import_cannot_overwrite_switched_project[STM32C071FBP6-success]" time="2.343" /><testcase classname="tests.test_usb_gui_async" name="test_late_import_cannot_overwrite_switched_project[STM32C071FBP6-error]" time="1.355" /></testsuite></testsuites>

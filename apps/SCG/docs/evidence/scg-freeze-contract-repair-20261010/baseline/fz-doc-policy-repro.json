@@ -1,0 +1,24 @@
+{
+  "baseline_commit": "56448bd35736221d7885a26704f2f953b0fe5055",
+  "baseline_policy_blob_sha256": "38c539dd57b646d9f827d26c816210ef5829a88871b486717861fbf2d033f180",
+  "temporary_root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\fzdoc-rl58tly0",
+  "wrong_source_policy_rejections": {
+    "current": {
+      "type": "WorkspacePolicyError",
+      "message": "Path escapes authorized workspace: C:\\Users\\chdxm\\AppData\\Local\\Temp\\fzdoc-rl58tly0\\silverstar_protocol_logging_sslog_0_0\\docs\\STORAGE_AND_FLIGHT_LOG.md"
+    },
+    "baseline_56448bd": {
+      "type": "WorkspacePolicyError",
+      "message": "Path escapes authorized workspace: C:\\Users\\chdxm\\AppData\\Local\\Temp\\fzdoc-rl58tly0\\silverstar_protocol_logging_sslog_0_0\\docs\\STORAGE_AND_FLIGHT_LOG.md"
+    }
+  },
+  "destination_policy": "WorkspacePolicy(temporary destination root), no guard weakening",
+  "adapt_twice_bytes_equal": true,
+  "original_test_heading_counts": {
+    "## CALIBRATION_RESULT 生效快照语义": 1,
+    "## FCCG独立协议插件归属": 1
+  },
+  "source_sha256": "fc32642bb641b31671cccd28cb6a57bfa9f3101c81fbe428582d9c2b845b48a6",
+  "adapted_sha256": "fc32642bb641b31671cccd28cb6a57bfa9f3101c81fbe428582d9c2b845b48a6",
+  "scope": "Separate normal document adaptation diagnostic. Original failed test is unchanged and still failed; no product/test/gate changes."
+}

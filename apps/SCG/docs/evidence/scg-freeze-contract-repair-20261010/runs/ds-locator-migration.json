@@ -1,0 +1,37 @@
+{
+  "recorded_utc": "2026-10-10T13:25:50.901670+00:00",
+  "records": [
+    {
+      "part": "STM32F103C8T6",
+      "project": "D:\\Codex_Work\\task-temp\\srgui01\\p_94ce466e",
+      "old_output": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\srgui01\\usb-e726963f29ab",
+      "new_output": "D:\\Codex_Work\\task-temp\\srgui01\\usb-e726963f29ab",
+      "original_pointer_sha256": "25a93092cdba656f14daca129793e53c353f139b1635e68f91bd622986967dd5",
+      "new_pointer_sha256": "d118d2e592270102f63365dca3719c9cc14ce7e00147d7f94758bc2cd8ddb958",
+      "model_file_sha256_unchanged": "ffef6bd243a647647c895bb6dbb5e6962744e955025c47a28827e1768856cf7d",
+      "immutable_receipts_and_elf_sha256": {
+        "backend-receipt.json": "a3204c0ed5b42e20ed2203365fc9af5c48af36dc3ecf9a476aeed7ff1280b2d7",
+        "receipt.json": "7aaad14ab07545427a794a63e7e0e18eb61a979af7efdf4b4143aed3af0e553a",
+        "build/native.elf": "fde957fe80fdf038f4c5c6640bc851446e8ef7acb7605258fd94dca87c81240b",
+        "build/analysis/native.elf": "fde957fe80fdf038f4c5c6640bc851446e8ef7acb7605258fd94dca87c81240b"
+      },
+      "scope": "Only output locator path changed to verified physical D destination. Every identity/result/hash field, model bytes, receipt bytes and ELF bytes unchanged. Original pointer saved. Product alias rejection guard unchanged."
+    },
+    {
+      "part": "STM32C071FBP6",
+      "project": "D:\\Codex_Work\\task-temp\\srgui01\\p_425d5c99",
+      "old_output": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\srgui01\\usb-4b090a3e59d4",
+      "new_output": "D:\\Codex_Work\\task-temp\\srgui01\\usb-4b090a3e59d4",
+      "original_pointer_sha256": "440908f351ded3baca436ce86e6eaec20b2a6fb9644a2c21646008bb5c429628",
+      "new_pointer_sha256": "a150ee3104cb08c5b23849832308060c0a149870a3d9e84af4c0872394f03ca8",
+      "model_file_sha256_unchanged": "c1be98e5362b3236938dca14592c9438de56edc523b58cda5c20837153822d83",
+      "immutable_receipts_and_elf_sha256": {
+        "backend-receipt.json": "7cb307697b01a95fe0a14a155838bbdf185c6a50982beeb267a7a6490fb14c73",
+        "receipt.json": "5eb340014e59705188973a779df4028bba143cab7d1f462aaea78189133c66a3",
+        "build/native.elf": "ee90e6871f5f5723982701e8b6783dd2638f4bd76f352f5099d2d38e031028b9",
+        "build/analysis/native.elf": "ee90e6871f5f5723982701e8b6783dd2638f4bd76f352f5099d2d38e031028b9"
+      },
+      "scope": "Only output locator path changed to verified physical D destination. Every identity/result/hash field, model bytes, receipt bytes and ELF bytes unchanged. Original pointer saved. Product alias rejection guard unchanged."
+    }
+  ]
+}

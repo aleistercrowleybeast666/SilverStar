@@ -1,0 +1,16 @@
+fzlegacy-Flight-static-analysis 0
+ build/FCCG/SilverStar_F407/StaticAnalysis/Release/Generated/Src/project_resources.o build/FCCG/SilverStar_F407/StaticAnalysis/Release/Generated/Src/project_metadata.o build/FCCG/SilverStar_F407/StaticAnalysis/Release/Generated/Src/project_mission_parameters.o build/FCCG/SilverStar_F407/StaticAnalysis/Release/Generated/Src/project_log_decoder_profile.o build/FCCG/SilverStar_F407/StaticAnalysis/Release/Generated/Src/project_log_config.o build/FCCG/SilverStar_F407/StaticAnalysis/Release/startup_stm32f407xx.o -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard -specs=nano.specs -TSTM32F407XX_FLASH.ld -lc -lm -lnosys -Wl,-Map=build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.map,--cref -Wl,--gc-sections -o build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.elf
+"FCCG_PROGRESS|LINK_DONE|build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.elf"
+"FCCG_PROGRESS|SIZE_BEGIN|build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.elf"
+arm-none-eabi-size build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.elf
+   text	   data	    bss	    dec	    hex	filename
+ 329668	   1140	 158376	 489184	  776e0	build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.elf
+"FCCG_PROGRESS|SIZE_DONE|build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.elf"
+"FCCG_PROGRESS|HEX_BEGIN|build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.hex"
+arm-none-eabi-objcopy -O ihex build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.elf build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.hex
+"FCCG_PROGRESS|BIN_BEGIN|build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.bin"
+arm-none-eabi-objcopy -O binary -S build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.elf build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.bin
+"FCCG_PROGRESS|HEX_DONE|build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.hex"
+"FCCG_PROGRESS|BIN_DONE|build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.bin"
+mingw32-make[1]: Leaving directory 'C:/Users/chdxm/AppData/Local/Temp/scg-freeze-legacy-nl6vxkda/Flight_Controller'
+

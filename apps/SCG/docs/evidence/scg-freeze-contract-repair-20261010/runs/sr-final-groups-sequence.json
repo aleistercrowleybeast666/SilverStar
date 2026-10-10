@@ -1,0 +1,56 @@
+[
+  {
+    "group": "backend",
+    "label": "srb02",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_repair_group.py",
+      "backend",
+      "srb02"
+    ],
+    "started_utc": "2026-10-10T11:21:25.067582+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:30:57.062298+00:00"
+  },
+  {
+    "group": "gui_native",
+    "label": "srgn03",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_repair_group.py",
+      "gui_native",
+      "srgn03"
+    ],
+    "started_utc": "2026-10-10T11:31:37.828055+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:38:22.825058+00:00"
+  },
+  {
+    "group": "uart",
+    "label": "sru02",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_repair_group.py",
+      "uart",
+      "sru02"
+    ],
+    "started_utc": "2026-10-10T11:38:22.826486+00:00",
+    "wrapper_exit": 0,
+    "finished_utc": "2026-10-10T11:42:13.577751+00:00"
+  },
+  {
+    "group": "flight",
+    "label": "srf02",
+    "command": [
+      "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+      "-B",
+      "run_scg_repair_group.py",
+      "flight",
+      "srf02"
+    ],
+    "started_utc": "2026-10-10T11:42:13.579082+00:00"
+  }
+]

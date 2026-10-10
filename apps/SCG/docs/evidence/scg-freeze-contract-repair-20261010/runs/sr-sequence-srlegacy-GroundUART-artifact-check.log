@@ -1,0 +1,33 @@
+srlegacy-GroundUART-artifact-check 0
+           CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .ARM.extab    00000000  08006bf0  08006bf0  0000800c  2**0
+                  CONTENTS, READONLY
+  4 .ARM          00000008  08006bf0  08006bf0  00007bf0  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  5 .preinit_array 00000000  08006bf8  08006bf8  0000800c  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  08006bf8  08006bf8  00007bf8  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  7 .fini_array   00000004  08006bfc  08006bfc  00007bfc  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  8 .data         0000000c  20000000  08006c00  00008000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .bss          0000159c  20000010  08006c0c  00008010  2**3
+                  ALLOC
+ 10 ._user_heap_stack 00000404  200015ac  08006c0c  000085ac  2**0
+                  ALLOC
+ 11 .ARM.attributes 00000029  00000000  00000000  0000800c  2**0
+                  CONTENTS, READONLY
+ 12 .comment      00000046  00000000  00000000  00008035  2**0
+                  CONTENTS, READONLY
+ 13 .debug_frame  000001f4  00000000  00000000  0000807c  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 14 .debug_line_str 000000de  00000000  00000000  00008270  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+COMMAND ["arm-none-eabi-objcopy", "-O", "binary", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-repair-legacy-a5joy2gh\\Ground_Station\\build\\ground.elf", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\scg-repair-legacy-a5joy2gh\\Ground_Station\\build\\ground-artifact.bin"]
+SHA256 C:\Users\chdxm\AppData\Local\Temp\scg-repair-legacy-a5joy2gh\Ground_Station\build\ground.elf 5aef8446cc40c2b305801853f3f49202643033802a7ba6943117f4650cc250db
+SHA256 C:\Users\chdxm\AppData\Local\Temp\scg-repair-legacy-a5joy2gh\Ground_Station\build\ground.bin 2d508b90c9eca280481180112a429fb27f0d56d24f804797eb7fd815b6292d00
+PASS ARM ELF/BIN identity, declared memory bounds, required symbols and linked source graph
+Metadata version is configuration provenance; embedded product version NOT PROVEN
+Actual task/ISR stack margin, radio timing and hardware qualification: NOT PROVEN
+
