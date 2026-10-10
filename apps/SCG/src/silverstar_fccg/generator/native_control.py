@@ -49,6 +49,17 @@ def NativeF103Control_Integrate(files,native,proof,replacements,callback_owned,b
 }""")
             start,opening,end=NativeC_FunctionSpanGet(text,'USBD_Init')
             text=text[:opening+1]+"\n  if ((pdev == NULL) || (pdev->pClassData != NULL)) { return USBD_FAIL; }\n"+text[opening+1:]
+            for function in ('USBD_LL_Reset', 'USBD_LL_DevDisconnected'):
+                start, _opening, end = NativeC_FunctionSpanGet(text, function)
+                body = text[start:end]
+                old = 'pdev->pClass->DeInit(pdev, (uint8_t)pdev->dev_config);'
+                if body.count(old) != 1:
+                    raise ValueError('F103 ordinary cleanup return owner differs')
+                body = body.replace(old,
+                    'uint8_t result = pdev->pClass->DeInit(pdev, (uint8_t)pdev->dev_config);\n'
+                    '    return (result == USBD_OK) ? USBD_OK :\n'
+                    '        ((result == USBD_BUSY) ? USBD_BUSY : USBD_FAIL);', 1)
+                text = text[:start] + body + text[end:]
             for stage in ('DataIn','DataOut'):
                 old='    pdev->pClass->'+stage+'(pdev, epnum);'
                 new=('    uint8_t result = pdev->pClass->'+stage+'(pdev, epnum);\n'

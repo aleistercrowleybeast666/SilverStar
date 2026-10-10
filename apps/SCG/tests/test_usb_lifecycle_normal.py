@@ -243,6 +243,52 @@ int main(int argc,char **argv)
   EnumConfigure();assert(USBD_DeInit(&hUsbDeviceFS)==USBD_OK);return 0;
  }
  session=PendingData();oldfree=frees;
+ if(strcmp(argv[1],"reset-close-failure")==0 || strcmp(argv[1],"disconnect-close-failure")==0)
+ {
+  void *storage=hUsbDeviceFS.pClassData;uint8_t *pending=tx_ptr[1];fail_close_once=1U;
+  USBD_StatusTypeDef status=(strcmp(argv[1],"reset-close-failure")==0) ?
+      USBD_LL_Reset(&hUsbDeviceFS) : USBD_LL_DevDisconnected(&hUsbDeviceFS);
+  assert(status!=USBD_OK && allocated==1U && frees==oldfree && hUsbDeviceFS.pClassData==storage);
+  assert(tx_ptr[1]==pending && pending[0]==1U && pending[63]==64U);
+  assert(PcByteStream_Session_Check(session)==0U);
+  assert(PcByteStream_WriteSession(fresh,7U,PcByteStream_Session_Get())==PC_BYTE_STREAM_WRITE_BUSY);
+  assert(USBD_Stop(&hUsbDeviceFS)==USBD_OK && allocated==0U && frees==oldfree+1U);
+  assert(tx_ptr[1]==NULL && rx_ptr[1]==NULL);
+  EnumConfigure();now=PcByteStream_Session_Get();assert(now!=session);
+  assert(PcByteStream_WriteSession(fresh,7U,session)==PC_BYTE_STREAM_WRITE_BUSY);
+  assert(PcByteStream_WriteSession(fresh,7U,now)==PC_BYTE_STREAM_WRITE_OK);InDone(1U);
+  assert(USBD_DeInit(&hUsbDeviceFS)==USBD_OK);return 0;
+ }
+
+ if(strncmp(argv[1],"suspend",7U)==0)
+ {
+  void *storage=hUsbDeviceFS.pClassData;uint8_t *pending=tx_ptr[1];uint8_t *armed=rx_ptr[1];
+  assert(USBD_LL_Suspend(&hUsbDeviceFS)==USBD_OK);
+  assert(hUsbDeviceFS.dev_state==USBD_STATE_SUSPENDED && allocated==1U && frees==oldfree);
+  assert(hUsbDeviceFS.pClassData==storage && tx_ptr[1]==pending && rx_ptr[1]==armed);
+  assert(PcByteStream_WriteSession(fresh,7U,session)==PC_BYTE_STREAM_WRITE_BUSY);
+  assert(pending[0]==1U && pending[63]==64U);
+  if(strcmp(argv[1],"suspend-resume")==0)
+  {
+   assert(USBD_LL_Resume(&hUsbDeviceFS)==USBD_OK);
+   assert(hUsbDeviceFS.dev_state==USBD_STATE_CONFIGURED && hUsbDeviceFS.pClassData==storage);
+   assert(PcByteStream_Session_Get()==session);
+   assert(PcByteStream_WriteSession(fresh,7U,session)==PC_BYTE_STREAM_WRITE_BUSY);
+   InDone(1U);assert(tx_size[1]==0U);
+   assert(PcByteStream_WriteSession(fresh,7U,session)==PC_BYTE_STREAM_WRITE_BUSY);
+   InDone(1U);assert(PcByteStream_WriteSession(fresh,7U,session)==PC_BYTE_STREAM_WRITE_OK);
+   InDone(1U);assert(USBD_DeInit(&hUsbDeviceFS)==USBD_OK);return 0;
+  }
+  if(strcmp(argv[1],"suspend-reset")==0){assert(USBD_LL_Reset(&hUsbDeviceFS)==USBD_OK);}
+  else {assert(strcmp(argv[1],"suspend-disconnect")==0);assert(USBD_LL_DevDisconnected(&hUsbDeviceFS)==USBD_OK);}
+  assert(allocated==0U && frees==oldfree+1U && hUsbDeviceFS.pClassData==NULL);
+  assert(tx_ptr[1]==NULL && rx_ptr[1]==NULL && PcByteStream_Session_Check(session)==0U);
+  EnumConfigure();now=PcByteStream_Session_Get();assert(now!=session);
+  assert(PcByteStream_WriteSession(fresh,7U,session)==PC_BYTE_STREAM_WRITE_BUSY);
+  assert(PcByteStream_WriteSession(fresh,7U,now)==PC_BYTE_STREAM_WRITE_OK);InDone(1U);
+  assert(USBD_DeInit(&hUsbDeviceFS)==USBD_OK);return 0;
+ }
+
  if(strcmp(argv[1],"deinit-close-retry")==0)
  {
   void *storage=hUsbDeviceFS.pClassData;fail_close_once=1U;
@@ -345,7 +391,7 @@ def test_normal_stack_lifecycle_and_buffer_sessions(first_batch,tmp_path):
     (tmp_path/'compile.log').write_text(result.stdout+result.stderr,encoding='utf8')
     assert result.returncode==0,result.stdout+result.stderr
     runs=[]
-    for scenario in ('complete-zlp','unconfigure','reset','disconnect','stop','deinit','close-retry','deinit-close-retry','init-open','init-prepare','tx-failure','rx-rearm'):
+    for scenario in ('complete-zlp','unconfigure','reset','disconnect','stop','deinit','close-retry','deinit-close-retry','init-open','init-prepare','tx-failure','rx-rearm','reset-close-failure','disconnect-close-failure','suspend-resume','suspend-reset','suspend-disconnect'):
         result=subprocess.run([str(tmp_path/'normal.exe'),scenario],capture_output=True,text=True,timeout=15)
         runs.append({'scenario':scenario,'exit':result.returncode,'stdout':result.stdout,'stderr':result.stderr})
     (tmp_path/'lifecycle-receipt.json').write_text(json.dumps({'part':part,'model_sha256':plan.model_sha256,'compiled_generated_sources_sha256':used,'command':command,'compile_exit':0,'runs':runs,'controller':'Host LL mock; native HAL/PMA/IRQ hardware is not executed'},indent=2),encoding='utf8')
