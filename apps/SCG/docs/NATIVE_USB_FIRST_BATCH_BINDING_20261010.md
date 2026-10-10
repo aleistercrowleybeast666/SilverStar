@@ -31,7 +31,7 @@ F103 Export 的保存项目目录边界仍沿用此前 API：它无 project_root
 
 测试实际基线是 ed9 的可审计 dirty snapshot，记录新增文件的原始 SHA/文本并与 efef 源提交核对。pyproject 的数据入包设置由随后 wheel 构建验证；不改称在最终 clean 提交上重跑了全部测试/链接。分开的 21、28、11 及 gates 不拼成未执行的全套回归。本阶段新增普通绑定没有独立 QA 通过结论；此前 348/ed9 独审只适用于其原范围。
 
-证据目录 `docs/evidence/native_usb_first_batch_binding_20261010/`，89 个清单项目、90 个 Git 文件（含 verification 自身）。清单 SHA256：`0a92f4dad9ca433d1643ce7dd78056be00970994c1f24a82bee6eb1277977062`。含执行命令/日志、保留失败、源码及配置、两份 C071 保存模型/合同、三次编译 receipt/源快照/ELF/map 和 wheel；没有复制整套 vendor 源。临时完整原生输入/产物路径在 receipts 中可核对。
+证据目录 `docs/evidence/native_usb_first_batch_binding_20261010/`，90 个清单项目、91 个 Git 文件（含 verification 自身）。清单 SHA256：`e98ac3076301a59825ccdf29b101fcbe1a8ab78b5c4c97f425d3f737bd698cb4`。含执行命令/日志、保留失败、源码及配置、两份 C071 保存模型/合同、三次编译 receipt/源快照/ELF/map 和 wheel；没有复制整套 vendor 源。临时完整原生输入/产物路径在 receipts 中可核对。
 
 ## 剩余工作与权限边界
 
@@ -40,3 +40,5 @@ F103 Export 的保存项目目录边界仍沿用此前 API：它无 project_root
 3. 硬件：未接探针/串口、未烧录/START，真实 USB/SPI/无线电/IRQ/计时余量与栈高水位均未测；软件实现和验收缺口单独列出。
 
 本阶段无需新增用户权限。未来合并必须在父任务先告知用户实际完成范围后安排，并检查日用工作区保护；当前未合并、未 push。日用仍 `56448bd35736221d7885a26704f2f953b0fe5055`，三个既有未跟踪清单保留。GUI/FINAL/用户文件未改；现有固件模板、插件 payload 与 F407 适配未改。
+
+首次证据提交 `4618cd8fba3309030a35afe37dc63a8a08b6f338` 漏入 Git 忽略的 build 产物并转换文本行末，未作为完整证据验收。后续仅补齐原始归档和 byte-preserving attributes，逐文件核对实际 Git blob；没有改源码或重构建。

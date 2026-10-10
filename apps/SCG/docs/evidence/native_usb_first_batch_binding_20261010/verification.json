@@ -1,6 +1,7 @@
 {
   "source_commit": "efef41f49c451ba38b4b7ca88581d4e89b6ee23d",
   "files_sha256": {
+    ".gitattributes": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
     "attempts/ub01-command.json": "36c8566c9bf2d15822ab5cc52859edfcf33fe6a92b280e6558d3a01b6b314661",
     "attempts/ub01.log": "87b028f50f646c683f3e443a962fa340d3290c7c126a15dac99751b4e78ef4c9",
     "attempts/ub02-command.json": "94bad9b02e5d90cd4c3233ef2cbd9a8ecbe1abf09c9fb7a3f7b43757278ff3f7",
@@ -14,7 +15,7 @@
     "attempts/ubr01-command.json": "c79aaed2f44f008d25e115fafd3c4722fe83d7f2c3a8832b5f870e7f4d38e124",
     "attempts/ubr01.log": "ffb5e48315d77b4af23893c70d1bdc4708f5752f322bcc626365ecaa59256a42",
     "c071-models/index.json": "430a8d6471292bce2a986813b9f0cd99c5d7dfdfe9ad95261bd27f3586bcd49e",
-    "checks/summary.json": "38ee75a6b438d238c4a0f3a115363ec0b065537b191792ec3b336cfe9b6d3a5b",
+    "checks/summary.json": "24529b1e9a4baac4c8c645d37a663ecdc004ea70b17100ee8eda38e2fe8e9cac",
     "checks/ub03-gates.json": "eef7cb5bc51f421e93fa87c5a96d458c135d20d8d84e6252837ec7a04954b244",
     "checks/usb-wheel.json": "116df50cf6c2b197c4e8f014539f5fa62e1714b125eb28abc0995a91d0a64ea8",
     "checks/usb-wheel.log": "fe1e6411dca6cbf3cec826b97a78f816eaacbb5d07b344c4d033af86946bd22a",
@@ -91,7 +92,7 @@
     "builds/ub03-STM32F103C8T6/build/analysis/native.map": "84b03f51da1836eeeff94f4a8d0ce4dcf7574073ea9388c996e9fdc49d80b97f",
     "builds/ub03-STM32F103C8T6/build/native-host/ready_transport_fixture.c": "03bd16ae61eee6f1663e0e78d0cad345693d8845de6cbfe1dbcd80a9afec646f"
   },
-  "listed_items": 89,
+  "listed_items": 90,
   "manifest_not_included_in_list": true,
   "summary": "checks/summary.json"
 }

@@ -211,5 +211,10 @@
       "snapshot_id": "751f3d0065e4b0336f4c32eeedbba043d14f7a8a779da52d27865bd6560d72a6",
       "model_file_sha256": "a7ebfc19d0863b0d71c79e832fb4b6596eb0b4a608190fe110542cfe4e42f32f"
     }
-  ]
+  ],
+  "archive_correction": {
+    "initial_evidence_commit": "4618cd8fba3309030a35afe37dc63a8a08b6f338",
+    "issue": "Git ignored nested build artifacts and normalized text line endings; initial archive was not accepted as complete",
+    "resolution": "Scoped byte-preserving attributes, force-add ignored artifacts, and renormalize the exact generated evidence directory to refresh already indexed text; no rebuild or firmware edits"
+  }
 }
