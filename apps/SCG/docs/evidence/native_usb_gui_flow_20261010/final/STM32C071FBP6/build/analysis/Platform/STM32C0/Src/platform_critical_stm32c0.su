@@ -1,0 +1,2 @@
+Platform/STM32C0/Src/platform_critical_stm32c0.c:5:23:PlatformCritical_Enter	0	static
+Platform/STM32C0/Src/platform_critical_stm32c0.c:13:6:PlatformCritical_Exit	0	static

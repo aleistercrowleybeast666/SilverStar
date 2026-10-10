@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\tools\validation\native_classic_cdc_compile.py", line 233, in <module>
+    NativeCompile_Run(parser.parse_args())
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\tools\validation\native_classic_cdc_compile.py", line 55, in NativeCompile_Run
+    experiments["clock"]=NativeClockSourceContract_Validate(files,proof["build"]["sources"],hclk_hz=args.clock_hz)
+                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_clock.py", line 33, in NativeClockSourceContract_Validate
+    raise ValueError("Unreviewed native HAL tick read/increment/IRQ body")
+ValueError: Unreviewed native HAL tick read/increment/IRQ body

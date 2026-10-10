@@ -1,0 +1,59 @@
+{
+  "baseline": "c55bdc3a16514f62c9a92b6a7582a7bbcdf132a3",
+  "scope": "Same ordinary unbound reference model, Ground and Build pages, offscreen1280x820; candidate status/resource text may differ by authorized logic and is not compared here",
+  "renders": [
+    {
+      "ground_generate_enabled": true,
+      "ground_generate_height": 26,
+      "ground_generate_font": "Sans Serif,9,-1,5,600,0,0,0,0,0,0,0,0,0,0,1",
+      "label": "baseline",
+      "page": "ground",
+      "sha256": "84e4a6cdb9d87444521e61f9b662c5d089d1e29f8bf6330726cc9c7ade7d3974",
+      "width": 1280,
+      "height": 820
+    },
+    {
+      "ground_generate_enabled": true,
+      "ground_generate_height": 26,
+      "ground_generate_font": "Sans Serif,9,-1,5,600,0,0,0,0,0,0,0,0,0,0,1",
+      "label": "baseline",
+      "page": "build",
+      "sha256": "ba3eeeba41fded5edf572601732ef6ba32d6285427af2725d38a6cc77fae1486",
+      "width": 1280,
+      "height": 820
+    },
+    {
+      "ground_generate_enabled": true,
+      "ground_generate_height": 26,
+      "ground_generate_font": "Sans Serif,9,-1,5,600,0,0,0,0,0,0,0,0,0,0,1",
+      "label": "current",
+      "page": "ground",
+      "sha256": "84e4a6cdb9d87444521e61f9b662c5d089d1e29f8bf6330726cc9c7ade7d3974",
+      "width": 1280,
+      "height": 820
+    },
+    {
+      "ground_generate_enabled": true,
+      "ground_generate_height": 26,
+      "ground_generate_font": "Sans Serif,9,-1,5,600,0,0,0,0,0,0,0,0,0,0,1",
+      "label": "current",
+      "page": "build",
+      "sha256": "ba3eeeba41fded5edf572601732ef6ba32d6285427af2725d38a6cc77fae1486",
+      "width": 1280,
+      "height": 820
+    }
+  ],
+  "ground_inventory_keys": [],
+  "comparisons": [
+    {
+      "page": "ground",
+      "pixel_difference_bbox": null,
+      "identical_pixels": true
+    },
+    {
+      "page": "build",
+      "pixel_difference_bbox": null,
+      "identical_pixels": true
+    }
+  ]
+}

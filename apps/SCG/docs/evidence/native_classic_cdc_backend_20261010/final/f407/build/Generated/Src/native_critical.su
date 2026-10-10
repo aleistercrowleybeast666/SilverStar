@@ -1,0 +1,2 @@
+Generated/Src/native_critical.c:5:23:PlatformCritical_Enter	0	static
+Generated/Src/native_critical.c:13:6:PlatformCritical_Exit	16	static

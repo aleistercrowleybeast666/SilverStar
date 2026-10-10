@@ -1,0 +1,18 @@
+[
+  {
+    "function": "<lambda>",
+    "seconds": 0.5788211000035517
+  },
+  {
+    "function": "<lambda>",
+    "seconds": 9.10018090000085
+  },
+  {
+    "function": "inspect",
+    "seconds": 3.5365473000056227
+  },
+  {
+    "function": "validate",
+    "seconds": 2.0919748000014806
+  }
+]

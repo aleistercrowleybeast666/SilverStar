@@ -1,0 +1,30 @@
+{
+  "compile": [
+    "D:/msys64/ucrt64/bin\\gcc.EXE",
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wpedantic",
+    "-Wconversion",
+    "-Wsign-conversion",
+    "-Wundef",
+    "-fanalyzer",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_actual_hal_boot_callers_p_7bfabd61\\original.c",
+    "-o",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_actual_hal_boot_callers_p_7bfabd61\\original.exe"
+  ],
+  "compile_exit": 0,
+  "compile_stdout": "",
+  "compile_stderr": "",
+  "run": [
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_actual_hal_boot_callers_p_7bfabd61\\original.exe",
+    "init-failure"
+  ],
+  "run_exit": 3221226505,
+  "stdout": "",
+  "stderr": "Assertion failed: HAL_Init()==tick_result, file C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_actual_hal_boot_callers_p_7bfabd61\\original.c, line 220\n",
+  "source_sha256": "2a56f8bcaca2c96b5c294ad5cb25270701a42d1be070a9e2fa429774e6d99130",
+  "executable_sha256": "d0db50c9ca17f0ff7f7934f50315c752ba842c5140faf2232dd2917988b9b916"
+}

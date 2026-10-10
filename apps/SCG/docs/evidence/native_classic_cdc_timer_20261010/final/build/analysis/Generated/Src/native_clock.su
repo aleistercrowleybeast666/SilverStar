@@ -1,0 +1,9 @@
+Generated/Src/native_clock.c:11:19:NativeClock_StatusGet	0	static
+Generated/Src/native_clock.c:13:6:NativeClock_FaultRecord	0	static
+Generated/Src/native_clock.c:38:19:NativeClock_Read	48	static
+Generated/Src/native_clock.c:52:19:NativeClock_DelayUs.part.0	32	static
+Generated/Src/native_clock.c:52:19:NativeClock_DelayUs	0	static
+Generated/Src/native_clock.c:72:16:PlatformTime_Init	32	static
+Generated/Src/native_clock.c:90:10:PlatformTime_Us	16	static
+Generated/Src/native_clock.c:98:10:PlatformTime_Ms	8	static
+Generated/Src/native_clock.c:100:6:PlatformTime_DelayMs	8	static

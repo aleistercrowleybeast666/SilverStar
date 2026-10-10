@@ -1,0 +1,30 @@
+--- HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
++++ HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
+@@ -1177,6 +1177,13 @@
+       }
+       if (pdata8bits == NULL)
+       {
++        /* Both alternate pointers unavailable is a failed buffer contract. */
++        if (pdata16bits == NULL)
++        {
++          huart->gState = HAL_UART_STATE_READY;
++          return HAL_ERROR;
++        }
++
+         huart->Instance->DR = (uint16_t)(*pdata16bits & 0x01FFU);
+         pdata16bits++;
+       }
+@@ -1659,6 +1666,13 @@
+       {
+         if (pdata8bits == NULL)
+         {
++        /* Both alternate pointers unavailable is a failed buffer contract. */
++        if (pdata16bits == NULL)
++        {
++          huart->RxState = HAL_UART_STATE_READY;
++          return HAL_ERROR;
++        }
++
+           *pdata16bits = (uint16_t)(huart->Instance->DR & (uint16_t)0x01FF);
+           pdata16bits++;
+         }

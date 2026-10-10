@@ -1,0 +1,10 @@
+{
+  "part": "STM32F103C8T6",
+  "synchronous_refresh_seconds": 0.5898514000000432,
+  "total_validation_seconds": 2.795687800004089,
+  "ticks": 62,
+  "max_tick_gap_seconds": 0.08474569999816595,
+  "plan_calls": 1,
+  "plan_ran_off_gui_thread": true,
+  "quality_records": 2
+}

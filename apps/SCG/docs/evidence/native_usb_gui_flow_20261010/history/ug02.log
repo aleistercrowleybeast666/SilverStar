@@ -1,0 +1,36 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_real_gui_import_save_reload_export_and_artifact_state[C071] _______
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x2aabcc53440) at 0x000002AABE588A00>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST'), [], 'C071')
+qapp = <PySide6.QtWidgets.QApplication(0x2aaba8abda0) at 0x000002AABE9C7BC0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug02'), _trace=<pluggy._tracing.TagTrac...AF9BCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug02'), _retention_count=3, _retention_policy='all')
+
+    def test_real_gui_import_save_reload_export_and_artifact_state(usb_window,qapp,tmp_path_factory):
+        current,source,errors,part=usb_window
+        before={p.relative_to(source).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in source.rglob('*') if p.is_file()}
+        model=_Import(qapp,usb_window)
+        project=tmp_path_factory.mktemp('p')
+        current._project_root=project
+        current._Project_Save()
+        assert not errors,errors
+        (project/'before-save.json').write_text(json.dumps(model,indent=2),encoding='utf8')
+>       assert ProjectModel_Load(project/'SilverStar.ssproject').Dictionary_Get()==model
+E       AssertionError: assert {'format_vers...'Tilt']}, ...} == {'format_vers...'Tilt']}, ...}
+E         
+E         Omitting 19 identical items, use -vv to show
+E         Differing items:
+E         {'ground_target': {'enabled': True, 'mcu': '', 'board': '', 'hardware': {'mode': 'custom', 'source_kind': 'manual_impo..._provider.stm32_cubemx', 'snapshot_id': '751f3d0065e4b0336f4c32eeedbba043d14f7a8a779da52d27865bd6560d72a6', ...}, ...}} != {'ground_target': {'enabled': True, 'mcu': '', 'board': '', 'hardware': {'mode': 'custom', 'source_kind': 'manual_impo..._provider.stm32_cubemx', 'snapshot_id': '751f3d0065e4b0336f4c32eeedbba043d14f7a8a779da52d27865bd6560d72a6', ...}, ...}}
+E         Use -v to get more diff
+
+apps\SCG\tests\test_usb_gui_flow.py:57: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_import_save_reload_export_and_artifact_state[C071]
+1 failed, 7 deselected, 1 warning in 9.48s

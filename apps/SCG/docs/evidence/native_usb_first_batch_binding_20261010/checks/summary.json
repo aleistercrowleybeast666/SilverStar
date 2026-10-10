@@ -1,0 +1,220 @@
+{
+  "schema_version": 1,
+  "source_commit": "efef41f49c451ba38b4b7ca88581d4e89b6ee23d",
+  "tested_base": "ed9ff651f0b6d8483378889009811ab572dff109",
+  "tested_snapshot": "Auditable dirty source captured by ub03/ub04, raw working hashes matched code commit; no claim of post-commit rebuild",
+  "source_modules": {
+    "apps/SCG/pyproject.toml": {
+      "working_sha256": "f440e3dd9b630bed71a9780ff0e31c0dcff00502447ab0ad029652219afbb599",
+      "git_blob_sha256": "f440e3dd9b630bed71a9780ff0e31c0dcff00502447ab0ad029652219afbb599"
+    },
+    "apps/SCG/src/silverstar_fccg/app/service.py": {
+      "working_sha256": "90c92f8e69e0d7b9fe05de29408ad7e7bdd7a5290fdea57c61be1abc416c11f0",
+      "git_blob_sha256": "90c92f8e69e0d7b9fe05de29408ad7e7bdd7a5290fdea57c61be1abc416c11f0"
+    },
+    "apps/SCG/src/silverstar_fccg/app/usb_ground.py": {
+      "working_sha256": "f3f3eea2ea2cb107e39f4aa927c28b79733dda79d83e45f48823a5d40f58b673",
+      "git_blob_sha256": "f3f3eea2ea2cb107e39f4aa927c28b79733dda79d83e45f48823a5d40f58b673"
+    },
+    "apps/SCG/src/silverstar_fccg/generator/multi_target.py": {
+      "working_sha256": "b060893e3142d90704c9a6b2756e481adf54e79ed2e51fe2ac5e7afc18a6893c",
+      "git_blob_sha256": "b060893e3142d90704c9a6b2756e481adf54e79ed2e51fe2ac5e7afc18a6893c"
+    },
+    "apps/SCG/src/silverstar_fccg/hardware/usb_profiles/.gitattributes": {
+      "working_sha256": "ed0552c0c90dc66525615947b802a78c48a1bf76ef68886ec8679298594f2511",
+      "git_blob_sha256": "9e8f041ed812cb5288282cc6b187de804e96b688d56647fdae181c49fec71863"
+    },
+    "apps/SCG/src/silverstar_fccg/hardware/usb_profiles/c071-companion-manifest.json": {
+      "working_sha256": "8835f4c76e6ea94ceeccf742ec59665157ddf2a089a4a361ad25b2671afcc6d7",
+      "git_blob_sha256": "8835f4c76e6ea94ceeccf742ec59665157ddf2a089a4a361ad25b2671afcc6d7"
+    },
+    "apps/SCG/src/silverstar_fccg/hardware/usb_profiles/c071-device-facts.json": {
+      "working_sha256": "b48d9ea209c362f7ba0a662a8c695a8ec0e3d659bd26b96b7700d962d397a014",
+      "git_blob_sha256": "b48d9ea209c362f7ba0a662a8c695a8ec0e3d659bd26b96b7700d962d397a014"
+    },
+    "apps/SCG/src/silverstar_fccg/hardware/usb_profiles/c071-native-profile.json": {
+      "working_sha256": "5c9ad2ccaae3b0bd4a81c00e5c450610f48c82b7d5958c9587b921be82d29589",
+      "git_blob_sha256": "5c9ad2ccaae3b0bd4a81c00e5c450610f48c82b7d5958c9587b921be82d29589"
+    },
+    "apps/SCG/src/silverstar_fccg/hardware/usb_profiles/f103-device-facts.json": {
+      "working_sha256": "7c4ec3cb53e16dc856fdfcc6f87f0be8889df2403e870d719b65b0f4329f3126",
+      "git_blob_sha256": "7c4ec3cb53e16dc856fdfcc6f87f0be8889df2403e870d719b65b0f4329f3126"
+    },
+    "apps/SCG/tests/test_usb_ground_backend.py": {
+      "working_sha256": "66477b72fceb530067ca826df30c55ae8c59a8a3afa660104ef052037c92b8e9",
+      "git_blob_sha256": "66477b72fceb530067ca826df30c55ae8c59a8a3afa660104ef052037c92b8e9"
+    }
+  },
+  "builds": [
+    {
+      "label": "ub03",
+      "part": "STM32F103C8T6",
+      "actual_output": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ub03\\o_69f0e848\\b",
+      "commands": 333,
+      "compiler_warnings": [],
+      "recorded_artifact_hashes_checked": 545,
+      "model_sha256": "77fb3834f95aea1209efc09eeaa5009f4a199bfa0d609c35fa46771fd4ea2c4b",
+      "elf_sha256": "daf2a00ba8d22023c11a1c39b3ed2194bd64f3f41c7f907c63f76b4505538a4a",
+      "scope": "PRIVATE_NATIVE_GROUND_RUNTIME_CANDIDATE"
+    },
+    {
+      "label": "ub04",
+      "part": "STM32F103C8T6",
+      "actual_output": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ub04\\o_a0379a56\\b",
+      "commands": 333,
+      "compiler_warnings": [],
+      "recorded_artifact_hashes_checked": 545,
+      "model_sha256": "77fb3834f95aea1209efc09eeaa5009f4a199bfa0d609c35fa46771fd4ea2c4b",
+      "elf_sha256": "daf2a00ba8d22023c11a1c39b3ed2194bd64f3f41c7f907c63f76b4505538a4a",
+      "scope": "PRIVATE_NATIVE_GROUND_RUNTIME_CANDIDATE"
+    },
+    {
+      "label": "ub04",
+      "part": "STM32F407VET6",
+      "actual_output": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ub04\\o_ec3eab66\\b",
+      "commands": 387,
+      "compiler_warnings": [],
+      "recorded_artifact_hashes_checked": 635,
+      "model_sha256": "1441f4d92d407cf254b467775c59350e84c5993707cd68e87cd5785d1a397cbe",
+      "elf_sha256": "5a9414e97a5e7f3f02d2e001266145304b711c600c16639e05e7e7a79aa44bf8",
+      "scope": "PRIVATE_NATIVE_GROUND_RUNTIME_CANDIDATE"
+    }
+  ],
+  "c071_original_native_files_hashes_checked_after_tests": 111,
+  "c071_current_firmware_build": "NOT EXECUTED: renderer/build integration not implemented in unified backend",
+  "c071_usb_review": "No passed outcome for b66; stopped review not retried or bypassed",
+  "tests": {
+    "ub01": "1 failed,18 passed; test reload cache configuration mismatch; retained",
+    "ub02": "19 passed; intermediate version, not final full suite",
+    "ub03": "21 passed,0 skipped;100.13s; includes actual F103 unified ARM/analyzer Build",
+    "ub04": "28 passed,0 skipped;241.12s; retained private F103/F407 backend tests and two real builds",
+    "ubr01": "11 passed;22.80s; separate preserved import/model/build-tooling unit regressions"
+  },
+  "warnings": "Each pytest suite has one existing Unknown config option: cache_dir warning; ARM compilation had none",
+  "gates": [
+    {
+      "family": "f103",
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ub03\\o_69f0e848\\b",
+      "command": [
+        "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+        "Tools/check_native_ground.py"
+      ],
+      "started_utc": "2026-10-10T01:41:51.224881+00:00",
+      "emitted_makefile_sha256": "f197a7cab7fce52fe363d862d398a97f715d262e40df468b80c5e2b4acebcbca",
+      "exit": 0,
+      "finished_utc": "2026-10-10T01:41:51.679006+00:00",
+      "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\ub03-f103-architecture.log",
+      "log_sha256": "6485185fa97ba47a0d74957b601d4b6f3ee9985456c658ca6a7d06f8bac09f97"
+    },
+    {
+      "family": "f103",
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ub03\\o_69f0e848\\b",
+      "command": [
+        "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+        "Tools/check_native_ground.py",
+        "host",
+        "--host-cc",
+        "gcc"
+      ],
+      "started_utc": "2026-10-10T01:41:51.685615+00:00",
+      "emitted_makefile_sha256": "f197a7cab7fce52fe363d862d398a97f715d262e40df468b80c5e2b4acebcbca",
+      "exit": 0,
+      "finished_utc": "2026-10-10T01:41:59.963919+00:00",
+      "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\ub03-f103-host.log",
+      "log_sha256": "aef7da329bb79938e4c096fe5eef9898f29251c6f32867f946e9280f693d2ffb"
+    },
+    {
+      "family": "f103",
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ub03\\o_69f0e848\\b",
+      "command": [
+        "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+        "Tools/check_native_ground.py",
+        "artifact",
+        "--prefix",
+        "arm-none-eabi-"
+      ],
+      "started_utc": "2026-10-10T01:41:59.973729+00:00",
+      "emitted_makefile_sha256": "f197a7cab7fce52fe363d862d398a97f715d262e40df468b80c5e2b4acebcbca",
+      "exit": 0,
+      "finished_utc": "2026-10-10T01:42:04.578163+00:00",
+      "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\ub03-f103-artifact.log",
+      "log_sha256": "5f467671999eca10ea112a8debd0aeb2dfd55bfa237d59dc09577cc7e87723c0"
+    },
+    {
+      "family": "f103",
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ub03\\o_69f0e848\\b",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "Tools/check_power_of_ten.ps1",
+        "-TargetKind",
+        "Ground"
+      ],
+      "started_utc": "2026-10-10T01:42:04.588065+00:00",
+      "emitted_makefile_sha256": "f197a7cab7fce52fe363d862d398a97f715d262e40df468b80c5e2b4acebcbca",
+      "exit": 0,
+      "finished_utc": "2026-10-10T01:42:07.106047+00:00",
+      "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\ub03-f103-power10.log",
+      "log_sha256": "6010c5a067e109af4f1c2ae59dfd6d80233ef2ad14cdc31796532526e8f3f091"
+    }
+  ],
+  "package": {
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "-B",
+      "-m",
+      "pip",
+      "wheel",
+      "--no-deps",
+      "--no-build-isolation",
+      "--no-index",
+      "--wheel-dir",
+      "C:\\Users\\chdxm\\AppData\\Local\\Temp\\usb-ground-wheel-20261010",
+      "D:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG"
+    ],
+    "started_utc": "2026-10-10T01:43:32.161593+00:00",
+    "pyproject_sha256": "f440e3dd9b630bed71a9780ff0e31c0dcff00502447ab0ad029652219afbb599",
+    "exit": 0,
+    "finished_utc": "2026-10-10T01:43:41.302484+00:00",
+    "wheel": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\usb-ground-wheel-20261010\\silverstar_fccg-0.1.2-py3-none-any.whl",
+    "wheel_sha256": "e8e97de9f7f0db582f7c6f376cd57c27ef432d4f19f630da4bf306556fd31cea",
+    "profile_sha256": {
+      "silverstar_fccg/hardware/usb_profiles/c071-companion-manifest.json": "8835f4c76e6ea94ceeccf742ec59665157ddf2a089a4a361ad25b2671afcc6d7",
+      "silverstar_fccg/hardware/usb_profiles/c071-device-facts.json": "b48d9ea209c362f7ba0a662a8c695a8ec0e3d659bd26b96b7700d962d397a014",
+      "silverstar_fccg/hardware/usb_profiles/c071-native-profile.json": "5c9ad2ccaae3b0bd4a81c00e5c450610f48c82b7d5958c9587b921be82d29589",
+      "silverstar_fccg/hardware/usb_profiles/f103-device-facts.json": "7c4ec3cb53e16dc856fdfcc6f87f0be8889df2403e870d719b65b0f4329f3126"
+    }
+  },
+  "shell_prep_failure": "One inline command for preserved regressions had quoting SyntaxError before tests; replaced by saved runner, not counted as PASS",
+  "publication": "BLOCKED; partial software integration only; no GUI, hardware, daily merge or push",
+  "remaining": {
+    "ordinary_implementation": "C071 firmware renderer and shared compiler integration pending; F103 shared EP0 repair not integrated",
+    "acceptance": "Complete EP0/async lifecycle/control/reset/config/deinit/cancel ownership, manual critical-contract, libraries/indirect calls/recursion and MSP/ISR stack/WCET NOT PROVEN",
+    "hardware": "No physical USB/SPI/radio/IRQ/timing/stack high-water validation"
+  },
+  "finished_utc": "2026-10-10T01:47:42.181492+00:00",
+  "c071_saved_models": [
+    {
+      "model": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ub03\\p_b8499479\\SilverStar.ssproject",
+      "backend_workspace": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ub03\\u_04e10a36",
+      "backend_cache": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ub03\\u_04e10a36\\i",
+      "snapshot_id": "751f3d0065e4b0336f4c32eeedbba043d14f7a8a779da52d27865bd6560d72a6",
+      "model_file_sha256": "a7ebfc19d0863b0d71c79e832fb4b6596eb0b4a608190fe110542cfe4e42f32f"
+    },
+    {
+      "model": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ub03\\p_d2a35b5b\\SilverStar.ssproject",
+      "backend_workspace": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ub03\\u_04e10a36",
+      "backend_cache": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ub03\\u_04e10a36\\i",
+      "snapshot_id": "751f3d0065e4b0336f4c32eeedbba043d14f7a8a779da52d27865bd6560d72a6",
+      "model_file_sha256": "a7ebfc19d0863b0d71c79e832fb4b6596eb0b4a608190fe110542cfe4e42f32f"
+    }
+  ],
+  "archive_correction": {
+    "initial_evidence_commit": "4618cd8fba3309030a35afe37dc63a8a08b6f338",
+    "issue": "Git ignored nested build artifacts and normalized text line endings; initial archive was not accepted as complete",
+    "resolution": "Scoped byte-preserving attributes, force-add ignored artifacts, and renormalize the exact generated evidence directory to refresh already indexed text; no rebuild or firmware edits"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "command": [
+    "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\backend_pytest.py",
+    "apps/SCG/tests/test_usb_gui_async.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/Users/chdxm/AppData/Local/Temp/ur06"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\.work\\ccdi",
+  "source_commit": "f61cbd851b8ac32b865deb1a3997058685dfebbd",
+  "dirty_diff": "",
+  "test_sha256": "00378a82d523510b7c4a759be093686d3641d536b3c2a3b824259773b2c84369",
+  "started_utc": "2026-10-10T04:55:50.511392+00:00",
+  "scope": "Actual completed F103/C071 candidate full audit on worker, one Plan per refresh, live Qt timers, pending/superseded requests, cancellation, owned close/destruction and ordinary late import; original artifacts remain unchanged",
+  "exit": 0,
+  "finished_utc": "2026-10-10T04:56:46.127847+00:00"
+}

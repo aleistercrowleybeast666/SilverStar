@@ -1,0 +1,130 @@
+[
+  {
+    "part": "STM32F103C8T6",
+    "mode": "architecture",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_native_ground.py"
+    ],
+    "started_utc": "2026-10-10T04:57:17.183295+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T04:57:17.958528+00:00",
+    "log_sha256": "6485185fa97ba47a0d74957b601d4b6f3ee9985456c658ca6a7d06f8bac09f97"
+  },
+  {
+    "part": "STM32F103C8T6",
+    "mode": "host",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_native_ground.py",
+      "host",
+      "--host-cc",
+      "gcc"
+    ],
+    "started_utc": "2026-10-10T04:57:17.962259+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T04:57:27.531458+00:00",
+    "log_sha256": "2cbf5dce5ba7ef2b1b44f6c8d83ad39b87b3596ea76ba56000e8696e1472395f"
+  },
+  {
+    "part": "STM32F103C8T6",
+    "mode": "artifact",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_native_ground.py",
+      "artifact",
+      "--prefix",
+      "arm-none-eabi-"
+    ],
+    "started_utc": "2026-10-10T04:57:27.542888+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T04:57:32.347037+00:00",
+    "log_sha256": "77ed4ad9d68595057ed8df3f11aa92e182c3a49470078c8e9253ebe771b43c8d"
+  },
+  {
+    "part": "STM32F103C8T6",
+    "mode": "power10",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30",
+    "command": [
+      "powershell",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "Tools/check_power_of_ten.ps1",
+      "-TargetKind",
+      "Ground"
+    ],
+    "started_utc": "2026-10-10T04:57:32.357737+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T04:57:34.902570+00:00",
+    "log_sha256": "8772397c520dfe4a0e324cd205100d4b040bd92a9a0e483e06a22057ed512503"
+  },
+  {
+    "part": "STM32C071FBP6",
+    "mode": "architecture",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-6d85cddbb6b8",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_c071_candidate.py"
+    ],
+    "started_utc": "2026-10-10T04:57:34.937389+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T04:57:35.557115+00:00",
+    "log_sha256": "e80508501ca6200f30ff0b1370e5c5f4a0efaaebf7a722fb6b7ebc321cabfe3f"
+  },
+  {
+    "part": "STM32C071FBP6",
+    "mode": "host",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-6d85cddbb6b8",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_c071_candidate.py",
+      "host",
+      "--host-cc",
+      "gcc"
+    ],
+    "started_utc": "2026-10-10T04:57:35.565731+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T04:57:43.714786+00:00",
+    "log_sha256": "3c35c3bd25bfc1de140f1a935549a59df9aa1a31c2a4d0cafce37d44b077c602"
+  },
+  {
+    "part": "STM32C071FBP6",
+    "mode": "artifact",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-6d85cddbb6b8",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_c071_candidate.py",
+      "artifact",
+      "--prefix",
+      "arm-none-eabi-"
+    ],
+    "started_utc": "2026-10-10T04:57:43.735429+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T04:57:49.332863+00:00",
+    "log_sha256": "3c8e218b2121a61fc655edbb728cba2a8f4755721251cf7e4d12ec756209260e"
+  },
+  {
+    "part": "STM32C071FBP6",
+    "mode": "power10",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-6d85cddbb6b8",
+    "command": [
+      "powershell",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "Tools/check_power_of_ten.ps1",
+      "-TargetKind",
+      "Ground"
+    ],
+    "started_utc": "2026-10-10T04:57:49.340429+00:00",
+    "exit": 0,
+    "finished_utc": "2026-10-10T04:57:51.562120+00:00",
+    "log_sha256": "7a90605db7add37e4f16568196a35b8005f8a944b44651dd882ecd527483d5ba"
+  }
+]

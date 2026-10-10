@@ -1,0 +1,3 @@
+Ground/Radio/Src/ground_radio_activity.c:40:6:GroundRadioActivity_Init	0	static
+Ground/Radio/Src/ground_radio_activity.c:87:6:GroundRadioActivity_Process	0	static
+Ground/Radio/Src/ground_radio_activity.c:105:10:GroundRadioActivity_ErrorCountGet	0	static

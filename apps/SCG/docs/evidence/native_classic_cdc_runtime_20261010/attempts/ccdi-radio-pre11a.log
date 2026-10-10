@@ -1,0 +1,69 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\.work\ccdi\apps\SCG
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collected 4 items
+
+.work\ccdi\apps\SCG\tests\test_native_radio.py FF.F                      [100%]
+
+================================== FAILURES ===================================
+______ test_real_driver_timestamps_are_sampled_before_irq_locks[normal] _______
+
+native_radio_executables = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-radio-pre11a/native-radio_b15cd6b2')
+scenario = 'normal'
+
+    @pytest.mark.parametrize('scenario',['normal','reinit','deactivate'])
+    def test_real_driver_timestamps_are_sampled_before_irq_locks(native_radio_executables,scenario):
+        result=subprocess.run([str(native_radio_executables/'contract.exe'),scenario],capture_output=True,text=True,timeout=15)
+        (native_radio_executables/(scenario+'.log')).write_text(result.stdout+result.stderr)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: Assertion failed: native_test_mask==0U, file C:\Users\chdxm\AppData\Local\Temp\sscdc-radio-pre11a\native-radio_b15cd6b2\test_sx1281_device.c, line 176
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-radio-pre11a\\native-radio_b15cd6b2\\contract.ex...e C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-radio-pre11a\\native-radio_b15cd6b2\\test_sx1281_device.c, line 176\n').returncode
+
+.work\ccdi\apps\SCG\tests\test_native_radio.py:57: AssertionError
+______ test_real_driver_timestamps_are_sampled_before_irq_locks[reinit] _______
+
+native_radio_executables = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-radio-pre11a/native-radio_b15cd6b2')
+scenario = 'reinit'
+
+    @pytest.mark.parametrize('scenario',['normal','reinit','deactivate'])
+    def test_real_driver_timestamps_are_sampled_before_irq_locks(native_radio_executables,scenario):
+        result=subprocess.run([str(native_radio_executables/'contract.exe'),scenario],capture_output=True,text=True,timeout=15)
+        (native_radio_executables/(scenario+'.log')).write_text(result.stdout+result.stderr)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: Assertion failed: native_test_mask==0U, file C:\Users\chdxm\AppData\Local\Temp\sscdc-radio-pre11a\native-radio_b15cd6b2\test_sx1281_device.c, line 176
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-radio-pre11a\\native-radio_b15cd6b2\\contract.ex...e C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-radio-pre11a\\native-radio_b15cd6b2\\test_sx1281_device.c, line 176\n').returncode
+
+.work\ccdi\apps\SCG\tests\test_native_radio.py:57: AssertionError
+___________ test_actual_owner_diagnostics_controls_and_tx_rx_loops ____________
+
+native_radio_executables = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-radio-pre11a/native-radio_b15cd6b2')
+
+    def test_actual_owner_diagnostics_controls_and_tx_rx_loops(native_radio_executables):
+        result=subprocess.run([str(native_radio_executables/'owner.exe')],capture_output=True,text=True,timeout=15)
+        (native_radio_executables/'owner.log').write_text(result.stdout+result.stderr)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: Assertion failed: native_test_mask==0U, file C:\Users\chdxm\AppData\Local\Temp\sscdc-radio-pre11a\native-radio_b15cd6b2\test_sx1281_device.c, line 176
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-radio-pre11a\\native-radio_b15cd6b2\\owner.exe']...e C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-radio-pre11a\\native-radio_b15cd6b2\\test_sx1281_device.c, line 176\n').returncode
+
+.work\ccdi\apps\SCG\tests\test_native_radio.py:64: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED .work\ccdi\apps\SCG\tests\test_native_radio.py::test_real_driver_timestamps_are_sampled_before_irq_locks[normal]
+FAILED .work\ccdi\apps\SCG\tests\test_native_radio.py::test_real_driver_timestamps_are_sampled_before_irq_locks[reinit]
+FAILED .work\ccdi\apps\SCG\tests\test_native_radio.py::test_actual_owner_diagnostics_controls_and_tx_rx_loops
+=================== 3 failed, 1 passed, 1 warning in 7.56s ====================

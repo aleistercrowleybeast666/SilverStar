@@ -1,0 +1,112 @@
+--- HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.c
++++ HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.c
+@@ -23,7 +23,11 @@
+ #include "stm32f1xx_hal.h"
+ #include "usbd_def.h"
+ #include "usbd_core.h"
+-#include "usbd_cdc.h"
++#include "usbd_cdc.h"
++#include "pc_byte_stream.h"
++#if (USE_HAL_PCD_REGISTER_CALLBACKS != 0U)
++#error "Private native bulk port requires fixed PCD callback owners"
++#endif
+ 
+ /* USER CODE BEGIN Includes */
+ 
+@@ -130,7 +134,12 @@
+ void HAL_PCD_DataOutStageCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
+ #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
+ {
+-  USBD_LL_DataOutStage((USBD_HandleTypeDef*)hpcd->pData, epnum, hpcd->OUT_ep[epnum].xfer_buff);
++  USBD_HandleTypeDef *pdev;
++  if ((hpcd == NULL) || (hpcd->pData == NULL)) { return; }
++  pdev = (USBD_HandleTypeDef *)hpcd->pData;
++  if (epnum >= 8U) { pdev->dev_state = USBD_STATE_DEFAULT; PcByteStream_OnUsbReset(); return; }
++  if (USBD_LL_DataOutStage(pdev, epnum, hpcd->OUT_ep[epnum].xfer_buff) != USBD_OK)
++  { pdev->dev_state = USBD_STATE_DEFAULT; PcByteStream_OnUsbReset(); }
+ }
+ 
+ /**
+@@ -145,7 +154,12 @@
+ void HAL_PCD_DataInStageCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
+ #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
+ {
+-  USBD_LL_DataInStage((USBD_HandleTypeDef*)hpcd->pData, epnum, hpcd->IN_ep[epnum].xfer_buff);
++  USBD_HandleTypeDef *pdev;
++  if ((hpcd == NULL) || (hpcd->pData == NULL)) { return; }
++  pdev = (USBD_HandleTypeDef *)hpcd->pData;
++  if (epnum >= 8U) { pdev->dev_state = USBD_STATE_DEFAULT; PcByteStream_OnUsbReset(); return; }
++  if (USBD_LL_DataInStage(pdev, epnum, hpcd->IN_ep[epnum].xfer_buff) != USBD_OK)
++  { pdev->dev_state = USBD_STATE_DEFAULT; PcByteStream_OnUsbReset(); }
+ }
+ 
+ /**
+@@ -183,7 +197,8 @@
+   USBD_LL_SetSpeed((USBD_HandleTypeDef*)hpcd->pData, speed);
+ 
+   /* Reset Device. */
+-  USBD_LL_Reset((USBD_HandleTypeDef*)hpcd->pData);
++  PcByteStream_OnUsbReset();
++  USBD_LL_Reset((USBD_HandleTypeDef*)hpcd->pData);
+ }
+ 
+ /**
+@@ -199,7 +214,8 @@
+ #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
+ {
+   /* Inform USB library that core enters in suspend Mode. */
+-  USBD_LL_Suspend((USBD_HandleTypeDef*)hpcd->pData);
++  PcByteStream_OnUsbReset();
++  USBD_LL_Suspend((USBD_HandleTypeDef*)hpcd->pData);
+   /* Enter in STOP mode. */
+   /* USER CODE BEGIN 2 */
+   if (hpcd->Init.low_power_enable)
+@@ -283,7 +299,8 @@
+ void HAL_PCD_DisconnectCallback(PCD_HandleTypeDef *hpcd)
+ #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
+ {
+-  USBD_LL_DevDisconnected((USBD_HandleTypeDef*)hpcd->pData);
++  PcByteStream_OnUsbReset();
++  USBD_LL_DevDisconnected((USBD_HandleTypeDef*)hpcd->pData);
+ }
+ 
+ /*******************************************************************************
+@@ -296,7 +313,9 @@
+   * @retval USBD status
+   */
+ USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef *pdev)
+-{
++{
++  if (pdev == NULL) { return USBD_FAIL; }
++
+   /* Init USB Ip. */
+   /* Link the driver to the stack. */
+   hpcd_USB_FS.pData = pdev;
+@@ -310,7 +329,7 @@
+   hpcd_USB_FS.Init.battery_charging_enable = DISABLE;
+   if (HAL_PCD_Init(&hpcd_USB_FS) != HAL_OK)
+   {
+-    Error_Handler( );
++    return USBD_FAIL;
+   }
+ 
+ #if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+@@ -329,13 +348,13 @@
+   HAL_PCD_RegisterIsoInIncpltCallback(&hpcd_USB_FS, PCD_ISOINIncompleteCallback);
+ #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
+   /* USER CODE BEGIN EndPoint_Configuration */
+-  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x00 , PCD_SNG_BUF, 0x18);
+-  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x80 , PCD_SNG_BUF, 0x58);
++  if (HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x00 , PCD_SNG_BUF, 0x18) != HAL_OK) { return USBD_FAIL; }
++  if (HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x80 , PCD_SNG_BUF, 0x58) != HAL_OK) { return USBD_FAIL; }
+   /* USER CODE END EndPoint_Configuration */
+   /* USER CODE BEGIN EndPoint_Configuration_CDC */
+-  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x81 , PCD_SNG_BUF, 0xC0);
+-  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x01 , PCD_SNG_BUF, 0x110);
+-  HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x82 , PCD_SNG_BUF, 0x100);
++  if (HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x81 , PCD_SNG_BUF, 0xC0) != HAL_OK) { return USBD_FAIL; }
++  if (HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x01 , PCD_SNG_BUF, 0x110) != HAL_OK) { return USBD_FAIL; }
++  if (HAL_PCDEx_PMAConfig((PCD_HandleTypeDef*)pdev->pData , 0x82 , PCD_SNG_BUF, 0x100) != HAL_OK) { return USBD_FAIL; }
+   /* USER CODE END EndPoint_Configuration_CDC */
+   return USBD_OK;
+ }

@@ -1,0 +1,93 @@
+{
+  "sources": [
+    "HardwareGenerated/ReviewedNativeEntry/Core/Src/main.c",
+    "HardwareGenerated/NativeClassicCdc/Core/Src/gpio.c",
+    "HardwareGenerated/NativeClassicCdc/Core/Src/adc.c",
+    "HardwareGenerated/NativeClassicCdc/Core/Src/dma.c",
+    "HardwareGenerated/NativeClassicCdc/Core/Src/spi.c",
+    "HardwareGenerated/NativeClassicCdc/Core/Src/usart.c",
+    "HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_it.c",
+    "HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_msp.c",
+    "HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_hal_timebase_tim.c",
+    "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.c",
+    "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.c",
+    "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.c",
+    "HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c",
+    "HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+    "HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+    "HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f4xx.c",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c",
+    "Generated/Src/native_no_heap.c",
+    "HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.c",
+    "Generated/Src/native_clock.c",
+    "Generated/Src/native_clock_port.c",
+    "Generated/Src/native_critical.c",
+    "Common/Src/silverstar_assert.c",
+    "Generated/Src/native_abi_probe.c"
+  ],
+  "asm_sources": [
+    "HardwareGenerated/NativeClassicCdc/startup_stm32f407xx.s"
+  ],
+  "include_dirs": [
+    "HardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target",
+    "HardwareGenerated/NativeClassicCdc/Core/Inc",
+    "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App",
+    "HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc",
+    "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc",
+    "HardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/Include",
+    "HardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include",
+    "Generated/Inc",
+    "Platform/Inc",
+    "Common/Inc"
+  ],
+  "defines": [
+    "USE_HAL_DRIVER",
+    "STM32F407xx"
+  ],
+  "linker_script": "HardwareGenerated/ReviewedNativeLinker/STM32F407XX_FLASH.ld",
+  "mcu_flags": [
+    "-mcpu=cortex-m4",
+    "-mthumb",
+    "-mfpu=fpv4-sp-d16",
+    "-mfloat-abi=hard"
+  ],
+  "required_irq_handlers": [
+    "DMA2_Stream2_IRQHandler",
+    "DMA2_Stream7_IRQHandler",
+    "EXTI9_5_IRQHandler",
+    "OTG_FS_IRQHandler",
+    "TIM1_UP_TIM10_IRQHandler",
+    "USART1_IRQHandler"
+  ],
+  "required_link_symbols": [
+    "_sbrk"
+  ],
+  "native_timer_probe": true
+}

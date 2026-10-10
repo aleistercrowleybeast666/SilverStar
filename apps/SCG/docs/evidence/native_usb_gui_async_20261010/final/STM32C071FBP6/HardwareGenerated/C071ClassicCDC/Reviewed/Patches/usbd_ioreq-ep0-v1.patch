@@ -1,0 +1,24 @@
+--- HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c
++++ HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_ioreq.c
+@@ -98,9 +98,7 @@
+ #endif /* USBD_AVOID_PACKET_SPLIT_MPS */
+ 
+   /* Start the transfer */
+-  (void)USBD_LL_Transmit(pdev, 0x00U, pbuf, len);
+-
+-  return USBD_OK;
++  return USBD_LL_Transmit(pdev, 0x00U, pbuf, len);
+ }
+ 
+ /**
+@@ -143,9 +141,7 @@
+ #endif /* USBD_AVOID_PACKET_SPLIT_MPS */
+ 
+   /* Start the transfer */
+-  (void)USBD_LL_PrepareReceive(pdev, 0U, pbuf, len);
+-
+-  return USBD_OK;
++  return USBD_LL_PrepareReceive(pdev, 0U, pbuf, len);
+ }
+ 
+ /**

@@ -1,0 +1,9 @@
+{
+  "part": "C071",
+  "scope": "ProjectDraft_Create default, existing USB combo/import-directory button/save/reload/generate button",
+  "source": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\c071-cubemx-input\\full-native-clean\\C071FBP6_PCD_TEST",
+  "output": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ue01\\usb-28a9f5908f4c",
+  "backend_loaded_private_model": false,
+  "formal_release": false,
+  "build_route": "Same existing ground Build handler exercised by ug08; no new ARM build claimed here"
+}

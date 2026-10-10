@@ -1,0 +1,16 @@
+{
+  "baseline": "bf22bdcd56e76687e8be40d5f221cb3c29668ec1",
+  "scope": "Separate identical offscreen processes, ordinary unbound reference model, 1280x820, no product visual changes",
+  "comparisons": [
+    {
+      "page": "ground",
+      "identical_pixels": true,
+      "pixel_difference_bbox": null
+    },
+    {
+      "page": "build",
+      "identical_pixels": true,
+      "pixel_difference_bbox": null
+    }
+  ]
+}

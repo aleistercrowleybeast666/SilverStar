@@ -1,0 +1,2 @@
+# Preserve audited raw bytes and SHA256 identities across Windows checkouts.
+* -text

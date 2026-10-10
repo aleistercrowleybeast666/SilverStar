@@ -1,0 +1,2 @@
+HardwareGenerated/STM32CubeMX/Core/Src/system_stm32c0xx.c:146:6:SystemInit	0	static
+HardwareGenerated/STM32CubeMX/Core/Src/system_stm32c0xx.c:194:6:SystemCoreClockUpdate	16	static

@@ -1,0 +1,16 @@
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_native_ground.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tools/validation/native_classic_cdc_compile.py', LF will be replaced by CRLF the next time Git touches it
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\tools\validation\native_classic_cdc_compile.py", line 306, in <module>
+    NativeCompile_Run(parser.parse_args())
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\tools\validation\native_classic_cdc_compile.py", line 73, in NativeCompile_Run
+    experimental_files,graph,records=NativeTimerProbe_FilesRender(files,proof,hclk_hz=args.clock_hz,scg_root=SCG)
+                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_clock_probe.py", line 18, in NativeTimerProbe_FilesRender
+    config,config_include,config_manifest=NativeUsbConfig_FilesRender(native_files,proof['cdc']['owners'])
+                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_usb_config.py", line 9, in NativeUsbConfig_FilesRender
+    path=owners['usbd_conf.h'];original=files[path]
+         ~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'usbd_conf.h'

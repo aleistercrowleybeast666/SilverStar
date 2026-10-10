@@ -1,0 +1,23 @@
+{
+  "scope": "Private ordinary Init/DeInit; OpenEP and PrepareReceive errors abort configuration; pending bytes retained on CloseEP failure; cleanup retry, Stop/DeInit result propagation and retained-class reinit refusal",
+  "independent_review": "NO_PASSED_OUTCOME",
+  "formal_release": false,
+  "entries": [
+    {
+      "original": "HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c",
+      "original_sha256": "aef992bfe1774b750790e8e5dc0dc1b8aae97f9a05084f03f9530bd81db53dde",
+      "derived": "HardwareGenerated/ReviewedC071Lifecycle/usbd_cdc.c",
+      "derived_sha256": "53f8164ce68fbd5a93065112d3c1a02efb0f7e4a9d1c23ad37b8ed36e07676cd",
+      "patch": "HardwareGenerated/ReviewedC071Lifecycle/usbd_cdc.c.patch",
+      "patch_sha256": "1b59b6c7b995bae7f4d65de743ae697b84591688080904d3bff4de1b9528468e"
+    },
+    {
+      "original": "HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_core.c",
+      "original_sha256": "e1091db93fd530c8dd05c58b7ec5544ad12a832b0f5847d41ff5647890b78f77",
+      "derived": "HardwareGenerated/ReviewedC071Lifecycle/usbd_core.c",
+      "derived_sha256": "66fd8f3a25dd0a850fd7d7a6d8e55af32bde84d1977927083ca74bac5d73f227",
+      "patch": "HardwareGenerated/ReviewedC071Lifecycle/usbd_core.c.patch",
+      "patch_sha256": "2769d39bfccd96e0ae51d3d141ede8c3bdae383d4f2c482d18ed846e1e8e0f1a"
+    }
+  ]
+}

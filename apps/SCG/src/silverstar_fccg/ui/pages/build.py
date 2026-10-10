@@ -337,11 +337,12 @@ class BuildPage(ScrollableLocalizedPage):
         self._ActionTooltips_Apply()
 
     def Targets_Set(self, *, flight_generated: bool, ground_enabled: bool,
-                    ground_generated: bool) -> None:
+                    ground_generated: bool, usb_candidate: bool = False) -> None:
         self._target_generated = {
             "flight": flight_generated, "ground": ground_generated,
         }
         self._ground_enabled = ground_enabled
+        self._usb_candidate = usb_candidate
         self._TargetActions_Update()
 
     def _TargetActions_Update(self) -> None:
@@ -358,9 +359,12 @@ class BuildPage(ScrollableLocalizedPage):
             for action, _key in self._TARGET_ACTIONS:
                 enabled = generated and configured
                 if action == "build":
-                    enabled = enabled and statuses.get("compiler") == "found" and statuses.get("make") == "found"
+                    enabled = enabled and statuses.get("compiler") == "found" and (
+                        (target == 'ground' and getattr(self, '_usb_candidate', False))
+                        or statuses.get("make") == "found")
                 elif action == "clean":
-                    enabled = enabled and statuses.get("make") == "found"
+                    enabled = enabled and ((target == 'ground' and getattr(self, '_usb_candidate', False))
+                                           or statuses.get("make") == "found")
                 self.action_buttons[f"{target}_{action}"].setEnabled(enabled)
 
     def QualityResults_Set(self, records: Iterable[object]) -> None:

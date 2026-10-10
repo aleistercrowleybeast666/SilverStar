@@ -1,0 +1,8 @@
+Ground/Core/Src/ground_bridge.c:34:6:GroundBridge_PcReset	8	static
+Ground/Core/Src/ground_bridge.c:43:27:GroundBridge_FrameWrite	32	static
+Ground/Core/Src/ground_bridge.c:173:27:GroundBridge_StatusSend	152	static
+Ground/Core/Src/ground_bridge.c:99:27:GroundBridge_AckSend	88	static
+Ground/Core/Src/ground_bridge.c:60:27:GroundBridge_PcFlush	40	static
+Ground/Core/Src/ground_bridge.c:226:20:GroundBridge_Init	8	static
+Ground/Core/Src/ground_bridge.c:327:20:GroundBridge_Process	200	static
+Ground/Core/Src/ground_bridge.c:364:20:GroundBridge_DiagnosticsGet	8	static

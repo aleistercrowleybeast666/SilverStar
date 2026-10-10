@@ -1,0 +1,56 @@
+{
+  "source_commit": "56448bd35736221d7885a26704f2f953b0fe5055",
+  "results": [
+    {
+      "case": "f103-usb",
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "architecture-check",
+        "host-tests",
+        "power10-check",
+        "PYTHON=D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+        "HOST_CC=D:/msys64/ucrt64/bin/gcc.exe"
+      ],
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-legacy10b\\f103-usb\\Ground_Station",
+      "started_utc": "2026-10-09T16:20:04.260873+00:00",
+      "finished_utc": "2026-10-09T16:20:26.641509+00:00",
+      "exit": 0,
+      "log_sha256": "a4b8aaf91ddf910969bdd2055e90727837a154258574f93f0301bdffb8ff3f62",
+      "critical_contract_not_proven": true
+    },
+    {
+      "case": "f103-uart",
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "architecture-check",
+        "host-tests",
+        "power10-check",
+        "PYTHON=D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+        "HOST_CC=D:/msys64/ucrt64/bin/gcc.exe"
+      ],
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-legacy10b\\f103-uart\\Ground_Station",
+      "started_utc": "2026-10-09T16:20:04.262520+00:00",
+      "finished_utc": "2026-10-09T16:20:19.845230+00:00",
+      "exit": 0,
+      "log_sha256": "e9f55ad4650933fcba732d61f2f5775348f29c1558791d7112621e0777e208a7",
+      "critical_contract_not_proven": true
+    },
+    {
+      "case": "f407-usb",
+      "command": [
+        "D:/msys64/ucrt64/bin/mingw32-make.exe",
+        "architecture-check",
+        "host-tests",
+        "power10-check",
+        "PYTHON=D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+        "HOST_CC=D:/msys64/ucrt64/bin/gcc.exe"
+      ],
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-legacy10b\\f407-usb\\Ground_Station",
+      "started_utc": "2026-10-09T16:20:19.845823+00:00",
+      "finished_utc": "2026-10-09T16:20:40.680844+00:00",
+      "exit": 0,
+      "log_sha256": "ac4c03b1e99d81c0267001580cdf9935d7d3c6210a685bdc979a5fe9f50a11e9",
+      "critical_contract_not_proven": true
+    }
+  ]
+}

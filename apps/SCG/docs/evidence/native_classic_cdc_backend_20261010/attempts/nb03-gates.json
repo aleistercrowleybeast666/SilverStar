@@ -1,0 +1,138 @@
+[
+  {
+    "family": "f103",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_5531ad58\\b",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_native_ground.py"
+    ],
+    "started_utc": "2026-10-09T21:50:05.282645+00:00",
+    "emitted_makefile_sha256": "f197a7cab7fce52fe363d862d398a97f715d262e40df468b80c5e2b4acebcbca",
+    "exit": 0,
+    "finished_utc": "2026-10-09T21:50:05.786426+00:00",
+    "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\nb03-f103-architecture.log",
+    "log_sha256": "6485185fa97ba47a0d74957b601d4b6f3ee9985456c658ca6a7d06f8bac09f97"
+  },
+  {
+    "family": "f103",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_5531ad58\\b",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_native_ground.py",
+      "host",
+      "--host-cc",
+      "gcc"
+    ],
+    "started_utc": "2026-10-09T21:50:05.789472+00:00",
+    "emitted_makefile_sha256": "f197a7cab7fce52fe363d862d398a97f715d262e40df468b80c5e2b4acebcbca",
+    "exit": 0,
+    "finished_utc": "2026-10-09T21:50:13.248270+00:00",
+    "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\nb03-f103-host.log",
+    "log_sha256": "0bffd12c7c1e50c50d4840a6f57b5f8777f2026198b4bedffd41c2ee3c52f339"
+  },
+  {
+    "family": "f103",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_5531ad58\\b",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_native_ground.py",
+      "artifact",
+      "--prefix",
+      "arm-none-eabi-"
+    ],
+    "started_utc": "2026-10-09T21:50:13.259449+00:00",
+    "emitted_makefile_sha256": "f197a7cab7fce52fe363d862d398a97f715d262e40df468b80c5e2b4acebcbca",
+    "exit": 0,
+    "finished_utc": "2026-10-09T21:50:17.759044+00:00",
+    "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\nb03-f103-artifact.log",
+    "log_sha256": "db7f60cd461f79c221840f4072dee101e31ea50101cc94dd5879d121484c8a5f"
+  },
+  {
+    "family": "f103",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_5531ad58\\b",
+    "command": [
+      "powershell",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "Tools/check_power_of_ten.ps1",
+      "-TargetKind",
+      "Ground"
+    ],
+    "started_utc": "2026-10-09T21:50:17.768369+00:00",
+    "emitted_makefile_sha256": "f197a7cab7fce52fe363d862d398a97f715d262e40df468b80c5e2b4acebcbca",
+    "exit": 0,
+    "finished_utc": "2026-10-09T21:50:19.747087+00:00",
+    "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\nb03-f103-power10.log",
+    "log_sha256": "6010c5a067e109af4f1c2ae59dfd6d80233ef2ad14cdc31796532526e8f3f091"
+  },
+  {
+    "family": "f407",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_e84860ff\\b",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_native_ground.py"
+    ],
+    "started_utc": "2026-10-09T21:50:19.767125+00:00",
+    "emitted_makefile_sha256": "fdd935a69bf2d48b7680219c2d0aa5f8ba0e37ad8f7d86d8466db257cd5609b9",
+    "exit": 0,
+    "finished_utc": "2026-10-09T21:50:20.398964+00:00",
+    "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\nb03-f407-architecture.log",
+    "log_sha256": "6485185fa97ba47a0d74957b601d4b6f3ee9985456c658ca6a7d06f8bac09f97"
+  },
+  {
+    "family": "f407",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_e84860ff\\b",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_native_ground.py",
+      "host",
+      "--host-cc",
+      "gcc"
+    ],
+    "started_utc": "2026-10-09T21:50:20.401247+00:00",
+    "emitted_makefile_sha256": "fdd935a69bf2d48b7680219c2d0aa5f8ba0e37ad8f7d86d8466db257cd5609b9",
+    "exit": 0,
+    "finished_utc": "2026-10-09T21:50:27.860832+00:00",
+    "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\nb03-f407-host.log",
+    "log_sha256": "a5557a5981c7664b98a2a79ca885054d5ffa51fac0e293431931618736a327b7"
+  },
+  {
+    "family": "f407",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_e84860ff\\b",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_native_ground.py",
+      "artifact",
+      "--prefix",
+      "arm-none-eabi-"
+    ],
+    "started_utc": "2026-10-09T21:50:27.873248+00:00",
+    "emitted_makefile_sha256": "fdd935a69bf2d48b7680219c2d0aa5f8ba0e37ad8f7d86d8466db257cd5609b9",
+    "exit": 0,
+    "finished_utc": "2026-10-09T21:50:33.062401+00:00",
+    "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\nb03-f407-artifact.log",
+    "log_sha256": "ebf54d370896659450413220850adfe7b5e87a68635602f378c87b7bbc3b8e4b"
+  },
+  {
+    "family": "f407",
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_e84860ff\\b",
+    "command": [
+      "powershell",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "Tools/check_power_of_ten.ps1",
+      "-TargetKind",
+      "Ground"
+    ],
+    "started_utc": "2026-10-09T21:50:33.072845+00:00",
+    "emitted_makefile_sha256": "fdd935a69bf2d48b7680219c2d0aa5f8ba0e37ad8f7d86d8466db257cd5609b9",
+    "exit": 0,
+    "finished_utc": "2026-10-09T21:50:34.957422+00:00",
+    "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\nb03-f407-power10.log",
+    "log_sha256": "cb4c5ebb889ec26cc5f8f0c1503a843230eb300e55b08cc14b0e90d17df7317f"
+  }
+]

@@ -6,6 +6,13 @@ from collections.abc import Callable
 from copy import deepcopy
 from dataclasses import dataclass, fields, replace
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from silverstar_fccg.hardware.native_classic_cdc import NativeDeviceFacts
+    from silverstar_fccg.app.native_ground import (
+        NativeGroundProjectImportResult, NativeGroundCandidatePlan, NativeGroundCandidateOutputResult,
+    )
 
 from silverstar_fccg.app.source_export import (
     SourcePackage_Export,
@@ -194,6 +201,7 @@ class FccgService:
         confirm_dangerous: bool = False,
         progress_callback: Callable[[int, int, str, bool], None] | None = None,
     ) -> ApplyResult:
+        self._NativeFormalGeneration_Reject(model)
         policy = self._OutputPolicy_Get(project_root)
         configuration = self.ProjectConfiguration_Reconcile(model)
         candidate = configuration.model
@@ -501,6 +509,7 @@ class FccgService:
         return policy.root
 
     def GenerationPlan_Create(self, model: ProjectModel, project_root: Path) -> GenerationPlan:
+        self._NativeFormalGeneration_Reject(model)
         selected_root = Path(project_root).resolve(strict=False)
         return self._Assembler_Get(selected_root).Plan(model, selected_root)
 
@@ -512,6 +521,7 @@ class FccgService:
         confirm_dangerous: bool = False,
         progress_callback: Callable[[int, int, str, bool], None] | None = None,
     ) -> ApplyResult:
+        self._NativeFormalGeneration_Reject(model)
         result = self._Assembler_Get(plan.project_root).Apply(
             model,
             plan,
@@ -692,6 +702,7 @@ class FccgService:
         progress_callback: Callable[[BuildProgress], None] | None = None,
         ensure_buildable: bool = True,
     ) -> BuildResult:
+        self._NativeFormalGeneration_Reject(model)
         if ensure_buildable:
             self.Project_EnsureBuildable(
                 model,
@@ -877,6 +888,89 @@ class FccgService:
         if compatibility_errors:
             raise CubeMxImportError("; ".join(compatibility_errors))
         return result
+
+    def NativeClassicCdcProject_Import(
+        self, input_path: Path, *, device_facts: NativeDeviceFacts, spi_resource: str,
+        gpio_resources: tuple[str, ...], risk_acknowledged: bool,
+    ) -> CubeMxImportResult:
+        """Experimental static admission; does not modify a model or enable firmware.
+
+        device_facts must come from an independently trusted backend descriptor,
+        never the project/IOC/linker being imported. No MCU plugin is selected.
+        """
+        from silverstar_fccg.hardware.native_classic_cdc import NativeClassicCdc_Import
+        return NativeClassicCdc_Import(self.hardware_importer, input_path,
+            device_facts=device_facts, spi_resource=spi_resource,
+            gpio_resources=gpio_resources, risk_acknowledged=risk_acknowledged)
+
+    @staticmethod
+    def _NativeFormalGeneration_Reject(model: ProjectModel) -> None:
+        inventory = model.ground_target.hardware.inventory
+        if (model.ground_target.hardware.mcu == "STM32C071FBP6" or
+                any(key in inventory for key in ("native_complete_classic_cdc", "native_ground_backend", "usb_ground_c071_native"))):
+            raise FccgError("error.native_formal_generation_blocked", {},
+                "Native classic CDC formal build remains blocked by pending lifecycle/critical-contract acceptance; "
+                "use the explicitly private candidate backend. No flash/start action is permitted.")
+
+    def NativeClassicCdcGroundProject_Import(
+        self, input_path: Path, model: ProjectModel, *, device_facts: NativeDeviceFacts,
+        spi_resource: str, gpio_resources: tuple[str, ...], hclk_hz: int,
+        risk_acknowledged: bool,
+    ) -> NativeGroundProjectImportResult:
+        """Bind an experimental native import to a copied, persistable Ground model.
+
+        The existing static import API remains unchanged. This backend path
+        preserves the caller model and never enables formal generation or GUI.
+        """
+        from silverstar_fccg.app.native_ground import NativeGroundProject_Import
+        return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+            input_path, model, device_facts=device_facts, spi_resource=spi_resource,
+            gpio_resources=gpio_resources, hclk_hz=hclk_hz,
+            risk_acknowledged=risk_acknowledged)
+
+    def NativeClassicCdcGroundCandidate_Plan(self, model: ProjectModel, *, device_facts: NativeDeviceFacts) -> NativeGroundCandidatePlan:
+        """Revalidate bound snapshot/facts and render a private preview in memory."""
+        from silverstar_fccg.app.native_ground import NativeGroundCandidate_Plan
+        return NativeGroundCandidate_Plan(self.hardware_importer, self.catalog,
+            model, device_facts=device_facts)
+
+    def NativeClassicCdcGroundCandidate_Export(
+        self, model: ProjectModel, output: Path, *, device_facts: NativeDeviceFacts,
+    ) -> NativeGroundCandidateOutputResult:
+        """Publish a private rendered candidate into a new disjoint output."""
+        from silverstar_fccg.app.native_ground import NativeGroundCandidate_Export
+        return NativeGroundCandidate_Export(self.hardware_importer, self.catalog,
+            model, output, device_facts=device_facts)
+
+    def NativeClassicCdcGroundCandidate_Build(
+        self, model: ProjectModel, project_root: Path, output: Path, *, device_facts: NativeDeviceFacts,
+    ) -> NativeGroundCandidateOutputResult:
+        """Build the exact saved native model through the shared ARM/analyzer engine.
+
+        This cannot flash/start a board or claim lifecycle/manual acceptance.
+        All original native files remain owned by their imported snapshot.
+        """
+        from silverstar_fccg.app.native_ground import NativeGroundCandidate_Build
+        return NativeGroundCandidate_Build(self.hardware_importer, self.catalog,
+            model, project_root, output, device_facts=device_facts)
+
+    def UsbGroundProject_Import(self, input_path: Path, model: ProjectModel, **options):
+        """Bind only the exact first-batch F103/C071 target; no GUI or release."""
+        from silverstar_fccg.app.usb_ground import UsbGroundProject_Import
+        return UsbGroundProject_Import(self.hardware_importer, self.catalog, input_path, model, **options)
+
+    def UsbGroundCandidate_Plan(self, model: ProjectModel, **options):
+        """Recheck backend facts and source identity; C071 reports its block."""
+        from silverstar_fccg.app.usb_ground import UsbGroundCandidate_Plan
+        return UsbGroundCandidate_Plan(self.hardware_importer, self.catalog, model, **options)
+
+    def UsbGroundCandidate_Export(self, model: ProjectModel, output: Path, **options):
+        from silverstar_fccg.app.usb_ground import UsbGroundCandidate_Export
+        return UsbGroundCandidate_Export(self.hardware_importer, self.catalog, model, output, **options)
+
+    def UsbGroundCandidate_Build(self, model: ProjectModel, project_root: Path, output: Path, **options):
+        from silverstar_fccg.app.usb_ground import UsbGroundCandidate_Build
+        return UsbGroundCandidate_Build(self.hardware_importer, self.catalog, model, project_root, output, **options)
 
     def HardwareProviderForMcu_Get(self, mcu_id: str) -> str:
         mcu = self.catalog.Component_Get(mcu_id)

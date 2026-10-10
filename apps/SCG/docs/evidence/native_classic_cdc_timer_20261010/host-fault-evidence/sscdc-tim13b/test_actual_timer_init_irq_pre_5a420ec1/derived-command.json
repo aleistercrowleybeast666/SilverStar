@@ -1,0 +1,24 @@
+{
+  "command": [
+    "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wpedantic",
+    "-Wconversion",
+    "-Wsign-conversion",
+    "-Wundef",
+    "-fanalyzer",
+    "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-tim13b\\test_actual_timer_init_irq_pre_5a420ec1",
+    "-ID:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc",
+    "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-tim13b\\test_actual_timer_init_irq_pre_5a420ec1\\Generated\\Inc",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-tim13b\\test_actual_timer_init_irq_pre_5a420ec1\\derived.c",
+    "-o",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-tim13b\\test_actual_timer_init_irq_pre_5a420ec1\\derived.exe"
+  ],
+  "exit": 0,
+  "stdout": "",
+  "stderr": ""
+}

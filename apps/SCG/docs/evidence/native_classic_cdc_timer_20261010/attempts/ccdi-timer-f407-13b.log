@@ -1,0 +1,14 @@
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_native_ground.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tools/validation/native_classic_cdc_compile.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_native_ground.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tools/validation/native_classic_cdc_compile.py', LF will be replaced by CRLF the next time Git touches it
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\tools\validation\native_classic_cdc_compile.py", line 306, in <module>
+    NativeCompile_Run(parser.parse_args())
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\tools\validation\native_classic_cdc_compile.py", line 206, in NativeCompile_Run
+    dependencies.DependencyClosure_Validate(output,graph,compiler,build_dir=build_dir,source=source)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\plugins\builtin\silverstar_core_ground_0_1_0\payload\Tools\ground_artifact_contract.py", line 156, in DependencyClosure_Validate
+    raise ValueError("declared C/ASM sources collide on an object path")
+ValueError: declared C/ASM sources collide on an object path

@@ -1,0 +1,8 @@
+HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_desc.c:218:11:USBD_CDC_DeviceDescriptor	0	static
+HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_desc.c:231:11:USBD_CDC_LangIDStrDescriptor	0	static
+HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_desc.c:338:13:IntToUnicode	16	static
+HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_desc.c:269:11:USBD_CDC_SerialStrDescriptor	8	static
+HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_desc.c:244:11:USBD_CDC_ProductStrDescriptor	8	static
+HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_desc.c:256:11:USBD_CDC_ManufacturerStrDescriptor	8	static
+HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_desc.c:291:11:USBD_CDC_ConfigStrDescriptor	8	static
+HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_desc.c:303:11:USBD_CDC_InterfaceStrDescriptor	8	static

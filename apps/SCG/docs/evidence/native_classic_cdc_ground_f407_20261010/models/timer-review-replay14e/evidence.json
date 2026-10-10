@@ -1,0 +1,91 @@
+{
+  "scope": "Replay provided independent ordinary phase model. Only post-fix port and expected success assertions differ. No measured MCU timing or USB execution.",
+  "results": [
+    {
+      "label": "original",
+      "compile": [
+        "D:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c11",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wsign-conversion",
+        "-Wundef",
+        "-fanalyzer",
+        "-IC:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\timer-review-replay14e\\original",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\timer-review-replay14e\\original\\native_clock.c",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\timer-review-replay14e\\original\\native_clock_port.c",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\timer-review-replay14e\\original\\normal_phase.c",
+        "-o",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\timer-review-replay14e\\original\\normal_phase.exe"
+      ],
+      "compile_exit": 0,
+      "compile_stdout": "",
+      "compile_stderr": "",
+      "run": [
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\timer-review-replay14e\\original\\normal_phase.exe"
+      ],
+      "run_exit": 0,
+      "stdout": "running timer, UIF=0, first=5 later=5 status=5 retries_us=0.6\n",
+      "stderr": "",
+      "sha256": {
+        "main.h": "9df3a0378be39581cddc140f7b44843e7735277da82507aa1f77ee5366d1067f",
+        "native_clock.c": "cf5d4f7b0617932a6dfd31b390cf2932f2624b2e2dccb8e01458cacf7b937a0c",
+        "native_clock.h": "c593bf6b734da6b8ccbe4d2b4803237769fe59a0619c8e501be57026c4f6243e",
+        "native_clock_port.c": "dc9c515469ad76d138220d7db877d7ba97d1be9842bbf6ee8b628ed1a25ea0af",
+        "normal_phase.c": "3871ad6d0bf017d51dfa07546f0608fdac208c03f89b0650ef7378ee62e2f693",
+        "normal_phase.exe": "f0263335dbb1fad3de1e663f4b33f9bf78b1aae1dd4b417762244096b48f18fe",
+        "platform_critical.h": "77f0d7141c4cf906171cf6c0019130949385d6e51e1ed9475c4ee50140157875",
+        "platform_time.h": "66ecf71030b25eb0993fae7c1176604088dbf78c42fd399c16c4fec8eed4822d",
+        "platform_types.h": "9eccf8476d8ebb58f251f9049de631651c6ae4e19a415d63579e703a6cfd8785",
+        "silverstar_assert.h": "4269f3cb8e10bbe4c184359fd1211701d81f65340257494e9da31790b36f1c69"
+      }
+    },
+    {
+      "label": "fixed",
+      "compile": [
+        "D:/msys64/ucrt64/bin/gcc.exe",
+        "-std=c11",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-Wpedantic",
+        "-Wconversion",
+        "-Wsign-conversion",
+        "-Wundef",
+        "-fanalyzer",
+        "-IC:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\timer-review-replay14e\\fixed",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\timer-review-replay14e\\fixed\\native_clock.c",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\timer-review-replay14e\\fixed\\native_clock_port.c",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\timer-review-replay14e\\fixed\\normal_phase.c",
+        "-o",
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\timer-review-replay14e\\fixed\\normal_phase.exe"
+      ],
+      "compile_exit": 0,
+      "compile_stdout": "",
+      "compile_stderr": "",
+      "run": [
+        "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\timer-review-replay14e\\fixed\\normal_phase.exe"
+      ],
+      "run_exit": 0,
+      "stdout": "running timer, UIF=0, first=0 later=0 status=0 retries_us=0.6\n",
+      "stderr": "",
+      "sha256": {
+        "main.h": "9df3a0378be39581cddc140f7b44843e7735277da82507aa1f77ee5366d1067f",
+        "native_clock.c": "cf5d4f7b0617932a6dfd31b390cf2932f2624b2e2dccb8e01458cacf7b937a0c",
+        "native_clock.h": "c593bf6b734da6b8ccbe4d2b4803237769fe59a0619c8e501be57026c4f6243e",
+        "native_clock_port.c": "410438f5c22053daee1230bd6400ba92dce87219493a56803f13a9cec0e1a908",
+        "normal_phase.c": "23433bd15f83adcd48e8f6e5b1615f2cea2e75abc7f2eff12f4c8d2c5af4b987",
+        "normal_phase.exe": "0df03513532e7263da0edb824345f47e921b094dcbd682d12099bdaff48ade3d",
+        "platform_critical.h": "77f0d7141c4cf906171cf6c0019130949385d6e51e1ed9475c4ee50140157875",
+        "platform_time.h": "66ecf71030b25eb0993fae7c1176604088dbf78c42fd399c16c4fec8eed4822d",
+        "platform_types.h": "9eccf8476d8ebb58f251f9049de631651c6ae4e19a415d63579e703a6cfd8785",
+        "silverstar_assert.h": "4269f3cb8e10bbe4c184359fd1211701d81f65340257494e9da31790b36f1c69"
+      }
+    }
+  ]
+}

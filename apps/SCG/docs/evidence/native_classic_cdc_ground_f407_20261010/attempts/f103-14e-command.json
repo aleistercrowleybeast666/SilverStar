@@ -1,0 +1,28 @@
+{
+  "command": [
+    "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+    "-B",
+    "apps/SCG/tools/validation/native_classic_cdc_compile.py",
+    "--input",
+    "C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation/cube-f103-usb",
+    "--device-facts",
+    "D:/python_software/SilverStar/.work/ccdi_facts/f103-usb.json",
+    "--output",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f103-14e",
+    "--spi",
+    "SPI1",
+    "--gpio",
+    "SPI_RADIO_NSS",
+    "RADIO_RST",
+    "RADIO_BUSY",
+    "RADIO_DIO1",
+    "--clock-hz",
+    "72000000",
+    "--runtime-project",
+    "C:/Users/chdxm/AppData/Local/Temp/sscdc-ground-f103-12c/candidate_config.ssproject"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\.work\\ccdi",
+  "started_utc": "2026-10-09T21:07:20.204941+00:00",
+  "exit": 0,
+  "finished_utc": "2026-10-09T21:08:13.780869+00:00"
+}

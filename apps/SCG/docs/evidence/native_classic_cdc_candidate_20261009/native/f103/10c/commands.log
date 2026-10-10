@@ -1,0 +1,502 @@
+["arm-none-eabi-gcc", "--version"]
+arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623
+Copyright (C) 2024 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/main.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/main.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/main.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/main.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/main.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/main.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/main.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/gpio.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/dma.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/spi.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/usart.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_it.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_it.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_it.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_it.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_it.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_it.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_it.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_hal_msp.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_hal_msp.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_hal_msp.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_hal_msp.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_hal_msp.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_hal_msp.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_hal_msp.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.o", "-S", "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.c", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.s", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.o", "-S", "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.c", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.s", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.o", "-S", "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.c", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.s", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.o", "-S", "HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.c", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.s", "-o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.o", "-S", "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f1xx.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f1xx.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f1xx.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f1xx.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f1xx.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f1xx.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f1xx.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o", "-S", "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o", "-S", "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o", "-S", "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o", "-S", "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/sysmem.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/sysmem.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/sysmem.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/sysmem.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/sysmem.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/sysmem.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/sysmem.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.o", "-S", "HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.c", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.gas.d", "-c", "build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.s", "-o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-std=c11", "-Os", "-ffunction-sections", "-fdata-sections", "-fstack-usage", "-Wall", "-Werror=implicit-function-declaration", "-Werror=incompatible-pointer-types", "-Werror=return-type", "-Wextra", "-Wpedantic", "-Werror", "-MD", "-MP", "-MF", "build/Generated/Src/native_abi_probe.d", "-MT", "build/Generated/Src/native_abi_probe.o", "-S", "Generated/Src/native_abi_probe.c", "-o", "build/Generated/Src/native_abi_probe.s"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-x", "assembler", "-Wa,--MD,build/Generated/Src/native_abi_probe.gas.d", "-c", "build/Generated/Src/native_abi_probe.s", "-o", "build/Generated/Src/native_abi_probe.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-IHardwareGenerated/NativeClassicCdc/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/App", "-IHardwareGenerated/NativeClassicCdc/USB_DEVICE/Target", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc", "-IHardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include", "-IHardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include", "-DUSE_HAL_DRIVER", "-DSTM32F103xB", "-save-temps=obj", "-MD", "-MP", "-MF", "build/HardwareGenerated/NativeClassicCdc/startup_stm32f103xb.d", "-MT", "build/HardwareGenerated/NativeClassicCdc/startup_stm32f103xb.o", "-Wa,--MD,build/HardwareGenerated/NativeClassicCdc/startup_stm32f103xb.gas.d", "-x", "assembler-with-cpp", "-c", "HardwareGenerated/NativeClassicCdc/startup_stm32f103xb.s", "-o", "build/HardwareGenerated/NativeClassicCdc/startup_stm32f103xb.o"]
+
+EXIT 0
+["arm-none-eabi-gcc", "build/HardwareGenerated/NativeClassicCdc/Core/Src/main.o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_it.o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_hal_msp.o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.o", "build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.o", "build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f1xx.o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o", "build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/sysmem.o", "build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.o", "build/Generated/Src/native_abi_probe.o", "build/HardwareGenerated/NativeClassicCdc/startup_stm32f103xb.o", "-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft", "-Wl,--gc-sections,-Map=build/native.map", "-THardwareGenerated/NativeClassicCdc/STM32F103XX_FLASH.ld", "-specs=nano.specs", "-lc", "-lm", "-lnosys", "-o", "build/native.elf"]
+
+EXIT 0
+["arm-none-eabi-nm", "-n", "build/native.elf"]
+00000000 A _Min_Heap_Size
+00000800 A _Min_Stack_Size
+08000000 R g_pfnVectors
+0800010c T strlen
+0800011c t deregister_tm_clones
+08000138 t register_tm_clones
+0800015c t __do_global_dtors_aux
+08000184 t frame_dummy
+080001a8 T SystemClock_Config
+08000224 T main
+08000244 T Error_Handler
+08000248 T MX_GPIO_Init
+08000354 T MX_DMA_Init
+08000394 T MX_SPI1_Init
+080003dc T HAL_SPI_MspInit
+08000450 T MX_USART1_UART_Init
+08000488 T HAL_UART_MspInit
+08000570 T NMI_Handler
+08000572 T HardFault_Handler
+08000574 T MemManage_Handler
+08000576 T BusFault_Handler
+08000578 T UsageFault_Handler
+0800057a T SVC_Handler
+0800057c T DebugMon_Handler
+0800057e T PendSV_Handler
+08000580 T SysTick_Handler
+08000584 T EXTI0_IRQHandler
+0800058c T DMA1_Channel4_IRQHandler
+08000598 T DMA1_Channel5_IRQHandler
+080005a4 T USB_LP_CAN1_RX0_IRQHandler
+080005b0 T USART1_IRQHandler
+080005bc T HAL_MspInit
+08000600 T MX_USB_DEVICE_Init
+08000650 T USBD_FS_DeviceDescriptor
+0800065c T USBD_FS_LangIDStrDescriptor
+08000668 t IntToUnicode
+08000694 T USBD_FS_SerialStrDescriptor
+080006d0 T USBD_FS_ManufacturerStrDescriptor
+080006e8 T USBD_FS_ProductStrDescriptor
+08000700 T USBD_FS_ConfigStrDescriptor
+08000718 T USBD_FS_InterfaceStrDescriptor
+08000730 t CDC_DeInit_FS
+08000734 t CDC_Control_FS
+08000738 t CDC_Receive_FS
+08000750 t CDC_Init_FS
+08000774 t USBD_Get_USB_Status
+08000780 T HAL_PCD_MspInit
+080007c0 T HAL_PCD_SetupStageCallback
+080007cc T HAL_PCD_DataOutStageCallback
+080007de T HAL_PCD_DataInStageCallback
+080007ee T HAL_PCD_SOFCallback
+080007f6 T HAL_PCD_ResetCallback
+0800081c T HAL_PCD_SuspendCallback
+0800083c T HAL_PCD_ResumeCallback
+08000844 T USBD_LL_Init
+080008c4 T USBD_LL_Start
+080008d6 T USBD_LL_OpenEP
+080008ee T USBD_LL_CloseEP
+08000900 T USBD_LL_StallEP
+08000912 T USBD_LL_ClearStallEP
+08000924 T USBD_LL_IsStallEP
+08000946 T USBD_LL_SetUSBAddress
+08000958 T USBD_LL_Transmit
+0800096a T USBD_LL_PrepareReceive
+0800097c T USBD_LL_GetRxDataSize
+08000984 T USBD_static_malloc
+0800098c T USBD_static_free
+0800098e T HAL_PCDEx_SetConnectionState
+08000990 T HAL_PCD_Init
+08000a56 T HAL_PCD_Start
+08000a88 T HAL_PCD_SetAddress
+08000ab0 T HAL_PCD_IRQHandler
+08001464 T HAL_PCD_EP_Open
+080014c4 T HAL_PCD_EP_Close
+08001514 T HAL_PCD_EP_Receive
+08001542 T HAL_PCD_EP_GetRxCount
+08001552 T HAL_PCD_EP_Transmit
+08001582 T HAL_PCD_EP_SetStall
+080015ee T HAL_PCD_EP_ClrStall
+08001652 T HAL_PCDEx_PMAConfig
+08001684 T USB_CoreInit
+08001692 T USB_EnableGlobalInt
+080016a4 T USB_DisableGlobalInt
+080016b8 T USB_SetCurrentMode
+080016bc T USB_DevInit
+080016e0 T USB_ActivateEndpoint
+080019a0 T USB_DeactivateEndpoint
+08001b46 T USB_EPSetStall
+08001b86 T USB_EPClearStall
+08001c18 T USB_SetDevAddress
+08001c24 T USB_DevConnect
+08001c28 T USB_DevDisconnect
+08001c2c T USB_ReadInterrupts
+08001c34 T USB_EP0_OutStart
+08001c38 T USB_WritePMA
+08001c58 T USB_EPStartXfer
+080020ba T USB_ReadPMA
+080020f4 W HAL_InitTick
+0800213c T HAL_Init
+08002160 W HAL_IncTick
+08002178 W HAL_GetTick
+08002184 T HAL_RCC_OscConfig
+080024bc T HAL_RCC_GetSysClockFreq
+08002508 T HAL_RCC_ClockConfig
+08002640 T HAL_RCC_GetPCLK1Freq
+08002660 T HAL_RCC_GetPCLK2Freq
+08002680 T HAL_RCCEx_PeriphCLKConfig
+08002774 T HAL_GPIO_Init
+0800291c T HAL_GPIO_WritePin
+08002926 W HAL_GPIO_EXTI_Callback
+08002928 T HAL_GPIO_EXTI_IRQHandler
+08002940 T HAL_DMA_Init
+080029a0 T HAL_DMA_Abort
+080029e0 T HAL_DMA_Abort_IT
+08002a6c T HAL_DMA_IRQHandler
+08002b94 T HAL_NVIC_SetPriorityGrouping
+08002bb8 T HAL_NVIC_SetPriority
+08002c18 T HAL_NVIC_EnableIRQ
+08002c34 T HAL_SYSTICK_Config
+08002c5c T HAL_SPI_Init
+08002d0c t UART_EndRxTransfer
+08002d68 t UART_SetConfig
+08002ddc T HAL_UART_Init
+08002e3a W HAL_UART_TxCpltCallback
+08002e3c W HAL_UART_RxCpltCallback
+08002e3e W HAL_UART_ErrorCallback
+08002e40 t UART_DMAAbortOnError
+08002e50 W HAL_UARTEx_RxEventCallback
+08002e52 t UART_Receive_IT.isra.0
+08002f08 T HAL_UART_IRQHandler
+0800319c T SystemInit
+0800319e T USBD_Init
+080031c8 T USBD_RegisterClass
+080031d6 T USBD_Start
+080031e0 T USBD_SetClassConfig
+080031fa T USBD_ClrClassConfig
+08003208 T USBD_LL_SetupStage
+08003262 T USBD_LL_DataOutStage
+080032d2 T USBD_LL_DataInStage
+0800338a T USBD_LL_Reset
+080033d8 T USBD_LL_SetSpeed
+080033de T USBD_LL_Suspend
+080033f0 T USBD_LL_Resume
+08003404 T USBD_LL_SOF
+0800341c t USBD_CtlError.constprop.0
+08003434 T USBD_StdDevReq
+080036c4 T USBD_StdItfReq
+0800370c T USBD_StdEPReq
+08003824 T USBD_ParseSetupRequest
+0800383a T USBD_CtlError
+08003850 T USBD_GetString
+08003888 T USBD_CtlSendData
+080038a2 T USBD_CtlContinueSendData
+080038b2 T USBD_CtlPrepareRx
+080038cc T USBD_CtlContinueRx
+080038dc T USBD_CtlSendStatus
+080038f2 T USBD_CtlReceiveStatus
+08003908 t USBD_CDC_EP0_RxReady
+08003930 t USBD_CDC_GetFSCfgDesc
+0800393c t USBD_CDC_GetHSCfgDesc
+08003948 t USBD_CDC_GetOtherSpeedCfgDesc
+08003954 T USBD_CDC_GetDeviceQualifierDescriptor
+08003960 t USBD_CDC_DataOut
+0800398e t USBD_CDC_DataIn
+080039ce t USBD_CDC_Setup
+08003a70 t USBD_CDC_DeInit
+08003ab2 t USBD_CDC_Init
+08003b3e T USBD_CDC_RegisterInterface
+08003b4c T USBD_CDC_SetTxBuffer
+08003b5c T USBD_CDC_SetRxBuffer
+08003b68 T USBD_CDC_ReceivePacket
+08003b90 W Reset_Handler
+08003b9e t CopyDataInit
+08003ba4 t LoopCopyDataInit
+08003bb2 t FillZerobss
+08003bb6 t LoopFillZerobss
+08003bd8 W ADC1_2_IRQHandler
+08003bd8 W CAN1_RX1_IRQHandler
+08003bd8 W CAN1_SCE_IRQHandler
+08003bd8 T Default_Handler
+08003bd8 W DMA1_Channel1_IRQHandler
+08003bd8 W DMA1_Channel2_IRQHandler
+08003bd8 W DMA1_Channel3_IRQHandler
+08003bd8 W DMA1_Channel6_IRQHandler
+08003bd8 W DMA1_Channel7_IRQHandler
+08003bd8 W EXTI1_IRQHandler
+08003bd8 W EXTI15_10_IRQHandler
+08003bd8 W EXTI2_IRQHandler
+08003bd8 W EXTI3_IRQHandler
+08003bd8 W EXTI4_IRQHandler
+08003bd8 W EXTI9_5_IRQHandler
+08003bd8 W FLASH_IRQHandler
+08003bd8 W I2C1_ER_IRQHandler
+08003bd8 W I2C1_EV_IRQHandler
+08003bd8 W I2C2_ER_IRQHandler
+08003bd8 W I2C2_EV_IRQHandler
+08003bd8 t Infinite_Loop
+08003bd8 W PVD_IRQHandler
+08003bd8 W RCC_IRQHandler
+08003bd8 W RTC_Alarm_IRQHandler
+08003bd8 W RTC_IRQHandler
+08003bd8 W SPI1_IRQHandler
+08003bd8 W SPI2_IRQHandler
+08003bd8 W TAMPER_IRQHandler
+08003bd8 W TIM1_BRK_IRQHandler
+08003bd8 W TIM1_CC_IRQHandler
+08003bd8 W TIM1_TRG_COM_IRQHandler
+08003bd8 W TIM1_UP_IRQHandler
+08003bd8 W TIM2_IRQHandler
+08003bd8 W TIM3_IRQHandler
+08003bd8 W TIM4_IRQHandler
+08003bd8 W USART2_IRQHandler
+08003bd8 W USART3_IRQHandler
+08003bd8 W USB_HP_CAN1_TX_IRQHandler
+08003bd8 W USBWakeUp_IRQHandler
+08003bd8 W WWDG_IRQHandler
+08003bda T memset
+08003bec T __libc_init_array
+08003c34 t __EH_FRAME_BEGIN__
+08003c34 T _init
+08003c40 T _fini
+08003c4c T _etext
+08003c8e r aPredivFactorTable.0
+08003c90 r aPLLMULFactorTable.1
+08003ca0 R APBPrescTable
+08003ca8 R AHBPrescTable
+08003cb8 R __exidx_start
+08003cc0 R __exidx_end
+08003cc0 r __frame_dummy_init_array_entry
+08003cc0 r __init_array_start
+08003cc0 d __preinit_array_end
+08003cc0 d __preinit_array_start
+08003cc4 r __do_global_dtors_aux_fini_array_entry
+08003cc4 r __init_array_end
+08003cc8 A _sidata
+20000000 D _sdata
+20000000 D USBD_StringSerial
+2000001c D USBD_LangIDDesc
+20000020 D USBD_FS_DeviceDesc
+20000034 D FS_Desc
+20000050 D USBD_Interface_fops_FS
+20000060 D uwTickFreq
+20000064 D uwTickPrio
+20000068 D SystemCoreClock
+2000006c D USBD_CDC_OtherSpeedCfgDesc
+200000b0 D USBD_CDC_CfgFSDesc
+200000f4 D USBD_CDC_CfgHSDesc
+20000138 D USBD_CDC
+20000170 d USBD_CDC_DeviceQualifierDesc
+2000017c B __bss_start__
+2000017c D __TMC_END__
+2000017c D _edata
+2000017c B _sbss
+2000017c b completed.1
+20000180 b object.0
+20000198 B hspi1
+200001f0 B hdma_usart1_tx
+20000234 B hdma_usart1_rx
+20000278 B huart1
+200002c0 B hUsbDeviceFS
+20000584 B USBD_StrDesc
+20000784 B UserTxBufferFS
+20000b84 B UserRxBufferFS
+20000f84 b mem.0
+200011a4 B hpcd_USB_FS
+2000147c B uwTick
+20001480 b cfgidx.0
+20001484 B __bss_end__
+20001484 B _ebss
+20001488 B _end
+20005000 R _estack
+f108f85f a BootRAM
+
+EXIT 0
+["arm-none-eabi-objcopy", "--dump-section", ".isr_vector=build/vectors.bin", "build/native.elf"]
+
+EXIT 0

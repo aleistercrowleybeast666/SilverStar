@@ -1,0 +1,16 @@
+[
+  {
+    "part": "STM32F103C8T6",
+    "output_matched": true,
+    "Output_Get_seconds": 1.4482342000046629,
+    "quality_records": 2,
+    "refresh_hash_seconds": 2.8639503000013065
+  },
+  {
+    "part": "STM32C071FBP6",
+    "output_matched": true,
+    "Output_Get_seconds": 2.2616122999970685,
+    "quality_records": 2,
+    "refresh_hash_seconds": 4.359841600002255
+  }
+]

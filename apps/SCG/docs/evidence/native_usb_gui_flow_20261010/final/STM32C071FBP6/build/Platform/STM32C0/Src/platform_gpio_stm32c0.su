@@ -1,0 +1,5 @@
+Platform/STM32C0/Src/platform_gpio_stm32c0.c:19:29:PlatformGpio_ContextGet	40	static
+Platform/STM32C0/Src/platform_gpio_stm32c0.c:40:16:PlatformGpio_Write	8	static
+Platform/STM32C0/Src/platform_gpio_stm32c0.c:50:16:PlatformGpio_Read	8	static
+Platform/STM32C0/Src/platform_gpio_stm32c0.c:63:9:PlatformGpio_IrqConsume	16	static
+Platform/STM32C0/Src/platform_gpio_stm32c0.c:80:6:HAL_GPIO_EXTI_Rising_Callback	16	static

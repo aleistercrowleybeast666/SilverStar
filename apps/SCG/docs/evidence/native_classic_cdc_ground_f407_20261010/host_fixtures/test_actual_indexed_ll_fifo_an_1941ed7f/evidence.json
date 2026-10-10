@@ -1,0 +1,32 @@
+{
+  "compile": [
+    "D:/msys64/ucrt64/bin\\gcc.EXE",
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wpedantic",
+    "-Wconversion",
+    "-Wsign-conversion",
+    "-Wundef",
+    "-fanalyzer",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_actual_indexed_ll_fifo_an_1941ed7f\\test.c",
+    "-o",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_actual_indexed_ll_fifo_an_1941ed7f\\test.exe"
+  ],
+  "compile_exit": 0,
+  "compile_stdout": "",
+  "compile_stderr": "",
+  "run": [
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_actual_indexed_ll_fifo_an_1941ed7f\\test.exe",
+    "fifo4"
+  ],
+  "run_exit": 0,
+  "stdout": "",
+  "stderr": "",
+  "native_sha256": "29c45cc956aa40eab3417c6a9a39fd2b196dde7c4cef8f3699a1c500d5825fe1",
+  "derived_sha256": "5eee3a862481fd4c668366be9a01fffd47fe94fd448c6525e89ec138a032bd1d",
+  "source_sha256": "215fad63c54e899dc2b46282aa9dad746bd8c2fd296328ba58e99ae9afab085a",
+  "executable_sha256": "ba6e1a6c34712ca3affd82f6ae79c92e6ed2ab9d8b33d9738429b09cfc7e19a4"
+}

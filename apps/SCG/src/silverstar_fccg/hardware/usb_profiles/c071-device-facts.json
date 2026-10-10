@@ -1,0 +1,149 @@
+{
+  "part": "STM32C071FBP6",
+  "core": "cortex-m0plus",
+  "device_macro": "STM32C071xx",
+  "startup": "startup_stm32c071xx.s",
+  "fpu": "",
+  "regions": [
+    {
+      "name": "FLASH",
+      "origin": 134217728,
+      "length": 131072
+    },
+    {
+      "name": "RAM",
+      "origin": 536870912,
+      "length": 24576
+    }
+  ],
+  "evidence_source": "Registered exact C071FBP6 MCU profile at b66f142f7ab9b5611bd2f9a84a105835e4f77b96; physical memory specification DS14693",
+  "evidence_sha256": "f00c83ff2533447e9e1be9e70fb29c51c9c0e7d131dc06c45728fb6f3c247aba",
+  "irq_numbers": [
+    [
+      "NonMaskableInt_IRQn",
+      -14
+    ],
+    [
+      "HardFault_IRQn",
+      -13
+    ],
+    [
+      "SVCall_IRQn",
+      -5
+    ],
+    [
+      "PendSV_IRQn",
+      -2
+    ],
+    [
+      "SysTick_IRQn",
+      -1
+    ],
+    [
+      "WWDG_IRQn",
+      0
+    ],
+    [
+      "PVM_VDDIO2_IRQn",
+      1
+    ],
+    [
+      "RTC_IRQn",
+      2
+    ],
+    [
+      "FLASH_IRQn",
+      3
+    ],
+    [
+      "RCC_CRS_IRQn",
+      4
+    ],
+    [
+      "EXTI0_1_IRQn",
+      5
+    ],
+    [
+      "EXTI2_3_IRQn",
+      6
+    ],
+    [
+      "EXTI4_15_IRQn",
+      7
+    ],
+    [
+      "USB_DRD_FS_IRQn",
+      8
+    ],
+    [
+      "DMA1_Channel1_IRQn",
+      9
+    ],
+    [
+      "DMA1_Channel2_3_IRQn",
+      10
+    ],
+    [
+      "DMAMUX1_DMA1_CH4_5_IRQn",
+      11
+    ],
+    [
+      "ADC1_IRQn",
+      12
+    ],
+    [
+      "TIM1_BRK_UP_TRG_COM_IRQn",
+      13
+    ],
+    [
+      "TIM1_CC_IRQn",
+      14
+    ],
+    [
+      "TIM2_IRQn",
+      15
+    ],
+    [
+      "TIM3_IRQn",
+      16
+    ],
+    [
+      "TIM14_IRQn",
+      19
+    ],
+    [
+      "TIM16_IRQn",
+      21
+    ],
+    [
+      "TIM17_IRQn",
+      22
+    ],
+    [
+      "I2C1_IRQn",
+      23
+    ],
+    [
+      "I2C2_IRQn",
+      24
+    ],
+    [
+      "SPI1_IRQn",
+      25
+    ],
+    [
+      "SPI2_IRQn",
+      26
+    ],
+    [
+      "USART1_IRQn",
+      27
+    ],
+    [
+      "USART2_IRQn",
+      28
+    ]
+  ],
+  "irq_header_sha256": "fa5f83d0763b0446aff74182074f52343fc0f2056e54661469e4ed8605484361",
+  "irq_evidence_source": "C:\\Users\\chdxm\\STM32Cube\\Repository\\STM32Cube_FW_C0_V1.4.1\\Drivers\\CMSIS\\Device\\ST\\STM32C0xx\\Include\\stm32c071xx.h"
+}

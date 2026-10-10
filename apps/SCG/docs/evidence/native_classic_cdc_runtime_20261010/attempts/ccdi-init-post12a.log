@@ -1,0 +1,3068 @@
+FFFFFFFFFFFFFFFFEEEE                                                     [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_real_driver_timestamps_are_sampled_before_irq_locks[normal] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a'), _trace=<pluggy._t...etemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_radio_executables(tmp_path_factory):
+        compiler=shutil.which('gcc')
+        if compiler is None:pytest.skip('Host GCC unavailable')
+        root=Path(__file__).resolve().parents[1]
+        core=root/'plugins/builtin/silverstar_core_0_1_0/payload'
+        radio=root/'plugins/builtin/silverstar_device_telemetry_sx1281/payload'
+        build=tmp_path_factory.mktemp('native-radio')
+        source=radio/'Devices/Telemetry/SX1281/Src/sx1281_device.c'
+>       (build/'sx1281_device.c').write_bytes(NativeRadioDevice_Derive(source.read_bytes()))
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_radio.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+original = b'#include "sx1281_device.h"\r\n\r\n#include <string.h>\r\n\r\n#include "project_resources.h"\r\n#include "silverstar_...n (result == PLATFORM_OK) && (frontend_off != 0U) ? LoraDeactivateResult_Ok : LoraDeactivateResult_PortError;\r\n}\r\n'
+
+    def NativeRadioDevice_Derive(original: bytes) -> bytes:
+        if hashlib.sha256(original).hexdigest() != '56ee9b35e54535249816363d0328120a6018f157ce51f8bad93185ebea78428c':
+            raise ValueError('Native radio device payload changed; review timestamp/IRQ ownership')
+        source=original.decode('utf-8-sig')
+        contracts=(('Lora_RadioFault',1,0),('Lora_TxResultGet',1,0),('Lora_DiagnosticsRefresh',2,0),
+            ('Lora_TxReceiptRecord',1,0),('Lora_ForceRxContinuousDirect',1,1),
+            ('Lora_ControlResultGet',1,0),('Lora_ControlProcess',1,0))
+        for name,expected_times,lock_index in contracts:
+            start,_opening,end=NativeC_FunctionSpanGet(source,name)
+            function=source[start:end]
+            times=list(re.finditer(r'\bPlatformTime_Ms\(\)',function))
+            locks=list(re.finditer(r'(?m)^    (?:uint32_t )?primask = Lora_IrqLock\(\);',function))
+            expected_locks=2 if name in {'Lora_ForceRxContinuousDirect','Lora_ControlProcess'} else 1
+            if len(times)!=expected_times or len(locks)!=expected_locks or times[-1].start()<locks[lock_index].start():
+                raise ValueError('Native radio timestamp/lock boundary changed: '+name)
+            # ISR only latches DIO; the sole main owner samples time immediately
+            # before its state lock. The earlier diagnostic refresh probe stays live.
+            time=times[-1]
+            function=function[:time.start()]+'native_now_ms'+function[time.end():]
+            lock=locks[lock_index]
+            function=(function[:lock.start()]+'    uint32_t native_now_ms = PlatformTime_Ms();\n'+
+                function[lock.start():])
+            if name == 'Lora_ControlProcess':
+                # Construct one coherent result locally for both timeout and normal
+                # completion. The timeout publishes the complete value under the
+                # same lock, instead of duplicating field-by-field publication.
+                initial = '''    result.transaction_id = s_control_transaction.transaction_id;
+        result.raw_irq_before = 0U;
+    '''
+                timeout = '''        s_control_transaction.result.transaction_id =
+                s_control_transaction.transaction_id;
+            s_control_transaction.result.result = LORA_DIAG_RESULT_TIMEOUT;
+            s_control_transaction.result.raw_irq_before = 0U;'''
+                if function.count(initial) != 1 or function.count(timeout) != 1:
+>                   raise ValueError('Native control result publication profile changed')
+E                   ValueError: Native control result publication profile changed
+
+.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_radio.py:61: ValueError
+_ ERROR at setup of test_real_driver_timestamps_are_sampled_before_irq_locks[reinit] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a'), _trace=<pluggy._t...etemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_radio_executables(tmp_path_factory):
+        compiler=shutil.which('gcc')
+        if compiler is None:pytest.skip('Host GCC unavailable')
+        root=Path(__file__).resolve().parents[1]
+        core=root/'plugins/builtin/silverstar_core_0_1_0/payload'
+        radio=root/'plugins/builtin/silverstar_device_telemetry_sx1281/payload'
+        build=tmp_path_factory.mktemp('native-radio')
+        source=radio/'Devices/Telemetry/SX1281/Src/sx1281_device.c'
+>       (build/'sx1281_device.c').write_bytes(NativeRadioDevice_Derive(source.read_bytes()))
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_radio.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+original = b'#include "sx1281_device.h"\r\n\r\n#include <string.h>\r\n\r\n#include "project_resources.h"\r\n#include "silverstar_...n (result == PLATFORM_OK) && (frontend_off != 0U) ? LoraDeactivateResult_Ok : LoraDeactivateResult_PortError;\r\n}\r\n'
+
+    def NativeRadioDevice_Derive(original: bytes) -> bytes:
+        if hashlib.sha256(original).hexdigest() != '56ee9b35e54535249816363d0328120a6018f157ce51f8bad93185ebea78428c':
+            raise ValueError('Native radio device payload changed; review timestamp/IRQ ownership')
+        source=original.decode('utf-8-sig')
+        contracts=(('Lora_RadioFault',1,0),('Lora_TxResultGet',1,0),('Lora_DiagnosticsRefresh',2,0),
+            ('Lora_TxReceiptRecord',1,0),('Lora_ForceRxContinuousDirect',1,1),
+            ('Lora_ControlResultGet',1,0),('Lora_ControlProcess',1,0))
+        for name,expected_times,lock_index in contracts:
+            start,_opening,end=NativeC_FunctionSpanGet(source,name)
+            function=source[start:end]
+            times=list(re.finditer(r'\bPlatformTime_Ms\(\)',function))
+            locks=list(re.finditer(r'(?m)^    (?:uint32_t )?primask = Lora_IrqLock\(\);',function))
+            expected_locks=2 if name in {'Lora_ForceRxContinuousDirect','Lora_ControlProcess'} else 1
+            if len(times)!=expected_times or len(locks)!=expected_locks or times[-1].start()<locks[lock_index].start():
+                raise ValueError('Native radio timestamp/lock boundary changed: '+name)
+            # ISR only latches DIO; the sole main owner samples time immediately
+            # before its state lock. The earlier diagnostic refresh probe stays live.
+            time=times[-1]
+            function=function[:time.start()]+'native_now_ms'+function[time.end():]
+            lock=locks[lock_index]
+            function=(function[:lock.start()]+'    uint32_t native_now_ms = PlatformTime_Ms();\n'+
+                function[lock.start():])
+            if name == 'Lora_ControlProcess':
+                # Construct one coherent result locally for both timeout and normal
+                # completion. The timeout publishes the complete value under the
+                # same lock, instead of duplicating field-by-field publication.
+                initial = '''    result.transaction_id = s_control_transaction.transaction_id;
+        result.raw_irq_before = 0U;
+    '''
+                timeout = '''        s_control_transaction.result.transaction_id =
+                s_control_transaction.transaction_id;
+            s_control_transaction.result.result = LORA_DIAG_RESULT_TIMEOUT;
+            s_control_transaction.result.raw_irq_before = 0U;'''
+                if function.count(initial) != 1 or function.count(timeout) != 1:
+>                   raise ValueError('Native control result publication profile changed')
+E                   ValueError: Native control result publication profile changed
+
+.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_radio.py:61: ValueError
+_ ERROR at setup of test_real_driver_timestamps_are_sampled_before_irq_locks[deactivate] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a'), _trace=<pluggy._t...etemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_radio_executables(tmp_path_factory):
+        compiler=shutil.which('gcc')
+        if compiler is None:pytest.skip('Host GCC unavailable')
+        root=Path(__file__).resolve().parents[1]
+        core=root/'plugins/builtin/silverstar_core_0_1_0/payload'
+        radio=root/'plugins/builtin/silverstar_device_telemetry_sx1281/payload'
+        build=tmp_path_factory.mktemp('native-radio')
+        source=radio/'Devices/Telemetry/SX1281/Src/sx1281_device.c'
+>       (build/'sx1281_device.c').write_bytes(NativeRadioDevice_Derive(source.read_bytes()))
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_radio.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+original = b'#include "sx1281_device.h"\r\n\r\n#include <string.h>\r\n\r\n#include "project_resources.h"\r\n#include "silverstar_...n (result == PLATFORM_OK) && (frontend_off != 0U) ? LoraDeactivateResult_Ok : LoraDeactivateResult_PortError;\r\n}\r\n'
+
+    def NativeRadioDevice_Derive(original: bytes) -> bytes:
+        if hashlib.sha256(original).hexdigest() != '56ee9b35e54535249816363d0328120a6018f157ce51f8bad93185ebea78428c':
+            raise ValueError('Native radio device payload changed; review timestamp/IRQ ownership')
+        source=original.decode('utf-8-sig')
+        contracts=(('Lora_RadioFault',1,0),('Lora_TxResultGet',1,0),('Lora_DiagnosticsRefresh',2,0),
+            ('Lora_TxReceiptRecord',1,0),('Lora_ForceRxContinuousDirect',1,1),
+            ('Lora_ControlResultGet',1,0),('Lora_ControlProcess',1,0))
+        for name,expected_times,lock_index in contracts:
+            start,_opening,end=NativeC_FunctionSpanGet(source,name)
+            function=source[start:end]
+            times=list(re.finditer(r'\bPlatformTime_Ms\(\)',function))
+            locks=list(re.finditer(r'(?m)^    (?:uint32_t )?primask = Lora_IrqLock\(\);',function))
+            expected_locks=2 if name in {'Lora_ForceRxContinuousDirect','Lora_ControlProcess'} else 1
+            if len(times)!=expected_times or len(locks)!=expected_locks or times[-1].start()<locks[lock_index].start():
+                raise ValueError('Native radio timestamp/lock boundary changed: '+name)
+            # ISR only latches DIO; the sole main owner samples time immediately
+            # before its state lock. The earlier diagnostic refresh probe stays live.
+            time=times[-1]
+            function=function[:time.start()]+'native_now_ms'+function[time.end():]
+            lock=locks[lock_index]
+            function=(function[:lock.start()]+'    uint32_t native_now_ms = PlatformTime_Ms();\n'+
+                function[lock.start():])
+            if name == 'Lora_ControlProcess':
+                # Construct one coherent result locally for both timeout and normal
+                # completion. The timeout publishes the complete value under the
+                # same lock, instead of duplicating field-by-field publication.
+                initial = '''    result.transaction_id = s_control_transaction.transaction_id;
+        result.raw_irq_before = 0U;
+    '''
+                timeout = '''        s_control_transaction.result.transaction_id =
+                s_control_transaction.transaction_id;
+            s_control_transaction.result.result = LORA_DIAG_RESULT_TIMEOUT;
+            s_control_transaction.result.raw_irq_before = 0U;'''
+                if function.count(initial) != 1 or function.count(timeout) != 1:
+>                   raise ValueError('Native control result publication profile changed')
+E                   ValueError: Native control result publication profile changed
+
+.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_radio.py:61: ValueError
+__ ERROR at setup of test_actual_owner_diagnostics_controls_and_tx_rx_loops ___
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a'), _trace=<pluggy._t...etemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_radio_executables(tmp_path_factory):
+        compiler=shutil.which('gcc')
+        if compiler is None:pytest.skip('Host GCC unavailable')
+        root=Path(__file__).resolve().parents[1]
+        core=root/'plugins/builtin/silverstar_core_0_1_0/payload'
+        radio=root/'plugins/builtin/silverstar_device_telemetry_sx1281/payload'
+        build=tmp_path_factory.mktemp('native-radio')
+        source=radio/'Devices/Telemetry/SX1281/Src/sx1281_device.c'
+>       (build/'sx1281_device.c').write_bytes(NativeRadioDevice_Derive(source.read_bytes()))
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_radio.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+original = b'#include "sx1281_device.h"\r\n\r\n#include <string.h>\r\n\r\n#include "project_resources.h"\r\n#include "silverstar_...n (result == PLATFORM_OK) && (frontend_off != 0U) ? LoraDeactivateResult_Ok : LoraDeactivateResult_PortError;\r\n}\r\n'
+
+    def NativeRadioDevice_Derive(original: bytes) -> bytes:
+        if hashlib.sha256(original).hexdigest() != '56ee9b35e54535249816363d0328120a6018f157ce51f8bad93185ebea78428c':
+            raise ValueError('Native radio device payload changed; review timestamp/IRQ ownership')
+        source=original.decode('utf-8-sig')
+        contracts=(('Lora_RadioFault',1,0),('Lora_TxResultGet',1,0),('Lora_DiagnosticsRefresh',2,0),
+            ('Lora_TxReceiptRecord',1,0),('Lora_ForceRxContinuousDirect',1,1),
+            ('Lora_ControlResultGet',1,0),('Lora_ControlProcess',1,0))
+        for name,expected_times,lock_index in contracts:
+            start,_opening,end=NativeC_FunctionSpanGet(source,name)
+            function=source[start:end]
+            times=list(re.finditer(r'\bPlatformTime_Ms\(\)',function))
+            locks=list(re.finditer(r'(?m)^    (?:uint32_t )?primask = Lora_IrqLock\(\);',function))
+            expected_locks=2 if name in {'Lora_ForceRxContinuousDirect','Lora_ControlProcess'} else 1
+            if len(times)!=expected_times or len(locks)!=expected_locks or times[-1].start()<locks[lock_index].start():
+                raise ValueError('Native radio timestamp/lock boundary changed: '+name)
+            # ISR only latches DIO; the sole main owner samples time immediately
+            # before its state lock. The earlier diagnostic refresh probe stays live.
+            time=times[-1]
+            function=function[:time.start()]+'native_now_ms'+function[time.end():]
+            lock=locks[lock_index]
+            function=(function[:lock.start()]+'    uint32_t native_now_ms = PlatformTime_Ms();\n'+
+                function[lock.start():])
+            if name == 'Lora_ControlProcess':
+                # Construct one coherent result locally for both timeout and normal
+                # completion. The timeout publishes the complete value under the
+                # same lock, instead of duplicating field-by-field publication.
+                initial = '''    result.transaction_id = s_control_transaction.transaction_id;
+        result.raw_irq_before = 0U;
+    '''
+                timeout = '''        s_control_transaction.result.transaction_id =
+                s_control_transaction.transaction_id;
+            s_control_transaction.result.result = LORA_DIAG_RESULT_TIMEOUT;
+            s_control_transaction.result.raw_irq_before = 0U;'''
+                if function.count(initial) != 1 or function.count(timeout) != 1:
+>                   raise ValueError('Native control result publication profile changed')
+E                   ValueError: Native control result publication profile changed
+
+.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_radio.py:61: ValueError
+================================== FAILURES ===================================
+____ test_native_lifecycle_prevents_early_and_faulted_publication[normal] _____
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a/test_native_lifecycle_prevents_267d17be')
+scenario = 'normal'
+
+    @pytest.mark.parametrize('scenario', ['normal','clock-init','platform-init','radio-init','pc-init',
+        'clock-during-init','clock-before-process','clock-during-process','pc-transient','radio-transient','retirement',
+        'unknown-init','unknown-process','usb-retirement','radio-not-initialized','radio-unverified'])
+    def test_native_lifecycle_prevents_early_and_faulted_publication(tmp_path, scenario):
+        compiler=shutil.which('gcc')
+        if compiler is None:
+            pytest.skip('Host GCC unavailable')
+        for path,content in NativeRuntime_FilesRender().items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        headers={
+            'native_clock.h':'''#include <stdint.h>
+    typedef enum { NativeClockResult_Ok, NativeClockResult_Stopped } NativeClockResult;
+    NativeClockResult NativeClock_StatusGet(void);
+    NativeClockResult NativeClock_DelayUs(uint32_t delay);
+    NativeClockResult NativeClock_Read(uint64_t *time);
+    ''',
+            'native_platform.h':'''#include "platform_types.h"
+    PlatformResult NativePlatform_Init(void);
+    void NativePlatform_Quiesce(void);
+    ''',
+            'ground_bridge.h':'''#include <stdint.h>
+    typedef enum { GROUND_BRIDGE_OK, GROUND_BRIDGE_RADIO_ERROR, GROUND_BRIDGE_PC_ERROR } GroundBridgeResult;
+    GroundBridgeResult GroundBridge_Init(void);
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms);
+    void GroundBridge_PcReset(void);
+    ''',
+            'pc_byte_stream.h':'void PcByteStream_OnUsbReset(void);\n',
+            'native_usb_state.h':'''typedef enum { NativeUsbResult_Ok, NativeUsbResult_Failure } NativeUsbResult;
+    NativeUsbResult NativeUsb_Stop(void);
+    ''',
+            'sx1281_device.h':'''#include <stdint.h>
+    typedef enum { LoraDeactivateResult_Ok, LoraDeactivateResult_PortError } LoraDeactivateResult;
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance);
+    typedef enum { LORA_DIAG_RESULT_OK, LORA_DIAG_RESULT_NOT_INIT } LoraDiagResult;
+    typedef struct { uint16_t firmware_version; uint8_t status_value; uint8_t verified; } LoraChipStatus;
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status);
+    ''',
+            'silverstar_assert.h':'''#include <assert.h>
+    #define SILVERSTAR_ASSERT_MODULE_GENERATED 1U
+    #define SILVERSTAR_ASSERT_REASON_STATE_INVARIANT 1U
+    #define SILVERSTAR_ASSERT(p,m,r) assert(p)
+    '''}
+        for path,content in headers.items():
+            (tmp_path/path).write_text(content,encoding='utf-8')
+        harness='''#include "native_runtime.h"
+    #include "native_clock.h"
+    #include "native_platform.h"
+    #include "platform_time.h"
+    #include "ground_bridge.h"
+    #include "sx1281_device.h"
+    #include "pc_byte_stream.h"
+    #include "native_usb_state.h"
+    #include <assert.h>
+    #include <string.h>
+    static NativeClockResult clock_result=NativeClockResult_Ok;
+    static PlatformResult clock_init=PLATFORM_OK,platform_init=PLATFORM_OK;
+    static GroundBridgeResult bridge_init=GROUND_BRIDGE_OK,bridge_process=GROUND_BRIDGE_OK;
+    static uint8_t clock_bad_init,clock_bad_process,retirement_bad,usb_retirement_bad;
+    static uint8_t radio_not_initialized,radio_unverified;
+    static uint32_t retired,quiesced,pc_reset,bridge_reset,process_calls,published;
+    NativeClockResult NativeClock_StatusGet(void) { return clock_result; }
+    NativeClockResult NativeClock_DelayUs(uint32_t delay) { assert(delay==1U);return clock_result; }
+    NativeClockResult NativeClock_Read(uint64_t *time)
+    { if (clock_result!=NativeClockResult_Ok) { return clock_result; } *time=1234000ULL;return clock_result; }
+    PlatformResult PlatformTime_Init(void) { return clock_init; }
+    PlatformResult NativePlatform_Init(void) { return platform_init; }
+    void NativePlatform_Quiesce(void)
+    { assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));quiesced++; }
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status)
+    {
+        assert(instance==0U && status!=0 && NativeRuntime_ReadyGet()==0U);
+        if (radio_not_initialized!=0U) { return LORA_DIAG_RESULT_NOT_INIT; }
+        status->firmware_version=0x1234U;status->status_value=0U;
+        status->verified=radio_unverified!=0U ? 0U : 1U;
+        return LORA_DIAG_RESULT_OK;
+    }
+    GroundBridgeResult GroundBridge_Init(void)
+    {
+        /* The real bridge tries to flush its initial STATUS before returning. */
+        assert(NativeRuntime_ReadyGet()==0U);
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        if (clock_bad_init!=0U) { clock_result=NativeClockResult_Stopped; }
+        return bridge_init;
+    }
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
+    {
+        assert(now_ms==1234U);process_calls++;
+        if (clock_bad_process!=0U) { clock_result=NativeClockResult_Stopped; }
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        return bridge_process;
+    }
+    void GroundBridge_PcReset(void) { assert(NativeRuntime_ReadyGet()==0U);bridge_reset++; }
+    void PcByteStream_OnUsbReset(void) { assert(NativeRuntime_ReadyGet()==0U);pc_reset++; }
+    NativeUsbResult NativeUsb_Stop(void)
+    { assert(NativeRuntime_ReadyGet()==0U);return usb_retirement_bad!=0U ? NativeUsbResult_Failure : NativeUsbResult_Ok; }
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance)
+    { assert(instance==0U && quiesced==0U && NativeRuntime_ReadyGet()==0U);retired++;
+      return retirement_bad!=0U ? LoraDeactivateResult_PortError : LoraDeactivateResult_Ok; }
+    int main(int argc,char **argv)
+    {
+        assert(argc==2);assert(NativeRuntime_ReadyGet()==0U);
+        assert(NativeRuntime_Process()==NativeRuntimeResult_NotReady);
+        if (strcmp(argv[1],"clock-init")==0) { clock_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"platform-init")==0) { platform_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"radio-init")==0) { bridge_init=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"pc-init")==0) { bridge_init=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"clock-during-init")==0) { clock_bad_init=1U; }
+        if (strcmp(argv[1],"unknown-init")==0) { bridge_init=(GroundBridgeResult)99; }
+        if (strcmp(argv[1],"radio-not-initialized")==0) { radio_not_initialized=1U; }
+        if (strcmp(argv[1],"radio-unverified")==0) { radio_unverified=1U; }
+        NativeRuntimeResult init=NativeRuntime_Init();assert(published==0U);
+        if (radio_not_initialized!=0U || radio_unverified!=0U)
+        { assert(init==NativeRuntimeResult_RadioFailure); }
+        if (init!=NativeRuntimeResult_Ok)
+        {
+            if (strcmp(argv[1],"unknown-init")==0) { assert(init==NativeRuntimeResult_NotReady); }
+            assert(NativeRuntime_ReadyGet()==0U && pc_reset==1U && bridge_reset==1U && quiesced==1U);
+            assert(NativeRuntime_Process()==init && process_calls==0U);
+            assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));
+            assert(NativeRuntime_Init()==NativeRuntimeResult_NotReady);return 0;
+        }
+        assert(NativeRuntime_ReadyGet()==1U);
+        if (strcmp(argv[1],"clock-before-process")==0) { clock_result=NativeClockResult_Stopped; }
+        if (strcmp(argv[1],"clock-during-process")==0) { clock_bad_process=1U; }
+        if (strcmp(argv[1],"pc-transient")==0) { bridge_process=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"radio-transient")==0) { bridge_process=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"retirement")==0) { clock_bad_process=1U;retirement_bad=1U; }
+        if (strcmp(argv[1],"usb-retirement")==0) { clock_bad_process=1U;usb_retirement_bad=1U; }
+        if (strcmp(argv[1],"unknown-process")==0) { bridge_process=(GroundBridgeResult)99; }
+        NativeRuntimeResult result=NativeRuntime_Process();
+        if (strcmp(argv[1],"unknown-process")==0)
+        {
+            assert(result==NativeRuntimeResult_NotReady && NativeRuntime_ReadyGet()==0U);
+            assert(retired==1U && quiesced==1U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);return 0;
+        }
+        if (clock_result!=NativeClockResult_Ok)
+        {
+            assert(result==((retirement_bad!=0U || usb_retirement_bad!=0U) ? NativeRuntimeResult_RetirementFailure : NativeRuntimeResult_ClockFailure));
+            assert(NativeRuntime_ReadyGet()==0U && retired==1U && quiesced==1U);
+            assert(published==0U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);
+        }
+        else
+        {
+            assert(NativeRuntime_ReadyGet()==1U && retired==0U && pc_reset==0U && published==1U);
+            assert(result==(bridge_process==GROUND_BRIDGE_OK ? NativeRuntimeResult_Ok :
+                bridge_process==GROUND_BRIDGE_PC_ERROR ? NativeRuntimeResult_PcFailure : NativeRuntimeResult_RadioFailure));
+        }
+        return 0;
+    }
+    '''
+        (tmp_path/'test.c').write_text(harness,encoding='utf-8')
+        api=Path(__file__).resolve().parents[1]/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion',
+            '-Wsign-conversion','-Wshadow','-Wundef','-Wstrict-prototypes','-Wmissing-prototypes','-Wswitch-enum',
+            '-fanalyzer','-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),
+            str(tmp_path/'Generated/Src/native_runtime.c'),str(tmp_path/'test.c'),'-o',str(tmp_path/'test.exe')]
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_267d17be\test.c: In function 'Lora_ChipStatusGet':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_267d17be\test.c:30:22: error: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} may change value [-Werror=conversion]
+E            30 |     status->verified=radio_unverified!=0U ? 0U : 1U;
+E               |                      ^~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...rified!=0U ? 0U : 1U;\n      |                      ^~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_runtime.py:167: AssertionError
+__ test_native_lifecycle_prevents_early_and_faulted_publication[clock-init] ___
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a/test_native_lifecycle_prevents_4944671d')
+scenario = 'clock-init'
+
+    @pytest.mark.parametrize('scenario', ['normal','clock-init','platform-init','radio-init','pc-init',
+        'clock-during-init','clock-before-process','clock-during-process','pc-transient','radio-transient','retirement',
+        'unknown-init','unknown-process','usb-retirement','radio-not-initialized','radio-unverified'])
+    def test_native_lifecycle_prevents_early_and_faulted_publication(tmp_path, scenario):
+        compiler=shutil.which('gcc')
+        if compiler is None:
+            pytest.skip('Host GCC unavailable')
+        for path,content in NativeRuntime_FilesRender().items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        headers={
+            'native_clock.h':'''#include <stdint.h>
+    typedef enum { NativeClockResult_Ok, NativeClockResult_Stopped } NativeClockResult;
+    NativeClockResult NativeClock_StatusGet(void);
+    NativeClockResult NativeClock_DelayUs(uint32_t delay);
+    NativeClockResult NativeClock_Read(uint64_t *time);
+    ''',
+            'native_platform.h':'''#include "platform_types.h"
+    PlatformResult NativePlatform_Init(void);
+    void NativePlatform_Quiesce(void);
+    ''',
+            'ground_bridge.h':'''#include <stdint.h>
+    typedef enum { GROUND_BRIDGE_OK, GROUND_BRIDGE_RADIO_ERROR, GROUND_BRIDGE_PC_ERROR } GroundBridgeResult;
+    GroundBridgeResult GroundBridge_Init(void);
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms);
+    void GroundBridge_PcReset(void);
+    ''',
+            'pc_byte_stream.h':'void PcByteStream_OnUsbReset(void);\n',
+            'native_usb_state.h':'''typedef enum { NativeUsbResult_Ok, NativeUsbResult_Failure } NativeUsbResult;
+    NativeUsbResult NativeUsb_Stop(void);
+    ''',
+            'sx1281_device.h':'''#include <stdint.h>
+    typedef enum { LoraDeactivateResult_Ok, LoraDeactivateResult_PortError } LoraDeactivateResult;
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance);
+    typedef enum { LORA_DIAG_RESULT_OK, LORA_DIAG_RESULT_NOT_INIT } LoraDiagResult;
+    typedef struct { uint16_t firmware_version; uint8_t status_value; uint8_t verified; } LoraChipStatus;
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status);
+    ''',
+            'silverstar_assert.h':'''#include <assert.h>
+    #define SILVERSTAR_ASSERT_MODULE_GENERATED 1U
+    #define SILVERSTAR_ASSERT_REASON_STATE_INVARIANT 1U
+    #define SILVERSTAR_ASSERT(p,m,r) assert(p)
+    '''}
+        for path,content in headers.items():
+            (tmp_path/path).write_text(content,encoding='utf-8')
+        harness='''#include "native_runtime.h"
+    #include "native_clock.h"
+    #include "native_platform.h"
+    #include "platform_time.h"
+    #include "ground_bridge.h"
+    #include "sx1281_device.h"
+    #include "pc_byte_stream.h"
+    #include "native_usb_state.h"
+    #include <assert.h>
+    #include <string.h>
+    static NativeClockResult clock_result=NativeClockResult_Ok;
+    static PlatformResult clock_init=PLATFORM_OK,platform_init=PLATFORM_OK;
+    static GroundBridgeResult bridge_init=GROUND_BRIDGE_OK,bridge_process=GROUND_BRIDGE_OK;
+    static uint8_t clock_bad_init,clock_bad_process,retirement_bad,usb_retirement_bad;
+    static uint8_t radio_not_initialized,radio_unverified;
+    static uint32_t retired,quiesced,pc_reset,bridge_reset,process_calls,published;
+    NativeClockResult NativeClock_StatusGet(void) { return clock_result; }
+    NativeClockResult NativeClock_DelayUs(uint32_t delay) { assert(delay==1U);return clock_result; }
+    NativeClockResult NativeClock_Read(uint64_t *time)
+    { if (clock_result!=NativeClockResult_Ok) { return clock_result; } *time=1234000ULL;return clock_result; }
+    PlatformResult PlatformTime_Init(void) { return clock_init; }
+    PlatformResult NativePlatform_Init(void) { return platform_init; }
+    void NativePlatform_Quiesce(void)
+    { assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));quiesced++; }
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status)
+    {
+        assert(instance==0U && status!=0 && NativeRuntime_ReadyGet()==0U);
+        if (radio_not_initialized!=0U) { return LORA_DIAG_RESULT_NOT_INIT; }
+        status->firmware_version=0x1234U;status->status_value=0U;
+        status->verified=radio_unverified!=0U ? 0U : 1U;
+        return LORA_DIAG_RESULT_OK;
+    }
+    GroundBridgeResult GroundBridge_Init(void)
+    {
+        /* The real bridge tries to flush its initial STATUS before returning. */
+        assert(NativeRuntime_ReadyGet()==0U);
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        if (clock_bad_init!=0U) { clock_result=NativeClockResult_Stopped; }
+        return bridge_init;
+    }
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
+    {
+        assert(now_ms==1234U);process_calls++;
+        if (clock_bad_process!=0U) { clock_result=NativeClockResult_Stopped; }
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        return bridge_process;
+    }
+    void GroundBridge_PcReset(void) { assert(NativeRuntime_ReadyGet()==0U);bridge_reset++; }
+    void PcByteStream_OnUsbReset(void) { assert(NativeRuntime_ReadyGet()==0U);pc_reset++; }
+    NativeUsbResult NativeUsb_Stop(void)
+    { assert(NativeRuntime_ReadyGet()==0U);return usb_retirement_bad!=0U ? NativeUsbResult_Failure : NativeUsbResult_Ok; }
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance)
+    { assert(instance==0U && quiesced==0U && NativeRuntime_ReadyGet()==0U);retired++;
+      return retirement_bad!=0U ? LoraDeactivateResult_PortError : LoraDeactivateResult_Ok; }
+    int main(int argc,char **argv)
+    {
+        assert(argc==2);assert(NativeRuntime_ReadyGet()==0U);
+        assert(NativeRuntime_Process()==NativeRuntimeResult_NotReady);
+        if (strcmp(argv[1],"clock-init")==0) { clock_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"platform-init")==0) { platform_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"radio-init")==0) { bridge_init=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"pc-init")==0) { bridge_init=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"clock-during-init")==0) { clock_bad_init=1U; }
+        if (strcmp(argv[1],"unknown-init")==0) { bridge_init=(GroundBridgeResult)99; }
+        if (strcmp(argv[1],"radio-not-initialized")==0) { radio_not_initialized=1U; }
+        if (strcmp(argv[1],"radio-unverified")==0) { radio_unverified=1U; }
+        NativeRuntimeResult init=NativeRuntime_Init();assert(published==0U);
+        if (radio_not_initialized!=0U || radio_unverified!=0U)
+        { assert(init==NativeRuntimeResult_RadioFailure); }
+        if (init!=NativeRuntimeResult_Ok)
+        {
+            if (strcmp(argv[1],"unknown-init")==0) { assert(init==NativeRuntimeResult_NotReady); }
+            assert(NativeRuntime_ReadyGet()==0U && pc_reset==1U && bridge_reset==1U && quiesced==1U);
+            assert(NativeRuntime_Process()==init && process_calls==0U);
+            assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));
+            assert(NativeRuntime_Init()==NativeRuntimeResult_NotReady);return 0;
+        }
+        assert(NativeRuntime_ReadyGet()==1U);
+        if (strcmp(argv[1],"clock-before-process")==0) { clock_result=NativeClockResult_Stopped; }
+        if (strcmp(argv[1],"clock-during-process")==0) { clock_bad_process=1U; }
+        if (strcmp(argv[1],"pc-transient")==0) { bridge_process=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"radio-transient")==0) { bridge_process=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"retirement")==0) { clock_bad_process=1U;retirement_bad=1U; }
+        if (strcmp(argv[1],"usb-retirement")==0) { clock_bad_process=1U;usb_retirement_bad=1U; }
+        if (strcmp(argv[1],"unknown-process")==0) { bridge_process=(GroundBridgeResult)99; }
+        NativeRuntimeResult result=NativeRuntime_Process();
+        if (strcmp(argv[1],"unknown-process")==0)
+        {
+            assert(result==NativeRuntimeResult_NotReady && NativeRuntime_ReadyGet()==0U);
+            assert(retired==1U && quiesced==1U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);return 0;
+        }
+        if (clock_result!=NativeClockResult_Ok)
+        {
+            assert(result==((retirement_bad!=0U || usb_retirement_bad!=0U) ? NativeRuntimeResult_RetirementFailure : NativeRuntimeResult_ClockFailure));
+            assert(NativeRuntime_ReadyGet()==0U && retired==1U && quiesced==1U);
+            assert(published==0U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);
+        }
+        else
+        {
+            assert(NativeRuntime_ReadyGet()==1U && retired==0U && pc_reset==0U && published==1U);
+            assert(result==(bridge_process==GROUND_BRIDGE_OK ? NativeRuntimeResult_Ok :
+                bridge_process==GROUND_BRIDGE_PC_ERROR ? NativeRuntimeResult_PcFailure : NativeRuntimeResult_RadioFailure));
+        }
+        return 0;
+    }
+    '''
+        (tmp_path/'test.c').write_text(harness,encoding='utf-8')
+        api=Path(__file__).resolve().parents[1]/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion',
+            '-Wsign-conversion','-Wshadow','-Wundef','-Wstrict-prototypes','-Wmissing-prototypes','-Wswitch-enum',
+            '-fanalyzer','-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),
+            str(tmp_path/'Generated/Src/native_runtime.c'),str(tmp_path/'test.c'),'-o',str(tmp_path/'test.exe')]
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_4944671d\test.c: In function 'Lora_ChipStatusGet':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_4944671d\test.c:30:22: error: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} may change value [-Werror=conversion]
+E            30 |     status->verified=radio_unverified!=0U ? 0U : 1U;
+E               |                      ^~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...rified!=0U ? 0U : 1U;\n      |                      ^~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_runtime.py:167: AssertionError
+_ test_native_lifecycle_prevents_early_and_faulted_publication[platform-init] _
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a/test_native_lifecycle_prevents_c7ed5cd0')
+scenario = 'platform-init'
+
+    @pytest.mark.parametrize('scenario', ['normal','clock-init','platform-init','radio-init','pc-init',
+        'clock-during-init','clock-before-process','clock-during-process','pc-transient','radio-transient','retirement',
+        'unknown-init','unknown-process','usb-retirement','radio-not-initialized','radio-unverified'])
+    def test_native_lifecycle_prevents_early_and_faulted_publication(tmp_path, scenario):
+        compiler=shutil.which('gcc')
+        if compiler is None:
+            pytest.skip('Host GCC unavailable')
+        for path,content in NativeRuntime_FilesRender().items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        headers={
+            'native_clock.h':'''#include <stdint.h>
+    typedef enum { NativeClockResult_Ok, NativeClockResult_Stopped } NativeClockResult;
+    NativeClockResult NativeClock_StatusGet(void);
+    NativeClockResult NativeClock_DelayUs(uint32_t delay);
+    NativeClockResult NativeClock_Read(uint64_t *time);
+    ''',
+            'native_platform.h':'''#include "platform_types.h"
+    PlatformResult NativePlatform_Init(void);
+    void NativePlatform_Quiesce(void);
+    ''',
+            'ground_bridge.h':'''#include <stdint.h>
+    typedef enum { GROUND_BRIDGE_OK, GROUND_BRIDGE_RADIO_ERROR, GROUND_BRIDGE_PC_ERROR } GroundBridgeResult;
+    GroundBridgeResult GroundBridge_Init(void);
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms);
+    void GroundBridge_PcReset(void);
+    ''',
+            'pc_byte_stream.h':'void PcByteStream_OnUsbReset(void);\n',
+            'native_usb_state.h':'''typedef enum { NativeUsbResult_Ok, NativeUsbResult_Failure } NativeUsbResult;
+    NativeUsbResult NativeUsb_Stop(void);
+    ''',
+            'sx1281_device.h':'''#include <stdint.h>
+    typedef enum { LoraDeactivateResult_Ok, LoraDeactivateResult_PortError } LoraDeactivateResult;
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance);
+    typedef enum { LORA_DIAG_RESULT_OK, LORA_DIAG_RESULT_NOT_INIT } LoraDiagResult;
+    typedef struct { uint16_t firmware_version; uint8_t status_value; uint8_t verified; } LoraChipStatus;
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status);
+    ''',
+            'silverstar_assert.h':'''#include <assert.h>
+    #define SILVERSTAR_ASSERT_MODULE_GENERATED 1U
+    #define SILVERSTAR_ASSERT_REASON_STATE_INVARIANT 1U
+    #define SILVERSTAR_ASSERT(p,m,r) assert(p)
+    '''}
+        for path,content in headers.items():
+            (tmp_path/path).write_text(content,encoding='utf-8')
+        harness='''#include "native_runtime.h"
+    #include "native_clock.h"
+    #include "native_platform.h"
+    #include "platform_time.h"
+    #include "ground_bridge.h"
+    #include "sx1281_device.h"
+    #include "pc_byte_stream.h"
+    #include "native_usb_state.h"
+    #include <assert.h>
+    #include <string.h>
+    static NativeClockResult clock_result=NativeClockResult_Ok;
+    static PlatformResult clock_init=PLATFORM_OK,platform_init=PLATFORM_OK;
+    static GroundBridgeResult bridge_init=GROUND_BRIDGE_OK,bridge_process=GROUND_BRIDGE_OK;
+    static uint8_t clock_bad_init,clock_bad_process,retirement_bad,usb_retirement_bad;
+    static uint8_t radio_not_initialized,radio_unverified;
+    static uint32_t retired,quiesced,pc_reset,bridge_reset,process_calls,published;
+    NativeClockResult NativeClock_StatusGet(void) { return clock_result; }
+    NativeClockResult NativeClock_DelayUs(uint32_t delay) { assert(delay==1U);return clock_result; }
+    NativeClockResult NativeClock_Read(uint64_t *time)
+    { if (clock_result!=NativeClockResult_Ok) { return clock_result; } *time=1234000ULL;return clock_result; }
+    PlatformResult PlatformTime_Init(void) { return clock_init; }
+    PlatformResult NativePlatform_Init(void) { return platform_init; }
+    void NativePlatform_Quiesce(void)
+    { assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));quiesced++; }
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status)
+    {
+        assert(instance==0U && status!=0 && NativeRuntime_ReadyGet()==0U);
+        if (radio_not_initialized!=0U) { return LORA_DIAG_RESULT_NOT_INIT; }
+        status->firmware_version=0x1234U;status->status_value=0U;
+        status->verified=radio_unverified!=0U ? 0U : 1U;
+        return LORA_DIAG_RESULT_OK;
+    }
+    GroundBridgeResult GroundBridge_Init(void)
+    {
+        /* The real bridge tries to flush its initial STATUS before returning. */
+        assert(NativeRuntime_ReadyGet()==0U);
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        if (clock_bad_init!=0U) { clock_result=NativeClockResult_Stopped; }
+        return bridge_init;
+    }
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
+    {
+        assert(now_ms==1234U);process_calls++;
+        if (clock_bad_process!=0U) { clock_result=NativeClockResult_Stopped; }
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        return bridge_process;
+    }
+    void GroundBridge_PcReset(void) { assert(NativeRuntime_ReadyGet()==0U);bridge_reset++; }
+    void PcByteStream_OnUsbReset(void) { assert(NativeRuntime_ReadyGet()==0U);pc_reset++; }
+    NativeUsbResult NativeUsb_Stop(void)
+    { assert(NativeRuntime_ReadyGet()==0U);return usb_retirement_bad!=0U ? NativeUsbResult_Failure : NativeUsbResult_Ok; }
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance)
+    { assert(instance==0U && quiesced==0U && NativeRuntime_ReadyGet()==0U);retired++;
+      return retirement_bad!=0U ? LoraDeactivateResult_PortError : LoraDeactivateResult_Ok; }
+    int main(int argc,char **argv)
+    {
+        assert(argc==2);assert(NativeRuntime_ReadyGet()==0U);
+        assert(NativeRuntime_Process()==NativeRuntimeResult_NotReady);
+        if (strcmp(argv[1],"clock-init")==0) { clock_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"platform-init")==0) { platform_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"radio-init")==0) { bridge_init=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"pc-init")==0) { bridge_init=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"clock-during-init")==0) { clock_bad_init=1U; }
+        if (strcmp(argv[1],"unknown-init")==0) { bridge_init=(GroundBridgeResult)99; }
+        if (strcmp(argv[1],"radio-not-initialized")==0) { radio_not_initialized=1U; }
+        if (strcmp(argv[1],"radio-unverified")==0) { radio_unverified=1U; }
+        NativeRuntimeResult init=NativeRuntime_Init();assert(published==0U);
+        if (radio_not_initialized!=0U || radio_unverified!=0U)
+        { assert(init==NativeRuntimeResult_RadioFailure); }
+        if (init!=NativeRuntimeResult_Ok)
+        {
+            if (strcmp(argv[1],"unknown-init")==0) { assert(init==NativeRuntimeResult_NotReady); }
+            assert(NativeRuntime_ReadyGet()==0U && pc_reset==1U && bridge_reset==1U && quiesced==1U);
+            assert(NativeRuntime_Process()==init && process_calls==0U);
+            assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));
+            assert(NativeRuntime_Init()==NativeRuntimeResult_NotReady);return 0;
+        }
+        assert(NativeRuntime_ReadyGet()==1U);
+        if (strcmp(argv[1],"clock-before-process")==0) { clock_result=NativeClockResult_Stopped; }
+        if (strcmp(argv[1],"clock-during-process")==0) { clock_bad_process=1U; }
+        if (strcmp(argv[1],"pc-transient")==0) { bridge_process=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"radio-transient")==0) { bridge_process=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"retirement")==0) { clock_bad_process=1U;retirement_bad=1U; }
+        if (strcmp(argv[1],"usb-retirement")==0) { clock_bad_process=1U;usb_retirement_bad=1U; }
+        if (strcmp(argv[1],"unknown-process")==0) { bridge_process=(GroundBridgeResult)99; }
+        NativeRuntimeResult result=NativeRuntime_Process();
+        if (strcmp(argv[1],"unknown-process")==0)
+        {
+            assert(result==NativeRuntimeResult_NotReady && NativeRuntime_ReadyGet()==0U);
+            assert(retired==1U && quiesced==1U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);return 0;
+        }
+        if (clock_result!=NativeClockResult_Ok)
+        {
+            assert(result==((retirement_bad!=0U || usb_retirement_bad!=0U) ? NativeRuntimeResult_RetirementFailure : NativeRuntimeResult_ClockFailure));
+            assert(NativeRuntime_ReadyGet()==0U && retired==1U && quiesced==1U);
+            assert(published==0U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);
+        }
+        else
+        {
+            assert(NativeRuntime_ReadyGet()==1U && retired==0U && pc_reset==0U && published==1U);
+            assert(result==(bridge_process==GROUND_BRIDGE_OK ? NativeRuntimeResult_Ok :
+                bridge_process==GROUND_BRIDGE_PC_ERROR ? NativeRuntimeResult_PcFailure : NativeRuntimeResult_RadioFailure));
+        }
+        return 0;
+    }
+    '''
+        (tmp_path/'test.c').write_text(harness,encoding='utf-8')
+        api=Path(__file__).resolve().parents[1]/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion',
+            '-Wsign-conversion','-Wshadow','-Wundef','-Wstrict-prototypes','-Wmissing-prototypes','-Wswitch-enum',
+            '-fanalyzer','-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),
+            str(tmp_path/'Generated/Src/native_runtime.c'),str(tmp_path/'test.c'),'-o',str(tmp_path/'test.exe')]
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_c7ed5cd0\test.c: In function 'Lora_ChipStatusGet':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_c7ed5cd0\test.c:30:22: error: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} may change value [-Werror=conversion]
+E            30 |     status->verified=radio_unverified!=0U ? 0U : 1U;
+E               |                      ^~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...rified!=0U ? 0U : 1U;\n      |                      ^~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_runtime.py:167: AssertionError
+__ test_native_lifecycle_prevents_early_and_faulted_publication[radio-init] ___
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a/test_native_lifecycle_prevents_5df5e816')
+scenario = 'radio-init'
+
+    @pytest.mark.parametrize('scenario', ['normal','clock-init','platform-init','radio-init','pc-init',
+        'clock-during-init','clock-before-process','clock-during-process','pc-transient','radio-transient','retirement',
+        'unknown-init','unknown-process','usb-retirement','radio-not-initialized','radio-unverified'])
+    def test_native_lifecycle_prevents_early_and_faulted_publication(tmp_path, scenario):
+        compiler=shutil.which('gcc')
+        if compiler is None:
+            pytest.skip('Host GCC unavailable')
+        for path,content in NativeRuntime_FilesRender().items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        headers={
+            'native_clock.h':'''#include <stdint.h>
+    typedef enum { NativeClockResult_Ok, NativeClockResult_Stopped } NativeClockResult;
+    NativeClockResult NativeClock_StatusGet(void);
+    NativeClockResult NativeClock_DelayUs(uint32_t delay);
+    NativeClockResult NativeClock_Read(uint64_t *time);
+    ''',
+            'native_platform.h':'''#include "platform_types.h"
+    PlatformResult NativePlatform_Init(void);
+    void NativePlatform_Quiesce(void);
+    ''',
+            'ground_bridge.h':'''#include <stdint.h>
+    typedef enum { GROUND_BRIDGE_OK, GROUND_BRIDGE_RADIO_ERROR, GROUND_BRIDGE_PC_ERROR } GroundBridgeResult;
+    GroundBridgeResult GroundBridge_Init(void);
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms);
+    void GroundBridge_PcReset(void);
+    ''',
+            'pc_byte_stream.h':'void PcByteStream_OnUsbReset(void);\n',
+            'native_usb_state.h':'''typedef enum { NativeUsbResult_Ok, NativeUsbResult_Failure } NativeUsbResult;
+    NativeUsbResult NativeUsb_Stop(void);
+    ''',
+            'sx1281_device.h':'''#include <stdint.h>
+    typedef enum { LoraDeactivateResult_Ok, LoraDeactivateResult_PortError } LoraDeactivateResult;
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance);
+    typedef enum { LORA_DIAG_RESULT_OK, LORA_DIAG_RESULT_NOT_INIT } LoraDiagResult;
+    typedef struct { uint16_t firmware_version; uint8_t status_value; uint8_t verified; } LoraChipStatus;
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status);
+    ''',
+            'silverstar_assert.h':'''#include <assert.h>
+    #define SILVERSTAR_ASSERT_MODULE_GENERATED 1U
+    #define SILVERSTAR_ASSERT_REASON_STATE_INVARIANT 1U
+    #define SILVERSTAR_ASSERT(p,m,r) assert(p)
+    '''}
+        for path,content in headers.items():
+            (tmp_path/path).write_text(content,encoding='utf-8')
+        harness='''#include "native_runtime.h"
+    #include "native_clock.h"
+    #include "native_platform.h"
+    #include "platform_time.h"
+    #include "ground_bridge.h"
+    #include "sx1281_device.h"
+    #include "pc_byte_stream.h"
+    #include "native_usb_state.h"
+    #include <assert.h>
+    #include <string.h>
+    static NativeClockResult clock_result=NativeClockResult_Ok;
+    static PlatformResult clock_init=PLATFORM_OK,platform_init=PLATFORM_OK;
+    static GroundBridgeResult bridge_init=GROUND_BRIDGE_OK,bridge_process=GROUND_BRIDGE_OK;
+    static uint8_t clock_bad_init,clock_bad_process,retirement_bad,usb_retirement_bad;
+    static uint8_t radio_not_initialized,radio_unverified;
+    static uint32_t retired,quiesced,pc_reset,bridge_reset,process_calls,published;
+    NativeClockResult NativeClock_StatusGet(void) { return clock_result; }
+    NativeClockResult NativeClock_DelayUs(uint32_t delay) { assert(delay==1U);return clock_result; }
+    NativeClockResult NativeClock_Read(uint64_t *time)
+    { if (clock_result!=NativeClockResult_Ok) { return clock_result; } *time=1234000ULL;return clock_result; }
+    PlatformResult PlatformTime_Init(void) { return clock_init; }
+    PlatformResult NativePlatform_Init(void) { return platform_init; }
+    void NativePlatform_Quiesce(void)
+    { assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));quiesced++; }
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status)
+    {
+        assert(instance==0U && status!=0 && NativeRuntime_ReadyGet()==0U);
+        if (radio_not_initialized!=0U) { return LORA_DIAG_RESULT_NOT_INIT; }
+        status->firmware_version=0x1234U;status->status_value=0U;
+        status->verified=radio_unverified!=0U ? 0U : 1U;
+        return LORA_DIAG_RESULT_OK;
+    }
+    GroundBridgeResult GroundBridge_Init(void)
+    {
+        /* The real bridge tries to flush its initial STATUS before returning. */
+        assert(NativeRuntime_ReadyGet()==0U);
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        if (clock_bad_init!=0U) { clock_result=NativeClockResult_Stopped; }
+        return bridge_init;
+    }
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
+    {
+        assert(now_ms==1234U);process_calls++;
+        if (clock_bad_process!=0U) { clock_result=NativeClockResult_Stopped; }
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        return bridge_process;
+    }
+    void GroundBridge_PcReset(void) { assert(NativeRuntime_ReadyGet()==0U);bridge_reset++; }
+    void PcByteStream_OnUsbReset(void) { assert(NativeRuntime_ReadyGet()==0U);pc_reset++; }
+    NativeUsbResult NativeUsb_Stop(void)
+    { assert(NativeRuntime_ReadyGet()==0U);return usb_retirement_bad!=0U ? NativeUsbResult_Failure : NativeUsbResult_Ok; }
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance)
+    { assert(instance==0U && quiesced==0U && NativeRuntime_ReadyGet()==0U);retired++;
+      return retirement_bad!=0U ? LoraDeactivateResult_PortError : LoraDeactivateResult_Ok; }
+    int main(int argc,char **argv)
+    {
+        assert(argc==2);assert(NativeRuntime_ReadyGet()==0U);
+        assert(NativeRuntime_Process()==NativeRuntimeResult_NotReady);
+        if (strcmp(argv[1],"clock-init")==0) { clock_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"platform-init")==0) { platform_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"radio-init")==0) { bridge_init=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"pc-init")==0) { bridge_init=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"clock-during-init")==0) { clock_bad_init=1U; }
+        if (strcmp(argv[1],"unknown-init")==0) { bridge_init=(GroundBridgeResult)99; }
+        if (strcmp(argv[1],"radio-not-initialized")==0) { radio_not_initialized=1U; }
+        if (strcmp(argv[1],"radio-unverified")==0) { radio_unverified=1U; }
+        NativeRuntimeResult init=NativeRuntime_Init();assert(published==0U);
+        if (radio_not_initialized!=0U || radio_unverified!=0U)
+        { assert(init==NativeRuntimeResult_RadioFailure); }
+        if (init!=NativeRuntimeResult_Ok)
+        {
+            if (strcmp(argv[1],"unknown-init")==0) { assert(init==NativeRuntimeResult_NotReady); }
+            assert(NativeRuntime_ReadyGet()==0U && pc_reset==1U && bridge_reset==1U && quiesced==1U);
+            assert(NativeRuntime_Process()==init && process_calls==0U);
+            assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));
+            assert(NativeRuntime_Init()==NativeRuntimeResult_NotReady);return 0;
+        }
+        assert(NativeRuntime_ReadyGet()==1U);
+        if (strcmp(argv[1],"clock-before-process")==0) { clock_result=NativeClockResult_Stopped; }
+        if (strcmp(argv[1],"clock-during-process")==0) { clock_bad_process=1U; }
+        if (strcmp(argv[1],"pc-transient")==0) { bridge_process=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"radio-transient")==0) { bridge_process=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"retirement")==0) { clock_bad_process=1U;retirement_bad=1U; }
+        if (strcmp(argv[1],"usb-retirement")==0) { clock_bad_process=1U;usb_retirement_bad=1U; }
+        if (strcmp(argv[1],"unknown-process")==0) { bridge_process=(GroundBridgeResult)99; }
+        NativeRuntimeResult result=NativeRuntime_Process();
+        if (strcmp(argv[1],"unknown-process")==0)
+        {
+            assert(result==NativeRuntimeResult_NotReady && NativeRuntime_ReadyGet()==0U);
+            assert(retired==1U && quiesced==1U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);return 0;
+        }
+        if (clock_result!=NativeClockResult_Ok)
+        {
+            assert(result==((retirement_bad!=0U || usb_retirement_bad!=0U) ? NativeRuntimeResult_RetirementFailure : NativeRuntimeResult_ClockFailure));
+            assert(NativeRuntime_ReadyGet()==0U && retired==1U && quiesced==1U);
+            assert(published==0U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);
+        }
+        else
+        {
+            assert(NativeRuntime_ReadyGet()==1U && retired==0U && pc_reset==0U && published==1U);
+            assert(result==(bridge_process==GROUND_BRIDGE_OK ? NativeRuntimeResult_Ok :
+                bridge_process==GROUND_BRIDGE_PC_ERROR ? NativeRuntimeResult_PcFailure : NativeRuntimeResult_RadioFailure));
+        }
+        return 0;
+    }
+    '''
+        (tmp_path/'test.c').write_text(harness,encoding='utf-8')
+        api=Path(__file__).resolve().parents[1]/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion',
+            '-Wsign-conversion','-Wshadow','-Wundef','-Wstrict-prototypes','-Wmissing-prototypes','-Wswitch-enum',
+            '-fanalyzer','-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),
+            str(tmp_path/'Generated/Src/native_runtime.c'),str(tmp_path/'test.c'),'-o',str(tmp_path/'test.exe')]
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_5df5e816\test.c: In function 'Lora_ChipStatusGet':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_5df5e816\test.c:30:22: error: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} may change value [-Werror=conversion]
+E            30 |     status->verified=radio_unverified!=0U ? 0U : 1U;
+E               |                      ^~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...rified!=0U ? 0U : 1U;\n      |                      ^~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_runtime.py:167: AssertionError
+____ test_native_lifecycle_prevents_early_and_faulted_publication[pc-init] ____
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a/test_native_lifecycle_prevents_b67511a9')
+scenario = 'pc-init'
+
+    @pytest.mark.parametrize('scenario', ['normal','clock-init','platform-init','radio-init','pc-init',
+        'clock-during-init','clock-before-process','clock-during-process','pc-transient','radio-transient','retirement',
+        'unknown-init','unknown-process','usb-retirement','radio-not-initialized','radio-unverified'])
+    def test_native_lifecycle_prevents_early_and_faulted_publication(tmp_path, scenario):
+        compiler=shutil.which('gcc')
+        if compiler is None:
+            pytest.skip('Host GCC unavailable')
+        for path,content in NativeRuntime_FilesRender().items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        headers={
+            'native_clock.h':'''#include <stdint.h>
+    typedef enum { NativeClockResult_Ok, NativeClockResult_Stopped } NativeClockResult;
+    NativeClockResult NativeClock_StatusGet(void);
+    NativeClockResult NativeClock_DelayUs(uint32_t delay);
+    NativeClockResult NativeClock_Read(uint64_t *time);
+    ''',
+            'native_platform.h':'''#include "platform_types.h"
+    PlatformResult NativePlatform_Init(void);
+    void NativePlatform_Quiesce(void);
+    ''',
+            'ground_bridge.h':'''#include <stdint.h>
+    typedef enum { GROUND_BRIDGE_OK, GROUND_BRIDGE_RADIO_ERROR, GROUND_BRIDGE_PC_ERROR } GroundBridgeResult;
+    GroundBridgeResult GroundBridge_Init(void);
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms);
+    void GroundBridge_PcReset(void);
+    ''',
+            'pc_byte_stream.h':'void PcByteStream_OnUsbReset(void);\n',
+            'native_usb_state.h':'''typedef enum { NativeUsbResult_Ok, NativeUsbResult_Failure } NativeUsbResult;
+    NativeUsbResult NativeUsb_Stop(void);
+    ''',
+            'sx1281_device.h':'''#include <stdint.h>
+    typedef enum { LoraDeactivateResult_Ok, LoraDeactivateResult_PortError } LoraDeactivateResult;
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance);
+    typedef enum { LORA_DIAG_RESULT_OK, LORA_DIAG_RESULT_NOT_INIT } LoraDiagResult;
+    typedef struct { uint16_t firmware_version; uint8_t status_value; uint8_t verified; } LoraChipStatus;
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status);
+    ''',
+            'silverstar_assert.h':'''#include <assert.h>
+    #define SILVERSTAR_ASSERT_MODULE_GENERATED 1U
+    #define SILVERSTAR_ASSERT_REASON_STATE_INVARIANT 1U
+    #define SILVERSTAR_ASSERT(p,m,r) assert(p)
+    '''}
+        for path,content in headers.items():
+            (tmp_path/path).write_text(content,encoding='utf-8')
+        harness='''#include "native_runtime.h"
+    #include "native_clock.h"
+    #include "native_platform.h"
+    #include "platform_time.h"
+    #include "ground_bridge.h"
+    #include "sx1281_device.h"
+    #include "pc_byte_stream.h"
+    #include "native_usb_state.h"
+    #include <assert.h>
+    #include <string.h>
+    static NativeClockResult clock_result=NativeClockResult_Ok;
+    static PlatformResult clock_init=PLATFORM_OK,platform_init=PLATFORM_OK;
+    static GroundBridgeResult bridge_init=GROUND_BRIDGE_OK,bridge_process=GROUND_BRIDGE_OK;
+    static uint8_t clock_bad_init,clock_bad_process,retirement_bad,usb_retirement_bad;
+    static uint8_t radio_not_initialized,radio_unverified;
+    static uint32_t retired,quiesced,pc_reset,bridge_reset,process_calls,published;
+    NativeClockResult NativeClock_StatusGet(void) { return clock_result; }
+    NativeClockResult NativeClock_DelayUs(uint32_t delay) { assert(delay==1U);return clock_result; }
+    NativeClockResult NativeClock_Read(uint64_t *time)
+    { if (clock_result!=NativeClockResult_Ok) { return clock_result; } *time=1234000ULL;return clock_result; }
+    PlatformResult PlatformTime_Init(void) { return clock_init; }
+    PlatformResult NativePlatform_Init(void) { return platform_init; }
+    void NativePlatform_Quiesce(void)
+    { assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));quiesced++; }
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status)
+    {
+        assert(instance==0U && status!=0 && NativeRuntime_ReadyGet()==0U);
+        if (radio_not_initialized!=0U) { return LORA_DIAG_RESULT_NOT_INIT; }
+        status->firmware_version=0x1234U;status->status_value=0U;
+        status->verified=radio_unverified!=0U ? 0U : 1U;
+        return LORA_DIAG_RESULT_OK;
+    }
+    GroundBridgeResult GroundBridge_Init(void)
+    {
+        /* The real bridge tries to flush its initial STATUS before returning. */
+        assert(NativeRuntime_ReadyGet()==0U);
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        if (clock_bad_init!=0U) { clock_result=NativeClockResult_Stopped; }
+        return bridge_init;
+    }
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
+    {
+        assert(now_ms==1234U);process_calls++;
+        if (clock_bad_process!=0U) { clock_result=NativeClockResult_Stopped; }
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        return bridge_process;
+    }
+    void GroundBridge_PcReset(void) { assert(NativeRuntime_ReadyGet()==0U);bridge_reset++; }
+    void PcByteStream_OnUsbReset(void) { assert(NativeRuntime_ReadyGet()==0U);pc_reset++; }
+    NativeUsbResult NativeUsb_Stop(void)
+    { assert(NativeRuntime_ReadyGet()==0U);return usb_retirement_bad!=0U ? NativeUsbResult_Failure : NativeUsbResult_Ok; }
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance)
+    { assert(instance==0U && quiesced==0U && NativeRuntime_ReadyGet()==0U);retired++;
+      return retirement_bad!=0U ? LoraDeactivateResult_PortError : LoraDeactivateResult_Ok; }
+    int main(int argc,char **argv)
+    {
+        assert(argc==2);assert(NativeRuntime_ReadyGet()==0U);
+        assert(NativeRuntime_Process()==NativeRuntimeResult_NotReady);
+        if (strcmp(argv[1],"clock-init")==0) { clock_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"platform-init")==0) { platform_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"radio-init")==0) { bridge_init=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"pc-init")==0) { bridge_init=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"clock-during-init")==0) { clock_bad_init=1U; }
+        if (strcmp(argv[1],"unknown-init")==0) { bridge_init=(GroundBridgeResult)99; }
+        if (strcmp(argv[1],"radio-not-initialized")==0) { radio_not_initialized=1U; }
+        if (strcmp(argv[1],"radio-unverified")==0) { radio_unverified=1U; }
+        NativeRuntimeResult init=NativeRuntime_Init();assert(published==0U);
+        if (radio_not_initialized!=0U || radio_unverified!=0U)
+        { assert(init==NativeRuntimeResult_RadioFailure); }
+        if (init!=NativeRuntimeResult_Ok)
+        {
+            if (strcmp(argv[1],"unknown-init")==0) { assert(init==NativeRuntimeResult_NotReady); }
+            assert(NativeRuntime_ReadyGet()==0U && pc_reset==1U && bridge_reset==1U && quiesced==1U);
+            assert(NativeRuntime_Process()==init && process_calls==0U);
+            assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));
+            assert(NativeRuntime_Init()==NativeRuntimeResult_NotReady);return 0;
+        }
+        assert(NativeRuntime_ReadyGet()==1U);
+        if (strcmp(argv[1],"clock-before-process")==0) { clock_result=NativeClockResult_Stopped; }
+        if (strcmp(argv[1],"clock-during-process")==0) { clock_bad_process=1U; }
+        if (strcmp(argv[1],"pc-transient")==0) { bridge_process=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"radio-transient")==0) { bridge_process=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"retirement")==0) { clock_bad_process=1U;retirement_bad=1U; }
+        if (strcmp(argv[1],"usb-retirement")==0) { clock_bad_process=1U;usb_retirement_bad=1U; }
+        if (strcmp(argv[1],"unknown-process")==0) { bridge_process=(GroundBridgeResult)99; }
+        NativeRuntimeResult result=NativeRuntime_Process();
+        if (strcmp(argv[1],"unknown-process")==0)
+        {
+            assert(result==NativeRuntimeResult_NotReady && NativeRuntime_ReadyGet()==0U);
+            assert(retired==1U && quiesced==1U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);return 0;
+        }
+        if (clock_result!=NativeClockResult_Ok)
+        {
+            assert(result==((retirement_bad!=0U || usb_retirement_bad!=0U) ? NativeRuntimeResult_RetirementFailure : NativeRuntimeResult_ClockFailure));
+            assert(NativeRuntime_ReadyGet()==0U && retired==1U && quiesced==1U);
+            assert(published==0U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);
+        }
+        else
+        {
+            assert(NativeRuntime_ReadyGet()==1U && retired==0U && pc_reset==0U && published==1U);
+            assert(result==(bridge_process==GROUND_BRIDGE_OK ? NativeRuntimeResult_Ok :
+                bridge_process==GROUND_BRIDGE_PC_ERROR ? NativeRuntimeResult_PcFailure : NativeRuntimeResult_RadioFailure));
+        }
+        return 0;
+    }
+    '''
+        (tmp_path/'test.c').write_text(harness,encoding='utf-8')
+        api=Path(__file__).resolve().parents[1]/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion',
+            '-Wsign-conversion','-Wshadow','-Wundef','-Wstrict-prototypes','-Wmissing-prototypes','-Wswitch-enum',
+            '-fanalyzer','-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),
+            str(tmp_path/'Generated/Src/native_runtime.c'),str(tmp_path/'test.c'),'-o',str(tmp_path/'test.exe')]
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_b67511a9\test.c: In function 'Lora_ChipStatusGet':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_b67511a9\test.c:30:22: error: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} may change value [-Werror=conversion]
+E            30 |     status->verified=radio_unverified!=0U ? 0U : 1U;
+E               |                      ^~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...rified!=0U ? 0U : 1U;\n      |                      ^~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_runtime.py:167: AssertionError
+_ test_native_lifecycle_prevents_early_and_faulted_publication[clock-during-init] _
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a/test_native_lifecycle_prevents_98d03478')
+scenario = 'clock-during-init'
+
+    @pytest.mark.parametrize('scenario', ['normal','clock-init','platform-init','radio-init','pc-init',
+        'clock-during-init','clock-before-process','clock-during-process','pc-transient','radio-transient','retirement',
+        'unknown-init','unknown-process','usb-retirement','radio-not-initialized','radio-unverified'])
+    def test_native_lifecycle_prevents_early_and_faulted_publication(tmp_path, scenario):
+        compiler=shutil.which('gcc')
+        if compiler is None:
+            pytest.skip('Host GCC unavailable')
+        for path,content in NativeRuntime_FilesRender().items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        headers={
+            'native_clock.h':'''#include <stdint.h>
+    typedef enum { NativeClockResult_Ok, NativeClockResult_Stopped } NativeClockResult;
+    NativeClockResult NativeClock_StatusGet(void);
+    NativeClockResult NativeClock_DelayUs(uint32_t delay);
+    NativeClockResult NativeClock_Read(uint64_t *time);
+    ''',
+            'native_platform.h':'''#include "platform_types.h"
+    PlatformResult NativePlatform_Init(void);
+    void NativePlatform_Quiesce(void);
+    ''',
+            'ground_bridge.h':'''#include <stdint.h>
+    typedef enum { GROUND_BRIDGE_OK, GROUND_BRIDGE_RADIO_ERROR, GROUND_BRIDGE_PC_ERROR } GroundBridgeResult;
+    GroundBridgeResult GroundBridge_Init(void);
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms);
+    void GroundBridge_PcReset(void);
+    ''',
+            'pc_byte_stream.h':'void PcByteStream_OnUsbReset(void);\n',
+            'native_usb_state.h':'''typedef enum { NativeUsbResult_Ok, NativeUsbResult_Failure } NativeUsbResult;
+    NativeUsbResult NativeUsb_Stop(void);
+    ''',
+            'sx1281_device.h':'''#include <stdint.h>
+    typedef enum { LoraDeactivateResult_Ok, LoraDeactivateResult_PortError } LoraDeactivateResult;
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance);
+    typedef enum { LORA_DIAG_RESULT_OK, LORA_DIAG_RESULT_NOT_INIT } LoraDiagResult;
+    typedef struct { uint16_t firmware_version; uint8_t status_value; uint8_t verified; } LoraChipStatus;
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status);
+    ''',
+            'silverstar_assert.h':'''#include <assert.h>
+    #define SILVERSTAR_ASSERT_MODULE_GENERATED 1U
+    #define SILVERSTAR_ASSERT_REASON_STATE_INVARIANT 1U
+    #define SILVERSTAR_ASSERT(p,m,r) assert(p)
+    '''}
+        for path,content in headers.items():
+            (tmp_path/path).write_text(content,encoding='utf-8')
+        harness='''#include "native_runtime.h"
+    #include "native_clock.h"
+    #include "native_platform.h"
+    #include "platform_time.h"
+    #include "ground_bridge.h"
+    #include "sx1281_device.h"
+    #include "pc_byte_stream.h"
+    #include "native_usb_state.h"
+    #include <assert.h>
+    #include <string.h>
+    static NativeClockResult clock_result=NativeClockResult_Ok;
+    static PlatformResult clock_init=PLATFORM_OK,platform_init=PLATFORM_OK;
+    static GroundBridgeResult bridge_init=GROUND_BRIDGE_OK,bridge_process=GROUND_BRIDGE_OK;
+    static uint8_t clock_bad_init,clock_bad_process,retirement_bad,usb_retirement_bad;
+    static uint8_t radio_not_initialized,radio_unverified;
+    static uint32_t retired,quiesced,pc_reset,bridge_reset,process_calls,published;
+    NativeClockResult NativeClock_StatusGet(void) { return clock_result; }
+    NativeClockResult NativeClock_DelayUs(uint32_t delay) { assert(delay==1U);return clock_result; }
+    NativeClockResult NativeClock_Read(uint64_t *time)
+    { if (clock_result!=NativeClockResult_Ok) { return clock_result; } *time=1234000ULL;return clock_result; }
+    PlatformResult PlatformTime_Init(void) { return clock_init; }
+    PlatformResult NativePlatform_Init(void) { return platform_init; }
+    void NativePlatform_Quiesce(void)
+    { assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));quiesced++; }
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status)
+    {
+        assert(instance==0U && status!=0 && NativeRuntime_ReadyGet()==0U);
+        if (radio_not_initialized!=0U) { return LORA_DIAG_RESULT_NOT_INIT; }
+        status->firmware_version=0x1234U;status->status_value=0U;
+        status->verified=radio_unverified!=0U ? 0U : 1U;
+        return LORA_DIAG_RESULT_OK;
+    }
+    GroundBridgeResult GroundBridge_Init(void)
+    {
+        /* The real bridge tries to flush its initial STATUS before returning. */
+        assert(NativeRuntime_ReadyGet()==0U);
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        if (clock_bad_init!=0U) { clock_result=NativeClockResult_Stopped; }
+        return bridge_init;
+    }
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
+    {
+        assert(now_ms==1234U);process_calls++;
+        if (clock_bad_process!=0U) { clock_result=NativeClockResult_Stopped; }
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        return bridge_process;
+    }
+    void GroundBridge_PcReset(void) { assert(NativeRuntime_ReadyGet()==0U);bridge_reset++; }
+    void PcByteStream_OnUsbReset(void) { assert(NativeRuntime_ReadyGet()==0U);pc_reset++; }
+    NativeUsbResult NativeUsb_Stop(void)
+    { assert(NativeRuntime_ReadyGet()==0U);return usb_retirement_bad!=0U ? NativeUsbResult_Failure : NativeUsbResult_Ok; }
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance)
+    { assert(instance==0U && quiesced==0U && NativeRuntime_ReadyGet()==0U);retired++;
+      return retirement_bad!=0U ? LoraDeactivateResult_PortError : LoraDeactivateResult_Ok; }
+    int main(int argc,char **argv)
+    {
+        assert(argc==2);assert(NativeRuntime_ReadyGet()==0U);
+        assert(NativeRuntime_Process()==NativeRuntimeResult_NotReady);
+        if (strcmp(argv[1],"clock-init")==0) { clock_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"platform-init")==0) { platform_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"radio-init")==0) { bridge_init=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"pc-init")==0) { bridge_init=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"clock-during-init")==0) { clock_bad_init=1U; }
+        if (strcmp(argv[1],"unknown-init")==0) { bridge_init=(GroundBridgeResult)99; }
+        if (strcmp(argv[1],"radio-not-initialized")==0) { radio_not_initialized=1U; }
+        if (strcmp(argv[1],"radio-unverified")==0) { radio_unverified=1U; }
+        NativeRuntimeResult init=NativeRuntime_Init();assert(published==0U);
+        if (radio_not_initialized!=0U || radio_unverified!=0U)
+        { assert(init==NativeRuntimeResult_RadioFailure); }
+        if (init!=NativeRuntimeResult_Ok)
+        {
+            if (strcmp(argv[1],"unknown-init")==0) { assert(init==NativeRuntimeResult_NotReady); }
+            assert(NativeRuntime_ReadyGet()==0U && pc_reset==1U && bridge_reset==1U && quiesced==1U);
+            assert(NativeRuntime_Process()==init && process_calls==0U);
+            assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));
+            assert(NativeRuntime_Init()==NativeRuntimeResult_NotReady);return 0;
+        }
+        assert(NativeRuntime_ReadyGet()==1U);
+        if (strcmp(argv[1],"clock-before-process")==0) { clock_result=NativeClockResult_Stopped; }
+        if (strcmp(argv[1],"clock-during-process")==0) { clock_bad_process=1U; }
+        if (strcmp(argv[1],"pc-transient")==0) { bridge_process=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"radio-transient")==0) { bridge_process=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"retirement")==0) { clock_bad_process=1U;retirement_bad=1U; }
+        if (strcmp(argv[1],"usb-retirement")==0) { clock_bad_process=1U;usb_retirement_bad=1U; }
+        if (strcmp(argv[1],"unknown-process")==0) { bridge_process=(GroundBridgeResult)99; }
+        NativeRuntimeResult result=NativeRuntime_Process();
+        if (strcmp(argv[1],"unknown-process")==0)
+        {
+            assert(result==NativeRuntimeResult_NotReady && NativeRuntime_ReadyGet()==0U);
+            assert(retired==1U && quiesced==1U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);return 0;
+        }
+        if (clock_result!=NativeClockResult_Ok)
+        {
+            assert(result==((retirement_bad!=0U || usb_retirement_bad!=0U) ? NativeRuntimeResult_RetirementFailure : NativeRuntimeResult_ClockFailure));
+            assert(NativeRuntime_ReadyGet()==0U && retired==1U && quiesced==1U);
+            assert(published==0U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);
+        }
+        else
+        {
+            assert(NativeRuntime_ReadyGet()==1U && retired==0U && pc_reset==0U && published==1U);
+            assert(result==(bridge_process==GROUND_BRIDGE_OK ? NativeRuntimeResult_Ok :
+                bridge_process==GROUND_BRIDGE_PC_ERROR ? NativeRuntimeResult_PcFailure : NativeRuntimeResult_RadioFailure));
+        }
+        return 0;
+    }
+    '''
+        (tmp_path/'test.c').write_text(harness,encoding='utf-8')
+        api=Path(__file__).resolve().parents[1]/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion',
+            '-Wsign-conversion','-Wshadow','-Wundef','-Wstrict-prototypes','-Wmissing-prototypes','-Wswitch-enum',
+            '-fanalyzer','-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),
+            str(tmp_path/'Generated/Src/native_runtime.c'),str(tmp_path/'test.c'),'-o',str(tmp_path/'test.exe')]
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_98d03478\test.c: In function 'Lora_ChipStatusGet':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_98d03478\test.c:30:22: error: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} may change value [-Werror=conversion]
+E            30 |     status->verified=radio_unverified!=0U ? 0U : 1U;
+E               |                      ^~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...rified!=0U ? 0U : 1U;\n      |                      ^~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_runtime.py:167: AssertionError
+_ test_native_lifecycle_prevents_early_and_faulted_publication[clock-before-process] _
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a/test_native_lifecycle_prevents_9a840f44')
+scenario = 'clock-before-process'
+
+    @pytest.mark.parametrize('scenario', ['normal','clock-init','platform-init','radio-init','pc-init',
+        'clock-during-init','clock-before-process','clock-during-process','pc-transient','radio-transient','retirement',
+        'unknown-init','unknown-process','usb-retirement','radio-not-initialized','radio-unverified'])
+    def test_native_lifecycle_prevents_early_and_faulted_publication(tmp_path, scenario):
+        compiler=shutil.which('gcc')
+        if compiler is None:
+            pytest.skip('Host GCC unavailable')
+        for path,content in NativeRuntime_FilesRender().items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        headers={
+            'native_clock.h':'''#include <stdint.h>
+    typedef enum { NativeClockResult_Ok, NativeClockResult_Stopped } NativeClockResult;
+    NativeClockResult NativeClock_StatusGet(void);
+    NativeClockResult NativeClock_DelayUs(uint32_t delay);
+    NativeClockResult NativeClock_Read(uint64_t *time);
+    ''',
+            'native_platform.h':'''#include "platform_types.h"
+    PlatformResult NativePlatform_Init(void);
+    void NativePlatform_Quiesce(void);
+    ''',
+            'ground_bridge.h':'''#include <stdint.h>
+    typedef enum { GROUND_BRIDGE_OK, GROUND_BRIDGE_RADIO_ERROR, GROUND_BRIDGE_PC_ERROR } GroundBridgeResult;
+    GroundBridgeResult GroundBridge_Init(void);
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms);
+    void GroundBridge_PcReset(void);
+    ''',
+            'pc_byte_stream.h':'void PcByteStream_OnUsbReset(void);\n',
+            'native_usb_state.h':'''typedef enum { NativeUsbResult_Ok, NativeUsbResult_Failure } NativeUsbResult;
+    NativeUsbResult NativeUsb_Stop(void);
+    ''',
+            'sx1281_device.h':'''#include <stdint.h>
+    typedef enum { LoraDeactivateResult_Ok, LoraDeactivateResult_PortError } LoraDeactivateResult;
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance);
+    typedef enum { LORA_DIAG_RESULT_OK, LORA_DIAG_RESULT_NOT_INIT } LoraDiagResult;
+    typedef struct { uint16_t firmware_version; uint8_t status_value; uint8_t verified; } LoraChipStatus;
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status);
+    ''',
+            'silverstar_assert.h':'''#include <assert.h>
+    #define SILVERSTAR_ASSERT_MODULE_GENERATED 1U
+    #define SILVERSTAR_ASSERT_REASON_STATE_INVARIANT 1U
+    #define SILVERSTAR_ASSERT(p,m,r) assert(p)
+    '''}
+        for path,content in headers.items():
+            (tmp_path/path).write_text(content,encoding='utf-8')
+        harness='''#include "native_runtime.h"
+    #include "native_clock.h"
+    #include "native_platform.h"
+    #include "platform_time.h"
+    #include "ground_bridge.h"
+    #include "sx1281_device.h"
+    #include "pc_byte_stream.h"
+    #include "native_usb_state.h"
+    #include <assert.h>
+    #include <string.h>
+    static NativeClockResult clock_result=NativeClockResult_Ok;
+    static PlatformResult clock_init=PLATFORM_OK,platform_init=PLATFORM_OK;
+    static GroundBridgeResult bridge_init=GROUND_BRIDGE_OK,bridge_process=GROUND_BRIDGE_OK;
+    static uint8_t clock_bad_init,clock_bad_process,retirement_bad,usb_retirement_bad;
+    static uint8_t radio_not_initialized,radio_unverified;
+    static uint32_t retired,quiesced,pc_reset,bridge_reset,process_calls,published;
+    NativeClockResult NativeClock_StatusGet(void) { return clock_result; }
+    NativeClockResult NativeClock_DelayUs(uint32_t delay) { assert(delay==1U);return clock_result; }
+    NativeClockResult NativeClock_Read(uint64_t *time)
+    { if (clock_result!=NativeClockResult_Ok) { return clock_result; } *time=1234000ULL;return clock_result; }
+    PlatformResult PlatformTime_Init(void) { return clock_init; }
+    PlatformResult NativePlatform_Init(void) { return platform_init; }
+    void NativePlatform_Quiesce(void)
+    { assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));quiesced++; }
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status)
+    {
+        assert(instance==0U && status!=0 && NativeRuntime_ReadyGet()==0U);
+        if (radio_not_initialized!=0U) { return LORA_DIAG_RESULT_NOT_INIT; }
+        status->firmware_version=0x1234U;status->status_value=0U;
+        status->verified=radio_unverified!=0U ? 0U : 1U;
+        return LORA_DIAG_RESULT_OK;
+    }
+    GroundBridgeResult GroundBridge_Init(void)
+    {
+        /* The real bridge tries to flush its initial STATUS before returning. */
+        assert(NativeRuntime_ReadyGet()==0U);
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        if (clock_bad_init!=0U) { clock_result=NativeClockResult_Stopped; }
+        return bridge_init;
+    }
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
+    {
+        assert(now_ms==1234U);process_calls++;
+        if (clock_bad_process!=0U) { clock_result=NativeClockResult_Stopped; }
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        return bridge_process;
+    }
+    void GroundBridge_PcReset(void) { assert(NativeRuntime_ReadyGet()==0U);bridge_reset++; }
+    void PcByteStream_OnUsbReset(void) { assert(NativeRuntime_ReadyGet()==0U);pc_reset++; }
+    NativeUsbResult NativeUsb_Stop(void)
+    { assert(NativeRuntime_ReadyGet()==0U);return usb_retirement_bad!=0U ? NativeUsbResult_Failure : NativeUsbResult_Ok; }
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance)
+    { assert(instance==0U && quiesced==0U && NativeRuntime_ReadyGet()==0U);retired++;
+      return retirement_bad!=0U ? LoraDeactivateResult_PortError : LoraDeactivateResult_Ok; }
+    int main(int argc,char **argv)
+    {
+        assert(argc==2);assert(NativeRuntime_ReadyGet()==0U);
+        assert(NativeRuntime_Process()==NativeRuntimeResult_NotReady);
+        if (strcmp(argv[1],"clock-init")==0) { clock_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"platform-init")==0) { platform_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"radio-init")==0) { bridge_init=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"pc-init")==0) { bridge_init=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"clock-during-init")==0) { clock_bad_init=1U; }
+        if (strcmp(argv[1],"unknown-init")==0) { bridge_init=(GroundBridgeResult)99; }
+        if (strcmp(argv[1],"radio-not-initialized")==0) { radio_not_initialized=1U; }
+        if (strcmp(argv[1],"radio-unverified")==0) { radio_unverified=1U; }
+        NativeRuntimeResult init=NativeRuntime_Init();assert(published==0U);
+        if (radio_not_initialized!=0U || radio_unverified!=0U)
+        { assert(init==NativeRuntimeResult_RadioFailure); }
+        if (init!=NativeRuntimeResult_Ok)
+        {
+            if (strcmp(argv[1],"unknown-init")==0) { assert(init==NativeRuntimeResult_NotReady); }
+            assert(NativeRuntime_ReadyGet()==0U && pc_reset==1U && bridge_reset==1U && quiesced==1U);
+            assert(NativeRuntime_Process()==init && process_calls==0U);
+            assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));
+            assert(NativeRuntime_Init()==NativeRuntimeResult_NotReady);return 0;
+        }
+        assert(NativeRuntime_ReadyGet()==1U);
+        if (strcmp(argv[1],"clock-before-process")==0) { clock_result=NativeClockResult_Stopped; }
+        if (strcmp(argv[1],"clock-during-process")==0) { clock_bad_process=1U; }
+        if (strcmp(argv[1],"pc-transient")==0) { bridge_process=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"radio-transient")==0) { bridge_process=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"retirement")==0) { clock_bad_process=1U;retirement_bad=1U; }
+        if (strcmp(argv[1],"usb-retirement")==0) { clock_bad_process=1U;usb_retirement_bad=1U; }
+        if (strcmp(argv[1],"unknown-process")==0) { bridge_process=(GroundBridgeResult)99; }
+        NativeRuntimeResult result=NativeRuntime_Process();
+        if (strcmp(argv[1],"unknown-process")==0)
+        {
+            assert(result==NativeRuntimeResult_NotReady && NativeRuntime_ReadyGet()==0U);
+            assert(retired==1U && quiesced==1U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);return 0;
+        }
+        if (clock_result!=NativeClockResult_Ok)
+        {
+            assert(result==((retirement_bad!=0U || usb_retirement_bad!=0U) ? NativeRuntimeResult_RetirementFailure : NativeRuntimeResult_ClockFailure));
+            assert(NativeRuntime_ReadyGet()==0U && retired==1U && quiesced==1U);
+            assert(published==0U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);
+        }
+        else
+        {
+            assert(NativeRuntime_ReadyGet()==1U && retired==0U && pc_reset==0U && published==1U);
+            assert(result==(bridge_process==GROUND_BRIDGE_OK ? NativeRuntimeResult_Ok :
+                bridge_process==GROUND_BRIDGE_PC_ERROR ? NativeRuntimeResult_PcFailure : NativeRuntimeResult_RadioFailure));
+        }
+        return 0;
+    }
+    '''
+        (tmp_path/'test.c').write_text(harness,encoding='utf-8')
+        api=Path(__file__).resolve().parents[1]/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion',
+            '-Wsign-conversion','-Wshadow','-Wundef','-Wstrict-prototypes','-Wmissing-prototypes','-Wswitch-enum',
+            '-fanalyzer','-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),
+            str(tmp_path/'Generated/Src/native_runtime.c'),str(tmp_path/'test.c'),'-o',str(tmp_path/'test.exe')]
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_9a840f44\test.c: In function 'Lora_ChipStatusGet':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_9a840f44\test.c:30:22: error: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} may change value [-Werror=conversion]
+E            30 |     status->verified=radio_unverified!=0U ? 0U : 1U;
+E               |                      ^~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...rified!=0U ? 0U : 1U;\n      |                      ^~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_runtime.py:167: AssertionError
+_ test_native_lifecycle_prevents_early_and_faulted_publication[clock-during-process] _
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a/test_native_lifecycle_prevents_98da7a63')
+scenario = 'clock-during-process'
+
+    @pytest.mark.parametrize('scenario', ['normal','clock-init','platform-init','radio-init','pc-init',
+        'clock-during-init','clock-before-process','clock-during-process','pc-transient','radio-transient','retirement',
+        'unknown-init','unknown-process','usb-retirement','radio-not-initialized','radio-unverified'])
+    def test_native_lifecycle_prevents_early_and_faulted_publication(tmp_path, scenario):
+        compiler=shutil.which('gcc')
+        if compiler is None:
+            pytest.skip('Host GCC unavailable')
+        for path,content in NativeRuntime_FilesRender().items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        headers={
+            'native_clock.h':'''#include <stdint.h>
+    typedef enum { NativeClockResult_Ok, NativeClockResult_Stopped } NativeClockResult;
+    NativeClockResult NativeClock_StatusGet(void);
+    NativeClockResult NativeClock_DelayUs(uint32_t delay);
+    NativeClockResult NativeClock_Read(uint64_t *time);
+    ''',
+            'native_platform.h':'''#include "platform_types.h"
+    PlatformResult NativePlatform_Init(void);
+    void NativePlatform_Quiesce(void);
+    ''',
+            'ground_bridge.h':'''#include <stdint.h>
+    typedef enum { GROUND_BRIDGE_OK, GROUND_BRIDGE_RADIO_ERROR, GROUND_BRIDGE_PC_ERROR } GroundBridgeResult;
+    GroundBridgeResult GroundBridge_Init(void);
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms);
+    void GroundBridge_PcReset(void);
+    ''',
+            'pc_byte_stream.h':'void PcByteStream_OnUsbReset(void);\n',
+            'native_usb_state.h':'''typedef enum { NativeUsbResult_Ok, NativeUsbResult_Failure } NativeUsbResult;
+    NativeUsbResult NativeUsb_Stop(void);
+    ''',
+            'sx1281_device.h':'''#include <stdint.h>
+    typedef enum { LoraDeactivateResult_Ok, LoraDeactivateResult_PortError } LoraDeactivateResult;
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance);
+    typedef enum { LORA_DIAG_RESULT_OK, LORA_DIAG_RESULT_NOT_INIT } LoraDiagResult;
+    typedef struct { uint16_t firmware_version; uint8_t status_value; uint8_t verified; } LoraChipStatus;
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status);
+    ''',
+            'silverstar_assert.h':'''#include <assert.h>
+    #define SILVERSTAR_ASSERT_MODULE_GENERATED 1U
+    #define SILVERSTAR_ASSERT_REASON_STATE_INVARIANT 1U
+    #define SILVERSTAR_ASSERT(p,m,r) assert(p)
+    '''}
+        for path,content in headers.items():
+            (tmp_path/path).write_text(content,encoding='utf-8')
+        harness='''#include "native_runtime.h"
+    #include "native_clock.h"
+    #include "native_platform.h"
+    #include "platform_time.h"
+    #include "ground_bridge.h"
+    #include "sx1281_device.h"
+    #include "pc_byte_stream.h"
+    #include "native_usb_state.h"
+    #include <assert.h>
+    #include <string.h>
+    static NativeClockResult clock_result=NativeClockResult_Ok;
+    static PlatformResult clock_init=PLATFORM_OK,platform_init=PLATFORM_OK;
+    static GroundBridgeResult bridge_init=GROUND_BRIDGE_OK,bridge_process=GROUND_BRIDGE_OK;
+    static uint8_t clock_bad_init,clock_bad_process,retirement_bad,usb_retirement_bad;
+    static uint8_t radio_not_initialized,radio_unverified;
+    static uint32_t retired,quiesced,pc_reset,bridge_reset,process_calls,published;
+    NativeClockResult NativeClock_StatusGet(void) { return clock_result; }
+    NativeClockResult NativeClock_DelayUs(uint32_t delay) { assert(delay==1U);return clock_result; }
+    NativeClockResult NativeClock_Read(uint64_t *time)
+    { if (clock_result!=NativeClockResult_Ok) { return clock_result; } *time=1234000ULL;return clock_result; }
+    PlatformResult PlatformTime_Init(void) { return clock_init; }
+    PlatformResult NativePlatform_Init(void) { return platform_init; }
+    void NativePlatform_Quiesce(void)
+    { assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));quiesced++; }
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status)
+    {
+        assert(instance==0U && status!=0 && NativeRuntime_ReadyGet()==0U);
+        if (radio_not_initialized!=0U) { return LORA_DIAG_RESULT_NOT_INIT; }
+        status->firmware_version=0x1234U;status->status_value=0U;
+        status->verified=radio_unverified!=0U ? 0U : 1U;
+        return LORA_DIAG_RESULT_OK;
+    }
+    GroundBridgeResult GroundBridge_Init(void)
+    {
+        /* The real bridge tries to flush its initial STATUS before returning. */
+        assert(NativeRuntime_ReadyGet()==0U);
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        if (clock_bad_init!=0U) { clock_result=NativeClockResult_Stopped; }
+        return bridge_init;
+    }
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
+    {
+        assert(now_ms==1234U);process_calls++;
+        if (clock_bad_process!=0U) { clock_result=NativeClockResult_Stopped; }
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        return bridge_process;
+    }
+    void GroundBridge_PcReset(void) { assert(NativeRuntime_ReadyGet()==0U);bridge_reset++; }
+    void PcByteStream_OnUsbReset(void) { assert(NativeRuntime_ReadyGet()==0U);pc_reset++; }
+    NativeUsbResult NativeUsb_Stop(void)
+    { assert(NativeRuntime_ReadyGet()==0U);return usb_retirement_bad!=0U ? NativeUsbResult_Failure : NativeUsbResult_Ok; }
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance)
+    { assert(instance==0U && quiesced==0U && NativeRuntime_ReadyGet()==0U);retired++;
+      return retirement_bad!=0U ? LoraDeactivateResult_PortError : LoraDeactivateResult_Ok; }
+    int main(int argc,char **argv)
+    {
+        assert(argc==2);assert(NativeRuntime_ReadyGet()==0U);
+        assert(NativeRuntime_Process()==NativeRuntimeResult_NotReady);
+        if (strcmp(argv[1],"clock-init")==0) { clock_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"platform-init")==0) { platform_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"radio-init")==0) { bridge_init=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"pc-init")==0) { bridge_init=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"clock-during-init")==0) { clock_bad_init=1U; }
+        if (strcmp(argv[1],"unknown-init")==0) { bridge_init=(GroundBridgeResult)99; }
+        if (strcmp(argv[1],"radio-not-initialized")==0) { radio_not_initialized=1U; }
+        if (strcmp(argv[1],"radio-unverified")==0) { radio_unverified=1U; }
+        NativeRuntimeResult init=NativeRuntime_Init();assert(published==0U);
+        if (radio_not_initialized!=0U || radio_unverified!=0U)
+        { assert(init==NativeRuntimeResult_RadioFailure); }
+        if (init!=NativeRuntimeResult_Ok)
+        {
+            if (strcmp(argv[1],"unknown-init")==0) { assert(init==NativeRuntimeResult_NotReady); }
+            assert(NativeRuntime_ReadyGet()==0U && pc_reset==1U && bridge_reset==1U && quiesced==1U);
+            assert(NativeRuntime_Process()==init && process_calls==0U);
+            assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));
+            assert(NativeRuntime_Init()==NativeRuntimeResult_NotReady);return 0;
+        }
+        assert(NativeRuntime_ReadyGet()==1U);
+        if (strcmp(argv[1],"clock-before-process")==0) { clock_result=NativeClockResult_Stopped; }
+        if (strcmp(argv[1],"clock-during-process")==0) { clock_bad_process=1U; }
+        if (strcmp(argv[1],"pc-transient")==0) { bridge_process=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"radio-transient")==0) { bridge_process=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"retirement")==0) { clock_bad_process=1U;retirement_bad=1U; }
+        if (strcmp(argv[1],"usb-retirement")==0) { clock_bad_process=1U;usb_retirement_bad=1U; }
+        if (strcmp(argv[1],"unknown-process")==0) { bridge_process=(GroundBridgeResult)99; }
+        NativeRuntimeResult result=NativeRuntime_Process();
+        if (strcmp(argv[1],"unknown-process")==0)
+        {
+            assert(result==NativeRuntimeResult_NotReady && NativeRuntime_ReadyGet()==0U);
+            assert(retired==1U && quiesced==1U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);return 0;
+        }
+        if (clock_result!=NativeClockResult_Ok)
+        {
+            assert(result==((retirement_bad!=0U || usb_retirement_bad!=0U) ? NativeRuntimeResult_RetirementFailure : NativeRuntimeResult_ClockFailure));
+            assert(NativeRuntime_ReadyGet()==0U && retired==1U && quiesced==1U);
+            assert(published==0U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);
+        }
+        else
+        {
+            assert(NativeRuntime_ReadyGet()==1U && retired==0U && pc_reset==0U && published==1U);
+            assert(result==(bridge_process==GROUND_BRIDGE_OK ? NativeRuntimeResult_Ok :
+                bridge_process==GROUND_BRIDGE_PC_ERROR ? NativeRuntimeResult_PcFailure : NativeRuntimeResult_RadioFailure));
+        }
+        return 0;
+    }
+    '''
+        (tmp_path/'test.c').write_text(harness,encoding='utf-8')
+        api=Path(__file__).resolve().parents[1]/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion',
+            '-Wsign-conversion','-Wshadow','-Wundef','-Wstrict-prototypes','-Wmissing-prototypes','-Wswitch-enum',
+            '-fanalyzer','-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),
+            str(tmp_path/'Generated/Src/native_runtime.c'),str(tmp_path/'test.c'),'-o',str(tmp_path/'test.exe')]
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_98da7a63\test.c: In function 'Lora_ChipStatusGet':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_98da7a63\test.c:30:22: error: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} may change value [-Werror=conversion]
+E            30 |     status->verified=radio_unverified!=0U ? 0U : 1U;
+E               |                      ^~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...rified!=0U ? 0U : 1U;\n      |                      ^~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_runtime.py:167: AssertionError
+_ test_native_lifecycle_prevents_early_and_faulted_publication[pc-transient] __
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a/test_native_lifecycle_prevents_6ab6f08f')
+scenario = 'pc-transient'
+
+    @pytest.mark.parametrize('scenario', ['normal','clock-init','platform-init','radio-init','pc-init',
+        'clock-during-init','clock-before-process','clock-during-process','pc-transient','radio-transient','retirement',
+        'unknown-init','unknown-process','usb-retirement','radio-not-initialized','radio-unverified'])
+    def test_native_lifecycle_prevents_early_and_faulted_publication(tmp_path, scenario):
+        compiler=shutil.which('gcc')
+        if compiler is None:
+            pytest.skip('Host GCC unavailable')
+        for path,content in NativeRuntime_FilesRender().items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        headers={
+            'native_clock.h':'''#include <stdint.h>
+    typedef enum { NativeClockResult_Ok, NativeClockResult_Stopped } NativeClockResult;
+    NativeClockResult NativeClock_StatusGet(void);
+    NativeClockResult NativeClock_DelayUs(uint32_t delay);
+    NativeClockResult NativeClock_Read(uint64_t *time);
+    ''',
+            'native_platform.h':'''#include "platform_types.h"
+    PlatformResult NativePlatform_Init(void);
+    void NativePlatform_Quiesce(void);
+    ''',
+            'ground_bridge.h':'''#include <stdint.h>
+    typedef enum { GROUND_BRIDGE_OK, GROUND_BRIDGE_RADIO_ERROR, GROUND_BRIDGE_PC_ERROR } GroundBridgeResult;
+    GroundBridgeResult GroundBridge_Init(void);
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms);
+    void GroundBridge_PcReset(void);
+    ''',
+            'pc_byte_stream.h':'void PcByteStream_OnUsbReset(void);\n',
+            'native_usb_state.h':'''typedef enum { NativeUsbResult_Ok, NativeUsbResult_Failure } NativeUsbResult;
+    NativeUsbResult NativeUsb_Stop(void);
+    ''',
+            'sx1281_device.h':'''#include <stdint.h>
+    typedef enum { LoraDeactivateResult_Ok, LoraDeactivateResult_PortError } LoraDeactivateResult;
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance);
+    typedef enum { LORA_DIAG_RESULT_OK, LORA_DIAG_RESULT_NOT_INIT } LoraDiagResult;
+    typedef struct { uint16_t firmware_version; uint8_t status_value; uint8_t verified; } LoraChipStatus;
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status);
+    ''',
+            'silverstar_assert.h':'''#include <assert.h>
+    #define SILVERSTAR_ASSERT_MODULE_GENERATED 1U
+    #define SILVERSTAR_ASSERT_REASON_STATE_INVARIANT 1U
+    #define SILVERSTAR_ASSERT(p,m,r) assert(p)
+    '''}
+        for path,content in headers.items():
+            (tmp_path/path).write_text(content,encoding='utf-8')
+        harness='''#include "native_runtime.h"
+    #include "native_clock.h"
+    #include "native_platform.h"
+    #include "platform_time.h"
+    #include "ground_bridge.h"
+    #include "sx1281_device.h"
+    #include "pc_byte_stream.h"
+    #include "native_usb_state.h"
+    #include <assert.h>
+    #include <string.h>
+    static NativeClockResult clock_result=NativeClockResult_Ok;
+    static PlatformResult clock_init=PLATFORM_OK,platform_init=PLATFORM_OK;
+    static GroundBridgeResult bridge_init=GROUND_BRIDGE_OK,bridge_process=GROUND_BRIDGE_OK;
+    static uint8_t clock_bad_init,clock_bad_process,retirement_bad,usb_retirement_bad;
+    static uint8_t radio_not_initialized,radio_unverified;
+    static uint32_t retired,quiesced,pc_reset,bridge_reset,process_calls,published;
+    NativeClockResult NativeClock_StatusGet(void) { return clock_result; }
+    NativeClockResult NativeClock_DelayUs(uint32_t delay) { assert(delay==1U);return clock_result; }
+    NativeClockResult NativeClock_Read(uint64_t *time)
+    { if (clock_result!=NativeClockResult_Ok) { return clock_result; } *time=1234000ULL;return clock_result; }
+    PlatformResult PlatformTime_Init(void) { return clock_init; }
+    PlatformResult NativePlatform_Init(void) { return platform_init; }
+    void NativePlatform_Quiesce(void)
+    { assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));quiesced++; }
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status)
+    {
+        assert(instance==0U && status!=0 && NativeRuntime_ReadyGet()==0U);
+        if (radio_not_initialized!=0U) { return LORA_DIAG_RESULT_NOT_INIT; }
+        status->firmware_version=0x1234U;status->status_value=0U;
+        status->verified=radio_unverified!=0U ? 0U : 1U;
+        return LORA_DIAG_RESULT_OK;
+    }
+    GroundBridgeResult GroundBridge_Init(void)
+    {
+        /* The real bridge tries to flush its initial STATUS before returning. */
+        assert(NativeRuntime_ReadyGet()==0U);
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        if (clock_bad_init!=0U) { clock_result=NativeClockResult_Stopped; }
+        return bridge_init;
+    }
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
+    {
+        assert(now_ms==1234U);process_calls++;
+        if (clock_bad_process!=0U) { clock_result=NativeClockResult_Stopped; }
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        return bridge_process;
+    }
+    void GroundBridge_PcReset(void) { assert(NativeRuntime_ReadyGet()==0U);bridge_reset++; }
+    void PcByteStream_OnUsbReset(void) { assert(NativeRuntime_ReadyGet()==0U);pc_reset++; }
+    NativeUsbResult NativeUsb_Stop(void)
+    { assert(NativeRuntime_ReadyGet()==0U);return usb_retirement_bad!=0U ? NativeUsbResult_Failure : NativeUsbResult_Ok; }
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance)
+    { assert(instance==0U && quiesced==0U && NativeRuntime_ReadyGet()==0U);retired++;
+      return retirement_bad!=0U ? LoraDeactivateResult_PortError : LoraDeactivateResult_Ok; }
+    int main(int argc,char **argv)
+    {
+        assert(argc==2);assert(NativeRuntime_ReadyGet()==0U);
+        assert(NativeRuntime_Process()==NativeRuntimeResult_NotReady);
+        if (strcmp(argv[1],"clock-init")==0) { clock_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"platform-init")==0) { platform_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"radio-init")==0) { bridge_init=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"pc-init")==0) { bridge_init=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"clock-during-init")==0) { clock_bad_init=1U; }
+        if (strcmp(argv[1],"unknown-init")==0) { bridge_init=(GroundBridgeResult)99; }
+        if (strcmp(argv[1],"radio-not-initialized")==0) { radio_not_initialized=1U; }
+        if (strcmp(argv[1],"radio-unverified")==0) { radio_unverified=1U; }
+        NativeRuntimeResult init=NativeRuntime_Init();assert(published==0U);
+        if (radio_not_initialized!=0U || radio_unverified!=0U)
+        { assert(init==NativeRuntimeResult_RadioFailure); }
+        if (init!=NativeRuntimeResult_Ok)
+        {
+            if (strcmp(argv[1],"unknown-init")==0) { assert(init==NativeRuntimeResult_NotReady); }
+            assert(NativeRuntime_ReadyGet()==0U && pc_reset==1U && bridge_reset==1U && quiesced==1U);
+            assert(NativeRuntime_Process()==init && process_calls==0U);
+            assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));
+            assert(NativeRuntime_Init()==NativeRuntimeResult_NotReady);return 0;
+        }
+        assert(NativeRuntime_ReadyGet()==1U);
+        if (strcmp(argv[1],"clock-before-process")==0) { clock_result=NativeClockResult_Stopped; }
+        if (strcmp(argv[1],"clock-during-process")==0) { clock_bad_process=1U; }
+        if (strcmp(argv[1],"pc-transient")==0) { bridge_process=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"radio-transient")==0) { bridge_process=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"retirement")==0) { clock_bad_process=1U;retirement_bad=1U; }
+        if (strcmp(argv[1],"usb-retirement")==0) { clock_bad_process=1U;usb_retirement_bad=1U; }
+        if (strcmp(argv[1],"unknown-process")==0) { bridge_process=(GroundBridgeResult)99; }
+        NativeRuntimeResult result=NativeRuntime_Process();
+        if (strcmp(argv[1],"unknown-process")==0)
+        {
+            assert(result==NativeRuntimeResult_NotReady && NativeRuntime_ReadyGet()==0U);
+            assert(retired==1U && quiesced==1U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);return 0;
+        }
+        if (clock_result!=NativeClockResult_Ok)
+        {
+            assert(result==((retirement_bad!=0U || usb_retirement_bad!=0U) ? NativeRuntimeResult_RetirementFailure : NativeRuntimeResult_ClockFailure));
+            assert(NativeRuntime_ReadyGet()==0U && retired==1U && quiesced==1U);
+            assert(published==0U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);
+        }
+        else
+        {
+            assert(NativeRuntime_ReadyGet()==1U && retired==0U && pc_reset==0U && published==1U);
+            assert(result==(bridge_process==GROUND_BRIDGE_OK ? NativeRuntimeResult_Ok :
+                bridge_process==GROUND_BRIDGE_PC_ERROR ? NativeRuntimeResult_PcFailure : NativeRuntimeResult_RadioFailure));
+        }
+        return 0;
+    }
+    '''
+        (tmp_path/'test.c').write_text(harness,encoding='utf-8')
+        api=Path(__file__).resolve().parents[1]/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion',
+            '-Wsign-conversion','-Wshadow','-Wundef','-Wstrict-prototypes','-Wmissing-prototypes','-Wswitch-enum',
+            '-fanalyzer','-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),
+            str(tmp_path/'Generated/Src/native_runtime.c'),str(tmp_path/'test.c'),'-o',str(tmp_path/'test.exe')]
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_6ab6f08f\test.c: In function 'Lora_ChipStatusGet':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_6ab6f08f\test.c:30:22: error: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} may change value [-Werror=conversion]
+E            30 |     status->verified=radio_unverified!=0U ? 0U : 1U;
+E               |                      ^~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...rified!=0U ? 0U : 1U;\n      |                      ^~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_runtime.py:167: AssertionError
+_ test_native_lifecycle_prevents_early_and_faulted_publication[radio-transient] _
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a/test_native_lifecycle_prevents_c65df03b')
+scenario = 'radio-transient'
+
+    @pytest.mark.parametrize('scenario', ['normal','clock-init','platform-init','radio-init','pc-init',
+        'clock-during-init','clock-before-process','clock-during-process','pc-transient','radio-transient','retirement',
+        'unknown-init','unknown-process','usb-retirement','radio-not-initialized','radio-unverified'])
+    def test_native_lifecycle_prevents_early_and_faulted_publication(tmp_path, scenario):
+        compiler=shutil.which('gcc')
+        if compiler is None:
+            pytest.skip('Host GCC unavailable')
+        for path,content in NativeRuntime_FilesRender().items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        headers={
+            'native_clock.h':'''#include <stdint.h>
+    typedef enum { NativeClockResult_Ok, NativeClockResult_Stopped } NativeClockResult;
+    NativeClockResult NativeClock_StatusGet(void);
+    NativeClockResult NativeClock_DelayUs(uint32_t delay);
+    NativeClockResult NativeClock_Read(uint64_t *time);
+    ''',
+            'native_platform.h':'''#include "platform_types.h"
+    PlatformResult NativePlatform_Init(void);
+    void NativePlatform_Quiesce(void);
+    ''',
+            'ground_bridge.h':'''#include <stdint.h>
+    typedef enum { GROUND_BRIDGE_OK, GROUND_BRIDGE_RADIO_ERROR, GROUND_BRIDGE_PC_ERROR } GroundBridgeResult;
+    GroundBridgeResult GroundBridge_Init(void);
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms);
+    void GroundBridge_PcReset(void);
+    ''',
+            'pc_byte_stream.h':'void PcByteStream_OnUsbReset(void);\n',
+            'native_usb_state.h':'''typedef enum { NativeUsbResult_Ok, NativeUsbResult_Failure } NativeUsbResult;
+    NativeUsbResult NativeUsb_Stop(void);
+    ''',
+            'sx1281_device.h':'''#include <stdint.h>
+    typedef enum { LoraDeactivateResult_Ok, LoraDeactivateResult_PortError } LoraDeactivateResult;
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance);
+    typedef enum { LORA_DIAG_RESULT_OK, LORA_DIAG_RESULT_NOT_INIT } LoraDiagResult;
+    typedef struct { uint16_t firmware_version; uint8_t status_value; uint8_t verified; } LoraChipStatus;
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status);
+    ''',
+            'silverstar_assert.h':'''#include <assert.h>
+    #define SILVERSTAR_ASSERT_MODULE_GENERATED 1U
+    #define SILVERSTAR_ASSERT_REASON_STATE_INVARIANT 1U
+    #define SILVERSTAR_ASSERT(p,m,r) assert(p)
+    '''}
+        for path,content in headers.items():
+            (tmp_path/path).write_text(content,encoding='utf-8')
+        harness='''#include "native_runtime.h"
+    #include "native_clock.h"
+    #include "native_platform.h"
+    #include "platform_time.h"
+    #include "ground_bridge.h"
+    #include "sx1281_device.h"
+    #include "pc_byte_stream.h"
+    #include "native_usb_state.h"
+    #include <assert.h>
+    #include <string.h>
+    static NativeClockResult clock_result=NativeClockResult_Ok;
+    static PlatformResult clock_init=PLATFORM_OK,platform_init=PLATFORM_OK;
+    static GroundBridgeResult bridge_init=GROUND_BRIDGE_OK,bridge_process=GROUND_BRIDGE_OK;
+    static uint8_t clock_bad_init,clock_bad_process,retirement_bad,usb_retirement_bad;
+    static uint8_t radio_not_initialized,radio_unverified;
+    static uint32_t retired,quiesced,pc_reset,bridge_reset,process_calls,published;
+    NativeClockResult NativeClock_StatusGet(void) { return clock_result; }
+    NativeClockResult NativeClock_DelayUs(uint32_t delay) { assert(delay==1U);return clock_result; }
+    NativeClockResult NativeClock_Read(uint64_t *time)
+    { if (clock_result!=NativeClockResult_Ok) { return clock_result; } *time=1234000ULL;return clock_result; }
+    PlatformResult PlatformTime_Init(void) { return clock_init; }
+    PlatformResult NativePlatform_Init(void) { return platform_init; }
+    void NativePlatform_Quiesce(void)
+    { assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));quiesced++; }
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status)
+    {
+        assert(instance==0U && status!=0 && NativeRuntime_ReadyGet()==0U);
+        if (radio_not_initialized!=0U) { return LORA_DIAG_RESULT_NOT_INIT; }
+        status->firmware_version=0x1234U;status->status_value=0U;
+        status->verified=radio_unverified!=0U ? 0U : 1U;
+        return LORA_DIAG_RESULT_OK;
+    }
+    GroundBridgeResult GroundBridge_Init(void)
+    {
+        /* The real bridge tries to flush its initial STATUS before returning. */
+        assert(NativeRuntime_ReadyGet()==0U);
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        if (clock_bad_init!=0U) { clock_result=NativeClockResult_Stopped; }
+        return bridge_init;
+    }
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
+    {
+        assert(now_ms==1234U);process_calls++;
+        if (clock_bad_process!=0U) { clock_result=NativeClockResult_Stopped; }
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        return bridge_process;
+    }
+    void GroundBridge_PcReset(void) { assert(NativeRuntime_ReadyGet()==0U);bridge_reset++; }
+    void PcByteStream_OnUsbReset(void) { assert(NativeRuntime_ReadyGet()==0U);pc_reset++; }
+    NativeUsbResult NativeUsb_Stop(void)
+    { assert(NativeRuntime_ReadyGet()==0U);return usb_retirement_bad!=0U ? NativeUsbResult_Failure : NativeUsbResult_Ok; }
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance)
+    { assert(instance==0U && quiesced==0U && NativeRuntime_ReadyGet()==0U);retired++;
+      return retirement_bad!=0U ? LoraDeactivateResult_PortError : LoraDeactivateResult_Ok; }
+    int main(int argc,char **argv)
+    {
+        assert(argc==2);assert(NativeRuntime_ReadyGet()==0U);
+        assert(NativeRuntime_Process()==NativeRuntimeResult_NotReady);
+        if (strcmp(argv[1],"clock-init")==0) { clock_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"platform-init")==0) { platform_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"radio-init")==0) { bridge_init=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"pc-init")==0) { bridge_init=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"clock-during-init")==0) { clock_bad_init=1U; }
+        if (strcmp(argv[1],"unknown-init")==0) { bridge_init=(GroundBridgeResult)99; }
+        if (strcmp(argv[1],"radio-not-initialized")==0) { radio_not_initialized=1U; }
+        if (strcmp(argv[1],"radio-unverified")==0) { radio_unverified=1U; }
+        NativeRuntimeResult init=NativeRuntime_Init();assert(published==0U);
+        if (radio_not_initialized!=0U || radio_unverified!=0U)
+        { assert(init==NativeRuntimeResult_RadioFailure); }
+        if (init!=NativeRuntimeResult_Ok)
+        {
+            if (strcmp(argv[1],"unknown-init")==0) { assert(init==NativeRuntimeResult_NotReady); }
+            assert(NativeRuntime_ReadyGet()==0U && pc_reset==1U && bridge_reset==1U && quiesced==1U);
+            assert(NativeRuntime_Process()==init && process_calls==0U);
+            assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));
+            assert(NativeRuntime_Init()==NativeRuntimeResult_NotReady);return 0;
+        }
+        assert(NativeRuntime_ReadyGet()==1U);
+        if (strcmp(argv[1],"clock-before-process")==0) { clock_result=NativeClockResult_Stopped; }
+        if (strcmp(argv[1],"clock-during-process")==0) { clock_bad_process=1U; }
+        if (strcmp(argv[1],"pc-transient")==0) { bridge_process=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"radio-transient")==0) { bridge_process=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"retirement")==0) { clock_bad_process=1U;retirement_bad=1U; }
+        if (strcmp(argv[1],"usb-retirement")==0) { clock_bad_process=1U;usb_retirement_bad=1U; }
+        if (strcmp(argv[1],"unknown-process")==0) { bridge_process=(GroundBridgeResult)99; }
+        NativeRuntimeResult result=NativeRuntime_Process();
+        if (strcmp(argv[1],"unknown-process")==0)
+        {
+            assert(result==NativeRuntimeResult_NotReady && NativeRuntime_ReadyGet()==0U);
+            assert(retired==1U && quiesced==1U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);return 0;
+        }
+        if (clock_result!=NativeClockResult_Ok)
+        {
+            assert(result==((retirement_bad!=0U || usb_retirement_bad!=0U) ? NativeRuntimeResult_RetirementFailure : NativeRuntimeResult_ClockFailure));
+            assert(NativeRuntime_ReadyGet()==0U && retired==1U && quiesced==1U);
+            assert(published==0U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);
+        }
+        else
+        {
+            assert(NativeRuntime_ReadyGet()==1U && retired==0U && pc_reset==0U && published==1U);
+            assert(result==(bridge_process==GROUND_BRIDGE_OK ? NativeRuntimeResult_Ok :
+                bridge_process==GROUND_BRIDGE_PC_ERROR ? NativeRuntimeResult_PcFailure : NativeRuntimeResult_RadioFailure));
+        }
+        return 0;
+    }
+    '''
+        (tmp_path/'test.c').write_text(harness,encoding='utf-8')
+        api=Path(__file__).resolve().parents[1]/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion',
+            '-Wsign-conversion','-Wshadow','-Wundef','-Wstrict-prototypes','-Wmissing-prototypes','-Wswitch-enum',
+            '-fanalyzer','-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),
+            str(tmp_path/'Generated/Src/native_runtime.c'),str(tmp_path/'test.c'),'-o',str(tmp_path/'test.exe')]
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_c65df03b\test.c: In function 'Lora_ChipStatusGet':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_c65df03b\test.c:30:22: error: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} may change value [-Werror=conversion]
+E            30 |     status->verified=radio_unverified!=0U ? 0U : 1U;
+E               |                      ^~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...rified!=0U ? 0U : 1U;\n      |                      ^~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_runtime.py:167: AssertionError
+__ test_native_lifecycle_prevents_early_and_faulted_publication[retirement] ___
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a/test_native_lifecycle_prevents_ec3d328d')
+scenario = 'retirement'
+
+    @pytest.mark.parametrize('scenario', ['normal','clock-init','platform-init','radio-init','pc-init',
+        'clock-during-init','clock-before-process','clock-during-process','pc-transient','radio-transient','retirement',
+        'unknown-init','unknown-process','usb-retirement','radio-not-initialized','radio-unverified'])
+    def test_native_lifecycle_prevents_early_and_faulted_publication(tmp_path, scenario):
+        compiler=shutil.which('gcc')
+        if compiler is None:
+            pytest.skip('Host GCC unavailable')
+        for path,content in NativeRuntime_FilesRender().items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        headers={
+            'native_clock.h':'''#include <stdint.h>
+    typedef enum { NativeClockResult_Ok, NativeClockResult_Stopped } NativeClockResult;
+    NativeClockResult NativeClock_StatusGet(void);
+    NativeClockResult NativeClock_DelayUs(uint32_t delay);
+    NativeClockResult NativeClock_Read(uint64_t *time);
+    ''',
+            'native_platform.h':'''#include "platform_types.h"
+    PlatformResult NativePlatform_Init(void);
+    void NativePlatform_Quiesce(void);
+    ''',
+            'ground_bridge.h':'''#include <stdint.h>
+    typedef enum { GROUND_BRIDGE_OK, GROUND_BRIDGE_RADIO_ERROR, GROUND_BRIDGE_PC_ERROR } GroundBridgeResult;
+    GroundBridgeResult GroundBridge_Init(void);
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms);
+    void GroundBridge_PcReset(void);
+    ''',
+            'pc_byte_stream.h':'void PcByteStream_OnUsbReset(void);\n',
+            'native_usb_state.h':'''typedef enum { NativeUsbResult_Ok, NativeUsbResult_Failure } NativeUsbResult;
+    NativeUsbResult NativeUsb_Stop(void);
+    ''',
+            'sx1281_device.h':'''#include <stdint.h>
+    typedef enum { LoraDeactivateResult_Ok, LoraDeactivateResult_PortError } LoraDeactivateResult;
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance);
+    typedef enum { LORA_DIAG_RESULT_OK, LORA_DIAG_RESULT_NOT_INIT } LoraDiagResult;
+    typedef struct { uint16_t firmware_version; uint8_t status_value; uint8_t verified; } LoraChipStatus;
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status);
+    ''',
+            'silverstar_assert.h':'''#include <assert.h>
+    #define SILVERSTAR_ASSERT_MODULE_GENERATED 1U
+    #define SILVERSTAR_ASSERT_REASON_STATE_INVARIANT 1U
+    #define SILVERSTAR_ASSERT(p,m,r) assert(p)
+    '''}
+        for path,content in headers.items():
+            (tmp_path/path).write_text(content,encoding='utf-8')
+        harness='''#include "native_runtime.h"
+    #include "native_clock.h"
+    #include "native_platform.h"
+    #include "platform_time.h"
+    #include "ground_bridge.h"
+    #include "sx1281_device.h"
+    #include "pc_byte_stream.h"
+    #include "native_usb_state.h"
+    #include <assert.h>
+    #include <string.h>
+    static NativeClockResult clock_result=NativeClockResult_Ok;
+    static PlatformResult clock_init=PLATFORM_OK,platform_init=PLATFORM_OK;
+    static GroundBridgeResult bridge_init=GROUND_BRIDGE_OK,bridge_process=GROUND_BRIDGE_OK;
+    static uint8_t clock_bad_init,clock_bad_process,retirement_bad,usb_retirement_bad;
+    static uint8_t radio_not_initialized,radio_unverified;
+    static uint32_t retired,quiesced,pc_reset,bridge_reset,process_calls,published;
+    NativeClockResult NativeClock_StatusGet(void) { return clock_result; }
+    NativeClockResult NativeClock_DelayUs(uint32_t delay) { assert(delay==1U);return clock_result; }
+    NativeClockResult NativeClock_Read(uint64_t *time)
+    { if (clock_result!=NativeClockResult_Ok) { return clock_result; } *time=1234000ULL;return clock_result; }
+    PlatformResult PlatformTime_Init(void) { return clock_init; }
+    PlatformResult NativePlatform_Init(void) { return platform_init; }
+    void NativePlatform_Quiesce(void)
+    { assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));quiesced++; }
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status)
+    {
+        assert(instance==0U && status!=0 && NativeRuntime_ReadyGet()==0U);
+        if (radio_not_initialized!=0U) { return LORA_DIAG_RESULT_NOT_INIT; }
+        status->firmware_version=0x1234U;status->status_value=0U;
+        status->verified=radio_unverified!=0U ? 0U : 1U;
+        return LORA_DIAG_RESULT_OK;
+    }
+    GroundBridgeResult GroundBridge_Init(void)
+    {
+        /* The real bridge tries to flush its initial STATUS before returning. */
+        assert(NativeRuntime_ReadyGet()==0U);
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        if (clock_bad_init!=0U) { clock_result=NativeClockResult_Stopped; }
+        return bridge_init;
+    }
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
+    {
+        assert(now_ms==1234U);process_calls++;
+        if (clock_bad_process!=0U) { clock_result=NativeClockResult_Stopped; }
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        return bridge_process;
+    }
+    void GroundBridge_PcReset(void) { assert(NativeRuntime_ReadyGet()==0U);bridge_reset++; }
+    void PcByteStream_OnUsbReset(void) { assert(NativeRuntime_ReadyGet()==0U);pc_reset++; }
+    NativeUsbResult NativeUsb_Stop(void)
+    { assert(NativeRuntime_ReadyGet()==0U);return usb_retirement_bad!=0U ? NativeUsbResult_Failure : NativeUsbResult_Ok; }
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance)
+    { assert(instance==0U && quiesced==0U && NativeRuntime_ReadyGet()==0U);retired++;
+      return retirement_bad!=0U ? LoraDeactivateResult_PortError : LoraDeactivateResult_Ok; }
+    int main(int argc,char **argv)
+    {
+        assert(argc==2);assert(NativeRuntime_ReadyGet()==0U);
+        assert(NativeRuntime_Process()==NativeRuntimeResult_NotReady);
+        if (strcmp(argv[1],"clock-init")==0) { clock_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"platform-init")==0) { platform_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"radio-init")==0) { bridge_init=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"pc-init")==0) { bridge_init=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"clock-during-init")==0) { clock_bad_init=1U; }
+        if (strcmp(argv[1],"unknown-init")==0) { bridge_init=(GroundBridgeResult)99; }
+        if (strcmp(argv[1],"radio-not-initialized")==0) { radio_not_initialized=1U; }
+        if (strcmp(argv[1],"radio-unverified")==0) { radio_unverified=1U; }
+        NativeRuntimeResult init=NativeRuntime_Init();assert(published==0U);
+        if (radio_not_initialized!=0U || radio_unverified!=0U)
+        { assert(init==NativeRuntimeResult_RadioFailure); }
+        if (init!=NativeRuntimeResult_Ok)
+        {
+            if (strcmp(argv[1],"unknown-init")==0) { assert(init==NativeRuntimeResult_NotReady); }
+            assert(NativeRuntime_ReadyGet()==0U && pc_reset==1U && bridge_reset==1U && quiesced==1U);
+            assert(NativeRuntime_Process()==init && process_calls==0U);
+            assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));
+            assert(NativeRuntime_Init()==NativeRuntimeResult_NotReady);return 0;
+        }
+        assert(NativeRuntime_ReadyGet()==1U);
+        if (strcmp(argv[1],"clock-before-process")==0) { clock_result=NativeClockResult_Stopped; }
+        if (strcmp(argv[1],"clock-during-process")==0) { clock_bad_process=1U; }
+        if (strcmp(argv[1],"pc-transient")==0) { bridge_process=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"radio-transient")==0) { bridge_process=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"retirement")==0) { clock_bad_process=1U;retirement_bad=1U; }
+        if (strcmp(argv[1],"usb-retirement")==0) { clock_bad_process=1U;usb_retirement_bad=1U; }
+        if (strcmp(argv[1],"unknown-process")==0) { bridge_process=(GroundBridgeResult)99; }
+        NativeRuntimeResult result=NativeRuntime_Process();
+        if (strcmp(argv[1],"unknown-process")==0)
+        {
+            assert(result==NativeRuntimeResult_NotReady && NativeRuntime_ReadyGet()==0U);
+            assert(retired==1U && quiesced==1U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);return 0;
+        }
+        if (clock_result!=NativeClockResult_Ok)
+        {
+            assert(result==((retirement_bad!=0U || usb_retirement_bad!=0U) ? NativeRuntimeResult_RetirementFailure : NativeRuntimeResult_ClockFailure));
+            assert(NativeRuntime_ReadyGet()==0U && retired==1U && quiesced==1U);
+            assert(published==0U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);
+        }
+        else
+        {
+            assert(NativeRuntime_ReadyGet()==1U && retired==0U && pc_reset==0U && published==1U);
+            assert(result==(bridge_process==GROUND_BRIDGE_OK ? NativeRuntimeResult_Ok :
+                bridge_process==GROUND_BRIDGE_PC_ERROR ? NativeRuntimeResult_PcFailure : NativeRuntimeResult_RadioFailure));
+        }
+        return 0;
+    }
+    '''
+        (tmp_path/'test.c').write_text(harness,encoding='utf-8')
+        api=Path(__file__).resolve().parents[1]/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion',
+            '-Wsign-conversion','-Wshadow','-Wundef','-Wstrict-prototypes','-Wmissing-prototypes','-Wswitch-enum',
+            '-fanalyzer','-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),
+            str(tmp_path/'Generated/Src/native_runtime.c'),str(tmp_path/'test.c'),'-o',str(tmp_path/'test.exe')]
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_ec3d328d\test.c: In function 'Lora_ChipStatusGet':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_ec3d328d\test.c:30:22: error: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} may change value [-Werror=conversion]
+E            30 |     status->verified=radio_unverified!=0U ? 0U : 1U;
+E               |                      ^~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...rified!=0U ? 0U : 1U;\n      |                      ^~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_runtime.py:167: AssertionError
+_ test_native_lifecycle_prevents_early_and_faulted_publication[unknown-init] __
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a/test_native_lifecycle_prevents_818d9d62')
+scenario = 'unknown-init'
+
+    @pytest.mark.parametrize('scenario', ['normal','clock-init','platform-init','radio-init','pc-init',
+        'clock-during-init','clock-before-process','clock-during-process','pc-transient','radio-transient','retirement',
+        'unknown-init','unknown-process','usb-retirement','radio-not-initialized','radio-unverified'])
+    def test_native_lifecycle_prevents_early_and_faulted_publication(tmp_path, scenario):
+        compiler=shutil.which('gcc')
+        if compiler is None:
+            pytest.skip('Host GCC unavailable')
+        for path,content in NativeRuntime_FilesRender().items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        headers={
+            'native_clock.h':'''#include <stdint.h>
+    typedef enum { NativeClockResult_Ok, NativeClockResult_Stopped } NativeClockResult;
+    NativeClockResult NativeClock_StatusGet(void);
+    NativeClockResult NativeClock_DelayUs(uint32_t delay);
+    NativeClockResult NativeClock_Read(uint64_t *time);
+    ''',
+            'native_platform.h':'''#include "platform_types.h"
+    PlatformResult NativePlatform_Init(void);
+    void NativePlatform_Quiesce(void);
+    ''',
+            'ground_bridge.h':'''#include <stdint.h>
+    typedef enum { GROUND_BRIDGE_OK, GROUND_BRIDGE_RADIO_ERROR, GROUND_BRIDGE_PC_ERROR } GroundBridgeResult;
+    GroundBridgeResult GroundBridge_Init(void);
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms);
+    void GroundBridge_PcReset(void);
+    ''',
+            'pc_byte_stream.h':'void PcByteStream_OnUsbReset(void);\n',
+            'native_usb_state.h':'''typedef enum { NativeUsbResult_Ok, NativeUsbResult_Failure } NativeUsbResult;
+    NativeUsbResult NativeUsb_Stop(void);
+    ''',
+            'sx1281_device.h':'''#include <stdint.h>
+    typedef enum { LoraDeactivateResult_Ok, LoraDeactivateResult_PortError } LoraDeactivateResult;
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance);
+    typedef enum { LORA_DIAG_RESULT_OK, LORA_DIAG_RESULT_NOT_INIT } LoraDiagResult;
+    typedef struct { uint16_t firmware_version; uint8_t status_value; uint8_t verified; } LoraChipStatus;
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status);
+    ''',
+            'silverstar_assert.h':'''#include <assert.h>
+    #define SILVERSTAR_ASSERT_MODULE_GENERATED 1U
+    #define SILVERSTAR_ASSERT_REASON_STATE_INVARIANT 1U
+    #define SILVERSTAR_ASSERT(p,m,r) assert(p)
+    '''}
+        for path,content in headers.items():
+            (tmp_path/path).write_text(content,encoding='utf-8')
+        harness='''#include "native_runtime.h"
+    #include "native_clock.h"
+    #include "native_platform.h"
+    #include "platform_time.h"
+    #include "ground_bridge.h"
+    #include "sx1281_device.h"
+    #include "pc_byte_stream.h"
+    #include "native_usb_state.h"
+    #include <assert.h>
+    #include <string.h>
+    static NativeClockResult clock_result=NativeClockResult_Ok;
+    static PlatformResult clock_init=PLATFORM_OK,platform_init=PLATFORM_OK;
+    static GroundBridgeResult bridge_init=GROUND_BRIDGE_OK,bridge_process=GROUND_BRIDGE_OK;
+    static uint8_t clock_bad_init,clock_bad_process,retirement_bad,usb_retirement_bad;
+    static uint8_t radio_not_initialized,radio_unverified;
+    static uint32_t retired,quiesced,pc_reset,bridge_reset,process_calls,published;
+    NativeClockResult NativeClock_StatusGet(void) { return clock_result; }
+    NativeClockResult NativeClock_DelayUs(uint32_t delay) { assert(delay==1U);return clock_result; }
+    NativeClockResult NativeClock_Read(uint64_t *time)
+    { if (clock_result!=NativeClockResult_Ok) { return clock_result; } *time=1234000ULL;return clock_result; }
+    PlatformResult PlatformTime_Init(void) { return clock_init; }
+    PlatformResult NativePlatform_Init(void) { return platform_init; }
+    void NativePlatform_Quiesce(void)
+    { assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));quiesced++; }
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status)
+    {
+        assert(instance==0U && status!=0 && NativeRuntime_ReadyGet()==0U);
+        if (radio_not_initialized!=0U) { return LORA_DIAG_RESULT_NOT_INIT; }
+        status->firmware_version=0x1234U;status->status_value=0U;
+        status->verified=radio_unverified!=0U ? 0U : 1U;
+        return LORA_DIAG_RESULT_OK;
+    }
+    GroundBridgeResult GroundBridge_Init(void)
+    {
+        /* The real bridge tries to flush its initial STATUS before returning. */
+        assert(NativeRuntime_ReadyGet()==0U);
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        if (clock_bad_init!=0U) { clock_result=NativeClockResult_Stopped; }
+        return bridge_init;
+    }
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
+    {
+        assert(now_ms==1234U);process_calls++;
+        if (clock_bad_process!=0U) { clock_result=NativeClockResult_Stopped; }
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        return bridge_process;
+    }
+    void GroundBridge_PcReset(void) { assert(NativeRuntime_ReadyGet()==0U);bridge_reset++; }
+    void PcByteStream_OnUsbReset(void) { assert(NativeRuntime_ReadyGet()==0U);pc_reset++; }
+    NativeUsbResult NativeUsb_Stop(void)
+    { assert(NativeRuntime_ReadyGet()==0U);return usb_retirement_bad!=0U ? NativeUsbResult_Failure : NativeUsbResult_Ok; }
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance)
+    { assert(instance==0U && quiesced==0U && NativeRuntime_ReadyGet()==0U);retired++;
+      return retirement_bad!=0U ? LoraDeactivateResult_PortError : LoraDeactivateResult_Ok; }
+    int main(int argc,char **argv)
+    {
+        assert(argc==2);assert(NativeRuntime_ReadyGet()==0U);
+        assert(NativeRuntime_Process()==NativeRuntimeResult_NotReady);
+        if (strcmp(argv[1],"clock-init")==0) { clock_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"platform-init")==0) { platform_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"radio-init")==0) { bridge_init=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"pc-init")==0) { bridge_init=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"clock-during-init")==0) { clock_bad_init=1U; }
+        if (strcmp(argv[1],"unknown-init")==0) { bridge_init=(GroundBridgeResult)99; }
+        if (strcmp(argv[1],"radio-not-initialized")==0) { radio_not_initialized=1U; }
+        if (strcmp(argv[1],"radio-unverified")==0) { radio_unverified=1U; }
+        NativeRuntimeResult init=NativeRuntime_Init();assert(published==0U);
+        if (radio_not_initialized!=0U || radio_unverified!=0U)
+        { assert(init==NativeRuntimeResult_RadioFailure); }
+        if (init!=NativeRuntimeResult_Ok)
+        {
+            if (strcmp(argv[1],"unknown-init")==0) { assert(init==NativeRuntimeResult_NotReady); }
+            assert(NativeRuntime_ReadyGet()==0U && pc_reset==1U && bridge_reset==1U && quiesced==1U);
+            assert(NativeRuntime_Process()==init && process_calls==0U);
+            assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));
+            assert(NativeRuntime_Init()==NativeRuntimeResult_NotReady);return 0;
+        }
+        assert(NativeRuntime_ReadyGet()==1U);
+        if (strcmp(argv[1],"clock-before-process")==0) { clock_result=NativeClockResult_Stopped; }
+        if (strcmp(argv[1],"clock-during-process")==0) { clock_bad_process=1U; }
+        if (strcmp(argv[1],"pc-transient")==0) { bridge_process=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"radio-transient")==0) { bridge_process=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"retirement")==0) { clock_bad_process=1U;retirement_bad=1U; }
+        if (strcmp(argv[1],"usb-retirement")==0) { clock_bad_process=1U;usb_retirement_bad=1U; }
+        if (strcmp(argv[1],"unknown-process")==0) { bridge_process=(GroundBridgeResult)99; }
+        NativeRuntimeResult result=NativeRuntime_Process();
+        if (strcmp(argv[1],"unknown-process")==0)
+        {
+            assert(result==NativeRuntimeResult_NotReady && NativeRuntime_ReadyGet()==0U);
+            assert(retired==1U && quiesced==1U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);return 0;
+        }
+        if (clock_result!=NativeClockResult_Ok)
+        {
+            assert(result==((retirement_bad!=0U || usb_retirement_bad!=0U) ? NativeRuntimeResult_RetirementFailure : NativeRuntimeResult_ClockFailure));
+            assert(NativeRuntime_ReadyGet()==0U && retired==1U && quiesced==1U);
+            assert(published==0U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);
+        }
+        else
+        {
+            assert(NativeRuntime_ReadyGet()==1U && retired==0U && pc_reset==0U && published==1U);
+            assert(result==(bridge_process==GROUND_BRIDGE_OK ? NativeRuntimeResult_Ok :
+                bridge_process==GROUND_BRIDGE_PC_ERROR ? NativeRuntimeResult_PcFailure : NativeRuntimeResult_RadioFailure));
+        }
+        return 0;
+    }
+    '''
+        (tmp_path/'test.c').write_text(harness,encoding='utf-8')
+        api=Path(__file__).resolve().parents[1]/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion',
+            '-Wsign-conversion','-Wshadow','-Wundef','-Wstrict-prototypes','-Wmissing-prototypes','-Wswitch-enum',
+            '-fanalyzer','-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),
+            str(tmp_path/'Generated/Src/native_runtime.c'),str(tmp_path/'test.c'),'-o',str(tmp_path/'test.exe')]
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_818d9d62\test.c: In function 'Lora_ChipStatusGet':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_818d9d62\test.c:30:22: error: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} may change value [-Werror=conversion]
+E            30 |     status->verified=radio_unverified!=0U ? 0U : 1U;
+E               |                      ^~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...rified!=0U ? 0U : 1U;\n      |                      ^~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_runtime.py:167: AssertionError
+_ test_native_lifecycle_prevents_early_and_faulted_publication[unknown-process] _
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a/test_native_lifecycle_prevents_4e986604')
+scenario = 'unknown-process'
+
+    @pytest.mark.parametrize('scenario', ['normal','clock-init','platform-init','radio-init','pc-init',
+        'clock-during-init','clock-before-process','clock-during-process','pc-transient','radio-transient','retirement',
+        'unknown-init','unknown-process','usb-retirement','radio-not-initialized','radio-unverified'])
+    def test_native_lifecycle_prevents_early_and_faulted_publication(tmp_path, scenario):
+        compiler=shutil.which('gcc')
+        if compiler is None:
+            pytest.skip('Host GCC unavailable')
+        for path,content in NativeRuntime_FilesRender().items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        headers={
+            'native_clock.h':'''#include <stdint.h>
+    typedef enum { NativeClockResult_Ok, NativeClockResult_Stopped } NativeClockResult;
+    NativeClockResult NativeClock_StatusGet(void);
+    NativeClockResult NativeClock_DelayUs(uint32_t delay);
+    NativeClockResult NativeClock_Read(uint64_t *time);
+    ''',
+            'native_platform.h':'''#include "platform_types.h"
+    PlatformResult NativePlatform_Init(void);
+    void NativePlatform_Quiesce(void);
+    ''',
+            'ground_bridge.h':'''#include <stdint.h>
+    typedef enum { GROUND_BRIDGE_OK, GROUND_BRIDGE_RADIO_ERROR, GROUND_BRIDGE_PC_ERROR } GroundBridgeResult;
+    GroundBridgeResult GroundBridge_Init(void);
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms);
+    void GroundBridge_PcReset(void);
+    ''',
+            'pc_byte_stream.h':'void PcByteStream_OnUsbReset(void);\n',
+            'native_usb_state.h':'''typedef enum { NativeUsbResult_Ok, NativeUsbResult_Failure } NativeUsbResult;
+    NativeUsbResult NativeUsb_Stop(void);
+    ''',
+            'sx1281_device.h':'''#include <stdint.h>
+    typedef enum { LoraDeactivateResult_Ok, LoraDeactivateResult_PortError } LoraDeactivateResult;
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance);
+    typedef enum { LORA_DIAG_RESULT_OK, LORA_DIAG_RESULT_NOT_INIT } LoraDiagResult;
+    typedef struct { uint16_t firmware_version; uint8_t status_value; uint8_t verified; } LoraChipStatus;
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status);
+    ''',
+            'silverstar_assert.h':'''#include <assert.h>
+    #define SILVERSTAR_ASSERT_MODULE_GENERATED 1U
+    #define SILVERSTAR_ASSERT_REASON_STATE_INVARIANT 1U
+    #define SILVERSTAR_ASSERT(p,m,r) assert(p)
+    '''}
+        for path,content in headers.items():
+            (tmp_path/path).write_text(content,encoding='utf-8')
+        harness='''#include "native_runtime.h"
+    #include "native_clock.h"
+    #include "native_platform.h"
+    #include "platform_time.h"
+    #include "ground_bridge.h"
+    #include "sx1281_device.h"
+    #include "pc_byte_stream.h"
+    #include "native_usb_state.h"
+    #include <assert.h>
+    #include <string.h>
+    static NativeClockResult clock_result=NativeClockResult_Ok;
+    static PlatformResult clock_init=PLATFORM_OK,platform_init=PLATFORM_OK;
+    static GroundBridgeResult bridge_init=GROUND_BRIDGE_OK,bridge_process=GROUND_BRIDGE_OK;
+    static uint8_t clock_bad_init,clock_bad_process,retirement_bad,usb_retirement_bad;
+    static uint8_t radio_not_initialized,radio_unverified;
+    static uint32_t retired,quiesced,pc_reset,bridge_reset,process_calls,published;
+    NativeClockResult NativeClock_StatusGet(void) { return clock_result; }
+    NativeClockResult NativeClock_DelayUs(uint32_t delay) { assert(delay==1U);return clock_result; }
+    NativeClockResult NativeClock_Read(uint64_t *time)
+    { if (clock_result!=NativeClockResult_Ok) { return clock_result; } *time=1234000ULL;return clock_result; }
+    PlatformResult PlatformTime_Init(void) { return clock_init; }
+    PlatformResult NativePlatform_Init(void) { return platform_init; }
+    void NativePlatform_Quiesce(void)
+    { assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));quiesced++; }
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status)
+    {
+        assert(instance==0U && status!=0 && NativeRuntime_ReadyGet()==0U);
+        if (radio_not_initialized!=0U) { return LORA_DIAG_RESULT_NOT_INIT; }
+        status->firmware_version=0x1234U;status->status_value=0U;
+        status->verified=radio_unverified!=0U ? 0U : 1U;
+        return LORA_DIAG_RESULT_OK;
+    }
+    GroundBridgeResult GroundBridge_Init(void)
+    {
+        /* The real bridge tries to flush its initial STATUS before returning. */
+        assert(NativeRuntime_ReadyGet()==0U);
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        if (clock_bad_init!=0U) { clock_result=NativeClockResult_Stopped; }
+        return bridge_init;
+    }
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
+    {
+        assert(now_ms==1234U);process_calls++;
+        if (clock_bad_process!=0U) { clock_result=NativeClockResult_Stopped; }
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        return bridge_process;
+    }
+    void GroundBridge_PcReset(void) { assert(NativeRuntime_ReadyGet()==0U);bridge_reset++; }
+    void PcByteStream_OnUsbReset(void) { assert(NativeRuntime_ReadyGet()==0U);pc_reset++; }
+    NativeUsbResult NativeUsb_Stop(void)
+    { assert(NativeRuntime_ReadyGet()==0U);return usb_retirement_bad!=0U ? NativeUsbResult_Failure : NativeUsbResult_Ok; }
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance)
+    { assert(instance==0U && quiesced==0U && NativeRuntime_ReadyGet()==0U);retired++;
+      return retirement_bad!=0U ? LoraDeactivateResult_PortError : LoraDeactivateResult_Ok; }
+    int main(int argc,char **argv)
+    {
+        assert(argc==2);assert(NativeRuntime_ReadyGet()==0U);
+        assert(NativeRuntime_Process()==NativeRuntimeResult_NotReady);
+        if (strcmp(argv[1],"clock-init")==0) { clock_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"platform-init")==0) { platform_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"radio-init")==0) { bridge_init=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"pc-init")==0) { bridge_init=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"clock-during-init")==0) { clock_bad_init=1U; }
+        if (strcmp(argv[1],"unknown-init")==0) { bridge_init=(GroundBridgeResult)99; }
+        if (strcmp(argv[1],"radio-not-initialized")==0) { radio_not_initialized=1U; }
+        if (strcmp(argv[1],"radio-unverified")==0) { radio_unverified=1U; }
+        NativeRuntimeResult init=NativeRuntime_Init();assert(published==0U);
+        if (radio_not_initialized!=0U || radio_unverified!=0U)
+        { assert(init==NativeRuntimeResult_RadioFailure); }
+        if (init!=NativeRuntimeResult_Ok)
+        {
+            if (strcmp(argv[1],"unknown-init")==0) { assert(init==NativeRuntimeResult_NotReady); }
+            assert(NativeRuntime_ReadyGet()==0U && pc_reset==1U && bridge_reset==1U && quiesced==1U);
+            assert(NativeRuntime_Process()==init && process_calls==0U);
+            assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));
+            assert(NativeRuntime_Init()==NativeRuntimeResult_NotReady);return 0;
+        }
+        assert(NativeRuntime_ReadyGet()==1U);
+        if (strcmp(argv[1],"clock-before-process")==0) { clock_result=NativeClockResult_Stopped; }
+        if (strcmp(argv[1],"clock-during-process")==0) { clock_bad_process=1U; }
+        if (strcmp(argv[1],"pc-transient")==0) { bridge_process=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"radio-transient")==0) { bridge_process=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"retirement")==0) { clock_bad_process=1U;retirement_bad=1U; }
+        if (strcmp(argv[1],"usb-retirement")==0) { clock_bad_process=1U;usb_retirement_bad=1U; }
+        if (strcmp(argv[1],"unknown-process")==0) { bridge_process=(GroundBridgeResult)99; }
+        NativeRuntimeResult result=NativeRuntime_Process();
+        if (strcmp(argv[1],"unknown-process")==0)
+        {
+            assert(result==NativeRuntimeResult_NotReady && NativeRuntime_ReadyGet()==0U);
+            assert(retired==1U && quiesced==1U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);return 0;
+        }
+        if (clock_result!=NativeClockResult_Ok)
+        {
+            assert(result==((retirement_bad!=0U || usb_retirement_bad!=0U) ? NativeRuntimeResult_RetirementFailure : NativeRuntimeResult_ClockFailure));
+            assert(NativeRuntime_ReadyGet()==0U && retired==1U && quiesced==1U);
+            assert(published==0U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);
+        }
+        else
+        {
+            assert(NativeRuntime_ReadyGet()==1U && retired==0U && pc_reset==0U && published==1U);
+            assert(result==(bridge_process==GROUND_BRIDGE_OK ? NativeRuntimeResult_Ok :
+                bridge_process==GROUND_BRIDGE_PC_ERROR ? NativeRuntimeResult_PcFailure : NativeRuntimeResult_RadioFailure));
+        }
+        return 0;
+    }
+    '''
+        (tmp_path/'test.c').write_text(harness,encoding='utf-8')
+        api=Path(__file__).resolve().parents[1]/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion',
+            '-Wsign-conversion','-Wshadow','-Wundef','-Wstrict-prototypes','-Wmissing-prototypes','-Wswitch-enum',
+            '-fanalyzer','-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),
+            str(tmp_path/'Generated/Src/native_runtime.c'),str(tmp_path/'test.c'),'-o',str(tmp_path/'test.exe')]
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_4e986604\test.c: In function 'Lora_ChipStatusGet':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_4e986604\test.c:30:22: error: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} may change value [-Werror=conversion]
+E            30 |     status->verified=radio_unverified!=0U ? 0U : 1U;
+E               |                      ^~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...rified!=0U ? 0U : 1U;\n      |                      ^~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_runtime.py:167: AssertionError
+_ test_native_lifecycle_prevents_early_and_faulted_publication[usb-retirement] _
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a/test_native_lifecycle_prevents_759b8290')
+scenario = 'usb-retirement'
+
+    @pytest.mark.parametrize('scenario', ['normal','clock-init','platform-init','radio-init','pc-init',
+        'clock-during-init','clock-before-process','clock-during-process','pc-transient','radio-transient','retirement',
+        'unknown-init','unknown-process','usb-retirement','radio-not-initialized','radio-unverified'])
+    def test_native_lifecycle_prevents_early_and_faulted_publication(tmp_path, scenario):
+        compiler=shutil.which('gcc')
+        if compiler is None:
+            pytest.skip('Host GCC unavailable')
+        for path,content in NativeRuntime_FilesRender().items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        headers={
+            'native_clock.h':'''#include <stdint.h>
+    typedef enum { NativeClockResult_Ok, NativeClockResult_Stopped } NativeClockResult;
+    NativeClockResult NativeClock_StatusGet(void);
+    NativeClockResult NativeClock_DelayUs(uint32_t delay);
+    NativeClockResult NativeClock_Read(uint64_t *time);
+    ''',
+            'native_platform.h':'''#include "platform_types.h"
+    PlatformResult NativePlatform_Init(void);
+    void NativePlatform_Quiesce(void);
+    ''',
+            'ground_bridge.h':'''#include <stdint.h>
+    typedef enum { GROUND_BRIDGE_OK, GROUND_BRIDGE_RADIO_ERROR, GROUND_BRIDGE_PC_ERROR } GroundBridgeResult;
+    GroundBridgeResult GroundBridge_Init(void);
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms);
+    void GroundBridge_PcReset(void);
+    ''',
+            'pc_byte_stream.h':'void PcByteStream_OnUsbReset(void);\n',
+            'native_usb_state.h':'''typedef enum { NativeUsbResult_Ok, NativeUsbResult_Failure } NativeUsbResult;
+    NativeUsbResult NativeUsb_Stop(void);
+    ''',
+            'sx1281_device.h':'''#include <stdint.h>
+    typedef enum { LoraDeactivateResult_Ok, LoraDeactivateResult_PortError } LoraDeactivateResult;
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance);
+    typedef enum { LORA_DIAG_RESULT_OK, LORA_DIAG_RESULT_NOT_INIT } LoraDiagResult;
+    typedef struct { uint16_t firmware_version; uint8_t status_value; uint8_t verified; } LoraChipStatus;
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status);
+    ''',
+            'silverstar_assert.h':'''#include <assert.h>
+    #define SILVERSTAR_ASSERT_MODULE_GENERATED 1U
+    #define SILVERSTAR_ASSERT_REASON_STATE_INVARIANT 1U
+    #define SILVERSTAR_ASSERT(p,m,r) assert(p)
+    '''}
+        for path,content in headers.items():
+            (tmp_path/path).write_text(content,encoding='utf-8')
+        harness='''#include "native_runtime.h"
+    #include "native_clock.h"
+    #include "native_platform.h"
+    #include "platform_time.h"
+    #include "ground_bridge.h"
+    #include "sx1281_device.h"
+    #include "pc_byte_stream.h"
+    #include "native_usb_state.h"
+    #include <assert.h>
+    #include <string.h>
+    static NativeClockResult clock_result=NativeClockResult_Ok;
+    static PlatformResult clock_init=PLATFORM_OK,platform_init=PLATFORM_OK;
+    static GroundBridgeResult bridge_init=GROUND_BRIDGE_OK,bridge_process=GROUND_BRIDGE_OK;
+    static uint8_t clock_bad_init,clock_bad_process,retirement_bad,usb_retirement_bad;
+    static uint8_t radio_not_initialized,radio_unverified;
+    static uint32_t retired,quiesced,pc_reset,bridge_reset,process_calls,published;
+    NativeClockResult NativeClock_StatusGet(void) { return clock_result; }
+    NativeClockResult NativeClock_DelayUs(uint32_t delay) { assert(delay==1U);return clock_result; }
+    NativeClockResult NativeClock_Read(uint64_t *time)
+    { if (clock_result!=NativeClockResult_Ok) { return clock_result; } *time=1234000ULL;return clock_result; }
+    PlatformResult PlatformTime_Init(void) { return clock_init; }
+    PlatformResult NativePlatform_Init(void) { return platform_init; }
+    void NativePlatform_Quiesce(void)
+    { assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));quiesced++; }
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status)
+    {
+        assert(instance==0U && status!=0 && NativeRuntime_ReadyGet()==0U);
+        if (radio_not_initialized!=0U) { return LORA_DIAG_RESULT_NOT_INIT; }
+        status->firmware_version=0x1234U;status->status_value=0U;
+        status->verified=radio_unverified!=0U ? 0U : 1U;
+        return LORA_DIAG_RESULT_OK;
+    }
+    GroundBridgeResult GroundBridge_Init(void)
+    {
+        /* The real bridge tries to flush its initial STATUS before returning. */
+        assert(NativeRuntime_ReadyGet()==0U);
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        if (clock_bad_init!=0U) { clock_result=NativeClockResult_Stopped; }
+        return bridge_init;
+    }
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
+    {
+        assert(now_ms==1234U);process_calls++;
+        if (clock_bad_process!=0U) { clock_result=NativeClockResult_Stopped; }
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        return bridge_process;
+    }
+    void GroundBridge_PcReset(void) { assert(NativeRuntime_ReadyGet()==0U);bridge_reset++; }
+    void PcByteStream_OnUsbReset(void) { assert(NativeRuntime_ReadyGet()==0U);pc_reset++; }
+    NativeUsbResult NativeUsb_Stop(void)
+    { assert(NativeRuntime_ReadyGet()==0U);return usb_retirement_bad!=0U ? NativeUsbResult_Failure : NativeUsbResult_Ok; }
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance)
+    { assert(instance==0U && quiesced==0U && NativeRuntime_ReadyGet()==0U);retired++;
+      return retirement_bad!=0U ? LoraDeactivateResult_PortError : LoraDeactivateResult_Ok; }
+    int main(int argc,char **argv)
+    {
+        assert(argc==2);assert(NativeRuntime_ReadyGet()==0U);
+        assert(NativeRuntime_Process()==NativeRuntimeResult_NotReady);
+        if (strcmp(argv[1],"clock-init")==0) { clock_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"platform-init")==0) { platform_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"radio-init")==0) { bridge_init=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"pc-init")==0) { bridge_init=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"clock-during-init")==0) { clock_bad_init=1U; }
+        if (strcmp(argv[1],"unknown-init")==0) { bridge_init=(GroundBridgeResult)99; }
+        if (strcmp(argv[1],"radio-not-initialized")==0) { radio_not_initialized=1U; }
+        if (strcmp(argv[1],"radio-unverified")==0) { radio_unverified=1U; }
+        NativeRuntimeResult init=NativeRuntime_Init();assert(published==0U);
+        if (radio_not_initialized!=0U || radio_unverified!=0U)
+        { assert(init==NativeRuntimeResult_RadioFailure); }
+        if (init!=NativeRuntimeResult_Ok)
+        {
+            if (strcmp(argv[1],"unknown-init")==0) { assert(init==NativeRuntimeResult_NotReady); }
+            assert(NativeRuntime_ReadyGet()==0U && pc_reset==1U && bridge_reset==1U && quiesced==1U);
+            assert(NativeRuntime_Process()==init && process_calls==0U);
+            assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));
+            assert(NativeRuntime_Init()==NativeRuntimeResult_NotReady);return 0;
+        }
+        assert(NativeRuntime_ReadyGet()==1U);
+        if (strcmp(argv[1],"clock-before-process")==0) { clock_result=NativeClockResult_Stopped; }
+        if (strcmp(argv[1],"clock-during-process")==0) { clock_bad_process=1U; }
+        if (strcmp(argv[1],"pc-transient")==0) { bridge_process=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"radio-transient")==0) { bridge_process=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"retirement")==0) { clock_bad_process=1U;retirement_bad=1U; }
+        if (strcmp(argv[1],"usb-retirement")==0) { clock_bad_process=1U;usb_retirement_bad=1U; }
+        if (strcmp(argv[1],"unknown-process")==0) { bridge_process=(GroundBridgeResult)99; }
+        NativeRuntimeResult result=NativeRuntime_Process();
+        if (strcmp(argv[1],"unknown-process")==0)
+        {
+            assert(result==NativeRuntimeResult_NotReady && NativeRuntime_ReadyGet()==0U);
+            assert(retired==1U && quiesced==1U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);return 0;
+        }
+        if (clock_result!=NativeClockResult_Ok)
+        {
+            assert(result==((retirement_bad!=0U || usb_retirement_bad!=0U) ? NativeRuntimeResult_RetirementFailure : NativeRuntimeResult_ClockFailure));
+            assert(NativeRuntime_ReadyGet()==0U && retired==1U && quiesced==1U);
+            assert(published==0U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);
+        }
+        else
+        {
+            assert(NativeRuntime_ReadyGet()==1U && retired==0U && pc_reset==0U && published==1U);
+            assert(result==(bridge_process==GROUND_BRIDGE_OK ? NativeRuntimeResult_Ok :
+                bridge_process==GROUND_BRIDGE_PC_ERROR ? NativeRuntimeResult_PcFailure : NativeRuntimeResult_RadioFailure));
+        }
+        return 0;
+    }
+    '''
+        (tmp_path/'test.c').write_text(harness,encoding='utf-8')
+        api=Path(__file__).resolve().parents[1]/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion',
+            '-Wsign-conversion','-Wshadow','-Wundef','-Wstrict-prototypes','-Wmissing-prototypes','-Wswitch-enum',
+            '-fanalyzer','-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),
+            str(tmp_path/'Generated/Src/native_runtime.c'),str(tmp_path/'test.c'),'-o',str(tmp_path/'test.exe')]
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_759b8290\test.c: In function 'Lora_ChipStatusGet':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_759b8290\test.c:30:22: error: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} may change value [-Werror=conversion]
+E            30 |     status->verified=radio_unverified!=0U ? 0U : 1U;
+E               |                      ^~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...rified!=0U ? 0U : 1U;\n      |                      ^~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_runtime.py:167: AssertionError
+_ test_native_lifecycle_prevents_early_and_faulted_publication[radio-not-initialized] _
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a/test_native_lifecycle_prevents_20720078')
+scenario = 'radio-not-initialized'
+
+    @pytest.mark.parametrize('scenario', ['normal','clock-init','platform-init','radio-init','pc-init',
+        'clock-during-init','clock-before-process','clock-during-process','pc-transient','radio-transient','retirement',
+        'unknown-init','unknown-process','usb-retirement','radio-not-initialized','radio-unverified'])
+    def test_native_lifecycle_prevents_early_and_faulted_publication(tmp_path, scenario):
+        compiler=shutil.which('gcc')
+        if compiler is None:
+            pytest.skip('Host GCC unavailable')
+        for path,content in NativeRuntime_FilesRender().items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        headers={
+            'native_clock.h':'''#include <stdint.h>
+    typedef enum { NativeClockResult_Ok, NativeClockResult_Stopped } NativeClockResult;
+    NativeClockResult NativeClock_StatusGet(void);
+    NativeClockResult NativeClock_DelayUs(uint32_t delay);
+    NativeClockResult NativeClock_Read(uint64_t *time);
+    ''',
+            'native_platform.h':'''#include "platform_types.h"
+    PlatformResult NativePlatform_Init(void);
+    void NativePlatform_Quiesce(void);
+    ''',
+            'ground_bridge.h':'''#include <stdint.h>
+    typedef enum { GROUND_BRIDGE_OK, GROUND_BRIDGE_RADIO_ERROR, GROUND_BRIDGE_PC_ERROR } GroundBridgeResult;
+    GroundBridgeResult GroundBridge_Init(void);
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms);
+    void GroundBridge_PcReset(void);
+    ''',
+            'pc_byte_stream.h':'void PcByteStream_OnUsbReset(void);\n',
+            'native_usb_state.h':'''typedef enum { NativeUsbResult_Ok, NativeUsbResult_Failure } NativeUsbResult;
+    NativeUsbResult NativeUsb_Stop(void);
+    ''',
+            'sx1281_device.h':'''#include <stdint.h>
+    typedef enum { LoraDeactivateResult_Ok, LoraDeactivateResult_PortError } LoraDeactivateResult;
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance);
+    typedef enum { LORA_DIAG_RESULT_OK, LORA_DIAG_RESULT_NOT_INIT } LoraDiagResult;
+    typedef struct { uint16_t firmware_version; uint8_t status_value; uint8_t verified; } LoraChipStatus;
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status);
+    ''',
+            'silverstar_assert.h':'''#include <assert.h>
+    #define SILVERSTAR_ASSERT_MODULE_GENERATED 1U
+    #define SILVERSTAR_ASSERT_REASON_STATE_INVARIANT 1U
+    #define SILVERSTAR_ASSERT(p,m,r) assert(p)
+    '''}
+        for path,content in headers.items():
+            (tmp_path/path).write_text(content,encoding='utf-8')
+        harness='''#include "native_runtime.h"
+    #include "native_clock.h"
+    #include "native_platform.h"
+    #include "platform_time.h"
+    #include "ground_bridge.h"
+    #include "sx1281_device.h"
+    #include "pc_byte_stream.h"
+    #include "native_usb_state.h"
+    #include <assert.h>
+    #include <string.h>
+    static NativeClockResult clock_result=NativeClockResult_Ok;
+    static PlatformResult clock_init=PLATFORM_OK,platform_init=PLATFORM_OK;
+    static GroundBridgeResult bridge_init=GROUND_BRIDGE_OK,bridge_process=GROUND_BRIDGE_OK;
+    static uint8_t clock_bad_init,clock_bad_process,retirement_bad,usb_retirement_bad;
+    static uint8_t radio_not_initialized,radio_unverified;
+    static uint32_t retired,quiesced,pc_reset,bridge_reset,process_calls,published;
+    NativeClockResult NativeClock_StatusGet(void) { return clock_result; }
+    NativeClockResult NativeClock_DelayUs(uint32_t delay) { assert(delay==1U);return clock_result; }
+    NativeClockResult NativeClock_Read(uint64_t *time)
+    { if (clock_result!=NativeClockResult_Ok) { return clock_result; } *time=1234000ULL;return clock_result; }
+    PlatformResult PlatformTime_Init(void) { return clock_init; }
+    PlatformResult NativePlatform_Init(void) { return platform_init; }
+    void NativePlatform_Quiesce(void)
+    { assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));quiesced++; }
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status)
+    {
+        assert(instance==0U && status!=0 && NativeRuntime_ReadyGet()==0U);
+        if (radio_not_initialized!=0U) { return LORA_DIAG_RESULT_NOT_INIT; }
+        status->firmware_version=0x1234U;status->status_value=0U;
+        status->verified=radio_unverified!=0U ? 0U : 1U;
+        return LORA_DIAG_RESULT_OK;
+    }
+    GroundBridgeResult GroundBridge_Init(void)
+    {
+        /* The real bridge tries to flush its initial STATUS before returning. */
+        assert(NativeRuntime_ReadyGet()==0U);
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        if (clock_bad_init!=0U) { clock_result=NativeClockResult_Stopped; }
+        return bridge_init;
+    }
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
+    {
+        assert(now_ms==1234U);process_calls++;
+        if (clock_bad_process!=0U) { clock_result=NativeClockResult_Stopped; }
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        return bridge_process;
+    }
+    void GroundBridge_PcReset(void) { assert(NativeRuntime_ReadyGet()==0U);bridge_reset++; }
+    void PcByteStream_OnUsbReset(void) { assert(NativeRuntime_ReadyGet()==0U);pc_reset++; }
+    NativeUsbResult NativeUsb_Stop(void)
+    { assert(NativeRuntime_ReadyGet()==0U);return usb_retirement_bad!=0U ? NativeUsbResult_Failure : NativeUsbResult_Ok; }
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance)
+    { assert(instance==0U && quiesced==0U && NativeRuntime_ReadyGet()==0U);retired++;
+      return retirement_bad!=0U ? LoraDeactivateResult_PortError : LoraDeactivateResult_Ok; }
+    int main(int argc,char **argv)
+    {
+        assert(argc==2);assert(NativeRuntime_ReadyGet()==0U);
+        assert(NativeRuntime_Process()==NativeRuntimeResult_NotReady);
+        if (strcmp(argv[1],"clock-init")==0) { clock_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"platform-init")==0) { platform_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"radio-init")==0) { bridge_init=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"pc-init")==0) { bridge_init=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"clock-during-init")==0) { clock_bad_init=1U; }
+        if (strcmp(argv[1],"unknown-init")==0) { bridge_init=(GroundBridgeResult)99; }
+        if (strcmp(argv[1],"radio-not-initialized")==0) { radio_not_initialized=1U; }
+        if (strcmp(argv[1],"radio-unverified")==0) { radio_unverified=1U; }
+        NativeRuntimeResult init=NativeRuntime_Init();assert(published==0U);
+        if (radio_not_initialized!=0U || radio_unverified!=0U)
+        { assert(init==NativeRuntimeResult_RadioFailure); }
+        if (init!=NativeRuntimeResult_Ok)
+        {
+            if (strcmp(argv[1],"unknown-init")==0) { assert(init==NativeRuntimeResult_NotReady); }
+            assert(NativeRuntime_ReadyGet()==0U && pc_reset==1U && bridge_reset==1U && quiesced==1U);
+            assert(NativeRuntime_Process()==init && process_calls==0U);
+            assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));
+            assert(NativeRuntime_Init()==NativeRuntimeResult_NotReady);return 0;
+        }
+        assert(NativeRuntime_ReadyGet()==1U);
+        if (strcmp(argv[1],"clock-before-process")==0) { clock_result=NativeClockResult_Stopped; }
+        if (strcmp(argv[1],"clock-during-process")==0) { clock_bad_process=1U; }
+        if (strcmp(argv[1],"pc-transient")==0) { bridge_process=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"radio-transient")==0) { bridge_process=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"retirement")==0) { clock_bad_process=1U;retirement_bad=1U; }
+        if (strcmp(argv[1],"usb-retirement")==0) { clock_bad_process=1U;usb_retirement_bad=1U; }
+        if (strcmp(argv[1],"unknown-process")==0) { bridge_process=(GroundBridgeResult)99; }
+        NativeRuntimeResult result=NativeRuntime_Process();
+        if (strcmp(argv[1],"unknown-process")==0)
+        {
+            assert(result==NativeRuntimeResult_NotReady && NativeRuntime_ReadyGet()==0U);
+            assert(retired==1U && quiesced==1U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);return 0;
+        }
+        if (clock_result!=NativeClockResult_Ok)
+        {
+            assert(result==((retirement_bad!=0U || usb_retirement_bad!=0U) ? NativeRuntimeResult_RetirementFailure : NativeRuntimeResult_ClockFailure));
+            assert(NativeRuntime_ReadyGet()==0U && retired==1U && quiesced==1U);
+            assert(published==0U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);
+        }
+        else
+        {
+            assert(NativeRuntime_ReadyGet()==1U && retired==0U && pc_reset==0U && published==1U);
+            assert(result==(bridge_process==GROUND_BRIDGE_OK ? NativeRuntimeResult_Ok :
+                bridge_process==GROUND_BRIDGE_PC_ERROR ? NativeRuntimeResult_PcFailure : NativeRuntimeResult_RadioFailure));
+        }
+        return 0;
+    }
+    '''
+        (tmp_path/'test.c').write_text(harness,encoding='utf-8')
+        api=Path(__file__).resolve().parents[1]/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion',
+            '-Wsign-conversion','-Wshadow','-Wundef','-Wstrict-prototypes','-Wmissing-prototypes','-Wswitch-enum',
+            '-fanalyzer','-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),
+            str(tmp_path/'Generated/Src/native_runtime.c'),str(tmp_path/'test.c'),'-o',str(tmp_path/'test.exe')]
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_20720078\test.c: In function 'Lora_ChipStatusGet':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_20720078\test.c:30:22: error: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} may change value [-Werror=conversion]
+E            30 |     status->verified=radio_unverified!=0U ? 0U : 1U;
+E               |                      ^~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...rified!=0U ? 0U : 1U;\n      |                      ^~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_runtime.py:167: AssertionError
+_ test_native_lifecycle_prevents_early_and_faulted_publication[radio-unverified] _
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-init-post12a/test_native_lifecycle_prevents_52b3be2c')
+scenario = 'radio-unverified'
+
+    @pytest.mark.parametrize('scenario', ['normal','clock-init','platform-init','radio-init','pc-init',
+        'clock-during-init','clock-before-process','clock-during-process','pc-transient','radio-transient','retirement',
+        'unknown-init','unknown-process','usb-retirement','radio-not-initialized','radio-unverified'])
+    def test_native_lifecycle_prevents_early_and_faulted_publication(tmp_path, scenario):
+        compiler=shutil.which('gcc')
+        if compiler is None:
+            pytest.skip('Host GCC unavailable')
+        for path,content in NativeRuntime_FilesRender().items():
+            dest=tmp_path/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+        headers={
+            'native_clock.h':'''#include <stdint.h>
+    typedef enum { NativeClockResult_Ok, NativeClockResult_Stopped } NativeClockResult;
+    NativeClockResult NativeClock_StatusGet(void);
+    NativeClockResult NativeClock_DelayUs(uint32_t delay);
+    NativeClockResult NativeClock_Read(uint64_t *time);
+    ''',
+            'native_platform.h':'''#include "platform_types.h"
+    PlatformResult NativePlatform_Init(void);
+    void NativePlatform_Quiesce(void);
+    ''',
+            'ground_bridge.h':'''#include <stdint.h>
+    typedef enum { GROUND_BRIDGE_OK, GROUND_BRIDGE_RADIO_ERROR, GROUND_BRIDGE_PC_ERROR } GroundBridgeResult;
+    GroundBridgeResult GroundBridge_Init(void);
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms);
+    void GroundBridge_PcReset(void);
+    ''',
+            'pc_byte_stream.h':'void PcByteStream_OnUsbReset(void);\n',
+            'native_usb_state.h':'''typedef enum { NativeUsbResult_Ok, NativeUsbResult_Failure } NativeUsbResult;
+    NativeUsbResult NativeUsb_Stop(void);
+    ''',
+            'sx1281_device.h':'''#include <stdint.h>
+    typedef enum { LoraDeactivateResult_Ok, LoraDeactivateResult_PortError } LoraDeactivateResult;
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance);
+    typedef enum { LORA_DIAG_RESULT_OK, LORA_DIAG_RESULT_NOT_INIT } LoraDiagResult;
+    typedef struct { uint16_t firmware_version; uint8_t status_value; uint8_t verified; } LoraChipStatus;
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status);
+    ''',
+            'silverstar_assert.h':'''#include <assert.h>
+    #define SILVERSTAR_ASSERT_MODULE_GENERATED 1U
+    #define SILVERSTAR_ASSERT_REASON_STATE_INVARIANT 1U
+    #define SILVERSTAR_ASSERT(p,m,r) assert(p)
+    '''}
+        for path,content in headers.items():
+            (tmp_path/path).write_text(content,encoding='utf-8')
+        harness='''#include "native_runtime.h"
+    #include "native_clock.h"
+    #include "native_platform.h"
+    #include "platform_time.h"
+    #include "ground_bridge.h"
+    #include "sx1281_device.h"
+    #include "pc_byte_stream.h"
+    #include "native_usb_state.h"
+    #include <assert.h>
+    #include <string.h>
+    static NativeClockResult clock_result=NativeClockResult_Ok;
+    static PlatformResult clock_init=PLATFORM_OK,platform_init=PLATFORM_OK;
+    static GroundBridgeResult bridge_init=GROUND_BRIDGE_OK,bridge_process=GROUND_BRIDGE_OK;
+    static uint8_t clock_bad_init,clock_bad_process,retirement_bad,usb_retirement_bad;
+    static uint8_t radio_not_initialized,radio_unverified;
+    static uint32_t retired,quiesced,pc_reset,bridge_reset,process_calls,published;
+    NativeClockResult NativeClock_StatusGet(void) { return clock_result; }
+    NativeClockResult NativeClock_DelayUs(uint32_t delay) { assert(delay==1U);return clock_result; }
+    NativeClockResult NativeClock_Read(uint64_t *time)
+    { if (clock_result!=NativeClockResult_Ok) { return clock_result; } *time=1234000ULL;return clock_result; }
+    PlatformResult PlatformTime_Init(void) { return clock_init; }
+    PlatformResult NativePlatform_Init(void) { return platform_init; }
+    void NativePlatform_Quiesce(void)
+    { assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));quiesced++; }
+    LoraDiagResult Lora_ChipStatusGet(uint8_t instance, LoraChipStatus *status)
+    {
+        assert(instance==0U && status!=0 && NativeRuntime_ReadyGet()==0U);
+        if (radio_not_initialized!=0U) { return LORA_DIAG_RESULT_NOT_INIT; }
+        status->firmware_version=0x1234U;status->status_value=0U;
+        status->verified=radio_unverified!=0U ? 0U : 1U;
+        return LORA_DIAG_RESULT_OK;
+    }
+    GroundBridgeResult GroundBridge_Init(void)
+    {
+        /* The real bridge tries to flush its initial STATUS before returning. */
+        assert(NativeRuntime_ReadyGet()==0U);
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        if (clock_bad_init!=0U) { clock_result=NativeClockResult_Stopped; }
+        return bridge_init;
+    }
+    GroundBridgeResult GroundBridge_Process(uint32_t now_ms)
+    {
+        assert(now_ms==1234U);process_calls++;
+        if (clock_bad_process!=0U) { clock_result=NativeClockResult_Stopped; }
+        if (NativeRuntime_ReadyGet()!=0U) { published++; }
+        return bridge_process;
+    }
+    void GroundBridge_PcReset(void) { assert(NativeRuntime_ReadyGet()==0U);bridge_reset++; }
+    void PcByteStream_OnUsbReset(void) { assert(NativeRuntime_ReadyGet()==0U);pc_reset++; }
+    NativeUsbResult NativeUsb_Stop(void)
+    { assert(NativeRuntime_ReadyGet()==0U);return usb_retirement_bad!=0U ? NativeUsbResult_Failure : NativeUsbResult_Ok; }
+    LoraDeactivateResult Lora_Deactivate(uint8_t instance)
+    { assert(instance==0U && quiesced==0U && NativeRuntime_ReadyGet()==0U);retired++;
+      return retirement_bad!=0U ? LoraDeactivateResult_PortError : LoraDeactivateResult_Ok; }
+    int main(int argc,char **argv)
+    {
+        assert(argc==2);assert(NativeRuntime_ReadyGet()==0U);
+        assert(NativeRuntime_Process()==NativeRuntimeResult_NotReady);
+        if (strcmp(argv[1],"clock-init")==0) { clock_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"platform-init")==0) { platform_init=PLATFORM_NOT_READY; }
+        if (strcmp(argv[1],"radio-init")==0) { bridge_init=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"pc-init")==0) { bridge_init=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"clock-during-init")==0) { clock_bad_init=1U; }
+        if (strcmp(argv[1],"unknown-init")==0) { bridge_init=(GroundBridgeResult)99; }
+        if (strcmp(argv[1],"radio-not-initialized")==0) { radio_not_initialized=1U; }
+        if (strcmp(argv[1],"radio-unverified")==0) { radio_unverified=1U; }
+        NativeRuntimeResult init=NativeRuntime_Init();assert(published==0U);
+        if (radio_not_initialized!=0U || radio_unverified!=0U)
+        { assert(init==NativeRuntimeResult_RadioFailure); }
+        if (init!=NativeRuntimeResult_Ok)
+        {
+            if (strcmp(argv[1],"unknown-init")==0) { assert(init==NativeRuntimeResult_NotReady); }
+            assert(NativeRuntime_ReadyGet()==0U && pc_reset==1U && bridge_reset==1U && quiesced==1U);
+            assert(NativeRuntime_Process()==init && process_calls==0U);
+            assert(retired==(clock_init==PLATFORM_OK && platform_init==PLATFORM_OK ? 1U : 0U));
+            assert(NativeRuntime_Init()==NativeRuntimeResult_NotReady);return 0;
+        }
+        assert(NativeRuntime_ReadyGet()==1U);
+        if (strcmp(argv[1],"clock-before-process")==0) { clock_result=NativeClockResult_Stopped; }
+        if (strcmp(argv[1],"clock-during-process")==0) { clock_bad_process=1U; }
+        if (strcmp(argv[1],"pc-transient")==0) { bridge_process=GROUND_BRIDGE_PC_ERROR; }
+        if (strcmp(argv[1],"radio-transient")==0) { bridge_process=GROUND_BRIDGE_RADIO_ERROR; }
+        if (strcmp(argv[1],"retirement")==0) { clock_bad_process=1U;retirement_bad=1U; }
+        if (strcmp(argv[1],"usb-retirement")==0) { clock_bad_process=1U;usb_retirement_bad=1U; }
+        if (strcmp(argv[1],"unknown-process")==0) { bridge_process=(GroundBridgeResult)99; }
+        NativeRuntimeResult result=NativeRuntime_Process();
+        if (strcmp(argv[1],"unknown-process")==0)
+        {
+            assert(result==NativeRuntimeResult_NotReady && NativeRuntime_ReadyGet()==0U);
+            assert(retired==1U && quiesced==1U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);return 0;
+        }
+        if (clock_result!=NativeClockResult_Ok)
+        {
+            assert(result==((retirement_bad!=0U || usb_retirement_bad!=0U) ? NativeRuntimeResult_RetirementFailure : NativeRuntimeResult_ClockFailure));
+            assert(NativeRuntime_ReadyGet()==0U && retired==1U && quiesced==1U);
+            assert(published==0U && pc_reset==1U && bridge_reset==1U);
+            uint32_t before=process_calls;assert(NativeRuntime_Process()==result && process_calls==before);
+        }
+        else
+        {
+            assert(NativeRuntime_ReadyGet()==1U && retired==0U && pc_reset==0U && published==1U);
+            assert(result==(bridge_process==GROUND_BRIDGE_OK ? NativeRuntimeResult_Ok :
+                bridge_process==GROUND_BRIDGE_PC_ERROR ? NativeRuntimeResult_PcFailure : NativeRuntimeResult_RadioFailure));
+        }
+        return 0;
+    }
+    '''
+        (tmp_path/'test.c').write_text(harness,encoding='utf-8')
+        api=Path(__file__).resolve().parents[1]/'plugins/builtin/silverstar_platform_api/payload/Platform/Inc'
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion',
+            '-Wsign-conversion','-Wshadow','-Wundef','-Wstrict-prototypes','-Wmissing-prototypes','-Wswitch-enum',
+            '-fanalyzer','-I'+str(tmp_path),'-I'+str(api),'-I'+str(tmp_path/'Generated/Inc'),
+            str(tmp_path/'Generated/Src/native_runtime.c'),str(tmp_path/'test.c'),'-o',str(tmp_path/'test.exe')]
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_52b3be2c\test.c: In function 'Lora_ChipStatusGet':
+E         C:\Users\chdxm\AppData\Local\Temp\sscdc-init-post12a\test_native_lifecycle_prevents_52b3be2c\test.c:30:22: error: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} may change value [-Werror=conversion]
+E            30 |     status->verified=radio_unverified!=0U ? 0U : 1U;
+E               |                      ^~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...rified!=0U ? 0U : 1U;\n      |                      ^~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+.work\ccdi\apps\SCG\tests\test_native_runtime.py:167: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+ERROR .work\ccdi\apps\SCG\tests\test_native_radio.py::test_real_driver_timestamps_are_sampled_before_irq_locks[normal]
+ERROR .work\ccdi\apps\SCG\tests\test_native_radio.py::test_real_driver_timestamps_are_sampled_before_irq_locks[reinit]
+ERROR .work\ccdi\apps\SCG\tests\test_native_radio.py::test_real_driver_timestamps_are_sampled_before_irq_locks[deactivate]
+ERROR .work\ccdi\apps\SCG\tests\test_native_radio.py::test_actual_owner_diagnostics_controls_and_tx_rx_loops
+FAILED .work\ccdi\apps\SCG\tests\test_native_runtime.py::test_native_lifecycle_prevents_early_and_faulted_publication[normal]
+FAILED .work\ccdi\apps\SCG\tests\test_native_runtime.py::test_native_lifecycle_prevents_early_and_faulted_publication[clock-init]
+FAILED .work\ccdi\apps\SCG\tests\test_native_runtime.py::test_native_lifecycle_prevents_early_and_faulted_publication[platform-init]
+FAILED .work\ccdi\apps\SCG\tests\test_native_runtime.py::test_native_lifecycle_prevents_early_and_faulted_publication[radio-init]
+FAILED .work\ccdi\apps\SCG\tests\test_native_runtime.py::test_native_lifecycle_prevents_early_and_faulted_publication[pc-init]
+FAILED .work\ccdi\apps\SCG\tests\test_native_runtime.py::test_native_lifecycle_prevents_early_and_faulted_publication[clock-during-init]
+FAILED .work\ccdi\apps\SCG\tests\test_native_runtime.py::test_native_lifecycle_prevents_early_and_faulted_publication[clock-before-process]
+FAILED .work\ccdi\apps\SCG\tests\test_native_runtime.py::test_native_lifecycle_prevents_early_and_faulted_publication[clock-during-process]
+FAILED .work\ccdi\apps\SCG\tests\test_native_runtime.py::test_native_lifecycle_prevents_early_and_faulted_publication[pc-transient]
+FAILED .work\ccdi\apps\SCG\tests\test_native_runtime.py::test_native_lifecycle_prevents_early_and_faulted_publication[radio-transient]
+FAILED .work\ccdi\apps\SCG\tests\test_native_runtime.py::test_native_lifecycle_prevents_early_and_faulted_publication[retirement]
+FAILED .work\ccdi\apps\SCG\tests\test_native_runtime.py::test_native_lifecycle_prevents_early_and_faulted_publication[unknown-init]
+FAILED .work\ccdi\apps\SCG\tests\test_native_runtime.py::test_native_lifecycle_prevents_early_and_faulted_publication[unknown-process]
+FAILED .work\ccdi\apps\SCG\tests\test_native_runtime.py::test_native_lifecycle_prevents_early_and_faulted_publication[usb-retirement]
+FAILED .work\ccdi\apps\SCG\tests\test_native_runtime.py::test_native_lifecycle_prevents_early_and_faulted_publication[radio-not-initialized]
+FAILED .work\ccdi\apps\SCG\tests\test_native_runtime.py::test_native_lifecycle_prevents_early_and_faulted_publication[radio-unverified]
+16 failed, 1 warning, 4 errors in 11.25s

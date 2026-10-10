@@ -1,0 +1,41 @@
+COMMAND ["D:/msys64/ucrt64/bin/gcc.exe", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wvla", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\build\\ground-host", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Ground\\Core\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Ground\\Protocol\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Common\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Generated\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Platform\\Inc", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Ground\\Core\\Src\\ground_bridge.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Ground\\Protocol\\Src\\gsp_min_protocol.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Ground\\Protocol\\Src\\protocol_crc16.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Common\\Src\\silverstar_assert.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Tests\\Host\\pc_session_uart.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Tests\\Host\\ground_bridge_bounds.c", "-o", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\build\\ground-host\\bridge_bounds.exe"]
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\build\\ground-host\\bridge_bounds.exe"]
+PASS host bridge_bounds
+COMMAND ["D:/msys64/ucrt64/bin/gcc.exe", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wvla", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\build\\ground-host", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Ground\\Core\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Ground\\Protocol\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Common\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Generated\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Platform\\Inc", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Ground\\Core\\Src\\ground_bridge.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Ground\\Protocol\\Src\\gsp_min_protocol.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Ground\\Protocol\\Src\\protocol_crc16.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Common\\Src\\silverstar_assert.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Tests\\Host\\ground_backpressure.c", "-o", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\build\\ground-host\\backpressure.exe"]
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\build\\ground-host\\backpressure.exe", "idle"]
+PASS idle forwarded=1 ACK=1 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\build\\ground-host\\backpressure.exe", "burst"]
+PASS burst forwarded=5 ACK=5 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\build\\ground-host\\backpressure.exe", "radio"]
+PASS radio forwarded=0 ACK=0 radio=4 status=2
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\build\\ground-host\\backpressure.exe", "mixed"]
+PASS mixed forwarded=1000 ACK=1000 radio=800 status=201
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\build\\ground-host\\backpressure.exe", "slow"]
+PASS slow forwarded=12 ACK=12 radio=0 status=2
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\build\\ground-host\\backpressure.exe", "sessions"]
+PASS sessions forwarded=100 ACK=100 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\build\\ground-host\\backpressure.exe", "queued-reset"]
+PASS queued-reset forwarded=5 ACK=1 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\build\\ground-host\\backpressure.exe", "budget"]
+PASS budget forwarded=1 ACK=1 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\build\\ground-host\\backpressure.exe", "error"]
+PASS error forwarded=0 ACK=0 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\build\\ground-host\\backpressure.exe", "error-reset"]
+PASS error-reset forwarded=0 ACK=0 radio=0 status=1
+PASS host backpressure
+COMMAND ["D:/msys64/ucrt64/bin/gcc.exe", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wvla", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\build\\ground-host", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Ground\\Core\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Ground\\Protocol\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Common\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Generated\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Platform\\Inc", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Generated\\Src\\pc_byte_stream.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Common\\Src\\silverstar_assert.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\Tests\\Host\\usb_cdc.c", "-o", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sscdc-ground-f103-10b\\build\\ground-host\\usb_cdc.exe"]
+D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccQyDDxf.o:pc_byte_stream.c:(.text+0x350): undefined reference to `NativeRuntime_ReadyGet'
+collect2.exe: error: ld returned 1 exit status
+Traceback (most recent call last):
+  File "C:\Users\chdxm\AppData\Local\Temp\sscdc-ground-f103-10b\Tools\check_ground.py", line 274, in <module>
+    Main_Run()
+    ~~~~~~~~^^
+  File "C:\Users\chdxm\AppData\Local\Temp\sscdc-ground-f103-10b\Tools\check_ground.py", line 260, in Main_Run
+    Host_Check(root, args.host_cc)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Temp\sscdc-ground-f103-10b\Tools\check_ground.py", line 175, in Host_Check
+    Command_Run(common + flags + sources + [str(harness), '-o', str(executable)], root)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Temp\sscdc-ground-f103-10b\Tools\check_ground.py", line 19, in Command_Run
+    raise RuntimeError(f'command exit {result.returncode}')
+RuntimeError: command exit 1

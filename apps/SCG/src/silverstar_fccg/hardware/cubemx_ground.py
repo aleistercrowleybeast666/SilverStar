@@ -25,9 +25,13 @@ def GroundCubeInputs_Get(root: Path, mcu: str) -> GroundCubeInputs:
     profiles = {
         "STM32F103C8T6": ("STM32F103xB", ("-mcpu=cortex-m3", "-mthumb", "-mfloat-abi=soft")),
         "STM32F407VET6": ("STM32F407xx", ("-mcpu=cortex-m4", "-mthumb", "-mfpu=fpv4-sp-d16", "-mfloat-abi=hard")),
+        "STM32C071FBP6": ("STM32C071xx", ("-mcpu=cortex-m0plus", "-mthumb", "-mfloat-abi=soft")),
     }
     if mcu not in profiles:
-        raise ValueError("Complete Ground CubeMX import currently supports STM32F103C8T6 and STM32F407VET6")
+        raise ValueError("Ground CubeMX import supports F103C8T6, F407VET6 and the exact reviewed C071FBP6 mini PCD profile")
+    if mcu == "STM32C071FBP6":
+        from silverstar_fccg.hardware.c071_mini import C071Native_Validate
+        C071Native_Validate(root)
     makefile = root / "Makefile"
     if not makefile.is_file():
         raise ValueError("Ground CubeMX project needs its generated GNU Makefile; select Makefile and copy required libraries in CubeMX, then Generate Code")
@@ -62,7 +66,7 @@ def GroundCubeInputs_Get(root: Path, mcu: str) -> GroundCubeInputs:
                "Middlewares/ST/STM32_USB_Device_Library/Core/Src/",
                "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/")
     for value in source_values:
-        family = "STM32F1xx" if mcu.startswith("STM32F103") else "STM32F4xx"
+        family = {"STM32F103C8T6": "STM32F1xx", "STM32F407VET6": "STM32F4xx", "STM32C071FBP6": "STM32C0xx"}[mcu]
         hal = re.fullmatch(r"Drivers/" + family + r"_HAL_Driver/Src/[A-Za-z0-9_]+\.c", value)
         if not value.endswith(".c") or not (value.startswith(allowed) or hal):
             raise ValueError(f"Unsupported Ground CubeMX source: {value}; only bare-metal HAL and classic USB CDC are supported")
@@ -70,7 +74,7 @@ def GroundCubeInputs_Get(root: Path, mcu: str) -> GroundCubeInputs:
     if not any(value.endswith("/Core/Src/main.c") for value in sources):
         raise ValueError("Ground CubeMX Makefile does not compile Core/Src/main.c")
     assembly_values = values("ASM_SOURCES")
-    startup = "startup_stm32f103xb.s" if mcu.startswith("STM32F103") else "startup_stm32f407xx.s"
+    startup = {"STM32F103C8T6": "startup_stm32f103xb.s", "STM32F407VET6": "startup_stm32f407xx.s", "STM32C071FBP6": "startup_stm32c071xx.s"}[mcu]
     if len(assembly_values) != 1 or assembly_values[0].split("/")[-1] != startup:
         raise ValueError("Ground CubeMX requires exactly one matching GNU startup assembler file")
     linker_values = values("LDSCRIPT")
@@ -81,6 +85,8 @@ def GroundCubeInputs_Get(root: Path, mcu: str) -> GroundCubeInputs:
     regions = re.findall(r"(?m)^\s*(FLASH|RAM)\s*\([^)]*\)\s*:\s*ORIGIN\s*=\s*(0x[0-9A-Fa-f]+|[0-9]+)\s*,\s*LENGTH\s*=\s*(0x[0-9A-Fa-f]+|[0-9]+)\s*([KM]?)", linker_text)
     expected_regions = {"FLASH": (0x08000000, 65536 if mcu.startswith("STM32F103") else 524288),
                         "RAM": (0x20000000, 20480 if mcu.startswith("STM32F103") else 131072)}
+    if mcu == "STM32C071FBP6":
+        expected_regions = {"FLASH": (0x08000000, 131072), "RAM": (0x20000000, 24576)}
     actual_regions = {name: (int(origin, 0), int(size, 0) * {"": 1, "K": 1024, "M": 1048576}[unit])
                       for name, origin, size, unit in regions}
     if len(regions) != 2 or actual_regions != expected_regions:
@@ -98,7 +104,7 @@ def GroundCubeInputs_Get(root: Path, mcu: str) -> GroundCubeInputs:
         raise ValueError("CubeMX Makefile MCU definitions do not match its .ioc")
     if set(defines) != {"-D" + expected_define, "-DUSE_HAL_DRIVER"}:
         raise ValueError("Ground C_DEFS supports only the exact MCU and USE_HAL_DRIVER; conflicting/custom macro overrides are unsupported")
-    family = "stm32f1xx" if mcu.startswith("STM32F103") else "stm32f4xx"
+    family = {"STM32F103C8T6": "stm32f1xx", "STM32F407VET6": "stm32f4xx", "STM32C071FBP6": "stm32c0xx"}[mcu]
     irq_path = "Core/Src/" + family + "_it.c"
     if irq_path not in source_values:
         raise ValueError("Ground requires its generated IRQ source in C_SOURCES: " + irq_path)
@@ -151,17 +157,21 @@ def _IrqHandlers_Get(root: Path, sources: tuple[str, ...]) -> tuple[str, ...]:
 
 
 def GroundEffectiveDefinitions_Validate(defines: tuple[str, ...], mcu: str) -> None:
-    expected = {"STM32F103C8T6": "STM32F103xB", "STM32F407VET6": "STM32F407xx"}[mcu]
+    expected = {"STM32F103C8T6": "STM32F103xB", "STM32F407VET6": "STM32F407xx", "STM32C071FBP6": "STM32C071xx"}[mcu]
     if expected not in defines:
         raise ValueError("Ground effective MCU definition is missing: " + expected)
     for item in defines:
         name = item.split("=", 1)[0]
-        if name == "HSE_VALUE" or (re.fullmatch(r"STM32F[0-9]{3}[A-Za-z0-9_]+", name) and item != expected):
+        if name == "HSE_VALUE" or (re.fullmatch(r"STM32[FC][0-9]{3}[A-Za-z0-9_]+", name) and item != expected):
             raise ValueError("Ground effective macro contradicts its imported MCU/clock contract: " + item)
 
 
 def GroundUsbConfiguration_Validate(root: Path, ioc: str, mcu: str) -> None:
     """Validate documented FS CDC topology; electrical/clock accuracy needs hardware."""
+    if mcu == "STM32C071FBP6":
+        from silverstar_fccg.hardware.c071_mini import C071Native_Validate
+        C071Native_Validate(root)
+        return  # PCD only; its separately registered companion is not native CDC.
     fields = dict(line.split("=", 1) for line in ioc.splitlines() if "=" in line)
     modules = {value for key, value in fields.items() if re.fullmatch(r"Mcu\.IP\d+", key)}
     if "USBX" in modules:

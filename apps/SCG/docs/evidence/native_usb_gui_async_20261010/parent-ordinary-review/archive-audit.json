@@ -1,0 +1,103 @@
+{
+  "archive_commit": "bf22bdcd56e76687e8be40d5f221cb3c29668ec1",
+  "code_commit": "63771a17e63052c238246dd4fe3fe6394de8ccec",
+  "manifest_files": 744,
+  "manifest_mismatches": [],
+  "git_files": 745,
+  "git_bytes_mismatches": [],
+  "post637_non_document_changes": [],
+  "build_metadata": [
+    {
+      "part": "STM32F103C8T6",
+      "output": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ug08\\usb-2815bba4e9b5",
+      "project_root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ug08\\p_caacac48",
+      "model_sha256": "f6d54278f50172ea1f3f469a91ff2e777c6010c9d7274952c8c7ef65a2dd3d72",
+      "runtime_project_sha256": "3e206feb8420d1a9db88f22c6bc0cb27740eaf5673555f223f2998f72a86b1be",
+      "snapshot_root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ug08\\w_c4fb9359\\i\\ddb85510395b43fcb4d4227f6b6330d96c599348c5139de3b19e5b5a9ceaf628\\NativeClassicCdc",
+      "source_snapshot_sha256": "e40511fd8c095348b5b13f60ceddedfd38275c519e5ef0c0246db48eaa159aed",
+      "backend_receipt_sha256": "5ee447227ab869f70d6c80129810ae4506a423de2001762b9a217e599f33a722",
+      "compile_receipt_sha256": "39b78e65eb7d5b01534280d5a12f99908114638c0067febdaab0d14923acc687",
+      "commands": 339,
+      "toolchain_version": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+      "irq_header_sha256": "d9c7c613d9fea74220892b4fbc3e80617493acad82a04bafadab2b4a7198399c",
+      "elf_sha256": {
+        "build/native.elf": "fde957fe80fdf038f4c5c6640bc851446e8ef7acb7605258fd94dca87c81240b",
+        "build/analysis/native.elf": "fde957fe80fdf038f4c5c6640bc851446e8ef7acb7605258fd94dca87c81240b"
+      },
+      "gui_quality": {
+        "architecture_check": {
+          "duration": 4.003616699999839,
+          "result": "passed",
+          "timestamp": "2026-10-10T04:02:38+00:00",
+          "command": [
+            "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+            "Tools/check_native_ground.py"
+          ],
+          "input_sha256": "9e91c069b1358f929b37a060e591ed65364023d025efadcd268d2d4aa019a9d8"
+        },
+        "artifact_check": {
+          "duration": 7.710393900000781,
+          "result": "passed",
+          "timestamp": "2026-10-10T04:02:51+00:00",
+          "command": [
+            "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+            "Tools/check_native_ground.py",
+            "artifact",
+            "--prefix",
+            "arm-none-eabi-"
+          ],
+          "input_sha256": "c8736d32181948fe84beaf0bf1d7bf5e7eb6d4b973ce176053cbeee3fb1ef8c9"
+        }
+      },
+      "input_files": 114,
+      "generated_files": 127,
+      "recorded_artifacts": 555
+    },
+    {
+      "part": "STM32C071FBP6",
+      "output": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ug08\\usb-9a125184f556",
+      "project_root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ug08\\p_feb8d835",
+      "model_sha256": "8f2d97e6cf5b69d7015440905b3a9948ae94f8bd7840c48054fd4a664263fdf9",
+      "runtime_project_sha256": "c1be98e5362b3236938dca14592c9438de56edc523b58cda5c20837153822d83",
+      "snapshot_root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ug08\\w_0e091a11\\i\\751f3d0065e4b0336f4c32eeedbba043d14f7a8a779da52d27865bd6560d72a6\\UsbGroundNative",
+      "source_snapshot_sha256": "3b3cca957eeb3c72dd773114ad344404bef178ddfb132d18c983d8b2e898ba5c",
+      "backend_receipt_sha256": "c7f0e3a95d7a87c7b5af5cea94aa416be293e177030604ec0b937076dbbc2bcf",
+      "compile_receipt_sha256": "5d724d334e854f651df275baf3b919a0fc46f53e23974159cda2a5867b87499d",
+      "commands": 351,
+      "toolchain_version": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+      "irq_header_sha256": "fa5f83d0763b0446aff74182074f52343fc0f2056e54661469e4ed8605484361",
+      "elf_sha256": {
+        "build/native.elf": "ee90e6871f5f5723982701e8b6783dd2638f4bd76f352f5099d2d38e031028b9",
+        "build/analysis/native.elf": "ee90e6871f5f5723982701e8b6783dd2638f4bd76f352f5099d2d38e031028b9"
+      },
+      "gui_quality": {
+        "architecture_check": {
+          "duration": 6.068315399999847,
+          "result": "passed",
+          "timestamp": "2026-10-10T04:04:26+00:00",
+          "command": [
+            "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+            "Tools/check_c071_candidate.py"
+          ],
+          "input_sha256": "bbab238865125576cfae1d201df5c021d452461b930c5b235d62f570c353905d"
+        },
+        "artifact_check": {
+          "duration": 10.470902699998987,
+          "result": "passed",
+          "timestamp": "2026-10-10T04:04:46+00:00",
+          "command": [
+            "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+            "Tools/check_c071_candidate.py",
+            "artifact",
+            "--prefix",
+            "arm-none-eabi-"
+          ],
+          "input_sha256": "29d35d5f4f117f05b43c64f74b659cf134bfcb1d9dbc1cf7e33d6d71585d0abb"
+        }
+      },
+      "input_files": 111,
+      "generated_files": 273,
+      "recorded_artifacts": 575
+    }
+  ]
+}

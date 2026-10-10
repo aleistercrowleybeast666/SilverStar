@@ -1,0 +1,54 @@
+[
+  {
+    "name": "architecture",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_native_ground.py"
+    ],
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f103-14e",
+    "started_utc": "2026-10-09T21:08:57.170186+00:00",
+    "exit": 0
+  },
+  {
+    "name": "host",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_native_ground.py",
+      "host",
+      "--host-cc",
+      "gcc"
+    ],
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f103-14e",
+    "started_utc": "2026-10-09T21:08:57.741745+00:00",
+    "exit": 0
+  },
+  {
+    "name": "artifact",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "Tools/check_native_ground.py",
+      "artifact",
+      "--prefix",
+      "arm-none-eabi-"
+    ],
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f103-14e",
+    "started_utc": "2026-10-09T21:09:06.168096+00:00",
+    "exit": 0
+  },
+  {
+    "name": "power10",
+    "command": [
+      "powershell",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "Tools/check_power_of_ten.ps1",
+      "-TargetKind",
+      "Ground"
+    ],
+    "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f103-14e",
+    "started_utc": "2026-10-09T21:09:10.742376+00:00",
+    "exit": 0
+  }
+]

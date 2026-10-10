@@ -1,0 +1,346 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\.work\ccdi\apps\SCG
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collected 15 items
+
+.work\ccdi\apps\SCG\tests\test_native_platform.py .F......F.F....        [100%]
+
+================================== FAILURES ===================================
+_______________ test_actual_native_platform_contract[f407-usb] ________________
+
+native = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-platform-10a/test_actual_native_platform_co_a085feec/native'), {...de\\stm32f407xx.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+
+    def test_actual_native_platform_contract(native):
+        root, args = native
+        proof, inventory, files = NativeClassicCdc_Inspect(root, **args)
+>       contract = NativePlatformContract_Inspect(files, proof, inventory)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_platform.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+files = {'.mxproject': b'[PreviousGenFiles]\r\nAdvancedFolderStructure=true\r\nHeaderFileListSize=12\r\nHeaderFiles#0=..\\Core...in the\nname of or to create a liability for the other in any way or for any purpose.\n\n</div>\n:::\n\n:::\n:::', ...}
+proof = {'format_version': 2, 'input_kind': 'native_complete_classic_cdc', 'ioc_file': 'cube-f407-usb.ioc', 'device_facts': {'part': 'STM32F407VET6', 'core': 'cortex-m4', 'device_macro': 'STM32F407xx', 'startup': 'startup_stm32f407xx.s', ...}, ...}
+inventory = HardwareInventory(mcu_part='STM32F407VET6', mcu_name='STM32F407V(E-G)Tx', mcu_family='STM32F4', package='LQFP100', cor...d_handle='', sd_instance='', card_detect_pin='', target_sources=(), errors=()), issues=(), sdio_shared_dma_bound=False)
+
+    def NativePlatformContract_Inspect(files: dict[str, bytes], proof: dict, inventory) -> dict:
+        resources = {item.resource_id: item for item in inventory.HardwareResources_Get()}
+        spi = resources[proof["bindings"]["spi"]]
+        handle = str(spi.metadata["handle"])
+        peripheral = str(spi.resource_id)
+        if not re.fullmatch(r"SPI[1-9][0-9]*", peripheral):
+            raise ValueError("Native peripheral identifier is not a literal SPI instance")
+        core = {p: NativeC_VisibleGet(files[p].decode("utf-8-sig"))
+                for p in proof["build"]["sources"] if p.startswith("Core/")}
+        initializers = []
+        expected = {"Mode": "SPI_MODE_MASTER", "Direction": "SPI_DIRECTION_2LINES",
+                    "DataSize": "SPI_DATASIZE_8BIT", "CLKPolarity": "SPI_POLARITY_LOW",
+                    "CLKPhase": "SPI_PHASE_1EDGE", "NSS": "SPI_NSS_SOFT",
+                    "FirstBit": "SPI_FIRSTBIT_MSB", "TIMode": "SPI_TIMODE_DISABLE",
+                    "CRCCalculation": "SPI_CRCCALCULATION_DISABLE"}
+        init_name = "MX_" + peripheral + "_Init"
+        for path in core:
+            try:
+                _start, opening, end = NativeC_FunctionSpanGet(files[path].decode("utf-8-sig"), init_name)
+            except ValueError:
+                continue
+            body = core[path][opening + 1:end - 1]
+            assignments = re.findall(re.escape(handle) + r"\.Init\.(\w+)\s*=\s*([^;{}]+);", body)
+            values = dict(assignments)
+            if len(values) != len(assignments) or any(values.get(key, "").strip() != value
+                                                     for key, value in expected.items()):
+                raise ValueError("Native SPI initializer contradicts the exact radio contract")
+            if not re.fullmatch(r"SPI_BAUDRATEPRESCALER_(2|4|8|16|32|64|128|256)",
+                                values.get("BaudRatePrescaler", "").strip()):
+                raise ValueError("Native SPI prescaler is not a literal supported initializer")
+            if values["BaudRatePrescaler"].strip() != spi.metadata.get("BaudRatePrescaler"):
+                raise ValueError("Native SPI actual prescaler differs from physical inventory")
+            expected["BaudRatePrescaler"] = values["BaudRatePrescaler"].strip()
+            if (len(re.findall(re.escape(handle) + r"\.Instance\s*=\s*" + peripheral + r"\s*;", body)) != 1 or
+                    not re.search(r"if\s*\(HAL_SPI_Init\s*\(\s*&" + handle +
+                                  r"\s*\)\s*!=\s*HAL_OK\s*\)\s*\{\s*Error_Handler\(\);\s*\}", body)):
+                raise ValueError("Native SPI initialization call/result owner is unknown")
+            initializers.append(path)
+        if len(initializers) != 1:
+            raise ValueError("Native SPI needs one actual initialization function")
+        # Hardware inventory supplies parsed bus frequency/pins; no fabricated SPI
+        # rate is emitted. A prepared radio route needs the declared physical range.
+        clock = spi.metadata.get("clock_hz")
+        if type(clock) is not int or not 100_000 <= clock <= 10_000_000:
+            raise ValueError("Native radio SPI clock is unavailable or outside its contract")
+        headers = [files[p].decode("utf-8-sig") for p in files if p.startswith("Core/") and p.endswith(".h")]
+        definitions = {}
+        for header in headers:
+            for name, value in re.findall(r"(?m)^\s*#define\s+(\w+)\s+([^\r\n]+)", header):
+                if name.endswith(("_Pin", "_GPIO_Port")):
+                    if name in definitions:
+                        raise ValueError("Native GPIO macro has multiple owners: " + name)
+                    definitions[name] = value.strip()
+    
+        def port_get(token):
+            value = definitions.get(token, token)
+            if not re.fullmatch(r"GPIO[A-Z]", value):
+                raise ValueError("Native GPIO port is an expression or unknown alias: " + token)
+            return value
+    
+        def pins_get(expression):
+            tokens = expression.split("|")
+            pins = []
+            for token in tokens:
+                value = definitions.get(token.strip(), token.strip())
+                match = re.fullmatch(r"GPIO_PIN_(\d|1[0-5])", value)
+                if match is None:
+                    raise ValueError("Native GPIO pin is an expression or unknown alias")
+                pins.append(int(match[1]))
+            if len(pins) != len(set(pins)):
+                raise ValueError("Native GPIO initialization repeats a pin")
+            return pins
+    
+        configs = {}
+        levels = {}
+        for path, code in core.items():
+            blocks = re.findall(r"GPIO_InitStruct\.Pin\s*=\s*([^;]+);"
+                r"((?:\s*GPIO_InitStruct\.\w+\s*=\s*[^;]+;)*)\s*"
+                r"HAL_GPIO_Init\s*\(\s*(\w+)\s*,\s*&GPIO_InitStruct\s*\)\s*;", code)
+            if len(blocks) != len(re.findall(r"\bHAL_GPIO_Init\s*\(", code)):
+                raise ValueError("Native GPIO initialization has unparsed aliases/control flow: " + path)
+            for pin_expression, fields, port in blocks:
+                attrs = re.findall(r"GPIO_InitStruct\.(\w+)\s*=\s*([^;]+);", fields)
+                if len(dict(attrs)) != len(attrs):
+                    raise ValueError("Native GPIO initializer field has multiple writes")
+                for pin in pins_get(pin_expression):
+                    key = (port_get(port), pin)
+                    configs.setdefault(key, []).append((path, {k: v.strip() for k, v in attrs}))
+            for port, pin_expression, level in re.findall(
+                    r"HAL_GPIO_WritePin\s*\(\s*(\w+)\s*,\s*([\w| \t]+)\s*,\s*(\w+)\s*\)\s*;", code):
+                for pin in pins_get(pin_expression):
+                    levels.setdefault((port_get(port), pin), []).append((path, level))
+        labels = proof["bindings"]["gpio"]
+        if len(labels) != 4:
+            raise ValueError("Native radio needs exact NSS/reset/busy/DIO1 role order")
+        bindings = []
+        for role, label, mode in zip(("nss", "reset", "busy", "dio1"), labels,
+                                     ("GPIO_MODE_OUTPUT_PP", "GPIO_MODE_OUTPUT_PP",
+                                      "GPIO_MODE_INPUT", "GPIO_MODE_IT_RISING")):
+            if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", label):
+                raise ValueError("Native GPIO role label is not a literal identifier")
+            port = port_get(label + "_GPIO_Port")
+            pin = pins_get(label + "_Pin")[0]
+            if resources[label].metadata.get("physical_pin") != "P" + port[4:] + str(pin):
+                raise ValueError("Native source GPIO pin differs from physical inventory")
+            matches = configs.get((port, pin), [])
+            if len(matches) != 1 or matches[0][1].get("Mode") != mode:
+                raise ValueError("Native GPIO has conflicting actual mode owners: " + role)
+            owner, attrs = matches[0]
+            if attrs.get("Pull") not in ({"GPIO_NOPULL", "GPIO_PULLUP"} if role == "nss" else {"GPIO_NOPULL"}):
+                raise ValueError("Native GPIO pull contradicts the radio contract: " + role)
+            if role in {"nss", "reset"}:
+                if attrs.get("Speed") != "GPIO_SPEED_FREQ_LOW" or levels.get((port, pin)) != [(owner, "GPIO_PIN_SET")]:
+                    raise ValueError("Native GPIO lacks a unique safe inactive output initializer")
+                code = core[owner]
+                write = re.search(r"HAL_GPIO_WritePin\s*\([^;]+" + re.escape(label) + r"_Pin[^;]+;", code)
+                configure = re.search(r"GPIO_InitStruct\.Pin\s*=\s*" + re.escape(label) + r"_Pin\s*;", code)
+                if write is None or configure is None or write.start() >= configure.start():
+>                   raise ValueError("Native radio output level is not set before mode initialization")
+E                   ValueError: Native radio output level is not set before mode initialization
+
+.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_platform.py:131: ValueError
+_____ test_native_platform_conflicting_owner_rejected[f407-usb-prescaler] _____
+
+native = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-platform-10a/test_native_platform_conflicti_9d9b86ea/native'), {...de\\stm32f407xx.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+mutation = 'prescaler'
+
+    @pytest.mark.parametrize('mutation', ['prescaler', 'expression', 'dio-irq', 'dio-route', 'spi-pin', 'callback'])
+    def test_native_platform_conflicting_owner_rejected(native, mutation):
+        root, args = native
+        proof, inventory, files = NativeClassicCdc_Inspect(root, **args)
+        changes = {
+            'prescaler': ('Core/Src/spi.c', b'SPI_BAUDRATEPRESCALER_8', b'SPI_BAUDRATEPRESCALER_16'),
+            'expression': ('Core/Src/spi.c', b'SPI_MODE_MASTER;', b'(1 ? SPI_MODE_SLAVE : SPI_MODE_MASTER);'),
+            'dio-irq': ('Core/Src/gpio.c', b'HAL_NVIC_EnableIRQ(EXTI0_IRQn);', b'HAL_NVIC_DisableIRQ(EXTI0_IRQn);'),
+            'dio-route': ('Core/Src/stm32f1xx_it.c' if args['device_facts'].core == 'cortex-m3' else 'Core/Src/stm32f4xx_it.c',
+                          b'HAL_GPIO_EXTI_IRQHandler(RADIO_DIO1_Pin);', b'HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);'),
+            'spi-pin': ('Core/Src/spi.c', b'GPIO_MODE_AF_PP;', b'GPIO_MODE_OUTPUT_PP;'),
+        }
+        if mutation == 'callback':
+            files['Core/Src/gpio.c'] += b'\nvoid HAL_GPIO_EXTI_Callback(uint16_t pin) { (void)pin; }\n'
+        else:
+            path, before, after = changes[mutation]
+            # Both fixture prescalers are independently specified in the inventory.
+            if mutation == 'prescaler' and before not in files[path]:
+>               before = contract_prescaler = NativePlatformContract_Inspect(files, proof, inventory)['spi_initializers']['BaudRatePrescaler'].encode()
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_platform.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+files = {'.mxproject': b'[PreviousGenFiles]\r\nAdvancedFolderStructure=true\r\nHeaderFileListSize=12\r\nHeaderFiles#0=..\\Core...in the\nname of or to create a liability for the other in any way or for any purpose.\n\n</div>\n:::\n\n:::\n:::', ...}
+proof = {'format_version': 2, 'input_kind': 'native_complete_classic_cdc', 'ioc_file': 'cube-f407-usb.ioc', 'device_facts': {'part': 'STM32F407VET6', 'core': 'cortex-m4', 'device_macro': 'STM32F407xx', 'startup': 'startup_stm32f407xx.s', ...}, ...}
+inventory = HardwareInventory(mcu_part='STM32F407VET6', mcu_name='STM32F407V(E-G)Tx', mcu_family='STM32F4', package='LQFP100', cor...d_handle='', sd_instance='', card_detect_pin='', target_sources=(), errors=()), issues=(), sdio_shared_dma_bound=False)
+
+    def NativePlatformContract_Inspect(files: dict[str, bytes], proof: dict, inventory) -> dict:
+        resources = {item.resource_id: item for item in inventory.HardwareResources_Get()}
+        spi = resources[proof["bindings"]["spi"]]
+        handle = str(spi.metadata["handle"])
+        peripheral = str(spi.resource_id)
+        if not re.fullmatch(r"SPI[1-9][0-9]*", peripheral):
+            raise ValueError("Native peripheral identifier is not a literal SPI instance")
+        core = {p: NativeC_VisibleGet(files[p].decode("utf-8-sig"))
+                for p in proof["build"]["sources"] if p.startswith("Core/")}
+        initializers = []
+        expected = {"Mode": "SPI_MODE_MASTER", "Direction": "SPI_DIRECTION_2LINES",
+                    "DataSize": "SPI_DATASIZE_8BIT", "CLKPolarity": "SPI_POLARITY_LOW",
+                    "CLKPhase": "SPI_PHASE_1EDGE", "NSS": "SPI_NSS_SOFT",
+                    "FirstBit": "SPI_FIRSTBIT_MSB", "TIMode": "SPI_TIMODE_DISABLE",
+                    "CRCCalculation": "SPI_CRCCALCULATION_DISABLE"}
+        init_name = "MX_" + peripheral + "_Init"
+        for path in core:
+            try:
+                _start, opening, end = NativeC_FunctionSpanGet(files[path].decode("utf-8-sig"), init_name)
+            except ValueError:
+                continue
+            body = core[path][opening + 1:end - 1]
+            assignments = re.findall(re.escape(handle) + r"\.Init\.(\w+)\s*=\s*([^;{}]+);", body)
+            values = dict(assignments)
+            if len(values) != len(assignments) or any(values.get(key, "").strip() != value
+                                                     for key, value in expected.items()):
+                raise ValueError("Native SPI initializer contradicts the exact radio contract")
+            if not re.fullmatch(r"SPI_BAUDRATEPRESCALER_(2|4|8|16|32|64|128|256)",
+                                values.get("BaudRatePrescaler", "").strip()):
+                raise ValueError("Native SPI prescaler is not a literal supported initializer")
+            if values["BaudRatePrescaler"].strip() != spi.metadata.get("BaudRatePrescaler"):
+                raise ValueError("Native SPI actual prescaler differs from physical inventory")
+            expected["BaudRatePrescaler"] = values["BaudRatePrescaler"].strip()
+            if (len(re.findall(re.escape(handle) + r"\.Instance\s*=\s*" + peripheral + r"\s*;", body)) != 1 or
+                    not re.search(r"if\s*\(HAL_SPI_Init\s*\(\s*&" + handle +
+                                  r"\s*\)\s*!=\s*HAL_OK\s*\)\s*\{\s*Error_Handler\(\);\s*\}", body)):
+                raise ValueError("Native SPI initialization call/result owner is unknown")
+            initializers.append(path)
+        if len(initializers) != 1:
+            raise ValueError("Native SPI needs one actual initialization function")
+        # Hardware inventory supplies parsed bus frequency/pins; no fabricated SPI
+        # rate is emitted. A prepared radio route needs the declared physical range.
+        clock = spi.metadata.get("clock_hz")
+        if type(clock) is not int or not 100_000 <= clock <= 10_000_000:
+            raise ValueError("Native radio SPI clock is unavailable or outside its contract")
+        headers = [files[p].decode("utf-8-sig") for p in files if p.startswith("Core/") and p.endswith(".h")]
+        definitions = {}
+        for header in headers:
+            for name, value in re.findall(r"(?m)^\s*#define\s+(\w+)\s+([^\r\n]+)", header):
+                if name.endswith(("_Pin", "_GPIO_Port")):
+                    if name in definitions:
+                        raise ValueError("Native GPIO macro has multiple owners: " + name)
+                    definitions[name] = value.strip()
+    
+        def port_get(token):
+            value = definitions.get(token, token)
+            if not re.fullmatch(r"GPIO[A-Z]", value):
+                raise ValueError("Native GPIO port is an expression or unknown alias: " + token)
+            return value
+    
+        def pins_get(expression):
+            tokens = expression.split("|")
+            pins = []
+            for token in tokens:
+                value = definitions.get(token.strip(), token.strip())
+                match = re.fullmatch(r"GPIO_PIN_(\d|1[0-5])", value)
+                if match is None:
+                    raise ValueError("Native GPIO pin is an expression or unknown alias")
+                pins.append(int(match[1]))
+            if len(pins) != len(set(pins)):
+                raise ValueError("Native GPIO initialization repeats a pin")
+            return pins
+    
+        configs = {}
+        levels = {}
+        for path, code in core.items():
+            blocks = re.findall(r"GPIO_InitStruct\.Pin\s*=\s*([^;]+);"
+                r"((?:\s*GPIO_InitStruct\.\w+\s*=\s*[^;]+;)*)\s*"
+                r"HAL_GPIO_Init\s*\(\s*(\w+)\s*,\s*&GPIO_InitStruct\s*\)\s*;", code)
+            if len(blocks) != len(re.findall(r"\bHAL_GPIO_Init\s*\(", code)):
+                raise ValueError("Native GPIO initialization has unparsed aliases/control flow: " + path)
+            for pin_expression, fields, port in blocks:
+                attrs = re.findall(r"GPIO_InitStruct\.(\w+)\s*=\s*([^;]+);", fields)
+                if len(dict(attrs)) != len(attrs):
+                    raise ValueError("Native GPIO initializer field has multiple writes")
+                for pin in pins_get(pin_expression):
+                    key = (port_get(port), pin)
+                    configs.setdefault(key, []).append((path, {k: v.strip() for k, v in attrs}))
+            for port, pin_expression, level in re.findall(
+                    r"HAL_GPIO_WritePin\s*\(\s*(\w+)\s*,\s*([\w| \t]+)\s*,\s*(\w+)\s*\)\s*;", code):
+                for pin in pins_get(pin_expression):
+                    levels.setdefault((port_get(port), pin), []).append((path, level))
+        labels = proof["bindings"]["gpio"]
+        if len(labels) != 4:
+            raise ValueError("Native radio needs exact NSS/reset/busy/DIO1 role order")
+        bindings = []
+        for role, label, mode in zip(("nss", "reset", "busy", "dio1"), labels,
+                                     ("GPIO_MODE_OUTPUT_PP", "GPIO_MODE_OUTPUT_PP",
+                                      "GPIO_MODE_INPUT", "GPIO_MODE_IT_RISING")):
+            if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", label):
+                raise ValueError("Native GPIO role label is not a literal identifier")
+            port = port_get(label + "_GPIO_Port")
+            pin = pins_get(label + "_Pin")[0]
+            if resources[label].metadata.get("physical_pin") != "P" + port[4:] + str(pin):
+                raise ValueError("Native source GPIO pin differs from physical inventory")
+            matches = configs.get((port, pin), [])
+            if len(matches) != 1 or matches[0][1].get("Mode") != mode:
+                raise ValueError("Native GPIO has conflicting actual mode owners: " + role)
+            owner, attrs = matches[0]
+            if attrs.get("Pull") not in ({"GPIO_NOPULL", "GPIO_PULLUP"} if role == "nss" else {"GPIO_NOPULL"}):
+                raise ValueError("Native GPIO pull contradicts the radio contract: " + role)
+            if role in {"nss", "reset"}:
+                if attrs.get("Speed") != "GPIO_SPEED_FREQ_LOW" or levels.get((port, pin)) != [(owner, "GPIO_PIN_SET")]:
+                    raise ValueError("Native GPIO lacks a unique safe inactive output initializer")
+                code = core[owner]
+                write = re.search(r"HAL_GPIO_WritePin\s*\([^;]+" + re.escape(label) + r"_Pin[^;]+;", code)
+                configure = re.search(r"GPIO_InitStruct\.Pin\s*=\s*" + re.escape(label) + r"_Pin\s*;", code)
+                if write is None or configure is None or write.start() >= configure.start():
+>                   raise ValueError("Native radio output level is not set before mode initialization")
+E                   ValueError: Native radio output level is not set before mode initialization
+
+.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_platform.py:131: ValueError
+______ test_native_platform_conflicting_owner_rejected[f407-usb-dio-irq] ______
+
+native = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-platform-10a/test_native_platform_conflicti_9a1c29d7/native'), {...de\\stm32f407xx.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+mutation = 'dio-irq'
+
+    @pytest.mark.parametrize('mutation', ['prescaler', 'expression', 'dio-irq', 'dio-route', 'spi-pin', 'callback'])
+    def test_native_platform_conflicting_owner_rejected(native, mutation):
+        root, args = native
+        proof, inventory, files = NativeClassicCdc_Inspect(root, **args)
+        changes = {
+            'prescaler': ('Core/Src/spi.c', b'SPI_BAUDRATEPRESCALER_8', b'SPI_BAUDRATEPRESCALER_16'),
+            'expression': ('Core/Src/spi.c', b'SPI_MODE_MASTER;', b'(1 ? SPI_MODE_SLAVE : SPI_MODE_MASTER);'),
+            'dio-irq': ('Core/Src/gpio.c', b'HAL_NVIC_EnableIRQ(EXTI0_IRQn);', b'HAL_NVIC_DisableIRQ(EXTI0_IRQn);'),
+            'dio-route': ('Core/Src/stm32f1xx_it.c' if args['device_facts'].core == 'cortex-m3' else 'Core/Src/stm32f4xx_it.c',
+                          b'HAL_GPIO_EXTI_IRQHandler(RADIO_DIO1_Pin);', b'HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);'),
+            'spi-pin': ('Core/Src/spi.c', b'GPIO_MODE_AF_PP;', b'GPIO_MODE_OUTPUT_PP;'),
+        }
+        if mutation == 'callback':
+            files['Core/Src/gpio.c'] += b'\nvoid HAL_GPIO_EXTI_Callback(uint16_t pin) { (void)pin; }\n'
+        else:
+            path, before, after = changes[mutation]
+            # Both fixture prescalers are independently specified in the inventory.
+            if mutation == 'prescaler' and before not in files[path]:
+                before = contract_prescaler = NativePlatformContract_Inspect(files, proof, inventory)['spi_initializers']['BaudRatePrescaler'].encode()
+                after = b'SPI_BAUDRATEPRESCALER_2' if contract_prescaler != b'SPI_BAUDRATEPRESCALER_2' else b'SPI_BAUDRATEPRESCALER_4'
+>           assert before in files[path]
+E           AssertionError: assert b'HAL_NVIC_EnableIRQ(EXTI0_IRQn);' in b'/* USER CODE BEGIN Header */\r\n/**\r\n  ***************************************************************************...5, 0);\r\n  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);\r\n\r\n}\r\n\r\n/* USER CODE BEGIN 2 */\r\n\r\n/* USER CODE END 2 */\r\n'
+
+.work\ccdi\apps\SCG\tests\test_native_platform.py:40: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED .work\ccdi\apps\SCG\tests\test_native_platform.py::test_actual_native_platform_contract[f407-usb]
+FAILED .work\ccdi\apps\SCG\tests\test_native_platform.py::test_native_platform_conflicting_owner_rejected[f407-usb-prescaler]
+FAILED .work\ccdi\apps\SCG\tests\test_native_platform.py::test_native_platform_conflicting_owner_rejected[f407-usb-dio-irq]
+================== 3 failed, 12 passed, 1 warning in 32.42s ===================

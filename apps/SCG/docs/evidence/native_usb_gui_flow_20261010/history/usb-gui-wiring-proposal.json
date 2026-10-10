@@ -1,0 +1,30 @@
+{
+  "status": "PROPOSAL_NOT_APPLIED_NOT_FUNCTIONALLY_TESTED",
+  "files": [
+    {
+      "path": "apps\\SCG\\src\\silverstar_fccg\\app\\usb_ground_flow.py",
+      "current_sha256": null,
+      "proposal_utf8_sha256": "98e34d95873861b5a4e21e7ec1cf81c9559fc34c99ac039ed22aa0dcdb63db49"
+    },
+    {
+      "path": "apps\\SCG\\src\\silverstar_fccg\\app\\usb_ground.py",
+      "current_sha256": "0b23efaf16f2904d4af26904ddb318fa6150572ee88505ea79c1d5abf999f1b4",
+      "proposal_utf8_sha256": "8d598c37c38ece63e9714a8f4c4a29cea3d60250f113c34ad2c5ba2b2e3d05f9"
+    },
+    {
+      "path": "apps\\SCG\\src\\silverstar_fccg\\app\\native_ground.py",
+      "current_sha256": "eb9a0f64df4b2fe48daafbf617b6a09de4f0c596c572d86b41dd9d586e02c63c",
+      "proposal_utf8_sha256": "f1c20a9606e53fdbd905caa9ba14ebaceeec5f7d6296f4859dd32a7f94ba60c2"
+    },
+    {
+      "path": "apps\\SCG\\src\\silverstar_fccg\\build\\native_compile.py",
+      "current_sha256": "aebd281d15ef725d02e9b05ec7834c0b2f769e2d8e78955323b7a900f86f4e00",
+      "proposal_utf8_sha256": "13caf8ef29023a6ecc8b7c9e9c25c90d0b51e79e8e27d45eafe466f5b950e9b1"
+    },
+    {
+      "path": "apps\\SCG\\src\\silverstar_fccg\\ui\\main_window.py",
+      "current_sha256": "f67de6b0911282fb0906efe317afd444d1b2c305c4a2e6ed6fb2b81f27e55471",
+      "proposal_utf8_sha256": "d9778bb9d48d9902763f5e78188a66129efe5c8742ff013828d988b2749208c0"
+    }
+  ]
+}

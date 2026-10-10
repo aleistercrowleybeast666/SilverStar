@@ -1,0 +1,4 @@
+#include <stdlib.h>
+#define SILVERSTAR_ASSERT_MODULE_GENERATED 1U
+#define SILVERSTAR_ASSERT_REASON_STATE_INVARIANT 1U
+#define SILVERSTAR_ASSERT(p,m,r) do { if (!(p)) { abort(); } } while (0)

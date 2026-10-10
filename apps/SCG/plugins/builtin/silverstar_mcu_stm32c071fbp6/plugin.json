@@ -1,0 +1,112 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.mcu.stm32c071fbp6",
+  "name": "STM32C071FBP6",
+  "type": "mcu",
+  "class": "stm32c0",
+  "version": "0.1.0",
+  "description": "Exact non-N C071FBP6 TSSOP20 mini Ground USB software contract, imported native HAL/CMSIS/startup/linker only.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.mcu_family.stm32c0",
+        "optional": false
+      },
+      {
+        "id": "silverstar.usb_cdc.stm32c071_mini",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "mcu.cortex_m0plus",
+    "hardware_provider.stm32_cubemx"
+  ],
+  "build": {
+    "sources": [],
+    "asm_sources": [],
+    "include_dirs": [],
+    "defines": [
+      "USE_HAL_DRIVER",
+      "STM32C071xx"
+    ],
+    "mcu_flags": [
+      "-mcpu=cortex-m0plus",
+      "-mthumb",
+      "-mfloat-abi=soft"
+    ],
+    "specs": [
+      "-specs=nano.specs"
+    ],
+    "libraries": [
+      "-lc",
+      "-lm",
+      "-lnosys"
+    ],
+    "linker_script": "",
+    "toolchain_prefix": "arm-none-eabi-"
+  },
+  "payload": {
+    "roots": [
+      "Platform/STM32C0/README_C071.md"
+    ]
+  },
+  "metadata": {
+    "platform_family_id": "silverstar.mcu_family.stm32c0",
+    "vendor": "STM32",
+    "mcu_model": "STM32C071FBP6",
+    "cpu_profile": "cortex_m0plus_softfp",
+    "max_hclk_hz": 48000000,
+    "flash_bytes": 131072,
+    "sram_bytes": 24576,
+    "memory_regions": [
+      {
+        "name": "FLASH",
+        "origin": 134217728,
+        "bytes": 131072
+      },
+      {
+        "name": "RAM",
+        "origin": 536870912,
+        "bytes": 24576
+      }
+    ],
+    "display_names": {
+      "zh_CN": "STM32C071FBP6",
+      "en_US": "STM32C071FBP6"
+    },
+    "supported_environments": [
+      "silverstar.environment.vscode_eide_gcc"
+    ],
+    "supported_toolchains": [
+      "arm-none-eabi-gcc"
+    ],
+    "resource_capacities": {
+      "spis": 1,
+      "gpios": 4,
+      "timebases": 1
+    }
+  },
+  "platform": {
+    "match_rules": [
+      {
+        "vendor": "STM32",
+        "exact_part": "STM32C071FBP6",
+        "package_pattern": "TSSOP20_GP",
+        "priority": 100,
+        "specificity": 1000,
+        "verification": "experimental"
+      }
+    ],
+    "build_target": {
+      "profile": "C071_Mini_Ground_USB"
+    }
+  }
+}

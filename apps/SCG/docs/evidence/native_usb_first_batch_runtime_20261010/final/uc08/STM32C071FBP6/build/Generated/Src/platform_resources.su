@@ -1,0 +1,3 @@
+Generated/Src/platform_resources.c:15:7:PlatformStm32c0Resource_SpiHandleGet	0	static
+Generated/Src/platform_resources.c:38:9:PlatformStm32c0Resource_GpioGet	8	static
+Generated/Src/platform_resources.c:63:9:PlatformStm32c0Resource_TimeGet	0	static

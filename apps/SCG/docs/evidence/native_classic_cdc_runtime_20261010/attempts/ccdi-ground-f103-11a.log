@@ -1,0 +1,14 @@
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/hardware/native_machine_contract.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_native_classic_cdc.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_native_machine_contract.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tools/validation/native_classic_cdc_compile.py', LF will be replaced by CRLF the next time Git touches it
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\tools\validation\native_classic_cdc_compile.py", line 284, in <module>
+    NativeCompile_Run(parser.parse_args())
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\tools\validation\native_classic_cdc_compile.py", line 71, in NativeCompile_Run
+    experimental_files,graph,records=NativeGroundCandidate_Render(files,proof,inventory,model,catalog,hclk_hz=args.clock_hz)
+                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_ground.py", line 111, in NativeGroundCandidate_Render
+    raise ValueError('Native Host masked-write contract owner changed')
+ValueError: Native Host masked-write contract owner changed

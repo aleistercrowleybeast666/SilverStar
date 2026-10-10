@@ -1,0 +1,321 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\.work\ccdi\apps\SCG
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collected 7 items
+
+.work\ccdi\apps\SCG\tests\test_native_usb_ll.py FFFFFFF                  [100%]
+
+================================== FAILURES ===================================
+_________ test_native_initialization_and_ll_errors_propagate[normal] __________
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-ll-post11a/test_native_initialization_and_060b1017')
+scenario = 'normal'
+
+    @pytest.mark.parametrize('scenario',['normal','core-init','core-start','pcd-init','pma','tx','rearm'])
+    def test_native_initialization_and_ll_errors_propagate(tmp_path,scenario):
+        origin=os.environ.get('SILVERSTAR_NATIVE_CDC_REFERENCE_ROOT');compiler=shutil.which('gcc')
+        if not origin or compiler is None:pytest.skip('Native fixture or Host GCC unavailable')
+        root=Path(origin)/'cube-f103-usb'
+        core=NativeUsbCore_Derive((root/'Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c').read_bytes()).decode()
+>       ll=NativeUsbLl_Derive((root/'USB_DEVICE/Target/usbd_conf.c').read_bytes()).decode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_usb_ll.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+original = b'/* USER CODE BEGIN Header */\r\n/**\r\n  ***************************************************************************...\r\n    break;\r\n    default :\r\n      usb_status = USBD_FAIL;\r\n    break;\r\n  }\r\n  return usb_status;\r\n}\r\n'
+
+    def NativeUsbLl_Derive(original: bytes) -> bytes:
+        if hashlib.sha256(original).hexdigest() != 'effe29562b9d655026d6127a87a988af13d05744d5d6d70356faefe5004d0f87':
+            raise ValueError('Native CDC LL source profile is unreviewed')
+        source = original.decode('utf-8-sig')
+        start, opening, end = NativeC_FunctionSpanGet(source,'USBD_LL_Init')
+        function = source[start:end]
+        local = opening-start+1
+        function = function[:local]+'\n  if (pdev == NULL) { return USBD_FAIL; }\n'+function[local:]
+        if function.count('Error_Handler( );') != 1:
+            raise ValueError('Native PCD initialization failure owner changed')
+        function = function.replace('Error_Handler( );','return USBD_FAIL;',1)
+        function, count = re.subn(r'(HAL_PCDEx_PMAConfig\([^;]+\));',
+            r'if (\1 != HAL_OK) { return USBD_FAIL; }',function)
+        if count != 5:
+            raise ValueError('Native PMA initialization owner changed')
+        source = source[:start]+function+source[end:]
+        # This candidate uses fixed vendor callbacks, never a runtime registry.
+        include = '#include "usbd_conf.h"'
+        if source.count(include) != 1:
+>           raise ValueError('Native USB LL include owner changed')
+E           ValueError: Native USB LL include owner changed
+
+.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_usb_data.py:266: ValueError
+________ test_native_initialization_and_ll_errors_propagate[core-init] ________
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-ll-post11a/test_native_initialization_and_9c89a685')
+scenario = 'core-init'
+
+    @pytest.mark.parametrize('scenario',['normal','core-init','core-start','pcd-init','pma','tx','rearm'])
+    def test_native_initialization_and_ll_errors_propagate(tmp_path,scenario):
+        origin=os.environ.get('SILVERSTAR_NATIVE_CDC_REFERENCE_ROOT');compiler=shutil.which('gcc')
+        if not origin or compiler is None:pytest.skip('Native fixture or Host GCC unavailable')
+        root=Path(origin)/'cube-f103-usb'
+        core=NativeUsbCore_Derive((root/'Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c').read_bytes()).decode()
+>       ll=NativeUsbLl_Derive((root/'USB_DEVICE/Target/usbd_conf.c').read_bytes()).decode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_usb_ll.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+original = b'/* USER CODE BEGIN Header */\r\n/**\r\n  ***************************************************************************...\r\n    break;\r\n    default :\r\n      usb_status = USBD_FAIL;\r\n    break;\r\n  }\r\n  return usb_status;\r\n}\r\n'
+
+    def NativeUsbLl_Derive(original: bytes) -> bytes:
+        if hashlib.sha256(original).hexdigest() != 'effe29562b9d655026d6127a87a988af13d05744d5d6d70356faefe5004d0f87':
+            raise ValueError('Native CDC LL source profile is unreviewed')
+        source = original.decode('utf-8-sig')
+        start, opening, end = NativeC_FunctionSpanGet(source,'USBD_LL_Init')
+        function = source[start:end]
+        local = opening-start+1
+        function = function[:local]+'\n  if (pdev == NULL) { return USBD_FAIL; }\n'+function[local:]
+        if function.count('Error_Handler( );') != 1:
+            raise ValueError('Native PCD initialization failure owner changed')
+        function = function.replace('Error_Handler( );','return USBD_FAIL;',1)
+        function, count = re.subn(r'(HAL_PCDEx_PMAConfig\([^;]+\));',
+            r'if (\1 != HAL_OK) { return USBD_FAIL; }',function)
+        if count != 5:
+            raise ValueError('Native PMA initialization owner changed')
+        source = source[:start]+function+source[end:]
+        # This candidate uses fixed vendor callbacks, never a runtime registry.
+        include = '#include "usbd_conf.h"'
+        if source.count(include) != 1:
+>           raise ValueError('Native USB LL include owner changed')
+E           ValueError: Native USB LL include owner changed
+
+.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_usb_data.py:266: ValueError
+_______ test_native_initialization_and_ll_errors_propagate[core-start] ________
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-ll-post11a/test_native_initialization_and_eec1995a')
+scenario = 'core-start'
+
+    @pytest.mark.parametrize('scenario',['normal','core-init','core-start','pcd-init','pma','tx','rearm'])
+    def test_native_initialization_and_ll_errors_propagate(tmp_path,scenario):
+        origin=os.environ.get('SILVERSTAR_NATIVE_CDC_REFERENCE_ROOT');compiler=shutil.which('gcc')
+        if not origin or compiler is None:pytest.skip('Native fixture or Host GCC unavailable')
+        root=Path(origin)/'cube-f103-usb'
+        core=NativeUsbCore_Derive((root/'Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c').read_bytes()).decode()
+>       ll=NativeUsbLl_Derive((root/'USB_DEVICE/Target/usbd_conf.c').read_bytes()).decode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_usb_ll.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+original = b'/* USER CODE BEGIN Header */\r\n/**\r\n  ***************************************************************************...\r\n    break;\r\n    default :\r\n      usb_status = USBD_FAIL;\r\n    break;\r\n  }\r\n  return usb_status;\r\n}\r\n'
+
+    def NativeUsbLl_Derive(original: bytes) -> bytes:
+        if hashlib.sha256(original).hexdigest() != 'effe29562b9d655026d6127a87a988af13d05744d5d6d70356faefe5004d0f87':
+            raise ValueError('Native CDC LL source profile is unreviewed')
+        source = original.decode('utf-8-sig')
+        start, opening, end = NativeC_FunctionSpanGet(source,'USBD_LL_Init')
+        function = source[start:end]
+        local = opening-start+1
+        function = function[:local]+'\n  if (pdev == NULL) { return USBD_FAIL; }\n'+function[local:]
+        if function.count('Error_Handler( );') != 1:
+            raise ValueError('Native PCD initialization failure owner changed')
+        function = function.replace('Error_Handler( );','return USBD_FAIL;',1)
+        function, count = re.subn(r'(HAL_PCDEx_PMAConfig\([^;]+\));',
+            r'if (\1 != HAL_OK) { return USBD_FAIL; }',function)
+        if count != 5:
+            raise ValueError('Native PMA initialization owner changed')
+        source = source[:start]+function+source[end:]
+        # This candidate uses fixed vendor callbacks, never a runtime registry.
+        include = '#include "usbd_conf.h"'
+        if source.count(include) != 1:
+>           raise ValueError('Native USB LL include owner changed')
+E           ValueError: Native USB LL include owner changed
+
+.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_usb_data.py:266: ValueError
+________ test_native_initialization_and_ll_errors_propagate[pcd-init] _________
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-ll-post11a/test_native_initialization_and_49530e58')
+scenario = 'pcd-init'
+
+    @pytest.mark.parametrize('scenario',['normal','core-init','core-start','pcd-init','pma','tx','rearm'])
+    def test_native_initialization_and_ll_errors_propagate(tmp_path,scenario):
+        origin=os.environ.get('SILVERSTAR_NATIVE_CDC_REFERENCE_ROOT');compiler=shutil.which('gcc')
+        if not origin or compiler is None:pytest.skip('Native fixture or Host GCC unavailable')
+        root=Path(origin)/'cube-f103-usb'
+        core=NativeUsbCore_Derive((root/'Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c').read_bytes()).decode()
+>       ll=NativeUsbLl_Derive((root/'USB_DEVICE/Target/usbd_conf.c').read_bytes()).decode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_usb_ll.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+original = b'/* USER CODE BEGIN Header */\r\n/**\r\n  ***************************************************************************...\r\n    break;\r\n    default :\r\n      usb_status = USBD_FAIL;\r\n    break;\r\n  }\r\n  return usb_status;\r\n}\r\n'
+
+    def NativeUsbLl_Derive(original: bytes) -> bytes:
+        if hashlib.sha256(original).hexdigest() != 'effe29562b9d655026d6127a87a988af13d05744d5d6d70356faefe5004d0f87':
+            raise ValueError('Native CDC LL source profile is unreviewed')
+        source = original.decode('utf-8-sig')
+        start, opening, end = NativeC_FunctionSpanGet(source,'USBD_LL_Init')
+        function = source[start:end]
+        local = opening-start+1
+        function = function[:local]+'\n  if (pdev == NULL) { return USBD_FAIL; }\n'+function[local:]
+        if function.count('Error_Handler( );') != 1:
+            raise ValueError('Native PCD initialization failure owner changed')
+        function = function.replace('Error_Handler( );','return USBD_FAIL;',1)
+        function, count = re.subn(r'(HAL_PCDEx_PMAConfig\([^;]+\));',
+            r'if (\1 != HAL_OK) { return USBD_FAIL; }',function)
+        if count != 5:
+            raise ValueError('Native PMA initialization owner changed')
+        source = source[:start]+function+source[end:]
+        # This candidate uses fixed vendor callbacks, never a runtime registry.
+        include = '#include "usbd_conf.h"'
+        if source.count(include) != 1:
+>           raise ValueError('Native USB LL include owner changed')
+E           ValueError: Native USB LL include owner changed
+
+.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_usb_data.py:266: ValueError
+___________ test_native_initialization_and_ll_errors_propagate[pma] ___________
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-ll-post11a/test_native_initialization_and_048c9ee0')
+scenario = 'pma'
+
+    @pytest.mark.parametrize('scenario',['normal','core-init','core-start','pcd-init','pma','tx','rearm'])
+    def test_native_initialization_and_ll_errors_propagate(tmp_path,scenario):
+        origin=os.environ.get('SILVERSTAR_NATIVE_CDC_REFERENCE_ROOT');compiler=shutil.which('gcc')
+        if not origin or compiler is None:pytest.skip('Native fixture or Host GCC unavailable')
+        root=Path(origin)/'cube-f103-usb'
+        core=NativeUsbCore_Derive((root/'Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c').read_bytes()).decode()
+>       ll=NativeUsbLl_Derive((root/'USB_DEVICE/Target/usbd_conf.c').read_bytes()).decode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_usb_ll.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+original = b'/* USER CODE BEGIN Header */\r\n/**\r\n  ***************************************************************************...\r\n    break;\r\n    default :\r\n      usb_status = USBD_FAIL;\r\n    break;\r\n  }\r\n  return usb_status;\r\n}\r\n'
+
+    def NativeUsbLl_Derive(original: bytes) -> bytes:
+        if hashlib.sha256(original).hexdigest() != 'effe29562b9d655026d6127a87a988af13d05744d5d6d70356faefe5004d0f87':
+            raise ValueError('Native CDC LL source profile is unreviewed')
+        source = original.decode('utf-8-sig')
+        start, opening, end = NativeC_FunctionSpanGet(source,'USBD_LL_Init')
+        function = source[start:end]
+        local = opening-start+1
+        function = function[:local]+'\n  if (pdev == NULL) { return USBD_FAIL; }\n'+function[local:]
+        if function.count('Error_Handler( );') != 1:
+            raise ValueError('Native PCD initialization failure owner changed')
+        function = function.replace('Error_Handler( );','return USBD_FAIL;',1)
+        function, count = re.subn(r'(HAL_PCDEx_PMAConfig\([^;]+\));',
+            r'if (\1 != HAL_OK) { return USBD_FAIL; }',function)
+        if count != 5:
+            raise ValueError('Native PMA initialization owner changed')
+        source = source[:start]+function+source[end:]
+        # This candidate uses fixed vendor callbacks, never a runtime registry.
+        include = '#include "usbd_conf.h"'
+        if source.count(include) != 1:
+>           raise ValueError('Native USB LL include owner changed')
+E           ValueError: Native USB LL include owner changed
+
+.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_usb_data.py:266: ValueError
+___________ test_native_initialization_and_ll_errors_propagate[tx] ____________
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-ll-post11a/test_native_initialization_and_858de7bc')
+scenario = 'tx'
+
+    @pytest.mark.parametrize('scenario',['normal','core-init','core-start','pcd-init','pma','tx','rearm'])
+    def test_native_initialization_and_ll_errors_propagate(tmp_path,scenario):
+        origin=os.environ.get('SILVERSTAR_NATIVE_CDC_REFERENCE_ROOT');compiler=shutil.which('gcc')
+        if not origin or compiler is None:pytest.skip('Native fixture or Host GCC unavailable')
+        root=Path(origin)/'cube-f103-usb'
+        core=NativeUsbCore_Derive((root/'Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c').read_bytes()).decode()
+>       ll=NativeUsbLl_Derive((root/'USB_DEVICE/Target/usbd_conf.c').read_bytes()).decode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_usb_ll.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+original = b'/* USER CODE BEGIN Header */\r\n/**\r\n  ***************************************************************************...\r\n    break;\r\n    default :\r\n      usb_status = USBD_FAIL;\r\n    break;\r\n  }\r\n  return usb_status;\r\n}\r\n'
+
+    def NativeUsbLl_Derive(original: bytes) -> bytes:
+        if hashlib.sha256(original).hexdigest() != 'effe29562b9d655026d6127a87a988af13d05744d5d6d70356faefe5004d0f87':
+            raise ValueError('Native CDC LL source profile is unreviewed')
+        source = original.decode('utf-8-sig')
+        start, opening, end = NativeC_FunctionSpanGet(source,'USBD_LL_Init')
+        function = source[start:end]
+        local = opening-start+1
+        function = function[:local]+'\n  if (pdev == NULL) { return USBD_FAIL; }\n'+function[local:]
+        if function.count('Error_Handler( );') != 1:
+            raise ValueError('Native PCD initialization failure owner changed')
+        function = function.replace('Error_Handler( );','return USBD_FAIL;',1)
+        function, count = re.subn(r'(HAL_PCDEx_PMAConfig\([^;]+\));',
+            r'if (\1 != HAL_OK) { return USBD_FAIL; }',function)
+        if count != 5:
+            raise ValueError('Native PMA initialization owner changed')
+        source = source[:start]+function+source[end:]
+        # This candidate uses fixed vendor callbacks, never a runtime registry.
+        include = '#include "usbd_conf.h"'
+        if source.count(include) != 1:
+>           raise ValueError('Native USB LL include owner changed')
+E           ValueError: Native USB LL include owner changed
+
+.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_usb_data.py:266: ValueError
+__________ test_native_initialization_and_ll_errors_propagate[rearm] __________
+
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/sscdc-ll-post11a/test_native_initialization_and_21097661')
+scenario = 'rearm'
+
+    @pytest.mark.parametrize('scenario',['normal','core-init','core-start','pcd-init','pma','tx','rearm'])
+    def test_native_initialization_and_ll_errors_propagate(tmp_path,scenario):
+        origin=os.environ.get('SILVERSTAR_NATIVE_CDC_REFERENCE_ROOT');compiler=shutil.which('gcc')
+        if not origin or compiler is None:pytest.skip('Native fixture or Host GCC unavailable')
+        root=Path(origin)/'cube-f103-usb'
+        core=NativeUsbCore_Derive((root/'Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c').read_bytes()).decode()
+>       ll=NativeUsbLl_Derive((root/'USB_DEVICE/Target/usbd_conf.c').read_bytes()).decode()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.work\ccdi\apps\SCG\tests\test_native_usb_ll.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+original = b'/* USER CODE BEGIN Header */\r\n/**\r\n  ***************************************************************************...\r\n    break;\r\n    default :\r\n      usb_status = USBD_FAIL;\r\n    break;\r\n  }\r\n  return usb_status;\r\n}\r\n'
+
+    def NativeUsbLl_Derive(original: bytes) -> bytes:
+        if hashlib.sha256(original).hexdigest() != 'effe29562b9d655026d6127a87a988af13d05744d5d6d70356faefe5004d0f87':
+            raise ValueError('Native CDC LL source profile is unreviewed')
+        source = original.decode('utf-8-sig')
+        start, opening, end = NativeC_FunctionSpanGet(source,'USBD_LL_Init')
+        function = source[start:end]
+        local = opening-start+1
+        function = function[:local]+'\n  if (pdev == NULL) { return USBD_FAIL; }\n'+function[local:]
+        if function.count('Error_Handler( );') != 1:
+            raise ValueError('Native PCD initialization failure owner changed')
+        function = function.replace('Error_Handler( );','return USBD_FAIL;',1)
+        function, count = re.subn(r'(HAL_PCDEx_PMAConfig\([^;]+\));',
+            r'if (\1 != HAL_OK) { return USBD_FAIL; }',function)
+        if count != 5:
+            raise ValueError('Native PMA initialization owner changed')
+        source = source[:start]+function+source[end:]
+        # This candidate uses fixed vendor callbacks, never a runtime registry.
+        include = '#include "usbd_conf.h"'
+        if source.count(include) != 1:
+>           raise ValueError('Native USB LL include owner changed')
+E           ValueError: Native USB LL include owner changed
+
+.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_usb_data.py:266: ValueError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED .work\ccdi\apps\SCG\tests\test_native_usb_ll.py::test_native_initialization_and_ll_errors_propagate[normal]
+FAILED .work\ccdi\apps\SCG\tests\test_native_usb_ll.py::test_native_initialization_and_ll_errors_propagate[core-init]
+FAILED .work\ccdi\apps\SCG\tests\test_native_usb_ll.py::test_native_initialization_and_ll_errors_propagate[core-start]
+FAILED .work\ccdi\apps\SCG\tests\test_native_usb_ll.py::test_native_initialization_and_ll_errors_propagate[pcd-init]
+FAILED .work\ccdi\apps\SCG\tests\test_native_usb_ll.py::test_native_initialization_and_ll_errors_propagate[pma]
+FAILED .work\ccdi\apps\SCG\tests\test_native_usb_ll.py::test_native_initialization_and_ll_errors_propagate[tx]
+FAILED .work\ccdi\apps\SCG\tests\test_native_usb_ll.py::test_native_initialization_and_ll_errors_propagate[rearm]
+======================== 7 failed, 1 warning in 4.27s =========================

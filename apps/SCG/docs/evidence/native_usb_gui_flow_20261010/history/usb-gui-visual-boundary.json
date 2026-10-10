@@ -1,0 +1,136 @@
+{
+  "baseline": "c55bdc3a16514f62c9a92b6a7582a7bbcdf132a3",
+  "scope": "Source and AST visual-boundary check, not a screenshot or whole-product visual PASS",
+  "changed_logic_files": [
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/main_window.py",
+      "baseline_git_sha256": "0c58b9e367598a6c85190030437ad3d1c0dbdea49b93e5aef129b49126345d58",
+      "current_working_sha256": "5082847fab1c0b6d5240bb75c1aa38f8c22a6319e83eaab9865ca884f02b1886",
+      "changed_logic_methods": [
+        "_GenerateOrApply_Request",
+        "_GroundCubeMxImport_Complete",
+        "_GroundCubeMxImport_Request",
+        "_Project_Display",
+        "_Project_Open",
+        "_QualityChecks_Complete",
+        "_QualityChecks_Request",
+        "_TargetAction_Request",
+        "_TargetPages_Refresh",
+        "_TargetQualityResults_Refresh",
+        "_Targets_Generate",
+        "_UsbGroundOperation_Request",
+        "_UsbGroundTargetAction_Request"
+      ],
+      "widget_constructor_ast_identical": true
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/pages/build.py",
+      "baseline_git_sha256": "3e9568aab733e0edb2e9f3bf62f2fa84a38e30d4c2dfc858791e18a529320da2",
+      "current_working_sha256": "9c89c5955f28758fe10c70557fef4e7df6aa49abbf96c59258d88ab86076a670",
+      "changed_logic_methods": [
+        "Targets_Set",
+        "_TargetActions_Update"
+      ],
+      "widget_constructor_ast_identical": true
+    }
+  ],
+  "unchanged_ui_files": [
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/__init__.py",
+      "git_sha256": "74e1370ae289d0b24f8ce99ab1f1bf0c35e2d231dcf9f3695c51e613137aa634"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/assets/check_white.svg",
+      "git_sha256": "479c15ae5a82a56504618fcf76e60f66c5c45953f3b5b8c2c1468f9cdc9c14da"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/assets/spin_minus_dark.svg",
+      "git_sha256": "5851e5afc073434b25934058ab4a70383795597d07e9dd980758e8d83ae74382"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/assets/spin_minus_light.svg",
+      "git_sha256": "b310754800f53999c00bd399abb7c25047a8b1e135b53b441fb9441feccfe906"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/assets/spin_plus_dark.svg",
+      "git_sha256": "90011ca17c4695f469a719368217c89121b4a057d78a008f5c8d3b34004e8c52"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/assets/spin_plus_light.svg",
+      "git_sha256": "163de9a17d898de3c66d6a7566c6da81f5f4023e74e21793464dbb9af4f79834"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/committed_spin.py",
+      "git_sha256": "3fef5cf07caf8adc77c95585afb6e5e1286caab7fd2e1cfae2154ae1aa9875a1"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/device_initialization.py",
+      "git_sha256": "3d41d864d8a9023a4fe3b2352d9ec1d3a460496b8651b474ff0812a6ca62bb51"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/dialogs/__init__.py",
+      "git_sha256": "2741377d887fc91bc5b94739b192936cfea4b332d823ad57cfd2251e71b693fd"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/dialogs/new_project.py",
+      "git_sha256": "013a7ad72e2af9a815151d08a6595514a0d0afa900b46819923c1318cd89bac4"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/ground_radio_instances.py",
+      "git_sha256": "b0e42f5b3cba2884366876fa5303a9a92c9e3522d8fc733241719990ebd66d0d"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/message_box.py",
+      "git_sha256": "c4124fa0920d0505f08bb260fbf87957e97abee5407a1f0dfedc47589d0481ff"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/pages/__init__.py",
+      "git_sha256": "1ebd3ee9930aaae7e0db1ee71a5b2e5195a99baf3d7588f3217fccb435c73992"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/pages/algorithm_parameters.py",
+      "git_sha256": "71b434e8e75a26bd8209540ebac268f7bd2d2683c4411075361b1c60931773b6"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/pages/base.py",
+      "git_sha256": "57853d17333f8db0843dde78199d258443ab178ffcf5731a8f9854d9f9799aa7"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/pages/components.py",
+      "git_sha256": "9b39346ea3b4436000b98aacb8c05e7b858ec37e0251a02376f921bb39835a50"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/pages/navigation_alignment.py",
+      "git_sha256": "8c2ab02e6027291987ffc2fc366ecf2b2d2c584240b3cb8be488779ffad3bdcd"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/pages/plugins.py",
+      "git_sha256": "cb94e2048b9034ac6c1d5864af9d7b81b4260c8d0425eba8beeb0f53af2719e2"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/pages/targets.py",
+      "git_sha256": "4798e6f6906e05ca25dcc246cf40a98e00f7ef058bb39d8008bcc71af8a33aa6"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/telemetry_card.py",
+      "git_sha256": "01639cc83b0fe72a2bf86af9ee7211b441a2f7c6b9cdd5344c21c1323f9430f6"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/theme.py",
+      "git_sha256": "e6811f8ebef82da6929161f953cb114ab4928ada374e82bf5ac0fc73b53dd44d"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/touch_scroll.py",
+      "git_sha256": "c79ba325dbbd123fbd27e8860648d483c46c41eae6a25d9744033836d358c140"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/widgets.py",
+      "git_sha256": "a4cf5677090b297d0370d8fce200ab8007d5b70447eac47f08d6155baadbc10a"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/workers.py",
+      "git_sha256": "c2130ea4e1fcd86b62b7a28593c2a7f4006f25a3d9ac6bdc317a4672b4b8dfb3"
+    }
+  ],
+  "result": "Widget constructors, layout/styles/theme sources unchanged; only listed handlers/results/availability logic differ"
+}

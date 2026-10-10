@@ -1,0 +1,184 @@
+"""Actual generated indexed class/callback/adapter/bridge normal data path.
+
+PCD transfer, radio and already-ready runtime are Host mocks. No EP0 or malformed
+USB input is run; initialization/fault runtime has separate actual-body tests.
+"""
+from pathlib import Path
+import os,shutil,subprocess,json,hashlib
+import pytest
+from silverstar_fccg.generator.native_hal import NativeC_FunctionSpanGet
+
+
+def test_generated_indexed_ground_bidirectional_data_and_reconnect(tmp_path):
+    origin=os.environ.get('SILVERSTAR_NATIVE_GROUND_OUTPUT');gcc=shutil.which('gcc')
+    if not origin or not gcc:pytest.skip('Fresh generated native Ground output or Host GCC unavailable')
+    root=Path(origin)
+    contract=json.loads((root/'Generated/native_ground_contract.json').read_text())
+    assert contract['clock']['port']=='tim1'
+    inputs={}
+    bodies=[]
+    for path,names in (
+        ('HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c',
+         ['NativeCdc_Fault','NativeCdc_InitAbort','NativeCdc_Open','USBD_CDC_Init','USBD_CDC_DeInit',
+          'USBD_CDC_SetTxBuffer','USBD_CDC_SetRxBuffer','USBD_CDC_TransmitPacket','USBD_CDC_ReceivePacket','USBD_CDC_DataOut','USBD_CDC_DataIn']),
+        ('HardwareGenerated/ReviewedNativeData/USB_DEVICE/App/usbd_cdc_if.c',
+         ['CDC_Init_FS','CDC_DeInit_FS','CDC_Receive_FS','CDC_TransmitCplt_FS','CDC_Transmit_FS'])):
+        text=(root/path).read_text();inputs[path]=hashlib.sha256((root/path).read_bytes()).hexdigest()
+        for name in names:
+            a,_o,b=NativeC_FunctionSpanGet(text,name);bodies.append(text[a:b])
+    facade=r'''#ifndef TEST_NATIVE_USB_H
+#define TEST_NATIVE_USB_H
+#include <stdint.h>
+#include <stddef.h>
+#define USBD_OK 0U
+#define USBD_BUSY 1U
+#define USBD_FAIL 2U
+#define USBD_SPEED_FULL 1U
+#define USBD_STATE_DEFAULT 1U
+#define USBD_STATE_CONFIGURED 3U
+#define USBD_EP_TYPE_BULK 2U
+#define USBD_EP_TYPE_INTR 3U
+#define CDC_IN_EP 0x81U
+#define CDC_OUT_EP 0x01U
+#define CDC_CMD_EP 0x82U
+#define CDC_CMD_PACKET_SIZE 8U
+#define CDC_DATA_FS_IN_PACKET_SIZE 64U
+#define CDC_DATA_FS_OUT_PACKET_SIZE 64U
+#define CDC_FS_BINTERVAL 16U
+#define UNUSED(v) ((void)(v))
+typedef uint8_t USBD_StatusTypeDef;
+typedef struct { uint32_t total_length;uint8_t is_used,bInterval; } Endpoint;
+typedef struct { void *pClassData,*pData;void *pClassDataCmsit[1],*pUserData[1];uint8_t classId,dev_speed,dev_state;Endpoint ep_in[4],ep_out[4]; } USBD_HandleTypeDef;
+typedef struct { uint32_t TxState,RxState,TxLength,RxLength;uint8_t *TxBuffer,*RxBuffer; } USBD_CDC_HandleTypeDef;
+typedef struct { int8_t (*Init)(void);int8_t (*DeInit)(void);int8_t (*Control)(uint8_t,uint8_t *,uint16_t);int8_t (*Receive)(uint8_t *,uint32_t *);int8_t (*TransmitCplt)(uint8_t *,uint32_t *,uint8_t); } USBD_CDC_ItfTypeDef;
+typedef struct { struct { uint32_t maxpacket; } IN_ep[4]; } PCD_HandleTypeDef;
+uint8_t CDC_Transmit_FS(uint8_t *,uint16_t);
+uint8_t USBD_CDC_SetTxBuffer(USBD_HandleTypeDef *,uint8_t *,uint32_t);
+uint8_t USBD_CDC_SetRxBuffer(USBD_HandleTypeDef *,uint8_t *);
+uint8_t USBD_CDC_TransmitPacket(USBD_HandleTypeDef *);
+uint8_t USBD_CDC_ReceivePacket(USBD_HandleTypeDef *);
+extern USBD_HandleTypeDef hUsbDeviceFS;
+#endif
+'''
+    for name in ('usb_device.h','usbd_cdc_if.h'):(tmp_path/name).write_text(facade if name=='usb_device.h' else '#include "usb_device.h"\n')
+    (tmp_path/'main.h').write_bytes((root/'Tests/Host/usb_main.h').read_bytes())
+    (tmp_path/'usbd_conf.h').write_text('/* Host only. */\n')
+    prefix=r'''#include "usb_device.h"
+#include "native_runtime.h"
+#include "native_clock.h"
+#include "ground_bridge.h"
+#include "ground_radio.h"
+#include "gsp_min_protocol.h"
+#include "pc_byte_stream.h"
+#include <assert.h>
+#include <string.h>
+#include <stdio.h>
+uint32_t usb_test_mask;
+USBD_HandleTypeDef hUsbDeviceFS;
+static uint8_t UserRxBufferFS[64],UserTxBufferFS[70];
+static USBD_CDC_HandleTypeDef storage;
+static uint32_t rx_length;
+static unsigned prepared,transmitted,forwarded,acks,air_rx,statuses;
+static uint8_t inject_radio_rx;
+static const uint8_t *retained;
+static uint8_t retained_copy[70];
+static uint32_t retained_length;
+static uint8_t USBD_CDC_Init(USBD_HandleTypeDef *,uint8_t);
+static uint8_t USBD_CDC_DeInit(USBD_HandleTypeDef *,uint8_t);
+static uint8_t USBD_CDC_DataIn(USBD_HandleTypeDef *,uint8_t);
+static uint8_t USBD_CDC_DataOut(USBD_HandleTypeDef *,uint8_t);
+static int8_t CDC_Init_FS(void);
+static int8_t CDC_DeInit_FS(void);
+static int8_t CDC_Receive_FS(uint8_t *,uint32_t *);
+static int8_t CDC_TransmitCplt_FS(uint8_t *,uint32_t *,uint8_t);
+uint8_t NativeRuntime_ReadyGet(void) { return 1U; }
+void NativeRuntime_TransportFaultRecord(void) { assert(0 && "No stored ownership fault in normal path"); }
+uint8_t NativeClock_ContextAllowedGet(void) { return usb_test_mask==0U ? 1U : 0U; }
+NativeClockResult NativeClock_DelayUs(uint32_t delay) { assert(delay==1U && usb_test_mask==0U);return NativeClockResult_Ok; }
+static void *TestAlloc(size_t size) { assert(size==sizeof(storage));return &storage; }
+static void TestFree(void *data) { assert(data==&storage); }
+#define USBD_malloc TestAlloc
+#define USBD_free TestFree
+static USBD_StatusTypeDef USBD_LL_OpenEP(USBD_HandleTypeDef *p,uint8_t ep,uint8_t type,uint16_t size)
+{ assert(p==&hUsbDeviceFS && (ep==0x81U || ep==1U || ep==0x82U) && type>=2U && size<=64U);return USBD_OK; }
+static USBD_StatusTypeDef USBD_LL_CloseEP(USBD_HandleTypeDef *p,uint8_t ep)
+{ assert(p==&hUsbDeviceFS && (ep==0x81U || ep==1U || ep==0x82U));return USBD_OK; }
+static USBD_StatusTypeDef USBD_LL_PrepareReceive(USBD_HandleTypeDef *p,uint8_t ep,uint8_t *data,uint16_t size)
+{ assert(p==&hUsbDeviceFS && ep==1U && data==UserRxBufferFS && size==64U);prepared++;return USBD_OK; }
+static uint32_t USBD_LL_GetRxDataSize(USBD_HandleTypeDef *p,uint8_t ep)
+{ assert(p==&hUsbDeviceFS && ep==1U);return rx_length; }
+static USBD_StatusTypeDef USBD_LL_Transmit(USBD_HandleTypeDef *p,uint8_t ep,uint8_t *data,uint16_t size)
+{
+  assert(p==&hUsbDeviceFS && ep==0x81U && data!=NULL && size<=70U && usb_test_mask==1U);
+  GspMinParser parser;GspMinFrame frame;GspParserResult result=GSP_PARSER_NO_FRAME;
+  GspMinParser_Init(&parser);
+  for (uint16_t i=0U;i<size;i++) { result=GspMinParser_InputByte(&parser,data[i],&frame); }
+  assert(result==GSP_PARSER_FRAME_READY);
+  if (frame.type==GSP_TYPE_ACK) { assert(frame.payload[1]==GSP_ACK_OK);acks++; }
+  else if (frame.type==GSP_TYPE_AIR_RX)
+  { assert(frame.payload_len==5U && frame.payload[3]==0x91U && frame.payload[4]==0x92U);air_rx++; }
+  else { assert(frame.type==GSP_TYPE_GS_STATUS);statuses++; }
+  retained=data;retained_length=size;memcpy(retained_copy,data,size);transmitted++;
+  return USBD_OK;
+}
+uint8_t GroundRadio_MetricsSupportedGet(void) { return 1U; }
+GroundRadioResult GroundRadio_Init(void) { return GROUND_RADIO_OK; }
+void GroundRadio_Process(void) { }
+GroundRadioResult GroundRadio_TxEnqueue(const uint8_t *data,uint8_t length)
+{ assert(usb_test_mask==1U && length==2U && data[0]==0x42U && data[1]==0x43U);forwarded++;return GROUND_RADIO_OK; }
+GroundRadioResult GroundRadio_RxDequeue(uint8_t *data,uint8_t *length,int8_t *rssi,int8_t *snr)
+{ if (inject_radio_rx==0U) { return GROUND_RADIO_EMPTY; }inject_radio_rx=0U;
+  data[0]=0x91U;data[1]=0x92U;*length=2U;*rssi=-70;*snr=3;return GROUND_RADIO_OK; }
+void GroundRadio_StatsGet(GroundRadioStats *stats) { memset(stats,0,sizeof(*stats));stats->radio_state=GSP_RADIO_STATE_RX; }
+'''
+    suffix=r'''static void Complete(void)
+{
+  if (storage.TxState!=0U)
+  { assert(retained!=NULL && memcmp(retained,retained_copy,retained_length)==0);
+    assert(USBD_CDC_DataIn(&hUsbDeviceFS,1U)==USBD_OK && storage.TxState==0U); }
+}
+static void Input(void)
+{
+  const uint8_t payload[3]={2U,0x42U,0x43U};
+  rx_length=GspMin_BuildFrame(GSP_TYPE_AIR_TX,payload,3U,UserRxBufferFS,64U);
+  assert(rx_length!=0U && USBD_CDC_DataOut(&hUsbDeviceFS,1U)==USBD_OK);
+}
+int main(void)
+{
+  PCD_HandleTypeDef pcd={0};pcd.IN_ep[1].maxpacket=64U;
+  USBD_CDC_ItfTypeDef itf={CDC_Init_FS,CDC_DeInit_FS,NULL,CDC_Receive_FS,CDC_TransmitCplt_FS};
+  hUsbDeviceFS.dev_speed=USBD_SPEED_FULL;hUsbDeviceFS.pData=&pcd;hUsbDeviceFS.pUserData[0]=&itf;
+  assert(USBD_CDC_Init(&hUsbDeviceFS,1U)==USBD_OK);
+  hUsbDeviceFS.dev_state=USBD_STATE_CONFIGURED;
+  assert(GroundBridge_Init()==GROUND_BRIDGE_OK);Complete();
+  uint32_t session=PcByteStream_Session_Get();
+  Input();inject_radio_rx=1U;
+  for (uint32_t now=1U;now<10U;now++) { assert(GroundBridge_Process(now)==GROUND_BRIDGE_OK);Complete(); }
+  assert(forwarded==1U && acks==1U && air_rx==1U && statuses>=1U && prepared==2U);
+  assert(USBD_CDC_DeInit(&hUsbDeviceFS,1U)==USBD_OK);
+  GroundBridge_PcReset();
+  assert(USBD_CDC_Init(&hUsbDeviceFS,1U)==USBD_OK);hUsbDeviceFS.dev_state=USBD_STATE_CONFIGURED;
+  assert(PcByteStream_WriteSession(UserTxBufferFS,3U,session)==PC_BYTE_STREAM_WRITE_BUSY);
+  GroundBridge_PcReset();Input();
+  for (uint32_t now=10U;now<20U;now++) { assert(GroundBridge_Process(now)==GROUND_BRIDGE_OK);Complete(); }
+  assert(forwarded==2U && acks==2U && prepared==4U && usb_test_mask==0U);
+  assert(USBD_CDC_DeInit(&hUsbDeviceFS,1U)==USBD_OK);
+  printf("PASS actual indexed CDC/callback/PC/GSP/Ground bidirectional flow; tx=%u radio_tx=%u ack=%u air_rx=%u rearm=%u; reconnect rejects stale session\n",transmitted,forwarded,acks,air_rx,prepared);
+  return 0;
+}
+'''
+    source=tmp_path/'data_path.c';source.write_text(prefix+'\n'.join(bodies)+'\n'+suffix)
+    units=['Generated/Src/pc_byte_stream.c','Ground/Core/Src/ground_bridge.c','Ground/Protocol/Src/gsp_min_protocol.c',
+        'Ground/Protocol/Src/protocol_crc16.c','Common/Src/silverstar_assert.c']
+    for path in units:inputs[path]=hashlib.sha256((root/path).read_bytes()).hexdigest()
+    includes=[tmp_path,*[root/p for p in ('Ground/Core/Inc','Ground/Protocol/Inc','Generated/Inc','Common/Inc','Platform/Inc')]]
+    exe=tmp_path/'data_path.exe'
+    command=[gcc,'-std=c11','-O2','-Wall','-Wextra','-Werror','-Wpedantic','-Wconversion','-Wsign-conversion','-Wundef','-fanalyzer',
+        *['-I'+str(p) for p in includes],str(source),*[str(root/p) for p in units],'-o',str(exe)]
+    compiled=subprocess.run(command,capture_output=True,text=True,timeout=90)
+    assert compiled.returncode==0,compiled.stdout+compiled.stderr
+    run=subprocess.run([str(exe)],capture_output=True,text=True,timeout=20)
+    (tmp_path/'evidence.json').write_text(json.dumps({'compiled_inputs_sha256':inputs,'compile':command,'compile_exit':compiled.returncode,
+        'compile_stdout':compiled.stdout,'compile_stderr':compiled.stderr,'run':[str(exe)],'run_exit':run.returncode,'stdout':run.stdout,'stderr':run.stderr,
+        'harness_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),'executable_sha256':hashlib.sha256(exe.read_bytes()).hexdigest()},indent=2))
+    assert run.returncode==0,run.stdout+run.stderr

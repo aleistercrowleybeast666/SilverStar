@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "C:\Users\chdxm\AppData\Local\Temp\sscdc-ground-f103-10a\Tools\check_ground.py", line 274, in <module>
+    Main_Run()
+    ~~~~~~~~^^
+  File "C:\Users\chdxm\AppData\Local\Temp\sscdc-ground-f103-10a\Tools\check_ground.py", line 258, in Main_Run
+    Architecture_Check(root)
+    ~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Temp\sscdc-ground-f103-10a\Tools\check_ground.py", line 85, in Architecture_Check
+    raise ValueError('Ground bridge integration missing')
+ValueError: Ground bridge integration missing

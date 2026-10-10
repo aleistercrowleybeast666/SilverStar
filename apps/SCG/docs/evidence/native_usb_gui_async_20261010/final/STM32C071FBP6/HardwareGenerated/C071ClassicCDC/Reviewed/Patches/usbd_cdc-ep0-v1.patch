@@ -1,0 +1,74 @@
+--- HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c
++++ HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c
+@@ -57,6 +57,7 @@
+ 
+ /* Includes ------------------------------------------------------------------*/
+ #include "usbd_cdc.h"
++#include "pc_c071_control.h"
+ #include "usbd_ctlreq.h"
+ 
+ 
+@@ -436,7 +437,6 @@
+                               USBD_SetupReqTypedef *req)
+ {
+   USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef *)pdev->pClassDataCmsit[pdev->classId];
+-  uint16_t len;
+   uint8_t ifalt = 0U;
+   uint16_t status_info = 0U;
+   USBD_StatusTypeDef ret = USBD_OK;
+@@ -449,30 +449,7 @@
+   switch (req->bmRequest & USB_REQ_TYPE_MASK)
+   {
+     case USB_REQ_TYPE_CLASS:
+-      if (req->wLength != 0U)
+-      {
+-        if ((req->bmRequest & 0x80U) != 0U)
+-        {
+-          ((USBD_CDC_ItfTypeDef *)pdev->pUserData[pdev->classId])->Control(req->bRequest,
+-                                                                           (uint8_t *)hcdc->data,
+-                                                                           req->wLength);
+-
+-          len = MIN(CDC_REQ_MAX_DATA_SIZE, req->wLength);
+-          (void)USBD_CtlSendData(pdev, (uint8_t *)hcdc->data, len);
+-        }
+-        else
+-        {
+-          hcdc->CmdOpCode = req->bRequest;
+-          hcdc->CmdLength = (uint8_t)MIN(req->wLength, USB_MAX_EP0_SIZE);
+-
+-          (void)USBD_CtlPrepareRx(pdev, (uint8_t *)hcdc->data, hcdc->CmdLength);
+-        }
+-      }
+-      else
+-      {
+-        ((USBD_CDC_ItfTypeDef *)pdev->pUserData[pdev->classId])->Control(req->bRequest,
+-                                                                         (uint8_t *)req, 0U);
+-      }
++      ret = PcC071Usb_ControlSetup(pdev, req);
+       break;
+ 
+     case USB_REQ_TYPE_STANDARD:
+@@ -605,22 +582,7 @@
+   */
+ static uint8_t USBD_CDC_EP0_RxReady(USBD_HandleTypeDef *pdev)
+ {
+-  USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef *)pdev->pClassDataCmsit[pdev->classId];
+-
+-  if (hcdc == NULL)
+-  {
+-    return (uint8_t)USBD_FAIL;
+-  }
+-
+-  if ((pdev->pUserData[pdev->classId] != NULL) && (hcdc->CmdOpCode != 0xFFU))
+-  {
+-    ((USBD_CDC_ItfTypeDef *)pdev->pUserData[pdev->classId])->Control(hcdc->CmdOpCode,
+-                                                                     (uint8_t *)hcdc->data,
+-                                                                     (uint16_t)hcdc->CmdLength);
+-    hcdc->CmdOpCode = 0xFFU;
+-  }
+-
+-  return (uint8_t)USBD_OK;
++  return (uint8_t)PcC071Usb_ControlRxReady(pdev);
+ }
+ #ifndef USE_USBD_COMPOSITE
+ /**

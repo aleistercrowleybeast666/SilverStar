@@ -1,0 +1,129 @@
+
+build/Common/Src/silverstar_assert.o:     file format elf32-littlearm
+
+
+Disassembly of section .text.SilverStarAssert_StackOverflowContextSet:
+
+00000000 <SilverStarAssert_StackOverflowContextSet>:
+   0:	b530      	push	{r4, r5, lr}
+   2:	2501      	movs	r5, #1
+   4:	4c0f      	ldr	r4, [pc, #60]	@ (44 <SilverStarAssert_StackOverflowContextSet+0x44>)
+   6:	76a5      	strb	r5, [r4, #26]
+   8:	61e0      	str	r0, [r4, #28]
+   a:	6221      	str	r1, [r4, #32]
+   c:	6262      	str	r2, [r4, #36]	@ 0x24
+   e:	9a03      	ldr	r2, [sp, #12]
+  10:	62a2      	str	r2, [r4, #40]	@ 0x28
+  12:	9a04      	ldr	r2, [sp, #16]
+  14:	62e2      	str	r2, [r4, #44]	@ 0x2c
+  16:	f89d 2014 	ldrb.w	r2, [sp, #20]
+  1a:	f884 2040 	strb.w	r2, [r4, #64]	@ 0x40
+  1e:	2200      	movs	r2, #0
+  20:	4610      	mov	r0, r2
+  22:	18a1      	adds	r1, r4, r2
+  24:	3201      	adds	r2, #1
+  26:	2a10      	cmp	r2, #16
+  28:	f881 0030 	strb.w	r0, [r1, #48]	@ 0x30
+  2c:	d1f9      	bne.n	22 <SilverStarAssert_StackOverflowContextSet+0x22>
+  2e:	b143      	cbz	r3, 42 <SilverStarAssert_StackOverflowContextSet+0x42>
+  30:	2200      	movs	r2, #0
+  32:	5c99      	ldrb	r1, [r3, r2]
+  34:	b129      	cbz	r1, 42 <SilverStarAssert_StackOverflowContextSet+0x42>
+  36:	18a0      	adds	r0, r4, r2
+  38:	3201      	adds	r2, #1
+  3a:	2a0f      	cmp	r2, #15
+  3c:	f880 1030 	strb.w	r1, [r0, #48]	@ 0x30
+  40:	d1f7      	bne.n	32 <SilverStarAssert_StackOverflowContextSet+0x32>
+  42:	bd30      	pop	{r4, r5, pc}
+  44:	00000000 	.word	0x00000000
+
+Disassembly of section .text.unlikely.SilverStarAssert_Fail:
+
+00000000 <SilverStarAssert_Fail>:
+   0:	b580      	push	{r7, lr}
+   2:	2600      	movs	r6, #0
+   4:	2700      	movs	r7, #0
+   6:	4c09      	ldr	r4, [pc, #36]	@ (2c <SilverStarAssert_Fail+0x2c>)
+   8:	6021      	str	r1, [r4, #0]
+   a:	e9c4 6702 	strd	r6, r7, [r4, #8]
+   e:	6122      	str	r2, [r4, #16]
+  10:	6962      	ldr	r2, [r4, #20]
+  12:	3201      	adds	r2, #1
+  14:	6162      	str	r2, [r4, #20]
+  16:	7620      	strb	r0, [r4, #24]
+  18:	7663      	strb	r3, [r4, #25]
+  1a:	2300      	movs	r3, #0
+  1c:	f884 3041 	strb.w	r3, [r4, #65]	@ 0x41
+  20:	2301      	movs	r3, #1
+  22:	f884 3042 	strb.w	r3, [r4, #66]	@ 0x42
+  26:	f3bf 8f5b 	dmb	ish
+  2a:	deff      	udf	#255	@ 0xff
+  2c:	00000000 	.word	0x00000000
+
+Disassembly of section .text.SilverStarAssert_Check:
+
+00000000 <SilverStarAssert_Check>:
+   0:	b510      	push	{r4, lr}
+   2:	4604      	mov	r4, r0
+   4:	4608      	mov	r0, r1
+   6:	4611      	mov	r1, r2
+   8:	461a      	mov	r2, r3
+   a:	b91c      	cbnz	r4, 14 <SilverStarAssert_Check+0x14>
+   c:	f89d 3008 	ldrb.w	r3, [sp, #8]
+  10:	f7ff fffe 	bl	0 <SilverStarAssert_Check>
+  14:	bd10      	pop	{r4, pc}
+
+Disassembly of section .text.SilverStarAssert_ObjectCheck:
+
+00000000 <SilverStarAssert_ObjectCheck>:
+   0:	e92d 41f3 	stmdb	sp!, {r0, r1, r4, r5, r6, r7, r8, lr}
+   4:	4616      	mov	r6, r2
+   6:	461f      	mov	r7, r3
+   8:	2301      	movs	r3, #1
+   a:	460c      	mov	r4, r1
+   c:	f8dd 8020 	ldr.w	r8, [sp, #32]
+  10:	4605      	mov	r5, r0
+  12:	3800      	subs	r0, #0
+  14:	bf18      	it	ne
+  16:	2001      	movne	r0, #1
+  18:	9300      	str	r3, [sp, #0]
+  1a:	463a      	mov	r2, r7
+  1c:	4643      	mov	r3, r8
+  1e:	4631      	mov	r1, r6
+  20:	f7ff fffe 	bl	0 <SilverStarAssert_ObjectCheck>
+  24:	b184      	cbz	r4, 48 <SilverStarAssert_ObjectCheck+0x48>
+  26:	fbb5 f3f4 	udiv	r3, r5, r4
+  2a:	fb04 5513 	mls	r5, r4, r3, r5
+  2e:	fab5 f085 	clz	r0, r5
+  32:	0940      	lsrs	r0, r0, #5
+  34:	2305      	movs	r3, #5
+  36:	463a      	mov	r2, r7
+  38:	9308      	str	r3, [sp, #32]
+  3a:	4631      	mov	r1, r6
+  3c:	4643      	mov	r3, r8
+  3e:	b002      	add	sp, #8
+  40:	e8bd 41f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, lr}
+  44:	f7ff bffe 	b.w	0 <SilverStarAssert_ObjectCheck>
+  48:	4620      	mov	r0, r4
+  4a:	e7f3      	b.n	34 <SilverStarAssert_ObjectCheck+0x34>
+
+Disassembly of section .text.SilverStarAssert_FaultedGet:
+
+00000000 <SilverStarAssert_FaultedGet>:
+   0:	4b01      	ldr	r3, [pc, #4]	@ (8 <SilverStarAssert_FaultedGet+0x8>)
+   2:	f893 0042 	ldrb.w	r0, [r3, #66]	@ 0x42
+   6:	4770      	bx	lr
+   8:	00000000 	.word	0x00000000
+
+Disassembly of section .text.SilverStarAssert_FaultRecordGet:
+
+00000000 <SilverStarAssert_FaultRecordGet>:
+   0:	b510      	push	{r4, lr}
+   2:	4604      	mov	r4, r0
+   4:	b128      	cbz	r0, 12 <SilverStarAssert_FaultRecordGet+0x12>
+   6:	2248      	movs	r2, #72	@ 0x48
+   8:	4902      	ldr	r1, [pc, #8]	@ (14 <SilverStarAssert_FaultRecordGet+0x14>)
+   a:	f7ff fffe 	bl	0 <memcpy>
+   e:	f894 0042 	ldrb.w	r0, [r4, #66]	@ 0x42
+  12:	bd10      	pop	{r4, pc}
+  14:	00000000 	.word	0x00000000

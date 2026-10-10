@@ -1,0 +1,22 @@
+{
+  "baseline": "9b9a20be2829dcc5135c648f6dc84b6e9af60316",
+  "before_source_sha256": "50b3515ea8ea1105a0f1fec5b2ea559672207b67b2a16f4572ad24f8550b5776",
+  "before_read_command": [
+    "git",
+    "-C",
+    "D:\\python_software\\SilverStar\\.work\\ccdi",
+    "show",
+    "9b9a20be2829dcc5135c648f6dc84b6e9af60316:apps/SCG/src/silverstar_fccg/app/service.py"
+  ],
+  "before": "NON_EXECUTING_RUNNER_REACHED",
+  "after": {
+    "code": "error.native_formal_generation_blocked",
+    "detail": "Native classic CDC formal build remains blocked by pending lifecycle/critical-contract acceptance; use the explicitly private candidate backend. No flash/start action is permitted."
+  },
+  "current_source_sha256": "f62890aa63dec142637d2caf4e5b06d38cb8e5442e2c19224edae88c7a0ea5f4",
+  "runner_calls": [
+    "build runner reached; no command executed"
+  ],
+  "actual_build_or_hardware_commands": 0,
+  "scope": "Ordinary Python service guard; mocked runner never executes imported Makefile"
+}

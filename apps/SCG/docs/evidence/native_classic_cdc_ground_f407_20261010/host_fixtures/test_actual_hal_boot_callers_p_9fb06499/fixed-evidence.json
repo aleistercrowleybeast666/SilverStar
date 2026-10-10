@@ -1,0 +1,30 @@
+{
+  "compile": [
+    "D:/msys64/ucrt64/bin\\gcc.EXE",
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wpedantic",
+    "-Wconversion",
+    "-Wsign-conversion",
+    "-Wundef",
+    "-fanalyzer",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_actual_hal_boot_callers_p_9fb06499\\fixed.c",
+    "-o",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_actual_hal_boot_callers_p_9fb06499\\fixed.exe"
+  ],
+  "compile_exit": 0,
+  "compile_stdout": "",
+  "compile_stderr": "",
+  "run": [
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_actual_hal_boot_callers_p_9fb06499\\fixed.exe",
+    "normal"
+  ],
+  "run_exit": 0,
+  "stdout": "",
+  "stderr": "",
+  "source_sha256": "9dbf1c377353f40879cb582eacdc23811d82a77cf49279b46dbb10a1f1571d00",
+  "executable_sha256": "e9be253030513aa40b237974e076f90600f831bb95a6d4bc88895e015479e5a5"
+}

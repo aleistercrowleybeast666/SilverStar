@@ -1,0 +1,1 @@
+Exact STM32C071FBP6 mini Ground USB software profile. HAL/CMSIS/startup/linker are exclusively from the complete native CubeMX input. Pinned classic CDC is separately owned and audited. Hardware and USB suspend power remain unverified.

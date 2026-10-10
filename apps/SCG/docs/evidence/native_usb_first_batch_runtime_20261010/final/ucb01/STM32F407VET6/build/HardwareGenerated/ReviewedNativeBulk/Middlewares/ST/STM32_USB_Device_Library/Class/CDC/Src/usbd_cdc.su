@@ -1,0 +1,15 @@
+HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c:581:16:USBD_CDC_EP0_RxReady	8	static
+HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c:700:10:USBD_CDC_GetDeviceQualifierDescriptor	0	static
+HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c:607:17:USBD_CDC_GetFSCfgDesc	16	static
+HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c:669:17:USBD_CDC_GetOtherSpeedCfgDesc	0	static
+HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c:638:17:USBD_CDC_GetHSCfgDesc	16	static
+HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c:550:16:USBD_CDC_DataOut	24	static
+HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c:506:16:USBD_CDC_DataIn	16	static
+HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c:402:16:USBD_CDC_Setup	32	static
+HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c:356:16:USBD_CDC_DeInit	16	static
+HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c:316:16:USBD_CDC_Init	24	static
+HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c:713:9:USBD_CDC_RegisterInterface	0	static
+HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c:735:9:USBD_CDC_SetTxBuffer	8	static
+HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c:757:9:USBD_CDC_SetRxBuffer	8	static
+HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c:778:9:USBD_CDC_TransmitPacket	16	static
+HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c:812:9:USBD_CDC_ReceivePacket	16	static

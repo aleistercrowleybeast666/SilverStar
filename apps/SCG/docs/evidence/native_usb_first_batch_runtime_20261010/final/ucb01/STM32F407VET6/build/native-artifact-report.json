@@ -1,0 +1,150 @@
+[
+  {
+    "build": "build",
+    "elf_sha256": "5a9414e97a5e7f3f02d2e001266145304b711c600c16639e05e7e7a79aa44bf8",
+    "linked_libraries": [
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+        "object": "libc_a-errno.o",
+        "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+        "object": "libc_a-findfp.o",
+        "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+        "object": "libc_a-impure.o",
+        "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+        "object": "libc_a-init.o",
+        "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+        "object": "libc_a-memcpy-stub.o",
+        "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+        "object": "libc_a-memset.o",
+        "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+        "object": "libc_a-strlen.o",
+        "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+        "object": "_aeabi_uldivmod.o",
+        "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+        "object": "_arm_addsubdf3.o",
+        "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+        "object": "_arm_fixunsdfsi.o",
+        "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+        "object": "_arm_muldivdf3.o",
+        "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+        "object": "_dvmd_tls.o",
+        "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+        "object": "_udivmoddi4.o",
+        "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+      }
+    ],
+    "stack_usage_files": 124,
+    "dynamic_frames": [],
+    "limits": "NOT PROVEN: library/indirect call graph, whole-program task/MSP/ISR nesting stack and MCU WCET"
+  },
+  {
+    "build": "build/analysis",
+    "elf_sha256": "5a9414e97a5e7f3f02d2e001266145304b711c600c16639e05e7e7a79aa44bf8",
+    "linked_libraries": [
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+        "object": "libc_a-errno.o",
+        "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+        "object": "libc_a-findfp.o",
+        "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+        "object": "libc_a-impure.o",
+        "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+        "object": "libc_a-init.o",
+        "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+        "object": "libc_a-memcpy-stub.o",
+        "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+        "object": "libc_a-memset.o",
+        "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+        "object": "libc_a-strlen.o",
+        "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+        "object": "_aeabi_uldivmod.o",
+        "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+        "object": "_arm_addsubdf3.o",
+        "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+        "object": "_arm_fixunsdfsi.o",
+        "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+        "object": "_arm_muldivdf3.o",
+        "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+        "object": "_dvmd_tls.o",
+        "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+      },
+      {
+        "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+        "object": "_udivmoddi4.o",
+        "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+      }
+    ],
+    "stack_usage_files": 62,
+    "dynamic_frames": [],
+    "limits": "NOT PROVEN: library/indirect call graph, whole-program task/MSP/ISR nesting stack and MCU WCET"
+  }
+]

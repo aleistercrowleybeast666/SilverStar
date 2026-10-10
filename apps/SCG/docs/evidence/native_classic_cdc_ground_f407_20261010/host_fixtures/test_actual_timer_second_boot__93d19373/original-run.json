@@ -1,0 +1,9 @@
+{
+  "command": [
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_actual_timer_second_boot__93d19373\\original.exe",
+    "late"
+  ],
+  "exit": 3221226505,
+  "stdout": "",
+  "stderr": "Assertion failed: handle==&htim1 && enabled==0U && TIM1->DIER==0U && TIM1->CR1==0U && TIM1->SR==0U, file C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_actual_timer_second_boot__93d19373\\original.c, line 94\n"
+}

@@ -1,0 +1,348 @@
+#include <assert.h>
+#include <stdint.h>
+#include <string.h>
+
+#include "project_resources.h"
+#include "platform_critical.h"
+#include "platform_gpio.h"
+#include "platform_time.h"
+#include "sx1280.h"
+#include "sx1281_bus.h"
+#include "sx1281_device.h"
+#include "test_common.h"
+
+static uint32_t s_tick_ms;
+static uint32_t s_irq_get_count;
+static uint32_t s_packet_type_get_count;
+static uint32_t s_rssi_get_count;
+static uint32_t s_irq_clear_count;
+static uint32_t s_set_rx_count;
+static uint16_t s_raw_irq;
+static uint8_t s_dio1_pending;
+static uint32_t s_host_send_count;
+static uint8_t s_host_receive_enabled;
+static PlatformResult s_gpio_write_result = PLATFORM_OK;
+static PlatformGpioId s_gpio_written;
+static uint8_t s_gpio_written_level;
+
+PlatformResult PlatformGpio_Write(PlatformGpioId id, uint8_t logical_high)
+{
+    if (id >= PLATFORM_GPIO_COUNT) { return PLATFORM_INVALID_ARGUMENT; }
+    s_gpio_written = id;
+    s_gpio_written_level = logical_high;
+    return s_gpio_write_result;
+}
+
+void SX1280Init(uint8_t instance) { (void)instance; }
+
+RadioStatus_t SX1280GetStatus(uint8_t instance)
+{
+    RadioStatus_t status;
+
+    (void)instance;
+    status.Value = 0x40U; /* ChipMode2: standby, not the reserved mode1. */
+    return status;
+}
+
+uint16_t SX1280GetFirmwareVersion(uint8_t instance)
+{ (void)instance; return 0x1234U; }
+void SX1280SetRegulatorMode(uint8_t instance, RadioRegulatorModes_t mode)
+{ (void)instance; (void)mode; }
+void SX1280SetStandby(uint8_t instance, RadioStandbyModes_t mode)
+{ (void)instance; (void)mode; }
+void SX1280SetPacketType(uint8_t instance, RadioPacketTypes_t type)
+{ (void)instance; (void)type; }
+void SX1280SetModulationParams(uint8_t instance, ModulationParams_t *params)
+{ (void)instance; (void)params; }
+void SX1280SetPacketParams(uint8_t instance, PacketParams_t *params)
+{ (void)instance; (void)params; }
+void SX1280SetRfFrequency(uint8_t instance, uint32_t frequency)
+{ (void)instance; (void)frequency; }
+void SX1280SetBufferBaseAddresses(
+    uint8_t instance, uint8_t tx, uint8_t rx)
+{
+    (void)instance;
+    (void)tx;
+    (void)rx;
+}
+void SX1280SetTxParams(
+    uint8_t instance, int8_t power, RadioRampTimes_t ramp)
+{
+    (void)instance;
+    (void)power;
+    (void)ramp;
+}
+void SX1280SetDioIrqParams(
+    uint8_t instance, uint16_t irq, uint16_t dio1,
+    uint16_t dio2, uint16_t dio3)
+{
+    (void)instance;
+    (void)irq;
+    (void)dio1;
+    (void)dio2;
+    (void)dio3;
+}
+void SX1280SetRx(uint8_t instance, TickTime_t timeout)
+{
+    (void)instance;
+    (void)timeout;
+    s_set_rx_count++;
+}
+uint16_t SX1280GetIrqStatus(uint8_t instance)
+{
+    (void)instance;
+    s_irq_get_count++;
+    return s_raw_irq;
+}
+void SX1280ClearIrqStatus(uint8_t instance, uint16_t irq)
+{
+    (void)instance;
+    (void)irq;
+    s_irq_clear_count++;
+    s_raw_irq = 0U;
+}
+RadioPacketTypes_t SX1280GetPacketType(uint8_t instance)
+{
+    (void)instance;
+    s_packet_type_get_count++;
+    return PACKET_TYPE_LORA;
+}
+int8_t SX1280GetRssiInst(uint8_t instance)
+{
+    (void)instance;
+    s_rssi_get_count++;
+    return -60;
+}
+uint8_t SX1280GetPayload(
+    uint8_t instance, uint8_t *payload, uint8_t *size, uint8_t maximum)
+{
+    (void)instance;
+    if ((s_host_receive_enabled != 0U) && (maximum >= 9U))
+    {
+        static const uint8_t command[9] = {0x20U, 255U, 0x02U, 0U, 0U, 0U, 0U, 0U, 0U};
+        (void)memcpy(payload, command, sizeof(command));
+        *size = (uint8_t)sizeof(command);
+        return 0U;
+    }
+    return 1U;
+}
+void SX1280GetPacketStatus(uint8_t instance, PacketStatus_t *status)
+{
+    (void)instance;
+    if (status != NULL) { (void)memset(status, 0, sizeof(*status)); }
+}
+void SX1280SendPayload(
+    uint8_t instance, uint8_t *payload, uint8_t size, TickTime_t timeout)
+{
+    (void)instance;
+    (void)payload;
+    (void)size;
+    (void)timeout;
+    s_host_send_count++;
+}
+
+void Sx1281Bus_Init(uint8_t instance) { (void)instance; }
+void Sx1281Bus_StatusGet(uint8_t instance, Sx1281BusStatus *status)
+{
+    (void)instance;
+    if (status != NULL) { (void)memset(status, 0, sizeof(*status)); }
+}
+PlatformGpioId Sx1281Bus_NssGet(uint8_t instance)
+{
+    ProjectSx1281Resources resources;
+    return (ProjectSx1281Resources_Get(instance, &resources) ==
+            SYSTEM_DEVICE_OK) ? resources.nss : PLATFORM_GPIO_COUNT;
+}
+PlatformGpioId Sx1281Bus_ResetGet(uint8_t instance)
+{
+    ProjectSx1281Resources resources;
+    return (ProjectSx1281Resources_Get(instance, &resources) ==
+            SYSTEM_DEVICE_OK) ? resources.reset : PLATFORM_GPIO_COUNT;
+}
+PlatformGpioId Sx1281Bus_BusyGet(uint8_t instance)
+{
+    ProjectSx1281Resources resources;
+    return (ProjectSx1281Resources_Get(instance, &resources) ==
+            SYSTEM_DEVICE_OK) ? resources.busy : PLATFORM_GPIO_COUNT;
+}
+PlatformGpioId Sx1281Bus_Dio1Get(uint8_t instance)
+{
+    ProjectSx1281Resources resources;
+    return (ProjectSx1281Resources_Get(instance, &resources) ==
+            SYSTEM_DEVICE_OK) ? resources.dio1 : PLATFORM_GPIO_COUNT;
+}
+
+static uint32_t native_test_mask;
+uint32_t PlatformTime_Ms(void) { assert(native_test_mask==0U); return s_tick_ms; }
+uint64_t PlatformTime_Us(void) { assert(native_test_mask==0U);return (uint64_t)s_tick_ms * 1000ULL; }
+void PlatformTime_DelayMs(uint32_t delay_ms) { s_tick_ms += delay_ms; }
+PlatformCriticalState PlatformCritical_Enter(void) { uint32_t saved=native_test_mask;native_test_mask=1U;return saved; }
+void PlatformCritical_Exit(PlatformCriticalState state) { native_test_mask=state; }
+
+PlatformResult PlatformGpio_Read(PlatformGpioId id, uint8_t *logical_high)
+{
+    if ((id >= PLATFORM_GPIO_COUNT) || (logical_high == NULL))
+    {
+        return PLATFORM_INVALID_ARGUMENT;
+    }
+    *logical_high = 0U;
+    return PLATFORM_OK;
+}
+
+uint8_t PlatformGpio_IrqConsume(PlatformGpioId id)
+{
+    uint8_t pending;
+
+    /* Follow the fixture's actual binding (GPIO7 in MultiInstance), rather
+     * than the legacy single-board GPIO3 ordinal. */
+    if (id != Sx1281Bus_Dio1Get(0U)) { return 0U; }
+    pending = s_dio1_pending;
+    s_dio1_pending = 0U;
+    return pending;
+}
+
+#ifndef TEST_SX1281_PORTS_ONLY
+#define Lora_Init() Lora_Init(0U)
+#define Lora_StartRx() Lora_StartRx(0U)
+#define Lora_Process() Lora_Process(0U)
+#define Lora_GetDiagSnapshot(snapshot) Lora_GetDiagSnapshot(0U, (snapshot))
+#define Lora_ChipStatusGet(status) Lora_ChipStatusGet(0U, (status))
+#define Lora_GetStats(stats) Lora_GetStats(0U, (stats))
+#define Lora_ControlSubmit(operation, timeout_ms, transaction_id) \
+    Lora_ControlSubmit(0U, (operation), (timeout_ms), (transaction_id))
+#define Lora_ControlResultGet(transaction_id, result) \
+    Lora_ControlResultGet(0U, (transaction_id), (result))
+#define Lora_IrqClear(raw_before) Lora_IrqClear(0U, (raw_before))
+
+static void Test_CachedDiagnosticsDoNotReadSpi(void)
+{
+    LoraDiagSnapshot snapshot;
+    LoraChipStatus chip;
+    uint32_t irq_count;
+    uint32_t packet_count;
+    uint32_t rssi_count;
+
+    TEST_CHECK(Lora_Init() == LORA_INIT_OK);
+    Lora_StartRx();
+    s_tick_ms = 100U;
+    Lora_Process();
+    irq_count = s_irq_get_count;
+    packet_count = s_packet_type_get_count;
+    rssi_count = s_rssi_get_count;
+    Lora_GetDiagSnapshot(&snapshot);
+    TEST_CHECK(Lora_ChipStatusGet(&chip) == LORA_DIAG_RESULT_OK);
+    TEST_CHECK(s_irq_get_count == irq_count);
+    TEST_CHECK(s_packet_type_get_count == packet_count);
+    TEST_CHECK(s_rssi_get_count == rssi_count);
+    TEST_CHECK(snapshot.rssi_inst_valid != 0U);
+    TEST_CHECK(chip.verified != 0U);
+}
+
+static void Test_DioEventDrivesDirectIrqProcessing(void)
+{
+    LoraStats stats;
+    uint32_t irq_count = s_irq_get_count;
+
+    s_raw_irq = IRQ_RX_TX_TIMEOUT;
+    s_dio1_pending = 1U;
+    Lora_Process();
+    Lora_GetStats(&stats);
+    TEST_CHECK(s_irq_get_count == (irq_count + 1U));
+    TEST_CHECK(s_irq_clear_count != 0U);
+    TEST_CHECK(stats.rx_timeout_irq_count != 0U);
+}
+
+static void Test_OwnerControlTransaction(void)
+{
+    LoraControlResult result;
+    uint32_t first_id;
+    uint32_t second_id;
+    uint32_t set_rx_before;
+
+    TEST_CHECK(Lora_ControlSubmit(LORA_CONTROL_IRQ_CLEAR, 20U,
+                                  &first_id) == LORA_CONTROL_SUBMIT_OK);
+    TEST_CHECK(Lora_ControlSubmit(LORA_CONTROL_FORCE_RX_CONTINUOUS, 20U,
+                                  &second_id) == LORA_CONTROL_SUBMIT_BUSY);
+    s_raw_irq = IRQ_RX_DONE;
+    Lora_Process();
+    TEST_CHECK(Lora_ControlResultGet(first_id, &result) ==
+               LORA_CONTROL_GET_COMPLETE);
+    TEST_CHECK(result.result == LORA_DIAG_RESULT_OK);
+    TEST_CHECK(result.raw_irq_before == IRQ_RX_DONE);
+    TEST_CHECK(s_irq_clear_count != 0U);
+
+    TEST_CHECK(Lora_IrqClear(NULL) == LORA_DIAG_RESULT_QUEUED);
+    Lora_Process();
+    TEST_CHECK(Lora_ControlSubmit(LORA_CONTROL_IRQ_CLEAR, 20U,
+                                  &first_id) == LORA_CONTROL_SUBMIT_OK);
+    Lora_Process();
+    TEST_CHECK(Lora_ControlResultGet(first_id, &result) ==
+               LORA_CONTROL_GET_COMPLETE);
+
+    set_rx_before = s_set_rx_count;
+    TEST_CHECK(Lora_ControlSubmit(LORA_CONTROL_FORCE_RX_CONTINUOUS, 10U,
+                                  &first_id) == LORA_CONTROL_SUBMIT_OK);
+    s_tick_ms += 11U;
+    TEST_CHECK(Lora_ControlResultGet(first_id, &result) ==
+               LORA_CONTROL_GET_COMPLETE);
+    TEST_CHECK(result.result == LORA_DIAG_RESULT_TIMEOUT);
+    TEST_CHECK(s_set_rx_count == set_rx_before);
+
+    TEST_CHECK(Lora_ControlSubmit(LORA_CONTROL_FORCE_RX_CONTINUOUS, 20U,
+                                  &second_id) == LORA_CONTROL_SUBMIT_OK);
+    Lora_Process();
+    TEST_CHECK(Lora_ControlResultGet(second_id, &result) ==
+               LORA_CONTROL_GET_COMPLETE);
+    TEST_CHECK(result.result == LORA_DIAG_RESULT_OK);
+    TEST_CHECK(s_set_rx_count > set_rx_before);
+}
+
+static void Test_ContinuousTxLoadPreservesRx(void)
+{
+    uint8_t packet[9] = {0x20U};
+    uint8_t output[64];
+    uint8_t length;
+    uint32_t before;
+    uint32_t cycle;
+    s_tick_ms = UINT32_MAX - 60U;
+    TEST_CHECK(Lora_Init() == LORA_INIT_OK);
+    for (cycle = 0U; cycle < LORA_TX_NORMAL_QUEUE_DEPTH; cycle++)
+    { TEST_CHECK(Lora_TxEnqueue(0U, packet, sizeof(packet)) == LORA_TX_ENQUEUE_OK); }
+    Lora_StartRx();
+    before = s_host_send_count;
+    Lora_Process();
+    TEST_CHECK(s_host_send_count == before);
+    s_tick_ms += 122U; /* 64-byte airtime ceil118ms plus4ms turn margin. */
+    Lora_Process();
+    TEST_CHECK(s_host_send_count == before + 1U);
+    s_host_receive_enabled = 1U;
+    for (cycle = 0U; cycle < 100U; cycle++)
+    {
+        before = s_host_send_count;
+        s_raw_irq = IRQ_TX_DONE; s_dio1_pending = 1U;
+        Lora_Process();
+        TEST_CHECK(s_host_send_count == before);
+        TEST_CHECK(Lora_TxEnqueue(0U, packet, sizeof(packet)) == LORA_TX_ENQUEUE_OK);
+        s_tick_ms += 60U;
+        s_raw_irq = IRQ_RX_DONE; s_dio1_pending = 1U;
+        Lora_Process();
+        length = 0U;
+        TEST_CHECK(Lora_RxDequeue(0U, output, &length, NULL, NULL) == LORA_RX_DEQUEUE_OK);
+        TEST_CHECK(length == 9U && output[0] == 0x20U && output[1] == 255U);
+        TEST_CHECK(s_host_send_count == before);
+        s_tick_ms += 120U;
+        Lora_Process();
+        TEST_CHECK(s_host_send_count == before + 1U);
+    }
+    s_host_receive_enabled = 0U;
+}
+
+int main(void)
+{
+    Test_CachedDiagnosticsDoNotReadSpi();
+    Test_DioEventDrivesDirectIrqProcessing();
+    Test_OwnerControlTransaction();
+    Test_ContinuousTxLoadPreservesRx();
+    return Test_Finish("sx1281_device");
+}
+#endif /* TEST_SX1281_PORTS_ONLY */

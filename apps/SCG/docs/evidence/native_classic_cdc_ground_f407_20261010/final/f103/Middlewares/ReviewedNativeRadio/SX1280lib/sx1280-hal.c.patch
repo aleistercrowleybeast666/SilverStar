@@ -1,0 +1,33 @@
+--- Middlewares/Third_Party/SX1280lib/sx1280-hal.c
++++ Middlewares/Third_Party/SX1280lib/sx1280-hal.c
+@@ -19,7 +19,8 @@
+ #include <string.h>
+ 
+ #include "platform_critical.h"
+-#include "platform_time.h"
++#include "platform_time.h"
++#include "native_clock.h"
+ #include "sx1281_config.h"
+ 
+ /* Ground supports the complete uint8_t packet-buffer operations plus
+@@ -123,7 +124,10 @@
+ void SX1280HalWakeup(uint8_t instance)
+ {
+     SX1280HalTransfer_Validate(instance, NULL, 0U, 2U);
+-    PlatformCriticalState critical_state = PlatformCritical_Enter();
++    /* Native bare-metal main is the sole radio/SPI owner; DIO ISR only
++     * records a flag. Keep tick/USB IRQs live through SPI and Busy waits. */
++    SILVERSTAR_ASSERT(NativeClock_ContextAllowedGet() != 0U,
++        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+     uint16_t hal_size = 2U;
+ 
+     GpioWrite(instance, RADIO_NSS, 0U);
+@@ -132,7 +136,7 @@
+     SpiIn(instance, SX1280_HAL_TX_BUFFER, hal_size);
+     GpioWrite(instance, RADIO_NSS, 1U);
+     SX1280HalWaitOnBusy(instance);
+-    PlatformCritical_Exit(critical_state);
++
+ }
+ 
+ void SX1280HalWriteCommand(

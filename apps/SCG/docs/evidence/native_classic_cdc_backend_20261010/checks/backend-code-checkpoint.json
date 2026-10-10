@@ -1,0 +1,28 @@
+{
+  "finished_utc": "2026-10-09T21:52:55.398511+00:00",
+  "baseline": "9b9a20be2829dcc5135c648f6dc84b6e9af60316",
+  "code_commit": "348784a35ac164dec2a8b0f2b113d7d4fa55e87b",
+  "paths": [
+    "apps/SCG/src/silverstar_fccg/app/native_ground.py",
+    "apps/SCG/src/silverstar_fccg/app/service.py",
+    "apps/SCG/src/silverstar_fccg/build/native_compile.py",
+    "apps/SCG/tools/validation/native_classic_cdc_compile.py",
+    "apps/SCG/tests/test_native_ground_backend.py"
+  ],
+  "snapshot_checks": [
+    {
+      "part": "STM32F103C8T6",
+      "modules": 45,
+      "raw_working_and_normalized_git_match": true
+    },
+    {
+      "part": "STM32F407VET6",
+      "modules": 45,
+      "raw_working_and_normalized_git_match": true
+    }
+  ],
+  "tests": "28 passed; separate preserved-entry/build regression 11 passed",
+  "gates": "8/8 exit 0",
+  "formal_generation": "BLOCKED",
+  "clean": true
+}

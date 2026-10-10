@@ -1,0 +1,248 @@
+{
+  "archive": {
+    "manifest": 604,
+    "present": 604,
+    "missing": [],
+    "mismatches": [],
+    "git_files": 605
+  },
+  "source_vs_evidence_nondoc_changes": [],
+  "builds": [
+    {
+      "part": "STM32F103C8T6",
+      "source_commit": "80db26338bba77950a9b8e9bbc03d8a77e33567b",
+      "dirty_empty": true,
+      "embedded_generator_modules": 13,
+      "module_mismatches": [],
+      "engine_source_matches": true,
+      "commands": 339,
+      "command_failures": [],
+      "warnings": [],
+      "analyzer_c_count": 54,
+      "normal_c_count": 54,
+      "retained_hashes": {
+        "experimental_files_sha256": {
+          "receipt_total": 127,
+          "retained_in_archive": 41,
+          "mismatches": []
+        },
+        "output_artifact_sha256": {
+          "receipt_total": 555,
+          "retained_in_archive": 112,
+          "mismatches": []
+        }
+      },
+      "saved_model_path_in_archive": "apps/SCG/docs/evidence/native_usb_lifecycle_normal_20261010/final/STM32F103C8T6/saved_project/SilverStar.ssproject",
+      "model_sha_matches_compiler": true,
+      "model_sha_matches_backend": true,
+      "compile_receipt_hash_matches": true,
+      "traceability": {
+        "runtime_project_matches_build_index": true,
+        "snapshot_matches_index": true,
+        "raw_saved_hash_matches_compiler": true,
+        "raw_saved_hash_matches_index": true
+      },
+      "make_c_sources_equal_graph": true,
+      "duplicate_sources": [],
+      "asm": [
+        "HardwareGenerated/NativeClassicCdc/startup_stm32f103xb.s"
+      ],
+      "linker": "HardwareGenerated/NativeClassicCdc/STM32F103XX_FLASH.ld",
+      "required_link_symbols": [
+        "_sbrk"
+      ],
+      "sources": [
+        "HardwareGenerated/ReviewedNativeEntry/Core/Src/main.c",
+        "HardwareGenerated/NativeClassicCdc/Core/Src/gpio.c",
+        "HardwareGenerated/NativeClassicCdc/Core/Src/dma.c",
+        "HardwareGenerated/NativeClassicCdc/Core/Src/spi.c",
+        "HardwareGenerated/NativeClassicCdc/Core/Src/usart.c",
+        "HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_it.c",
+        "HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_hal_msp.c",
+        "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.c",
+        "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.c",
+        "HardwareGenerated/ReviewedNativeControl/App/usbd_cdc_if.c",
+        "HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c",
+        "HardwareGenerated/ReviewedNativeHal/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c",
+        "HardwareGenerated/ReviewedNativeHal/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c",
+        "HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f1xx.c",
+        "HardwareGenerated/ReviewedNativeControl/Core/Src/usbd_core.c",
+        "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c",
+        "HardwareGenerated/ReviewedNativeControl/Core/Src/usbd_ioreq.c",
+        "HardwareGenerated/ReviewedNativeControl/Class/CDC/Src/usbd_cdc.c",
+        "Generated/Src/native_no_heap.c",
+        "HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.c",
+        "Common/Src/silverstar_assert.c",
+        "Generated/Src/native_clock.c",
+        "Generated/Src/native_clock_port.c",
+        "Generated/Src/native_critical.c",
+        "Generated/Src/native_platform.c",
+        "Generated/Src/native_runtime.c",
+        "Generated/Src/native_usb_state.c",
+        "Generated/Src/project_resources.c",
+        "Generated/Src/pc_byte_stream.c",
+        "Generated/Src/pc_usb_control.c",
+        "Ground/Core/Src/ground_bridge.c",
+        "Ground/Radio/Src/ground_radio_sx1281.c",
+        "Ground/Radio/Src/ground_radio_activity.c",
+        "Ground/Protocol/Src/gsp_min_protocol.c",
+        "Ground/Protocol/Src/protocol_crc16.c",
+        "Devices/Telemetry/SX1281/Src/sx1281_device.c",
+        "Devices/Telemetry/SX1281/Src/sx1281_bus.c",
+        "Middlewares/Third_Party/SX1280lib/sx1280.c",
+        "Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c",
+        "Generated/Src/native_abi_probe.c"
+      ]
+    },
+    {
+      "part": "STM32C071FBP6",
+      "source_commit": "80db26338bba77950a9b8e9bbc03d8a77e33567b",
+      "dirty_empty": true,
+      "embedded_generator_modules": 13,
+      "module_mismatches": [],
+      "engine_source_matches": true,
+      "commands": 351,
+      "command_failures": [],
+      "warnings": [],
+      "analyzer_c_count": 56,
+      "normal_c_count": 56,
+      "retained_hashes": {
+        "experimental_files_sha256": {
+          "receipt_total": 273,
+          "retained_in_archive": 44,
+          "mismatches": []
+        },
+        "output_artifact_sha256": {
+          "receipt_total": 575,
+          "retained_in_archive": 116,
+          "mismatches": []
+        }
+      },
+      "saved_model_path_in_archive": "apps/SCG/docs/evidence/native_usb_lifecycle_normal_20261010/final/STM32C071FBP6/saved_project/SilverStar.ssproject",
+      "model_sha_matches_compiler": true,
+      "model_sha_matches_backend": true,
+      "compile_receipt_hash_matches": true,
+      "traceability": {
+        "runtime_project_matches_build_index": true,
+        "snapshot_matches_index": true,
+        "raw_saved_hash_matches_compiler": true,
+        "raw_saved_hash_matches_index": true,
+        "backend_project_matches_index": true,
+        "backend_runtime_matches_index": true,
+        "backend_snapshot_matches_index": true,
+        "backend_saved_hash_matches": true
+      },
+      "make_c_sources_equal_graph": true,
+      "duplicate_sources": [],
+      "asm": [
+        "HardwareGenerated/STM32CubeMX/startup_stm32c071xx.s"
+      ],
+      "linker": "HardwareGenerated/STM32CubeMX/STM32C071XX_FLASH.ld",
+      "required_link_symbols": [
+        "_sbrk"
+      ],
+      "sources": [
+        "Ground/Core/Src/ground_bridge.c",
+        "Ground/Radio/Src/ground_radio_sx1281.c",
+        "Ground/Radio/Src/ground_radio_activity.c",
+        "Ground/Protocol/Src/gsp_min_protocol.c",
+        "Ground/Protocol/Src/protocol_crc16.c",
+        "Platform/STM32C0/Src/platform_critical_stm32c0.c",
+        "Platform/STM32C0/Src/platform_spi_stm32c0.c",
+        "Platform/STM32C0/Src/platform_gpio_stm32c0.c",
+        "Platform/STM32C0/Src/platform_time_stm32c0.c",
+        "Devices/Telemetry/SX1281/Src/sx1281_device.c",
+        "Devices/Telemetry/SX1281/Src/sx1281_bus.c",
+        "Middlewares/Third_Party/SX1280lib/sx1280.c",
+        "HardwareGenerated/ReviewedC071Radio/Middlewares/Third_Party/SX1280lib/sx1280-hal.c",
+        "Platform/STM32C0/Src/main.c",
+        "HardwareGenerated/STM32CubeMX/Core/Src/gpio.c",
+        "HardwareGenerated/STM32CubeMX/Core/Src/spi.c",
+        "HardwareGenerated/STM32CubeMX/Core/Src/usart.c",
+        "HardwareGenerated/STM32CubeMX/Core/Src/usb.c",
+        "HardwareGenerated/STM32CubeMX/Core/Src/stm32c0xx_it.c",
+        "Platform/STM32C0/Src/stm32c0xx_hal_msp.c",
+        "HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal.c",
+        "HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_cortex.c",
+        "HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc.c",
+        "HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc_ex.c",
+        "HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_flash.c",
+        "HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_flash_ex.c",
+        "HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_gpio.c",
+        "HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma.c",
+        "HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma_ex.c",
+        "HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_pwr.c",
+        "HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_pwr_ex.c",
+        "HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_exti.c",
+        "HardwareGenerated/ReviewedC071Hal/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_spi.c",
+        "HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_spi_ex.c",
+        "HardwareGenerated/ReviewedC071Hal/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_uart.c",
+        "HardwareGenerated/ReviewedC071Hal/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_uart_ex.c",
+        "HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_pcd.c",
+        "HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_pcd_ex.c",
+        "HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_ll_usb.c",
+        "HardwareGenerated/STM32CubeMX/Core/Src/system_stm32c0xx.c",
+        "HardwareGenerated/STM32CubeMX/Core/Src/syscalls.c",
+        "HardwareGenerated/C071ClassicCDC/USB_Device/App/usb_device.c",
+        "Platform/STM32C0/Src/usbd_cdc_if.c",
+        "HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_desc.c",
+        "Platform/STM32C0/Src/usbd_conf.c",
+        "HardwareGenerated/ReviewedC071Lifecycle/usbd_cdc.c",
+        "HardwareGenerated/ReviewedC071Lifecycle/usbd_core.c",
+        "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c",
+        "HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_ioreq.c",
+        "Common/Src/silverstar_assert.c",
+        "Generated/Src/project_resources.c",
+        "Generated/Src/platform_resources.c",
+        "Generated/Src/pc_byte_stream.c",
+        "Generated/Src/native_no_heap.c",
+        "Generated/Src/c071_context.c",
+        "Generated/Src/native_abi_probe.c"
+      ]
+    }
+  ],
+  "version_source_records": {
+    "standalone_source_snapshots_retained": false,
+    "uc09_source_records": 9,
+    "module_records_per_compile_receipt": 13,
+    "new_lifecycle_modules_not_in_embedded_source_records": [
+      "generator/c071_lifecycle.py",
+      "generator/native_control.py"
+    ],
+    "mismatches": []
+  },
+  "host_source_binding": [
+    {
+      "part": "F103",
+      "count": 21,
+      "mismatches": [],
+      "not_found_in_final_receipt": []
+    },
+    {
+      "part": "C071",
+      "count": 19,
+      "mismatches": [],
+      "not_found_in_final_receipt": []
+    }
+  ],
+  "gates": {
+    "ucg03": {
+      "count": 8,
+      "nonzero": []
+    }
+  }
+}

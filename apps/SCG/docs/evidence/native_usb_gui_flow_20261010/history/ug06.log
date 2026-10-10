@@ -1,0 +1,331 @@
+FFFFFFFF..FF                                                             [100%]
+================================== FAILURES ===================================
+______ test_real_gui_import_save_reload_export_and_artifact_state[F103] _______
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d31466270) at 0x0000022D352FFA80>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation/cube-f103-usb'), [], 'F103')
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug06'), _trace=<pluggy._tracing.TagTrac...1A2BCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug06'), _retention_count=3, _retention_policy='all')
+
+    def test_real_gui_import_save_reload_export_and_artifact_state(usb_window,qapp,tmp_path_factory):
+        current,source,errors,part=usb_window
+        before={p.relative_to(source).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in source.rglob('*') if p.is_file()}
+>       model=_Import(qapp,usb_window)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_usb_gui_flow.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d31466270) at 0x0000022D352FFA80>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation/cube-f103-usb'), [], 'F103')
+
+    def _Import(qapp,window):
+        current,source,errors,part=window
+        current._GroundCubeMxImport_Request(True)
+        _Wait(qapp,lambda:current._active_worker is None)
+        assert not errors,errors
+        assert current._model.ground_target.mcu==''
+        assert current._model.ground_target.resource_assignments['radio0:spi']=='SPI1'
+        assert {view.key:view.assignment for view in current.ground_target_page._resources}==current._model.ground_target.resource_assignments
+>       assert all(view.fixed and not view.validation_error for view in current.ground_target_page._resources)
+E       assert False
+E        +  where False = all(<generator object _Import.<locals>.<genexpr> at 0x0000022D37BF2C20>)
+
+apps\SCG\tests\test_usb_gui_flow.py:45: AssertionError
+______ test_real_gui_import_save_reload_export_and_artifact_state[C071] _______
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d366a1e00) at 0x0000022D35540380>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST'), [], 'C071')
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug06'), _trace=<pluggy._tracing.TagTrac...1A2BCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug06'), _retention_count=3, _retention_policy='all')
+
+    def test_real_gui_import_save_reload_export_and_artifact_state(usb_window,qapp,tmp_path_factory):
+        current,source,errors,part=usb_window
+        before={p.relative_to(source).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in source.rglob('*') if p.is_file()}
+>       model=_Import(qapp,usb_window)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_usb_gui_flow.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d366a1e00) at 0x0000022D35540380>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST'), [], 'C071')
+
+    def _Import(qapp,window):
+        current,source,errors,part=window
+        current._GroundCubeMxImport_Request(True)
+        _Wait(qapp,lambda:current._active_worker is None)
+        assert not errors,errors
+        assert current._model.ground_target.mcu==''
+        assert current._model.ground_target.resource_assignments['radio0:spi']=='SPI1'
+        assert {view.key:view.assignment for view in current.ground_target_page._resources}==current._model.ground_target.resource_assignments
+>       assert all(view.fixed and not view.validation_error for view in current.ground_target_page._resources)
+E       assert False
+E        +  where False = all(<generator object _Import.<locals>.<genexpr> at 0x0000022D37DD5A40>)
+
+apps\SCG\tests\test_usb_gui_flow.py:45: AssertionError
+___________ test_real_gui_build_progress_and_cancel[F103-generate] ____________
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d366a0660) at 0x0000022D352FC240>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation/cube-f103-usb'), [], 'F103')
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug06'), _trace=<pluggy._tracing.TagTrac...1A2BCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug06'), _retention_count=3, _retention_policy='all')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022D37DA2E70>
+operation = 'generate'
+
+    @pytest.mark.parametrize('operation',['generate','build'])
+    def test_real_gui_build_progress_and_cancel(usb_window,qapp,tmp_path_factory,monkeypatch,operation):
+        current,source,errors,part=usb_window
+>       _Import(qapp,usb_window)
+
+apps\SCG\tests\test_usb_gui_flow.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d366a0660) at 0x0000022D352FC240>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation/cube-f103-usb'), [], 'F103')
+
+    def _Import(qapp,window):
+        current,source,errors,part=window
+        current._GroundCubeMxImport_Request(True)
+        _Wait(qapp,lambda:current._active_worker is None)
+        assert not errors,errors
+        assert current._model.ground_target.mcu==''
+        assert current._model.ground_target.resource_assignments['radio0:spi']=='SPI1'
+        assert {view.key:view.assignment for view in current.ground_target_page._resources}==current._model.ground_target.resource_assignments
+>       assert all(view.fixed and not view.validation_error for view in current.ground_target_page._resources)
+E       assert False
+E        +  where False = all(<generator object _Import.<locals>.<genexpr> at 0x0000022D38F9C040>)
+
+apps\SCG\tests\test_usb_gui_flow.py:45: AssertionError
+_____________ test_real_gui_build_progress_and_cancel[F103-build] _____________
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d366a0660) at 0x0000022D38EE6400>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation/cube-f103-usb'), [], 'F103')
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug06'), _trace=<pluggy._tracing.TagTrac...1A2BCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug06'), _retention_count=3, _retention_policy='all')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022D35416140>
+operation = 'build'
+
+    @pytest.mark.parametrize('operation',['generate','build'])
+    def test_real_gui_build_progress_and_cancel(usb_window,qapp,tmp_path_factory,monkeypatch,operation):
+        current,source,errors,part=usb_window
+>       _Import(qapp,usb_window)
+
+apps\SCG\tests\test_usb_gui_flow.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d366a0660) at 0x0000022D38EE6400>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation/cube-f103-usb'), [], 'F103')
+
+    def _Import(qapp,window):
+        current,source,errors,part=window
+        current._GroundCubeMxImport_Request(True)
+        _Wait(qapp,lambda:current._active_worker is None)
+        assert not errors,errors
+        assert current._model.ground_target.mcu==''
+        assert current._model.ground_target.resource_assignments['radio0:spi']=='SPI1'
+        assert {view.key:view.assignment for view in current.ground_target_page._resources}==current._model.ground_target.resource_assignments
+>       assert all(view.fixed and not view.validation_error for view in current.ground_target_page._resources)
+E       assert False
+E        +  where False = all(<generator object _Import.<locals>.<genexpr> at 0x0000022D3904B510>)
+
+apps\SCG\tests\test_usb_gui_flow.py:45: AssertionError
+___________ test_real_gui_build_progress_and_cancel[C071-generate] ____________
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d3669f8e0) at 0x0000022D35361D00>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST'), [], 'C071')
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug06'), _trace=<pluggy._tracing.TagTrac...1A2BCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug06'), _retention_count=3, _retention_policy='all')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022D35416F10>
+operation = 'generate'
+
+    @pytest.mark.parametrize('operation',['generate','build'])
+    def test_real_gui_build_progress_and_cancel(usb_window,qapp,tmp_path_factory,monkeypatch,operation):
+        current,source,errors,part=usb_window
+>       _Import(qapp,usb_window)
+
+apps\SCG\tests\test_usb_gui_flow.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d3669f8e0) at 0x0000022D35361D00>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST'), [], 'C071')
+
+    def _Import(qapp,window):
+        current,source,errors,part=window
+        current._GroundCubeMxImport_Request(True)
+        _Wait(qapp,lambda:current._active_worker is None)
+        assert not errors,errors
+        assert current._model.ground_target.mcu==''
+        assert current._model.ground_target.resource_assignments['radio0:spi']=='SPI1'
+        assert {view.key:view.assignment for view in current.ground_target_page._resources}==current._model.ground_target.resource_assignments
+>       assert all(view.fixed and not view.validation_error for view in current.ground_target_page._resources)
+E       assert False
+E        +  where False = all(<generator object _Import.<locals>.<genexpr> at 0x0000022D391AE260>)
+
+apps\SCG\tests\test_usb_gui_flow.py:45: AssertionError
+_____________ test_real_gui_build_progress_and_cancel[C071-build] _____________
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d366a0b70) at 0x0000022D3903DC00>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST'), [], 'C071')
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug06'), _trace=<pluggy._tracing.TagTrac...1A2BCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug06'), _retention_count=3, _retention_policy='all')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022D38F1B450>
+operation = 'build'
+
+    @pytest.mark.parametrize('operation',['generate','build'])
+    def test_real_gui_build_progress_and_cancel(usb_window,qapp,tmp_path_factory,monkeypatch,operation):
+        current,source,errors,part=usb_window
+>       _Import(qapp,usb_window)
+
+apps\SCG\tests\test_usb_gui_flow.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d366a0b70) at 0x0000022D3903DC00>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST'), [], 'C071')
+
+    def _Import(qapp,window):
+        current,source,errors,part=window
+        current._GroundCubeMxImport_Request(True)
+        _Wait(qapp,lambda:current._active_worker is None)
+        assert not errors,errors
+        assert current._model.ground_target.mcu==''
+        assert current._model.ground_target.resource_assignments['radio0:spi']=='SPI1'
+        assert {view.key:view.assignment for view in current.ground_target_page._resources}==current._model.ground_target.resource_assignments
+>       assert all(view.fixed and not view.validation_error for view in current.ground_target_page._resources)
+E       assert False
+E        +  where False = all(<generator object _Import.<locals>.<genexpr> at 0x0000022D39304860>)
+
+apps\SCG\tests\test_usb_gui_flow.py:45: AssertionError
+________________ test_real_gui_success_build_and_quality[F103] ________________
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d366a3090) at 0x0000022D37B1C240>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation/cube-f103-usb'), [], 'F103')
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug06'), _trace=<pluggy._tracing.TagTrac...1A2BCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug06'), _retention_count=3, _retention_policy='all')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022D392D8150>
+
+    def test_real_gui_success_build_and_quality(usb_window,qapp,tmp_path_factory,monkeypatch):
+        assert os.environ.get('SILVERSTAR_USB_BACKEND_ARM')=='1'
+        current,source,errors,part=usb_window
+>       _Import(qapp,usb_window)
+
+apps\SCG\tests\test_usb_gui_flow.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d366a3090) at 0x0000022D37B1C240>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation/cube-f103-usb'), [], 'F103')
+
+    def _Import(qapp,window):
+        current,source,errors,part=window
+        current._GroundCubeMxImport_Request(True)
+        _Wait(qapp,lambda:current._active_worker is None)
+        assert not errors,errors
+        assert current._model.ground_target.mcu==''
+        assert current._model.ground_target.resource_assignments['radio0:spi']=='SPI1'
+        assert {view.key:view.assignment for view in current.ground_target_page._resources}==current._model.ground_target.resource_assignments
+>       assert all(view.fixed and not view.validation_error for view in current.ground_target_page._resources)
+E       assert False
+E        +  where False = all(<generator object _Import.<locals>.<genexpr> at 0x0000022D3944F510>)
+
+apps\SCG\tests\test_usb_gui_flow.py:45: AssertionError
+________________ test_real_gui_success_build_and_quality[C071] ________________
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d366a0ed0) at 0x0000022D38ED0C00>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST'), [], 'C071')
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug06'), _trace=<pluggy._tracing.TagTrac...1A2BCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ug06'), _retention_count=3, _retention_policy='all')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022D392E5130>
+
+    def test_real_gui_success_build_and_quality(usb_window,qapp,tmp_path_factory,monkeypatch):
+        assert os.environ.get('SILVERSTAR_USB_BACKEND_ARM')=='1'
+        current,source,errors,part=usb_window
+>       _Import(qapp,usb_window)
+
+apps\SCG\tests\test_usb_gui_flow.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d366a0ed0) at 0x0000022D38ED0C00>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST'), [], 'C071')
+
+    def _Import(qapp,window):
+        current,source,errors,part=window
+        current._GroundCubeMxImport_Request(True)
+        _Wait(qapp,lambda:current._active_worker is None)
+        assert not errors,errors
+        assert current._model.ground_target.mcu==''
+        assert current._model.ground_target.resource_assignments['radio0:spi']=='SPI1'
+        assert {view.key:view.assignment for view in current.ground_target_page._resources}==current._model.ground_target.resource_assignments
+>       assert all(view.fixed and not view.validation_error for view in current.ground_target_page._resources)
+E       assert False
+E        +  where False = all(<generator object _Import.<locals>.<genexpr> at 0x0000022D3959DE50>)
+
+apps\SCG\tests\test_usb_gui_flow.py:45: AssertionError
+__________ test_tool_location_change_preserves_native_bindings[F103] __________
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d366a2ee0) at 0x0000022D39318AC0>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation/cube-f103-usb'), [], 'F103')
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022D35146970>
+
+    def test_tool_location_change_preserves_native_bindings(usb_window,qapp,monkeypatch):
+        current,source,errors,part=usb_window
+>       _Import(qapp,usb_window)
+
+apps\SCG\tests\test_usb_gui_flow.py:164: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d366a2ee0) at 0x0000022D39318AC0>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation/cube-f103-usb'), [], 'F103')
+
+    def _Import(qapp,window):
+        current,source,errors,part=window
+        current._GroundCubeMxImport_Request(True)
+        _Wait(qapp,lambda:current._active_worker is None)
+        assert not errors,errors
+        assert current._model.ground_target.mcu==''
+        assert current._model.ground_target.resource_assignments['radio0:spi']=='SPI1'
+        assert {view.key:view.assignment for view in current.ground_target_page._resources}==current._model.ground_target.resource_assignments
+>       assert all(view.fixed and not view.validation_error for view in current.ground_target_page._resources)
+E       assert False
+E        +  where False = all(<generator object _Import.<locals>.<genexpr> at 0x0000022D3A922C20>)
+
+apps\SCG\tests\test_usb_gui_flow.py:45: AssertionError
+__________ test_tool_location_change_preserves_native_bindings[C071] __________
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d366a18f0) at 0x0000022D395E4600>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST'), [], 'C071')
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022D3A9829C0>
+
+    def test_tool_location_change_preserves_native_bindings(usb_window,qapp,monkeypatch):
+        current,source,errors,part=usb_window
+>       _Import(qapp,usb_window)
+
+apps\SCG\tests\test_usb_gui_flow.py:164: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+qapp = <PySide6.QtWidgets.QApplication(0x22d31384260) at 0x0000022D3547DFC0>
+window = (<silverstar_fccg.ui.main_window.MainWindow(0x22d366a18f0) at 0x0000022D395E4600>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST'), [], 'C071')
+
+    def _Import(qapp,window):
+        current,source,errors,part=window
+        current._GroundCubeMxImport_Request(True)
+        _Wait(qapp,lambda:current._active_worker is None)
+        assert not errors,errors
+        assert current._model.ground_target.mcu==''
+        assert current._model.ground_target.resource_assignments['radio0:spi']=='SPI1'
+        assert {view.key:view.assignment for view in current.ground_target_page._resources}==current._model.ground_target.resource_assignments
+>       assert all(view.fixed and not view.validation_error for view in current.ground_target_page._resources)
+E       assert False
+E        +  where False = all(<generator object _Import.<locals>.<genexpr> at 0x0000022D3AA69630>)
+
+apps\SCG\tests\test_usb_gui_flow.py:45: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_import_save_reload_export_and_artifact_state[F103]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_import_save_reload_export_and_artifact_state[C071]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_build_progress_and_cancel[F103-generate]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_build_progress_and_cancel[F103-build]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_build_progress_and_cancel[C071-generate]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_build_progress_and_cancel[C071-build]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_success_build_and_quality[F103]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_success_build_and_quality[C071]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_tool_location_change_preserves_native_bindings[F103]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_tool_location_change_preserves_native_bindings[C071]
+10 failed, 2 passed, 1 warning in 31.87s

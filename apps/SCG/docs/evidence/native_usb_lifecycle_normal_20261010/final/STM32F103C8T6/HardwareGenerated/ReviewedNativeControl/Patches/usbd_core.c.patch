@@ -1,0 +1,166 @@
+--- HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c
++++ HardwareGenerated/ReviewedNativeControl/Core/Src/usbd_core.c
+@@ -19,6 +19,7 @@
+ 
+ /* Includes ------------------------------------------------------------------*/
+ #include "usbd_core.h"
++#include "pc_usb_control.h"
+ 
+ /** @addtogroup STM32_USBD_DEVICE_LIBRARY
+ * @{
+@@ -89,6 +90,8 @@
+ USBD_StatusTypeDef USBD_Init(USBD_HandleTypeDef *pdev,
+                              USBD_DescriptorsTypeDef *pdesc, uint8_t id)
+ {
++  if ((pdev == NULL) || (pdev->pClassData != NULL)) { return USBD_FAIL; }
++
+   /* Check whether the USB Host handle is valid */
+   if (pdev == NULL)
+   {
+@@ -114,9 +117,7 @@
+   pdev->dev_state = USBD_STATE_DEFAULT;
+   pdev->id = id;
+   /* Initialize low level driver */
+-  USBD_LL_Init(pdev);
+-
+-  return USBD_OK;
++  return USBD_LL_Init(pdev);
+ }
+ 
+ /**
+@@ -127,19 +128,11 @@
+ */
+ USBD_StatusTypeDef USBD_DeInit(USBD_HandleTypeDef *pdev)
+ {
+-  /* Set Default State */
+-  pdev->dev_state = USBD_STATE_DEFAULT;
+-
+-  /* Free Class Resources */
+-  pdev->pClass->DeInit(pdev, (uint8_t)pdev->dev_config);
+-
+-  /* Stop the low level driver  */
+-  USBD_LL_Stop(pdev);
+-
+-  /* Initialize low level driver */
+-  USBD_LL_DeInit(pdev);
+-
+-  return USBD_OK;
++  USBD_StatusTypeDef result;
++  if (pdev == NULL) { return USBD_FAIL; }
++  result = USBD_Stop(pdev);
++  if (result != USBD_OK) { return result; }
++  return USBD_LL_DeInit(pdev);
+ }
+ 
+ /**
+@@ -178,9 +171,8 @@
+ USBD_StatusTypeDef  USBD_Start(USBD_HandleTypeDef *pdev)
+ {
+   /* Start the low level driver  */
+-  USBD_LL_Start(pdev);
+-
+-  return USBD_OK;
++  if (pdev == NULL) { return USBD_FAIL; }
++  return USBD_LL_Start(pdev);
+ }
+ 
+ /**
+@@ -189,15 +181,16 @@
+   * @param  pdev: Device Handle
+   * @retval USBD Status
+   */
+-USBD_StatusTypeDef  USBD_Stop(USBD_HandleTypeDef *pdev)
+-{
+-  /* Free Class Resources */
+-  pdev->pClass->DeInit(pdev, (uint8_t)pdev->dev_config);
+-
+-  /* Stop the low level driver */
+-  USBD_LL_Stop(pdev);
+-
+-  return USBD_OK;
++USBD_StatusTypeDef USBD_Stop(USBD_HandleTypeDef *pdev)
++{
++  uint8_t class_result = USBD_OK;
++  USBD_StatusTypeDef result;
++  if (pdev == NULL) { return USBD_FAIL; }
++  pdev->dev_state = USBD_STATE_DEFAULT;
++  if (pdev->pClass != NULL)
++  { class_result = pdev->pClass->DeInit(pdev, (uint8_t)pdev->dev_config); }
++  result = USBD_LL_Stop(pdev);
++  return ((class_result == USBD_OK) && (result == USBD_OK)) ? USBD_OK : USBD_FAIL;
+ }
+ 
+ /**
+@@ -248,9 +241,8 @@
+ USBD_StatusTypeDef USBD_ClrClassConfig(USBD_HandleTypeDef  *pdev, uint8_t cfgidx)
+ {
+   /* Clear configuration  and De-initialize the Class process*/
+-  pdev->pClass->DeInit(pdev, cfgidx);
+-
+-  return USBD_OK;
++  if ((pdev == NULL) || (pdev->pClass == NULL)) { return USBD_FAIL; }
++  return (pdev->pClass->DeInit(pdev, cfgidx) == USBD_OK) ? USBD_OK : USBD_FAIL;
+ }
+ 
+ 
+@@ -267,6 +259,9 @@
+   pdev->ep0_state = USBD_EP0_SETUP;
+ 
+   pdev->ep0_data_len = pdev->request.wLength;
++  PcUsbControl_Cancel(pdev);
++  if ((pdev->request.bmRequest & USB_REQ_TYPE_MASK) == USB_REQ_TYPE_CLASS)
++  { return PcUsbControl_Dispatch(pdev); }
+ 
+   switch (pdev->request.bmRequest & 0x1FU)
+   {
+@@ -317,12 +312,12 @@
+       }
+       else
+       {
+-        if ((pdev->pClass->EP0_RxReady != NULL) &&
+-            (pdev->dev_state == USBD_STATE_CONFIGURED))
+-        {
+-          pdev->pClass->EP0_RxReady(pdev);
+-        }
+-        USBD_CtlSendStatus(pdev);
++        if ((pdev->dev_state != USBD_STATE_CONFIGURED) || (pdev->pClass == NULL) ||
++            (pdev->pClass->EP0_RxReady == NULL) || (pdev->pClass->EP0_RxReady(pdev) != USBD_OK))
++        { USBD_CtlError(pdev, &pdev->request); return USBD_FAIL; }
++        USBD_StatusTypeDef status = USBD_CtlSendStatus(pdev);
++        if (status != USBD_OK) { USBD_CtlError(pdev, &pdev->request); }
++        return status;
+       }
+     }
+     else
+@@ -340,7 +335,9 @@
+   else if ((pdev->pClass->DataOut != NULL) &&
+            (pdev->dev_state == USBD_STATE_CONFIGURED))
+   {
+-    pdev->pClass->DataOut(pdev, epnum);
++    uint8_t result = pdev->pClass->DataOut(pdev, epnum);
++    return (result == USBD_OK) ? USBD_OK :
++        ((result == USBD_BUSY) ? USBD_BUSY : USBD_FAIL);
+   }
+   else
+   {
+@@ -399,7 +396,8 @@
+             pdev->pClass->EP0_TxSent(pdev);
+           }
+           USBD_LL_StallEP(pdev, 0x80U);
+-          USBD_CtlReceiveStatus(pdev);
++          if (USBD_CtlReceiveStatus(pdev) != USBD_OK)
++          { USBD_CtlError(pdev, &pdev->request); return USBD_FAIL; }
+         }
+       }
+     }
+@@ -421,7 +419,9 @@
+   else if ((pdev->pClass->DataIn != NULL) &&
+            (pdev->dev_state == USBD_STATE_CONFIGURED))
+   {
+-    pdev->pClass->DataIn(pdev, epnum);
++    uint8_t result = pdev->pClass->DataIn(pdev, epnum);
++    return (result == USBD_OK) ? USBD_OK :
++        ((result == USBD_BUSY) ? USBD_BUSY : USBD_FAIL);
+   }
+   else
+   {

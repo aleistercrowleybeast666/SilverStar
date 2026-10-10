@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\tools\validation\native_classic_cdc_compile.py", line 233, in <module>
+    NativeCompile_Run(parser.parse_args())
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\tools\validation\native_classic_cdc_compile.py", line 55, in NativeCompile_Run
+    experiments["clock"]=NativeClockSourceContract_Validate(files,proof["build"]["sources"],hclk_hz=args.clock_hz)
+                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_clock.py", line 29, in NativeClockSourceContract_Validate
+    irq_path, irq = body("SysTick_Handler")
+                    ~~~~^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\ccdi\apps\SCG\src\silverstar_fccg\generator\native_clock.py", line 25, in body
+    raise ValueError("Native clock requires one actual owner: " + name)
+ValueError: Native clock requires one actual owner: SysTick_Handler

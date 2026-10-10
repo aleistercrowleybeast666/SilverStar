@@ -1,0 +1,13 @@
+{
+  "status": "CompiledCandidate",
+  "scope": "PRIVATE_C071_GROUND_BACKEND",
+  "model_sha256": "8f2d97e6cf5b69d7015440905b3a9948ae94f8bd7840c48054fd4a664263fdf9",
+  "snapshot_id": "751f3d0065e4b0336f4c32eeedbba043d14f7a8a779da52d27865bd6560d72a6",
+  "project_root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ug08\\p_feb8d835",
+  "runtime_project": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ug08\\p_feb8d835\\SilverStar.ssproject",
+  "runtime_project_sha256": "c1be98e5362b3236938dca14592c9438de56edc523b58cda5c20837153822d83",
+  "snapshot_root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ug08\\w_0e091a11\\i\\751f3d0065e4b0336f4c32eeedbba043d14f7a8a779da52d27865bd6560d72a6\\UsbGroundNative",
+  "compile_receipt_sha256": "5d724d334e854f651df275baf3b919a0fc46f53e23974159cda2a5867b87499d",
+  "failure": null,
+  "limits": "PRIVATE C071 native PCD plus pinned classic CDC companion Ground candidate. Formal USB release BLOCKED: b66 independent review has no passed outcome and must not be retried or bypassed. Full EP0/async lifecycle, critical contracts, stack/WCET and hardware NOT PROVEN."
+}

@@ -1,0 +1,67 @@
+......FF....                                                             [100%]
+================================== FAILURES ===================================
+________________ test_real_gui_success_build_and_quality[F103] ________________
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x27a4dc8a820) at 0x0000027A51889880>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation/cube-f103-usb'), [], 'F103')
+qapp = <PySide6.QtWidgets.QApplication(0x27a489ce5e0) at 0x0000027A4C82F280>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ua03'), _trace=<pluggy._tracing.TagTrac...90FFCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ua03'), _retention_count=3, _retention_policy='all')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000027A518D8F50>
+
+    def test_real_gui_success_build_and_quality(usb_window,qapp,tmp_path_factory,monkeypatch):
+        assert os.environ.get('SILVERSTAR_USB_BACKEND_ARM')=='1'
+        current,source,errors,part=usb_window
+        _Import(qapp,usb_window)
+        current._project_root=tmp_path_factory.mktemp('p')
+        compiler='D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc.exe'
+        monkeypatch.setattr(QFileDialog,'getOpenFileName',lambda *a:(compiler,''))
+        assert current._ToolchainBrowse('compiler')
+        assert not errors,errors
+        # Exercise the real enabled button after the ordinary Generate operation.
+        current.ground_target_page.generate_button.click()
+        _Wait(qapp,lambda:current._active_worker is None)
+        assert not errors,errors
+        button=current.build_page.action_buttons['ground_build']
+>       assert button.isEnabled()
+E       assert False
+E        +  where False = <built-in method isEnabled of PySide6.QtWidgets.QPushButton object at 0x0000027A51AB1B80>()
+E        +    where <built-in method isEnabled of PySide6.QtWidgets.QPushButton object at 0x0000027A51AB1B80> = <PySide6.QtWidgets.QPushButton(0x27a4d46ed10) at 0x0000027A51AB1B80>.isEnabled
+
+apps\SCG\tests\test_usb_gui_flow.py:144: AssertionError
+________________ test_real_gui_success_build_and_quality[C071] ________________
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x27a4df09580) at 0x0000027A517D5A80>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST'), [], 'C071')
+qapp = <PySide6.QtWidgets.QApplication(0x27a489ce5e0) at 0x0000027A4C82F280>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ua03'), _trace=<pluggy._tracing.TagTrac...90FFCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ua03'), _retention_count=3, _retention_policy='all')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000027A51CE15E0>
+
+    def test_real_gui_success_build_and_quality(usb_window,qapp,tmp_path_factory,monkeypatch):
+        assert os.environ.get('SILVERSTAR_USB_BACKEND_ARM')=='1'
+        current,source,errors,part=usb_window
+        _Import(qapp,usb_window)
+        current._project_root=tmp_path_factory.mktemp('p')
+        compiler='D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc.exe'
+        monkeypatch.setattr(QFileDialog,'getOpenFileName',lambda *a:(compiler,''))
+        assert current._ToolchainBrowse('compiler')
+        assert not errors,errors
+        # Exercise the real enabled button after the ordinary Generate operation.
+        current.ground_target_page.generate_button.click()
+        _Wait(qapp,lambda:current._active_worker is None)
+        assert not errors,errors
+        button=current.build_page.action_buttons['ground_build']
+>       assert button.isEnabled()
+E       assert False
+E        +  where False = <built-in method isEnabled of PySide6.QtWidgets.QPushButton object at 0x0000027A51BE7CC0>()
+E        +    where <built-in method isEnabled of PySide6.QtWidgets.QPushButton object at 0x0000027A51BE7CC0> = <PySide6.QtWidgets.QPushButton(0x27a4b050490) at 0x0000027A51BE7CC0>.isEnabled
+
+apps\SCG\tests\test_usb_gui_flow.py:144: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_success_build_and_quality[F103]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_success_build_and_quality[C071]
+2 failed, 10 passed, 1 warning in 135.24s (0:02:15)

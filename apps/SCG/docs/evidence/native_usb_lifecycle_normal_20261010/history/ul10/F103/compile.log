@@ -1,0 +1,4 @@
+C:\Users\chdxm\AppData\Local\Temp\ul10\test_normal_stack_lifecycle_an_0b20aacb\usbd_ctlreq.c: In function 'USBD_CtlError':
+C:\Users\chdxm\AppData\Local\Temp\ul10\test_normal_stack_lifecycle_an_0b20aacb\usbd_ctlreq.c:853:42: warning: unused parameter 'req' [-Wunused-parameter]
+  853 |                    USBD_SetupReqTypedef *req)
+      |                    ~~~~~~~~~~~~~~~~~~~~~~^~~

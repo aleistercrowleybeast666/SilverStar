@@ -1,0 +1,46 @@
+--- HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c
++++ HardwareGenerated/ReviewedNativeControl/Core/Src/usbd_ioreq.c
+@@ -93,9 +93,7 @@
+   pdev->ep_in[0].rem_length   = len;
+ 
+   /* Start the transfer */
+-  USBD_LL_Transmit(pdev, 0x00U, pbuf, len);
+-
+-  return USBD_OK;
++  return USBD_LL_Transmit(pdev, 0x00U, pbuf, len);
+ }
+ 
+ /**
+@@ -132,9 +130,7 @@
+   pdev->ep_out[0].rem_length   = len;
+ 
+   /* Start the transfer */
+-  USBD_LL_PrepareReceive(pdev, 0U, pbuf, len);
+-
+-  return USBD_OK;
++  return USBD_LL_PrepareReceive(pdev, 0U, pbuf, len);
+ }
+ 
+ /**
+@@ -165,9 +161,7 @@
+   pdev->ep0_state = USBD_EP0_STATUS_IN;
+ 
+   /* Start the transfer */
+-  USBD_LL_Transmit(pdev, 0x00U, NULL, 0U);
+-
+-  return USBD_OK;
++  return USBD_LL_Transmit(pdev, 0x00U, NULL, 0U);
+ }
+ 
+ /**
+@@ -182,9 +176,7 @@
+   pdev->ep0_state = USBD_EP0_STATUS_OUT;
+ 
+   /* Start the transfer */
+-  USBD_LL_PrepareReceive(pdev, 0U, NULL, 0U);
+-
+-  return USBD_OK;
++  return USBD_LL_PrepareReceive(pdev, 0U, NULL, 0U);
+ }
+ 
+ /**

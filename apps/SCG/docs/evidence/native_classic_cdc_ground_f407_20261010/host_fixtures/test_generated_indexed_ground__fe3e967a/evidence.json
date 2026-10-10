@@ -1,0 +1,49 @@
+{
+  "compiled_inputs_sha256": {
+    "HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c": "24caec0aafb56c7f88977f532bb20c5b0562af042b436b540587aae9a63d6325",
+    "HardwareGenerated/ReviewedNativeData/USB_DEVICE/App/usbd_cdc_if.c": "7480f120e2521ee26253a6f3ae7ec1aef0b71c3b8a7f8b36a6bf6fd58768261b",
+    "Generated/Src/pc_byte_stream.c": "668147a0f1255eed5967994a94e5d9a726faa035e31ac04e979a3faca5774586",
+    "Ground/Core/Src/ground_bridge.c": "425258007cfb5f6d843df86de2a3dd7cd153914a172aa2d53c431f63433b415b",
+    "Ground/Protocol/Src/gsp_min_protocol.c": "a58a68a7aa2eda03b3a0b64c7d25133e41051f1f3d3e99583c397e94a36f3b08",
+    "Ground/Protocol/Src/protocol_crc16.c": "00e27c2e0d0dcdcd157e614b785e2d0a0cea8f2b5e14ffb6f3d4c161739993b9",
+    "Common/Src/silverstar_assert.c": "ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826"
+  },
+  "compile": [
+    "D:/msys64/ucrt64/bin\\gcc.EXE",
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wpedantic",
+    "-Wconversion",
+    "-Wsign-conversion",
+    "-Wundef",
+    "-fanalyzer",
+    "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_generated_indexed_ground__fe3e967a",
+    "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14e\\Ground\\Core\\Inc",
+    "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14e\\Ground\\Protocol\\Inc",
+    "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14e\\Generated\\Inc",
+    "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14e\\Common\\Inc",
+    "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14e\\Platform\\Inc",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_generated_indexed_ground__fe3e967a\\data_path.c",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14e\\Generated\\Src\\pc_byte_stream.c",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14e\\Ground\\Core\\Src\\ground_bridge.c",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14e\\Ground\\Protocol\\Src\\gsp_min_protocol.c",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14e\\Ground\\Protocol\\Src\\protocol_crc16.c",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-ground-f407-14e\\Common\\Src\\silverstar_assert.c",
+    "-o",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_generated_indexed_ground__fe3e967a\\data_path.exe"
+  ],
+  "compile_exit": 0,
+  "compile_stdout": "",
+  "compile_stderr": "",
+  "run": [
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ccdi-handoff-normal14d\\test_generated_indexed_ground__fe3e967a\\data_path.exe"
+  ],
+  "run_exit": 0,
+  "stdout": "PASS actual indexed CDC/callback/PC/GSP/Ground bidirectional flow; tx=4 radio_tx=2 ack=2 air_rx=1 rearm=4; reconnect rejects stale session\n",
+  "stderr": "",
+  "harness_sha256": "ead677b68a54274a1e40a28aee29964697c583b83051625a9481535bf5c1e415",
+  "executable_sha256": "eb81459568ec7b169bcedf8c041a6a09a4bd3da32d299107d94dbd102f145ec8"
+}

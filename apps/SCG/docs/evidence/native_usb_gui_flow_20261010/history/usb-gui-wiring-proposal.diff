@@ -1,0 +1,632 @@
+--- apps\SCG\src\silverstar_fccg\app\usb_ground_flow.py
++++ apps\SCG\src\silverstar_fccg\app\usb_ground_flow.py
+@@ -0,0 +1,206 @@
++"""Existing GUI actions for exact, isolated USB software candidates.
++
++Receipts locate outputs; they never grant target admission or formal release.
++"""
++from copy import deepcopy
++from dataclasses import dataclass
++from pathlib import Path
++import hashlib
++import json
++import os
++import shutil
++import sys
++import time
++import uuid
++
++from silverstar_fccg.app.native_ground import BINDING_KEY, NativeGroundBackendResult
++from silverstar_fccg.app.usb_ground import (
++    C071_PART, FIRST_BATCH_PARTS, _Profile_Load, _Json_Encode,
++    UsbGroundDeviceFacts_Get, UsbGroundTarget_Validate,
++)
++from silverstar_fccg.build.runner import BuildAction, BuildResult, BuildRunner
++from silverstar_fccg.core.task import TaskCancelledError
++from silverstar_fccg.core.workspace import WorkspacePolicy
++from silverstar_fccg.hardware.cubemx import CubeMxImportError
++from silverstar_fccg.hardware.inventory import CubeMxInventory_Parse
++
++
++RELEASE_NOTICE = (
++    "USB software candidate only; formal release BLOCKED. "
++    "Independent USB safety review: NO_PASSED_OUTCOME (not retried). "
++    "Critical-contract acceptance, whole-program stack/WCET: NOT PROVEN. "
++    "PCD/IRQ scheduling and physical USB behaviour: outside Host evidence. "
++    "No hardware action is required or performed by this workflow."
++)
++
++
++def UsbGroundBound_Is(model):
++    return BINDING_KEY in model.ground_target.hardware.inventory
++
++
++def UsbGroundOptions_Get(part):
++    UsbGroundTarget_Validate(part, 48_000_000 if part == C071_PART else 72_000_000)
++    profile = _Profile_Load('c071-device-facts.json' if part == C071_PART else 'f103-device-facts.json')
++    # Backend-pinned bytes and IRQ enums are checked again on every operation.
++    # An explicit SDK override is a location, never a new trust descriptor.
++    header = Path(os.environ.get('SILVERSTAR_USB_SDK_' + ('C071' if part == C071_PART else 'F103'),
++                                 profile['irq_evidence_source']))
++    UsbGroundDeviceFacts_Get(part, header)
++    options = {'independent_irq_header': header}
++    if part == C071_PART:
++        options['companion_root'] = Path(__file__).resolve().parents[3] / 'plugins/builtin/silverstar_usb_cdc_stm32c071_mini'
++    return options
++
++
++def UsbGroundFlow_Import(service, source, model, context):
++    context.Cancel_RaiseIfRequested()
++    root, ioc = service.hardware_importer._Input_Resolve(Path(source))
++    inventory = CubeMxInventory_Parse(ioc.read_text(encoding='utf-8-sig'))
++    part = inventory.mcu_part
++    options = UsbGroundOptions_Get(part)
++    context.Progress_Report(0.1, 'status.task_running')
++    gpio = (('RADIO_NSS', 'RADIO_RESET', 'RADIO_BUSY', 'RADIO_DIO1') if part == C071_PART else
++            ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1'))
++    result = service.UsbGroundProject_Import(root, deepcopy(model), part=part,
++        hclk_hz=48_000_000 if part == C071_PART else 72_000_000,
++        spi_resource='SPI1', gpio_resources=gpio, risk_acknowledged=True, **options)
++    context.Cancel_RaiseIfRequested()
++    context.Progress_Report(0.95, 'status.task_running')
++    return result
++
++
++def _Pointer_Path(project):
++    return WorkspacePolicy(project).Path_Resolve('.fccg/usb-candidate.json', allow_root=False)
++
++
++def _Pointer_Save(project, model, result):
++    WorkspacePolicy(project).Text_AtomicWrite('.fccg/usb-candidate.json', json.dumps({
++        'model_sha256': hashlib.sha256(_Json_Encode(model.Dictionary_Get())).hexdigest(),
++        'output': str(result.output), 'backend_receipt_sha256': result.receipt_sha256,
++        'result': result.result.value, 'formal_release': False}, indent=2))
++
++
++def UsbGroundOutput_Get(service, model, project, *, compiled=False):
++    service.UsbGroundCandidate_Plan(model, **UsbGroundOptions_Get(model.ground_target.hardware.mcu))
++    pointer = json.loads(_Pointer_Path(project).read_text(encoding='utf-8'))
++    if pointer['model_sha256'] != hashlib.sha256(_Json_Encode(model.Dictionary_Get())).hexdigest():
++        raise CubeMxImportError('USB candidate belongs to another saved model; generate/build again')
++    output = Path(pointer['output'])
++    if output.absolute() != output or output.resolve() != output or output.is_symlink() or output.is_junction():
++        raise CubeMxImportError('USB candidate output alias rejected')
++    protected = (Path(project).resolve(), service.hardware_importer.cache_root.resolve())
++    if any(output.is_relative_to(p) or p.is_relative_to(output) for p in protected):
++        raise CubeMxImportError('USB candidate output must remain disjoint')
++    receipt = output / 'backend-receipt.json'
++    if hashlib.sha256(receipt.read_bytes()).hexdigest() != pointer['backend_receipt_sha256']:
++        raise CubeMxImportError('USB candidate backend receipt changed')
++    backend = json.loads(receipt.read_text(encoding='utf-8'))
++    if backend['model_sha256'] != pointer['model_sha256']:
++        raise CubeMxImportError('USB candidate model receipt changed')
++    policy = WorkspacePolicy(output)
++    if pointer['result'] == NativeGroundBackendResult.RenderedCandidate.value:
++        for relative, digest in backend['files_sha256'].items():
++            if hashlib.sha256(policy.Path_Resolve(relative, allow_root=False).read_bytes()).hexdigest() != digest:
++                raise CubeMxImportError('Rendered USB candidate changed: ' + relative)
++        if compiled:
++            raise CubeMxImportError('USB candidate is rendered, not compiled; build first')
++    elif pointer['result'] == NativeGroundBackendResult.CompiledCandidate.value:
++        compilation = output / 'receipt.json'
++        if hashlib.sha256(compilation.read_bytes()).hexdigest() != backend['compile_receipt_sha256']:
++            raise CubeMxImportError('USB compiler receipt changed')
++        record = json.loads(compilation.read_text(encoding='utf-8'))
++        if record['status'] != 'NATIVE_SOURCE_CPP_GAS_ARM_LINK_AND_ANALYZER_EXECUTED' or record['runtime_model_sha256'] != pointer['model_sha256']:
++            raise CubeMxImportError('USB compiler result is not an exact-model software success')
++        for relative, digest in {**record['experimental_files_sha256'], **record['output_artifact_sha256']}.items():
++            if hashlib.sha256(policy.Path_Resolve(relative, allow_root=False).read_bytes()).hexdigest() != digest:
++                raise CubeMxImportError('USB candidate source/artifact changed: ' + relative)
++        # Copied native inputs must still equal the admitted input bytes.
++        prefix = 'HardwareGenerated/STM32CubeMX/' if model.ground_target.hardware.mcu == C071_PART else 'HardwareGenerated/NativeClassicCdc/'
++        from silverstar_fccg.hardware.native_classic_cdc import NATIVE_PREFIX
++        if model.ground_target.hardware.mcu != C071_PART:
++            prefix = NATIVE_PREFIX
++        for relative, digest in record['input_sha256'].items():
++            if hashlib.sha256(policy.Path_Resolve(prefix + relative, allow_root=False).read_bytes()).hexdigest() != digest:
++                raise CubeMxImportError('USB copied native input changed: ' + relative)
++    else:
++        raise CubeMxImportError('USB candidate has no successful rendered/compiled outcome')
++    return output
++
++
++def UsbGroundFlow_Run(service, model, project, operation, context):
++    model = deepcopy(model)
++    context.Cancel_RaiseIfRequested()
++    options = UsbGroundOptions_Get(model.ground_target.hardware.mcu)
++    plan = service.UsbGroundCandidate_Plan(model, **options)
++    context.Line_Report(RELEASE_NOTICE)
++    if operation not in {'generate', 'build'}:
++        raise ValueError('Unknown USB candidate operation')
++    service.ProjectRoot_Save(model, Path(project))
++    context.Cancel_RaiseIfRequested()
++    # Fresh sibling output: never overwrite the user's native tree or project.
++    output = Path(project).resolve().parent / ('usb-' + uuid.uuid4().hex[:12])
++    if operation == 'generate':
++        context.Progress_Report(0.15, 'status.generation_running')
++        result = service.UsbGroundCandidate_Export(model, output, **options)
++    else:
++        result = service.UsbGroundCandidate_Build(model, Path(project), output, task_context=context, **options)
++    context.Cancel_RaiseIfRequested()
++    if result.result == NativeGroundBackendResult.FailedCandidate:
++        raise CubeMxImportError(result.detail + '; receipt: ' + str(result.receipt))
++    _Pointer_Save(project, model, result)
++    context.Line_Report(f'USB {result.result.value}: {result.output}; backend receipt {result.receipt_sha256}')
++    context.Progress_Report(0.99, 'status.task_running')
++    return result
++
++
++def UsbGroundQualityHash_Get(service, model, project, action):
++    output = UsbGroundOutput_Get(service, model, project, compiled=action in {'artifact_check', 'static_analysis'})
++    pointer = json.loads(_Pointer_Path(project).read_text(encoding='utf-8'))
++    digest = hashlib.sha256(_Json_Encode([pointer, action]))
++    for path in sorted((output / 'Tools').rglob('*')):
++        if path.is_file():
++            digest.update(str(path.relative_to(output)).encode())
++            digest.update(path.read_bytes())
++    return output, digest.hexdigest()
++
++
++def UsbGroundQuality_Run(service, model, project, action, context):
++    from silverstar_fccg.build.quality_batch import TargetQualityResult
++    started = time.perf_counter()
++    output = Path(project)
++    result = None
++    digest = ''
++    error = ''
++    try:
++        output, before = UsbGroundQualityHash_Get(service, model, project, action.value)
++        checker = 'check_c071_candidate.py' if model.ground_target.hardware.mcu == C071_PART else 'check_native_ground.py'
++        selected = deepcopy(model)
++        selected.build = selected.ground_target.build
++        runner = BuildRunner(WorkspacePolicy(output))
++        environment = runner._Environment_Get(selected, action)
++        python = environment.get('PYTHON', sys.executable)
++        command = (python, 'Tools/' + checker)
++        if action == BuildAction.HOST_TESTS:
++            host = runner._HostCompiler_Resolve(selected)
++            if host is None:
++                raise ValueError('Host C compiler unavailable')
++            command += ('host', '--host-cc', str(host))
++        elif action in {BuildAction.ARTIFACT_CHECK, BuildAction.STATIC_ANALYSIS}:
++            command += ('artifact', '--prefix', selected.build.toolchain_prefix)
++        elif action == BuildAction.POWER10_CHECK:
++            command = ('powershell', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
++                       'Tools/check_power_of_ten.ps1', '-TargetKind', 'Ground')
++        elif action != BuildAction.ARCHITECTURE_CHECK:
++            raise ValueError('Unknown USB software check')
++        context.Line_Report(RELEASE_NOTICE)
++        code, lines = runner._Process_Run(command, output, environment, context, context.Line_Report)
++        context.Cancel_RaiseIfRequested()
++        _, digest = UsbGroundQualityHash_Get(service, model, project, action.value)
++        if digest != before:
++            raise CubeMxImportError('USB quality inputs changed during check')
++        result = BuildResult(action, command, code, RELEASE_NOTICE + '\n' + ''.join(lines), live_streamed=True)
++    except TaskCancelledError:
++        raise
++    except Exception as exception:
++        error = str(exception)
++    return TargetQualityResult('ground', output, model, result, digest, time.perf_counter() - started, error)
+--- apps\SCG\src\silverstar_fccg\app\usb_ground.py
++++ apps\SCG\src\silverstar_fccg\app\usb_ground.py
+@@ -302,7 +302,7 @@
+ 
+ 
+ 
+-def UsbGroundCandidate_Export(importer, catalog, model, output, *, independent_irq_header, companion_root=None):
++def UsbGroundCandidate_Export(importer, catalog, model, output, *, independent_irq_header, companion_root=None, task_context=None):
+     plan = UsbGroundCandidate_Plan(importer, catalog, model,
+         independent_irq_header=independent_irq_header, companion_root=companion_root)
+     if plan.result != UsbGroundPlanResult.RenderedCandidate:
+@@ -332,19 +332,19 @@
+     return NativeGroundCandidate_Export(importer, catalog, model, output, device_facts=facts)
+ 
+ 
+-def UsbGroundCandidate_Build(importer, catalog, model, project_root, output, *, independent_irq_header, companion_root=None):
++def UsbGroundCandidate_Build(importer, catalog, model, project_root, output, *, independent_irq_header, companion_root=None, task_context=None):
+     plan = UsbGroundCandidate_Plan(importer, catalog, model,
+         independent_irq_header=independent_irq_header, companion_root=companion_root)
+     if plan.result != UsbGroundPlanResult.RenderedCandidate:
+         raise CubeMxImportError(plan.detail)
+     if plan.part == C071_PART:
+         return _C071Candidate_Build(importer,catalog,model,project_root,output,plan,
+-            independent_irq_header=independent_irq_header,companion_root=companion_root)
++            independent_irq_header=independent_irq_header,companion_root=companion_root,task_context=task_context)
+     facts = UsbGroundDeviceFacts_Get(plan.part, independent_irq_header)
+-    return NativeGroundCandidate_Build(importer, catalog, model, project_root, output, device_facts=facts)
+-
+-
+-def _C071Candidate_Build(importer,catalog,model,project_root,output,plan,*,independent_irq_header,companion_root):
++    return NativeGroundCandidate_Build(importer, catalog, model, project_root, output, device_facts=facts, task_context=task_context)
++
++
++def _C071Candidate_Build(importer,catalog,model,project_root,output,plan,*,independent_irq_header,companion_root,task_context=None):
+     from silverstar_fccg.project.model import ProjectModel_Load
+     from silverstar_fccg.build.native_compile import NativeCompile_Run
+     from silverstar_fccg.hardware.cubemx_ground import GroundCubeInputs_Get
+@@ -373,7 +373,7 @@
+     token=secrets.token_hex(16)
+     args=SimpleNamespace(input=snapshot,output=destination,spi='SPI1',gpio=[],clock_hz=48_000_000,
+         runtime_project=project_root/'SilverStar.ssproject', toolchain_prefix=saved.ground_target.build.toolchain_prefix,
+-        reviewed_hal=False,native_timer_probe=False,backend_owner_token=token)
++        reviewed_hal=False,native_timer_probe=False,backend_owner_token=token,task_context=task_context)
+     failure=None
+     try:
+         receipt=NativeCompile_Run(args,device_facts=facts,runtime_catalog=catalog,
+@@ -395,4 +395,6 @@
+         'runtime_project_sha256':_Hash_Get(args.runtime_project.read_bytes()),'snapshot_root':str(snapshot.resolve()),
+         'compile_receipt_sha256':_Hash_Get(compilation.read_bytes()) if compilation.is_file() else None,
+         'failure':failure,'limits':C071_LIMITS})
++    if task_context is not None:
++        task_context.Cancel_RaiseIfRequested()
+     return NativeGroundCandidateOutputResult(result,destination,receipt,_Hash_Get(receipt.read_bytes()),failure or C071_LIMITS)
+--- apps\SCG\src\silverstar_fccg\app\native_ground.py
++++ apps\SCG\src\silverstar_fccg\app\native_ground.py
+@@ -253,7 +253,7 @@
+ 
+ def NativeGroundCandidate_Build(importer: CubeMxImporter, catalog: PluginCatalog,
+                                 model: ProjectModel, project_root: Path, output: Path, *,
+-                                device_facts: NativeDeviceFacts) -> NativeGroundCandidateOutputResult:
++                                device_facts: NativeDeviceFacts, task_context=None) -> NativeGroundCandidateOutputResult:
+     saved = ProjectModel_Load(project_root / "SilverStar.ssproject")
+     if _Json_Encode(saved.Dictionary_Get()) != _Json_Encode(model.Dictionary_Get()):
+         raise CubeMxImportError("Save the exact bound native project before candidate build")
+@@ -267,7 +267,7 @@
+         spi=binding["spi"], gpio=binding["gpio"], clock_hz=binding["hclk_hz"],
+         runtime_project=project_root / "SilverStar.ssproject",
+         toolchain_prefix=saved.ground_target.build.toolchain_prefix,
+-        reviewed_hal=False, native_timer_probe=False)
++        reviewed_hal=False, native_timer_probe=False, task_context=task_context)
+     owner_token = secrets.token_hex(16)
+     args.backend_owner_token = owner_token
+     started = datetime.now(timezone.utc).isoformat()
+@@ -298,5 +298,7 @@
+             "compile_receipt_sha256": _Hash_Get(compile_receipt.read_bytes()) if compile_receipt.is_file() else None,
+             "binding": binding, "failure": failure, "limits": LIMITS}
+     receipt = _Receipt_Write(destination, data)
++    if task_context is not None:
++        task_context.Cancel_RaiseIfRequested()
+     return NativeGroundCandidateOutputResult(result, destination, receipt,
+         _Hash_Get(receipt.read_bytes()), failure or LIMITS)
+--- apps\SCG\src\silverstar_fccg\build\native_compile.py
++++ apps\SCG\src\silverstar_fccg\build\native_compile.py
+@@ -14,6 +14,8 @@
+ import re
+ import struct
+ import subprocess
++import time
++from silverstar_fccg.core.task import TaskCancelledError
+ 
+ SCG=Path(__file__).resolve().parents[3]
+ from silverstar_fccg.hardware.native_classic_cdc import NativeDeviceFacts, NativeMemoryRegion, NativeClassicCdc_Inspect, NATIVE_PREFIX
+@@ -25,6 +27,11 @@
+ 
+ 
+ def NativeCompile_Run(args, *, device_facts=None, runtime_catalog=None, prepared_candidate=None):
++    context = getattr(args, 'task_context', None)
++    def cancelled_check():
++        if context is not None:
++            context.Cancel_RaiseIfRequested()
++    cancelled_check()
+     timer_probe=getattr(args,'native_timer_probe',False)
+     if timer_probe and (args.clock_hz is None or args.runtime_project is not None or args.reviewed_hal):
+         raise ValueError('Private timer probe needs --clock-hz, includes HAL once, and is separate from Ground runtime')
+@@ -55,6 +62,7 @@
+         (output/'backend-owner.json').write_text(json.dumps({'token':args.backend_owner_token}),encoding='utf-8')
+     original_hashes={p:hashlib.sha256(b).hexdigest() for p,b in files.items()}
+     for p,b in files.items():
++        cancelled_check()
+         dest=output/native_prefix/p; dest.parent.mkdir(parents=True,exist_ok=True); dest.write_bytes(b)
+     snapshot_modules=[Path(__file__),SCG/"tools/validation/native_classic_cdc_compile.py",
+         SCG/"src/silverstar_fccg/app/native_ground.py",SCG/"src/silverstar_fccg/app/service.py",
+@@ -139,9 +147,17 @@
+         graph["sources"].append("Common/Src/silverstar_assert.c")
+         graph["include_dirs"].extend(["Generated/Inc","Platform/Inc","Common/Inc"])
+     for path,content in experimental_files.items():
++        cancelled_check()
+         dest=output/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
+     compiler=args.toolchain_prefix+"gcc"
+     environment=os.environ.copy()
++    if args.runtime_project is not None:
++        from copy import deepcopy
++        from silverstar_fccg.build.runner import BuildRunner, BuildAction
++        from silverstar_fccg.core.workspace import WorkspacePolicy
++        selected = deepcopy(model)
++        selected.build = selected.ground_target.build
++        environment = BuildRunner(WorkspacePolicy(output))._Environment_Get(selected, BuildAction.BUILD)
+     for name in ("CPATH","C_INCLUDE_PATH","CPLUS_INCLUDE_PATH","OBJC_INCLUDE_PATH","DEPENDENCIES_OUTPUT","SUNPRO_DEPENDENCIES","GCC_EXEC_PREFIX","COMPILER_PATH"):
+         environment.pop(name,None)
+     commands=[]
+@@ -149,13 +165,46 @@
+     log=output/"commands.log"
+ 
+     def run(command):
+-        result=subprocess.run(command,cwd=output,env=environment,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=120)
++        cancelled_check()
++        process = subprocess.Popen(command, cwd=output, env=environment, text=True,
++            encoding='utf-8', errors='replace', stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
++        deadline = time.monotonic() + 120
++        interrupted = None
++        while True:
++            try:
++                stdout, _ = process.communicate(timeout=0.1)
++                break
++            except subprocess.TimeoutExpired:
++                try:
++                    cancelled_check()
++                    if time.monotonic() >= deadline:
++                        raise TimeoutError('Native compiler command exceeded 120 seconds')
++                except (TaskCancelledError, TimeoutError) as error:
++                    interrupted = error
++                    # This PID belongs to the compiler started immediately above.
++                    # On Windows retire its cc1/as children before collecting output.
++                    if os.name == 'nt':
++                        subprocess.run(['taskkill', '/PID', str(process.pid), '/T', '/F'],
++                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=10)
++                    else:
++                        process.kill()
++                    stdout, _ = process.communicate(timeout=10)
++                    break
+         with log.open("a",encoding="utf-8") as stream:
+-            stream.write(json.dumps(command)+"\n"+result.stdout+"\nEXIT "+str(result.returncode)+"\n")
+-        commands.append({"command":command,"exit":result.returncode})
+-        warning_diagnostics.extend(line for line in result.stdout.splitlines() if "warning:" in line)
+-        if result.returncode: raise ValueError("native validation command failed; see "+str(log))
+-        return result.stdout
++            stream.write(json.dumps(command)+"\n"+stdout+"\nEXIT "+str(process.returncode)+"\n")
++        commands.append({"command":command,"exit":process.returncode,
++                         "interrupted":type(interrupted).__name__ if interrupted else None})
++        warning_diagnostics.extend(line for line in stdout.splitlines() if "warning:" in line)
++        if context is not None and interrupted is None:
++            context.Line_Report('> ' + ' '.join(command))
++            for line in stdout.splitlines():
++                context.Line_Report(line)
++            context.Progress_Report(min(0.99, len(commands) / command_total), 'status.build_running')
++        if interrupted is not None:
++            raise interrupted
++        cancelled_check()
++        if process.returncode: raise ValueError("native validation command failed; see "+str(log))
++        return stdout
+ 
+     flags=[*graph["mcu_flags"],*["-I"+p for p in graph["include_dirs"]],*["-D"+d for d in graph["defines"]]]
+     # Declarations must agree with actual headers, and the compiler must select
+@@ -210,6 +259,10 @@
+     if timer_probe:
+         for path,content in experimental_files.items():
+             dest=output/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(content)
++    command_total = 1 + 2 * (3 * len(graph['sources']) + 2 * len(graph['asm_sources']) + 5)
++    if context is not None:
++        context.Progress_Report(0.0, 'status.build_running')
++        context.Line_Report(f'USB native compiler plan: {command_total} commands including analyzer, ELF/CPU/IRQ audits')
+     objects=[]
+     started=datetime.now(timezone.utc).isoformat()
+     try:
+@@ -289,7 +342,7 @@
+         if warning_diagnostics:
+             raise ValueError("Native warning diagnostics require independent review; strict no-warning acceptance FAILED")
+     except Exception as error:
+-        status="FAILED"; failure=str(error)
++        status="CANCELLED" if isinstance(error, TaskCancelledError) else "FAILED"; failure=str(error)
+         raise
+     finally:
+         receipt={"status":status,"started_utc":started,"finished_utc":datetime.now(timezone.utc).isoformat(),
+@@ -321,7 +374,7 @@
+           "toolchain_version":locals().get("version"),
+           "warning_diagnostics":warning_diagnostics,
+           "no_warning_gate":"FAIL" if warning_diagnostics else "NO_RECORDED_WARNING",
+-          "facts":facts_json,"contract":proof,"commands":commands,"graph":graph,"input_sha256":original_hashes,
++          "planned_command_total":command_total,"facts":facts_json,"contract":proof,"commands":commands,"graph":graph,"input_sha256":original_hashes,
+           "output_artifact_sha256":{str(p.relative_to(output)):hashlib.sha256(p.read_bytes()).hexdigest() for p in output.rglob("*") if p.is_file() and p.suffix in {".elf",".map",".o",".su",".d",".s",".bin"}},
+           "failure":locals().get("failure"),"limits":"PRIVATE CANDIDATE ONLY. NOT PROVEN: manual critical-contract acceptance, complete EP0/async lifecycle, physical memory authority beyond caller review, MCU tick/radio timing, whole-program stack/WCET and hardware. Source/ABI closure and private generated Ground compilation are recorded only for this snapshot. Normal native generation remains blocked; no board access."}
+         (output/"receipt.json").write_text(json.dumps(receipt,indent=2),encoding="utf-8")
+--- apps\SCG\src\silverstar_fccg\ui\main_window.py
++++ apps\SCG\src\silverstar_fccg\ui\main_window.py
+@@ -1,6 +1,11 @@
+ from __future__ import annotations
+ 
+ import json
++from silverstar_fccg.app.usb_ground_flow import (
++    UsbGroundBound_Is, UsbGroundFlow_Import, UsbGroundFlow_Run,
++    UsbGroundOutput_Get, UsbGroundQuality_Run, UsbGroundQualityHash_Get, RELEASE_NOTICE,
++)
++from silverstar_fccg.app.native_ground import NativeGroundProjectImportResult
+ import logging
+ import os
+ import re
+@@ -873,13 +878,20 @@
+             else:
+                 self.algorithm_parameters_page.RatePlan_Set(rate_plan)
+             project_root = self._project_root
++            usb_output = None
++            if project_root and UsbGroundBound_Is(display.model):
++                try:
++                    usb_output = UsbGroundOutput_Get(self._service, display.model, project_root)
++                except (OSError, ValueError):
++                    pass
+             self.build_page.Targets_Set(
+                 flight_generated=bool(
+                     project_root and (project_root / "Flight_Controller" / "Makefile").is_file()
+                 ),
+                 ground_enabled=display.model.ground_target.enabled,
+                 ground_generated=bool(
+-                    project_root and (project_root / "Ground_Station" / "Makefile").is_file()
++                    usb_output or (project_root and not UsbGroundBound_Is(display.model)
++                    and (project_root / "Ground_Station" / "Makefile").is_file())
+                 ),
+             )
+             self.build_page.FirmwareArtifact_Set(
+@@ -888,6 +900,8 @@
+             )
+             self.build_page.QualityResults_Set(display.quality_results)
+             self._TargetQualityResults_Refresh()
++            if UsbGroundBound_Is(display.model):
++                self.build_page.target_status_labels['ground'].setText('USB candidate; formal release BLOCKED')
+             self.power10_export_button.setEnabled(
+                 self._project_root is not None and Power10Report_Load(self._project_root / FLIGHT_DIRECTORY) is not None)
+             self.legacy_migration_button.setVisible(bool(ReleaseCompatibilityIssues_Get(display.model)))
+@@ -2128,13 +2142,24 @@
+         if not selected:
+             return
+         self.Task_Run(
+-            lambda _context: self._service.CubeMxProject_Import(
+-                Path(selected), self._model, risk_acknowledged=True, target="ground"
+-            ),
++            lambda context: (UsbGroundFlow_Import(self._service, Path(selected), self._model, context)
++                if self._model.ground_target.enabled and self._model.ground_target.pc_interface == 'usb_cdc'
++                else self._service.CubeMxProject_Import(
++                    Path(selected), self._model, risk_acknowledged=True, target="ground")),
+             self._GroundCubeMxImport_Complete,
+         )
+ 
+     def _GroundCubeMxImport_Complete(self, result) -> None:
++        if isinstance(result, NativeGroundProjectImportResult):
++            # The backend returns the complete bound model. Reconciliation through
++            # legacy MCU selection would clear resources or invent CDC capability.
++            display = self._ProjectDisplayState_Build(result.model)
++            self._Project_Display(display)
++            self._model = result.model
++            self._project_state = ProjectLifecycleState.DIRTY
++            self._generation_plan = None
++            self.status_label.setText(RELEASE_NOTICE)
++            return
+         from silverstar_fccg.hardware.platform import (
+             DetectedMcuFacts_FromInventory,
+             PlatformMatch_Resolve,
+@@ -2448,6 +2473,9 @@
+         )
+ 
+     def _GenerateOrApply_Request(self) -> None:
++        if UsbGroundBound_Is(self._model):
++            self._UsbGroundOperation_Request('generate')
++            return
+         self._ProjectModel_Sync()
+         if self._project_root is None:
+             self._Error_Show(self._translator.Text_Get("error.output_required"))
+@@ -3225,6 +3253,12 @@
+         return False
+ 
+     def _Targets_Generate(self, action_text: str) -> None:
++        if UsbGroundBound_Is(self._model) and action_text in {'generate_ground', 'generate_all'}:
++            if action_text == 'generate_all':
++                self._Error_Show('USB candidate and Flight generation require their separate existing target actions')
++                return
++            self._UsbGroundOperation_Request('generate')
++            return
+         if self._active_worker is not None:
+             return
+         if self.algorithm_parameters_page.alignment_editor.draft_dirty:
+@@ -3440,6 +3474,23 @@
+         for target in ("flight", "ground"):
+             records = ()
+             states = {}
++            if target == 'ground' and self._project_root and UsbGroundBound_Is(self._model):
++                try:
++                    root = UsbGroundOutput_Get(self._service, self._model, self._project_root)
++                    records = self._service.QualityResults_Get(root)
++                    for record in records:
++                        try:
++                            _, digest = UsbGroundQualityHash_Get(self._service, self._model, self._project_root, record.task)
++                            if record.input_sha256 != digest:
++                                states[record.task] = 'stale'
++                        except (OSError, ValueError):
++                            states[record.task] = 'unavailable'
++                    self.build_page.target_quality_status[target].setText(RELEASE_NOTICE)
++                except (OSError, ValueError):
++                    states = {task: 'unavailable' for task in QUALITY_TASKS}
++                    self.build_page.target_quality_status[target].setText('USB generate/build required; formal release BLOCKED')
++                self.build_page.TargetQualityResults_Set(target, records, states)
++                continue
+             try:
+                 root, model = self._TargetQualityInputs_Get(target)
+                 records = self._service.QualityResults_Get(root)
+@@ -3497,7 +3548,18 @@
+         self.build_page.BuildDetailLog_Set("")
+         self._active_quality_targets = selected
+         self._active_quality_action = action.value
+-        self.Task_Run(lambda context: QualityBatch_Run(tuple(inputs), action, context),
++        def quality_run(context):
++            if UsbGroundBound_Is(self._model):
++                outcomes = []
++                for target, root, model in inputs:
++                    context.Cancel_RaiseIfRequested()
++                    if target == 'ground':
++                        outcomes.append(UsbGroundQuality_Run(self._service, self._model, self._project_root, action, context))
++                    else:
++                        outcomes.extend(QualityBatch_Run(((target, root, model),), action, context).targets)
++                return QualityBatchResult(tuple(outcomes))
++            return QualityBatch_Run(tuple(inputs), action, context)
++        self.Task_Run(quality_run,
+                       self._QualityChecks_Complete, self._QualityChecks_Error,
+                       line_callback=self._QualityLine_Append)
+ 
+@@ -3574,7 +3636,70 @@
+         self._project_state = ProjectLifecycleState.ERROR
+         self._active_quality_targets = ()
+ 
++    def _UsbGroundOperation_Request(self, operation: str) -> None:
++        if self._active_worker is not None:
++            return
++        if self.algorithm_parameters_page.alignment_editor.draft_dirty:
++            self._Error_Show(self._translator.Text_Get('alignment.confirm_before_generation'))
++            return
++        self._ProjectModel_Sync()
++        if self._project_root is None:
++            self._Project_SaveAs()
++            if self._project_root is None:
++                return
++        self.build_page.BuildLog_Set('')
++        model, project = deepcopy(self._model), self._project_root
++        def complete(result):
++            self._Project_Refresh()
++            self.status_label.setText(f'USB {result.result.value}: {result.output}; formal release BLOCKED')
++            self.build_page.BuildLog_Append(RELEASE_NOTICE)
++        self.Task_Run(lambda context: UsbGroundFlow_Run(self._service, model, project, operation, context),
++                      complete, self._Build_Error, line_callback=self._BuildLine_Append)
++
++    def _UsbGroundTargetAction_Request(self, operation: str) -> None:
++        if operation == 'build':
++            self._UsbGroundOperation_Request('build')
++            return
++        if self._project_root is None:
++            self._Error_Show(self._translator.Text_Get('error.generate_before_open'))
++            return
++        try:
++            output = UsbGroundOutput_Get(self._service, self._model, self._project_root,
++                                        compiled=operation == 'artifact_check')
++            if operation == 'open_folder':
++                if not QDesktopServices.openUrl(QUrl.fromLocalFile(str(output))):
++                    raise ValueError('Could not open USB candidate folder')
++            elif operation == 'open_vscode':
++                # Candidate builds do not invent an EIDE configuration; open
++                # the real source directory with VS Code's existing launcher.
++                executable = shutil.which('code.cmd') or shutil.which('code')
++                if not executable:
++                    raise ValueError('VS Code command unavailable; use Open Folder')
++                subprocess.Popen([executable, str(output)], shell=False,
++                    creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0)
++            elif operation == 'artifact_check':
++                self.build_page.BuildLog_Append(f'USB exact-model native.elf + analyzer ELF and receipt hashes verified: {output}\n' + RELEASE_NOTICE)
++                self.status_label.setText('USB software artifacts verified; formal release BLOCKED')
++            elif operation == 'clean':
++                # Keep receipts/logs/generated sources for traceability; only
++                # compiler products under the validated output may be removed.
++                policy = WorkspacePolicy(output)
++                build = policy.Path_Resolve('build', allow_root=False)
++                if build.exists():
++                    policy.Tree_Remove(build)
++                pointer = WorkspacePolicy(self._project_root).Path_Resolve('.fccg/usb-candidate.json', allow_root=False)
++                pointer.unlink()
++                self._Project_Refresh()
++                self.status_label.setText('USB compiler products cleaned; generate/build a new candidate')
++            else:
++                raise ValueError('Unknown USB target action')
++        except Exception as error:
++            self._Error_Show(error)
++
+     def _TargetAction_Request(self, action_text: str) -> None:
++        if action_text.startswith('ground_') and UsbGroundBound_Is(self._model):
++            self._UsbGroundTargetAction_Request(action_text.removeprefix('ground_'))
++            return
+         target, separator, operation = action_text.partition("_")
+         if not separator or target not in {"flight", "ground"}:
+             return

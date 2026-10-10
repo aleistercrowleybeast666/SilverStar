@@ -1,0 +1,33 @@
+{
+  "format_version": 1,
+  "entries": [
+    {
+      "original": "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c",
+      "original_sha256": "9bf6b6c49a7faab7bdc465dae5df52bcc878720bd354c8596b51e16d6e210ecb",
+      "derived": "HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c",
+      "derived_sha256": "d14420398e670b6821a65f1e9714e9ab3f7c1dc3bc67f4bce64718ea0662be74",
+      "patch": "HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c.patch",
+      "patch_sha256": "fd451f511255b69e0a4d9c3fe6fb09b96a74bbb29bb44dc15865b6b0022e4ca5"
+    },
+    {
+      "original": "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c",
+      "original_sha256": "9696a4d61c9e05cd7989936792b15b88f9b7be567d2a927b4feeb0685f1a73a2",
+      "derived": "HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c",
+      "derived_sha256": "d4193c6a561e5e74573eeb7bcd77d8c6b17b9f117885d0b01020f22d0169116c",
+      "patch": "HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c.patch",
+      "patch_sha256": "3183ec1bf9eb06f15e420486b1145a1d7e886b56f6943058a9de4a32f06287f6"
+    },
+    {
+      "original": "HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.c",
+      "original_sha256": "effe29562b9d655026d6127a87a988af13d05744d5d6d70356faefe5004d0f87",
+      "derived": "HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.c",
+      "derived_sha256": "b4a00d9a75a405e44410e0c082eec340ec379eb4af243640983ea56ff213d0d3",
+      "patch": "HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.c.patch",
+      "patch_sha256": "a84c6f64b14a7e40045405e1ce77f31f0b8255f22d9ece71841bc6d70f24941b"
+    }
+  ],
+  "scope": "Private F1 vendor source profile, FS single CDC, 70-byte SCG TX and 64-byte RX; not an MCU admission list",
+  "ownership": "Keep TX ownership on ambiguous LL failure; failed endpoint closure retains class block and blocks reinitialization",
+  "ep0": "No shared EP0 owner patch integrated; EP0 and full async lifecycle acceptance remain NOT PROVEN",
+  "exceptions": "Vendor fixed callbacks and one static class allocation retained; no heap/runtime registry introduced"
+}

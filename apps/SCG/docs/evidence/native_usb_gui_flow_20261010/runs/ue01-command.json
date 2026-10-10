@@ -1,0 +1,20 @@
+{
+  "command": [
+    "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\backend_pytest.py",
+    "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\test_existing_usb_user_entry.py",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/Users/chdxm/AppData/Local/Temp/ue01",
+    "-q"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\.work\\ccdi",
+  "started_utc": "2026-10-10T04:07:41.958290+00:00",
+  "source_commit": "63771a17e63052c238246dd4fe3fe6394de8ccec",
+  "dirty": "",
+  "test_sha256": "d95442370a2cc301618dc10609d3257cd59ad1d9d75e4f8c9d3036247d7aa5c2",
+  "scope": "Ordinary new project default plus existing USB combo/import directory/save/reload/generate; no private model or admission environment",
+  "exit": 0,
+  "finished_utc": "2026-10-10T04:08:35.751992+00:00"
+}

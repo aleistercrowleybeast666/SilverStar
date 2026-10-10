@@ -1,0 +1,608 @@
+--- Devices/Telemetry/SX1281/Src/sx1281_device.c
++++ Devices/Telemetry/SX1281/Src/sx1281_device.c
+@@ -769,50 +769,51 @@
+ /* Ordinary persistent I/O failure: fail bounded queued work, invalidate the
+  * cached chip/READY state, and require explicit owner reinitialization.
+  * No successful receipt is manufactured and no further radio command runs. */
+-static void Lora_RadioFault(uint8_t instance, uint8_t failed_tx)
+-{
+-    /* Best-effort hardware retirement, even when SPI/BUSY is unavailable. */
+-    if (Lora_RfFrontendSet(instance, 0U) == 0U)
+-    { (void)PlatformGpio_Write(Sx1281Bus_ResetGet(instance), 0U); }
+-    uint32_t primask = Lora_IrqLock();
+-    Lora_TxQueueAssert(instance); Lora_RxQueueAssert(instance); Lora_ControlAssert(instance);
+-    if (failed_tx != 0U) { s_stats.tx_timeout++; }
+-    for (uint32_t index = 0U; index < (LORA_TX_QUEUE_DEPTH + 1U); index++)
+-    {
+-        uint32_t id = s_contexts[instance].active_tx_id;
+-        if (index < LORA_TX_QUEUE_DEPTH)
+-        {
+-            uint8_t slot = (uint8_t)((s_tx_tail + index) % LORA_TX_QUEUE_DEPTH);
+-            id = index < s_tx_count ? s_contexts[instance].tx_ids[slot] : 0U;
+-            s_contexts[instance].tx_ids[slot] = 0U;
+-        }
+-        if (id != 0U)
+-        {
+-            s_contexts[instance].completed_tx_id = id;
+-            s_contexts[instance].completed_tx_ms = PlatformTime_Ms();
+-            s_contexts[instance].completed_tx_result = LoraTxQueryResult_TimedOut;
+-        }
+-    }
+-    s_stats.tx_dropped += s_tx_count; s_stats.rx_dropped += s_rx_count; s_stats.rx_error++;
+-    s_tx_head = 0U; s_tx_tail = 0U; s_tx_count = 0U;
+-    s_tx_control_count = 0U; s_tx_control_burst = 0U;
+-    s_rx_head = 0U; s_rx_tail = 0U; s_rx_count = 0U;
+-    s_contexts[instance].active_tx_id = 0U;
+-    s_contexts[instance].rx_packet_active = 0U; s_contexts[instance].rx_window_active = 0U;
+-    s_tx_busy = 0U; s_radio_in_rx = 0U; s_inited = 0U; s_chip_status.verified = 0U;
+-    s_tx_done_flag = 0U; s_tx_timeout_flag = 0U; s_rx_done_flag = 0U;
+-    s_rx_timeout_flag = 0U; s_rx_error_flag = 0U;
+-    if ((s_control_transaction.state == LoraControlStateSubmitted) ||
+-        (s_control_transaction.state == LoraControlStateActive))
+-    {
+-        s_control_transaction.result.transaction_id = s_control_transaction.transaction_id;
+-        s_control_transaction.result.result = LORA_DIAG_RESULT_TIMEOUT;
+-        s_control_transaction.result.raw_irq_before = 0U;
+-        s_control_transaction.state = s_control_transaction.auto_release != 0U ?
+-            LoraControlStateIdle : LoraControlStateComplete;
+-    }
+-    s_stats.radio_state = LORA_RADIO_STATE_NOT_INIT;
+-    Lora_IrqUnlock(primask);
++static void Lora_RadioFault(uint8_t instance, uint8_t failed_tx)
++{
++    /* Best-effort hardware retirement, even when SPI/BUSY is unavailable. */
++    if (Lora_RfFrontendSet(instance, 0U) == 0U)
++    { (void)PlatformGpio_Write(Sx1281Bus_ResetGet(instance), 0U); }
++    uint32_t native_now_ms = PlatformTime_Ms();
++    uint32_t primask = Lora_IrqLock();
++    Lora_TxQueueAssert(instance); Lora_RxQueueAssert(instance); Lora_ControlAssert(instance);
++    if (failed_tx != 0U) { s_stats.tx_timeout++; }
++    for (uint32_t index = 0U; index < (LORA_TX_QUEUE_DEPTH + 1U); index++)
++    {
++        uint32_t id = s_contexts[instance].active_tx_id;
++        if (index < LORA_TX_QUEUE_DEPTH)
++        {
++            uint8_t slot = (uint8_t)((s_tx_tail + index) % LORA_TX_QUEUE_DEPTH);
++            id = index < s_tx_count ? s_contexts[instance].tx_ids[slot] : 0U;
++            s_contexts[instance].tx_ids[slot] = 0U;
++        }
++        if (id != 0U)
++        {
++            s_contexts[instance].completed_tx_id = id;
++            s_contexts[instance].completed_tx_ms = native_now_ms;
++            s_contexts[instance].completed_tx_result = LoraTxQueryResult_TimedOut;
++        }
++    }
++    s_stats.tx_dropped += s_tx_count; s_stats.rx_dropped += s_rx_count; s_stats.rx_error++;
++    s_tx_head = 0U; s_tx_tail = 0U; s_tx_count = 0U;
++    s_tx_control_count = 0U; s_tx_control_burst = 0U;
++    s_rx_head = 0U; s_rx_tail = 0U; s_rx_count = 0U;
++    s_contexts[instance].active_tx_id = 0U;
++    s_contexts[instance].rx_packet_active = 0U; s_contexts[instance].rx_window_active = 0U;
++    s_tx_busy = 0U; s_radio_in_rx = 0U; s_inited = 0U; s_chip_status.verified = 0U;
++    s_tx_done_flag = 0U; s_tx_timeout_flag = 0U; s_rx_done_flag = 0U;
++    s_rx_timeout_flag = 0U; s_rx_error_flag = 0U;
++    if ((s_control_transaction.state == LoraControlStateSubmitted) ||
++        (s_control_transaction.state == LoraControlStateActive))
++    {
++        s_control_transaction.result.transaction_id = s_control_transaction.transaction_id;
++        s_control_transaction.result.result = LORA_DIAG_RESULT_TIMEOUT;
++        s_control_transaction.result.raw_irq_before = 0U;
++        s_control_transaction.state = s_control_transaction.auto_release != 0U ?
++            LoraControlStateIdle : LoraControlStateComplete;
++    }
++    s_stats.radio_state = LORA_RADIO_STATE_NOT_INIT;
++    Lora_IrqUnlock(primask);
+ }
+ 
+ static uint8_t Lora_RadioRecover(uint8_t instance, uint8_t failed_tx)
+@@ -1096,38 +1097,39 @@
+     return LORA_TX_ENQUEUE_OK;
+ }
+ 
+-LoraTxQueryResult Lora_TxResultGet(uint8_t instance,
+-    uint32_t transaction_id, uint32_t *age_ms)
+-{
+-    uint8_t index;
+-    uint32_t primask;
+-    LoraTxQueryResult result = LoraTxQueryResult_NotFound;
+-    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+-        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+-    if ((transaction_id == 0U) || (age_ms == NULL)) { return LoraTxQueryResult_InvalidArgument; }
+-    *age_ms = 0U;
+-    primask = Lora_IrqLock();
+-    Lora_TxQueueAssert(instance);
+-    if (s_contexts[instance].completed_tx_id == transaction_id)
+-    {
+-        SILVERSTAR_ASSERT((s_contexts[instance].completed_tx_result == LoraTxQueryResult_Complete) ||
+-            (s_contexts[instance].completed_tx_result == LoraTxQueryResult_TimedOut),
+-            SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+-        result = s_contexts[instance].completed_tx_result;
+-        *age_ms = (uint32_t)(PlatformTime_Ms() - s_contexts[instance].completed_tx_ms);
+-    }
+-    else if (s_contexts[instance].active_tx_id == transaction_id) { result = LoraTxQueryResult_Pending; }
+-    else
+-    {
+-        for (index = 0U; index < LORA_TX_QUEUE_DEPTH; index++)
+-        {
+-            uint8_t position = (uint8_t)((s_tx_tail + index) % LORA_TX_QUEUE_DEPTH);
+-            if ((index < s_tx_count) && (s_contexts[instance].tx_ids[position] == transaction_id))
+-            { result = LoraTxQueryResult_Pending; }
+-        }
+-    }
+-    Lora_IrqUnlock(primask);
+-    return result;
++LoraTxQueryResult Lora_TxResultGet(uint8_t instance,
++    uint32_t transaction_id, uint32_t *age_ms)
++{
++    uint8_t index;
++    uint32_t primask;
++    LoraTxQueryResult result = LoraTxQueryResult_NotFound;
++    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
++        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
++    if ((transaction_id == 0U) || (age_ms == NULL)) { return LoraTxQueryResult_InvalidArgument; }
++    *age_ms = 0U;
++    uint32_t native_now_ms = PlatformTime_Ms();
++    primask = Lora_IrqLock();
++    Lora_TxQueueAssert(instance);
++    if (s_contexts[instance].completed_tx_id == transaction_id)
++    {
++        SILVERSTAR_ASSERT((s_contexts[instance].completed_tx_result == LoraTxQueryResult_Complete) ||
++            (s_contexts[instance].completed_tx_result == LoraTxQueryResult_TimedOut),
++            SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
++        result = s_contexts[instance].completed_tx_result;
++        *age_ms = (uint32_t)(native_now_ms - s_contexts[instance].completed_tx_ms);
++    }
++    else if (s_contexts[instance].active_tx_id == transaction_id) { result = LoraTxQueryResult_Pending; }
++    else
++    {
++        for (index = 0U; index < LORA_TX_QUEUE_DEPTH; index++)
++        {
++            uint8_t position = (uint8_t)((s_tx_tail + index) % LORA_TX_QUEUE_DEPTH);
++            if ((index < s_tx_count) && (s_contexts[instance].tx_ids[position] == transaction_id))
++            { result = LoraTxQueryResult_Pending; }
++        }
++    }
++    Lora_IrqUnlock(primask);
++    return result;
+ }
+ 
+ static void Lora_IrqProcess(uint8_t instance, uint16_t raw_irq)
+@@ -1216,59 +1218,61 @@
+     }
+ }
+ 
+-static void Lora_DiagnosticsRefresh(uint8_t instance)
+-{
+-    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+-        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+-    SILVERSTAR_ASSERT(s_inited == 1U,
+-        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+-    RadioStatus_t radio_status;
+-    uint8_t busy_gpio = 0U;
+-    uint8_t dio1_gpio = 0U;
+-    uint8_t packet_runtime;
+-    int16_t rssi_inst;
+-    uint32_t primask;
+-    Sx1281BusStatus before;
+-
+-    if ((PlatformTime_Ms() - s_diag_last_refresh_ms) <
+-        LORA_DIAG_REFRESH_PERIOD_MS)
+-    {
+-        return;
+-    }
+-    Sx1281Bus_StatusGet(instance, &before);
+-    radio_status = SX1280GetStatus(instance);
+-    packet_runtime = (uint8_t)SX1280GetPacketType(instance);
+-    rssi_inst = (int16_t)SX1280GetRssiInst(instance);
+-    (void)PlatformGpio_Read(Sx1281Bus_BusyGet(instance), &busy_gpio);
+-    (void)PlatformGpio_Read(Sx1281Bus_Dio1Get(instance), &dio1_gpio);
+-    uint8_t reads_good = Lora_BusReadSucceeded(instance, before);
+-    primask = Lora_IrqLock();
+-    s_chip_status.status_value = radio_status.Value;
+-    s_chip_status.verified = (uint8_t)((reads_good != 0U) && (radio_status.Value != 0x00U) &&
+-                                      (radio_status.Value != 0xFFU));
+-    s_diag.packet_runtime = packet_runtime;
+-    s_diag.rssi_inst = rssi_inst;
+-    s_diag.rssi_inst_valid = reads_good;
+-    s_cached_busy_gpio = busy_gpio;
+-    s_cached_dio1_gpio = dio1_gpio;
+-    s_diag_last_refresh_ms = PlatformTime_Ms();
+-    Lora_IrqUnlock(primask);
+-}
+-
+-static void Lora_TxReceiptRecord(uint8_t instance, LoraTxQueryResult result)
+-{
+-    uint32_t primask;
+-    SILVERSTAR_ASSERT((result == LoraTxQueryResult_Complete) || (result == LoraTxQueryResult_TimedOut),
+-        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+-    primask = Lora_IrqLock();
+-    if (s_contexts[instance].active_tx_id != 0U)
+-    {
+-        s_contexts[instance].completed_tx_id = s_contexts[instance].active_tx_id;
+-        s_contexts[instance].completed_tx_ms = PlatformTime_Ms();
+-        s_contexts[instance].completed_tx_result = result;
+-        s_contexts[instance].active_tx_id = 0U;
+-    }
+-    Lora_IrqUnlock(primask);
++static void Lora_DiagnosticsRefresh(uint8_t instance)
++{
++    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
++        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
++    SILVERSTAR_ASSERT(s_inited == 1U,
++        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
++    RadioStatus_t radio_status;
++    uint8_t busy_gpio = 0U;
++    uint8_t dio1_gpio = 0U;
++    uint8_t packet_runtime;
++    int16_t rssi_inst;
++    uint32_t primask;
++    Sx1281BusStatus before;
++
++    if ((PlatformTime_Ms() - s_diag_last_refresh_ms) <
++        LORA_DIAG_REFRESH_PERIOD_MS)
++    {
++        return;
++    }
++    Sx1281Bus_StatusGet(instance, &before);
++    radio_status = SX1280GetStatus(instance);
++    packet_runtime = (uint8_t)SX1280GetPacketType(instance);
++    rssi_inst = (int16_t)SX1280GetRssiInst(instance);
++    (void)PlatformGpio_Read(Sx1281Bus_BusyGet(instance), &busy_gpio);
++    (void)PlatformGpio_Read(Sx1281Bus_Dio1Get(instance), &dio1_gpio);
++    uint8_t reads_good = Lora_BusReadSucceeded(instance, before);
++    uint32_t native_now_ms = PlatformTime_Ms();
++    primask = Lora_IrqLock();
++    s_chip_status.status_value = radio_status.Value;
++    s_chip_status.verified = (uint8_t)((reads_good != 0U) && (radio_status.Value != 0x00U) &&
++                                      (radio_status.Value != 0xFFU));
++    s_diag.packet_runtime = packet_runtime;
++    s_diag.rssi_inst = rssi_inst;
++    s_diag.rssi_inst_valid = reads_good;
++    s_cached_busy_gpio = busy_gpio;
++    s_cached_dio1_gpio = dio1_gpio;
++    s_diag_last_refresh_ms = native_now_ms;
++    Lora_IrqUnlock(primask);
++}
++
++static void Lora_TxReceiptRecord(uint8_t instance, LoraTxQueryResult result)
++{
++    uint32_t primask;
++    SILVERSTAR_ASSERT((result == LoraTxQueryResult_Complete) || (result == LoraTxQueryResult_TimedOut),
++        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
++    uint32_t native_now_ms = PlatformTime_Ms();
++    primask = Lora_IrqLock();
++    if (s_contexts[instance].active_tx_id != 0U)
++    {
++        s_contexts[instance].completed_tx_id = s_contexts[instance].active_tx_id;
++        s_contexts[instance].completed_tx_ms = native_now_ms;
++        s_contexts[instance].completed_tx_result = result;
++        s_contexts[instance].active_tx_id = 0U;
++    }
++    Lora_IrqUnlock(primask);
+ }
+ 
+ static void Lora_TxCompletionProcess(uint8_t instance)
+@@ -1548,57 +1552,58 @@
+                                                   LORA_DIAG_RESULT_NOT_INIT;
+ }
+ 
+-static LoraDiagResult Lora_ForceRxContinuousDirect(uint8_t instance)
+-{
+-    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+-        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+-    uint32_t primask;
+-
+-    if (s_inited == 0U)
+-    {
+-        return LORA_DIAG_RESULT_NOT_INIT;
+-    }
+-
+-    SILVERSTAR_ASSERT(s_pkt_params.PacketType == PACKET_TYPE_LORA,
+-        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+-
+-    if (Lora_RfFrontendSet(instance, 0U) == 0U)
+-    { Lora_RadioFault(instance, 0U); return LORA_DIAG_RESULT_TIMEOUT; }
+-    Sx1281BusStatus before;
+-    Sx1281Bus_StatusGet(instance, &before);
+-    SX1280SetStandby(instance, STDBY_RC);
+-    SX1280ClearIrqStatus(instance, IRQ_RADIO_ALL);
+-    s_diag_counted_raw_irq = 0U;
+-
+-    primask = Lora_IrqLock();
+-    s_tx_done_flag = 0U;
+-    s_rx_done_flag = 0U;
+-    s_tx_timeout_flag = 0U;
+-    s_rx_timeout_flag = 0U;
+-    s_rx_error_flag = 0U;
+-    s_tx_busy = 0U;
+-    s_radio_in_rx = 0U;
+-    s_contexts[instance].rx_packet_active = 0U;
+-    s_contexts[instance].rx_window_active = 1U;
+-    Lora_IrqUnlock(primask);
+-
+-    s_pkt_params.Params.LoRa.PayloadLength = LORA_MAX_PAYLOAD_LEN;
+-    SX1280SetPacketParams(instance, &s_pkt_params);
+-    Lora_DiagSetDioIrqParams(instance, LORA_RX_IRQ_MASK, LORA_RX_IRQ_MASK, IRQ_RADIO_NONE, IRQ_RADIO_NONE);
+-    if (Lora_RfFrontendSet(instance, 1U) == 0U)
+-    { Lora_RadioFault(instance, 0U); return LORA_DIAG_RESULT_TIMEOUT; }
+-    SX1280SetRx(instance, RX_TX_CONTINUOUS);
+-    Lora_DiagRecordSetRx(instance);
+-    if (Lora_BusReadSucceeded(instance, before) == 0U)
+-    { Lora_RadioFault(instance, 0U); return LORA_DIAG_RESULT_TIMEOUT; }
+-
+-    primask = Lora_IrqLock();
+-    s_radio_in_rx = 1U;
+-    s_rx_started_ms = PlatformTime_Ms();
+-    Lora_IrqUnlock(primask);
+-    Lora_SetRadioState(instance, LORA_RADIO_STATE_RX);
+-
+-    return LORA_DIAG_RESULT_OK;
++static LoraDiagResult Lora_ForceRxContinuousDirect(uint8_t instance)
++{
++    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
++        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
++    uint32_t primask;
++
++    if (s_inited == 0U)
++    {
++        return LORA_DIAG_RESULT_NOT_INIT;
++    }
++
++    SILVERSTAR_ASSERT(s_pkt_params.PacketType == PACKET_TYPE_LORA,
++        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
++
++    if (Lora_RfFrontendSet(instance, 0U) == 0U)
++    { Lora_RadioFault(instance, 0U); return LORA_DIAG_RESULT_TIMEOUT; }
++    Sx1281BusStatus before;
++    Sx1281Bus_StatusGet(instance, &before);
++    SX1280SetStandby(instance, STDBY_RC);
++    SX1280ClearIrqStatus(instance, IRQ_RADIO_ALL);
++    s_diag_counted_raw_irq = 0U;
++
++    primask = Lora_IrqLock();
++    s_tx_done_flag = 0U;
++    s_rx_done_flag = 0U;
++    s_tx_timeout_flag = 0U;
++    s_rx_timeout_flag = 0U;
++    s_rx_error_flag = 0U;
++    s_tx_busy = 0U;
++    s_radio_in_rx = 0U;
++    s_contexts[instance].rx_packet_active = 0U;
++    s_contexts[instance].rx_window_active = 1U;
++    Lora_IrqUnlock(primask);
++
++    s_pkt_params.Params.LoRa.PayloadLength = LORA_MAX_PAYLOAD_LEN;
++    SX1280SetPacketParams(instance, &s_pkt_params);
++    Lora_DiagSetDioIrqParams(instance, LORA_RX_IRQ_MASK, LORA_RX_IRQ_MASK, IRQ_RADIO_NONE, IRQ_RADIO_NONE);
++    if (Lora_RfFrontendSet(instance, 1U) == 0U)
++    { Lora_RadioFault(instance, 0U); return LORA_DIAG_RESULT_TIMEOUT; }
++    SX1280SetRx(instance, RX_TX_CONTINUOUS);
++    Lora_DiagRecordSetRx(instance);
++    if (Lora_BusReadSucceeded(instance, before) == 0U)
++    { Lora_RadioFault(instance, 0U); return LORA_DIAG_RESULT_TIMEOUT; }
++
++    uint32_t native_now_ms = PlatformTime_Ms();
++    primask = Lora_IrqLock();
++    s_radio_in_rx = 1U;
++    s_rx_started_ms = native_now_ms;
++    Lora_IrqUnlock(primask);
++    Lora_SetRadioState(instance, LORA_RADIO_STATE_RX);
++
++    return LORA_DIAG_RESULT_OK;
+ }
+ 
+ void Lora_ClearStats(uint8_t instance)
+@@ -1730,109 +1735,109 @@
+     return LORA_CONTROL_SUBMIT_OK;
+ }
+ 
+-LoraControlGetResult Lora_ControlResultGet(uint8_t instance, uint32_t transaction_id,
+-                                           LoraControlResult *result)
+-{
+-    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+-        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+-    uint32_t primask;
+-
+-    if ((transaction_id == 0U) || (result == 0))
+-    {
+-        return LORA_CONTROL_GET_BAD_PARAM;
+-    }
+-    SILVERSTAR_ASSERT_OBJECT(result, LoraControlResult,
+-        SILVERSTAR_ASSERT_MODULE_DEVICE);
+-    primask = Lora_IrqLock();
+-    Lora_ControlAssert(instance);
+-    if ((s_control_transaction.state == LoraControlStateIdle) ||
+-        (s_control_transaction.transaction_id != transaction_id))
+-    {
+-        Lora_IrqUnlock(primask);
+-        return LORA_CONTROL_GET_NOT_FOUND;
+-    }
+-    if ((s_control_transaction.state == LoraControlStateSubmitted) &&
+-        ((PlatformTime_Ms() - s_control_transaction.submitted_ms) >=
+-         s_control_transaction.timeout_ms))
+-    {
+-        s_control_transaction.result.transaction_id = transaction_id;
+-        s_control_transaction.result.result = LORA_DIAG_RESULT_TIMEOUT;
+-        s_control_transaction.result.raw_irq_before = 0U;
+-        s_control_transaction.state = LoraControlStateComplete;
+-    }
+-    if (s_control_transaction.state != LoraControlStateComplete)
+-    {
+-        Lora_IrqUnlock(primask);
+-        return LORA_CONTROL_GET_PENDING;
+-    }
+-    *result = s_control_transaction.result;
+-    s_control_transaction.state = LoraControlStateIdle;
+-    Lora_IrqUnlock(primask);
+-    return LORA_CONTROL_GET_COMPLETE;
+-}
+-
+-static void Lora_ControlProcess(uint8_t instance)
+-{
+-    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+-        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+-    LoraControlOperation operation;
+-    LoraControlResult result;
+-    uint32_t primask;
+-
+-    primask = Lora_IrqLock();
+-    SILVERSTAR_ASSERT((uint32_t)s_control_transaction.state <= LoraControlStateComplete,
+-        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+-    if (s_control_transaction.state != LoraControlStateSubmitted)
+-    {
+-        Lora_IrqUnlock(primask);
+-        return;
+-    }
+-    SILVERSTAR_ASSERT((s_control_transaction.operation == LORA_CONTROL_IRQ_CLEAR) ||
+-        (s_control_transaction.operation == LORA_CONTROL_FORCE_RX_CONTINUOUS),
+-        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+-    SILVERSTAR_ASSERT(s_control_transaction.transaction_id != 0U,
+-        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
+-    SILVERSTAR_ASSERT(s_control_transaction.timeout_ms != 0U,
+-        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
+-    SILVERSTAR_ASSERT(s_control_transaction.auto_release <= 1U,
+-        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+-    if ((PlatformTime_Ms() - s_control_transaction.submitted_ms) >=
+-        s_control_transaction.timeout_ms)
+-    {
+-        s_control_transaction.result.transaction_id =
+-            s_control_transaction.transaction_id;
+-        s_control_transaction.result.result = LORA_DIAG_RESULT_TIMEOUT;
+-        s_control_transaction.result.raw_irq_before = 0U;
+-        s_control_transaction.state =
+-            (s_control_transaction.auto_release != 0U) ?
+-                LoraControlStateIdle : LoraControlStateComplete;
+-        Lora_IrqUnlock(primask);
+-        return;
+-    }
+-    operation = s_control_transaction.operation;
+-    result.transaction_id = s_control_transaction.transaction_id;
+-    result.raw_irq_before = 0U;
+-    s_control_transaction.state = LoraControlStateActive;
+-    Lora_IrqUnlock(primask);
+-
+-    if (operation == LORA_CONTROL_IRQ_CLEAR)
+-    {
+-        result.raw_irq_before = SX1280GetIrqStatus(instance);
+-        SX1280ClearIrqStatus(instance, IRQ_RADIO_ALL);
+-        s_diag_counted_raw_irq = 0U;
+-        result.result = LORA_DIAG_RESULT_OK;
+-    }
+-    else
+-    {
+-        result.result = Lora_ForceRxContinuousDirect(instance);
+-    }
+-
+-    primask = Lora_IrqLock();
+-    s_control_transaction.result = result;
+-    s_control_transaction.state =
+-        (s_control_transaction.auto_release != 0U) ?
+-            LoraControlStateIdle : LoraControlStateComplete;
+-    Lora_IrqUnlock(primask);
++LoraControlGetResult Lora_ControlResultGet(uint8_t instance, uint32_t transaction_id,
++                                           LoraControlResult *result)
++{
++    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
++        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
++    uint32_t primask;
++
++    if ((transaction_id == 0U) || (result == 0))
++    {
++        return LORA_CONTROL_GET_BAD_PARAM;
++    }
++    SILVERSTAR_ASSERT_OBJECT(result, LoraControlResult,
++        SILVERSTAR_ASSERT_MODULE_DEVICE);
++    uint32_t native_now_ms = PlatformTime_Ms();
++    primask = Lora_IrqLock();
++    Lora_ControlAssert(instance);
++    if ((s_control_transaction.state == LoraControlStateIdle) ||
++        (s_control_transaction.transaction_id != transaction_id))
++    {
++        Lora_IrqUnlock(primask);
++        return LORA_CONTROL_GET_NOT_FOUND;
++    }
++    if ((s_control_transaction.state == LoraControlStateSubmitted) &&
++        ((native_now_ms - s_control_transaction.submitted_ms) >=
++         s_control_transaction.timeout_ms))
++    {
++        s_control_transaction.result.transaction_id = transaction_id;
++        s_control_transaction.result.result = LORA_DIAG_RESULT_TIMEOUT;
++        s_control_transaction.result.raw_irq_before = 0U;
++        s_control_transaction.state = LoraControlStateComplete;
++    }
++    if (s_control_transaction.state != LoraControlStateComplete)
++    {
++        Lora_IrqUnlock(primask);
++        return LORA_CONTROL_GET_PENDING;
++    }
++    *result = s_control_transaction.result;
++    s_control_transaction.state = LoraControlStateIdle;
++    Lora_IrqUnlock(primask);
++    return LORA_CONTROL_GET_COMPLETE;
++}
++
++static void Lora_ControlProcess(uint8_t instance)
++{
++    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
++        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
++    LoraControlOperation operation;
++    LoraControlResult result;
++    uint32_t primask;
++
++    uint32_t native_now_ms = PlatformTime_Ms();
++    primask = Lora_IrqLock();
++    SILVERSTAR_ASSERT((uint32_t)s_control_transaction.state <= LoraControlStateComplete,
++        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
++    if (s_control_transaction.state != LoraControlStateSubmitted)
++    {
++        Lora_IrqUnlock(primask);
++        return;
++    }
++    SILVERSTAR_ASSERT((s_control_transaction.operation == LORA_CONTROL_IRQ_CLEAR) ||
++        (s_control_transaction.operation == LORA_CONTROL_FORCE_RX_CONTINUOUS),
++        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
++    SILVERSTAR_ASSERT(s_control_transaction.transaction_id != 0U,
++        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
++    SILVERSTAR_ASSERT(s_control_transaction.timeout_ms != 0U,
++        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
++    SILVERSTAR_ASSERT(s_control_transaction.auto_release <= 1U,
++        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
++    result.transaction_id = s_control_transaction.transaction_id;
++    result.raw_irq_before = 0U;
++    if ((native_now_ms - s_control_transaction.submitted_ms) >=
++        s_control_transaction.timeout_ms)
++    {
++        result.result = LORA_DIAG_RESULT_TIMEOUT;
++        s_control_transaction.result = result;
++        s_control_transaction.state =
++            (s_control_transaction.auto_release != 0U) ?
++                LoraControlStateIdle : LoraControlStateComplete;
++        Lora_IrqUnlock(primask);
++        return;
++    }
++    operation = s_control_transaction.operation;
++    s_control_transaction.state = LoraControlStateActive;
++    Lora_IrqUnlock(primask);
++
++    if (operation == LORA_CONTROL_IRQ_CLEAR)
++    {
++        result.raw_irq_before = SX1280GetIrqStatus(instance);
++        SX1280ClearIrqStatus(instance, IRQ_RADIO_ALL);
++        s_diag_counted_raw_irq = 0U;
++        result.result = LORA_DIAG_RESULT_OK;
++    }
++    else
++    {
++        result.result = Lora_ForceRxContinuousDirect(instance);
++    }
++
++    primask = Lora_IrqLock();
++    s_control_transaction.result = result;
++    s_control_transaction.state =
++        (s_control_transaction.auto_release != 0U) ?
++            LoraControlStateIdle : LoraControlStateComplete;
++    Lora_IrqUnlock(primask);
+ }
+ 
+ static void Lora_OnTxDone(uint8_t instance)

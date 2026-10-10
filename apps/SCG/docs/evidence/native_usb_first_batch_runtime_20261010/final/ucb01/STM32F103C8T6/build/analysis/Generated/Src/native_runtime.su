@@ -1,0 +1,4 @@
+Generated/Src/native_runtime.c:25:28:NativeRuntime_Abort	16	static
+Generated/Src/native_runtime.c:17:9:NativeRuntime_ReadyGet	16	static
+Generated/Src/native_runtime.c:47:21:NativeRuntime_Init	24	static
+Generated/Src/native_runtime.c:77:21:NativeRuntime_Process	24	static

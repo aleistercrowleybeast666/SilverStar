@@ -1,0 +1,62 @@
+COMMAND ["gcc", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wvla", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Core\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Protocol\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Common\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Generated\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Platform\\Inc", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Core\\Src\\ground_bridge.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Protocol\\Src\\gsp_min_protocol.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Protocol\\Src\\protocol_crc16.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Common\\Src\\silverstar_assert.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Tests\\Host\\pc_session_uart.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Tests\\Host\\ground_bridge_bounds.c", "-o", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\bridge_bounds.exe"]
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\bridge_bounds.exe"]
+PASS host bridge_bounds
+COMMAND ["gcc", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wvla", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Core\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Protocol\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Common\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Generated\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Platform\\Inc", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Core\\Src\\ground_bridge.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Protocol\\Src\\gsp_min_protocol.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Protocol\\Src\\protocol_crc16.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Common\\Src\\silverstar_assert.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Tests\\Host\\ground_backpressure.c", "-o", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\backpressure.exe"]
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\backpressure.exe", "idle"]
+PASS idle forwarded=1 ACK=1 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\backpressure.exe", "burst"]
+PASS burst forwarded=5 ACK=5 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\backpressure.exe", "radio"]
+PASS radio forwarded=0 ACK=0 radio=4 status=2
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\backpressure.exe", "mixed"]
+PASS mixed forwarded=1000 ACK=1000 radio=800 status=201
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\backpressure.exe", "slow"]
+PASS slow forwarded=12 ACK=12 radio=0 status=2
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\backpressure.exe", "sessions"]
+PASS sessions forwarded=100 ACK=100 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\backpressure.exe", "queued-reset"]
+PASS queued-reset forwarded=5 ACK=1 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\backpressure.exe", "budget"]
+PASS budget forwarded=1 ACK=1 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\backpressure.exe", "error"]
+PASS error forwarded=0 ACK=0 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\backpressure.exe", "error-reset"]
+PASS error-reset forwarded=0 ACK=0 radio=0 status=1
+PASS host backpressure
+COMMAND ["gcc", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wvla", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Core\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Protocol\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Common\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Generated\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Platform\\Inc", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Generated\\Src\\pc_byte_stream.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Common\\Src\\silverstar_assert.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\native-host\\ready_transport_fixture.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Tests\\Host\\usb_cdc.c", "-o", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\usb_cdc.exe"]
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\usb_cdc.exe"]
+PASS host usb_cdc
+COMMAND ["gcc", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wvla", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Core\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Protocol\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Common\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Generated\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Platform\\Inc", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Generated\\Src\\pc_byte_stream.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Core\\Src\\ground_bridge.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Protocol\\Src\\gsp_min_protocol.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Protocol\\Src\\protocol_crc16.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Common\\Src\\silverstar_assert.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\native-host\\ready_transport_fixture.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Tests\\Host\\usb_session.c", "-o", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\usb_session.exe"]
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\usb_session.exe"]
+forwarded_cross_session_frames=0 expected=0 reset_pending=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\usb_session.exe", "control"]
+forwarded_cross_session_frames=0 expected=0 reset_pending=0
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\usb_session.exe", "read-reset"]
+forwarded_after_reset=0 expected=0 dev_state=0 reset_pending=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\usb_session.exe", "delivery-reset"]
+forwarded_after_reset=0 expected=0 dev_state=0 reset_pending=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\usb_session.exe", "normal"]
+PASS host usb_session
+COMMAND ["gcc", "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wvla", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Core\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Protocol\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Common\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Generated\\Inc", "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Platform\\Inc", "-DGROUND_TEST_USB", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Generated\\Src\\pc_byte_stream.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Core\\Src\\ground_bridge.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Protocol\\Src\\gsp_min_protocol.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Ground\\Protocol\\Src\\protocol_crc16.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Common\\Src\\silverstar_assert.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\native-host\\ready_transport_fixture.c", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\Tests\\Host\\ground_backpressure.c", "-o", "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\usb_backpressure.exe"]
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\usb_backpressure.exe", "idle"]
+PASS idle forwarded=1 ACK=1 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\usb_backpressure.exe", "burst"]
+PASS burst forwarded=5 ACK=5 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\usb_backpressure.exe", "radio"]
+PASS radio forwarded=0 ACK=0 radio=4 status=2
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\usb_backpressure.exe", "mixed"]
+PASS mixed forwarded=1000 ACK=1000 radio=800 status=201
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\usb_backpressure.exe", "slow"]
+PASS slow forwarded=12 ACK=12 radio=0 status=2
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\usb_backpressure.exe", "sessions"]
+PASS sessions forwarded=100 ACK=100 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\usb_backpressure.exe", "queued-reset"]
+PASS queued-reset forwarded=5 ACK=1 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\usb_backpressure.exe", "budget"]
+PASS budget forwarded=1 ACK=1 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\usb_backpressure.exe", "error"]
+PASS error forwarded=0 ACK=0 radio=0 status=1
+COMMAND ["C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30\\build\\ground-host\\usb_backpressure.exe", "error-reset"]
+PASS error-reset forwarded=0 ACK=0 radio=0 status=1
+PASS host usb_backpressure
+PASS 5 generated-source host executables; HAL/radio are mocks, no MCU recovery proof

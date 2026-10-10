@@ -1,0 +1,7 @@
+HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_ioreq.c:86:20:USBD_CtlSendData	8	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_ioreq.c:112:20:USBD_CtlContinueSendData	8	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_ioreq.c:129:20:USBD_CtlPrepareRx	8	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_ioreq.c:155:20:USBD_CtlContinueRx	8	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_ioreq.c:169:20:USBD_CtlSendStatus	8	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_ioreq.c:186:20:USBD_CtlReceiveStatus	8	static
+HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_ioreq.c:204:10:USBD_GetRxCount	8	static

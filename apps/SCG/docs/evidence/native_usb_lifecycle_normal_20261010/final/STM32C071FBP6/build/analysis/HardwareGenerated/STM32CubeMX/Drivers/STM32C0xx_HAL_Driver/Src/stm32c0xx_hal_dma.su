@@ -1,0 +1,14 @@
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma.c:980:13:DMA_SetConfig	20	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma.c:1023:13:DMA_CalcDMAMUXChannelBaseAndMask	8	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma.c:151:19:HAL_DMA_Init	24	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma.c:241:19:HAL_DMA_DeInit	24	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma.c:345:19:HAL_DMA_Start	32	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma.c:392:19:HAL_DMA_Start_IT	32	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma.c:466:19:HAL_DMA_Abort	20	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma.c:527:19:HAL_DMA_Abort_IT	24	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma.c:588:19:HAL_DMA_PollForTransfer	40	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma.c:720:6:HAL_DMA_IRQHandler	24	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma.c:814:19:HAL_DMA_RegisterCallback	12	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma.c:866:19:HAL_DMA_UnRegisterCallback	12	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma.c:942:22:HAL_DMA_GetState	0	static
+HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma.c:954:10:HAL_DMA_GetError	0	static

@@ -1,0 +1,3055 @@
+{
+  "created_utc": "2026-10-09T22:00:53.257325+00:00",
+  "code_commit": "348784a35ac164dec2a8b0f2b113d7d4fa55e87b",
+  "source_baseline": "9b9a20be2829dcc5135c648f6dc84b6e9af60316",
+  "tested_source": "nb03 full 28-test suite and both real builds used auditable dirty snapshots based on 9b. All 45 captured modules match raw working files and normalized code_commit blobs. No later report commit rebuild is claimed.",
+  "scope": "Backend API native import -> bound/persisted/reloaded model -> native renderer -> actual ARM/analyzer compile/receipt. Exact F103/F407 candidates; no formal admission, GUI, EP0 repair/review or hardware.",
+  "source_changes": [
+    "apps/SCG/src/silverstar_fccg/app/native_ground.py",
+    "apps/SCG/src/silverstar_fccg/app/service.py",
+    "apps/SCG/src/silverstar_fccg/build/native_compile.py",
+    "apps/SCG/tools/validation/native_classic_cdc_compile.py",
+    "apps/SCG/tests/test_native_ground_backend.py"
+  ],
+  "snapshot_checks": [
+    {
+      "part": "STM32F103C8T6",
+      "modules": 45,
+      "raw_working_and_normalized_git_match": true
+    },
+    {
+      "part": "STM32F407VET6",
+      "modules": 45,
+      "raw_working_and_normalized_git_match": true
+    }
+  ],
+  "families": {
+    "f103": {
+      "part": "STM32F103C8T6",
+      "output": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_5531ad58\\b",
+      "project": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\p_cffbefe8",
+      "snapshot": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\w_b2fc7971\\.fccg\\hardware_imports\\ddb85510395b43fcb4d4227f6b6330d96c599348c5139de3b19e5b5a9ceaf628\\NativeClassicCdc",
+      "compile_commands": 333,
+      "c_sources": 53,
+      "startup_asm_sources": 1,
+      "compiler_warnings": [],
+      "toolchain_version": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+      "generated_hashes_checked": 114,
+      "artifact_hashes_checked": 545,
+      "original_native_hashes_checked": 114,
+      "independent_sdk": "D:\\Tools\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h",
+      "independent_sdk_sha256": "d9c7c613d9fea74220892b4fbc3e80617493acad82a04bafadab2b4a7198399c",
+      "independent_irq_enumerators": 52,
+      "fpu_final_enumerator": null,
+      "runtime_model_sha256": "77fb3834f95aea1209efc09eeaa5009f4a199bfa0d609c35fa46771fd4ea2c4b",
+      "backend_model_sha256": "77fb3834f95aea1209efc09eeaa5009f4a199bfa0d609c35fa46771fd4ea2c4b",
+      "elf_sha256": {
+        "build": "daf2a00ba8d22023c11a1c39b3ed2194bd64f3f41c7f907c63f76b4505538a4a",
+        "build/analysis": "daf2a00ba8d22023c11a1c39b3ed2194bd64f3f41c7f907c63f76b4505538a4a"
+      },
+      "elf_matches_14e_baseline": true,
+      "facts": {
+        "part": "STM32F103C8T6",
+        "core": "cortex-m3",
+        "device_macro": "STM32F103xB",
+        "startup": "startup_stm32f103xb.s",
+        "regions": [
+          {
+            "name": "FLASH",
+            "origin": 134217728,
+            "length": 65536
+          },
+          {
+            "name": "RAM",
+            "origin": 536870912,
+            "length": 20480
+          }
+        ],
+        "evidence_source": "D:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_mcu_stm32f103c8t6\\plugin.json",
+        "evidence_sha256": "aa496ae4ea80316dab19e06b15009b139ba115a7d76fd6a97ef2aa59aea3f7c0",
+        "fpu": "",
+        "irq_numbers": [
+          [
+            "NonMaskableInt_IRQn",
+            -14
+          ],
+          [
+            "HardFault_IRQn",
+            -13
+          ],
+          [
+            "MemoryManagement_IRQn",
+            -12
+          ],
+          [
+            "BusFault_IRQn",
+            -11
+          ],
+          [
+            "UsageFault_IRQn",
+            -10
+          ],
+          [
+            "SVCall_IRQn",
+            -5
+          ],
+          [
+            "DebugMonitor_IRQn",
+            -4
+          ],
+          [
+            "PendSV_IRQn",
+            -2
+          ],
+          [
+            "SysTick_IRQn",
+            -1
+          ],
+          [
+            "WWDG_IRQn",
+            0
+          ],
+          [
+            "PVD_IRQn",
+            1
+          ],
+          [
+            "TAMPER_IRQn",
+            2
+          ],
+          [
+            "RTC_IRQn",
+            3
+          ],
+          [
+            "FLASH_IRQn",
+            4
+          ],
+          [
+            "RCC_IRQn",
+            5
+          ],
+          [
+            "EXTI0_IRQn",
+            6
+          ],
+          [
+            "EXTI1_IRQn",
+            7
+          ],
+          [
+            "EXTI2_IRQn",
+            8
+          ],
+          [
+            "EXTI3_IRQn",
+            9
+          ],
+          [
+            "EXTI4_IRQn",
+            10
+          ],
+          [
+            "DMA1_Channel1_IRQn",
+            11
+          ],
+          [
+            "DMA1_Channel2_IRQn",
+            12
+          ],
+          [
+            "DMA1_Channel3_IRQn",
+            13
+          ],
+          [
+            "DMA1_Channel4_IRQn",
+            14
+          ],
+          [
+            "DMA1_Channel5_IRQn",
+            15
+          ],
+          [
+            "DMA1_Channel6_IRQn",
+            16
+          ],
+          [
+            "DMA1_Channel7_IRQn",
+            17
+          ],
+          [
+            "ADC1_2_IRQn",
+            18
+          ],
+          [
+            "USB_HP_CAN1_TX_IRQn",
+            19
+          ],
+          [
+            "USB_LP_CAN1_RX0_IRQn",
+            20
+          ],
+          [
+            "CAN1_RX1_IRQn",
+            21
+          ],
+          [
+            "CAN1_SCE_IRQn",
+            22
+          ],
+          [
+            "EXTI9_5_IRQn",
+            23
+          ],
+          [
+            "TIM1_BRK_IRQn",
+            24
+          ],
+          [
+            "TIM1_UP_IRQn",
+            25
+          ],
+          [
+            "TIM1_TRG_COM_IRQn",
+            26
+          ],
+          [
+            "TIM1_CC_IRQn",
+            27
+          ],
+          [
+            "TIM2_IRQn",
+            28
+          ],
+          [
+            "TIM3_IRQn",
+            29
+          ],
+          [
+            "TIM4_IRQn",
+            30
+          ],
+          [
+            "I2C1_EV_IRQn",
+            31
+          ],
+          [
+            "I2C1_ER_IRQn",
+            32
+          ],
+          [
+            "I2C2_EV_IRQn",
+            33
+          ],
+          [
+            "I2C2_ER_IRQn",
+            34
+          ],
+          [
+            "SPI1_IRQn",
+            35
+          ],
+          [
+            "SPI2_IRQn",
+            36
+          ],
+          [
+            "USART1_IRQn",
+            37
+          ],
+          [
+            "USART2_IRQn",
+            38
+          ],
+          [
+            "USART3_IRQn",
+            39
+          ],
+          [
+            "EXTI15_10_IRQn",
+            40
+          ],
+          [
+            "RTC_Alarm_IRQn",
+            41
+          ],
+          [
+            "USBWakeUp_IRQn",
+            42
+          ]
+        ],
+        "irq_header_sha256": "d9c7c613d9fea74220892b4fbc3e80617493acad82a04bafadab2b4a7198399c",
+        "irq_evidence_source": "D:\\Tools\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h"
+      },
+      "formal_generation": "BLOCKED"
+    },
+    "f407": {
+      "part": "STM32F407VET6",
+      "output": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_e84860ff\\b",
+      "project": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\p_8fd52b8c",
+      "snapshot": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\w_5f324c64\\.fccg\\hardware_imports\\027cb258b8b32ebc7ebb2aaac00b7ca0f4bf7c5ff02820c5acbcfa0858255f8e\\NativeClassicCdc",
+      "compile_commands": 387,
+      "c_sources": 62,
+      "startup_asm_sources": 1,
+      "compiler_warnings": [],
+      "toolchain_version": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+      "generated_hashes_checked": 124,
+      "artifact_hashes_checked": 635,
+      "original_native_hashes_checked": 141,
+      "independent_sdk": "D:\\Tools\\Embedded\\STM32\\Repository\\STM32Cube_FW_F4_V1.28.3\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f407xx.h",
+      "independent_sdk_sha256": "bd21220ea8b6858c2d727cca1d2a5f1077f8a81717acdac583a1e9165d858160",
+      "independent_irq_enumerators": 89,
+      "fpu_final_enumerator": 81,
+      "runtime_model_sha256": "1441f4d92d407cf254b467775c59350e84c5993707cd68e87cd5785d1a397cbe",
+      "backend_model_sha256": "1441f4d92d407cf254b467775c59350e84c5993707cd68e87cd5785d1a397cbe",
+      "elf_sha256": {
+        "build": "5a9414e97a5e7f3f02d2e001266145304b711c600c16639e05e7e7a79aa44bf8",
+        "build/analysis": "5a9414e97a5e7f3f02d2e001266145304b711c600c16639e05e7e7a79aa44bf8"
+      },
+      "elf_matches_14e_baseline": true,
+      "facts": {
+        "part": "STM32F407VET6",
+        "core": "cortex-m4",
+        "device_macro": "STM32F407xx",
+        "startup": "startup_stm32f407xx.s",
+        "regions": [
+          {
+            "name": "FLASH",
+            "origin": 134217728,
+            "length": 524288
+          },
+          {
+            "name": "RAM",
+            "origin": 536870912,
+            "length": 131072
+          },
+          {
+            "name": "CCMRAM",
+            "origin": 268435456,
+            "length": 65536
+          }
+        ],
+        "evidence_source": "D:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_mcu_stm32f407vet6\\plugin.json",
+        "evidence_sha256": "34e238ad7014e3a6d81b8b780cd07642ec64179816995c62b6f163451eb08274",
+        "fpu": "fpv4-sp-d16",
+        "irq_numbers": [
+          [
+            "NonMaskableInt_IRQn",
+            -14
+          ],
+          [
+            "MemoryManagement_IRQn",
+            -12
+          ],
+          [
+            "BusFault_IRQn",
+            -11
+          ],
+          [
+            "UsageFault_IRQn",
+            -10
+          ],
+          [
+            "SVCall_IRQn",
+            -5
+          ],
+          [
+            "DebugMonitor_IRQn",
+            -4
+          ],
+          [
+            "PendSV_IRQn",
+            -2
+          ],
+          [
+            "SysTick_IRQn",
+            -1
+          ],
+          [
+            "WWDG_IRQn",
+            0
+          ],
+          [
+            "PVD_IRQn",
+            1
+          ],
+          [
+            "TAMP_STAMP_IRQn",
+            2
+          ],
+          [
+            "RTC_WKUP_IRQn",
+            3
+          ],
+          [
+            "FLASH_IRQn",
+            4
+          ],
+          [
+            "RCC_IRQn",
+            5
+          ],
+          [
+            "EXTI0_IRQn",
+            6
+          ],
+          [
+            "EXTI1_IRQn",
+            7
+          ],
+          [
+            "EXTI2_IRQn",
+            8
+          ],
+          [
+            "EXTI3_IRQn",
+            9
+          ],
+          [
+            "EXTI4_IRQn",
+            10
+          ],
+          [
+            "DMA1_Stream0_IRQn",
+            11
+          ],
+          [
+            "DMA1_Stream1_IRQn",
+            12
+          ],
+          [
+            "DMA1_Stream2_IRQn",
+            13
+          ],
+          [
+            "DMA1_Stream3_IRQn",
+            14
+          ],
+          [
+            "DMA1_Stream4_IRQn",
+            15
+          ],
+          [
+            "DMA1_Stream5_IRQn",
+            16
+          ],
+          [
+            "DMA1_Stream6_IRQn",
+            17
+          ],
+          [
+            "ADC_IRQn",
+            18
+          ],
+          [
+            "CAN1_TX_IRQn",
+            19
+          ],
+          [
+            "CAN1_RX0_IRQn",
+            20
+          ],
+          [
+            "CAN1_RX1_IRQn",
+            21
+          ],
+          [
+            "CAN1_SCE_IRQn",
+            22
+          ],
+          [
+            "EXTI9_5_IRQn",
+            23
+          ],
+          [
+            "TIM1_BRK_TIM9_IRQn",
+            24
+          ],
+          [
+            "TIM1_UP_TIM10_IRQn",
+            25
+          ],
+          [
+            "TIM1_TRG_COM_TIM11_IRQn",
+            26
+          ],
+          [
+            "TIM1_CC_IRQn",
+            27
+          ],
+          [
+            "TIM2_IRQn",
+            28
+          ],
+          [
+            "TIM3_IRQn",
+            29
+          ],
+          [
+            "TIM4_IRQn",
+            30
+          ],
+          [
+            "I2C1_EV_IRQn",
+            31
+          ],
+          [
+            "I2C1_ER_IRQn",
+            32
+          ],
+          [
+            "I2C2_EV_IRQn",
+            33
+          ],
+          [
+            "I2C2_ER_IRQn",
+            34
+          ],
+          [
+            "SPI1_IRQn",
+            35
+          ],
+          [
+            "SPI2_IRQn",
+            36
+          ],
+          [
+            "USART1_IRQn",
+            37
+          ],
+          [
+            "USART2_IRQn",
+            38
+          ],
+          [
+            "USART3_IRQn",
+            39
+          ],
+          [
+            "EXTI15_10_IRQn",
+            40
+          ],
+          [
+            "RTC_Alarm_IRQn",
+            41
+          ],
+          [
+            "OTG_FS_WKUP_IRQn",
+            42
+          ],
+          [
+            "TIM8_BRK_TIM12_IRQn",
+            43
+          ],
+          [
+            "TIM8_UP_TIM13_IRQn",
+            44
+          ],
+          [
+            "TIM8_TRG_COM_TIM14_IRQn",
+            45
+          ],
+          [
+            "TIM8_CC_IRQn",
+            46
+          ],
+          [
+            "DMA1_Stream7_IRQn",
+            47
+          ],
+          [
+            "FSMC_IRQn",
+            48
+          ],
+          [
+            "SDIO_IRQn",
+            49
+          ],
+          [
+            "TIM5_IRQn",
+            50
+          ],
+          [
+            "SPI3_IRQn",
+            51
+          ],
+          [
+            "UART4_IRQn",
+            52
+          ],
+          [
+            "UART5_IRQn",
+            53
+          ],
+          [
+            "TIM6_DAC_IRQn",
+            54
+          ],
+          [
+            "TIM7_IRQn",
+            55
+          ],
+          [
+            "DMA2_Stream0_IRQn",
+            56
+          ],
+          [
+            "DMA2_Stream1_IRQn",
+            57
+          ],
+          [
+            "DMA2_Stream2_IRQn",
+            58
+          ],
+          [
+            "DMA2_Stream3_IRQn",
+            59
+          ],
+          [
+            "DMA2_Stream4_IRQn",
+            60
+          ],
+          [
+            "ETH_IRQn",
+            61
+          ],
+          [
+            "ETH_WKUP_IRQn",
+            62
+          ],
+          [
+            "CAN2_TX_IRQn",
+            63
+          ],
+          [
+            "CAN2_RX0_IRQn",
+            64
+          ],
+          [
+            "CAN2_RX1_IRQn",
+            65
+          ],
+          [
+            "CAN2_SCE_IRQn",
+            66
+          ],
+          [
+            "OTG_FS_IRQn",
+            67
+          ],
+          [
+            "DMA2_Stream5_IRQn",
+            68
+          ],
+          [
+            "DMA2_Stream6_IRQn",
+            69
+          ],
+          [
+            "DMA2_Stream7_IRQn",
+            70
+          ],
+          [
+            "USART6_IRQn",
+            71
+          ],
+          [
+            "I2C3_EV_IRQn",
+            72
+          ],
+          [
+            "I2C3_ER_IRQn",
+            73
+          ],
+          [
+            "OTG_HS_EP1_OUT_IRQn",
+            74
+          ],
+          [
+            "OTG_HS_EP1_IN_IRQn",
+            75
+          ],
+          [
+            "OTG_HS_WKUP_IRQn",
+            76
+          ],
+          [
+            "OTG_HS_IRQn",
+            77
+          ],
+          [
+            "DCMI_IRQn",
+            78
+          ],
+          [
+            "RNG_IRQn",
+            80
+          ],
+          [
+            "FPU_IRQn",
+            81
+          ]
+        ],
+        "irq_header_sha256": "bd21220ea8b6858c2d727cca1d2a5f1077f8a81717acdac583a1e9165d858160",
+        "irq_evidence_source": "D:\\Tools\\Embedded\\STM32\\Repository\\STM32Cube_FW_F4_V1.28.3\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f407xx.h"
+      },
+      "formal_generation": "BLOCKED"
+    }
+  },
+  "gates": [
+    {
+      "family": "f103",
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_5531ad58\\b",
+      "command": [
+        "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+        "Tools/check_native_ground.py"
+      ],
+      "started_utc": "2026-10-09T21:50:05.282645+00:00",
+      "emitted_makefile_sha256": "f197a7cab7fce52fe363d862d398a97f715d262e40df468b80c5e2b4acebcbca",
+      "exit": 0,
+      "finished_utc": "2026-10-09T21:50:05.786426+00:00",
+      "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\nb03-f103-architecture.log",
+      "log_sha256": "6485185fa97ba47a0d74957b601d4b6f3ee9985456c658ca6a7d06f8bac09f97"
+    },
+    {
+      "family": "f103",
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_5531ad58\\b",
+      "command": [
+        "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+        "Tools/check_native_ground.py",
+        "host",
+        "--host-cc",
+        "gcc"
+      ],
+      "started_utc": "2026-10-09T21:50:05.789472+00:00",
+      "emitted_makefile_sha256": "f197a7cab7fce52fe363d862d398a97f715d262e40df468b80c5e2b4acebcbca",
+      "exit": 0,
+      "finished_utc": "2026-10-09T21:50:13.248270+00:00",
+      "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\nb03-f103-host.log",
+      "log_sha256": "0bffd12c7c1e50c50d4840a6f57b5f8777f2026198b4bedffd41c2ee3c52f339"
+    },
+    {
+      "family": "f103",
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_5531ad58\\b",
+      "command": [
+        "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+        "Tools/check_native_ground.py",
+        "artifact",
+        "--prefix",
+        "arm-none-eabi-"
+      ],
+      "started_utc": "2026-10-09T21:50:13.259449+00:00",
+      "emitted_makefile_sha256": "f197a7cab7fce52fe363d862d398a97f715d262e40df468b80c5e2b4acebcbca",
+      "exit": 0,
+      "finished_utc": "2026-10-09T21:50:17.759044+00:00",
+      "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\nb03-f103-artifact.log",
+      "log_sha256": "db7f60cd461f79c221840f4072dee101e31ea50101cc94dd5879d121484c8a5f"
+    },
+    {
+      "family": "f103",
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_5531ad58\\b",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "Tools/check_power_of_ten.ps1",
+        "-TargetKind",
+        "Ground"
+      ],
+      "started_utc": "2026-10-09T21:50:17.768369+00:00",
+      "emitted_makefile_sha256": "f197a7cab7fce52fe363d862d398a97f715d262e40df468b80c5e2b4acebcbca",
+      "exit": 0,
+      "finished_utc": "2026-10-09T21:50:19.747087+00:00",
+      "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\nb03-f103-power10.log",
+      "log_sha256": "6010c5a067e109af4f1c2ae59dfd6d80233ef2ad14cdc31796532526e8f3f091"
+    },
+    {
+      "family": "f407",
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_e84860ff\\b",
+      "command": [
+        "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+        "Tools/check_native_ground.py"
+      ],
+      "started_utc": "2026-10-09T21:50:19.767125+00:00",
+      "emitted_makefile_sha256": "fdd935a69bf2d48b7680219c2d0aa5f8ba0e37ad8f7d86d8466db257cd5609b9",
+      "exit": 0,
+      "finished_utc": "2026-10-09T21:50:20.398964+00:00",
+      "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\nb03-f407-architecture.log",
+      "log_sha256": "6485185fa97ba47a0d74957b601d4b6f3ee9985456c658ca6a7d06f8bac09f97"
+    },
+    {
+      "family": "f407",
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_e84860ff\\b",
+      "command": [
+        "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+        "Tools/check_native_ground.py",
+        "host",
+        "--host-cc",
+        "gcc"
+      ],
+      "started_utc": "2026-10-09T21:50:20.401247+00:00",
+      "emitted_makefile_sha256": "fdd935a69bf2d48b7680219c2d0aa5f8ba0e37ad8f7d86d8466db257cd5609b9",
+      "exit": 0,
+      "finished_utc": "2026-10-09T21:50:27.860832+00:00",
+      "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\nb03-f407-host.log",
+      "log_sha256": "a5557a5981c7664b98a2a79ca885054d5ffa51fac0e293431931618736a327b7"
+    },
+    {
+      "family": "f407",
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_e84860ff\\b",
+      "command": [
+        "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+        "Tools/check_native_ground.py",
+        "artifact",
+        "--prefix",
+        "arm-none-eabi-"
+      ],
+      "started_utc": "2026-10-09T21:50:27.873248+00:00",
+      "emitted_makefile_sha256": "fdd935a69bf2d48b7680219c2d0aa5f8ba0e37ad8f7d86d8466db257cd5609b9",
+      "exit": 0,
+      "finished_utc": "2026-10-09T21:50:33.062401+00:00",
+      "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\nb03-f407-artifact.log",
+      "log_sha256": "ebf54d370896659450413220850adfe7b5e87a68635602f378c87b7bbc3b8e4b"
+    },
+    {
+      "family": "f407",
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\nb03\\o_e84860ff\\b",
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "Tools/check_power_of_ten.ps1",
+        "-TargetKind",
+        "Ground"
+      ],
+      "started_utc": "2026-10-09T21:50:33.072845+00:00",
+      "emitted_makefile_sha256": "fdd935a69bf2d48b7680219c2d0aa5f8ba0e37ad8f7d86d8466db257cd5609b9",
+      "exit": 0,
+      "finished_utc": "2026-10-09T21:50:34.957422+00:00",
+      "log": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\nb03-f407-power10.log",
+      "log_sha256": "cb4c5ebb889ec26cc5f8f0c1503a843230eb300e55b08cc14b0e90d17df7317f"
+    }
+  ],
+  "tests": {
+    "nb03": {
+      "passed": 28,
+      "skipped": 0,
+      "elapsed_seconds": 233.59,
+      "warning": "pytest cache_dir config warning; compiler warnings zero"
+    },
+    "nbr01": {
+      "passed": 11,
+      "scope": "Separate preserved static import/model and ordinary build tooling regressions"
+    },
+    "nb02": {
+      "passed": 24,
+      "scope": "Intermediate normal backend suite before final guards"
+    },
+    "nb01": {
+      "status": "FAILED_SETUP",
+      "reason": "Restricted Windows pytest mode0700 temporary ACL; initial log codec error; no functional pass"
+    }
+  },
+  "limits": "Formal generation BLOCKED. Complete EP0/async lifecycle, manual critical-contract acceptance, call graph/indirect calls/library/recursion, MSP/ISR stack, timing/WCET/hardware NOT PROVEN. b66 platform-stopped review not retried or integrated. Unknown profiles rejected.",
+  "prior_review": {
+    "path": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\runtime-9f-9b-review\\review.md",
+    "sha256": "41c7ccf808429c19056fe0da475ef99043be54ae9f16b23c45ffc3e65030f484",
+    "scope": "Parent independent ordinary 9f/9b review passed; not review of new backend code or blocked b66",
+    "manifest_items": 1338,
+    "git_blobs_including_manifest_itself": 1339
+  },
+  "prior_manifest_sha256": "5340f403de1a4bffb9db349ede5782b74bdf6d13d123ab2dc413a93075811f87",
+  "report_sha256": "9ad615e53526aad3cf9ce2a72bc4ecfdfac701fbbfdefc3b21c3f0d3c1c72bb1",
+  "python_version": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+  "archive_policy": "Actual generated/derived first-party owners, receipts/logs/snapshots/config/ELF/map/stack/Host/artifact evidence archived. Full original vendor source and objects remain in fresh C output/cache; original inputs and all listed hashes verified. No vendor source duplication in this evidence.",
+  "files": {
+    ".gitattributes": {
+      "bytes": 9,
+      "sha256": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992"
+    },
+    "attempts/nb01-command.json": {
+      "bytes": 31479,
+      "sha256": "237421a90c4142c33100f662854bd6434bead5d32c268abe6add747991961b7d"
+    },
+    "attempts/nb01.log": {
+      "bytes": 4937,
+      "sha256": "68b61ae0fb86efac629d06435473e271381905e8295debc3f0fc09674ab019fe"
+    },
+    "attempts/nb02-command.json": {
+      "bytes": 31533,
+      "sha256": "452fcec44e2cb6295569c843e79ea89f0ad26850d52318c705408a765c192406"
+    },
+    "attempts/nb02.log": {
+      "bytes": 636,
+      "sha256": "e7165143aea9b18e5952be7f4516a91b9361680f01cd10d55c76bbb30cd2c681"
+    },
+    "attempts/nb03-build-index.jsonl": {
+      "bytes": 902,
+      "sha256": "510816216d897c270ef2250f72627e9d92655e5e7894df1d43ce935a355dbe2a"
+    },
+    "attempts/nb03-command.json": {
+      "bytes": 33387,
+      "sha256": "77498aae7e937784b850fcad3227215b431d9f57ded02ffab57b1d062d72832d"
+    },
+    "attempts/nb03-f103-architecture.log": {
+      "bytes": 196,
+      "sha256": "6485185fa97ba47a0d74957b601d4b6f3ee9985456c658ca6a7d06f8bac09f97"
+    },
+    "attempts/nb03-f103-artifact.log": {
+      "bytes": 21505,
+      "sha256": "db7f60cd461f79c221840f4072dee101e31ea50101cc94dd5879d121484c8a5f"
+    },
+    "attempts/nb03-f103-host.log": {
+      "bytes": 11076,
+      "sha256": "0bffd12c7c1e50c50d4840a6f57b5f8777f2026198b4bedffd41c2ee3c52f339"
+    },
+    "attempts/nb03-f103-power10.log": {
+      "bytes": 48098,
+      "sha256": "6010c5a067e109af4f1c2ae59dfd6d80233ef2ad14cdc31796532526e8f3f091"
+    },
+    "attempts/nb03-f407-architecture.log": {
+      "bytes": 196,
+      "sha256": "6485185fa97ba47a0d74957b601d4b6f3ee9985456c658ca6a7d06f8bac09f97"
+    },
+    "attempts/nb03-f407-artifact.log": {
+      "bytes": 25406,
+      "sha256": "ebf54d370896659450413220850adfe7b5e87a68635602f378c87b7bbc3b8e4b"
+    },
+    "attempts/nb03-f407-host.log": {
+      "bytes": 11076,
+      "sha256": "a5557a5981c7664b98a2a79ca885054d5ffa51fac0e293431931618736a327b7"
+    },
+    "attempts/nb03-f407-power10.log": {
+      "bytes": 48684,
+      "sha256": "cb4c5ebb889ec26cc5f8f0c1503a843230eb300e55b08cc14b0e90d17df7317f"
+    },
+    "attempts/nb03-gates.json": {
+      "bytes": 5591,
+      "sha256": "efcd0e2646e2df7770c6232536c70140af84297555dd644c675c2d7e61247542"
+    },
+    "attempts/nb03.log": {
+      "bytes": 622,
+      "sha256": "f24af6cce52af1668c4e70f57d23e36abadc8bdb931288f1941e1d6eda856cd7"
+    },
+    "attempts/nbr01-command.json": {
+      "bytes": 755,
+      "sha256": "4b3b278b0e82ac6d467ac78a1fb7d61f806559c732bf6bbc4bd845c6d0299031"
+    },
+    "attempts/nbr01.log": {
+      "bytes": 611,
+      "sha256": "049394d92bd9bf1995284dd7678a1dc3a51b817d65b10a27d95649748e5d71a5"
+    },
+    "checks/backend-build-verification.json": {
+      "bytes": 15756,
+      "sha256": "714e0836b610cd32df7c4bfbc2585a69bc404d0879692b606d00760fedf9a8c5"
+    },
+    "checks/backend-code-checkpoint.json": {
+      "bytes": 914,
+      "sha256": "eafacf7bde167a4a8656d1721fe57d80080346dc7aacdfb9653d62467ca19ec1"
+    },
+    "checks/formal-build-guard-pre-post.json": {
+      "bytes": 998,
+      "sha256": "fae957a4e857c814f33cbfd41d6a251b195bb36e3f028b4a70fd143d74fc8f1d"
+    },
+    "facts/f103.json": {
+      "bytes": 3385,
+      "sha256": "7c4ec3cb53e16dc856fdfcc6f87f0be8889df2403e870d719b65b0f4329f3126"
+    },
+    "facts/f407.json": {
+      "bytes": 5321,
+      "sha256": "93d0e20efe48f7ca1c4b686877574b6b2844f787c7b0d64bd076c3c25ab6a6ba"
+    },
+    "final/f103/backend-owner.json": {
+      "bytes": 45,
+      "sha256": "347d8969600ffbc4185a8d50966824433dc3874b99759ee2f5db35b902a1acd9"
+    },
+    "final/f103/backend-receipt.json": {
+      "bytes": 1326,
+      "sha256": "371b777e3d9298ab98ae2d862dbeade1ea5b07a5fecc8f7a8fdf6c200da139fe"
+    },
+    "final/f103/build/analysis/Common/Src/silverstar_assert.su": {
+      "bytes": 454,
+      "sha256": "1a070b91fd15db62581b016292be2c2de5f8dddceea1c9d48c6b9aa7aa1f387a"
+    },
+    "final/f103/build/analysis/Devices/Telemetry/SX1281/Src/sx1281_bus.su": {
+      "bytes": 968,
+      "sha256": "1dd8b1a57e7dda7ee0eee45bb88b04a55b4eaf06a3fb8de79ccbb1ea1d2f5fe8"
+    },
+    "final/f103/build/analysis/Devices/Telemetry/SX1281/Src/sx1281_device.su": {
+      "bytes": 3296,
+      "sha256": "6b55a9b1d8b885bb271ae50262e8e55fe6908240c115a81ec75932617bc1c43d"
+    },
+    "final/f103/build/analysis/Generated/Src/native_abi_probe.su": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final/f103/build/analysis/Generated/Src/native_clock.su": {
+      "bytes": 589,
+      "sha256": "c784e7cce6235cd0683e1c01275df6b91e2a93b659cc289bf5c8b2dd1da45de7"
+    },
+    "final/f103/build/analysis/Generated/Src/native_clock_port.su": {
+      "bytes": 157,
+      "sha256": "a1faac13e6ccd54eef8aeefecac8a989dae8dfe1dc71f643ca6efcf034ebc312"
+    },
+    "final/f103/build/analysis/Generated/Src/native_critical.su": {
+      "bytes": 140,
+      "sha256": "7f5e9a489a940110460d61528e617ea8998d8aa97251d6196dad16a25dd8ac47"
+    },
+    "final/f103/build/analysis/Generated/Src/native_no_heap.su": {
+      "bytes": 51,
+      "sha256": "26237653473b56b8e00f6790a148c9524bfdeed98f8ef817d447fed4e120c390"
+    },
+    "final/f103/build/analysis/Generated/Src/native_platform.su": {
+      "bytes": 776,
+      "sha256": "7f2755247c7ba841471afbffaeb60de2d9ed826a4e23bf8f869c34df92c17712"
+    },
+    "final/f103/build/analysis/Generated/Src/native_runtime.su": {
+      "bytes": 275,
+      "sha256": "0fa0a289b7329e82c64bb1e4f1168d26352a689d9c9280f4fdecfe880305cda5"
+    },
+    "final/f103/build/analysis/Generated/Src/native_usb_state.su": {
+      "bytes": 63,
+      "sha256": "834b9f5d6ecaf4ce02fd733343c450482d2bf9452f886ba12e20ae5aaef97473"
+    },
+    "final/f103/build/analysis/Generated/Src/pc_byte_stream.su": {
+      "bytes": 938,
+      "sha256": "3ece1ab34d0798963d7f378df9d0f6dff81b07096cc927bec132642e98765dd5"
+    },
+    "final/f103/build/analysis/Generated/Src/project_resources.su": {
+      "bytes": 76,
+      "sha256": "ca126e1f149889a723f5d9466c55f8181d879fea874e15d19522fbfde736a433"
+    },
+    "final/f103/build/analysis/Ground/Core/Src/ground_bridge.su": {
+      "bytes": 572,
+      "sha256": "1e291d5c4a511fdf1b5dc450cbea13790efaa05501d75198929069fb88bf7c19"
+    },
+    "final/f103/build/analysis/Ground/Protocol/Src/gsp_min_protocol.su": {
+      "bytes": 638,
+      "sha256": "abf15d62d4fb2edc3a11b03771bfb591b5eb2e8ba964cdb4180a80c6f257eefd"
+    },
+    "final/f103/build/analysis/Ground/Protocol/Src/protocol_crc16.su": {
+      "bytes": 78,
+      "sha256": "2edee582c9b121606149267740092af6a5e40e123bc285f3745fac04ac0f19d1"
+    },
+    "final/f103/build/analysis/Ground/Radio/Src/ground_radio_activity.su": {
+      "bytes": 257,
+      "sha256": "46f9fb7286d2813a3b4e53d05a6131d18ba92eb7f45c26d25856d55489eac279"
+    },
+    "final/f103/build/analysis/Ground/Radio/Src/ground_radio_sx1281.su": {
+      "bytes": 552,
+      "sha256": "b3f00bcc7e2d03f2e261b907ca109e275106429d20ea76a4dd6b661f7956bdc8"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Core/Src/dma.su": {
+      "bytes": 78,
+      "sha256": "caa271e0776135289b906c12a1fd9bfa8d65cd29aeb4978d8186096203d2c839"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.su": {
+      "bytes": 80,
+      "sha256": "9c827f3a25744e256b35f6325ab902eb71ea4f79e6bd092a3778e1ce1f185687"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Core/Src/spi.su": {
+      "bytes": 243,
+      "sha256": "8a67c0d9e3acde01bddff55d1cd6b73ebd508e31c67291207fd5488311f5fa1c"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_hal_msp.su": {
+      "bytes": 91,
+      "sha256": "a1a34d8f850782f63d11a0d6e12e587d967419e808770e88e2edd8d5e23fd86e"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_it.su": {
+      "bytes": 1304,
+      "sha256": "0f37b2b7e4e3ee9d26ec3d07b53f13ea6084639d5152bc69ec21dada97f6301e"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.su": {
+      "bytes": 1416,
+      "sha256": "912977b7554468a411d6898f5d375126c70a2c19d895a48f3201491dc7ab796a"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f1xx.su": {
+      "bytes": 191,
+      "sha256": "9d5e586806977eaaed59a1a8fb4c1368c86023e8f23893f4de3e1570a6ef9e5e"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Core/Src/usart.su": {
+      "bytes": 259,
+      "sha256": "7953a1ea4b714474fd8b58807e1ed9addde45b2b7e83a0741582b290d627b08e"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.su": {
+      "bytes": 2962,
+      "sha256": "133d1e20c589b71d1e4e8b74a3b6aacd813605c605a5c40fd0b4961f2f6d3709"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.su": {
+      "bytes": 1953,
+      "sha256": "da63bb2897a9fdb90efe01630e600a0bbc82fb5334461564a1ce3dcb1fb748c8"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.su": {
+      "bytes": 1482,
+      "sha256": "da85c7adc948a2397d652cdef51b55142b4a632de7a23dd594e7b12a7a9f0082"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.su": {
+      "bytes": 1153,
+      "sha256": "23cc183d94f5827d2c43c23a24ed555899eaf2be21a49cbeda9a02ceaa64bf08"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.su": {
+      "bytes": 1674,
+      "sha256": "ccdf2bb5f60a84f4353f862c44e3ff7001a45950c0ca15c7b83f6b809fd6a777"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.su": {
+      "bytes": 1055,
+      "sha256": "7bc4b0ca98b7d153d41298a5fbf67a743f2e80f00ce66e1406fa7fe8653c437e"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.su": {
+      "bytes": 994,
+      "sha256": "388fa44917627e932285dcc1f70bf9301728978af8a0328e5a08ba825f213252"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.su": {
+      "bytes": 401,
+      "sha256": "68256f2becb5a5b3a208e86659381e170527cc660002a9216719db16bf87cdbc"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.su": {
+      "bytes": 4331,
+      "sha256": "cfa45e5007204a4753535d0980c09277ee3c47f7758a633f93643971e9f8d83d"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.su": {
+      "bytes": 527,
+      "sha256": "59129765dc0f62384dc15841299fe49c3962f9986a08d1813810bba375728f79"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.su": {
+      "bytes": 2275,
+      "sha256": "925926a41499227fb9f4676cfffacde4d44befb04307d711bad45bddabb098ae"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.su": {
+      "bytes": 1760,
+      "sha256": "f1a6c02bfc1ca5c75c7fec4a05bb1bf4b6b6839d31a9e45ab85c3ed24d8c6419"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.su": {
+      "bytes": 405,
+      "sha256": "d5dccf9301cfdfef13b43eda00b04ee08be95eaf638b5389735d40b1534a3bf9"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.su": {
+      "bytes": 3473,
+      "sha256": "5b00e71d1b68261e79d13bfa772394ba7c42825edd1931cc332f1fd5df379109"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.su": {
+      "bytes": 925,
+      "sha256": "ef195bd5973c33962be6a7dfceeee46d5e93ba6eb6d28315a67d9147b3234e5f"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.su": {
+      "bytes": 933,
+      "sha256": "b3ca4159259edffac82752c73dd0501f5c5e871157c968e86c1ac679c658fdcf"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.su": {
+      "bytes": 97,
+      "sha256": "2780c3105aade26c2fc653dcf99da4f2c848d2bcb5b5bf2bd7e68890ef72603e"
+    },
+    "final/f103/build/analysis/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.su": {
+      "bytes": 849,
+      "sha256": "3359e906bbbe75466b38b3304744afd4a00a56e953f5c45fa6455436f60be7db"
+    },
+    "final/f103/build/analysis/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.su": {
+      "bytes": 2115,
+      "sha256": "fcfd0373117bb152fb2f5b97953ab41bd6c464538b759c9f3b6f37618fbed0f6"
+    },
+    "final/f103/build/analysis/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.su": {
+      "bytes": 2651,
+      "sha256": "0b7ca17fd47f978eb3955ce122e9bc0747bcbc2450110755645582671c637aa0"
+    },
+    "final/f103/build/analysis/HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.su": {
+      "bytes": 3332,
+      "sha256": "af2020cc8ae561a7a0a409711fc3668673f7bb2ac09cdfb313b324044d5ea8bd"
+    },
+    "final/f103/build/analysis/HardwareGenerated/ReviewedNativeData/USB_DEVICE/App/usbd_cdc_if.su": {
+      "bytes": 486,
+      "sha256": "6652ad72b5d9ae8ca55d9ec7e1a54c14e4846dde026736b48d8bd296fd53b192"
+    },
+    "final/f103/build/analysis/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.su": {
+      "bytes": 248,
+      "sha256": "38ea43dba626d247441f341e5ca8f97601cb8aa8d85a3e2d2b01a0fe58bc8b62"
+    },
+    "final/f103/build/analysis/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.su": {
+      "bytes": 7019,
+      "sha256": "bc026b17b1715940fcc30142bc1d9bc45c2353b9923a70f8942ecae4644d8d6c"
+    },
+    "final/f103/build/analysis/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.su": {
+      "bytes": 7720,
+      "sha256": "d670821c3421bba2e1489c1c57cea3ea924d0887ed05b99b656a3d73aab5422a"
+    },
+    "final/f103/build/analysis/Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.su": {
+      "bytes": 1392,
+      "sha256": "ae5d1be87ab02b6d10aeb269aed66168c227dc6ac49733cff6b506b958c8c60b"
+    },
+    "final/f103/build/analysis/Middlewares/Third_Party/SX1280lib/sx1280.su": {
+      "bytes": 5350,
+      "sha256": "28a25bc47b2c3a962f9cf0a2b5c7d30f7fa5c3c3debc36e8ab86421ca37308dd"
+    },
+    "final/f103/build/analysis/native.elf": {
+      "bytes": 78216,
+      "sha256": "daf2a00ba8d22023c11a1c39b3ed2194bd64f3f41c7f907c63f76b4505538a4a"
+    },
+    "final/f103/build/analysis/native.map": {
+      "bytes": 272621,
+      "sha256": "84b03f51da1836eeeff94f4a8d0ce4dcf7574073ea9388c996e9fdc49d80b97f"
+    },
+    "final/f103/build/analysis/vectors.bin": {
+      "bytes": 268,
+      "sha256": "92468adb2e8ef3c64851d8a299df62fc744feae640358e89f5600a714e8ca4cd"
+    },
+    "final/f103/build/Common/Src/silverstar_assert.su": {
+      "bytes": 454,
+      "sha256": "1a070b91fd15db62581b016292be2c2de5f8dddceea1c9d48c6b9aa7aa1f387a"
+    },
+    "final/f103/build/Devices/Telemetry/SX1281/Src/sx1281_bus.su": {
+      "bytes": 968,
+      "sha256": "1dd8b1a57e7dda7ee0eee45bb88b04a55b4eaf06a3fb8de79ccbb1ea1d2f5fe8"
+    },
+    "final/f103/build/Devices/Telemetry/SX1281/Src/sx1281_device.su": {
+      "bytes": 3296,
+      "sha256": "6b55a9b1d8b885bb271ae50262e8e55fe6908240c115a81ec75932617bc1c43d"
+    },
+    "final/f103/build/Generated/Src/native_abi_probe.su": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final/f103/build/Generated/Src/native_clock.su": {
+      "bytes": 589,
+      "sha256": "c784e7cce6235cd0683e1c01275df6b91e2a93b659cc289bf5c8b2dd1da45de7"
+    },
+    "final/f103/build/Generated/Src/native_clock_port.su": {
+      "bytes": 157,
+      "sha256": "a1faac13e6ccd54eef8aeefecac8a989dae8dfe1dc71f643ca6efcf034ebc312"
+    },
+    "final/f103/build/Generated/Src/native_critical.su": {
+      "bytes": 140,
+      "sha256": "7f5e9a489a940110460d61528e617ea8998d8aa97251d6196dad16a25dd8ac47"
+    },
+    "final/f103/build/Generated/Src/native_no_heap.su": {
+      "bytes": 51,
+      "sha256": "26237653473b56b8e00f6790a148c9524bfdeed98f8ef817d447fed4e120c390"
+    },
+    "final/f103/build/Generated/Src/native_platform.su": {
+      "bytes": 776,
+      "sha256": "7f2755247c7ba841471afbffaeb60de2d9ed826a4e23bf8f869c34df92c17712"
+    },
+    "final/f103/build/Generated/Src/native_runtime.su": {
+      "bytes": 275,
+      "sha256": "0fa0a289b7329e82c64bb1e4f1168d26352a689d9c9280f4fdecfe880305cda5"
+    },
+    "final/f103/build/Generated/Src/native_usb_state.su": {
+      "bytes": 63,
+      "sha256": "834b9f5d6ecaf4ce02fd733343c450482d2bf9452f886ba12e20ae5aaef97473"
+    },
+    "final/f103/build/Generated/Src/pc_byte_stream.su": {
+      "bytes": 938,
+      "sha256": "3ece1ab34d0798963d7f378df9d0f6dff81b07096cc927bec132642e98765dd5"
+    },
+    "final/f103/build/Generated/Src/project_resources.su": {
+      "bytes": 76,
+      "sha256": "ca126e1f149889a723f5d9466c55f8181d879fea874e15d19522fbfde736a433"
+    },
+    "final/f103/build/Ground/Core/Src/ground_bridge.su": {
+      "bytes": 572,
+      "sha256": "1e291d5c4a511fdf1b5dc450cbea13790efaa05501d75198929069fb88bf7c19"
+    },
+    "final/f103/build/Ground/Protocol/Src/gsp_min_protocol.su": {
+      "bytes": 638,
+      "sha256": "abf15d62d4fb2edc3a11b03771bfb591b5eb2e8ba964cdb4180a80c6f257eefd"
+    },
+    "final/f103/build/Ground/Protocol/Src/protocol_crc16.su": {
+      "bytes": 78,
+      "sha256": "2edee582c9b121606149267740092af6a5e40e123bc285f3745fac04ac0f19d1"
+    },
+    "final/f103/build/Ground/Radio/Src/ground_radio_activity.su": {
+      "bytes": 257,
+      "sha256": "46f9fb7286d2813a3b4e53d05a6131d18ba92eb7f45c26d25856d55489eac279"
+    },
+    "final/f103/build/Ground/Radio/Src/ground_radio_sx1281.su": {
+      "bytes": 552,
+      "sha256": "b3f00bcc7e2d03f2e261b907ca109e275106429d20ea76a4dd6b661f7956bdc8"
+    },
+    "final/f103/build/ground-host/backpressure.exe": {
+      "bytes": 163625,
+      "sha256": "39be39474b55e4e766931ddc1966086962d4ff423aec23ab2525a900bf8fb6ad"
+    },
+    "final/f103/build/ground-host/bridge_bounds.exe": {
+      "bytes": 155238,
+      "sha256": "462fdd15dd3789312d123f9dbd6f7d6bcadf314c1534e1f3029596cb70b46750"
+    },
+    "final/f103/build/ground-host/usb_backpressure.exe": {
+      "bytes": 166203,
+      "sha256": "db3d8e9b1329be923a49de59005eb47141ead798396cf21b8b9619b37164599e"
+    },
+    "final/f103/build/ground-host/usb_cdc.exe": {
+      "bytes": 148933,
+      "sha256": "52f425021a6c33baafad60c768bf9e57e241df7aadb65b36298f1da985d39789"
+    },
+    "final/f103/build/ground-host/usb_session.exe": {
+      "bytes": 161045,
+      "sha256": "a8494e45b19143824cd5ed49c24526291d39a3dae53acbe44a25b8788c419cb4"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.su": {
+      "bytes": 78,
+      "sha256": "caa271e0776135289b906c12a1fd9bfa8d65cd29aeb4978d8186096203d2c839"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.su": {
+      "bytes": 80,
+      "sha256": "9c827f3a25744e256b35f6325ab902eb71ea4f79e6bd092a3778e1ce1f185687"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.su": {
+      "bytes": 243,
+      "sha256": "8a67c0d9e3acde01bddff55d1cd6b73ebd508e31c67291207fd5488311f5fa1c"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_hal_msp.su": {
+      "bytes": 91,
+      "sha256": "a1a34d8f850782f63d11a0d6e12e587d967419e808770e88e2edd8d5e23fd86e"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_it.su": {
+      "bytes": 1304,
+      "sha256": "0f37b2b7e4e3ee9d26ec3d07b53f13ea6084639d5152bc69ec21dada97f6301e"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.su": {
+      "bytes": 1416,
+      "sha256": "912977b7554468a411d6898f5d375126c70a2c19d895a48f3201491dc7ab796a"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f1xx.su": {
+      "bytes": 191,
+      "sha256": "9d5e586806977eaaed59a1a8fb4c1368c86023e8f23893f4de3e1570a6ef9e5e"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.su": {
+      "bytes": 259,
+      "sha256": "7953a1ea4b714474fd8b58807e1ed9addde45b2b7e83a0741582b290d627b08e"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.su": {
+      "bytes": 2962,
+      "sha256": "133d1e20c589b71d1e4e8b74a3b6aacd813605c605a5c40fd0b4961f2f6d3709"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.su": {
+      "bytes": 1953,
+      "sha256": "da63bb2897a9fdb90efe01630e600a0bbc82fb5334461564a1ce3dcb1fb748c8"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.su": {
+      "bytes": 1482,
+      "sha256": "da85c7adc948a2397d652cdef51b55142b4a632de7a23dd594e7b12a7a9f0082"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.su": {
+      "bytes": 1153,
+      "sha256": "23cc183d94f5827d2c43c23a24ed555899eaf2be21a49cbeda9a02ceaa64bf08"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.su": {
+      "bytes": 1674,
+      "sha256": "ccdf2bb5f60a84f4353f862c44e3ff7001a45950c0ca15c7b83f6b809fd6a777"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.su": {
+      "bytes": 1055,
+      "sha256": "7bc4b0ca98b7d153d41298a5fbf67a743f2e80f00ce66e1406fa7fe8653c437e"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.su": {
+      "bytes": 994,
+      "sha256": "388fa44917627e932285dcc1f70bf9301728978af8a0328e5a08ba825f213252"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.su": {
+      "bytes": 401,
+      "sha256": "68256f2becb5a5b3a208e86659381e170527cc660002a9216719db16bf87cdbc"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.su": {
+      "bytes": 4331,
+      "sha256": "cfa45e5007204a4753535d0980c09277ee3c47f7758a633f93643971e9f8d83d"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.su": {
+      "bytes": 527,
+      "sha256": "59129765dc0f62384dc15841299fe49c3962f9986a08d1813810bba375728f79"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.su": {
+      "bytes": 2275,
+      "sha256": "925926a41499227fb9f4676cfffacde4d44befb04307d711bad45bddabb098ae"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.su": {
+      "bytes": 1760,
+      "sha256": "f1a6c02bfc1ca5c75c7fec4a05bb1bf4b6b6839d31a9e45ab85c3ed24d8c6419"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.su": {
+      "bytes": 405,
+      "sha256": "d5dccf9301cfdfef13b43eda00b04ee08be95eaf638b5389735d40b1534a3bf9"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.su": {
+      "bytes": 3473,
+      "sha256": "5b00e71d1b68261e79d13bfa772394ba7c42825edd1931cc332f1fd5df379109"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.su": {
+      "bytes": 925,
+      "sha256": "ef195bd5973c33962be6a7dfceeee46d5e93ba6eb6d28315a67d9147b3234e5f"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.su": {
+      "bytes": 933,
+      "sha256": "b3ca4159259edffac82752c73dd0501f5c5e871157c968e86c1ac679c658fdcf"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.su": {
+      "bytes": 97,
+      "sha256": "2780c3105aade26c2fc653dcf99da4f2c848d2bcb5b5bf2bd7e68890ef72603e"
+    },
+    "final/f103/build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.su": {
+      "bytes": 849,
+      "sha256": "3359e906bbbe75466b38b3304744afd4a00a56e953f5c45fa6455436f60be7db"
+    },
+    "final/f103/build/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.su": {
+      "bytes": 2115,
+      "sha256": "fcfd0373117bb152fb2f5b97953ab41bd6c464538b759c9f3b6f37618fbed0f6"
+    },
+    "final/f103/build/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.su": {
+      "bytes": 2651,
+      "sha256": "0b7ca17fd47f978eb3955ce122e9bc0747bcbc2450110755645582671c637aa0"
+    },
+    "final/f103/build/HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.su": {
+      "bytes": 3332,
+      "sha256": "af2020cc8ae561a7a0a409711fc3668673f7bb2ac09cdfb313b324044d5ea8bd"
+    },
+    "final/f103/build/HardwareGenerated/ReviewedNativeData/USB_DEVICE/App/usbd_cdc_if.su": {
+      "bytes": 486,
+      "sha256": "6652ad72b5d9ae8ca55d9ec7e1a54c14e4846dde026736b48d8bd296fd53b192"
+    },
+    "final/f103/build/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.su": {
+      "bytes": 248,
+      "sha256": "38ea43dba626d247441f341e5ca8f97601cb8aa8d85a3e2d2b01a0fe58bc8b62"
+    },
+    "final/f103/build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.su": {
+      "bytes": 7019,
+      "sha256": "bc026b17b1715940fcc30142bc1d9bc45c2353b9923a70f8942ecae4644d8d6c"
+    },
+    "final/f103/build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.su": {
+      "bytes": 7720,
+      "sha256": "d670821c3421bba2e1489c1c57cea3ea924d0887ed05b99b656a3d73aab5422a"
+    },
+    "final/f103/build/Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.su": {
+      "bytes": 1392,
+      "sha256": "ae5d1be87ab02b6d10aeb269aed66168c227dc6ac49733cff6b506b958c8c60b"
+    },
+    "final/f103/build/Middlewares/Third_Party/SX1280lib/sx1280.su": {
+      "bytes": 5350,
+      "sha256": "28a25bc47b2c3a962f9cf0a2b5c7d30f7fa5c3c3debc36e8ab86421ca37308dd"
+    },
+    "final/f103/build/native-artifact-report.json": {
+      "bytes": 8069,
+      "sha256": "a6e36cf9e3112835580371bdd1a198580b1a200bd0eb7f83b2d53f3104081301"
+    },
+    "final/f103/build/native-artifact-vectors.bin": {
+      "bytes": 268,
+      "sha256": "92468adb2e8ef3c64851d8a299df62fc744feae640358e89f5600a714e8ca4cd"
+    },
+    "final/f103/build/native-host/ready_transport_fixture.c": {
+      "bytes": 673,
+      "sha256": "03bd16ae61eee6f1663e0e78d0cad345693d8845de6cbfe1dbcd80a9afec646f"
+    },
+    "final/f103/build/native.elf": {
+      "bytes": 78216,
+      "sha256": "daf2a00ba8d22023c11a1c39b3ed2194bd64f3f41c7f907c63f76b4505538a4a"
+    },
+    "final/f103/build/native.map": {
+      "bytes": 262487,
+      "sha256": "8f4a360c111b20393dfd4cbeeb761a03c36ad734e9cabc23c7c9e3532aa9e4c8"
+    },
+    "final/f103/build/vectors.bin": {
+      "bytes": 268,
+      "sha256": "92468adb2e8ef3c64851d8a299df62fc744feae640358e89f5600a714e8ca4cd"
+    },
+    "final/f103/candidate_config.ssproject": {
+      "bytes": 99302,
+      "sha256": "807a3da4efeced67b91abdfb7ea5f7a26fd7a1b617b3be45108847a488cada8d"
+    },
+    "final/f103/commands.log": {
+      "bytes": 320242,
+      "sha256": "458f8ba7b04504c8b4aff488614815cda0a18276b47166e9ef6038643ed98268"
+    },
+    "final/f103/Common/Inc/silverstar_assert.h": {
+      "bytes": 3910,
+      "sha256": "6ab611010a13e2bd98aaa59c72e0a2fca47844bb11c47f1bf104e9ffe15dc904"
+    },
+    "final/f103/Common/Inc/silverstar_compiler.h": {
+      "bytes": 366,
+      "sha256": "3d66165f468e3e7263ebb6d72b6c217a042dd337be39e170ffb83487815ffd57"
+    },
+    "final/f103/Common/Src/silverstar_assert.c": {
+      "bytes": 3454,
+      "sha256": "ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826"
+    },
+    "final/f103/Devices/Telemetry/SX1281/Inc/sx1281_bus.h": {
+      "bytes": 1905,
+      "sha256": "2dbdb5f5c8f6541f5cdb454582cca9cf8337f76671e25e31f6f44d01ee748e70"
+    },
+    "final/f103/Devices/Telemetry/SX1281/Inc/sx1281_config.h": {
+      "bytes": 5593,
+      "sha256": "829a8a29dbce2cfd7dcb30df893c0306ece11915e6207105b657f8992cf43aac"
+    },
+    "final/f103/Devices/Telemetry/SX1281/Inc/sx1281_device.h": {
+      "bytes": 6728,
+      "sha256": "b99c121794e6c7e7b406d9aa8cc58e95ecd1432c9f6175f2f152f7e4c2cc528f"
+    },
+    "final/f103/Devices/Telemetry/SX1281/module.mk": {
+      "bytes": 423,
+      "sha256": "eb2e611ab9a607fea080b25443ac4098641625963759bcc580a77bd75d0306e8"
+    },
+    "final/f103/Devices/Telemetry/SX1281/Src/sx1281_bus.c": {
+      "bytes": 9052,
+      "sha256": "81395fa07a3ee0fdc4bf39d240a73cf6455d67eedcbbe254b66e6d4ce7a3efcd"
+    },
+    "final/f103/Devices/Telemetry/SX1281/Src/sx1281_device.c": {
+      "bytes": 74139,
+      "sha256": "f91ef428337521135342f4074ce332f2a90d8bd2303575f34f13ce6025591062"
+    },
+    "final/f103/Evidence/NativePayloads/Devices/Telemetry/SX1281/Src/sx1281_device.c.original": {
+      "bytes": 74247,
+      "sha256": "56ee9b35e54535249816363d0328120a6018f157ce51f8bad93185ebea78428c"
+    },
+    "final/f103/Evidence/NativePayloads/Devices/Telemetry/SX1281/Src/sx1281_device.c.original.patch": {
+      "bytes": 26372,
+      "sha256": "8f449c1eb32f929b7bdda3b2577ece9626b8ed38847ba9d91daef145ee418646"
+    },
+    "final/f103/Generated/ground_source_graph.json": {
+      "bytes": 5256,
+      "sha256": "8483e4a15b09ee8b2700b18ddc176387a3fae69117c834a658e8a1223d4aff2f"
+    },
+    "final/f103/Generated/Inc/air_link_config.h": {
+      "bytes": 746,
+      "sha256": "f0ccc4b3380f7dab45d259862dceff135a1b798f23b69e1eb592230d10cff1b9"
+    },
+    "final/f103/Generated/Inc/ground_radio_config.h": {
+      "bytes": 548,
+      "sha256": "188408af6a34358a5b78dcbd86bc5d9d1b572ce9c596631079f76f90a19a33c0"
+    },
+    "final/f103/Generated/Inc/native_clock.h": {
+      "bytes": 1086,
+      "sha256": "ff54516229e36effce233f78f2092a3a0292639213084c9a1f9d255b1ccffe56"
+    },
+    "final/f103/Generated/Inc/native_no_heap.h": {
+      "bytes": 210,
+      "sha256": "b8b0b6f565f4b29b1f34ea6502fb6b635b154e41f75b849e7de64afda1d63465"
+    },
+    "final/f103/Generated/Inc/native_platform.h": {
+      "bytes": 194,
+      "sha256": "9ecbb58779f478c0f74ac27d5bae4eac6649376e3ec6a51f2f22714307be6555"
+    },
+    "final/f103/Generated/Inc/native_runtime.h": {
+      "bytes": 533,
+      "sha256": "a2d14d6f974ec2a03d672251a51332882a5e9eef4d2a5e7d5ff84a3293aa2053"
+    },
+    "final/f103/Generated/Inc/native_usb_state.h": {
+      "bytes": 208,
+      "sha256": "8d48e97ddf8c3321970cc731ca451c9a8cdab853eb476fc9dc0f708c082fb771"
+    },
+    "final/f103/Generated/Inc/project_resources.h": {
+      "bytes": 548,
+      "sha256": "37d9eda4825196488be023dd51af9347e3ee113940bd4e8450e574cd7a4af706"
+    },
+    "final/f103/Generated/native_ground_contract.json": {
+      "bytes": 26251,
+      "sha256": "2ccdac0076098c4bca99ce01805d731fe2cbb794c25186b06dcb94e69c95889b"
+    },
+    "final/f103/Generated/Src/native_abi_probe.c": {
+      "bytes": 814,
+      "sha256": "46a991f8be1347a60533ba7feb32efe4850537d675dd4dc400dae50ad499b367"
+    },
+    "final/f103/Generated/Src/native_clock.c": {
+      "bytes": 4177,
+      "sha256": "cf5d4f7b0617932a6dfd31b390cf2932f2624b2e2dccb8e01458cacf7b937a0c"
+    },
+    "final/f103/Generated/Src/native_clock_port.c": {
+      "bytes": 2045,
+      "sha256": "de7924b1993713d3bf3c9fb8c04a97b4c4abe88cd8dfcb676458fcb42b6e7ce6"
+    },
+    "final/f103/Generated/Src/native_critical.c": {
+      "bytes": 461,
+      "sha256": "8af7010cef83a7e3006736c1646c3e182b032f6abbceb262d32019341ad24211"
+    },
+    "final/f103/Generated/Src/native_no_heap.c": {
+      "bytes": 220,
+      "sha256": "5dcd328fc27281cb0f828bb08930a7c84ab6a6e52ca3a44d8d3ac3be79fff0aa"
+    },
+    "final/f103/Generated/Src/native_platform.c": {
+      "bytes": 5939,
+      "sha256": "a46bf2cc95d6b55c4cf63e30ba52c47fa397c05a7dcddbf00a1aa55dca966c74"
+    },
+    "final/f103/Generated/Src/native_runtime.c": {
+      "bytes": 4434,
+      "sha256": "e1f51df1e9463d369da0d40ea03f741d21dea2280f0d6b9702a717a4a8fbcfb0"
+    },
+    "final/f103/Generated/Src/native_usb_state.c": {
+      "bytes": 505,
+      "sha256": "de275c4d3e8e1eafcd24ce66188c67d781064d70cee72062cd96654bb518a6b4"
+    },
+    "final/f103/Generated/Src/pc_byte_stream.c": {
+      "bytes": 6106,
+      "sha256": "204e3b373f17a2981a04c3c5a1da8dd305fee70d98615c8d3f3be794f199778d"
+    },
+    "final/f103/Generated/Src/project_resources.c": {
+      "bytes": 570,
+      "sha256": "67198ce6e78ce33d0d540b4f3a45fc4be69cbf0d8be3992558a57ea4070a3d6f"
+    },
+    "final/f103/Ground/Core/Inc/ground_bridge.h": {
+      "bytes": 744,
+      "sha256": "cd581df6b068999e85b632b648988689c5d4dd8ae6f9140bb1f8319e0d731388"
+    },
+    "final/f103/Ground/Core/Inc/ground_radio.h": {
+      "bytes": 965,
+      "sha256": "c4c9e59147019858974d121fa9412870e182a1ae58307fe7fb9cd388d8ba6381"
+    },
+    "final/f103/Ground/Core/Inc/ground_radio_activity.h": {
+      "bytes": 336,
+      "sha256": "df45a3dd778de1163256639800d137ebbccecd4cebbf5ec8e95b4bc180485b87"
+    },
+    "final/f103/Ground/Core/Inc/pc_byte_stream.h": {
+      "bytes": 1568,
+      "sha256": "daa3b71a6d126630d9f350c571dd1101cc4db163afe43b29ba54b6327598a3b9"
+    },
+    "final/f103/Ground/Core/Src/ground_bridge.c": {
+      "bytes": 14713,
+      "sha256": "425258007cfb5f6d843df86de2a3dd7cd153914a172aa2d53c431f63433b415b"
+    },
+    "final/f103/Ground/Protocol/Inc/gsp_min_protocol.h": {
+      "bytes": 3403,
+      "sha256": "9f4ac85c63a0e69c474bddceef1fb39ebb28846c074d5a3e926aa799cfbd79c1"
+    },
+    "final/f103/Ground/Protocol/Inc/protocol_crc16.h": {
+      "bytes": 160,
+      "sha256": "c3edf7f7848dbdd5e31d2b176935ff14358e7c7322f9172363ea03403106ba4d"
+    },
+    "final/f103/Ground/Protocol/Src/gsp_min_protocol.c": {
+      "bytes": 9191,
+      "sha256": "a58a68a7aa2eda03b3a0b64c7d25133e41051f1f3d3e99583c397e94a36f3b08"
+    },
+    "final/f103/Ground/Protocol/Src/protocol_crc16.c": {
+      "bytes": 836,
+      "sha256": "00e27c2e0d0dcdcd157e614b785e2d0a0cea8f2b5e14ffb6f3d4c161739993b9"
+    },
+    "final/f103/Ground/Radio/Src/ground_radio_activity.c": {
+      "bytes": 3742,
+      "sha256": "e16470e3f85ad3fe43a3f29c3dc5a103f28a2a179ecfbd9a7b7833cce691e7bf"
+    },
+    "final/f103/Ground/Radio/Src/ground_radio_sx1281.c": {
+      "bytes": 6478,
+      "sha256": "079bcf846fe5322ff011b887bd290f63cb2a325ca603a1a1e32362d920417890"
+    },
+    "final/f103/HardwareGenerated/ReviewedNativeBulk/manifest.json": {
+      "bytes": 2376,
+      "sha256": "a27e821546992c7f68cca1cb536ce5bbd641d598741695543588559a26f4d66a"
+    },
+    "final/f103/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c": {
+      "bytes": 32039,
+      "sha256": "d14420398e670b6821a65f1e9714e9ab3f7c1dc3bc67f4bce64718ea0662be74"
+    },
+    "final/f103/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c.patch": {
+      "bytes": 15617,
+      "sha256": "fd451f511255b69e0a4d9c3fe6fb09b96a74bbb29bb44dc15865b6b0022e4ca5"
+    },
+    "final/f103/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c": {
+      "bytes": 13820,
+      "sha256": "d4193c6a561e5e74573eeb7bcd77d8c6b17b9f117885d0b01020f22d0169116c"
+    },
+    "final/f103/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c.patch": {
+      "bytes": 4215,
+      "sha256": "3183ec1bf9eb06f15e420486b1145a1d7e886b56f6943058a9de4a32f06287f6"
+    },
+    "final/f103/HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.c": {
+      "bytes": 20283,
+      "sha256": "b4a00d9a75a405e44410e0c082eec340ec379eb4af243640983ea56ff213d0d3"
+    },
+    "final/f103/HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.c.patch": {
+      "bytes": 4658,
+      "sha256": "a84c6f64b14a7e40045405e1ce77f31f0b8255f22d9ece71841bc6d70f24941b"
+    },
+    "final/f103/HardwareGenerated/ReviewedNativeData/USB_DEVICE/App/usbd_cdc_if.c": {
+      "bytes": 8824,
+      "sha256": "c09a468729ba331cb42331d351145bad53ccb799aec9746b511bc9340cece9ec"
+    },
+    "final/f103/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.c": {
+      "bytes": 5886,
+      "sha256": "4b4966e1ee20d4d5a66f99cf0f4b07ecd6ae37c9c3632312b833e6e523acd7a9"
+    },
+    "final/f103/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c": {
+      "bytes": 129047,
+      "sha256": "e53e02f263f305d157775516af06579d1728735f1d2b8f6c72c258739559b8e5"
+    },
+    "final/f103/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c.patch": {
+      "bytes": 3520,
+      "sha256": "0bcf3abeb4121b99a25e077b597701c6d5ce2ae494b7933af3b6366167214f81"
+    },
+    "final/f103/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c": {
+      "bytes": 135947,
+      "sha256": "f610f5eab2bf5c7ad15ae2a3171e8918a952681422b5595256b57b3dcaf60e1c"
+    },
+    "final/f103/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c.patch": {
+      "bytes": 982,
+      "sha256": "81f024bd174110440115536065188f6127f042fe651b213399f1d1ba26aaaa14"
+    },
+    "final/f103/HardwareGenerated/ReviewedNativeHal/manifest.json": {
+      "bytes": 1983,
+      "sha256": "05d0db272fbb0d465802c731fd7a820aee42de3bd9a45a01ae2f84cb885c69f7"
+    },
+    "final/f103/Interfaces/Inc/system_device_types.h": {
+      "bytes": 5050,
+      "sha256": "3d3511dcd927ceaa90caf1a8da6cd6ba0406d7916c60021b61c36bfb67f6ae35"
+    },
+    "final/f103/Makefile": {
+      "bytes": 8248,
+      "sha256": "f197a7cab7fce52fe363d862d398a97f715d262e40df468b80c5e2b4acebcbca"
+    },
+    "final/f103/Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c": {
+      "bytes": 10531,
+      "sha256": "ec24e7611dad901324b42ef145730ac9d01ec3cc4dc683a99ef82150d60505af"
+    },
+    "final/f103/Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c.patch": {
+      "bytes": 1176,
+      "sha256": "e2a273c05d5d517aa30ca6ef13511a4944e2214ab96f259b69fec73d64cdd612"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/hw.h": {
+      "bytes": 773,
+      "sha256": "22b5c167d8aa4e881700849149620ffcd5f29299c1dac5c8ae70a29233aacd6f"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrection_defines.h": {
+      "bytes": 363,
+      "sha256": "3b0a743e401f5e76d2d1cb8edcfa5654b7a7013288a3865e121cd80fe6403879"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF10BW0400.h": {
+      "bytes": 2140,
+      "sha256": "5c5f86fe2f3a50a1b4f3365d2d1eaaddd0cb2d84493db029704e0d5397757aab"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF10BW0800.h": {
+      "bytes": 2594,
+      "sha256": "b24c1cf925ed504244cdf44e11d02064c4717868d1f57517fdf7c358aa7feebd"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF10BW1600.h": {
+      "bytes": 2550,
+      "sha256": "31494c5f8e0110a477535790581071ec98f4de17fabd40272e84da109db796b8"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF5BW0400.h": {
+      "bytes": 2138,
+      "sha256": "1e015d973f0a02b9a81a7bf0f8088304d25f49c199ca4e291dc36e8005e89068"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF5BW0800.h": {
+      "bytes": 2633,
+      "sha256": "5f01237f6ce5398e44b4b8966cdc3eb64a813d05d1189bf2f96ca10066120ee3"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF5BW1600.h": {
+      "bytes": 2638,
+      "sha256": "9496afc66a957bf4a3bc11b450e37073fafcf314f6ac6c99db052f3c63d9dee0"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF6BW0400.h": {
+      "bytes": 2138,
+      "sha256": "62f2ee4dbd66bd944fc31e6681174b5d4553bb64935bdbd0ee7c40973936cf12"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF6BW0800.h": {
+      "bytes": 2566,
+      "sha256": "b208b46096c56d78bfd895a9512d83959d6d636d5fa483124c3d03fe5b313fab"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF6BW1600.h": {
+      "bytes": 2524,
+      "sha256": "e4bfc1bac9a2023a7c9e76262998f7ec0092a72ec98860a9a8997e9be8ee8478"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF7BW0400.h": {
+      "bytes": 2138,
+      "sha256": "6c4da0aa939a52e2823cfb130987fd4c6e968e40f31d932678b12845417baa14"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF7BW0800.h": {
+      "bytes": 2567,
+      "sha256": "15c05a8b9645479ec18789dd4254cdbdad19be84443c8f085e50549e8d0b3fd1"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF7BW1600.h": {
+      "bytes": 2565,
+      "sha256": "dadf5e2cbc546435fd40b6a8f75be84a6dcf0570be905d803f6fb1430fad56fb"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF8BW0400.h": {
+      "bytes": 2138,
+      "sha256": "074fa8a43cdf9adeababdf658f1ddd94577c62d541e58aafeed0f0c1c798afa8"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF8BW0800.h": {
+      "bytes": 2513,
+      "sha256": "819285d0b732d5d6ba2ac01ef9a01b269925cbda422f7c302e8639637a78c1dd"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF8BW1600.h": {
+      "bytes": 2594,
+      "sha256": "8942988cb9527a19655676f77e2b7f619d6df9c63e8adc07a3567ee25370c779"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF9BW0400.h": {
+      "bytes": 2138,
+      "sha256": "4ec83afa50f6a7d462ee95b21ca8eb4986e6c42e2473db94ed985e5693620b6d"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF9BW0800.h": {
+      "bytes": 2590,
+      "sha256": "e9e2fa1138a60ea35fbd271f86ac2894f87a0cd049029ca40b0d9045d3fb745c"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF9BW1600.h": {
+      "bytes": 2519,
+      "sha256": "3adde20ed4cae32a31e6e9bd68b101d0ab666c2ead4ccb3790f325cff98dc87c"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/RangingCorrection.h": {
+      "bytes": 3145,
+      "sha256": "74f6fec9eaf91a2111ea8b5e1d5ab0d8a81ca1744b5a596054a10be7df3e8c0f"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/sx1280-hal.c": {
+      "bytes": 10321,
+      "sha256": "b8caf4dd85dd3307897fa8f923adcaf7153b0d4c91a787eb58537d0b34eb783d"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/sx1280-hal.h": {
+      "bytes": 4353,
+      "sha256": "7bef829a1cdce0e4306298e952fe8623a0e37edd6b31ef61d2d2d91754046aa4"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/sx1280.c": {
+      "bytes": 39625,
+      "sha256": "cd06494c8d33f2d051217461a36243da08cd3cbf0fa8be227b368d7f44c9871a"
+    },
+    "final/f103/Middlewares/Third_Party/SX1280lib/sx1280.h": {
+      "bytes": 60175,
+      "sha256": "ad8ac1dc630c8ad97aecd5c3f1da35995036a46f9e35d4552257081501c8d726"
+    },
+    "final/f103/Platform/Inc/platform_adc.h": {
+      "bytes": 391,
+      "sha256": "5c55740713e0284cf0833c9988ddfaa657b10476f77de048e4771a0bccfe7d7f"
+    },
+    "final/f103/Platform/Inc/platform_can.h": {
+      "bytes": 1242,
+      "sha256": "4126161fc5568c0826923fe742dcfcc25556149bb39920a991613b4f6c910333"
+    },
+    "final/f103/Platform/Inc/platform_critical.h": {
+      "bytes": 279,
+      "sha256": "77f0d7141c4cf906171cf6c0019130949385d6e51e1ed9475c4ee50140157875"
+    },
+    "final/f103/Platform/Inc/platform_gpio.h": {
+      "bytes": 953,
+      "sha256": "63127538ba99d9abaddf798ad1895958bcb1c58f78d9fc33f2a31cc1b5d0b673"
+    },
+    "final/f103/Platform/Inc/platform_i2c.h": {
+      "bytes": 1833,
+      "sha256": "4a81446224675ed457a71ce4cf5989ca29640300a221d6b7ecbc1463e62b597b"
+    },
+    "final/f103/Platform/Inc/platform_memory.h": {
+      "bytes": 2265,
+      "sha256": "d60ad568042f904cbc4466d582fbe757570f0875adabd47b018a5eb648bb6b4d"
+    },
+    "final/f103/Platform/Inc/platform_pwm.h": {
+      "bytes": 1081,
+      "sha256": "ad00de15d8c2f98539cb8829065276d7a171e1243418625cac1dafe9d98f018f"
+    },
+    "final/f103/Platform/Inc/platform_spi.h": {
+      "bytes": 1524,
+      "sha256": "ad6b1451f284a892e819c6768907414b4d2cb56701fddf42928045c2e5968b75"
+    },
+    "final/f103/Platform/Inc/platform_time.h": {
+      "bytes": 387,
+      "sha256": "66ecf71030b25eb0993fae7c1176604088dbf78c42fd399c16c4fec8eed4822d"
+    },
+    "final/f103/Platform/Inc/platform_types.h": {
+      "bytes": 359,
+      "sha256": "9eccf8476d8ebb58f251f9049de631651c6ae4e19a415d63579e703a6cfd8785"
+    },
+    "final/f103/Platform/Inc/platform_uart.h": {
+      "bytes": 2959,
+      "sha256": "48bf21ca17f65c34fbe819e9cc52f2222ba54dde72d36343a46c599c9becd1ee"
+    },
+    "final/f103/receipt.json": {
+      "bytes": 710953,
+      "sha256": "fbc057fcad3937d995c9f6bb80fcfcc16b78378eede66bf23a1762aeb17f1063"
+    },
+    "final/f103/saved-project/SilverStar.ssproject": {
+      "bytes": 99302,
+      "sha256": "807a3da4efeced67b91abdfb7ea5f7a26fd7a1b617b3be45108847a488cada8d"
+    },
+    "final/f103/source-snapshot.json": {
+      "bytes": 627370,
+      "sha256": "f387bcbbbeb78ed6421f580244b25b580d71a200f4d19520ed6e81a2540fdf92"
+    },
+    "final/f103/Tests/Host/ground_backpressure.c": {
+      "bytes": 9956,
+      "sha256": "ccf4eed293ed1771267c4984d1c14a1fbaae3a4a20d30adfb3e159fae3866c28"
+    },
+    "final/f103/Tests/Host/ground_bridge_bounds.c": {
+      "bytes": 3758,
+      "sha256": "2753bba46a7841c68addc12efef66b923a32134e341592f808566c0007e457c5"
+    },
+    "final/f103/Tests/Host/pc_session_uart.c": {
+      "bytes": 880,
+      "sha256": "0df3a19c59c9ea40ad3893c7a650fd3f79d4be5c8ca9cbb3378e7d0ccefebd91"
+    },
+    "final/f103/Tests/Host/uart_dma.c": {
+      "bytes": 2547,
+      "sha256": "b7bc5808f0bfaaa7358c2fa585885a3d98ba2cf09b8b008d38576b22bcda8608"
+    },
+    "final/f103/Tests/Host/uart_dma_main.h": {
+      "bytes": 631,
+      "sha256": "947f6546c34f5db38b862f3c8a6c47f7d14f87d1bf7ec6286418353376fbe3a6"
+    },
+    "final/f103/Tests/Host/usb_cdc.c": {
+      "bytes": 3734,
+      "sha256": "c343b04e74beebe0cc46157288cb7f1c22041e500ba247168926f056a42249be"
+    },
+    "final/f103/Tests/Host/usb_cdc_if.h": {
+      "bytes": 215,
+      "sha256": "45efbbfffd5f5c4b770c00ece28a452b30cc76d39c035d4a8c2df7eae1d863df"
+    },
+    "final/f103/Tests/Host/usb_device.h": {
+      "bytes": 300,
+      "sha256": "2e1fa27d0bd22f308a0951928da03f08a4cf4b5fb9c7db6c3b0bb8a754d54345"
+    },
+    "final/f103/Tests/Host/usb_main.h": {
+      "bytes": 350,
+      "sha256": "ac95e653dee2ddadc0238719ab93909b6488cb7d1fa3686068c28ecebe2aeada"
+    },
+    "final/f103/Tests/Host/usb_session.c": {
+      "bytes": 3273,
+      "sha256": "95d8da726ee2c3f227ac8400dbf1db14781a00a1e04a7c1f0e66513bd673cd40"
+    },
+    "final/f103/Tests/Host/usb_session_main.h": {
+      "bytes": 510,
+      "sha256": "a48c0e2a4a289d9dd3913edfa0075da4423707e1ccf3c8fc2b05aa0f4f6e60c6"
+    },
+    "final/f103/Tools/check_ground.py": {
+      "bytes": 17039,
+      "sha256": "5ee793ff03a05317a7e7244a16db5bace21f90ae9ad11cb4ad81710455f42ac5"
+    },
+    "final/f103/Tools/check_native_ground.py": {
+      "bytes": 13226,
+      "sha256": "24200c0c2fd4f0616adc9533ccd21e20dbdb606e73b78d0456bb79e9f27e6293"
+    },
+    "final/f103/Tools/check_native_probe.py": {
+      "bytes": 6499,
+      "sha256": "a503c0dad65f8c2686701fecd7e7791fe2a9eb8e56c685f7980229d7c5928943"
+    },
+    "final/f103/Tools/check_power_of_ten.ps1": {
+      "bytes": 32037,
+      "sha256": "a02b24e2305dd65f99aff49f58a0cd10ddf954b8860f90b3d01096f499f06286"
+    },
+    "final/f103/Tools/ground_artifact_contract.py": {
+      "bytes": 12515,
+      "sha256": "f530008831c5f7599f728aa0c2fead9f8dc7c328044658892f95da300f739134"
+    },
+    "final/f103/Tools/native_machine_contract.py": {
+      "bytes": 4358,
+      "sha256": "1b362104ab039d9f4302b60aecb7150edba22e49af304c8a3d3f28f820801c09"
+    },
+    "final/f407/backend-owner.json": {
+      "bytes": 45,
+      "sha256": "41955ee00c687b6bc90a1fa5c6c50191aa104b031dc251a2693aac58cf416867"
+    },
+    "final/f407/backend-receipt.json": {
+      "bytes": 1317,
+      "sha256": "0a071cffa7c86f195a6b171804568f2d7330c8ba45b3993c9bf67e3740ffb8e5"
+    },
+    "final/f407/build/analysis/Common/Src/silverstar_assert.su": {
+      "bytes": 454,
+      "sha256": "1a070b91fd15db62581b016292be2c2de5f8dddceea1c9d48c6b9aa7aa1f387a"
+    },
+    "final/f407/build/analysis/Devices/Telemetry/SX1281/Src/sx1281_bus.su": {
+      "bytes": 968,
+      "sha256": "1dd8b1a57e7dda7ee0eee45bb88b04a55b4eaf06a3fb8de79ccbb1ea1d2f5fe8"
+    },
+    "final/f407/build/analysis/Devices/Telemetry/SX1281/Src/sx1281_device.su": {
+      "bytes": 3296,
+      "sha256": "6b55a9b1d8b885bb271ae50262e8e55fe6908240c115a81ec75932617bc1c43d"
+    },
+    "final/f407/build/analysis/Generated/Src/native_abi_probe.su": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final/f407/build/analysis/Generated/Src/native_clock.su": {
+      "bytes": 589,
+      "sha256": "c784e7cce6235cd0683e1c01275df6b91e2a93b659cc289bf5c8b2dd1da45de7"
+    },
+    "final/f407/build/analysis/Generated/Src/native_clock_port.su": {
+      "bytes": 158,
+      "sha256": "92ace9c3f0a6a0c1095c3397f60ac4ce32a2a7a6362274470863778a57e06cc7"
+    },
+    "final/f407/build/analysis/Generated/Src/native_critical.su": {
+      "bytes": 140,
+      "sha256": "7f5e9a489a940110460d61528e617ea8998d8aa97251d6196dad16a25dd8ac47"
+    },
+    "final/f407/build/analysis/Generated/Src/native_no_heap.su": {
+      "bytes": 51,
+      "sha256": "26237653473b56b8e00f6790a148c9524bfdeed98f8ef817d447fed4e120c390"
+    },
+    "final/f407/build/analysis/Generated/Src/native_platform.su": {
+      "bytes": 776,
+      "sha256": "7f2755247c7ba841471afbffaeb60de2d9ed826a4e23bf8f869c34df92c17712"
+    },
+    "final/f407/build/analysis/Generated/Src/native_runtime.su": {
+      "bytes": 356,
+      "sha256": "2ac1d8afc866553f2153300e559a96ac67bc5aaab9d451bba084ca823ae9b566"
+    },
+    "final/f407/build/analysis/Generated/Src/native_usb_state.su": {
+      "bytes": 63,
+      "sha256": "834b9f5d6ecaf4ce02fd733343c450482d2bf9452f886ba12e20ae5aaef97473"
+    },
+    "final/f407/build/analysis/Generated/Src/pc_byte_stream.su": {
+      "bytes": 938,
+      "sha256": "9d75bc6c62e3886c2130632c8918a619678fe41fc110173b26665eaeba07ae58"
+    },
+    "final/f407/build/analysis/Generated/Src/project_resources.su": {
+      "bytes": 76,
+      "sha256": "ca126e1f149889a723f5d9466c55f8181d879fea874e15d19522fbfde736a433"
+    },
+    "final/f407/build/analysis/Ground/Core/Src/ground_bridge.su": {
+      "bytes": 572,
+      "sha256": "1e291d5c4a511fdf1b5dc450cbea13790efaa05501d75198929069fb88bf7c19"
+    },
+    "final/f407/build/analysis/Ground/Protocol/Src/gsp_min_protocol.su": {
+      "bytes": 638,
+      "sha256": "abf15d62d4fb2edc3a11b03771bfb591b5eb2e8ba964cdb4180a80c6f257eefd"
+    },
+    "final/f407/build/analysis/Ground/Protocol/Src/protocol_crc16.su": {
+      "bytes": 78,
+      "sha256": "2edee582c9b121606149267740092af6a5e40e123bc285f3745fac04ac0f19d1"
+    },
+    "final/f407/build/analysis/Ground/Radio/Src/ground_radio_activity.su": {
+      "bytes": 257,
+      "sha256": "46f9fb7286d2813a3b4e53d05a6131d18ba92eb7f45c26d25856d55489eac279"
+    },
+    "final/f407/build/analysis/Ground/Radio/Src/ground_radio_sx1281.su": {
+      "bytes": 552,
+      "sha256": "b3f00bcc7e2d03f2e261b907ca109e275106429d20ea76a4dd6b661f7956bdc8"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Core/Src/adc.su": {
+      "bytes": 245,
+      "sha256": "f34b686d2066b1875bd390e6abb50b650dbff5dbd55a9534636c2197eeea73e3"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Core/Src/dma.su": {
+      "bytes": 78,
+      "sha256": "caa271e0776135289b906c12a1fd9bfa8d65cd29aeb4978d8186096203d2c839"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.su": {
+      "bytes": 80,
+      "sha256": "9c827f3a25744e256b35f6325ab902eb71ea4f79e6bd092a3778e1ce1f185687"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Core/Src/spi.su": {
+      "bytes": 243,
+      "sha256": "dfa5d70568f1abcb3ac352e1bd0708221891970ef3c745c5b8d68014522a1b7d"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_msp.su": {
+      "bytes": 91,
+      "sha256": "441f3354ee190a3e8bfc8f80ac8e2e1334bca2664899e8bf9f6036ef38392239"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.su": {
+      "bytes": 1416,
+      "sha256": "912977b7554468a411d6898f5d375126c70a2c19d895a48f3201491dc7ab796a"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f4xx.su": {
+      "bytes": 191,
+      "sha256": "e8be0b2ba6bd0dd9e33ebf0974d4f81865343b1de79086e6824c7c7a815c7fa1"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Core/Src/usart.su": {
+      "bytes": 259,
+      "sha256": "5b59c361e673183b6aec53d5745fc31572227102bd26d20adb11b11ef74c9d37"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.su": {
+      "bytes": 3126,
+      "sha256": "4f72087c84210f56e897b79008ccdd0a50c2df10b08dd6801e38149ad9817237"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.su": {
+      "bytes": 2050,
+      "sha256": "53a115bcbdf43c3b681615319c7472f3e7100933d45c6ee4f5f34b6964d5ce1f"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.su": {
+      "bytes": 2712,
+      "sha256": "8de03df72eb418221eb35fa7b4fa399933a052f6f883402281bf10d792f2c992"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.su": {
+      "bytes": 1618,
+      "sha256": "f01fc09892df66d8c67ab24feaf264dbe1f52ff8a4ed473cb6725ae050ff2cd3"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.su": {
+      "bytes": 406,
+      "sha256": "a47822d517e86e38fdecf7ab9cf67b512258b03e1f951036e4a30ba94c4ef92d"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.su": {
+      "bytes": 1153,
+      "sha256": "01ce80b8e357e96c382962fb56b772e2e26073ceac2da15c2a4bf72831626c37"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.su": {
+      "bytes": 2063,
+      "sha256": "e0c3797a187564a921d41cfd8c4793353c30cefdb3ac252ee8bb11a764fd23e2"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.su": {
+      "bytes": 913,
+      "sha256": "2b17ef35ee3492940c5f4393e1c1fd946fab08e1f23fda041f0613f1d5d60b4a"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.su": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.su": {
+      "bytes": 994,
+      "sha256": "9604ac38ae039c49c46db3f9edf8084c74dbde1d2b34e67cb391ee9dde7b2479"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.su": {
+      "bytes": 4460,
+      "sha256": "711ad764f365ec0e6edb9e9888bcc49b2452a1c39ffc11affcd6179386f4d120"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.su": {
+      "bytes": 518,
+      "sha256": "c12ecc9da200252f4f664a2a46d044d3a5d882dcec8b15a1455fe60611ed491c"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.su": {
+      "bytes": 2153,
+      "sha256": "670ab565a7ef42ae34775a7446b397cc0338a72a99acb21f3b4460002b115944"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.su": {
+      "bytes": 819,
+      "sha256": "3032f8275a0d7393344e61479eed70209a9e80385b9aa5ea16ee319311757ee0"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.su": {
+      "bytes": 801,
+      "sha256": "8b37d3a9d437b68bbdcc99d093bcabddab2a388cbe55b139e72af7a0868c5aa7"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.su": {
+      "bytes": 14572,
+      "sha256": "324f09c30ddb24df8aa5984a0ad32f606714b4868153eaca8301ae6976f73ca4"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.su": {
+      "bytes": 5670,
+      "sha256": "c1ad4df341df6a43001995c4c306474f94c655b2fcd3e7b72226f0681916334e"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.su": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.su": {
+      "bytes": 6041,
+      "sha256": "be4c9c62b115a17ee4c80097dd4c55f50566be78a8b9afb60ef2988ffe1545fe"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.su": {
+      "bytes": 925,
+      "sha256": "ab93e0a786709ce12d4fe0a01ab514f3ab442fbfa2f80b5c5a98717c0ad6a955"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.su": {
+      "bytes": 933,
+      "sha256": "a21e99001c6bf2ef6ed0fc7049b1e76a11dc700901e38cabdaa1e83c6ca29ed4"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.su": {
+      "bytes": 97,
+      "sha256": "2780c3105aade26c2fc653dcf99da4f2c848d2bcb5b5bf2bd7e68890ef72603e"
+    },
+    "final/f407/build/analysis/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.su": {
+      "bytes": 849,
+      "sha256": "f52ca16fb97e538913ed211cec7a47cb372277df3ca3d9732576d3d3e9ad5b9a"
+    },
+    "final/f407/build/analysis/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.su": {
+      "bytes": 2116,
+      "sha256": "94ae6f7b0a6d8d2787b6fcf8faa5c27b1d16a6622977db1d6a6a6b6ad0684a86"
+    },
+    "final/f407/build/analysis/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.su": {
+      "bytes": 3176,
+      "sha256": "389e4f8ad8505a3ddba9fc3432603ff2768bc8984ce8cfb00553d33f5212c45e"
+    },
+    "final/f407/build/analysis/HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.su": {
+      "bytes": 3222,
+      "sha256": "cfa3e3b86751a4c5fe056673f08d71f8328a948a51a4a6fac31a32d1d4821b8f"
+    },
+    "final/f407/build/analysis/HardwareGenerated/ReviewedNativeData/USB_DEVICE/App/usbd_cdc_if.su": {
+      "bytes": 589,
+      "sha256": "1f14a3ef5d69dce3ba78abc732c781a65f0cc15b1165ec6e8ad67220b8f39c60"
+    },
+    "final/f407/build/analysis/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.su": {
+      "bytes": 348,
+      "sha256": "92109ca368127e73242c4a8fa79c9cf0b13bb445dbafe80d7978355858b00cd2"
+    },
+    "final/f407/build/analysis/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.su": {
+      "bytes": 7019,
+      "sha256": "e6e5ee565c27c3956fedbe449ffb167f0c5d9a72c7fb08ee947feae869609381"
+    },
+    "final/f407/build/analysis/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.su": {
+      "bytes": 7721,
+      "sha256": "777f5825691c31f8e1ea411f1d18943b4fa5d9caf446b0b386e0d362fb67ce98"
+    },
+    "final/f407/build/analysis/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_hal_timebase_tim.su": {
+      "bytes": 318,
+      "sha256": "5b2bf639862fb0a4029a69708caddaa1d246464db9c19e65e09956c909d183da"
+    },
+    "final/f407/build/analysis/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_it.su": {
+      "bytes": 1151,
+      "sha256": "bb318ac676c46b4ca16ec374cdaa3a16b56b6c85f19af0fac7c3294ff1872c37"
+    },
+    "final/f407/build/analysis/HardwareGenerated/ReviewedNativeTime/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.su": {
+      "bytes": 3271,
+      "sha256": "4d231ead07123dff2ad8dba63ad0bf945a3534cb7b38a7475a1460450f56dc6c"
+    },
+    "final/f407/build/analysis/HardwareGenerated/ReviewedNativeTime/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.su": {
+      "bytes": 1780,
+      "sha256": "3532331ae9b22b5c39f277f9352fe6995e5050bc1c7f45b9a4d9c58d67e9c20c"
+    },
+    "final/f407/build/analysis/Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.su": {
+      "bytes": 1392,
+      "sha256": "ae5d1be87ab02b6d10aeb269aed66168c227dc6ac49733cff6b506b958c8c60b"
+    },
+    "final/f407/build/analysis/Middlewares/Third_Party/SX1280lib/sx1280.su": {
+      "bytes": 5350,
+      "sha256": "28a25bc47b2c3a962f9cf0a2b5c7d30f7fa5c3c3debc36e8ab86421ca37308dd"
+    },
+    "final/f407/build/analysis/native.elf": {
+      "bytes": 82180,
+      "sha256": "5a9414e97a5e7f3f02d2e001266145304b711c600c16639e05e7e7a79aa44bf8"
+    },
+    "final/f407/build/analysis/native.map": {
+      "bytes": 329788,
+      "sha256": "43d888278ed116f9e8593f8297a32bcc107a4a5ee26c981cf2111cd314aa5ecf"
+    },
+    "final/f407/build/analysis/vectors.bin": {
+      "bytes": 392,
+      "sha256": "e1b0324fa9ae2a1b5d3f9bfbc23c4d3e49f0f9703405b4f0ae3b7192df5250c7"
+    },
+    "final/f407/build/Common/Src/silverstar_assert.su": {
+      "bytes": 454,
+      "sha256": "1a070b91fd15db62581b016292be2c2de5f8dddceea1c9d48c6b9aa7aa1f387a"
+    },
+    "final/f407/build/Devices/Telemetry/SX1281/Src/sx1281_bus.su": {
+      "bytes": 968,
+      "sha256": "1dd8b1a57e7dda7ee0eee45bb88b04a55b4eaf06a3fb8de79ccbb1ea1d2f5fe8"
+    },
+    "final/f407/build/Devices/Telemetry/SX1281/Src/sx1281_device.su": {
+      "bytes": 3296,
+      "sha256": "6b55a9b1d8b885bb271ae50262e8e55fe6908240c115a81ec75932617bc1c43d"
+    },
+    "final/f407/build/Generated/Src/native_abi_probe.su": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final/f407/build/Generated/Src/native_clock.su": {
+      "bytes": 589,
+      "sha256": "c784e7cce6235cd0683e1c01275df6b91e2a93b659cc289bf5c8b2dd1da45de7"
+    },
+    "final/f407/build/Generated/Src/native_clock_port.su": {
+      "bytes": 158,
+      "sha256": "92ace9c3f0a6a0c1095c3397f60ac4ce32a2a7a6362274470863778a57e06cc7"
+    },
+    "final/f407/build/Generated/Src/native_critical.su": {
+      "bytes": 140,
+      "sha256": "7f5e9a489a940110460d61528e617ea8998d8aa97251d6196dad16a25dd8ac47"
+    },
+    "final/f407/build/Generated/Src/native_no_heap.su": {
+      "bytes": 51,
+      "sha256": "26237653473b56b8e00f6790a148c9524bfdeed98f8ef817d447fed4e120c390"
+    },
+    "final/f407/build/Generated/Src/native_platform.su": {
+      "bytes": 776,
+      "sha256": "7f2755247c7ba841471afbffaeb60de2d9ed826a4e23bf8f869c34df92c17712"
+    },
+    "final/f407/build/Generated/Src/native_runtime.su": {
+      "bytes": 356,
+      "sha256": "2ac1d8afc866553f2153300e559a96ac67bc5aaab9d451bba084ca823ae9b566"
+    },
+    "final/f407/build/Generated/Src/native_usb_state.su": {
+      "bytes": 63,
+      "sha256": "834b9f5d6ecaf4ce02fd733343c450482d2bf9452f886ba12e20ae5aaef97473"
+    },
+    "final/f407/build/Generated/Src/pc_byte_stream.su": {
+      "bytes": 938,
+      "sha256": "9d75bc6c62e3886c2130632c8918a619678fe41fc110173b26665eaeba07ae58"
+    },
+    "final/f407/build/Generated/Src/project_resources.su": {
+      "bytes": 76,
+      "sha256": "ca126e1f149889a723f5d9466c55f8181d879fea874e15d19522fbfde736a433"
+    },
+    "final/f407/build/Ground/Core/Src/ground_bridge.su": {
+      "bytes": 572,
+      "sha256": "1e291d5c4a511fdf1b5dc450cbea13790efaa05501d75198929069fb88bf7c19"
+    },
+    "final/f407/build/Ground/Protocol/Src/gsp_min_protocol.su": {
+      "bytes": 638,
+      "sha256": "abf15d62d4fb2edc3a11b03771bfb591b5eb2e8ba964cdb4180a80c6f257eefd"
+    },
+    "final/f407/build/Ground/Protocol/Src/protocol_crc16.su": {
+      "bytes": 78,
+      "sha256": "2edee582c9b121606149267740092af6a5e40e123bc285f3745fac04ac0f19d1"
+    },
+    "final/f407/build/Ground/Radio/Src/ground_radio_activity.su": {
+      "bytes": 257,
+      "sha256": "46f9fb7286d2813a3b4e53d05a6131d18ba92eb7f45c26d25856d55489eac279"
+    },
+    "final/f407/build/Ground/Radio/Src/ground_radio_sx1281.su": {
+      "bytes": 552,
+      "sha256": "b3f00bcc7e2d03f2e261b907ca109e275106429d20ea76a4dd6b661f7956bdc8"
+    },
+    "final/f407/build/ground-host/backpressure.exe": {
+      "bytes": 163625,
+      "sha256": "3a72f0993a8d183c1d1b94e623390d3237c35be58c9205fecdeea2d0bc2bd9ae"
+    },
+    "final/f407/build/ground-host/bridge_bounds.exe": {
+      "bytes": 155238,
+      "sha256": "111415e3b5aa3fcd2b54d371cc4e1182398d5e0c78ab7eb6d1f784459a1640df"
+    },
+    "final/f407/build/ground-host/usb_backpressure.exe": {
+      "bytes": 166203,
+      "sha256": "0e0c16477f708915bb870bc9adc600598b1021d212371461d0bfcb928cbe4363"
+    },
+    "final/f407/build/ground-host/usb_cdc.exe": {
+      "bytes": 148933,
+      "sha256": "5b3a51f37890ebac25ac801745e8866cdba25e28cbfaae63cf13caa04cbe616f"
+    },
+    "final/f407/build/ground-host/usb_session.exe": {
+      "bytes": 161045,
+      "sha256": "4547edee4285169c323a569d66db01db335261264b40db3e996e8e2cb99de26d"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Core/Src/adc.su": {
+      "bytes": 245,
+      "sha256": "f34b686d2066b1875bd390e6abb50b650dbff5dbd55a9534636c2197eeea73e3"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Core/Src/dma.su": {
+      "bytes": 78,
+      "sha256": "caa271e0776135289b906c12a1fd9bfa8d65cd29aeb4978d8186096203d2c839"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Core/Src/gpio.su": {
+      "bytes": 80,
+      "sha256": "9c827f3a25744e256b35f6325ab902eb71ea4f79e6bd092a3778e1ce1f185687"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Core/Src/spi.su": {
+      "bytes": 243,
+      "sha256": "dfa5d70568f1abcb3ac352e1bd0708221891970ef3c745c5b8d68014522a1b7d"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Core/Src/stm32f4xx_hal_msp.su": {
+      "bytes": 91,
+      "sha256": "441f3354ee190a3e8bfc8f80ac8e2e1334bca2664899e8bf9f6036ef38392239"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.su": {
+      "bytes": 1416,
+      "sha256": "912977b7554468a411d6898f5d375126c70a2c19d895a48f3201491dc7ab796a"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f4xx.su": {
+      "bytes": 191,
+      "sha256": "e8be0b2ba6bd0dd9e33ebf0974d4f81865343b1de79086e6824c7c7a815c7fa1"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Core/Src/usart.su": {
+      "bytes": 259,
+      "sha256": "5b59c361e673183b6aec53d5745fc31572227102bd26d20adb11b11ef74c9d37"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.su": {
+      "bytes": 3126,
+      "sha256": "4f72087c84210f56e897b79008ccdd0a50c2df10b08dd6801e38149ad9817237"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.su": {
+      "bytes": 2050,
+      "sha256": "53a115bcbdf43c3b681615319c7472f3e7100933d45c6ee4f5f34b6964d5ce1f"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.su": {
+      "bytes": 2712,
+      "sha256": "8de03df72eb418221eb35fa7b4fa399933a052f6f883402281bf10d792f2c992"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.su": {
+      "bytes": 1618,
+      "sha256": "f01fc09892df66d8c67ab24feaf264dbe1f52ff8a4ed473cb6725ae050ff2cd3"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.su": {
+      "bytes": 406,
+      "sha256": "a47822d517e86e38fdecf7ab9cf67b512258b03e1f951036e4a30ba94c4ef92d"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.su": {
+      "bytes": 1153,
+      "sha256": "01ce80b8e357e96c382962fb56b772e2e26073ceac2da15c2a4bf72831626c37"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.su": {
+      "bytes": 2063,
+      "sha256": "e0c3797a187564a921d41cfd8c4793353c30cefdb3ac252ee8bb11a764fd23e2"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.su": {
+      "bytes": 913,
+      "sha256": "2b17ef35ee3492940c5f4393e1c1fd946fab08e1f23fda041f0613f1d5d60b4a"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.su": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.su": {
+      "bytes": 994,
+      "sha256": "9604ac38ae039c49c46db3f9edf8084c74dbde1d2b34e67cb391ee9dde7b2479"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.su": {
+      "bytes": 4460,
+      "sha256": "711ad764f365ec0e6edb9e9888bcc49b2452a1c39ffc11affcd6179386f4d120"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.su": {
+      "bytes": 518,
+      "sha256": "c12ecc9da200252f4f664a2a46d044d3a5d882dcec8b15a1455fe60611ed491c"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.su": {
+      "bytes": 2153,
+      "sha256": "670ab565a7ef42ae34775a7446b397cc0338a72a99acb21f3b4460002b115944"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.su": {
+      "bytes": 819,
+      "sha256": "3032f8275a0d7393344e61479eed70209a9e80385b9aa5ea16ee319311757ee0"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.su": {
+      "bytes": 801,
+      "sha256": "8b37d3a9d437b68bbdcc99d093bcabddab2a388cbe55b139e72af7a0868c5aa7"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.su": {
+      "bytes": 14572,
+      "sha256": "324f09c30ddb24df8aa5984a0ad32f606714b4868153eaca8301ae6976f73ca4"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.su": {
+      "bytes": 5670,
+      "sha256": "c1ad4df341df6a43001995c4c306474f94c655b2fcd3e7b72226f0681916334e"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.su": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.su": {
+      "bytes": 6041,
+      "sha256": "be4c9c62b115a17ee4c80097dd4c55f50566be78a8b9afb60ef2988ffe1545fe"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.su": {
+      "bytes": 925,
+      "sha256": "ab93e0a786709ce12d4fe0a01ab514f3ab442fbfa2f80b5c5a98717c0ad6a955"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.su": {
+      "bytes": 933,
+      "sha256": "a21e99001c6bf2ef6ed0fc7049b1e76a11dc700901e38cabdaa1e83c6ca29ed4"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.su": {
+      "bytes": 97,
+      "sha256": "2780c3105aade26c2fc653dcf99da4f2c848d2bcb5b5bf2bd7e68890ef72603e"
+    },
+    "final/f407/build/HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.su": {
+      "bytes": 849,
+      "sha256": "f52ca16fb97e538913ed211cec7a47cb372277df3ca3d9732576d3d3e9ad5b9a"
+    },
+    "final/f407/build/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.su": {
+      "bytes": 2116,
+      "sha256": "94ae6f7b0a6d8d2787b6fcf8faa5c27b1d16a6622977db1d6a6a6b6ad0684a86"
+    },
+    "final/f407/build/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.su": {
+      "bytes": 3176,
+      "sha256": "389e4f8ad8505a3ddba9fc3432603ff2768bc8984ce8cfb00553d33f5212c45e"
+    },
+    "final/f407/build/HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.su": {
+      "bytes": 3222,
+      "sha256": "cfa3e3b86751a4c5fe056673f08d71f8328a948a51a4a6fac31a32d1d4821b8f"
+    },
+    "final/f407/build/HardwareGenerated/ReviewedNativeData/USB_DEVICE/App/usbd_cdc_if.su": {
+      "bytes": 589,
+      "sha256": "1f14a3ef5d69dce3ba78abc732c781a65f0cc15b1165ec6e8ad67220b8f39c60"
+    },
+    "final/f407/build/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.su": {
+      "bytes": 348,
+      "sha256": "92109ca368127e73242c4a8fa79c9cf0b13bb445dbafe80d7978355858b00cd2"
+    },
+    "final/f407/build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.su": {
+      "bytes": 7019,
+      "sha256": "e6e5ee565c27c3956fedbe449ffb167f0c5d9a72c7fb08ee947feae869609381"
+    },
+    "final/f407/build/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.su": {
+      "bytes": 7721,
+      "sha256": "777f5825691c31f8e1ea411f1d18943b4fa5d9caf446b0b386e0d362fb67ce98"
+    },
+    "final/f407/build/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_hal_timebase_tim.su": {
+      "bytes": 318,
+      "sha256": "5b2bf639862fb0a4029a69708caddaa1d246464db9c19e65e09956c909d183da"
+    },
+    "final/f407/build/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_it.su": {
+      "bytes": 1151,
+      "sha256": "bb318ac676c46b4ca16ec374cdaa3a16b56b6c85f19af0fac7c3294ff1872c37"
+    },
+    "final/f407/build/HardwareGenerated/ReviewedNativeTime/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.su": {
+      "bytes": 3271,
+      "sha256": "4d231ead07123dff2ad8dba63ad0bf945a3534cb7b38a7475a1460450f56dc6c"
+    },
+    "final/f407/build/HardwareGenerated/ReviewedNativeTime/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.su": {
+      "bytes": 1780,
+      "sha256": "3532331ae9b22b5c39f277f9352fe6995e5050bc1c7f45b9a4d9c58d67e9c20c"
+    },
+    "final/f407/build/Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.su": {
+      "bytes": 1392,
+      "sha256": "ae5d1be87ab02b6d10aeb269aed66168c227dc6ac49733cff6b506b958c8c60b"
+    },
+    "final/f407/build/Middlewares/Third_Party/SX1280lib/sx1280.su": {
+      "bytes": 5350,
+      "sha256": "28a25bc47b2c3a962f9cf0a2b5c7d30f7fa5c3c3debc36e8ab86421ca37308dd"
+    },
+    "final/f407/build/native-artifact-report.json": {
+      "bytes": 8173,
+      "sha256": "d693d1b17a982c624ead13ef6826696d1463a01a182b943581ebf2add8efb868"
+    },
+    "final/f407/build/native-artifact-vectors.bin": {
+      "bytes": 392,
+      "sha256": "e1b0324fa9ae2a1b5d3f9bfbc23c4d3e49f0f9703405b4f0ae3b7192df5250c7"
+    },
+    "final/f407/build/native-host/ready_transport_fixture.c": {
+      "bytes": 673,
+      "sha256": "03bd16ae61eee6f1663e0e78d0cad345693d8845de6cbfe1dbcd80a9afec646f"
+    },
+    "final/f407/build/native.elf": {
+      "bytes": 82180,
+      "sha256": "5a9414e97a5e7f3f02d2e001266145304b711c600c16639e05e7e7a79aa44bf8"
+    },
+    "final/f407/build/native.map": {
+      "bytes": 316972,
+      "sha256": "a31e008f2ad667400e159f68a449377222ce07ca72a1e9c4281fff99e6bbfdb5"
+    },
+    "final/f407/build/vectors.bin": {
+      "bytes": 392,
+      "sha256": "e1b0324fa9ae2a1b5d3f9bfbc23c4d3e49f0f9703405b4f0ae3b7192df5250c7"
+    },
+    "final/f407/candidate_config.ssproject": {
+      "bytes": 114398,
+      "sha256": "cb3bf6e301a02aa1ae8985d1bbb851285da429c986af48536514a6a664d47cef"
+    },
+    "final/f407/commands.log": {
+      "bytes": 400724,
+      "sha256": "7324cafd526a5b9834ae218ecc4b8a19b9d17a00e37af6177df5ef8710320178"
+    },
+    "final/f407/Common/Inc/silverstar_assert.h": {
+      "bytes": 3910,
+      "sha256": "6ab611010a13e2bd98aaa59c72e0a2fca47844bb11c47f1bf104e9ffe15dc904"
+    },
+    "final/f407/Common/Inc/silverstar_compiler.h": {
+      "bytes": 366,
+      "sha256": "3d66165f468e3e7263ebb6d72b6c217a042dd337be39e170ffb83487815ffd57"
+    },
+    "final/f407/Common/Src/silverstar_assert.c": {
+      "bytes": 3454,
+      "sha256": "ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826"
+    },
+    "final/f407/Devices/Telemetry/SX1281/Inc/sx1281_bus.h": {
+      "bytes": 1905,
+      "sha256": "2dbdb5f5c8f6541f5cdb454582cca9cf8337f76671e25e31f6f44d01ee748e70"
+    },
+    "final/f407/Devices/Telemetry/SX1281/Inc/sx1281_config.h": {
+      "bytes": 5593,
+      "sha256": "829a8a29dbce2cfd7dcb30df893c0306ece11915e6207105b657f8992cf43aac"
+    },
+    "final/f407/Devices/Telemetry/SX1281/Inc/sx1281_device.h": {
+      "bytes": 6728,
+      "sha256": "b99c121794e6c7e7b406d9aa8cc58e95ecd1432c9f6175f2f152f7e4c2cc528f"
+    },
+    "final/f407/Devices/Telemetry/SX1281/module.mk": {
+      "bytes": 423,
+      "sha256": "eb2e611ab9a607fea080b25443ac4098641625963759bcc580a77bd75d0306e8"
+    },
+    "final/f407/Devices/Telemetry/SX1281/Src/sx1281_bus.c": {
+      "bytes": 9052,
+      "sha256": "81395fa07a3ee0fdc4bf39d240a73cf6455d67eedcbbe254b66e6d4ce7a3efcd"
+    },
+    "final/f407/Devices/Telemetry/SX1281/Src/sx1281_device.c": {
+      "bytes": 74139,
+      "sha256": "f91ef428337521135342f4074ce332f2a90d8bd2303575f34f13ce6025591062"
+    },
+    "final/f407/Evidence/NativePayloads/Devices/Telemetry/SX1281/Src/sx1281_device.c.original": {
+      "bytes": 74247,
+      "sha256": "56ee9b35e54535249816363d0328120a6018f157ce51f8bad93185ebea78428c"
+    },
+    "final/f407/Evidence/NativePayloads/Devices/Telemetry/SX1281/Src/sx1281_device.c.original.patch": {
+      "bytes": 26372,
+      "sha256": "8f449c1eb32f929b7bdda3b2577ece9626b8ed38847ba9d91daef145ee418646"
+    },
+    "final/f407/Generated/ground_source_graph.json": {
+      "bytes": 6172,
+      "sha256": "7aa0676157c1b9a555e211994f37bb41a8cdf2138952befe65843b66c476f835"
+    },
+    "final/f407/Generated/Inc/air_link_config.h": {
+      "bytes": 746,
+      "sha256": "f0ccc4b3380f7dab45d259862dceff135a1b798f23b69e1eb592230d10cff1b9"
+    },
+    "final/f407/Generated/Inc/ground_radio_config.h": {
+      "bytes": 548,
+      "sha256": "188408af6a34358a5b78dcbd86bc5d9d1b572ce9c596631079f76f90a19a33c0"
+    },
+    "final/f407/Generated/Inc/native_clock.h": {
+      "bytes": 1087,
+      "sha256": "c593bf6b734da6b8ccbe4d2b4803237769fe59a0619c8e501be57026c4f6243e"
+    },
+    "final/f407/Generated/Inc/native_no_heap.h": {
+      "bytes": 210,
+      "sha256": "b8b0b6f565f4b29b1f34ea6502fb6b635b154e41f75b849e7de64afda1d63465"
+    },
+    "final/f407/Generated/Inc/native_platform.h": {
+      "bytes": 194,
+      "sha256": "9ecbb58779f478c0f74ac27d5bae4eac6649376e3ec6a51f2f22714307be6555"
+    },
+    "final/f407/Generated/Inc/native_runtime.h": {
+      "bytes": 580,
+      "sha256": "4a449aa81269f9080aa4860d12f0cbb1371ec743203533b64b0320b106d343b5"
+    },
+    "final/f407/Generated/Inc/native_usb_state.h": {
+      "bytes": 208,
+      "sha256": "8d48e97ddf8c3321970cc731ca451c9a8cdab853eb476fc9dc0f708c082fb771"
+    },
+    "final/f407/Generated/Inc/project_resources.h": {
+      "bytes": 548,
+      "sha256": "37d9eda4825196488be023dd51af9347e3ee113940bd4e8450e574cd7a4af706"
+    },
+    "final/f407/Generated/native_ground_contract.json": {
+      "bytes": 35218,
+      "sha256": "0cd92b713ae8d749ebdeb4b0f1f04123d7841712a3c5ec89a99850b9c1f6224c"
+    },
+    "final/f407/Generated/Src/native_abi_probe.c": {
+      "bytes": 899,
+      "sha256": "ac5cc1ef9b29e3933ad0ab6a72aa7bd501a7f55497dbe8e1b9c7908da6fd58b3"
+    },
+    "final/f407/Generated/Src/native_clock.c": {
+      "bytes": 4177,
+      "sha256": "cf5d4f7b0617932a6dfd31b390cf2932f2624b2e2dccb8e01458cacf7b937a0c"
+    },
+    "final/f407/Generated/Src/native_clock_port.c": {
+      "bytes": 3089,
+      "sha256": "410438f5c22053daee1230bd6400ba92dce87219493a56803f13a9cec0e1a908"
+    },
+    "final/f407/Generated/Src/native_critical.c": {
+      "bytes": 461,
+      "sha256": "8af7010cef83a7e3006736c1646c3e182b032f6abbceb262d32019341ad24211"
+    },
+    "final/f407/Generated/Src/native_no_heap.c": {
+      "bytes": 220,
+      "sha256": "5dcd328fc27281cb0f828bb08930a7c84ab6a6e52ca3a44d8d3ac3be79fff0aa"
+    },
+    "final/f407/Generated/Src/native_platform.c": {
+      "bytes": 5938,
+      "sha256": "9b24fddbfc54bf48137a1ce32ca225845fc6334bc31e7d9161658cac9fb8d73e"
+    },
+    "final/f407/Generated/Src/native_runtime.c": {
+      "bytes": 5103,
+      "sha256": "7a7d2ff0017ffa5150dabb659fe563357b894730c5d39a790bcf29b5a5536c4d"
+    },
+    "final/f407/Generated/Src/native_usb_state.c": {
+      "bytes": 505,
+      "sha256": "de275c4d3e8e1eafcd24ce66188c67d781064d70cee72062cd96654bb518a6b4"
+    },
+    "final/f407/Generated/Src/pc_byte_stream.c": {
+      "bytes": 6449,
+      "sha256": "668147a0f1255eed5967994a94e5d9a726faa035e31ac04e979a3faca5774586"
+    },
+    "final/f407/Generated/Src/project_resources.c": {
+      "bytes": 570,
+      "sha256": "67198ce6e78ce33d0d540b4f3a45fc4be69cbf0d8be3992558a57ea4070a3d6f"
+    },
+    "final/f407/Ground/Core/Inc/ground_bridge.h": {
+      "bytes": 744,
+      "sha256": "cd581df6b068999e85b632b648988689c5d4dd8ae6f9140bb1f8319e0d731388"
+    },
+    "final/f407/Ground/Core/Inc/ground_radio.h": {
+      "bytes": 965,
+      "sha256": "c4c9e59147019858974d121fa9412870e182a1ae58307fe7fb9cd388d8ba6381"
+    },
+    "final/f407/Ground/Core/Inc/ground_radio_activity.h": {
+      "bytes": 336,
+      "sha256": "df45a3dd778de1163256639800d137ebbccecd4cebbf5ec8e95b4bc180485b87"
+    },
+    "final/f407/Ground/Core/Inc/pc_byte_stream.h": {
+      "bytes": 1568,
+      "sha256": "daa3b71a6d126630d9f350c571dd1101cc4db163afe43b29ba54b6327598a3b9"
+    },
+    "final/f407/Ground/Core/Src/ground_bridge.c": {
+      "bytes": 14713,
+      "sha256": "425258007cfb5f6d843df86de2a3dd7cd153914a172aa2d53c431f63433b415b"
+    },
+    "final/f407/Ground/Protocol/Inc/gsp_min_protocol.h": {
+      "bytes": 3403,
+      "sha256": "9f4ac85c63a0e69c474bddceef1fb39ebb28846c074d5a3e926aa799cfbd79c1"
+    },
+    "final/f407/Ground/Protocol/Inc/protocol_crc16.h": {
+      "bytes": 160,
+      "sha256": "c3edf7f7848dbdd5e31d2b176935ff14358e7c7322f9172363ea03403106ba4d"
+    },
+    "final/f407/Ground/Protocol/Src/gsp_min_protocol.c": {
+      "bytes": 9191,
+      "sha256": "a58a68a7aa2eda03b3a0b64c7d25133e41051f1f3d3e99583c397e94a36f3b08"
+    },
+    "final/f407/Ground/Protocol/Src/protocol_crc16.c": {
+      "bytes": 836,
+      "sha256": "00e27c2e0d0dcdcd157e614b785e2d0a0cea8f2b5e14ffb6f3d4c161739993b9"
+    },
+    "final/f407/Ground/Radio/Src/ground_radio_activity.c": {
+      "bytes": 3742,
+      "sha256": "e16470e3f85ad3fe43a3f29c3dc5a103f28a2a179ecfbd9a7b7833cce691e7bf"
+    },
+    "final/f407/Ground/Radio/Src/ground_radio_sx1281.c": {
+      "bytes": 6478,
+      "sha256": "079bcf846fe5322ff011b887bd290f63cb2a325ca603a1a1e32362d920417890"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeBulk/manifest.json": {
+      "bytes": 2386,
+      "sha256": "e74c5363c0c3c5413f9e95e42b4b83d419e633436a1d2e8e3ab0ed21b482221f"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c": {
+      "bytes": 29865,
+      "sha256": "24caec0aafb56c7f88977f532bb20c5b0562af042b436b540587aae9a63d6325"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c.patch": {
+      "bytes": 19902,
+      "sha256": "23bb2f11e66200c54627b9358c020030e76a436ede2694a71edda1a7a35958cd"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c": {
+      "bytes": 29667,
+      "sha256": "196b11ed6a29f13678d45cdca082b6bba075fd9d97ce73ef84100429558fa1f1"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeBulk/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c.patch": {
+      "bytes": 3975,
+      "sha256": "142447808317d40439677cd58d607f3e488c114490699f052413431eeff6bcb2"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.c": {
+      "bytes": 19737,
+      "sha256": "5eee3a862481fd4c668366be9a01fffd47fe94fd448c6525e89ec138a032bd1d"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeBulk/USB_DEVICE/Target/usbd_conf.c.patch": {
+      "bytes": 6372,
+      "sha256": "e28c32a197fba5663914e649dd48cf34dcf13dfa66b6365d6d2b0e1e854369fc"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target/usbd_conf.h": {
+      "bytes": 4337,
+      "sha256": "e0f5ebdc625a122b198441195a8e8c6ab40e64fcf61d9f3d84bff614beff8c37"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeConfig/USB_DEVICE/Target/usbd_conf.h.patch": {
+      "bytes": 628,
+      "sha256": "9aa2f58bdde28d719b3cba2ba8d04eb11ce3269123ac1a7316fbd39e4548ba40"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeData/USB_DEVICE/App/usbd_cdc_if.c": {
+      "bytes": 9728,
+      "sha256": "7480f120e2521ee26253a6f3ae7ec1aef0b71c3b8a7f8b36a6bf6fd58768261b"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeEntry/Core/Src/main.c": {
+      "bytes": 6437,
+      "sha256": "85b7c370586471f18700dd778fcea9950378d8d980aee08cb3c946a05048b197"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c": {
+      "bytes": 126521,
+      "sha256": "e7c94b6cf21159e1414e8a7a47684a0a3d8c113beed58b03b2a0e72a428e66ca"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c.patch": {
+      "bytes": 3520,
+      "sha256": "87736f047dbdceb36e700cb643ae96a666a785bf0a03da9ef2a9a7c4fe223171"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c": {
+      "bytes": 137340,
+      "sha256": "fa1311ea68d2958469d23eed7af0edf067ec89f972d1580f6544cb4ad5d813d1"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeHal/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c.patch": {
+      "bytes": 982,
+      "sha256": "e24d761ba96ff040c73bb881141daf9c07e62b5f87c7990b950715e8bb86bc8a"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeHal/manifest.json": {
+      "bytes": 1985,
+      "sha256": "eb86b53a36a36217e225bcd05411b77bd4bcb17ddb70d577609614c82df8f608"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_hal_timebase_tim.c": {
+      "bytes": 5282,
+      "sha256": "88f3e0d8afe2e0efd2809f2b80ca90080763a3d27dd473568da427148d0459bb"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_hal_timebase_tim.c.patch": {
+      "bytes": 10024,
+      "sha256": "2addb2cdbc3fa50226b0ef4e625e0cfee9ca8f8c1f50df7abb4b27fe72ca866f"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_it.c": {
+      "bytes": 6710,
+      "sha256": "a7154e7749aa571ce433fe9bf01200370747a99db741ad18b4c7e61bb35ead29"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeTime/Core/Src/stm32f4xx_it.c.patch": {
+      "bytes": 772,
+      "sha256": "8feec90bde587fa18846cf8dc4a8c6e61a94cb255a0be12287623ba37d3d1213"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeTime/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c": {
+      "bytes": 19224,
+      "sha256": "a2fe93ff4baede958ed0f5e56351bc6d1eeecec0b4349b8fda9e7f05b422c178"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeTime/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c.patch": {
+      "bytes": 517,
+      "sha256": "cb43ef4cbf89c534148a85e02f2735c412d2e892915521d8adb0cd8abb313692"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeTime/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c": {
+      "bytes": 42529,
+      "sha256": "69bcd05727c0cdb9e351f1ada95807f07e193e5eb64d4e79727a77f79880be50"
+    },
+    "final/f407/HardwareGenerated/ReviewedNativeTime/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c.patch": {
+      "bytes": 520,
+      "sha256": "bf7ba140e8456b0857acbf0bd49d9ab5528a1d2b49f2665ec99adde9c64a9ecd"
+    },
+    "final/f407/Interfaces/Inc/system_device_types.h": {
+      "bytes": 5050,
+      "sha256": "3d3511dcd927ceaa90caf1a8da6cd6ba0406d7916c60021b61c36bfb67f6ae35"
+    },
+    "final/f407/Makefile": {
+      "bytes": 9161,
+      "sha256": "fdd935a69bf2d48b7680219c2d0aa5f8ba0e37ad8f7d86d8466db257cd5609b9"
+    },
+    "final/f407/Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c": {
+      "bytes": 10531,
+      "sha256": "ec24e7611dad901324b42ef145730ac9d01ec3cc4dc683a99ef82150d60505af"
+    },
+    "final/f407/Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c.patch": {
+      "bytes": 1176,
+      "sha256": "e2a273c05d5d517aa30ca6ef13511a4944e2214ab96f259b69fec73d64cdd612"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/hw.h": {
+      "bytes": 773,
+      "sha256": "22b5c167d8aa4e881700849149620ffcd5f29299c1dac5c8ae70a29233aacd6f"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrection_defines.h": {
+      "bytes": 363,
+      "sha256": "3b0a743e401f5e76d2d1cb8edcfa5654b7a7013288a3865e121cd80fe6403879"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF10BW0400.h": {
+      "bytes": 2140,
+      "sha256": "5c5f86fe2f3a50a1b4f3365d2d1eaaddd0cb2d84493db029704e0d5397757aab"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF10BW0800.h": {
+      "bytes": 2594,
+      "sha256": "b24c1cf925ed504244cdf44e11d02064c4717868d1f57517fdf7c358aa7feebd"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF10BW1600.h": {
+      "bytes": 2550,
+      "sha256": "31494c5f8e0110a477535790581071ec98f4de17fabd40272e84da109db796b8"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF5BW0400.h": {
+      "bytes": 2138,
+      "sha256": "1e015d973f0a02b9a81a7bf0f8088304d25f49c199ca4e291dc36e8005e89068"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF5BW0800.h": {
+      "bytes": 2633,
+      "sha256": "5f01237f6ce5398e44b4b8966cdc3eb64a813d05d1189bf2f96ca10066120ee3"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF5BW1600.h": {
+      "bytes": 2638,
+      "sha256": "9496afc66a957bf4a3bc11b450e37073fafcf314f6ac6c99db052f3c63d9dee0"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF6BW0400.h": {
+      "bytes": 2138,
+      "sha256": "62f2ee4dbd66bd944fc31e6681174b5d4553bb64935bdbd0ee7c40973936cf12"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF6BW0800.h": {
+      "bytes": 2566,
+      "sha256": "b208b46096c56d78bfd895a9512d83959d6d636d5fa483124c3d03fe5b313fab"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF6BW1600.h": {
+      "bytes": 2524,
+      "sha256": "e4bfc1bac9a2023a7c9e76262998f7ec0092a72ec98860a9a8997e9be8ee8478"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF7BW0400.h": {
+      "bytes": 2138,
+      "sha256": "6c4da0aa939a52e2823cfb130987fd4c6e968e40f31d932678b12845417baa14"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF7BW0800.h": {
+      "bytes": 2567,
+      "sha256": "15c05a8b9645479ec18789dd4254cdbdad19be84443c8f085e50549e8d0b3fd1"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF7BW1600.h": {
+      "bytes": 2565,
+      "sha256": "dadf5e2cbc546435fd40b6a8f75be84a6dcf0570be905d803f6fb1430fad56fb"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF8BW0400.h": {
+      "bytes": 2138,
+      "sha256": "074fa8a43cdf9adeababdf658f1ddd94577c62d541e58aafeed0f0c1c798afa8"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF8BW0800.h": {
+      "bytes": 2513,
+      "sha256": "819285d0b732d5d6ba2ac01ef9a01b269925cbda422f7c302e8639637a78c1dd"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF8BW1600.h": {
+      "bytes": 2594,
+      "sha256": "8942988cb9527a19655676f77e2b7f619d6df9c63e8adc07a3567ee25370c779"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF9BW0400.h": {
+      "bytes": 2138,
+      "sha256": "4ec83afa50f6a7d462ee95b21ca8eb4986e6c42e2473db94ed985e5693620b6d"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF9BW0800.h": {
+      "bytes": 2590,
+      "sha256": "e9e2fa1138a60ea35fbd271f86ac2894f87a0cd049029ca40b0d9045d3fb745c"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF9BW1600.h": {
+      "bytes": 2519,
+      "sha256": "3adde20ed4cae32a31e6e9bd68b101d0ab666c2ead4ccb3790f325cff98dc87c"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/RangingCorrection.h": {
+      "bytes": 3145,
+      "sha256": "74f6fec9eaf91a2111ea8b5e1d5ab0d8a81ca1744b5a596054a10be7df3e8c0f"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/sx1280-hal.c": {
+      "bytes": 10321,
+      "sha256": "b8caf4dd85dd3307897fa8f923adcaf7153b0d4c91a787eb58537d0b34eb783d"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/sx1280-hal.h": {
+      "bytes": 4353,
+      "sha256": "7bef829a1cdce0e4306298e952fe8623a0e37edd6b31ef61d2d2d91754046aa4"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/sx1280.c": {
+      "bytes": 39625,
+      "sha256": "cd06494c8d33f2d051217461a36243da08cd3cbf0fa8be227b368d7f44c9871a"
+    },
+    "final/f407/Middlewares/Third_Party/SX1280lib/sx1280.h": {
+      "bytes": 60175,
+      "sha256": "ad8ac1dc630c8ad97aecd5c3f1da35995036a46f9e35d4552257081501c8d726"
+    },
+    "final/f407/Platform/Inc/platform_adc.h": {
+      "bytes": 391,
+      "sha256": "5c55740713e0284cf0833c9988ddfaa657b10476f77de048e4771a0bccfe7d7f"
+    },
+    "final/f407/Platform/Inc/platform_can.h": {
+      "bytes": 1242,
+      "sha256": "4126161fc5568c0826923fe742dcfcc25556149bb39920a991613b4f6c910333"
+    },
+    "final/f407/Platform/Inc/platform_critical.h": {
+      "bytes": 279,
+      "sha256": "77f0d7141c4cf906171cf6c0019130949385d6e51e1ed9475c4ee50140157875"
+    },
+    "final/f407/Platform/Inc/platform_gpio.h": {
+      "bytes": 953,
+      "sha256": "63127538ba99d9abaddf798ad1895958bcb1c58f78d9fc33f2a31cc1b5d0b673"
+    },
+    "final/f407/Platform/Inc/platform_i2c.h": {
+      "bytes": 1833,
+      "sha256": "4a81446224675ed457a71ce4cf5989ca29640300a221d6b7ecbc1463e62b597b"
+    },
+    "final/f407/Platform/Inc/platform_memory.h": {
+      "bytes": 2265,
+      "sha256": "d60ad568042f904cbc4466d582fbe757570f0875adabd47b018a5eb648bb6b4d"
+    },
+    "final/f407/Platform/Inc/platform_pwm.h": {
+      "bytes": 1081,
+      "sha256": "ad00de15d8c2f98539cb8829065276d7a171e1243418625cac1dafe9d98f018f"
+    },
+    "final/f407/Platform/Inc/platform_spi.h": {
+      "bytes": 1524,
+      "sha256": "ad6b1451f284a892e819c6768907414b4d2cb56701fddf42928045c2e5968b75"
+    },
+    "final/f407/Platform/Inc/platform_time.h": {
+      "bytes": 387,
+      "sha256": "66ecf71030b25eb0993fae7c1176604088dbf78c42fd399c16c4fec8eed4822d"
+    },
+    "final/f407/Platform/Inc/platform_types.h": {
+      "bytes": 359,
+      "sha256": "9eccf8476d8ebb58f251f9049de631651c6ae4e19a415d63579e703a6cfd8785"
+    },
+    "final/f407/Platform/Inc/platform_uart.h": {
+      "bytes": 2959,
+      "sha256": "48bf21ca17f65c34fbe819e9cc52f2222ba54dde72d36343a46c599c9becd1ee"
+    },
+    "final/f407/receipt.json": {
+      "bytes": 821303,
+      "sha256": "ec059d1c6be5edffdd90d4080fe8968a642ba9801aa753be4548cc9dd6607a2d"
+    },
+    "final/f407/saved-project/SilverStar.ssproject": {
+      "bytes": 114398,
+      "sha256": "cb3bf6e301a02aa1ae8985d1bbb851285da429c986af48536514a6a664d47cef"
+    },
+    "final/f407/source-snapshot.json": {
+      "bytes": 632914,
+      "sha256": "2e56a87a5e31e675977fe342e339db7393c5a2192b6a4b7e6b60f9bb48594b80"
+    },
+    "final/f407/Tests/Host/ground_backpressure.c": {
+      "bytes": 10017,
+      "sha256": "cb423028a5b1e97ce7bde6cc1bb20b1bcb42411e0bbd73d1f310759b82bbfb85"
+    },
+    "final/f407/Tests/Host/ground_bridge_bounds.c": {
+      "bytes": 3758,
+      "sha256": "2753bba46a7841c68addc12efef66b923a32134e341592f808566c0007e457c5"
+    },
+    "final/f407/Tests/Host/pc_session_uart.c": {
+      "bytes": 880,
+      "sha256": "0df3a19c59c9ea40ad3893c7a650fd3f79d4be5c8ca9cbb3378e7d0ccefebd91"
+    },
+    "final/f407/Tests/Host/uart_dma.c": {
+      "bytes": 2547,
+      "sha256": "b7bc5808f0bfaaa7358c2fa585885a3d98ba2cf09b8b008d38576b22bcda8608"
+    },
+    "final/f407/Tests/Host/uart_dma_main.h": {
+      "bytes": 631,
+      "sha256": "947f6546c34f5db38b862f3c8a6c47f7d14f87d1bf7ec6286418353376fbe3a6"
+    },
+    "final/f407/Tests/Host/usb_cdc.c": {
+      "bytes": 3859,
+      "sha256": "58b7b7ab883fbf9c2dff4bf8765bd7ccd31170e4911938edbffdb6b8f8499c69"
+    },
+    "final/f407/Tests/Host/usb_cdc_if.h": {
+      "bytes": 215,
+      "sha256": "45efbbfffd5f5c4b770c00ece28a452b30cc76d39c035d4a8c2df7eae1d863df"
+    },
+    "final/f407/Tests/Host/usb_device.h": {
+      "bytes": 343,
+      "sha256": "0829775e976c075e620913bd5ae7e5dc7962e99fa6b438405f1c270b683a2dd1"
+    },
+    "final/f407/Tests/Host/usb_main.h": {
+      "bytes": 350,
+      "sha256": "ac95e653dee2ddadc0238719ab93909b6488cb7d1fa3686068c28ecebe2aeada"
+    },
+    "final/f407/Tests/Host/usb_session.c": {
+      "bytes": 3313,
+      "sha256": "c4e64e27fb51a6267ad3b7902334795c58d8af6ee3f587a38acc5e36b1529736"
+    },
+    "final/f407/Tests/Host/usb_session_main.h": {
+      "bytes": 510,
+      "sha256": "a48c0e2a4a289d9dd3913edfa0075da4423707e1ccf3c8fc2b05aa0f4f6e60c6"
+    },
+    "final/f407/Tools/check_ground.py": {
+      "bytes": 17039,
+      "sha256": "5ee793ff03a05317a7e7244a16db5bace21f90ae9ad11cb4ad81710455f42ac5"
+    },
+    "final/f407/Tools/check_native_ground.py": {
+      "bytes": 13226,
+      "sha256": "24200c0c2fd4f0616adc9533ccd21e20dbdb606e73b78d0456bb79e9f27e6293"
+    },
+    "final/f407/Tools/check_native_probe.py": {
+      "bytes": 6499,
+      "sha256": "a503c0dad65f8c2686701fecd7e7791fe2a9eb8e56c685f7980229d7c5928943"
+    },
+    "final/f407/Tools/check_power_of_ten.ps1": {
+      "bytes": 32037,
+      "sha256": "a02b24e2305dd65f99aff49f58a0cd10ddf954b8860f90b3d01096f499f06286"
+    },
+    "final/f407/Tools/ground_artifact_contract.py": {
+      "bytes": 12515,
+      "sha256": "f530008831c5f7599f728aa0c2fead9f8dc7c328044658892f95da300f739134"
+    },
+    "final/f407/Tools/native_machine_contract.py": {
+      "bytes": 4358,
+      "sha256": "1b362104ab039d9f4302b60aecb7150edba22e49af304c8a3d3f28f820801c09"
+    },
+    "runners/backend_pytest.py": {
+      "bytes": 580,
+      "sha256": "0ac8ce3c7adb96bd382b5467a0c0696020da2760db5b78873c1c4a1873f178ff"
+    },
+    "runners/commit_backend_sources.py": {
+      "bytes": 3025,
+      "sha256": "0e5bb5414e9d6dc1e501309d6a942ca8039f97d6898de8e15b00df03ce6af0c8"
+    },
+    "runners/inspect_backend_evidence.py": {
+      "bytes": 3942,
+      "sha256": "b3fa7eb54fe7985dc84c202e7783b504f44e95c4d048342b7ffc18bdbad32f56"
+    },
+    "runners/normal_test_paths.py": {
+      "bytes": 896,
+      "sha256": "98525ae940fd5e735b9671f3ec593af4a47fad1798573283fc7fea9697fd6a81"
+    },
+    "runners/package_backend_evidence.py": {
+      "bytes": 6625,
+      "sha256": "765937dfa3dc0502d6e9d013956a0a53caed2137d850177492f429c9d4199e43"
+    },
+    "runners/reproduce_formal_build_guard.py": {
+      "bytes": 2648,
+      "sha256": "973f7918c9b420eb20a59b937ea137fdf230502541fe97d985c2d972b54dcc40"
+    },
+    "runners/run_backend_gates.py": {
+      "bytes": 2482,
+      "sha256": "c099901ae62aa7ef4fc0b20b7d106d67a9e13eab34d8b999a3e74765f4f641e3"
+    },
+    "runners/run_backend_regressions.py": {
+      "bytes": 1484,
+      "sha256": "afd92c52d74a891909b3f9d8da7a86e1c9ed147d436118a6b66acf1d1fd15a87"
+    },
+    "runners/run_backend_tests.py": {
+      "bytes": 2565,
+      "sha256": "88296e17a60016e0fa832edf5f20b2029de6da5586e909f3523da3e561845b49"
+    },
+    "source_archive/apps/SCG/src/silverstar_fccg/app/native_ground.py": {
+      "bytes": 17420,
+      "sha256": "fee452b3b05fcc2d35bc210df83403e00dacd795e6b4c3e7b0a0b54772339ee4"
+    },
+    "source_archive/apps/SCG/src/silverstar_fccg/app/service.py": {
+      "bytes": 67432,
+      "sha256": "f62890aa63dec142637d2caf4e5b06d38cb8e5442e2c19224edae88c7a0ea5f4"
+    },
+    "source_archive/apps/SCG/src/silverstar_fccg/build/native_compile.py": {
+      "bytes": 25409,
+      "sha256": "881d980ab70a03de98c98c7deea44959763f659a0a9bbf23d2f1c7bd06cbfbef"
+    },
+    "source_archive/apps/SCG/tests/test_native_ground_backend.py": {
+      "bytes": 12672,
+      "sha256": "ee9808df8e76a850e09f37a0b2605305801c5c4e32d69b73f1f26952be0afc7e"
+    },
+    "source_archive/apps/SCG/tools/validation/native_classic_cdc_compile.py": {
+      "bytes": 1322,
+      "sha256": "0d7cd96e3dd72d31cc900307f2f81294e77932a64f00720478efab62d65f9370"
+    }
+  }
+}

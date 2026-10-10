@@ -358,6 +358,12 @@ $(BUILD_DIR)/%.o: %.s
 def GroundFiles_Render(
     model: ProjectModel, catalog: PluginCatalog, internal_policy: WorkspacePolicy,
 ) -> dict[str, bytes]:
+    if (model.ground_target.hardware.mcu == "STM32C071FBP6" or
+            any(key in model.ground_target.hardware.inventory for key in
+            ("native_complete_classic_cdc", "native_ground_backend", "usb_ground_c071_native"))):
+        raise ValueError("Native complete classic CDC admission is experimental; "
+                         "runtime adapter/compiled closure/ABI/radio timing NOT PROVEN. "
+                         "Normal firmware generation is blocked; legacy import is unchanged.")
     issues = GroundTargetIssues_Get(model, catalog)
     if issues:
         raise ValueError("; ".join(f"{issue.code}: {issue.message}" for issue in issues))

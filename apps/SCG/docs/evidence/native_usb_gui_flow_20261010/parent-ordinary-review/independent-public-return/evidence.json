@@ -1,0 +1,102 @@
+{
+  "source_commit": "80db26338bba77950a9b8e9bbc03d8a77e33567b",
+  "scope": "Only valid configured session followed by a normal Reset/Disconnect with one ordinary public CloseEP failure; same archived LL/controller. No malformed requests, alternate owners or hardware.",
+  "expectation": "The same public core function must not report USBD_OK when its class DeInit reported endpoint cleanup failure; class retention/write blocking/retry preserved.",
+  "targets": [
+    {
+      "part": "F103",
+      "harness_sha256": "283f500c7584936ba2ad783ac617707f4b74ebbc9a5574d44a628b8716f92f1d",
+      "compile": {
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\gcc.exe",
+          "-DHOST_F103=1",
+          "-std=c11",
+          "-O2",
+          "-Wall",
+          "-Wextra",
+          "-Werror=implicit-function-declaration",
+          "-Werror=incompatible-pointer-types",
+          "-DUSBD_CLASS_BOS_ENABLED=0",
+          "-DUSBD_MAX_SUPPORTED_CLASS=1",
+          "-IC:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\F103",
+          "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\F103\\usbd_core.c",
+          "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\F103\\usbd_ctlreq.c",
+          "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\F103\\usbd_ioreq.c",
+          "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\F103\\usbd_cdc.c",
+          "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\F103\\usbd_cdc_if.c",
+          "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\F103\\usbd_desc.c",
+          "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\F103\\pc_byte_stream.c",
+          "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\F103\\pc_usb_control.c",
+          "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\independent-public-return\\F103\\normal_public_return.c",
+          "-o",
+          "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\independent-public-return\\F103\\normal_public_return.exe"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\F103\\usbd_ctlreq.c: In function 'USBD_CtlError':\nC:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\F103\\usbd_ctlreq.c:853:42: warning: unused parameter 'req' [-Wunused-parameter]\n  853 |                    USBD_SetupReqTypedef *req)\n      |                    ~~~~~~~~~~~~~~~~~~~~~~^~~\n"
+      },
+      "runs": [
+        {
+          "scenario": "reset-close-failure",
+          "exit": 3221226505,
+          "stdout": "cleanup_status=0 allocated=1 frees_delta=0 state=1 class_retained=1\n",
+          "stderr": "Assertion failed: cleanup_status!=USBD_OK, file C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\independent-public-return\\F103\\normal_public_return.c, line 221\n"
+        },
+        {
+          "scenario": "disconnect-close-failure",
+          "exit": 3221226505,
+          "stdout": "cleanup_status=0 allocated=1 frees_delta=0 state=1 class_retained=1\n",
+          "stderr": "Assertion failed: cleanup_status!=USBD_OK, file C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\independent-public-return\\F103\\normal_public_return.c, line 221\n"
+        }
+      ],
+      "executable_sha256": "ee3ed02aa6bdd38f0557663636811c302ed95daf6719316a2a695298b1f8190f"
+    },
+    {
+      "part": "C071",
+      "harness_sha256": "fed6242014c8a8c1cea7e564eb400392c31619fd4c80a8ac52ec948a2d304041",
+      "compile": {
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\gcc.exe",
+          "-DHOST_C071=1",
+          "-std=c11",
+          "-O2",
+          "-Wall",
+          "-Wextra",
+          "-Werror=implicit-function-declaration",
+          "-Werror=incompatible-pointer-types",
+          "-DUSBD_CLASS_BOS_ENABLED=0",
+          "-DUSBD_MAX_SUPPORTED_CLASS=1",
+          "-IC:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\C071",
+          "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\C071\\usbd_core.c",
+          "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\C071\\usbd_ctlreq.c",
+          "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\C071\\usbd_ioreq.c",
+          "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\C071\\usbd_cdc.c",
+          "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\C071\\usbd_cdc_if.c",
+          "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\C071\\usbd_desc.c",
+          "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\C071\\pc_byte_stream.c",
+          "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\independent-public-return\\C071\\normal_public_return.c",
+          "-o",
+          "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\independent-public-return\\C071\\normal_public_return.exe"
+        ],
+        "exit": 0,
+        "stdout": "",
+        "stderr": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\C071\\usbd_desc.c: In function 'USBD_CDC_ProductStrDescriptor':\nC:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\C071\\usbd_desc.c:244:59: warning: unused parameter 'speed' [-Wunused-parameter]\n  244 | uint8_t * USBD_CDC_ProductStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)\n      |                                         ~~~~~~~~~~~~~~~~~~^~~~~\nC:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\C071\\usbd_desc.c: In function 'USBD_CDC_ConfigStrDescriptor':\nC:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\C071\\usbd_desc.c:291:58: warning: unused parameter 'speed' [-Wunused-parameter]\n  291 | uint8_t * USBD_CDC_ConfigStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)\n      |                                        ~~~~~~~~~~~~~~~~~~^~~~~\nC:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\C071\\usbd_desc.c: In function 'USBD_CDC_InterfaceStrDescriptor':\nC:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\lifecycle-80db-c55-review\\apps\\SCG\\docs\\evidence\\native_usb_lifecycle_normal_20261010\\host\\C071\\usbd_desc.c:303:61: warning: unused parameter 'speed' [-Wunused-parameter]\n  303 | uint8_t * USBD_CDC_InterfaceStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)\n      |                                           ~~~~~~~~~~~~~~~~~~^~~~~\n"
+      },
+      "runs": [
+        {
+          "scenario": "reset-close-failure",
+          "exit": 0,
+          "stdout": "cleanup_status=3 allocated=1 frees_delta=0 state=1 class_retained=1\n",
+          "stderr": ""
+        },
+        {
+          "scenario": "disconnect-close-failure",
+          "exit": 0,
+          "stdout": "cleanup_status=3 allocated=1 frees_delta=0 state=1 class_retained=1\n",
+          "stderr": ""
+        }
+      ],
+      "executable_sha256": "3cc810b52e88b30c068422c677a2757f4610cd9ce7153c907ea3bc9fd185317c"
+    }
+  ]
+}
