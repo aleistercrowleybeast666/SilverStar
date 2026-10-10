@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import math
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Generator, Optional
 
@@ -146,6 +146,12 @@ class FlightPlotter:
             time_range=self.page_range, deploy_time_s=data.parachute_time_s,
             gap_threshold_s=display.gap_threshold_s,
         )
+        if trajectory.deploy_enu is not None:
+            # Preserve the geometry's view-range visibility, then resolve the
+            # epoch with the same last-row validity rule as static 3D and GIF.
+            trajectory = replace(trajectory, deploy_enu=PositionDisplay_PointAt(
+                display, data.parachute_time_s,
+            ))
         catalog = ZH_CN if self.config.language is Language.ZH_CN else EN_US
         figure = plt.figure(figsize=(8, 6))
         labels = {key: catalog["horizontal." + key] for key in LABEL_IDS}

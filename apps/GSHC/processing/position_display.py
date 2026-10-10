@@ -53,7 +53,11 @@ def PositionDisplay_Build(samples, gap_threshold_s=None) -> PositionDisplay:
 
 
 def PositionDisplay_PointAt(display: PositionDisplay, time_s: float, *, hold_end=False):
-    """Exact sample or a connected pair; no interpolation through rejected rows."""
+    """Use the last row at an exact epoch, including its validity; else a pair.
+
+    An invalid final duplicate suppresses the point instead of falling back to
+    an earlier valid row. Rejected rows are never crossed by interpolation.
+    """
     if not math.isfinite(time_s):
         return None
     times, points = display.times_s, display.points_enu

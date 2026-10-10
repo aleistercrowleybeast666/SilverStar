@@ -167,3 +167,74 @@ def test_position_chart_masks_whole_bad_row_but_keeps_raw_values(tmp_path):
             assert np.isfinite(axis.get_ylim()).all()
         plt.close(figure)
     assert [s.values for s in samples] == original
+
+
+@pytest.mark.parametrize("duplicates,deploy,end_time,expected", [
+    ([(1, 2, 3), (9, 9, 2e15)], .2, .4, None),
+    ([(9, 9, 2e15), (1, 2, 3)], .2, .4, (1, 2, 3)),
+    ([(1, 2, 3), (4, 5, 6)], .2, .4, (4, 5, 6)),
+    ([(9, 9, 2e15), (8, 8, 2e15)], .2, .4, None),
+    ([(1, 2, 3), (4, 5, 6)], .8, 1.4, None),
+], ids=["valid-invalid", "invalid-valid", "both-valid", "both-invalid", "long-gap"])
+def test_duplicate_epoch_deploy_is_consistent_across_exports(
+    duplicates, deploy, end_time, expected, tmp_path,
+):
+    samples = samples_build([(0, 0, 0), *duplicates, (7, 8, 9)],
+                            [0, .2, .2, end_time])
+    original = [s.values for s in samples]
+    data = data_build(samples, deploy)
+    display = PositionDisplay_Build(samples)
+    assert not display.joins[1]  # Duplicate epochs always split the path.
+    for i in np.flatnonzero(~display.valid):
+        if i:
+            assert not display.joins[i - 1]
+        if i < len(display.joins):
+            assert not display.joins[i]
+    plotter = FlightPlotter()
+    with patch("processing.flight_plotter.HorizontalTrajectory_Draw") as draw:
+        plotter.plot_horizontal_trajectory(tmp_path / "horizontal.png", data)
+        trajectory = draw.call_args.args[1]
+    if expected is None:
+        assert trajectory.deploy_enu is None
+        assert plotter._get_chute_point(data) is None
+    else:
+        np.testing.assert_array_equal(trajectory.deploy_enu, expected)
+        np.testing.assert_array_equal(plotter._get_chute_point(data), expected)
+    assert len(trajectory.edges_enu) == int(display.joins.sum())
+    renderer = plotter._GifRenderer_Create(data)
+    try:
+        frame = plotter._GifFrame_Render(renderer, data, deploy)
+        frame.close()
+        if expected is None:
+            assert renderer["chute"] is None
+        else:
+            np.testing.assert_array_equal(
+                np.column_stack(renderer["chute"].get_data_3d())[0], expected,
+            )
+            assert renderer["chute"].get_visible()
+        with patch.object(plotter, "_save_figure") as save:
+            plotter._draw_gif_frame(tmp_path / "static.png", data, deploy,
+                                    (1, 0, 0, 0), (0, 0, 0),
+                                    plotter._trajectory_limits(data))
+            figure = save.call_args.args[0]
+            texts = figure.axes[1].texts
+            assert bool(texts) is (expected is not None)
+            if expected is not None:
+                np.testing.assert_array_equal(texts[0].get_position_3d(), expected)
+            plt.close(figure)
+    finally:
+        plt.close(renderer["figure"])
+    np.testing.assert_array_equal([s.values for s in samples], original)
+
+
+@pytest.mark.parametrize("page_range,deploy", [((0, .1), .2), ((.25, .4), .3)])
+def test_2d_deploy_keeps_view_visibility_after_duplicate_resolution(
+    page_range, deploy, tmp_path,
+):
+    data = data_build(samples_build([(0, 0, 0), (1, 2, 3), (4, 5, 6), (7, 8, 9)],
+                                    [0, .2, .2, .4]), deploy)
+    plotter = FlightPlotter()
+    plotter.page_range = page_range
+    with patch("processing.flight_plotter.HorizontalTrajectory_Draw") as draw:
+        plotter.plot_horizontal_trajectory(tmp_path / "horizontal.png", data)
+        assert draw.call_args.args[1].deploy_enu is None

@@ -30,7 +30,14 @@ unchanged; GSHC passes its AIR-specific threshold and validity mask to it.
 Deployment uses its recorded time and an exact valid sample or one connected
 adjacent pair. It is not snapped to the nearest sample, extrapolated, or placed
 inside a rejected/long-gap interval. The same deployment point is used by 2D and
-3D. A 598 ms interval with a 239 ms median cadence is connected (the unquantized
+3D. When multiple rows have the exact same AIR millisecond, their retained input
+order is preserved and the last row determines the event position and validity.
+An invalid final row suppresses the marker, even if an earlier duplicate was
+valid; there is no fallback to a stale position. All duplicates and invalid rows
+still split trajectory geometry. GSHC adapts the 2D marker to this same rule,
+while retaining the standalone geometry's page-range visibility requirements.
+
+A 598 ms interval with a 239 ms median cadence is connected (the unquantized
 limit is 597.5 ms); 599 ms still splits geometry and omits an interior deployment
 point. The one-second default cap remains.
 
