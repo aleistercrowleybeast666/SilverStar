@@ -53,6 +53,14 @@
       "sha256": "cb230b76b9e34417a3765b647b8a873913ab7e783bcf32b8634576524cdd42dd",
       "bytes": 4575,
       "copied_without_modification": true
+    },
+    {
+      "path": "docs/public/licenses/STM32CubeMX_6.15_SLA0048.pdf",
+      "upstream_url": "https://www.st.com/resource/en/additional_license_terms/additional-license-terms-stm32cubemx-v6-15-0.html",
+      "sha256": "d77764c03ebd4de8816361f90830dd508a43335b9d012846d4f939ebad7bc2a5",
+      "bytes": 354257,
+      "copied_without_modification": true,
+      "source": "Unmodified installed ST tool component license witness retained by independent review; not a substitute for unrelated template grants."
     }
   ],
   "vendor_matches": [
@@ -3525,19 +3533,26 @@
     {
       "file": "apps/SCG/plugins/builtin/silverstar_board_ground_station_0_5/payload/Core/Inc/stm32f1xx_hal_conf.h",
       "local_sha256": "c05dae0be31ba96e53576408a5f0053d8a0d24c0d706151facb86f7153a7833c",
-      "status": "GENERATION_PACKAGE_RECORDED_TEMPLATE_LICENSE_UNRESOLVED",
+      "status": "SOURCE_AND_LICENSE_MAPPED_DERIVATIVE",
       "generation_project": "apps/SCG/plugins/builtin/silverstar_board_ground_station_0_5/payload/Ground_Station0.5.ioc",
       "recorded_cubemx_version": "6.15.0",
       "recorded_database": "DB.6.0.150",
       "recorded_firmware_package": "STM32Cube FW_F1 V1.8.7",
       "official_component_table": "docs/public/licenses/ST_CUBE_F1_1.8.7_COMPONENTS.txt",
-      "license_path": null,
+      "license_path": "docs/public/licenses/ST_HAL_F1_1.1.10_LICENSE.txt",
       "candidate_template_witness": {
         "relative_path": "db/templates/stm32f1xx_hal_conf_h.ftl",
         "sha256": "2e15ecb9da1cf2c0b541a506d9aa7516b75296bf714be16e80c2768159afce48",
         "installed_tool_version": ">6.15.0-RC4",
         "exact_render_not_verified": true
-      }
+      },
+      "working_tree_sha256": "c05dae0be31ba96e53576408a5f0053d8a0d24c0d706151facb86f7153a7833c",
+      "git_blob_sha256": "569a20b70ff0056fd424dc59b72bf30bfc5de99bba4483d730e18c2cd47bda77",
+      "upstream_sha256": "1d35375e0a43e1c62b3f5e8b0a1904cf14ea7bcbacd943cfdd639e432465f170",
+      "mapping_basis": "Substantial same HAL configuration skeleton, assertions and module includes; non-comment differences are configuration/macro selections and values, header USER blocks and formatting. Recorded family package includes this pinned HAL version. Not exact-byte or exact-render claim.",
+      "license": "BSD-3-Clause",
+      "exact_render_claim": false,
+      "upstream_url": "https://github.com/STMicroelectronics/stm32f1xx-hal-driver/blob/77fbb30b7a1d02533980400083e48c559aae5a4f/Inc/stm32f1xx_hal_conf_template.h"
     },
     {
       "file": "apps/SCG/plugins/builtin/silverstar_board_ground_station_0_5/payload/Core/Inc/stm32f1xx_it.h",
@@ -3731,19 +3746,26 @@
     {
       "file": "apps/SCG/plugins/builtin/silverstar_board_silverstar_0_5/payload/Core/Inc/stm32f4xx_hal_conf.h",
       "local_sha256": "812258028ba4569afd569b8824844ddca53cc856fdcb2f46c71e7b565b695772",
-      "status": "GENERATION_PACKAGE_RECORDED_TEMPLATE_LICENSE_UNRESOLVED",
+      "status": "SOURCE_AND_LICENSE_MAPPED_DERIVATIVE",
       "generation_project": "apps/SCG/plugins/builtin/silverstar_board_silverstar_0_5/payload/Flight_Controller0.5.ioc",
       "recorded_cubemx_version": "6.15.0",
       "recorded_database": "DB.6.0.150",
       "recorded_firmware_package": "STM32Cube FW_F4 V1.28.3",
       "official_component_table": "docs/public/licenses/ST_CUBE_F4_1.28.3_COMPONENTS.txt",
-      "license_path": null,
+      "license_path": "docs/public/licenses/ST_HAL_F4_1.8.5_LICENSE.txt",
       "candidate_template_witness": {
         "relative_path": "db/templates/stm32f4xx_hal_conf_h.ftl",
         "sha256": "fceb0b33a17c1cbe8130691d91a7132e8f82238ddc55bb1c6c5c9dd1521ca3d8",
         "installed_tool_version": ">6.15.0-RC4",
         "exact_render_not_verified": true
-      }
+      },
+      "working_tree_sha256": "812258028ba4569afd569b8824844ddca53cc856fdcb2f46c71e7b565b695772",
+      "git_blob_sha256": "132b5b6bd1ac5b82ae12f3e1b7a0d74be0e34a6fb4873bf58ca5bf3d6e10e030",
+      "upstream_sha256": "fea2676745945e8cf5ded3e1ea32000c68c5a3e33018578703024964336ca243",
+      "mapping_basis": "Substantial same HAL configuration skeleton, assertions and module includes; non-comment differences are configuration/macro selections and values, header USER blocks and formatting. Recorded family package includes this pinned HAL version. Not exact-byte or exact-render claim.",
+      "license": "BSD-3-Clause",
+      "exact_render_claim": false,
+      "upstream_url": "https://github.com/STMicroelectronics/stm32f4xx-hal-driver/blob/b6f0ed3829f3829eb358a2e7417d80bba1a42db7/Inc/stm32f4xx_hal_conf_template.h"
     },
     {
       "file": "apps/SCG/plugins/builtin/silverstar_board_silverstar_0_5/payload/Core/Inc/stm32f4xx_it.h",
@@ -3881,24 +3903,44 @@
     {
       "file": "apps/SCG/plugins/builtin/silverstar_board_silverstar_0_5/payload/Core/Src/syscalls.c",
       "local_sha256": "03c06c72eafb44b499814cf9234aba57dd830f345d9b8779b5d7090e78517600",
-      "status": "GENERATION_PACKAGE_RECORDED_TEMPLATE_LICENSE_UNRESOLVED",
+      "status": "SOURCE_AND_LICENSE_MAPPED_EXACT_TOOL_RESOURCE",
       "generation_project": "apps/SCG/plugins/builtin/silverstar_board_silverstar_0_5/payload/Flight_Controller0.5.ioc",
       "recorded_cubemx_version": "6.15.0",
       "recorded_database": "DB.6.0.150",
       "recorded_firmware_package": "STM32Cube FW_F4 V1.28.3",
       "official_component_table": "docs/public/licenses/ST_CUBE_F4_1.28.3_COMPONENTS.txt",
-      "license_path": null
+      "license_path": "docs/public/licenses/STM32CubeMX_6.15_SLA0048.pdf",
+      "working_tree_sha256": "03c06c72eafb44b499814cf9234aba57dd830f345d9b8779b5d7090e78517600",
+      "git_blob_sha256": "03c06c72eafb44b499814cf9234aba57dd830f345d9b8779b5d7090e78517600",
+      "upstream_sha256": "03c06c72eafb44b499814cf9234aba57dd830f345d9b8779b5d7090e78517600",
+      "mapping_basis": "Exact same bytes as original built-in plain source template; complete existing tool package terms cover ST software portions and source redistribution subject to preserved conditions. Does not reuse another library license.",
+      "license": "SLA0048 Rev4/March 2018 in installed STM32CubeMX component terms",
+      "exact_render_claim": false,
+      "upstream_resource": "templates/syscalls.c",
+      "tool_distribution": "ST STM32CubeMX, installed >6.15.0-RC4 / DB.6.0.150",
+      "exact_bytes": true,
+      "official_version_terms_url": "https://www.st.com/resource/en/additional_license_terms/additional-license-terms-stm32cubemx-v6-15-0.html"
     },
     {
       "file": "apps/SCG/plugins/builtin/silverstar_board_silverstar_0_5/payload/Core/Src/sysmem.c",
       "local_sha256": "ad20f7b1fa1e7c73330727747222cf2ffa3245ebf035230ee9a157545e79df95",
-      "status": "GENERATION_PACKAGE_RECORDED_TEMPLATE_LICENSE_UNRESOLVED",
+      "status": "SOURCE_AND_LICENSE_MAPPED_EXACT_TOOL_RESOURCE",
       "generation_project": "apps/SCG/plugins/builtin/silverstar_board_silverstar_0_5/payload/Flight_Controller0.5.ioc",
       "recorded_cubemx_version": "6.15.0",
       "recorded_database": "DB.6.0.150",
       "recorded_firmware_package": "STM32Cube FW_F4 V1.28.3",
       "official_component_table": "docs/public/licenses/ST_CUBE_F4_1.28.3_COMPONENTS.txt",
-      "license_path": null
+      "license_path": "docs/public/licenses/STM32CubeMX_6.15_SLA0048.pdf",
+      "working_tree_sha256": "ad20f7b1fa1e7c73330727747222cf2ffa3245ebf035230ee9a157545e79df95",
+      "git_blob_sha256": "ad20f7b1fa1e7c73330727747222cf2ffa3245ebf035230ee9a157545e79df95",
+      "upstream_sha256": "ad20f7b1fa1e7c73330727747222cf2ffa3245ebf035230ee9a157545e79df95",
+      "mapping_basis": "Exact same bytes as original built-in plain source template; complete existing tool package terms cover ST software portions and source redistribution subject to preserved conditions. Does not reuse another library license.",
+      "license": "SLA0048 Rev4/March 2018 in installed STM32CubeMX component terms",
+      "exact_render_claim": false,
+      "upstream_resource": "templates/sysmem.c",
+      "tool_distribution": "ST STM32CubeMX, installed >6.15.0-RC4 / DB.6.0.150",
+      "exact_bytes": true,
+      "official_version_terms_url": "https://www.st.com/resource/en/additional_license_terms/additional-license-terms-stm32cubemx-v6-15-0.html"
     },
     {
       "file": "apps/SCG/plugins/builtin/silverstar_board_silverstar_0_5/payload/Core/Src/system_stm32f4xx.c",
@@ -4037,12 +4079,23 @@
     {
       "file": "apps/SCG/plugins/builtin/silverstar_mcu_family_stm32c0/payload/Platform/STM32C0/Src/usbd_cdc_if.c",
       "local_sha256": "a447cf7b8ce345d4a290a570d4167010ba5ada52a566345567c915c6ff97dcda",
-      "status": "ADAPTED_C0_TEMPLATE_CANDIDATE_IMPORT_RECORD_UNRESOLVED",
-      "upstream_url": "https://raw.githubusercontent.com/STMicroelectronics/stm32c0-classic-coremw-apps/334655ed5eb719db18fa5990a5044332eeca59dc/Projects/NUCLEO-C071RB/Applications/USB_Device/CDC_Standalone/USB_Device/App/usbd_cdc_if.c",
+      "status": "SOURCE_AND_LICENSE_MAPPED_DERIVATIVE_IMPORT_CHAIN",
+      "upstream_url": "https://github.com/STMicroelectronics/stm32c0-classic-coremw-apps/blob/334655ed5eb719db18fa5990a5044332eeca59dc/Projects/NUCLEO-C071RB/Applications/USB_Device/CDC_Standalone/USB_Device/App/usbd_cdc_if.c",
       "upstream_sha256": "917736bf53803912785894fef3d78408a2ed5612345952b9432eb8fcc0ab2af5",
       "candidate_license_path": "docs/public/licenses/ST_C071_APPLICATIONS_LICENSE.txt",
-      "license_path": null,
-      "existing_modification_notice": "SilverStar adaptation: bounded byte stream and LL failure recovery."
+      "license_path": "docs/public/licenses/ST_C071_APPLICATIONS_LICENSE.txt",
+      "existing_modification_notice": "SilverStar adaptation: bounded byte stream and LL failure recovery.",
+      "working_tree_sha256": "a447cf7b8ce345d4a290a570d4167010ba5ada52a566345567c915c6ff97dcda",
+      "git_blob_sha256": "a447cf7b8ce345d4a290a570d4167010ba5ada52a566345567c915c6ff97dcda",
+      "mapping_basis": "The first import commit adds derivative, pinned original CDC App/Target payload and manifest together; original byte hash matches authoritative snapshot and existing document states adaptation/pinned origin. This is a documented local derivative, not a byte-identical upstream file. Existing ST notice and SilverStar adaptation notice remain required.",
+      "license": "SLA0044 Rev6/October 2025",
+      "exact_render_claim": false,
+      "local_introduction_commit": "838f148059020b05d0de4a735332abf830f8b953",
+      "original_revision": "334655ed5eb719db18fa5990a5044332eeca59dc",
+      "companion_manifest": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/companion-manifest.json",
+      "companion_manifest_sha256": "8835f4c76e6ea94ceeccf742ec59665157ddf2a089a4a361ad25b2671afcc6d7",
+      "derived_bytes_unchanged_since_introduction": true,
+      "original_notice_header_identical": true
     },
     {
       "file": "apps/SCG/plugins/builtin/silverstar_mcu_stm32f103c8t6/payload/startup_stm32f103xb.s",
@@ -4776,10 +4829,66 @@
       "EXACT_BYTES": 100
     },
     "split_49": {
-      "GENERATION_PACKAGE_RECORDED_TEMPLATE_LICENSE_UNRESOLVED": 42,
+      "GENERATION_PACKAGE_RECORDED_TEMPLATE_LICENSE_UNRESOLVED": 38,
+      "SOURCE_AND_LICENSE_MAPPED_DERIVATIVE": 2,
       "MAPPED_EXACT_OR_EOL_ONLY": 5,
-      "ADAPTED_C0_TEMPLATE_CANDIDATE_IMPORT_RECORD_UNRESOLVED": 1,
+      "SOURCE_AND_LICENSE_MAPPED_EXACT_TOOL_RESOURCE": 2,
+      "SOURCE_AND_LICENSE_MAPPED_DERIVATIVE_IMPORT_CHAIN": 1,
       "MAPPED_LOCAL_DERIVATIVE": 1
     }
+  },
+  "independent_review_integration": {
+    "review_source_commit": "19c54c7b8a084117f3577b00401faaea2ec7feb5",
+    "review_json_sha256": "4194eb79134b62a59ef001c66b33141dbe1615c36860fef2ce70c3926e4d4097",
+    "report_sha256": "3f6dd3c40133c37be9a34d8e8a2fcea43d6f6d5252f7f741adda79e46b5caf36",
+    "evidence_manifest_sha256": "89409eae01a528f90cb2126c06aa100131c1efc97074d2e65909fc488e3131a9",
+    "verified_artifacts": 27,
+    "five_mappings_added": [
+      {
+        "file": "apps/SCG/plugins/builtin/silverstar_board_ground_station_0_5/payload/Core/Inc/stm32f1xx_hal_conf.h",
+        "status": "SOURCE_AND_LICENSE_MAPPED_DERIVATIVE",
+        "working_tree_sha256": "c05dae0be31ba96e53576408a5f0053d8a0d24c0d706151facb86f7153a7833c",
+        "git_blob_sha256": "569a20b70ff0056fd424dc59b72bf30bfc5de99bba4483d730e18c2cd47bda77",
+        "license_path": "docs/public/licenses/ST_HAL_F1_1.1.10_LICENSE.txt"
+      },
+      {
+        "file": "apps/SCG/plugins/builtin/silverstar_board_silverstar_0_5/payload/Core/Inc/stm32f4xx_hal_conf.h",
+        "status": "SOURCE_AND_LICENSE_MAPPED_DERIVATIVE",
+        "working_tree_sha256": "812258028ba4569afd569b8824844ddca53cc856fdcb2f46c71e7b565b695772",
+        "git_blob_sha256": "132b5b6bd1ac5b82ae12f3e1b7a0d74be0e34a6fb4873bf58ca5bf3d6e10e030",
+        "license_path": "docs/public/licenses/ST_HAL_F4_1.8.5_LICENSE.txt"
+      },
+      {
+        "file": "apps/SCG/plugins/builtin/silverstar_board_silverstar_0_5/payload/Core/Src/syscalls.c",
+        "status": "SOURCE_AND_LICENSE_MAPPED_EXACT_TOOL_RESOURCE",
+        "working_tree_sha256": "03c06c72eafb44b499814cf9234aba57dd830f345d9b8779b5d7090e78517600",
+        "git_blob_sha256": "03c06c72eafb44b499814cf9234aba57dd830f345d9b8779b5d7090e78517600",
+        "license_path": "docs/public/licenses/STM32CubeMX_6.15_SLA0048.pdf"
+      },
+      {
+        "file": "apps/SCG/plugins/builtin/silverstar_board_silverstar_0_5/payload/Core/Src/sysmem.c",
+        "status": "SOURCE_AND_LICENSE_MAPPED_EXACT_TOOL_RESOURCE",
+        "working_tree_sha256": "ad20f7b1fa1e7c73330727747222cf2ffa3245ebf035230ee9a157545e79df95",
+        "git_blob_sha256": "ad20f7b1fa1e7c73330727747222cf2ffa3245ebf035230ee9a157545e79df95",
+        "license_path": "docs/public/licenses/STM32CubeMX_6.15_SLA0048.pdf"
+      },
+      {
+        "file": "apps/SCG/plugins/builtin/silverstar_mcu_family_stm32c0/payload/Platform/STM32C0/Src/usbd_cdc_if.c",
+        "status": "SOURCE_AND_LICENSE_MAPPED_DERIVATIVE_IMPORT_CHAIN",
+        "working_tree_sha256": "a447cf7b8ce345d4a290a570d4167010ba5ada52a566345567c915c6ff97dcda",
+        "git_blob_sha256": "a447cf7b8ce345d4a290a570d4167010ba5ada52a566345567c915c6ff97dcda",
+        "license_path": "docs/public/licenses/ST_C071_APPLICATIONS_LICENSE.txt"
+      }
+    ],
+    "scope": "Source/license mapping only; no source code modification, final legal clearance or USB safety review",
+    "already_supplied_final_check": "Independent review checked designated FINAL license filenames: found HAL/CMSIS/FreeRTOS terms, no generated-template root LICENSE or Semtech LICENSE.TXT. This does not establish that no other historical copy exists."
+  },
+  "remaining_source_request": {
+    "board_files": 38,
+    "semtech_files": 25,
+    "status": "AWAITING_USER_SOURCE_INFORMATION; no further expansive search",
+    "user_wording": "请告诉我们 Ground_Station0.5、Flight_Controller0.5 旧工程和 SX1280lib 最初从哪里取得，或提供原始工程/库压缩包，保留随附许可文件即可。无需另行整理法律清单。",
+    "acceptable_alternatives": "Authoritative matching template/distribution terms with provenance, or ST/Semtech statement tied to the exact files/hashes. Original project LICENSE is one possible witness, not the sole mandatory artifact.",
+    "already_available_evidence": "Current repository .ioc records tool/FW versions; Git histories do not establish original Semtech revision. Supplied FINAL license scope does not close the 38 generated-template or 25 Semtech files."
   }
 }
