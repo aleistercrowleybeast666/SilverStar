@@ -1,20 +1,8 @@
-# Selected device build capabilities
+# 文档入口已迁移
 
-The matched MCU manifest declares `metadata.device_build_capabilities`: each
-`SYSTEM_SELECTED_*` symbol maps to a device class and either a provided capability
-or a sensor recommendation parameter. The generator writes the resolved facts to
-`Generated/Inc/project_device_build_capabilities.h`, included by the generated
-flight configuration before target configuration is read.
+当前公共说明见[DEVICE_BUILD_CAPABILITIES.md](../public/SCG/DEVICE_BUILD_CAPABILITIES.md)。产品版本取仓库根 VERSION，现为 0.1.2。
 
-The provider is the same physical primary selected by capability routes and device
-descriptors. An auxiliary JY901B does not qualify a different primary IMU. Raw
-acceleration/rotation, software propagation qualification, preflight attitude
-qualification, and runtime authoritative attitude qualification remain separate
-facts. Missing facts are zero. A sensor without its own noise recommendation has
-no recommendation; it does not inherit JY901B or NEO-M9N values. Explicit resolved
-algorithm parameters remain authoritative.
+此路径保留以兼容旧引用。原文的历史版本、日期及证据身份完整保存在[内部历史原文](../internal/history/documentation-baseline-20261010/FCCG/DEVICE_BUILD_CAPABILITIES.md)；历史原文不随公共源码包分发，不等同当前验收。
 
-Generated target builds do not include unselected JY901B or NEO-M9N private
-capability headers. Legacy reference builds retain their existing package-owned
-fallback definitions. This generation contract describes software composition;
-it does not assert that a newly supported device has been verified on hardware.
+<!-- Historical heading anchors retained for path compatibility. -->
+<a id="selected-device-build-capabilities"></a>

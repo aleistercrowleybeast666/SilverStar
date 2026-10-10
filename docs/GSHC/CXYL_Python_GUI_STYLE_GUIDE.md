@@ -1,3 +1,8 @@
-# CXYL Python GUI Style Guide
+# 文档入口已迁移
 
-此路径保留为兼容入口，当前规范统一见 [GUI_STYLE_GUIDE](GUI_STYLE_GUIDE.md)，避免维护两份相同规则。
+当前公共说明见[CXYL_Python_GUI_STYLE_GUIDE.md](../public/GSHC/CXYL_Python_GUI_STYLE_GUIDE.md)。产品版本取仓库根 VERSION，现为 0.1.2。
+
+此路径保留以兼容旧引用。原文的历史版本、日期及证据身份完整保存在[内部历史原文](../internal/history/documentation-baseline-20261010/GSHC/CXYL_Python_GUI_STYLE_GUIDE.md)；历史原文不随公共源码包分发，不等同当前验收。
+
+<!-- Historical heading anchors retained for path compatibility. -->
+<a id="cxyl-python-gui-style-guide"></a>

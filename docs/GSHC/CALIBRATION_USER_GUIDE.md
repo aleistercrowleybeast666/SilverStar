@@ -1,6 +1,9 @@
+<!-- Compatibility content mirror; canonical current document lives in docs/public. -->
+当前公共权威入口：[CALIBRATION_USER_GUIDE.md](../public/GSHC/CALIBRATION_USER_GUIDE.md)。此旧路径保留内容镜像供既有文档契约读取者兼容；当前修改在公共文档维护。
+
 # 校准操作说明
 
-连接地面站串口后，等待“飞控 AIR 链路”完成 Capability handshake。可用模式来自当前 `calibration_mode_mask`，完整契约见 [`AIR_CALIBRATION_CONTRACT.md`](AIR_CALIBRATION_CONTRACT.md)。
+连接地面站串口后，等待“飞控 AIR 链路”完成 Capability handshake。可用模式来自当前 `calibration_mode_mask`，完整契约见 [`AIR_CALIBRATION_CONTRACT.md`](../public/GSHC/AIR_CALIBRATION_CONTRACT.md)。
 
 ## 1. 菜单
 

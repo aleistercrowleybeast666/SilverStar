@@ -1,0 +1,367 @@
+{
+  "product_version": "0.1.2",
+  "source_baseline": "4049c08872e10af6e544e9778ef4c4b2bbeeab8c",
+  "scope": "Current public documentation; old paths retain compatibility entries. Original historical snapshots remain internal and excluded from release archive.",
+  "documents": [
+    {
+      "compatibility_path": "docs/FCCG/AIR_CALIBRATION_CONTRACT.md",
+      "public_path": "docs/public/SCG/AIR_CALIBRATION_CONTRACT.md",
+      "original_document_sha256": "8815a1e25e6cd78a946aec7acaaa199969b1d1ffbdc7aa98dac0ae4440487b85"
+    },
+    {
+      "compatibility_path": "docs/FCCG/ALGORITHM_PARAMETERS.md",
+      "public_path": "docs/public/SCG/ALGORITHM_PARAMETERS.md",
+      "original_document_sha256": "eb6240893c0e2a173c6e2ad6ebb8d52d0f9bd76cfffd0410a0bb858db03cfed7"
+    },
+    {
+      "compatibility_path": "docs/FCCG/APP_README.md",
+      "public_path": "docs/public/SCG/APP_README.md",
+      "original_document_sha256": "d94e7fb4ba8f5bf529dd3d55720fdb4b1a80de4c1a67625440685a708482c562"
+    },
+    {
+      "compatibility_path": "docs/FCCG/ARCHITECTURE.md",
+      "public_path": "docs/public/SCG/ARCHITECTURE.md",
+      "original_document_sha256": "d8c3f2b28e9aa5e68ab4dde8cdb2cc74592984a07dd1506e1741915715d0c2ab"
+    },
+    {
+      "compatibility_path": "docs/FCCG/BUILD.md",
+      "public_path": "docs/public/SCG/BUILD.md",
+      "original_document_sha256": "06217c1342cf185d636a9d0dae53e88088e7483e50f3ae16f324102af45c76d6"
+    },
+    {
+      "compatibility_path": "docs/FCCG/COMPONENTS.md",
+      "public_path": "docs/public/SCG/COMPONENTS.md",
+      "original_document_sha256": "326c53d82c8618d6d66cf206c67ad25d8e3a89226ad69e972070c7aad6984a81"
+    },
+    {
+      "compatibility_path": "docs/FCCG/CXYL_Python_GUI_STYLE_GUIDE.md",
+      "public_path": "docs/public/SCG/CXYL_Python_GUI_STYLE_GUIDE.md",
+      "original_document_sha256": "09ee99f4429bbff30c33e75f1b1f72abac0de848493bc3e3ef0d4f7a1311fa2d"
+    },
+    {
+      "compatibility_path": "docs/FCCG/DEVICE_BUILD_CAPABILITIES.md",
+      "public_path": "docs/public/SCG/DEVICE_BUILD_CAPABILITIES.md",
+      "original_document_sha256": "bad607affe27933e6f7bef9e045f6668643ba35bc50cec24a928e38023776000"
+    },
+    {
+      "compatibility_path": "docs/FCCG/EBYTE_RADIO_VARIANTS.md",
+      "public_path": "docs/public/SCG/EBYTE_RADIO_VARIANTS.md",
+      "original_document_sha256": "f6b19ab31bfce4098f1fb1949225eb810e7e9598f8e3646fd9c965bca1f19335"
+    },
+    {
+      "compatibility_path": "docs/FCCG/FIELD_LOG_REPLAY_CONTRACT.md",
+      "public_path": "docs/public/SCG/FIELD_LOG_REPLAY_CONTRACT.md",
+      "original_document_sha256": "9188164532ce1e5d4ba7f51aaeb9969a7f1d6ebf52899ede63316f9546d418b4"
+    },
+    {
+      "compatibility_path": "docs/FCCG/GENERATED_CODE.md",
+      "public_path": "docs/public/SCG/GENERATED_CODE.md",
+      "original_document_sha256": "6556166445a787dfb931a88a2114fe394707e3cd6721dea7b7a09c3134e149d1"
+    },
+    {
+      "compatibility_path": "docs/FCCG/GROUND_SOFTWARE_GATES.md",
+      "public_path": "docs/public/SCG/GROUND_SOFTWARE_GATES.md",
+      "original_document_sha256": "2f6af2b5cbede4a34c12714a7b5d70579bd142284caa49b85dbd2878a35a3f56"
+    },
+    {
+      "compatibility_path": "docs/FCCG/GUI_STYLE_GUIDE.md",
+      "public_path": "docs/public/SCG/GUI_STYLE_GUIDE.md",
+      "original_document_sha256": "cafdb95d42d02c7e957e794e91d50d25d9f4d6115502006c5dee2c366d395d17"
+    },
+    {
+      "compatibility_path": "docs/FCCG/KF6_FIXED_LAG_REPLAY.md",
+      "public_path": "docs/public/SCG/KF6_FIXED_LAG_REPLAY.md",
+      "original_document_sha256": "55eedb89febd5df184df23e2945e98e9c97ef37e8d8404affe868278e978a5f9"
+    },
+    {
+      "compatibility_path": "docs/FCCG/KF6_HEALTH_PUBLICATION.md",
+      "public_path": "docs/public/SCG/KF6_HEALTH_PUBLICATION.md",
+      "original_document_sha256": "3c1fafd67df631b57927fcc5d7f62c7ec425bc68347d6becd94d37a70d1570e0"
+    },
+    {
+      "compatibility_path": "docs/FCCG/KF6_OUTAGE_RECOVERY.md",
+      "public_path": "docs/public/SCG/KF6_OUTAGE_RECOVERY.md",
+      "original_document_sha256": "31f59c843fc683f4144bc25e04b522ebc35916f3533aabc85bc19ae5b415167e"
+    },
+    {
+      "compatibility_path": "docs/FCCG/NAVIGATION_CONTRACT.md",
+      "public_path": "docs/public/SCG/NAVIGATION_CONTRACT.md",
+      "original_document_sha256": "fcea7e6d59202bad4af10244b6b644884151c0bbd4ec23ed4518fd52975801f2"
+    },
+    {
+      "compatibility_path": "docs/FCCG/PLUGIN_FORMAT.md",
+      "public_path": "docs/public/SCG/PLUGIN_FORMAT.md",
+      "original_document_sha256": "4f2390fb690e0d032d5c0a1e4770a557d207585b73493ef95fc31a770c46f548"
+    },
+    {
+      "compatibility_path": "docs/FCCG/PREFLIGHT_LOGGING.md",
+      "public_path": "docs/public/SCG/PREFLIGHT_LOGGING.md",
+      "original_document_sha256": "15138ac562730957df148e4e34cdde42a428b6dd12a90df8aeadc9a205509d5b"
+    },
+    {
+      "compatibility_path": "docs/FCCG/PROJECT_FORMAT.md",
+      "public_path": "docs/public/SCG/PROJECT_FORMAT.md",
+      "original_document_sha256": "8495655424ae83718e884ef6605219670d70bc3a2bd3ef4d63360e9050b910a8"
+    },
+    {
+      "compatibility_path": "docs/FCCG/README.md",
+      "public_path": "docs/public/SCG/README.md",
+      "original_document_sha256": "03826da6734f7b2fb43ce0316c1c81085e44bba66b524bdce50d39c5701b2300"
+    },
+    {
+      "compatibility_path": "docs/FCCG/TARGETS.md",
+      "public_path": "docs/public/SCG/TARGETS.md",
+      "original_document_sha256": "f5264fc4e61ac3e6ad4b7b6ac465c77a5b873c05393488cedf69524f9c557289"
+    },
+    {
+      "compatibility_path": "docs/FCCG/USER_GUIDE.md",
+      "public_path": "docs/public/SCG/USER_GUIDE.md",
+      "original_document_sha256": "7658f77370680422b481c5b04990541f6b0fe7550f8a3311e118567cc44d3d61"
+    },
+    {
+      "compatibility_path": "docs/FLP/APP_README.md",
+      "public_path": "docs/public/FLP/APP_README.md",
+      "original_document_sha256": "0b80951078b967d0b0687bc8e1e6d260e4a4ad855ef89ebf317993a7baf9ca07"
+    },
+    {
+      "compatibility_path": "docs/FLP/Algorithm_Plugin_API.md",
+      "public_path": "docs/public/FLP/Algorithm_Plugin_API.md",
+      "original_document_sha256": "7c4b628a81481f9e667b5bb2077e53c856ad7e320b8b550a991c03b0a145ba8e"
+    },
+    {
+      "compatibility_path": "docs/FLP/Architecture.md",
+      "public_path": "docs/public/FLP/Architecture.md",
+      "original_document_sha256": "d9edccfee4d5c9b722471420a4a610d6527e0e5124634039f8eb4ad37f3654ed"
+    },
+    {
+      "compatibility_path": "docs/FLP/CXYL_Python_GUI_STYLE_GUIDE.md",
+      "public_path": "docs/public/FLP/CXYL_Python_GUI_STYLE_GUIDE.md",
+      "original_document_sha256": "9b2743a0dbee840b22eb5e41a147e25922d8f4262162072fbaf851e9c38b9a1e"
+    },
+    {
+      "compatibility_path": "docs/FLP/Data_Model.md",
+      "public_path": "docs/public/FLP/Data_Model.md",
+      "original_document_sha256": "3ecdba5c157a4d35ee072d8809e9a6fd40db24242e9499b6945a57e4bf6002ee"
+    },
+    {
+      "compatibility_path": "docs/FLP/Decoder_Profile_Package.md",
+      "public_path": "docs/public/FLP/Decoder_Profile_Package.md",
+      "original_document_sha256": "ea7f94ef8436b744767988d6b158a7f0cd99f9edb9f1e2ef49200d8c4f58eb4c"
+    },
+    {
+      "compatibility_path": "docs/FLP/Display_DataQuality.md",
+      "public_path": "docs/public/FLP/Display_DataQuality.md",
+      "original_document_sha256": "1afbb91ca2ce74482caed022823231a838a30bf5288e091af64510c2fd01c84d"
+    },
+    {
+      "compatibility_path": "docs/FLP/Field_Log_Replay.md",
+      "public_path": "docs/public/FLP/Field_Log_Replay.md",
+      "original_document_sha256": "b195f16528269e806ff0de65a7a577436f47778233180db6302c346d4e1af428"
+    },
+    {
+      "compatibility_path": "docs/FLP/GUI_STYLE_GUIDE.md",
+      "public_path": "docs/public/FLP/GUI_STYLE_GUIDE.md",
+      "original_document_sha256": "c41d3faa378a06481f5293c106d095712a58a7d5f8f6f0c667f0bdde123ac2e3"
+    },
+    {
+      "compatibility_path": "docs/FLP/Horizontal_Trajectory.md",
+      "public_path": "docs/public/FLP/Horizontal_Trajectory.md",
+      "original_document_sha256": "147851a9206bba12a3b95700b5e8e9183a5a1bd20a34ef7e8c45899ae575be83"
+    },
+    {
+      "compatibility_path": "docs/FLP/I18N.md",
+      "public_path": "docs/public/FLP/I18N.md",
+      "original_document_sha256": "f73b8a072a8fb49f4ade2531b59450fbf0e9ee13fb8e8cc62249d6623f4ed44a"
+    },
+    {
+      "compatibility_path": "docs/FLP/Log_Container_Plugin_API.md",
+      "public_path": "docs/public/FLP/Log_Container_Plugin_API.md",
+      "original_document_sha256": "edb16664b6ef030cce89ed7a0198aa6b8409087ffe7fae31d19ac5b0da90cb08"
+    },
+    {
+      "compatibility_path": "docs/FLP/Project_Artifacts.md",
+      "public_path": "docs/public/FLP/Project_Artifacts.md",
+      "original_document_sha256": "ea1b5d9116597033b52d50c075f5d532fc8d5e835a80ddff7dcde43e8adf1d16"
+    },
+    {
+      "compatibility_path": "docs/FLP/Project_Format.md",
+      "public_path": "docs/public/FLP/Project_Format.md",
+      "original_document_sha256": "e0e3a74faf53829202dc45cf0b5ab6f05a4814cf0821f76f221f700b9d856b9e"
+    },
+    {
+      "compatibility_path": "docs/FLP/Replay.md",
+      "public_path": "docs/public/FLP/Replay.md",
+      "original_document_sha256": "c092755ad34fcada727dc51957f8beb6ad91a4495b1b6958e5c0864037c1b8fd"
+    },
+    {
+      "compatibility_path": "docs/FLP/SF6_Replay.md",
+      "public_path": "docs/public/FLP/SF6_Replay.md",
+      "original_document_sha256": "3441f61224804a56dede8315d1298c952cf453c68827e0a979e5fc5ea93011fe"
+    },
+    {
+      "compatibility_path": "docs/FLP/SSLOG.md",
+      "public_path": "docs/public/FLP/SSLOG.md",
+      "original_document_sha256": "491ab1dd94f16187b717499fef02330be40f8b7408ee757577bb3fe9cd73893b"
+    },
+    {
+      "compatibility_path": "docs/FLP/Source_Comparison_Matrix.md",
+      "public_path": "docs/public/FLP/Source_Comparison_Matrix.md",
+      "original_document_sha256": "e3e29c55f621453fd42a42d7421f2ca29e15fbc31cd7cb800976c88265b3f8a7"
+    },
+    {
+      "compatibility_path": "docs/FLP/TARGETS.md",
+      "public_path": "docs/public/FLP/TARGETS.md",
+      "original_document_sha256": "67b3dfc3ea7f33d3708b971487a6f5daf84e4b60e865d2faa9a1492abf415313"
+    },
+    {
+      "compatibility_path": "docs/GSHC/AIR_CALIBRATION_CONTRACT.md",
+      "public_path": "docs/public/GSHC/AIR_CALIBRATION_CONTRACT.md",
+      "original_document_sha256": "ffb8013cb9e1f254872255f8e4dc86abd374af5199ece39963fc90a0301f1f40"
+    },
+    {
+      "compatibility_path": "docs/GSHC/AIR_PROTOCOL.md",
+      "public_path": "docs/public/GSHC/AIR_PROTOCOL.md",
+      "original_document_sha256": "cd3115916fa42b1329fc72aed8100bcd54b1049e0db5f44e7b09c719ce9c1f8a"
+    },
+    {
+      "compatibility_path": "docs/GSHC/APP_README.md",
+      "public_path": "docs/public/GSHC/APP_README.md",
+      "original_document_sha256": "a03c10d4579d403380c3012f7ee36d4d0a70c68b988e8afc2525940c41f823ec"
+    },
+    {
+      "compatibility_path": "docs/GSHC/CALIBRATION_USER_GUIDE.md",
+      "public_path": "docs/public/GSHC/CALIBRATION_USER_GUIDE.md",
+      "original_document_sha256": "fed39cfc6f2ea5bd1d4e81f3f089a9ede7a5069c9660336d92ebd875a8bf23d6"
+    },
+    {
+      "compatibility_path": "docs/GSHC/CXYL_Python_GUI_STYLE_GUIDE.md",
+      "public_path": "docs/public/GSHC/CXYL_Python_GUI_STYLE_GUIDE.md",
+      "original_document_sha256": "39f8d4c1db1cebe1108c23d5a9804628631bcc30c0af5e29d5e59c93611bce75"
+    },
+    {
+      "compatibility_path": "docs/GSHC/GSP_MIN_PROTOCOL.md",
+      "public_path": "docs/public/GSHC/GSP_MIN_PROTOCOL.md",
+      "original_document_sha256": "4246ece17b4b3e357a51b8b9f11cda26506e0736bcaa0e7e0871dad84c4a49f3"
+    },
+    {
+      "compatibility_path": "docs/GSHC/GUI_STYLE_GUIDE.md",
+      "public_path": "docs/public/GSHC/GUI_STYLE_GUIDE.md",
+      "original_document_sha256": "94f28d374258487023cd86cb455de4fc8b047fd22ad0955ca63458b203094fe6"
+    },
+    {
+      "compatibility_path": "docs/GSHC/Horizontal_Trajectory.md",
+      "public_path": "docs/public/GSHC/Horizontal_Trajectory.md",
+      "original_document_sha256": "fdab2c2d47a2e3f9d72023e3cd0ba5e99603de1447ed93a67cd245562fee157e"
+    },
+    {
+      "compatibility_path": "docs/GSHC/MAGNETOMETER_CALIBRATION.md",
+      "public_path": "docs/public/GSHC/MAGNETOMETER_CALIBRATION.md",
+      "original_document_sha256": "69a9ba971dd89938530acd399d3c60da88ed00e8aac6cbff1b3a7196439efdf0"
+    },
+    {
+      "compatibility_path": "docs/GSHC/Position_Display_20261010.md",
+      "public_path": "docs/public/GSHC/Position_Display_20261010.md",
+      "original_document_sha256": "5b0e52e66aa61e205cf506a5e7a6acf8810bf4ca492cbf8518a7c564238d959f"
+    },
+    {
+      "compatibility_path": "docs/GSHC/README.md",
+      "public_path": "docs/public/GSHC/README.md",
+      "original_document_sha256": "63bdd7bc9f88afc9d681aec8144d9cf91b598935a8503bd64f12733ec03f2238"
+    },
+    {
+      "compatibility_path": "docs/GSHC/TARGETS.md",
+      "public_path": "docs/public/GSHC/TARGETS.md",
+      "original_document_sha256": "f34e19d6ce5f3c6dab657b04e3d9d944b21279b66383a4eb93764ee94d274bb0"
+    },
+    {
+      "compatibility_path": "docs/GSHC/TIME_EXPORT.md",
+      "public_path": "docs/public/GSHC/TIME_EXPORT.md",
+      "original_document_sha256": "cf74633567fbdb565836129088a28c630f3e05b619e6cc99ef530f264ea8fa7a"
+    },
+    {
+      "compatibility_path": "docs/GSHC/UPPER_COMPUTER_ARCHITECTURE.md",
+      "public_path": "docs/public/GSHC/UPPER_COMPUTER_ARCHITECTURE.md",
+      "original_document_sha256": "3f6f3db8af5464d73164ccd5efd7fa15f04cc7b6060e14f07e39d33177ce2695"
+    },
+    {
+      "compatibility_path": "docs/SilverStar_Recommended_Configurations.md",
+      "public_path": "docs/public/SUPPORT_MATRIX.md",
+      "original_document_sha256": "c67ba90ecb80f6eb6cfbdbf5066ea52e292e553f053776e31a672b9f34dccea2"
+    },
+    {
+      "compatibility_path": "docs/USER_WORKFLOW.md",
+      "public_path": "docs/public/USER_WORKFLOW.md",
+      "original_document_sha256": "1014f564db49e65f4cec462dd8410addf00987cb13392cf8045c3c587a159310"
+    },
+    {
+      "compatibility_path": "docs/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "public_path": "docs/public/algorithms/NAVIGATION_IMPLEMENTATION.md",
+      "original_document_sha256": "88c3f6fef62b891507253aa456b19f4862ab4dc2fbb7fa15e0ec6a5614b350ed"
+    },
+    {
+      "compatibility_path": "docs/architecture/AIR_LINK.md",
+      "public_path": "docs/public/shared/AIR_LINK.md",
+      "original_document_sha256": "ec1f4dd212221e5e671a75fd0678abd22733cfc4599b8cf3936ff4f5d7deeb89"
+    },
+    {
+      "compatibility_path": "docs/architecture/DEVICE_STARTUP.md",
+      "public_path": "docs/public/shared/DEVICE_STARTUP.md",
+      "original_document_sha256": "b3bb1d13015969f57b496a90223ecbb3062bafcd0d985ff80a8d88f9d36b5e1c"
+    },
+    {
+      "compatibility_path": "docs/architecture/DEVICE_VARIANTS.md",
+      "public_path": "docs/public/shared/DEVICE_VARIANTS.md",
+      "original_document_sha256": "2d8bb75feb752ab6cc5cc124f9c819c65e35a7d6b49c514f6c6fd4e4b4bb264a"
+    },
+    {
+      "compatibility_path": "docs/architecture/GROUND_STATION.md",
+      "public_path": "docs/public/shared/GROUND_STATION.md",
+      "original_document_sha256": "4d9161aebc20012b11758c90d30f5cbad09a18151173d43cc2aca4f1f4e541f5"
+    },
+    {
+      "compatibility_path": "docs/architecture/MCU_PLATFORM.md",
+      "public_path": "docs/public/shared/MCU_PLATFORM.md",
+      "original_document_sha256": "7f62b2e4888e58132caea5c2b9ba4e9b86b12b9341d2b73396ceb4dcf5d5173c"
+    },
+    {
+      "compatibility_path": "docs/architecture/MISSION_SNAPSHOT.md",
+      "public_path": "docs/public/shared/MISSION_SNAPSHOT.md",
+      "original_document_sha256": "3152a456f20e7c566403ae4ae8119351176a16f289d14ff15cf08ee8c6fceb3e"
+    },
+    {
+      "compatibility_path": "docs/architecture/MONOREPO_ARCHITECTURE.md",
+      "public_path": "docs/public/shared/MONOREPO_ARCHITECTURE.md",
+      "original_document_sha256": "9d100529c21787552ffc40755d5e7f5e4dcdd8976c6610da057769432fc051f7"
+    },
+    {
+      "compatibility_path": "docs/architecture/PCB_INSTANCE_WORKFLOW.md",
+      "public_path": "docs/public/shared/PCB_INSTANCE_WORKFLOW.md",
+      "original_document_sha256": "60b96941688cbdc4b0835fe90749a0a087604742a0f46271018ee16d24dcaca0"
+    },
+    {
+      "compatibility_path": "docs/architecture/PERSISTENT_STORAGE.md",
+      "public_path": "docs/public/shared/PERSISTENT_STORAGE.md",
+      "original_document_sha256": "8c375f9c568de4f9eb0f9c5823580de11b401689f679bcf6ffcc04dc88d813e4"
+    },
+    {
+      "compatibility_path": "docs/architecture/PROJECT_FOLDER_CONTRACT.md",
+      "public_path": "docs/public/shared/PROJECT_FOLDER_CONTRACT.md",
+      "original_document_sha256": "d5272c4480c74618e2c4696c12a829fdd9b6eb0c7ba24cc2f79e55c106eafd8e"
+    },
+    {
+      "compatibility_path": "docs/architecture/TARGET_MODEL.md",
+      "public_path": "docs/public/shared/TARGET_MODEL.md",
+      "original_document_sha256": "9073b211571e561cf047b1188d3d77a7e86e78764d93a1d68e45d5246114f1d8"
+    },
+    {
+      "compatibility_path": "docs/architecture/TARGET_RESOURCE_PLAN.md",
+      "public_path": "docs/public/shared/TARGET_RESOURCE_PLAN.md",
+      "original_document_sha256": "f24f7f7cbb12fa0848cf349088babcab87ccb25a75dc3d0127e5614cc19fa34d"
+    },
+    {
+      "compatibility_path": "docs/releases/0.1.2.md",
+      "public_path": "docs/public/releases/0.1.2.md",
+      "original_document_sha256": "2812c3b02121ecaed467bb64f797038d0c56c49a209696265d2d557d6fad3e0f"
+    }
+  ]
+}

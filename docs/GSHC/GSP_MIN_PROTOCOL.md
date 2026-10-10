@@ -1,59 +1,15 @@
-# GSP-MIN 地面站串口封装
+# 文档入口已迁移
 
-本文只定义PC上位机与地面站之间的GSP-MIN。AIR应用层帧以 [`AIR_PROTOCOL.md`](AIR_PROTOCOL.md) 为唯一正式定义。
+当前公共说明见[GSP_MIN_PROTOCOL.md](../public/GSHC/GSP_MIN_PROTOCOL.md)。产品版本取仓库根 VERSION，现为 0.1.2。
 
-## Frame
-所有多字节整数little-endian。
-```text
-Byte0  SOF1=0xA5
-Byte1  SOF2=0x5A
-Byte2  GSP_TYPE
-Byte3  LEN
-Byte4.. payload
-最后2字节 CRC16 little-endian
-```
-总长`6+LEN`。CRC16 CCITT-FALSE，init `0xFFFF`，poly `0x1021`，覆盖`GSP_TYPE+LEN+PAYLOAD`。
+此路径保留以兼容旧引用。原文的历史版本、日期及证据身份完整保存在[内部历史原文](../internal/history/documentation-baseline-20261010/GSHC/GSP_MIN_PROTOCOL.md)；历史原文不随公共源码包分发，不等同当前验收。
 
-## Types
-| type | value | direction | meaning |
-|---|---:|---|---|
-| GS_STATUS | `0x01` | GS→PC | 地面站/无线状态 |
-| AIR_RX | `0x02` | GS→PC | 转发完整AIR帧 |
-| AIR_TX | `0x03` | PC→GS | 请求发送完整AIR帧 |
-| ACK | `0x04` | 双向 | GSP层结果 |
-
-## GS_STATUS payload (12 B)
-```text
-0 GS_STATE
-1 RADIO_STATE
-2..5 TX_CNT u32
-6..9 RX_CNT u32
-10..11 CRC_ERR_CNT u16
-```
-GS_STATE：IDLE/INIT_OK/RX_MODE/TX_MODE/ERROR。RADIO_STATE：NOT_INIT/READY/RX/TX/BUSY。
-
-## AIR_RX
-```text
-0 RSSI_DBM int8
-1 SNR_Q4 int8 (0.25 dB)
-2 AIR_LEN
-3.. AIR_FRAME
-```
-Ground station不得重组AIR帧。
-
-## AIR_TX
-```text
-0 AIR_LEN
-1.. AIR_FRAME
-```
-GSP只检查封装长度并交给无线层，AIR命令语义不属于GSP。
-
-## ACK
-固定3字节：`ACK_GSP_TYPE, RESULT, DETAIL`。RESULT：OK/BAD_CRC/BAD_LEN/BAD_TYPE/BAD_PARAM/BUSY。GSP ACK只确认串口封装，不替代AIR ACK。
-
-
-## AIR_RX_RADIO_V1 (0x05, GS to PC)
-
-NRF uses the exact contract in [gsp_air_rx_radio_v1.json](../../contracts/gsp_air_rx_radio_v1.json): offset0 backend=1, offset1 metrics_flags=0, offset2 AIR_LEN=1..61, then exactly AIR_LEN original AIR bytes. Payload length is exactly3+AIR_LEN and remains at most64 bytes. Unknown backend/flags and invalid lengths are rejected.
-
-This envelope has no numeric RSSI/SNR fields. Live GSHC clears old SX measurements; raw and parsed logs carry absent values, and exports contain no fabricated link metrics. Legacy AIR_RX0x02 signed metrics and bytes, AIR_TX, ACK and AIR M0/CMD/ACK are unchanged. Both Ground and GSHC need the paired implementation; old clients ignore0x05 and cannot display its AIR data. Physical radio completion is not application ACK or READY.
+<!-- Historical heading anchors retained for path compatibility. -->
+<a id="gsp-min-地面站串口封装"></a>
+<a id="frame"></a>
+<a id="types"></a>
+<a id="gs_status-payload-12-b"></a>
+<a id="air_rx"></a>
+<a id="air_tx"></a>
+<a id="ack"></a>
+<a id="air_rx_radio_v1-0x05-gs-to-pc"></a>

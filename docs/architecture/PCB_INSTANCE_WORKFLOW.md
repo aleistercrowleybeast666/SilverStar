@@ -1,30 +1,8 @@
-# PCB instance workflow
+# 文档入口已迁移
 
-Flight Hardware and Ground Station Hardware accept an existing PCB instance,
-a CubeMX `.ioc`, or a generated CubeMX project directory. The CubeMX importer
-parses the exact MCU, package, clock, peripheral and pin inventory, DMA, IRQ,
-UART, SPI, I²C, SDIO, USB and ADC evidence. An `.ioc` alone is an editing
-snapshot; firmware generation requires the corresponding generated sources.
-The imported CubeMX files remain hardware input and are not SilverStar-owned
-source.
+当前公共说明见[PCB_INSTANCE_WORKFLOW.md](../public/shared/PCB_INSTANCE_WORKFLOW.md)。产品版本取仓库根 VERSION，现为 0.1.2。
 
-An imported generated project can be saved with **Save as New PCB Instance**.
-The save operation requires an exact MCU, a positive HCLK within that MCU's
-declared limit, source digest and generated source snapshot. The installed
-plugin records target role, IOC, generated hardware snapshot, clock, resource
-provisions, exact MCU, source digest and provenance. Its maturity is always
-`local_unverified`; saving a plugin does not validate a physical PCB. The
-local package is installed under the FCCG plugin catalog, with a disposable
-archive in the app's ignored `.work/board_exports/` directory.
+此路径保留以兼容旧引用。原文的历史版本、日期及证据身份完整保存在[内部历史原文](../internal/history/documentation-baseline-20261010/architecture/PCB_INSTANCE_WORKFLOW.md)；历史原文不随公共源码包分发，不等同当前验收。
 
-Flight and Ground use the same CubeMX importer and board plugin exporter.
-Ground's production selector includes the hardware-validated GS_SS1 reference
-and locally installed Ground PCB instances. Selecting a PCB instance rebuilds
-its hardware inventory and resource candidates. Ground radio bindings are
-checked against the same SPI/electrical constraints as Flight; exclusive pins
-and PC UART pins cannot overlap radio pins. A local board remains subject to
-target resource validation and firmware build audits.
-
-The GS_SS1 legacy firmware has run on its real F103 PCB, so that topology is a
-hardware-validated reference. The new SilverStar Ground Core has an ARM build
-result and awaits its own Round 5 board smoke test.
+<!-- Historical heading anchors retained for path compatibility. -->
+<a id="pcb-instance-workflow"></a>

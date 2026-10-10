@@ -12,6 +12,8 @@ SilverStar 是面向火箭航电开发的三应用软件套件。此分发提供
 
 当前版本以根目录 `VERSION` 为准。历史子文档中的 0.0.x/0.1.0 是当时快照，不覆盖本版本；AIR M0、SSLOG 0.0、`.ssdecoder` 1.2、导航 revision 和第三方库各有独立版本。FCCG 是 SCG 的历史名称；`silverstar_fccg` Python 包及旧项目身份继续兼容。
 
+公共文档统一入口：[docs/public](docs/public/README.md)，包含跨工具流程、教程、API/插件、原理与实现公式。旧文档路径保留兼容入口；历史验收与原始数据不随公共文档分发。
+
 ## 快速开始：安装与启动
 
 推荐 Windows 10/11、Python 3.11 或以上、可写的解压目录。实际离线启动验证使用 Windows、Python 3.14.0、PySide6 6.10.1、NumPy 2.4.1、matplotlib 3.10.8、pyqtgraph 0.14.0、pyserial 3.5。Python 3.11 是声明的最低版本，本轮没有另建 3.11 环境验证。依赖是版本范围，未提供锁定环境；首次安装需要从配置的 Python 包源下载依赖。
@@ -142,7 +144,7 @@ Recorded 是日志实际记录值；Recomputed 使用实际记录配置；Offlin
 
 当前 revision 3 的水平闭合误差来自记录的 `NAV_QUALITY`：10 秒窗口、两队列交错、每 5 秒完成一个窗口。高频重复记录的是上一个完成结果，因此 Recorded 水平图按完成结果保持为阶梯。`variance_scale` 是位置测量 **方差** 倍率，不是误差，也不是标准差倍数。
 
-垂直图由 FLP 对 `GNSS_NATIVE` 原始高度/垂直速度独立积分，随真实样本更新；参考重置、断流等形成分段。它没有使用相同的 10 秒/5 秒水平窗口，灰色重置线不等于固件拒绝事件。两图不能直接横比数值或据此断言水平/垂直精度；不应为美观插值阶梯值。完整解释见 [FLP 使用文档](docs/FLP/APP_README.md)，其中旧版本段落须按开头的版本说明阅读。
+垂直图由 FLP 对 `GNSS_NATIVE` 原始高度/垂直速度独立积分，随真实样本更新；参考重置、断流等形成分段。它没有使用相同的 10 秒/5 秒水平窗口，灰色重置线不等于固件拒绝事件。两图不能直接横比数值或据此断言水平/垂直精度；不应为美观插值阶梯值。完整解释见 [FLP 使用文档](docs/public/FLP/APP_README.md)，其中旧版本段落须按开头的版本说明阅读。
 
 ## 插件与开发接口
 
@@ -162,7 +164,7 @@ FLP 的解码包是声明式数据，不执行包内 Python。容器插件与算
 
 原创 SilverStar 源码使用根 [Apache License 2.0](LICENSE)。第三方材料保留自己的版权头和条款：FreeRTOS MIT、CMSIS Apache-2.0、ST HAL/device 相应包条款、FatFs 文件头条款、Bosch 相应 BSD 条款等，均不能被根 LICENSE 改写。
 
-已有来源审计仍列出 Semtech SX1280lib 引用的 `LICENSE.TXT` 缺失、ST 精确包来源与第一方权利人署名待核事项。当前只准备本地源码候选包；**公开分发及二进制/Qt 打包仍需关闭这些已知事项**。不附第三方 Python/Qt 二进制，也未执行 Windows 安装器许可审计。详见 [本版分发说明](docs/releases/0.1.2.md)。
+已有来源审计仍列出 Semtech SX1280lib 引用的 `LICENSE.TXT` 缺失、ST 精确包来源与第一方权利人署名待核事项。当前只准备本地源码候选包；**公开分发及二进制/Qt 打包仍需关闭这些已知事项**。不附第三方 Python/Qt 二进制，也未执行 Windows 安装器许可审计。详见 [本版分发说明](docs/public/releases/0.1.2.md)。
 
 包采用文件白名单，不含 `.git`、`.venv`、缓存、临时目录、开发验收证据、原始用户日志或用户项目，也不附带固件最终交付物。来源路径字段的可移植处理以及文档链接范围会逐项记录在 `RELEASE_MANIFEST.json`；源文件及分发内容分别计算 SHA256，不能将处理后的元数据谎称与 Git blob 完全一致。
 

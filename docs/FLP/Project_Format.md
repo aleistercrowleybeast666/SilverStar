@@ -1,46 +1,10 @@
-# Project format v3
+# 文档入口已迁移
 
-`.ssflp` is an atomic, single-log reference document. It never embeds or modifies a log or decoder.
-Version 3 rejects all older versions, including v2 multiplier configurations; no migration exists.
-Decoder, generation, Catalog, Semantics, cache and container identity checks remain mandatory.
+当前公共说明见[Project_Format.md](../public/FLP/Project_Format.md)。产品版本取仓库根 VERSION，现为 0.1.2。
 
-Each `replay_configurations` item contains exactly:
+此路径保留以兼容旧引用。原文的历史版本、日期及证据身份完整保存在[内部历史原文](../internal/history/documentation-baseline-20261010/FLP/Project_Format.md)；历史原文不随公共源码包分发，不等同当前验收。
 
-- `algorithm_id` and `algorithm_version`;
-- `mode`: `recorded_configuration`, `what_if`, or explicit `offline`;
-- `input_source`;
-- `actual_values`: ID-to-value map;
-- `parameter_schema_identity`: SHA-256 of plugin schema metadata;
-- `provenance`: `Firmware build configuration from .ssdecoder` or `Algorithm Plugin actual defaults`.
-
-Unknown fields/IDs, missing values, invalid types/ranges, non-finite numbers, old plugin/schema
-identities and invalid modes are rejected. Recorded values cannot override the package.
-Restore checks every saved configuration against the opened dataset and validates provenance
-before publishing it. The `draft` entry preserves unsubmitted What-if edits; historical run
-configurations remain available. Optional verified numerical sidecars now retain results;
-missing historical arrays require explicit replay and are never recomputed automatically.
-Saves flush a temporary UTF-8 JSON file and atomically replace the target.
-
-## Desktop workflow and path authority
-
-**New Project** first asks for the destination `.ssflp`, then opens the existing manual-pair or
-bounded folder-search import flow. Cancellation or exact-match failure leaves that destination
-untouched; an existing destination requires confirmation and is replaced only by the final atomic
-save after validation. Open Project selects only `.ssflp` and requires its referenced log and
-decoder at their exact saved identities—there is no similar-name recovery scan.
-
-Log and decoder references in the project directory or descendants are stored relative to the
-`.ssflp`; paths that cannot be relativized fall back to absolute references. A neighboring FCCG
-`SilverStar.ssproject` is an inert sidecar: FLP does not parse it, infer parameters from it, or use
-it for matching. The authoritative chain remains log Descriptor ↔ exact `.ssdecoder` 1.2.
-
-The format remains **version 3**. Optional result_artifact, parse_artifact and
-save_data_and_results fields extend the same project model; earlier v3 files remain readable.
-See [Project Artifacts](Project_Artifacts.md).
-
-## Analysis source and range state
-
-Version 3 ui_state stores analysis_source and time_range (start/end/preset/custom_duration).
-The selected primary and optional secondary retain source/run IDs. Completed runs restore
-from verified sidecars after source-log/exact-decoder checks. Missing results stay unavailable
-until explicit user replay. No automatic numerical replay is started on reopen.
+<!-- Historical heading anchors retained for path compatibility. -->
+<a id="project-format-v3"></a>
+<a id="desktop-workflow-and-path-authority"></a>
+<a id="analysis-source-and-range-state"></a>

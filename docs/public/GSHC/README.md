@@ -1,0 +1,17 @@
+# GSHC 0.1.2 公共文档：地面站
+
+先阅读[应用说明](APP_README.md)、[公共总入口](../README.md)与[版本/证据](../shared/VERSIONS_AND_EVIDENCE.md)。产品、工程格式、wire与插件版本各自独立；旧报告和原始数据不在本公共目录。
+
+- [AIR_CALIBRATION_CONTRACT.md](AIR_CALIBRATION_CONTRACT.md)
+- [AIR_PROTOCOL.md](AIR_PROTOCOL.md)
+- [APP_README.md](APP_README.md)
+- [CALIBRATION_USER_GUIDE.md](CALIBRATION_USER_GUIDE.md)
+- [CXYL_Python_GUI_STYLE_GUIDE.md](CXYL_Python_GUI_STYLE_GUIDE.md)
+- [GSP_MIN_PROTOCOL.md](GSP_MIN_PROTOCOL.md)
+- [GUI_STYLE_GUIDE.md](GUI_STYLE_GUIDE.md)
+- [Horizontal_Trajectory.md](Horizontal_Trajectory.md)
+- [MAGNETOMETER_CALIBRATION.md](MAGNETOMETER_CALIBRATION.md)
+- [Position_Display_20261010.md](Position_Display_20261010.md)
+- [TARGETS.md](TARGETS.md)
+- [TIME_EXPORT.md](TIME_EXPORT.md)
+- [UPPER_COMPUTER_ARCHITECTURE.md](UPPER_COMPUTER_ARCHITECTURE.md)

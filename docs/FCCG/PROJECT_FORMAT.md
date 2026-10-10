@@ -1,46 +1,16 @@
-# SilverStar Project Format
+# 文档入口已迁移
 
-当前 0.1.0 pre-release 工程格式为 **14**（`PROJECT_FORMAT_VERSION` 与 `schemas/project.schema.json`）。项目包括 Flight Controller 配置、可选 ground_target、共享 air_link、alignment 与两端独立 TX power；Device instance 记录 plugin、interface、profile。详见[Target model](../architecture/TARGET_MODEL.md)、[AIR Link](../architecture/AIR_LINK.md)与[Device variants](../architecture/DEVICE_VARIANTS.md)。以下 format 12/13 段落保留作为历史说明，不代表当前 schema。
+当前公共说明见[PROJECT_FORMAT.md](../public/SCG/PROJECT_FORMAT.md)。产品版本取仓库根 VERSION，现为 0.1.2。
 
-## 历史：format 12/13
+此路径保留以兼容旧引用。原文的历史版本、日期及证据身份完整保存在[内部历史原文](../internal/history/documentation-baseline-20261010/FCCG/PROJECT_FORMAT.md)；历史原文不随公共源码包分发，不等同当前验收。
 
-## Algorithm actual parameters / 算法实际参数
-
-新增独立算法参数页面（硬件连接之前），插件声明实际值、单位和 representation。
-Project format 12；`.ssdecoder` / project-semantics 1.2，拒绝 decoder 1.1；
-Platform 仍为 0.0.12，Record Catalog 与协议布局不变。
-参数清单、生成绑定与 Recorded Configuration / Offline What-if 边界见[参数契约](ALGORITHM_PARAMETERS.md)。
-精确验证结果仅见仓库根 VALIDATION.md。
-
-
-以下核心字段原属 Flight Controller；format 13 起保留其运行时 API 以保证原有 Flight 生成能力，format 14 延续该结构。
-
-## 核心数据
-- project identity：name、SilverStar firmware/platform version；
-- MCU/Platform lock + `build.target_profile`派生锁；
-- Board或Custom CubeMX hardware identity；
-- Device instances；
-- Strategies；
-- Modes及参数；
-- capability source overrides；
-- three nullable protocol slots；
-- logging policy；
-- resource assignments；
-- development environment；
-- generation/readiness fingerprints。
-
-## Calibration
-`modes.calibration`合法：`[]`、`["OneFace"]`、`["SixFace"]`、`["OneFace","SixFace"]`。NONE不是GUI mode option，而是始终存在的SystemCalibration运行模式。空数组自动NONE/READY；非空build仍允许运行时选择NONE。
-
-## Protocols
-`telemetry/maintenance/logging`分别为协议锁对象或`null`。Device存在不强制启用协议。
-
-## Target lock
-`build.target_profile`必须与匹配MCU/Platform manifest完全一致；它是完整性锁，不是用户自由输入。
-
-## Project Semantics
-生成的Project Semantics记录physical devices、capability endpoints、initial canonical routes、protocol locks/bindings、algorithms/strategies/modes、logging和hardware identity。Runtime source change通过日志event表达。
-
-## Shared algorithm-parameter invariant (format 12)
-
-No shared map is added. Values remain under `algorithm_parameters[component_id][parameter_id]`; all selected declarations with one `shared_key` must be exactly equal or strict open/validation/generation fails with a shared-parameter mismatch. Reconciliation initializes a newly selected owner from an existing group value, but never repairs an existing conflict. Deselecting an owner prunes only its existing private component map.
+<!-- Historical heading anchors retained for path compatibility. -->
+<a id="silverstar-project-format"></a>
+<a id="历史format-1213"></a>
+<a id="algorithm-actual-parameters--算法实际参数"></a>
+<a id="核心数据"></a>
+<a id="calibration"></a>
+<a id="protocols"></a>
+<a id="target-lock"></a>
+<a id="project-semantics"></a>
+<a id="shared-algorithm-parameter-invariant-format-12"></a>

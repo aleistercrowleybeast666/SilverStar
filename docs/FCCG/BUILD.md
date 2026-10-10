@@ -1,39 +1,12 @@
-# Build and Development Environment
+# 文档入口已迁移
 
-## Build truth
-生成项目只使用Resolved SourceGraph。Make、EIDE、VS Code共享sources/includes/defines/linker/CPU/FPU/library/forced-include信息，不允许各自扫描源树。
+当前公共说明见[BUILD.md](../public/SCG/BUILD.md)。产品版本取仓库根 VERSION，现为 0.1.2。
 
-当前已验证MCU插件声明`SilverStar_F407` Target Profile；该值来自MCU/Platform manifest，不是Python全局默认。
+此路径保留以兼容旧引用。原文的历史版本、日期及证据身份完整保存在[内部历史原文](../internal/history/documentation-baseline-20261010/FCCG/BUILD.md)；历史原文不随公共源码包分发，不等同当前验收。
 
-## Arm GNU
-- Release：`-O2 -g`；
-- Debug：`-Og -g3`；
-- 保留运行时assert和静态分配；
-- 输出ELF/HEX/BIN/MAP；
-- first-party使用严格warning策略。
-
-常用目标：
-```text
-all / clean / clean-all
-host-tests
-architecture-check
-power10-check
-static-analysis
-artifact-check
-stack-report
-```
-
-所有Arm GNU C编译生成stack-usage信息。`stack-report`把`.su`、ELF call graph和保守context reserve结合，对所有启用静态任务检查预算；不能用Host测试替代STM32任务栈证明。
-
-## EIDE / VS Code
-EIDE与VS Code从同一SourceGraph渲染。FCCG不生成已验证flash按钮；模板保留的OpenOCD/J-Link结构不构成烧录能力声明。
-
-## Tool separation
-- Arm GNU：固件编译/静态分析；
-- GNU Make：构建编排；
-- Host GCC：电脑端Host tests。
-缺失工具只禁用依赖操作，不阻止Generate。
-
-更多平台构建边界见 [`platform/details/BUILD_AND_TARGETS.md`](platform/details/BUILD_AND_TARGETS.md)。
-
-默认生成Release配置。构建输出仅位于`build/FCCG/`，Host测试使用`build/FCCG/Host/Tests`。`stack-report`通过生成Make显式运行，需要Python作离线分析；普通固件编译不运行Python生成器。
+<!-- Historical heading anchors retained for path compatibility. -->
+<a id="build-and-development-environment"></a>
+<a id="build-truth"></a>
+<a id="arm-gnu"></a>
+<a id="eide--vs-code"></a>
+<a id="tool-separation"></a>

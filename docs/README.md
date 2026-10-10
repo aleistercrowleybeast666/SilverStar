@@ -1,29 +1,5 @@
-# Documentation
+# SilverStar 文档入口
 
-Current application implementation: `apps/SCG`. The Python package and plugin IDs retain FCCG compatibility names. `docs/FCCG` and frozen evidence paths are historical namespaces; their recorded bytes and hashes are preserved.
+面向用户和开发者的现行说明统一进入 [docs/public](public/README.md)：SCG、GSHC、FLP、共享契约、算法与公式。
 
-建议阅读顺序：[用户流程总览](USER_WORKFLOW.md) → [硬件与四档/推荐边界](SilverStar_Recommended_Configurations.md) → [SCG 配置生成](FCCG/USER_GUIDE.md) → [GSHC 采集](GSHC/APP_README.md) → [FLP 分析](FLP/APP_README.md) → [四算法原理与实际实现](algorithms/NAVIGATION_IMPLEMENTATION.md) → [当前验证边界与明日静态清单](NIGHTLY_SOFTWARE_CLOSEOUT_20261008.md)。
-
-- [0.1.2 短时恢复：正常 Qt 布局、真实工作进度、单次打开刷新及未关闭的失败](GUI_FOLLOWUP_0_1_2_20261008.md)
-- [当前 0.1.2：四档归一化、原生 GUI、真实进度、软件门禁及剩余阻塞](GUI_ACCEPTANCE_0_1_2_20261008.md)
-- [FCCG documentation](FCCG/README.md), [application guide](FCCG/APP_README.md), [historical validation](FCCG/VALIDATION.md)
-- [GSHC documentation](GSHC/README.md), [application guide](GSHC/APP_README.md), [historical validation](GSHC/VALIDATION.md)
-- [FLP documentation](FLP/APP_README.md), [architecture](FLP/Architecture.md), [historical validation](FLP/VALIDATION.md)
-- [推荐组合与验证范围](SilverStar_Recommended_Configurations.md)
-- [2026-10-08 GUI 收尾、文档核对与未通过项](RELEASE_GUI_CLOSEOUT_20261008.md)
-- [本机软件收尾与当前边界：菜单生命周期、四档、Windows路径及静态清单](NIGHTLY_SOFTWARE_CLOSEOUT_20261008.md)
-- [当前静态任务与一次复查](STATIC_BENCH_ACCEPTANCE_20261008.md)、[000045 复查边界](STATIC_BENCH_REPEAT_20261008.md)、[实际 TF 文件与 FLP 离线验收](STATIC_LOG_FILE_ACCEPTANCE_20261008.md)
-- [Monorepo architecture](architecture/MONOREPO_ARCHITECTURE.md)
-- [2026-10-08 TEST_5 与生产 GSHC 对比、DAP 拒绝现场](TEST5_GSHC_DAP_COMPARISON_20261008.md)
-- [2026-10-08 健康事件终结边界修复：红绿回归、完整软件检查及栈来源阻塞](LOGGER_HEALTH_FINALIZATION_20261008.md)
-- [2026-10-08 精确来源授权后完整复验与 mission 000051 静态运行](LOGGER_HEALTH_RETEST_20261008.md)
-- [Flight and Ground target model](architecture/TARGET_MODEL.md), [AIR Link](architecture/AIR_LINK.md), [Ground Station firmware](architecture/GROUND_STATION.md), [Device variants](architecture/DEVICE_VARIANTS.md)
-- [Project folder contract](architecture/PROJECT_FOLDER_CONTRACT.md)
-- [Mission snapshot and final status](architecture/MISSION_SNAPSHOT.md)
-- [Round 4 device and navigation report](architecture/ROUND4_DEVICE_NAVIGATION_REPORT.md)
-- [Round 5 field qualification report](architecture/ROUND5_FIELD_QUALIFICATION_REPORT.md), [frozen software reference](field/FIELD_TEST_REFERENCE.md), [field-test checklist](field/FIELD_TEST_CHECKLIST_0_1_0.md)
-- [Round 2 multi-target report](architecture/ROUND2_MULTI_TARGET_REPORT.md)
-- [0.1.0 migration report](architecture/MIGRATION_0_1_0.md)
-- [Canonical navigation contract](../contracts/navigation_v1.json)
-
-The imported `VALIDATION.md` files are historical records. Their old absolute paths and test counts describe the former workspaces, not a fresh monorepo validation result.
+本目录其余历史记录、测试证据、原始数据和内部诊断保留原时间/源码身份，不构成 0.1.2 的新验收，也不自动纳入公开发布材料。旧路径的兼容入口指向现行公共文档；原文保存在内部历史快照。程序实现与源日志保持冻结。

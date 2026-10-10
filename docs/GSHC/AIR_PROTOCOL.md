@@ -1,4 +1,9 @@
+<!-- Compatibility content mirror; canonical current document lives in docs/public. -->
+当前公共权威入口：[AIR_PROTOCOL.md](../public/GSHC/AIR_PROTOCOL.md)。此旧路径保留内容镜像供既有文档契约读取者兼容；当前修改在公共文档维护。
+
 # SilverStar AIR 应用层协议 M0
+
+产品显示身份为0.1.2；下文0.0.x是该接口/wire契约的来源版本，不是当前应用产品版本。AIR仍为M0，具体字段与兼容性按实际协议核对，不据产品版本重写旧数据。
 
 > 正式名称：AIR 遥测协议 M0
 > wire兼容标识：`AIR_PROFILE_COMPACT_V0 = 0`
@@ -59,7 +64,7 @@ AIR 周期主链只关心长期稳定的 canonical information：
 
 Ground Station 遇到尚未认识的 sensor ID 时应显示 `Unknown Sensor 0xNN`，而不是拒绝整个会话。
 
-当前 0.0.10 契约内保持 M0 wire layout 冻结；后续扩展遵循下一节 Profile 边界。
+沿用源自 0.0.10 的 M0 wire 契约，产品 0.1.2 不改变该布局；后续扩展遵循下一节 Profile 边界。
 
 ---
 
@@ -144,7 +149,7 @@ bit3..7 = reserved
 | SixFace | `0x05` |
 | OneFace+SixFace | `0x07` |
 
-NONE始终属于合法Calibration mode。无采样procedure的build启动时自动NONE/READY；build含采样procedure时，GSHC仍可用现有`CAL_START(NONE)`显式选择默认/单位校正。详细跨组件行为见 [AIR_CALIBRATION_CONTRACT.md](AIR_CALIBRATION_CONTRACT.md)。
+NONE始终属于合法Calibration mode。无采样procedure的build启动时自动NONE/READY；build含采样procedure时，GSHC仍可用现有`CAL_START(NONE)`显式选择默认/单位校正。详细跨组件行为见 [AIR_CALIBRATION_CONTRACT.md](../public/GSHC/AIR_CALIBRATION_CONTRACT.md)。
 
 未知bit3..7仅用于诊断，不生成未知操作，也不单独导致profile拒绝。
 
@@ -677,7 +682,7 @@ AIR M0 不定义 SENSOR_STATUS_REQUEST / DEVICE_INFO_REQUEST。
 | 4 | u8 | `result` |
 | 5..8 | u32 little-endian | `time_ms` |
 
-CAL_START 的 `BAD_PARAM` 表示 mode 编码非法，`REJECTED` 表示合法采样模式未编入 build；`BAD_STATE/BUSY` 保持状态不允许/忙语义。NONE、ONE_FACE、SIX_FACE 的 `OK` 均仅表示接受，完成依据真实飞控状态。跨组件行为以[共同契约](AIR_CALIBRATION_CONTRACT.md)为准。
+CAL_START 的 `BAD_PARAM` 表示 mode 编码非法，`REJECTED` 表示合法采样模式未编入 build；`BAD_STATE/BUSY` 保持状态不允许/忙语义。NONE、ONE_FACE、SIX_FACE 的 `OK` 均仅表示接受，完成依据真实飞控状态。跨组件行为以[共同契约](../public/GSHC/AIR_CALIBRATION_CONTRACT.md)为准。
 
 | 值 | result |
 |---:|---|
@@ -960,7 +965,7 @@ Unknown sensor ID 必须保留原值。
 
 ## 40. AIR M0 冻结目标
 
-AIR M0 wire在0.0.10当前契约内冻结；普通物理设备或能力实例扩展只能复用既有`SENSOR_STATUS.sensor_id + instance_id`，不能顺带调整现有帧。
+AIR M0 wire沿用0.0.10来源契约的冻结布局，产品0.1.2不机械改写它；普通物理设备或能力实例扩展只能复用既有`SENSOR_STATUS.sensor_id + instance_id`，不能顺带调整现有帧。
 
 正式发布后，普通硬件扩展不得要求修改 wire format。
 
