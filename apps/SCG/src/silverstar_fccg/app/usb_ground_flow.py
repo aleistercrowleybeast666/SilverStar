@@ -4,7 +4,7 @@ Receipts locate outputs; they never grant target admission or formal release.
 """
 from copy import deepcopy
 from pathlib import Path
-from dataclasses import replace
+from dataclasses import dataclass, replace
 import hashlib
 import json
 import os
@@ -82,8 +82,13 @@ def _Pointer_Save(project, model, result):
         'result': result.result.value, 'formal_release': False}, indent=2))
 
 
-def UsbGroundOutput_Get(service, model, project, *, compiled=False):
+def UsbGroundOutput_Get(service, model, project, *, compiled=False, task_context=None):
+    def cancel_check():
+        if task_context is not None:
+            task_context.Cancel_RaiseIfRequested()
+    cancel_check()
     service.UsbGroundCandidate_Plan(model, **UsbGroundOptions_Get(model.ground_target.hardware.mcu))
+    cancel_check()
     pointer = json.loads(_Pointer_Path(project).read_text(encoding='utf-8'))
     if not isinstance(pointer, dict) or pointer.get('model_sha256') != hashlib.sha256(_Json_Encode(model.Dictionary_Get())).hexdigest():
         raise CubeMxImportError('USB candidate belongs to another saved model; generate/build again')
@@ -113,6 +118,7 @@ def UsbGroundOutput_Get(service, model, project, *, compiled=False):
         if not isinstance(backend.get('files_sha256'), dict):
             raise CubeMxImportError('USB rendered receipt lacks its generated file inventory')
         for relative, digest in backend['files_sha256'].items():
+            cancel_check()
             if hashlib.sha256(policy.Path_Resolve(relative, allow_root=False).read_bytes()).hexdigest() != digest:
                 raise CubeMxImportError('Rendered USB candidate changed: ' + relative)
         if compiled:
@@ -130,6 +136,7 @@ def UsbGroundOutput_Get(service, model, project, *, compiled=False):
                        ('experimental_files_sha256', 'output_artifact_sha256', 'input_sha256'))):
             raise CubeMxImportError('USB compiler result is not an exact-model software success')
         for relative, digest in {**record['experimental_files_sha256'], **record['output_artifact_sha256']}.items():
+            cancel_check()
             if hashlib.sha256(policy.Path_Resolve(relative, allow_root=False).read_bytes()).hexdigest() != digest:
                 raise CubeMxImportError('USB candidate source/artifact changed: ' + relative)
         # Copied native inputs must still equal the admitted input bytes.
@@ -138,6 +145,7 @@ def UsbGroundOutput_Get(service, model, project, *, compiled=False):
         if model.ground_target.hardware.mcu != C071_PART:
             prefix = NATIVE_PREFIX
         for relative, digest in record['input_sha256'].items():
+            cancel_check()
             if hashlib.sha256(policy.Path_Resolve(prefix + relative, allow_root=False).read_bytes()).hexdigest() != digest:
                 raise CubeMxImportError('USB copied native input changed: ' + relative)
     else:
@@ -171,15 +179,72 @@ def UsbGroundFlow_Run(service, model, project, operation, context):
     return result
 
 
-def UsbGroundQualityHash_Get(service, model, project, action):
-    output = UsbGroundOutput_Get(service, model, project, compiled=action in {'artifact_check', 'static_analysis'})
-    pointer = json.loads(_Pointer_Path(project).read_text(encoding='utf-8'))
-    digest = hashlib.sha256(_Json_Encode([pointer, action]))
+def _QualityTools_Read(output, context=None):
+    files = []
     for path in sorted((output / 'Tools').rglob('*')):
+        if context is not None:
+            context.Cancel_RaiseIfRequested()
         if path.is_file():
-            digest.update(str(path.relative_to(output)).encode())
-            digest.update(WorkspacePolicy(output).Path_Resolve(path, allow_root=False).read_bytes())
-    return output, digest.hexdigest()
+            body = WorkspacePolicy(output).Path_Resolve(path, allow_root=False).read_bytes()
+            files.append((str(path.relative_to(output)), body))
+    return tuple(files)
+
+
+def _QualityDigest_Get(pointer, action, files):
+    digest = hashlib.sha256(_Json_Encode([pointer, action]))
+    for relative, body in files:
+        digest.update(relative.encode())
+        digest.update(body)
+    return digest.hexdigest()
+
+
+def UsbGroundQualityHash_Get(service, model, project, action, *, task_context=None):
+    before = _Pointer_Path(project).read_bytes()
+    output = UsbGroundOutput_Get(service, model, project,
+        compiled=action in {'artifact_check', 'static_analysis'}, task_context=task_context)
+    files = _QualityTools_Read(output, task_context)
+    if _Pointer_Path(project).read_bytes() != before:
+        raise CubeMxImportError('USB candidate pointer changed during check')
+    return output, _QualityDigest_Get(json.loads(before), action, files)
+
+
+@dataclass(frozen=True)
+class UsbGroundRefreshResult:
+    output: Path | None
+    records: tuple
+    states: dict
+    error: str = ''
+
+
+def UsbGroundRefresh_Inspect(service, model, project, context):
+    """One complete inspection per refresh; records share its exact inputs.
+
+    This is a worker-only, request-scoped result, never persisted authority.
+    Each action still revalidates independently before using any candidate.
+    """
+    context.Cancel_RaiseIfRequested()
+    output = None
+    records = ()
+    try:
+        before = _Pointer_Path(project).read_bytes()
+        output = UsbGroundOutput_Get(service, model, project, task_context=context)
+        pointer = json.loads(before)
+        records = service.QualityResults_Get(output)
+        files = _QualityTools_Read(output, context) if records else ()
+        states = {}
+        for record in records:
+            context.Cancel_RaiseIfRequested()
+            if (record.task in {'artifact_check', 'static_analysis'} and
+                    pointer['result'] != NativeGroundBackendResult.CompiledCandidate.value):
+                states[record.task] = 'unavailable'
+            elif record.input_sha256 != _QualityDigest_Get(pointer, record.task, files):
+                states[record.task] = 'stale'
+        if _Pointer_Path(project).read_bytes() != before:
+            raise CubeMxImportError('USB candidate pointer changed during refresh')
+        context.Cancel_RaiseIfRequested()
+        return UsbGroundRefreshResult(output, tuple(records), states)
+    except (OSError, ValueError) as error:
+        return UsbGroundRefreshResult(None, (), {}, str(error))
 
 
 def UsbGroundQuality_Run(service, model, project, action, context):
@@ -190,7 +255,7 @@ def UsbGroundQuality_Run(service, model, project, action, context):
     digest = ''
     error = ''
     try:
-        output, before = UsbGroundQualityHash_Get(service, model, project, action.value)
+        output, before = UsbGroundQualityHash_Get(service, model, project, action.value, task_context=context)
         checker = 'check_c071_candidate.py' if model.ground_target.hardware.mcu == C071_PART else 'check_native_ground.py'
         selected = deepcopy(model)
         selected.build = replace(selected.ground_target.build, tool_paths={
@@ -214,7 +279,7 @@ def UsbGroundQuality_Run(service, model, project, action, context):
         context.Line_Report(RELEASE_NOTICE)
         code, lines = runner._Process_Run(command, output, environment, context, context.Line_Report)
         context.Cancel_RaiseIfRequested()
-        _, digest = UsbGroundQualityHash_Get(service, model, project, action.value)
+        _, digest = UsbGroundQualityHash_Get(service, model, project, action.value, task_context=context)
         if digest != before:
             raise CubeMxImportError('USB quality inputs changed during check')
         result = BuildResult(action, command, code, RELEASE_NOTICE + '\n' + ''.join(lines), live_streamed=True)

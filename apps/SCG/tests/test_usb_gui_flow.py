@@ -14,7 +14,17 @@ from silverstar_fccg.hardware.cubemx import CubeMxImporter
 from silverstar_fccg.project.model import ProjectModel_Load
 from silverstar_fccg.ui.main_window import MainWindow
 from silverstar_fccg.build.runner import BuildAction
-from test_task_progress_busy import _Wait
+from PySide6.QtCore import QTimer
+
+
+def _Wait(qapp, condition):
+    # Completion now includes the cancellable asynchronous refresh phase.
+    # GUI cadence is tested independently; this is a work-completion budget.
+    deadline=time.monotonic()+30
+    while not condition() and time.monotonic()<deadline:
+        qapp.processEvents();time.sleep(.005)
+    assert condition(), 'bounded multi-phase GUI work wait expired'
+
 
 @pytest.fixture(params=['F103','C071'])
 def usb_window(request,qapp,tmp_path_factory,builtin_catalog,monkeypatch):
@@ -31,8 +41,19 @@ def usb_window(request,qapp,tmp_path_factory,builtin_catalog,monkeypatch):
     errors=[]
     monkeypatch.setattr(current,'_Error_Show',lambda *a:errors.append(a))
     monkeypatch.setattr(QFileDialog,'getExistingDirectory',lambda *a: str(source))
+    phases=[];task_run=current.Task_Run
+    def timed_run(function,*args,**kwargs):
+        def timed(context):
+            start=time.monotonic()
+            try:return function(context)
+            finally:phases.append({'function':function.__name__,'seconds':time.monotonic()-start})
+        return task_run(timed,*args,**kwargs)
+    monkeypatch.setattr(current,'Task_Run',timed_run)
     try:yield current,source,errors,request.param
-    finally:current.close();qapp.processEvents()
+    finally:
+        current._Task_Cancel();_Wait(qapp,lambda:current._active_worker is None)
+        (root/'worker-durations.json').write_text(json.dumps(phases,indent=2),encoding='utf8')
+        current.close();qapp.processEvents()
 
 def _Import(qapp,window):
     current,source,errors,part=window
@@ -71,6 +92,7 @@ def test_real_gui_import_save_reload_export_and_artifact_state(usb_window,qapp,t
     assert current.build_page.action_buttons['ground_build'].isEnabled() is False  # tools not detected yet
     assert current.build_page.action_buttons['ground_open_folder'].isEnabled()
     current._TargetAction_Request('ground_artifact_check')
+    _Wait(qapp,lambda:current._active_worker is None)
     assert errors and 'not compiled' in str(errors[-1])
     assert before=={p.relative_to(source).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in source.rglob('*') if p.is_file()}
     (project/'gui-flow-test-receipt.json').write_text(json.dumps({'part':part,'source':str(source),'project':str(project),'output':str(output),'model':model,'result':'Actual import/save/reload/private export handlers executed; rendered output correctly refuses compiled artifact claim'},indent=2),encoding='utf8')
@@ -114,10 +136,24 @@ def test_real_gui_success_build_and_quality(usb_window,qapp,tmp_path_factory,mon
     monkeypatch.setattr(QFileDialog,'getOpenFileName',lambda *a:(compiler,''))
     assert current._ToolchainBrowse('compiler')
     assert not errors,errors
-    current.build_page.actionRequested.emit('ground_build')
+    # Exercise the real enabled button after the ordinary Generate operation.
+    current.ground_target_page.generate_button.click()
+    _Wait(qapp,lambda:current._active_worker is None)
+    assert not errors,errors
+    button=current.build_page.action_buttons['ground_build']
+    assert button.isEnabled()
+    ticks=[];timer=QTimer();timer.setInterval(20)
+    timer.timeout.connect(lambda:ticks.append(time.monotonic()))
+    timer.start();started=time.monotonic();button.click()
     deadline=time.monotonic()+240
     while current._active_worker is not None and time.monotonic()<deadline:
         qapp.processEvents();time.sleep(0.01)
+    timer.stop()
+    gaps=[b-a for a,b in zip([started]+ticks,ticks+[time.monotonic()])]
+    (current._project_root/'build-responsiveness.json').write_text(json.dumps({
+        'part':part,'actual_enabled_build_button_clicked':True,'ticks':len(ticks),
+        'max_tick_gap_seconds':max(gaps),'build_elapsed_seconds':time.monotonic()-started},indent=2),encoding='utf8')
+    assert len(ticks)>20 and max(gaps)<1.0,(len(ticks),max(gaps))
     assert current._active_worker is None
     assert not errors,errors
     assert current.progress_bar.property('taskState')=='success'
@@ -127,6 +163,7 @@ def test_real_gui_success_build_and_quality(usb_window,qapp,tmp_path_factory,mon
     assert compiler['warning_diagnostics']==[]
     assert (output/'build/native.elf').is_file() and (output/'build/analysis/native.elf').is_file()
     current._TargetAction_Request('ground_artifact_check')
+    _Wait(qapp,lambda:current._active_worker is None)
     assert not errors,errors
     with Path(os.environ['SILVERSTAR_USB_BACKEND_BUILD_INDEX']).open('a',encoding='utf8') as f:
         f.write(json.dumps({'part':current._model.ground_target.hardware.mcu,'output':str(output),'project_root':str(current._project_root),'backend_receipt_sha256':hashlib.sha256((output/'backend-receipt.json').read_bytes()).hexdigest()})+'\n')
@@ -146,6 +183,7 @@ def test_real_gui_success_build_and_quality(usb_window,qapp,tmp_path_factory,mon
     try:
         elf.write_bytes(original+b'ordinary-stale-artifact')
         current._TargetAction_Request('ground_artifact_check')
+        _Wait(qapp,lambda:current._active_worker is None)
         assert errors and 'changed' in str(errors[-1])
         (current._project_root/'stale-artifact-test.json').write_text(json.dumps({'part':part,'detected':str(errors[-1]),'original_elf_sha256':hashlib.sha256(original).hexdigest()}),encoding='utf8')
     finally:
