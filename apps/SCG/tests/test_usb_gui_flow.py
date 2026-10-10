@@ -75,6 +75,7 @@ def _Import(qapp,window):
 def test_saved_legacy_f103_is_refused_before_gui_work_then_reimports(
         legacy_bound, qapp, tmp_path_factory, monkeypatch):
     from silverstar_fccg.app.usb_ground import F103_REIMPORT_REQUIRED, UsbGroundReimportIssue_Get
+    from silverstar_fccg.app.usb_ground_flow import REIMPORT_STATUS
     from silverstar_fccg.hardware.cubemx import CubeMxImportError
     service, imported, args, source = legacy_bound
     service.assembler.catalog = service.catalog
@@ -92,7 +93,8 @@ def test_saved_legacy_f103_is_refused_before_gui_work_then_reimports(
         assert UsbGroundReimportIssue_Get(current._model) == F103_REIMPORT_REQUIRED
         assert not current.ground_target_page.generate_button.isEnabled()
         assert not current.build_page.action_buttons['ground_build'].isEnabled()
-        assert current.build_page.target_status_labels['ground'].text() == F103_REIMPORT_REQUIRED
+        assert current.build_page.target_status_labels['ground'].text() == REIMPORT_STATUS
+        assert current.build_page.target_status_labels['ground'].toolTip() == F103_REIMPORT_REQUIRED
         assert F103_REIMPORT_REQUIRED in current.ground_target_page.generate_button.toolTip()
         assert not current._usb_refresh_timer.isActive() and current._usb_refresh_pending is None
         task_run = current.Task_Run

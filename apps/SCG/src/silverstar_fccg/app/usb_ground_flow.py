@@ -26,6 +26,7 @@ from silverstar_fccg.hardware.inventory import CubeMxInventory_Parse
 
 
 RELEASE_STATUS = 'USB software candidate; formal release BLOCKED'
+REIMPORT_STATUS = 'F103: reimport CubeMX / 重新导入'
 
 
 RELEASE_NOTICE = (

@@ -4,7 +4,7 @@ import json
 from silverstar_fccg.app.usb_ground_flow import (
     UsbGroundBound_Is, UsbGroundFlow_Import, UsbGroundFlow_Run,
     UsbGroundOutput_Get, UsbGroundQuality_Run, UsbGroundRefresh_Inspect, RELEASE_NOTICE, RELEASE_STATUS,
-    UsbGroundReimportIssue_Get,
+    UsbGroundReimportIssue_Get, REIMPORT_STATUS,
 )
 from silverstar_fccg.app.native_ground import NativeGroundProjectImportResult
 import logging
@@ -904,7 +904,10 @@ class MainWindow(QMainWindow):
             self.build_page.QualityResults_Set(display.quality_results)
             self._TargetQualityResults_Refresh(display.model)
             if UsbGroundBound_Is(display.model):
-                self.build_page.target_status_labels['ground'].setText(usb_reimport_issue or RELEASE_STATUS)
+                self.build_page.target_status_labels['ground'].setText(
+                    REIMPORT_STATUS if usb_reimport_issue else RELEASE_STATUS)
+                self.build_page.target_status_labels['ground'].setToolTip(
+                    usb_reimport_issue or RELEASE_NOTICE)
             self.power10_export_button.setEnabled(
                 self._project_root is not None and Power10Report_Load(self._project_root / FLIGHT_DIRECTORY) is not None)
             self.legacy_migration_button.setVisible(bool(ReleaseCompatibilityIssues_Get(display.model)))
