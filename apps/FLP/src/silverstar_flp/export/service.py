@@ -564,28 +564,50 @@ class FlightExporter:
         gif_metadata["analysis_source"] = store.ActiveSource_Get().source_id
         integrity_result = None
         vertical_result = None
-        integrity_error = None
         integrity_parameters = {}
-        if (requested.include_plots and dataset.Records_Get("GNSS_NATIVE")
-                and self._EstimatorSelection_Get(resolver) is not None):
-            try:
-                source = self._EstimatorSelection_Get(resolver)[0]
-                integrity_parameters = dict(self._SourceParameters_Get(dataset, resolver, source))
-                entry = resolver.store.SourceEntry_Get(source.source_id)
-                windows = entry.diagnostics.get("window_evidence") if entry is not None else None
-                integrity_result = HorizontalQuality_Build(
-                    dataset,
-                    source_kind=("recorded" if source.kind == AnalysisSourceKind.RECORDED
-                                 else "recomputed"),
-                    window_evidence=windows,
-                    integrity_enabled=integrity_parameters.get("gnss_integrity_enable"),
-                )
-                vertical_result = GnssVerticalConsistency_Build(
-                    dataset,
-                    max_gap_ms=int(integrity_parameters.get("gnss_integrity_max_gap_ms", 120)),
-                )
-            except (ValueError, KeyError, TypeError) as error:
-                integrity_error = str(error)
+        integrity_plots = (
+            ("GNSS_Horizontal_Consistency_Error", "export.gnss_integrity.horizontal"),
+            ("GNSS_Vertical_Consistency_Error", "export.gnss_integrity.vertical"),
+            ("GNSS_Receiver_Information", "export.gnss_integrity.receiver"),
+        )
+        integrity_unavailable: dict[str, str] = {}
+        if requested.include_plots:
+            horizontal_kind, vertical_kind, receiver_kind = (item[0] for item in integrity_plots)
+            estimator = self._EstimatorSelection_Get(resolver)
+            if estimator is None:
+                integrity_unavailable[horizontal_kind] = "selected_estimator_unavailable"
+            else:
+                try:
+                    source = estimator[0]
+                    integrity_parameters = dict(self._SourceParameters_Get(dataset, resolver, source))
+                    entry = resolver.store.SourceEntry_Get(source.source_id)
+                    windows = entry.diagnostics.get("window_evidence") if entry is not None else None
+                    source_kind = ("recorded" if source.kind == AnalysisSourceKind.RECORDED
+                                   else "recomputed")
+                    integrity_result = HorizontalQuality_Build(
+                        dataset, source_kind=source_kind, window_evidence=windows,
+                        integrity_enabled=integrity_parameters.get("gnss_integrity_enable"),
+                    )
+                    if not integrity_result.timestamp_us.size:
+                        integrity_unavailable[horizontal_kind] = (
+                            "recorded_revision3_nav_quality_unavailable" if source_kind == "recorded"
+                            else "recomputed_window_evidence_unavailable"
+                        )
+                except (ValueError, KeyError, TypeError) as error:
+                    integrity_unavailable[horizontal_kind] = f"gnss_horizontal_input_unavailable:{error}"
+            if not dataset.Records_Get("GNSS_NATIVE"):
+                integrity_unavailable[receiver_kind] = "gnss_native_unavailable"
+                integrity_unavailable[vertical_kind] = "gnss_native_unavailable"
+            else:
+                try:
+                    vertical_result = GnssVerticalConsistency_Build(
+                        dataset,
+                        max_gap_ms=int(integrity_parameters.get("gnss_integrity_max_gap_ms", 120)),
+                    )
+                    if not vertical_result.timestamp_us.size:
+                        integrity_unavailable[vertical_kind] = "gnss_vertical_samples_unavailable"
+                except (ValueError, KeyError, TypeError) as error:
+                    integrity_unavailable[vertical_kind] = f"gnss_vertical_input_unavailable:{error}"
 
         standard_plot_units = (
             self._StandardPlotWorkUnitCount_Get(
@@ -650,7 +672,8 @@ class FlightExporter:
             + (sum(entry.algorithm_id == "silverstar.algorithm.sf6"
                    for entry in store.Entries_Get())
                if requested.include_csv else 0)
-            + (3 * len(pages) if integrity_result is not None else 0)
+            + ((len(integrity_plots) - len(integrity_unavailable)) * len(pages)
+               if requested.include_plots else 0)
             + int(requested.include_trajectory_3d)
             + gif_frame_units
             + int(requested.include_attitude_gif)
@@ -857,14 +880,14 @@ class FlightExporter:
                 Translator(language.value).Text_Get("horizontal.title"),
             )
 
-        if integrity_result is not None:
+        if requested.include_plots:
             integrity_dir = output / "GNSSIntegrity"
-            for page_start, page_end in pages:
-                for kind, name_key in (
-                    ("GNSS_Horizontal_Consistency_Error", "export.gnss_integrity.horizontal"),
-                    ("GNSS_Vertical_Consistency_Error", "export.gnss_integrity.vertical"),
-                    ("GNSS_Receiver_Information", "export.gnss_integrity.receiver"),
-                ):
+            for kind, name_key in integrity_plots:
+                name = Translator(language.value).Text_Get(name_key)
+                if kind in integrity_unavailable:
+                    skip(f"gnss_integrity:{kind}", name, integrity_unavailable[kind])
+                    continue
+                for page_start, page_end in pages:
                     interval = f"{page_start:010.3f}-{page_end:010.3f}"
                     path = integrity_dir / kind / f"{kind}_{interval}{suffix}.png"
                     attempt(
@@ -875,10 +898,8 @@ class FlightExporter:
                                 resolved_theme, a, b, integrity_parameters,
                                 vertical_result,
                             ),
-                        Translator(language.value).Text_Get(name_key),
+                        name,
                     )
-        elif requested.include_plots and dataset.Records_Get("GNSS_NATIVE"):
-            skip("gnss_integrity", "GNSS Integrity", integrity_error or "unavailable")
 
         if requested.include_trajectory_3d:
             path = output / "Trajectory3D" / f"Trajectory_3D{suffix}.png"
@@ -2289,10 +2310,8 @@ class FlightExporter:
         background, foreground, _ = self._Plot_Configure(theme)
         label = Translator(language.value).Text_Get
         origin = dataset.start_timestamp_us or dataset.diagnostics.first_timestamp_us or 0
-        receiver = ReceiverInformation_Build(dataset)
-        time = (result.timestamp_us.astype(np.float64) - origin) * 1e-6
-        keep = (time >= page_start) & (time <= page_end)
         if kind == "GNSS_Receiver_Information":
+            receiver = ReceiverInformation_Build(dataset)
             time = (receiver.timestamp_us.astype(np.float64) - origin) * 1e-6
             keep = (time >= page_start) & (time <= page_end)
             figure, axes = plt.subplots(2, 1, figsize=(11, 7), dpi=140, sharex=True)
@@ -2321,6 +2340,8 @@ class FlightExporter:
             satellites.set_xlim(page_start, max(page_end, page_start + .001))
         else:
             if kind == "GNSS_Horizontal_Consistency_Error":
+                time = (result.timestamp_us.astype(np.float64) - origin) * 1e-6
+                keep = (time >= page_start) & (time <= page_end)
                 figure, axes = plt.subplots(2, 1, figsize=(11, 7), dpi=140, sharex=True)
                 axis, weight = axes
                 for item in axes:
