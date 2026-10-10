@@ -1,0 +1,370 @@
+{
+  "source_commit": "f61cbd851b8ac32b865deb1a3997058685dfebbd",
+  "evidence_commit": "5b99438ba4005ea02935e9734307e749e2e758e7",
+  "checked_utc": "2026-10-10T05:08:02.544280+00:00",
+  "scope": "Ordinary read-only async GUI/candidate archive QA; no hardware or stopped independent safety review",
+  "manifest": {
+    "count": 962,
+    "mismatches": []
+  },
+  "git_archive": {
+    "files": 963,
+    "mismatches": []
+  },
+  "post_code_non_document_changes": [],
+  "delivery": {
+    "report_sha256_matches": true,
+    "manifest_sha256_matches": true
+  },
+  "gui": {
+    "source_commit": "f61cbd851b8ac32b865deb1a3997058685dfebbd",
+    "dirty_diff": "",
+    "exit": 0,
+    "started_utc": "2026-10-10T04:49:40.070956+00:00",
+    "finished_utc": "2026-10-10T04:55:33.448185+00:00",
+    "command": [
+      "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+      "-B",
+      "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\backend_pytest.py",
+      "apps/SCG/tests/test_usb_gui_flow.py",
+      "-p",
+      "no:cacheprovider",
+      "--basetemp=C:/Users/chdxm/AppData/Local/Temp/ua04",
+      "-q"
+    ],
+    "source_hashes": {
+      "count": 6,
+      "mismatches": []
+    }
+  },
+  "gates": [
+    {
+      "part": "STM32F103C8T6",
+      "mode": "architecture",
+      "exit": 0,
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30",
+      "log_hash_matches": true,
+      "command": [
+        "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+        "Tools/check_native_ground.py"
+      ]
+    },
+    {
+      "part": "STM32F103C8T6",
+      "mode": "host",
+      "exit": 0,
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30",
+      "log_hash_matches": true,
+      "command": [
+        "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+        "Tools/check_native_ground.py",
+        "host",
+        "--host-cc",
+        "gcc"
+      ]
+    },
+    {
+      "part": "STM32F103C8T6",
+      "mode": "artifact",
+      "exit": 0,
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30",
+      "log_hash_matches": true,
+      "command": [
+        "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+        "Tools/check_native_ground.py",
+        "artifact",
+        "--prefix",
+        "arm-none-eabi-"
+      ]
+    },
+    {
+      "part": "STM32F103C8T6",
+      "mode": "power10",
+      "exit": 0,
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30",
+      "log_hash_matches": true,
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "Tools/check_power_of_ten.ps1",
+        "-TargetKind",
+        "Ground"
+      ]
+    },
+    {
+      "part": "STM32C071FBP6",
+      "mode": "architecture",
+      "exit": 0,
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-6d85cddbb6b8",
+      "log_hash_matches": true,
+      "command": [
+        "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+        "Tools/check_c071_candidate.py"
+      ]
+    },
+    {
+      "part": "STM32C071FBP6",
+      "mode": "host",
+      "exit": 0,
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-6d85cddbb6b8",
+      "log_hash_matches": true,
+      "command": [
+        "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+        "Tools/check_c071_candidate.py",
+        "host",
+        "--host-cc",
+        "gcc"
+      ]
+    },
+    {
+      "part": "STM32C071FBP6",
+      "mode": "artifact",
+      "exit": 0,
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-6d85cddbb6b8",
+      "log_hash_matches": true,
+      "command": [
+        "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+        "Tools/check_c071_candidate.py",
+        "artifact",
+        "--prefix",
+        "arm-none-eabi-"
+      ]
+    },
+    {
+      "part": "STM32C071FBP6",
+      "mode": "power10",
+      "exit": 0,
+      "cwd": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-6d85cddbb6b8",
+      "log_hash_matches": true,
+      "command": [
+        "powershell",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "Tools/check_power_of_ten.ps1",
+        "-TargetKind",
+        "Ground"
+      ]
+    }
+  ],
+  "candidates": [
+    {
+      "part": "STM32F103C8T6",
+      "output": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-ee466bf8fd30",
+      "project_root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\p_1842494a",
+      "status": "NATIVE_SOURCE_CPP_GAS_ARM_LINK_AND_ANALYZER_EXECUTED",
+      "source_commit": "f61cbd851b8ac32b865deb1a3997058685dfebbd",
+      "dirty_diff": "",
+      "commands": 339,
+      "planned": 339,
+      "nonzero_exits": [],
+      "warning_diagnostics": [],
+      "actual_analyzer_c_compilations": 54,
+      "syntax_only_commands": 0,
+      "generated": {
+        "count": 127,
+        "mismatches": []
+      },
+      "archived_generated": {
+        "count": 127,
+        "mismatches": []
+      },
+      "artifacts": {
+        "count": 555,
+        "mismatches": []
+      },
+      "native_inputs": {
+        "count": 114,
+        "mismatches": []
+      },
+      "source_snapshot": {
+        "count": 52,
+        "mismatches": [],
+        "CRLF_raw_hash_preserved_with_identical_normalized_git_source": [
+          "src\\silverstar_fccg\\project\\model.py"
+        ]
+      },
+      "backend_index_match": true,
+      "compile_backend_match": true,
+      "saved_model_file_match": true,
+      "model_digest_match": true,
+      "archived_receipt_matches": true,
+      "archived_snapshot_matches": true,
+      "elf_sha256": "fde957fe80fdf038f4c5c6640bc851446e8ef7acb7605258fd94dca87c81240b",
+      "analysis_elf_sha256": "fde957fe80fdf038f4c5c6640bc851446e8ef7acb7605258fd94dca87c81240b"
+    },
+    {
+      "part": "STM32C071FBP6",
+      "output": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\usb-6d85cddbb6b8",
+      "project_root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ua04\\p_885b3d60",
+      "status": "NATIVE_SOURCE_CPP_GAS_ARM_LINK_AND_ANALYZER_EXECUTED",
+      "source_commit": "f61cbd851b8ac32b865deb1a3997058685dfebbd",
+      "dirty_diff": "",
+      "commands": 351,
+      "planned": 351,
+      "nonzero_exits": [],
+      "warning_diagnostics": [],
+      "actual_analyzer_c_compilations": 56,
+      "syntax_only_commands": 0,
+      "generated": {
+        "count": 273,
+        "mismatches": []
+      },
+      "archived_generated": {
+        "count": 273,
+        "mismatches": []
+      },
+      "artifacts": {
+        "count": 575,
+        "mismatches": []
+      },
+      "native_inputs": {
+        "count": 111,
+        "mismatches": []
+      },
+      "source_snapshot": {
+        "count": 161,
+        "mismatches": [],
+        "CRLF_raw_hash_preserved_with_identical_normalized_git_source": [
+          "src\\silverstar_fccg\\project\\model.py",
+          "src\\silverstar_fccg\\__init__.py",
+          "src\\silverstar_fccg\\app\\application.py",
+          "src\\silverstar_fccg\\app\\source_export.py",
+          "src\\silverstar_fccg\\app\\version.py",
+          "src\\silverstar_fccg\\app\\__init__.py",
+          "src\\silverstar_fccg\\build\\quality_batch.py",
+          "src\\silverstar_fccg\\build\\runner.py",
+          "src\\silverstar_fccg\\build\\target_progress.py",
+          "src\\silverstar_fccg\\build\\toolchain.py",
+          "src\\silverstar_fccg\\build\\__init__.py",
+          "src\\silverstar_fccg\\core\\errors.py",
+          "src\\silverstar_fccg\\core\\i18n.py",
+          "src\\silverstar_fccg\\core\\path_preferences.py",
+          "src\\silverstar_fccg\\core\\settings.py",
+          "src\\silverstar_fccg\\core\\task.py",
+          "src\\silverstar_fccg\\core\\view_models.py",
+          "src\\silverstar_fccg\\core\\workspace.py",
+          "src\\silverstar_fccg\\core\\__init__.py",
+          "src\\silverstar_fccg\\generator\\assembler.py",
+          "src\\silverstar_fccg\\generator\\compact_entry.py",
+          "src\\silverstar_fccg\\generator\\eide_ownership.py",
+          "src\\silverstar_fccg\\generator\\ground_environment.py",
+          "src\\silverstar_fccg\\generator\\ground_pc_session_uart.py",
+          "src\\silverstar_fccg\\generator\\ground_pc_uart_dma.py",
+          "src\\silverstar_fccg\\generator\\ground_pc_usb_cdc.py",
+          "src\\silverstar_fccg\\generator\\ground_radio.py",
+          "src\\silverstar_fccg\\generator\\hardware_preparation.py",
+          "src\\silverstar_fccg\\generator\\kf6_identity.py",
+          "src\\silverstar_fccg\\generator\\log_decoder_profile.py",
+          "src\\silverstar_fccg\\generator\\render.py",
+          "src\\silverstar_fccg\\generator\\__init__.py",
+          "src\\silverstar_fccg\\hardware\\board_plugin.py",
+          "src\\silverstar_fccg\\hardware\\cubemx.py",
+          "src\\silverstar_fccg\\hardware\\ground_dependencies.py",
+          "src\\silverstar_fccg\\hardware\\platform.py",
+          "src\\silverstar_fccg\\hardware\\__init__.py",
+          "src\\silverstar_fccg\\plugins\\algorithm_parameters.py",
+          "src\\silverstar_fccg\\plugins\\catalog.py",
+          "src\\silverstar_fccg\\plugins\\installer.py",
+          "src\\silverstar_fccg\\plugins\\manifest.py",
+          "src\\silverstar_fccg\\plugins\\recommendations.py",
+          "src\\silverstar_fccg\\plugins\\__init__.py",
+          "src\\silverstar_fccg\\project\\air_link.py",
+          "src\\silverstar_fccg\\project\\algorithm_parameters.py",
+          "src\\silverstar_fccg\\project\\alignment.py",
+          "src\\silverstar_fccg\\project\\artifact_memory.py",
+          "src\\silverstar_fccg\\project\\build_audit.py",
+          "src\\silverstar_fccg\\project\\capabilities.py",
+          "src\\silverstar_fccg\\project\\clock_plan.py",
+          "src\\silverstar_fccg\\project\\compact.py",
+          "src\\silverstar_fccg\\project\\compact_logging.py",
+          "src\\silverstar_fccg\\project\\configuration.py",
+          "src\\silverstar_fccg\\project\\feature_tiers.py",
+          "src\\silverstar_fccg\\project\\folder_contract.py",
+          "src\\silverstar_fccg\\project\\generation_state.py",
+          "src\\silverstar_fccg\\project\\ground_activity.py",
+          "src\\silverstar_fccg\\project\\ground_radios.py",
+          "src\\silverstar_fccg\\project\\io_throughput.py",
+          "src\\silverstar_fccg\\project\\lifecycle.py",
+          "src\\silverstar_fccg\\project\\logging.py",
+          "src\\silverstar_fccg\\project\\nrf24.py",
+          "src\\silverstar_fccg\\project\\power10_report.py",
+          "src\\silverstar_fccg\\project\\protocols.py",
+          "src\\silverstar_fccg\\project\\quality_inputs.py",
+          "src\\silverstar_fccg\\project\\quality_results.py",
+          "src\\silverstar_fccg\\project\\radio_variants.py",
+          "src\\silverstar_fccg\\project\\rate_plan.py",
+          "src\\silverstar_fccg\\project\\record_catalog.py",
+          "src\\silverstar_fccg\\project\\reference.py",
+          "src\\silverstar_fccg\\project\\release_policy.py",
+          "src\\silverstar_fccg\\project\\resources.py",
+          "src\\silverstar_fccg\\project\\response_time.py",
+          "src\\silverstar_fccg\\project\\storage_binding.py",
+          "src\\silverstar_fccg\\project\\timing_evidence.py",
+          "src\\silverstar_fccg\\project\\validation.py",
+          "src\\silverstar_fccg\\project\\__init__.py",
+          "src\\silverstar_fccg\\ui\\committed_spin.py",
+          "src\\silverstar_fccg\\ui\\device_initialization.py",
+          "src\\silverstar_fccg\\ui\\ground_radio_instances.py",
+          "src\\silverstar_fccg\\ui\\message_box.py",
+          "src\\silverstar_fccg\\ui\\telemetry_card.py",
+          "src\\silverstar_fccg\\ui\\theme.py",
+          "src\\silverstar_fccg\\ui\\touch_scroll.py",
+          "src\\silverstar_fccg\\ui\\widgets.py",
+          "src\\silverstar_fccg\\ui\\workers.py",
+          "src\\silverstar_fccg\\ui\\__init__.py",
+          "src\\silverstar_fccg\\ui\\dialogs\\new_project.py",
+          "src\\silverstar_fccg\\ui\\dialogs\\__init__.py",
+          "src\\silverstar_fccg\\ui\\pages\\algorithm_parameters.py",
+          "src\\silverstar_fccg\\ui\\pages\\base.py",
+          "src\\silverstar_fccg\\ui\\pages\\components.py",
+          "src\\silverstar_fccg\\ui\\pages\\navigation_alignment.py",
+          "src\\silverstar_fccg\\ui\\pages\\plugins.py",
+          "src\\silverstar_fccg\\ui\\pages\\targets.py",
+          "src\\silverstar_fccg\\ui\\pages\\__init__.py"
+        ]
+      },
+      "backend_index_match": true,
+      "compile_backend_match": true,
+      "saved_model_file_match": true,
+      "model_digest_match": true,
+      "archived_receipt_matches": true,
+      "archived_snapshot_matches": true,
+      "elf_sha256": "ee90e6871f5f5723982701e8b6783dd2638f4bd76f352f5099d2d38e031028b9",
+      "analysis_elf_sha256": "ee90e6871f5f5723982701e8b6783dd2638f4bd76f352f5099d2d38e031028b9"
+    }
+  ],
+  "lifecycle": [
+    {
+      "part": "C071",
+      "compile_exit": 0,
+      "scenarios": 17,
+      "failed_runs": [],
+      "fresh_generated_hashes": {
+        "count": 19,
+        "mismatches": []
+      }
+    },
+    {
+      "part": "F103",
+      "compile_exit": 0,
+      "scenarios": 17,
+      "failed_runs": [],
+      "fresh_generated_hashes": {
+        "count": 21,
+        "mismatches": []
+      }
+    }
+  ],
+  "normal_test_log_tails": {
+    "ua04": "n_or_fail_if_strict(f\"Unknown config option: {key}\\n\")\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n12 passed, 1 warning in 350.73s (0:05:50)\n",
+    "ur06": "  self._warn_or_fail_if_strict(f\"Unknown config option: {key}\\n\")\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n16 passed, 1 warning in 53.42s\n",
+    "ugr04": "n_or_fail_if_strict(f\"Unknown config option: {key}\\n\")\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n99 passed, 1 warning in 197.34s (0:03:17)\n",
+    "ul19": "   self._warn_or_fail_if_strict(f\"Unknown config option: {key}\\n\")\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n2 passed, 1 warning in 21.57s\n"
+  },
+  "parallel_failed_run_preserved": true
+}

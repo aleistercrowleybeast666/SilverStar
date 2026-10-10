@@ -1,0 +1,10 @@
+{
+  "part": "STM32C071FBP6",
+  "synchronous_refresh_seconds": 0.498152600004687,
+  "total_validation_seconds": 3.2483023000022513,
+  "ticks": 86,
+  "max_tick_gap_seconds": 0.08071860000200104,
+  "plan_calls": 1,
+  "plan_ran_off_gui_thread": true,
+  "quality_records": 2
+}

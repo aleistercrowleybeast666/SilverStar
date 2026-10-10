@@ -1,0 +1,29 @@
+{
+  "before_head": "2016a1279fa529c96d5b108d7d67326e2fda3653",
+  "delivery_fix_commit": "e1357b417ee98df5990a1fff18c55d6b35183896",
+  "source_code_commit": "f61cbd851b8ac32b865deb1a3997058685dfebbd",
+  "scope": "Git delivery-only correction: preserve already independently-reviewed exact payload bytes; no normalized C, Python, validator or profile hash changes",
+  "payloads": [
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Src/sx1281_device.c",
+      "expected_sha256": "56ee9b35e54535249816363d0328120a6018f157ce51f8bad93185ebea78428c",
+      "before_working_sha256": "0bdf0cfc1c950bd8fcda97898d8842a34f1e536f5e34bdc5b96758d46a8638ef",
+      "before_git_blob_sha256": "0c9096e56e659f28319221ac9d56e559b375c1174787844946f2517e8dc22bed",
+      "accepted_raw_sha256": "56ee9b35e54535249816363d0328120a6018f157ce51f8bad93185ebea78428c",
+      "normalized_content_identical": true,
+      "raw_backup": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\daily-before-sx1281_device.c.bin"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Middlewares/Third_Party/SX1280lib/sx1280-hal.c",
+      "expected_sha256": "b8caf4dd85dd3307897fa8f923adcaf7153b0d4c91a787eb58537d0b34eb783d",
+      "before_working_sha256": "b8caf4dd85dd3307897fa8f923adcaf7153b0d4c91a787eb58537d0b34eb783d",
+      "before_git_blob_sha256": "fb75e779068aa4704b15c5ed3ad76b459abbd8a17c6191e6682072989ff96323",
+      "accepted_raw_sha256": "b8caf4dd85dd3307897fa8f923adcaf7153b0d4c91a787eb58537d0b34eb783d",
+      "normalized_content_identical": true,
+      "raw_backup": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\daily-before-sx1280-hal.c.bin"
+    }
+  ],
+  "fresh_checkout_raw_hash_verified": true,
+  "fresh_checkout": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\daily-radio-checkout-0vrnegur",
+  "recorded_utc": "2026-10-10T05:23:54.099251+00:00"
+}

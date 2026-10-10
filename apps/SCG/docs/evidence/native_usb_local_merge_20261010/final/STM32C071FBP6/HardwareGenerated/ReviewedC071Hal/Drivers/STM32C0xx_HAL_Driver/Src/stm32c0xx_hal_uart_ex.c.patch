@@ -1,0 +1,16 @@
+--- HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_uart_ex.c
++++ HardwareGenerated/ReviewedC071Hal/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_uart_ex.c
+@@ -795,6 +795,13 @@
+       {
+         if (pdata8bits == NULL)
+         {
++        /* Both alternate pointers unavailable is a failed buffer contract. */
++        if (pdata16bits == NULL)
++        {
++          huart->RxState = HAL_UART_STATE_READY;
++          return HAL_ERROR;
++        }
++
+           *pdata16bits = (uint16_t)(huart->Instance->RDR & uhMask);
+           pdata16bits++;
+         }

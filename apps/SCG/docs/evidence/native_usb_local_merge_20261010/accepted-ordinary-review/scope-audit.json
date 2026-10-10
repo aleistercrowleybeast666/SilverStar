@@ -1,0 +1,19 @@
+{
+  "baseline": "63771a17e63052c238246dd4fe3fe6394de8ccec",
+  "current": "f61cbd851b8ac32b865deb1a3997058685dfebbd",
+  "other_ui_files": 25,
+  "changed_other_ui_files": [],
+  "owned_state_statements_removed": [
+    "self._usb_refresh_epoch = 0",
+    "self._usb_refresh_pending = None",
+    "self._usb_refresh_worker = None",
+    "self._usb_refresh_timer = QTimer(self)",
+    "self._usb_refresh_timer.setSingleShot(True)",
+    "self._usb_refresh_timer.timeout.connect(self._UsbGroundRefresh_Start)"
+  ],
+  "remaining_constructor_ast_identical": true,
+  "failed_parallel_and_passed_isolated_same_test_sha256": true,
+  "parallel_failed_code_commit": "f61cbd851b8ac32b865deb1a3997058685dfebbd",
+  "parallel_dirty_diff": "",
+  "isolated_code_commit": "f61cbd851b8ac32b865deb1a3997058685dfebbd"
+}

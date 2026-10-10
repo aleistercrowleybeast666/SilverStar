@@ -1,0 +1,6 @@
+# Hash-locked STM32Cube vendor sources are imported byte-for-byte.
+plugins/builtin/silverstar_mcu_stm32f407vet6/payload/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c -whitespace
+plugins/builtin/silverstar_mcu_stm32f407vet6/payload/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c -whitespace
+# Preserve the exact reviewed radio payload bytes used by native derivatives.
+plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Src/sx1281_device.c -text
+plugins/builtin/silverstar_device_telemetry_sx1281/payload/Middlewares/Third_Party/SX1280lib/sx1280-hal.c -text

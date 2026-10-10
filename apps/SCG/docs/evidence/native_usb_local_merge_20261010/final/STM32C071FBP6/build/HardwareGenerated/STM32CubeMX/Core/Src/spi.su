@@ -1,0 +1,3 @@
+HardwareGenerated/STM32CubeMX/Core/Src/spi.c:30:6:MX_SPI1_Init	8	static
+HardwareGenerated/STM32CubeMX/Core/Src/spi.c:64:6:HAL_SPI_MspInit	72	static
+HardwareGenerated/STM32CubeMX/Core/Src/spi.c:106:6:HAL_SPI_MspDeInit	8	static

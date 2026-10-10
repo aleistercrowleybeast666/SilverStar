@@ -1,0 +1,2996 @@
+{
+  "format_version": 14,
+  "project": {
+    "name": "NativeGroundPrivate10a",
+    "firmware_version": "0.1.2",
+    "build_target": "SilverStar_0_1_2"
+  },
+  "components": {
+    "core": "silverstar.core.0_1_0",
+    "mcu_family": "silverstar.mcu_family.stm32f4",
+    "mcu": "silverstar.mcu.stm32f407vet6",
+    "board": "silverstar.board.silverstar_0_5",
+    "os": "silverstar.os.freertos_11_3_0",
+    "devices": [
+      {
+        "instance_id": "imu0",
+        "plugin": "silverstar.device.imu.jy901b",
+        "interface": "",
+        "profile": "",
+        "installation_orientation": "vertical"
+      },
+      {
+        "instance_id": "gnss0",
+        "plugin": "silverstar.device.gnss.neo_m9n",
+        "interface": "",
+        "profile": ""
+      },
+      {
+        "instance_id": "telemetry0",
+        "plugin": "silverstar.device.telemetry.sx1281",
+        "interface": "",
+        "profile": ""
+      },
+      {
+        "instance_id": "maintenance0",
+        "plugin": "silverstar.device.console.uart",
+        "interface": "",
+        "profile": ""
+      },
+      {
+        "instance_id": "storage0",
+        "plugin": "silverstar.device.storage.sd_sdio_fatfs",
+        "interface": "",
+        "profile": ""
+      },
+      {
+        "instance_id": "voltage_monitor0",
+        "plugin": "silverstar.device.sensor.input_voltage",
+        "interface": "",
+        "profile": ""
+      },
+      {
+        "instance_id": "launch_ignition0",
+        "plugin": "silverstar.device.actuator.launch_ignition",
+        "interface": "",
+        "profile": ""
+      },
+      {
+        "instance_id": "parachute_pyro0",
+        "plugin": "silverstar.device.actuator.parachute_pyro",
+        "interface": "",
+        "profile": ""
+      },
+      {
+        "instance_id": "system_indicator0",
+        "plugin": "silverstar.device.indicator.system_status",
+        "interface": "",
+        "profile": ""
+      }
+    ],
+    "base": [
+      "silverstar.algorithm.common",
+      "silverstar.algorithm.alignment.common",
+      "silverstar.algorithm.calibration",
+      "silverstar.flight_logic.cycle.reference",
+      "silverstar.flight_logic.deployment.multi_trigger",
+      "silverstar.flight_logic.landing.baro_imu_window",
+      "silverstar.flight_logic.mission_action.gpio_output_service",
+      "silverstar.flight_logic.indicator.gpio_status_service"
+    ],
+    "strategies": {
+      "alignment": "silverstar.algorithm.alignment.vector_constraints",
+      "estimator": "silverstar.algorithm.estimator.kf6",
+      "ins": "silverstar.algorithm.ins.coning2_sculling2",
+      "landing": "silverstar.flight_logic.landing.baro_imu_window_strategy"
+    },
+    "development_environment": "silverstar.environment.vscode_eide_gcc"
+  },
+  "modes": {
+    "calibration": [],
+    "deployment": [
+      "ApogeeVerticalVelocity",
+      "Tilt"
+    ]
+  },
+  "algorithm_parameters": {
+    "silverstar.algorithm.ins.coning2_sculling2": {
+      "gravity_mps2": 9.78,
+      "mechanization_aggregation": 2
+    },
+    "silverstar.algorithm.estimator.kf6": {
+      "gravity_mps2": 9.78,
+      "p0_position_e": 4.0,
+      "p0_position_n": 4.0,
+      "p0_position_u": 9.0,
+      "p0_velocity_e": 0.25,
+      "p0_velocity_n": 0.25,
+      "p0_velocity_u": 0.25,
+      "process_accel_std_e": 1.5,
+      "process_accel_std_n": 1.5,
+      "process_accel_std_u": 2.0,
+      "gnss_position_std_horizontal": 1.5,
+      "gnss_position_std_vertical": 2.5,
+      "gnss_velocity_std": 0.15,
+      "baro_std_m": 2.5,
+      "nis_1d_soft": 6.635,
+      "nis_1d_hard": 10.828,
+      "nis_2d_soft": 9.21,
+      "nis_2d_hard": 13.816,
+      "nis_3d_soft": 11.345,
+      "nis_3d_hard": 16.266,
+      "nis_max_r_scale": 10.0,
+      "gnss_velocity_vertical_scale": 1.75,
+      "gnss_reacquire_outage_ms": 300,
+      "gnss_position_measurement_delay_ms": 0,
+      "gnss_velocity_measurement_delay_ms": 270,
+      "baro_measurement_delay_ms": 0,
+      "gnss_integrity_enable": 1,
+      "gnss_integrity_max_gap_ms": 120,
+      "gnss_integrity_error_threshold_m": 10.0,
+      "gnss_integrity_recovery_threshold_m": 4.0,
+      "gnss_integrity_suspect_duration_ms": 2000,
+      "gnss_integrity_reject_duration_ms": 5000,
+      "gnss_integrity_recovery_duration_ms": 8000,
+      "gnss_integrity_position_r_scale": 4.0,
+      "gnss_integrity_hacc_max_m": 6.0,
+      "gnss_integrity_sacc_max_mps": 1.2
+    }
+  },
+  "alignment": {
+    "constraints": [
+      {
+        "kind": "gravity",
+        "weight": 1.0,
+        "declination_deg": 0.0,
+        "body_axis": "+X",
+        "nav_azimuth_deg": 90.0
+      },
+      {
+        "kind": "reference_direction",
+        "weight": 1.0,
+        "declination_deg": 0.0,
+        "body_axis": "+X",
+        "nav_azimuth_deg": 90.0
+      }
+    ],
+    "external_source_instance": "",
+    "external_yaw_authoritative": false,
+    "external_known_azimuth_deg": 90.0
+  },
+  "mode_parameters": {
+    "deployment": {
+      "ApogeeVerticalVelocity": {
+        "vertical_velocity_threshold": -2.0
+      },
+      "Delay": {
+        "delay": 60.0
+      },
+      "Tilt": {
+        "tilt_threshold": 45.0
+      }
+    }
+  },
+  "protocols": {
+    "logging": {
+      "component": "silverstar.protocol.logging.sslog_0_0",
+      "version": "0.1.0",
+      "profile": "flight_log.0_0",
+      "manifest_sha256": "2fddaeef8d1e03e68b874b42ea7f02fb90ed64b6562f8b823b1c3ccf0d3c13ca"
+    },
+    "maintenance": {
+      "component": "silverstar.protocol.maintenance.serial_0_0",
+      "version": "0.1.0",
+      "profile": "maintenance.serial.0_0",
+      "manifest_sha256": "6fef72f81ada0ded41b1634eefe4696921f67d1ad3e197ff7ec9e2cdaa55e553"
+    },
+    "telemetry": {
+      "component": "silverstar.protocol.telemetry.air_m0",
+      "version": "0.1.0",
+      "profile": "air.m0",
+      "manifest_sha256": "3787f900f6dbaabebfdd3d82bc693a725c91d2e7e5df52ad5c2b8bb38515de60"
+    }
+  },
+  "hardware": {
+    "mode": "board_plugin",
+    "source_kind": "verified_builtin",
+    "provider": "silverstar.hardware_provider.stm32_cubemx",
+    "snapshot_id": "",
+    "ioc_file": "payload/Flight_Controller0.5.ioc",
+    "mcu": "STM32F407VET6",
+    "platform_component": "silverstar.mcu.stm32f407vet6",
+    "platform_version": "0.1.0",
+    "platform_manifest_sha256": "1b1a062811663dc07da0e4fc9b2eb8ae2ae0733254d233fac66a1ff925f9ef45",
+    "cubemx_version": "6.15.0",
+    "firmware_package": "STM32Cube FW_F4 V1.28.3",
+    "hal_cmsis_source_policy": "plugin_payload_authoritative",
+    "i2c_external_pullup_confirmations": {},
+    "capabilities": [
+      "peripheral.adc",
+      "peripheral.gpio_input",
+      "peripheral.gpio_interrupt",
+      "peripheral.gpio_output",
+      "peripheral.sdio",
+      "peripheral.spi",
+      "peripheral.time",
+      "peripheral.uart"
+    ],
+    "inventory": {
+      "mcu_part": "STM32F407VET6",
+      "mcu_name": "STM32F407V(E-G)Tx",
+      "mcu_family": "STM32F4",
+      "package": "LQFP100",
+      "core": "STM32F407VETx",
+      "cubemx_version": "6.15.0",
+      "firmware_package": "STM32Cube FW_F4 V1.28.3",
+      "pins": [
+        {
+          "pin": "PA1",
+          "signal": "GPIO_Output",
+          "label": "IMU_CAL_LED",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "high",
+          "output_type": "push_pull",
+          "speed": "low",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PA10",
+          "signal": "USART1_RX",
+          "label": "IMU_MR",
+          "mode": "Asynchronous",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PA13",
+          "signal": "SYS_JTMS-SWDIO",
+          "label": "",
+          "mode": "Serial_Wire",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PA14",
+          "signal": "SYS_JTCK-SWCLK",
+          "label": "",
+          "mode": "Serial_Wire",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PA4",
+          "signal": "GPIO_Output",
+          "label": "RADIO_NSS",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "high",
+          "output_type": "push_pull",
+          "speed": "low",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PA5",
+          "signal": "SPI1_SCK",
+          "label": "RADIO_SCK",
+          "mode": "Full_Duplex_Master",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PA6",
+          "signal": "SPI1_MISO",
+          "label": "RADIO_MISDO",
+          "mode": "Full_Duplex_Master",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PA7",
+          "signal": "SPI1_MOSI",
+          "label": "RADIO_MOSI",
+          "mode": "Full_Duplex_Master",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PA9",
+          "signal": "USART1_TX",
+          "label": "IMU_MT",
+          "mode": "Asynchronous",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PB0",
+          "signal": "GPIO_Output",
+          "label": "RADIO_RST",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "high",
+          "output_type": "push_pull",
+          "speed": "low",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PB1",
+          "signal": "GPIO_Input",
+          "label": "RADIO_BUSY",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PB10",
+          "signal": "USART3_TX",
+          "label": "DBG_MT",
+          "mode": "Asynchronous",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PB11",
+          "signal": "USART3_RX",
+          "label": "DBG_MR",
+          "mode": "Asynchronous",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PB14",
+          "signal": "GPIO_Output",
+          "label": "P_CONTROL2",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "low",
+          "output_type": "push_pull",
+          "speed": "low",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PB15",
+          "signal": "GPIO_Output",
+          "label": "P_CONTROL1",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "low",
+          "output_type": "push_pull",
+          "speed": "low",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PC0",
+          "signal": "ADCx_IN10",
+          "label": "ADC",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PC10",
+          "signal": "SDIO_D2",
+          "label": "",
+          "mode": "SD_4_bits_Wide_bus",
+          "alternate_function": "",
+          "pull": "up",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PC11",
+          "signal": "SDIO_D3",
+          "label": "",
+          "mode": "SD_4_bits_Wide_bus",
+          "alternate_function": "",
+          "pull": "up",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PC12",
+          "signal": "SDIO_CK",
+          "label": "",
+          "mode": "SD_4_bits_Wide_bus",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PC7",
+          "signal": "GPIO_Input",
+          "label": "",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "down",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PC8",
+          "signal": "SDIO_D0",
+          "label": "",
+          "mode": "SD_4_bits_Wide_bus",
+          "alternate_function": "",
+          "pull": "up",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PC9",
+          "signal": "SDIO_D1",
+          "label": "",
+          "mode": "SD_4_bits_Wide_bus",
+          "alternate_function": "",
+          "pull": "up",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PD2",
+          "signal": "SDIO_CMD",
+          "label": "",
+          "mode": "SD_4_bits_Wide_bus",
+          "alternate_function": "",
+          "pull": "up",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PD5",
+          "signal": "USART2_TX",
+          "label": "GNSS_MT",
+          "mode": "Asynchronous",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PD6",
+          "signal": "USART2_RX",
+          "label": "GNSS_MR",
+          "mode": "Asynchronous",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PE5",
+          "signal": "GPIO_Output",
+          "label": "GNSS_RST",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "high",
+          "output_type": "push_pull",
+          "speed": "low",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PE6",
+          "signal": "GPXTI6",
+          "label": "GNSS_TIMEPULSE",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "rising",
+          "locked": true,
+          "exti_line": 6
+        },
+        {
+          "pin": "PE7",
+          "signal": "GPXTI7",
+          "label": "RADIO_DIO1",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "rising",
+          "locked": true,
+          "exti_line": 7
+        },
+        {
+          "pin": "PH0-OSC_IN",
+          "signal": "RCC_OSC_IN",
+          "label": "",
+          "mode": "HSE-External-Oscillator",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PH1-OSC_OUT",
+          "signal": "RCC_OSC_OUT",
+          "label": "",
+          "mode": "HSE-External-Oscillator",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        }
+      ],
+      "uarts": [
+        {
+          "instance": "USART1",
+          "kind": "uart",
+          "pins": {
+            "rx": "PA10",
+            "tx": "PA9"
+          },
+          "settings": {
+            "BaudRate": 230400,
+            "VirtualMode": "VM_ASYNC",
+            "baud_rate": 230400,
+            "mode": "VM_ASYNC",
+            "word_length": 8,
+            "parity": "none",
+            "stop_bits": 1.0
+          },
+          "dma": [
+            {
+              "request": "USART1_RX",
+              "instance": "DMA2_Stream2",
+              "direction": "DMA_PERIPH_TO_MEMORY",
+              "mode": "DMA_CIRCULAR",
+              "priority": "DMA_PRIORITY_HIGH",
+              "channel": ""
+            },
+            {
+              "request": "USART1_TX",
+              "instance": "DMA2_Stream7",
+              "direction": "DMA_MEMORY_TO_PERIPH",
+              "mode": "DMA_NORMAL",
+              "priority": "DMA_PRIORITY_HIGH",
+              "channel": ""
+            }
+          ],
+          "irq": {
+            "irq": "USART1_IRQn",
+            "enabled": true,
+            "preempt_priority": 5,
+            "sub_priority": 0
+          }
+        },
+        {
+          "instance": "USART2",
+          "kind": "uart",
+          "pins": {
+            "tx": "PD5",
+            "rx": "PD6"
+          },
+          "settings": {
+            "BaudRate": 921600,
+            "VirtualMode": "VM_ASYNC",
+            "baud_rate": 921600,
+            "mode": "VM_ASYNC",
+            "word_length": 8,
+            "parity": "none",
+            "stop_bits": 1.0
+          },
+          "dma": [
+            {
+              "request": "USART2_RX",
+              "instance": "DMA1_Stream5",
+              "direction": "DMA_PERIPH_TO_MEMORY",
+              "mode": "DMA_CIRCULAR",
+              "priority": "DMA_PRIORITY_HIGH",
+              "channel": ""
+            },
+            {
+              "request": "USART2_TX",
+              "instance": "DMA1_Stream6",
+              "direction": "DMA_MEMORY_TO_PERIPH",
+              "mode": "DMA_NORMAL",
+              "priority": "DMA_PRIORITY_HIGH",
+              "channel": ""
+            }
+          ],
+          "irq": {
+            "irq": "USART2_IRQn",
+            "enabled": true,
+            "preempt_priority": 5,
+            "sub_priority": 0
+          }
+        },
+        {
+          "instance": "USART3",
+          "kind": "uart",
+          "pins": {
+            "tx": "PB10",
+            "rx": "PB11"
+          },
+          "settings": {
+            "BaudRate": 230400,
+            "VirtualMode": "VM_ASYNC",
+            "baud_rate": 230400,
+            "mode": "VM_ASYNC",
+            "word_length": 8,
+            "parity": "none",
+            "stop_bits": 1.0
+          },
+          "dma": [
+            {
+              "request": "USART3_RX",
+              "instance": "DMA1_Stream1",
+              "direction": "DMA_PERIPH_TO_MEMORY",
+              "mode": "DMA_CIRCULAR",
+              "priority": "DMA_PRIORITY_LOW",
+              "channel": ""
+            },
+            {
+              "request": "USART3_TX",
+              "instance": "DMA1_Stream3",
+              "direction": "DMA_MEMORY_TO_PERIPH",
+              "mode": "DMA_NORMAL",
+              "priority": "DMA_PRIORITY_LOW",
+              "channel": ""
+            }
+          ],
+          "irq": {
+            "irq": "USART3_IRQn",
+            "enabled": true,
+            "preempt_priority": 5,
+            "sub_priority": 0
+          }
+        }
+      ],
+      "spis": [
+        {
+          "instance": "SPI1",
+          "kind": "spi",
+          "pins": {
+            "sck": "PA5",
+            "miso": "PA6",
+            "mosi": "PA7"
+          },
+          "settings": {
+            "BaudRatePrescaler": "SPI_BAUDRATEPRESCALER_16",
+            "CalculateBaudRate": "5.25 MBits/s",
+            "Direction": "SPI_DIRECTION_2LINES",
+            "mode": "master",
+            "cubemx_Mode": "SPI_MODE_MASTER",
+            "VirtualType": "VM_MASTER",
+            "clock_hz": 5250000,
+            "cpol": "low",
+            "cpha": "1edge",
+            "data_bits": 8,
+            "bit_order": "msb"
+          },
+          "dma": [],
+          "irq": null
+        }
+      ],
+      "i2cs": [],
+      "adcs": [
+        {
+          "instance": "ADC1",
+          "kind": "adc",
+          "pins": {
+            "adcx_in10": "PC0"
+          },
+          "settings": {
+            "Channel-2#ChannelRegularConversion": "ADC_CHANNEL_10",
+            "NbrOfConversionFlag": 1,
+            "Rank-2#ChannelRegularConversion": 1,
+            "SamplingTime-2#ChannelRegularConversion": "ADC_SAMPLETIME_56CYCLES",
+            "master": 1
+          },
+          "dma": [],
+          "irq": null
+        }
+      ],
+      "timers": [],
+      "pwms": [],
+      "cans": [],
+      "dmas": [
+        {
+          "request": "SDIO_RX",
+          "instance": "DMA2_Stream3",
+          "direction": "DMA_PERIPH_TO_MEMORY",
+          "mode": "DMA_PFCTRL",
+          "priority": "DMA_PRIORITY_HIGH",
+          "channel": ""
+        },
+        {
+          "request": "SDIO_TX",
+          "instance": "DMA2_Stream6",
+          "direction": "DMA_MEMORY_TO_PERIPH",
+          "mode": "DMA_PFCTRL",
+          "priority": "DMA_PRIORITY_HIGH",
+          "channel": ""
+        },
+        {
+          "request": "USART1_RX",
+          "instance": "DMA2_Stream2",
+          "direction": "DMA_PERIPH_TO_MEMORY",
+          "mode": "DMA_CIRCULAR",
+          "priority": "DMA_PRIORITY_HIGH",
+          "channel": ""
+        },
+        {
+          "request": "USART1_TX",
+          "instance": "DMA2_Stream7",
+          "direction": "DMA_MEMORY_TO_PERIPH",
+          "mode": "DMA_NORMAL",
+          "priority": "DMA_PRIORITY_HIGH",
+          "channel": ""
+        },
+        {
+          "request": "USART2_RX",
+          "instance": "DMA1_Stream5",
+          "direction": "DMA_PERIPH_TO_MEMORY",
+          "mode": "DMA_CIRCULAR",
+          "priority": "DMA_PRIORITY_HIGH",
+          "channel": ""
+        },
+        {
+          "request": "USART2_TX",
+          "instance": "DMA1_Stream6",
+          "direction": "DMA_MEMORY_TO_PERIPH",
+          "mode": "DMA_NORMAL",
+          "priority": "DMA_PRIORITY_HIGH",
+          "channel": ""
+        },
+        {
+          "request": "USART3_RX",
+          "instance": "DMA1_Stream1",
+          "direction": "DMA_PERIPH_TO_MEMORY",
+          "mode": "DMA_CIRCULAR",
+          "priority": "DMA_PRIORITY_LOW",
+          "channel": ""
+        },
+        {
+          "request": "USART3_TX",
+          "instance": "DMA1_Stream3",
+          "direction": "DMA_MEMORY_TO_PERIPH",
+          "mode": "DMA_NORMAL",
+          "priority": "DMA_PRIORITY_LOW",
+          "channel": ""
+        }
+      ],
+      "nvic": [
+        {
+          "irq": "BusFault_IRQn",
+          "enabled": true,
+          "preempt_priority": 0,
+          "sub_priority": 0
+        },
+        {
+          "irq": "DMA1_Stream1_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "DMA1_Stream3_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "DMA1_Stream5_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "DMA1_Stream6_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "DMA2_Stream2_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "DMA2_Stream3_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "DMA2_Stream6_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "DMA2_Stream7_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "DebugMonitor_IRQn",
+          "enabled": true,
+          "preempt_priority": 0,
+          "sub_priority": 0
+        },
+        {
+          "irq": "EXTI9_5_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "HardFault_IRQn",
+          "enabled": true,
+          "preempt_priority": 0,
+          "sub_priority": 0
+        },
+        {
+          "irq": "MemoryManagement_IRQn",
+          "enabled": true,
+          "preempt_priority": 0,
+          "sub_priority": 0
+        },
+        {
+          "irq": "NonMaskableInt_IRQn",
+          "enabled": true,
+          "preempt_priority": 0,
+          "sub_priority": 0
+        },
+        {
+          "irq": "PendSV_IRQn",
+          "enabled": true,
+          "preempt_priority": 15,
+          "sub_priority": 0
+        },
+        {
+          "irq": "SDIO_IRQn",
+          "enabled": true,
+          "preempt_priority": 6,
+          "sub_priority": 0
+        },
+        {
+          "irq": "SVCall_IRQn",
+          "enabled": true,
+          "preempt_priority": 0,
+          "sub_priority": 0
+        },
+        {
+          "irq": "SysTick_IRQn",
+          "enabled": true,
+          "preempt_priority": 15,
+          "sub_priority": 0
+        },
+        {
+          "irq": "TIM1_UP_TIM10_IRQn",
+          "enabled": true,
+          "preempt_priority": 15,
+          "sub_priority": 0
+        },
+        {
+          "irq": "USART1_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "USART2_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "USART3_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "UsageFault_IRQn",
+          "enabled": true,
+          "preempt_priority": 0,
+          "sub_priority": 0
+        }
+      ],
+      "clocks": {
+        "RCC.48MHZClocksFreq_Value": 48000000,
+        "RCC.AHBFreq_Value": 168000000,
+        "RCC.APB1CLKDivider": "RCC_HCLK_DIV4",
+        "RCC.APB1Freq_Value": 42000000,
+        "RCC.APB1TimFreq_Value": 84000000,
+        "RCC.APB2CLKDivider": "RCC_HCLK_DIV2",
+        "RCC.APB2Freq_Value": 84000000,
+        "RCC.APB2TimFreq_Value": 168000000,
+        "RCC.CortexFreq_Value": 168000000,
+        "RCC.EthernetFreq_Value": 168000000,
+        "RCC.FCLKCortexFreq_Value": 168000000,
+        "RCC.HCLKFreq_Value": 168000000,
+        "RCC.HSE_VALUE": 25000000,
+        "RCC.HSI_VALUE": 16000000,
+        "RCC.I2SClocksFreq_Value": 192000000,
+        "RCC.LSE_VALUE": 32768,
+        "RCC.LSI_VALUE": 32000,
+        "RCC.MCO2PinFreq_Value": 168000000,
+        "RCC.PLLCLKFreq_Value": 168000000,
+        "RCC.PLLQCLKFreq_Value": 48000000,
+        "RCC.RTCFreq_Value": 32000,
+        "RCC.RTCHSEDivFreq_Value": 12500000,
+        "RCC.SYSCLKFreq_VALUE": 168000000,
+        "RCC.SYSCLKSource": "RCC_SYSCLKSOURCE_PLLCLK",
+        "RCC.VCOI2SOutputFreq_Value": 384000000,
+        "RCC.VCOInputFreq_Value": 2000000,
+        "RCC.VCOOutputFreq_Value": 336000000
+      },
+      "peripherals": [
+        "ADC1",
+        "DMA",
+        "FATFS",
+        "NVIC",
+        "RCC",
+        "SDIO",
+        "SPI1",
+        "SYS",
+        "USART1",
+        "USART2",
+        "USART3"
+      ],
+      "generated_sources": [
+        "Core/Inc/adc.h",
+        "Core/Inc/dma.h",
+        "Core/Inc/gpio.h",
+        "Core/Inc/main.h",
+        "Core/Inc/sdio.h",
+        "Core/Inc/spi.h",
+        "Core/Inc/stm32f4xx_hal_conf.h",
+        "Core/Inc/stm32f4xx_it.h",
+        "Core/Inc/usart.h",
+        "Core/Src/adc.c",
+        "Core/Src/dma.c",
+        "Core/Src/gpio.c",
+        "Core/Src/main.c",
+        "Core/Src/sdio.c",
+        "Core/Src/spi.c",
+        "Core/Src/stm32f4xx_hal_msp.c",
+        "Core/Src/stm32f4xx_hal_timebase_tim.c",
+        "Core/Src/stm32f4xx_it.c",
+        "Core/Src/syscalls.c",
+        "Core/Src/sysmem.c",
+        "Core/Src/system_stm32f4xx.c",
+        "Core/Src/usart.c",
+        "FATFS/App/fatfs.c",
+        "FATFS/App/fatfs.h",
+        "FATFS/Target/bsp_driver_sd.c",
+        "FATFS/Target/bsp_driver_sd.h",
+        "FATFS/Target/fatfs_platform.c",
+        "FATFS/Target/fatfs_platform.h",
+        "FATFS/Target/ffconf.h",
+        "FATFS/Target/sd_diskio.c",
+        "FATFS/Target/sd_diskio.h"
+      ],
+      "usb_cdc": false,
+      "timebase": {
+        "kind": "tim",
+        "source": "Core/Src/stm32f4xx_hal_timebase_tim.c",
+        "handle": "htim1",
+        "instance": "TIM1",
+        "irq": "TIM1_UP_TIM10_IRQn",
+        "counter_frequency_hz": 1000000,
+        "period_counts": 1000,
+        "tick_frequency_hz": 1000,
+        "interrupt_started": true,
+        "errors": []
+      },
+      "fatfs": {
+        "enabled": true,
+        "app_source": "FATFS/App/fatfs.c",
+        "app_header": "FATFS/App/fatfs.h",
+        "object_symbol": "SDFatFS",
+        "path_symbol": "SDPath",
+        "driver_symbol": "SD_Driver",
+        "sd_handle": "hsd",
+        "sd_instance": "SDIO",
+        "card_detect_pin": "PC7",
+        "target_sources": [
+          "FATFS/Target/bsp_driver_sd.c",
+          "FATFS/Target/fatfs_platform.c",
+          "FATFS/Target/sd_diskio.c"
+        ],
+        "errors": []
+      },
+      "issues": []
+    },
+    "resources": [],
+    "build_sources": [],
+    "asm_sources": [],
+    "include_dirs": [],
+    "defines": [],
+    "linker_script": "",
+    "source_digest": "",
+    "source_label": "SS0.5",
+    "risk_acknowledged": false,
+    "assignment_fingerprint": ""
+  },
+  "air_link": {
+    "protocol_profile": "air.m0",
+    "radio_technology": "lora",
+    "radio_family": "sx128x",
+    "phy_mode": "lora",
+    "frequency_hz": 2473000000,
+    "spreading_factor": 10,
+    "bandwidth_hz": 800000,
+    "coding_rate": "4/5",
+    "preamble_symbols": 16,
+    "header_mode": "explicit",
+    "crc_enabled": true,
+    "iq_mode": "normal",
+    "packet_mtu": 61,
+    "flight_radio_instance": "telemetry0"
+  },
+  "flight_tx_power_dbm": 12,
+  "ground_target": {
+    "enabled": true,
+    "mcu": "",
+    "board": "",
+    "hardware": {
+      "mode": "custom",
+      "source_kind": "manual_import",
+      "provider": "silverstar.hardware_provider.stm32_cubemx",
+      "snapshot_id": "ddb85510395b43fcb4d4227f6b6330d96c599348c5139de3b19e5b5a9ceaf628",
+      "ioc_file": "cube-f103-usb.ioc",
+      "mcu": "STM32F103C8T6",
+      "platform_component": "",
+      "platform_version": "",
+      "platform_manifest_sha256": "",
+      "cubemx_version": "6.15.0",
+      "firmware_package": "STM32Cube FW_F1 V1.8.7",
+      "hal_cmsis_source_policy": "imported_tree_authoritative",
+      "i2c_external_pullup_confirmations": {},
+      "capabilities": [
+        "usb.device",
+        "usb.cdc"
+      ],
+      "inventory": {
+        "mcu_part": "STM32F103C8T6",
+        "mcu_name": "STM32F103C(8-B)Tx",
+        "mcu_family": "STM32F1",
+        "package": "LQFP48",
+        "core": "STM32F103C8Tx",
+        "cubemx_version": "6.15.0",
+        "firmware_package": "STM32Cube FW_F1 V1.8.7",
+        "pins": [
+          {
+            "pin": "PA10",
+            "signal": "USART1_RX",
+            "label": "UART_EXT_MR",
+            "mode": "Asynchronous",
+            "alternate_function": "",
+            "pull": "none",
+            "output_default": "",
+            "output_type": "",
+            "speed": "",
+            "exti_trigger": "",
+            "locked": false,
+            "exti_line": null
+          },
+          {
+            "pin": "PA11",
+            "signal": "USB_DM",
+            "label": "",
+            "mode": "Device",
+            "alternate_function": "",
+            "pull": "none",
+            "output_default": "",
+            "output_type": "",
+            "speed": "",
+            "exti_trigger": "",
+            "locked": false,
+            "exti_line": null
+          },
+          {
+            "pin": "PA12",
+            "signal": "USB_DP",
+            "label": "",
+            "mode": "Device",
+            "alternate_function": "",
+            "pull": "none",
+            "output_default": "",
+            "output_type": "",
+            "speed": "",
+            "exti_trigger": "",
+            "locked": false,
+            "exti_line": null
+          },
+          {
+            "pin": "PA13",
+            "signal": "SYS_JTMS-SWDIO",
+            "label": "",
+            "mode": "Serial_Wire",
+            "alternate_function": "",
+            "pull": "none",
+            "output_default": "",
+            "output_type": "",
+            "speed": "",
+            "exti_trigger": "",
+            "locked": false,
+            "exti_line": null
+          },
+          {
+            "pin": "PA14",
+            "signal": "SYS_JTCK-SWCLK",
+            "label": "",
+            "mode": "Serial_Wire",
+            "alternate_function": "",
+            "pull": "none",
+            "output_default": "",
+            "output_type": "",
+            "speed": "",
+            "exti_trigger": "",
+            "locked": false,
+            "exti_line": null
+          },
+          {
+            "pin": "PA4",
+            "signal": "GPIO_Output",
+            "label": "SPI_RADIO_NSS",
+            "mode": "",
+            "alternate_function": "",
+            "pull": "up",
+            "output_default": "high",
+            "output_type": "push_pull",
+            "speed": "low",
+            "exti_trigger": "",
+            "locked": true,
+            "exti_line": null
+          },
+          {
+            "pin": "PA5",
+            "signal": "SPI1_SCK",
+            "label": "SPI_RADIO_SCK",
+            "mode": "Full_Duplex_Master",
+            "alternate_function": "",
+            "pull": "none",
+            "output_default": "",
+            "output_type": "",
+            "speed": "",
+            "exti_trigger": "",
+            "locked": false,
+            "exti_line": null
+          },
+          {
+            "pin": "PA6",
+            "signal": "SPI1_MISO",
+            "label": "SPI_RADIO_MISO",
+            "mode": "Full_Duplex_Master",
+            "alternate_function": "",
+            "pull": "none",
+            "output_default": "",
+            "output_type": "",
+            "speed": "",
+            "exti_trigger": "",
+            "locked": false,
+            "exti_line": null
+          },
+          {
+            "pin": "PA7",
+            "signal": "SPI1_MOSI",
+            "label": "SPI_RADIO_MOSI",
+            "mode": "Full_Duplex_Master",
+            "alternate_function": "",
+            "pull": "none",
+            "output_default": "",
+            "output_type": "",
+            "speed": "",
+            "exti_trigger": "",
+            "locked": false,
+            "exti_line": null
+          },
+          {
+            "pin": "PA9",
+            "signal": "USART1_TX",
+            "label": "UART_EXT_MT",
+            "mode": "Asynchronous",
+            "alternate_function": "",
+            "pull": "none",
+            "output_default": "",
+            "output_type": "",
+            "speed": "",
+            "exti_trigger": "",
+            "locked": false,
+            "exti_line": null
+          },
+          {
+            "pin": "PB0",
+            "signal": "GPXTI0",
+            "label": "RADIO_DIO1",
+            "mode": "",
+            "alternate_function": "",
+            "pull": "none",
+            "output_default": "",
+            "output_type": "",
+            "speed": "",
+            "exti_trigger": "rising",
+            "locked": true,
+            "exti_line": 0
+          },
+          {
+            "pin": "PB1",
+            "signal": "GPIO_Input",
+            "label": "RADIO_DIO2",
+            "mode": "",
+            "alternate_function": "",
+            "pull": "none",
+            "output_default": "",
+            "output_type": "",
+            "speed": "",
+            "exti_trigger": "",
+            "locked": true,
+            "exti_line": null
+          },
+          {
+            "pin": "PB10",
+            "signal": "GPIO_Input",
+            "label": "RADIO_BUSY",
+            "mode": "",
+            "alternate_function": "",
+            "pull": "none",
+            "output_default": "",
+            "output_type": "",
+            "speed": "",
+            "exti_trigger": "",
+            "locked": true,
+            "exti_line": null
+          },
+          {
+            "pin": "PB11",
+            "signal": "GPIO_Output",
+            "label": "RADIO_RST",
+            "mode": "",
+            "alternate_function": "",
+            "pull": "none",
+            "output_default": "high",
+            "output_type": "push_pull",
+            "speed": "low",
+            "exti_trigger": "",
+            "locked": true,
+            "exti_line": null
+          },
+          {
+            "pin": "PB3",
+            "signal": "GPIO_Input",
+            "label": "RADIO_DIO3",
+            "mode": "",
+            "alternate_function": "",
+            "pull": "none",
+            "output_default": "",
+            "output_type": "",
+            "speed": "",
+            "exti_trigger": "",
+            "locked": true,
+            "exti_line": null
+          },
+          {
+            "pin": "PC13-TAMPER-RTC",
+            "signal": "GPIO_Output",
+            "label": "LED",
+            "mode": "",
+            "alternate_function": "",
+            "pull": "none",
+            "output_default": "high",
+            "output_type": "push_pull",
+            "speed": "low",
+            "exti_trigger": "",
+            "locked": true,
+            "exti_line": null
+          },
+          {
+            "pin": "PD0-OSC_IN",
+            "signal": "RCC_OSC_IN",
+            "label": "",
+            "mode": "HSE-External-Oscillator",
+            "alternate_function": "",
+            "pull": "none",
+            "output_default": "",
+            "output_type": "",
+            "speed": "",
+            "exti_trigger": "",
+            "locked": false,
+            "exti_line": null
+          },
+          {
+            "pin": "PD1-OSC_OUT",
+            "signal": "RCC_OSC_OUT",
+            "label": "",
+            "mode": "HSE-External-Oscillator",
+            "alternate_function": "",
+            "pull": "none",
+            "output_default": "",
+            "output_type": "",
+            "speed": "",
+            "exti_trigger": "",
+            "locked": false,
+            "exti_line": null
+          }
+        ],
+        "uarts": [
+          {
+            "instance": "USART1",
+            "kind": "uart",
+            "pins": {
+              "rx": "PA10",
+              "tx": "PA9"
+            },
+            "settings": {
+              "BaudRate": 230400,
+              "VirtualMode": "VM_ASYNC",
+              "baud_rate": 230400,
+              "mode": "VM_ASYNC",
+              "word_length": 8,
+              "parity": "none",
+              "stop_bits": 1.0
+            },
+            "dma": [
+              {
+                "request": "USART1_RX",
+                "instance": "DMA1_Channel5",
+                "direction": "DMA_PERIPH_TO_MEMORY",
+                "mode": "DMA_NORMAL",
+                "priority": "DMA_PRIORITY_LOW",
+                "channel": ""
+              },
+              {
+                "request": "USART1_TX",
+                "instance": "DMA1_Channel4",
+                "direction": "DMA_MEMORY_TO_PERIPH",
+                "mode": "DMA_NORMAL",
+                "priority": "DMA_PRIORITY_LOW",
+                "channel": ""
+              }
+            ],
+            "irq": {
+              "irq": "USART1_IRQn",
+              "enabled": true,
+              "preempt_priority": 0,
+              "sub_priority": 0
+            }
+          }
+        ],
+        "spis": [
+          {
+            "instance": "SPI1",
+            "kind": "spi",
+            "pins": {
+              "sck": "PA5",
+              "miso": "PA6",
+              "mosi": "PA7"
+            },
+            "settings": {
+              "BaudRatePrescaler": "SPI_BAUDRATEPRESCALER_8",
+              "CalculateBaudRate": "9.0 MBits/s",
+              "Direction": "SPI_DIRECTION_2LINES",
+              "mode": "master",
+              "cubemx_Mode": "SPI_MODE_MASTER",
+              "VirtualType": "VM_MASTER",
+              "clock_hz": 9000000,
+              "cpol": "low",
+              "cpha": "1edge",
+              "data_bits": 8,
+              "bit_order": "msb"
+            },
+            "dma": [],
+            "irq": null
+          }
+        ],
+        "i2cs": [],
+        "adcs": [],
+        "timers": [],
+        "pwms": [],
+        "cans": [],
+        "dmas": [
+          {
+            "request": "USART1_RX",
+            "instance": "DMA1_Channel5",
+            "direction": "DMA_PERIPH_TO_MEMORY",
+            "mode": "DMA_NORMAL",
+            "priority": "DMA_PRIORITY_LOW",
+            "channel": ""
+          },
+          {
+            "request": "USART1_TX",
+            "instance": "DMA1_Channel4",
+            "direction": "DMA_MEMORY_TO_PERIPH",
+            "mode": "DMA_NORMAL",
+            "priority": "DMA_PRIORITY_LOW",
+            "channel": ""
+          }
+        ],
+        "nvic": [
+          {
+            "irq": "BusFault_IRQn",
+            "enabled": true,
+            "preempt_priority": 0,
+            "sub_priority": 0
+          },
+          {
+            "irq": "DMA1_Channel4_IRQn",
+            "enabled": true,
+            "preempt_priority": 0,
+            "sub_priority": 0
+          },
+          {
+            "irq": "DMA1_Channel5_IRQn",
+            "enabled": true,
+            "preempt_priority": 0,
+            "sub_priority": 0
+          },
+          {
+            "irq": "DebugMonitor_IRQn",
+            "enabled": true,
+            "preempt_priority": 0,
+            "sub_priority": 0
+          },
+          {
+            "irq": "EXTI0_IRQn",
+            "enabled": true,
+            "preempt_priority": 0,
+            "sub_priority": 0
+          },
+          {
+            "irq": "HardFault_IRQn",
+            "enabled": true,
+            "preempt_priority": 0,
+            "sub_priority": 0
+          },
+          {
+            "irq": "MemoryManagement_IRQn",
+            "enabled": true,
+            "preempt_priority": 0,
+            "sub_priority": 0
+          },
+          {
+            "irq": "NonMaskableInt_IRQn",
+            "enabled": true,
+            "preempt_priority": 0,
+            "sub_priority": 0
+          },
+          {
+            "irq": "PendSV_IRQn",
+            "enabled": true,
+            "preempt_priority": 0,
+            "sub_priority": 0
+          },
+          {
+            "irq": "SVCall_IRQn",
+            "enabled": true,
+            "preempt_priority": 0,
+            "sub_priority": 0
+          },
+          {
+            "irq": "SysTick_IRQn",
+            "enabled": true,
+            "preempt_priority": 15,
+            "sub_priority": 0
+          },
+          {
+            "irq": "USART1_IRQn",
+            "enabled": true,
+            "preempt_priority": 0,
+            "sub_priority": 0
+          },
+          {
+            "irq": "USB_LP_CAN1_RX0_IRQn",
+            "enabled": true,
+            "preempt_priority": 1,
+            "sub_priority": 0
+          },
+          {
+            "irq": "UsageFault_IRQn",
+            "enabled": true,
+            "preempt_priority": 0,
+            "sub_priority": 0
+          }
+        ],
+        "clocks": {
+          "RCC.ADCFreqValue": 36000000,
+          "RCC.AHBFreq_Value": 72000000,
+          "RCC.APB1CLKDivider": "RCC_HCLK_DIV2",
+          "RCC.APB1Freq_Value": 36000000,
+          "RCC.APB1TimFreq_Value": 72000000,
+          "RCC.APB2Freq_Value": 72000000,
+          "RCC.APB2TimFreq_Value": 72000000,
+          "RCC.FCLKCortexFreq_Value": 72000000,
+          "RCC.HCLKFreq_Value": 72000000,
+          "RCC.MCOFreq_Value": 72000000,
+          "RCC.PLLCLKFreq_Value": 72000000,
+          "RCC.PLLMCOFreq_Value": 36000000,
+          "RCC.SYSCLKFreq_VALUE": 72000000,
+          "RCC.SYSCLKSource": "RCC_SYSCLKSOURCE_PLLCLK",
+          "RCC.TimSysFreq_Value": 72000000,
+          "RCC.USBFreq_Value": 48000000,
+          "RCC.VCOOutput2Freq_Value": 8000000
+        },
+        "peripherals": [
+          "DMA",
+          "NVIC",
+          "RCC",
+          "SPI1",
+          "SYS",
+          "USART1",
+          "USB",
+          "USB_DEVICE"
+        ],
+        "generated_sources": [
+          "Core/Inc/dma.h",
+          "Core/Inc/gpio.h",
+          "Core/Inc/main.h",
+          "Core/Inc/spi.h",
+          "Core/Inc/stm32f1xx_hal_conf.h",
+          "Core/Inc/stm32f1xx_it.h",
+          "Core/Inc/usart.h",
+          "Core/Src/dma.c",
+          "Core/Src/gpio.c",
+          "Core/Src/main.c",
+          "Core/Src/spi.c",
+          "Core/Src/stm32f1xx_hal_msp.c",
+          "Core/Src/stm32f1xx_it.c",
+          "Core/Src/syscalls.c",
+          "Core/Src/sysmem.c",
+          "Core/Src/system_stm32f1xx.c",
+          "Core/Src/usart.c",
+          "USB_DEVICE/App/usb_device.c",
+          "USB_DEVICE/App/usb_device.h",
+          "USB_DEVICE/App/usbd_cdc_if.c",
+          "USB_DEVICE/App/usbd_cdc_if.h",
+          "USB_DEVICE/App/usbd_desc.c",
+          "USB_DEVICE/App/usbd_desc.h",
+          "USB_DEVICE/Target/usbd_conf.c",
+          "USB_DEVICE/Target/usbd_conf.h"
+        ],
+        "usb_cdc": true,
+        "timebase": {
+          "kind": "systick",
+          "source": "",
+          "handle": "",
+          "instance": "",
+          "irq": "SysTick_IRQn",
+          "counter_frequency_hz": 0,
+          "period_counts": 0,
+          "tick_frequency_hz": 1000,
+          "interrupt_started": false,
+          "errors": []
+        },
+        "fatfs": {
+          "enabled": false,
+          "app_source": "",
+          "app_header": "",
+          "object_symbol": "",
+          "path_symbol": "",
+          "driver_symbol": "",
+          "sd_handle": "",
+          "sd_instance": "",
+          "card_detect_pin": "",
+          "target_sources": [],
+          "errors": []
+        },
+        "issues": [],
+        "native_complete_classic_cdc": {
+          "format_version": 2,
+          "input_kind": "native_complete_classic_cdc",
+          "ioc_file": "cube-f103-usb.ioc",
+          "device_facts": {
+            "part": "STM32F103C8T6",
+            "core": "cortex-m3",
+            "device_macro": "STM32F103xB",
+            "startup": "startup_stm32f103xb.s",
+            "regions": [
+              {
+                "name": "FLASH",
+                "origin": 134217728,
+                "length": 65536
+              },
+              {
+                "name": "RAM",
+                "origin": 536870912,
+                "length": 20480
+              }
+            ],
+            "evidence_source": "D:\\python_software\\SilverStar\\.work\\ccdi\\apps\\SCG\\plugins\\builtin\\silverstar_mcu_stm32f103c8t6\\plugin.json",
+            "evidence_sha256": "aa496ae4ea80316dab19e06b15009b139ba115a7d76fd6a97ef2aa59aea3f7c0",
+            "fpu": "",
+            "irq_numbers": [
+              [
+                "NonMaskableInt_IRQn",
+                -14
+              ],
+              [
+                "HardFault_IRQn",
+                -13
+              ],
+              [
+                "MemoryManagement_IRQn",
+                -12
+              ],
+              [
+                "BusFault_IRQn",
+                -11
+              ],
+              [
+                "UsageFault_IRQn",
+                -10
+              ],
+              [
+                "SVCall_IRQn",
+                -5
+              ],
+              [
+                "DebugMonitor_IRQn",
+                -4
+              ],
+              [
+                "PendSV_IRQn",
+                -2
+              ],
+              [
+                "SysTick_IRQn",
+                -1
+              ],
+              [
+                "WWDG_IRQn",
+                0
+              ],
+              [
+                "PVD_IRQn",
+                1
+              ],
+              [
+                "TAMPER_IRQn",
+                2
+              ],
+              [
+                "RTC_IRQn",
+                3
+              ],
+              [
+                "FLASH_IRQn",
+                4
+              ],
+              [
+                "RCC_IRQn",
+                5
+              ],
+              [
+                "EXTI0_IRQn",
+                6
+              ],
+              [
+                "EXTI1_IRQn",
+                7
+              ],
+              [
+                "EXTI2_IRQn",
+                8
+              ],
+              [
+                "EXTI3_IRQn",
+                9
+              ],
+              [
+                "EXTI4_IRQn",
+                10
+              ],
+              [
+                "DMA1_Channel1_IRQn",
+                11
+              ],
+              [
+                "DMA1_Channel2_IRQn",
+                12
+              ],
+              [
+                "DMA1_Channel3_IRQn",
+                13
+              ],
+              [
+                "DMA1_Channel4_IRQn",
+                14
+              ],
+              [
+                "DMA1_Channel5_IRQn",
+                15
+              ],
+              [
+                "DMA1_Channel6_IRQn",
+                16
+              ],
+              [
+                "DMA1_Channel7_IRQn",
+                17
+              ],
+              [
+                "ADC1_2_IRQn",
+                18
+              ],
+              [
+                "USB_HP_CAN1_TX_IRQn",
+                19
+              ],
+              [
+                "USB_LP_CAN1_RX0_IRQn",
+                20
+              ],
+              [
+                "CAN1_RX1_IRQn",
+                21
+              ],
+              [
+                "CAN1_SCE_IRQn",
+                22
+              ],
+              [
+                "EXTI9_5_IRQn",
+                23
+              ],
+              [
+                "TIM1_BRK_IRQn",
+                24
+              ],
+              [
+                "TIM1_UP_IRQn",
+                25
+              ],
+              [
+                "TIM1_TRG_COM_IRQn",
+                26
+              ],
+              [
+                "TIM1_CC_IRQn",
+                27
+              ],
+              [
+                "TIM2_IRQn",
+                28
+              ],
+              [
+                "TIM3_IRQn",
+                29
+              ],
+              [
+                "TIM4_IRQn",
+                30
+              ],
+              [
+                "I2C1_EV_IRQn",
+                31
+              ],
+              [
+                "I2C1_ER_IRQn",
+                32
+              ],
+              [
+                "I2C2_EV_IRQn",
+                33
+              ],
+              [
+                "I2C2_ER_IRQn",
+                34
+              ],
+              [
+                "SPI1_IRQn",
+                35
+              ],
+              [
+                "SPI2_IRQn",
+                36
+              ],
+              [
+                "USART1_IRQn",
+                37
+              ],
+              [
+                "USART2_IRQn",
+                38
+              ],
+              [
+                "USART3_IRQn",
+                39
+              ],
+              [
+                "EXTI15_10_IRQn",
+                40
+              ],
+              [
+                "RTC_Alarm_IRQn",
+                41
+              ],
+              [
+                "USBWakeUp_IRQn",
+                42
+              ]
+            ],
+            "irq_header_sha256": "d9c7c613d9fea74220892b4fbc3e80617493acad82a04bafadab2b4a7198399c",
+            "irq_evidence_source": "D:\\Tools\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h"
+          },
+          "build": {
+            "sources": [
+              "Core/Src/main.c",
+              "Core/Src/gpio.c",
+              "Core/Src/dma.c",
+              "Core/Src/spi.c",
+              "Core/Src/usart.c",
+              "Core/Src/stm32f1xx_it.c",
+              "Core/Src/stm32f1xx_hal_msp.c",
+              "USB_DEVICE/App/usb_device.c",
+              "USB_DEVICE/App/usbd_desc.c",
+              "USB_DEVICE/App/usbd_cdc_if.c",
+              "USB_DEVICE/Target/usbd_conf.c",
+              "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c",
+              "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.c",
+              "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.c",
+              "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c",
+              "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c",
+              "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c",
+              "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c",
+              "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c",
+              "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c",
+              "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c",
+              "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c",
+              "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c",
+              "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c",
+              "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c",
+              "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c",
+              "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c",
+              "Core/Src/system_stm32f1xx.c",
+              "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c",
+              "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c",
+              "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c",
+              "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c",
+              "Core/Src/sysmem.c",
+              "Core/Src/syscalls.c"
+            ],
+            "asm_sources": [
+              "startup_stm32f103xb.s"
+            ],
+            "include_dirs": [
+              "Core/Inc",
+              "USB_DEVICE/App",
+              "USB_DEVICE/Target",
+              "Drivers/STM32F1xx_HAL_Driver/Inc",
+              "Drivers/STM32F1xx_HAL_Driver/Inc/Legacy",
+              "Middlewares/ST/STM32_USB_Device_Library/Core/Inc",
+              "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc",
+              "Drivers/CMSIS/Device/ST/STM32F1xx/Include",
+              "Drivers/CMSIS/Include"
+            ],
+            "defines": [
+              "USE_HAL_DRIVER",
+              "STM32F103xB"
+            ],
+            "linker_script": "STM32F103XX_FLASH.ld",
+            "mcu_flags": [
+              "-mcpu=cortex-m3",
+              "-mthumb",
+              "-mfloat-abi=soft"
+            ]
+          },
+          "cdc": {
+            "adapter_profile": "st_classic_fs_single_v1",
+            "owners": {
+              "main.c": "Core/Src/main.c",
+              "usbd_desc.c": "USB_DEVICE/App/usbd_desc.c",
+              "usbd_cdc_if.c": "USB_DEVICE/App/usbd_cdc_if.c",
+              "usbd_conf.c": "USB_DEVICE/Target/usbd_conf.c",
+              "usbd_ioreq.c": "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c",
+              "usbd_ctlreq.c": "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c",
+              "usb_device.c": "USB_DEVICE/App/usb_device.c",
+              "usbd_cdc.c": "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c",
+              "usbd_core.c": "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c"
+            },
+            "device_symbol": "hUsbDeviceFS",
+            "transmit_symbol": "CDC_Transmit_FS",
+            "lifecycle_semantics": "NOT_PROVEN",
+            "rearm_error_handling": "NOT_PROVEN",
+            "tx_completion_zlp": "NOT_PROVEN",
+            "control_request_semantics": "NOT_PROVEN"
+          },
+          "bindings": {
+            "spi": "SPI1",
+            "gpio": [
+              "SPI_RADIO_NSS",
+              "RADIO_RST",
+              "RADIO_BUSY",
+              "RADIO_DIO1"
+            ]
+          },
+          "required_irq_handlers": [
+            "SysTick_Handler",
+            "DMA1_Channel4_IRQHandler",
+            "DMA1_Channel5_IRQHandler",
+            "EXTI0_IRQHandler",
+            "USART1_IRQHandler",
+            "USB_LP_CAN1_RX0_IRQHandler"
+          ],
+          "independent_irq_slots": {
+            "SysTick_Handler": -1,
+            "DMA1_Channel4_IRQHandler": 14,
+            "DMA1_Channel5_IRQHandler": 15,
+            "EXTI0_IRQHandler": 6,
+            "USART1_IRQHandler": 37,
+            "USB_LP_CAN1_RX0_IRQHandler": 20
+          },
+          "spi_abi": {
+            "tx_buffer_const": true,
+            "header_owner": "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h",
+            "blocking_timeout_semantics": "NOT_PROVEN"
+          },
+          "static_contract": "VALIDATED_TEXT_SCOPE",
+          "compiler_abi_closure": "NOT_PROVEN",
+          "physical_hardware": "NOT_PROVEN",
+          "runtime_adapter_enabled": false,
+          "radio_us_delay": "NOT_PROVEN",
+          "tick_liveness": "NOT_PROVEN",
+          "native_files_sha256": {
+            ".mxproject": "fb283c98084b2d3ec685f197709c60072d06be4b5de8c2816426cb3d404defe7",
+            "cube-f103-usb.ioc": "352e9529bc6811bbf4013b30793fb29d5ac6723e97a5f015aeea9f40d60d5643",
+            "License.md": "92282b534952354891151c90af2f935f311fb3b3be9deed1eae8410599443a39",
+            "Makefile": "3e4623d60da22a4f6223f07d2529ea179789028b8750c3ea3c93062074b3a151",
+            "Package_license.md": "5d0016458729aeb4501e604bb8fa8385e1b258b0113af3c6915532cfb945817b",
+            "startup_stm32f103xb.s": "a9a5fc7ed5ff617527dd98b3092830f4d17ed4bf57c99eac2c53bdb514ce138c",
+            "STM32F103XX_FLASH.ld": "06e84edb59f646ee70f086243b60280623b0077ac1a6e5a39b72799c4a3f967b",
+            "USB_DEVICE/App/usbd_cdc_if.c": "ae28e72d8a1f51db0c80c9ac3f6775c01023af39fd9f5b30ab239b0dfe6b663a",
+            "USB_DEVICE/App/usbd_cdc_if.h": "d45aedfed245c9ef0413a5942c64a2981375d391281fb873e0e84610774bf6ba",
+            "USB_DEVICE/App/usbd_desc.c": "f489492589fe4fbc9a98b340dd1c8c754e17a71b02ffca6ee7801a405a764107",
+            "USB_DEVICE/App/usbd_desc.h": "1e47de8ed0f3d14ac0e8b702dd29cfa96325bd31dc20786018afe40cfbf08069",
+            "USB_DEVICE/App/usb_device.c": "35fc6fe328f3b683fed8a4f75fbd809ba486ccbba1699994f7eb94c35cdb884b",
+            "USB_DEVICE/App/usb_device.h": "679fbafd000780ab1c924d20ff45a079b7db2dce127f7ac2dd16cc8076310599",
+            "USB_DEVICE/Target/usbd_conf.c": "effe29562b9d655026d6127a87a988af13d05744d5d6d70356faefe5004d0f87",
+            "USB_DEVICE/Target/usbd_conf.h": "04e182939c390d12a163d3d8c003f31202f3fdcdfd37aa09cf111dc5aaa285b5",
+            "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h": "5df2712273bfd522fd5164385acc22d6c2fb899b4dc6ed09823a3698e0963c5e",
+            "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h": "e0e1fd6d50790b5f82e633e3683908ace0f5e8339884648a013c6e0dfe27c0e4",
+            "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h": "1fb60258c3705a07f04c32d5b6229a8b8125f90fd72ee06959c098d94485dd05",
+            "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h": "b3c4df07bf76dd3371def96c9de53bb2db991f6cecc4601da890641f24376175",
+            "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c": "9696a4d61c9e05cd7989936792b15b88f9b7be567d2a927b4feeb0685f1a73a2",
+            "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c": "339046117dd385d4257508a2b240067b7624a4b6df3dd170b72d2cdac215ffa9",
+            "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c": "a89f4e80bb59bcd369fe412b12915ab4392bb110bb54f0b93dd521c43669dbc1",
+            "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h": "2bc428e2226229a206723d0441d37003a390ceea9acb7825b02dacf3afc05a1e",
+            "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c": "9bf6b6c49a7faab7bdc465dae5df52bcc878720bd354c8596b51e16d6e210ecb",
+            "Drivers/CMSIS/LICENSE.txt": "e03ba41d7fab20700769fe4118bab50d800cb74f990353a05d2f5fff1c228363",
+            "Drivers/STM32F1xx_HAL_Driver/LICENSE.txt": "d5a162f3eaf2b7b6762f00700017cae5695ebbdce7932fead8316448baafd9c1",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h": "cc3851d46bc92478fe355f8b1fedd013deaa70da5e8e4136ce5cbb2536519803",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_cortex.h": "11ef612e231958eb9f3d4f825cda6bed35bd482996ecbf51f34b5ee7d84371f7",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h": "377e7fc68715cfb6d09715e9d77bd5cee09e79f00479f502d3191016c3c388dd",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h": "22cbcbf02ef1867f0d9bbf28c600c9aeb71a7d221608449ae64cb48339687928",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma_ex.h": "1b09d5229c87587ab894fc3237182a7027b1672a20433b9659433fb978e459f3",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_exti.h": "745bd5b830259f613d116286a445d18c26677a72170117f2b35b7e0607fd563c",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash.h": "fc9d0c2df0c277cbcb37a5baca8e0b6f112e4c7e879dc753b62aa9095732fff5",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h": "6bdda70eea1f54de098cf7033091c1d367e40043e3e0759ec08700718d38ab35",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h": "3ae8ac366a2a55952fc4bada166e88f6d15fb884492048191f267f79ffa73d44",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio_ex.h": "769eb507539209ec99906cb586e60c760c96ffcede2754e5c43717404e3f18de",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd.h": "8f59dc170ba07d1466471742e39bde67b03db84bfb968a7e1152df5ac0b4ab72",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd_ex.h": "5d1c4892ffd05dff9ec40eb36dc528b9e4f6967c5abd8679348b9a930a30b0b0",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h": "1353dc09e32e7e6ec686b725b80981a9286c7e8b5383f8f4259f672470d481c3",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h": "8bf099bedb0c4fa035df81520f99e289464293b27e71d7e8759c8d5160ce8ac1",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc_ex.h": "ed9ac1b6349ed0989367a1daa82819390dcefec0f6cef6fa432e09b2c9ea0adc",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h": "261464a3f9e9ad0c8c6390eeec680f1bbf87cf5c72c80008ada16928070446e9",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h": "949edfcd2021d8c73c5eb36d5cc1fb995b6f7a19fc084121b340c7502d33c135",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_bus.h": "6680693a685a8ed0d09d9c6901328ac23bb207ecc9d68e9521b66cf09c8f75a8",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_cortex.h": "e46032e4e08ce856c204f91f28018dc4ac59f4b8ea24e3bf0f5a609a4ba7bb32",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_dma.h": "1a0eba87b8820b996098d1be8d09ab3df996845cf1c1fa5b536cbf6bce8fe16d",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_exti.h": "9f816072941e79763cbc048fe03bf803fd81bf0a0ade876d74a49be8620bfde5",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_gpio.h": "d2fe5810dc0640bfc6f10be30162425d6b0004444bc40cb5d62257b6f21338fe",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_pwr.h": "4e706bc7ad93abf9e67433d7c46abf777e74d9036fa03a16380348c118b8c998",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_rcc.h": "8f9653c499ac50a5d874c2606091b1a2fbed71aae7d25e70d9d518337d7922ed",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_spi.h": "aa8d53561d7617de21e1caf4de8a8ad8502b9a9a74e37b5366a81e984dffdf0f",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_system.h": "5506acce915aad3a1d0a93f17a07eb2c26c731808dc77c28014eef081c3824bb",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usart.h": "8684e487827c318256ba7ae36841bd2c7fa2438c0cc5c8aa36b555f607873e77",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usb.h": "2bd0a33a370a330a7187e71393097660c74093d29ae7a7389d9bab7cbcaaba8c",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_utils.h": "decb7156d26dc56db7ed76c06c71533ca579905b80824b178749a03a2f224a1b",
+            "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c": "607343f969fce8d49111fe4d8d32001c9b289742408d0452ae49761034f39f01",
+            "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c": "21ccc3b54e45e62b278e7f32fd34533bb1e0f4105c7f47c9218ffa0801bfbddd",
+            "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c": "9ec6e91366c9b27c64b93c4d31fb4636dbc830b055ec501dc728c34eff6900da",
+            "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c": "6f201feccce8c53717098109bd4d2b4a0894ce4334cd1d6cdd8d15d5e69a8eb6",
+            "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c": "cddd2adcf578c7d63fd27f55a6ef88f50540a3b65927dfc411c192900c127bb1",
+            "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c": "5e0631a9ce807629cc24d26effb6dba3b0e4eeca10e9d46ae9d5dc40fa1989da",
+            "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c": "a2e12792c9d49eecdc567ab9fc1a49ed90723007f9579b702c28960dfd83e121",
+            "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c": "5ec9f22de1b3ee82e8437b3ba52725f8f031cf9075848582a0a297d4d1176450",
+            "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.c": "412e7819ef1900f3b33b550068c64e7f9679fe99793758a23e775712842c12a2",
+            "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.c": "036e3573f0d1a2dab6c5bd713333cde6a633afecb1df8d437bee081b02cd9a20",
+            "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c": "d7db81f800f7f41c942b485e2f3fe9a27f5b21def71830297ecb44f131d91e60",
+            "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c": "5c64b13347aa70dd970f803331d3e106e915e13e2bb029d27c673cfba7cd394c",
+            "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c": "2dc02facf7141e4a25ae5653287d7100adbc3847b8a25e3e00969927c2e727d5",
+            "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c": "74c20012ae5e579f6f720b941e66cae7b39ca47d80d873dc53d2274519795802",
+            "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c": "0baff878faf8551e43ad63959f04bae08d61ee94e686e56a56cd97d02535c4d9",
+            "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c": "d4cb02a5d87452df94f8695e3ca7e10b20fb298113b0022c768e062d1a7c65c0",
+            "Drivers/STM32F1xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h": "583cd8373bde87cbf384a9153b7c8ba9c456139baebb248bffe7116c926e2286",
+            "Drivers/CMSIS/Include/cmsis_armcc.h": "57b8d88cd03152f60bf74de0149ec979ae20210d86ab06e837aa69c66f27d615",
+            "Drivers/CMSIS/Include/cmsis_armclang.h": "da29dbad3cf27f6c86437af6bd0b302e105210742ad7a602bea51b104f1661c9",
+            "Drivers/CMSIS/Include/cmsis_compiler.h": "cd3cbd1c771a5252827a14c75a12e7ed975f76b9fc1577d53a74ba0e7c1af6c3",
+            "Drivers/CMSIS/Include/cmsis_gcc.h": "8c16d51f7884a9fc07c5cbe6f2bcd24e5e092ddc519f71d36740c2d2e2ff6a27",
+            "Drivers/CMSIS/Include/cmsis_iccarm.h": "a600765888c69ee60cd2d01d77356902d4ae5fa98aa7e1d73703663c96b7f87a",
+            "Drivers/CMSIS/Include/cmsis_version.h": "280b9fc8739aefa878d47e68d7adbd4908a15f98ec193cdba1a4b514133f5c34",
+            "Drivers/CMSIS/Include/core_armv8mbl.h": "220d90f3f99126e656c31c32f099ff766b32cf487f7dd77388e4c9a78e1898c8",
+            "Drivers/CMSIS/Include/core_armv8mml.h": "825a8799d71f3fa29690b1597dfc2dfb660b103d44e20b8185f26b4f3b4ffdf0",
+            "Drivers/CMSIS/Include/core_cm0.h": "1beaa04c859225f75142d055e9c5dacfc9ac1d88c82934177f745b9c5f3f4094",
+            "Drivers/CMSIS/Include/core_cm0plus.h": "c953256e1c1b1cd6accbbfca5d47c09a9b0534f3147b125e17e59c0ae6c30ed7",
+            "Drivers/CMSIS/Include/core_cm1.h": "460281028a261740cd5ec86840bed01c480d70ba5b54a0f9938d4cefadfd486b",
+            "Drivers/CMSIS/Include/core_cm23.h": "6303efec943ca0f9eccdab8fc39200d6f95dc943d4051198e0d49f24395028a5",
+            "Drivers/CMSIS/Include/core_cm3.h": "368296087a925cf78133d27e0854d748605441915e0f4fece93f2f97eea68adb",
+            "Drivers/CMSIS/Include/core_cm33.h": "7f1b6a76b119e1e1680f756da897929f63d98133442c5115678af60adf20f1a8",
+            "Drivers/CMSIS/Include/core_cm4.h": "738dff259c25e68ed2529baf425315d8dae1af5dac6c11b66bfdef82e78e86c9",
+            "Drivers/CMSIS/Include/core_cm7.h": "6b75e3bef1eb81e0d3e2c311ad26fcdbac4cde2cd3462a62b81a23f6aec0e55f",
+            "Drivers/CMSIS/Include/core_sc000.h": "d1528d13fbf91da620ef977e99802d83ded093c0521c04cad128da23e3001524",
+            "Drivers/CMSIS/Include/core_sc300.h": "fa514ea0cf5327b0523c2bdfebfb76fd2e69f972e5f60fbfb94ade56b31c722b",
+            "Drivers/CMSIS/Include/mpu_armv7.h": "b0b6da4ec744b5f547a94e60e24b0a6ff6bb7307d3f81a83d0b7c3a64dc29326",
+            "Drivers/CMSIS/Include/mpu_armv8.h": "8280a1d4d3d25f60cdc05b84718cf504f02b7265fc3b7c5790cb29cd7dcf116c",
+            "Drivers/CMSIS/Include/tz_context.h": "7fcc21fc190f6fd970390e9caaa6a86d72fd10f9edf4efab36f12aecf1a8baa0",
+            "Drivers/CMSIS/Device/ST/STM32F1xx/LICENSE.txt": "b616ef9c1ae02a5da902bc4a3efb48a8a3170308b30fc09bfda77ba712f49f95",
+            "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h": "d9c7c613d9fea74220892b4fbc3e80617493acad82a04bafadab2b4a7198399c",
+            "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h": "05e93fa3ddefb2e83d762b9ca4de36e3bba9cd8e9690400fe9f2c11fc0a3cef5",
+            "Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h": "a54dfbb3480c672f532d472a6e84bcf34df6551771d2e9966c5a3503c676b6ab",
+            "Core/Inc/dma.h": "7cf6f7450a29d26303cbba5a3ca8c6cb24a02635d6a5ba4d05141fdfc75c4c49",
+            "Core/Inc/gpio.h": "e2d62f964a0b7f238384ed6a20a181d09df9647240a268dc547acf5b35099f74",
+            "Core/Inc/main.h": "63dc7f2dba801c0ecc73ad04e5151247324300495b6618a95b6eb408997fc0c0",
+            "Core/Inc/spi.h": "7ee08a1f7b3c518b8f1a33e73ee2d18830c1336be9341e774e73f137984491d8",
+            "Core/Inc/stm32f1xx_hal_conf.h": "92f0e3c270b9a757eb3a6f8252bdcfe3d6d1dea141b992afc88707d67c0937fe",
+            "Core/Inc/stm32f1xx_it.h": "98dce6276a88862c2d728a1cc5608b718f718873ce7d1eeba5e5063b4521c6d2",
+            "Core/Inc/usart.h": "b57eee246dfa6d43d3188845b3f5a21ae2fff22ccfc58317d6e51a26e994cbbb",
+            "Core/Src/dma.c": "d01f597b35d1381bb4d246a2cab078f7786e62355d06c322cabbdecff5c84f35",
+            "Core/Src/gpio.c": "81b05b5afd16a3619b1a2d0d4a5a0e251fb194feff547cd7a141e3d22ad8e5ae",
+            "Core/Src/main.c": "ab58a3082c5b3f6ad7ecdbafbcf606e84ca50e72d98ac9976ecd8926b8e6950c",
+            "Core/Src/spi.c": "e1607b65e151f22d84b8485d518740992186990e502902a6e98cdaa09e7a0a1f",
+            "Core/Src/stm32f1xx_hal_msp.c": "0c660d42a5bdd0df9e096117351e75ff94a8fb2cf0ec996cac0f55c1355c3ab9",
+            "Core/Src/stm32f1xx_it.c": "7a9b0b452936d153b7c71b85a451c8b29575d2abdb54e173fb3ea5a0efdc3bb9",
+            "Core/Src/syscalls.c": "03c06c72eafb44b499814cf9234aba57dd830f345d9b8779b5d7090e78517600",
+            "Core/Src/sysmem.c": "ad20f7b1fa1e7c73330727747222cf2ffa3245ebf035230ee9a157545e79df95",
+            "Core/Src/system_stm32f1xx.c": "6f13b57054f33b4dcb8f3f23fa05b2942d9dca8abd9a2a08ecde6f99693505a5",
+            "Core/Src/usart.c": "c3963ae03d9139ad636694b3bc626a2469502f54785acbf7d6139edc1d4cd164"
+          }
+        },
+        "native_ground_backend": {
+          "format_version": 1,
+          "scope": "PRIVATE_NATIVE_GROUND_BACKEND",
+          "profile": "f103-systick-classic-v1",
+          "hclk_hz": 72000000,
+          "facts_sha256": "0ee5e3f4aeb470f2978049b512172c0b4b77c2509f7bd3b9a9dbb5b82e0093bc",
+          "snapshot_id": "ddb85510395b43fcb4d4227f6b6330d96c599348c5139de3b19e5b5a9ceaf628",
+          "spi": "SPI1",
+          "gpio": [
+            "SPI_RADIO_NSS",
+            "RADIO_RST",
+            "RADIO_BUSY",
+            "RADIO_DIO1"
+          ],
+          "formal_generation": "BLOCKED"
+        }
+      },
+      "resources": [
+        {
+          "id": "USB_CDC",
+          "kind": "usb_cdc",
+          "metadata": {
+            "capabilities": [
+              "usb.device",
+              "usb.cdc"
+            ],
+            "physical_resource": "USB Device CDC"
+          }
+        },
+        {
+          "id": "USART1",
+          "kind": "uart",
+          "metadata": {
+            "c_id": "((PlatformUartId)0U)",
+            "header": "platform_uart.h",
+            "handle": "huart1",
+            "logical_index": 0,
+            "peripheral": "USART1",
+            "physical_resource": "USART1",
+            "pins": {
+              "rx": "PA10",
+              "tx": "PA9"
+            },
+            "pin_electrical": {
+              "rx": {
+                "pin": "PA10",
+                "signal": "USART1_RX",
+                "mode": "Asynchronous",
+                "alternate_function": "USART1_RX",
+                "pull": "none",
+                "output_type": "",
+                "speed": ""
+              },
+              "tx": {
+                "pin": "PA9",
+                "signal": "USART1_TX",
+                "mode": "Asynchronous",
+                "alternate_function": "USART1_TX",
+                "pull": "none",
+                "output_type": "",
+                "speed": ""
+              }
+            },
+            "BaudRate": 230400,
+            "VirtualMode": "VM_ASYNC",
+            "baud_rate": 230400,
+            "mode": "VM_ASYNC",
+            "word_length": 8,
+            "parity": "none",
+            "stop_bits": 1.0,
+            "dma": [
+              {
+                "request": "USART1_RX",
+                "instance": "DMA1_Channel5",
+                "direction": "DMA_PERIPH_TO_MEMORY",
+                "mode": "DMA_NORMAL",
+                "priority": "DMA_PRIORITY_LOW",
+                "channel": ""
+              },
+              {
+                "request": "USART1_TX",
+                "instance": "DMA1_Channel4",
+                "direction": "DMA_MEMORY_TO_PERIPH",
+                "mode": "DMA_NORMAL",
+                "priority": "DMA_PRIORITY_LOW",
+                "channel": ""
+              }
+            ],
+            "irq": {
+              "irq": "USART1_IRQn",
+              "enabled": true,
+              "preempt_priority": 0,
+              "sub_priority": 0
+            },
+            "irq_enabled": 1
+          }
+        },
+        {
+          "id": "SPI1",
+          "kind": "spi",
+          "metadata": {
+            "c_id": "((PlatformSpiId)0U)",
+            "header": "platform_spi.h",
+            "handle": "hspi1",
+            "logical_index": 0,
+            "peripheral": "SPI1",
+            "physical_resource": "SPI1",
+            "pins": {
+              "sck": "PA5",
+              "miso": "PA6",
+              "mosi": "PA7"
+            },
+            "pin_electrical": {
+              "sck": {
+                "pin": "PA5",
+                "signal": "SPI1_SCK",
+                "mode": "Full_Duplex_Master",
+                "alternate_function": "SPI1_SCK",
+                "pull": "none",
+                "output_type": "",
+                "speed": ""
+              },
+              "miso": {
+                "pin": "PA6",
+                "signal": "SPI1_MISO",
+                "mode": "Full_Duplex_Master",
+                "alternate_function": "SPI1_MISO",
+                "pull": "none",
+                "output_type": "",
+                "speed": ""
+              },
+              "mosi": {
+                "pin": "PA7",
+                "signal": "SPI1_MOSI",
+                "mode": "Full_Duplex_Master",
+                "alternate_function": "SPI1_MOSI",
+                "pull": "none",
+                "output_type": "",
+                "speed": ""
+              }
+            },
+            "BaudRatePrescaler": "SPI_BAUDRATEPRESCALER_8",
+            "CalculateBaudRate": "9.0 MBits/s",
+            "Direction": "SPI_DIRECTION_2LINES",
+            "mode": "master",
+            "cubemx_Mode": "SPI_MODE_MASTER",
+            "VirtualType": "VM_MASTER",
+            "clock_hz": 9000000,
+            "cpol": "low",
+            "cpha": "1edge",
+            "data_bits": 8,
+            "bit_order": "msb",
+            "dma": []
+          }
+        },
+        {
+          "id": "SPI_RADIO_NSS",
+          "kind": "gpio_output",
+          "metadata": {
+            "c_id": "((PlatformGpioId)0U)",
+            "header": "platform_gpio.h",
+            "port": "SPI_RADIO_NSS_GPIO_Port",
+            "pin": "SPI_RADIO_NSS_Pin",
+            "logical_index": 0,
+            "physical_pin": "PA4",
+            "physical_resource": "PA4 (GPIO_Output)",
+            "label": "SPI_RADIO_NSS",
+            "signal": "GPIO_Output",
+            "mode": "gpio_output",
+            "pin_mode": "",
+            "alternate_function": "",
+            "pull": "up",
+            "output_type": "push_pull",
+            "speed": "low",
+            "output_default": "high",
+            "initial_level": "high",
+            "exti_trigger": "",
+            "locked": true,
+            "exti_line": null,
+            "irq": {},
+            "irq_enabled": 0
+          }
+        },
+        {
+          "id": "RADIO_DIO1",
+          "kind": "gpio_interrupt",
+          "metadata": {
+            "c_id": "((PlatformGpioId)1U)",
+            "header": "platform_gpio.h",
+            "port": "RADIO_DIO1_GPIO_Port",
+            "pin": "RADIO_DIO1_Pin",
+            "logical_index": 1,
+            "physical_pin": "PB0",
+            "physical_resource": "PB0 (GPXTI0)",
+            "label": "RADIO_DIO1",
+            "signal": "GPXTI0",
+            "mode": "gpio_interrupt",
+            "pin_mode": "",
+            "alternate_function": "",
+            "pull": "none",
+            "output_type": "",
+            "speed": "",
+            "output_default": "",
+            "initial_level": "",
+            "exti_trigger": "rising",
+            "locked": true,
+            "exti_line": 0,
+            "irq": {
+              "irq": "EXTI0_IRQn",
+              "enabled": true,
+              "preempt_priority": 0,
+              "sub_priority": 0
+            },
+            "irq_enabled": 1
+          }
+        },
+        {
+          "id": "RADIO_DIO2",
+          "kind": "gpio_input",
+          "metadata": {
+            "c_id": "((PlatformGpioId)2U)",
+            "header": "platform_gpio.h",
+            "port": "RADIO_DIO2_GPIO_Port",
+            "pin": "RADIO_DIO2_Pin",
+            "logical_index": 2,
+            "physical_pin": "PB1",
+            "physical_resource": "PB1 (GPIO_Input)",
+            "label": "RADIO_DIO2",
+            "signal": "GPIO_Input",
+            "mode": "gpio_input",
+            "pin_mode": "",
+            "alternate_function": "",
+            "pull": "none",
+            "output_type": "",
+            "speed": "",
+            "output_default": "",
+            "initial_level": "",
+            "exti_trigger": "",
+            "locked": true,
+            "exti_line": null,
+            "irq": {},
+            "irq_enabled": 0
+          }
+        },
+        {
+          "id": "RADIO_BUSY",
+          "kind": "gpio_input",
+          "metadata": {
+            "c_id": "((PlatformGpioId)3U)",
+            "header": "platform_gpio.h",
+            "port": "RADIO_BUSY_GPIO_Port",
+            "pin": "RADIO_BUSY_Pin",
+            "logical_index": 3,
+            "physical_pin": "PB10",
+            "physical_resource": "PB10 (GPIO_Input)",
+            "label": "RADIO_BUSY",
+            "signal": "GPIO_Input",
+            "mode": "gpio_input",
+            "pin_mode": "",
+            "alternate_function": "",
+            "pull": "none",
+            "output_type": "",
+            "speed": "",
+            "output_default": "",
+            "initial_level": "",
+            "exti_trigger": "",
+            "locked": true,
+            "exti_line": null,
+            "irq": {},
+            "irq_enabled": 0
+          }
+        },
+        {
+          "id": "RADIO_RST",
+          "kind": "gpio_output",
+          "metadata": {
+            "c_id": "((PlatformGpioId)4U)",
+            "header": "platform_gpio.h",
+            "port": "RADIO_RST_GPIO_Port",
+            "pin": "RADIO_RST_Pin",
+            "logical_index": 4,
+            "physical_pin": "PB11",
+            "physical_resource": "PB11 (GPIO_Output)",
+            "label": "RADIO_RST",
+            "signal": "GPIO_Output",
+            "mode": "gpio_output",
+            "pin_mode": "",
+            "alternate_function": "",
+            "pull": "none",
+            "output_type": "push_pull",
+            "speed": "low",
+            "output_default": "high",
+            "initial_level": "high",
+            "exti_trigger": "",
+            "locked": true,
+            "exti_line": null,
+            "irq": {},
+            "irq_enabled": 0
+          }
+        },
+        {
+          "id": "RADIO_DIO3",
+          "kind": "gpio_input",
+          "metadata": {
+            "c_id": "((PlatformGpioId)5U)",
+            "header": "platform_gpio.h",
+            "port": "RADIO_DIO3_GPIO_Port",
+            "pin": "RADIO_DIO3_Pin",
+            "logical_index": 5,
+            "physical_pin": "PB3",
+            "physical_resource": "PB3 (GPIO_Input)",
+            "label": "RADIO_DIO3",
+            "signal": "GPIO_Input",
+            "mode": "gpio_input",
+            "pin_mode": "",
+            "alternate_function": "",
+            "pull": "none",
+            "output_type": "",
+            "speed": "",
+            "output_default": "",
+            "initial_level": "",
+            "exti_trigger": "",
+            "locked": true,
+            "exti_line": null,
+            "irq": {},
+            "irq_enabled": 0
+          }
+        },
+        {
+          "id": "LED",
+          "kind": "gpio_output",
+          "metadata": {
+            "c_id": "((PlatformGpioId)6U)",
+            "header": "platform_gpio.h",
+            "port": "LED_GPIO_Port",
+            "pin": "LED_Pin",
+            "logical_index": 6,
+            "physical_pin": "PC13-TAMPER-RTC",
+            "physical_resource": "PC13-TAMPER-RTC (GPIO_Output)",
+            "label": "LED",
+            "signal": "GPIO_Output",
+            "mode": "gpio_output",
+            "pin_mode": "",
+            "alternate_function": "",
+            "pull": "none",
+            "output_type": "push_pull",
+            "speed": "low",
+            "output_default": "high",
+            "initial_level": "high",
+            "exti_trigger": "",
+            "locked": true,
+            "exti_line": null,
+            "irq": {},
+            "irq_enabled": 0
+          }
+        },
+        {
+          "id": "SYSTEM_TIME",
+          "kind": "time",
+          "metadata": {
+            "c_id": "((PlatformTimeId)0U)",
+            "header": "platform_time.h",
+            "logical_index": 0,
+            "handle": "",
+            "handle_type": "TIM_HandleTypeDef",
+            "timer_instance": "",
+            "physical_resource": "HAL Timebase",
+            "timebase": {
+              "kind": "systick",
+              "source": "",
+              "handle": "",
+              "instance": "",
+              "irq": "SysTick_IRQn",
+              "counter_frequency_hz": 0,
+              "period_counts": 0,
+              "tick_frequency_hz": 1000,
+              "interrupt_started": false,
+              "errors": []
+            },
+            "counter_frequency_hz": 0,
+            "period_counts": 0,
+            "tick_frequency_hz": 1000,
+            "irq": "SysTick_IRQn"
+          }
+        }
+      ],
+      "build_sources": [
+        "HardwareGenerated/NativeClassicCdc/Core/Src/main.c",
+        "HardwareGenerated/NativeClassicCdc/Core/Src/gpio.c",
+        "HardwareGenerated/NativeClassicCdc/Core/Src/dma.c",
+        "HardwareGenerated/NativeClassicCdc/Core/Src/spi.c",
+        "HardwareGenerated/NativeClassicCdc/Core/Src/usart.c",
+        "HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_it.c",
+        "HardwareGenerated/NativeClassicCdc/Core/Src/stm32f1xx_hal_msp.c",
+        "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usb_device.c",
+        "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.c",
+        "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.c",
+        "HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target/usbd_conf.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c",
+        "HardwareGenerated/NativeClassicCdc/Core/Src/system_stm32f1xx.c",
+        "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c",
+        "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c",
+        "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c",
+        "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c",
+        "HardwareGenerated/NativeClassicCdc/Core/Src/sysmem.c",
+        "HardwareGenerated/NativeClassicCdc/Core/Src/syscalls.c"
+      ],
+      "asm_sources": [
+        "HardwareGenerated/NativeClassicCdc/startup_stm32f103xb.s"
+      ],
+      "include_dirs": [
+        "HardwareGenerated/NativeClassicCdc/Core/Inc",
+        "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App",
+        "HardwareGenerated/NativeClassicCdc/USB_DEVICE/Target",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/Inc/Legacy",
+        "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc",
+        "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc",
+        "HardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/Include",
+        "HardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Include"
+      ],
+      "defines": [
+        "STM32F103xB",
+        "USE_HAL_DRIVER"
+      ],
+      "linker_script": "HardwareGenerated/NativeClassicCdc/STM32F103XX_FLASH.ld",
+      "source_digest": "ddb85510395b43fcb4d4227f6b6330d96c599348c5139de3b19e5b5a9ceaf628",
+      "source_label": "cube-f103-usb",
+      "risk_acknowledged": true,
+      "assignment_fingerprint": ""
+    },
+    "radio_plugin": "silverstar.device.telemetry.sx1281",
+    "module_variant": "e28_2g4m12sx",
+    "resources": {
+      "radio0:busy": "RADIO_BUSY",
+      "radio0:dio1": "RADIO_DIO1",
+      "radio0:nss": "SPI_RADIO_NSS",
+      "radio0:reset": "RADIO_RST",
+      "radio0:spi": "SPI1"
+    },
+    "pc_interface": "usb_cdc",
+    "pc_resource": "",
+    "baudrate": 230400,
+    "tx_power_dbm": 12,
+    "build": {
+      "target_profile": "",
+      "make_command": "mingw32-make",
+      "toolchain_prefix": "arm-none-eabi-",
+      "gcc_path": "",
+      "flash_command": "",
+      "eide_mode": "native",
+      "tool_paths": {},
+      "memory_layout": "legacy"
+    },
+    "activity_led_enabled": false
+  },
+  "resources": {
+    "gnss0:data": "PLATFORM_UART_2",
+    "gnss0:reset": "PLATFORM_GPIO_7",
+    "gnss0:time": "PLATFORM_TIME_1",
+    "gnss0:timepulse": "PLATFORM_GPIO_8",
+    "imu0:data": "PLATFORM_UART_1",
+    "imu0:time": "PLATFORM_TIME_1",
+    "launch_ignition0:output": "PLATFORM_GPIO_4",
+    "launch_ignition0:time": "PLATFORM_TIME_1",
+    "maintenance0:console": "PLATFORM_UART_3",
+    "parachute_pyro0:output": "PLATFORM_GPIO_5",
+    "parachute_pyro0:time": "PLATFORM_TIME_1",
+    "storage0:storage": "PLATFORM_SDIO_1",
+    "storage0:time": "PLATFORM_TIME_1",
+    "system_indicator0:output": "PLATFORM_GPIO_6",
+    "telemetry0:radio_bus": "PLATFORM_SPI_1",
+    "telemetry0:radio_busy": "PLATFORM_GPIO_2",
+    "telemetry0:radio_dio1": "PLATFORM_GPIO_3",
+    "telemetry0:radio_nss": "PLATFORM_GPIO_0",
+    "telemetry0:radio_reset": "PLATFORM_GPIO_1",
+    "telemetry0:time": "PLATFORM_TIME_1",
+    "voltage_monitor0:input_voltage": "PLATFORM_ADC_1",
+    "voltage_monitor0:time": "PLATFORM_TIME_1"
+  },
+  "capability_sources": {},
+  "logging": {
+    "streams": [
+      {
+        "record": "FLIGHT_LOG_RECORD_EVENT",
+        "enabled": true,
+        "policy": "EVENT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_STATS",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 1000000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESTIMATOR",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 40000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_SYSTEM_CONFIG",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_PURE_INS",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 40000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_KF6_DIAGNOSTIC",
+        "enabled": false,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 40000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_KF6_FULL_P",
+        "enabled": false,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 200000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_POWER",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 100000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_HEALTH",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 1000000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_TELEMETRY_DIAG",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 1000000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_INITIAL_STATE",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_GNSS_NATIVE",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_BARO_NATIVE",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_MAG_NATIVE",
+        "enabled": false,
+        "policy": "DECIMATION",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_INERTIAL_INCREMENT",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_GNSS_MEASUREMENT",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_BARO_MEASUREMENT",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_IMU_CORRECTED",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_CALIBRATION_RESULT",
+        "enabled": true,
+        "policy": "EVENT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ALIGNMENT_RESULT",
+        "enabled": true,
+        "policy": "EVENT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_MISSION_CONFIG",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_DEVICE_DESCRIPTOR",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ALGORITHM_DESCRIPTOR",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_LOG_STREAM_DESCRIPTOR",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_DECODER_PROFILE_DESCRIPTOR",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESTIMATOR_STEP",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_GNSS_RECOVERY",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_LANDING_DIAGNOSTIC",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESKF15_STATE",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 40000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESKF15_FULL_P_PART",
+        "enabled": false,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 40000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESKF15_INITIAL_STATE",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESKF15_INITIAL_P_PART",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESKF15_MEASUREMENT",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESKF15_BODY_INPUT",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_NAV_QUALITY",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE",
+        "enabled": true,
+        "policy": "EVENT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY",
+        "enabled": false,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_SF6_STATE",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 100000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_SF6_MEASUREMENT",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      }
+    ]
+  },
+  "log_decoder_profile": {
+    "relative_path": "",
+    "package_schema": "",
+    "container_plugin_id": "",
+    "generation_profile_sha256": "",
+    "package_sha256": ""
+  },
+  "build": {
+    "target_profile": "SilverStar_F407",
+    "make_command": "mingw32-make",
+    "toolchain_prefix": "arm-none-eabi-",
+    "gcc_path": "",
+    "flash_command": "",
+    "eide_mode": "native",
+    "tool_paths": {
+      "compiler": "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc.exe",
+      "objcopy": "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-objcopy.exe",
+      "size": "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-size.exe"
+    },
+    "memory_layout": "legacy"
+  },
+  "generated_glue": [
+    "project_bindings",
+    "project_capability_routes",
+    "project_device_instances",
+    "platform_resources",
+    "project_resources",
+    "project_storage_binding",
+    "project_log_config",
+    "project_metadata",
+    "project_flight_config",
+    "project_algorithm_parameters",
+    "project_log_decoder_profile",
+    "project_sources"
+  ],
+  "component_provenance": {},
+  "reference_provenance": {}
+}

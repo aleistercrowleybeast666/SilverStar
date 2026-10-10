@@ -1,0 +1,381 @@
+{
+  "scope": "Exact ordinary input byte provenance across accepted Git blob/isolated worktree/Windows daily checkout; no validator changes or malformed USB research",
+  "records": [
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Src/sx1281_device.c",
+      "expected_sha256": "56ee9b35e54535249816363d0328120a6018f157ce51f8bad93185ebea78428c",
+      "daily_sha256": "0bdf0cfc1c950bd8fcda97898d8842a34f1e536f5e34bdc5b96758d46a8638ef",
+      "same_bytes": false,
+      "only_crlf_conversion": false,
+      "lf_git_blob_sha256": "0c9096e56e659f28319221ac9d56e559b375c1174787844946f2517e8dc22bed"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Middlewares/Third_Party/SX1280lib/sx1280-hal.c",
+      "expected_sha256": "b8caf4dd85dd3307897fa8f923adcaf7153b0d4c91a787eb58537d0b34eb783d",
+      "daily_sha256": "b8caf4dd85dd3307897fa8f923adcaf7153b0d4c91a787eb58537d0b34eb783d",
+      "same_bytes": true,
+      "only_crlf_conversion": false,
+      "lf_git_blob_sha256": "fb75e779068aa4704b15c5ed3ad76b459abbd8a17c6191e6682072989ff96323"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Upstream/LICENSE.md",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "effc9e8a8ebe8de11cef6d0afc2cad395c8fd039aa6b522495c4f99c71f2a796",
+      "candidate_sha256": "effc9e8a8ebe8de11cef6d0afc2cad395c8fd039aa6b522495c4f99c71f2a796",
+      "daily_sha256": "effc9e8a8ebe8de11cef6d0afc2cad395c8fd039aa6b522495c4f99c71f2a796",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "effc9e8a8ebe8de11cef6d0afc2cad395c8fd039aa6b522495c4f99c71f2a796"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/USB_Device/App/usb_device.c",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "a9f8c728661aedd10724a2ff1938a28a69ce0308cfd5359a8534f95afda25993",
+      "candidate_sha256": "a9f8c728661aedd10724a2ff1938a28a69ce0308cfd5359a8534f95afda25993",
+      "daily_sha256": "a9f8c728661aedd10724a2ff1938a28a69ce0308cfd5359a8534f95afda25993",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "a9f8c728661aedd10724a2ff1938a28a69ce0308cfd5359a8534f95afda25993"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/USB_Device/App/usb_device.h",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "e9e59db9ef7b117940d7f3a7c7e56c321ddd45cd50e4845648942b6eaf76751f",
+      "candidate_sha256": "e9e59db9ef7b117940d7f3a7c7e56c321ddd45cd50e4845648942b6eaf76751f",
+      "daily_sha256": "e9e59db9ef7b117940d7f3a7c7e56c321ddd45cd50e4845648942b6eaf76751f",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "e9e59db9ef7b117940d7f3a7c7e56c321ddd45cd50e4845648942b6eaf76751f"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_cdc_if.c",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "917736bf53803912785894fef3d78408a2ed5612345952b9432eb8fcc0ab2af5",
+      "candidate_sha256": "917736bf53803912785894fef3d78408a2ed5612345952b9432eb8fcc0ab2af5",
+      "daily_sha256": "917736bf53803912785894fef3d78408a2ed5612345952b9432eb8fcc0ab2af5",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "917736bf53803912785894fef3d78408a2ed5612345952b9432eb8fcc0ab2af5"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_cdc_if.h",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "1833c814cff004bb16dd5ff2698bf0209eb72493b62759685772d9b665ff9e5c",
+      "candidate_sha256": "1833c814cff004bb16dd5ff2698bf0209eb72493b62759685772d9b665ff9e5c",
+      "daily_sha256": "1833c814cff004bb16dd5ff2698bf0209eb72493b62759685772d9b665ff9e5c",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "1833c814cff004bb16dd5ff2698bf0209eb72493b62759685772d9b665ff9e5c"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_desc.c",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "cb4a5f84594d7ff44fd2b772a83a8e9bff07a110be846f372b2df3cc7a000c05",
+      "candidate_sha256": "cb4a5f84594d7ff44fd2b772a83a8e9bff07a110be846f372b2df3cc7a000c05",
+      "daily_sha256": "cb4a5f84594d7ff44fd2b772a83a8e9bff07a110be846f372b2df3cc7a000c05",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "cb4a5f84594d7ff44fd2b772a83a8e9bff07a110be846f372b2df3cc7a000c05"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_desc.h",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "1c6b04d788a92da35def548a68ad74ee5a6bc9a95bd286b431f4ce361895a2ab",
+      "candidate_sha256": "1c6b04d788a92da35def548a68ad74ee5a6bc9a95bd286b431f4ce361895a2ab",
+      "daily_sha256": "1c6b04d788a92da35def548a68ad74ee5a6bc9a95bd286b431f4ce361895a2ab",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "1c6b04d788a92da35def548a68ad74ee5a6bc9a95bd286b431f4ce361895a2ab"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/USB_Device/Target/usbd_conf.c",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "8135a146b684745bac67a69d8ca257101c0855d7ce187a423c00f7e1255b4e3b",
+      "candidate_sha256": "8135a146b684745bac67a69d8ca257101c0855d7ce187a423c00f7e1255b4e3b",
+      "daily_sha256": "8135a146b684745bac67a69d8ca257101c0855d7ce187a423c00f7e1255b4e3b",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "8135a146b684745bac67a69d8ca257101c0855d7ce187a423c00f7e1255b4e3b"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/USB_Device/Target/usbd_conf.h",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "352473d22d7ddb5da5a6a443effe9b0d4591122f73ed4bf1cab01a7e012ffaf0",
+      "candidate_sha256": "352473d22d7ddb5da5a6a443effe9b0d4591122f73ed4bf1cab01a7e012ffaf0",
+      "daily_sha256": "352473d22d7ddb5da5a6a443effe9b0d4591122f73ed4bf1cab01a7e012ffaf0",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "352473d22d7ddb5da5a6a443effe9b0d4591122f73ed4bf1cab01a7e012ffaf0"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Upstream/README.md",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "a2d8c5ccd48fa3d55445b5ddb0c9c54e27cca6321b4e39771e1e26c09c34da5d",
+      "candidate_sha256": "a2d8c5ccd48fa3d55445b5ddb0c9c54e27cca6321b4e39771e1e26c09c34da5d",
+      "daily_sha256": "a2d8c5ccd48fa3d55445b5ddb0c9c54e27cca6321b4e39771e1e26c09c34da5d",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "a2d8c5ccd48fa3d55445b5ddb0c9c54e27cca6321b4e39771e1e26c09c34da5d"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Upstream/Release_Notes.html",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "f5467658b7cd75abb53602c8c2bf3a3247f3e99c1ee31ffa4ec50c2d6ae6bb84",
+      "candidate_sha256": "f5467658b7cd75abb53602c8c2bf3a3247f3e99c1ee31ffa4ec50c2d6ae6bb84",
+      "daily_sha256": "f5467658b7cd75abb53602c8c2bf3a3247f3e99c1ee31ffa4ec50c2d6ae6bb84",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "f5467658b7cd75abb53602c8c2bf3a3247f3e99c1ee31ffa4ec50c2d6ae6bb84"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "3ea35b19e264217c3bd1d433c75f4e093930ea83cdf63aa88aee77748a9fc7dc",
+      "candidate_sha256": "3ea35b19e264217c3bd1d433c75f4e093930ea83cdf63aa88aee77748a9fc7dc",
+      "daily_sha256": "3ea35b19e264217c3bd1d433c75f4e093930ea83cdf63aa88aee77748a9fc7dc",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "3ea35b19e264217c3bd1d433c75f4e093930ea83cdf63aa88aee77748a9fc7dc"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc_if_template.h",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "6ea2d95f93f3393c84a72a96a99e2534d176337295a69b6692b189dfdfeeb05f",
+      "candidate_sha256": "6ea2d95f93f3393c84a72a96a99e2534d176337295a69b6692b189dfdfeeb05f",
+      "daily_sha256": "6ea2d95f93f3393c84a72a96a99e2534d176337295a69b6692b189dfdfeeb05f",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "6ea2d95f93f3393c84a72a96a99e2534d176337295a69b6692b189dfdfeeb05f"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "5229bac9e3df38c7602b3d8790e73ebfff4395da011fb8fac57aaea48a48b407",
+      "candidate_sha256": "5229bac9e3df38c7602b3d8790e73ebfff4395da011fb8fac57aaea48a48b407",
+      "daily_sha256": "5229bac9e3df38c7602b3d8790e73ebfff4395da011fb8fac57aaea48a48b407",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "5229bac9e3df38c7602b3d8790e73ebfff4395da011fb8fac57aaea48a48b407"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc_if_template.c",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "fecdea035bf4662755b18fb53f528e4d6ff58ee138d3f823e447b3b8210909e9",
+      "candidate_sha256": "fecdea035bf4662755b18fb53f528e4d6ff58ee138d3f823e447b3b8210909e9",
+      "daily_sha256": "fecdea035bf4662755b18fb53f528e4d6ff58ee138d3f823e447b3b8210909e9",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "fecdea035bf4662755b18fb53f528e4d6ff58ee138d3f823e447b3b8210909e9"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_conf_template.h",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "e699363b680368bbd4d2e034a2b0b723ee839581a27b10a88c717302a02ce118",
+      "candidate_sha256": "e699363b680368bbd4d2e034a2b0b723ee839581a27b10a88c717302a02ce118",
+      "daily_sha256": "e699363b680368bbd4d2e034a2b0b723ee839581a27b10a88c717302a02ce118",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "e699363b680368bbd4d2e034a2b0b723ee839581a27b10a88c717302a02ce118"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "a6c2dfc99fabefe4db7c4c145b4ab87d6b992e3fbd15cc65ecc1c7f9d2086f78",
+      "candidate_sha256": "a6c2dfc99fabefe4db7c4c145b4ab87d6b992e3fbd15cc65ecc1c7f9d2086f78",
+      "daily_sha256": "a6c2dfc99fabefe4db7c4c145b4ab87d6b992e3fbd15cc65ecc1c7f9d2086f78",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "a6c2dfc99fabefe4db7c4c145b4ab87d6b992e3fbd15cc65ecc1c7f9d2086f78"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "f8897c9b47f97b6ca78c72b857d20fb2a2b0d85091a2362799165cdfa863e3cc",
+      "candidate_sha256": "f8897c9b47f97b6ca78c72b857d20fb2a2b0d85091a2362799165cdfa863e3cc",
+      "daily_sha256": "f8897c9b47f97b6ca78c72b857d20fb2a2b0d85091a2362799165cdfa863e3cc",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "f8897c9b47f97b6ca78c72b857d20fb2a2b0d85091a2362799165cdfa863e3cc"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "1588736a66291a09de7aa69a5945574566413fefb84c0a7896dc088d174086a9",
+      "candidate_sha256": "1588736a66291a09de7aa69a5945574566413fefb84c0a7896dc088d174086a9",
+      "daily_sha256": "1588736a66291a09de7aa69a5945574566413fefb84c0a7896dc088d174086a9",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "1588736a66291a09de7aa69a5945574566413fefb84c0a7896dc088d174086a9"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_desc_template.h",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "4802cc5149b8a5ac414d10b83e5023a5d8501634d3a02e5e2dcedf0299e5602a",
+      "candidate_sha256": "4802cc5149b8a5ac414d10b83e5023a5d8501634d3a02e5e2dcedf0299e5602a",
+      "daily_sha256": "4802cc5149b8a5ac414d10b83e5023a5d8501634d3a02e5e2dcedf0299e5602a",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "4802cc5149b8a5ac414d10b83e5023a5d8501634d3a02e5e2dcedf0299e5602a"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "8a2d44f0cc1c34c21eb75e01cec568b45b901678fba9ca2dc3b0c9a9f0364e7c",
+      "candidate_sha256": "8a2d44f0cc1c34c21eb75e01cec568b45b901678fba9ca2dc3b0c9a9f0364e7c",
+      "daily_sha256": "8a2d44f0cc1c34c21eb75e01cec568b45b901678fba9ca2dc3b0c9a9f0364e7c",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "8a2d44f0cc1c34c21eb75e01cec568b45b901678fba9ca2dc3b0c9a9f0364e7c"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_conf_template.c",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "ba1530b4ddb11b3f4b3f03c0c9d270110f9eb40f21f32b1038bd85f8c0692e9d",
+      "candidate_sha256": "ba1530b4ddb11b3f4b3f03c0c9d270110f9eb40f21f32b1038bd85f8c0692e9d",
+      "daily_sha256": "ba1530b4ddb11b3f4b3f03c0c9d270110f9eb40f21f32b1038bd85f8c0692e9d",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "ba1530b4ddb11b3f4b3f03c0c9d270110f9eb40f21f32b1038bd85f8c0692e9d"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "21647e3c0537a8d56cd67cc67951206f7a84501acd74d0c8a827c13e192183c5",
+      "candidate_sha256": "21647e3c0537a8d56cd67cc67951206f7a84501acd74d0c8a827c13e192183c5",
+      "daily_sha256": "21647e3c0537a8d56cd67cc67951206f7a84501acd74d0c8a827c13e192183c5",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "21647e3c0537a8d56cd67cc67951206f7a84501acd74d0c8a827c13e192183c5"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "5f1c211ed991e074589c82bc52571357a268f36776111d99a85539df53fd80f0",
+      "candidate_sha256": "5f1c211ed991e074589c82bc52571357a268f36776111d99a85539df53fd80f0",
+      "daily_sha256": "5f1c211ed991e074589c82bc52571357a268f36776111d99a85539df53fd80f0",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "5f1c211ed991e074589c82bc52571357a268f36776111d99a85539df53fd80f0"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_desc_template.c",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "5bc71ab2e28075699d4e808bd3c33cdaaaa5daa1ed9513b6c473b1a02f32cd42",
+      "candidate_sha256": "5bc71ab2e28075699d4e808bd3c33cdaaaa5daa1ed9513b6c473b1a02f32cd42",
+      "daily_sha256": "5bc71ab2e28075699d4e808bd3c33cdaaaa5daa1ed9513b6c473b1a02f32cd42",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "5bc71ab2e28075699d4e808bd3c33cdaaaa5daa1ed9513b6c473b1a02f32cd42"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "7df0e6888230c6e0e4af31278853ae1accdf5728288ab2d1a1190a5692157038",
+      "candidate_sha256": "7df0e6888230c6e0e4af31278853ae1accdf5728288ab2d1a1190a5692157038",
+      "daily_sha256": "7df0e6888230c6e0e4af31278853ae1accdf5728288ab2d1a1190a5692157038",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "7df0e6888230c6e0e4af31278853ae1accdf5728288ab2d1a1190a5692157038"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/LICENSE.md",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "2925956f5c102172a6ee52deb66a6e878a9940062d82aeef3841647e21596501",
+      "candidate_sha256": "2925956f5c102172a6ee52deb66a6e878a9940062d82aeef3841647e21596501",
+      "daily_sha256": "2925956f5c102172a6ee52deb66a6e878a9940062d82aeef3841647e21596501",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "2925956f5c102172a6ee52deb66a6e878a9940062d82aeef3841647e21596501"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/README.md",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "6055dcc368ca2b6a49e617470a20baf04f482f890322c789c1d5a471449d2f37",
+      "candidate_sha256": "6055dcc368ca2b6a49e617470a20baf04f482f890322c789c1d5a471449d2f37",
+      "daily_sha256": "6055dcc368ca2b6a49e617470a20baf04f482f890322c789c1d5a471449d2f37",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "6055dcc368ca2b6a49e617470a20baf04f482f890322c789c1d5a471449d2f37"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Release_Notes.html",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "1fb25224779455645ae94416380923936ca6449165242ae33217d52120261974",
+      "candidate_sha256": "1fb25224779455645ae94416380923936ca6449165242ae33217d52120261974",
+      "daily_sha256": "1fb25224779455645ae94416380923936ca6449165242ae33217d52120261974",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "1fb25224779455645ae94416380923936ca6449165242ae33217d52120261974"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "aef992bfe1774b750790e8e5dc0dc1b8aae97f9a05084f03f9530bd81db53dde",
+      "candidate_sha256": "aef992bfe1774b750790e8e5dc0dc1b8aae97f9a05084f03f9530bd81db53dde",
+      "daily_sha256": "aef992bfe1774b750790e8e5dc0dc1b8aae97f9a05084f03f9530bd81db53dde",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "aef992bfe1774b750790e8e5dc0dc1b8aae97f9a05084f03f9530bd81db53dde"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Reviewed/Patches/usbd_cdc-ep0-v1.patch",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "96d9c89e79f30999b92b983bc7461ce3129d3eaf6ee44e2972491e2650124c10",
+      "candidate_sha256": "96d9c89e79f30999b92b983bc7461ce3129d3eaf6ee44e2972491e2650124c10",
+      "daily_sha256": "96d9c89e79f30999b92b983bc7461ce3129d3eaf6ee44e2972491e2650124c10",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "96d9c89e79f30999b92b983bc7461ce3129d3eaf6ee44e2972491e2650124c10"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_core.c",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "e1091db93fd530c8dd05c58b7ec5544ad12a832b0f5847d41ff5647890b78f77",
+      "candidate_sha256": "e1091db93fd530c8dd05c58b7ec5544ad12a832b0f5847d41ff5647890b78f77",
+      "daily_sha256": "e1091db93fd530c8dd05c58b7ec5544ad12a832b0f5847d41ff5647890b78f77",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "e1091db93fd530c8dd05c58b7ec5544ad12a832b0f5847d41ff5647890b78f77"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Reviewed/Patches/usbd_core-ep0-v1.patch",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "b778b780d734d7de23e257adf9a2d7ac99e5f1436aa6a822d217e8099103fb11",
+      "candidate_sha256": "b778b780d734d7de23e257adf9a2d7ac99e5f1436aa6a822d217e8099103fb11",
+      "daily_sha256": "b778b780d734d7de23e257adf9a2d7ac99e5f1436aa6a822d217e8099103fb11",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "b778b780d734d7de23e257adf9a2d7ac99e5f1436aa6a822d217e8099103fb11"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_ioreq.c",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "2613da8858008ccbcf47669845ac6a7d1dd7c5075b19f946fa16399d86d508a2",
+      "candidate_sha256": "2613da8858008ccbcf47669845ac6a7d1dd7c5075b19f946fa16399d86d508a2",
+      "daily_sha256": "2613da8858008ccbcf47669845ac6a7d1dd7c5075b19f946fa16399d86d508a2",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "2613da8858008ccbcf47669845ac6a7d1dd7c5075b19f946fa16399d86d508a2"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Reviewed/Patches/usbd_ioreq-ep0-v1.patch",
+      "profile": "c071-companion-manifest.json",
+      "expected_sha256": "96c12dde975cf95fadd2075555a3d0e88020a93c4e8a0596f04158aa400ec9ef",
+      "candidate_sha256": "96c12dde975cf95fadd2075555a3d0e88020a93c4e8a0596f04158aa400ec9ef",
+      "daily_sha256": "96c12dde975cf95fadd2075555a3d0e88020a93c4e8a0596f04158aa400ec9ef",
+      "same_bytes": true,
+      "only_crlf_conversion": true,
+      "lf_git_blob_sha256": "96c12dde975cf95fadd2075555a3d0e88020a93c4e8a0596f04158aa400ec9ef"
+    }
+  ],
+  "mismatches": [
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Src/sx1281_device.c",
+      "expected_sha256": "56ee9b35e54535249816363d0328120a6018f157ce51f8bad93185ebea78428c",
+      "daily_sha256": "0bdf0cfc1c950bd8fcda97898d8842a34f1e536f5e34bdc5b96758d46a8638ef",
+      "same_bytes": false,
+      "only_crlf_conversion": false,
+      "lf_git_blob_sha256": "0c9096e56e659f28319221ac9d56e559b375c1174787844946f2517e8dc22bed"
+    }
+  ]
+}

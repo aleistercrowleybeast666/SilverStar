@@ -1,0 +1,37 @@
+.F.                                                                      [100%]
+================================== FAILURES ===================================
+_________ test_f103_dispatch_reuses_plan_f407_stays_private[f103-usb] _________
+
+bound = (<silverstar_fccg.app.service.FccgService object at 0x000001D9F83B6AD0>, NativeGroundProjectImportResult(result=<Nativ... 'RADIO_DIO1')}, WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dmg02/test_f103_dispatch_reuses_plan_3492cdd1/native'))
+
+    def test_f103_dispatch_reuses_plan_f407_stays_private(bound):
+        service, imported, args, _source = bound
+        facts = args['device_facts']
+        if facts.part == 'STM32F407VET6':
+            with pytest.raises(CubeMxImportError, match='Unsupported first-batch'):
+                service.UsbGroundCandidate_Plan(imported.model, independent_irq_header=Path(facts.irq_evidence_source))
+            old = service.NativeClassicCdcGroundCandidate_Plan(imported.model, device_facts=facts)
+            assert old.profile == 'f407-tim1-indexed-v1'
+        else:
+            rebound = service.UsbGroundProject_Import(_source, imported.model, part=facts.part,
+                independent_irq_header=Path(facts.irq_evidence_source), hclk_hz=72_000_000,
+                spi_resource=args['spi_resource'], gpio_resources=args['gpio_resources'], risk_acknowledged=True)
+>           assert rebound.model.Dictionary_Get() == imported.model.Dictionary_Get()
+E           AssertionError: assert {'format_vers...'Tilt']}, ...} == {'format_vers...'Tilt']}, ...}
+E             
+E             Omitting 19 identical items, use -vv to show
+E             Differing items:
+E             {'ground_target': {'enabled': True, 'mcu': '', 'board': '', 'hardware': {'mode': 'custom', 'source_kind': 'manual_impo..._provider.stm32_cubemx', 'snapshot_id': 'ddb85510395b43fcb4d4227f6b6330d96c599348c5139de3b19e5b5a9ceaf628', ...}, ...}} != {'ground_target': {'enabled': True, 'mcu': '', 'board': '', 'hardware': {'mode': 'custom', 'source_kind': 'manual_impo..._provider.stm32_cubemx', 'snapshot_id': '8a76c3b886f89137d1c9d7d75f7e59e58f728a5f6e71b385be3bae338d807932', ...}, ...}}
+E             Use -v to get more diff
+
+apps\SCG\tests\test_usb_ground_backend.py:162: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_usb_ground_backend.py::test_f103_dispatch_reuses_plan_f407_stays_private[f103-usb]
+1 failed, 2 passed, 19 deselected, 1 warning in 27.10s

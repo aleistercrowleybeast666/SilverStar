@@ -1,0 +1,20 @@
+{
+  "command": [
+    "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\daily_backend_pytest.py",
+    "apps/SCG/tests/test_usb_ground_backend.py",
+    "-k",
+    "all_output_routes_block_before_write or f103_dispatch_reuses_plan_f407_stays_private",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/Users/chdxm/AppData/Local/Temp/dmg02"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "source_commit": "e1357b417ee98df5990a1fff18c55d6b35183896",
+  "scope": "Ordinary formal generation/build/output routes refuse before writes, F103 private dispatch and F407 remains private; no malformed USB or stopped safety review",
+  "started_utc": "2026-10-10T05:25:00.867193+00:00",
+  "exit": 1,
+  "finished_utc": "2026-10-10T05:25:29.759367+00:00"
+}

@@ -1,0 +1,8 @@
+Transcribed tool evidence, not a new execution.
+Command: python -B daily_scg_startup_check.py
+Tool session: 10960; exit: 1.
+The restricted default execution failed creating temporary writable log state:
+PermissionError: [WinError 5] Access denied: C:\Users\chdxm\AppData\Local\Temp\daily-scg-startup-7a5z6ad4\.fccg
+Authorized execution with unchanged application/probe subsequently completed
+application.main, MainWindow show, live Qt event loop and normal close successfully.
+No user settings, hardware or application code were changed to address this.

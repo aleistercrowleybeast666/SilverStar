@@ -1,0 +1,262 @@
+# Ground IDE metadata; existing Make source graph is authoritative.
+version: '4.1'
+name: NativeGroundPrivate10a_Ground
+type: ARM
+deviceName: STM32C071FBP6
+packDir: null
+srcDirs: []
+virtualFolder:
+  name: <virtual_root>
+  files:
+  - path: Ground/Core/Src/ground_bridge.c
+  - path: Ground/Radio/Src/ground_radio_sx1281.c
+  - path: Ground/Radio/Src/ground_radio_activity.c
+  - path: Ground/Protocol/Src/gsp_min_protocol.c
+  - path: Ground/Protocol/Src/protocol_crc16.c
+  - path: Platform/STM32C0/Src/platform_critical_stm32c0.c
+  - path: Platform/STM32C0/Src/platform_spi_stm32c0.c
+  - path: Platform/STM32C0/Src/platform_gpio_stm32c0.c
+  - path: Platform/STM32C0/Src/platform_time_stm32c0.c
+  - path: Devices/Telemetry/SX1281/Src/sx1281_device.c
+  - path: Devices/Telemetry/SX1281/Src/sx1281_bus.c
+  - path: Middlewares/Third_Party/SX1280lib/sx1280.c
+  - path: Middlewares/Third_Party/SX1280lib/sx1280-hal.c
+  - path: Platform/STM32C0/Src/main.c
+  - path: HardwareGenerated/STM32CubeMX/Core/Src/gpio.c
+  - path: HardwareGenerated/STM32CubeMX/Core/Src/spi.c
+  - path: HardwareGenerated/STM32CubeMX/Core/Src/usart.c
+  - path: HardwareGenerated/STM32CubeMX/Core/Src/usb.c
+  - path: HardwareGenerated/STM32CubeMX/Core/Src/stm32c0xx_it.c
+  - path: Platform/STM32C0/Src/stm32c0xx_hal_msp.c
+  - path: HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal.c
+  - path: HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_cortex.c
+  - path: HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc.c
+  - path: HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc_ex.c
+  - path: HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_flash.c
+  - path: HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_flash_ex.c
+  - path: HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_gpio.c
+  - path: HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma.c
+  - path: HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma_ex.c
+  - path: HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_pwr.c
+  - path: HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_pwr_ex.c
+  - path: HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_exti.c
+  - path: HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_spi.c
+  - path: HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_spi_ex.c
+  - path: HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_uart.c
+  - path: HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_uart_ex.c
+  - path: HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_pcd.c
+  - path: HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_pcd_ex.c
+  - path: HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_ll_usb.c
+  - path: HardwareGenerated/STM32CubeMX/Core/Src/system_stm32c0xx.c
+  - path: HardwareGenerated/STM32CubeMX/Core/Src/syscalls.c
+  - path: HardwareGenerated/C071ClassicCDC/USB_Device/App/usb_device.c
+  - path: Platform/STM32C0/Src/usbd_cdc_if.c
+  - path: HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_desc.c
+  - path: Platform/STM32C0/Src/usbd_conf.c
+  - path: HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c
+  - path: HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_core.c
+  - path: HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c
+  - path: HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_ioreq.c
+  - path: Common/Src/silverstar_assert.c
+  - path: Generated/Src/project_resources.c
+  - path: Generated/Src/platform_resources.c
+  - path: Generated/Src/pc_byte_stream.c
+  - path: HardwareGenerated/STM32CubeMX/startup_stm32c071xx.s
+  folders: []
+dependenceList: []
+outDir: build/FCCG/C071_Mini_Ground_USB/EIDE
+miscInfo:
+  uid: 000000000000000000000000ba9bc30a
+targets:
+  Release:
+    cppPreprocessAttrs:
+      defineList:
+      - SILVERSTAR_AIR_LINK_ENABLED=1
+      - USE_HAL_DRIVER
+      - STM32C071xx
+      - AIR_LINK_HAL_BUFFER_SIZE=260
+      - USE_HAL_PCD_REGISTER_CALLBACKS=0
+      - USBD_CLASS_BOS_ENABLED=0
+      - USBD_USER_REGISTER_CALLBACK=0
+      incList:
+      - Platform/STM32C0/Inc
+      - Ground/Core/Inc
+      - Ground/Protocol/Inc
+      - Platform/Inc
+      - Devices/Telemetry/SX1281/Inc
+      - Middlewares/Third_Party/SX1280lib
+      - HardwareGenerated/STM32CubeMX/Core/Inc
+      - HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Inc
+      - HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Inc/Legacy
+      - HardwareGenerated/STM32CubeMX/Drivers/CMSIS/Device/ST/STM32C0xx/Include
+      - HardwareGenerated/STM32CubeMX/Drivers/CMSIS/Include
+      - HardwareGenerated/C071ClassicCDC/USB_Device/App
+      - HardwareGenerated/C071ClassicCDC/USB_Device/Target
+      - HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc
+      - HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc
+      - Generated/Inc
+      - Devices
+      - Common/Inc
+      - Interfaces/Inc
+      libList: []
+    excludeList: []
+    settings:
+      debugger: cortex-debug
+    toolchain: GCC
+    toolchainConfigMap:
+      GCC:
+        archExtensions: ''
+        cpuType: Cortex-M0plus
+        floatingPointHardware: none
+        options:
+          version: 5
+          afterBuildTasks: []
+          asm-compiler:
+            ASM_FLAGS: ''
+          beforeBuildTasks: []
+          c/cpp-compiler:
+            CXX_FLAGS: ''
+            C_FLAGS: -fstack-usage -Wvla -Werror=vla
+            language-c: c11
+            language-cpp: c++11
+            one-elf-section-per-data: true
+            one-elf-section-per-function: true
+            optimization: level-size
+            warnings: all-warnings
+          global:
+            arm-thumb-mode: thumb
+            misc-control: -mcpu=cortex-m0plus -mthumb -mfloat-abi=soft
+            not-use-syscalls: false
+            output-debug-info: disable
+            use-newlib-nano: true
+            toolPrefix: arm-none-eabi-
+          linker:
+            $outputTaskExcludes: []
+            $toolName: auto
+            LD_FLAGS: ''
+            LIB_FLAGS: -lc -lm -lnosys
+            output-format: elf
+            remove-unused-input-sections: true
+            use-float-printf: false
+        scatterFilePath: HardwareGenerated/STM32CubeMX/STM32C071XX_FLASH.ld
+        storageLayout:
+          RAM: []
+          ROM: []
+        useCustomScatterFile: true
+    uploadConfigMap:
+      JLink:
+        baseAddr: ''
+        bin: ''
+        cpuInfo:
+          cpuName: 'null'
+          vendor: 'null'
+        otherCmds: ''
+        proType: 1
+        speed: 8000
+      STLink:
+        address: '0x08000000'
+        bin: ''
+        elFile: None
+        optionBytes: .eide/debug.st.option.bytes.ini
+        otherCmds: ''
+        proType: SWD
+        resetMode: default
+        runAfterProgram: true
+        speed: 4000
+    uploader: STLink
+  Debug:
+    cppPreprocessAttrs:
+      defineList:
+      - SILVERSTAR_AIR_LINK_ENABLED=1
+      - USE_HAL_DRIVER
+      - STM32C071xx
+      - AIR_LINK_HAL_BUFFER_SIZE=260
+      - USE_HAL_PCD_REGISTER_CALLBACKS=0
+      - USBD_CLASS_BOS_ENABLED=0
+      - USBD_USER_REGISTER_CALLBACK=0
+      incList:
+      - Platform/STM32C0/Inc
+      - Ground/Core/Inc
+      - Ground/Protocol/Inc
+      - Platform/Inc
+      - Devices/Telemetry/SX1281/Inc
+      - Middlewares/Third_Party/SX1280lib
+      - HardwareGenerated/STM32CubeMX/Core/Inc
+      - HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Inc
+      - HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Inc/Legacy
+      - HardwareGenerated/STM32CubeMX/Drivers/CMSIS/Device/ST/STM32C0xx/Include
+      - HardwareGenerated/STM32CubeMX/Drivers/CMSIS/Include
+      - HardwareGenerated/C071ClassicCDC/USB_Device/App
+      - HardwareGenerated/C071ClassicCDC/USB_Device/Target
+      - HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc
+      - HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc
+      - Generated/Inc
+      - Devices
+      - Common/Inc
+      - Interfaces/Inc
+      libList: []
+    excludeList: []
+    settings:
+      debugger: cortex-debug
+    toolchain: GCC
+    toolchainConfigMap:
+      GCC:
+        archExtensions: ''
+        cpuType: Cortex-M0plus
+        floatingPointHardware: none
+        options:
+          version: 5
+          afterBuildTasks: []
+          asm-compiler:
+            ASM_FLAGS: ''
+          beforeBuildTasks: []
+          c/cpp-compiler:
+            CXX_FLAGS: ''
+            C_FLAGS: -fstack-usage -Wvla -Werror=vla
+            language-c: c11
+            language-cpp: c++11
+            one-elf-section-per-data: true
+            one-elf-section-per-function: true
+            optimization: level-size
+            warnings: all-warnings
+          global:
+            arm-thumb-mode: thumb
+            misc-control: -mcpu=cortex-m0plus -mthumb -mfloat-abi=soft
+            not-use-syscalls: false
+            output-debug-info: disable
+            use-newlib-nano: true
+            toolPrefix: arm-none-eabi-
+          linker:
+            $outputTaskExcludes: []
+            $toolName: auto
+            LD_FLAGS: ''
+            LIB_FLAGS: -lc -lm -lnosys
+            output-format: elf
+            remove-unused-input-sections: true
+            use-float-printf: false
+        scatterFilePath: HardwareGenerated/STM32CubeMX/STM32C071XX_FLASH.ld
+        storageLayout:
+          RAM: []
+          ROM: []
+        useCustomScatterFile: true
+    uploadConfigMap:
+      JLink:
+        baseAddr: ''
+        bin: ''
+        cpuInfo:
+          cpuName: 'null'
+          vendor: 'null'
+        otherCmds: ''
+        proType: 1
+        speed: 8000
+      STLink:
+        address: '0x08000000'
+        bin: ''
+        elFile: None
+        optionBytes: .eide/debug.st.option.bytes.ini
+        otherCmds: ''
+        proType: SWD
+        resetMode: default
+        runAfterProgram: true
+        speed: 4000
+    uploader: STLink

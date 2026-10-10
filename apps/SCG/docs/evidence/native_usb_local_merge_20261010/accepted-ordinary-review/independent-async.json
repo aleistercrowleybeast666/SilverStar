@@ -1,0 +1,45 @@
+{
+  "command": [
+    "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\backend_pytest.py",
+    "apps/SCG/tests/test_usb_gui_async.py",
+    "-k",
+    "not late_import",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\gui-f61-review\\qt-7130b2d7",
+    "-q"
+  ],
+  "cwd": "D:\\python_software\\SilverStar\\.work\\ccdi",
+  "basetemp": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-09\\task-2\\gui-f61-review\\qt-7130b2d7",
+  "source_commit": "f61cbd851b8ac32b865deb1a3997058685dfebbd",
+  "evidence_commit": "5b99438ba4005ea02935e9734307e749e2e758e7",
+  "test_sha256": "00378a82d523510b7c4a759be093686d3641d536b3c2a3b824259773b2c84369",
+  "started_utc": "2026-10-10T05:05:44.105676+00:00",
+  "scope": "Existing read-only completed-candidate refresh, pending/project switch, cancel/close/destruction, artifact validation. Four late-import cases deselected to avoid writes to author input caches. No native import/export/build or hardware.",
+  "exit": 0,
+  "finished_utc": "2026-10-10T05:06:34.548792+00:00",
+  "responses": [
+    {
+      "part": "STM32C071FBP6",
+      "synchronous_refresh_seconds": 0.6423347999952966,
+      "total_validation_seconds": 4.4111659999980475,
+      "ticks": 118,
+      "max_tick_gap_seconds": 0.0781319000016083,
+      "plan_calls": 1,
+      "plan_ran_off_gui_thread": true,
+      "quality_records": 2
+    },
+    {
+      "part": "STM32F103C8T6",
+      "synchronous_refresh_seconds": 0.6455769000021974,
+      "total_validation_seconds": 3.0569845999998506,
+      "ticks": 71,
+      "max_tick_gap_seconds": 0.08968019999883836,
+      "plan_calls": 1,
+      "plan_ran_off_gui_thread": true,
+      "quality_records": 2
+    }
+  ]
+}

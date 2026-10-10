@@ -1,0 +1,139 @@
+version: '2.1'
+options:
+  Release:
+    files: &id001
+      Ground/Core/Src/ground_bridge.c: -Wall -Wextra -Wpedantic -Werror -Wconversion
+        -Wsign-conversion -Wshadow -Wundef -Wformat=2 -Wdouble-promotion -Wcast-align
+        -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wswitch-enum -Wvla
+      Ground/Radio/Src/ground_radio_sx1281.c: -Wall -Wextra -Wpedantic -Werror -Wconversion
+        -Wsign-conversion -Wshadow -Wundef -Wformat=2 -Wdouble-promotion -Wcast-align
+        -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wswitch-enum -Wvla
+      Ground/Radio/Src/ground_radio_activity.c: -Wall -Wextra -Wpedantic -Werror -Wconversion
+        -Wsign-conversion -Wshadow -Wundef -Wformat=2 -Wdouble-promotion -Wcast-align
+        -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wswitch-enum -Wvla
+      Ground/Protocol/Src/gsp_min_protocol.c: -Wall -Wextra -Wpedantic -Werror -Wconversion
+        -Wsign-conversion -Wshadow -Wundef -Wformat=2 -Wdouble-promotion -Wcast-align
+        -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wswitch-enum -Wvla
+      Ground/Protocol/Src/protocol_crc16.c: -Wall -Wextra -Wpedantic -Werror -Wconversion
+        -Wsign-conversion -Wshadow -Wundef -Wformat=2 -Wdouble-promotion -Wcast-align
+        -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wswitch-enum -Wvla
+      Platform/STM32C0/Src/platform_critical_stm32c0.c: -Wall -Wextra -Wpedantic -Werror
+        -Wconversion -Wsign-conversion -Wshadow -Wundef -Wformat=2 -Wdouble-promotion
+        -Wcast-align -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wswitch-enum
+        -Wvla
+      Platform/STM32C0/Src/platform_spi_stm32c0.c: -Wall -Wextra -Wpedantic -Werror
+        -Wconversion -Wsign-conversion -Wshadow -Wundef -Wformat=2 -Wdouble-promotion
+        -Wcast-align -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wswitch-enum
+        -Wvla
+      Platform/STM32C0/Src/platform_gpio_stm32c0.c: -Wall -Wextra -Wpedantic -Werror
+        -Wconversion -Wsign-conversion -Wshadow -Wundef -Wformat=2 -Wdouble-promotion
+        -Wcast-align -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wswitch-enum
+        -Wvla
+      Platform/STM32C0/Src/platform_time_stm32c0.c: -Wall -Wextra -Wpedantic -Werror
+        -Wconversion -Wsign-conversion -Wshadow -Wundef -Wformat=2 -Wdouble-promotion
+        -Wcast-align -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wswitch-enum
+        -Wvla
+      Devices/Telemetry/SX1281/Src/sx1281_device.c: -Wall -Wextra -Wpedantic -Werror
+        -Wconversion -Wsign-conversion -Wshadow -Wundef -Wformat=2 -Wdouble-promotion
+        -Wcast-align -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wswitch-enum
+        -Wvla
+      Devices/Telemetry/SX1281/Src/sx1281_bus.c: -Wall -Wextra -Wpedantic -Werror
+        -Wconversion -Wsign-conversion -Wshadow -Wundef -Wformat=2 -Wdouble-promotion
+        -Wcast-align -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wswitch-enum
+        -Wvla
+      Middlewares/Third_Party/SX1280lib/sx1280.c: -Wall -Werror=implicit-function-declaration
+        -Werror=incompatible-pointer-types -Werror=return-type
+      Middlewares/Third_Party/SX1280lib/sx1280-hal.c: -Wall -Werror=implicit-function-declaration
+        -Werror=incompatible-pointer-types -Werror=return-type
+      Platform/STM32C0/Src/main.c: -Wall -Wextra -Wpedantic -Werror -Wconversion -Wsign-conversion
+        -Wshadow -Wundef -Wformat=2 -Wdouble-promotion -Wcast-align -Wcast-qual -Wstrict-prototypes
+        -Wmissing-prototypes -Wswitch-enum -Wvla
+      HardwareGenerated/STM32CubeMX/Core/Src/gpio.c: -Wall -Werror=implicit-function-declaration
+        -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Core/Src/spi.c: -Wall -Werror=implicit-function-declaration
+        -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Core/Src/usart.c: -Wall -Werror=implicit-function-declaration
+        -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Core/Src/usb.c: -Wall -Werror=implicit-function-declaration
+        -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Core/Src/stm32c0xx_it.c: -Wall -Werror=implicit-function-declaration
+        -Werror=incompatible-pointer-types -Werror=return-type
+      Platform/STM32C0/Src/stm32c0xx_hal_msp.c: -Wall -Wextra -Wpedantic -Werror -Wconversion
+        -Wsign-conversion -Wshadow -Wundef -Wformat=2 -Wdouble-promotion -Wcast-align
+        -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wswitch-enum -Wvla
+      HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_cortex.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_rcc_ex.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_flash.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_flash_ex.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_gpio.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_dma_ex.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_pwr.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_pwr_ex.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_exti.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_spi.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_spi_ex.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_uart.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_uart_ex.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_pcd.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_hal_pcd_ex.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Drivers/STM32C0xx_HAL_Driver/Src/stm32c0xx_ll_usb.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Core/Src/system_stm32c0xx.c: -Wall -Werror=implicit-function-declaration
+        -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/STM32CubeMX/Core/Src/syscalls.c: -Wall -Werror=implicit-function-declaration
+        -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/C071ClassicCDC/USB_Device/App/usb_device.c: -Wall -Werror=implicit-function-declaration
+        -Werror=incompatible-pointer-types -Werror=return-type
+      Platform/STM32C0/Src/usbd_cdc_if.c: -Wall -Wextra -Wpedantic -Werror -Wconversion
+        -Wsign-conversion -Wshadow -Wundef -Wformat=2 -Wdouble-promotion -Wcast-align
+        -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wswitch-enum -Wvla
+      HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_desc.c: -Wall -Werror=implicit-function-declaration
+        -Werror=incompatible-pointer-types -Werror=return-type
+      Platform/STM32C0/Src/usbd_conf.c: -Wall -Wextra -Wpedantic -Werror -Wconversion
+        -Wsign-conversion -Wshadow -Wundef -Wformat=2 -Wdouble-promotion -Wcast-align
+        -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wswitch-enum -Wvla
+      HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c: -Wall -Werror=implicit-function-declaration
+        -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_core.c: -Wall -Werror=implicit-function-declaration
+        -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c: -Wall
+        -Werror=implicit-function-declaration -Werror=incompatible-pointer-types -Werror=return-type
+      HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_ioreq.c: -Wall -Werror=implicit-function-declaration
+        -Werror=incompatible-pointer-types -Werror=return-type
+      Common/Src/silverstar_assert.c: -Wall -Wextra -Wpedantic -Werror -Wconversion
+        -Wsign-conversion -Wshadow -Wundef -Wformat=2 -Wdouble-promotion -Wcast-align
+        -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wswitch-enum -Wvla
+      Generated/Src/project_resources.c: -Wall -Wextra -Wpedantic -Werror -Wconversion
+        -Wsign-conversion -Wshadow -Wundef -Wformat=2 -Wdouble-promotion -Wcast-align
+        -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wswitch-enum -Wvla
+      Generated/Src/platform_resources.c: -Wall -Wextra -Wpedantic -Werror -Wconversion
+        -Wsign-conversion -Wshadow -Wundef -Wformat=2 -Wdouble-promotion -Wcast-align
+        -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wswitch-enum -Wvla
+      Generated/Src/pc_byte_stream.c: -Wall -Wextra -Wpedantic -Werror -Wconversion
+        -Wsign-conversion -Wshadow -Wundef -Wformat=2 -Wdouble-promotion -Wcast-align
+        -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -Wswitch-enum -Wvla
+    virtualPathFiles: {}
+  Debug:
+    files: *id001
+    virtualPathFiles: {}

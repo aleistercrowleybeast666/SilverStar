@@ -1,0 +1,30 @@
+{
+  "format_version": 1,
+  "status": "CompiledCandidate",
+  "scope": "PRIVATE_NATIVE_GROUND_BACKEND",
+  "started_utc": "2026-10-10T05:26:39.472141+00:00",
+  "finished_utc": "2026-10-10T05:27:37.425709+00:00",
+  "model_sha256": "c32c6fea6a858a12b83e99988fb7b196bcef43354d562255a3412d9d888adf8d",
+  "project_root": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\dm02\\p_f353a348",
+  "snapshot_id": "ddb85510395b43fcb4d4227f6b6330d96c599348c5139de3b19e5b5a9ceaf628",
+  "profile": "f103-systick-classic-v1",
+  "compile_receipt_sha256": "7a92450dcb2b211cdc4cfa5f4d5c8a6376cb909203d48bea5ebee5c5723676c1",
+  "binding": {
+    "format_version": 1,
+    "scope": "PRIVATE_NATIVE_GROUND_BACKEND",
+    "profile": "f103-systick-classic-v1",
+    "hclk_hz": 72000000,
+    "facts_sha256": "0ee5e3f4aeb470f2978049b512172c0b4b77c2509f7bd3b9a9dbb5b82e0093bc",
+    "snapshot_id": "ddb85510395b43fcb4d4227f6b6330d96c599348c5139de3b19e5b5a9ceaf628",
+    "spi": "SPI1",
+    "gpio": [
+      "SPI_RADIO_NSS",
+      "RADIO_RST",
+      "RADIO_BUSY",
+      "RADIO_DIO1"
+    ],
+    "formal_generation": "BLOCKED"
+  },
+  "failure": null,
+  "limits": "PRIVATE CANDIDATE ONLY; formal generation BLOCKED. NOT PROVEN: complete EP0/async lifecycle, manual critical contracts, whole-program stack/WCET and physical timing/hardware. F103 shared control ordinary integration only; independent USB safety review has no passed outcome. F407 shared EP0 repair not integrated."
+}

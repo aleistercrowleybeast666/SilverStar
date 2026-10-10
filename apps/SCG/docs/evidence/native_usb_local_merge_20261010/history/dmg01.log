@@ -1,0 +1,124 @@
+FEE                                                                      [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_f103_dispatch_reuses_plan_f407_stays_private[f103-usb] _
+
+native = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dmg01/test_f103_dispatch_reuses_plan_f07bd28e/native'), {'device_facts...stm32f103xb.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dmg01'), _trace=<pluggy._tracing.TagTra...5CFCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dmg01'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001AC0E8AF0E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+apps\SCG\tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\app\service.py:926: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+apps\SCG\src\silverstar_fccg\app\native_ground.py:121: in NativeGroundProject_Import
+    NativeGroundCandidate_Render(native, proof, inventory, candidate, catalog, hclk_hz=hclk_hz)
+apps\SCG\src\silverstar_fccg\generator\native_ground.py:168: in NativeGroundCandidate_Render
+    files[device_path]=NativeRadioDevice_Derive(original_device)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+original = b'#include "sx1281_device.h"\r\n\r\n#include <string.h>\r\n\r\n#include "project_resources.h"\r\n#include "silverstar_...n (result == PLATFORM_OK) && (frontend_off != 0U) ? LoraDeactivateResult_Ok : LoraDeactivateResult_PortError;\r\n}\r\n'
+
+    def NativeRadioDevice_Derive(original: bytes) -> bytes:
+        if hashlib.sha256(original).hexdigest() != '56ee9b35e54535249816363d0328120a6018f157ce51f8bad93185ebea78428c':
+>           raise ValueError('Native radio device payload changed; review timestamp/IRQ ownership')
+E           ValueError: Native radio device payload changed; review timestamp/IRQ ownership
+
+apps\SCG\src\silverstar_fccg\generator\native_radio.py:30: ValueError
+_ ERROR at setup of test_f103_dispatch_reuses_plan_f407_stays_private[f407-usb] _
+
+native = (WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dmg01/test_f103_dispatch_reuses_plan_0390999f/native'), {'device_facts...de\\stm32f407xx.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dmg01'), _trace=<pluggy._tracing.TagTra...5CFCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dmg01'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001AC0E8AF0E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+apps\SCG\tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\app\service.py:926: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+apps\SCG\src\silverstar_fccg\app\native_ground.py:121: in NativeGroundProject_Import
+    NativeGroundCandidate_Render(native, proof, inventory, candidate, catalog, hclk_hz=hclk_hz)
+apps\SCG\src\silverstar_fccg\generator\native_ground.py:168: in NativeGroundCandidate_Render
+    files[device_path]=NativeRadioDevice_Derive(original_device)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+original = b'#include "sx1281_device.h"\r\n\r\n#include <string.h>\r\n\r\n#include "project_resources.h"\r\n#include "silverstar_...n (result == PLATFORM_OK) && (frontend_off != 0U) ? LoraDeactivateResult_Ok : LoraDeactivateResult_PortError;\r\n}\r\n'
+
+    def NativeRadioDevice_Derive(original: bytes) -> bytes:
+        if hashlib.sha256(original).hexdigest() != '56ee9b35e54535249816363d0328120a6018f157ce51f8bad93185ebea78428c':
+>           raise ValueError('Native radio device payload changed; review timestamp/IRQ ownership')
+E           ValueError: Native radio device payload changed; review timestamp/IRQ ownership
+
+apps\SCG\src\silverstar_fccg\generator\native_radio.py:30: ValueError
+================================== FAILURES ===================================
+_______________ test_c071_all_output_routes_block_before_write ________________
+
+c071 = (<silverstar_fccg.app.service.FccgService object at 0x000001AC0E8AE510>, NativeGroundProjectImportResult(result=<Nativ...), WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST'))
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dmg01'), _trace=<pluggy._tracing.TagTra...5CFCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dmg01'), _retention_count=3, _retention_policy='all')
+
+    def test_c071_all_output_routes_block_before_write(c071, tmp_path_factory):
+        service, result, header, companion, _source = c071
+        model = result.model
+        project = tmp_path_factory.mktemp('p')
+        service.ProjectRoot_Save(model, project, create_new=True)
+        output = tmp_path_factory.mktemp('o') / 'candidate'
+>       exported=service.UsbGroundCandidate_Export(model,output,independent_irq_header=header,companion_root=companion)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_usb_ground_backend.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\app\service.py:969: in UsbGroundCandidate_Export
+    return UsbGroundCandidate_Export(self.hardware_importer, self.catalog, model, output, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\app\usb_ground.py:306: in UsbGroundCandidate_Export
+    plan = UsbGroundCandidate_Plan(importer, catalog, model,
+apps\SCG\src\silverstar_fccg\app\usb_ground.py:293: in UsbGroundCandidate_Plan
+    files, graph, records = C071Candidate_Render(native, inventory, model, catalog, snapshot, profile)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\c071_candidate.py:57: in C071Candidate_Render
+    target_body=transform(body)
+                ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+original = b'#include "sx1281_device.h"\r\n\r\n#include <string.h>\r\n\r\n#include "project_resources.h"\r\n#include "silverstar_...n (result == PLATFORM_OK) && (frontend_off != 0U) ? LoraDeactivateResult_Ok : LoraDeactivateResult_PortError;\r\n}\r\n'
+
+    def NativeRadioDevice_Derive(original: bytes) -> bytes:
+        if hashlib.sha256(original).hexdigest() != '56ee9b35e54535249816363d0328120a6018f157ce51f8bad93185ebea78428c':
+>           raise ValueError('Native radio device payload changed; review timestamp/IRQ ownership')
+E           ValueError: Native radio device payload changed; review timestamp/IRQ ownership
+
+apps\SCG\src\silverstar_fccg\generator\native_radio.py:30: ValueError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+ERROR apps\SCG\tests\test_usb_ground_backend.py::test_f103_dispatch_reuses_plan_f407_stays_private[f103-usb]
+ERROR apps\SCG\tests\test_usb_ground_backend.py::test_f103_dispatch_reuses_plan_f407_stays_private[f407-usb]
+FAILED apps\SCG\tests\test_usb_ground_backend.py::test_c071_all_output_routes_block_before_write
+1 failed, 19 deselected, 1 warning, 2 errors in 14.98s

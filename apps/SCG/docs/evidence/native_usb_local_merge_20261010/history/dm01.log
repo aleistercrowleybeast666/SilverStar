@@ -1,0 +1,550 @@
+FFFFFFFF..FF                                                             [100%]
+================================== FAILURES ===================================
+______ test_real_gui_import_save_reload_export_and_artifact_state[F103] _______
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x267d70bd890) at 0x00000267DAD2AD00>, WindowsPath('C:/Users/chdxm/Documen...dation/cube-f103-usb'), [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)], 'F103')
+qapp = <PySide6.QtWidgets.QApplication(0x267d6d98130) at 0x00000267D9270AC0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dm01'), _trace=<pluggy._tracing.TagTrac...73CFCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dm01'), _retention_count=3, _retention_policy='all')
+
+    def test_real_gui_import_save_reload_export_and_artifact_state(usb_window,qapp,tmp_path_factory):
+        current,source,errors,part=usb_window
+        before={p.relative_to(source).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in source.rglob('*') if p.is_file()}
+>       model=_Import(qapp,usb_window)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_usb_gui_flow.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+qapp = <PySide6.QtWidgets.QApplication(0x267d6d98130) at 0x00000267D9270AC0>
+window = (<silverstar_fccg.ui.main_window.MainWindow(0x267d70bd890) at 0x00000267DAD2AD00>, WindowsPath('C:/Users/chdxm/Documen...dation/cube-f103-usb'), [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)], 'F103')
+
+    def _Import(qapp,window):
+        current,source,errors,part=window
+        current._GroundCubeMxImport_Request(True)
+        _Wait(qapp,lambda:current._active_worker is None)
+>       assert not errors,errors
+E       AssertionError: [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)]
+E       assert not [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)]
+
+apps\SCG\tests\test_usb_gui_flow.py:62: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    root:main_window.py:4609 Background task failed:
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\workers.py", line 38, in run
+    result = self._function(self.context)
+  File "D:\python_software\SilverStar\apps\SCG\tests\test_usb_gui_flow.py", line 48, in timed
+    try:return function(context)
+               ~~~~~~~~^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\main_window.py", line 2170, in <lambda>
+    lambda context: UsbGroundFlow_Import(service, Path(selected), model, context),
+                    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\usb_ground_flow.py", line 66, in UsbGroundFlow_Import
+    result = service.UsbGroundProject_Import(root, deepcopy(model), part=part,
+        hclk_hz=48_000_000 if part == C071_PART else 72_000_000,
+        spi_resource='SPI1', gpio_resources=gpio, risk_acknowledged=True, **options)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\service.py", line 960, in UsbGroundProject_Import
+    return UsbGroundProject_Import(self.hardware_importer, self.catalog, input_path, model, **options)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\usb_ground.py", line 223, in UsbGroundProject_Import
+    return NativeGroundProject_Import(importer, catalog, input_path, model,
+        device_facts=facts, hclk_hz=hclk_hz, spi_resource=spi_resource,
+        gpio_resources=gpio_resources, risk_acknowledged=True)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\native_ground.py", line 121, in NativeGroundProject_Import
+    NativeGroundCandidate_Render(native, proof, inventory, candidate, catalog, hclk_hz=hclk_hz)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\native_ground.py", line 168, in NativeGroundCandidate_Render
+    files[device_path]=NativeRadioDevice_Derive(original_device)
+                       ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\native_radio.py", line 30, in NativeRadioDevice_Derive
+    raise ValueError('Native radio device payload changed; review timestamp/IRQ ownership')
+ValueError: Native radio device payload changed; review timestamp/IRQ ownership
+______ test_real_gui_import_save_reload_export_and_artifact_state[C071] _______
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x267d70bda40) at 0x00000267DB4AAA40>, WindowsPath('C:/Users/chdxm/Documen...an/C071FBP6_PCD_TEST'), [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)], 'C071')
+qapp = <PySide6.QtWidgets.QApplication(0x267d6d98130) at 0x00000267D9270AC0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dm01'), _trace=<pluggy._tracing.TagTrac...73CFCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dm01'), _retention_count=3, _retention_policy='all')
+
+    def test_real_gui_import_save_reload_export_and_artifact_state(usb_window,qapp,tmp_path_factory):
+        current,source,errors,part=usb_window
+        before={p.relative_to(source).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in source.rglob('*') if p.is_file()}
+        model=_Import(qapp,usb_window)
+        project=tmp_path_factory.mktemp('p')
+        current._project_root=project
+        current._Project_Save()
+        assert not errors,errors
+        (project/'before-save.json').write_text(json.dumps(model,indent=2),encoding='utf8')
+        assert json.dumps(ProjectModel_Load(project/'SilverStar.ssproject').Dictionary_Get(),sort_keys=True)==json.dumps(model,sort_keys=True)
+        current._Project_Open(project)
+        assert not errors,errors
+        assert json.dumps(current._model.Dictionary_Get(),sort_keys=True)==json.dumps(model,sort_keys=True)
+        assert current.ground_target_page.generate_button.isEnabled()
+        current.ground_target_page.generate_button.click()
+        _Wait(qapp,lambda:current._active_worker is None)
+>       assert not errors,errors
+E       AssertionError: [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)]
+E       assert not [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)]
+
+apps\SCG\tests\test_usb_gui_flow.py:87: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    root:main_window.py:4609 Background task failed:
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\workers.py", line 38, in run
+    result = self._function(self.context)
+  File "D:\python_software\SilverStar\apps\SCG\tests\test_usb_gui_flow.py", line 48, in timed
+    try:return function(context)
+               ~~~~~~~~^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\main_window.py", line 3742, in <lambda>
+    self.Task_Run(lambda context: UsbGroundFlow_Run(service, model, project, operation, context),
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\usb_ground_flow.py", line 160, in UsbGroundFlow_Run
+    service.UsbGroundCandidate_Plan(model, **options)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\service.py", line 965, in UsbGroundCandidate_Plan
+    return UsbGroundCandidate_Plan(self.hardware_importer, self.catalog, model, **options)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\usb_ground.py", line 293, in UsbGroundCandidate_Plan
+    files, graph, records = C071Candidate_Render(native, inventory, model, catalog, snapshot, profile)
+                            ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\c071_candidate.py", line 57, in C071Candidate_Render
+    target_body=transform(body)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\native_radio.py", line 30, in NativeRadioDevice_Derive
+    raise ValueError('Native radio device payload changed; review timestamp/IRQ ownership')
+ValueError: Native radio device payload changed; review timestamp/IRQ ownership
+___________ test_real_gui_build_progress_and_cancel[F103-generate] ____________
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x267de7459f0) at 0x00000267DB44DC80>, WindowsPath('C:/Users/chdxm/Documen...dation/cube-f103-usb'), [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)], 'F103')
+qapp = <PySide6.QtWidgets.QApplication(0x267d6d98130) at 0x00000267D9270AC0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dm01'), _trace=<pluggy._tracing.TagTrac...73CFCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dm01'), _retention_count=3, _retention_policy='all')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000267DE8E0DD0>
+operation = 'generate'
+
+    @pytest.mark.parametrize('operation',['generate','build'])
+    def test_real_gui_build_progress_and_cancel(usb_window,qapp,tmp_path_factory,monkeypatch,operation):
+        current,source,errors,part=usb_window
+>       _Import(qapp,usb_window)
+
+apps\SCG\tests\test_usb_gui_flow.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+qapp = <PySide6.QtWidgets.QApplication(0x267d6d98130) at 0x00000267D9270AC0>
+window = (<silverstar_fccg.ui.main_window.MainWindow(0x267de7459f0) at 0x00000267DB44DC80>, WindowsPath('C:/Users/chdxm/Documen...dation/cube-f103-usb'), [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)], 'F103')
+
+    def _Import(qapp,window):
+        current,source,errors,part=window
+        current._GroundCubeMxImport_Request(True)
+        _Wait(qapp,lambda:current._active_worker is None)
+>       assert not errors,errors
+E       AssertionError: [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)]
+E       assert not [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)]
+
+apps\SCG\tests\test_usb_gui_flow.py:62: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    root:main_window.py:4609 Background task failed:
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\workers.py", line 38, in run
+    result = self._function(self.context)
+  File "D:\python_software\SilverStar\apps\SCG\tests\test_usb_gui_flow.py", line 48, in timed
+    try:return function(context)
+               ~~~~~~~~^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\main_window.py", line 2170, in <lambda>
+    lambda context: UsbGroundFlow_Import(service, Path(selected), model, context),
+                    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\usb_ground_flow.py", line 66, in UsbGroundFlow_Import
+    result = service.UsbGroundProject_Import(root, deepcopy(model), part=part,
+        hclk_hz=48_000_000 if part == C071_PART else 72_000_000,
+        spi_resource='SPI1', gpio_resources=gpio, risk_acknowledged=True, **options)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\service.py", line 960, in UsbGroundProject_Import
+    return UsbGroundProject_Import(self.hardware_importer, self.catalog, input_path, model, **options)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\usb_ground.py", line 223, in UsbGroundProject_Import
+    return NativeGroundProject_Import(importer, catalog, input_path, model,
+        device_facts=facts, hclk_hz=hclk_hz, spi_resource=spi_resource,
+        gpio_resources=gpio_resources, risk_acknowledged=True)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\native_ground.py", line 121, in NativeGroundProject_Import
+    NativeGroundCandidate_Render(native, proof, inventory, candidate, catalog, hclk_hz=hclk_hz)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\native_ground.py", line 168, in NativeGroundCandidate_Render
+    files[device_path]=NativeRadioDevice_Derive(original_device)
+                       ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\native_radio.py", line 30, in NativeRadioDevice_Derive
+    raise ValueError('Native radio device payload changed; review timestamp/IRQ ownership')
+ValueError: Native radio device payload changed; review timestamp/IRQ ownership
+_____________ test_real_gui_build_progress_and_cancel[F103-build] _____________
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x267de7460b0) at 0x00000267DF9778C0>, WindowsPath('C:/Users/chdxm/Documen...dation/cube-f103-usb'), [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)], 'F103')
+qapp = <PySide6.QtWidgets.QApplication(0x267d6d98130) at 0x00000267D9270AC0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dm01'), _trace=<pluggy._tracing.TagTrac...73CFCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dm01'), _retention_count=3, _retention_policy='all')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000267DFA84490>
+operation = 'build'
+
+    @pytest.mark.parametrize('operation',['generate','build'])
+    def test_real_gui_build_progress_and_cancel(usb_window,qapp,tmp_path_factory,monkeypatch,operation):
+        current,source,errors,part=usb_window
+>       _Import(qapp,usb_window)
+
+apps\SCG\tests\test_usb_gui_flow.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+qapp = <PySide6.QtWidgets.QApplication(0x267d6d98130) at 0x00000267D9270AC0>
+window = (<silverstar_fccg.ui.main_window.MainWindow(0x267de7460b0) at 0x00000267DF9778C0>, WindowsPath('C:/Users/chdxm/Documen...dation/cube-f103-usb'), [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)], 'F103')
+
+    def _Import(qapp,window):
+        current,source,errors,part=window
+        current._GroundCubeMxImport_Request(True)
+        _Wait(qapp,lambda:current._active_worker is None)
+>       assert not errors,errors
+E       AssertionError: [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)]
+E       assert not [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)]
+
+apps\SCG\tests\test_usb_gui_flow.py:62: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    root:main_window.py:4609 Background task failed:
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\workers.py", line 38, in run
+    result = self._function(self.context)
+  File "D:\python_software\SilverStar\apps\SCG\tests\test_usb_gui_flow.py", line 48, in timed
+    try:return function(context)
+               ~~~~~~~~^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\main_window.py", line 2170, in <lambda>
+    lambda context: UsbGroundFlow_Import(service, Path(selected), model, context),
+                    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\usb_ground_flow.py", line 66, in UsbGroundFlow_Import
+    result = service.UsbGroundProject_Import(root, deepcopy(model), part=part,
+        hclk_hz=48_000_000 if part == C071_PART else 72_000_000,
+        spi_resource='SPI1', gpio_resources=gpio, risk_acknowledged=True, **options)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\service.py", line 960, in UsbGroundProject_Import
+    return UsbGroundProject_Import(self.hardware_importer, self.catalog, input_path, model, **options)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\usb_ground.py", line 223, in UsbGroundProject_Import
+    return NativeGroundProject_Import(importer, catalog, input_path, model,
+        device_facts=facts, hclk_hz=hclk_hz, spi_resource=spi_resource,
+        gpio_resources=gpio_resources, risk_acknowledged=True)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\native_ground.py", line 121, in NativeGroundProject_Import
+    NativeGroundCandidate_Render(native, proof, inventory, candidate, catalog, hclk_hz=hclk_hz)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\native_ground.py", line 168, in NativeGroundCandidate_Render
+    files[device_path]=NativeRadioDevice_Derive(original_device)
+                       ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\native_radio.py", line 30, in NativeRadioDevice_Derive
+    raise ValueError('Native radio device payload changed; review timestamp/IRQ ownership')
+ValueError: Native radio device payload changed; review timestamp/IRQ ownership
+___________ test_real_gui_build_progress_and_cancel[C071-generate] ____________
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x267de746ad0) at 0x00000267DFAE7840>, WindowsPath('C:/Users/chdxm/Documen...an/C071FBP6_PCD_TEST'), [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)], 'C071')
+qapp = <PySide6.QtWidgets.QApplication(0x267d6d98130) at 0x00000267D9270AC0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dm01'), _trace=<pluggy._tracing.TagTrac...73CFCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dm01'), _retention_count=3, _retention_policy='all')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000267DFA85260>
+operation = 'generate'
+
+    @pytest.mark.parametrize('operation',['generate','build'])
+    def test_real_gui_build_progress_and_cancel(usb_window,qapp,tmp_path_factory,monkeypatch,operation):
+        current,source,errors,part=usb_window
+        _Import(qapp,usb_window)
+        current._project_root=tmp_path_factory.mktemp('p')
+        observed=[]
+        original=current._Task_Progress
+        def progress(value,code):observed.append(value);original(value,code)
+        monkeypatch.setattr(current,'_Task_Progress',progress)
+        current._UsbGroundOperation_Request(operation)
+        _Wait(qapp,lambda:len(observed)>3 or current._active_worker is None)
+>       assert current._active_worker is not None,errors
+E       AssertionError: [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)]
+E       assert None is not None
+E        +  where None = <silverstar_fccg.ui.main_window.MainWindow(0x267de746ad0) at 0x00000267DFAE7840>._active_worker
+
+apps\SCG\tests\test_usb_gui_flow.py:111: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    root:main_window.py:4609 Background task failed:
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\workers.py", line 38, in run
+    result = self._function(self.context)
+  File "D:\python_software\SilverStar\apps\SCG\tests\test_usb_gui_flow.py", line 48, in timed
+    try:return function(context)
+               ~~~~~~~~^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\main_window.py", line 3742, in <lambda>
+    self.Task_Run(lambda context: UsbGroundFlow_Run(service, model, project, operation, context),
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\usb_ground_flow.py", line 160, in UsbGroundFlow_Run
+    service.UsbGroundCandidate_Plan(model, **options)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\service.py", line 965, in UsbGroundCandidate_Plan
+    return UsbGroundCandidate_Plan(self.hardware_importer, self.catalog, model, **options)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\usb_ground.py", line 293, in UsbGroundCandidate_Plan
+    files, graph, records = C071Candidate_Render(native, inventory, model, catalog, snapshot, profile)
+                            ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\c071_candidate.py", line 57, in C071Candidate_Render
+    target_body=transform(body)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\native_radio.py", line 30, in NativeRadioDevice_Derive
+    raise ValueError('Native radio device payload changed; review timestamp/IRQ ownership')
+ValueError: Native radio device payload changed; review timestamp/IRQ ownership
+_____________ test_real_gui_build_progress_and_cancel[C071-build] _____________
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x267de7460b0) at 0x00000267DF9C2340>, WindowsPath('C:/Users/chdxm/Documen...an/C071FBP6_PCD_TEST'), [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)], 'C071')
+qapp = <PySide6.QtWidgets.QApplication(0x267d6d98130) at 0x00000267D9270AC0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dm01'), _trace=<pluggy._tracing.TagTrac...73CFCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dm01'), _retention_count=3, _retention_policy='all')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000267DFD38750>
+operation = 'build'
+
+    @pytest.mark.parametrize('operation',['generate','build'])
+    def test_real_gui_build_progress_and_cancel(usb_window,qapp,tmp_path_factory,monkeypatch,operation):
+        current,source,errors,part=usb_window
+        _Import(qapp,usb_window)
+        current._project_root=tmp_path_factory.mktemp('p')
+        observed=[]
+        original=current._Task_Progress
+        def progress(value,code):observed.append(value);original(value,code)
+        monkeypatch.setattr(current,'_Task_Progress',progress)
+        current._UsbGroundOperation_Request(operation)
+        _Wait(qapp,lambda:len(observed)>3 or current._active_worker is None)
+>       assert current._active_worker is not None,errors
+E       AssertionError: [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)]
+E       assert None is not None
+E        +  where None = <silverstar_fccg.ui.main_window.MainWindow(0x267de7460b0) at 0x00000267DF9C2340>._active_worker
+
+apps\SCG\tests\test_usb_gui_flow.py:111: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    root:main_window.py:4609 Background task failed:
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\workers.py", line 38, in run
+    result = self._function(self.context)
+  File "D:\python_software\SilverStar\apps\SCG\tests\test_usb_gui_flow.py", line 48, in timed
+    try:return function(context)
+               ~~~~~~~~^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\main_window.py", line 3742, in <lambda>
+    self.Task_Run(lambda context: UsbGroundFlow_Run(service, model, project, operation, context),
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\usb_ground_flow.py", line 160, in UsbGroundFlow_Run
+    service.UsbGroundCandidate_Plan(model, **options)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\service.py", line 965, in UsbGroundCandidate_Plan
+    return UsbGroundCandidate_Plan(self.hardware_importer, self.catalog, model, **options)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\usb_ground.py", line 293, in UsbGroundCandidate_Plan
+    files, graph, records = C071Candidate_Render(native, inventory, model, catalog, snapshot, profile)
+                            ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\c071_candidate.py", line 57, in C071Candidate_Render
+    target_body=transform(body)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\native_radio.py", line 30, in NativeRadioDevice_Derive
+    raise ValueError('Native radio device payload changed; review timestamp/IRQ ownership')
+ValueError: Native radio device payload changed; review timestamp/IRQ ownership
+________________ test_real_gui_success_build_and_quality[F103] ________________
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x267de745f00) at 0x00000267DD681CC0>, WindowsPath('C:/Users/chdxm/Documen...dation/cube-f103-usb'), [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)], 'F103')
+qapp = <PySide6.QtWidgets.QApplication(0x267d6d98130) at 0x00000267D9270AC0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dm01'), _trace=<pluggy._tracing.TagTrac...73CFCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dm01'), _retention_count=3, _retention_policy='all')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000267DFD3AA50>
+
+    def test_real_gui_success_build_and_quality(usb_window,qapp,tmp_path_factory,monkeypatch):
+        assert os.environ.get('SILVERSTAR_USB_BACKEND_ARM')=='1'
+        current,source,errors,part=usb_window
+>       _Import(qapp,usb_window)
+
+apps\SCG\tests\test_usb_gui_flow.py:133: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+qapp = <PySide6.QtWidgets.QApplication(0x267d6d98130) at 0x00000267D9270AC0>
+window = (<silverstar_fccg.ui.main_window.MainWindow(0x267de745f00) at 0x00000267DD681CC0>, WindowsPath('C:/Users/chdxm/Documen...dation/cube-f103-usb'), [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)], 'F103')
+
+    def _Import(qapp,window):
+        current,source,errors,part=window
+        current._GroundCubeMxImport_Request(True)
+        _Wait(qapp,lambda:current._active_worker is None)
+>       assert not errors,errors
+E       AssertionError: [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)]
+E       assert not [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)]
+
+apps\SCG\tests\test_usb_gui_flow.py:62: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    root:main_window.py:4609 Background task failed:
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\workers.py", line 38, in run
+    result = self._function(self.context)
+  File "D:\python_software\SilverStar\apps\SCG\tests\test_usb_gui_flow.py", line 48, in timed
+    try:return function(context)
+               ~~~~~~~~^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\main_window.py", line 2170, in <lambda>
+    lambda context: UsbGroundFlow_Import(service, Path(selected), model, context),
+                    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\usb_ground_flow.py", line 66, in UsbGroundFlow_Import
+    result = service.UsbGroundProject_Import(root, deepcopy(model), part=part,
+        hclk_hz=48_000_000 if part == C071_PART else 72_000_000,
+        spi_resource='SPI1', gpio_resources=gpio, risk_acknowledged=True, **options)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\service.py", line 960, in UsbGroundProject_Import
+    return UsbGroundProject_Import(self.hardware_importer, self.catalog, input_path, model, **options)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\usb_ground.py", line 223, in UsbGroundProject_Import
+    return NativeGroundProject_Import(importer, catalog, input_path, model,
+        device_facts=facts, hclk_hz=hclk_hz, spi_resource=spi_resource,
+        gpio_resources=gpio_resources, risk_acknowledged=True)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\native_ground.py", line 121, in NativeGroundProject_Import
+    NativeGroundCandidate_Render(native, proof, inventory, candidate, catalog, hclk_hz=hclk_hz)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\native_ground.py", line 168, in NativeGroundCandidate_Render
+    files[device_path]=NativeRadioDevice_Derive(original_device)
+                       ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\native_radio.py", line 30, in NativeRadioDevice_Derive
+    raise ValueError('Native radio device payload changed; review timestamp/IRQ ownership')
+ValueError: Native radio device payload changed; review timestamp/IRQ ownership
+________________ test_real_gui_success_build_and_quality[C071] ________________
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x267de746e30) at 0x00000267E0D7D340>, WindowsPath('C:/Users/chdxm/Documen...an/C071FBP6_PCD_TEST'), [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)], 'C071')
+qapp = <PySide6.QtWidgets.QApplication(0x267d6d98130) at 0x00000267D9270AC0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dm01'), _trace=<pluggy._tracing.TagTrac...73CFCE0>, _basetemp=WindowsPath('C:/Users/chdxm/AppData/Local/Temp/dm01'), _retention_count=3, _retention_policy='all')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000267E2040AA0>
+
+    def test_real_gui_success_build_and_quality(usb_window,qapp,tmp_path_factory,monkeypatch):
+        assert os.environ.get('SILVERSTAR_USB_BACKEND_ARM')=='1'
+        current,source,errors,part=usb_window
+        _Import(qapp,usb_window)
+        current._project_root=tmp_path_factory.mktemp('p')
+        compiler='D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc.exe'
+        monkeypatch.setattr(QFileDialog,'getOpenFileName',lambda *a:(compiler,''))
+        assert current._ToolchainBrowse('compiler')
+        assert not errors,errors
+        # Selecting a location does not establish detected tool availability.
+        # Use the existing real detector, not fabricated ToolStatus entries.
+        assert current.build_page.detect_button.isEnabled()
+        current.build_page.detect_button.click()
+        _Wait(qapp,lambda:current._active_worker is None)
+        assert not errors,errors
+        assert any(view.tool_id=='compiler' and view.status=='found' for view in current.build_page._tools)
+        # Exercise the real enabled button after the ordinary Generate operation.
+        current.ground_target_page.generate_button.click()
+        _Wait(qapp,lambda:current._active_worker is None)
+>       assert not errors,errors
+E       AssertionError: [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)]
+E       assert not [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)]
+
+apps\SCG\tests\test_usb_gui_flow.py:149: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    root:main_window.py:4609 Background task failed:
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\workers.py", line 38, in run
+    result = self._function(self.context)
+  File "D:\python_software\SilverStar\apps\SCG\tests\test_usb_gui_flow.py", line 48, in timed
+    try:return function(context)
+               ~~~~~~~~^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\main_window.py", line 3742, in <lambda>
+    self.Task_Run(lambda context: UsbGroundFlow_Run(service, model, project, operation, context),
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\usb_ground_flow.py", line 160, in UsbGroundFlow_Run
+    service.UsbGroundCandidate_Plan(model, **options)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\service.py", line 965, in UsbGroundCandidate_Plan
+    return UsbGroundCandidate_Plan(self.hardware_importer, self.catalog, model, **options)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\usb_ground.py", line 293, in UsbGroundCandidate_Plan
+    files, graph, records = C071Candidate_Render(native, inventory, model, catalog, snapshot, profile)
+                            ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\c071_candidate.py", line 57, in C071Candidate_Render
+    target_body=transform(body)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\native_radio.py", line 30, in NativeRadioDevice_Derive
+    raise ValueError('Native radio device payload changed; review timestamp/IRQ ownership')
+ValueError: Native radio device payload changed; review timestamp/IRQ ownership
+__________ test_tool_location_change_preserves_native_bindings[F103] __________
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x267de746fe0) at 0x00000267E210DDC0>, WindowsPath('C:/Users/chdxm/Documen...dation/cube-f103-usb'), [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)], 'F103')
+qapp = <PySide6.QtWidgets.QApplication(0x267d6d98130) at 0x00000267D9270AC0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000267E20A6EB0>
+
+    def test_tool_location_change_preserves_native_bindings(usb_window,qapp,monkeypatch):
+        current,source,errors,part=usb_window
+>       _Import(qapp,usb_window)
+
+apps\SCG\tests\test_usb_gui_flow.py:214: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+qapp = <PySide6.QtWidgets.QApplication(0x267d6d98130) at 0x00000267D9270AC0>
+window = (<silverstar_fccg.ui.main_window.MainWindow(0x267de746fe0) at 0x00000267E210DDC0>, WindowsPath('C:/Users/chdxm/Documen...dation/cube-f103-usb'), [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)], 'F103')
+
+    def _Import(qapp,window):
+        current,source,errors,part=window
+        current._GroundCubeMxImport_Request(True)
+        _Wait(qapp,lambda:current._active_worker is None)
+>       assert not errors,errors
+E       AssertionError: [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)]
+E       assert not [(ValueError('Native radio device payload changed; review timestamp/IRQ ownership'),)]
+
+apps\SCG\tests\test_usb_gui_flow.py:62: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    root:main_window.py:4609 Background task failed:
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\workers.py", line 38, in run
+    result = self._function(self.context)
+  File "D:\python_software\SilverStar\apps\SCG\tests\test_usb_gui_flow.py", line 48, in timed
+    try:return function(context)
+               ~~~~~~~~^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\ui\main_window.py", line 2170, in <lambda>
+    lambda context: UsbGroundFlow_Import(service, Path(selected), model, context),
+                    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\usb_ground_flow.py", line 66, in UsbGroundFlow_Import
+    result = service.UsbGroundProject_Import(root, deepcopy(model), part=part,
+        hclk_hz=48_000_000 if part == C071_PART else 72_000_000,
+        spi_resource='SPI1', gpio_resources=gpio, risk_acknowledged=True, **options)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\service.py", line 960, in UsbGroundProject_Import
+    return UsbGroundProject_Import(self.hardware_importer, self.catalog, input_path, model, **options)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\usb_ground.py", line 223, in UsbGroundProject_Import
+    return NativeGroundProject_Import(importer, catalog, input_path, model,
+        device_facts=facts, hclk_hz=hclk_hz, spi_resource=spi_resource,
+        gpio_resources=gpio_resources, risk_acknowledged=True)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\native_ground.py", line 121, in NativeGroundProject_Import
+    NativeGroundCandidate_Render(native, proof, inventory, candidate, catalog, hclk_hz=hclk_hz)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\native_ground.py", line 168, in NativeGroundCandidate_Render
+    files[device_path]=NativeRadioDevice_Derive(original_device)
+                       ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\native_radio.py", line 30, in NativeRadioDevice_Derive
+    raise ValueError('Native radio device payload changed; review timestamp/IRQ ownership')
+ValueError: Native radio device payload changed; review timestamp/IRQ ownership
+__________ test_tool_location_change_preserves_native_bindings[C071] __________
+
+usb_window = (<silverstar_fccg.ui.main_window.MainWindow(0x267de746ad0) at 0x00000267E225AEC0>, WindowsPath('C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST'), [], 'C071')
+qapp = <PySide6.QtWidgets.QApplication(0x267d6d98130) at 0x00000267D9270AC0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000267E34831E0>
+
+    def test_tool_location_change_preserves_native_bindings(usb_window,qapp,monkeypatch):
+        current,source,errors,part=usb_window
+        _Import(qapp,usb_window)
+        before=deepcopy(current._model.ground_target)
+        compiler='D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc.exe'
+        assert Path(compiler).is_file()
+        monkeypatch.setattr(QFileDialog,'getOpenFileName',lambda *a:(compiler,''))
+        assert current._ToolchainBrowse('compiler')
+        assert not errors,errors
+        assert current._model.ground_target==before
+        assert current._model.build.tool_paths['compiler']==compiler
+>       current._service.UsbGroundCandidate_Plan(current._model,**UsbGroundOptions_Get(current._model.ground_target.hardware.mcu))
+
+apps\SCG\tests\test_usb_gui_flow.py:223: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\app\service.py:965: in UsbGroundCandidate_Plan
+    return UsbGroundCandidate_Plan(self.hardware_importer, self.catalog, model, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\app\usb_ground.py:293: in UsbGroundCandidate_Plan
+    files, graph, records = C071Candidate_Render(native, inventory, model, catalog, snapshot, profile)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\c071_candidate.py:57: in C071Candidate_Render
+    target_body=transform(body)
+                ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+original = b'#include "sx1281_device.h"\r\n\r\n#include <string.h>\r\n\r\n#include "project_resources.h"\r\n#include "silverstar_...n (result == PLATFORM_OK) && (frontend_off != 0U) ? LoraDeactivateResult_Ok : LoraDeactivateResult_PortError;\r\n}\r\n'
+
+    def NativeRadioDevice_Derive(original: bytes) -> bytes:
+        if hashlib.sha256(original).hexdigest() != '56ee9b35e54535249816363d0328120a6018f157ce51f8bad93185ebea78428c':
+>           raise ValueError('Native radio device payload changed; review timestamp/IRQ ownership')
+E           ValueError: Native radio device payload changed; review timestamp/IRQ ownership
+
+apps\SCG\src\silverstar_fccg\generator\native_radio.py:30: ValueError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_import_save_reload_export_and_artifact_state[F103]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_import_save_reload_export_and_artifact_state[C071]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_build_progress_and_cancel[F103-generate]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_build_progress_and_cancel[F103-build]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_build_progress_and_cancel[C071-generate]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_build_progress_and_cancel[C071-build]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_success_build_and_quality[F103]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_real_gui_success_build_and_quality[C071]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_tool_location_change_preserves_native_bindings[F103]
+FAILED apps\SCG\tests\test_usb_gui_flow.py::test_tool_location_change_preserves_native_bindings[C071]
+10 failed, 2 passed, 1 warning in 53.45s

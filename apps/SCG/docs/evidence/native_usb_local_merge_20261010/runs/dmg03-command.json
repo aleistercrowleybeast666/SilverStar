@@ -1,0 +1,21 @@
+{
+  "command": [
+    "D:\\python_software\\SilverStar\\apps\\FLP\\.venv\\Scripts\\python.exe",
+    "-B",
+    "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\daily_backend_pytest.py",
+    "apps/SCG/tests/test_usb_ground_backend.py",
+    "apps/SCG/tests/test_native_ground_backend.py",
+    "-k",
+    "all_output_routes_block_before_write or formal_build_rejects_even_without_ensure_buildable or formal_plan_and_generation_reject_bound_model",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/Users/chdxm/AppData/Local/Temp/dmg03"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "source_commit": "e1357b417ee98df5990a1fff18c55d6b35183896",
+  "scope": "Direct ordinary F103/F407/C071 formal generation/build/output routes refuse before writes with unchanged guards; no malformed USB or stopped safety review",
+  "started_utc": "2026-10-10T05:28:02.673457+00:00",
+  "exit": 0,
+  "finished_utc": "2026-10-10T05:28:30.467484+00:00"
+}
