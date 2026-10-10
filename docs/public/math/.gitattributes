@@ -1,0 +1,3 @@
+# Preserve reviewed TeX source and PDF bytes.
+*.tex -text
+*.pdf -text

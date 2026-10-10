@@ -1,0 +1,120 @@
+\section{ESKF15: right local error and residual biases}
+\label{sec:eskf}
+\subsection{Nominal and error states}
+The nominal storage has 16 scalars,
+\begin{equation}
+(\mat p,\mat v,q_{nb},\mat b_g,\mat b_a),
+\end{equation}
+while the error state has 15 degrees of freedom:
+\begin{equation}
+\delta\mat x=[\delta\mat p^T,\delta\mat v^T,\delta\mat\theta^T,
+\delta\mat b_g^T,\delta\mat b_a^T]^T,
+\qquad q_{true}=q_{nb}\otimes\Exp(\delta\mat\theta).
+\label{eq:error-state}
+\end{equation}
+The attitude error is a right-multiplicative Body rotation. Additive errors are true minus nominal. The biases are residuals after external calibration, not substitutes for the calibration result.
+
+\subsection{Body-input propagation}
+Firmware stores the actual calibrated means of two half intervals. With $h$ their total duration, the implemented input increments are
+\begin{align}
+\mat a_i&=(\mat\omega_{m,i}-\mat b_g)h/2,&
+\mat u_i&=(\mat f_{m,i}-\mat b_a)h/2,\quad i=1,2.
+\end{align}
+Equations~\eqref{eq:coning}--\eqref{eq:ins-propagation} then apply to this bias-corrected pair, using the ESKF nominal starting attitude and ESKF gravity. Nominal biases remain unchanged during deterministic prediction; their uncertainty grows through random-walk noise.
+
+ESKF must consume Body inputs. Reusing already-rotated Pure INS ENU increments would lose the effect of attitude/bias corrections and risk repeated rotation or compensation. Its prediction rejects source/generation mismatch, noncontinuous time, excluded quality bits and $h\notin(0,0.02]$ s. The stored endpoint duration and float duration must agree within $2\times10^{-6}$ s.
+
+\subsection{Linearized dynamics and discretization}
+Let $\bar{\mat\omega}=(\mat\omega_{m,1}+\mat\omega_{m,2})/2-\mat b_g$ and
+$\bar{\mat f}=(\mat f_{m,1}+\mat f_{m,2})/2-\mat b_a$. In the error order of Equation~\eqref{eq:error-state},
+\begin{equation}
+F=\begin{bmatrix}
+0&I&0&0&0\\
+0&0&-R\crossmat{\bar{\mat f}}&0&-R\\
+0&0&-\crossmat{\bar{\mat\omega}}&-I&0\\
+0&0&0&0&0\\
+0&0&0&0&0
+\end{bmatrix}.
+\label{eq:eskf-f}
+\end{equation}
+For example, $R_{true}\simeq R(I+\crossmat{\delta\mat\theta})$ gives
+$\delta(R\mat f)=-R\crossmat{\mat f}\delta\mat\theta-R\delta\mat b_a$.
+The right Body attitude error evolves as
+$\delta\dot{\mat\theta}=-\crossmat{\bar{\mat\omega}}\delta\mat\theta-\delta\mat b_g$.
+These signs must not be mixed with a left navigation-frame error model.
+
+The implemented deterministic transition retains second order:
+\begin{equation}
+\Phi=I+Fh+\tfrac12F^2h^2,\qquad P^- = \Phi P^+\Phi^T+Q_d.
+\end{equation}
+With the declared continuous amplitude densities, the isotropic firmware spectral matrix is
+\begin{equation}
+W=c_q\diag(0_3,n_a^2I_3,n_g^2I_3,n_{bg}^2I_3,n_{ba}^2I_3).
+\end{equation}
+The process quality multiplier $c_q=4$ when the input flags contain any \texttt{0x05} bit, otherwise $c_q=1$; \texttt{0x72} excluded bits reject prediction. Densities are squared once. Units are given in the symbol table; sample standard deviation cannot be substituted without a sampling/noise model.
+
+Noise propagation uses a \emph{first-order} map even though deterministic $\Phi$ retains $F^2$:
+\begin{align}
+Q_d&=\int_0^h(I+F\tau)W(I+F\tau)^T\,d\tau\nonumber\\
+&=hW+\tfrac12h^2(FW+WF^T)+\tfrac13h^3FWF^T.
+\label{eq:eskf-q}
+\end{align}
+Current declared defaults are $n_g=0.003$, $n_a=0.08$, $n_{bg}=10^{-4}$ and $n_{ba}=10^{-3}$ in their respective density units. FLP maps isotropic accelerometer noise through $R$ and uses positive Simpson weights at $0,h/2,h$ for the same quadratic integrand. The mathematical covariance model agrees; float precision and actual half-duration rounding still matter. Firmware averages the two half means equally; FLP uses actual duration-weighted means for its reconstructed halves.
+
+\subsection{GNSS lever arm and actual observation matrices}
+Define $\mat\omega=\mat\omega_m-\mat b_g$ at measurement evaluation. The antenna predictions are
+\begin{align}
+\hat{\mat z}_p&=\mat p+R\mat\ell,&
+\hat{\mat z}_v&=\mat v+R(\mat\omega\times\mat\ell).
+\label{eq:lever}
+\end{align}
+Their full three-axis Jacobians in error-state order are
+\begin{align}
+H_p&=[I\ \ 0\ \ -R\crossmat{\mat\ell}\ \ 0\ \ 0],\\
+H_v&=[0\ \ I\ \ -R\crossmat{\mat\omega\times\mat\ell}\ \ R\crossmat{\mat\ell}\ \ 0].
+\label{eq:eskf-h}
+\end{align}
+The five production groups select EN or U rows, as in SF6/KF6. Barometer prediction is relative up position with zero lever offset:
+$H_{baro}=[\mat e_U^T\ \ 0\ \ 0\ \ 0\ \ 0]$.
+The positive gyro-bias block in $H_v$ follows
+$(-\delta\mat b_g)\times\mat\ell=\crossmat{\mat\ell}\delta\mat b_g$.
+
+Each supplied variance already includes backend quality/consistency adjustments; it is not sigma. The innovation, NIS and gain formulas have the same matrix meanings as KF6, but the firmware innovation solve explicitly inverts a scalar or $2\times2$ system. Its separate covariance validator uses Cholesky. These are different operations.
+
+ESKF rejects when $\eta>\eta_{hard,m}$ and soft-weights when $\eta>\eta_{soft,m}$ by $\min(c_{max},\eta/\eta_{soft,m})$, then recomputes with inflated $R$. At exact hard equality, ESKF's comparison differs from KF6's $\ge$ comparison. Thresholds/noise/P0 follow the actual ESKF profile, not the KF6 settings. The declared 1D soft/hard pair is $(6.635,10.828)$ and the 2D pair is $(9.21,13.816)$; ESKF's default $c_{max}=4$, whereas KF6's is 10.
+
+The declared initial covariance diagonal follows $[\delta\mat p,\delta\mat v,\delta\mat\theta,\delta\mat b_g,\delta\mat b_a]$. Defaults are $(4,4,9)$ m$^2$, $(0.25,0.25,0.25)$ m$^2$/s$^2$, $0.030461742 I_3$ rad$^2$, $10^{-4}I_3$ rad$^2$/s$^2$ and $0.01 I_3$ m$^2$/s$^4$. These are variance entries already. Actual admitted initialization and its complete recorded covariance remain authoritative.
+
+\subsection{Injection, Joseph update and reset}
+After solving $\widehat{\delta\mat x}=K\mat r$, the candidate nominal correction is
+\begin{align}
+\mat p^+&=\mat p^-+\widehat{\delta\mat p},&
+\mat v^+&=\mat v^-+\widehat{\delta\mat v},\\
+q^+&=\operatorname{normalize}(q^-\otimes\Exp(\widehat{\delta\mat\theta})),\\
+\mat b_g^+&=\mat b_g^-+\widehat{\delta\mat b_g},&
+\mat b_a^+&=\mat b_a^-+\widehat{\delta\mat b_a}.
+\end{align}
+The error mean is recentered at zero. After the Joseph covariance update of Equation~\eqref{eq:joseph}, the \emph{full} covariance is transformed:
+\begin{equation}
+P^+=J P_{Joseph}J^T,\qquad
+J=\diag(I_3,I_3,J_r(\widehat{\delta\mat\theta}),I_3,I_3).
+\label{eq:reset}
+\end{equation}
+For $\alpha=\norm{\mat a}$,
+\begin{equation}
+J_r(\mat a)=I-\frac{1-\cos\alpha}{\alpha^2}\crossmat{\mat a}
++\frac{\alpha-\sin\alpha}{\alpha^3}\crossmat{\mat a}^2.
+\end{equation}
+The implementation uses coefficient series $1/2-\alpha^2/24$ and $1/6-\alpha^2/120$ for $\alpha<10^{-3}$; the leading reset is
+$I-\tfrac12\crossmat{\mat a}+\tfrac16\crossmat{\mat a}^2$.
+This follows $\Exp(\delta\mat\theta_{new})=\Exp(-\widehat{\delta\mat\theta})\Exp(\delta\mat\theta_{old})$ linearized around the injected estimate. All attitude cross-covariances change under Equation~\eqref{eq:reset}, not only its attitude diagonal block.
+
+The implementation limits attitude-correction norm to 0.35 rad, residual gyro-bias norm to 1 rad/s and residual acceleration-bias norm to 5 m/s$^2$. These are model-domain checks, not sensor accuracy specifications. Finite candidate state, nonzero finite gain norm and validated covariance are required before commit. Numerical/model errors must remain distinct from accepted fusion.
+
+\subsection{Bounded Body replay}
+ESKF retains 192 Body intervals, 208 events and a 600 ms window, with maximum $192+2(208)=608$ replay steps. It must restore nominal state and covariance and reintegrate Body inputs after a correction, because corrected attitude and biases change subsequent ENU increments. Source, calibration generation, continuous epoch and capacity are part of admission. A reset is not crossed by replay.
+
+Recorded initialization requires the matched ESKF initial state, complete initial covariance snapshot and Body-input identity. Offline initialization/default covariance is a different mode. Missing history or recorded evidence is an explicit failure/unavailable state, not an invitation to synthesize inputs.
+
+\source{S6}{nominal storage, right error, dynamics, noise, observation matrices and reset}
+\source{S8}{ESKF backend parameters, timestamp/quality handling and bounded Body replay}

@@ -146,6 +146,8 @@ Recorded 是日志实际记录值；Recomputed 使用实际记录配置；Offlin
 
 垂直图由 FLP 对 `GNSS_NATIVE` 原始高度/垂直速度独立积分，随真实样本更新；参考重置、断流等形成分段。它没有使用相同的 10 秒/5 秒水平窗口，灰色重置线不等于固件拒绝事件。两图不能直接横比数值或据此断言水平/垂直精度；不应为美观插值阶梯值。完整解释见 [FLP 使用文档](docs/public/FLP/APP_README.md)，其中旧版本段落须按开头的版本说明阅读。
 
+公式文档可直接读[15页PDF](docs/public/math/navigation-models.pdf)，维护源见[模块化TeX入口](docs/public/math/README.md)，涵盖惯导、SF6/KF6/ESKF15的实际实现、坐标、符号、假设和源码版本。
+
 ## 插件与开发接口
 
 SCG 插件是 `apps/SCG/plugins/builtin/<name>/plugin.json` 及对应 payload：清单声明身份、能力、依赖、源图、资源与生成边界。保留声明式所有权，禁止给未知目标套默认 CPU/IRQ 或拷贝用户项目覆盖源。源码 API 位于 `apps/SCG/src/silverstar_fccg/plugins/`；builtin 是随版本的参考组件，installed 为用户显式安装内容。

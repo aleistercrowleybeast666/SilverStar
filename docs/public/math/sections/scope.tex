@@ -1,0 +1,22 @@
+\section{Scope and version identities}
+This reference describes the implemented firmware equations and their recorded-data boundaries. It is based on source inspection at the commit printed on the title page. It does not establish sensor accuracy, target execution time, stack safety, electrical correctness or flight qualification.
+
+The product version is 0.1.2. Independent identities remain AIR M0, SSLOG 0.0 and \texttt{.ssdecoder} package schema/project semantics 1.2. Algorithm revisions are separate: SF6 revision 2, KF6 process model revision 2, ESKF15 revision 1 and navigation-quality revision 3. A historical log retains the exact revision and decoder with which it was recorded. A current mathematical description cannot replace those identities.
+
+These algorithms share navigation coordinates, but their stored states differ:
+\begin{center}
+\begin{tabular}{@{}L{22mm}L{71mm}L{30mm}@{}}
+\toprule
+Algorithm & State and observation feedback & Covariance \\
+\midrule
+Pure INS & Independent inertial $\mat p,\mat v,q_{nb}$; no observation correction & None \\
+SF6 & Six velocity/position states; fixed per-axis correction; separate inertial attitude & None \\
+KF6 & Six position/velocity states; GNSS/barometer correction; external software attitude & $6\times6$ \\
+ESKF15 & Nominal $\mat p,\mat v,q_{nb},\mat b_g,\mat b_a$; right local error feedback & $15\times15$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Feature tier and hardware feasibility remain configuration contracts. Full exposes the supported estimator choices; Standard excludes ESKF15; Compact/Minimal permit SF6 or pure INS and exclude KF6/ESKF15. A supported choice is not hardware acceptance. The independent Pure INS branch is not overwritten by estimator corrections.
+
+References below use source keys S1--S14, resolved in Section~\ref{sec:sources}; each key names an owning repository file and functions. No external project path or machine-local build directory is required to maintain this document.

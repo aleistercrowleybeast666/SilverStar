@@ -1,0 +1,46 @@
+\section{SF6 revision 2: fixed-gain current-state fusion}
+\label{sec:sf6}
+SF6's state order is
+\begin{equation}
+\mat x_s=[v_E,v_N,v_U,p_E,p_N,p_U]^T.
+\end{equation}
+It uses the admitted inertial navigation increment to predict
+\begin{align}
+\mat v^-_{k+1}&=\mat v^+_k+\Delta\mat v_n,\\
+\mat p^-_{k+1}&=\mat p^+_k+(\mat v^+_k+\tfrac12\Delta\mat v_n)h.
+\end{align}
+The separate attitude propagates inertially and is not corrected by these observations. For each observed state component $j$, the update is
+\begin{equation}
+x_{s,j}^{+}=x_{s,j}^{-}+k_j(z_j-x_{s,j}^{-}),\qquad0\le k_j\le1.
+\label{eq:sf6-gain}
+\end{equation}
+The six gains follow the state order above; their declared defaults are all 0.2. This is an engineering default, not an optimal gain or accuracy result. $k_j=0$ retains the prediction and $k_j=1$ selects the admitted observation. SF6 maintains no $P$, $Q$, $R$, Kalman gain or NIS. The shared output's statistical fields are unavailable (NaN), not zero uncertainty.
+
+\begin{center}
+\begin{tabular}{@{}cll@{}}
+\toprule Group & Observation & Corrected components \\
+\midrule
+0 & GNSS position EN & $p_E,p_N$ \\
+1 & GNSS position U & $p_U$ \\
+2 & GNSS velocity EN & $v_E,v_N$ \\
+3 & GNSS velocity U & $v_U$ \\
+4 & Relative barometer altitude & $p_U$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+GNSS altitude and barometer altitude share the $p_U$ gain. Position observations do not directly correct velocity. There is no magnetic measurement update in SF6.
+
+Revision 2 applies every admitted observation to the \emph{present} predicted state. It has no history ring, delayed observation queue, rewind or replay. Measurement time serves admission/age checks. The backend uses a trusted sample timestamp, otherwise the receive timestamp (zero configured delay). A measurement must satisfy
+\begin{equation}
+t_0\le t_s\le t_r\le t_e,\qquad t_e-t_s\le0.5\ \mathrm{s}.
+\end{equation}
+For a previously seen group, both sample and receive times must advance. Unsigned 32-bit sequence difference must lie in $[1,2^{31}-1]$, which admits wraparound only within the forward half range. Prediction requires $0<h\le0.02$ s and exact continuity with the microsecond-rounded duration.
+
+A constant-velocity delayed position observation lags current position by about $-\mat v\tau$. Equation~\eqref{eq:sf6-gain} therefore adds approximately $-k_jv_j\tau$ beyond a current observation's correction. Under constant acceleration, delayed velocity analogously contributes $-k_ja_j\tau$. These are explanatory model estimates, not measured navigation accuracy.
+
+The backend checks source identity, basic physical GNSS/barometer validity and age. SF6 does not obtain covariance-based satellite/window/NIS downweighting simply because those policies exist for KF6/ESKF15. Its health reports admission and whether the relevant gain can make an effective update; a zero gain cannot refresh successful-fusion health. The covariance-free core commits the finite candidate state and group admission metadata together.
+
+Historical SF6 revision 1 used fixed-lag replay. Recorded mode must retain that revision's semantics; current Offline What-if revision 2 must identify its semantic difference. Continuing inertial propagation or barometer correction during GNSS loss does not bound horizontal drift.
+
+\source{S3}{fixed gains, state advancement, group/time admission and candidate commit}
+\source{S4}{physical admission, current-state measurement timestamps and health/statistical output}

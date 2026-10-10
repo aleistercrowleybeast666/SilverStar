@@ -1,0 +1,34 @@
+\section{Recorded replay and evidence boundaries}
+Recorded analysis opens through the exact \texttt{.ssdecoder} and Descriptor. Source logs and decoder packages remain immutable. Explicit Offline What-if parameters must be labeled separately from recorded configuration; absent noise, initial state, validity or timing fields cannot be silently filled and called recorded.
+
+Mathematical equivalence is distinct from numerical replay fidelity. Pure INS/KF6 currently lack an exact-validation reference on the ordinary reconstruction path; SF6 revision 2 is approximate when reconstructed, with unavailable status for missing required input. ESKF's recorded-parity path additionally checks actual Body inputs, complete initial state/covariance, timing, identities, measurement outcomes and state/covariance comparisons. A complete declared comparison can establish its recorded-data fidelity scope; it cannot establish real sensor truth or target hardware correctness. Missing covariance parts cannot be reported as compared successfully.
+
+Host tests, source-graph checks, Power-of-Ten project gates, analyzer compilation and ARM linking establish only their executed revisions/configurations/scopes. Historical reports retain their original source identity, failed/skipped details and hashes. An unavailable hardware test is not a pass; unresolved critical contracts remain NOT PROVEN. This mathematical reference adds no new MCU WCET, stack, electrical, hardware/flight or USB acceptance evidence.
+
+\section{Source index and maintenance map}
+\label{sec:sources}
+Source keys refer to repository-relative owning files at the title-page commit. The root prefix for S1--S13 is \path{apps/SCG/plugins/builtin/}; paths below are relative to that prefix unless stated otherwise. Maintain equations when the owner/revision changes, and preserve the prior reference as a versioned historical document.
+
+\begin{small}
+\begin{longtable}{@{}L{8mm}L{134mm}@{}}
+\toprule Key & Owning file(s) and evidence anchor \\
+\midrule\endhead
+S1 & \path{silverstar_algorithm_ins_coning2_sculling2/payload/Algorithm/INS/Coning2Sculling2/Src/ins_mechanization.c}: \texttt{Ins\_ComputeSubIntervalIncrement}, coning/sculling, \texttt{InsMechanization\_NavigationCompute}. \\
+S2 & \path{silverstar_algorithm_common/payload/Algorithm/Common/Src/attitude_frame.c}: Hamilton multiply, rotation-vector exponential and right Body propagation. \\
+S3 & \path{silverstar_algorithm_estimator_sf6/payload/Algorithm/Estimator/SF6/Inc/navigation_sf6.h} and \path{silverstar_algorithm_estimator_sf6/payload/Algorithm/Estimator/SF6/Src/navigation_sf6.c}: revision, state order, 500 ms admission, fixed-gain update. \\
+S4 & \path{silverstar_algorithm_estimator_sf6/payload/Algorithm/Estimator/SF6/Src/navigation_sf6_backend.c}: actual source/time handling, effective gain, unavailable covariance and health. \\
+S5 & \path{silverstar_algorithm_estimator_kf6/payload/Algorithm/Estimator/KF6/Src/navigation_kf.c}: \texttt{NavigationKf\_PredictNoise}, \texttt{NavigationKf\_PredictInterval}, vector updates, Joseph form and reacquisition. Parameter values: owning \path{silverstar_algorithm_estimator_kf6/plugin.json}. \\
+S6 & \path{silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf.c} and corresponding \path{Inc/navigation_eskf.h}: right error, nominal integration, linearization, noise, lever-arm Jacobians, reset and numerical limits. Parameter values: owning \path{silverstar_algorithm_estimator_eskf15/plugin.json}. \\
+S7 & \path{silverstar_algorithm_estimator_kf6/payload/Algorithm/Estimator/KF6/Inc/navigation_kf_replay.h} and corresponding \path{Src/navigation_kf_replay.c}: 600 ms window, capacities, checkpoint stride and original-interval splitting. \\
+S8 & \path{silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c}; \path{Inc/navigation_eskf_replay.h} and \path{Src/navigation_eskf_replay.c}: profile initialization, source/generation/time admission and Body replay. \\
+S9 & \path{silverstar_algorithm_calibration/payload/Algorithm/Calibration/Src/imu_six_face_calibration.c}; \path{silverstar_core_0_1_0/payload/System/Calibration/Src/system_calibration_correction.c}: external bias/scale application and six-face model. \\
+S10 & \path{silverstar_algorithm_alignment_common/payload/Algorithm/Alignment/Common/Src/attitude_alignment.c}: bounded dyadic quaternion mean and known-yaw left adjustment. Selected vector/external-attitude strategies retain their own contracts. \\
+S11 & \path{silverstar_algorithm_common/payload/Algorithm/Common/Inc/navigation_quality.h} and corresponding \path{Src/navigation_quality.c}: revision 3, satellite scale and two-window closure. \\
+S12 & \path{silverstar_core_0_1_0/payload/APP/Src/estimator_task.c}: GNSS quality application, profile/initialization, actual window configuration and replay integration. ESKF's corresponding path is in S8. \\
+S13 & \path{silverstar_core_0_1_0/payload/System/Inc/system_navigation_health.h} and corresponding \path{Src/system_navigation_health.c}; \path{Src/system_gnss_quality.c}: timeouts, group evidence and physical GNSS admission. \\
+S14 & Root-relative FLP: \path{apps/FLP/src/silverstar_flp/plugins/algorithms/pure_ins/mechanization.py}; \path{sf6/current_state.py}, \path{kf6/filter.py}, \path{eskf15/filter.py} and \path{eskf15/verification.py} under the same algorithm directory. These own offline arithmetic, version routing and recorded-parity comparison boundaries. \\
+\bottomrule
+\end{longtable}
+\end{small}
+
+Related current contracts: \path{docs/public/algorithms/NAVIGATION_IMPLEMENTATION.md}, \path{docs/FCCG/SF6_CURRENT_STATE.md}, \path{docs/public/SCG/KF6_FIXED_LAG_REPLAY.md}, \path{docs/public/SCG/KF6_OUTAGE_RECOVERY.md}, \path{docs/public/SCG/ALGORITHM_PARAMETERS.md}, \path{docs/public/SCG/NAVIGATION_CONTRACT.md} and \path{docs/public/FLP/Field_Log_Replay.md}. Older pages bearing a historical date/version remain historical evidence rather than a current product-version authority.

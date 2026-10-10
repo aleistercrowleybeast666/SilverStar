@@ -12,6 +12,8 @@
 | [单仓库架构](shared/MONOREPO_ARCHITECTURE.md) | 三工具职责和共享契约 |
 | [0.1.2分发说明](releases/0.1.2.md) | 源码分发、已知限制和许可证待完成项 |
 
+直接阅读[惯导与融合算法15页PDF](math/navigation-models.pdf)；[模块化TeX入口](math/README.md)提供主文档和九个子文件，注明实现、符号、坐标与版本边界。
+
 ## 共用说明
 
 - [AIR_LINK](shared/AIR_LINK.md)

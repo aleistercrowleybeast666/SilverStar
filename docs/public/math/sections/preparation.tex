@@ -1,0 +1,42 @@
+\section{Preparation: calibration, alignment and initial state}
+\label{sec:preparation}
+Preparation is distinct from estimator feedback. Calibration establishes external correction and its provenance; alignment establishes the initial orientation; the admitted initial-state snapshot supplies the start boundary. An acknowledgement is not READY. Runtime command/lifecycle ownership remains authoritative.
+
+\subsection{External IMU correction and six-face calibration}
+For each selected Body axis, the applied correction is
+\begin{equation}
+f_{c,j}=(f_{raw,j}-b_{a,cal,j})s_{a,j},\qquad
+\omega_{c,j}=(\omega_{raw,j}-b_{g,cal,j})s_{g,j}.
+\label{eq:calibration}
+\end{equation}
+This is a per-axis bias/scale model, not a full misalignment matrix or temperature model. In six-face calibration, $a_j^+$ and $a_j^-$ are the measured means on that axis's positive and negative faces:
+\begin{align}
+b_{a,cal,j}&=\tfrac12(a_j^++a_j^-),&s_{a,j}&=\frac{2g}{a_j^+-a_j^-},\\
+b_{g,cal,j}&=\frac16\sum_{face=1}^{6}\bar\omega_{face,j},&s_{g,j}&=1.
+\end{align}
+The denominator must be finite and greater than $10^{-6}$ m/s$^2$, and the scale must lie in the configured range. One-face and NONE procedures have their own implementation/lifecycle conditions; the six-face equation must not be described as the estimator's bias filter. ESKF subsequently subtracts its estimated \emph{residual} biases from the corrected inputs of Equation~\eqref{eq:calibration}.
+
+\source{S9}{six-face correction calculation and system correction application}
+
+\subsection{Alignment windows and yaw}
+Alignment accumulates a bounded admitted stationary window. Its inertial mean is $\bar{\mat f}=N^{-1}\sum\mat f_i$ and $\bar{\mat\omega}=N^{-1}\sum\mat\omega_i$ after the implemented validity, stationarity and timing checks. For hardware-quaternion averaging it forms a dyadic sum
+\begin{equation}
+M=\sum_i q_iq_i^T,\qquad
+q^{(r+1)}=\operatorname{normalize}(M q^{(r)}),
+\end{equation}
+for the fixed iteration count in the owner. It seeds from the stored reference quaternion and resolves sign relative to that reference. This bounded numerical procedure must not be claimed to be an exact eigen-solution.
+
+Gravity constrains tilt, but a single gravity vector does not observe yaw. Selected known-yaw or vector/external-attitude strategies supply the additional orientation constraint; unavailable/misaligned/collinear inputs must retain the selected strategy's rejection behavior. For known yaw, the code first rotates the selected signed Body axis into ENU, then computes
+\begin{align}
+\psi_{current}&=\operatorname{atan2}(u_N,u_E),&
+\Delta\psi&=\operatorname{wrap}_{[-\pi,\pi]}(\psi_{target}-\psi_{current}),\\
+q_{aligned}&=\operatorname{normalize}(q_U(\Delta\psi)\otimes q_{source}).
+\end{align}
+This navigation-Up yaw adjustment is \emph{left} multiplication, whereas Body inertial propagation and ESKF local injection multiply on the right. The projected axis must have usable horizontal norm. Replacing this with right multiplication generally changes the tilt-dependent result.
+
+Calibration READY, alignment READY and successful START are separate boundaries. Hardware attitude used to establish/diagnose an initial state is not a continuing observation update in SF6/KF6. The source identity and calibration generation must remain coherent through initialization and prediction.
+
+\source{S10}{bounded inertial/quaternion means and known-yaw application}
+
+\subsection{Origin and initialization are not running corrections}
+GNSS origin and barometer reference are frozen from their admitted preparation windows. $\mat p_0=0$ refers to that local origin; it does not assert a perfect absolute position. Initial velocity uses only admitted components. The state quaternion is the accepted initial attitude. ESKF's complete initial $P_0$ belongs to its recorded initialization; generic KF6 diagonal floors cannot substitute for it. Missing origin/initialization evidence remains visible rather than silently rebasing a moving mission.

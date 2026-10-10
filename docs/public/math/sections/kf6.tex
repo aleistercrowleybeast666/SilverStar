@@ -1,0 +1,78 @@
+\section{KF6 revision 2: position/velocity Kalman filter}
+\label{sec:kf6}
+The implemented state order differs from SF6:
+\begin{equation}
+\mat x_k=[p_E,p_N,p_U,v_E,v_N,v_U]^T.
+\end{equation}
+Attitude propagation belongs to the software INS branch. KF6 does not estimate attitude or IMU biases. An already-rotated, gravity-corrected navigation increment is its prediction input.
+
+\subsection{Prediction and the original-interval process model}
+\begin{align}
+A(h)&=\begin{bmatrix}I_3&hI_3\\0&I_3\end{bmatrix},&
+B(h)&=\begin{bmatrix}\tfrac12hI_3\\I_3\end{bmatrix},\\
+\mat x^-&=A(h)\mat x^++B(h)\Delta\mat v_n,&
+P^-&=A(h)P^+A(h)^T+Q_d(h;T).
+\end{align}
+Here $T$ is the original, unsplit inertial interval and $h\le T$ is the fragment being propagated. For each axis $i$, the actual parameter is acceleration standard deviation $\sigma_{a,i}$ in m/s$^2$. Revision 2 forms $d_i=\sigma_{a,i}^2T$, giving
+\begin{equation}
+Q_{d,i}(h;T)=d_i\begin{bmatrix}h^3/3&h^2/2\\h^2/2&h\end{bmatrix}
+\quad\text{in the }[p_i,v_i]\text{ subspace}.
+\label{eq:kf-q}
+\end{equation}
+The full matrix inserts these three blocks at $(i,i+3)$ without cross-axis process noise. The units are m$^2$, m$^2$/s and m$^2$/s$^2$. The complete interval uses $h=T$.
+
+This is the integral of an equivalent white-acceleration model for that original interval. Splitting an interval preserves $T$ in every fragment:
+\begin{equation}
+Q_d(h_1+h_2;T)=A(h_2)Q_d(h_1;T)A(h_2)^T+Q_d(h_2;T).
+\label{eq:kf-compose}
+\end{equation}
+Replacing $T$ by each fragment's duration breaks this noise accumulation. It is also incorrect to interpret the configured $\sigma_a$ as the ESKF continuous amplitude-density parameter.
+
+Historical revision 1 used $\operatorname{Var}(\Delta v_i)=(\sigma_{a,i}h)^2$ and $G=[h/2,1]^T$, hence $Q_i=G\operatorname{Var}(\Delta v_i)G^T$. This historical model must remain available for its recorded decoder/revision; it must not be silently replaced with Equation~\eqref{eq:kf-q}.
+
+\subsection{Actual observations and units}
+With axis-selection rows $E_{EN}=[\mat e_E^T;\mat e_N^T]$ and $E_U=\mat e_U^T$, the production group matrices are
+\begin{align}
+H_{p,EN}&=[E_{EN}\ \ 0],&H_{p,U}&=[E_U\ \ 0],\\
+H_{v,EN}&=[0\ \ E_{EN}],&H_{v,U}&=[0\ \ E_U],\\
+H_{baro}&=[E_U\ \ 0].
+\end{align}
+Groups have independent validity and updates. Do not append a second 3D GNSS update to observations already consumed through horizontal/vertical groups. Generic 3D APIs and thresholds exist, but do not describe an extra production observation.
+
+Receiver-reported uncertainty is first scaled and floored as a standard deviation, then squared. For the generated actual profile,
+\begin{align}
+\sigma_{p,EN}&=\max(1.25\,hAcc,\sigma_{p,EN}^{floor}),\\
+\sigma_{p,U}&=\max(1.25\,vAcc,\sigma_{p,U}^{floor}),\\
+\sigma_{v,EN}&=\max(1.25\,sAcc,\sigma_v^{floor}),\\
+\sigma_{v,U}&=c_U\max(1.25\,sAcc,\sigma_v^{floor}).
+\end{align}
+The declared current defaults are floors 1.5 m, 2.5 m and 0.15 m/s, with $c_U=1.75$. The effective group $R$ contains variances and any admitted quality multipliers from Section~\ref{sec:diagnostics}. Invalid or missing supported-field evidence is not fabricated uncertainty. Barometer observation is relative up altitude with $R_{baro}=\sigma_{baro}^2$; its declared default sigma is 2.5 m.
+
+Configured $P_0$ diagonal values already are variances and are not squared again. Declared floors are $(4,4,9)$ m$^2$ for position and $(0.25,0.25,0.25)$ m$^2$/s$^2$ for velocity. Qualified initial receiver uncertainty may increase applicable entries. Initial position is zero in the frozen local frame; initial velocity comes from the admitted initial-state snapshot. Source-specific validity still determines which components are usable.
+
+\subsection{Innovation, gates and covariance update}
+\begin{align}
+\mat r&=\mat z-H\mat x^-,&S&=HP^-H^T+R,\\
+\eta&=\mat r^TS^{-1}\mat r,&K&=P^-H^TS^{-1},\\
+\mat x^+&=\mat x^-+K\mat r.
+\end{align}
+KF6 solves the innovation system using Cholesky-based routines. For dimension $m$, $\eta\ge\eta_{hard,m}$ is rejected. When $\eta>\eta_{soft,m}$ but below hard, it replaces $R$ by
+\begin{equation}
+R_{eff}=\min(c_{max},\eta/\eta_{soft,m})R
+\end{equation}
+and recomputes the innovation covariance and gain. Joseph form is used:
+\begin{equation}
+P^+=(I-KH)P^-(I-KH)^T+KR_{eff}K^T.
+\label{eq:joseph}
+\end{equation}
+NIS is dimensionless. Default soft/hard thresholds for 1D, 2D and 3D are respectively $(6.635,10.828)$, $(9.21,13.816)$ and $(11.345,16.266)$, with $c_{max}=10$. The actual recorded profile is authoritative. Equality at the KF6 hard threshold rejects. A rejected or numerically failed update does not establish successful fusion.
+
+\subsection{Delayed observations and bounded replay}
+Trusted MCU sample time is retained. Otherwise the backend resolves measurement time as receive time minus the configured delay, rejecting underflow and future timestamps. The fixed-lag engine uses a 600 ms admission window, 144 inertial increments, 48 GNSS events, 160 barometer events and 8 checkpoints at a stride of 18 predictions. Its work bound is $144+2(48+160)=560$ steps.
+
+An observation inside an interval splits the navigation increment in proportion to time while retaining the original $T$ for Equation~\eqref{eq:kf-q}. Replay restores filter state, covariance and relevant diagnostic/reacquisition state, sorts admitted events and repropagates to the present. History loss, overflow or replay failure has an explicit result; it is not an instruction to fall back to a current-state update.
+
+Outage/reacquisition, covariance inflation and conditional reanchoring are project state machines beyond the basic Kalman equations. Receive-side loss/reset evidence is collected once; replay cannot manufacture a fresh physical reception or repeat task side effects. Their exact conditions remain in the owning outage/recovery contract and implementation, not in a universal Kalman-filter claim.
+
+\source{S5}{state order, original-interval noise, group observations, Cholesky/NIS and Joseph update}
+\source{S7}{bounded fixed-lag replay and interval splitting}

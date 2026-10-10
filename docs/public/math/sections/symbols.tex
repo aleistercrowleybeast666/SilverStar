@@ -1,0 +1,62 @@
+\section{Coordinates, symbols and units}
+\label{sec:conventions}
+The local navigation frame $n$ is East--North--Up (ENU). Body frame $b$ follows the selected mounting-axis mapping. Vectors are columns and are ordered E,N,U when in $n$. Local position is measured from a frozen GNSS origin, not directly in latitude/longitude units. Up-positive gravity is
+\begin{equation}
+\mat g_n=\begin{bmatrix}0&0&-g\end{bmatrix}^{T},\qquad g>0.
+\label{eq:gravity}
+\end{equation}
+Accelerometer input is \emph{specific force}: a stationary, level sensor supplies approximately $+g$ on its up axis; $R_{nb}\mat f_b+\mat g_n$ is navigation acceleration. Subtracting gravity in Body before an arbitrary rotation would change this model.
+
+\begin{small}
+\begin{longtable}{@{}L{23mm}L{84mm}L{39mm}@{}}
+\toprule Symbol & Meaning & Unit \\
+\midrule\endhead
+$\mat p,\mat v$ & Local ENU position and velocity & m, m/s \\
+$\mat f_m,\mat\omega_m$ & Body specific force/angular rate after external calibration & m/s$^2$, rad/s \\
+$\mat f,\mat\omega$ & ESKF input after subtracting estimated residual biases & m/s$^2$, rad/s \\
+$q_{nb},R_{nb}$ & Hamilton scalar-first quaternion $[w,x,y,z]^T$ and Body-to-ENU rotation & dimensionless \\
+$\Delta\mat\theta_b$ & Integrated Body rotation vector & rad \\
+$\Delta\mat u_b$ & Integrated specific force before gravity; not ENU velocity & m/s \\
+$\Delta\mat v_n$ & Rotation- and gravity-corrected navigation increment & m/s \\
+$h,h_i,T$ & Current integration duration, subinterval duration, original unsplit KF interval & s \\
+$t_s,t_r,t_e$ & Measurement/sample, receive and evaluation timestamps & s; stored as $\mu$s \\
+$\mat b_g,\mat b_a$ & ESKF residual gyro and accelerometer bias & rad/s, m/s$^2$ \\
+$\delta\mat x$ & ESKF position, velocity, right Body attitude and bias errors & mixed state units \\
+$P,Q_d$ & State/error covariance and discrete process covariance & pairwise state-unit products \\
+$R,S$ & Observation covariance and innovation covariance & pairwise observation-unit products \\
+$H,K$ & Observation Jacobian and gain & corresponding state/observation ratios \\
+$\mat r,\eta$ & Innovation and normalized innovation squared (NIS) & observation units, dimensionless \\
+$\mat\ell$ & Lever arm from state reference to GNSS antenna, in Body & m \\
+$\sigma_a$ & KF6 per-original-interval acceleration standard deviation parameter & m/s$^2$ \\
+$n_g,n_a$ & ESKF gyro/accelerometer amplitude density & rad/s/$\sqrt{\mathrm{Hz}}$, m/s$^2$/$\sqrt{\mathrm{Hz}}$ \\
+$n_{bg},n_{ba}$ & ESKF bias derivative amplitude density & rad/s$^2$/$\sqrt{\mathrm{Hz}}$, m/s$^3$/$\sqrt{\mathrm{Hz}}$ \\
+\bottomrule
+\end{longtable}
+\end{small}
+
+Hamilton multiplication, with $q=[w,\mat u]^T$ and $d=[s,\mat a]^T$, is
+\begin{equation}
+q\otimes d=\begin{bmatrix}ws-\mat u^T\mat a\\w\mat a+s\mat u+\mat u\times\mat a\end{bmatrix}.
+\end{equation}
+The rotation used by the implementation is
+\begin{equation}
+R(q)=\begin{bmatrix}
+1-2(y^2+z^2)&2(xy-wz)&2(xz+wy)\\
+2(xy+wz)&1-2(x^2+z^2)&2(yz-wx)\\
+2(xz-wy)&2(yz+wx)&1-2(x^2+y^2)
+\end{bmatrix}.
+\label{eq:rotation}
+\end{equation}
+Thus $\mat u_n=R(q_{nb})\mat u_b$. Body increments multiply on the right. The skew convention is $\crossmat{\mat a}\mat b=\mat a\times\mat b$.
+
+For $\alpha=\norm{\mat\theta}$, the quaternion exponential is
+\begin{equation}
+\Exp(\mat\theta)=\begin{bmatrix}\cos(\alpha/2)\\
+\dfrac{\sin(\alpha/2)}{\alpha}\mat\theta\end{bmatrix},
+\label{eq:exp}
+\end{equation}
+with its continuous zero-angle limit. Pure INS uses $1-\alpha^2/8$ and $1/2-\alpha^2/48$ when $\alpha^2\le10^{-6}$, then normalizes; ESKF uses $\cos(\alpha/2)$ and the small-angle vector factor $1/2-\alpha^2/48$ for $\alpha<10^{-3}$. They implement the same convention with slightly different numerical branches. Quaternion normalization enforces a valid rotation; it does not remove attitude drift. $q$ and $-q$ represent the same orientation.
+
+Quaternion/Euler ENU yaw is $\operatorname{atan2}(R_{21},R_{11})$ for the Body $+X$ axis projected horizontally; zero points east. A known-yaw alignment target can instead constrain a selected signed Body reference axis, as specified in Section~\ref{sec:preparation}. North-referenced compass bearing must not be substituted without an explicit convention conversion.
+
+\source{S2 and S6}{quaternion multiplication, rotation, propagation and injection}

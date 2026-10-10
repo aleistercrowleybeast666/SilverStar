@@ -1,0 +1,46 @@
+\section{Quality windows, physical admission and health}
+\label{sec:diagnostics}
+These diagnostics are separate from coning/sculling and from the basic measurement update equations. Revision 3's covariance-based policies apply to the KF6/ESKF15 backend paths. SF6 uses its own physical/admission health contract in Section~\ref{sec:sf6}.
+
+\subsection{Receiver validity and satellite variance scale}
+Physical GNSS admission checks online/fix state, supported/valid fields, finite values, age and per-group capability. No fix is an ordinary rejection, not a fabricated valid zero. Low satellite count is quality degradation, not by itself proof of a bad position. When the count is valid,
+\begin{equation}
+c_{sv}=\begin{cases}
+1,&N_{sv}\ge6,\\
+\min(4,1+\tfrac12(6-N_{sv})^2),&N_{sv}<6.
+\end{cases}
+\end{equation}
+An unavailable count gives this multiplier's neutral value 1; it does not certify healthy receiver quality. This multiplier acts on variance, not on sigma or on the SF6 gain. Other supported-field checks retain their own validity policy.
+
+\subsection{Two interleaved consistency windows}
+Current firmware configuration uses two 10 s windows offset by 5 s, with completed-evidence TTL 6 s. Let $\mat p_{EN}(t)$ and $\mat v_{EN}(t)$ be receiver horizontal position and velocity. For a covered window $[t_0,t_1]$, the diagnostic closure is
+\begin{equation}
+\mat e=\mat p_{EN}(t_1)-\mat p_{EN}(t_0)
+-\int_{t_0}^{t_1}\mat v_{EN}(t)\,dt,\qquad E=\norm{\mat e}.
+\label{eq:closure}
+\end{equation}
+The code linearly interpolates endpoint positions and integrates linearly interpolated velocity exactly over each clipped sample segment. For fractions $a,b$ of an interval with velocities $\mat v_i,\mat v_{i+1}$, the contribution is
+\begin{equation}
+\Delta\mat d=\left[\mat v_i+\tfrac12(a+b)(\mat v_{i+1}-\mat v_i)\right]\Delta t_{clip}.
+\end{equation}
+Finite valid position endpoints and continuous velocity evidence are needed. Source/generation change, a sequence gap, unusable velocity or excess timestamp gap anchors new windows and invalidates the previous scale evidence. Duplicate/old evidence is not a new sample. There is no fabricated high-rate observation from a repeated low-rate receiver sample.
+
+For configured error threshold $E_0>0$ and maximum $c_w^{max}\in[1,4]$, a completed window yields
+\begin{equation}
+c_w=\min(c_w^{max},\max(1,E^2/E_0^2)).
+\end{equation}
+The current KF6 backend applies the completed-window scale to horizontal position variance. A stale/unavailable window returns neutral scale 1 and carries the unavailable evidence state; it does not prove closure consistency. This diagnostic is not position error against truth, RMSE against ground truth, a covariance proof or a navigation-accuracy certification.
+
+The historical standalone \texttt{NavigationIntegrity} suspect/reject state machine remains a different implementation/history contract. It must not be presented as revision 3's active window algorithm merely because both use a position--velocity closure.
+
+\source{S11}{satellite variance scale, clipped integration, completed window and TTL}
+\source{S12}{actual 10 s/5 s/6 s backend configuration and group scaling}
+
+\subsection{Fusion health is more than receipt}
+The health owner distinguishes receipt, physical validity, attempted update and \emph{effective} successful fusion. Each of five groups retains the actual receive/sample/evaluation identity and last successful fusion time. Rejects or failed numerical updates must not refresh success. SF6 zero-gain observations do not provide an effective update even if admitted.
+
+At the recorded source baseline, group supervision marks dead reckoning after 2 s without effective fusion and invalid after 10 s, measured from the prior success or initialization epoch. Required-group selection and IMU/model failures also participate. A fresh packet, ACK or successful file read is not equivalent to READY or a successful filter correction. Replay restores algorithm history while receive-side health evidence remains a single physical reception.
+
+These timeouts are implemented health policy, not drift bounds. Continued inertial propagation, a finite covariance or a successful NIS test does not establish safe flight. Diagnostics need their own recorded timestamps, reason/result codes and unavailable status.
+
+\source{S13}{group supervision, successful-fusion ownership and model/IMU faults}

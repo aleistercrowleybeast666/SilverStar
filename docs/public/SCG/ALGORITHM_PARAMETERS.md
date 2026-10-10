@@ -22,8 +22,7 @@ KF6 P0, process sigma, GNSS sigma floors, barometer sigma and NIS values come fr
 profile initialization calls in `estimator_task.c`. Their C calculation sites are in
 `navigation_kf.c`. P0 entries are actual covariance diagonal **floors**, with E/N/U order;
 the existing initial GNSS uncertainty rule may increase P0. They are not squared again.
-Process acceleration sigma is per axis; existing prediction squares sigma and retains its
-original dt gains. GNSS sigma remains `max(receiver_sigma * 1.25, configured_floor)` and
+Process acceleration sigma is per axis. KF6 process-model revision 2 preserves the original unsplit inertial interval `T` while replay may use a subinterval `h <= T`: `Q_i(h;T) = sigma_a,i^2 * T * [[h^3/3,h^2/2],[h^2/2,h]]`. Every split uses that same `T`; it does not restart the noise model with each `h`. Historical revision 1 keeps its own delta-velocity variance/dt gains. See [the implemented prediction model](../algorithms/NAVIGATION_IMPLEMENTATION.md#4-kf6六维位置速度-kalman-滤波). GNSS sigma remains `max(receiver_sigma * 1.25, configured_floor)` and
 R is its square. Horizontal E/N share a position floor; velocity U additionally uses the declared vertical sigma scale.
 Barometer R is the square of the configured sigma. JY901B recommendation (1.5 m)
 is advisory; there is no device sigma floor and no fabricated native variance.
@@ -47,6 +46,21 @@ Measurement timing is extended by the [fixed-lag replay contract](KF6_FIXED_LAG_
 | Parameter ID | Default actual | Unit | Representation |
 |---|---:|---|---|
 | `gravity_mps2` | 9.78 | m/s^2 | value |
+
+## SF6 revision 2: six fixed gains
+
+`silverstar.algorithm.estimator.sf6` declares the following actual, dimensionless gains:
+
+| Parameter ID | Default actual | Unit | Allowed range | Meaning |
+|---|---:|---|---|---|
+| `gain_ve` | 0.2 | 1 | 0..1 | East velocity correction |
+| `gain_vn` | 0.2 | 1 | 0..1 | North velocity correction |
+| `gain_vu` | 0.2 | 1 | 0..1 | Up velocity correction |
+| `gain_pe` | 0.2 | 1 | 0..1 | East position correction |
+| `gain_pn` | 0.2 | 1 | 0..1 | North position correction |
+| `gain_pu` | 0.2 | 1 | 0..1 | Up position correction, shared by admitted GNSS altitude/barometer |
+
+For an admitted observation, `x_j += gain_j * (z_j - x_j)`. These are fixed gains, not Kalman gain or variance multipliers. Revision 2 updates the current predicted state and has no `P/Q/R`, NIS, delayed history ring, rollback or fixed-lag repropagation. FLP can still run this algorithm offline from the Replay page; that UI operation does not turn revision 2 into historical revision 1's delayed replay model. The exact decoder/component revision selects historical behavior. See [SF6 implementation](../algorithms/NAVIGATION_IMPLEMENTATION.md#3-sf6-revision-2固定增益的六状态融合).
 
 ## KF6 Navigation Estimator
 

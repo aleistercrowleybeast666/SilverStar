@@ -83,7 +83,7 @@ $$x^-=Fx+B\Delta v_n,\qquad P^-=FPF^T+Q.$$
 
 $$P^+=(I-KH)P^-(I-KH)^T+KRK^T.$$
 
-`NIS=rᵀS⁻¹r` 用对应 1D/2D/3D 参数门限。高于 hard 拒绝；介于 soft/hard 把 R 放大 `min(max_scale,NIS/soft)` 后重算增益；物理非法和数值错误另有结果码。输入 R 是方差（标准差必须平方），拒绝不能算作成功修正。
+`NIS=rᵀS⁻¹r` 用对应 1D/2D/3D 参数门限。KF6 在 `NIS >= hard` 时拒绝；ESKF15 使用 `NIS > hard`，两者 hard 等号边界不同。KF6 超过 soft 且尚未达到 hard 时 把 R 放大 `min(max_scale,NIS/soft)` 后重算增益；物理非法和数值错误另有结果码。输入 R 是方差（标准差必须平方），拒绝不能算作成功修正。
 
 **过程模型版本必须保留。** 历史 revision 1 每轴用 `Var(Δv)=(σ_a h)²`、`G=[h/2,1]ᵀ`，`Q=G Var(Δv)Gᵀ`。当前 revision 2 为使同一真实惯性区间分段时的噪声累计一致，保存原区间长 `T`，令 `d=σ_a² T`：
 
@@ -130,7 +130,7 @@ FLP 使用正权 Simpson 节点 0、1/2、1 对同一二次被积式求和。固
 
 $$\hat z_p=p+Rl,\qquad \hat z_v=v+R[(\omega_m-b_g)\times l].$$
 
-相应 H 的姿态块分别是 `-R[l]×` 和 `-R[(ω_m-b_g)×l]×`，速度的陀螺偏置块是 `R[l]×`。按选定水平/垂直轴提取；气压使用项目定义的相对高度量测。量测应用与 KF 类似的创新、Cholesky/NIS、R软加权及 Joseph 协方差更新，但还要检查姿态/偏置修正是否超模型范围。
+相应 H 的姿态块分别是 `-R[l]×` 和 `-R[(ω_m-b_g)×l]×`，速度的陀螺偏置块是 `R[l]×`。按选定水平/垂直轴提取；气压使用项目定义的相对高度量测。ESKF 的创新协方差使用标量或 2×2 显式求逆来计算 NIS 与增益；Cholesky 用于独立的状态协方差 `P` 校验，并不是该创新求逆操作。随后按 NIS/R软加权与 Joseph 形式更新完整协方差，还要检查姿态/偏置修正是否超模型范围。
 
 得到 δx 后注入 `p+=δp,v+=δv,q←q⊗Exp(δθ),b_g+=δb_g,b_a+=δb_a`，误差均值归零。不能只更新 q 而不重置 P：
 
@@ -158,3 +158,7 @@ $$J_r(a)=I-\frac{1-\cos\alpha}{\alpha^2}[a]_\times
 Pure INS/KF6 当前没有 `exact_validation_reference`，SF6 当前路径也报告 **APPROXIMATE**；缺条件时为 UNAVAILABLE。ESKF15 默认 APPROXIMATE，但 Recorded Configuration 的完整 Body 输入、初始化和无运行失败条件满足后，还会调用 [RecordedParity_Verify](../../../apps/FLP/src/silverstar_flp/plugins/algorithms/eskf15/verification.py)。它核对记录中的时间、有效性、状态/P及更新诊断；连续值绝对容差 2e-4、相对容差 3e-4，接纳/结果码精确比较，CRC/序号/截尾问题阻断通过。周期完整 P 在精确 decoder 中显式关闭且没有分片时，交叉协方差标成 unavailable，不能声称已比较。通过后本项目接口可返回 EXACT/FAITHFUL；这是记录量的受限一致性，不是位级相同、完整内部路径或实机资格证明。
 
 Host 数学/短样例、当前 GUI 回归、历史 ARM 构建、真实板测分别记载。历史指定 F407/ESKF15 实测失败保留原配置/源码身份，本轮未新增该配置实机复验，H7 当前没有生成支持，F103/NRF 未实物验证。没有新的 MCU WCET、完整栈证明或飞行资格结论。
+
+## 可读公式与维护源
+
+完整实现数学文档见[15页PDF](../math/navigation-models.pdf)与[模块化TeX入口](../math/README.md)，包含坐标/符号、四套算法、校准/对准、质量窗口与源码索引。数学说明和PDF编译不构成新固件或硬件验收。

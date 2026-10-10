@@ -1,0 +1,37 @@
+\section{Pure INS: coning/sculling mechanization}
+\label{sec:ins}
+Pure INS maintains its own attitude, velocity and position from the admitted initial state. Its calibration-corrected Body input is independent of estimator feedback. It uses a local flat frame with constant configured gravity; Earth rotation, transport rate and Coriolis acceleration do not appear in the implemented propagation.
+
+For successive samples, the actual timestamp difference gives each duration $h_i$. A trapezoidal subinterval supplies
+\begin{align}
+\mat a_i&=\tfrac12(\mat\omega_{i-1}+\mat\omega_i)h_i,&
+\mat u_i&=\tfrac12(\mat f_{i-1}+\mat f_i)h_i.
+\label{eq:ins-input}
+\end{align}
+Two admitted subintervals give the implemented second-order corrections
+\begin{align}
+\Delta\mat\theta_b&=\mat a_1+\mat a_2+\tfrac23(\mat a_1\times\mat a_2),
+\label{eq:coning}\\
+\Delta\mat u_b&=\mat u_1+\mat u_2
++\tfrac12[(\mat a_1+\mat a_2)\times(\mat u_1+\mat u_2)]\nonumber\\
+&\quad+\tfrac23(\mat a_1\times\mat u_2+\mat u_1\times\mat a_2).
+\label{eq:sculling}
+\end{align}
+The half coefficient handles rotation of the specific-force increment; the two-thirds terms handle the pair's coning/sculling correction. These coefficients describe the algorithm being used, not a guarantee for arbitrary sensor timing or motion.
+
+With $h=h_1+h_2$, the \emph{starting} attitude rotates the corrected increment once:
+\begin{align}
+\Delta\mat v_n&=R(q_k)\Delta\mat u_b+\mat g_n h,
+\label{eq:nav-dv}\\
+\mat v_{k+1}&=\mat v_k+\Delta\mat v_n,\\
+\mat p_{k+1}&=\mat p_k+\tfrac12(\mat v_k+\mat v_{k+1})h,\\
+q_{k+1}&=\operatorname{normalize}(q_k\otimes\Exp(\Delta\mat\theta_b)).
+\label{eq:ins-propagation}
+\end{align}
+Diagnostic navigation acceleration is $\Delta\mat v_n/h$. Basic, rotation-corrected and sculling-corrected increments are separate recorded quantities; they are not three independent physical observations.
+
+Firmware also accepts the configured one-subinterval mode by setting the second pair to zero. The current FLP Corrected-IMU Pure INS/KF6 replay requires the two-subinterval, undecimated input contract; a valid recorded firmware output does not automatically supply that replay input. Formula validity and replay availability must be distinguished.
+
+Admission checks include finite accelerometer/gyro input, valid flags, strictly advancing timestamps, and the duration range defined by the configured mechanization sample-rate limits and tolerance. A gap resets sample-pair collection and records a health failure. A rejected interval must not be replaced with a guessed uniform duration. Candidate navigation state and quaternion must pass the implemented finite/normalization checks before publication.
+
+\source{S1}{subinterval increments, coning/sculling, navigation transform and candidate publication}

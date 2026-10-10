@@ -1,0 +1,34 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage[margin=24mm]{geometry}
+\usepackage{longtable,booktabs,array}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\emergencystretch}{2em}
+\newcommand{\mat}[1]{\boldsymbol{#1}}
+\newcommand{\crossmat}[1]{[#1]_{\times}}
+\newcommand{\Exp}{\operatorname{Exp}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\norm}[1]{\lVert #1\rVert}
+\newcommand{\source}[2]{\textit{Implementation: #1, #2.}}
+\title{SilverStar Navigation Models\\\large Pure INS, SF6, KF6 and ESKF15}
+\author{Implementation reference for SilverStar 0.1.2}
+\date{Source baseline:\\\small\texttt{234caa5f6d8e704739edb897078666274fca0673}}
+\begin{document}
+\maketitle
+\input{sections/scope}
+\tableofcontents
+\newpage
+\input{sections/symbols}
+\input{sections/mechanization}
+\input{sections/sf6}
+\input{sections/kf6}
+\input{sections/eskf15}
+\input{sections/preparation}
+\input{sections/diagnostics}
+\input{sections/evidence}
+\end{document}
