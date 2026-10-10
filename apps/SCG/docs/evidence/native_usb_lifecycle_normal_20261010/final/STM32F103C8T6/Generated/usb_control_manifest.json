@@ -1,0 +1,55 @@
+{
+  "profile": "classic-f103-single-v1",
+  "scope": "single classic FS CDC interface 0; experimental software repair",
+  "owner": "SilverStar Ground EP0 integration",
+  "reason": "fresh bounded GET; validate SET actual count; propagate callback/LL failure",
+  "native_bottom_layer_ownership": "unchanged imported HAL/PCD/CMSIS/startup/linker; one stack",
+  "vendor_patches": [
+    {
+      "original_path": "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c",
+      "original_sha256": "9bf6b6c49a7faab7bdc465dae5df52bcc878720bd354c8596b51e16d6e210ecb",
+      "derived_path": "HardwareGenerated/ReviewedNativeControl/Class/CDC/Src/usbd_cdc.c",
+      "derived_sha256": "093a9bbc83529320eb0df6ebd72c07695189215930c154d691da673694ae1053",
+      "patch_path": "HardwareGenerated/ReviewedNativeControl/Patches/usbd_cdc.c.patch",
+      "patch_sha256": "6663430f1df08d4a96e55929fefe3c9b24f5c457d4aa661284daa1536deecd47"
+    },
+    {
+      "original_path": "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c",
+      "original_sha256": "9696a4d61c9e05cd7989936792b15b88f9b7be567d2a927b4feeb0685f1a73a2",
+      "derived_path": "HardwareGenerated/ReviewedNativeControl/Core/Src/usbd_core.c",
+      "derived_sha256": "dc1b5d0ffdb4b9ca3777d5931b9da28312896189e902db31bf72a74972e00734",
+      "patch_path": "HardwareGenerated/ReviewedNativeControl/Patches/usbd_core.c.patch",
+      "patch_sha256": "fb2b2c026c4cbcd06b571d960284784f072573bc8792de786c17641226779118"
+    },
+    {
+      "original_path": "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c",
+      "original_sha256": "a89f4e80bb59bcd369fe412b12915ab4392bb110bb54f0b93dd521c43669dbc1",
+      "derived_path": "HardwareGenerated/ReviewedNativeControl/Core/Src/usbd_ioreq.c",
+      "derived_sha256": "1073d83e2665b8305ad3cea056b66b3f6d3274dc526b72a49472dd6373898f48",
+      "patch_path": "HardwareGenerated/ReviewedNativeControl/Patches/usbd_ioreq.c.patch",
+      "patch_sha256": "532a6b2180a4bda8eae31c17f28d3604147934ee473a5b317a204162bf286684"
+    }
+  ],
+  "callback_original_path": "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.c",
+  "reviewed_native_inventory_sha256": {
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c": "9bf6b6c49a7faab7bdc465dae5df52bcc878720bd354c8596b51e16d6e210ecb",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c": "9696a4d61c9e05cd7989936792b15b88f9b7be567d2a927b4feeb0685f1a73a2",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c": "a89f4e80bb59bcd369fe412b12915ab4392bb110bb54f0b93dd521c43669dbc1",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h": "1fb60258c3705a07f04c32d5b6229a8b8125f90fd72ee06959c098d94485dd05",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h": "5df2712273bfd522fd5164385acc22d6c2fb899b4dc6ed09823a3698e0963c5e",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h": "b3c4df07bf76dd3371def96c9de53bb2db991f6cecc4601da890641f24376175",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h": "2bc428e2226229a206723d0441d37003a390ceea9acb7825b02dacf3afc05a1e"
+  },
+  "callback_original_sha256": "ae28e72d8a1f51db0c80c9ac3f6775c01023af39fd9f5b30ab239b0dfe6b663a",
+  "callback_derived_path": "HardwareGenerated/ReviewedNativeControl/App/usbd_cdc_if.c",
+  "callback_derived_sha256": "82a9d313efe24e01502991298833c578c4be4cb22f3410c00b74b0b799ec2349",
+  "callback_patch_path": "HardwareGenerated/ReviewedNativeControl/Patches/usbd_cdc_if.c.patch",
+  "callback_patch_sha256": "f256d64b5b48edd82231180b51291793aa7a0773133362d717f96355ab95dd9a",
+  "owned_files_sha256": {
+    "Generated/Inc/pc_usb_control.h": "c66fba9b7241727fb396faa99d0b21245ac373045dac6fc7929683edd13d952e",
+    "Generated/Src/pc_usb_control.c": "104efcc3f50bd4d6c17d1737cea2512e2480481b7b378e77b5450e792c3fd97f"
+  },
+  "independent_review": "NO_PASSED_OUTCOME",
+  "formal_release": false,
+  "bulk_composition": "Existing native bulk init/deinit/LL failure and session ownership retained"
+}

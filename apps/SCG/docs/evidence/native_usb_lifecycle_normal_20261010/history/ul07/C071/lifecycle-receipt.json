@@ -1,0 +1,93 @@
+{
+  "part": "C071",
+  "model_sha256": "4075ac29bb1b2e23ad82a5e0e1d9c70e75ea8feab4a5f2bc0c6f4bf74597a73d",
+  "compiled_generated_sources_sha256": {
+    "HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_core.c": "e1091db93fd530c8dd05c58b7ec5544ad12a832b0f5847d41ff5647890b78f77",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c": "5f1c211ed991e074589c82bc52571357a268f36776111d99a85539df53fd80f0",
+    "HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_ioreq.c": "2613da8858008ccbcf47669845ac6a7d1dd7c5075b19f946fa16399d86d508a2",
+    "HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c": "aef992bfe1774b750790e8e5dc0dc1b8aae97f9a05084f03f9530bd81db53dde",
+    "Platform/STM32C0/Src/usbd_cdc_if.c": "a447cf7b8ce345d4a290a570d4167010ba5ada52a566345567c915c6ff97dcda",
+    "HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_desc.c": "cb4a5f84594d7ff44fd2b772a83a8e9bff07a110be846f372b2df3cc7a000c05",
+    "Generated/Src/pc_byte_stream.c": "8ac01f46c2c1da755fa2c79ad610a47173365d6627719c0eee275ba26f35c452",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h": "1588736a66291a09de7aa69a5945574566413fefb84c0a7896dc088d174086a9",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h": "a6c2dfc99fabefe4db7c4c145b4ab87d6b992e3fbd15cc65ecc1c7f9d2086f78",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h": "f8897c9b47f97b6ca78c72b857d20fb2a2b0d85091a2362799165cdfa863e3cc",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h": "8a2d44f0cc1c34c21eb75e01cec568b45b901678fba9ca2dc3b0c9a9f0364e7c",
+    "HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h": "3ea35b19e264217c3bd1d433c75f4e093930ea83cdf63aa88aee77748a9fc7dc",
+    "HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_cdc_if.h": "1833c814cff004bb16dd5ff2698bf0209eb72493b62759685772d9b665ff9e5c",
+    "HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_desc.h": "1c6b04d788a92da35def548a68ad74ee5a6bc9a95bd286b431f4ce361895a2ab",
+    "Ground/Core/Inc/pc_byte_stream.h": "daa3b71a6d126630d9f350c571dd1101cc4db163afe43b29ba54b6327598a3b9",
+    "Ground/Protocol/Inc/gsp_min_protocol.h": "9f4ac85c63a0e69c474bddceef1fb39ebb28846c074d5a3e926aa799cfbd79c1",
+    "Platform/STM32C0/Inc/pc_c071_usb.h": "d39e62601176bf1b17ef67498a11b7ff4a45b80159c33abfc3a0e7f65766be94",
+    "Platform/STM32C0/Inc/pc_c071_control.h": "a638dc76210164816014e9fdfd390dd1f5f3097f76ecb0839b60a0a9db08d659",
+    "Platform/Inc/platform_types.h": "9eccf8476d8ebb58f251f9049de631651c6ae4e19a415d63579e703a6cfd8785"
+  },
+  "command": [
+    "D:/msys64/ucrt64/bin\\gcc.EXE",
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror=implicit-function-declaration",
+    "-Werror=incompatible-pointer-types",
+    "-DUSBD_CLASS_BOS_ENABLED=0",
+    "-DUSBD_MAX_SUPPORTED_CLASS=1",
+    "-IC:\\Users\\chdxm\\AppData\\Local\\Temp\\ul07\\test_normal_stack_lifecycle_an_d600d73d",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ul07\\test_normal_stack_lifecycle_an_d600d73d\\usbd_core.c",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ul07\\test_normal_stack_lifecycle_an_d600d73d\\usbd_ctlreq.c",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ul07\\test_normal_stack_lifecycle_an_d600d73d\\usbd_ioreq.c",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ul07\\test_normal_stack_lifecycle_an_d600d73d\\usbd_cdc.c",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ul07\\test_normal_stack_lifecycle_an_d600d73d\\usbd_cdc_if.c",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ul07\\test_normal_stack_lifecycle_an_d600d73d\\usbd_desc.c",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ul07\\test_normal_stack_lifecycle_an_d600d73d\\pc_byte_stream.c",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ul07\\test_normal_stack_lifecycle_an_d600d73d\\normal.c",
+    "-o",
+    "C:\\Users\\chdxm\\AppData\\Local\\Temp\\ul07\\test_normal_stack_lifecycle_an_d600d73d\\normal.exe"
+  ],
+  "compile_exit": 0,
+  "runs": [
+    {
+      "scenario": "complete-zlp",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "scenario": "unconfigure",
+      "exit": 0,
+      "stdout": "normal lifecycle unconfigure passed\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "reset",
+      "exit": 0,
+      "stdout": "normal lifecycle reset passed\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "disconnect",
+      "exit": 0,
+      "stdout": "normal lifecycle disconnect passed\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "stop",
+      "exit": 0,
+      "stdout": "normal lifecycle stop passed\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "deinit",
+      "exit": 0,
+      "stdout": "normal lifecycle deinit passed\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "close-retry",
+      "exit": 3221226505,
+      "stdout": "",
+      "stderr": "Assertion failed: rx_ptr[1]==NULL && tx_ptr[1]==NULL, file C:\\Users\\chdxm\\AppData\\Local\\Temp\\ul07\\test_normal_stack_lifecycle_an_d600d73d\\normal.c, line 20\n"
+    }
+  ],
+  "controller": "Host LL mock; native HAL/PMA/IRQ hardware is not executed"
+}

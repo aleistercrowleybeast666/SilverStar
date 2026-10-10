@@ -1,0 +1,1215 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+____________ test_normal_stack_lifecycle_and_buffer_sessions[F103] ____________
+
+first_batch = ('F103', NativeGroundCandidatePlan(model_sha256='77fb3834f95aea1209efc09eeaa5009f4a199bfa0d609c35fa46771fd4ea2c4b', sn... graph, stack/WCET/hardware unavailable', 'publication': 'PRIVATE CANDIDATE ONLY; normal generation remains blocked'}))
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ul01/test_normal_stack_lifecycle_an_4a3a9b2b')
+
+    def test_normal_stack_lifecycle_and_buffer_sessions(first_batch,tmp_path):
+        part,plan=first_batch
+        files=plan.files;graph=json.loads(files['Generated/ground_source_graph.json'])
+        names=('usbd_core.c','usbd_ctlreq.c','usbd_ioreq.c','usbd_cdc.c','usbd_cdc_if.c','usbd_desc.c','pc_byte_stream.c')
+        selected={name:next(p for p in graph['sources'] if p.endswith('/'+name)) for name in names}
+        if part=='F103':selected['pc_usb_control.c']='Generated/Src/pc_usb_control.c'
+        used={}
+        for name,path in selected.items():
+            (tmp_path/name).write_bytes(files[path]);used[path]=hashlib.sha256(files[path]).hexdigest()
+        headers=('usbd_def.h','usbd_core.h','usbd_ctlreq.h','usbd_ioreq.h','usbd_cdc.h','usbd_cdc_if.h','usbd_desc.h','pc_byte_stream.h','gsp_min_protocol.h','pc_c071_usb.h','pc_c071_control.h','pc_usb_control.h','native_runtime.h','native_clock.h')
+        for name in headers:
+            matches=[prefix+'/'+name for prefix in graph['include_dirs'] if prefix+'/'+name in files]
+            if matches:
+                path=matches[0];(tmp_path/name).write_bytes(files[path]);used[path]=hashlib.sha256(files[path]).hexdigest()
+        conf=next(files[p+'/usbd_conf.h'] for p in graph['include_dirs'] if p+'/usbd_conf.h' in files).decode('utf8')
+        conf=re.sub(r'#include "(?:main|stm32\w+)\.h"','#include "host_shim.h"',conf)
+        (tmp_path/'usbd_conf.h').write_text(conf,encoding='utf8')
+        (tmp_path/'host_shim.h').write_text(SHIM,encoding='utf8')
+        (tmp_path/'main.h').write_text('#include "host_shim.h"\n',encoding='utf8')
+        (tmp_path/'usb_device.h').write_text('#include "usbd_core.h"\nextern USBD_HandleTypeDef hUsbDeviceFS;\n',encoding='utf8')
+        (tmp_path/'silverstar_assert.h').write_text('#include <assert.h>\n#define SILVERSTAR_ASSERT(c,m,r) assert(c)\n',encoding='utf8')
+        (tmp_path/'normal.c').write_text(HARNESS,encoding='utf8')
+        compiler=shutil.which('gcc');assert compiler
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror=implicit-function-declaration','-Werror=incompatible-pointer-types','-DUSBD_CLASS_BOS_ENABLED=0','-DUSBD_MAX_SUPPORTED_CLASS=1','-I'+str(tmp_path),*[str(tmp_path/n) for n in selected],str(tmp_path/'normal.c'),'-o',str(tmp_path/'normal.exe')]
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+        (tmp_path/'compile.log').write_text(result.stdout+result.stderr,encoding='utf8')
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_ctlreq.c: In function 'USBD_CtlError':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_ctlreq.c:853:42: warning: unused parameter 'req' [-Wunused-parameter]
+E           853 |                    USBD_SetupReqTypedef *req)
+E               |                    ~~~~~~~~~~~~~~~~~~~~~~^~~
+E         In file included from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc.c:59:
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc.h:121:3: error: unknown type name '__IO'
+E           121 |   __IO uint32_t TxState;
+E               |   ^~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc.h:121:17: error: expected ':', ',', ';', '}' or '__attribute__' before 'TxState'
+E           121 |   __IO uint32_t TxState;
+E               |                 ^~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc.c: In function 'USBD_CDC_DeInit':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc.c:559:9: error: 'USBD_CDC_HandleTypeDef' has no member named 'TxState'
+E           559 |     hcdc->TxState = 1U; /* Retain buffer ownership until closure is confirmed. */
+E               |         ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc.c: In function 'USBD_CDC_DataIn':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc.c:668:14: error: 'USBD_CDC_HandleTypeDef' has no member named 'TxState'
+E           668 |   else { hcdc->TxState = 0U; }
+E               |              ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc.c: In function 'USBD_CDC_SetTxBuffer':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc.c:795:11: error: 'USBD_CDC_HandleTypeDef' has no member named 'TxState'
+E           795 |   if (hcdc->TxState != 0U) { return USBD_BUSY; }
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc.c: In function 'USBD_CDC_TransmitPacket':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc.c:830:11: error: 'USBD_CDC_HandleTypeDef' has no member named 'TxState'
+E           830 |   if (hcdc->TxState != 0U) { return USBD_BUSY; }
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc.c:833:7: error: 'USBD_CDC_HandleTypeDef' has no member named 'TxState'
+E           833 |   hcdc->TxState = 1U;
+E               |       ^~
+E         In file included from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc_if.h:31,
+E                          from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc_if.c:22:
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc.h:121:3: error: unknown type name '__IO'
+E           121 |   __IO uint32_t TxState;
+E               |   ^~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc.h:121:17: error: expected ':', ',', ';', '}' or '__attribute__' before 'TxState'
+E           121 |   __IO uint32_t TxState;
+E               |                 ^~~~~~~
+E         In file included from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\pc_byte_stream.c:3:
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\native_clock.h:4:10: fatal error: platform_types.h: No such file or directory
+E             4 | #include "platform_types.h"
+E               |          ^~~~~~~~~~~~~~~~~~
+E         compilation terminated.
+E         In file included from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\pc_usb_control.c:3:
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc.h:121:3: error: unknown type name '__IO'
+E           121 |   __IO uint32_t TxState;
+E               |   ^~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc.h:121:17: error: expected ':', ',', ';', '}' or '__attribute__' before 'TxState'
+E           121 |   __IO uint32_t TxState;
+E               |                 ^~~~~~~
+E         In file included from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\normal.c:2:
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc.h:121:3: error: unknown type name '__IO'
+E           121 |   __IO uint32_t TxState;
+E               |   ^~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_cdc.h:121:17: error: expected ':', ',', ';', '}' or '__attribute__' before 'TxState'
+E           121 |   __IO uint32_t TxState;
+E               |                 ^~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\normal.c:41:20: error: conflicting types for 'USBD_LL_Transmit'; have 'USBD_StatusTypeDef(USBD_HandleTypeDef *, uint8_t,  uint8_t *, uint32_t)' {aka 'USBD_StatusTypeDef(struct _USBD_HandleTypeDef *, unsigned char,  unsigned char *, unsigned int)'}
+E            41 | USBD_StatusTypeDef USBD_LL_Transmit(USBD_HandleTypeDef *d,uint8_t ep,uint8_t *p,uint32_t n)
+E               |                    ^~~~~~~~~~~~~~~~
+E         In file included from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\normal.c:1:
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_core.h:127:21: note: previous declaration of 'USBD_LL_Transmit' with type 'USBD_StatusTypeDef(USBD_HandleTypeDef *, uint8_t,  uint8_t *, uint16_t)' {aka 'USBD_StatusTypeDef(struct _USBD_HandleTypeDef *, unsigned char,  unsigned char *, short unsigned int)'}
+E           127 | USBD_StatusTypeDef  USBD_LL_Transmit(USBD_HandleTypeDef *pdev,
+E               |                     ^~~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\normal.c:43:20: error: conflicting types for 'USBD_LL_PrepareReceive'; have 'USBD_StatusTypeDef(USBD_HandleTypeDef *, uint8_t,  uint8_t *, uint32_t)' {aka 'USBD_StatusTypeDef(struct _USBD_HandleTypeDef *, unsigned char,  unsigned char *, unsigned int)'}
+E            43 | USBD_StatusTypeDef USBD_LL_PrepareReceive(USBD_HandleTypeDef *d,uint8_t ep,uint8_t *p,uint32_t n)
+E               |                    ^~~~~~~~~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_4a3a9b2b\usbd_core.h:132:21: note: previous declaration of 'USBD_LL_PrepareReceive' with type 'USBD_StatusTypeDef(USBD_HandleTypeDef *, uint8_t,  uint8_t *, uint16_t)' {aka 'USBD_StatusTypeDef(struct _USBD_HandleTypeDef *, unsigned char,  unsigned char *, short unsigned int)'}
+E           132 | USBD_StatusTypeDef  USBD_LL_PrepareReceive(USBD_HandleTypeDef *pdev,
+E               |                     ^~~~~~~~~~~~~~~~~~~~~~
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:/msys64/ucrt64/bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror=implicit-funct...StatusTypeDef  USBD_LL_PrepareReceive(USBD_HandleTypeDef *pdev,\n      |                     ^~~~~~~~~~~~~~~~~~~~~~\n').returncode
+
+apps\SCG\tests\test_usb_lifecycle_normal.py:211: AssertionError
+____________ test_normal_stack_lifecycle_and_buffer_sessions[C071] ____________
+
+first_batch = ('C071', NativeGroundCandidatePlan(model_sha256='4075ac29bb1b2e23ad82a5e0e1d9c70e75ea8feab4a5f2bc0c6f4bf74597a73d', sn...rmal_release': False, 'limits': 'EP0/async lifecycle, manual critical contracts, stack/WCET and hardware NOT PROVEN'}))
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ul01/test_normal_stack_lifecycle_an_ccb3a6a9')
+
+    def test_normal_stack_lifecycle_and_buffer_sessions(first_batch,tmp_path):
+        part,plan=first_batch
+        files=plan.files;graph=json.loads(files['Generated/ground_source_graph.json'])
+        names=('usbd_core.c','usbd_ctlreq.c','usbd_ioreq.c','usbd_cdc.c','usbd_cdc_if.c','usbd_desc.c','pc_byte_stream.c')
+        selected={name:next(p for p in graph['sources'] if p.endswith('/'+name)) for name in names}
+        if part=='F103':selected['pc_usb_control.c']='Generated/Src/pc_usb_control.c'
+        used={}
+        for name,path in selected.items():
+            (tmp_path/name).write_bytes(files[path]);used[path]=hashlib.sha256(files[path]).hexdigest()
+        headers=('usbd_def.h','usbd_core.h','usbd_ctlreq.h','usbd_ioreq.h','usbd_cdc.h','usbd_cdc_if.h','usbd_desc.h','pc_byte_stream.h','gsp_min_protocol.h','pc_c071_usb.h','pc_c071_control.h','pc_usb_control.h','native_runtime.h','native_clock.h')
+        for name in headers:
+            matches=[prefix+'/'+name for prefix in graph['include_dirs'] if prefix+'/'+name in files]
+            if matches:
+                path=matches[0];(tmp_path/name).write_bytes(files[path]);used[path]=hashlib.sha256(files[path]).hexdigest()
+        conf=next(files[p+'/usbd_conf.h'] for p in graph['include_dirs'] if p+'/usbd_conf.h' in files).decode('utf8')
+        conf=re.sub(r'#include "(?:main|stm32\w+)\.h"','#include "host_shim.h"',conf)
+        (tmp_path/'usbd_conf.h').write_text(conf,encoding='utf8')
+        (tmp_path/'host_shim.h').write_text(SHIM,encoding='utf8')
+        (tmp_path/'main.h').write_text('#include "host_shim.h"\n',encoding='utf8')
+        (tmp_path/'usb_device.h').write_text('#include "usbd_core.h"\nextern USBD_HandleTypeDef hUsbDeviceFS;\n',encoding='utf8')
+        (tmp_path/'silverstar_assert.h').write_text('#include <assert.h>\n#define SILVERSTAR_ASSERT(c,m,r) assert(c)\n',encoding='utf8')
+        (tmp_path/'normal.c').write_text(HARNESS,encoding='utf8')
+        compiler=shutil.which('gcc');assert compiler
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror=implicit-function-declaration','-Werror=incompatible-pointer-types','-DUSBD_CLASS_BOS_ENABLED=0','-DUSBD_MAX_SUPPORTED_CLASS=1','-I'+str(tmp_path),*[str(tmp_path/n) for n in selected],str(tmp_path/'normal.c'),'-o',str(tmp_path/'normal.exe')]
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+        (tmp_path/'compile.log').write_text(result.stdout+result.stderr,encoding='utf8')
+>       assert result.returncode==0,result.stdout+result.stderr
+E       AssertionError: In file included from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.h:29,
+E                          from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:20:
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:216:12: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'USBD_ConfigDescTypeDef'
+E           216 | } __PACKED USBD_ConfigDescTypeDef;
+E               |            ^~~~~~~~~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:234:12: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'USBD_EpDescTypeDef'
+E           234 | } __PACKED USBD_EpDescTypeDef;
+E               |            ^~~~~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:370:3: error: unknown type name '__IO'
+E           370 |   __IO uint32_t           ep0_state;
+E               |   ^~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:370:27: error: expected ':', ',', ';', '}' or '__attribute__' before 'ep0_state'
+E           370 |   __IO uint32_t           ep0_state;
+E               |                           ^~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:425:1: error: unknown type name '__STATIC_INLINE'
+E           425 | __STATIC_INLINE uint16_t SWAPBYTE(uint8_t *addr)
+E               | ^~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:425:26: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'SWAPBYTE'
+E           425 | __STATIC_INLINE uint16_t SWAPBYTE(uint8_t *addr)
+E               |                          ^~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c: In function 'USBD_Init':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:121:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           121 |   pdev->pClass[0] = NULL;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:122:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pUserData'
+E           122 |   pdev->pUserData[0] = NULL;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:125:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pConfDesc'
+E           125 |   pdev->pConfDesc = NULL;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:130:9: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pDesc'
+E           130 |     pdev->pDesc = pdesc;
+E               |         ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:134:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           134 |   pdev->dev_state = USBD_STATE_DEFAULT;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c: In function 'USBD_DeInit':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:157:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           157 |   pdev->dev_state = USBD_STATE_DEFAULT;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:176:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           176 |   if (pdev->pClass[0] != NULL)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:178:9: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           178 |     pdev->pClass[0]->DeInit(pdev, (uint8_t)pdev->dev_config);
+E               |         ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:181:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pUserData'
+E           181 |   pdev->pUserData[0] = NULL;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:186:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pDesc'
+E           186 |   pdev->pDesc = NULL;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:187:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pConfDesc'
+E           187 |   pdev->pConfDesc = NULL;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c: In function 'USBD_RegisterClass':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:215:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           215 |   pdev->pClass[0] = pclass;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:224:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           224 |   if (pdev->pClass[pdev->classId]->GetFSConfigDescriptor != NULL)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:224:24: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           224 |   if (pdev->pClass[pdev->classId]->GetFSConfigDescriptor != NULL)
+E               |                        ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:226:9: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pConfDesc'
+E           226 |     pdev->pConfDesc = (void *)pdev->pClass[pdev->classId]->GetFSConfigDescriptor(&len);
+E               |         ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:226:35: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           226 |     pdev->pConfDesc = (void *)pdev->pClass[pdev->classId]->GetFSConfigDescriptor(&len);
+E               |                                   ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:226:48: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           226 |     pdev->pConfDesc = (void *)pdev->pClass[pdev->classId]->GetFSConfigDescriptor(&len);
+E               |                                                ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:231:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'NumClasses'
+E           231 |   pdev->NumClasses++;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c: In function 'USBD_Stop':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:425:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           425 |   if (pdev->pClass[0] != NULL)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:427:15: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           427 |     (void)pdev->pClass[0]->DeInit(pdev, (uint8_t)pdev->dev_config);
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c: In function 'USBD_SetClassConfig':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:488:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           488 |   if (pdev->pClass[0] != NULL)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:491:35: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           491 |     ret = (USBD_StatusTypeDef)pdev->pClass[0]->Init(pdev, cfgidx);
+E               |                                   ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c: In function 'USBD_ClrClassConfig':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:529:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           529 |   if (pdev->pClass[0]->DeInit(pdev, cfgidx) != 0U)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c: In function 'USBD_LL_SetupStage':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:550:31: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'request'
+E           550 |   USBD_ParseSetupRequest(&pdev->request, psetup);
+E               |                               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:552:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'ep0_state'
+E           552 |   pdev->ep0_state = USBD_EP0_SETUP;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:554:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'ep0_data_len'
+E           554 |   pdev->ep0_data_len = pdev->request.wLength;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:554:28: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'request'
+E           554 |   pdev->ep0_data_len = pdev->request.wLength;
+E               |                            ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:556:15: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'request'
+E           556 |   switch (pdev->request.bmRequest & 0x1FU)
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:559:39: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'request'
+E           559 |       ret = USBD_StdDevReq(pdev, &pdev->request);
+E               |                                       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:563:39: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'request'
+E           563 |       ret = USBD_StdItfReq(pdev, &pdev->request);
+E               |                                       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:567:38: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'request'
+E           567 |       ret = USBD_StdEPReq(pdev, &pdev->request);
+E               |                                      ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:571:40: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'request'
+E           571 |       ret = USBD_LL_StallEP(pdev, (pdev->request.bmRequest & 0x80U));
+E               |                                        ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:575:50: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'request'
+E           575 |   if (ret != USBD_OK) { USBD_CtlError(pdev, &pdev->request); }
+E               |                                                  ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c: In function 'USBD_LL_DataOutStage':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:600:13: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'ep0_state'
+E           600 |     if (pdev->ep0_state == USBD_EP0_DATA_OUT)
+E               |             ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:612:21: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'request'
+E           612 |         switch (pdev->request.bmRequest & 0x1FU)
+E               |                     ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:621:52: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'request'
+E           621 |             idx = USBD_CoreFindIF(pdev, LOBYTE(pdev->request.wIndex));
+E               |                                                    ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:442:32: note: in definition of macro 'LOBYTE'
+E           442 | #define LOBYTE(x)  ((uint8_t)((x) & 0x00FFU))
+E               |                                ^
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:625:52: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'request'
+E           625 |             idx = USBD_CoreFindEP(pdev, LOBYTE(pdev->request.wIndex));
+E               |                                                    ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:442:32: note: in definition of macro 'LOBYTE'
+E           442 | #define LOBYTE(x)  ((uint8_t)((x) & 0x00FFU))
+E               |                                ^
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:635:54: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           635 |         if ((idx < USBD_MAX_SUPPORTED_CLASS) && (pdev->dev_state == USBD_STATE_CONFIGURED) &&
+E               |                                                      ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:636:18: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           636 |             (pdev->pClass[idx] != NULL) && (pdev->pClass[idx]->EP0_RxReady != NULL))
+E               |                  ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:636:49: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           636 |             (pdev->pClass[idx] != NULL) && (pdev->pClass[idx]->EP0_RxReady != NULL))
+E               |                                                 ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:638:15: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           638 |           pdev->classId = idx;
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:639:41: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           639 |           ret = (USBD_StatusTypeDef)pdev->pClass[idx]->EP0_RxReady(pdev);
+E               |                                         ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:643:36: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'request'
+E           643 |           USBD_CtlError(pdev, &pdev->request);
+E               |                                    ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:658:15: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           658 |       if (pdev->dev_state == USBD_STATE_CONFIGURED)
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:660:17: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           660 |         if (pdev->pClass[idx]->DataOut != NULL)
+E               |                 ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:662:15: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           662 |           pdev->classId = idx;
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:663:41: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           663 |           ret = (USBD_StatusTypeDef)pdev->pClass[idx]->DataOut(pdev, epnum);
+E               |                                         ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c: In function 'USBD_LL_DataInStage':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:697:13: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'ep0_state'
+E           697 |     if (pdev->ep0_state == USBD_EP0_DATA_IN)
+E               |             ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:714:38: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'ep0_data_len'
+E           714 |             (pep->total_length < pdev->ep0_data_len))
+E               |                                      ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:717:15: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'ep0_data_len'
+E           717 |           pdev->ep0_data_len = 0U;
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:724:19: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           724 |           if (pdev->dev_state == USBD_STATE_CONFIGURED)
+E               |                   ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:726:21: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           726 |             if (pdev->pClass[0]->EP0_TxSent != NULL)
+E               |                     ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:728:19: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           728 |               pdev->classId = 0U;
+E               |                   ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:729:19: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           729 |               pdev->pClass[0]->EP0_TxSent(pdev);
+E               |                   ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:738:13: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_test_mode'
+E           738 |     if (pdev->dev_test_mode != 0U)
+E               |             ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:741:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_test_mode'
+E           741 |       pdev->dev_test_mode = 0U;
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:752:15: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           752 |       if (pdev->dev_state == USBD_STATE_CONFIGURED)
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:754:17: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           754 |         if (pdev->pClass[idx]->DataIn != NULL)
+E               |                 ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:756:15: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           756 |           pdev->classId = idx;
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:757:41: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           757 |           ret = (USBD_StatusTypeDef)pdev->pClass[idx]->DataIn(pdev, epnum);
+E               |                                         ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c: In function 'USBD_LL_Reset':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:782:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           782 |   pdev->dev_state = USBD_STATE_DEFAULT;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:783:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'ep0_state'
+E           783 |   pdev->ep0_state = USBD_EP0_IDLE;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:785:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_remote_wakeup'
+E           785 |   pdev->dev_remote_wakeup = 0U;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:786:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_test_mode'
+E           786 |   pdev->dev_test_mode = 0U;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:812:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           812 |   if (pdev->pClass[0] != NULL)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:814:13: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           814 |     if (pdev->pClass[0]->DeInit != NULL)
+E               |             ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:816:15: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           816 |       if (pdev->pClass[0]->DeInit(pdev, (uint8_t)pdev->dev_config) != USBD_OK)
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c: In function 'USBD_LL_Suspend':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:861:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           861 |   if (pdev->dev_state != USBD_STATE_SUSPENDED)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:863:9: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_old_state'
+E           863 |     pdev->dev_old_state = pdev->dev_state;
+E               |         ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:863:31: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           863 |     pdev->dev_old_state = pdev->dev_state;
+E               |                               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:866:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           866 |   pdev->dev_state = USBD_STATE_SUSPENDED;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c: In function 'USBD_LL_Resume':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:879:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           879 |   if (pdev->dev_state == USBD_STATE_SUSPENDED)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:881:9: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           881 |     pdev->dev_state = pdev->dev_old_state;
+E               |         ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:881:27: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_old_state'
+E           881 |     pdev->dev_state = pdev->dev_old_state;
+E               |                           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c: In function 'USBD_LL_SOF':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:896:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           896 |   if (pdev->dev_state == USBD_STATE_CONFIGURED)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:916:13: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           916 |     if (pdev->pClass[0] != NULL)
+E               |             ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:918:15: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           918 |       if (pdev->pClass[0]->SOF != NULL)
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:920:19: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           920 |         (void)pdev->pClass[0]->SOF(pdev);
+E               |                   ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c: In function 'USBD_LL_IsoINIncomplete':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:939:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           939 |   if (pdev->pClass[pdev->classId] == NULL)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:939:24: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           939 |   if (pdev->pClass[pdev->classId] == NULL)
+E               |                        ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:944:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           944 |   if (pdev->dev_state == USBD_STATE_CONFIGURED)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:946:13: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           946 |     if (pdev->pClass[pdev->classId]->IsoINIncomplete != NULL)
+E               |             ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:946:26: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           946 |     if (pdev->pClass[pdev->classId]->IsoINIncomplete != NULL)
+E               |                          ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:948:17: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           948 |       (void)pdev->pClass[pdev->classId]->IsoINIncomplete(pdev, epnum);
+E               |                 ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:948:30: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           948 |       (void)pdev->pClass[pdev->classId]->IsoINIncomplete(pdev, epnum);
+E               |                              ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c: In function 'USBD_LL_IsoOUTIncomplete':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:965:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           965 |   if (pdev->pClass[pdev->classId] == NULL)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:965:24: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           965 |   if (pdev->pClass[pdev->classId] == NULL)
+E               |                        ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:970:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           970 |   if (pdev->dev_state == USBD_STATE_CONFIGURED)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:972:13: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           972 |     if (pdev->pClass[pdev->classId]->IsoOUTIncomplete != NULL)
+E               |             ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:972:26: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           972 |     if (pdev->pClass[pdev->classId]->IsoOUTIncomplete != NULL)
+E               |                          ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:974:17: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           974 |       (void)pdev->pClass[pdev->classId]->IsoOUTIncomplete(pdev, epnum);
+E               |                 ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:974:30: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           974 |       (void)pdev->pClass[pdev->classId]->IsoOUTIncomplete(pdev, epnum);
+E               |                              ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c: In function 'USBD_LL_DevDisconnected':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:1006:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E          1006 |   pdev->dev_state = USBD_STATE_DEFAULT;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:1027:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E          1027 |   if (pdev->pClass[0] != NULL)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:1029:13: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E          1029 |     if (pdev->pClass[0]->DeInit(pdev, (uint8_t)pdev->dev_config) != 0U)
+E               |             ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c: In function 'USBD_GetEpDesc':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:1160:3: error: unknown type name 'USBD_ConfigDescTypeDef'; did you mean 'USBD_BosDescTypeDef'?
+E          1160 |   USBD_ConfigDescTypeDef *desc = (USBD_ConfigDescTypeDef *)(void *)pConfDesc;
+E               |   ^~~~~~~~~~~~~~~~~~~~~~
+E               |   USBD_BosDescTypeDef
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:1160:35: error: 'USBD_ConfigDescTypeDef' undeclared (first use in this function); did you mean 'USBD_BosDescTypeDef'?
+E          1160 |   USBD_ConfigDescTypeDef *desc = (USBD_ConfigDescTypeDef *)(void *)pConfDesc;
+E               |                                   ^~~~~~~~~~~~~~~~~~~~~~
+E               |                                   USBD_BosDescTypeDef
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:1160:35: note: each undeclared identifier is reported only once for each function it appears in
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:1160:59: error: expected expression before ')' token
+E          1160 |   USBD_ConfigDescTypeDef *desc = (USBD_ConfigDescTypeDef *)(void *)pConfDesc;
+E               |                                                           ^
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:1160:68: error: expected ',' or ';' before 'pConfDesc'
+E          1160 |   USBD_ConfigDescTypeDef *desc = (USBD_ConfigDescTypeDef *)(void *)pConfDesc;
+E               |                                                                    ^~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:1161:3: error: unknown type name 'USBD_EpDescTypeDef'; did you mean 'USBD_BosDescTypeDef'?
+E          1161 |   USBD_EpDescTypeDef *pEpDesc = NULL;
+E               |   ^~~~~~~~~~~~~~~~~~
+E               |   USBD_BosDescTypeDef
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:1164:11: error: request for member 'wTotalLength' in something not a structure or union
+E          1164 |   if (desc->wTotalLength > desc->bLength)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:1164:32: error: request for member 'bLength' in something not a structure or union
+E          1164 |   if (desc->wTotalLength > desc->bLength)
+E               |                                ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:1166:15: error: request for member 'bLength' in something not a structure or union
+E          1166 |     ptr = desc->bLength;
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:1168:22: error: request for member 'wTotalLength' in something not a structure or union
+E          1168 |     while (ptr < desc->wTotalLength)
+E               |                      ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:1174:20: error: 'USBD_EpDescTypeDef' undeclared (first use in this function); did you mean 'USBD_BosDescTypeDef'?
+E          1174 |         pEpDesc = (USBD_EpDescTypeDef *)(void *)pdesc;
+E               |                    ^~~~~~~~~~~~~~~~~~
+E               |                    USBD_BosDescTypeDef
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:1174:40: error: expected expression before ')' token
+E          1174 |         pEpDesc = (USBD_EpDescTypeDef *)(void *)pdesc;
+E               |                                        ^
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:1174:49: error: expected ';' before 'pdesc'
+E          1174 |         pEpDesc = (USBD_EpDescTypeDef *)(void *)pdesc;
+E               |                                                 ^~~~~
+E               |                                                 ;
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.c:1176:20: error: request for member 'bEndpointAddress' in something not a structure or union
+E          1176 |         if (pEpDesc->bEndpointAddress == EpAddr)
+E               |                    ^~
+E         In file included from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.h:28,
+E                          from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:20:
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:216:12: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'USBD_ConfigDescTypeDef'
+E           216 | } __PACKED USBD_ConfigDescTypeDef;
+E               |            ^~~~~~~~~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:234:12: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'USBD_EpDescTypeDef'
+E           234 | } __PACKED USBD_EpDescTypeDef;
+E               |            ^~~~~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:370:3: error: unknown type name '__IO'
+E           370 |   __IO uint32_t           ep0_state;
+E               |   ^~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:370:27: error: expected ':', ',', ';', '}' or '__attribute__' before 'ep0_state'
+E           370 |   __IO uint32_t           ep0_state;
+E               |                           ^~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:425:1: error: unknown type name '__STATIC_INLINE'
+E           425 | __STATIC_INLINE uint16_t SWAPBYTE(uint8_t *addr)
+E               | ^~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:425:26: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'SWAPBYTE'
+E           425 | __STATIC_INLINE uint16_t SWAPBYTE(uint8_t *addr)
+E               |                          ^~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c: In function 'USBD_StdDevReq':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:112:37: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           112 |       ret = (USBD_StatusTypeDef)pdev->pClass[pdev->classId]->Setup(pdev, req);
+E               |                                     ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:112:50: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           112 |       ret = (USBD_StatusTypeDef)pdev->pClass[pdev->classId]->Setup(pdev, req);
+E               |                                                  ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c: In function 'USBD_StdItfReq':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:177:19: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           177 |       switch (pdev->dev_state)
+E               |                   ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:190:23: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           190 |               if (pdev->pClass[idx]->Setup != NULL)
+E               |                       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:192:21: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           192 |                 pdev->classId = idx;
+E               |                     ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:193:48: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           193 |                 ret = (USBD_StatusTypeDef)(pdev->pClass[idx]->Setup(pdev, req));
+E               |                                                ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c: In function 'USBD_StdEPReq':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:256:13: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           256 |         pdev->classId = idx;
+E               |             ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:258:17: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           258 |         if (pdev->pClass[idx]->Setup != NULL)
+E               |                 ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:260:41: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           260 |           ret = (USBD_StatusTypeDef)pdev->pClass[idx]->Setup(pdev, req);
+E               |                                         ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:269:23: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           269 |           switch (pdev->dev_state)
+E               |                       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:303:23: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           303 |           switch (pdev->dev_state)
+E               |                       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:330:23: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           330 |                   pdev->classId = idx;
+E               |                       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:332:27: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           332 |                   if (pdev->pClass[idx]->Setup != NULL)
+E               |                           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:334:52: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           334 |                     ret = (USBD_StatusTypeDef)(pdev->pClass[idx]->Setup(pdev, req));
+E               |                                                    ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:347:23: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           347 |           switch (pdev->dev_state)
+E               |                       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c: In function 'USBD_GetDescriptor':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:450:18: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pDesc'
+E           450 |       pbuf = pdev->pDesc->GetDeviceDescriptor(pdev->dev_speed, &len);
+E               |                  ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:464:33: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           464 |           pbuf = (uint8_t *)pdev->pClass[0]->GetHSConfigDescriptor(&len);
+E               |                                 ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:478:33: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           478 |           pbuf = (uint8_t *)pdev->pClass[0]->GetFSConfigDescriptor(&len);
+E               |                                 ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:488:19: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pDesc'
+E           488 |           if (pdev->pDesc->GetLangIDStrDescriptor != NULL)
+E               |                   ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:490:24: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pDesc'
+E           490 |             pbuf = pdev->pDesc->GetLangIDStrDescriptor(pdev->dev_speed, &len);
+E               |                        ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:500:19: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pDesc'
+E           500 |           if (pdev->pDesc->GetManufacturerStrDescriptor != NULL)
+E               |                   ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:502:24: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pDesc'
+E           502 |             pbuf = pdev->pDesc->GetManufacturerStrDescriptor(pdev->dev_speed, &len);
+E               |                        ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:512:19: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pDesc'
+E           512 |           if (pdev->pDesc->GetProductStrDescriptor != NULL)
+E               |                   ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:514:24: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pDesc'
+E           514 |             pbuf = pdev->pDesc->GetProductStrDescriptor(pdev->dev_speed, &len);
+E               |                        ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:524:19: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pDesc'
+E           524 |           if (pdev->pDesc->GetSerialStrDescriptor != NULL)
+E               |                   ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:526:24: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pDesc'
+E           526 |             pbuf = pdev->pDesc->GetSerialStrDescriptor(pdev->dev_speed, &len);
+E               |                        ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:536:19: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pDesc'
+E           536 |           if (pdev->pDesc->GetConfigurationStrDescriptor != NULL)
+E               |                   ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:538:24: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pDesc'
+E           538 |             pbuf = pdev->pDesc->GetConfigurationStrDescriptor(pdev->dev_speed, &len);
+E               |                        ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:548:19: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pDesc'
+E           548 |           if (pdev->pDesc->GetInterfaceStrDescriptor != NULL)
+E               |                   ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:550:24: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pDesc'
+E           550 |             pbuf = pdev->pDesc->GetInterfaceStrDescriptor(pdev->dev_speed, &len);
+E               |                        ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:613:33: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           613 |           pbuf = (uint8_t *)pdev->pClass[0]->GetDeviceQualifierDescriptor(&len);
+E               |                                 ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:634:33: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClass'
+E           634 |           pbuf = (uint8_t *)pdev->pClass[0]->GetOtherSpeedConfigDescriptor(&len);
+E               |                                 ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c: In function 'USBD_SetAddress':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:690:13: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           690 |     if (pdev->dev_state == USBD_STATE_CONFIGURED)
+E               |             ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:696:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_address'
+E           696 |       pdev->dev_address = dev_addr;
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:702:13: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           702 |         pdev->dev_state = USBD_STATE_ADDRESSED;
+E               |             ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:706:13: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           706 |         pdev->dev_state = USBD_STATE_DEFAULT;
+E               |             ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c: In function 'USBD_SetConfig':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:736:15: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           736 |   switch (pdev->dev_state)
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:748:15: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           748 |           pdev->dev_state = USBD_STATE_ADDRESSED;
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:753:15: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           753 |           pdev->dev_state = USBD_STATE_CONFIGURED;
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:772:13: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           772 |         pdev->dev_state = USBD_STATE_ADDRESSED;
+E               |             ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:791:15: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           791 |           pdev->dev_state = USBD_STATE_ADDRESSED;
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c: In function 'USBD_GetConfig':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:829:17: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           829 |     switch (pdev->dev_state)
+E               |                 ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c: In function 'USBD_GetStatus':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:857:15: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           857 |   switch (pdev->dev_state)
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:874:15: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_remote_wakeup'
+E           874 |       if (pdev->dev_remote_wakeup != 0U)
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c: In function 'USBD_SetFeature':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:900:9: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_remote_wakeup'
+E           900 |     pdev->dev_remote_wakeup = 1U;
+E               |         ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:905:9: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_test_mode'
+E           905 |     pdev->dev_test_mode = (uint8_t)(req->wIndex >> 8);
+E               |         ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c: In function 'USBD_ClrFeature':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:924:15: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           924 |   switch (pdev->dev_state)
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:931:13: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_remote_wakeup'
+E           931 |         pdev->dev_remote_wakeup = 0U;
+E               |             ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c: In function 'USBD_ParseSetupRequest':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ctlreq.c:960:17: error: implicit declaration of function 'SWAPBYTE' [-Wimplicit-function-declaration]
+E           960 |   req->wValue = SWAPBYTE(pbuff);
+E               |                 ^~~~~~~~
+E         In file included from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ioreq.h:28,
+E                          from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ioreq.c:20:
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:216:12: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'USBD_ConfigDescTypeDef'
+E           216 | } __PACKED USBD_ConfigDescTypeDef;
+E               |            ^~~~~~~~~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:234:12: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'USBD_EpDescTypeDef'
+E           234 | } __PACKED USBD_EpDescTypeDef;
+E               |            ^~~~~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:370:3: error: unknown type name '__IO'
+E           370 |   __IO uint32_t           ep0_state;
+E               |   ^~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:370:27: error: expected ':', ',', ';', '}' or '__attribute__' before 'ep0_state'
+E           370 |   __IO uint32_t           ep0_state;
+E               |                           ^~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:425:1: error: unknown type name '__STATIC_INLINE'
+E           425 | __STATIC_INLINE uint16_t SWAPBYTE(uint8_t *addr)
+E               | ^~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:425:26: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'SWAPBYTE'
+E           425 | __STATIC_INLINE uint16_t SWAPBYTE(uint8_t *addr)
+E               |                          ^~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ioreq.c: In function 'USBD_CtlSendData':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ioreq.c:90:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'ep0_state'
+E            90 |   pdev->ep0_state = USBD_EP0_DATA_IN;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ioreq.c: In function 'USBD_CtlPrepareRx':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ioreq.c:133:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'ep0_state'
+E           133 |   pdev->ep0_state = USBD_EP0_DATA_OUT;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ioreq.c: In function 'USBD_CtlSendStatus':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ioreq.c:172:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'ep0_state'
+E           172 |   pdev->ep0_state = USBD_EP0_STATUS_IN;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ioreq.c: In function 'USBD_CtlReceiveStatus':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ioreq.c:189:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'ep0_state'
+E           189 |   pdev->ep0_state = USBD_EP0_STATUS_OUT;
+E               |       ^~
+E         In file included from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ioreq.h:28,
+E                          from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.h:28,
+E                          from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:59:
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:216:12: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'USBD_ConfigDescTypeDef'
+E           216 | } __PACKED USBD_ConfigDescTypeDef;
+E               |            ^~~~~~~~~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:234:12: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'USBD_EpDescTypeDef'
+E           234 | } __PACKED USBD_EpDescTypeDef;
+E               |            ^~~~~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:370:3: error: unknown type name '__IO'
+E           370 |   __IO uint32_t           ep0_state;
+E               |   ^~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:370:27: error: expected ':', ',', ';', '}' or '__attribute__' before 'ep0_state'
+E           370 |   __IO uint32_t           ep0_state;
+E               |                           ^~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:425:1: error: unknown type name '__STATIC_INLINE'
+E           425 | __STATIC_INLINE uint16_t SWAPBYTE(uint8_t *addr)
+E               | ^~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:425:26: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'SWAPBYTE'
+E           425 | __STATIC_INLINE uint16_t SWAPBYTE(uint8_t *addr)
+E               |                          ^~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.h:130:3: error: unknown type name '__IO'
+E           130 |   __IO uint32_t TxState;
+E               |   ^~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.h:130:17: error: expected ':', ',', ';', '}' or '__attribute__' before 'TxState'
+E           130 |   __IO uint32_t TxState;
+E               |                 ^~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c: In function 'USBD_CDC_Init':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:300:9: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassDataCmsit'
+E           300 |     pdev->pClassDataCmsit[pdev->classId] = NULL;
+E               |         ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:300:31: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           300 |     pdev->pClassDataCmsit[pdev->classId] = NULL;
+E               |                               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:306:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassDataCmsit'
+E           306 |   pdev->pClassDataCmsit[pdev->classId] = (void *)hcdc;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:306:29: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           306 |   pdev->pClassDataCmsit[pdev->classId] = (void *)hcdc;
+E               |                             ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:307:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassData'
+E           307 |   pdev->pClassData = pdev->pClassDataCmsit[pdev->classId];
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:307:26: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassDataCmsit'
+E           307 |   pdev->pClassData = pdev->pClassDataCmsit[pdev->classId];
+E               |                          ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:307:48: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           307 |   pdev->pClassData = pdev->pClassDataCmsit[pdev->classId];
+E               |                                                ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:358:31: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pUserData'
+E           358 |   ((USBD_CDC_ItfTypeDef *)pdev->pUserData[pdev->classId])->Init();
+E               |                               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:358:47: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           358 |   ((USBD_CDC_ItfTypeDef *)pdev->pUserData[pdev->classId])->Init();
+E               |                                               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:361:7: error: 'USBD_CDC_HandleTypeDef' has no member named 'TxState'
+E           361 |   hcdc->TxState = 0U;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:362:7: error: 'USBD_CDC_HandleTypeDef' has no member named 'RxState'
+E           362 |   hcdc->RxState = 0U;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c: In function 'USBD_CDC_DeInit':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:418:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassDataCmsit'
+E           418 |   if (pdev->pClassDataCmsit[pdev->classId] != NULL)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:418:33: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           418 |   if (pdev->pClassDataCmsit[pdev->classId] != NULL)
+E               |                                 ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:420:33: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pUserData'
+E           420 |     ((USBD_CDC_ItfTypeDef *)pdev->pUserData[pdev->classId])->DeInit();
+E               |                                 ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:420:49: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           420 |     ((USBD_CDC_ItfTypeDef *)pdev->pUserData[pdev->classId])->DeInit();
+E               |                                                 ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:421:25: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassDataCmsit'
+E           421 |     (void)USBD_free(pdev->pClassDataCmsit[pdev->classId]);
+E               |                         ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:421:47: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           421 |     (void)USBD_free(pdev->pClassDataCmsit[pdev->classId]);
+E               |                                               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:422:9: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassDataCmsit'
+E           422 |     pdev->pClassDataCmsit[pdev->classId] = NULL;
+E               |         ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:422:31: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           422 |     pdev->pClassDataCmsit[pdev->classId] = NULL;
+E               |                               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:423:9: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassData'
+E           423 |     pdev->pClassData = NULL;
+E               |         ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c: In function 'USBD_CDC_Setup':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:439:64: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassDataCmsit'
+E           439 |   USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef *)pdev->pClassDataCmsit[pdev->classId];
+E               |                                                                ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:439:86: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           439 |   USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef *)pdev->pClassDataCmsit[pdev->classId];
+E               |                                                                                      ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:459:19: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           459 |           if (pdev->dev_state == USBD_STATE_CONFIGURED)
+E               |                   ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:471:19: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           471 |           if (pdev->dev_state == USBD_STATE_CONFIGURED)
+E               |                   ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:483:19: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           483 |           if (pdev->dev_state != USBD_STATE_CONFIGURED)
+E               |                   ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c: In function 'USBD_CDC_DataIn':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:519:54: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pData'
+E           519 |   PCD_HandleTypeDef *hpcd = (PCD_HandleTypeDef *)pdev->pData;
+E               |                                                      ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:521:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassDataCmsit'
+E           521 |   if (pdev->pClassDataCmsit[pdev->classId] == NULL)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:521:33: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           521 |   if (pdev->pClassDataCmsit[pdev->classId] == NULL)
+E               |                                 ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:526:40: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassDataCmsit'
+E           526 |   hcdc = (USBD_CDC_HandleTypeDef *)pdev->pClassDataCmsit[pdev->classId];
+E               |                                        ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:526:62: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           526 |   hcdc = (USBD_CDC_HandleTypeDef *)pdev->pClassDataCmsit[pdev->classId];
+E               |                                                              ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:539:9: error: 'USBD_CDC_HandleTypeDef' has no member named 'TxState'
+E           539 |     hcdc->TxState = 0U;
+E               |         ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:541:37: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pUserData'
+E           541 |     if (((USBD_CDC_ItfTypeDef *)pdev->pUserData[pdev->classId])->TransmitCplt != NULL)
+E               |                                     ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:541:53: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           541 |     if (((USBD_CDC_ItfTypeDef *)pdev->pUserData[pdev->classId])->TransmitCplt != NULL)
+E               |                                                     ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:543:35: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pUserData'
+E           543 |       ((USBD_CDC_ItfTypeDef *)pdev->pUserData[pdev->classId])->TransmitCplt(hcdc->TxBuffer, &hcdc->TxLength, epnum);
+E               |                                   ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:543:51: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           543 |       ((USBD_CDC_ItfTypeDef *)pdev->pUserData[pdev->classId])->TransmitCplt(hcdc->TxBuffer, &hcdc->TxLength, epnum);
+E               |                                                   ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c: In function 'USBD_CDC_DataOut':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:559:64: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassDataCmsit'
+E           559 |   USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef *)pdev->pClassDataCmsit[pdev->classId];
+E               |                                                                ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:559:86: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           559 |   USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef *)pdev->pClassDataCmsit[pdev->classId];
+E               |                                                                                      ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:561:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassDataCmsit'
+E           561 |   if (pdev->pClassDataCmsit[pdev->classId] == NULL)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:561:33: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           561 |   if (pdev->pClassDataCmsit[pdev->classId] == NULL)
+E               |                                 ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:572:31: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pUserData'
+E           572 |   ((USBD_CDC_ItfTypeDef *)pdev->pUserData[pdev->classId])->Receive(hcdc->RxBuffer, &hcdc->RxLength);
+E               |                               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:572:47: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           572 |   ((USBD_CDC_ItfTypeDef *)pdev->pUserData[pdev->classId])->Receive(hcdc->RxBuffer, &hcdc->RxLength);
+E               |                                               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c: In function 'USBD_CDC_GetFSCfgDesc':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:596:3: error: unknown type name 'USBD_EpDescTypeDef'; did you mean 'USBD_BosDescTypeDef'?
+E           596 |   USBD_EpDescTypeDef *pEpCmdDesc = USBD_GetEpDesc(USBD_CDC_CfgDesc, CDC_CMD_EP);
+E               |   ^~~~~~~~~~~~~~~~~~
+E               |   USBD_BosDescTypeDef
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:597:3: error: unknown type name 'USBD_EpDescTypeDef'; did you mean 'USBD_BosDescTypeDef'?
+E           597 |   USBD_EpDescTypeDef *pEpOutDesc = USBD_GetEpDesc(USBD_CDC_CfgDesc, CDC_OUT_EP);
+E               |   ^~~~~~~~~~~~~~~~~~
+E               |   USBD_BosDescTypeDef
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:598:3: error: unknown type name 'USBD_EpDescTypeDef'; did you mean 'USBD_BosDescTypeDef'?
+E           598 |   USBD_EpDescTypeDef *pEpInDesc = USBD_GetEpDesc(USBD_CDC_CfgDesc, CDC_IN_EP);
+E               |   ^~~~~~~~~~~~~~~~~~
+E               |   USBD_BosDescTypeDef
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:602:15: error: request for member 'bInterval' in something not a structure or union
+E           602 |     pEpCmdDesc->bInterval = CDC_FS_BINTERVAL;
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:607:15: error: request for member 'wMaxPacketSize' in something not a structure or union
+E           607 |     pEpOutDesc->wMaxPacketSize = CDC_DATA_FS_MAX_PACKET_SIZE;
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:612:14: error: request for member 'wMaxPacketSize' in something not a structure or union
+E           612 |     pEpInDesc->wMaxPacketSize = CDC_DATA_FS_MAX_PACKET_SIZE;
+E               |              ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c: In function 'USBD_CDC_GetHSCfgDesc':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:627:3: error: unknown type name 'USBD_EpDescTypeDef'; did you mean 'USBD_BosDescTypeDef'?
+E           627 |   USBD_EpDescTypeDef *pEpCmdDesc = USBD_GetEpDesc(USBD_CDC_CfgDesc, CDC_CMD_EP);
+E               |   ^~~~~~~~~~~~~~~~~~
+E               |   USBD_BosDescTypeDef
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:628:3: error: unknown type name 'USBD_EpDescTypeDef'; did you mean 'USBD_BosDescTypeDef'?
+E           628 |   USBD_EpDescTypeDef *pEpOutDesc = USBD_GetEpDesc(USBD_CDC_CfgDesc, CDC_OUT_EP);
+E               |   ^~~~~~~~~~~~~~~~~~
+E               |   USBD_BosDescTypeDef
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:629:3: error: unknown type name 'USBD_EpDescTypeDef'; did you mean 'USBD_BosDescTypeDef'?
+E           629 |   USBD_EpDescTypeDef *pEpInDesc = USBD_GetEpDesc(USBD_CDC_CfgDesc, CDC_IN_EP);
+E               |   ^~~~~~~~~~~~~~~~~~
+E               |   USBD_BosDescTypeDef
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:633:15: error: request for member 'bInterval' in something not a structure or union
+E           633 |     pEpCmdDesc->bInterval = CDC_HS_BINTERVAL;
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:638:15: error: request for member 'wMaxPacketSize' in something not a structure or union
+E           638 |     pEpOutDesc->wMaxPacketSize = CDC_DATA_HS_MAX_PACKET_SIZE;
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:643:14: error: request for member 'wMaxPacketSize' in something not a structure or union
+E           643 |     pEpInDesc->wMaxPacketSize = CDC_DATA_HS_MAX_PACKET_SIZE;
+E               |              ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c: In function 'USBD_CDC_GetOtherSpeedCfgDesc':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:658:3: error: unknown type name 'USBD_EpDescTypeDef'; did you mean 'USBD_BosDescTypeDef'?
+E           658 |   USBD_EpDescTypeDef *pEpCmdDesc = USBD_GetEpDesc(USBD_CDC_CfgDesc, CDC_CMD_EP);
+E               |   ^~~~~~~~~~~~~~~~~~
+E               |   USBD_BosDescTypeDef
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:659:3: error: unknown type name 'USBD_EpDescTypeDef'; did you mean 'USBD_BosDescTypeDef'?
+E           659 |   USBD_EpDescTypeDef *pEpOutDesc = USBD_GetEpDesc(USBD_CDC_CfgDesc, CDC_OUT_EP);
+E               |   ^~~~~~~~~~~~~~~~~~
+E               |   USBD_BosDescTypeDef
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:660:3: error: unknown type name 'USBD_EpDescTypeDef'; did you mean 'USBD_BosDescTypeDef'?
+E           660 |   USBD_EpDescTypeDef *pEpInDesc = USBD_GetEpDesc(USBD_CDC_CfgDesc, CDC_IN_EP);
+E               |   ^~~~~~~~~~~~~~~~~~
+E               |   USBD_BosDescTypeDef
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:664:15: error: request for member 'bInterval' in something not a structure or union
+E           664 |     pEpCmdDesc->bInterval = CDC_FS_BINTERVAL;
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:669:15: error: request for member 'wMaxPacketSize' in something not a structure or union
+E           669 |     pEpOutDesc->wMaxPacketSize = CDC_DATA_FS_MAX_PACKET_SIZE;
+E               |               ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:674:14: error: request for member 'wMaxPacketSize' in something not a structure or union
+E           674 |     pEpInDesc->wMaxPacketSize = CDC_DATA_FS_MAX_PACKET_SIZE;
+E               |              ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c: In function 'USBD_CDC_RegisterInterface':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:708:7: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pUserData'
+E           708 |   pdev->pUserData[pdev->classId] = fops;
+E               |       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:708:23: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           708 |   pdev->pUserData[pdev->classId] = fops;
+E               |                       ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c: In function 'USBD_CDC_SetTxBuffer':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:731:64: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassDataCmsit'
+E           731 |   USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef *)pdev->pClassDataCmsit[pdev->classId];
+E               |                                                                ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:731:86: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           731 |   USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef *)pdev->pClassDataCmsit[pdev->classId];
+E               |                                                                                      ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c: In function 'USBD_CDC_SetRxBuffer':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:753:64: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassDataCmsit'
+E           753 |   USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef *)pdev->pClassDataCmsit[pdev->classId];
+E               |                                                                ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:753:86: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           753 |   USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef *)pdev->pClassDataCmsit[pdev->classId];
+E               |                                                                                      ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c: In function 'USBD_CDC_TransmitPacket':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:780:64: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassDataCmsit'
+E           780 |   USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef *)pdev->pClassDataCmsit[pdev->classId];
+E               |                                                                ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:780:86: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           780 |   USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef *)pdev->pClassDataCmsit[pdev->classId];
+E               |                                                                                      ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:795:11: error: 'USBD_CDC_HandleTypeDef' has no member named 'TxState'
+E           795 |   if (hcdc->TxState == 0U)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:798:9: error: 'USBD_CDC_HandleTypeDef' has no member named 'TxState'
+E           798 |     hcdc->TxState = 1U;
+E               |         ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c: In function 'USBD_CDC_ReceivePacket':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:820:64: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassDataCmsit'
+E           820 |   USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef *)pdev->pClassDataCmsit[pdev->classId];
+E               |                                                                ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:820:86: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           820 |   USBD_CDC_HandleTypeDef *hcdc = (USBD_CDC_HandleTypeDef *)pdev->pClassDataCmsit[pdev->classId];
+E               |                                                                                      ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:827:11: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassDataCmsit'
+E           827 |   if (pdev->pClassDataCmsit[pdev->classId] == NULL)
+E               |           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.c:827:33: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           827 |   if (pdev->pClassDataCmsit[pdev->classId] == NULL)
+E               |                                 ^~
+E         In file included from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_ioreq.h:28,
+E                          from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.h:28,
+E                          from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.h:30,
+E                          from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.c:21:
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:216:12: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'USBD_ConfigDescTypeDef'
+E           216 | } __PACKED USBD_ConfigDescTypeDef;
+E               |            ^~~~~~~~~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:234:12: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'USBD_EpDescTypeDef'
+E           234 | } __PACKED USBD_EpDescTypeDef;
+E               |            ^~~~~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:370:3: error: unknown type name '__IO'
+E           370 |   __IO uint32_t           ep0_state;
+E               |   ^~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:370:27: error: expected ':', ',', ';', '}' or '__attribute__' before 'ep0_state'
+E           370 |   __IO uint32_t           ep0_state;
+E               |                           ^~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:425:1: error: unknown type name '__STATIC_INLINE'
+E           425 | __STATIC_INLINE uint16_t SWAPBYTE(uint8_t *addr)
+E               | ^~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:425:26: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'SWAPBYTE'
+E           425 | __STATIC_INLINE uint16_t SWAPBYTE(uint8_t *addr)
+E               |                          ^~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.h:130:3: error: unknown type name '__IO'
+E           130 |   __IO uint32_t TxState;
+E               |   ^~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.h:130:17: error: expected ':', ',', ';', '}' or '__attribute__' before 'TxState'
+E           130 |   __IO uint32_t TxState;
+E               |                 ^~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.c: In function 'PcC071Usb_ControlSetup':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.c:88:16: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E            88 |         (device->classId != 0U) || (device->dev_state != USBD_STATE_CONFIGURED) ||
+E               |                ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.c:88:43: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E            88 |         (device->classId != 0U) || (device->dev_state != USBD_STATE_CONFIGURED) ||
+E               |                                           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.c:89:16: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pUserData'
+E            89 |         (device->pUserData[0] != &USBD_Interface_fops_FS)) { return USBD_FAIL; }
+E               |                ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.c:90:43: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassDataCmsit'
+E            90 |     cdc = (USBD_CDC_HandleTypeDef *)device->pClassDataCmsit[0];
+E               |                                           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.c: In function 'PcC071Usb_ControlRxReady':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.c:127:45: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'classId'
+E           127 |     if ((device != &hUsbDeviceFS) || (device->classId != 0U) ||
+E               |                                             ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.c:128:16: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           128 |         (device->dev_state != USBD_STATE_CONFIGURED) ||
+E               |                ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.c:129:16: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pUserData'
+E           129 |         (device->pUserData[0] != &USBD_Interface_fops_FS)) { return USBD_FAIL; }
+E               |                ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.c:130:43: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassDataCmsit'
+E           130 |     cdc = (USBD_CDC_HandleTypeDef *)device->pClassDataCmsit[0];
+E               |                                           ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.c:137:16: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'request'
+E           137 |         (device->request.bmRequest != 0x21U) ||
+E               |                ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.c:138:16: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'request'
+E           138 |         (device->request.bRequest != CDC_SET_LINE_CODING) ||
+E               |                ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.c:139:16: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'request'
+E           139 |         (device->request.wValue != 0U) || (device->request.wIndex != 0U) ||
+E               |                ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.c:139:50: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'request'
+E           139 |         (device->request.wValue != 0U) || (device->request.wIndex != 0U) ||
+E               |                                                  ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.c:140:16: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'request'
+E           140 |         (device->request.wLength != sizeof(s_line)) ||
+E               |                ^~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.c: In function 'PcC071Usb_Service':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.c:172:49: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           172 |     if ((s_rearm_pending != 0U) && (hUsbDeviceFS.dev_state == USBD_STATE_CONFIGURED) &&
+E               |                                                 ^
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.c:173:22: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassData'
+E           173 |         (hUsbDeviceFS.pClassData != NULL))
+E               |                      ^
+E         In file included from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.h:29,
+E                          from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_desc.c:22:
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:216:12: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'USBD_ConfigDescTypeDef'
+E           216 | } __PACKED USBD_ConfigDescTypeDef;
+E               |            ^~~~~~~~~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:234:12: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'USBD_EpDescTypeDef'
+E           234 | } __PACKED USBD_EpDescTypeDef;
+E               |            ^~~~~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:370:3: error: unknown type name '__IO'
+E           370 |   __IO uint32_t           ep0_state;
+E               |   ^~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:370:27: error: expected ':', ',', ';', '}' or '__attribute__' before 'ep0_state'
+E           370 |   __IO uint32_t           ep0_state;
+E               |                           ^~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:425:1: error: unknown type name '__STATIC_INLINE'
+E           425 | __STATIC_INLINE uint16_t SWAPBYTE(uint8_t *addr)
+E               | ^~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:425:26: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'SWAPBYTE'
+E           425 | __STATIC_INLINE uint16_t SWAPBYTE(uint8_t *addr)
+E               |                          ^~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_desc.c: In function 'USBD_CDC_ProductStrDescriptor':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_desc.c:244:59: warning: unused parameter 'speed' [-Wunused-parameter]
+E           244 | uint8_t * USBD_CDC_ProductStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)
+E               |                                         ~~~~~~~~~~~~~~~~~~^~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_desc.c: In function 'USBD_CDC_ConfigStrDescriptor':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_desc.c:291:58: warning: unused parameter 'speed' [-Wunused-parameter]
+E           291 | uint8_t * USBD_CDC_ConfigStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)
+E               |                                        ~~~~~~~~~~~~~~~~~~^~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_desc.c: In function 'USBD_CDC_InterfaceStrDescriptor':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_desc.c:303:61: warning: unused parameter 'speed' [-Wunused-parameter]
+E           303 | uint8_t * USBD_CDC_InterfaceStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)
+E               |                                           ~~~~~~~~~~~~~~~~~~^~~~~
+E         In file included from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.h:29,
+E                          from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usb_device.h:1,
+E                          from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\pc_byte_stream.c:6:
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:216:12: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'USBD_ConfigDescTypeDef'
+E           216 | } __PACKED USBD_ConfigDescTypeDef;
+E               |            ^~~~~~~~~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:234:12: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'USBD_EpDescTypeDef'
+E           234 | } __PACKED USBD_EpDescTypeDef;
+E               |            ^~~~~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:370:3: error: unknown type name '__IO'
+E           370 |   __IO uint32_t           ep0_state;
+E               |   ^~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:370:27: error: expected ':', ',', ';', '}' or '__attribute__' before 'ep0_state'
+E           370 |   __IO uint32_t           ep0_state;
+E               |                           ^~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:425:1: error: unknown type name '__STATIC_INLINE'
+E           425 | __STATIC_INLINE uint16_t SWAPBYTE(uint8_t *addr)
+E               | ^~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:425:26: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'SWAPBYTE'
+E           425 | __STATIC_INLINE uint16_t SWAPBYTE(uint8_t *addr)
+E               |                          ^~~~~~~~
+E         In file included from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc_if.h:30,
+E                          from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\pc_byte_stream.c:7:
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.h:130:3: error: unknown type name '__IO'
+E           130 |   __IO uint32_t TxState;
+E               |   ^~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.h:130:17: error: expected ':', ',', ';', '}' or '__attribute__' before 'TxState'
+E           130 |   __IO uint32_t TxState;
+E               |                 ^~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\pc_byte_stream.c: In function 'PcByteStream_WriteSession':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\pc_byte_stream.c:127:22: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E           127 |     if ((hUsbDeviceFS.dev_state != USBD_STATE_CONFIGURED) ||
+E               |                      ^
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\pc_byte_stream.c:128:22: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassData'
+E           128 |         (hUsbDeviceFS.pClassData == NULL))
+E               |                      ^
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\pc_byte_stream.c:133:49: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassData'
+E           133 |     cdc = (USBD_CDC_HandleTypeDef *)hUsbDeviceFS.pClassData;
+E               |                                                 ^
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\pc_byte_stream.c:134:12: error: 'USBD_CDC_HandleTypeDef' has no member named 'TxState'
+E           134 |     if (cdc->TxState != 0U)
+E               |            ^~
+E         In file included from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_core.h:29,
+E                          from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\normal.c:1:
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:216:12: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'USBD_ConfigDescTypeDef'
+E           216 | } __PACKED USBD_ConfigDescTypeDef;
+E               |            ^~~~~~~~~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:234:12: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'USBD_EpDescTypeDef'
+E           234 | } __PACKED USBD_EpDescTypeDef;
+E               |            ^~~~~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:370:3: error: unknown type name '__IO'
+E           370 |   __IO uint32_t           ep0_state;
+E               |   ^~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:370:27: error: expected ':', ',', ';', '}' or '__attribute__' before 'ep0_state'
+E           370 |   __IO uint32_t           ep0_state;
+E               |                           ^~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:425:1: error: unknown type name '__STATIC_INLINE'
+E           425 | __STATIC_INLINE uint16_t SWAPBYTE(uint8_t *addr)
+E               | ^~~~~~~~~~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_def.h:425:26: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'SWAPBYTE'
+E           425 | __STATIC_INLINE uint16_t SWAPBYTE(uint8_t *addr)
+E               |                          ^~~~~~~~
+E         In file included from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\normal.c:2:
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.h:130:3: error: unknown type name '__IO'
+E           130 |   __IO uint32_t TxState;
+E               |   ^~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\usbd_cdc.h:130:17: error: expected ':', ',', ';', '}' or '__attribute__' before 'TxState'
+E           130 |   __IO uint32_t TxState;
+E               |                 ^~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\normal.c: In function 'USBD_LL_Init':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\normal.c:24:29: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pData'
+E            24 | { assert(d==&hUsbDeviceFS);d->pData=&pcd;return USBD_OK; }
+E               |                             ^~
+E         In file included from C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\normal.c:6:
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\normal.c: In function 'EnumConfigure':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\normal.c:60:21: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E            60 |  assert(hUsbDeviceFS.dev_state==USBD_STATE_DEFAULT && allocated==0U);
+E               |                     ^
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\normal.c:65:21: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E            65 |  assert(hUsbDeviceFS.dev_state==USBD_STATE_ADDRESSED);
+E               |                     ^
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\normal.c:70:21: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'dev_state'
+E            70 |  assert(hUsbDeviceFS.dev_state==USBD_STATE_CONFIGURED && allocated==1U);
+E               |                     ^
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\normal.c:71:40: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassData'
+E            71 |  assert(rx_ptr[1]!=NULL && hUsbDeviceFS.pClassData!=NULL);
+E               |                                        ^
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\normal.c: In function 'main':
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\normal.c:102:34: error: 'FS_Desc' undeclared (first use in this function)
+E           102 |  assert(USBD_Init(&hUsbDeviceFS,&FS_Desc,0U)==USBD_OK);
+E               |                                  ^~~~~~~
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\normal.c:102:34: note: each undeclared identifier is reported only once for each function it appears in
+E         C:\Users\chdxm\AppData\Local\Temp\ul01\test_normal_stack_lifecycle_an_ccb3a6a9\normal.c:123:59: error: 'USBD_HandleTypeDef' {aka 'struct _USBD_HandleTypeDef'} has no member named 'pClassData'
+E           123 |  assert(allocated==0U && frees==oldfree+1U && hUsbDeviceFS.pClassData==NULL);
+E               |                                                           ^
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:/msys64/ucrt64/bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror=implicit-funct...=oldfree+1U && hUsbDeviceFS.pClassData==NULL);\n      |                                                           ^\n").returncode
+
+apps\SCG\tests\test_usb_lifecycle_normal.py:211: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_usb_lifecycle_normal.py::test_normal_stack_lifecycle_and_buffer_sessions[F103]
+FAILED apps\SCG\tests\test_usb_lifecycle_normal.py::test_normal_stack_lifecycle_and_buffer_sessions[C071]
+2 failed, 1 warning in 12.37s

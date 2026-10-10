@@ -1,0 +1,4 @@
+Platform/STM32C0/Src/platform_spi_stm32c0.c:25:16:PlatformSpi_WriteObserved	40	static
+Platform/STM32C0/Src/platform_spi_stm32c0.c:56:16:PlatformSpi_Write	16	static
+Platform/STM32C0/Src/platform_spi_stm32c0.c:62:16:PlatformSpi_TransferObserved	48	static
+Platform/STM32C0/Src/platform_spi_stm32c0.c:95:16:PlatformSpi_Transfer	16	static

@@ -1,0 +1,4 @@
+Platform/STM32C0/Src/platform_time_stm32c0.c:13:16:PlatformTime_Init	8	static
+Platform/STM32C0/Src/platform_time_stm32c0.c:23:10:PlatformTime_Ms	8	static
+Platform/STM32C0/Src/platform_time_stm32c0.c:28:10:PlatformTime_Us	24	static
+Platform/STM32C0/Src/platform_time_stm32c0.c:49:6:PlatformTime_DelayMs	8	static

@@ -1,0 +1,2 @@
+Generated/Src/native_clock_port.c:5:9:NativeClock_ContextAllowedGet	0	static
+Generated/Src/native_clock_port.c:11:19:NativeClockPort_SnapshotGet	48	static

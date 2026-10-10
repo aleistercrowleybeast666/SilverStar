@@ -1,0 +1,7 @@
+Ground/Radio/Src/ground_radio_sx1281.c:65:9:GroundRadio_MetricsSupportedGet	0	static
+Ground/Radio/Src/ground_radio_sx1281.c:67:19:GroundRadio_Init	8	static
+Ground/Radio/Src/ground_radio_sx1281.c:120:6:GroundRadio_Process	0	static
+Ground/Radio/Src/ground_radio_sx1281.c:133:9:GroundRadio_ActiveInstanceGet	0	static
+Ground/Radio/Src/ground_radio_sx1281.c:135:19:GroundRadio_TxEnqueue	8	static
+Ground/Radio/Src/ground_radio_sx1281.c:145:19:GroundRadio_RxDequeue	16	static
+Ground/Radio/Src/ground_radio_sx1281.c:157:6:GroundRadio_StatsGet	72	static

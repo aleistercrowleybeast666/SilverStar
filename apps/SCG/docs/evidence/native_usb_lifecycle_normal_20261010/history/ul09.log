@@ -1,0 +1,107 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+____________ test_normal_stack_lifecycle_and_buffer_sessions[F103] ____________
+
+first_batch = ('F103', NativeGroundCandidatePlan(model_sha256='77fb3834f95aea1209efc09eeaa5009f4a199bfa0d609c35fa46771fd4ea2c4b', sn... graph, stack/WCET/hardware unavailable', 'publication': 'PRIVATE CANDIDATE ONLY; normal generation remains blocked'}))
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ul09/test_normal_stack_lifecycle_an_38797600')
+
+    def test_normal_stack_lifecycle_and_buffer_sessions(first_batch,tmp_path):
+        part,plan=first_batch
+        files=plan.files;graph=json.loads(files['Generated/ground_source_graph.json'])
+        names=('usbd_core.c','usbd_ctlreq.c','usbd_ioreq.c','usbd_cdc.c','usbd_cdc_if.c','usbd_desc.c','pc_byte_stream.c')
+        selected={name:next(p for p in graph['sources'] if p.endswith('/'+name)) for name in names}
+        if part=='F103':selected['pc_usb_control.c']='Generated/Src/pc_usb_control.c'
+        used={}
+        for name,path in selected.items():
+            (tmp_path/name).write_bytes(files[path]);used[path]=hashlib.sha256(files[path]).hexdigest()
+        headers=('usbd_def.h','usbd_core.h','usbd_ctlreq.h','usbd_ioreq.h','usbd_cdc.h','usbd_cdc_if.h','usbd_desc.h','pc_byte_stream.h','gsp_min_protocol.h','pc_c071_usb.h','pc_c071_control.h','pc_usb_control.h','native_runtime.h','native_clock.h','platform_types.h')
+        for name in headers:
+            matches=[prefix+'/'+name for prefix in graph['include_dirs'] if prefix+'/'+name in files]
+            if matches:
+                path=matches[0];(tmp_path/name).write_bytes(files[path]);used[path]=hashlib.sha256(files[path]).hexdigest()
+        conf=next(files[p+'/usbd_conf.h'] for p in graph['include_dirs'] if p+'/usbd_conf.h' in files).decode('utf8')
+        conf=re.sub(r'#include "(?:main|stm32\w+)\.h"','#include "host_shim.h"',conf)
+        (tmp_path/'usbd_conf.h').write_text(conf,encoding='utf8')
+        (tmp_path/'host_shim.h').write_text(SHIM,encoding='utf8')
+        (tmp_path/'main.h').write_text('#include "host_shim.h"\n',encoding='utf8')
+        (tmp_path/'usb_device.h').write_text('#include "usbd_core.h"\nextern USBD_HandleTypeDef hUsbDeviceFS;\n',encoding='utf8')
+        (tmp_path/'silverstar_assert.h').write_text('#include <assert.h>\n#define SILVERSTAR_ASSERT(c,m,r) assert(c)\n',encoding='utf8')
+        desc_name=re.search(r'USBD_DescriptorsTypeDef\s+(\w+)\s*=',files[selected['usbd_desc.c']].decode())[1]
+        (tmp_path/'normal.c').write_text(HARNESS.replace('FS_Desc',desc_name),encoding='utf8')
+        compiler=shutil.which('gcc');assert compiler
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror=implicit-function-declaration','-Werror=incompatible-pointer-types','-DUSBD_CLASS_BOS_ENABLED=0','-DUSBD_MAX_SUPPORTED_CLASS=1','-I'+str(tmp_path),*[str(tmp_path/n) for n in selected],str(tmp_path/'normal.c'),'-o',str(tmp_path/'normal.exe')]
+        if part=='F103':command.insert(1,'-DHOST_F103=1')
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+        (tmp_path/'compile.log').write_text(result.stdout+result.stderr,encoding='utf8')
+        assert result.returncode==0,result.stdout+result.stderr
+        runs=[]
+        for scenario in ('complete-zlp','unconfigure','reset','disconnect','stop','deinit','close-retry','deinit-close-retry'):
+            result=subprocess.run([str(tmp_path/'normal.exe'),scenario],capture_output=True,text=True,timeout=15)
+            runs.append({'scenario':scenario,'exit':result.returncode,'stdout':result.stdout,'stderr':result.stderr})
+        (tmp_path/'lifecycle-receipt.json').write_text(json.dumps({'part':part,'model_sha256':plan.model_sha256,'compiled_generated_sources_sha256':used,'command':command,'compile_exit':0,'runs':runs,'controller':'Host LL mock; native HAL/PMA/IRQ hardware is not executed'},indent=2),encoding='utf8')
+>       assert all(r['exit']==0 for r in runs),runs
+E       AssertionError: [{'scenario': 'complete-zlp', 'exit': 0, 'stdout': '', 'stderr': ''}, {'scenario': 'unconfigure', 'exit': 0, 'stdout':...
+E         ', 'stderr': ''}, {'scenario': 'deinit', 'exit': 0, 'stdout': 'normal lifecycle deinit passed
+E         ', 'stderr': ''}, ...]
+E       assert False
+E        +  where False = all(<generator object test_normal_stack_lifecycle_and_buffer_sessions.<locals>.<genexpr> at 0x000002408ABBA4D0>)
+
+apps\SCG\tests\test_usb_lifecycle_normal.py:252: AssertionError
+____________ test_normal_stack_lifecycle_and_buffer_sessions[C071] ____________
+
+first_batch = ('C071', NativeGroundCandidatePlan(model_sha256='4075ac29bb1b2e23ad82a5e0e1d9c70e75ea8feab4a5f2bc0c6f4bf74597a73d', sn...rmal_release': False, 'limits': 'EP0/async lifecycle, manual critical contracts, stack/WCET and hardware NOT PROVEN'}))
+tmp_path = WindowsPath('C:/Users/chdxm/AppData/Local/Temp/ul09/test_normal_stack_lifecycle_an_2417dbc5')
+
+    def test_normal_stack_lifecycle_and_buffer_sessions(first_batch,tmp_path):
+        part,plan=first_batch
+        files=plan.files;graph=json.loads(files['Generated/ground_source_graph.json'])
+        names=('usbd_core.c','usbd_ctlreq.c','usbd_ioreq.c','usbd_cdc.c','usbd_cdc_if.c','usbd_desc.c','pc_byte_stream.c')
+        selected={name:next(p for p in graph['sources'] if p.endswith('/'+name)) for name in names}
+        if part=='F103':selected['pc_usb_control.c']='Generated/Src/pc_usb_control.c'
+        used={}
+        for name,path in selected.items():
+            (tmp_path/name).write_bytes(files[path]);used[path]=hashlib.sha256(files[path]).hexdigest()
+        headers=('usbd_def.h','usbd_core.h','usbd_ctlreq.h','usbd_ioreq.h','usbd_cdc.h','usbd_cdc_if.h','usbd_desc.h','pc_byte_stream.h','gsp_min_protocol.h','pc_c071_usb.h','pc_c071_control.h','pc_usb_control.h','native_runtime.h','native_clock.h','platform_types.h')
+        for name in headers:
+            matches=[prefix+'/'+name for prefix in graph['include_dirs'] if prefix+'/'+name in files]
+            if matches:
+                path=matches[0];(tmp_path/name).write_bytes(files[path]);used[path]=hashlib.sha256(files[path]).hexdigest()
+        conf=next(files[p+'/usbd_conf.h'] for p in graph['include_dirs'] if p+'/usbd_conf.h' in files).decode('utf8')
+        conf=re.sub(r'#include "(?:main|stm32\w+)\.h"','#include "host_shim.h"',conf)
+        (tmp_path/'usbd_conf.h').write_text(conf,encoding='utf8')
+        (tmp_path/'host_shim.h').write_text(SHIM,encoding='utf8')
+        (tmp_path/'main.h').write_text('#include "host_shim.h"\n',encoding='utf8')
+        (tmp_path/'usb_device.h').write_text('#include "usbd_core.h"\nextern USBD_HandleTypeDef hUsbDeviceFS;\n',encoding='utf8')
+        (tmp_path/'silverstar_assert.h').write_text('#include <assert.h>\n#define SILVERSTAR_ASSERT(c,m,r) assert(c)\n',encoding='utf8')
+        desc_name=re.search(r'USBD_DescriptorsTypeDef\s+(\w+)\s*=',files[selected['usbd_desc.c']].decode())[1]
+        (tmp_path/'normal.c').write_text(HARNESS.replace('FS_Desc',desc_name),encoding='utf8')
+        compiler=shutil.which('gcc');assert compiler
+        command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror=implicit-function-declaration','-Werror=incompatible-pointer-types','-DUSBD_CLASS_BOS_ENABLED=0','-DUSBD_MAX_SUPPORTED_CLASS=1','-I'+str(tmp_path),*[str(tmp_path/n) for n in selected],str(tmp_path/'normal.c'),'-o',str(tmp_path/'normal.exe')]
+        if part=='F103':command.insert(1,'-DHOST_F103=1')
+        result=subprocess.run(command,capture_output=True,text=True,timeout=60)
+        (tmp_path/'compile.log').write_text(result.stdout+result.stderr,encoding='utf8')
+        assert result.returncode==0,result.stdout+result.stderr
+        runs=[]
+        for scenario in ('complete-zlp','unconfigure','reset','disconnect','stop','deinit','close-retry','deinit-close-retry'):
+            result=subprocess.run([str(tmp_path/'normal.exe'),scenario],capture_output=True,text=True,timeout=15)
+            runs.append({'scenario':scenario,'exit':result.returncode,'stdout':result.stdout,'stderr':result.stderr})
+        (tmp_path/'lifecycle-receipt.json').write_text(json.dumps({'part':part,'model_sha256':plan.model_sha256,'compiled_generated_sources_sha256':used,'command':command,'compile_exit':0,'runs':runs,'controller':'Host LL mock; native HAL/PMA/IRQ hardware is not executed'},indent=2),encoding='utf8')
+>       assert all(r['exit']==0 for r in runs),runs
+E       AssertionError: [{'scenario': 'complete-zlp', 'exit': 0, 'stdout': '', 'stderr': ''}, {'scenario': 'unconfigure', 'exit': 0, 'stdout':...
+E         ', 'stderr': ''}, {'scenario': 'deinit', 'exit': 0, 'stdout': 'normal lifecycle deinit passed
+E         ', 'stderr': ''}, ...]
+E       assert False
+E        +  where False = all(<generator object test_normal_stack_lifecycle_and_buffer_sessions.<locals>.<genexpr> at 0x000002408AFF5D80>)
+
+apps\SCG\tests\test_usb_lifecycle_normal.py:252: AssertionError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_usb_lifecycle_normal.py::test_normal_stack_lifecycle_and_buffer_sessions[F103]
+FAILED apps\SCG\tests\test_usb_lifecycle_normal.py::test_normal_stack_lifecycle_and_buffer_sessions[C071]
+2 failed, 1 warning in 14.82s

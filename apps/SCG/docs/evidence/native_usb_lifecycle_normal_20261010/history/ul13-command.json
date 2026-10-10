@@ -1,0 +1,18 @@
+{
+  "command": [
+    "D:/python_software/SilverStar/apps/FLP/.venv/Scripts/python.exe",
+    "-B",
+    "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-10\\task\\backend_pytest.py",
+    "apps/SCG/tests/test_usb_lifecycle_normal.py",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:/Users/chdxm/AppData/Local/Temp/ul13",
+    "-q"
+  ],
+  "source_commit": "e176458c4da7f15e01ed01c61f891cb57983ab71",
+  "started_utc": "2026-10-10T03:00:53.850568+00:00",
+  "scope": "Only valid ordinary single-FS CDC enumeration, configured bulk transfers, ZLP, lifecycle cancellation, buffer lifetime and session reconnection through real generated USB sources. Host LL controller substitutes; no malformed USB/owner expressions or blocked independent review.",
+  "test_sha256": "f8435699bd5a2a94c0eb11f48cb994f8cc80c4de1b157d9aa37ce5ffb785e9f7",
+  "exit": 0,
+  "finished_utc": "2026-10-10T03:01:09.587651+00:00"
+}

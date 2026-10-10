@@ -1,0 +1,12 @@
+C:\Users\chdxm\AppData\Local\Temp\ul09\test_normal_stack_lifecycle_an_2417dbc5\usbd_desc.c: In function 'USBD_CDC_ProductStrDescriptor':
+C:\Users\chdxm\AppData\Local\Temp\ul09\test_normal_stack_lifecycle_an_2417dbc5\usbd_desc.c:244:59: warning: unused parameter 'speed' [-Wunused-parameter]
+  244 | uint8_t * USBD_CDC_ProductStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)
+      |                                         ~~~~~~~~~~~~~~~~~~^~~~~
+C:\Users\chdxm\AppData\Local\Temp\ul09\test_normal_stack_lifecycle_an_2417dbc5\usbd_desc.c: In function 'USBD_CDC_ConfigStrDescriptor':
+C:\Users\chdxm\AppData\Local\Temp\ul09\test_normal_stack_lifecycle_an_2417dbc5\usbd_desc.c:291:58: warning: unused parameter 'speed' [-Wunused-parameter]
+  291 | uint8_t * USBD_CDC_ConfigStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)
+      |                                        ~~~~~~~~~~~~~~~~~~^~~~~
+C:\Users\chdxm\AppData\Local\Temp\ul09\test_normal_stack_lifecycle_an_2417dbc5\usbd_desc.c: In function 'USBD_CDC_InterfaceStrDescriptor':
+C:\Users\chdxm\AppData\Local\Temp\ul09\test_normal_stack_lifecycle_an_2417dbc5\usbd_desc.c:303:61: warning: unused parameter 'speed' [-Wunused-parameter]
+  303 | uint8_t * USBD_CDC_InterfaceStrDescriptor(USBD_SpeedTypeDef speed, uint16_t *length)
+      |                                           ~~~~~~~~~~~~~~~~~~^~~~~
