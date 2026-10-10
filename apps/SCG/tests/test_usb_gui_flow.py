@@ -133,7 +133,12 @@ def test_real_gui_success_build_and_quality(usb_window,qapp,tmp_path_factory,mon
     monkeypatch.setattr(current.build_page,'QualityTargets_Get',lambda:('ground',))
     for action in (BuildAction.ARCHITECTURE_CHECK,BuildAction.ARTIFACT_CHECK):
         current._QualityChecks_Request(action)
-        _Wait(qapp,lambda:current._active_worker is None)
+        # Real artifact audits run ARM tools over both links; the generic UI
+        # helper's ten-second budget is for short tasks, not compiler audits.
+        deadline=time.monotonic()+120
+        while current._active_worker is not None and time.monotonic()<deadline:
+            qapp.processEvents();time.sleep(0.01)
+        assert current._active_worker is None, 'bounded real quality audit wait expired'
         assert not errors,errors
         assert current.progress_bar.property('taskState')=='success'
         assert 'BLOCKED' in current.build_page.target_quality_status['ground'].text()
