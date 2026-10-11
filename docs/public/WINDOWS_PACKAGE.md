@@ -1,5 +1,7 @@
 # Windows 0.1.2 便携包
 
+发布文件名为 `SilverStar_0_1_2_Windows_Portable.zip`，沿用 UNDERLINE 的版本下划线及 Windows_Portable 命名。`dist` 仅保留发布 ZIP；最新 `SHA256SUMS.txt` 和发布记录在独立交付目录，校验行使用此最终文件名。此次 ZIP 仅改名，字节内容仍是提交 `6feeadd000c866e456c08d5c85057d0f529d0993` 的已验证构建；后续标签提交只同步发布元数据，不重建 EXE。
+
 包内为 `SCG.exe`、`GSHC.exe`、`FLP.exe`，以及单一共用 `_internal` 依赖/源码/资源目录和 `docs`。目标为 Windows 10/11 64位；Qt 使用操作系统提供的 ICU。无需另装 Python；SCG 的外部 Arm 编译工具链、CubeMX SDK 仍需用户单独提供。此包没有安装器，也没有最终固件。
 
 完整解压到用户可写目录后启动相应 EXE。不要单独复制 EXE、删除 `_internal`，或把三套独立 dist 合并覆盖 DLL。三个程序来自同一构建环境，共用依赖；首次生成/导出时保持包及工作目录可写。可从任意当前工作目录启动，程序按 EXE 的相对目录找资源。
