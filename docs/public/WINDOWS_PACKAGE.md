@@ -18,3 +18,5 @@ FLP 正常打开日志仍须精确 `.ssdecoder` 和 Descriptor，通过 LogOpenC
 `licenses` 保留本次实际依赖版本的上游许可/版权/字体材料及 Qt LGPL/GPL 原件、对应版本源码链接；根 Apache-2.0 只覆盖原创代码。Qt/PySide6/Shiboken 以共用动态 DLL 形式分发，保留替换这些库及调试修改库所需的权利；不要把第三方条款改写为 Apache。文件摘要、版本、打包命令、离线检查和未测范围以包旁 receipt 为准。
 
 本机已有开发环境；不宣称纯净 Windows 机器验证。无硬件、串口连接、DAPLink、烧录、CONNECT 或 START。原源码候选和旧 receipt 保留，不能替代新 EXE 的检查。
+
+本次实包已直接启动三个发布 EXE，检查 SCG 打开合成参考工程、GSHC 生成带模拟标记的日志、FLP 显示合成日志的 exact decoder 与 Recorded 数据；具体范围与退出状态见旁置 receipt。冻结 QA 的生成及导出检查单独记录，不能合称完整 GUI 验收。发布示例使用简体中文；程序语言可在既有设置中选择，无需修改程序。
