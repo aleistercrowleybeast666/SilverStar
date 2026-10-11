@@ -1,6 +1,6 @@
-# 第三方来源与许可材料（0.1.2 后续本地候选）
+# 第三方来源与许可材料（0.1.2）
 
-根 Apache-2.0 只覆盖原创 SilverStar 材料。本目录保留已经核实的上游原始许可正文和文件来源，不改变任何第三方条款，不宣称全包是 Apache 或全包已获公开分发放行。`v0.1.2` 仍指向原源码候选；这些补充属于其后的独立提交和独立后缀候选包。
+根 Apache-2.0 只覆盖原创 SilverStar 材料。本目录保留已经核实的上游原始许可正文和文件来源，不改变任何第三方条款，不宣称全包是 Apache 或全包已获公开分发放行。旧源码候选及其 receipt 保留历史状态；最终 tag 与 Windows 实包身份以本次最终发布 receipt 为准。
 
 [逐文件来源、SHA256、匹配结果与未解项](source-map.json)记录本次检查源基线、官方版本、原始字节、仅换行差异及本地修改；程序、共享契约和原用户文件未改。官方 Git tree 的 blob 匹配只证明被检查文件的字节来源，不证明整个供应包或全部历史导入。
 
@@ -20,12 +20,13 @@ SLA0044 的 ST 处理器用途范围及不得把 ST 软件置于 Apache/BSD/MIT 
 
 在 HAL、CMSIS device、ARM CMSIS_5、C071 Applications 和 USB 指定版本的完整递归文件树中未发现 NOTICE 文件；具体 ref/tree-response 摘要见 source-map.json。没有凭空新增上游 NOTICE，也不把这项检查扩大到未核实供应包。
 
-## 仍未闭合的具体来源材料
+## 用户确认的原工程与无线库来源
 
-1. **Semtech SX1280lib**：五个源头引用的 `LICENSE.TXT` 仍缺；25 文件完整清单及候选官方证据见 source-map.json。ARM 官方镜像具有相同 Semtech 头，但不是本地完整文件的逐字节匹配来源，也没有找到这批内容的对应 LICENSE.TXT。Semtech 官方 gateway 仓库的许可不被借用。需要原始 SX1280Lib 官方导出/归档（含完整许可和 rangingCorrection 数据表）或准确原始 revision/URL。未知并不等于已证实禁止分发，当前也不能报告缺口已关闭。
-2. **38 个 board 生成文件**：两份随包 `.ioc` 已明确 CubeMX 6.15.0/DB.6.0.150，以及 F1 1.8.7、F4 1.28.3；[F1 官方组件表](ST_CUBE_F1_1.8.7_COMPONENTS.txt)与[F4 官方组件表](ST_CUBE_F4_1.28.3_COMPONENTS.txt)原样保留。它们不能替代每个生成模板的许可证明。安装目录的 BSD_License.ftl 与 Ultimate_Liberty_License.ftl 都产生相同外置 LICENSE 头，因此仅凭头部不能选择 BSD 或 SLA0044。需要原始生成工程所附 LICENSE/适用模板条款；剩余38条路径已标记未解，未猜测授权。
+用户确认 Ground_Station0.5、Flight_Controller0.5 是自己开发的项目。原工程分别为 [GS_SS1 固定提交](https://github.com/aleistercrowleybeast666/GS_SS1/tree/7fe0f61142c7360f7dbae0ac0000036315631320)（含 Ground_Station0.5.ioc）和 [FC 固定提交](https://github.com/aleistercrowleybeast666/FC/tree/cc0b377ded690556d037a412a55f87fe334c42d0)。这确认第一方工程来源；ST 生成模板、HAL/CMSIS 等既有版权及许可范围仍按各自证据保留，不因项目由用户开发就改成第一方条款。38 个剩余模板项未宣称已逐一重现完整生成过程。
 
+SX1280 无线库下载自[成都亿佰特官方原包](https://www.ebyte.com/Uploadfiles/Files/2024-2-27/20242271620496877.rar)，SHA256 `b39eef7a3077ce459a52bf10f3268174eeff2507586580d689845e92cdff39ca`。原包没有 LICENSE/license.txt；其中25个 C/H 文件保留 Semtech 2016 Revised BSD 头，属于 Mbed C++ 到 C 的移植，之后有 SilverStar 本地修改。保留原声明，不拿其他驱动 SWDR005 的 Clear BSD 条款补位，也不编造缺失的原包许可。
 
+用户已修复多处致命问题，但没有对全部库代码完成穷尽扫描，仍可能有缺陷。完整 SilverStar 自有实现是后续计划，**本版尚未实现**。本轮按用户明确授权，准确披露来源和限制后推进发布，不继续寻找许可或换驱动；来源确认不等于全部第三方权利条件已独立核验完毕。
 
 ## 本次独立核对补足的五项映射
 
@@ -35,14 +36,10 @@ SLA0044 的 ST 处理器用途范围及不得把 ST 软件置于 Apache/BSD/MIT 
 
 五项的工作区/提交字节摘要、原件摘要、依据及27个独审产物的清单摘要见 source-map.json。HAL两配置头工作区 CRLF 与 Git/包内 LF 不同，已分别记录，未修改代码。此前六项 CMSIS/startup/system 映射仍保留；49个分拆项现仅38项待来源。
 
-## 停在一次来源资料请求
+## 本轮收口范围
 
-请告诉我们 **Ground_Station0.5、Flight_Controller0.5 旧工程和 SX1280lib 最初从哪里取得**，或提供原始工程/库压缩包，保留随附许可文件即可；无需另行整理法律清单。
+此前一次来源资料请求已收到用户答复，不再停在“等待用户提供来源”。保留逐文件证据、既有模板条款及未证明的范围，不擅删驱动或改变程序。FreeRTOS MIT、Bosch BSD、FatFs 原头继续保留（F1 flight 为 R0.11，F4 为 R0.12c）。
 
-已提供的 FINAL 工程在独审所查许可范围内，只找到 HAL/CMSIS/FreeRTOS 条款，未找到生成模板根许可或 Semtech LICENSE.TXT。当前仓库已有 `.ioc` 和导入历史，足以确认工具/FW版本，但还不能自动关闭剩余38个 board 文件和25个 Semtech 文件。后续停在待用户来源，不继续泛化调查，也不擅删驱动。
+Windows 实包将另附实际打入的 Python、Qt/PySide6/Shiboken、数值库和字体等材料；具体版本、文件范围与验证状态以实包清单为准。源码候选的旧检查不能替代新 EXE 验证。
 
-原工程 LICENSE 是一种证据，不是唯一强制材料；匹配的权威模板/分发条款和来源、或厂家针对这些文件的明确说明，也可用于补足映射。未知不等于整个项目非法，也不能标为全部已闭合。
-
-第一方准确权利人署名是 owner review 待办，不是本次已证明的公开禁令；根 LICENSE 不改，也不从 Git 作者猜权利人。FreeRTOS MIT、Bosch BSD、FatFs 原头继续保留（F1 flight 的 FatFs 为 R0.11，F4 为 R0.12c）。Python/Qt 二进制、EXE和安装器未进入源码 ZIP，其未来许可审计另属范围。
-
-[已存在修改的明确记录](modifications.md)。公开分发仍未执行；所有未解项保留，未删驱动规避缺口。
+[已存在修改的明确记录](modifications.md)。USB 安全验收、硬件与飞行验收状态不因来源补充改变。

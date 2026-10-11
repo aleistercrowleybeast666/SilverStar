@@ -8,7 +8,7 @@ SilverStar 是面向火箭航电开发的三应用软件套件。此分发提供
 | GSHC（Ground Station Host Computer） | AIR M0 地面站界面、接收状态、命令与日志/图表导出 | `GSHC.py` |
 | FLP（Flight Log Processor） | exact decoder 日志打开、Recorded/Recomputed/What-if 分析、图表及数据导出 | `FLP.py` |
 
-**0.1.2 是本次本地准备的软件源码分发版本。** 包内不提供 Windows EXE、安装器、Python/Qt、Arm 工具链、CubeMX SDK 或已验收的最终固件。软件检查的通过范围见下文；本版本没有新增连接硬件、烧录或飞行验收。USB Ground 的普通生成入口仍保持阻断，不能作为通用可用 CDC 产品交付。
+**0.1.2 是本次准备的软件分发版本。** 新增 [Windows 便携包](docs/public/WINDOWS_PACKAGE.md)：SCG.exe、GSHC.exe、FLP.exe 共用单一依赖目录，含运行所需 Python/Qt 与资源；另保留源码候选。没有安装器、Arm 工具链、CubeMX SDK 或已验收最终固件。实包验证以其 receipt 为准；尚未公开推送，不宣称纯净机器或硬件/飞行验收。USB Ground 普通生成入口仍保持阻断，不能作为通用可用 CDC 产品交付。
 
 当前版本以根目录 `VERSION` 为准。历史子文档中的 0.0.x/0.1.0 是当时快照，不覆盖本版本；AIR M0、SSLOG 0.0、`.ssdecoder` 1.2、导航 revision 和第三方库各有独立版本。FCCG 是 SCG 的历史名称；`silverstar_fccg` Python 包及旧项目身份继续兼容。
 
@@ -166,7 +166,7 @@ FLP 的解码包是声明式数据，不执行包内 Python。容器插件与算
 
 原创 SilverStar 源码使用根 [Apache License 2.0](LICENSE)。第三方材料保留自己的版权头和条款：FreeRTOS MIT、CMSIS Apache-2.0、ST HAL/device 相应包条款、FatFs 文件头条款、Bosch 相应 BSD 条款等，均不能被根 LICENSE 改写。
 
-当前补充候选已加入经核实的 ST HAL 完整许可正文、CMSIS/startup 与 C071 SLA0044 来源映射，详见 [第三方来源与许可材料](docs/public/licenses/README.md)。独立核对已补足两份 HAL 配置头、F4 syscalls/sysmem 及 C0 适配映射，并附 ST 工具原始 SLA0048。Semtech SX1280lib 的25个文件对应原始版本/`LICENSE.TXT`，以及38个 board 生成模板的适用许可仍未闭合；不能宣称已完成公开分发许可核验。第一方准确权利人署名是待确认项，不等同于已证明的公开禁令。当前仅本地候选，不附 Python/Qt 二进制；Windows EXE/安装器许可审计未执行。详见 [本版分发说明](docs/public/releases/0.1.2.md)。
+本版保留经核实的 ST HAL、CMSIS、C071 及 CubeMX 许可/来源映射。用户已确认两个原工程为自开发项目，以及 SX1280lib 来自亿佰特官方原包并有本地修改；原无线库包无独立 LICENSE，尚未实现完整 SilverStar 自有替代，残余缺陷仍可能存在。ST 模板条款保持独立，不宣称全部许可条件已独立闭合。本轮不再搜许可或更换驱动，详见 [来源与限制](docs/public/licenses/README.md)及[本版分发说明](docs/public/releases/0.1.2.md)。Windows 实包的依赖许可与检查范围以其单独清单和 receipt 为准。
 
 包采用文件白名单，不含 `.git`、`.venv`、缓存、临时目录、开发验收证据、原始用户日志或用户项目，也不附带固件最终交付物。来源路径字段的可移植处理以及文档链接范围会逐项记录在 `RELEASE_MANIFEST.json`；源文件及分发内容分别计算 SHA256，不能将处理后的元数据谎称与 Git blob 完全一致。
 

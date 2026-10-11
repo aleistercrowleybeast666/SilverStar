@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "snapshot_source_commit": "a7e889c2602924a415bc5ee4c084fc1f8f4ade64",
-  "created_utc": "2026-10-10T17:55:38.264338+00:00",
+  "created_utc": "2026-10-11T02:32:19.678364+00:00",
   "scope": "file provenance and retained license documentation; no relicense or final legal clearance",
   "first_party_license_unchanged": true,
   "official_license_copies": [
@@ -4613,7 +4613,7 @@
     }
   ],
   "semtech": {
-    "status": "MATCHING_LICENSE_AND_ORIGINAL_VERSION_UNRESOLVED",
+    "status": "ORIGIN_CONFIRMED_EBYTE_ARCHIVE_NO_STANDALONE_LICENSE; retained headers; no blanket clearance claim",
     "files": [
       {
         "file": "apps/SCG/plugins/builtin/silverstar_device_telemetry_sx1281/payload/Middlewares/Third_Party/SX1280lib/RangingCorrection.h",
@@ -4736,7 +4736,11 @@
       "Original official SX1280Lib archive/export with LICENSE.TXT and rangingCorrection files, or exact original repository revision with reachable authoritative license.",
       "The import revision/URL linking locally adapted files and data tables to that distribution."
     ],
-    "no_claim_of_prohibition": true
+    "no_claim_of_prohibition": true,
+    "previous_status": "MATCHING_LICENSE_AND_ORIGINAL_VERSION_UNRESOLVED",
+    "original_archive": "https://www.ebyte.com/Uploadfiles/Files/2024-2-27/20242271620496877.rar",
+    "original_archive_sha256": "b39eef7a3077ce459a52bf10f3268174eeff2507586580d689845e92cdff39ca",
+    "prohibited_license_substitution": "Do not apply Semtech SWDR005 Clear BSD from an unrelated driver."
   },
   "known_local_template_modifications": [
     {
@@ -4886,9 +4890,33 @@
   "remaining_source_request": {
     "board_files": 38,
     "semtech_files": 25,
-    "status": "AWAITING_USER_SOURCE_INFORMATION; no further expansive search",
+    "status": "USER_SOURCE_INFORMATION_RECEIVED; proceed within release authorization, retain template/license scope uncertainty; no further search this round",
     "user_wording": "请告诉我们 Ground_Station0.5、Flight_Controller0.5 旧工程和 SX1280lib 最初从哪里取得，或提供原始工程/库压缩包，保留随附许可文件即可。无需另行整理法律清单。",
     "acceptable_alternatives": "Authoritative matching template/distribution terms with provenance, or ST/Semtech statement tied to the exact files/hashes. Original project LICENSE is one possible witness, not the sole mandatory artifact.",
-    "already_available_evidence": "Current repository .ioc records tool/FW versions; Git histories do not establish original Semtech revision. Supplied FINAL license scope does not close the 38 generated-template or 25 Semtech files."
+    "already_available_evidence": "Current repository .ioc records tool/FW versions; Git histories do not establish original Semtech revision. Supplied FINAL license scope does not close the 38 generated-template or 25 Semtech files.",
+    "previous_status": "AWAITING_USER_SOURCE_INFORMATION; no further expansive search"
+  },
+  "user_source_confirmation_20261011": {
+    "basis": "Direct user confirmation: both board projects are self-developed; radio package downloaded from Ebyte official website and modified locally.",
+    "board_origins": [
+      {
+        "project": "Ground_Station0.5",
+        "repository": "aleistercrowleybeast666/GS_SS1",
+        "commit": "7fe0f61142c7360f7dbae0ac0000036315631320",
+        "ioc_present": true
+      },
+      {
+        "project": "Flight_Controller0.5",
+        "repository": "aleistercrowleybeast666/FC",
+        "commit": "cc0b377ded690556d037a412a55f87fe334c42d0"
+      }
+    ],
+    "upstream_template_scope": "First-party project origin is confirmed; existing ST template notices and applicable independently mapped component terms remain separate. Confirmation does not relicense ST code.",
+    "radio_archive_url": "https://www.ebyte.com/Uploadfiles/Files/2024-2-27/20242271620496877.rar",
+    "radio_archive_sha256": "b39eef7a3077ce459a52bf10f3268174eeff2507586580d689845e92cdff39ca",
+    "radio_archive_license_file": "No LICENSE/license.txt in original archive; 25 C/H files retain Semtech 2016 Revised BSD notice headers. Mbed C++ to C port, then local modifications.",
+    "future_reimplementation": "Planned future SilverStar implementation; NOT implemented in this release.",
+    "known_quality_limit": "User has repaired several fatal defects, but has not exhaustively scanned all library code; residual defects may remain.",
+    "release_scope": "User authorizes this release with accurate provenance and limitations; no further license hunt or driver replacement in this round. This is not a claim that every third-party grant is independently closed."
   }
 }
