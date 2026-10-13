@@ -79,6 +79,7 @@ from services.state_model import (
 from transport.protocol_worker import ProtocolBatch, ProtocolWorker, ProtocolWorkerDiagnostics
 from transport.serial_backend import SerialConfig, SerialLink, list_serial_port_names
 from ui.file_transfer import FileTransferManager, normalize_port
+from ui.probe_selection import ProbeSelectionManager
 from ui.main_window import MainWindow
 
 GS_STATE_MAP = {
@@ -993,7 +994,7 @@ class DataMigrationWorker(QObject):
 
 
 class Controller(QObject):
-    def __init__(self, window: MainWindow) -> None:
+    def __init__(self, window: MainWindow, *, probe_enumerator=None) -> None:
         super().__init__(window)
         self.window = window
         self.link = SerialLink()
@@ -1032,6 +1033,7 @@ class Controller(QObject):
         self.data_migration_worker: DataMigrationWorker | None = None
         self.data_migration_cancel_requested = False
         self.file_transfer = FileTransferManager(self)
+        self.probes = ProbeSelectionManager(self, probe_enumerator)
         self.pending_data_root: Path | None = None
         self.previous_data_root: Path | None = None
         self.pending_data_migration_conflict_policy = (
@@ -1070,7 +1072,7 @@ class Controller(QObject):
         self.window.on_debug_connect = self.file_transfer.connect_debug
         self.window.on_debug_disconnect = self.file_transfer.disconnect_debug
         self.window.on_cancel_device_job = self.file_transfer.cancel
-        self.window.on_close_requested = self.file_transfer.request_window_close
+        self.window.on_close_requested = self._request_window_close
         self.refresh_ports()
 
     def _next_state_generation(self) -> int:
@@ -1127,6 +1129,11 @@ class Controller(QObject):
 
     def refresh_ports(self) -> None:
         self.window.set_ports(list_serial_port_names())
+
+    def _request_window_close(self) -> bool:
+        probes_done = self.probes.request_close()
+        files_done = self.file_transfer.request_window_close()
+        return probes_done and files_done
 
     def connect(self) -> None:
         if getattr(self, "file_transfer", None) is not None and self.file_transfer.busy is True:
@@ -1271,6 +1278,8 @@ class Controller(QObject):
         self._replace_state(connected=False, connection_text="未连接")
 
     def shutdown(self) -> None:
+        if getattr(self, 'probes', None) is not None:
+            self.probes.shutdown()
         if getattr(self, "file_transfer", None) is not None:
             self.file_transfer.shutdown()
         if self.simulation_worker is not None:

@@ -104,10 +104,11 @@ class UiWorkflowTests(unittest.TestCase):
             self.window.preflight_page,
             self.window.flight_page,
             self.window.post_process_page,
-            self.window.maintenance_page,
+            self.window.maintenance_scroll,
         ):
             self.window.pages.setCurrentWidget(page)
             self.assertIs(self.window.pages.currentWidget(), page)
+        self.assertIs(self.window.maintenance_scroll.widget(), self.window.maintenance_page)
 
     def test_header_brand_credit_version_and_localized_labels(self) -> None:
         self.assertEqual(self.window.windowTitle(), "SilverStar GSHC")
@@ -338,7 +339,8 @@ class UiWorkflowTests(unittest.TestCase):
         source_file.write_text("flight-log", encoding="utf-8")
 
         with patch("app.USER_DATA_ROOT", source_root), patch("app.list_serial_port_names", return_value=[]):
-            controller = Controller(self.window)
+            from transport.probe_inventory import ProbeInventory, ProbeInventoryResult
+            controller = Controller(self.window, probe_enumerator=lambda _: ProbeInventory(ProbeInventoryResult.Empty))
         controller.data_root = source_root
         controller.log_dir = source_root / "logs"
         controller.data_dir = source_root / "data"

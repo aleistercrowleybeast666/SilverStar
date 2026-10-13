@@ -1201,6 +1201,25 @@ EN_US.update({'horizontal.title': 'Horizontal trajectory', 'horizontal.east': 'E
 ZH_CN["horizontal.history_trimmed"] = "已达容量；省略最早 {count} 个样本，显示可用范围"
 EN_US["horizontal.history_trimmed"] = "Capacity reached: {count} oldest samples omitted; available range"
 
+ZH_CN.update({
+    'probe.title': 'SWD 调试器', 'probe.retry': '重新检测 / 重试',
+    'probe.not_scanned': '尚未检测探针；未连接目标', 'probe.busy': '正在枚举主机探针…',
+    'probe.empty': '未检测到探针；可重新检测', 'probe.choose': '请选择探针',
+    'probe.selected': '已选择探针；未连接目标', 'probe.removed': '所选探针已失效；请重新选择',
+    'probe.missing_dependency': '缺少主机枚举组件；可重试', 'probe.failed': '主机枚举失败；可重试',
+    'probe.cancelled': '检测已取消',
+    'probe.boundary': '仅枚举和选择主机探针；未建立 SWD 会话。占用、目标供电及固件状态未知。与 COM 串口角色独立。',
+})
+EN_US.update({
+    'probe.title': 'SWD probe', 'probe.retry': 'Detect / Retry',
+    'probe.not_scanned': 'Not scanned; target not connected', 'probe.busy': 'Enumerating host probes…',
+    'probe.empty': 'No probe detected; retry available', 'probe.choose': 'Select a probe',
+    'probe.selected': 'Probe selected; target not connected', 'probe.removed': 'Selected probe unavailable; select again',
+    'probe.missing_dependency': 'Host enumeration dependency missing; retry available', 'probe.failed': 'Host enumeration failed; retry available',
+    'probe.cancelled': 'Detection cancelled',
+    'probe.boundary': 'Host probe inventory and selection only; no SWD session. Probe occupancy, target power and firmware are unknown. Independent of COM serial roles.',
+})
+
 class I18n:
     SETTINGS_ORGANIZATION = APP_ORGANIZATION
     SETTINGS_APPLICATION = APP_EN_NAME

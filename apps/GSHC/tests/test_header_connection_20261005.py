@@ -17,7 +17,7 @@ def _Rect(widget, window):
 
 
 @pytest.mark.parametrize("language", ("zh_CN", "en_US"))
-def test_connection_controls_center_and_baud_edit_field_fits(tmp_path, language):
+def test_connection_controls_left_aligned_and_baud_edit_field_fits(tmp_path, language):
     app = QApplication.instance() or QApplication([])
     i18n = I18n(QSettings(str(tmp_path / "settings.ini"), QSettings.IniFormat))
     i18n.set_language(language)
@@ -36,7 +36,7 @@ def test_connection_controls_center_and_baud_edit_field_fits(tmp_path, language)
         assert window.port_combo.width() <= 180
         group = _Rect(window.header_connection_group, window)
         bar = _Rect(window.header_bar, window)
-        assert abs(group.center().x() - bar.center().x()) <= 3
+        assert 0 <= group.left() - bar.left() <= 16
         assert _Rect(window.lbl_port_name, window).right() < _Rect(window.port_combo, window).left()
         assert _Rect(window.lbl_baud_name, window).right() < _Rect(window.baud_combo, window).left()
         assert _Rect(window.port_combo, window).right() < _Rect(window.lbl_baud_name, window).left()

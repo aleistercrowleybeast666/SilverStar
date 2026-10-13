@@ -20,6 +20,7 @@ from test_file_service_client import MockTransport
 from ui.file_transfer import DownloadWorker, ExportWorker, normalize_port
 from ui.main_window import MainWindow
 from ui.maintenance_page import MaintenancePage
+from transport.probe_inventory import ProbeInventory, ProbeInventoryResult
 
 
 class TransferUiTests(unittest.TestCase):
@@ -39,7 +40,7 @@ class TransferUiTests(unittest.TestCase):
         self.settings = QSettings(str(self.root / "settings.ini"), QSettings.Format.IniFormat)
         self.window = MainWindow(I18n(self.settings))
         with patch("app.USER_DATA_ROOT", self.root), patch("app.list_serial_port_names", return_value=[]):
-            self.controller = Controller(self.window)
+            self.controller = Controller(self.window, probe_enumerator=lambda _: ProbeInventory(ProbeInventoryResult.Empty))
         self.source = self.controller.log_dir / "fc_session_ui.jsonl"
         self.source.write_bytes(b'{"raw_hex":"00ff"}\n')
         self.target = self.root / "下载 日志"
@@ -283,7 +284,7 @@ class TransferUiTests(unittest.TestCase):
         self.assertEqual(self.window.debug_port_combo.count(), 3)
         layout = self.window.btn_refresh.parentWidget().layout()
         self.assertLess(layout.indexOf(self.window.btn_refresh), layout.indexOf(self.window.lbl_port_name))
-        self.assertIn(self.window.i18n.tr("maintenance.swd_unavailable"), self.window.maintenance_page.swd_status.text())
+        self.assertIn(self.window.i18n.tr("probe.boundary"), self.window.maintenance_page.swd_status.text())
         self.assertIsNone(self.controller.file_transfer.owner)
 
     def test_diagnostics_generic_rows_pause_for_file_job_and_disconnect(self):
