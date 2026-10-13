@@ -24,9 +24,12 @@ def _Configuration(probe):
     _ValidateProbe(probe)
     return [
         'adapter driver cmsis-dap', 'cmsis-dap backend usb_bulk',
+        # The reviewed Horco profile exposes the bulk DAP interface as MI_00.
+        # Never let a future multi-interface descriptor silently choose another.
+        'cmsis-dap usb interface 0',
         'cmsis-dap vid_pid 0xfaed 0x4870', f'adapter serial {probe.serial}',
         'transport select swd', 'adapter speed 100', 'reset_config none',
-        'gdb_port pipe', 'tcl_port disabled', 'telnet_port disabled',
+        'gdb port pipe', 'tcl port disabled', 'telnet port disabled',
         'swd newdap ss cpu -expected-id 0x2ba01477',
         'dap create ss.dap -chain-position ss.cpu',
         'target create ss.mem mem_ap -dap ss.dap -ap-num 0 -gdb-port pipe',

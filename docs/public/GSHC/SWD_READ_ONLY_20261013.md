@@ -27,6 +27,10 @@ CPUID/DBGMCU 检查成功后，才显示目标已连接。维护串口及 AIR M0
 
 ## 后端核验与阻塞
 
+后续[离线阻碍核对](SWD_OFFLINE_AUDIT_20261013.md)已确认本机 EXE 与供应商发布归档完全一致，
+区分了纯 SWD 的复位路径与 WinUSB/HID 排他边界；下述首次实现记录仍保留历史范围。
+真实 gate 未解除，台架前仍需处理明确 Busy 拒绝及双调试接口占用。
+
 本机 `.venv` Python 3.14.0；未安装 pyOCD、pyusb、hidapi 或 pyelftools。
 已有 `D:/OpenOCD-20250710-0.12.0/bin/openocd.exe`：
 `Open On-Chip Debugger 0.12.0 (2025-07-10) [https://github.com/sysprogs/openocd]`，

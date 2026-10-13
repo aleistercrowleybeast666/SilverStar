@@ -169,7 +169,9 @@ def test_live_adapter_is_blocked_before_process_or_device_open(tmp_path):
 def test_configuration_no_board_scripts_core_driver_or_network():
     commands = _Configuration(PROBE)
     assert 'reset_config none' in commands and 'cmsis-dap backend usb_bulk' in commands
-    assert 'tcl_port disabled' in commands and 'telnet_port disabled' in commands
+    assert 'cmsis-dap usb interface 0' in commands
+    assert 'gdb port pipe' in commands
+    assert 'tcl port disabled' in commands and 'telnet port disabled' in commands
     assert any('mem_ap' in command and '-gdb-port pipe' in command for command in commands)
     assert not any(word in ' '.join(commands) for word in ('cortex_m','source ','reset halt','resume','flash ','3333'))
 
