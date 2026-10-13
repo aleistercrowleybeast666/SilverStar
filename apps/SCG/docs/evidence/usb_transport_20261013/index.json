@@ -1,0 +1,1570 @@
+{
+  "schema": "silverstar-usb-transport-audit-v1",
+  "recorded_head": "14f8e1bb63250184d90a2fa27cab20b266f4f5ad",
+  "frozen_v0_1_2_tag_object": "942f20ef64df3cb1aa65be7349361c409418aa0f",
+  "scope": "Experimental additive kit; ABI_ONLY_NOT_HOOKED_TO_NATIVE_CALLBACKS; no hardware actions",
+  "source_bindings": {
+    "apps\\SCG\\src\\silverstar_fccg\\app\\usb_transport.py": {
+      "current_sha256": "21bf87afa1d5a9bd3bfffa242d071715593aedde9e08f1e580a4f8aa93d1a16b",
+      "export04_match": true,
+      "final03_match": false
+    },
+    "apps\\SCG\\src\\silverstar_fccg\\generator\\usb_cdc_transport.py": {
+      "current_sha256": "8e24afa217fe9b90553befbebc2666381614f9a242c14129e8f6fa046c608aeb",
+      "export04_match": true,
+      "final03_match": true
+    },
+    "apps\\SCG\\tests\\test_usb_transport.py": {
+      "current_sha256": "d874ceec988f5e15fae1436b41f45416c606fccf2765222cdcc2aa8dac92f4e5",
+      "export04_match": true,
+      "final03_match": false
+    },
+    "apps\\SCG\\tools\\validation\\usb_transport_validate.py": {
+      "current_sha256": "07498edde887d6abf5344692977dec71737cd33d10817d36908847003210e971",
+      "export04_match": true,
+      "final03_match": false
+    }
+  },
+  "native": [
+    {
+      "part": "STM32F103C8T6",
+      "root": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b",
+      "scope": "ABI_ONLY_NOT_HOOKED_TO_NATIVE_CALLBACKS",
+      "source_commit": "14f8e1bb63250184d90a2fa27cab20b266f4f5ad",
+      "original_command_count": 339,
+      "warnings": [],
+      "generated_current_match_sha256": {
+        "Inc/usb_cdc_transport.h": "225f99a7ff8520b5324615c22f868eb42bf78935093c5773a55710b6eae6c4ed",
+        "Inc/usb_cdc_port.h": "14d76f1e98f691d82181ae563534463f9962c7a12145931f06399fd3d083b343",
+        "Src/usb_cdc_transport.c": "37684894e381072410182de742db02b2c7e49e2d6a18f3e707473cec08c9a9e8",
+        "Src/usb_cdc_port.c": "b12f19a50b4e977bc16a7e1d8b631a21d972760255c32f785489629b776cb114",
+        "usb_cdc_transport.cmake": "044c83b4e8ea5bedd585eaa0b6b24170006c57cc89d517253a00aebc01668973"
+      },
+      "license_and_release_files": {
+        "HardwareGenerated/NativeClassicCdc/License.md": "92282b534952354891151c90af2f935f311fb3b3be9deed1eae8410599443a39",
+        "HardwareGenerated/NativeClassicCdc/Package_license.md": "5d0016458729aeb4501e604bb8fa8385e1b258b0113af3c6915532cfb945817b",
+        "HardwareGenerated/NativeClassicCdc/Drivers/CMSIS/LICENSE.txt": "e03ba41d7fab20700769fe4118bab50d800cb74f990353a05d2f5fff1c228363",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/LICENSE.txt": "d5a162f3eaf2b7b6762f00700017cae5695ebbdce7932fead8316448baafd9c1",
+        "HardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/LICENSE.txt": "b616ef9c1ae02a5da902bc4a3efb48a8a3170308b30fc09bfda77ba712f49f95"
+      },
+      "input_sha256": {
+        ".mxproject": "fb283c98084b2d3ec685f197709c60072d06be4b5de8c2816426cb3d404defe7",
+        "cube-f103-usb.ioc": "352e9529bc6811bbf4013b30793fb29d5ac6723e97a5f015aeea9f40d60d5643",
+        "License.md": "92282b534952354891151c90af2f935f311fb3b3be9deed1eae8410599443a39",
+        "Makefile": "3e4623d60da22a4f6223f07d2529ea179789028b8750c3ea3c93062074b3a151",
+        "Package_license.md": "5d0016458729aeb4501e604bb8fa8385e1b258b0113af3c6915532cfb945817b",
+        "startup_stm32f103xb.s": "a9a5fc7ed5ff617527dd98b3092830f4d17ed4bf57c99eac2c53bdb514ce138c",
+        "STM32F103XX_FLASH.ld": "06e84edb59f646ee70f086243b60280623b0077ac1a6e5a39b72799c4a3f967b",
+        "USB_DEVICE/App/usbd_cdc_if.c": "ae28e72d8a1f51db0c80c9ac3f6775c01023af39fd9f5b30ab239b0dfe6b663a",
+        "USB_DEVICE/App/usbd_cdc_if.h": "d45aedfed245c9ef0413a5942c64a2981375d391281fb873e0e84610774bf6ba",
+        "USB_DEVICE/App/usbd_desc.c": "f489492589fe4fbc9a98b340dd1c8c754e17a71b02ffca6ee7801a405a764107",
+        "USB_DEVICE/App/usbd_desc.h": "1e47de8ed0f3d14ac0e8b702dd29cfa96325bd31dc20786018afe40cfbf08069",
+        "USB_DEVICE/App/usb_device.c": "35fc6fe328f3b683fed8a4f75fbd809ba486ccbba1699994f7eb94c35cdb884b",
+        "USB_DEVICE/App/usb_device.h": "679fbafd000780ab1c924d20ff45a079b7db2dce127f7ac2dd16cc8076310599",
+        "USB_DEVICE/Target/usbd_conf.c": "effe29562b9d655026d6127a87a988af13d05744d5d6d70356faefe5004d0f87",
+        "USB_DEVICE/Target/usbd_conf.h": "04e182939c390d12a163d3d8c003f31202f3fdcdfd37aa09cf111dc5aaa285b5",
+        "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h": "5df2712273bfd522fd5164385acc22d6c2fb899b4dc6ed09823a3698e0963c5e",
+        "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h": "e0e1fd6d50790b5f82e633e3683908ace0f5e8339884648a013c6e0dfe27c0e4",
+        "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h": "1fb60258c3705a07f04c32d5b6229a8b8125f90fd72ee06959c098d94485dd05",
+        "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h": "b3c4df07bf76dd3371def96c9de53bb2db991f6cecc4601da890641f24376175",
+        "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c": "9696a4d61c9e05cd7989936792b15b88f9b7be567d2a927b4feeb0685f1a73a2",
+        "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c": "339046117dd385d4257508a2b240067b7624a4b6df3dd170b72d2cdac215ffa9",
+        "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c": "a89f4e80bb59bcd369fe412b12915ab4392bb110bb54f0b93dd521c43669dbc1",
+        "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h": "2bc428e2226229a206723d0441d37003a390ceea9acb7825b02dacf3afc05a1e",
+        "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c": "9bf6b6c49a7faab7bdc465dae5df52bcc878720bd354c8596b51e16d6e210ecb",
+        "Drivers/CMSIS/LICENSE.txt": "e03ba41d7fab20700769fe4118bab50d800cb74f990353a05d2f5fff1c228363",
+        "Drivers/STM32F1xx_HAL_Driver/LICENSE.txt": "d5a162f3eaf2b7b6762f00700017cae5695ebbdce7932fead8316448baafd9c1",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h": "cc3851d46bc92478fe355f8b1fedd013deaa70da5e8e4136ce5cbb2536519803",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_cortex.h": "11ef612e231958eb9f3d4f825cda6bed35bd482996ecbf51f34b5ee7d84371f7",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h": "377e7fc68715cfb6d09715e9d77bd5cee09e79f00479f502d3191016c3c388dd",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h": "22cbcbf02ef1867f0d9bbf28c600c9aeb71a7d221608449ae64cb48339687928",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma_ex.h": "1b09d5229c87587ab894fc3237182a7027b1672a20433b9659433fb978e459f3",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_exti.h": "745bd5b830259f613d116286a445d18c26677a72170117f2b35b7e0607fd563c",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash.h": "fc9d0c2df0c277cbcb37a5baca8e0b6f112e4c7e879dc753b62aa9095732fff5",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h": "6bdda70eea1f54de098cf7033091c1d367e40043e3e0759ec08700718d38ab35",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h": "3ae8ac366a2a55952fc4bada166e88f6d15fb884492048191f267f79ffa73d44",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio_ex.h": "769eb507539209ec99906cb586e60c760c96ffcede2754e5c43717404e3f18de",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd.h": "8f59dc170ba07d1466471742e39bde67b03db84bfb968a7e1152df5ac0b4ab72",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd_ex.h": "5d1c4892ffd05dff9ec40eb36dc528b9e4f6967c5abd8679348b9a930a30b0b0",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h": "1353dc09e32e7e6ec686b725b80981a9286c7e8b5383f8f4259f672470d481c3",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h": "8bf099bedb0c4fa035df81520f99e289464293b27e71d7e8759c8d5160ce8ac1",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc_ex.h": "ed9ac1b6349ed0989367a1daa82819390dcefec0f6cef6fa432e09b2c9ea0adc",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h": "261464a3f9e9ad0c8c6390eeec680f1bbf87cf5c72c80008ada16928070446e9",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h": "949edfcd2021d8c73c5eb36d5cc1fb995b6f7a19fc084121b340c7502d33c135",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_bus.h": "6680693a685a8ed0d09d9c6901328ac23bb207ecc9d68e9521b66cf09c8f75a8",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_cortex.h": "e46032e4e08ce856c204f91f28018dc4ac59f4b8ea24e3bf0f5a609a4ba7bb32",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_dma.h": "1a0eba87b8820b996098d1be8d09ab3df996845cf1c1fa5b536cbf6bce8fe16d",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_exti.h": "9f816072941e79763cbc048fe03bf803fd81bf0a0ade876d74a49be8620bfde5",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_gpio.h": "d2fe5810dc0640bfc6f10be30162425d6b0004444bc40cb5d62257b6f21338fe",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_pwr.h": "4e706bc7ad93abf9e67433d7c46abf777e74d9036fa03a16380348c118b8c998",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_rcc.h": "8f9653c499ac50a5d874c2606091b1a2fbed71aae7d25e70d9d518337d7922ed",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_spi.h": "aa8d53561d7617de21e1caf4de8a8ad8502b9a9a74e37b5366a81e984dffdf0f",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_system.h": "5506acce915aad3a1d0a93f17a07eb2c26c731808dc77c28014eef081c3824bb",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usart.h": "8684e487827c318256ba7ae36841bd2c7fa2438c0cc5c8aa36b555f607873e77",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usb.h": "2bd0a33a370a330a7187e71393097660c74093d29ae7a7389d9bab7cbcaaba8c",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_utils.h": "decb7156d26dc56db7ed76c06c71533ca579905b80824b178749a03a2f224a1b",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c": "607343f969fce8d49111fe4d8d32001c9b289742408d0452ae49761034f39f01",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c": "21ccc3b54e45e62b278e7f32fd34533bb1e0f4105c7f47c9218ffa0801bfbddd",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c": "9ec6e91366c9b27c64b93c4d31fb4636dbc830b055ec501dc728c34eff6900da",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c": "6f201feccce8c53717098109bd4d2b4a0894ce4334cd1d6cdd8d15d5e69a8eb6",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c": "cddd2adcf578c7d63fd27f55a6ef88f50540a3b65927dfc411c192900c127bb1",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c": "5e0631a9ce807629cc24d26effb6dba3b0e4eeca10e9d46ae9d5dc40fa1989da",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c": "a2e12792c9d49eecdc567ab9fc1a49ed90723007f9579b702c28960dfd83e121",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c": "5ec9f22de1b3ee82e8437b3ba52725f8f031cf9075848582a0a297d4d1176450",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.c": "412e7819ef1900f3b33b550068c64e7f9679fe99793758a23e775712842c12a2",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.c": "036e3573f0d1a2dab6c5bd713333cde6a633afecb1df8d437bee081b02cd9a20",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c": "d7db81f800f7f41c942b485e2f3fe9a27f5b21def71830297ecb44f131d91e60",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c": "5c64b13347aa70dd970f803331d3e106e915e13e2bb029d27c673cfba7cd394c",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c": "2dc02facf7141e4a25ae5653287d7100adbc3847b8a25e3e00969927c2e727d5",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c": "74c20012ae5e579f6f720b941e66cae7b39ca47d80d873dc53d2274519795802",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c": "0baff878faf8551e43ad63959f04bae08d61ee94e686e56a56cd97d02535c4d9",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c": "d4cb02a5d87452df94f8695e3ca7e10b20fb298113b0022c768e062d1a7c65c0",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h": "583cd8373bde87cbf384a9153b7c8ba9c456139baebb248bffe7116c926e2286",
+        "Drivers/CMSIS/Include/cmsis_armcc.h": "57b8d88cd03152f60bf74de0149ec979ae20210d86ab06e837aa69c66f27d615",
+        "Drivers/CMSIS/Include/cmsis_armclang.h": "da29dbad3cf27f6c86437af6bd0b302e105210742ad7a602bea51b104f1661c9",
+        "Drivers/CMSIS/Include/cmsis_compiler.h": "cd3cbd1c771a5252827a14c75a12e7ed975f76b9fc1577d53a74ba0e7c1af6c3",
+        "Drivers/CMSIS/Include/cmsis_gcc.h": "8c16d51f7884a9fc07c5cbe6f2bcd24e5e092ddc519f71d36740c2d2e2ff6a27",
+        "Drivers/CMSIS/Include/cmsis_iccarm.h": "a600765888c69ee60cd2d01d77356902d4ae5fa98aa7e1d73703663c96b7f87a",
+        "Drivers/CMSIS/Include/cmsis_version.h": "280b9fc8739aefa878d47e68d7adbd4908a15f98ec193cdba1a4b514133f5c34",
+        "Drivers/CMSIS/Include/core_armv8mbl.h": "220d90f3f99126e656c31c32f099ff766b32cf487f7dd77388e4c9a78e1898c8",
+        "Drivers/CMSIS/Include/core_armv8mml.h": "825a8799d71f3fa29690b1597dfc2dfb660b103d44e20b8185f26b4f3b4ffdf0",
+        "Drivers/CMSIS/Include/core_cm0.h": "1beaa04c859225f75142d055e9c5dacfc9ac1d88c82934177f745b9c5f3f4094",
+        "Drivers/CMSIS/Include/core_cm0plus.h": "c953256e1c1b1cd6accbbfca5d47c09a9b0534f3147b125e17e59c0ae6c30ed7",
+        "Drivers/CMSIS/Include/core_cm1.h": "460281028a261740cd5ec86840bed01c480d70ba5b54a0f9938d4cefadfd486b",
+        "Drivers/CMSIS/Include/core_cm23.h": "6303efec943ca0f9eccdab8fc39200d6f95dc943d4051198e0d49f24395028a5",
+        "Drivers/CMSIS/Include/core_cm3.h": "368296087a925cf78133d27e0854d748605441915e0f4fece93f2f97eea68adb",
+        "Drivers/CMSIS/Include/core_cm33.h": "7f1b6a76b119e1e1680f756da897929f63d98133442c5115678af60adf20f1a8",
+        "Drivers/CMSIS/Include/core_cm4.h": "738dff259c25e68ed2529baf425315d8dae1af5dac6c11b66bfdef82e78e86c9",
+        "Drivers/CMSIS/Include/core_cm7.h": "6b75e3bef1eb81e0d3e2c311ad26fcdbac4cde2cd3462a62b81a23f6aec0e55f",
+        "Drivers/CMSIS/Include/core_sc000.h": "d1528d13fbf91da620ef977e99802d83ded093c0521c04cad128da23e3001524",
+        "Drivers/CMSIS/Include/core_sc300.h": "fa514ea0cf5327b0523c2bdfebfb76fd2e69f972e5f60fbfb94ade56b31c722b",
+        "Drivers/CMSIS/Include/mpu_armv7.h": "b0b6da4ec744b5f547a94e60e24b0a6ff6bb7307d3f81a83d0b7c3a64dc29326",
+        "Drivers/CMSIS/Include/mpu_armv8.h": "8280a1d4d3d25f60cdc05b84718cf504f02b7265fc3b7c5790cb29cd7dcf116c",
+        "Drivers/CMSIS/Include/tz_context.h": "7fcc21fc190f6fd970390e9caaa6a86d72fd10f9edf4efab36f12aecf1a8baa0",
+        "Drivers/CMSIS/Device/ST/STM32F1xx/LICENSE.txt": "b616ef9c1ae02a5da902bc4a3efb48a8a3170308b30fc09bfda77ba712f49f95",
+        "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h": "d9c7c613d9fea74220892b4fbc3e80617493acad82a04bafadab2b4a7198399c",
+        "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h": "05e93fa3ddefb2e83d762b9ca4de36e3bba9cd8e9690400fe9f2c11fc0a3cef5",
+        "Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h": "a54dfbb3480c672f532d472a6e84bcf34df6551771d2e9966c5a3503c676b6ab",
+        "Core/Inc/dma.h": "7cf6f7450a29d26303cbba5a3ca8c6cb24a02635d6a5ba4d05141fdfc75c4c49",
+        "Core/Inc/gpio.h": "e2d62f964a0b7f238384ed6a20a181d09df9647240a268dc547acf5b35099f74",
+        "Core/Inc/main.h": "63dc7f2dba801c0ecc73ad04e5151247324300495b6618a95b6eb408997fc0c0",
+        "Core/Inc/spi.h": "7ee08a1f7b3c518b8f1a33e73ee2d18830c1336be9341e774e73f137984491d8",
+        "Core/Inc/stm32f1xx_hal_conf.h": "92f0e3c270b9a757eb3a6f8252bdcfe3d6d1dea141b992afc88707d67c0937fe",
+        "Core/Inc/stm32f1xx_it.h": "98dce6276a88862c2d728a1cc5608b718f718873ce7d1eeba5e5063b4521c6d2",
+        "Core/Inc/usart.h": "b57eee246dfa6d43d3188845b3f5a21ae2fff22ccfc58317d6e51a26e994cbbb",
+        "Core/Src/dma.c": "d01f597b35d1381bb4d246a2cab078f7786e62355d06c322cabbdecff5c84f35",
+        "Core/Src/gpio.c": "81b05b5afd16a3619b1a2d0d4a5a0e251fb194feff547cd7a141e3d22ad8e5ae",
+        "Core/Src/main.c": "ab58a3082c5b3f6ad7ecdbafbcf606e84ca50e72d98ac9976ecd8926b8e6950c",
+        "Core/Src/spi.c": "e1607b65e151f22d84b8485d518740992186990e502902a6e98cdaa09e7a0a1f",
+        "Core/Src/stm32f1xx_hal_msp.c": "0c660d42a5bdd0df9e096117351e75ff94a8fb2cf0ec996cac0f55c1355c3ab9",
+        "Core/Src/stm32f1xx_it.c": "7a9b0b452936d153b7c71b85a451c8b29575d2abdb54e173fb3ea5a0efdc3bb9",
+        "Core/Src/syscalls.c": "03c06c72eafb44b499814cf9234aba57dd830f345d9b8779b5d7090e78517600",
+        "Core/Src/sysmem.c": "ad20f7b1fa1e7c73330727747222cf2ffa3245ebf035230ee9a157545e79df95",
+        "Core/Src/system_stm32f1xx.c": "6f13b57054f33b4dcb8f3f23fa05b2942d9dca8abd9a2a08ecde6f99693505a5",
+        "Core/Src/usart.c": "c3963ae03d9139ad636694b3bc626a2469502f54785acbf7d6139edc1d4cd164"
+      },
+      "all_retained_files_rehashed": 947,
+      "builds": [
+        {
+          "build": "build",
+          "artifact_sha256": {
+            "usb-transport-abi.elf": "97a1d40048244288fde2c339284edf155d818a79e7d39c25a44590a4d8ca3926",
+            "usb-transport-abi.map": "9c51e2862c4b8e137aa0b6816858f8012402816ced4d0edd12f1ee071f8c4687",
+            "usb-transport-abi-vectors.bin": "d60953ba530332b230d30448faf37dc95fd5642d6cb23e53fec2a1c5fe8c11ff"
+          },
+          "retained_libraries": [
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+              "object": "libc_a-errno.o",
+              "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+              "object": "libc_a-findfp.o",
+              "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+              "object": "libc_a-impure.o",
+              "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+              "object": "libc_a-init.o",
+              "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+              "object": "libc_a-memcpy-stub.o",
+              "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+              "object": "libc_a-memset.o",
+              "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+              "object": "libc_a-strlen.o",
+              "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+              "object": "_aeabi_uldivmod.o",
+              "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+              "object": "_arm_addsubdf3.o",
+              "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+              "object": "_arm_fixunsdfsi.o",
+              "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+              "object": "_arm_muldivdf3.o",
+              "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+              "object": "_dvmd_tls.o",
+              "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+              "object": "_udivmoddi4.o",
+              "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+            }
+          ],
+          "transport_function_frames": {
+            "build/Generated/UsbTransport/Src/usb_cdc_port.su": "Generated/UsbTransport/Src/usb_cdc_port.c:11:10:UsbCdcPort_Lock\t0\tstatic\nGenerated/UsbTransport/Src/usb_cdc_port.c:19:6:UsbCdcPort_Unlock\t0\tstatic\nGenerated/UsbTransport/Src/usb_cdc_port.c:25:14:UsbCdcPort_TxState\t0\tstatic\nGenerated/UsbTransport/Src/usb_cdc_port.c:35:14:UsbCdcPort_Submit\t16\tstatic\nGenerated/UsbTransport/Src/usb_cdc_port.c:47:14:UsbCdcPort_Rearm\t8\tstatic\n",
+            "build/Generated/UsbTransport/Src/usb_cdc_transport.su": "Generated/UsbTransport/Src/usb_cdc_transport.c:40:13:UsbCdc_Invalidate\t0\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:19:13:UsbCdc_Check\t32\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:52:6:UsbCdc_LinkDown\t8\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:60:14:UsbCdc_Quiesced\t16\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:74:14:UsbCdc_Configure\t16\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:90:14:UsbCdc_Receive\t24\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:114:14:UsbCdc_Read\t32\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:139:14:UsbCdc_Write\t24\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:179:14:UsbCdc_Service\t24\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:206:10:UsbCdc_SessionGet\t8\tstatic\n"
+          },
+          "whole_program_stack": "NOT_PROVEN"
+        },
+        {
+          "build": "build/analysis",
+          "artifact_sha256": {
+            "usb-transport-abi.elf": "97a1d40048244288fde2c339284edf155d818a79e7d39c25a44590a4d8ca3926",
+            "usb-transport-abi.map": "b314cf4fa302b06a8bf06c496298e017061799771f6f737c46fd1ab7969fea75",
+            "usb-transport-abi-vectors.bin": "d60953ba530332b230d30448faf37dc95fd5642d6cb23e53fec2a1c5fe8c11ff"
+          },
+          "retained_libraries": [
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+              "object": "libc_a-errno.o",
+              "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+              "object": "libc_a-findfp.o",
+              "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+              "object": "libc_a-impure.o",
+              "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+              "object": "libc_a-init.o",
+              "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+              "object": "libc_a-memcpy-stub.o",
+              "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+              "object": "libc_a-memset.o",
+              "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\\libc_nano.a",
+              "object": "libc_a-strlen.o",
+              "archive_sha256": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+              "object": "_aeabi_uldivmod.o",
+              "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+              "object": "_arm_addsubdf3.o",
+              "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+              "object": "_arm_fixunsdfsi.o",
+              "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+              "object": "_arm_muldivdf3.o",
+              "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+              "object": "_dvmd_tls.o",
+              "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7-m/nofp\\libgcc.a",
+              "object": "_udivmoddi4.o",
+              "archive_sha256": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+            }
+          ],
+          "transport_function_frames": {
+            "build/analysis/Generated/UsbTransport/Src/usb_cdc_port.su": "Generated/UsbTransport/Src/usb_cdc_port.c:11:10:UsbCdcPort_Lock\t0\tstatic\nGenerated/UsbTransport/Src/usb_cdc_port.c:19:6:UsbCdcPort_Unlock\t0\tstatic\nGenerated/UsbTransport/Src/usb_cdc_port.c:25:14:UsbCdcPort_TxState\t0\tstatic\nGenerated/UsbTransport/Src/usb_cdc_port.c:35:14:UsbCdcPort_Submit\t16\tstatic\nGenerated/UsbTransport/Src/usb_cdc_port.c:47:14:UsbCdcPort_Rearm\t8\tstatic\n",
+            "build/analysis/Generated/UsbTransport/Src/usb_cdc_transport.su": "Generated/UsbTransport/Src/usb_cdc_transport.c:40:13:UsbCdc_Invalidate\t0\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:19:13:UsbCdc_Check\t32\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:52:6:UsbCdc_LinkDown\t8\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:60:14:UsbCdc_Quiesced\t16\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:74:14:UsbCdc_Configure\t16\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:90:14:UsbCdc_Receive\t24\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:114:14:UsbCdc_Read\t32\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:139:14:UsbCdc_Write\t24\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:179:14:UsbCdc_Service\t24\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:206:10:UsbCdc_SessionGet\t8\tstatic\n"
+          },
+          "whole_program_stack": "NOT_PROVEN"
+        }
+      ],
+      "limits": "PRIVATE CANDIDATE ONLY. NOT PROVEN: manual critical-contract acceptance, complete EP0/async lifecycle, physical memory authority beyond caller review, MCU tick/radio timing, whole-program stack/WCET and hardware. Source/ABI closure and private generated Ground compilation are recorded only for this snapshot. Normal native generation remains blocked; no board access."
+    },
+    {
+      "part": "STM32F407VET6",
+      "root": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b",
+      "scope": "ABI_ONLY_NOT_HOOKED_TO_NATIVE_CALLBACKS",
+      "source_commit": "14f8e1bb63250184d90a2fa27cab20b266f4f5ad",
+      "original_command_count": 387,
+      "warnings": [],
+      "generated_current_match_sha256": {
+        "Inc/usb_cdc_transport.h": "225f99a7ff8520b5324615c22f868eb42bf78935093c5773a55710b6eae6c4ed",
+        "Inc/usb_cdc_port.h": "14d76f1e98f691d82181ae563534463f9962c7a12145931f06399fd3d083b343",
+        "Src/usb_cdc_transport.c": "37684894e381072410182de742db02b2c7e49e2d6a18f3e707473cec08c9a9e8",
+        "Src/usb_cdc_port.c": "f130a194292b29a23b42e7ab5ae48fa982e05cde084bed5911de762ee0fa8864",
+        "usb_cdc_transport.cmake": "044c83b4e8ea5bedd585eaa0b6b24170006c57cc89d517253a00aebc01668973"
+      },
+      "license_and_release_files": {
+        "HardwareGenerated/NativeClassicCdc/Package_license.md": "2fe52ca80ec3d84064631a051a914b418aa65b9126ae5131ea323213a8be5aa2",
+        "HardwareGenerated/NativeClassicCdc/USB_DEVICE/USB_Library_LICENSE.txt": "cbee2f4bca504849a4f5c48a396b9892c64e4b3aadc25bde42365d5bfa7adbdd",
+        "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/LICENSE.txt": "cbee2f4bca504849a4f5c48a396b9892c64e4b3aadc25bde42365d5bfa7adbdd",
+        "HardwareGenerated/NativeClassicCdc/Drivers/CMSIS/LICENSE.txt": "b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1",
+        "HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/LICENSE.txt": "d5a162f3eaf2b7b6762f00700017cae5695ebbdce7932fead8316448baafd9c1",
+        "HardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/LICENSE.txt": "135fb2d86e9ecdf6824cc3bba21c72b8e380c07b055fbebb6b995463eb609baf"
+      },
+      "input_sha256": {
+        ".mxproject": "edb4c9b9526d11de0acb08dd962e2321f7856e0c448a7fe9e8ea3f53a8e1eb52",
+        "cube-f407-usb.ioc": "b54fe39a49bc38217a6a8c4a6be72bcd668c26eb57720df85be006b2547f1433",
+        "Makefile": "4fe98196cb7afb7d355ee05477986bcd0fb9da5ce84562703776df5bcc3af063",
+        "Package_license.md": "2fe52ca80ec3d84064631a051a914b418aa65b9126ae5131ea323213a8be5aa2",
+        "startup_stm32f407xx.s": "430f14fd00db0f7aa88f354aee54064efb582ddc4cc264fb8e435dc7d7a2f53d",
+        "STM32F407XX_FLASH.ld": "498166bd9ecfba722c36d9f1821b89773b86d8093e13af1d5483c7507080c8e1",
+        "USB_DEVICE/USB_Library_LICENSE.txt": "cbee2f4bca504849a4f5c48a396b9892c64e4b3aadc25bde42365d5bfa7adbdd",
+        "USB_DEVICE/App/usbd_cdc_if.c": "9b0d5bc7dd87d80c2b86d725bd789805a6ef5b8c33541a0a54164ea15e21f76d",
+        "USB_DEVICE/App/usbd_cdc_if.h": "664e44912621ec1b9a2d602cda9ad5dd8c347da3c6efdcf10a5c9ba1674b8d39",
+        "USB_DEVICE/App/usbd_desc.c": "97ba18339feec643ec4959fc2acabb97e226e1d6e36416089b2d1059794cee15",
+        "USB_DEVICE/App/usbd_desc.h": "a4fbe168f224d3e2d8091b90df1115301247e1a6e16177bab101ca81aa70172d",
+        "USB_DEVICE/App/usb_device.c": "4bf9062fc2a106eaa6bd2c68942da74051da9bb49eb2eced1b0a109ea7dae2af",
+        "USB_DEVICE/App/usb_device.h": "5da12da5450c1e4344d68beb710e530da7d728c6e831a93442614446f84757b1",
+        "USB_DEVICE/Target/usbd_conf.c": "29c45cc956aa40eab3417c6a9a39fd2b196dde7c4cef8f3699a1c500d5825fe1",
+        "USB_DEVICE/Target/usbd_conf.h": "99dcff1bcbf4fbda59073bbc32ec34c61fbf7cbc0456c4f42b568078dee56fdf",
+        "Middlewares/ST/STM32_USB_Device_Library/LICENSE.txt": "cbee2f4bca504849a4f5c48a396b9892c64e4b3aadc25bde42365d5bfa7adbdd",
+        "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h": "a6c2dfc99fabefe4db7c4c145b4ab87d6b992e3fbd15cc65ecc1c7f9d2086f78",
+        "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h": "f8897c9b47f97b6ca78c72b857d20fb2a2b0d85091a2362799165cdfa863e3cc",
+        "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h": "1588736a66291a09de7aa69a5945574566413fefb84c0a7896dc088d174086a9",
+        "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h": "8a2d44f0cc1c34c21eb75e01cec568b45b901678fba9ca2dc3b0c9a9f0364e7c",
+        "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c": "21647e3c0537a8d56cd67cc67951206f7a84501acd74d0c8a827c13e192183c5",
+        "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c": "5f1c211ed991e074589c82bc52571357a268f36776111d99a85539df53fd80f0",
+        "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c": "7df0e6888230c6e0e4af31278853ae1accdf5728288ab2d1a1190a5692157038",
+        "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h": "3ea35b19e264217c3bd1d433c75f4e093930ea83cdf63aa88aee77748a9fc7dc",
+        "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c": "794a6d0df08fc2b777678b99013f61d0a9c93f5fbeacfaa3466c0feeaa9ada39",
+        "Drivers/CMSIS/LICENSE.txt": "b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1",
+        "Drivers/STM32F4xx_HAL_Driver/LICENSE.txt": "d5a162f3eaf2b7b6762f00700017cae5695ebbdce7932fead8316448baafd9c1",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h": "6942f40453fee331e026179cfac4c0f24ffe6313fedcb68af9c3382f702dbaf5",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h": "d1be882b4bef7d53646e85e3d1783b47e7880647ee8a1436da58d652c803b12f",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h": "c7da815c495df4b6d5e0764af990c1ae8df871fdd9e7f6e49416e931d40b3a0f",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h": "d96dba22903abda49d66cad29ac0c49357e6a27cf9cb03dfd8c6db71b61a7fca",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h": "c8eb3f7b393f8c5a0c32e16ccfa101c83ddb59e96bd42239b8a5c5d4da83e97f",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h": "71c38dfd65c5415b388375147e5317c7ac018b39893d6fd0ac1c897f4313329c",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h": "3ee15423d73ac394de39e7b65821775966389b13749ff0849894548ab6968676",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h": "61e8f76bdb45dedf38fef592504e10418ca410952c7a209cd271b45ac835833a",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h": "10be06c6e06fcf4eb11e236641948aed861898fea235c606ae221fa72bc46638",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h": "7c206f5dbed3c147a6f090ab808933132a1b06b8339623ad7174fd0a222e981c",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h": "f18a6eabc99f56483566f9231ca33c780afa98bc93929e60bb419b5e544eee2a",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h": "0b40fc83363b64d3c7396a202be7a914ceaa7735ab0fa81d566ed320102b23fb",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h": "4091beefc5bf8b250f376d400f43ca028ef7378e1c7ba5c9eb5de64ec74231c0",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h": "6694ecb5f99106582053b1080ea192b9685131a789c37e14cd75e0952c6d6026",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h": "3dcb909d0aafba72741ab372c038ee0086e4b21dec0d876da48fc2646e17d209",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h": "d6f6abc4af3d5a1ca59d886f5a9154e44f257a43af77c7f18173f160825ed6b5",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h": "1794b88c5e080858c0205a2e94340c0250ac9171b3a3f01cad6d050005a1b09d",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h": "eb6911d964b1cf8a83993b19c8feb9845e8793d7c0e5d643390b53207c8b078e",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h": "49f0c8068524e1de248738530cff3bbe630dc4784b6e8b5568fbc7e1a154f772",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h": "330803c32d1d5ec40df5a827a74cb1d850ec60b207eda5bf6299c57d575795a6",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h": "63f00354e2a5e8d3a8d211fc736517273e12b99a1eb782aa7a2670cb1264a16d",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h": "aa6695d64677e8a7b46d719da3d81049290f42383c17e76271605bc68143fd1e",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h": "42528bc9caa6e2fe96b7e6d7b3fcdf35d8d85ae38d33195a233e18a072f157a1",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h": "fabfc9706709a9997e96d87aee25356b3ca84021668a915ad816ba42e1babadc",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_bus.h": "95a518139f74d14a4477519b5172675347990e9fa637bd3948c69bd475bd7c88",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_cortex.h": "d8b268ca207e51864d1a71ce14fff316c57d09e62a04d0c28310b4a1008e6f17",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_dma.h": "39e89050700e16304e04643e29c162b6aaa9f3bfe53880cd78c255ce46104e82",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_exti.h": "6da580d41ebdcfd7349e29666a2e561c8e2c2e01f6e7ef29dfec6ebf6ae237df",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_gpio.h": "e46857f5f9a5f5a2d13ca2d6925dc9e66dfa7fc56a2cc72e54b891bdb88e2f16",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_pwr.h": "229af558bfeef8bb88d2224277b083c3b927c5c2612991fdeba00dad56255abc",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_rcc.h": "605960f2e8e57a702b912475f9c154bb58711b58c8f2ff27dd4e75b5d767dc4e",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_spi.h": "3b053ed6c58bc9ae4de03fcae86f64a14fb86ad4a36ef27a3bdf1524e93e9b54",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_system.h": "d634a419a55e99b4a641fecc055e1f602d8a418bd7d822cf2f812a0965ac9a3e",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usart.h": "982c4448c49ddc7c6c71bd788e5354f05e96aca5e98edd0626f8ffcaefc65e79",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h": "b9b9f9da33abf806bf1a79018138ef6cab3e4e657316c299740809d86f239758",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_utils.h": "535cb625cfcd461d6054549bf04d25ef939ec5754f77731a5f9fd92728280ded",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c": "97e715cda2a34bd564b59ce4ba9b16bd29651f8f229161105aaec666d76ea91a",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c": "275b278044c92159719b25adebe672454387976ee5baeb1eb61e83c34deb13d1",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c": "54378229ed51c2b3e4665983bc0e9a644eca93a7838f622f7234710071967965",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c": "9aaa0f19137d700616bec01a5a806786c24e3f3386120365c5d2addaa4055505",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c": "a345a1b1fe0221c827d5ad21d5a0f5387296bc2c075e06e5b8539c23da5678e4",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c": "90cafb5a5b17a46b478770ef4abdc9a641cb395419abbb80f288138a63d44582",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c": "f56651f86e5d89e8bba3bcb331353e00f291db15c902927a205d81bbe8951e6d",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c": "8bf12eeb6e6cfc12a17587ed6d761724e0835a4a3dc0f6b14a8d1ca068bcb55b",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c": "51a70deb9b19dd43f6f202430fae052f2deb26c39232c09c79230c8d8a61f773",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c": "d3b426e8cb9d617f9064d2b0cea2a1d02b7bb6a74cba3f094779d6e922e477e3",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c": "408908b15477b6ce2b0b9703caabcb053293d98f2f109d6e6940e076a6a3902b",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c": "9084fe7346bad811d9f4c71bc04002cffc5bd9d0583dfa2e9306250399a919f4",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c": "1db062fd007ce9bd838da2c7b97de938a661da237aa3fe52d0b7fd4c15af59bc",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c": "d779468a95df34421bf6c8417136a79aa910753381a644afa9ed10b185ae18b5",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c": "4409dddc0d2019f918d0ddebecf659f06d4de3f9aa28566621a16ea47203331f",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c": "f3ac468e2f415adb74281107c0dec1448008950b64a7bb11c14cbe3ee1a936de",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c": "526324811fa113c3eadfa84cd24ea5e607ad8e8bf003a2085456c04b734ca25e",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c": "641ad467e834c17a83c445cf8eea7c8317a71976d7e0c77da740be999251efe4",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c": "a7dea3b10a771a380915007b9ece123654c6bd2a40f611102220df9bfdd143e4",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c": "4471b582d56545fbd48725401249b4a2a728ccc0d933b3f1a02e2b09dda8d8fa",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c": "a74ed3a9a13a4fcbaada9e6f88f7d4fcabe2a75852a6ce4c09f8d4314a2e851a",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c": "9fe6fbeee8b8d44d8bc548f6d4abd8ee06693f56f12be013277dac2f767f19ec",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c": "a4a3827fba7ad9d0df9457a87e1bf31ede88eeeb9dc750b3fff639f59c8dff5c",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h": "8c2d2feb90e8ed88fe5756f3f1616a2b67aa1cd0858da8b130ed69607688c8c0",
+        "Drivers/CMSIS/Include/cachel1_armv7.h": "2e336a64f60a9c0eaf5a08e2c4845d94da86c3fd84d219d0d0c9f530e63bc9c3",
+        "Drivers/CMSIS/Include/cmsis_armcc.h": "5bc0d7ed8e36e9bcb868c4042fff350c702eca305df4162fb00384789e35ee1c",
+        "Drivers/CMSIS/Include/cmsis_armclang.h": "d5da2b48204f0d0cf1ff38ffccb527e5706cd0a091ff0a331eb41d6596c33fe5",
+        "Drivers/CMSIS/Include/cmsis_armclang_ltm.h": "3e8ffb284f4f155de3ea93841cca853b41d5e812b53e52c64c3d4a67b7f1ec7c",
+        "Drivers/CMSIS/Include/cmsis_compiler.h": "b51963d271c1571ca3463654c76aa7ea50c4eac5d0a2710df10414ac64d9e0f8",
+        "Drivers/CMSIS/Include/cmsis_gcc.h": "43bfd1fe69fbbc2ca70aaf7d43cc3e20f16e0c7f66e1bdef9b51af6dc14b2617",
+        "Drivers/CMSIS/Include/cmsis_iccarm.h": "2d255c8429e507e52cb603f2970bed4cc4a6cdcc3eb7fc7997385abad7364837",
+        "Drivers/CMSIS/Include/cmsis_version.h": "184c19fd3ee73632edf35a0b4d49cd48be75fbf49e6ccb19d9db05fa83bea4b3",
+        "Drivers/CMSIS/Include/core_armv81mml.h": "a40954bccbf202bd65ee721ea688122561e005c9f9f9d18e082280c5b897d0e4",
+        "Drivers/CMSIS/Include/core_armv8mbl.h": "458b1e6788079ded52adc7d06383701c865ca97b67c5e7a0a44884194f91a842",
+        "Drivers/CMSIS/Include/core_armv8mml.h": "5a68204fa31cda7d04d41c9ceaf3f4b1217908f59366f757ee778181c7cc8cb9",
+        "Drivers/CMSIS/Include/core_cm0.h": "ac13cb645f108666a0e57c93467872660d6bc860a839f840dc870b7a5863b4bf",
+        "Drivers/CMSIS/Include/core_cm0plus.h": "a09fa9c6b8b21d1920bce15b98aa56182b027e9278cca0b154812bac2aea3cfa",
+        "Drivers/CMSIS/Include/core_cm1.h": "944bf0c4f940eef30a632cd99d5dcfe8270e8a8431eb98c0f081bcf4f61f728e",
+        "Drivers/CMSIS/Include/core_cm23.h": "77822e9738885394ec52fca6f617452b823a0b55e2664ee225e65576cf0e8f2d",
+        "Drivers/CMSIS/Include/core_cm3.h": "c9937781259a8897adf514445441c68570087d6a72a558d8a4afe75cdb62dbd2",
+        "Drivers/CMSIS/Include/core_cm33.h": "225c47c36230edaa314f1e7a45b38279f6ab4d58faeb132226db35f7007d58aa",
+        "Drivers/CMSIS/Include/core_cm35p.h": "206b427589981b78169c1d9b73e898e4e8de4efbd76fd0c2df7df81d645b9fa2",
+        "Drivers/CMSIS/Include/core_cm4.h": "f5b63d52dd1557b15ca414cb59c264f595a7b5669db2a5878dffe22f4caedc8c",
+        "Drivers/CMSIS/Include/core_cm55.h": "5707f716cf03f7e80151108ae94601fcfdf362dd2d830876040213318f6dee3a",
+        "Drivers/CMSIS/Include/core_cm7.h": "e974d0a91752487d0154457cd422c37667328e9ddb7ba4fa2fed479a63577f63",
+        "Drivers/CMSIS/Include/core_cm85.h": "75bc123889f0f5ca33c4d16b6cbdd580a3572663c899fadb2c8e28f6a5e6fead",
+        "Drivers/CMSIS/Include/core_sc000.h": "c81377a69a4ea8ecaead42194f2ce8ab59bd4ee7bd638e423f5b1f5ec283d154",
+        "Drivers/CMSIS/Include/core_sc300.h": "73dd461c12c7d3a693840df3084fd8f85122095c6f21fa3d779b0f3eceaebad5",
+        "Drivers/CMSIS/Include/core_starmc1.h": "92d8661f2947d00da91653d04794cde0593fdaafb3438842a0477775716aafc5",
+        "Drivers/CMSIS/Include/mpu_armv7.h": "29206b52ee02290ed6f5a5415ebd4187de802cf176d9b3cb844390d8e5571372",
+        "Drivers/CMSIS/Include/mpu_armv8.h": "2c7d22a344cedcc1e35380d1f76f0e6c55da5e3101e6a41fd85497d1841fe8c9",
+        "Drivers/CMSIS/Include/pac_armv81.h": "d76f5cc0c59a59e035115f700b8e8d95b7b98ecb99a2924e885f82a94903d984",
+        "Drivers/CMSIS/Include/pmu_armv8.h": "cea8c105c5f41ba831fe4d9e8e39758068cd4c414383348dc2835d6be447cca0",
+        "Drivers/CMSIS/Include/tz_context.h": "45565c8cb04c653aabaf3cceddfc848b6a0de28c20d4f7e3d475a992c7eee788",
+        "Drivers/CMSIS/Device/ST/STM32F4xx/LICENSE.txt": "135fb2d86e9ecdf6824cc3bba21c72b8e380c07b055fbebb6b995463eb609baf",
+        "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h": "bd21220ea8b6858c2d727cca1d2a5f1077f8a81717acdac583a1e9165d858160",
+        "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h": "a19edea6b2f4df2ab3c567782c4d313a52319c4303bd56ad7dd1d0e077014657",
+        "Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h": "02c067d5a135f540c03215dc834b1e60a97bbd4e55bfd3994b0c82a15ea3012a",
+        "Core/Inc/adc.h": "0ac97025a4065f07b7b65a906bd0c45ea800215434ed43c287c1685507f3f612",
+        "Core/Inc/dma.h": "7cf6f7450a29d26303cbba5a3ca8c6cb24a02635d6a5ba4d05141fdfc75c4c49",
+        "Core/Inc/gpio.h": "e2d62f964a0b7f238384ed6a20a181d09df9647240a268dc547acf5b35099f74",
+        "Core/Inc/main.h": "630a07a239888eeac28eae316b139f82fcff8bad1c610d38ac05ed5eeecfb90a",
+        "Core/Inc/spi.h": "7ee08a1f7b3c518b8f1a33e73ee2d18830c1336be9341e774e73f137984491d8",
+        "Core/Inc/stm32f4xx_hal_conf.h": "bc949fb15aa20cb56c5d395c0c6aa548a77acc40e32b232b9fa5a773ca7ac87e",
+        "Core/Inc/stm32f4xx_it.h": "40c1fb20464923f0156b0d6efceafcedca5e0385210261f569a9fd3e702aea8a",
+        "Core/Inc/usart.h": "b57eee246dfa6d43d3188845b3f5a21ae2fff22ccfc58317d6e51a26e994cbbb",
+        "Core/Src/adc.c": "606635940f00195e25e4c36a92a9391bfcff9516fb577a72c44db584f756c096",
+        "Core/Src/dma.c": "15aa51669282ee6949d69e90146ecd8e6a81cf7801399962bb26e76d7fc9155d",
+        "Core/Src/gpio.c": "ef45aff0da62729275d32c62d1aae855402d72d69a9bdc7a5fc616345ab3e555",
+        "Core/Src/main.c": "b29d5f13e084cf835c1845095dc19243f00411d3c6198ca25b3477993923aca8",
+        "Core/Src/spi.c": "cc0d5bf1fdf19c1f4cfc51386dd876c18e2e62d995765c990f2c5ff1f79de181",
+        "Core/Src/stm32f4xx_hal_msp.c": "20068019c1fff792541802d587e12466025b3adc8611e3c8ed1267ab9b160688",
+        "Core/Src/stm32f4xx_hal_timebase_tim.c": "bfc01b357084f00c3799755d1c3d9ce7536a4072f31f6136fc3bdd431c1880aa",
+        "Core/Src/stm32f4xx_it.c": "5f7ec81a56f6765c682581b90da27fea1b07002fad09b174592263ae7377965e",
+        "Core/Src/syscalls.c": "03c06c72eafb44b499814cf9234aba57dd830f345d9b8779b5d7090e78517600",
+        "Core/Src/sysmem.c": "ad20f7b1fa1e7c73330727747222cf2ffa3245ebf035230ee9a157545e79df95",
+        "Core/Src/system_stm32f4xx.c": "a31929eab936ac98db060c18917118acf79dc96e1f03ed4b57d614535dd06d70",
+        "Core/Src/usart.c": "069e2fd2550eaf187eedfd42705b43c78a8614f37685df5d047405cd8a0e2281"
+      },
+      "all_retained_files_rehashed": 1069,
+      "builds": [
+        {
+          "build": "build",
+          "artifact_sha256": {
+            "usb-transport-abi.elf": "a4b3b84a1055e21c77dfb81f6e1f6a191518c324839a14c30366f3abd48393d1",
+            "usb-transport-abi.map": "feaefa58e8556e78714c39cc85eba800457ba1911e5a36d3806a41ef3d96753e",
+            "usb-transport-abi-vectors.bin": "e1b0324fa9ae2a1b5d3f9bfbc23c4d3e49f0f9703405b4f0ae3b7192df5250c7"
+          },
+          "retained_libraries": [
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+              "object": "libc_a-errno.o",
+              "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+              "object": "libc_a-findfp.o",
+              "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+              "object": "libc_a-impure.o",
+              "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+              "object": "libc_a-init.o",
+              "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+              "object": "libc_a-memcpy-stub.o",
+              "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+              "object": "libc_a-memset.o",
+              "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+              "object": "libc_a-strlen.o",
+              "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+              "object": "_aeabi_uldivmod.o",
+              "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+              "object": "_arm_addsubdf3.o",
+              "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+              "object": "_arm_fixunsdfsi.o",
+              "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+              "object": "_arm_muldivdf3.o",
+              "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+              "object": "_dvmd_tls.o",
+              "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+              "object": "_udivmoddi4.o",
+              "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+            }
+          ],
+          "transport_function_frames": {
+            "build/Generated/UsbTransport/Src/usb_cdc_port.su": "Generated/UsbTransport/Src/usb_cdc_port.c:11:10:UsbCdcPort_Lock\t0\tstatic\nGenerated/UsbTransport/Src/usb_cdc_port.c:19:6:UsbCdcPort_Unlock\t0\tstatic\nGenerated/UsbTransport/Src/usb_cdc_port.c:25:14:UsbCdcPort_TxState\t0\tstatic\nGenerated/UsbTransport/Src/usb_cdc_port.c:37:14:UsbCdcPort_Submit\t16\tstatic\nGenerated/UsbTransport/Src/usb_cdc_port.c:49:14:UsbCdcPort_Rearm\t8\tstatic\n",
+            "build/Generated/UsbTransport/Src/usb_cdc_transport.su": "Generated/UsbTransport/Src/usb_cdc_transport.c:40:13:UsbCdc_Invalidate\t0\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:19:13:UsbCdc_Check\t32\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:52:6:UsbCdc_LinkDown\t8\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:60:14:UsbCdc_Quiesced\t16\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:74:14:UsbCdc_Configure\t16\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:90:14:UsbCdc_Receive\t24\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:114:14:UsbCdc_Read\t32\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:139:14:UsbCdc_Write\t24\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:179:14:UsbCdc_Service\t24\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:206:10:UsbCdc_SessionGet\t8\tstatic\n"
+          },
+          "whole_program_stack": "NOT_PROVEN"
+        },
+        {
+          "build": "build/analysis",
+          "artifact_sha256": {
+            "usb-transport-abi.elf": "a4b3b84a1055e21c77dfb81f6e1f6a191518c324839a14c30366f3abd48393d1",
+            "usb-transport-abi.map": "5d3260bc080653a3f145b39c7ad7f22ecbc8cc934e143ca43148ed1b565848ce",
+            "usb-transport-abi-vectors.bin": "e1b0324fa9ae2a1b5d3f9bfbc23c4d3e49f0f9703405b4f0ae3b7192df5250c7"
+          },
+          "retained_libraries": [
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+              "object": "libc_a-errno.o",
+              "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+              "object": "libc_a-findfp.o",
+              "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+              "object": "libc_a-impure.o",
+              "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+              "object": "libc_a-init.o",
+              "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+              "object": "libc_a-memcpy-stub.o",
+              "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+              "object": "libc_a-memset.o",
+              "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/hard\\libc_nano.a",
+              "object": "libc_a-strlen.o",
+              "archive_sha256": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+              "object": "_aeabi_uldivmod.o",
+              "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+              "object": "_arm_addsubdf3.o",
+              "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+              "object": "_arm_fixunsdfsi.o",
+              "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+              "object": "_arm_muldivdf3.o",
+              "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+              "object": "_dvmd_tls.o",
+              "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+            },
+            {
+              "archive": "D:/Arm GNU Toolchain/14.3 rel1/bin/../lib/gcc/arm-none-eabi/14.3.1/thumb/v7e-m+fp/hard\\libgcc.a",
+              "object": "_udivmoddi4.o",
+              "archive_sha256": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+            }
+          ],
+          "transport_function_frames": {
+            "build/analysis/Generated/UsbTransport/Src/usb_cdc_port.su": "Generated/UsbTransport/Src/usb_cdc_port.c:11:10:UsbCdcPort_Lock\t0\tstatic\nGenerated/UsbTransport/Src/usb_cdc_port.c:19:6:UsbCdcPort_Unlock\t0\tstatic\nGenerated/UsbTransport/Src/usb_cdc_port.c:25:14:UsbCdcPort_TxState\t0\tstatic\nGenerated/UsbTransport/Src/usb_cdc_port.c:37:14:UsbCdcPort_Submit\t16\tstatic\nGenerated/UsbTransport/Src/usb_cdc_port.c:49:14:UsbCdcPort_Rearm\t8\tstatic\n",
+            "build/analysis/Generated/UsbTransport/Src/usb_cdc_transport.su": "Generated/UsbTransport/Src/usb_cdc_transport.c:40:13:UsbCdc_Invalidate\t0\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:19:13:UsbCdc_Check\t32\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:52:6:UsbCdc_LinkDown\t8\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:60:14:UsbCdc_Quiesced\t16\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:74:14:UsbCdc_Configure\t16\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:90:14:UsbCdc_Receive\t24\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:114:14:UsbCdc_Read\t32\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:139:14:UsbCdc_Write\t24\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:179:14:UsbCdc_Service\t24\tstatic\nGenerated/UsbTransport/Src/usb_cdc_transport.c:206:10:UsbCdc_SessionGet\t8\tstatic\n"
+          },
+          "whole_program_stack": "NOT_PROVEN"
+        }
+      ],
+      "limits": "PRIVATE CANDIDATE ONLY. NOT PROVEN: manual critical-contract acceptance, complete EP0/async lifecycle, physical memory authority beyond caller review, MCU tick/radio timing, whole-program stack/WCET and hardware. Source/ABI closure and private generated Ground compilation are recorded only for this snapshot. Normal native generation remains blocked; no board access."
+    }
+  ],
+  "runs": {
+    "baseline01": "Frozen c31c13c feature-gap reproduction: compile 0; requested capacity512 gives actual511/drop1; expected run exit1. Not a regression against old drop-policy contract.",
+    "version01": "Failed: pre-existing stale independent plugin version assertions; manifests unchanged by USB writer.",
+    "version02": "1 passed; one existing cache_dir config warning.",
+    "tests01": "13 passed, 2 failed: DMA/cache heuristic matched CMSIS declarations.",
+    "tests02": "13 passed, 2 failed: redirected Documents ancestor rejected.",
+    "tests03": "15 passed; one existing cache_dir config warning.",
+    "final01": "17 host passed; 2 native failed during evidence snapshot: default GBK decoding of git diff. Fixed by explicit PYTHONUTF8=1/PYTHONIOENCODING=utf8; no ignored bytes.",
+    "final02": "17 host and 2 native passed, strict compile/analyzer/link, emitted project gates passed. Historical earlier revision.",
+    "final03": "20 host and 2 native passed (26 deselected); all recorded compile/analyzer/link and gates exit0. Includes real Cube/HAL/stack inputs, both adapter ABIs, no callback integration. Critical review NOT_PROVEN.",
+    "export04": "21 host passed; no target build requested. Python publication/read limits changed; current target renderer and emitted files match final03 exactly."
+  },
+  "full_output_policy": "All .work/usb013 run directories retained. Native source trees, binaries/maps and full .su remain there; archive contains compact records. No existing .work content cleaned.",
+  "archive_sha256": "80e7cc429a839ce97547bccd72af1150a064da79afc3f6afe303d09d3e570f61",
+  "archive_entries": {
+    "final01/arm-none-eabi-gcc-version.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final01\\arm-none-eabi-gcc-version.log",
+      "size": 290,
+      "sha256": "cd6a323ba7731af79782d022373a1bdd2ab3c9e4fd8e6fdbd367916316c6bc98"
+    },
+    "final01/commands.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final01\\commands.json",
+      "size": 3025,
+      "sha256": "51fe04030430446d40c5a291e407fdc3ceb85761d5c83e4705b630cff7014d80"
+    },
+    "final01/gcc-version.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final01\\gcc-version.log",
+      "size": 249,
+      "sha256": "d6334173e6c7d0b9aa942c21d117ef3c243b17c8697d007a2eb1ea6092d51d15"
+    },
+    "final01/host-tests.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final01\\host-tests.log",
+      "size": 709,
+      "sha256": "933270af0b53df3af1157e1a74a774d9fa21346ff835a5ed6d86d8b690a6e281"
+    },
+    "final01/native-tests.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final01\\native-tests.log",
+      "size": 5263,
+      "sha256": "e3a9f5c98cb3f5eaabe519e6cce5d7e155cf7efa2b758f00df8cee6c56bb35d7"
+    },
+    "final01/python-version.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final01\\python-version.log",
+      "size": 15,
+      "sha256": "3c00433d6870b2f40b3bbc642b5cec6dc34ace27ad25b0c1a0bb075047ea33b8"
+    },
+    "final01/source-snapshot.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final01\\source-snapshot.json",
+      "size": 44763,
+      "sha256": "be7c52c33dc6e0cded00611b4e0b892600284a324ed3dc1e0959bdec0a39a773"
+    },
+    "final02/arm-none-eabi-gcc-version.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\arm-none-eabi-gcc-version.log",
+      "size": 290,
+      "sha256": "cd6a323ba7731af79782d022373a1bdd2ab3c9e4fd8e6fdbd367916316c6bc98"
+    },
+    "final02/commands.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\commands.json",
+      "size": 57409,
+      "sha256": "cad3cdc48feb462f0fffca7ef588b7875630f4819015d7ae2959df5f6e4940fd"
+    },
+    "final02/gcc-version.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\gcc-version.log",
+      "size": 249,
+      "sha256": "d6334173e6c7d0b9aa942c21d117ef3c243b17c8697d007a2eb1ea6092d51d15"
+    },
+    "final02/host-tests.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\host-tests.log",
+      "size": 709,
+      "sha256": "5065ab21f8cf883673cfbf0d48f6d2310f7a1f6bd747de37ed596bdfaf8609bd"
+    },
+    "final02/native-index.jsonl": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\native-index.jsonl",
+      "size": 1016,
+      "sha256": "36c400f449e18a584e9a57588fdff5e9e03d7296a410362c5ea849061ade4b13"
+    },
+    "final02/native-tests.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\native-tests.log",
+      "size": 734,
+      "sha256": "9f1846a139eac056a3b0bb59be3550cd59fe06bfff9c97df4e3d7f5c1af7cf82"
+    },
+    "final02/python-version.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\python-version.log",
+      "size": 15,
+      "sha256": "3c00433d6870b2f40b3bbc642b5cec6dc34ace27ad25b0c1a0bb075047ea33b8"
+    },
+    "final02/source-snapshot.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\source-snapshot.json",
+      "size": 45323,
+      "sha256": "c2fba0a66a904d25b23d8899f4f089bad5b6008ae80ec570fc4b9848b1c0700e"
+    },
+    "final02/STM32F103C8T6-analyzer-attributes.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F103C8T6-analyzer-attributes.log",
+      "size": 376,
+      "sha256": "915962c3ba12ca01502ed05f81abd520cc017cd2e8354a25d30d807f3c91fd33"
+    },
+    "final02/STM32F103C8T6-analyzer-link.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F103C8T6-analyzer-link.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final02/STM32F103C8T6-analyzer-size.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F103C8T6-analyzer-size.log",
+      "size": 128,
+      "sha256": "416cdacde306608c0a2cdcedb3b0940eac83d78be18b992d6cf18dcd7bd53c2d"
+    },
+    "final02/STM32F103C8T6-analyzer-symbols.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F103C8T6-analyzer-symbols.log",
+      "size": 15535,
+      "sha256": "3813017aa01b7cc73b361de7e4d2e3dfaab40e7050c32d3ed8f6dcba81affda7"
+    },
+    "final02/STM32F103C8T6-analyzer-usb_cdc_port.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F103C8T6-analyzer-usb_cdc_port.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final02/STM32F103C8T6-analyzer-usb_cdc_transport.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F103C8T6-analyzer-usb_cdc_transport.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final02/STM32F103C8T6-architecture.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F103C8T6-architecture.log",
+      "size": 294,
+      "sha256": "c23d4eac7dd37075f9e8ee1c096d50c30d144234e97e23f27528accf3fb6d56d"
+    },
+    "final02/STM32F103C8T6-artifact.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F103C8T6-artifact.log",
+      "size": 23929,
+      "sha256": "eabc5743ce5061c29a683ed87198c0be8206326f294e9c4d6f3240a656333839"
+    },
+    "final02/STM32F103C8T6-compile-usb_cdc_port.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F103C8T6-compile-usb_cdc_port.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final02/STM32F103C8T6-compile-usb_cdc_transport.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F103C8T6-compile-usb_cdc_transport.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final02/STM32F103C8T6-host.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F103C8T6-host.log",
+      "size": 12903,
+      "sha256": "d73d3bba9988293d88d24b6ddc519acbfb4ff40256a84fbb8269afb348ace656"
+    },
+    "final02/STM32F103C8T6-inventory.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F103C8T6-inventory.json",
+      "size": 133844,
+      "sha256": "e25a5d3a73dca0ff457bad4632f23b640575b860feb40ab48781f1ef14fb632a"
+    },
+    "final02/STM32F103C8T6-normal-attributes.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F103C8T6-normal-attributes.log",
+      "size": 376,
+      "sha256": "915962c3ba12ca01502ed05f81abd520cc017cd2e8354a25d30d807f3c91fd33"
+    },
+    "final02/STM32F103C8T6-normal-link.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F103C8T6-normal-link.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final02/STM32F103C8T6-normal-size.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F103C8T6-normal-size.log",
+      "size": 119,
+      "sha256": "0e847dc05cf7c69b77f3974d63f920a37ff10fe50fc1811c09a7e5857b37e2e8"
+    },
+    "final02/STM32F103C8T6-normal-symbols.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F103C8T6-normal-symbols.log",
+      "size": 15535,
+      "sha256": "3813017aa01b7cc73b361de7e4d2e3dfaab40e7050c32d3ed8f6dcba81affda7"
+    },
+    "final02/STM32F103C8T6-power10.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F103C8T6-power10.log",
+      "size": 54855,
+      "sha256": "cd0207ea9ac6ca1c0aca240b25cc758d203a64cbd68f6caa0f7039b23cd03154"
+    },
+    "final02/STM32F407VET6-analyzer-attributes.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F407VET6-analyzer-attributes.log",
+      "size": 472,
+      "sha256": "8599b35651442bea43fda5310f643b91722355e85fcb37b4181e210307f710db"
+    },
+    "final02/STM32F407VET6-analyzer-link.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F407VET6-analyzer-link.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final02/STM32F407VET6-analyzer-size.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F407VET6-analyzer-size.log",
+      "size": 128,
+      "sha256": "96ed15ea2183981ee804313eee7e0c19a9d142c6b4815d884066573d66ecf7b8"
+    },
+    "final02/STM32F407VET6-analyzer-symbols.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F407VET6-analyzer-symbols.log",
+      "size": 17846,
+      "sha256": "2f74757258007ac85a5ab19759815f8ecb3a43bf8d7084775e820a446168e10b"
+    },
+    "final02/STM32F407VET6-analyzer-usb_cdc_port.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F407VET6-analyzer-usb_cdc_port.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final02/STM32F407VET6-analyzer-usb_cdc_transport.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F407VET6-analyzer-usb_cdc_transport.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final02/STM32F407VET6-architecture.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F407VET6-architecture.log",
+      "size": 294,
+      "sha256": "c23d4eac7dd37075f9e8ee1c096d50c30d144234e97e23f27528accf3fb6d56d"
+    },
+    "final02/STM32F407VET6-artifact.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F407VET6-artifact.log",
+      "size": 28088,
+      "sha256": "745bbdb8d5aaf602650bd8cf6a49a3e40307a2d4c7986a289ec87abb5ffe1a86"
+    },
+    "final02/STM32F407VET6-compile-usb_cdc_port.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F407VET6-compile-usb_cdc_port.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final02/STM32F407VET6-compile-usb_cdc_transport.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F407VET6-compile-usb_cdc_transport.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final02/STM32F407VET6-host.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F407VET6-host.log",
+      "size": 12903,
+      "sha256": "15764a9c9c55131d6519fe8e94010236c09187229f56f12342298e19c3b91206"
+    },
+    "final02/STM32F407VET6-inventory.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F407VET6-inventory.json",
+      "size": 156633,
+      "sha256": "3997d945a0ec2da8b0fd72e18ed3ca231c0ac37700971190c883ef3ea40a02e3"
+    },
+    "final02/STM32F407VET6-normal-attributes.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F407VET6-normal-attributes.log",
+      "size": 472,
+      "sha256": "8599b35651442bea43fda5310f643b91722355e85fcb37b4181e210307f710db"
+    },
+    "final02/STM32F407VET6-normal-link.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F407VET6-normal-link.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final02/STM32F407VET6-normal-size.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F407VET6-normal-size.log",
+      "size": 119,
+      "sha256": "148cbb7d556106164a2ae813ecf60acd70e0f07e2e21c3b21d79f0d6e883283e"
+    },
+    "final02/STM32F407VET6-normal-symbols.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F407VET6-normal-symbols.log",
+      "size": 17846,
+      "sha256": "2f74757258007ac85a5ab19759815f8ecb3a43bf8d7084775e820a446168e10b"
+    },
+    "final02/STM32F407VET6-power10.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02\\STM32F407VET6-power10.log",
+      "size": 53862,
+      "sha256": "b6504b53a3333f2c0e03fc0ca4f88f7f0b63cad4b069b1be80034f39d5d4cd54"
+    },
+    "final03/arm-none-eabi-gcc-version.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\arm-none-eabi-gcc-version.log",
+      "size": 290,
+      "sha256": "cd6a323ba7731af79782d022373a1bdd2ab3c9e4fd8e6fdbd367916316c6bc98"
+    },
+    "final03/commands.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\commands.json",
+      "size": 59725,
+      "sha256": "b8067275527da241283997e715ca503a3c3bf95bf5b622e4749a2e15d49c894b"
+    },
+    "final03/gcc-version.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\gcc-version.log",
+      "size": 249,
+      "sha256": "d6334173e6c7d0b9aa942c21d117ef3c243b17c8697d007a2eb1ea6092d51d15"
+    },
+    "final03/host-tests.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\host-tests.log",
+      "size": 709,
+      "sha256": "64b4775baa6bfa0c8916638361a70407f5f74c683e6c708bbe3850c474932825"
+    },
+    "final03/native-index.jsonl": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native-index.jsonl",
+      "size": 1016,
+      "sha256": "f5ca4a533a818cdfd2cc3904cedd48345d72453649dcd90ef60b259701e1c927"
+    },
+    "final03/native-tests.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native-tests.log",
+      "size": 734,
+      "sha256": "f7f8aef4e8a2d30a432a30d1e4648c17e470c4d4c8a209ab26e16bd151e2594e"
+    },
+    "final03/python-version.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\python-version.log",
+      "size": 15,
+      "sha256": "3c00433d6870b2f40b3bbc642b5cec6dc34ace27ad25b0c1a0bb075047ea33b8"
+    },
+    "final03/source-snapshot.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\source-snapshot.json",
+      "size": 51107,
+      "sha256": "666c3c64b6f46027634705256655838fc0acc8cdbf230322b727c7a09c8cf61b"
+    },
+    "final03/STM32F103C8T6-analyzer-attributes.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F103C8T6-analyzer-attributes.log",
+      "size": 376,
+      "sha256": "915962c3ba12ca01502ed05f81abd520cc017cd2e8354a25d30d807f3c91fd33"
+    },
+    "final03/STM32F103C8T6-analyzer-link.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F103C8T6-analyzer-link.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final03/STM32F103C8T6-analyzer-size.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F103C8T6-analyzer-size.log",
+      "size": 128,
+      "sha256": "416cdacde306608c0a2cdcedb3b0940eac83d78be18b992d6cf18dcd7bd53c2d"
+    },
+    "final03/STM32F103C8T6-analyzer-symbols.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F103C8T6-analyzer-symbols.log",
+      "size": 15535,
+      "sha256": "3813017aa01b7cc73b361de7e4d2e3dfaab40e7050c32d3ed8f6dcba81affda7"
+    },
+    "final03/STM32F103C8T6-analyzer-usb_cdc_port.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F103C8T6-analyzer-usb_cdc_port.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final03/STM32F103C8T6-analyzer-usb_cdc_transport.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F103C8T6-analyzer-usb_cdc_transport.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final03/STM32F103C8T6-analyzer-vectors.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F103C8T6-analyzer-vectors.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final03/STM32F103C8T6-architecture.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F103C8T6-architecture.log",
+      "size": 294,
+      "sha256": "c23d4eac7dd37075f9e8ee1c096d50c30d144234e97e23f27528accf3fb6d56d"
+    },
+    "final03/STM32F103C8T6-artifact.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F103C8T6-artifact.log",
+      "size": 23929,
+      "sha256": "56bd03e3aa64cb8b69d0fc7852f0e59aee115a5fa6e24daca1d605f43a76862b"
+    },
+    "final03/STM32F103C8T6-compile-usb_cdc_port.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F103C8T6-compile-usb_cdc_port.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final03/STM32F103C8T6-compile-usb_cdc_transport.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F103C8T6-compile-usb_cdc_transport.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final03/STM32F103C8T6-host.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F103C8T6-host.log",
+      "size": 12903,
+      "sha256": "39a7bc346d95e8c4e49fa2abdcf95ae66b8edd663219530613659b10e3251465"
+    },
+    "final03/STM32F103C8T6-inventory.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F103C8T6-inventory.json",
+      "size": 134073,
+      "sha256": "e9d8fbd045fafd40b256fb5bb13dd7edaf0e1424ad4b53c98f5cf8aed7311942"
+    },
+    "final03/STM32F103C8T6-normal-attributes.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F103C8T6-normal-attributes.log",
+      "size": 376,
+      "sha256": "915962c3ba12ca01502ed05f81abd520cc017cd2e8354a25d30d807f3c91fd33"
+    },
+    "final03/STM32F103C8T6-normal-link.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F103C8T6-normal-link.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final03/STM32F103C8T6-normal-size.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F103C8T6-normal-size.log",
+      "size": 119,
+      "sha256": "0e847dc05cf7c69b77f3974d63f920a37ff10fe50fc1811c09a7e5857b37e2e8"
+    },
+    "final03/STM32F103C8T6-normal-symbols.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F103C8T6-normal-symbols.log",
+      "size": 15535,
+      "sha256": "3813017aa01b7cc73b361de7e4d2e3dfaab40e7050c32d3ed8f6dcba81affda7"
+    },
+    "final03/STM32F103C8T6-normal-vectors.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F103C8T6-normal-vectors.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final03/STM32F103C8T6-power10.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F103C8T6-power10.log",
+      "size": 54855,
+      "sha256": "cd0207ea9ac6ca1c0aca240b25cc758d203a64cbd68f6caa0f7039b23cd03154"
+    },
+    "final03/STM32F407VET6-analyzer-attributes.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F407VET6-analyzer-attributes.log",
+      "size": 472,
+      "sha256": "8599b35651442bea43fda5310f643b91722355e85fcb37b4181e210307f710db"
+    },
+    "final03/STM32F407VET6-analyzer-link.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F407VET6-analyzer-link.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final03/STM32F407VET6-analyzer-size.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F407VET6-analyzer-size.log",
+      "size": 128,
+      "sha256": "96ed15ea2183981ee804313eee7e0c19a9d142c6b4815d884066573d66ecf7b8"
+    },
+    "final03/STM32F407VET6-analyzer-symbols.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F407VET6-analyzer-symbols.log",
+      "size": 17846,
+      "sha256": "2f74757258007ac85a5ab19759815f8ecb3a43bf8d7084775e820a446168e10b"
+    },
+    "final03/STM32F407VET6-analyzer-usb_cdc_port.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F407VET6-analyzer-usb_cdc_port.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final03/STM32F407VET6-analyzer-usb_cdc_transport.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F407VET6-analyzer-usb_cdc_transport.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final03/STM32F407VET6-analyzer-vectors.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F407VET6-analyzer-vectors.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final03/STM32F407VET6-architecture.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F407VET6-architecture.log",
+      "size": 294,
+      "sha256": "c23d4eac7dd37075f9e8ee1c096d50c30d144234e97e23f27528accf3fb6d56d"
+    },
+    "final03/STM32F407VET6-artifact.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F407VET6-artifact.log",
+      "size": 28088,
+      "sha256": "4feaa49eef43d8c8cbf57867ee2680e4baa379a9be6ccf1bbfdb0fbf1734590c"
+    },
+    "final03/STM32F407VET6-compile-usb_cdc_port.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F407VET6-compile-usb_cdc_port.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final03/STM32F407VET6-compile-usb_cdc_transport.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F407VET6-compile-usb_cdc_transport.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final03/STM32F407VET6-host.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F407VET6-host.log",
+      "size": 12903,
+      "sha256": "9e0851b45c399f7bb4085987e6bc8fc946f20c8d8c239339cd200c4b70874a4c"
+    },
+    "final03/STM32F407VET6-inventory.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F407VET6-inventory.json",
+      "size": 156862,
+      "sha256": "70e74092e4962a56624356598763777552d02591a840ae9cbeee618c12e4f44d"
+    },
+    "final03/STM32F407VET6-normal-attributes.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F407VET6-normal-attributes.log",
+      "size": 472,
+      "sha256": "8599b35651442bea43fda5310f643b91722355e85fcb37b4181e210307f710db"
+    },
+    "final03/STM32F407VET6-normal-link.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F407VET6-normal-link.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final03/STM32F407VET6-normal-size.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F407VET6-normal-size.log",
+      "size": 119,
+      "sha256": "148cbb7d556106164a2ae813ecf60acd70e0f07e2e21c3b21d79f0d6e883283e"
+    },
+    "final03/STM32F407VET6-normal-symbols.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F407VET6-normal-symbols.log",
+      "size": 17846,
+      "sha256": "2f74757258007ac85a5ab19759815f8ecb3a43bf8d7084775e820a446168e10b"
+    },
+    "final03/STM32F407VET6-normal-vectors.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F407VET6-normal-vectors.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "final03/STM32F407VET6-power10.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\STM32F407VET6-power10.log",
+      "size": 53862,
+      "sha256": "b6504b53a3333f2c0e03fc0ca4f88f7f0b63cad4b069b1be80034f39d5d4cd54"
+    },
+    "export04/arm-none-eabi-gcc-version.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\export04\\arm-none-eabi-gcc-version.log",
+      "size": 290,
+      "sha256": "cd6a323ba7731af79782d022373a1bdd2ab3c9e4fd8e6fdbd367916316c6bc98"
+    },
+    "export04/commands.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\export04\\commands.json",
+      "size": 2155,
+      "sha256": "b6a07065caf6715c9dc142a0df6d6d5de8ca2eddcd691e8970edcb5b433fbc20"
+    },
+    "export04/gcc-version.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\export04\\gcc-version.log",
+      "size": 249,
+      "sha256": "d6334173e6c7d0b9aa942c21d117ef3c243b17c8697d007a2eb1ea6092d51d15"
+    },
+    "export04/host-tests.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\export04\\host-tests.log",
+      "size": 709,
+      "sha256": "3b678976897e91e25a9199f2f54e2d04793af409e15c744bf5f7bf0e98c0d518"
+    },
+    "export04/python-version.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\export04\\python-version.log",
+      "size": 15,
+      "sha256": "3c00433d6870b2f40b3bbc642b5cec6dc34ace27ad25b0c1a0bb075047ea33b8"
+    },
+    "export04/source-snapshot.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\export04\\source-snapshot.json",
+      "size": 52979,
+      "sha256": "31573fb562ec8e76e4557dfd49b6db8d217c16c531341b6b6708342206e18ce5"
+    },
+    "history/baseline01-run.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\baseline01-run.log",
+      "size": 139,
+      "sha256": "b76eb07fe490260f38813929eb9b467ba379b02026867de1c6c60aaff31e3fc5"
+    },
+    "history/export04-run.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\export04-run.log",
+      "size": 243,
+      "sha256": "4f5e80b6c60f1d3c1f71b5ec838fa6acd5838cb7756c38e15bbad719bcfae117"
+    },
+    "history/final01-run.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final01-run.log",
+      "size": 6441,
+      "sha256": "5eab0dc2142e8cf4af62c213f08ff39a0efe8801917c9f8479117afaab7e93e9"
+    },
+    "history/final02-run.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final02-run.log",
+      "size": 1326,
+      "sha256": "d07e22844099fe064f1bd59038428f485212fe1a09a1ff7d08a29be34193d477"
+    },
+    "history/final03-run.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03-run.log",
+      "size": 1458,
+      "sha256": "6e2c4136cb20ded631b838962e5affa957e59a8267ca35134d5b75c70a4b3e2a"
+    },
+    "history/tests01.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\tests01.log",
+      "size": 4536,
+      "sha256": "47497c5e620d7ef774f27a5aaf1cbbb391191f7ca61fef58500c9a9fc24d18ce"
+    },
+    "history/tests02.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\tests02.log",
+      "size": 4971,
+      "sha256": "428a669c445e9135934be89a7327e4b39680e97f03aaccf871c4e9d9fe034501"
+    },
+    "history/tests03.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\tests03.log",
+      "size": 709,
+      "sha256": "306a9eafaf6487e523f0fffe8d0e84b3b82de9bc2e35ffd8430f3f5d0f6f13fd"
+    },
+    "history/version01.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\version01.log",
+      "size": 3459,
+      "sha256": "f2ee462aceab79378a5c2fcde4264b8226a3fd2c03acfe79197ded60e8617058"
+    },
+    "history/version02.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\version02.log",
+      "size": 708,
+      "sha256": "c5f547ca877b16aecce1bff469d30a3c29e28771f1cb3604dfaeb4f5023928ad"
+    },
+    "baseline01/baseline_owner.py": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\baseline01\\baseline_owner.py",
+      "size": 5721,
+      "sha256": "a34dcdb4a593c8bf43149157fd8ab2bebe43ee6ac1a304bf13d38d8b845ab8f3"
+    },
+    "baseline01/compile.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\baseline01\\compile.log",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "baseline01/harness.c": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\baseline01\\harness.c",
+      "size": 908,
+      "sha256": "fe03d5fa66231395cace771806e08acea44846e01465ebf2b79b9ac48a405995"
+    },
+    "baseline01/main.h": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\baseline01\\main.h",
+      "size": 350,
+      "sha256": "ac95e653dee2ddadc0238719ab93909b6488cb7d1fa3686068c28ecebe2aeada"
+    },
+    "baseline01/manifest.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\baseline01\\manifest.json",
+      "size": 2314,
+      "sha256": "134503d8ba051dc8b0ecfed4c95516abe68ddf565a230c04aa033627c0575152"
+    },
+    "baseline01/pc_byte_stream.c": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\baseline01\\pc_byte_stream.c",
+      "size": 5732,
+      "sha256": "21e0f8654c36b1228e807e65dd2ad27d558423d380f9294d5454c1b645ee7469"
+    },
+    "baseline01/required-capacity.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\baseline01\\required-capacity.log",
+      "size": 38,
+      "sha256": "6b7af01eb5a0c5454a2774f2221f96eb929dfe40f0bee974b75c56ffb96ca34a"
+    },
+    "baseline01/usb_device.h": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\baseline01\\usb_device.h",
+      "size": 300,
+      "sha256": "2e1fa27d0bd22f308a0951928da03f08a4cf4b5fb9c7db6c3b0bb8a754d54345"
+    },
+    "baseline01/usbd_cdc_if.h": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\baseline01\\usbd_cdc_if.h",
+      "size": 215,
+      "sha256": "45efbbfffd5f5c4b770c00ece28a452b30cc76d39c035d4a8c2df7eae1d863df"
+    },
+    "baseline01/usbd_conf.h": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\baseline01\\usbd_conf.h",
+      "size": 37,
+      "sha256": "7a562c6ebfa10a53c4b3a51aa6697dbffa1e10a8f19d8cdc7460f8fe6cf1ecef"
+    },
+    "collect_evidence.py": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\collect_evidence.py",
+      "size": 8222,
+      "sha256": "ea59cb521fb1015cd54d34f582fd360aff6e18563ba4291441b6775038ba52e2"
+    },
+    "native/STM32F103C8T6/Generated/UsbTransport/Inc/usb_cdc_transport.h": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\Generated\\UsbTransport\\Inc\\usb_cdc_transport.h",
+      "size": 808,
+      "sha256": "225f99a7ff8520b5324615c22f868eb42bf78935093c5773a55710b6eae6c4ed"
+    },
+    "native/STM32F103C8T6/Generated/UsbTransport/Inc/usb_cdc_port.h": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\Generated\\UsbTransport\\Inc\\usb_cdc_port.h",
+      "size": 456,
+      "sha256": "14d76f1e98f691d82181ae563534463f9962c7a12145931f06399fd3d083b343"
+    },
+    "native/STM32F103C8T6/Generated/UsbTransport/Src/usb_cdc_transport.c": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\Generated\\UsbTransport\\Src\\usb_cdc_transport.c",
+      "size": 6442,
+      "sha256": "37684894e381072410182de742db02b2c7e49e2d6a18f3e707473cec08c9a9e8"
+    },
+    "native/STM32F103C8T6/Generated/UsbTransport/Src/usb_cdc_port.c": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\Generated\\UsbTransport\\Src\\usb_cdc_port.c",
+      "size": 1676,
+      "sha256": "b12f19a50b4e977bc16a7e1d8b631a21d972760255c32f785489629b776cb114"
+    },
+    "native/STM32F103C8T6/Generated/UsbTransport/usb_cdc_transport.cmake": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\Generated\\UsbTransport\\usb_cdc_transport.cmake",
+      "size": 923,
+      "sha256": "044c83b4e8ea5bedd585eaa0b6b24170006c57cc89d517253a00aebc01668973"
+    },
+    "native/STM32F103C8T6/receipt.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\receipt.json",
+      "size": 729817,
+      "sha256": "bedd30a601f877027d608119d51d528a1193f70e5ccd1da4accadde7b735c251"
+    },
+    "native/STM32F103C8T6/source-snapshot.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\source-snapshot.json",
+      "size": 716957,
+      "sha256": "0d2716af575db4c184e8b101ff1775d21bb9a3e5ee893d27cd4c90ed460cf7ff"
+    },
+    "native/STM32F103C8T6/commands.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\commands.log",
+      "size": 323660,
+      "sha256": "4d3663458a13de0d51cadb4352d465ea3292053dca45da11d71e64336afdbafc"
+    },
+    "native/STM32F103C8T6/backend-receipt.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\backend-receipt.json",
+      "size": 1451,
+      "sha256": "5269bc7a86122199b751d67ba75a57b33bf6f85a4c29d2c139d0fa82186884ee"
+    },
+    "native/STM32F103C8T6/candidate_config.ssproject": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\candidate_config.ssproject",
+      "size": 99289,
+      "sha256": "3dfe36df11e01b0e8a075c42ee4a7c8b4b6927154128a37fa250bb2242128568"
+    },
+    "native/STM32F103C8T6/Makefile": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\Makefile",
+      "size": 8166,
+      "sha256": "d5f58a875a5580601450a07ced62762efa126a0f44a5c37102b860e4af66ea07"
+    },
+    "native/STM32F103C8T6/Generated/usb_transport_abi_graph.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\Generated\\usb_transport_abi_graph.json",
+      "size": 5661,
+      "sha256": "ca4a88fcf38f5fcd34c1893774f02f14bce8eb5868d334f2a68886a15822bc7f"
+    },
+    "native/STM32F103C8T6/Generated/ground_source_graph.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\Generated\\ground_source_graph.json",
+      "size": 5177,
+      "sha256": "e7ad5bf1bd1c6be71c5b46485b3c52c14713b62c72b0b4ee8ebf19a912b2968e"
+    },
+    "native/STM32F103C8T6/Generated/native_ground_contract.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\Generated\\native_ground_contract.json",
+      "size": 30908,
+      "sha256": "2435abb22730493847955a0a64204ad728228d99599907304fbf6a41f77d2121"
+    },
+    "native/STM32F103C8T6/build/native-artifact-report.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\build\\native-artifact-report.json",
+      "size": 8069,
+      "sha256": "520755bb3a1c7171c6e8a1c87642653ef1233628bb0a816352c056057ce62f40"
+    },
+    "native/STM32F103C8T6/Tools/check_power_of_ten.ps1": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\Tools\\check_power_of_ten.ps1",
+      "size": 32037,
+      "sha256": "a02b24e2305dd65f99aff49f58a0cd10ddf954b8860f90b3d01096f499f06286"
+    },
+    "native/STM32F103C8T6/Tools/check_native_ground.py": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\Tools\\check_native_ground.py",
+      "size": 13432,
+      "sha256": "d9c4ee572c62469160cb8c95024c2cd12ba0c96e696dbd87f67b2a2ec3b1aa73"
+    },
+    "native/STM32F103C8T6/Tools/native_machine_contract.py": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\Tools\\native_machine_contract.py",
+      "size": 4427,
+      "sha256": "10dbb135a85f99479ae39119be777ebd192151ad48b20af54a549229e3832a1e"
+    },
+    "native/STM32F103C8T6/HardwareGenerated/NativeClassicCdc/License.md": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\HardwareGenerated\\NativeClassicCdc\\License.md",
+      "size": 1662,
+      "sha256": "92282b534952354891151c90af2f935f311fb3b3be9deed1eae8410599443a39"
+    },
+    "native/STM32F103C8T6/HardwareGenerated/NativeClassicCdc/Package_license.md": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\HardwareGenerated\\NativeClassicCdc\\Package_license.md",
+      "size": 11754,
+      "sha256": "5d0016458729aeb4501e604bb8fa8385e1b258b0113af3c6915532cfb945817b"
+    },
+    "native/STM32F103C8T6/HardwareGenerated/NativeClassicCdc/Drivers/CMSIS/LICENSE.txt": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\HardwareGenerated\\NativeClassicCdc\\Drivers\\CMSIS\\LICENSE.txt",
+      "size": 11558,
+      "sha256": "e03ba41d7fab20700769fe4118bab50d800cb74f990353a05d2f5fff1c228363"
+    },
+    "native/STM32F103C8T6/HardwareGenerated/NativeClassicCdc/Drivers/STM32F1xx_HAL_Driver/LICENSE.txt": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\HardwareGenerated\\NativeClassicCdc\\Drivers\\STM32F1xx_HAL_Driver\\LICENSE.txt",
+      "size": 377,
+      "sha256": "d5a162f3eaf2b7b6762f00700017cae5695ebbdce7932fead8316448baafd9c1"
+    },
+    "native/STM32F103C8T6/HardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F1xx/LICENSE.txt": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\HardwareGenerated\\NativeClassicCdc\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\LICENSE.txt",
+      "size": 369,
+      "sha256": "b616ef9c1ae02a5da902bc4a3efb48a8a3170308b30fc09bfda77ba712f49f95"
+    },
+    "native/STM32F103C8T6/build/Generated/UsbTransport/Src/usb_cdc_port.su": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\build\\Generated\\UsbTransport\\Src\\usb_cdc_port.su",
+      "size": 378,
+      "sha256": "7a5b5e090fb9edcea90532824f7991dbf712cea703eb376c74a4dc2519a0966e"
+    },
+    "native/STM32F103C8T6/build/Generated/UsbTransport/Src/usb_cdc_transport.su": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\build\\Generated\\UsbTransport\\Src\\usb_cdc_transport.su",
+      "size": 793,
+      "sha256": "c202bb4c527780502777d1b6444a876773789127e6c21f62ceb1379dba6a63d4"
+    },
+    "native/STM32F103C8T6/build/analysis/Generated/UsbTransport/Src/usb_cdc_port.su": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\build\\analysis\\Generated\\UsbTransport\\Src\\usb_cdc_port.su",
+      "size": 378,
+      "sha256": "7a5b5e090fb9edcea90532824f7991dbf712cea703eb376c74a4dc2519a0966e"
+    },
+    "native/STM32F103C8T6/build/analysis/Generated/UsbTransport/Src/usb_cdc_transport.su": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_8f623d67\\b\\build\\analysis\\Generated\\UsbTransport\\Src\\usb_cdc_transport.su",
+      "size": 793,
+      "sha256": "c202bb4c527780502777d1b6444a876773789127e6c21f62ceb1379dba6a63d4"
+    },
+    "native/STM32F407VET6/Generated/UsbTransport/Inc/usb_cdc_transport.h": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\Generated\\UsbTransport\\Inc\\usb_cdc_transport.h",
+      "size": 808,
+      "sha256": "225f99a7ff8520b5324615c22f868eb42bf78935093c5773a55710b6eae6c4ed"
+    },
+    "native/STM32F407VET6/Generated/UsbTransport/Inc/usb_cdc_port.h": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\Generated\\UsbTransport\\Inc\\usb_cdc_port.h",
+      "size": 456,
+      "sha256": "14d76f1e98f691d82181ae563534463f9962c7a12145931f06399fd3d083b343"
+    },
+    "native/STM32F407VET6/Generated/UsbTransport/Src/usb_cdc_transport.c": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\Generated\\UsbTransport\\Src\\usb_cdc_transport.c",
+      "size": 6442,
+      "sha256": "37684894e381072410182de742db02b2c7e49e2d6a18f3e707473cec08c9a9e8"
+    },
+    "native/STM32F407VET6/Generated/UsbTransport/Src/usb_cdc_port.c": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\Generated\\UsbTransport\\Src\\usb_cdc_port.c",
+      "size": 1978,
+      "sha256": "f130a194292b29a23b42e7ab5ae48fa982e05cde084bed5911de762ee0fa8864"
+    },
+    "native/STM32F407VET6/Generated/UsbTransport/usb_cdc_transport.cmake": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\Generated\\UsbTransport\\usb_cdc_transport.cmake",
+      "size": 923,
+      "sha256": "044c83b4e8ea5bedd585eaa0b6b24170006c57cc89d517253a00aebc01668973"
+    },
+    "native/STM32F407VET6/receipt.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\receipt.json",
+      "size": 831633,
+      "sha256": "5299c5df25f7988c089d2ba4d18f6edc56739b222640a6854160c4b272900b1d"
+    },
+    "native/STM32F407VET6/source-snapshot.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\source-snapshot.json",
+      "size": 723776,
+      "sha256": "63c3f15c8d56e3ddea391b4cc55dfacf355caa73ee7ea2b60315df0a6034fe16"
+    },
+    "native/STM32F407VET6/commands.log": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\commands.log",
+      "size": 400724,
+      "sha256": "7324cafd526a5b9834ae218ecc4b8a19b9d17a00e37af6177df5ef8710320178"
+    },
+    "native/STM32F407VET6/backend-receipt.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\backend-receipt.json",
+      "size": 1442,
+      "sha256": "4b51621f24961c52b64f75d1efed6f5a2b2e290afe94719ccacdf49e040e5231"
+    },
+    "native/STM32F407VET6/candidate_config.ssproject": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\candidate_config.ssproject",
+      "size": 114385,
+      "sha256": "04654347c1ea919d3b18e2035545cd6932e059370ce76e8480a5b4c93135fbb5"
+    },
+    "native/STM32F407VET6/Makefile": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\Makefile",
+      "size": 9161,
+      "sha256": "fdd935a69bf2d48b7680219c2d0aa5f8ba0e37ad8f7d86d8466db257cd5609b9"
+    },
+    "native/STM32F407VET6/Generated/usb_transport_abi_graph.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\Generated\\usb_transport_abi_graph.json",
+      "size": 6666,
+      "sha256": "6ef45420b203d9e9165b25ca059a2cbf6c248670882793df110b846cf36ebe5f"
+    },
+    "native/STM32F407VET6/Generated/ground_source_graph.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\Generated\\ground_source_graph.json",
+      "size": 6172,
+      "sha256": "7aa0676157c1b9a555e211994f37bb41a8cdf2138952befe65843b66c476f835"
+    },
+    "native/STM32F407VET6/Generated/native_ground_contract.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\Generated\\native_ground_contract.json",
+      "size": 35241,
+      "sha256": "e2d9ecf5e3eb73c4837c790f723c5c17eba8afdc34bcf7481993b042b2434adb"
+    },
+    "native/STM32F407VET6/build/native-artifact-report.json": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\build\\native-artifact-report.json",
+      "size": 8173,
+      "sha256": "8230fc0c0144097721983b9d19024af0cc1d637dea38f548e107ec34e258dfdb"
+    },
+    "native/STM32F407VET6/Tools/check_power_of_ten.ps1": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\Tools\\check_power_of_ten.ps1",
+      "size": 32037,
+      "sha256": "a02b24e2305dd65f99aff49f58a0cd10ddf954b8860f90b3d01096f499f06286"
+    },
+    "native/STM32F407VET6/Tools/check_native_ground.py": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\Tools\\check_native_ground.py",
+      "size": 13432,
+      "sha256": "d9c4ee572c62469160cb8c95024c2cd12ba0c96e696dbd87f67b2a2ec3b1aa73"
+    },
+    "native/STM32F407VET6/Tools/native_machine_contract.py": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\Tools\\native_machine_contract.py",
+      "size": 4427,
+      "sha256": "10dbb135a85f99479ae39119be777ebd192151ad48b20af54a549229e3832a1e"
+    },
+    "native/STM32F407VET6/HardwareGenerated/NativeClassicCdc/Package_license.md": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\HardwareGenerated\\NativeClassicCdc\\Package_license.md",
+      "size": 30874,
+      "sha256": "2fe52ca80ec3d84064631a051a914b418aa65b9126ae5131ea323213a8be5aa2"
+    },
+    "native/STM32F407VET6/HardwareGenerated/NativeClassicCdc/USB_DEVICE/USB_Library_LICENSE.txt": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\HardwareGenerated\\NativeClassicCdc\\USB_DEVICE\\USB_Library_LICENSE.txt",
+      "size": 4662,
+      "sha256": "cbee2f4bca504849a4f5c48a396b9892c64e4b3aadc25bde42365d5bfa7adbdd"
+    },
+    "native/STM32F407VET6/HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/LICENSE.txt": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\HardwareGenerated\\NativeClassicCdc\\Middlewares\\ST\\STM32_USB_Device_Library\\LICENSE.txt",
+      "size": 4662,
+      "sha256": "cbee2f4bca504849a4f5c48a396b9892c64e4b3aadc25bde42365d5bfa7adbdd"
+    },
+    "native/STM32F407VET6/HardwareGenerated/NativeClassicCdc/Drivers/CMSIS/LICENSE.txt": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\HardwareGenerated\\NativeClassicCdc\\Drivers\\CMSIS\\LICENSE.txt",
+      "size": 11357,
+      "sha256": "b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1"
+    },
+    "native/STM32F407VET6/HardwareGenerated/NativeClassicCdc/Drivers/STM32F4xx_HAL_Driver/LICENSE.txt": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\HardwareGenerated\\NativeClassicCdc\\Drivers\\STM32F4xx_HAL_Driver\\LICENSE.txt",
+      "size": 377,
+      "sha256": "d5a162f3eaf2b7b6762f00700017cae5695ebbdce7932fead8316448baafd9c1"
+    },
+    "native/STM32F407VET6/HardwareGenerated/NativeClassicCdc/Drivers/CMSIS/Device/ST/STM32F4xx/LICENSE.txt": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\HardwareGenerated\\NativeClassicCdc\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\LICENSE.txt",
+      "size": 371,
+      "sha256": "135fb2d86e9ecdf6824cc3bba21c72b8e380c07b055fbebb6b995463eb609baf"
+    },
+    "native/STM32F407VET6/build/Generated/UsbTransport/Src/usb_cdc_port.su": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\build\\Generated\\UsbTransport\\Src\\usb_cdc_port.su",
+      "size": 378,
+      "sha256": "bc60018c2a2c29d0c06615d142e9361d8e030a212171173b08b885ea4ada1968"
+    },
+    "native/STM32F407VET6/build/Generated/UsbTransport/Src/usb_cdc_transport.su": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\build\\Generated\\UsbTransport\\Src\\usb_cdc_transport.su",
+      "size": 793,
+      "sha256": "c202bb4c527780502777d1b6444a876773789127e6c21f62ceb1379dba6a63d4"
+    },
+    "native/STM32F407VET6/build/analysis/Generated/UsbTransport/Src/usb_cdc_port.su": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\build\\analysis\\Generated\\UsbTransport\\Src\\usb_cdc_port.su",
+      "size": 378,
+      "sha256": "bc60018c2a2c29d0c06615d142e9361d8e030a212171173b08b885ea4ada1968"
+    },
+    "native/STM32F407VET6/build/analysis/Generated/UsbTransport/Src/usb_cdc_transport.su": {
+      "original_path": "D:\\python_software\\SilverStar\\.work\\usb013\\final03\\native\\o_272613ae\\b\\build\\analysis\\Generated\\UsbTransport\\Src\\usb_cdc_transport.su",
+      "size": 793,
+      "sha256": "c202bb4c527780502777d1b6444a876773789127e6c21f62ceb1379dba6a63d4"
+    }
+  },
+  "limits": [
+    "No integrated generic callback execution or board evidence",
+    "Unknown LL failure propagation and confirmed cancellation block acceptance",
+    "No full-repository test run claimed",
+    "No whole-program task/MSP/ISR stack or timing proof",
+    "New ST code not downloaded; input license/version files and exact source hashes govern native code"
+  ]
+}

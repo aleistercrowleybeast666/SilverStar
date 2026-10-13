@@ -1,0 +1,11 @@
+{
+  "apps/SCG/docs/USB_CDC_TRANSPORT_20261013.md": "4115536c01b446f5d99bdbd45ebe560d052fc21f996a4682c3b8f624f06c9b9c",
+  "apps/SCG/src/silverstar_fccg/app/usb_transport.py": "21bf87afa1d5a9bd3bfffa242d071715593aedde9e08f1e580a4f8aa93d1a16b",
+  "apps/SCG/src/silverstar_fccg/generator/usb_cdc_transport.py": "8e24afa217fe9b90553befbebc2666381614f9a242c14129e8f6fa046c608aeb",
+  "apps/SCG/tests/test_usb_transport.py": "d874ceec988f5e15fae1436b41f45416c606fccf2765222cdcc2aa8dac92f4e5",
+  "apps/SCG/tools/validation/usb_transport_baseline.py": "f67a612f324458cdb9c4399f7bebcd9f0487913b034e266ebf89d6c843c22078",
+  "apps/SCG/tools/validation/usb_transport_validate.py": "07498edde887d6abf5344692977dec71737cd33d10817d36908847003210e971",
+  "apps/SCG/docs/evidence/usb_transport_20261013/README.md": "5153137de90a13173bbbe9e18cf418e2709f67f6ff6185f1af17725e78728602",
+  "apps/SCG/docs/evidence/usb_transport_20261013/index.json": "530766fb555b5ad88346051682f27f5b13d0028289c6643d90e2a1fec389e6dc",
+  "apps/SCG/docs/evidence/usb_transport_20261013/audit-records.zip": "80e7cc429a839ce97547bccd72af1150a064da79afc3f6afe303d09d3e570f61"
+}
