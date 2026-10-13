@@ -12,8 +12,11 @@
 
 static uint64_t s_now;
 static uint32_t s_current = 2U;
-static SystemLifecycleState s_lifecycle = SYSTEM_STATE_PREFLIGHT;
+static SystemLifecycleState s_lifecycle = SYSTEM_STATE_POSTFLIGHT;
+static SystemMaintenanceState s_maintenance_fixture = SystemMaintenanceState_Ready;
+static uint32_t s_pattern_size;
 static uint32_t s_io_count;
+static uint8_t s_writer_open;
 static uint32_t s_critical_depth;
 static uint8_t s_close_error;
 static uint8_t s_read_error;
@@ -52,7 +55,7 @@ static void Finish(unsigned int id)
     unsigned int step;
     for (step = 0U; step < 30U; step++)
     {
-        SystemLogFile_Process();
+        SystemLogFile_Process(1U);
         Poll(id);
         if (strncmp(s_reply, "PENDING ", 8U) != 0) { return; }
     }
@@ -66,8 +69,13 @@ PlatformCriticalState PlatformCritical_Enter(void)
 void PlatformCritical_Exit(PlatformCriticalState state) { assert(s_critical_depth == state + 1U); s_critical_depth = state; }
 uint64_t SystemTime_GetMonotonicUs(void) { return s_now; }
 SystemLifecycleState SystemLifecycle_GetState(void) { return s_lifecycle; }
+SystemMaintenanceState SystemLifecycle_MaintenanceGet(void) { return s_maintenance_fixture; }
+SystemDeviceResult SystemLifecycle_MaintenanceRequest(void)
+{ s_maintenance_fixture = SystemMaintenanceState_Draining; return SYSTEM_DEVICE_OK; }
+void SystemLifecycle_MaintenanceComplete(uint8_t ok)
+{ s_maintenance_fixture = ok ? SystemMaintenanceState_Ready : SystemMaintenanceState_Failed; }
 SystemDeviceResult SystemStorage_HealthGet(SystemStorageHealth *health)
-{ memset(health, 0, sizeof(*health)); health->mounted = 1U; health->healthy = 1U; health->file_open = 1U; return SYSTEM_DEVICE_OK; }
+{ memset(health, 0, sizeof(*health)); health->mounted = 1U; health->healthy = 1U; health->file_open = s_writer_open; return SYSTEM_DEVICE_OK; }
 SystemDeviceResult SystemStorage_MissionIdGet(uint32_t *id) { *id = s_current; return SYSTEM_DEVICE_OK; }
 void SilverStarAssert_Check(uint8_t condition, SilverStarAssertModuleId module,
     const char *file, uint32_t line, SilverStarAssertReasonId reason)
@@ -79,8 +87,9 @@ static void Io(void) { assert(s_critical_depth == 0U); s_io_count++; }
 FRESULT f_open(FIL *file, const char *path, BYTE mode)
 {
     Io(); assert(mode == FA_READ);
-    if (strcmp(path, "0:/missions/000001/flight.sslog") != 0) { return FR_NO_FILE; }
-    file->offset = 0U; file->size = s_size_change ? 10U : 9U; file->id = 1U; return FR_OK;
+    if ((strcmp(path, "0:/missions/000001/flight.sslog") != 0) &&
+        !((s_pattern_size != 0U) && (strcmp(path, "0:/missions/999999/flight.sslog") == 0))) { return FR_NO_FILE; }
+    file->offset = 0U; file->size = s_pattern_size ? s_pattern_size : (s_size_change ? 10U : 9U); file->id = 1U; return FR_OK;
 }
 FRESULT f_close(FIL *file)
 {
@@ -97,7 +106,10 @@ FRESULT f_read(FIL *file, void *data, UINT capacity, UINT *count)
     if (s_read_error) { *count = 0U; return FR_DISK_ERR; }
     *count = file->size - file->offset;
     if (*count > capacity) { *count = capacity; }
-    memcpy(data, bytes + file->offset, *count); file->offset += *count; return FR_OK;
+    if (s_pattern_size != 0U)
+    { for (UINT i = 0U; i < *count; i++) { ((unsigned char *)data)[i] = (unsigned char)(file->offset + i); } }
+    else { memcpy(data, bytes + file->offset, *count); }
+    file->offset += *count; return FR_OK;
 }
 FRESULT f_lseek(FIL *file, uint32_t offset) { Io(); file->offset = offset; return FR_OK; }
 FRESULT f_stat(const char *path, FILINFO *info)
@@ -121,24 +133,25 @@ static void Normal(void)
     Execute("LOGFILE READ 1 bad 0 extra"); assert(strstr(s_reply, "code=BAD_ARGUMENT"));
     id = Submit("LOGFILE LIST 0"); Finish(id); assert(strstr(s_reply, "file_id=1") && strstr(s_reply, "next_cursor=3"));
     id = Submit("LOGFILE LIST 3"); Finish(id); assert(strstr(s_reply, "end=1"));
-    id = Submit("LOGFILE META 2"); Finish(id); assert(strstr(s_reply, "code=LOCKED"));
+    s_writer_open = 1U; id = Submit("LOGFILE META 2"); Finish(id); assert(strstr(s_reply, "code=LOCKED")); s_writer_open = 0U;
     id = Submit("LOGFILE META 1"); Execute("LOGFILE META 1"); assert(strstr(s_reply, "code=BUSY")); Finish(id);
     assert(strstr(s_reply, "token=1-CBF43926-00000009") && strstr(s_reply, "format_version=0.0"));
     id = Submit("LOGFILE READ 1 1-CBF43926-00000009 0"); Finish(id);
     assert(strstr(s_reply, "crc32=CBF43926 data=313233343536373839"));
     id = Submit("LOGFILE READ 1 1-CBF43926-00000009 9"); Finish(id); assert(strstr(s_reply, "length=0 crc32=00000000 data=-"));
     s_size_change = 1U; id = Submit("LOGFILE READ 1 1-CBF43926-00000009 0"); Finish(id); assert(strstr(s_reply, "code=STALE")); s_size_change = 0U;
-    id = Submit("LOGFILE META 1"); s_lifecycle = SYSTEM_STATE_FLIGHT; Finish(id); assert(strstr(s_reply, "code=LOCKED")); s_lifecycle = SYSTEM_STATE_PREFLIGHT;
+    id = Submit("LOGFILE META 1"); s_lifecycle = SYSTEM_STATE_FLIGHT; Finish(id); assert(strstr(s_reply, "code=LOCKED")); s_lifecycle = SYSTEM_STATE_POSTFLIGHT;
     id = Submit("LOGFILE META 1"); Finish(id); assert(strstr(s_reply, "OK LOGFILE META"));
-    Execute("LOGFILE CANCEL"); SystemLogFile_Process();
+    s_current = 1U; id = Submit("LOGFILE META 1"); Finish(id); assert(strstr(s_reply, "OK LOGFILE META")); s_current = 2U;
+    Execute("LOGFILE CANCEL"); SystemLogFile_Process(1U);
     id = Submit("LOGFILE READ 1 1-CBF43926-00000009 0"); Finish(id); assert(strstr(s_reply, "code=STALE"));
-    id = Submit("LOGFILE META 1"); SystemLogFile_Process(); s_cancel_in_read = 1U; SystemLogFile_Process(); SystemLogFile_Process(); Poll(id); assert(strstr(s_reply, "code=CANCELLED"));
-    id = Submit("LOGFILE META 1"); SystemLogFile_Process(); s_now += 30000001ULL; s_submit_in_close = 1U; SystemLogFile_Process(); Poll(id); assert(strstr(s_reply, "code=TIMEOUT")); assert(s_submit_busy);
+    id = Submit("LOGFILE META 1"); SystemLogFile_Process(1U); s_cancel_in_read = 1U; SystemLogFile_Process(1U); SystemLogFile_Process(1U); Poll(id); assert(strstr(s_reply, "code=CANCELLED"));
+    id = Submit("LOGFILE META 1"); SystemLogFile_Process(1U); s_now += 30000001ULL; s_submit_in_close = 1U; SystemLogFile_Process(1U); Poll(id); assert(strstr(s_reply, "code=TIMEOUT")); assert(s_submit_busy);
     id = Submit("LOGFILE READ 1 1-CBF43926-00000009 0"); Finish(id); assert(strstr(s_reply, "code=STALE"));
     id = Submit("LOGFILE META 1"); s_cancel_on_close = 1U; Finish(id); assert(strstr(s_reply, "code=CANCELLED"));
     id = Submit("LOGFILE READ 1 1-CBF43926-00000009 0"); Finish(id); assert(strstr(s_reply, "code=STALE"));
     id = Submit("LOGFILE META 1");
-    for (unsigned int step = 0U; step < 4U; step++) { s_now += 20000000ULL; Poll(id); SystemLogFile_Process(); }
+    for (unsigned int step = 0U; step < 4U; step++) { s_now += 20000000ULL; Poll(id); SystemLogFile_Process(1U); }
     Poll(id); assert(strstr(s_reply, "OK LOGFILE META"));
     id = Submit("LOGFILE META 1"); s_read_error = 1U; Finish(id); assert(strstr(s_reply, "code=IO_ERROR")); s_read_error = 0U;
     id = Submit("LOGFILE META 1"); Finish(id); assert(strstr(s_reply, "OK LOGFILE META"));
@@ -146,11 +159,70 @@ static void Normal(void)
 }
 int main(int argc, char *argv[])
 {
+    if ((argc > 1) && strcmp(argv[1], "status") == 0)
+    {
+        SystemLogFileSnapshot snapshot = {0};
+        Execute("LOGFILE STATUS"); assert(strstr(s_reply, "code=NOT_READY"));
+        snapshot.valid = 1U; snapshot.lifecycle = SYSTEM_STATE_PREFLIGHT;
+        snapshot.sequence = UINT32_MAX; snapshot.storage_valid = 1U;
+        snapshot.mounted = 1U; snapshot.healthy = 1U; snapshot.finalization = 3U;
+        SystemLogFile_StatusPublish(&snapshot); s_now = 6000000ULL;
+        Execute("LOGFILE STATUS");
+        assert(strstr(s_reply, "source=FC_DEBUG_RAM") && strstr(s_reply, "age_ms=6000"));
+        assert(strstr(s_reply, "sequence=4294967295") && strstr(s_reply, "cleanup_pending=0"));
+        Execute("LOGFILE CANCEL"); assert(strstr(s_reply, "cleanup_complete=0"));
+        Execute("LOGFILE STATUS"); assert(strstr(s_reply, "cleanup_pending=1"));
+        assert(s_io_count == 0U); SystemLogFile_Process(1U);
+        Execute("LOGFILE STATUS"); assert(strstr(s_reply, "cleanup_pending=0"));
+        assert(s_io_count == 0U);
+        puts("PASS RAM status and cancellation acknowledgement never perform filesystem I/O"); return 0;
+    }
+    if ((argc > 1) && strcmp(argv[1], "unfinalized") == 0)
+    {
+        unsigned int id = Submit("LOGFILE META 1");
+        SystemLogFile_Process(0U); Poll(id);
+        assert(strstr(s_reply, "code=LOCKED")); assert(s_io_count == 0U);
+        puts("PASS unfinalized owner rejects without filesystem access"); return 0;
+    }
+    if ((argc > 1) && strcmp(argv[1], "start-window") == 0)
+    {
+        s_maintenance_fixture = SystemMaintenanceState_Off;
+        static const SystemLifecycleState states[] = {SYSTEM_STATE_PREFLIGHT, SYSTEM_STATE_READY,
+            SYSTEM_STATE_FLIGHT, SYSTEM_STATE_RECOVERY, SYSTEM_STATE_LANDED, SYSTEM_STATE_FAULT};
+        for (unsigned int i = 0U; i < sizeof(states) / sizeof(states[0]); i++)
+        {
+            s_lifecycle = states[i];
+            unsigned int id = Submit("LOGFILE META 1"); Finish(id);
+            assert(strstr(s_reply, "code=LOCKED") != NULL); assert(s_io_count == 0U);
+        }
+        puts("PASS start-capable and active states reject before filesystem access"); return 0;
+    }
+    if ((argc > 1) && strcmp(argv[1], "boot-maintenance") == 0)
+    {
+        s_lifecycle = SYSTEM_STATE_PREFLIGHT;
+        s_maintenance_fixture = SystemMaintenanceState_Draining;
+        unsigned int id = Submit("LOGFILE META 1"); Finish(id);
+        assert(strstr(s_reply, "code=LOCKED") && s_io_count == 0U);
+        s_maintenance_fixture = SystemMaintenanceState_Ready;
+        id = Submit("LOGFILE META 1"); Finish(id);
+        assert(strstr(s_reply, "OK LOGFILE META") && s_io_count > 0U);
+        puts("PASS historical boot log reads require completed maintenance reservation"); return 0;
+    }
+    if ((argc > 1) && strcmp(argv[1], "full-chunk") == 0)
+    {
+        s_pattern_size = 512U;
+        unsigned int id = Submit("LOGFILE META 1"); Finish(id);
+        assert(strstr(s_reply, "token=1-1C613576-00000200"));
+        id = Submit("LOGFILE READ 1 1-1C613576-00000200 0"); Finish(id);
+        assert(strstr(s_reply, "length=64 crc32=100ECE8C data=0001020304050607"));
+        assert(strstr(s_reply, "38393A3B3C3D3E3F"));
+        puts("PASS full hash quantum and read chunk preserve all bytes"); return 0;
+    }
     if ((argc > 1) && strcmp(argv[1], "disabled") == 0)
     {
         Execute("LOGFILE CAPS"); assert(strstr(s_reply, "supported=0 max_chunk"));
         Execute("LOGFILE META 1"); assert(strstr(s_reply, "code=UNSUPPORTED"));
-        SystemLogFile_Process(); assert(s_io_count == 0U);
+        SystemLogFile_Process(1U); assert(s_io_count == 0U);
         puts("PASS logging disabled: linked at O0, capability false and no filesystem access"); return 0;
     }
     if ((argc > 1) && strcmp(argv[1], "golden") == 0)

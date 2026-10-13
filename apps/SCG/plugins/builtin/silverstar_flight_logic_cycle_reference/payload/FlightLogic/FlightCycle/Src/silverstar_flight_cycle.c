@@ -30,6 +30,7 @@ static volatile uint8_t s_response_tail;
 static volatile uint8_t s_start_request_pending;
 static volatile uint8_t s_start_transaction_active;
 static volatile uint8_t s_configuration_actions;
+static volatile SystemMaintenanceState s_maintenance;
 static SystemLifecycleStartDiagnostic s_start_diagnostics[3];
 static uint32_t s_start_diagnostic_sequence;
 
@@ -63,7 +64,8 @@ SystemDeviceResult SystemLifecycle_ConfigurationBegin(SystemConfigurationAction 
         (s_lifecycle_state != SYSTEM_STATE_PREFLIGHT) &&
         (s_lifecycle_state != SYSTEM_STATE_READY))
     { SystemLifecycle_IrqUnlock(lock); return SYSTEM_DEVICE_BAD_STATE; }
-    if ((s_start_transaction_active != 0U) || (s_start_request_pending != 0U) ||
+    if ((s_maintenance != SystemMaintenanceState_Off) ||
+        (s_start_transaction_active != 0U) || (s_start_request_pending != 0U) ||
         ((s_configuration_actions & (uint8_t)action) != 0U))
     { SystemLifecycle_IrqUnlock(lock); return SYSTEM_DEVICE_BUSY; }
     s_configuration_actions |= (uint8_t)action;
@@ -243,6 +245,7 @@ void SystemLifecycle_Init(void)
     s_response_tail = 0U;
     s_start_request_pending = 0U;
     s_start_transaction_active = 0U;
+    s_maintenance = SystemMaintenanceState_Off;
     if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
     { s_configuration_actions = 0U; }
     s_start_diagnostic_sequence = 0U;
@@ -252,6 +255,45 @@ void SystemLifecycle_Init(void)
 SystemLifecycleState SystemLifecycle_GetState(void)
 {
     return s_lifecycle_state;
+}
+
+SystemDeviceResult SystemLifecycle_MaintenanceRequest(void)
+{
+    uint32_t lock = SystemLifecycle_IrqLock();
+    SystemDeviceResult result = SYSTEM_DEVICE_OK;
+    SILVERSTAR_ASSERT(s_maintenance <= SystemMaintenanceState_Failed,
+        SILVERSTAR_ASSERT_MODULE_FLIGHT_LOGIC, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    if ((s_lifecycle_state != SYSTEM_STATE_PREFLIGHT) &&
+        (s_lifecycle_state != SYSTEM_STATE_READY) &&
+        (s_lifecycle_state != SYSTEM_STATE_POSTFLIGHT))
+    { result = SYSTEM_DEVICE_BAD_STATE; }
+    else if ((s_start_request_pending != 0U) || (s_start_transaction_active != 0U) ||
+        (s_configuration_actions != 0U))
+    { result = SYSTEM_DEVICE_BUSY; }
+    else if (s_maintenance == SystemMaintenanceState_Off)
+    { s_maintenance = SystemMaintenanceState_Draining; }
+    SystemLifecycle_IrqUnlock(lock);
+    return result;
+}
+
+SystemMaintenanceState SystemLifecycle_MaintenanceGet(void)
+{
+    return s_maintenance;
+}
+
+void SystemLifecycle_MaintenanceComplete(uint8_t successful)
+{
+    uint32_t lock = SystemLifecycle_IrqLock();
+    SILVERSTAR_ASSERT(successful <= 1U,
+        SILVERSTAR_ASSERT_MODULE_FLIGHT_LOGIC, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT(s_maintenance != SystemMaintenanceState_Off,
+        SILVERSTAR_ASSERT_MODULE_FLIGHT_LOGIC, SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
+    /* A fault/uncertain close can never be upgraded to READY on a retry. */
+    if ((s_maintenance != SystemMaintenanceState_Failed) &&
+        (s_lifecycle_state != SYSTEM_STATE_FAULT) && (successful != 0U))
+    { s_maintenance = SystemMaintenanceState_Ready; }
+    else { s_maintenance = SystemMaintenanceState_Failed; }
+    SystemLifecycle_IrqUnlock(lock);
 }
 
 SystemDeviceResult SystemLifecycle_EnterSelfTest(void)
@@ -328,6 +370,8 @@ void SystemLifecycle_EnterFault(uint32_t reason_mask)
 {
     s_fault_reason_mask |= reason_mask;
     s_lifecycle_state = SYSTEM_STATE_FAULT;
+    if (s_maintenance != SystemMaintenanceState_Off)
+    { s_maintenance = SystemMaintenanceState_Failed; }
     (void)SystemOutput_SafeSet();
     if (SystemTime_IsMissionStarted() != 0U)
     {
@@ -346,7 +390,8 @@ SystemLifecycleStartResult SystemLifecycle_StartReadinessGet(
     uint8_t busy;
     uint32_t primask = SystemLifecycle_IrqLock();
 
-    busy = (uint8_t)((s_start_request_pending != 0U) ||
+    busy = (uint8_t)((s_maintenance != SystemMaintenanceState_Off) ||
+                     (s_start_request_pending != 0U) ||
                      (s_start_transaction_active != 0U) ||
                      (SystemLifecycle_ConfigurationBusy() != 0U));
     SystemLifecycle_IrqUnlock(primask);
@@ -482,7 +527,8 @@ SystemLifecycleStartResult SystemLifecycle_StartTransaction(void)
     SILVERSTAR_ASSERT(s_start_transaction_active <= 1U,
                       SILVERSTAR_ASSERT_MODULE_FLIGHT_LOGIC,
                       SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
-    if ((s_start_request_pending != 0U) ||
+    if ((s_maintenance != SystemMaintenanceState_Off) ||
+        (s_start_request_pending != 0U) ||
         (s_start_transaction_active != 0U) ||
         (SystemLifecycle_ConfigurationBusy() != 0U))
     {
@@ -523,7 +569,8 @@ SystemDeviceResult SystemLifecycle_SubmitStart(
     response.result = SYSTEM_LIFECYCLE_START_BUSY;
     response.reason = SYSTEM_START_REASON_REQUEST_PENDING;
     primask = SystemLifecycle_IrqLock();
-    if ((s_start_request_pending != 0U) ||
+    if ((s_maintenance != SystemMaintenanceState_Off) ||
+        (s_start_request_pending != 0U) ||
         (s_start_transaction_active != 0U) ||
         (SystemLifecycle_ConfigurationBusy() != 0U))
     {
@@ -687,6 +734,7 @@ const char *SystemLifecycle_StartReasonText(SystemLifecycleStartReason reason)
 
 uint8_t SystemLifecycle_IsConfigurationLocked(void)
 {
-    return (uint8_t)((s_lifecycle_state == SYSTEM_STATE_FLIGHT) ||
+    return (uint8_t)((s_maintenance != SystemMaintenanceState_Off) ||
+                     (s_lifecycle_state == SYSTEM_STATE_FLIGHT) ||
                      (s_lifecycle_state == SYSTEM_STATE_RECOVERY));
 }

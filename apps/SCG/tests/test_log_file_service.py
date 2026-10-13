@@ -8,8 +8,8 @@ import subprocess
 import pytest
 
 
-@pytest.mark.parametrize("logging", [True, False])
-def test_log_file_service_fault_boundaries(tmp_path, workspace_root, logging):
+@pytest.mark.parametrize("logging,maximum", [(True, False), (False, False), (True, True)])
+def test_log_file_service_fault_boundaries(tmp_path, workspace_root, logging, maximum):
     compiler = shutil.which("gcc")
     if not compiler:
         pytest.skip("Host GCC unavailable")
@@ -24,11 +24,15 @@ def test_log_file_service_fault_boundaries(tmp_path, workspace_root, logging):
     if not logging:
         command += ["-DSILVERSTAR_PROTOCOL_LOGGING_ENABLED=0"]
     command += ["-I" + str(path) for path in includes]
-    command += [str(fixture / "test_log_file_service.c"), str(core / "System/Src/system_log_file.c"),
-                str(core / "Common/Src/common_format.c"), str(adapter), "-o", str(binary)]
+    command += ([str(fixture / "test_log_file_maximum.c")] if maximum else
+                [str(fixture / "test_log_file_service.c"), str(core / "System/Src/system_log_file.c")])
+    command += [str(core / "Common/Src/common_format.c"), str(adapter), "-o", str(binary)]
     log = []
     environment = dict(os.environ, TEMP=str(tmp_path), TMP=str(tmp_path))
-    cases = ([str(binary)], [str(binary), "close-fault"], [str(binary), "golden"]) if logging else ([str(binary), "disabled"],)
+    cases = ([str(binary)],) if maximum else (([str(binary)], [str(binary), "close-fault"],
+        [str(binary), "golden"], [str(binary), "start-window"], [str(binary), "unfinalized"],
+        [str(binary), "full-chunk"], [str(binary), "status"],
+        [str(binary), "boot-maintenance"]) if logging else ([str(binary), "disabled"],))
     for arguments in (command, *cases):
         run = subprocess.run(arguments, capture_output=True, text=True, env=environment, timeout=90)
         log.append({"command": arguments, "exit_code": run.returncode, "stdout": run.stdout, "stderr": run.stderr})
@@ -37,6 +41,9 @@ def test_log_file_service_fault_boundaries(tmp_path, workspace_root, logging):
         if arguments[-1] == "golden":
             contract = json.loads((workspace_root.parents[1] / "contracts/log_file_service_v1.json").read_text())
             assert run.stdout.strip() == contract["golden"]["read_response"].strip()
+        if maximum and arguments == [str(binary)]:
+            import zlib
+            assert f"crc32={zlib.crc32(bytes(range(191,255))):08X}" in run.stdout
 
 
 def test_f1_and_f4_log_file_payloads_are_identical(workspace_root):

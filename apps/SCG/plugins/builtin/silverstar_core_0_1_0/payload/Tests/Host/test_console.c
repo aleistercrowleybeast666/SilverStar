@@ -15,6 +15,13 @@
 #include "system_hardware_quaternion_if.h"
 #include "system_imu_if.h"
 #include "system_lifecycle.h"
+
+SystemMaintenanceState SystemLifecycle_MaintenanceGet(void)
+{ return SystemMaintenanceState_Off; }
+SystemDeviceResult SystemLifecycle_MaintenanceRequest(void)
+{ return SYSTEM_DEVICE_NOT_READY; }
+void SystemLifecycle_MaintenanceComplete(uint8_t successful)
+{ (void)successful; }
 #include "system_magnetometer_if.h"
 #include "system_mag_calibration.h"
 #include "system_output_if.h"

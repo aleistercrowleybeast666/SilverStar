@@ -191,12 +191,13 @@ def test_product_patch_binding_accepts_only_authorized_complete_header(tmp_path,
 
 
 @pytest.mark.parametrize('mutation', ['digest', 'function'])
-def test_product_metadata_binding_accepts_only_authorized_complete_source(builtin_catalog, mutation):
-    from silverstar_fccg.project.model import ProjectModel_Load
-    from silverstar_fccg.generator.render import _MetadataSource_Render
-    source = Path(__file__).resolve().parents[3] / 'docs/evidence/logger_health_retest_20261008/generated_config.ssproject'
-    text = _MetadataSource_Render(ProjectModel_Load(source), builtin_catalog)
+def test_product_metadata_binding_accepts_only_authorized_complete_source(mutation):
+    # v13 approves archived complete bytes. Rendering an old model with a new
+    # product/catalog changes its identity and cannot reproduce that review.
+    source = Path(__file__).resolve().parents[3] / 'docs/evidence/scg_decoder_binding_20261008/evidence.zip'
     relative = 'Generated/Src/project_metadata.c'
+    with zipfile.ZipFile(source) as archive:
+        text = archive.read('.work/DecoderBindingApproval_20261008/project/Flight_Controller/' + relative).decode('utf8').replace('\r\n', '\n')
     approved = 'bba3aed1cc73043a10cfd126a7759728a10de53e3769e2563fb209a4b12feadf'
     assert stacks.BindingSourceHash_Get(text) == approved
     assert approved in stacks.BindingSourceVersions_Get(relative)
@@ -226,6 +227,34 @@ INTEGRATION_IDENTITIES = {
     'Generated/Src/project_metadata.c': '7b76da5ac6c0e615a2c76dabf8bf2a8e674b00ca0c3e4d1b81ecc60a1eaf4d00',
     'Generated/Src/project_log_decoder_profile.c': 'ec50f2e5db9a0de82b53c77811f99838bb3ecf2b0f7f6dd94ccb632961b09c51',
 }
+
+
+@pytest.mark.parametrize('relative', [
+    'APP/Inc/logger_bus.h', 'APP/Src/logger_bus.c', 'APP/Src/logger_task.c',
+    'Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c',
+    'FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c',
+    'Generated/Src/project_log_decoder_profile.c', 'Generated/Src/project_metadata.c',
+    'System/Inc/system_lifecycle.h', 'System/Inc/system_log_file.h',
+    'System/Src/system_console.c', 'System/Src/system_log_file.c'])
+def test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input(tmp_path, relative):
+    base = Path(__file__).resolve().parents[1]
+    if relative.startswith('Generated/'):
+        owner = base / 'tests/fixtures/stack_uart_identity_20261013'
+    elif relative.startswith('Devices/'):
+        owner = base / 'plugins/builtin/silverstar_device_storage_sd_sdio_fatfs/payload'
+    elif relative.startswith('FlightLogic/'):
+        owner = base / 'plugins/builtin/silverstar_flight_logic_cycle_reference/payload'
+    else:
+        owner = base / 'plugins/builtin/silverstar_core_0_1_0/payload'
+    text = (owner / relative).read_text(encoding='utf8')
+    assert stacks.BindingSourceHash_Get(text) in stacks.BINDING_SOURCE_UART_MAINTENANCE_V16[relative]
+    path = tmp_path / relative
+    path.parent.mkdir(parents=True)
+    path.write_text(text, encoding='utf8')
+    stacks.BindingHeader_Verify(tmp_path, relative)
+    path.write_text(text + '\nint Unreviewed_Callback(void) { return 1; }\n', encoding='utf8')
+    with pytest.raises(ValueError, match='Changed or missing reviewed callback compilation input'):
+        stacks.BindingHeader_Verify(tmp_path, relative)
 
 
 def test_integration_registration_is_exactly_two_complete_sources():

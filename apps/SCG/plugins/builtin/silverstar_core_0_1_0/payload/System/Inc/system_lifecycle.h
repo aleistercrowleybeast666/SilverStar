@@ -83,6 +83,20 @@ typedef struct
 void SystemLifecycle_Init(void);
 typedef enum
 {
+    SystemMaintenanceState_Off = 0,
+    SystemMaintenanceState_Draining,
+    SystemMaintenanceState_Ready,
+    SystemMaintenanceState_Failed
+} SystemMaintenanceState;
+
+/* Explicit, boot-latched reservation. No command releases it; reboot is
+ * required before another flight. Same IRQ boundary as every START entrance. */
+SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemLifecycle_MaintenanceRequest(void);
+SystemMaintenanceState SystemLifecycle_MaintenanceGet(void);
+/* LoggerTask only, after writer/finalization/cleanup results are known. */
+void SystemLifecycle_MaintenanceComplete(uint8_t successful);
+typedef enum
+{
     SYSTEM_CONFIGURATION_ACTION_CALIBRATION = 1U,
     SYSTEM_CONFIGURATION_ACTION_ALIGNMENT = 2U
 } SystemConfigurationAction;

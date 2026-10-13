@@ -44,21 +44,18 @@ SystemLogFileResult SystemLogFileStorage_Check(uint32_t file_id, uint8_t deletin
 {
     SystemLifecycleState lifecycle = SystemLifecycle_GetState();
     SystemStorageHealth health;
-    uint32_t current = 0U;
-    SystemDeviceResult current_result;
+    (void)file_id;
     if (s_failed != 0U) { return SystemLogFileResult_IoError; }
     if (deleting != 0U) { return SystemLogFileResult_Unsupported; }
-    if ((lifecycle != SYSTEM_STATE_PREFLIGHT) && (lifecycle != SYSTEM_STATE_READY) &&
-        (lifecycle != SYSTEM_STATE_POSTFLIGHT)) { return SystemLogFileResult_Locked; }
+    /* The lifecycle lease is boot-latched and atomically excludes every START
+     * entrance. LoggerTask grants READY only after its writer is finalized. */
+    if ((SystemLifecycle_MaintenanceGet() != SystemMaintenanceState_Ready) ||
+        ((lifecycle != SYSTEM_STATE_PREFLIGHT) && (lifecycle != SYSTEM_STATE_READY) &&
+         (lifecycle != SYSTEM_STATE_POSTFLIGHT))) { return SystemLogFileResult_Locked; }
     if ((SystemStorage_HealthGet(&health) != SYSTEM_DEVICE_OK) ||
         (health.mounted == 0U) || (health.healthy == 0U))
     { return SystemLogFileResult_NotReady; }
-    current_result = SystemStorage_MissionIdGet(&current);
-    /* During a failed manifest reservation, current ID is still returned.
-     * Never expose the current mission even if its writer is temporarily shut. */
-    if ((current_result != SYSTEM_DEVICE_OK) &&
-        (current_result != SYSTEM_DEVICE_NOT_READY)) { return SystemLogFileResult_NotReady; }
-    if ((file_id != 0U) && (file_id == current)) { return SystemLogFileResult_Locked; }
+    if (health.file_open != 0U) { return SystemLogFileResult_Locked; }
     return SystemLogFileResult_Ok;
 }
 

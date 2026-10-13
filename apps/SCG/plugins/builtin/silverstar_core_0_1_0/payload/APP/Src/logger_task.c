@@ -8,6 +8,7 @@
 #include "logger_bus.h"
 #include "logger_task.h"
 #include "system_log_file.h"
+#include "system_lifecycle.h"
 #include "debug_log.h"
 #include "project_device_instances.h"
 #include "system_storage_if.h"
@@ -49,9 +50,11 @@ typedef struct
     SystemMissionSnapshotStatus snapshot;
 } LoggerRuntime;
 
-static LoggerRuntime s_logger;
-static LoggerTaskDiagnostics s_diagnostics;
-static uint8_t s_record_buffer[FLIGHT_LOG_MAX_RECORD_SIZE];
+static PLATFORM_CPU_FAST_BSS LoggerRuntime s_logger;
+static PLATFORM_CPU_FAST_BSS LoggerTaskDiagnostics s_diagnostics;
+/* Selected synchronous FatFs sinks copy through the diskio DMA bounce sector;
+ * serialization/header bytes are never passed directly to peripheral DMA. */
+static PLATFORM_CPU_FAST_BSS uint8_t s_record_buffer[FLIGHT_LOG_MAX_RECORD_SIZE];
 static PLATFORM_DMA_ACCESSIBLE uint8_t
     s_aggregate_buffer[SYSTEM_LOG_AGGREGATION_BUFFER_SIZE];
 
@@ -736,6 +739,50 @@ static uint8_t LoggerTask_SessionUnavailableProcess(
     return (uint8_t)(s_logger.session_active == 0U);
 }
 
+static void LoggerTask_MaintenanceProcess(void)
+{
+    LoggerBusResult result;
+    if (SystemLifecycle_MaintenanceGet() != SystemMaintenanceState_Draining) { return; }
+    if ((s_diagnostics.io_fault != 0U) || (s_diagnostics.boot_logging_disabled != 0U) ||
+        (s_diagnostics.final_status_write_failed != 0U))
+    { SystemLifecycle_MaintenanceComplete(0U); return; }
+    if (s_logger.session_finalized != 0U)
+    {
+        SILVERSTAR_ASSERT((s_logger.session_finalized == 1U) &&
+            (s_logger.session_active == 0U) && (s_logger.aggregate_length == 0U),
+            SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+        SILVERSTAR_ASSERT((LoggerBus_FinalizationStateGet() == LOGGER_BUS_FINALIZATION_FINALIZED) &&
+            (LoggerBus_Count() == 0U), SILVERSTAR_ASSERT_MODULE_APP,
+            SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
+        SystemLifecycle_MaintenanceComplete(1U);
+        return;
+    }
+    /* Bootstrap includes initial mount/recovery/manifest/descriptor writes.
+     * Its completion and an idle owned request precede producer admission close.
+     * The normal LoggerTask drain, flush, close and final-status path then runs. */
+    result = LoggerBus_MaintenanceDrainBegin();
+    if (result == LOGGER_BUS_RESULT_BAD_STATE)
+    { SystemLifecycle_MaintenanceComplete(0U); }
+}
+
+static void LoggerTask_StatusPublish(uint64_t now_us)
+{
+    SystemStorageHealth health = {0};
+    SystemLogFileSnapshot snapshot = {0};
+    snapshot.storage_valid = (uint8_t)(SystemStorage_HealthGet(&health) == SYSTEM_DEVICE_OK);
+    snapshot.timestamp_us = now_us;
+    snapshot.sequence = s_diagnostics.iteration_count;
+    snapshot.lifecycle = (uint8_t)SystemLifecycle_GetState();
+    snapshot.mounted = health.mounted;
+    snapshot.healthy = health.healthy;
+    snapshot.writer_open = health.file_open;
+    snapshot.log_fault = (uint8_t)((s_diagnostics.io_fault != 0U) ||
+        (s_diagnostics.final_status_write_failed != 0U));
+    snapshot.finalization = (uint8_t)LoggerBus_FinalizationStateGet();
+    snapshot.valid = 1U;
+    SystemLogFile_StatusPublish(&snapshot);
+}
+
 void AppTask_Logger(void *argument)
 {
     LoggerBusFinalizationState finalization_state;
@@ -754,8 +801,12 @@ void AppTask_Logger(void *argument)
     {
         now_us = SystemTime_GetMonotonicUs();
         LoggerTask_IterationRecord(now_us);
-        SystemLogFile_Process();
+        LoggerTask_MaintenanceProcess();
+        LoggerTask_StatusPublish(now_us);
+        SystemLogFile_Process((uint8_t)(SystemLifecycle_MaintenanceGet() == SystemMaintenanceState_Ready));
         finalization_state = LoggerBus_FinalizationProcess(now_us);
+        if (SystemLifecycle_MaintenanceGet() == SystemMaintenanceState_Failed)
+        { vTaskDelay(pdMS_TO_TICKS(10U)); continue; }
         if (LoggerTask_SessionUnavailableProcess(now_us, finalization_state) != 0U)
         { vTaskDelay(pdMS_TO_TICKS(10U)); continue; }
 

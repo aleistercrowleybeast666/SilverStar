@@ -25,7 +25,9 @@
     "READ": "LOGFILE READ <file_id> <token> <offset>",
     "DELETE": "LOGFILE DELETE <file_id> <token> CONFIRM",
     "CANCEL": "LOGFILE CANCEL",
-    "POLL": "LOGFILE POLL <request_id>"
+    "POLL": "LOGFILE POLL <request_id>",
+    "STATUS": "LOGFILE STATUS",
+    "ENTER": "LOGFILE ENTER"
   },
   "numbers": "Unsigned decimal without sign; CRC and token components are eight uppercase hexadecimal digits",
   "token": {
@@ -38,15 +40,17 @@
     "security": "Change detector only, not authentication or collision-resistant identity. Includes no invented boot/device identity."
   },
   "responses": {
-    "CAPS": "OK LOGFILE CAPS file_service_version=1 supported=1 max_chunk=64 delete_supported=0 telemetry_bulk=0 device_id=unknown boot_id=unknown",
+    "CAPS": "OK LOGFILE CAPS file_service_version=1 supported=1 max_chunk=64 delete_supported=0 telemetry_bulk=0 device_id=unknown boot_id=unknown status_version=1 maintenance_required=1 firmware=<product_version>",
     "PENDING": "PENDING LOGFILE <OP> request_id=<request_id>",
     "LIST": "OK LOGFILE LIST request_id=<request_id> file_id=<file_id> size=<size_bytes> closed=1 next_cursor=<cursor> end=0",
     "LIST_END": "OK LOGFILE LIST request_id=<request_id> end=1 next_cursor=0",
     "META": "OK LOGFILE META request_id=<request_id> file_id=<file_id> token=<token> size=<size_bytes> crc32=<crc32> format=SSLOG format_version=0.0 closed=1",
     "READ": "OK LOGFILE READ request_id=<request_id> file_id=<file_id> token=<token> offset=<offset> length=<length> crc32=<chunk_crc32> data=<uppercase_hex_or_dash_for_empty>",
     "DELETE": "OK LOGFILE DELETE request_id=<request_id> file_id=<file_id> deleted=1",
-    "CANCEL": "OK LOGFILE CANCEL cancelled=1",
-    "ERR": "ERR LOGFILE <OP> request_id=<request_id_or_zero> code=<error>"
+    "CANCEL": "OK LOGFILE CANCEL cancelled=1 cleanup_complete=0",
+    "ERR": "ERR LOGFILE <OP> request_id=<request_id_or_zero> code=<error>",
+    "ENTER": "OK LOGFILE ENTER accepted=1 maintenance=<state> reboot_required=1",
+    "STATUS": "OK LOGFILE STATUS status_version=1 source=FC_DEBUG_RAM sequence=<u32> age_ms=<u32> lifecycle=<0..8> storage_valid=<0|1> mounted=<0|1> healthy=<0|1> writer_open=<0|1> log_fault=<0|1> finalization=<0..3> maintenance=<0..3> cleanup_pending=<0|1> reboot_required=<0|1>"
   },
   "errors": [
     "BAD_ARGUMENT",
@@ -61,15 +65,16 @@
     "UNSUPPORTED"
   ],
   "semantics": {
-    "submission": "CAPS/POLL/CANCEL are synchronous. Valid LIST/META/READ submit one operation; storage owner advances it. Reserved DELETE is synchronously rejected as UNSUPPORTED. POLL returns PENDING until complete. Completion remains replayable until the next accepted request or CANCEL. Client serializes commands and matches operation/request_id/file_id/token/offset.",
+    "submission": "CAPS/STATUS/ENTER/POLL/CANCEL are synchronous RAM operations. ENTER acknowledges an atomic boot-latched START exclusion, not writer cleanup. Valid LIST/META/READ submit one operation; LoggerTask alone advances it. Reserved DELETE is synchronously rejected as UNSUPPORTED. POLL returns PENDING until complete; completion is replayable until the next accepted request or CANCEL. Match operation/request_id/file_id/token/offset.",
     "list": "cursor=0 starts enumeration; next_cursor is opaque uint32. One entry per reply. Only fixed six-digit mission directories containing flight.sslog are exposed. closed means no active writer, not proof of successful recording/finalization.",
-    "storage_owner": "Only LoggerTask performs FatFs work; one bounded hash/read quantum per iteration. No FatFs from SerialTask or ISR.",
-    "safety": "LIST/META/READ require PREFLIGHT, READY or POSTFLIGHT; current mission is never exposed, including temporary writer closure/retry. Other mission logs can be read while current preflight recording continues, serialized through LoggerTask. DELETE is disabled. Recheck before each I/O quantum; an in-progress bounded device transaction completes before cancellation is observed. No radio/AIR/GSP bulk binding. CAPS advertises unsupported when logger service is absent.",
+    "storage_owner": "Only LoggerTask performs FatFs work. Hash input is at most 512 bytes and READ data at most 64 bytes per step; open/seek/close and directory work can involve multiple SD operations. These byte limits do not establish a time bound. No FatFs in SerialTask or ISR.",
+    "safety": "Explicit ENTER is required. In PREFLIGHT/READY/POSTFLIGHT it atomically reserves maintenance only when no START request/transaction or configuration action is active; every START entrance immediately rejects while reserved, never queues for later. LoggerTask waits for bootstrap/recovery to finish, stops producer admission, drains, flushes, closes its writer and writes final status before maintenance READY. Failures latch FAILED and never authorize reads. LIST/META/READ require READY, a healthy mounted store, no open writer and a non-flight lifecycle. Boot-time historical reads are supported after this quiescence. Maintenance remains latched after cancellation, disconnect and completion; physical reboot is required before flight preparation. No radio/AIR/GSP bulk binding, remote delete or automatic restart.",
     "read": "META must first compute full-file CRC32 and size in this service instance. READ requires matching cached file_id/token and unchanged length. Offset <= size; response up to 64 original bytes. Client validates each chunk CRC and final size/whole CRC, then atomically publishes. CRC32 is ISO-HDLC (zlib.crc32), empty CRC=00000000.",
     "resume": "With unknown device or boot identity, disconnect, cancellation, timeout and reboot invalidate all partial downloads and cached selection. Repeat CAPS+META and restart read-only download at offset zero; a matching CRC/size or prefix does not authorize continuation. Never mix responses from another request. No SSLOG bytes or Descriptor are rewritten.",
     "delete": "Reserved explicit command. Current implementation advertises delete_supported=0 and always returns UNSUPPORTED, because device_id/boot_id are unknown. No unlink is performed. A future identity-capable version requires an independent user confirmation and full identity/content validation; old confirmation never survives a reconnect.",
-    "timeout": "30 seconds without POLL cancels outstanding work and invalidates cached metadata. POLL updates liveness; individual device transactions use existing diskio timeouts, but FatFs open/seek/close work can involve multiple transactions and has no established task-level WCET. CANCEL is asynchronous to storage I/O already in progress and prevents subsequent operations.",
-    "compatibility": "Older firmware returns unknown module and client must report unsupported. SSLOG0 remains container 0.0; exact matching .ssdecoder and embedded Descriptor are still required by FLP. Legacy flat-directory logs are not enumerated by v1."
+    "timeout": "30 seconds without POLL cancels outstanding file work and invalidates cached metadata; POLL updates liveness. Existing diskio timeouts bound individual device transactions only; no whole FatFs/task WCET or total cancellation deadline is established. CANCEL cancelled=1 acknowledges acceptance, cleanup_complete=0 explicitly does not claim closure. STATUS cleanup_pending remains 1 until owner reset/close returns; close failure latches maintenance FAILED. Cancellation never releases maintenance or permits START.",
+    "compatibility": "Older firmware lacking LOGFILE or status_version/maintenance_required reports unsupported for the relevant feature. GSHC disables device listing/download without explicit maintenance/START exclusion. AIR M0 and SSLOG0 bytes remain unchanged; exact .ssdecoder and embedded Descriptor remain required by FLP. Legacy flat directories are not enumerated.",
+    "status": "status_version=1 is an additive capability. STATUS copies a LoggerTask-published RAM snapshot and current maintenance/cleanup state; it never probes media or touches FatFs. sequence is a wrapping sample counter, not a request or boot identity; age_ms is saturated elapsed time since that sample. The receiver adds host receive age and marks stale after 3 seconds, invalidates on disconnect/unsupported/error, and never presents unknown storage fields as zero. Missing snapshot returns NOT_READY. lifecycle is an observation, not authorization to START. maintenance: 0 OFF, 1 DRAINING, 2 READY, 3 FAILED. finalization: 0 IDLE, 1 ARMED, 2 DRAINING, 3 FINALIZED. firmware is product identity, independent of wire versions."
   },
   "golden": {
     "file_bytes_hex": "313233343536373839",

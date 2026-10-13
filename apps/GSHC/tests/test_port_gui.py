@@ -29,7 +29,7 @@ def test_invalid_editable_baudrate_stops_before_serial_open(tmp_path):
         controller.window = window
         controller.data_migration_thread = None
         controller._tr.side_effect = window.i18n.tr
-        for invalid in ("abc", "0", "2000001"):
+        for invalid in ("abc", "0", "2147483648", "-1", "115200.0", "１２３"):
             window.baud_combo.setEditText(invalid)
             assert window.current_baudrate() == 0
             with patch("app.QMessageBox.warning") as warning:

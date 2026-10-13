@@ -270,6 +270,85 @@ class TransferUiTests(unittest.TestCase):
         self.assertEqual(sensors.child(2).text(2), self.window.i18n.tr("maintenance.time_unknown"))
         page.details.close()
 
+    def test_shared_refresh_preserves_independent_serial_roles(self):
+        self.window.set_ports(["COM7", "COM9"])
+        self.window.port_combo.setCurrentText("COM7")
+        self.window.debug_port_combo.setCurrentText("COM9")
+        with patch("app.list_serial_port_names", return_value=["COM7", "COM9", "COM100"]) as enumerate_ports:
+            self.window.btn_refresh.click()
+        enumerate_ports.assert_called_once_with()
+        self.assertEqual(self.window.port_combo.currentText(), "COM7")
+        self.assertEqual(self.window.debug_port_combo.currentText(), "COM9")
+        self.assertEqual(self.window.port_combo.count(), 3)
+        self.assertEqual(self.window.debug_port_combo.count(), 3)
+        layout = self.window.btn_refresh.parentWidget().layout()
+        self.assertLess(layout.indexOf(self.window.btn_refresh), layout.indexOf(self.window.lbl_port_name))
+        self.assertIn(self.window.i18n.tr("maintenance.swd_unavailable"), self.window.maintenance_page.swd_status.text())
+        self.assertIsNone(self.controller.file_transfer.owner)
+
+    def test_baud_choices_and_custom_value_reach_maintenance_owner(self):
+        from transport.serial_options import SERIAL_BAUD_CANDIDATES
+        for combo in (self.window.baud_combo, self.window.debug_baud_combo):
+            self.assertEqual(tuple(combo.itemText(i) for i in range(combo.count())), SERIAL_BAUD_CANDIDATES)
+            self.assertTrue(combo.isEditable())
+            combo.setEditText("250000")
+        self.assertEqual(self.window.current_baudrate(), 250000)
+        wire = MockTransport()
+        with patch.object(self.controller.file_transfer, "transport_factory", return_value=wire) as factory:
+            self.window.debug_port_combo.setCurrentText("COM9")
+            self.window.btn_debug_connect.click()
+            self.wait_connected()
+            factory.assert_called_once_with("COM9", 250000)
+            self.window.btn_debug_disconnect.click()
+            self.wait_disconnected()
+
+    def test_invalid_maintenance_baud_stops_before_owner_or_port_open(self):
+        self.window.debug_port_combo.setCurrentText("COM9")
+        for value in ("0", "-1", "2147483648", "115200.0", "１２３"):
+            with self.subTest(value=value):
+                self.window.debug_baud_combo.setEditText(value)
+                with patch("ui.file_transfer.QMessageBox.warning") as warning, \
+                     patch.object(self.controller.file_transfer, "transport_factory") as factory:
+                    self.window.btn_debug_connect.click()
+                warning.assert_called_once()
+                factory.assert_not_called()
+                self.assertIsNone(self.controller.file_transfer.owner)
+
+    def test_legacy_final_status_stays_available_with_files_disabled(self):
+        from test_legacy_firmware_status import LegacyWire
+        wire = LegacyWire()
+        self.controller.file_transfer.transport_factory = lambda *_: wire
+        self.window.debug_port_combo.setCurrentText("COM9")
+        self.assertEqual(self.window.debug_baud_combo.currentText(), "230400")
+        self.window.btn_debug_connect.click()
+        deadline = time.monotonic() + 3
+        page = self.window.maintenance_page
+        while page.firmware_snapshot is None and time.monotonic() < deadline:
+            QTest.qWait(10)
+        self.assertIsNotNone(page.firmware_snapshot)
+        self.assertIn("maintenance.serial.0_0", page.firmware_summary.text())
+        self.assertIn("mounted=1", page.firmware_summary.text())
+        self.assertIn("writes=123", page.firmware_summary.text())
+        self.assertFalse(self.window._debug_service_supported)
+        self.assertFalse(self.window.btn_download_device.isEnabled())
+        self.assertFalse(self.window.btn_refresh_device_logs.isEnabled())
+        self.assertEqual(wire.commands[:5], ['LOGFILE CAPS', 'SYSTEM INFO', 'SYSTEM CAPABILITIES', 'SYSTEM STATUS', 'LOG STATUS'])
+        evidence = os.environ.get("GSHC_TRANSFER_QA_DIR")
+        if evidence:
+            self.window.resize(1280, 900)
+            QTest.qWait(50)
+            folder = Path(evidence)
+            folder.mkdir(parents=True, exist_ok=True)
+            self.assertTrue(self.window.grab().save(str(folder / 'windows_legacy_status_zh.png')))
+            self.window.i18n.set_language(Language.EN_US)
+            self.window.retranslate_ui()
+            QTest.qWait(50)
+            self.assertTrue(self.window.grab().save(str(folder / 'windows_legacy_status_en.png')))
+        self.window.btn_debug_disconnect.click()
+        self.wait_disconnected()
+        self.assertIsNone(page.firmware_snapshot)
+        self.assertNotIn('mounted=1', page.firmware_summary.text())
+
     def test_unsupported_or_timed_out_caps_keeps_port_open_and_disables_files(self):
         for timeout in (False, True):
             class UnsupportedTransport(MockTransport):

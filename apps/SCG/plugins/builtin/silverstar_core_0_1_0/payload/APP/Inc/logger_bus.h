@@ -160,6 +160,9 @@ LoggerBusResult LoggerBus_MagCalibrationIdentityPush(
     uint64_t timestamp_us,
     const FlightLogMagCalibrationIdentityRecord *record);
 LoggerBusResult LoggerBus_FinalizationArm(uint64_t landing_timestamp_us);
+/* LoggerTask only, after lifecycle maintenance reservation. Closes producer
+ * admission once bootstrap/request publication has completed; never reopens. */
+LoggerBusResult LoggerBus_MaintenanceDrainBegin(void);
 LoggerBusFinalizationState LoggerBus_FinalizationProcess(uint64_t now_us);
 void LoggerBus_FinalizationComplete(void);
 LoggerBusFinalizationState LoggerBus_FinalizationStateGet(void);

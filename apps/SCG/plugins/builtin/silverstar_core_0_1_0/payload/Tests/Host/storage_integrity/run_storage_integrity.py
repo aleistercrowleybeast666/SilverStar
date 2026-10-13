@@ -160,6 +160,10 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
         subprocess.run([str(writer), str(output / "boot-mode-unused.sslog"), mode],
                        check=True, cwd=project, env=environment)
     decoders = list(project.glob("*.ssdecoder"))
+    if not sf6_compact:
+        for mode in ("maintenance", "maintenance-fault"):
+            subprocess.run([str(writer), str(output / (mode + '.unused')), mode],
+                           check=True, cwd=project, env=environment)
     if len(decoders) != 1:
         raise ValueError("exactly one generated decoder is required for writer acceptance")
     modes = (("startup-burst", "startup-burst-overload") if sf6_compact else

@@ -6,11 +6,12 @@ from threading import Event
 
 import serial
 from services.device_export import ExportCancelled
+from transport.serial_options import SerialBaud_Parse
 
 
 class FileServiceSerialTransport:
     def __init__(self, port: str, baudrate: int, *, serial_factory=serial.Serial) -> None:
-        if not port.strip() or not 1200 <= baudrate <= 3000000:
+        if not port.strip() or type(baudrate) is not int or SerialBaud_Parse(str(baudrate)) == 0:
             raise ValueError("Select an explicit maintenance UART/USB port and baud rate")
         self._serial = serial_factory(port=port, baudrate=baudrate, timeout=0.05, write_timeout=0.5)
         self._buffer = bytearray()
@@ -49,6 +50,17 @@ class FileServiceSerialTransport:
                 line = raw.decode("ascii", errors="strict").strip()
                 if command == "LOGFILE CAPS" and line.startswith("ERR "):
                     return line
+                if command in {"SYSTEM INFO", "SYSTEM STATUS", "SYSTEM CAPABILITIES", "LOG STATUS"}:
+                    for prefix in ("OK " + command + " ", "ERR " + command + " "):
+                        if line.startswith(prefix) or line.startswith("> " + prefix):
+                            return line.removeprefix("> ")
+                    # A generic parse error is unavailable, never a status.
+                    if line.startswith("ERR "):
+                        return line
+                    discarded += 1
+                    if discarded > 32:
+                        raise OSError("Too many unrelated maintenance lines")
+                    continue
                 # Console may emit a prompt, command echo or diagnostic line.
                 # Only complete protocol responses are returned to the client.
                 marker = next((line.find(prefix) for prefix in ("OK LOGFILE ", "ERR LOGFILE ", "PENDING LOGFILE ") if prefix in line), -1)

@@ -1,7 +1,8 @@
-"""Read-only diagnostics from existing telemetry; no variable read/write wire."""
+"""Read-only FC debug RAM status and separately identified AIR diagnostics."""
 from __future__ import annotations
 
 import time
+from services.legacy_firmware_status import LegacyFirmwareSnapshot
 
 from PySide6.QtWidgets import (
     QDialog,
@@ -27,6 +28,8 @@ class MaintenancePage(QWidget):
         super().__init__(parent)
         self.i18n = i18n
         self.state = None
+        self.firmware_snapshot = None
+        self.firmware_detail = "Not connected / unavailable"
         self.details = QDialog(self)
         self.details.resize(800, 480)
         self.tree = QTreeWidget()
@@ -37,6 +40,12 @@ class MaintenancePage(QWidget):
         detail_layout.addWidget(self.detail_source)
         detail_layout.addWidget(self.tree)
         layout = QVBoxLayout(self)
+        self.firmware_summary = QLabel()
+        self.firmware_summary.setWordWrap(True)
+        layout.addWidget(self.firmware_summary)
+        self.swd_status = QLabel()
+        self.swd_status.setWordWrap(True)
+        layout.addWidget(self.swd_status)
         self.source = QLabel()
         self.source.setWordWrap(True)
         layout.addWidget(self.source)
@@ -88,8 +97,54 @@ class MaintenancePage(QWidget):
         layout.addStretch(1)
         self.retranslate()
 
+    def set_firmware_status(self, snapshot, detail=""):
+        self.firmware_snapshot = snapshot
+        self.firmware_detail = detail
+        self._render_firmware()
+
+    def _render_firmware(self):
+        snap = self.firmware_snapshot
+        if snap is None:
+            self.firmware_summary.setText("FC Debug RAM: " + self.firmware_detail)
+            return
+        if isinstance(snap, LegacyFirmwareSnapshot):
+            self._render_legacy_firmware(snap)
+            return
+        age = snap.age_ms / 1000 + max(0, (time.monotonic_ns() - snap.received_ns) / 1e9)
+        freshness = self.i18n.tr("maintenance.stale" if age > 3 else "maintenance.received")
+        states = ("BOOT", "SELF_TEST", "PREFLIGHT", "READY", "FLIGHT", "RECOVERY", "LANDED", "POSTFLIGHT", "FAULT")
+        maintenance = ("OFF", "DRAINING", "READY", "FAILED")[snap.maintenance]
+        storage = (f"mounted={snap.mounted}, healthy={snap.healthy}, writer_open={snap.writer_open}"
+                   if snap.storage_valid else self.i18n.tr("maintenance.unavailable"))
+        self.firmware_summary.setText(
+            f"FC Debug RAM · firmware {snap.firmware} · sample #{snap.sequence} · {age:.1f}s · {freshness}\n"
+            f"Lifecycle={states[snap.lifecycle]} · maintenance={maintenance} · cleanup_pending={snap.cleanup_pending}\n"
+            f"TF: {storage} · log_fault={snap.log_fault} · reboot_required={snap.reboot_required}")
+
+    def _render_legacy_firmware(self, snap):
+        now = time.monotonic_ns()
+        age = max(0, (now - snap.received_ns) / 1e9)
+        freshness = self.i18n.tr("maintenance.stale" if age > 3 else "maintenance.received")
+        states = ("BOOT", "SELF_TEST", "PREFLIGHT", "READY", "FLIGHT", "RECOVERY", "LANDED", "POSTFLIGHT", "FAULT")
+        lines = [f"FC maintenance.serial.0_0 · firmware {snap.firmware} · {age:.1f}s · {freshness}",
+            f"Lifecycle={states[snap.lifecycle]} · ready={int(snap.ready)} · block=0x{snap.blocking_mask:08X} · warn=0x{snap.warning_mask:08X} · attitude={snap.attitude}"]
+        if snap.capabilities is not None:
+            lines.append("Capabilities: " + " · ".join(f"{key}=0x{value:08X}" for key, value in
+                zip(("compiled", "enabled", "present", "healthy"), snap.capabilities)))
+        log = snap.storage
+        if log is None:
+            lines.append("LOG STATUS: " + (snap.storage_detail or self.i18n.tr("maintenance.unavailable")))
+        else:
+            log_age = max(0, (now - log.received_ns) / 1e9)
+            log_fresh = self.i18n.tr("maintenance.stale" if log_age > 3 else "maintenance.received")
+            lines.append(f"LOG STATUS: {log_age:.1f}s · {log_fresh} · initialized={int(log.initialized)} · mounted={int(log.mounted)} · open={int(log.writer_open)} · healthy={int(log.healthy)} · writes={log.writes} · syncs={log.syncs} · errors={log.errors}")
+        lines.append(self.i18n.tr("maintenance.legacy_age"))
+        self.firmware_summary.setText("\n".join(lines))
+
     def retranslate(self):
         tr = self.i18n.tr
+        self._render_firmware()
+        self.swd_status.setText(tr("maintenance.swd_unavailable"))
         self.summary.setTitle(tr("maintenance.summary"))
         self.source.setText(tr("maintenance.source"))
         self.detail_source.setText(tr("maintenance.source"))
@@ -117,6 +172,7 @@ class MaintenancePage(QWidget):
         self.destination_path.setCursorPosition(0)
 
     def render(self, state):
+        self._render_firmware()
         self.state = state
         unavailable = self.i18n.tr("maintenance.unavailable")
         system_stamp = state.handshake.last_preflight_status_rx_monotonic_ns

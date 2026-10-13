@@ -23,6 +23,7 @@ class MockTransport:
         self.known = known
         self.mutate = lambda response: response
         self.closed = False
+        self.maintenance = 0
 
     @property
     def token(self):
@@ -44,7 +45,12 @@ class MockTransport:
         parts = command.split()
         op = parts[1]
         if op == "CAPS":
-            return "OK LOGFILE CAPS file_service_version=1 supported=1 max_chunk=64 delete_supported=" + ("1" if self.known else "0") + " telemetry_bulk=0 device_id=" + ("device-1 boot_id=boot-1" if self.known else "unknown boot_id=unknown")
+            return "OK LOGFILE CAPS file_service_version=1 supported=1 max_chunk=64 delete_supported=" + ("1" if self.known else "0") + " telemetry_bulk=0 device_id=" + ("device-1 boot_id=boot-1" if self.known else "unknown boot_id=unknown") + " status_version=1 maintenance_required=1 firmware=0.1.3"
+        if op == "ENTER":
+            self.maintenance = 2
+            return "OK LOGFILE ENTER accepted=1 maintenance=1 reboot_required=1"
+        if op == "STATUS":
+            return self.mutate(f"OK LOGFILE STATUS status_version=1 source=FC_DEBUG_RAM sequence=1 age_ms=0 lifecycle=2 storage_valid=1 mounted=1 healthy=1 writer_open=0 log_fault=0 finalization=3 maintenance={self.maintenance} cleanup_pending=0 reboot_required={int(self.maintenance != 0)}")
         if op == "CANCEL":
             return "OK LOGFILE CANCEL cancelled=1"
         if op != "POLL":

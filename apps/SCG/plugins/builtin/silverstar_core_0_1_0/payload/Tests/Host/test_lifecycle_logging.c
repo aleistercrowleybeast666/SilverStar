@@ -7,6 +7,11 @@
 #include "estimator_task.h"
 #include "ins_task.h"
 #include "logger_bus.h"
+
+/* This lifecycle integration harness models the bus; real drain/close failure
+ * is exercised by storage_integrity/test_logger_storage.c. */
+LoggerBusResult LoggerBus_MaintenanceDrainBegin(void)
+{ return LOGGER_BUS_RESULT_BUSY; }
 #include "logger_task.h"
 #include "debug_log.h"
 #include "project_device_instances.h"

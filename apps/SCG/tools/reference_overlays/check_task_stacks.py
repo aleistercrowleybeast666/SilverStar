@@ -1195,7 +1195,7 @@ BINDING_TRIGGER_V2 = '\\b(?:SystemDeviceStartup\\w*|SensorImu\\w*|SensorRegister
 # Reviewed MPU epoch product revision. These exact whole-input/compiled-graph
 # variants supplement the historical V2 sets. No generic acceptance, source
 # coverage exclusion, callback exception or stack threshold is added.
-BINDING_REVIEW_REVISION = "rf_four_provider_queue_20261007_v9"
+BINDING_REVIEW_REVISION = "uart_maintenance_20261013_v16"
 BINDING_SOURCE_EPOCH_V3 = {'APP/Src/imu_sample_bus.c': ['ee0e7e802d34a113b53b066c81223550e597933a2e1d90c4b84424b25e1ec1f9'],
  'Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c': ['c3b492c44a5d98fc53da74e6b3f9479c82a6bda9f7a4e4739324f3e50d14ed1b'],
  'Devices/SensorBus/Adapter/Src/sensor_imu_adapter.c': ['b477e1565cd8a7286e540497734936488104028a7af4b1da46e9ee76de9e41bd'],
@@ -1462,6 +1462,31 @@ BINDING_SOURCE_INTEGRATION_IDENTITIES_V15 = {
 }
 
 
+# Exact UART maintenance review v16, 2026-10-13 development task.
+# Eleven complete inputs and four compiler dependency graphs are registered.
+# New service/lifecycle/status paths have direct calls only; linked FatFs SD and
+# startup callback proofs still run unchanged. No callback target, threshold,
+# unknown-source/dependency/indirect/recursion rejection or source scope changes.
+# Scope and unresolved whole-firmware MSP/ISR obligations are recorded in
+# docs/public/SCG/UART_MAINTENANCE_20261013.md and its evidence inventory.
+BINDING_SOURCE_UART_MAINTENANCE_V16 = {'APP/Inc/logger_bus.h': ['077d47330fd6563a410a242864d580468722f8d3f4daae4fc5fffb271c81918b'],
+ 'APP/Src/logger_bus.c': ['694acdf52db1cc042022cea3fb5c999b305eccb7a3511e24a800788c7dfdc30e'],
+ 'APP/Src/logger_task.c': ['add1697345162f9174c111c9a63f1f118326ce08df2a3f74fa8ed72333501e2a'],
+ 'Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c': ['ddaab372f3478bc9d9a9481d160abe4ca96cd8186a6aae22db52f345ef3c7f38'],
+ 'FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c': ['75c237331e402c9e915f9a932401c3bb51206f0ac0c770de7baf582280cad68e'],
+ 'Generated/Src/project_log_decoder_profile.c': ['5ac6d3e7614214dfd5d38495bab5656363ce42778be6ca1e037781411b644170'],
+ 'Generated/Src/project_metadata.c': ['272fb367309e246dd49d3e682afa424b533e5e417016925d8b5764d3bfe770c1'],
+ 'System/Inc/system_lifecycle.h': ['5a08754621adacd292d725a8b8706daf9c6366f942ed127ef78836d09fbab45a'],
+ 'System/Inc/system_log_file.h': ['8974948a654cca7889378779b8bf2bf2b2462e2a7eba2160af90047393016e17'],
+ 'System/Src/system_console.c': ['a1a66189ab492fefbef703dbcd193397a78ce700593311f442afbb8818ccb45e'],
+ 'System/Src/system_log_file.c': ['b525df1b84a21fe1e8d4e0340a35b693a6c879666da9f69c36e6367fa894d3d7']}
+
+BINDING_DEPENDENCIES_UART_MAINTENANCE_V16 = {'APP/Src/logger_task.c': ['7153d872e5f42292aebbfbf99d682b3409cc75e204249de274741c41886a91d7'],
+ 'Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c': ['03a7bcfafc90ae3b5185a4ebd5551483cf77b39cee7b215d87c4a97770867c7d'],
+ 'System/Src/system_console.c': ['fc56d25bfb4fc05211e10b7992cbe6df4247bce497a9b91eb4dfefe96988961f'],
+ 'System/Src/system_log_file.c': ['ceb89202b09819f0983bb1815060296034f2beb00c36c1a86f33029edbca067d']}
+
+
 def BindingSourceVersions_Get(path):
     return (BINDING_SOURCE_V2.get(path, []) + BINDING_SOURCE_EPOCH_V3.get(path, []) +
             BINDING_SOURCE_LOGGER_V4.get(path, []) + BINDING_SOURCE_NRF_V5.get(path, []) +
@@ -1473,7 +1498,8 @@ def BindingSourceVersions_Get(path):
             BINDING_SOURCE_PRODUCT_PATCH_V12.get(path, []) +
             BINDING_SOURCE_PRODUCT_METADATA_V13.get(path, []) +
             BINDING_SOURCE_PRODUCT_DECODER_V14.get(path, []) +
-            BINDING_SOURCE_INTEGRATION_IDENTITIES_V15.get(path, []))
+            BINDING_SOURCE_INTEGRATION_IDENTITIES_V15.get(path, []) +
+            BINDING_SOURCE_UART_MAINTENANCE_V16.get(path, []))
 
 
 def BindingSourceHash_Get(text):
@@ -1499,7 +1525,8 @@ def BindingSources_Verify(root, sources, build):
                           BINDING_DEPENDENCIES_NRF_V5.get(path, []) +
                           BINDING_DEPENDENCIES_HEALTH_V6.get(path, []) +
                           BINDING_DEPENDENCIES_POWER_V7.get(path, []) +
-                          BINDING_DEPENDENCIES_RF_QUEUE_V9.get(path, []))
+                          BINDING_DEPENDENCIES_RF_QUEUE_V9.get(path, []) +
+                          BINDING_DEPENDENCIES_UART_MAINTENANCE_V16.get(path, []))
         graph_hash = hashlib.sha256("\n".join(dependencies).encode()).hexdigest()
         if graph_hash not in expected_graph:
             raise ValueError("Changed compiled callback dependency graph: " + path)

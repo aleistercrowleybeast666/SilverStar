@@ -22,6 +22,8 @@ from services.file_service_client import (
     validate_download_directory,
 )
 from transport.file_service_backend import FileServiceSerialTransport
+from transport.serial_options import SerialBaud_Parse
+from services.legacy_firmware_status import LegacyFirmwareStatusClient
 
 _logger = logging.getLogger(__name__)
 
@@ -84,6 +86,7 @@ class DownloadWorker(QThread):
                 else:
                     result = "Deletion declined; source retained"
                 return
+            client.enter_maintenance()
             ids = client.list_closed()
             self.catalog.emit(ids)
             if self.list_only:
@@ -159,6 +162,7 @@ class MaintenanceOwner(QThread):
     failed = Signal(str)
     job_finished = Signal()
     service_status = Signal(bool, str)
+    firmware_status = Signal(object, str)
 
     def __init__(self, port, baud, *, transport_factory=FileServiceSerialTransport, parent=None):
         super().__init__(parent)
@@ -192,6 +196,7 @@ class MaintenanceOwner(QThread):
 
     def run(self):
         transport = None
+        status_client = None
         detail = "Disconnected"
         try:
             transport = self.transport_factory(self.port, self.baud)
@@ -200,16 +205,32 @@ class MaintenanceOwner(QThread):
             self.connected.set()
             self.connection_changed.emit(True, f"Port open: {self.port}@{self.baud}")
             try:
-                FileServiceClient(transport, cancel=self.stop).negotiate()
-                self.service_status.emit(True, f"{self.port}@{self.baud} · LOGFILE v1 supported · device/boot identity unknown · read-only / restart from zero")
+                status_client = FileServiceClient(transport, cancel=self.stop)
+                caps = status_client.negotiate()
+                safe_files = caps.get("maintenance_required") == "1" and caps.get("status_version") == "1"
+                self.service_status.emit(safe_files, f"{self.port}@{self.baud} · LOGFILE v1 · explicit maintenance {'supported' if safe_files else 'unsupported'} · device/boot identity unknown")
             except FileServiceError as exc:
                 self.service_status.emit(False, f"{self.port}@{self.baud} · LOGFILE unsupported: {exc}")
+                status_client = LegacyFirmwareStatusClient(transport, cancel=self.stop)
             except TimeoutError:
                 self.service_status.emit(False, f"{self.port}@{self.baud} · LOGFILE unavailable: negotiation response timeout; serial port remains open")
+                status_client = LegacyFirmwareStatusClient(transport, cancel=self.stop)
+            if isinstance(status_client, FileServiceClient) and caps.get("status_version") != "1":
+                status_client = LegacyFirmwareStatusClient(transport, cancel=self.stop)
+            next_status = 0.0
             while not self.stop.is_set():
                 try:
                     destination, list_only = self.jobs.get(timeout=0.05)
                 except queue.Empty:
+                    if time.monotonic() >= next_status:
+                        next_status = time.monotonic() + 1.0
+                        try:
+                            if status_client is None:
+                                status_client = FileServiceClient(transport, cancel=self.stop)
+                            snapshot = status_client.status()
+                            self.firmware_status.emit(snapshot, "")
+                        except (FileServiceError, TimeoutError) as exc:
+                            self.firmware_status.emit(None, str(exc))
                     transport.check_alive()
                     continue
                 if self.stop.is_set():
@@ -232,6 +253,10 @@ class MaintenanceOwner(QThread):
                 if isinstance(operation.operation_error, OSError):
                     detail = str(operation.operation_error)
                     break
+        except ExportCancelled:
+            # A disconnect can arrive between the idle-loop stop check and
+            # STATUS exchange. It is expected cancellation, not a modal error.
+            detail = "Disconnected / status invalidated"
         except Exception as exc:
             _logger.exception("Maintenance owner failed")
             detail = str(exc)
@@ -319,17 +344,21 @@ class FileTransferManager(QObject):
         if self.owner is not None:
             return
         port = c.window.debug_port_combo.currentText().strip()
-        baud_text = c.window.debug_baud_combo.currentText().strip()
-        if not port or not baud_text.isascii() or not baud_text.isdecimal():
+        baud = SerialBaud_Parse(c.window.debug_baud_combo.currentText())
+        if not port:
             self._failed(self._tr("maintenance.invalid_port"))
+            return
+        if baud == 0:
+            self._failed(self._tr("message.invalid_baudrate"))
             return
         if c.worker is not None and normalize_port(c.worker._config.port) == normalize_port(port):
             self._failed(self._tr("maintenance.same_port"))
             return
-        owner = MaintenanceOwner(port, int(baud_text), transport_factory=self.transport_factory, parent=self)
+        owner = MaintenanceOwner(port, baud, transport_factory=self.transport_factory, parent=self)
         self.owner = owner
         owner.connection_changed.connect(self._connection_changed, Qt.QueuedConnection)
         owner.service_status.connect(self._service_status, Qt.QueuedConnection)
+        owner.firmware_status.connect(self._firmware_status, Qt.QueuedConnection)
         owner.destination_validated.connect(self._destination_validated, Qt.QueuedConnection)
         owner.progress.connect(self._progress, Qt.QueuedConnection)
         owner.catalog.connect(c.window.maintenance_page.show_catalog, Qt.QueuedConnection)
@@ -345,6 +374,7 @@ class FileTransferManager(QObject):
 
     def disconnect_debug(self):
         if self.owner is not None:
+            self.controller.window.maintenance_page.set_firmware_status(None, "Disconnected / invalidated")
             self.controller.window.debug_status.setText(self._tr("maintenance.stopping"))
             self.owner.request_stop()
 
@@ -357,6 +387,7 @@ class FileTransferManager(QObject):
             window._debug_service_supported = False
             window.maintenance_page.catalog.clear()
             window.maintenance_page.service_status.setText("LOGFILE: disconnected / negotiation invalidated")
+            window.maintenance_page.set_firmware_status(None, "Disconnected / invalidated")
         window._render_data_tool_buttons()
 
     def _service_status(self, supported, detail):
@@ -364,6 +395,10 @@ class FileTransferManager(QObject):
         window._debug_service_supported = bool(supported)
         window.maintenance_page.service_status.setText(detail)
         window._render_data_tool_buttons()
+
+    def _firmware_status(self, snapshot, detail):
+        if self.owner is not None and not self.owner.stop.is_set():
+            self.controller.window.maintenance_page.set_firmware_status(snapshot, detail)
 
     def _destination_validated(self, destination):
         page = self.controller.window.maintenance_page

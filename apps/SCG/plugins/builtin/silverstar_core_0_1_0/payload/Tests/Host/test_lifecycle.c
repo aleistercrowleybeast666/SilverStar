@@ -304,11 +304,50 @@ static void Test_StartReasonsAndPending(void)
     SystemLifecycle_Process();
 }
 
+static void Test_MaintenanceStartExclusion(void)
+{
+    SystemLifecycleStartRequest request = {SYSTEM_START_SOURCE_AIR, 123U};
+    SystemLifecycleStartResponse response;
+    SystemLifecycleStartReason reason;
+    Test_StateReset();
+    TEST_CHECK(SystemLifecycle_EnterReady() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemLifecycle_SubmitStart(&request) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemLifecycle_MaintenanceRequest() == SYSTEM_DEVICE_BUSY);
+    TEST_CHECK(SystemLifecycle_MaintenanceGet() == SystemMaintenanceState_Off);
+    SystemLifecycle_Process();
+    TEST_CHECK(SystemLifecycle_GetState() == SYSTEM_STATE_FLIGHT);
+    TEST_CHECK(SystemLifecycle_MaintenanceRequest() == SYSTEM_DEVICE_BAD_STATE);
+
+    Test_StateReset();
+    TEST_CHECK(SystemLifecycle_MaintenanceRequest() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemLifecycle_MaintenanceGet() == SystemMaintenanceState_Draining);
+    TEST_CHECK(SystemLifecycle_EnterReady() == SYSTEM_DEVICE_OK);
+    for (unsigned int phase = 0U; phase < 3U; phase++)
+    {
+        TEST_CHECK(SystemLifecycle_StartTransaction() == SYSTEM_LIFECYCLE_START_BUSY);
+        TEST_CHECK(SystemLifecycle_StartReadinessGet(&reason) == SYSTEM_LIFECYCLE_START_BUSY);
+        for (unsigned int source = 0U; source <= SYSTEM_START_SOURCE_LOCAL; source++)
+        {
+            request.source = (SystemStartSource)source;
+            TEST_CHECK(SystemLifecycle_SubmitStart(&request) == SYSTEM_DEVICE_BUSY);
+        }
+        SystemLifecycle_Process();
+        TEST_CHECK(SystemLifecycle_TryGetStartResponse(&response) == 0U);
+        TEST_CHECK(s_prepare_count == 0U && s_mission_started == 0U);
+        TEST_CHECK(SystemLifecycle_ConfigurationBegin(SYSTEM_CONFIGURATION_ACTION_CALIBRATION) == SYSTEM_DEVICE_BUSY);
+        SystemLifecycle_MaintenanceComplete((uint8_t)(phase == 0U));
+    }
+    SystemLifecycle_MaintenanceComplete(1U);
+    TEST_CHECK(SystemLifecycle_MaintenanceGet() == SystemMaintenanceState_Failed);
+    TEST_CHECK(SystemLifecycle_IsConfigurationLocked() != 0U);
+}
+
 int main(void)
 {
     Test_StartTransaction();
     Test_Rollback();
     Test_RequestQueueAndFault();
     Test_StartReasonsAndPending();
+    Test_MaintenanceStartExclusion();
     return Test_Finish("lifecycle");
 }

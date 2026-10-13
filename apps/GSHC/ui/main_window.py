@@ -28,7 +28,7 @@ from protocol.common import (
     enum_name,
 )
 from PySide6.QtCore import QSize, Qt, QTimer
-from PySide6.QtGui import QColor, QFont, QIntValidator, QTextCursor, QVector3D
+from PySide6.QtGui import QColor, QFont, QTextCursor, QVector3D
 from PySide6.QtWidgets import (
     QApplication,
     QCheckBox,
@@ -77,6 +77,7 @@ from services.state_model import (
     MissionPhase,
 )
 from ui.baud_combo import BaudComboBox
+from transport.serial_options import SerialBaud_Parse
 from ui.maintenance_page import MaintenancePage
 from ui.port_combo import PortComboBox
 from ui.theme import ThemeColors, apply_application_theme, theme_colors
@@ -1441,7 +1442,7 @@ class MainWindow(QMainWindow):
         self.pages.setTabText(
             self.pages.indexOf(self.post_process_page), self.i18n.tr("page.post_process")
         )
-        self.pages.setTabText(self.pages.indexOf(self.maintenance_page), self.i18n.tr("page.maintenance"))
+        self.pages.setTabText(self.pages.indexOf(self.maintenance_scroll), self.i18n.tr("page.maintenance"))
         self.maintenance_page.retranslate()
         language_index = self.language_combo.findData(self.i18n.language.value)
         if language_index >= 0 and language_index != self.language_combo.currentIndex():
@@ -1533,7 +1534,8 @@ class MainWindow(QMainWindow):
         self.pages.addTab(self.preflight_page, "")
         self.pages.addTab(self.flight_page, "")
         self.pages.addTab(self.post_process_page, "")
-        self.pages.addTab(self.maintenance_page, "")
+        self.maintenance_scroll = TouchScroll_Wrap(self.maintenance_page)
+        self.pages.addTab(self.maintenance_scroll, "")
         splitter.addWidget(self.pages)
         splitter.setSizes([420, 1340])
         splitter.setStretchFactor(0, 0)
@@ -1584,9 +1586,7 @@ class MainWindow(QMainWindow):
         self.btn_refresh = QPushButton()
         self._bind_text(self.btn_refresh, "button.refresh_ports")
         self.baud_combo = BaudComboBox()
-        self.baud_combo.addItems(("9600", "57600", "115200", "230400", "460800", "921600", "2000000"))
         self.baud_combo.setCurrentText("230400")
-        self.baud_combo.lineEdit().setValidator(QIntValidator(9600, 2_000_000, self.baud_combo))
         self.btn_connect = QPushButton()
         self.btn_disconnect = QPushButton()
         self._bind_text(self.btn_connect, "button.connect")
@@ -1610,9 +1610,9 @@ class MainWindow(QMainWindow):
         port_layout = QHBoxLayout(port_group)
         port_layout.setContentsMargins(0, 0, 0, 0)
         port_layout.setSpacing(4)
+        port_layout.addWidget(self.btn_refresh)
         port_layout.addWidget(self.lbl_port_name)
         port_layout.addWidget(self.port_combo)
-        port_layout.addWidget(self.btn_refresh)
         controls_layout.addWidget(port_group)
         self.lbl_baud_name = QLabel()
         self._bind_text(self.lbl_baud_name, "field.baudrate")
@@ -1639,8 +1639,7 @@ class MainWindow(QMainWindow):
         self.debug_port_combo = PortComboBox()
         self.debug_port_combo.setEditable(True)
         self.debug_baud_combo = BaudComboBox()
-        self.debug_baud_combo.addItems(("115200", "230400", "460800", "921600"))
-        self.debug_baud_combo.setCurrentText("115200")
+        self.debug_baud_combo.setCurrentText("230400")
         self.btn_debug_connect = QPushButton()
         self.btn_debug_disconnect = QPushButton()
         self._bind_text(self.btn_debug_connect, "button.connect")
@@ -2335,11 +2334,7 @@ class MainWindow(QMainWindow):
         return self.port_combo.currentText().strip()
 
     def current_baudrate(self) -> int:
-        value = self.baud_combo.currentText().strip()
-        if not value.isascii() or not value.isdecimal():
-            return 0
-        baudrate = int(value)
-        return baudrate if 9600 <= baudrate <= 2_000_000 else 0
+        return SerialBaud_Parse(self.baud_combo.currentText())
 
     def set_connection_status(self, text: str) -> None:
         self._connection_status_text = text

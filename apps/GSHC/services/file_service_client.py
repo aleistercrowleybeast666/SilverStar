@@ -86,6 +86,24 @@ class RemoteLog:
     format_version: str = "0.0"
 
 
+@dataclass(frozen=True)
+class FirmwareSnapshot:
+    firmware: str
+    received_ns: int
+    sequence: int
+    age_ms: int
+    lifecycle: int
+    storage_valid: bool
+    mounted: bool
+    healthy: bool
+    writer_open: bool
+    log_fault: bool
+    finalization: int
+    maintenance: int
+    cleanup_pending: bool
+    reboot_required: bool
+
+
 def _uint(fields: dict[str, str], key: str, maximum: int = 0xFFFFFFFF) -> int:
     value = fields.get(key, "")
     if not re.fullmatch(r"[0-9]{1,10}", value) or int(value) > maximum:
@@ -142,7 +160,7 @@ class FileServiceClient:
                 raise FileServiceError(FileServiceResult.BUSY if code in {"BUSY", "LOCKED", "NOT_READY"}
                                        else FileServiceResult.STALE if code == "STALE" else FileServiceResult.IO_ERROR,
                                        f"Device rejected {op}: {code}")
-            if op not in {"CAPS", "CANCEL"}:
+            if op not in {"CAPS", "CANCEL", "STATUS", "ENTER"}:
                 if request_id is None and parts[0] != "PENDING":
                     raise FileServiceError(FileServiceResult.BAD_RESPONSE, "Missing submission PENDING acknowledgement")
                 response_id = _uint(fields, "request_id")
@@ -167,6 +185,45 @@ class FileServiceClient:
             raise FileServiceError(FileServiceResult.UNSUPPORTED, "Unsupported LOGFILE capabilities")
         self.capabilities = fields
         return fields
+
+    def status(self) -> FirmwareSnapshot:
+        caps = self.capabilities if self.capabilities is not None else self.negotiate()
+        if caps.get("status_version") != "1":
+            raise FileServiceError(FileServiceResult.UNSUPPORTED, "Firmware RAM status unsupported")
+        fields = self._request("STATUS")
+        if fields.get("status_version") != "1" or fields.get("source") != "FC_DEBUG_RAM":
+            raise FileServiceError(FileServiceResult.BAD_RESPONSE, "Unknown status version/source")
+        return FirmwareSnapshot(
+            caps.get("firmware", "unknown"), time.monotonic_ns(),
+            _uint(fields, "sequence"), _uint(fields, "age_ms"), _uint(fields, "lifecycle", 8),
+            bool(_uint(fields, "storage_valid", 1)), bool(_uint(fields, "mounted", 1)),
+            bool(_uint(fields, "healthy", 1)), bool(_uint(fields, "writer_open", 1)),
+            bool(_uint(fields, "log_fault", 1)), _uint(fields, "finalization", 3),
+            _uint(fields, "maintenance", 3), bool(_uint(fields, "cleanup_pending", 1)),
+            bool(_uint(fields, "reboot_required", 1)))
+
+    def enter_maintenance(self) -> None:
+        caps = self.capabilities if self.capabilities is not None else self.negotiate()
+        if caps.get("maintenance_required") != "1" or caps.get("status_version") != "1":
+            raise FileServiceError(FileServiceResult.UNSUPPORTED, "Firmware has no explicit maintenance/START exclusion")
+        reply = self._request("ENTER")
+        if reply.get("accepted") != "1" or reply.get("reboot_required") != "1":
+            raise FileServiceError(FileServiceResult.BAD_RESPONSE, "Invalid maintenance acknowledgement")
+        # An accepted reservation is not a closed writer. Wait for owner evidence.
+        while True:
+            snapshot = self.status()
+            if snapshot.maintenance == 3:
+                raise FileServiceError(FileServiceResult.IO_ERROR, "Maintenance finalization failed; restart required")
+            if snapshot.maintenance == 2:
+                if (snapshot.age_ms > 3000 or not snapshot.storage_valid or not snapshot.mounted
+                        or not snapshot.healthy or snapshot.writer_open or snapshot.log_fault
+                        or snapshot.finalization != 3 or snapshot.cleanup_pending):
+                    raise FileServiceError(FileServiceResult.BUSY, "Maintenance snapshot is not safe/fresh for reads")
+                return
+            if snapshot.maintenance != 1:
+                raise FileServiceError(FileServiceResult.BAD_RESPONSE, "Maintenance reservation lost")
+            if self.cancel.wait(0.1):
+                self._check()
 
     def list_closed(self) -> list[int]:
         if self.capabilities is None:

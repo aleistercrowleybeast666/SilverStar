@@ -1,4 +1,6 @@
 #include "system_log_file.h"
+#include "system_lifecycle.h"
+#include "system_version.h"
 
 #include <stddef.h>
 #include <string.h>
@@ -12,6 +14,7 @@
 #define LOG_FILE_IDLE_TIMEOUT_US 30000000ULL
 #define LOG_FILE_REQUEST_SIZE 192U
 #define LOG_FILE_TOKEN_COUNT 5U
+#define LOG_FILE_FORMAT_SIZE 256U
 
 typedef struct
 {
@@ -44,7 +47,7 @@ typedef struct
     uint64_t last_poll_us;
     uint32_t sequence;
     uint8_t cancelled;
-    char response[SYSTEM_LOG_FILE_RESPONSE_SIZE];
+    char response[LOG_FILE_FORMAT_SIZE];
 } LogFileMailbox;
 typedef struct
 {
@@ -58,12 +61,33 @@ typedef struct
     uint8_t cached;
 } LogFileWorker;
 
+typedef union
+{
+    uint8_t data[SYSTEM_LOG_FILE_HASH_QUANTUM];
+    char result[LOG_FILE_FORMAT_SIZE];
+} LogFileScratch;
+
 /* The selected storage adapters copy through their private DMA bounce sector.
  * Mailbox, hash bytes and formatter storage remain CPU-only. */
 static PLATFORM_CPU_FAST_BSS LogFileMailbox s_mailbox;
 static PLATFORM_CPU_FAST_BSS LogFileWorker s_worker;
-static PLATFORM_CPU_FAST_BSS uint8_t s_data[SYSTEM_LOG_FILE_HASH_QUANTUM];
-static PLATFORM_CPU_FAST_BSS char s_result[SYSTEM_LOG_FILE_RESPONSE_SIZE];
+/* LoggerTask owns scratch. Hash bytes are consumed before formatting. READ
+ * copies all bytes to local hex and computes CRC before writing result. The
+ * independent mailbox alone is shared with SerialTask. Maximum READ text is
+ * 255 bytes plus NUL (uint32 IDs/offset, six-digit file ID, 64-byte hex data). */
+static PLATFORM_CPU_FAST_BSS LogFileScratch s_scratch;
+static PLATFORM_CPU_FAST_BSS SystemLogFileSnapshot s_snapshot;
+
+void SystemLogFile_StatusPublish(const SystemLogFileSnapshot *snapshot)
+{
+    PlatformCriticalState lock;
+    SILVERSTAR_ASSERT_OBJECT(snapshot, SystemLogFileSnapshot, SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    SILVERSTAR_ASSERT((snapshot->valid == 1U) && (snapshot->lifecycle <= SYSTEM_STATE_FAULT),
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    lock = PlatformCritical_Enter();
+    s_snapshot = *snapshot;
+    PlatformCritical_Exit(lock);
+}
 
 static const char *LogFile_OperationText(LogFileOperation operation)
 {
@@ -260,7 +284,7 @@ static void LogFile_Control(const LogFileTokens *tokens, uint8_t count,
         PlatformCriticalState state = PlatformCritical_Enter();
         s_mailbox.cancelled = 1U;
         PlatformCritical_Exit(state);
-        (void)CommonFormat_Print(response, capacity, "OK LOGFILE CANCEL cancelled=1");
+        (void)CommonFormat_Print(response, capacity, "OK LOGFILE CANCEL cancelled=1 cleanup_complete=0");
     }
     else if ((count == 3U) && (strcmp(LogFile_TokenGet(tokens, 1U), "POLL") == 0) &&
         (LogFile_NumberParse(LogFile_TokenGet(tokens, 2U), &id) != 0U))
@@ -273,6 +297,40 @@ static void LogFile_Control(const LogFileTokens *tokens, uint8_t count,
     }
     else
     { LogFile_ErrorWrite(response, capacity, "PARSE", 0U, SystemLogFileResult_BadArgument); }
+}
+
+static void LogFile_StatusWrite(char *response, uint16_t capacity)
+{
+    SystemLogFileSnapshot snapshot;
+    uint8_t cleanup;
+    uint64_t age_ms;
+    PlatformCriticalState lock = PlatformCritical_Enter();
+    snapshot = s_snapshot;
+    cleanup = s_mailbox.cancelled;
+    PlatformCritical_Exit(lock);
+    if (snapshot.valid == 0U)
+    { LogFile_ErrorWrite(response, capacity, "STATUS", 0U, SystemLogFileResult_NotReady); return; }
+    age_ms = (SystemTime_GetMonotonicUs() - snapshot.timestamp_us) / 1000ULL;
+    (void)CommonFormat_Print(response, capacity,
+        "OK LOGFILE STATUS status_version=1 source=FC_DEBUG_RAM sequence=%lu age_ms=%lu lifecycle=%u storage_valid=%u mounted=%u healthy=%u writer_open=%u log_fault=%u finalization=%u maintenance=%u cleanup_pending=%u reboot_required=%u",
+        (unsigned long)snapshot.sequence, (unsigned long)((age_ms > UINT32_MAX) ? UINT32_MAX : age_ms),
+        (unsigned int)snapshot.lifecycle, (unsigned int)snapshot.storage_valid,
+        (unsigned int)snapshot.mounted, (unsigned int)snapshot.healthy,
+        (unsigned int)snapshot.writer_open, (unsigned int)snapshot.log_fault,
+        (unsigned int)snapshot.finalization, (unsigned int)SystemLifecycle_MaintenanceGet(),
+        (unsigned int)cleanup, (unsigned int)(SystemLifecycle_MaintenanceGet() != SystemMaintenanceState_Off));
+}
+
+static void LogFile_MaintenanceEnter(char *response, uint16_t capacity)
+{
+    SystemDeviceResult result = SystemLifecycle_MaintenanceRequest();
+    if (result != SYSTEM_DEVICE_OK)
+    { LogFile_ErrorWrite(response, capacity, "ENTER", 0U,
+        (result == SYSTEM_DEVICE_BUSY) ? SystemLogFileResult_Busy : SystemLogFileResult_Locked); }
+    else
+    { (void)CommonFormat_Print(response, capacity,
+        "OK LOGFILE ENTER accepted=1 maintenance=%u reboot_required=1",
+        (unsigned int)SystemLifecycle_MaintenanceGet()); }
 }
 
 SystemConsoleExecuteResult SystemLogFile_ExecuteLine(
@@ -296,10 +354,14 @@ SystemConsoleExecuteResult SystemLogFile_ExecuteLine(
     { LogFile_ErrorWrite(response, capacity, "PARSE", 0U, SystemLogFileResult_BadArgument); }
     else if ((count == 2U) && (strcmp(LogFile_TokenGet(&tokens, 1U), "CAPS") == 0))
     { (void)CommonFormat_Print(response, capacity,
-        "OK LOGFILE CAPS file_service_version=1 supported=%u max_chunk=64 delete_supported=0 telemetry_bulk=0 device_id=unknown boot_id=unknown",
+        "OK LOGFILE CAPS file_service_version=1 supported=%u max_chunk=64 delete_supported=0 telemetry_bulk=0 device_id=unknown boot_id=unknown status_version=1 maintenance_required=1 firmware=" SILVERSTAR_VERSION_STRING,
         (unsigned int)(SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)); }
     else if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED == 0U)
     { LogFile_ErrorWrite(response, capacity, "PARSE", 0U, SystemLogFileResult_Unsupported); }
+    else if ((count == 2U) && (strcmp(LogFile_TokenGet(&tokens, 1U), "STATUS") == 0))
+    { LogFile_StatusWrite(response, capacity); }
+    else if ((count == 2U) && (strcmp(LogFile_TokenGet(&tokens, 1U), "ENTER") == 0))
+    { LogFile_MaintenanceEnter(response, capacity); }
     else { LogFile_Control(&tokens, count, response, capacity); }
     return SYSTEM_CONSOLE_EXECUTE_OK;
 }
@@ -321,7 +383,7 @@ static uint32_t LogFile_CrcUpdate(uint32_t crc, const uint8_t *data, uint16_t le
 
 static void LogFile_MetadataWrite(const LogFileRequest *request)
 {
-    (void)CommonFormat_Print(s_result, sizeof(s_result),
+    (void)CommonFormat_Print(s_scratch.result, sizeof(s_scratch.result),
         "OK LOGFILE META request_id=%lu file_id=%lu token=1-%08lX-%08lX size=%lu crc32=%08lX format=SSLOG format_version=0.0 closed=1",
         (unsigned long)request->id, (unsigned long)request->file_id,
         (unsigned long)s_worker.crc, (unsigned long)s_worker.size,
@@ -357,11 +419,11 @@ static SystemLogFileResult LogFile_HashProcess(const LogFileRequest *request)
         s_worker.count = 0U;
         return SystemLogFileResult_Pending;
     }
-    result = SystemLogFileStorage_HashRead(s_data, &length);
+    result = SystemLogFileStorage_HashRead(s_scratch.data, &length);
     if (result != SystemLogFileResult_Ok) { return result; }
     if ((s_worker.count > s_worker.size) ||
         (length > s_worker.size - s_worker.count)) { return SystemLogFileResult_Stale; }
-    s_worker.crc = LogFile_CrcUpdate(s_worker.crc, s_data, length);
+    s_worker.crc = LogFile_CrcUpdate(s_worker.crc, s_scratch.data, length);
     s_worker.count += length;
     if (length == 0U) { return LogFile_HashFinish(request); }
     return SystemLogFileResult_Pending;
@@ -380,16 +442,16 @@ static SystemLogFileResult LogFile_Read(const LogFileRequest *request)
     { return SystemLogFileResult_Stale; }
     if (request->offset > request->size) { return SystemLogFileResult_BadArgument; }
     result = SystemLogFileStorage_Read(request->file_id, request->size,
-        request->offset, s_data, &length);
+        request->offset, s_scratch.data, &length);
     if (result != SystemLogFileResult_Ok) { return result; }
     SILVERSTAR_ASSERT(length <= SYSTEM_LOG_FILE_CHUNK_SIZE,
         SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
     for (index = 0U; index < length; index++)
-    { data[index * 2U] = hex[s_data[index] >> 4U]; data[index * 2U + 1U] = hex[s_data[index] & 15U]; }
+    { data[index * 2U] = hex[s_scratch.data[index] >> 4U]; data[index * 2U + 1U] = hex[s_scratch.data[index] & 15U]; }
     data[length * 2U] = '\0';
     if (length == 0U) { data[0] = '-'; data[1] = '\0'; }
-    crc = ~LogFile_CrcUpdate(UINT32_MAX, s_data, length);
-    (void)CommonFormat_Print(s_result, sizeof(s_result),
+    crc = ~LogFile_CrcUpdate(UINT32_MAX, s_scratch.data, length);
+    (void)CommonFormat_Print(s_scratch.result, sizeof(s_scratch.result),
         "OK LOGFILE READ request_id=%lu file_id=%lu token=1-%08lX-%08lX offset=%lu length=%u crc32=%08lX data=%s",
         (unsigned long)request->id, (unsigned long)request->file_id,
         (unsigned long)request->crc, (unsigned long)request->size,
@@ -407,10 +469,10 @@ static SystemLogFileResult LogFile_List(const LogFileRequest *request)
     s_worker.cursor = next_cursor;
     if (result != SystemLogFileResult_Ok) { return result; }
     if (file_id == 0U)
-    { (void)CommonFormat_Print(s_result, sizeof(s_result),
+    { (void)CommonFormat_Print(s_scratch.result, sizeof(s_scratch.result),
         "OK LOGFILE LIST request_id=%lu end=1 next_cursor=0", (unsigned long)request->id); }
     else
-    { (void)CommonFormat_Print(s_result, sizeof(s_result),
+    { (void)CommonFormat_Print(s_scratch.result, sizeof(s_scratch.result),
         "OK LOGFILE LIST request_id=%lu file_id=%lu size=%lu closed=1 next_cursor=%lu end=0",
         (unsigned long)request->id, (unsigned long)file_id,
         (unsigned long)size, (unsigned long)next_cursor); }
@@ -434,13 +496,18 @@ static void LogFile_Abort(const LogFileRequest *request, SystemLogFileResult res
     PlatformCriticalState state;
     s_worker.hashing = 0U;
     s_worker.cached = 0U;
-    if (closed != SystemLogFileResult_Ok) { result = closed; }
-    LogFile_ErrorWrite(s_result, sizeof(s_result),
+    if (closed != SystemLogFileResult_Ok)
+    {
+        result = closed;
+        if (SystemLifecycle_MaintenanceGet() != SystemMaintenanceState_Off)
+        { SystemLifecycle_MaintenanceComplete(0U); }
+    }
+    LogFile_ErrorWrite(s_scratch.result, sizeof(s_scratch.result),
         LogFile_OperationText(request->operation), request->id, result);
     state = PlatformCritical_Enter();
     SILVERSTAR_ASSERT(s_mailbox.request.id == request->id,
         SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
-    (void)memcpy(s_mailbox.response, s_result, sizeof(s_mailbox.response));
+    (void)memcpy(s_mailbox.response, s_scratch.result, sizeof(s_mailbox.response));
     s_mailbox.state = (request->id == 0U) ? LOG_FILE_IDLE : LOG_FILE_DONE;
     s_mailbox.last_poll_us = SystemTime_GetMonotonicUs();
     s_mailbox.cancelled = 0U;
@@ -456,7 +523,7 @@ static void LogFile_Complete(const LogFileRequest *request, SystemLogFileResult 
     if (s_mailbox.cancelled != 0U) { result = SystemLogFileResult_Cancelled; }
     if (result == SystemLogFileResult_Ok)
     {
-        (void)memcpy(s_mailbox.response, s_result, sizeof(s_mailbox.response));
+        (void)memcpy(s_mailbox.response, s_scratch.result, sizeof(s_mailbox.response));
         s_mailbox.state = LOG_FILE_DONE;
         PlatformCritical_Exit(state);
         return;
@@ -467,7 +534,7 @@ static void LogFile_Complete(const LogFileRequest *request, SystemLogFileResult 
     LogFile_Abort(request, result);
 }
 
-void SystemLogFile_Process(void)
+void SystemLogFile_Process(uint8_t session_finalized)
 {
     LogFileRequest request;
     SystemLogFileResult result;
@@ -493,8 +560,10 @@ void SystemLogFile_Process(void)
     if (mailbox_state != LOG_FILE_PENDING) { return; }
     SILVERSTAR_ASSERT((request.id != 0U) && (request.operation <= LOG_FILE_READ),
         SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT(session_finalized <= 1U,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if (s_worker.request_id != request.id)
     { s_worker.request_id = request.id; s_worker.cursor = request.file_id; }
-    result = LogFile_Work(&request);
+    result = (session_finalized != 0U) ? LogFile_Work(&request) : SystemLogFileResult_Locked;
     if (result != SystemLogFileResult_Pending) { LogFile_Complete(&request, result); }
 }

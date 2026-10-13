@@ -1242,6 +1242,30 @@ LoggerBusResult LoggerBus_MagCalibrationIdentityPush(
         record, sizeof(*record), 0U);
 }
 
+LoggerBusResult LoggerBus_MaintenanceDrainBegin(void)
+{
+    PlatformCriticalState lock = LoggerBus_IrqLock();
+    LoggerBusResult result = LOGGER_BUS_RESULT_BUSY;
+    SILVERSTAR_ASSERT(s_finalization_state <= LOGGER_BUS_FINALIZATION_FINALIZED,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    SILVERSTAR_ASSERT(s_request.phase <= LOGGER_REQUEST_FAULT,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    if ((s_initialized == 0U) || (s_boot_disabled != 0U) || (s_request.io_fault != 0U))
+    { result = LOGGER_BUS_RESULT_BAD_STATE; }
+    else if (s_finalization_state == LOGGER_BUS_FINALIZATION_FINALIZED)
+    { result = LOGGER_BUS_RESULT_OK; }
+    else if ((s_diagnostics.startup_state == LOGGER_STREAMING_READY) &&
+        (s_request.phase == LOGGER_REQUEST_IDLE) &&
+        (s_finalization_state == LOGGER_BUS_FINALIZATION_IDLE))
+    {
+        s_accepting_records = 0U;
+        s_finalization_state = LOGGER_BUS_FINALIZATION_DRAINING;
+        result = LOGGER_BUS_RESULT_OK;
+    }
+    LoggerBus_IrqUnlock(lock);
+    return result;
+}
+
 LoggerBusResult LoggerBus_FinalizationArm(uint64_t landing_timestamp_us)
 {
     const uint64_t grace_us =

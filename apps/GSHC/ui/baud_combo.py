@@ -3,7 +3,9 @@
 import math
 
 from PySide6.QtCore import QEvent, QRect, QSize
+from PySide6.QtGui import QIntValidator
 from PySide6.QtWidgets import QComboBox, QSizePolicy, QStyle, QStyleOptionComboBox
+from transport.serial_options import SERIAL_BAUD_CANDIDATES, SERIAL_BAUD_MAX
 
 
 class BaudComboBox(QComboBox):
@@ -12,6 +14,8 @@ class BaudComboBox(QComboBox):
         self._width_updating = False
         self.setEditable(True)
         self.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
+        self.addItems(SERIAL_BAUD_CANDIDATES)
+        self.lineEdit().setValidator(QIntValidator(1, SERIAL_BAUD_MAX, self))
         self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         self.currentTextChanged.connect(self._Width_Update)
         self._Width_Update()
