@@ -78,6 +78,7 @@ from services.state_model import (
 )
 from transport.protocol_worker import ProtocolBatch, ProtocolWorker, ProtocolWorkerDiagnostics
 from transport.serial_backend import SerialConfig, SerialLink, list_serial_port_names
+from ui.file_transfer import FileTransferManager, normalize_port
 from ui.main_window import MainWindow
 
 GS_STATE_MAP = {
@@ -1030,6 +1031,7 @@ class Controller(QObject):
         self.data_migration_thread: QThread | None = None
         self.data_migration_worker: DataMigrationWorker | None = None
         self.data_migration_cancel_requested = False
+        self.file_transfer = FileTransferManager(self)
         self.pending_data_root: Path | None = None
         self.previous_data_root: Path | None = None
         self.pending_data_migration_conflict_policy = (
@@ -1062,6 +1064,13 @@ class Controller(QObject):
         self.window.on_cancel_data_migration = self.cancel_data_migration
         self.window.on_open_log_dir = self.open_log_dir
         self.window.on_open_data_dir = self.open_data_dir
+        self.window.on_export_device = self.file_transfer.choose_export
+        self.window.on_download_device = self.file_transfer.choose_download
+        self.window.on_refresh_device_logs = self.file_transfer.refresh_device_logs
+        self.window.on_debug_connect = self.file_transfer.connect_debug
+        self.window.on_debug_disconnect = self.file_transfer.disconnect_debug
+        self.window.on_cancel_device_job = self.file_transfer.cancel
+        self.window.on_close_requested = self.file_transfer.request_window_close
         self.refresh_ports()
 
     def _next_state_generation(self) -> int:
@@ -1120,6 +1129,8 @@ class Controller(QObject):
         self.window.set_ports(list_serial_port_names())
 
     def connect(self) -> None:
+        if getattr(self, "file_transfer", None) is not None and self.file_transfer.busy is True:
+            return
         if self.data_migration_thread is not None:
             QMessageBox.information(
                 self.window,
@@ -1133,6 +1144,10 @@ class Controller(QObject):
             QMessageBox.warning(
                 self.window, self._tr("app.title"), self._tr("message.select_port")
             )
+            return
+        transfer = getattr(self, "file_transfer", None)
+        if isinstance(transfer, FileTransferManager) and transfer.owner is not None and normalize_port(transfer.owner.port) == normalize_port(port):
+            QMessageBox.warning(self.window, self._tr("app.title"), self._tr("maintenance.same_port"))
             return
         if not baud:
             QMessageBox.warning(
@@ -1256,6 +1271,8 @@ class Controller(QObject):
         self._replace_state(connected=False, connection_text="未连接")
 
     def shutdown(self) -> None:
+        if getattr(self, "file_transfer", None) is not None:
+            self.file_transfer.shutdown()
         if self.simulation_worker is not None:
             self.simulation_worker.request_cancel()
         if self.processing_worker is not None:
@@ -1945,6 +1962,10 @@ class Controller(QObject):
         self._send_air_cmd(int(AirCmdId.UNLOCK), token=TOKEN_UNLOCK)
 
     def send_start(self) -> None:
+        transfer = getattr(self, "file_transfer", None)
+        if isinstance(transfer, FileTransferManager) and transfer.busy:
+            self._set_radio_message("maintenance.start_blocked")
+            return
         if self.state.start_transaction_pending():
             self._set_radio_message("radio.start_in_progress")
             return
@@ -2785,6 +2806,8 @@ class Controller(QObject):
         self._open_folder(self.data_dir)
 
     def choose_data_root(self) -> None:
+        if getattr(self, "file_transfer", None) is not None and self.file_transfer.busy is True:
+            return
         if (
             self.logger.session_active
             or self.protocol_worker is not None
@@ -2873,6 +2896,8 @@ class Controller(QObject):
             DataMigrationConflictPolicy.OVERWRITE
         ),
     ) -> None:
+        if getattr(self, "file_transfer", None) is not None and self.file_transfer.busy is True:
+            return
         if self.data_migration_thread is not None:
             return
         self.previous_data_root = self.data_root
@@ -3002,6 +3027,8 @@ class Controller(QObject):
         )
 
     def generate_sim_validation_data(self) -> None:
+        if getattr(self, "file_transfer", None) is not None and self.file_transfer.busy is True:
+            return
         if self.state.mission_started:
             QMessageBox.information(
                 self.window,
@@ -3130,6 +3157,8 @@ class Controller(QObject):
         self.simulation_thread = None
 
     def choose_and_process_data(self) -> None:
+        if getattr(self, "file_transfer", None) is not None and self.file_transfer.busy is True:
+            return
         if self.data_migration_thread is not None:
             return
         if self.state.mission_started:
@@ -3167,6 +3196,8 @@ class Controller(QObject):
         log_path: Path,
         export_options: ResolvedExportOptions,
     ) -> None:
+        if getattr(self, "file_transfer", None) is not None and self.file_transfer.busy is True:
+            return
         if (
             self.processing_thread is not None
             or self.simulation_thread is not None

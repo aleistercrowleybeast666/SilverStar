@@ -32,6 +32,7 @@ from PySide6.QtGui import QColor, QFont, QIntValidator, QTextCursor, QVector3D
 from PySide6.QtWidgets import (
     QApplication,
     QCheckBox,
+    QBoxLayout,
     QComboBox,
     QDialog,
     QDoubleSpinBox,
@@ -43,6 +44,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QListWidget,
     QMainWindow,
+    QMenu,
     QPlainTextEdit,
     QProgressBar,
     QPushButton,
@@ -75,6 +77,7 @@ from services.state_model import (
     MissionPhase,
 )
 from ui.baud_combo import BaudComboBox
+from ui.maintenance_page import MaintenancePage
 from ui.port_combo import PortComboBox
 from ui.theme import ThemeColors, apply_application_theme, theme_colors
 from ui.touch_scroll import TouchScroll_Enable, TouchScroll_Wrap
@@ -1329,6 +1332,15 @@ class MainWindow(QMainWindow):
         self.on_generate_sim_data: Callable[[], None] | None = None
         self.on_cancel_sim_data: Callable[[], None] | None = None
         self.on_process_data: Callable[[], None] | None = None
+        self.on_export_device: Callable[[bool], None] | None = None
+        self.on_download_device: Callable[[bool], None] | None = None
+        self.on_refresh_device_logs: Callable[[], None] | None = None
+        self.on_debug_connect: Callable[[], None] | None = None
+        self.on_debug_disconnect: Callable[[], None] | None = None
+        self.on_cancel_device_job: Callable[[], None] | None = None
+        self._debug_connected = False
+        self._debug_service_supported = False
+        self.on_close_requested: Callable[[], bool] | None = None
         self.on_cancel_process_data: Callable[[], None] | None = None
         self.on_select_data_root: Callable[[], None] | None = None
         self.on_cancel_data_migration: Callable[[], None] | None = None
@@ -1429,6 +1441,8 @@ class MainWindow(QMainWindow):
         self.pages.setTabText(
             self.pages.indexOf(self.post_process_page), self.i18n.tr("page.post_process")
         )
+        self.pages.setTabText(self.pages.indexOf(self.maintenance_page), self.i18n.tr("page.maintenance"))
+        self.maintenance_page.retranslate()
         language_index = self.language_combo.findData(self.i18n.language.value)
         if language_index >= 0 and language_index != self.language_combo.currentIndex():
             blocked = self.language_combo.blockSignals(True)
@@ -1509,9 +1523,17 @@ class MainWindow(QMainWindow):
         self.preflight_page = self._build_preflight_page()
         self.flight_page = self._build_flight_page()
         self.post_process_page = self._build_post_process_page()
+        self.maintenance_page = MaintenancePage(self.i18n, self)
+        self.maintenance_page.tools.addWidget(self.btn_export_device)
+        self.maintenance_page.tools.addWidget(self.btn_download_device)
+        self.btn_refresh_device_logs = QPushButton()
+        self._bind_text(self.btn_refresh_device_logs, "maintenance.refresh_logs")
+        self.btn_refresh_device_logs.clicked.connect(lambda: self.on_refresh_device_logs and self.on_refresh_device_logs())
+        self.maintenance_page.tools.addWidget(self.btn_refresh_device_logs)
         self.pages.addTab(self.preflight_page, "")
         self.pages.addTab(self.flight_page, "")
         self.pages.addTab(self.post_process_page, "")
+        self.pages.addTab(self.maintenance_page, "")
         splitter.addWidget(self.pages)
         splitter.setSizes([420, 1340])
         splitter.setStretchFactor(0, 0)
@@ -1583,7 +1605,7 @@ class MainWindow(QMainWindow):
         controls_layout.setSpacing(4)
 
         self.lbl_port_name = QLabel()
-        self._bind_text(self.lbl_port_name, "field.port")
+        self._bind_text(self.lbl_port_name, "maintenance.ground_port")
         port_group = QWidget()
         port_layout = QHBoxLayout(port_group)
         port_layout.setContentsMargins(0, 0, 0, 0)
@@ -1604,9 +1626,38 @@ class MainWindow(QMainWindow):
         controls_layout.addWidget(self.btn_connect)
         controls_layout.addWidget(self.btn_disconnect)
         controls_layout.addWidget(self.conn_label)
+        for button in (self.btn_refresh, self.btn_connect, self.btn_disconnect):
+            button.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Fixed)
         connection_layout.addStretch(1)
         connection_layout.addWidget(connection_group)
-        connection_layout.addStretch(1)
+        self.debug_connection_group = QWidget()
+        debug_layout = QHBoxLayout(self.debug_connection_group)
+        debug_layout.setContentsMargins(0, 0, 0, 0)
+        debug_layout.setSpacing(4)
+        debug_title = QLabel()
+        self._bind_text(debug_title, "maintenance.port_title")
+        self.debug_port_combo = PortComboBox()
+        self.debug_port_combo.setEditable(True)
+        self.debug_baud_combo = BaudComboBox()
+        self.debug_baud_combo.addItems(("115200", "230400", "460800", "921600"))
+        self.debug_baud_combo.setCurrentText("115200")
+        self.btn_debug_connect = QPushButton()
+        self.btn_debug_disconnect = QPushButton()
+        self._bind_text(self.btn_debug_connect, "button.connect")
+        self._bind_text(self.btn_debug_disconnect, "button.disconnect")
+        self.debug_status = QLabel("Disconnected")
+        self.debug_status.setWordWrap(True)
+        self.debug_status.setMinimumWidth(110)
+        self.debug_status.setMaximumWidth(200)
+        for widget in (debug_title, self.debug_port_combo, self.debug_baud_combo,
+                       self.btn_debug_connect, self.btn_debug_disconnect, self.debug_status):
+            debug_layout.addWidget(widget)
+        for button in (self.btn_debug_connect, self.btn_debug_disconnect):
+            button.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Fixed)
+        debug_layout.addStretch(1)
+        connection_layout.addWidget(self.debug_connection_group)
+        self.btn_debug_connect.clicked.connect(lambda: self.on_debug_connect and self.on_debug_connect())
+        self.btn_debug_disconnect.clicked.connect(lambda: self.on_debug_disconnect and self.on_debug_disconnect())
 
         self.header_version = QLabel()
         self.header_version.setObjectName("headerVersion")
@@ -1999,6 +2050,27 @@ class MainWindow(QMainWindow):
         layout.setSpacing(10)
         self.btn_generate_sim = QPushButton()
         self.btn_process_data = QPushButton()
+        self.btn_export_device = QPushButton()
+        export_menu = QMenu(self.btn_export_device)
+        self.action_export_copy = export_menu.addAction("")
+        self.action_export_cut = export_menu.addAction("")
+        self.btn_export_device.setMenu(export_menu)
+        self.btn_download_device = QPushButton()
+        download_menu = QMenu(self.btn_download_device)
+        self.action_download_copy = download_menu.addAction("")
+        self.action_download_delete = download_menu.addAction("")
+        self.action_download_delete.setEnabled(False)
+        self.btn_download_device.setMenu(download_menu)
+        self._bind_text(self.btn_download_device, "transfer.download")
+        self._bind_text(self.action_download_copy, "transfer.download_copy")
+        self._bind_text(self.action_download_delete, "transfer.download_delete")
+        self.action_download_copy.triggered.connect(lambda: self.on_download_device and self.on_download_device(False))
+        self.action_download_delete.triggered.connect(lambda: self.on_download_device and self.on_download_device(True))
+        self._bind_text(self.btn_export_device, "transfer.export")
+        self._bind_text(self.action_export_copy, "transfer.copy")
+        self._bind_text(self.action_export_cut, "transfer.cut")
+        self.action_export_copy.triggered.connect(lambda: self.on_export_device and self.on_export_device(False))
+        self.action_export_cut.triggered.connect(lambda: self.on_export_device and self.on_export_device(True))
         self.btn_select_data_root = QPushButton()
         self.btn_open_log_dir = QPushButton()
         self.btn_open_data_dir = QPushButton()
@@ -2246,6 +2318,11 @@ class MainWindow(QMainWindow):
             self.curves[key].setPen(pg.mkPen(colors.plot_curve, width=2))
 
     def set_ports(self, ports: list[str]) -> None:
+        debug_current = self.debug_port_combo.currentText()
+        self.debug_port_combo.clear()
+        self.debug_port_combo.addItems(ports)
+        if debug_current:
+            self.debug_port_combo.setCurrentText(debug_current)
         current = self.port_combo.currentText()
         self.port_combo.clear()
         self.port_combo.addItems(ports)
@@ -2273,6 +2350,9 @@ class MainWindow(QMainWindow):
         self._PlotMinimum_Update()
         if hasattr(self, "conn_label"):
             self._ConnectionStatus_Display()
+        if hasattr(self, "debug_connection_group"):
+            needed = self.header_connection_group.minimumSizeHint().width() + self.debug_connection_group.minimumSizeHint().width() + 60
+            self.header_connection_layout.setDirection(QBoxLayout.Direction.LeftToRight if self.width() >= needed else QBoxLayout.Direction.TopToBottom)
 
     def _PlotMinimum_Update(self) -> None:
         if not hasattr(self, "plot_widgets"):
@@ -2286,6 +2366,9 @@ class MainWindow(QMainWindow):
 
     def _ConnectionStatus_Display(self) -> None:
         text = self._connection_status_text
+        if len(text) <= 24:
+            self.conn_label.setMinimumWidth(max(110, self.conn_label.fontMetrics().horizontalAdvance(text) + 10))
+            self.conn_label.setMaximumWidth(max(200, self.conn_label.minimumWidth()))
         width = max(1, self.conn_label.contentsRect().width())
         metrics = self.conn_label.fontMetrics()
         if metrics.horizontalAdvance(text) <= width:
@@ -2466,6 +2549,10 @@ class MainWindow(QMainWindow):
         high_load_enabled = not self._data_tools_busy and not mission
         self.btn_generate_sim.setEnabled(high_load_enabled)
         self.btn_process_data.setEnabled(high_load_enabled)
+        file_tools_enabled = high_load_enabled and not bool(self._state and self._state.start_transaction_pending())
+        self.btn_export_device.setEnabled(file_tools_enabled and not bool(self._state and self._state.connected))
+        self.btn_download_device.setEnabled(file_tools_enabled and self._debug_connected and self._debug_service_supported)
+        self.btn_refresh_device_logs.setEnabled(file_tools_enabled and self._debug_connected and self._debug_service_supported)
         self.btn_cancel_sim.setEnabled(
             self._simulation_task_active and self._simulation_cancel_enabled
         )
@@ -2479,10 +2566,19 @@ class MainWindow(QMainWindow):
         self.btn_open_log_dir.setEnabled(True)
         self.btn_open_data_dir.setEnabled(True)
 
+    def closeEvent(self, event) -> None:
+        if self.on_close_requested is not None and not self.on_close_requested():
+            event.ignore()
+            return
+        super().closeEvent(event)
+
     def render_state(self) -> None:
         state = self._state
         if state is None:
             return
+        self.maintenance_page.render(state)
+        if (state.mission_started or state.start_transaction_pending()) and self.on_cancel_device_job is not None:
+            self.on_cancel_device_job()
 
         self.set_connection_status(self.i18n.format_message(state.connection_message))
         lifecycle_name = (

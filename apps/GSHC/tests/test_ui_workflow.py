@@ -10,6 +10,7 @@ from unittest.mock import patch
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 import pyqtgraph as pg
+from config import APP_VERSION
 from PySide6.QtCore import QSettings
 from PySide6.QtGui import QColor, QTextCursor
 from PySide6.QtWidgets import QApplication
@@ -93,7 +94,7 @@ class UiWorkflowTests(unittest.TestCase):
 
     def test_release_pages_are_manually_selectable(self) -> None:
         labels = [self.window.pages.tabText(index) for index in range(self.window.pages.count())]
-        self.assertEqual(labels, [self.window.i18n.tr(key) for key in ("page.preflight", "page.flight", "page.post_process")])
+        self.assertEqual(labels, [self.window.i18n.tr(key) for key in ("page.preflight", "page.flight", "page.post_process", "page.maintenance")])
         self.assertFalse(hasattr(self.window, "magnetometer_calibration_page"))
         self.assertEqual(self.window.pages.objectName(), "pageTabs")
         self.assertEqual(self.window.pages.tabBar().objectName(), "pageNavigation")
@@ -103,6 +104,7 @@ class UiWorkflowTests(unittest.TestCase):
             self.window.preflight_page,
             self.window.flight_page,
             self.window.post_process_page,
+            self.window.maintenance_page,
         ):
             self.window.pages.setCurrentWidget(page)
             self.assertIs(self.window.pages.currentWidget(), page)
@@ -116,7 +118,7 @@ class UiWorkflowTests(unittest.TestCase):
         self.assertEqual(self.window.header_credit.text(), "辰星引力开发")
         self.assertEqual(
             self.window.header_version.text(),
-            "SilverStar GSHC v0.1.1",
+            f"SilverStar GSHC v{APP_VERSION}",
         )
         header_layout = self.window.header_identity_layout
         self.assertLess(
@@ -158,7 +160,7 @@ class UiWorkflowTests(unittest.TestCase):
         self.assertEqual(self.window.header_credit.text(), "by CXYL")
         self.assertEqual(
             self.window.header_version.text(),
-            "SilverStar GSHC v0.1.1",
+            f"SilverStar GSHC v{APP_VERSION}",
         )
 
     def test_post_process_uses_inline_progress_and_cancel_controls(self) -> None:
@@ -335,7 +337,8 @@ class UiWorkflowTests(unittest.TestCase):
         source_file.parent.mkdir(parents=True)
         source_file.write_text("flight-log", encoding="utf-8")
 
-        controller = Controller(self.window)
+        with patch("app.USER_DATA_ROOT", source_root), patch("app.list_serial_port_names", return_value=[]):
+            controller = Controller(self.window)
         controller.data_root = source_root
         controller.log_dir = source_root / "logs"
         controller.data_dir = source_root / "data"

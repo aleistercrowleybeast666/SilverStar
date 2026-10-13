@@ -315,6 +315,8 @@ class AsyncJsonlLogger:
                                 "kind": "SESSION_START",
                                 "reason": item.reason,
                                 **item.metadata,
+                                "log_format": "silverstar.gshc-jsonl",
+                                "log_format_version": 1,
                             }
                             batch.append(json.dumps(session_record, ensure_ascii=False, default=str) + "\n")
                             batch_flush()

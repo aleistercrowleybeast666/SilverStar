@@ -35,10 +35,14 @@ def Probe_Run(output: Path, width: int, height: int, baseline: bool = False) -> 
     window.resize(width, height)
     window.show()
     window.port_combo.setFont(QFont("Segoe UI", 16))
+    if not baseline:
+        window.debug_port_combo.setFont(QFont("Segoe UI", 16))
     window.conn_label.setFont(QFont("Segoe UI", 16))
     rows = []
     for port in ("COM1", "COM9", "COM10", "COM99", "COM100"):
         window.set_ports([port])
+        if not baseline:
+            window.debug_port_combo.setCurrentText(port)
         status = port + "@230400"
         window.set_connection_status(status)
         app.processEvents()
@@ -60,6 +64,14 @@ def Probe_Run(output: Path, width: int, height: int, baseline: bool = False) -> 
             assert field.width() >= required, (port, field.width(), required)
         if not baseline:
             assert combo.minimumWidth() > 0
+            for debug_combo in (window.debug_port_combo, window.debug_baud_combo):
+                debug_option = QStyleOptionComboBox()
+                debug_combo.initStyleOption(debug_option)
+                debug_field = debug_combo.style().subControlRect(QStyle.ComplexControl.CC_ComboBox,
+                    debug_option, QStyle.SubControl.SC_ComboBoxEditField, debug_combo)
+                assert debug_field.width() >= debug_combo.fontMetrics().horizontalAdvance(debug_combo.currentText())
+            assert window.debug_port_combo.toolTip() == port
+            assert not window.header_connection_group.geometry().intersects(window.debug_connection_group.geometry())
         combo.showPopup()
         app.processEvents()
         popup = combo.view().viewport().width()
