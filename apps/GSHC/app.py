@@ -994,7 +994,7 @@ class DataMigrationWorker(QObject):
 
 
 class Controller(QObject):
-    def __init__(self, window: MainWindow, *, probe_enumerator=None) -> None:
+    def __init__(self, window: MainWindow, *, probe_enumerator=None, swd_factory=None) -> None:
         super().__init__(window)
         self.window = window
         self.link = SerialLink()
@@ -1034,6 +1034,8 @@ class Controller(QObject):
         self.data_migration_cancel_requested = False
         self.file_transfer = FileTransferManager(self)
         self.probes = ProbeSelectionManager(self, probe_enumerator)
+        from ui.swd_connection import SwdConnectionManager
+        self.swd = SwdConnectionManager(self, swd_factory)
         self.pending_data_root: Path | None = None
         self.previous_data_root: Path | None = None
         self.pending_data_migration_conflict_policy = (
@@ -1131,9 +1133,10 @@ class Controller(QObject):
         self.window.set_ports(list_serial_port_names())
 
     def _request_window_close(self) -> bool:
+        swd_done = self.swd.request_close()
         probes_done = self.probes.request_close()
         files_done = self.file_transfer.request_window_close()
-        return probes_done and files_done
+        return swd_done and probes_done and files_done
 
     def connect(self) -> None:
         if getattr(self, "file_transfer", None) is not None and self.file_transfer.busy is True:
@@ -1278,6 +1281,8 @@ class Controller(QObject):
         self._replace_state(connected=False, connection_text="未连接")
 
     def shutdown(self) -> None:
+        if getattr(self, 'swd', None) is not None:
+            self.swd.shutdown()
         if getattr(self, 'probes', None) is not None:
             self.probes.shutdown()
         if getattr(self, "file_transfer", None) is not None:

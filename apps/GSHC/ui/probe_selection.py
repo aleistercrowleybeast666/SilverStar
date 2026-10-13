@@ -27,6 +27,7 @@ class ProbeSelectionManager(QObject):
         self.enumerator = enumerator or ProbeInventory_Read
         self.selection = ProbeSelection()
         self.worker = None
+        self.target_active = False
         self.closing = False
         self.status = 'probe.not_scanned'
         self.detail = ''
@@ -40,7 +41,7 @@ class ProbeSelectionManager(QObject):
         QTimer.singleShot(0, self.refresh)
 
     def refresh(self):
-        if self.closing or self.worker is not None:
+        if self.closing or self.worker is not None or self.target_active:
             return False
         self.timer.stop()
         self.status = 'probe.busy'
@@ -56,10 +57,10 @@ class ProbeSelectionManager(QObject):
             return
         lost = self.selection.apply(inventory)
         self.detail = inventory.detail
-        if lost and inventory.result in (ProbeInventoryResult.Ready, ProbeInventoryResult.Empty):
+        if lost and inventory.result == ProbeInventoryResult.Ready:
             self.status = 'probe.removed'
         elif inventory.result == ProbeInventoryResult.Ready:
-            self.status = 'probe.selected' if self.selection.identity else 'probe.choose'
+            self.status = 'probe.selected' if self.selection.identity else 'probe.available'
         else:
             self.status = 'probe.' + inventory.result.value
         self.render()
@@ -76,10 +77,10 @@ class ProbeSelectionManager(QObject):
             self.render()
 
     def _selected(self, _index):
-        if self.closing or self.worker is not None:
+        if self.closing or self.worker is not None or self.target_active:
             return
         if self.selection.select(self.window.probe_combo.currentData() or ''):
-            self.status = 'probe.selected' if self.selection.identity else 'probe.choose'
+            self.status = 'probe.selected' if self.selection.identity else ('probe.available' if self.selection.probes else 'probe.empty')
             self.render()
 
     def render(self):
@@ -94,14 +95,15 @@ class ProbeSelectionManager(QObject):
             combo.setItemData(combo.count()-1, probe.identity, Qt.ToolTipRole)
         combo.setCurrentIndex(max(0, combo.findData(self.selection.identity)))
         combo.blockSignals(False)
-        busy = self.status == 'probe.busy' or self.worker is not None
+        busy = self.status == 'probe.busy' or self.worker is not None or self.target_active
         combo.setEnabled(not busy and bool(self.selection.probes) and not self.closing)
         window.btn_probe_refresh.setEnabled(not busy and not self.closing)
         detail = self.detail
         selected = next((p for p in self.selection.probes if p.identity == self.selection.identity), None)
         if selected is not None:
             detail = f'{selected.label}\nID: {selected.identity} ({selected.identity_kind})\nHost PnP: {selected.host_status}\n' + '\n'.join(selected.interfaces)
-        window.set_probe_status(tr(self.status), detail)
+        display_status = 'probe.in_session' if self.target_active else self.status
+        window.set_probe_status(tr(display_status), detail)
 
     def request_close(self):
         self.closing = True

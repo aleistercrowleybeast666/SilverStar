@@ -4,6 +4,7 @@ from __future__ import annotations
 import time
 from services.legacy_firmware_status import LegacyFirmwareSnapshot
 
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QDialog,
     QGridLayout,
@@ -29,7 +30,7 @@ class MaintenancePage(QWidget):
         self.i18n = i18n
         self.state = None
         self.firmware_snapshot = None
-        self.firmware_detail = "Not connected / unavailable"
+        self.firmware_detail = ""
         self.diagnostic_entries = []
         self._diagnostic_render_ns = 0
         self.details = QDialog(self)
@@ -48,6 +49,19 @@ class MaintenancePage(QWidget):
         self.swd_status = QLabel()
         self.swd_status.setWordWrap(True)
         layout.addWidget(self.swd_status)
+        swd_row = QHBoxLayout()
+        self.btn_swd_attach = QPushButton()
+        self.btn_swd_detach = QPushButton()
+        self.btn_swd_attach.setEnabled(False)
+        self.btn_swd_detach.setEnabled(False)
+        swd_row.addWidget(self.btn_swd_attach)
+        swd_row.addWidget(self.btn_swd_detach)
+        swd_row.addStretch(1)
+        layout.addLayout(swd_row)
+        self.swd_target_status = QLabel()
+        self.swd_target_status.setTextFormat(Qt.PlainText)
+        self.swd_target_status.setWordWrap(True)
+        layout.addWidget(self.swd_target_status)
         self.diagnostic_status = QLabel()
         self.diagnostic_status.setWordWrap(True)
         layout.addWidget(self.diagnostic_status)
@@ -151,7 +165,8 @@ class MaintenancePage(QWidget):
     def _render_firmware(self):
         snap = self.firmware_snapshot
         if snap is None:
-            self.firmware_summary.setText("FC Debug RAM: " + self.firmware_detail)
+            detail = self.firmware_detail or self.i18n.tr("maintenance.firmware_not_received")
+            self.firmware_summary.setText(self.i18n.tr("maintenance.firmware_source") + ": " + detail)
             return
         if isinstance(snap, LegacyFirmwareSnapshot):
             self._render_legacy_firmware(snap)
@@ -163,7 +178,7 @@ class MaintenancePage(QWidget):
         storage = (f"mounted={snap.mounted}, healthy={snap.healthy}, writer_open={snap.writer_open}"
                    if snap.storage_valid else self.i18n.tr("maintenance.unavailable"))
         self.firmware_summary.setText(
-            f"FC Debug RAM · firmware {snap.firmware} · sample #{snap.sequence} · {age:.1f}s · {freshness}\n"
+            f"{self.i18n.tr('maintenance.firmware_source')} · firmware {snap.firmware} · sample #{snap.sequence} · {age:.1f}s · {freshness}\n"
             f"Lifecycle={states[snap.lifecycle]} · maintenance={maintenance} · cleanup_pending={snap.cleanup_pending}\n"
             f"TF: {storage} · log_fault={snap.log_fault} · reboot_required={snap.reboot_required}")
 
@@ -194,6 +209,9 @@ class MaintenancePage(QWidget):
         self._diagnostic_render_ns = 0
         self._render_diagnostics()
         self.swd_status.setText(tr("maintenance.swd_unavailable"))
+        self.btn_swd_attach.setText(tr('swd.attach'))
+        self.btn_swd_detach.setText(tr('swd.detach'))
+        self.swd_target_status.setText(tr('swd.detached'))
         self.summary.setTitle(tr("maintenance.summary"))
         self.source.setText(tr("maintenance.source"))
         self.detail_source.setText(tr("maintenance.source"))

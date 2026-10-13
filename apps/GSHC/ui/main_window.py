@@ -1447,6 +1447,8 @@ class MainWindow(QMainWindow):
         self._DebugStatus_Render()
         if self.on_probe_render is not None:
             self.on_probe_render()
+        if self.on_swd_render is not None:
+            self.on_swd_render()
         self._ConnectionGroups_Reflow()
         language_index = self.language_combo.findData(self.i18n.language.value)
         if language_index >= 0 and language_index != self.language_combo.currentIndex():
@@ -1698,6 +1700,7 @@ class MainWindow(QMainWindow):
         self._bind_text(self.probe_status, 'probe.not_scanned')
         probe_layout.addWidget(self.probe_status)
         self.on_probe_render = None
+        self.on_swd_render = None
         connection_layout.addWidget(self.probe_group, 0, 2, Qt.AlignLeft)
         connection_layout.setColumnStretch(3, 1)
 
@@ -2399,6 +2402,12 @@ class MainWindow(QMainWindow):
         return super().eventFilter(watched, event)
 
     def _ConnectionGroups_Reflow(self):
+        # QLabel's wrapped size hint can retain the previous text's height.
+        # Reserve the height needed at the actual width after state changes.
+        for label in (self.debug_status, self.probe_status):
+            height = max(0, label.heightForWidth(max(1, label.width())))
+            if label.minimumHeight() != height:
+                label.setMinimumHeight(height)
         groups = (self.header_connection_group, self.debug_connection_group, self.probe_group)
         width = self.header_bar.contentsRect().width() - 28
         widths = [group.minimumSizeHint().width() for group in groups]
@@ -2434,7 +2443,8 @@ class MainWindow(QMainWindow):
     def set_probe_status(self, status, detail=''):
         import html
         self.probe_status.setText(status)
-        tooltip = '<qt>' + html.escape(detail).replace('\n', '<br>') + '</qt>'
+        explanation = self.i18n.tr('probe.boundary') + ('\n' + detail if detail else '')
+        tooltip = '<qt>' + html.escape(explanation).replace('\n', '<br>') + '</qt>'
         self.probe_status.setToolTip(tooltip)
         self.probe_combo.setToolTip(tooltip)
         self.maintenance_page.swd_status.setTextFormat(Qt.PlainText)

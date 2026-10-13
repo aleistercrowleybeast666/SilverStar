@@ -68,6 +68,7 @@ def test_multiple_choice_reorder_removal_and_replug(panel):
     manager=create(lambda _:current[0])
     wait_for(lambda: manager.worker is None and len(manager.selection.probes)==2)
     assert window.probe_combo.currentData()==''
+    assert manager.status=='probe.available'
     chosen=manager.selection.probes[1].identity
     window.probe_combo.setCurrentIndex(window.probe_combo.findData(chosen))
     current[0]=parsed(list(reversed(nodes('A')+nodes('B'))))
@@ -79,6 +80,36 @@ def test_multiple_choice_reorder_removal_and_replug(panel):
     current[0]=parsed(nodes('B'))
     manager.refresh(); wait_for(lambda:manager.worker is None)
     assert window.probe_combo.currentData()==''
+
+
+@pytest.mark.parametrize('language',['zh_CN','en_US'])
+def test_probe_labels_distinguish_discovery_selection_and_empty_after_rescan(panel,language):
+    window,create=panel
+    window.i18n.set_language(language); window.retranslate_ui()
+    assert window.probe_status.text()==window.i18n.tr('probe.not_scanned')
+    current=[parsed(nodes('A'))]
+    manager=create(lambda _:current[0])
+    wait_for(lambda:manager.worker is None and bool(manager.selection.identity))
+    assert window.probe_status.text()==window.i18n.tr('probe.selected')
+    assert window.i18n.tr('probe.boundary') in window.probe_status.toolTip()
+    assert window.i18n.tr('maintenance.firmware_source') in window.maintenance_page.firmware_summary.text()
+    assert window.i18n.tr('maintenance.firmware_not_received') in window.maintenance_page.firmware_summary.text()
+    window.probe_combo.setCurrentIndex(0)
+    assert manager.status=='probe.available'
+    assert window.probe_status.text()==window.i18n.tr('probe.available')
+    manager.refresh(); assert manager.status=='probe.busy'
+    wait_for(lambda:manager.worker is None)
+    assert manager.status=='probe.available' and window.probe_combo.currentData()==''
+    window.probe_combo.setCurrentIndex(1)
+    current[0]=parsed([])
+    manager.refresh(); wait_for(lambda:manager.worker is None)
+    assert manager.status=='probe.empty' and window.probe_combo.currentData()==''
+    assert window.probe_status.text()==window.i18n.tr('probe.empty')
+    assert window.probe_status.text()!=window.i18n.tr('probe.available')
+    assert not window.probe_combo.isEnabled()
+    current[0]=parsed(nodes('A'))
+    manager.refresh(); wait_for(lambda:manager.worker is None)
+    assert manager.status=='probe.available'  # Reappearance is not a target reconnect.
 
 
 @pytest.mark.parametrize('result', [Result.Empty,Result.Failed,Result.MissingDependency])
