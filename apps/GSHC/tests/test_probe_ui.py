@@ -127,11 +127,23 @@ def test_header_wraps_without_clipping_or_overlap(panel,language,width):
     rect=lambda w: QRect(w.mapTo(window,QPoint()),w.size())
     bar=rect(window.header_bar)
     groups=[rect(w) for w in (window.header_connection_group,window.debug_connection_group,window.probe_group)]
-    for group in groups: assert bar.contains(group)
+    for widget,group in zip((window.header_connection_group,window.debug_connection_group,window.probe_group),groups):
+        assert bar.contains(group)
+        assert group.width()>=widget.minimumSizeHint().width()
     for i,one in enumerate(groups):
         for two in groups[i+1:]: assert not one.intersects(two)
     assert groups[0].left()-bar.left()<=16
-    assert 0<=bar.right()-rect(window.btn_probe_refresh).right()<=20
+    assert rect(window.probe_status).left()>rect(window.btn_probe_refresh).right()
+    assert abs(rect(window.probe_combo).center().y()-rect(window.btn_probe_refresh).center().y())<=1
+    assert abs(rect(window.probe_status).center().y()-rect(window.btn_probe_refresh).center().y())<=1
+    controls=(window.port_combo,window.debug_port_combo,window.probe_combo)
+    for i,one in enumerate(groups):
+        for j,two in enumerate(groups[i+1:],i+1):
+            if one.top()==two.top():
+                assert abs(rect(controls[i]).center().y()-rect(controls[j]).center().y())<=1
+    if language=='zh_CN':
+        assert window.btn_probe_refresh.text()=='重新检测'
+        assert window.debug_status.text()=='未连接'
     for control in (window.probe_title,window.probe_combo,window.btn_probe_refresh,window.probe_status):
         assert groups[2].contains(rect(control))
     assert window.probe_combo.currentData().endswith('\\A')

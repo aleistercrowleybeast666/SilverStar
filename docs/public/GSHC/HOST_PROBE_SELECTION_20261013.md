@@ -8,8 +8,9 @@ release packages, firmware and flight algorithms are outside this change.
 
 Run `.venv\Scripts\python.exe apps\GSHC\main.py` from the repository root.
 The old packaged executable is unchanged. The header places ground and FC
-maintenance serial controls at the left, then the **SWD probe** selector and
-**Detect / Retry** button at the right. Groups wrap onto additional rows when
+maintenance serial controls at the left, then the **SWD probe** selector,
+**重新检测 / Detect Again** button and status text to its right. Controls on the
+same row share a vertical center; compact groups wrap onto additional rows when
 space is limited. Serial baud rates remain editable and independent. A probe
 has no serial baud rate.
 
@@ -49,7 +50,7 @@ instead of inventing an identity. A serial-class interface alone never counts
 as an SWD probe. DAPLink's COM role and debug role remain independent; a separate
 USB-UART adapter and a separate probe are also valid choices.
 
-“Probe selected” explicitly says **target not connected**. Host PnP “OK” does
+“Probe selected” explicitly says **no SWD session**. Host PnP “OK” does
 not prove that a probe is free, that its driver can be opened, that the target
 is powered, or that firmware is ready. Probe occupancy and target state remain
 unknown. “Enumerating” describes this application's inventory work, not another
@@ -57,11 +58,11 @@ debugger's ownership. AIR M0 readiness and all command gates remain authoritativ
 
 ## Acceptance
 
-1. Start the source GUI and find the SWD selector and rightmost retry button.
+1. Restart the source GUI and find the SWD selector and **重新检测** button.
 2. With zero candidates, verify the no-probe state. With one, verify its full
-   identity and “target not connected”; with multiple, select explicitly.
-3. Resize or change language: serial groups stay at the left and the probe
-   group wraps while keeping its retry button visible.
+   identity and “SWD 未连接”; with multiple, select explicitly.
+3. Resize or change language: controls on a shared row stay level, status text
+   sits to the right of its probe controls, and all groups remain visible when wrapping.
 4. When hardware is available for manual testing, remove the selected probe
    and wait for an inventory or press retry. Selection must clear. Replugging
    must not silently substitute a target. No interface-open step exists here.
@@ -72,3 +73,29 @@ Actual host inventory and Windows Qt layout observations, commands, source
 hashes and remaining validation limits are recorded with this increment's
 [evidence record](../../../apps/GSHC/docs/evidence/host_probe_20261013/README.md).
 Simulated cases are not physical hotplug or target verification.
+
+## Connection diagnosis and localized states (15:23 UTC follow-up)
+
+The maintenance serial status now distinguishes **未连接**, **串口已打开；等待固件**,
+**串口已打开；固件有响应**, and **串口已打开；状态不可用**. These are separate from
+probe discovery and SWD selection. Unsupported LOGFILE or unavailable status
+does not by itself close the serial port or prove a physical disconnect.
+
+The actual host inventory at 2026-10-13 15:23 UTC found Horco CMSIS-DAP
+`FAED:4870`, serial `132765403520`, and matching USB serial **COM9**. COM7/COM8
+were Bluetooth serial devices. A fresh source GUI on this host selected COM8
+initially while independently selecting the Horco probe; it did not create a
+maintenance connection. This is a reproduced startup observation, not a read
+of the user's already-running GUI or a hardcoded port assignment. Select the
+intended maintenance port explicitly; a selected SWD probe never opens it.
+
+This task did not open COM9 or send any firmware command. The existing Windows
+serial backend configures DTR/RTS on open; reset-free wiring and driver behavior
+are unproven. pySerial also documents possible driver activation or glitches
+on [serial open](https://pyserial.readthedocs.io/en/latest/pyserial_api.html#serial.Serial.open).
+The user explicitly required stopping at enumeration in that situation.
+Port occupancy, UART wiring, flashed firmware identity and actual firmware
+response remain unknown. Prior FINAL source described USART3 PB10/PB11 at
+230400 8N1; that is not verification of today's flashed device or connections.
+
+See the [alignment and diagnosis evidence](../../../apps/GSHC/docs/evidence/host_probe_alignment_20261013/README.md).

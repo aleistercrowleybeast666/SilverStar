@@ -385,7 +385,7 @@ class FileTransferManager(QObject):
         owner.failed.connect(self._failed, Qt.QueuedConnection)
         owner.job_finished.connect(self._job_finished, Qt.QueuedConnection)
         owner.finished.connect(self._owner_finished)
-        c.window.debug_status.setText(self._tr("maintenance.connecting"))
+        c.window.set_debug_status("maintenance.connecting")
         c.window.debug_port_combo.setEnabled(False)
         c.window.debug_baud_combo.setEnabled(False)
         c.window.btn_debug_connect.setEnabled(False)
@@ -395,14 +395,13 @@ class FileTransferManager(QObject):
         if self.owner is not None:
             self.controller.window.maintenance_page.set_firmware_status(None, "Disconnected / invalidated")
             self.controller.window.maintenance_page.set_diagnostics(None, "Disconnected / invalidated")
-            self.controller.window.debug_status.setText(self._tr("maintenance.stopping"))
+            self.controller.window.set_debug_status("maintenance.stopping")
             self.owner.request_stop()
 
     def _connection_changed(self, connected, detail):
         window = self.controller.window
         window._debug_connected = bool(connected)
-        window.debug_status.setText(detail)
-        window.debug_status.setToolTip(detail)
+        window.set_debug_status("maintenance.serial_open" if connected else "maintenance.disconnected", detail)
         if not connected:
             window._debug_service_supported = False
             window.maintenance_page.catalog.clear()
@@ -420,6 +419,10 @@ class FileTransferManager(QObject):
     def _firmware_status(self, snapshot, detail):
         if self.owner is not None and not self.owner.stop.is_set():
             self.controller.window.maintenance_page.set_firmware_status(snapshot, detail)
+            if self.controller.window._debug_connected:
+                self.controller.window.set_debug_status(
+                    "maintenance.firmware_reply" if snapshot is not None else "maintenance.status_unavailable",
+                    f"{self.owner.port}@{self.owner.baud}\n{detail}")
 
     def _diagnostic_status(self, entries, detail):
         if self.owner is not None and not self.owner.stop.is_set():

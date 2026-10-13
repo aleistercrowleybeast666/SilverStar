@@ -287,6 +287,36 @@ class TransferUiTests(unittest.TestCase):
         self.assertIn(self.window.i18n.tr("probe.boundary"), self.window.maintenance_page.swd_status.text())
         self.assertIsNone(self.controller.file_transfer.owner)
 
+    def test_localized_header_separates_open_port_from_firmware_response(self):
+        from threading import Event
+        window=self.window
+        manager=self.controller.file_transfer
+        window.i18n.set_language(Language.ZH_CN)
+        window.retranslate_ui()
+        self.assertEqual(window.debug_status.text(), '未连接')
+        owner=SimpleNamespace(stop=Event(),port='COM9',baud=230400)
+        manager.owner=owner
+        try:
+            manager._connection_changed(True,'Port open: COM9@230400')
+            self.assertEqual(window.debug_status.text(),'串口已打开；等待固件')
+            manager._service_status(False,'LOGFILE unsupported')
+            self.assertTrue(window._debug_connected)
+            self.assertEqual(window.debug_status.text(),'串口已打开；等待固件')
+            with patch.object(window.maintenance_page,'set_firmware_status'):
+                manager._firmware_status(object(),'valid parsed legacy response')
+                self.assertEqual(window.debug_status.text(),'串口已打开；固件有响应')
+                manager._firmware_status(None,'response timeout')
+            self.assertTrue(window._debug_connected)
+            self.assertEqual(window.debug_status.text(),'串口已打开；状态不可用')
+            window.i18n.set_language(Language.EN_US); window.retranslate_ui()
+            self.assertEqual(window.debug_status.text(),'Port open; status unavailable')
+            manager._connection_changed(False,'Disconnected / status invalidated')
+            window.i18n.set_language(Language.ZH_CN); window.retranslate_ui()
+            self.assertEqual(window.debug_status.text(),'未连接')
+            self.assertFalse(window._debug_connected)
+        finally:
+            manager.owner=None
+
     def test_diagnostics_generic_rows_pause_for_file_job_and_disconnect(self):
         from test_runtime_diagnostics import entry
         class DiagnosticWire(MockTransport):

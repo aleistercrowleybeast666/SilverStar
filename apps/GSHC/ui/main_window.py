@@ -27,7 +27,7 @@ from protocol.common import (
     air_sensor_descriptor,
     enum_name,
 )
-from PySide6.QtCore import QSize, Qt, QTimer
+from PySide6.QtCore import QEvent, QSize, Qt, QTimer
 from PySide6.QtGui import QColor, QFont, QTextCursor, QVector3D
 from PySide6.QtWidgets import (
     QApplication,
@@ -1444,6 +1444,7 @@ class MainWindow(QMainWindow):
         )
         self.pages.setTabText(self.pages.indexOf(self.maintenance_scroll), self.i18n.tr("page.maintenance"))
         self.maintenance_page.retranslate()
+        self._DebugStatus_Render()
         if self.on_probe_render is not None:
             self.on_probe_render()
         self._ConnectionGroups_Reflow()
@@ -1573,11 +1574,16 @@ class MainWindow(QMainWindow):
         # resize event that switches the connection groups to wrapped rows.
         bar.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
         self.header_bar = bar
+        self._connection_reflow_timer = QTimer(self)
+        self._connection_reflow_timer.setSingleShot(True)
+        self._connection_reflow_timer.timeout.connect(self._ConnectionGroups_Reflow)
+        bar.installEventFilter(self)
         root_layout = QVBoxLayout(bar)
         root_layout.setContentsMargins(10, 5, 10, 5)
         root_layout.setSpacing(3)
         connection_layout = QGridLayout()
-        connection_layout.setSpacing(4)
+        connection_layout.setHorizontalSpacing(6)
+        connection_layout.setVerticalSpacing(3)
         identity_layout = QHBoxLayout()
         identity_layout.setSpacing(4)
         self.header_connection_layout = connection_layout
@@ -1650,10 +1656,13 @@ class MainWindow(QMainWindow):
         self.btn_debug_disconnect = QPushButton()
         self._bind_text(self.btn_debug_connect, "button.connect")
         self._bind_text(self.btn_debug_disconnect, "button.disconnect")
-        self.debug_status = QLabel("Disconnected")
+        self.debug_status = QLabel()
+        self.debug_status.setTextFormat(Qt.PlainText)
+        self._debug_status_key = "maintenance.disconnected"
+        self._debug_status_detail = ""
         self.debug_status.setWordWrap(True)
-        self.debug_status.setMinimumWidth(110)
-        self.debug_status.setMaximumWidth(200)
+        self.debug_status.setMinimumWidth(56)
+        self.debug_status.setMaximumWidth(170)
         for widget in (debug_title, self.debug_port_combo, self.debug_baud_combo,
                        self.btn_debug_connect, self.btn_debug_disconnect, self.debug_status):
             debug_layout.addWidget(widget)
@@ -1666,32 +1675,31 @@ class MainWindow(QMainWindow):
 
         self.probe_group = QWidget()
         self.probe_group.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
-        probe_layout = QVBoxLayout(self.probe_group)
+        probe_layout = QHBoxLayout(self.probe_group)
         probe_layout.setContentsMargins(0, 0, 0, 0)
-        probe_layout.setSpacing(2)
-        probe_row = QHBoxLayout()
-        probe_row.setSpacing(4)
+        probe_layout.setSpacing(3)
         self.probe_title = QLabel()
         self._bind_text(self.probe_title, 'probe.title')
         self.probe_combo = QComboBox()
-        self.probe_combo.setMinimumWidth(190)
-        self.probe_combo.setMaximumWidth(280)
+        self.probe_combo.setMinimumWidth(160)
+        self.probe_combo.setMaximumWidth(200)
         self.probe_combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon)
-        self.probe_combo.setMinimumContentsLength(20)
+        self.probe_combo.setMinimumContentsLength(16)
         self.probe_combo.setEnabled(False)
         self.btn_probe_refresh = QPushButton()
         self._bind_text(self.btn_probe_refresh, 'probe.retry')
         for widget in (self.probe_title, self.probe_combo, self.btn_probe_refresh):
-            probe_row.addWidget(widget)
-        probe_layout.addLayout(probe_row)
+            probe_layout.addWidget(widget)
         self.probe_status = QLabel()
         self.probe_status.setTextFormat(Qt.PlainText)
         self.probe_status.setWordWrap(True)
+        self.probe_status.setMinimumWidth(96)
+        self.probe_status.setMaximumWidth(170)
         self._bind_text(self.probe_status, 'probe.not_scanned')
         probe_layout.addWidget(self.probe_status)
         self.on_probe_render = None
-        connection_layout.addWidget(self.probe_group, 0, 2, Qt.AlignRight)
-        connection_layout.setColumnStretch(2, 1)
+        connection_layout.addWidget(self.probe_group, 0, 2, Qt.AlignLeft)
+        connection_layout.setColumnStretch(3, 1)
 
         self.header_version = QLabel()
         self.header_version.setObjectName("headerVersion")
@@ -2383,11 +2391,19 @@ class MainWindow(QMainWindow):
         if hasattr(self, "probe_group"):
             self._ConnectionGroups_Reflow()
 
+    def eventFilter(self, watched, event):
+        if watched is getattr(self, 'header_bar', None) and event.type() in (QEvent.Resize, QEvent.LayoutRequest):
+            # MainWindow.resizeEvent can precede its child's final geometry,
+            # especially after native screen clamping. Reflow once Qt settles.
+            self._connection_reflow_timer.start(0)
+        return super().eventFilter(watched, event)
+
     def _ConnectionGroups_Reflow(self):
         groups = (self.header_connection_group, self.debug_connection_group, self.probe_group)
         width = self.header_bar.contentsRect().width() - 28
         widths = [group.minimumSizeHint().width() for group in groups]
-        mode = 0 if sum(widths) + 8 <= width else (1 if sum(widths[:2]) + 4 <= width else 2)
+        gap = self.header_connection_layout.horizontalSpacing()
+        mode = 0 if sum(widths) + gap * 2 <= width else (1 if sum(widths[:2]) + gap <= width else 2)
         if getattr(self, '_connection_layout_mode', None) == mode:
             return
         self._connection_layout_mode = mode
@@ -2396,23 +2412,34 @@ class MainWindow(QMainWindow):
             layout.removeWidget(group)
         if mode == 0:
             for column,group in enumerate(groups):
-                layout.addWidget(group, 0, column, Qt.AlignRight if column == 2 else Qt.AlignLeft)
+                layout.addWidget(group, 0, column, Qt.AlignLeft)
         elif mode == 1:
             layout.addWidget(groups[0], 0, 0, Qt.AlignLeft)
             layout.addWidget(groups[1], 0, 1, 1, 2, Qt.AlignLeft)
-            layout.addWidget(groups[2], 1, 0, 1, 3, Qt.AlignRight)
+            layout.addWidget(groups[2], 1, 0, 1, 3, Qt.AlignLeft)
         else:
             for row,group in enumerate(groups):
-                layout.addWidget(group, row, 0, 1, 3, Qt.AlignRight if row == 2 else Qt.AlignLeft)
+                layout.addWidget(group, row, 0, 1, 3, Qt.AlignLeft)
+
+    def set_debug_status(self, key, detail=''):
+        self._debug_status_key, self._debug_status_detail = key, detail
+        self._DebugStatus_Render()
+
+    def _DebugStatus_Render(self):
+        import html
+        self.debug_status.setText(self.i18n.tr(self._debug_status_key))
+        self.debug_status.setToolTip('<qt>' + html.escape(self._debug_status_detail).replace('\n', '<br>') + '</qt>')
+        self._ConnectionGroups_Reflow()
 
     def set_probe_status(self, status, detail=''):
         import html
         self.probe_status.setText(status)
-        self.probe_status.setToolTip(html.escape(detail))
-        self.probe_combo.setToolTip(html.escape(detail))
+        tooltip = '<qt>' + html.escape(detail).replace('\n', '<br>') + '</qt>'
+        self.probe_status.setToolTip(tooltip)
+        self.probe_combo.setToolTip(tooltip)
         self.maintenance_page.swd_status.setTextFormat(Qt.PlainText)
         self.maintenance_page.swd_status.setText(status + '\n' + self.i18n.tr('probe.boundary'))
-        self.maintenance_page.swd_status.setToolTip(html.escape(detail))
+        self.maintenance_page.swd_status.setToolTip(tooltip)
         self._ConnectionGroups_Reflow()
 
     def _PlotMinimum_Update(self) -> None:
