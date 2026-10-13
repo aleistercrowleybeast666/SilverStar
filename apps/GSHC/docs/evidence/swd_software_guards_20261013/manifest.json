@@ -1,0 +1,143 @@
+{
+  "archive": "evidence.zip",
+  "bytes": 61660,
+  "sha256": "433abc803c3e219a2d0b28650f6fb583fc71ed615622b73ca738a88702b5de4d",
+  "files": [
+    {
+      "path": "task/final_state.json",
+      "bytes": 1232,
+      "sha256": "f55c07ba5300f9902fa15038f94bc1e312ae2e53cb704bc9ab07aa756e6ff80d"
+    },
+    {
+      "path": "task/host_preflight.py",
+      "bytes": 1813,
+      "sha256": "49ad6fcce0ee341e3d312e6479a7aecafd49fde95891b29ec3a3e00c68fb2637"
+    },
+    {
+      "path": "task/host_preflight01.json",
+      "bytes": 960,
+      "sha256": "6b5d14b4e5e9f4bc03f115fa2d76ba9ebfa94280ca995a69ff33a4b634e9f94d"
+    },
+    {
+      "path": "task/inventory.json",
+      "bytes": 11828,
+      "sha256": "51586e601e2c4d4e5e92e472a3a92a833a715b5a837a1806a77efff3dfd782e9"
+    },
+    {
+      "path": "task/marker_parse01.json",
+      "bytes": 551,
+      "sha256": "58c7ccd663d30e09836294deb1aaa059415c95f6d5e760caee2f5cf91c2569d6"
+    },
+    {
+      "path": "task/marker_parse01.stderr.log",
+      "bytes": 283,
+      "sha256": "a2d05b70ad0991fe55767b0284545734d428b6b0531ceda2be20ec3ab5978e25"
+    },
+    {
+      "path": "task/marker_parse01.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "task/package_evidence.py",
+      "bytes": 3993,
+      "sha256": "09a1e9405b4b06bd24a85f0a673133149f2c09dcff82c430a9651a75c17a8f0f"
+    },
+    {
+      "path": "task/post_fix01.json",
+      "bytes": 11302,
+      "sha256": "ca7b15a3c17f7df5b77638e9ac666b1e72c5aaeefa62bf1cb057a0cc0f541359"
+    },
+    {
+      "path": "task/post_fix01.log",
+      "bytes": 101,
+      "sha256": "bb237979d58947b578b655557101ee6d0a3121a0748a99118a16c44f9ea926df"
+    },
+    {
+      "path": "task/pre_fix01.json",
+      "bytes": 11257,
+      "sha256": "259a655ceb344d4298620d4159a31bd5c343ec0cc159f98cdffe599ba0af31ed"
+    },
+    {
+      "path": "task/pre_fix01.log",
+      "bytes": 5944,
+      "sha256": "66ae5e321e8674ca9b043f6a51cdf9f730901a774f331e46a16f0f800aa243b2"
+    },
+    {
+      "path": "task/README.md",
+      "bytes": 764,
+      "sha256": "e3e8787d8f3e61006ab0b40824efce30e2e122e36e60d506ed71bcb9a47b4f67"
+    },
+    {
+      "path": "task/regression01.json",
+      "bytes": 11349,
+      "sha256": "01687bfb0df43dba55366558483fce3b8628a406850e743901beef03d0007aa2"
+    },
+    {
+      "path": "task/regression01.log",
+      "bytes": 183,
+      "sha256": "66ad699e2dbdf697eb7f3b3a6fc26c9da946d523414cc35ffe5f9bffeb1d7d96"
+    },
+    {
+      "path": "task/regression02.json",
+      "bytes": 11349,
+      "sha256": "7d7e56108364233bd4d79dd8fb48a257fe18d97b5251e6bc3c7f540d0962acbe"
+    },
+    {
+      "path": "task/regression02.log",
+      "bytes": 183,
+      "sha256": "f2f99ebe16b834603585f6bcce3acd3115235705b1833f852974c7f323182cd2"
+    },
+    {
+      "path": "task/regression03.json",
+      "bytes": 11349,
+      "sha256": "73a22e45c6c9cc8e9682fbc780bcce40fb9b26a8f090ed3fc57fc0d85271c528"
+    },
+    {
+      "path": "task/regression03.log",
+      "bytes": 183,
+      "sha256": "fbacbf310bd6c81a66c0111aa94bfb6fe5a33514bb9f2b7d2e870d3c61c16075"
+    },
+    {
+      "path": "task/regression04.json",
+      "bytes": 11349,
+      "sha256": "326fb5320182c750848cdffc763da1054040f20cb49de914abf2923f3cfa8a07"
+    },
+    {
+      "path": "task/regression04.log",
+      "bytes": 183,
+      "sha256": "3840356448c8894aff61b6d087773a318d37b34d72c90925b5b9ff47026a54d3"
+    },
+    {
+      "path": "task/verify.py",
+      "bytes": 1139,
+      "sha256": "c19e75c18a0616ac0152bbee2abafae38b5b0811dcd7790609186282f5d33ce0"
+    },
+    {
+      "path": "source/apps/GSHC/transport/swd_session.py",
+      "bytes": 11686,
+      "sha256": "b99f5d203c4764b63242f471ec39a9d74023910aa8689e063c75f82d5fd5df79"
+    },
+    {
+      "path": "source/apps/GSHC/transport/_swd_openocd.py",
+      "bytes": 12286,
+      "sha256": "6b8bae0dc140a7378d65440db74b916f00adb2d97f0ecfce7d35860d3f7cf94e"
+    },
+    {
+      "path": "source/apps/GSHC/tests/test_swd_guard.py",
+      "bytes": 10477,
+      "sha256": "9e2f9d734e786dc7498f3caf1c66c8df41a49b7fb4ed1edf8097c92309cf2083"
+    },
+    {
+      "path": "source/docs/public/GSHC/SWD_SOFTWARE_GUARDS_20261013.md",
+      "bytes": 5755,
+      "sha256": "c14add0f9a3d69be56ddd1bdb2301533ad57de41066b3e32f3d97596bc47646c"
+    },
+    {
+      "path": "source/docs/public/GSHC/SWD_READ_ONLY_20261013.md",
+      "bytes": 8045,
+      "sha256": "75659af8756571ef89369ad5d0b7cae47de00fbd97a648369607247c6af55c62"
+    }
+  ],
+  "retained_task_bytes": 19894982
+}

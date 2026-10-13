@@ -14,6 +14,13 @@ import time
 from transport.probe_inventory import HostProbe
 
 
+# Only coordinates callers of SwdSession in this Python process. It is not an
+# OS device claim and does not exclude another process or a direct HID client.
+_ProbeOwners = {}
+_ProbeOwnersLock = Lock()
+_MAX_PROCESS_OWNERS = 32
+
+
 class SwdResult(Enum):
     Ok = 'ok'
     InvalidRequest = 'invalid_request'
@@ -103,6 +110,7 @@ class SwdSession:
         self._backend = None
         self._lock = Lock()
         self._probe = None
+        self._owned_probe_identity = ''
         self._started = 0.0
         self._bytes = 0
         self._samples = 0
@@ -119,14 +127,17 @@ class SwdSession:
     def Swd_Attach(self, probe: HostProbe) -> SwdReply:
         def operation():
             if self._backend is not None:
-                raise SwdError(SwdResult.Busy, 'Detach the current target before attaching')
+                # A local repeated request must not release the current owner.
+                return SwdReply(SwdResult.Busy, 'Detach the current target before attaching')
             _ValidateProbe(probe)
+            self._acquire_process_owner(probe.identity)
             from transport._swd_openocd import OpenOcdMemAp
             self._backend = (self._factory or OpenOcdMemAp)(self.cancel)
             self._probe = probe
             self._started, self._bytes, self._samples = time.monotonic(), 0, 0
             self._last_sample = float('-inf')
-            self._backend.open(probe)
+            if self._backend.open(probe) is not None:
+                raise SwdError(SwdResult.TransportError, 'Backend open must succeed with None or raise SwdError')
             return self._snapshot()
         return self._run(operation)
 
@@ -139,8 +150,10 @@ class SwdSession:
             if (type(address) is not int or type(length) is not int or
                     not 1 <= length <= self.MAX_READ or
                     not any(lo <= address < address + length <= hi for lo, hi in self._RAM)):
-                raise SwdError(SwdResult.InvalidRequest, 'Read must fit one approved RAM region, 1..1024 bytes')
-            self._budget(length)
+                return SwdReply(SwdResult.InvalidRequest, 'Read must fit one approved RAM region, 1..1024 bytes')
+            limited = self._budget(length)
+            if limited is not None:
+                return limited
             from datetime import datetime, timezone
             started = time.monotonic_ns()
             data = self._read(address, length)
@@ -162,12 +175,27 @@ class SwdSession:
         self._probe = None
         if backend is not None:
             try:
-                backend.close()
+                if backend.close() is not None:
+                    raise SwdError(SwdResult.ReleaseFailed, 'Backend close must return None after complete release')
             except Exception as exc:
                 # Retain ownership so a later detach can retry cleanup.
                 self._backend = backend
                 return SwdReply(SwdResult.ReleaseFailed, str(exc)[:400])
+        with _ProbeOwnersLock:
+            if _ProbeOwners.get(self._owned_probe_identity) is self:
+                del _ProbeOwners[self._owned_probe_identity]
+            self._owned_probe_identity = ''
         return SwdReply(SwdResult.Ok, 'Detached; no resume/reset operation requested')
+
+    def _acquire_process_owner(self, identity):
+        key = identity.upper()
+        with _ProbeOwnersLock:
+            if key in _ProbeOwners:
+                raise SwdError(SwdResult.Busy, 'Probe is held by another SwdSession in this Python process')
+            if len(_ProbeOwners) >= _MAX_PROCESS_OWNERS:
+                raise SwdError(SwdResult.Busy, 'Within-process probe session capacity reached')
+            _ProbeOwners[key] = self
+            self._owned_probe_identity = key
 
     def _run(self, operation):
         if not self._lock.acquire(blocking=False):
@@ -181,10 +209,11 @@ class SwdSession:
                 result, detail = exc.result, str(exc)
             except Exception as exc:
                 result, detail = SwdResult.TransportError, str(exc)
-            if result not in (SwdResult.InvalidRequest, SwdResult.Busy, SwdResult.RateLimited):
-                released = self._release()
-                if released.result != SwdResult.Ok:
-                    return SwdReply(released.result, f'{result.value}: {detail}; release: {released.detail}')
+            # Every backend exception can follow a partial claim. Local Busy,
+            # invalid parameters and pre-I/O rate limiting return replies above.
+            released = self._release()
+            if released.result != SwdResult.Ok:
+                return SwdReply(released.result, f'{result.value}: {detail}; release: {released.detail}')
             return SwdReply(result, detail[:600])
         finally:
             self._lock.release()
@@ -197,7 +226,7 @@ class SwdSession:
                 self._samples >= self.MAX_SAMPLES or self._bytes + count > self.MAX_BYTES):
             raise SwdError(SwdResult.BudgetExceeded, 'Session time, sample or byte limit reached; explicitly reconnect')
         if now - self._last_sample < .1:
-            raise SwdError(SwdResult.RateLimited, 'At most 10 operations/second; no request queued')
+            return SwdReply(SwdResult.RateLimited, 'At most 10 operations/second; no request queued')
         self._last_sample = now
         self._samples += 1
         self._bytes += count
@@ -214,7 +243,9 @@ class SwdSession:
 
     def _snapshot(self):
         from datetime import datetime, timezone
-        self._budget(12)
+        limited = self._budget(12)
+        if limited is not None:
+            return limited
         started = time.monotonic_ns()
         cpuid = int.from_bytes(self._read(0xE000ED00, 4), 'little')
         # Check Cortex-M4 before reading the STM32-specific debug register.
