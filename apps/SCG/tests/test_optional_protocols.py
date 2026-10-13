@@ -501,19 +501,16 @@ def test_protocol_combos_and_logging_disabled_state_are_stable(
             assert combo.itemData(0) is None
             assert combo.itemText(0) == "不使用"
 
-        telemetry_combo = next(
-            combo
-            for combo in window.devices_page.device_combos.values()
-            if combo.findData(TELEMETRY_DEVICE) >= 0
-        )
         telemetry_instance_id = next(
             instance.instance_id
             for instance in window._model.device_instances
             if instance.plugin == TELEMETRY_DEVICE
         )
-        assert window.devices_page.device_combos[telemetry_instance_id] is (
-            telemetry_combo
-        )
+        telemetry_combo = window.devices_page.device_combos[telemetry_instance_id]
+        # The radio editor selects a declared (plugin, module) pair.
+        radio_selection = telemetry_combo.currentData()
+        assert radio_selection[0] == TELEMETRY_DEVICE
+        assert radio_selection[1]
         telemetry_combo.setCurrentIndex(0)
         qapp.processEvents()
         assert window._model.protocols["telemetry"] is None
@@ -525,14 +522,10 @@ def test_protocol_combos_and_logging_disabled_state_are_stable(
         assert telemetry_item is not None and not telemetry_item.isEnabled()
         assert "兼容" in telemetry_item.toolTip()
 
-        telemetry_combo = next(
-            combo
-            for combo in window.devices_page.device_combos.values()
-            if combo.findData(TELEMETRY_DEVICE) >= 0
-        )
-        telemetry_combo.setCurrentIndex(
-            telemetry_combo.findData(TELEMETRY_DEVICE)
-        )
+        telemetry_combo = window.devices_page.device_combos[telemetry_instance_id]
+        radio_index = telemetry_combo.findData(radio_selection)
+        assert radio_index > 0
+        telemetry_combo.setCurrentIndex(radio_index)
         qapp.processEvents()
         assert window._model.protocols["telemetry"] is None
         telemetry_item = window.flight_configuration_page.protocol_combos[

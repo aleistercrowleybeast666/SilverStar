@@ -1,0 +1,134 @@
+{
+  "collected_utc": "2026-10-13T05:06:27.624886+00:00",
+  "head_before_integration_evidence_commit": "ec5fd86cc1ffd0a4807fdae343a40e997143b14a",
+  "branch": "feature/usb-transport-0.1.3-20261013",
+  "frozen_tag": "942f20ef64df3cb1aa65be7349361c409418aa0f",
+  "frozen_commit": "c31c13cc0686a56a3184d4f207fd3816c5d39696",
+  "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+  "executable": "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+  "git_version": "git version 2.51.0.windows.1",
+  "versions": {
+    "pytest": "9.1.1",
+    "PySide6": "6.10.1",
+    "jsonschema": "4.26.0",
+    "pyserial": "3.5"
+  },
+  "tests": [
+    {
+      "command": ".venv/Scripts/python.exe -m pytest apps/SCG/tests/test_optional_protocols.py::test_protocol_combos_and_logging_disabled_state_are_stable -q --basetemp=apps/SCG/.work/dev013-ui-fix",
+      "exit_code": 0,
+      "result": "1 passed",
+      "log": "scg-ui-fixed.log"
+    },
+    {
+      "command": ".venv/Scripts/python.exe -m pytest apps/SCG/tests/test_optional_protocols.py apps/SCG/tests/test_architecture_maintenance_selection.py apps/SCG/tests/test_storage_binding_admission.py -q --basetemp=apps/SCG/.work/dev013-selection",
+      "exit_code": 0,
+      "result": "52 passed, 4 expected skips",
+      "log": "scg-selected-final.log"
+    }
+  ],
+  "test_environment": {
+    "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\SCG\\src",
+    "PYTHONUTF8": "1",
+    "PYTHONIOENCODING": "utf8",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "QT_QPA_PLATFORM": "offscreen"
+  },
+  "changed_test_sha256": "a6d7cc94e5478fc9834b8509c16a33f0ec11b67a41cc87d5c9e74dac89057724",
+  "unchanged_baseline_ui_source": "apps/SCG/src/silverstar_fccg/ui/pages/components.py",
+  "firmware_source_bindings_rechecked": {
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/plugin.json": "7716db89bedf0da86a5326abd9c78ed4384b4070b3ed662cc28e5f69c87b2f64",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_task.c": "2652970a54741b212903dc9af3c42cace6cf06970a1862165f5f132ca95c1a60",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/BuildSystem/first_party.mk": "98c660c76ed3278bd8cc4a32c94bae0f229e723ebb21e34135fa3af3fcaf6566",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Inc/system_log_file.h": "029b3611773f6f2642b55c6cdf05dfa52bd913be886e93d47e333c39da895e29",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_log_file.c": "322ac913247b718c458bcbd1c3d56df9f586041ca58c0ad2559f00946d148a29",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c": "30c5152ca9c1fe567a46cd23019a7d07c9eaf349ad11b9bad26af7590f95aadd",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/run_tests.ps1": "48c4223e0b2d609252f675ac21b60c7516ab5e333b5fc7f999765529925f7d8b",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/Fixtures/log_file_storage_stub.c": "f68e207432c583eef67f17d7f12376c38003a0d20b189bc285f149c35bc6043a",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/storage_integrity/run_storage_integrity.py": "115bef7c8eb9f666fbf642c323829fe3fd59f80a9c0e2fc60e40b3a34122a734",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/storage_integrity/test_logger_storage.c": "1415e35ac430664109e114b4579e4a3f133884dc265f0d09417b50be2888d937",
+    "apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs/plugin.json": "cb6162573bea23bec8e9de7c2fe2247645c3afd0eb5b63cfcac98414fb87176a",
+    "apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs/payload/Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c": "ab0987e03d0c04e8833f234674e888e033355a11f07c4849dc448bf38a187a88",
+    "apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs_f1/plugin.json": "59743ebee71f4f381014c612ca073de516be7b7be92e27e95b26e8c90f1a4f51",
+    "apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs_f1/payload/Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c": "ab0987e03d0c04e8833f234674e888e033355a11f07c4849dc448bf38a187a88",
+    "apps/SCG/tests/log_file_service/project_storage_binding.h": "9d438b158659f196736b7b425f8706330ecce796aa75d2cb6cb99d61b9c5149c",
+    "apps/SCG/tests/log_file_service/system_user_config.h": "7aeea0faeca5e82f9a35f57a4d5ac887272f197d74c94704fcef017d0c2bb649",
+    "apps/SCG/tests/log_file_service/test_log_file_service.c": "207063ba99e2f192524889aad88c81860eccf65a921eccc6289e212b1ae42f91",
+    "apps/SCG/tests/test_log_file_service.py": "1e5086f8f0ab863cf519794831b0e2cff93e4b428863ec2428939f86487c65a7",
+    "docs/public/SCG/LOG_FILE_SERVICE_V1.md": "8ffc33a364e34ce80c653487875b851746e77f28dbeae9475b0fbde3532fb442",
+    "contracts/log_file_service_v1.json": "9b93fdfbc24e8a213ab45e5fc62fd839038e196d759b88b21758972b6f40e89c",
+    "contracts/session_export_v1.schema.json": "ed2ce84f55d26ccdc28fc37683e83bdb9a114078f717294e49cd63f4c1d17feb",
+    "contracts/session_export_v1.golden.json": "d998062d184fd1c8f1d73677faf93ccb55c53cf32c66efc37d943133e702cf9e"
+  },
+  "firmware_artifacts_rechecked": {
+    "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.bin": {
+      "sha256": "25c22bf3393b57f2de0bb7e57ae823e3f439a5e3ad9b2b3394332fe9cc43884e",
+      "size": 337860
+    },
+    "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.elf": {
+      "sha256": "e8425ec092322303132a88de21fc47f88880fbf8947bb793167fd7150ff70c5d",
+      "size": 3367720
+    },
+    "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.hex": {
+      "sha256": "b2f10d89ff9c2439a482445a00e6fc17038025120d66fd37391b095258603cd9",
+      "size": 950392
+    },
+    "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.map": {
+      "sha256": "d5c000bf3c13e291695e81943d5e681b4078e30271ff6124b06e30974f985c71",
+      "size": 1531977
+    },
+    "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_3.bin": {
+      "sha256": "25c22bf3393b57f2de0bb7e57ae823e3f439a5e3ad9b2b3394332fe9cc43884e",
+      "size": 337860
+    },
+    "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_3.elf": {
+      "sha256": "a00868d6df346ecfde122a18f5fc6daa72e9317db82c050c0941892cb8800b68",
+      "size": 3367900
+    },
+    "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_3.hex": {
+      "sha256": "b2f10d89ff9c2439a482445a00e6fc17038025120d66fd37391b095258603cd9",
+      "size": 950392
+    },
+    "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_3.map": {
+      "sha256": "4ea2ae06730c1148cd724c6d8f4ad9b7d0186b5bb46ba94eb3432f41820842ed",
+      "size": 1668567
+    }
+  },
+  "windows_evidence_rechecked": {
+    "path": "apps/GSHC/docs/evidence/windows_log_transfer_20261013.zip",
+    "sha256": "281984668d74769306c198d9d36dcfc8685062d715b437e2517341f8c608fe05",
+    "bytes": 3337751,
+    "hashed_entries": 113,
+    "crc": "PASS",
+    "current_sources_match_final_v7_snapshot": {
+      "apps/GSHC/app.py": "b32232fc226d1c87ebde10acfffe976f3074dec88931d34dddc2dc34470573a0",
+      "apps/GSHC/services/i18n.py": "57a7d7dfe8ca00b39b69dee5f7e976f0dc396a9345c6a7c7b8f095e43d42aca1",
+      "apps/GSHC/services/logger.py": "e606836e289707e7b86d0565f615964f124944320b2a37e5d6c1a0ec7b2503fb",
+      "apps/GSHC/services/device_export.py": "c12e3dd4d11efa3fdeac21f5d7cf19c8ed1b98f02c7df5b4953efaa77bbdfb3e",
+      "apps/GSHC/services/file_service_client.py": "2c97ef07758f3ff4ae2366ef7ed648eced22d124c55bb87cd70901afb661dbb9",
+      "apps/GSHC/transport/file_service_backend.py": "559ef48d3f80f266e9a724ed5b041dee68d44ae6e9b90af45300a793d8fac198",
+      "apps/GSHC/ui/main_window.py": "b31a522780c4e76109b0dea44dab7fc8376b2eba034540b33e9d2d0ac5a4a9f7",
+      "apps/GSHC/ui/file_transfer.py": "bbe32f9607337a7bcc34c2b9f7ce692b21801cac12ee49fec779b7726cb0b5b6",
+      "apps/GSHC/ui/maintenance_page.py": "ca415f877520480bfc0d434b6edbfb78972b61d7de50c2ec13ed98cff4f50cdb",
+      "apps/GSHC/tests/requirements.txt": "2b28832b160f962ea032d59bc966e7c34ae6e708d1b82daf538baee040c6d45d",
+      "apps/GSHC/tests/test_device_export.py": "e7146ac6268fab49793f9b17b722c3aa4596c6f6cad494eb67eee9c2a4a45379",
+      "apps/GSHC/tests/test_file_service_client.py": "38fd42898025c9623c358753ceb3c770403159af3014842aad51564879ff9253",
+      "apps/GSHC/tests/test_file_transfer_ui.py": "2fe386c65a559cef4242f8a76152ba38371f8b0cef874a3ace35c1a6d3190dde",
+      "apps/GSHC/tests/test_ui_workflow.py": "e6ac831a99f9e2c7edf7ebef4d76b3af3ef818c207fc4e632dbf587ee4dee226",
+      "apps/GSHC/tests/validation/port_geometry_probe.py": "75c4ee77731dc247a44f25d89a4719a5cce9ea926a06bd655a61d626e1165002",
+      "apps/GSHC/docs/LOG_TRANSFER_20261013.md": "7f498019ab5ad63e8ff0dd3e48a2e53e8d01ff31dad24614d3c8d329d2dea1bd"
+    }
+  },
+  "aggregate_safety_acceptance": "BLOCKED: strict stack FAIL and documented NOT PROVEN items remain",
+  "hardware_access": "none",
+  "retained_file_sha256": {
+    ".gitattributes": "4554344ef217cfabb68438ef086caaffa4a66eeb358dd2372c11b3853091e58e",
+    "baseline_components.py": "9b39346ea3b4436000b98aacb8c05e7b858ec37e0251a02376f921bb39835a50",
+    "baseline_test_optional_protocols.py": "3ae715833dbfcbd505bfae74f5136d2156bde35ef65c161276a11ad420dff2b4",
+    "collect.py": "20143c8b7bfbe3d3b2f3cfbd95ae8ac1781327f4a36f8c2c619ac184d8b6b586",
+    "README.md": "45861e9732b19d716f145042d086bad2e295b63049b089e0a9bc6deff62ab657",
+    "scg-selected-final.log": "664cda7b194702c102bea735ba4b408d261b96e8755e62cc49f34d19a2fb66a1",
+    "scg-ui-fixed.log": "75f9220fb3f93111db68e79f7a6dfa249d757365dc6b795f1c016505304860bc",
+    "tested_optional_protocols.py": "a6d7cc94e5478fc9834b8509c16a33f0ec11b67a41cc87d5c9e74dac89057724"
+  }
+}

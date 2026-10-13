@@ -1,0 +1,5 @@
+...........................sss................s.........                 [100%]
+=========================== short test summary info ===========================
+SKIPPED [3] apps\SCG\tests\test_architecture_maintenance_selection.py:93: missing-scope negative requires selected Console owner
+SKIPPED [1] apps\SCG\tests\test_architecture_maintenance_selection.py:110: present-unselected-source negative requires disabled maintenance
+52 passed, 4 skipped in 446.40s (0:07:26)
