@@ -161,7 +161,7 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
                        check=True, cwd=project, env=environment)
     decoders = list(project.glob("*.ssdecoder"))
     if not sf6_compact:
-        for mode in ("maintenance", "maintenance-fault"):
+        for mode in ("maintenance", "maintenance-fault", "maintenance-write-fault"):
             subprocess.run([str(writer), str(output / (mode + '.unused')), mode],
                            check=True, cwd=project, env=environment)
     if len(decoders) != 1:

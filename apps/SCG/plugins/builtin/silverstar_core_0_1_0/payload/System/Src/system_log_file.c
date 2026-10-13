@@ -89,6 +89,16 @@ void SystemLogFile_StatusPublish(const SystemLogFileSnapshot *snapshot)
     PlatformCritical_Exit(lock);
 }
 
+uint8_t SystemLogFile_StatusGet(SystemLogFileSnapshot *snapshot)
+{
+    PlatformCriticalState lock;
+    if (snapshot == NULL) { return 0U; }
+    lock = PlatformCritical_Enter();
+    *snapshot = s_snapshot;
+    PlatformCritical_Exit(lock);
+    return snapshot->valid;
+}
+
 static const char *LogFile_OperationText(LogFileOperation operation)
 {
     switch (operation)

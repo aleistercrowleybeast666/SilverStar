@@ -536,14 +536,17 @@ static SystemConsoleExecuteResult SystemConsole_ErrorWrite(
     return result;
 }
 
-static uint8_t SystemConsole_CommandIsInspection(const char *command)
+static uint8_t SystemConsole_CommandIsInspection(const char *module,
+                                                const char *command)
 {
     return (uint8_t)((strcmp(command, "INFO") == 0) ||
                      (strcmp(command, "STATUS") == 0) ||
                      (strcmp(command, "CAPABILITIES") == 0) ||
                      (strcmp(command, "SAMPLE") == 0) ||
                      (strcmp(command, "IO") == 0) ||
-                     (strcmp(command, "LIST") == 0));
+                     (strcmp(command, "LIST") == 0) ||
+                     ((strcmp(module, "SYSTEM") == 0) &&
+                      (strcmp(command, "DIAG") == 0)));
 }
 
 static uint8_t SystemConsole_CommandAllowedInFlight(const char *module,
@@ -554,7 +557,7 @@ static uint8_t SystemConsole_CommandAllowedInFlight(const char *module,
         SILVERSTAR_ASSERT_MODULE_SYSTEM);
     SILVERSTAR_ASSERT_OBJECT(command, char,
         SILVERSTAR_ASSERT_MODULE_SYSTEM);
-    if (SystemConsole_CommandIsInspection(command) != 0U)
+    if (SystemConsole_CommandIsInspection(module, command) != 0U)
     {
         return 1U;
     }
@@ -1848,6 +1851,141 @@ static SystemConsoleExecuteResult SystemConsole_SystemUnsupportedExecute(
         "UNSUPPORTED", "NOT_IMPLEMENTED", SYSTEM_CONSOLE_EXECUTE_UNSUPPORTED);
 }
 
+static uint32_t SystemConsole_DiagnosticAge(uint64_t timestamp_us)
+{
+    uint64_t now_us = SystemTime_GetMonotonicUs();
+    uint64_t age;
+    if ((timestamp_us == 0U) || (timestamp_us > now_us)) { return UINT32_MAX; }
+    age = (now_us - timestamp_us) / 1000ULL;
+    return (age >= UINT32_MAX) ? UINT32_MAX : (uint32_t)age;
+}
+
+static void SystemConsole_DiagnosticBase(char *response, uint16_t capacity,
+    const char *id, const char *group, const char *name, uint8_t next)
+{
+    (void)CommonFormat_Print(response, capacity,
+        "OK SYSTEM DIAG version=1 id=%s group=%s name=%s readonly=1 next_cursor=%u end=0",
+        id, group, name, (unsigned int)next);
+}
+
+static const char *SystemConsole_DiagnosticBlockReason(uint32_t mask)
+{
+    if ((mask & SYSTEM_HEALTH_BLOCK_PROFILE_INVALID) != 0U) { return "profile_invalid"; }
+    if ((mask & SYSTEM_HEALTH_BLOCK_PRIMARY_IMU) != 0U) { return "primary_imu_unavailable"; }
+    if ((mask & SYSTEM_HEALTH_BLOCK_ATTITUDE_UNAVAILABLE) != 0U) { return "attitude_unavailable"; }
+    if ((mask & SYSTEM_HEALTH_BLOCK_OUTPUT_NOT_SAFE) != 0U) { return "output_not_safe"; }
+    if ((mask & SYSTEM_HEALTH_BLOCK_REQUIRED_DEVICE) != 0U) { return "required_device_unavailable"; }
+    if ((mask & SYSTEM_HEALTH_BLOCK_STARTUP_INCOMPLETE) != 0U) { return "startup_incomplete"; }
+    if ((mask & SYSTEM_HEALTH_BLOCK_STARTUP_FAILED) != 0U) { return "startup_failed"; }
+    if ((mask & SYSTEM_HEALTH_BLOCK_CALIBRATION_NOT_READY) != 0U) { return "calibration_not_ready"; }
+    if ((mask & SYSTEM_HEALTH_BLOCK_ALIGNMENT_NOT_READY) != 0U) { return "alignment_not_ready"; }
+    if ((mask & SYSTEM_HEALTH_BLOCK_ASSERTION_FAULT) != 0U) { return "assertion_fault"; }
+    return (mask == 0U) ? "no_health_block" : "unrecognized_block";
+}
+
+static void SystemConsole_DiagnosticPreparation(char *response, uint16_t capacity)
+{
+    SystemHealthSnapshot health;
+    SystemHealth_GetSnapshot(&health);
+    SystemConsole_DiagnosticBase(response, capacity, "task.preparation", "task", "Preparation", 2U);
+    SystemConsole_TextAppend(response, capacity,
+        " state=%s reason=%s source=SystemHealth age_ms=%lu sequence=%lu block=0x%08lX warn=0x%08lX",
+        (health.ready != 0U) ? "OBSERVED" : "WAIT",
+        SystemConsole_DiagnosticBlockReason(health.start_blocking_mask),
+        (unsigned long)SystemConsole_DiagnosticAge(health.timestamp_us),
+        (unsigned long)health.sequence, (unsigned long)health.start_blocking_mask,
+        (unsigned long)health.warning_mask);
+}
+
+static void SystemConsole_DiagnosticLogger(char *response, uint16_t capacity)
+{
+    SystemLogFileSnapshot snapshot;
+    SystemConsole_DiagnosticBase(response, capacity, "thread.logger", "thread", "Logger_completed_writes", 3U);
+    if (SystemLogFile_StatusGet(&snapshot) == 0U)
+    { SystemConsole_TextAppend(response, capacity, " state=UNKNOWN reason=not_published source=LoggerTask age_ms=4294967295"); return; }
+    SystemConsole_TextAppend(response, capacity,
+        " state=%s reason=%s source=LoggerTask age_ms=%lu sequence=%lu counter=%lu unit=completed_writes work_age_ms=%lu",
+        (snapshot.log_fault != 0U) ? "FAULT" : "OBSERVED",
+        (snapshot.log_fault != 0U) ? "io_fault" : ((snapshot.finalization == 3U) ? "finalized" : "write_completion_not_durability"),
+        (unsigned long)SystemConsole_DiagnosticAge(snapshot.timestamp_us),
+        (unsigned long)snapshot.sequence, (unsigned long)snapshot.completed_writes,
+        (unsigned long)SystemConsole_DiagnosticAge(snapshot.last_completed_write_us));
+}
+
+static void SystemConsole_DiagnosticEstimator(char *response, uint16_t capacity)
+{
+    SystemEstimatorStatusDiagnostics snapshot;
+    SystemConsole_DiagnosticBase(response, capacity, "thread.estimator", "thread", "Estimator_prediction", 4U);
+    if (SystemEstimatorStatusDiagnostics_Get(&snapshot) == 0U)
+    { SystemConsole_TextAppend(response, capacity, " state=UNKNOWN reason=not_published source=Estimator age_ms=4294967295"); return; }
+    /* last_state_timestamp is data/state time, not task completion wall time. */
+    SystemConsole_TextAppend(response, capacity,
+        " state=OBSERVED reason=state_time_not_task_heartbeat source=Estimator age_ms=4294967295 counter=%lu unit=predictions data_age_ms=%lu started=%u",
+        (unsigned long)snapshot.imu_prediction_count,
+        (unsigned long)SystemConsole_DiagnosticAge(snapshot.last_state_timestamp_us),
+        (unsigned int)snapshot.started);
+}
+
+static void SystemConsole_DiagnosticIns(char *response, uint16_t capacity)
+{
+    SystemInsDiagnostics snapshot;
+    SystemConsole_DiagnosticBase(response, capacity, "sensor.ins_solution", "sensor", "INS_solution_validity", 5U);
+    if (SystemInsDiagnostics_Get(&snapshot) == 0U)
+    { SystemConsole_TextAppend(response, capacity, " state=UNKNOWN reason=not_published source=INS age_ms=4294967295"); return; }
+    SystemConsole_TextAppend(response, capacity,
+        " state=%s reason=solution_validity_not_sensor_online source=INS age_ms=4294967295 data_age_ms=%lu quaternion_valid=%u velocity_valid=%u position_valid=%u",
+        (snapshot.quaternion_valid != 0U) ? "OBSERVED" : "WAIT",
+        (unsigned long)SystemConsole_DiagnosticAge(snapshot.last_update_timestamp_us),
+        (unsigned int)snapshot.quaternion_valid, (unsigned int)snapshot.velocity_valid,
+        (unsigned int)snapshot.position_valid);
+}
+
+static void SystemConsole_DiagnosticStorage(char *response, uint16_t capacity)
+{
+    SystemStorageHealth health;
+    SystemConsole_DiagnosticBase(response, capacity, "storage.tf", "storage", "TF_storage", 6U);
+    if (SystemStorage_HealthGet(&health) != SYSTEM_DEVICE_OK)
+    { SystemConsole_TextAppend(response, capacity, " state=UNKNOWN reason=not_available source=StorageHealth age_ms=4294967295"); return; }
+    SystemConsole_TextAppend(response, capacity,
+        " state=%s reason=ram_observation source=StorageHealth age_ms=4294967295 mounted=%u open=%u healthy=%u counter=%lu unit=write_attempts syncs=%lu errors=%lu",
+        (health.healthy == 0U) ? "FAULT" : ((health.mounted == 0U) ? "WAIT" : "OBSERVED"),
+        (unsigned int)health.mounted, (unsigned int)health.file_open, (unsigned int)health.healthy,
+        (unsigned long)health.write_count, (unsigned long)health.sync_count, (unsigned long)health.error_count);
+}
+
+static SystemConsoleExecuteResult SystemConsole_DiagnosticsExecute(
+    const char *cursor, char *response, uint16_t capacity)
+{
+    if (cursor == NULL)
+    {
+        (void)CommonFormat_Print(response, capacity,
+            "OK SYSTEM DIAG version=1 maintenance=0.1 compatible=0.0 file_service_version=1 entries=7 max_entries=16 max_line=511 polling_ms=1000 firmware=" SILVERSTAR_VERSION_STRING);
+        return SYSTEM_CONSOLE_EXECUTE_OK;
+    }
+    if ((cursor[0] < '0') || (cursor[0] > '7') || (cursor[1] != '\0'))
+    { return SystemConsole_ErrorWrite(response, capacity, "SYSTEM", "DIAG", "BAD_ARGUMENT", "CURSOR", SYSTEM_CONSOLE_EXECUTE_BAD_ARGUMENT); }
+    switch (cursor[0])
+    {
+        case '0':
+            SystemConsole_DiagnosticBase(response, capacity, "task.lifecycle", "task", "Lifecycle", 1U);
+            SystemConsole_TextAppend(response, capacity, " state=OBSERVED reason=not_start_authorization source=Lifecycle age_ms=4294967295 phase=%u", (unsigned int)SystemLifecycle_GetState());
+            break;
+        case '1': SystemConsole_DiagnosticPreparation(response, capacity); break;
+        case '2': SystemConsole_DiagnosticLogger(response, capacity); break;
+        case '3': SystemConsole_DiagnosticEstimator(response, capacity); break;
+        case '4': SystemConsole_DiagnosticIns(response, capacity); break;
+        case '5': SystemConsole_DiagnosticStorage(response, capacity); break;
+        case '6':
+            SystemConsole_DiagnosticBase(response, capacity, "communication.console", "communication", "Console_work_health", 7U);
+            SystemConsole_TextAppend(response, capacity, " state=UNKNOWN reason=completion_not_instrumented source=not_available age_ms=4294967295");
+            break;
+        default:
+            (void)CommonFormat_Print(response, capacity, "OK SYSTEM DIAG version=1 end=1 next_cursor=0");
+            break;
+    }
+    return SYSTEM_CONSOLE_EXECUTE_OK;
+}
+
 static SystemConsoleExecuteResult SystemConsole_SystemExecute(
     const char *command,
     const char *subcommand,
@@ -1856,6 +1994,8 @@ static SystemConsoleExecuteResult SystemConsole_SystemExecute(
 {
     SILVERSTAR_ASSERT_OBJECT(command, char,
         SILVERSTAR_ASSERT_MODULE_SYSTEM);
+    if (strcmp(command, "DIAG") == 0)
+    { return SystemConsole_DiagnosticsExecute(subcommand, response, capacity); }
     if (strcmp(command, "FLIGHT") == 0)
     { return SystemConsole_SystemFlightExecute(subcommand, response, capacity); }
     if (strcmp(command, "CONSOLE") == 0)

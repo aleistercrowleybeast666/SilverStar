@@ -1195,7 +1195,7 @@ BINDING_TRIGGER_V2 = '\\b(?:SystemDeviceStartup\\w*|SensorImu\\w*|SensorRegister
 # Reviewed MPU epoch product revision. These exact whole-input/compiled-graph
 # variants supplement the historical V2 sets. No generic acceptance, source
 # coverage exclusion, callback exception or stack threshold is added.
-BINDING_REVIEW_REVISION = "uart_maintenance_20261013_v16"
+BINDING_REVIEW_REVISION = "maintenance_diagnostics_20261013_v17"
 BINDING_SOURCE_EPOCH_V3 = {'APP/Src/imu_sample_bus.c': ['ee0e7e802d34a113b53b066c81223550e597933a2e1d90c4b84424b25e1ec1f9'],
  'Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c': ['c3b492c44a5d98fc53da74e6b3f9479c82a6bda9f7a4e4739324f3e50d14ed1b'],
  'Devices/SensorBus/Adapter/Src/sensor_imu_adapter.c': ['b477e1565cd8a7286e540497734936488104028a7af4b1da46e9ee76de9e41bd'],
@@ -1487,6 +1487,19 @@ BINDING_DEPENDENCIES_UART_MAINTENANCE_V16 = {'APP/Src/logger_task.c': ['7153d872
  'System/Src/system_log_file.c': ['ceb89202b09819f0983bb1815060296034f2beb00c36c1a86f33029edbca067d']}
 
 
+# Maintenance 0.1 diagnostic review v17: six exact complete inputs.
+# RAM snapshot copy, completed-write observations, bounded direct diagnostic
+# readers and two generated identity sources; no new indirect edges or graphs.
+# Existing callback proofs, unknown-source rejection and stack margins unchanged.
+# See docs/public/SCG/MAINTENANCE_0_1_20261013.md for evidence and unresolved bounds.
+BINDING_SOURCE_MAINTENANCE_DIAGNOSTICS_V17 = {'APP/Src/logger_task.c': ['61eca40601d0bfb437c6d122ad5e5b768a107609bd4e01cc532fc3440b7767f6'],
+ 'Generated/Src/project_log_decoder_profile.c': ['e63337bc4953694a97766adcd457f2bd384c55b0ea6fba4b3f35b43e4c638ad6'],
+ 'Generated/Src/project_metadata.c': ['35f6f89681b4850b26ca6f2cd1a958236cfeb635eac3565df029533e20dc2240'],
+ 'System/Inc/system_log_file.h': ['9ac073f9efed02b70c3ff786f9f02a513c899c8f744bfd11344e0cac968aa8a9'],
+ 'System/Src/system_console.c': ['0a44e6db3e91e18ce0340fdc80c55fb9c15a459210b10f23eb17a5d46e4e2346'],
+ 'System/Src/system_log_file.c': ['b6759ba75a08903fbc4a86a44a0dbc3a2b235af1972b7a33947176db19a22bc7']}
+
+
 def BindingSourceVersions_Get(path):
     return (BINDING_SOURCE_V2.get(path, []) + BINDING_SOURCE_EPOCH_V3.get(path, []) +
             BINDING_SOURCE_LOGGER_V4.get(path, []) + BINDING_SOURCE_NRF_V5.get(path, []) +
@@ -1499,7 +1512,8 @@ def BindingSourceVersions_Get(path):
             BINDING_SOURCE_PRODUCT_METADATA_V13.get(path, []) +
             BINDING_SOURCE_PRODUCT_DECODER_V14.get(path, []) +
             BINDING_SOURCE_INTEGRATION_IDENTITIES_V15.get(path, []) +
-            BINDING_SOURCE_UART_MAINTENANCE_V16.get(path, []))
+            BINDING_SOURCE_UART_MAINTENANCE_V16.get(path, []) +
+            BINDING_SOURCE_MAINTENANCE_DIAGNOSTICS_V17.get(path, []))
 
 
 def BindingSourceHash_Get(text):

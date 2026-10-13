@@ -247,7 +247,7 @@ def test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input(tmp_
     else:
         owner = base / 'plugins/builtin/silverstar_core_0_1_0/payload'
     text = (owner / relative).read_text(encoding='utf8')
-    assert stacks.BindingSourceHash_Get(text) in stacks.BINDING_SOURCE_UART_MAINTENANCE_V16[relative]
+    assert stacks.BindingSourceHash_Get(text) in stacks.BindingSourceVersions_Get(relative)
     path = tmp_path / relative
     path.parent.mkdir(parents=True)
     path.write_text(text, encoding='utf8')

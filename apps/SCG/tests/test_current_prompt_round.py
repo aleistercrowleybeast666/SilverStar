@@ -49,7 +49,7 @@ def test_protocol_profiles_resolve_four_layers_and_selected_source_graph(
         (
             "maintenance_service",
             "maintenance_protocol",
-            "maintenance.serial.0_0",
+            "maintenance.serial.0_1",
             "transport.byte_stream",
             "maintenance0",
         ),
@@ -70,18 +70,22 @@ def test_protocol_transport_constraints_are_enforced(
     builtin_catalog, monkeypatch
 ) -> None:
     model = ReferenceProject_Create("TransportMismatch", catalog=builtin_catalog)
-    telemetry = builtin_catalog.Component_Get(
+    # Reference construction caches a resolved device-variant view. Mutate the
+    # selected provider in that view, not an unused base manifest.
+    catalog = builtin_catalog.ProjectView_Get(model)
+    assert Project_Validate(model, catalog).valid
+    telemetry = catalog.Component_Get(
         "silverstar.device.telemetry.sx1281"
     )
     monkeypatch.setitem(
-        builtin_catalog._components,
+        catalog._components,
         telemetry.component_id,
         replace(
             telemetry,
             transports=(replace(telemetry.transports[0], mtu=16),),
         ),
     )
-    validation = Project_Validate(model, builtin_catalog)
+    validation = Project_Validate(model, catalog)
     assert not validation.valid
     assert any(issue.code == "protocol_transport" for issue in validation.issues)
 
@@ -99,6 +103,9 @@ def test_quality_results_are_project_local_and_not_generation_state(
         succeeded=True,
         duration=1.25,
         summary="checks=9307",
+        input_sha256="a" * 64,
+        command=("make", "host-tests"),
+        details="local host evidence",
     )
     assert saved.result == "passed"
     assert QualityResults_Load(root) == (saved,)
@@ -112,7 +119,13 @@ def test_quality_results_are_project_local_and_not_generation_state(
         "timestamp",
         "duration",
         "summary",
+        "input_sha256",
+        "command",
+        "details",
     }
+    assert document["results"]["host_tests"]["input_sha256"] == "a" * 64
+    assert document["results"]["host_tests"]["command"] == ["make", "host-tests"]
+    assert document["results"]["host_tests"]["details"] == "local host evidence"
 
 
 def test_source_package_is_deterministic_and_keeps_real_test_sources(

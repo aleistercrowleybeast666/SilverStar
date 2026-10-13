@@ -150,7 +150,7 @@ def ReferenceProject_Create(
             version=catalog.Component_Get(component_id).version,
             profile={
                 "telemetry": "air.m0",
-                "maintenance": "maintenance.serial.0_0",
+                "maintenance": "maintenance.serial.0_1",
                 "logging": "flight_log.0_0",
             }[category],
             manifest_sha256=(

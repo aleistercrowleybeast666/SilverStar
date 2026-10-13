@@ -28,6 +28,8 @@ class FileServiceSerialTransport:
         self._serial.read(128)
 
     def exchange(self, command: str, timeout: float, cancel: Event) -> str:
+        if cancel.is_set():
+            raise ExportCancelled("Maintenance operation cancelled")
         if len(command) > 191 or not command.isascii() or "\r" in command or "\n" in command:
             raise ValueError("Invalid maintenance command")
         payload = (command + "\r\n").encode("ascii")
@@ -50,8 +52,10 @@ class FileServiceSerialTransport:
                 line = raw.decode("ascii", errors="strict").strip()
                 if command == "LOGFILE CAPS" and line.startswith("ERR "):
                     return line
-                if command in {"SYSTEM INFO", "SYSTEM STATUS", "SYSTEM CAPABILITIES", "LOG STATUS"}:
-                    for prefix in ("OK " + command + " ", "ERR " + command + " "):
+                is_diag = command == "SYSTEM DIAG" or command.startswith("SYSTEM DIAG ")
+                if is_diag or command in {"SYSTEM INFO", "SYSTEM STATUS", "SYSTEM CAPABILITIES", "LOG STATUS"}:
+                    matched_command = "SYSTEM DIAG" if is_diag else command
+                    for prefix in ("OK " + matched_command + " ", "ERR " + matched_command + " "):
                         if line.startswith(prefix) or line.startswith("> " + prefix):
                             return line.removeprefix("> ")
                     # A generic parse error is unavailable, never a status.

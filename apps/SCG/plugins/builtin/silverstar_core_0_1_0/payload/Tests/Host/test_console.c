@@ -1751,6 +1751,19 @@ int main(void)
     s_flight_recovery_status.impact_threshold_mps2 = 15.0f;
     Test_Execute("SYSTEM INFO", SYSTEM_CONSOLE_EXECUTE_OK,
                  "project=SilverStar version=" SILVERSTAR_VERSION_STRING);
+    Test_Execute("SYSTEM DIAG", SYSTEM_CONSOLE_EXECUTE_OK,
+                 "version=1 maintenance=0.1 compatible=0.0 file_service_version=1");
+    Test_Execute("SYSTEM DIAG 0", SYSTEM_CONSOLE_EXECUTE_OK, "id=task.lifecycle");
+    Test_Execute("SYSTEM DIAG 1", SYSTEM_CONSOLE_EXECUTE_OK, "id=task.preparation");
+    Test_Execute("SYSTEM DIAG 2", SYSTEM_CONSOLE_EXECUTE_OK, "id=thread.logger");
+    Test_Execute("SYSTEM DIAG 3", SYSTEM_CONSOLE_EXECUTE_OK, "id=thread.estimator");
+    Test_Execute("SYSTEM DIAG 4", SYSTEM_CONSOLE_EXECUTE_OK, "id=sensor.ins_solution");
+    Test_Execute("SYSTEM DIAG 5", SYSTEM_CONSOLE_EXECUTE_OK, "id=storage.tf");
+    Test_Execute("SYSTEM DIAG 6", SYSTEM_CONSOLE_EXECUTE_OK, "state=UNKNOWN");
+    Test_Execute("SYSTEM DIAG 7", SYSTEM_CONSOLE_EXECUTE_OK, "end=1 next_cursor=0");
+    Test_Execute("SYSTEM DIAG 8", SYSTEM_CONSOLE_EXECUTE_BAD_ARGUMENT, "code=BAD_ARGUMENT reason=CURSOR");
+    Test_Execute("SYSTEM DIAG -1", SYSTEM_CONSOLE_EXECUTE_BAD_ARGUMENT, "code=BAD_ARGUMENT reason=CURSOR");
+    Test_Execute("SYSTEM DIAG 1 EXTRA", SYSTEM_CONSOLE_EXECUTE_BAD_ARGUMENT, "code=BAD_FORMAT");
     Test_Execute("SYSTEM STATUS", SYSTEM_CONSOLE_EXECUTE_OK,
                  "OK SYSTEM STATUS");
     Test_Execute("SYSTEM STACK", SYSTEM_CONSOLE_EXECUTE_OK,

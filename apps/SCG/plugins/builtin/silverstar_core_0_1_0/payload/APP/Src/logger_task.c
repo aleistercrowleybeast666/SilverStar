@@ -37,6 +37,8 @@ typedef struct
     uint32_t observed_drop_count;
     uint64_t critical_deadline_us;
     uint64_t last_iteration_us;
+    uint64_t last_completed_write_us;
+    uint32_t completed_writes;
     uint8_t critical_pending;
     uint64_t last_flush_us;
     uint64_t next_retry_us;
@@ -129,6 +131,10 @@ static uint8_t LoggerTask_SinkWrite(const uint8_t *data, uint32_t length)
     s_logger.sink_offset_mod_quantum = (uint16_t)(
         ((uint32_t)s_logger.sink_offset_mod_quantum + length) %
         LOGGER_STREAMING_WRITE_QUANTUM_BYTES);
+    /* Count only a complete successful sink write. Attempts/iterations are
+     * not useful-work heartbeats; sync/durability remains a separate contract. */
+    s_logger.last_completed_write_us = SystemTime_GetMonotonicUs();
+    s_logger.completed_writes++;
     return 1U;
 }
 
@@ -772,6 +778,8 @@ static void LoggerTask_StatusPublish(uint64_t now_us)
     snapshot.storage_valid = (uint8_t)(SystemStorage_HealthGet(&health) == SYSTEM_DEVICE_OK);
     snapshot.timestamp_us = now_us;
     snapshot.sequence = s_diagnostics.iteration_count;
+    snapshot.last_completed_write_us = s_logger.last_completed_write_us;
+    snapshot.completed_writes = s_logger.completed_writes;
     snapshot.lifecycle = (uint8_t)SystemLifecycle_GetState();
     snapshot.mounted = health.mounted;
     snapshot.healthy = health.healthy;

@@ -49,6 +49,8 @@ static jmp_buf s_exit;
 static uint8_t s_boot_mode_test;
 static uint8_t s_maintenance_test;
 static uint32_t s_maintenance_steps;
+static uint32_t s_completed_before_fault;
+static uint64_t s_completed_time_before_fault;
 static uint32_t s_boot_delay_count;
 static uint32_t s_warning_count;
 uint16_t DebugLog_Write(const uint8_t *data, uint16_t length)
@@ -338,9 +340,26 @@ void vTaskDelay(TickType_t ticks)
             (LoggerBus_StartupStateGet() == LOGGER_STREAMING_READY))
         {
             uint32_t before = s_dma_transactions;
+            if (s_maintenance_test == 3U)
+            {
+                /* Cross the FatFs sector cache: one small record can succeed
+                 * in RAM and fail only during later sync, which is different. */
+                for (uint32_t item = 0U; item < 32U; item++)
+                {
+                    if (LoggerBus_EventPush(PlatformTime_Us(), FLIGHT_LOG_EVENT_BOOT,
+                        0U, 0U) != LOGGER_BUS_RESULT_OK) { abort(); }
+                }
+            }
             if (SystemLogFile_ExecuteLine("LOGFILE ENTER", reply, sizeof(reply)) != SYSTEM_CONSOLE_EXECUTE_OK ||
                 strstr(reply, "accepted=1") == NULL || s_dma_transactions != before) { abort(); }
-            if (s_maintenance_test == 2U) { s_start_failure = 1U; }
+            if (s_maintenance_test >= 2U)
+            {
+                SystemLogFileSnapshot snapshot;
+                if (SystemLogFile_StatusGet(&snapshot) == 0U) { abort(); }
+                s_completed_before_fault = snapshot.completed_writes;
+                s_completed_time_before_fault = snapshot.last_completed_write_us;
+                s_start_failure = 1U;
+            }
         }
         if ((s_fixture_maintenance == SystemMaintenanceState_Ready) ||
             (s_fixture_maintenance == SystemMaintenanceState_Failed)) { longjmp(s_exit, 1); }
@@ -829,6 +848,7 @@ static int Test_Maintenance(const char *mode)
     LoggerTaskDiagnostics diagnostics;
     SystemStorageHealth health;
     s_maintenance_test = (uint8_t)(strcmp(mode, "maintenance-fault") == 0 ? 2U : 1U);
+    if (strcmp(mode, "maintenance-write-fault") == 0) { s_maintenance_test = 3U; }
     CHECK(f_mkdir("0:/missions") == FR_OK);
     CHECK(f_mkdir("0:/missions/000001") == FR_OK);
     CHECK(f_open(&historical, "0:/missions/000001/flight.sslog", FA_CREATE_NEW | FA_WRITE) == FR_OK);
@@ -840,8 +860,17 @@ static int Test_Maintenance(const char *mode)
     if (setjmp(s_exit) == 0) { AppTask_Logger(NULL); }
     CHECK(LoggerTask_DiagnosticsGet(&diagnostics) == SYSTEM_DEVICE_OK);
     CHECK(SystemStorage_HealthGet(&health) == SYSTEM_DEVICE_OK);
-    if (s_maintenance_test == 2U)
+    if (s_maintenance_test >= 2U)
     {
+        SystemLogFileSnapshot snapshot;
+        CHECK(SystemLogFile_StatusGet(&snapshot) == 1U);
+        CHECK(snapshot.completed_writes == s_completed_before_fault);
+        CHECK(snapshot.last_completed_write_us == s_completed_time_before_fault);
+        if (s_maintenance_test == 3U)
+        {
+            CHECK(diagnostics.io_fault != 0U && diagnostics.append_failure_count != 0U);
+            CHECK(diagnostics.write_count > snapshot.completed_writes);
+        }
         CHECK(s_fixture_maintenance == SystemMaintenanceState_Failed);
         CHECK(diagnostics.io_fault != 0U || diagnostics.final_status_write_failed != 0U);
         before = s_dma_transactions;
@@ -851,6 +880,13 @@ static int Test_Maintenance(const char *mode)
     else
     {
         CHECK(s_fixture_maintenance == SystemMaintenanceState_Ready);
+        {
+            SystemLogFileSnapshot snapshot;
+            CHECK(SystemLogFile_StatusGet(&snapshot) == 1U);
+            CHECK(snapshot.completed_writes > 0U);
+            CHECK(snapshot.completed_writes <= diagnostics.write_count);
+            CHECK(snapshot.last_completed_write_us != 0U);
+        }
         CHECK(health.file_open == 0U && diagnostics.io_fault == 0U);
         CHECK(LoggerBus_FinalizationStateGet() == LOGGER_BUS_FINALIZATION_FINALIZED);
         CHECK(SystemLogFile_ExecuteLine("LOGFILE META 1", reply, sizeof(reply)) == SYSTEM_CONSOLE_EXECUTE_OK);
@@ -897,7 +933,8 @@ int main(int argc, char **argv)
     if (f_mkfs(SDPath, FM_FAT | FM_SFD, 512U, s_work, sizeof(s_work)) != FR_OK) { return 4; }
 #endif
     if (f_mount(&s_fs, SDPath, 1U) != FR_OK) { return 5; }
-    if (argc == 3 && (strcmp(argv[2], "maintenance") == 0 || strcmp(argv[2], "maintenance-fault") == 0))
+    if (argc == 3 && (strcmp(argv[2], "maintenance") == 0 ||
+        strcmp(argv[2], "maintenance-fault") == 0 || strcmp(argv[2], "maintenance-write-fault") == 0))
     { return Test_Maintenance(argv[2]) ? 0 : 1; }
     if (argc == 3 && (strcmp(argv[2], "initial-manifest-error") == 0 ||
         strcmp(argv[2], "post-open-write-error") == 0))

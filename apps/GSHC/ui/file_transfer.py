@@ -24,6 +24,8 @@ from services.file_service_client import (
 from transport.file_service_backend import FileServiceSerialTransport
 from transport.serial_options import SerialBaud_Parse
 from services.legacy_firmware_status import LegacyFirmwareStatusClient
+from services.legacy_firmware_status import LegacyFirmwareSnapshot
+from services.runtime_diagnostics import RuntimeDiagnosticsClient, LegacyDiagnostics_FromSnapshot
 
 _logger = logging.getLogger(__name__)
 
@@ -163,6 +165,7 @@ class MaintenanceOwner(QThread):
     job_finished = Signal()
     service_status = Signal(bool, str)
     firmware_status = Signal(object, str)
+    diagnostic_status = Signal(object, str)
 
     def __init__(self, port, baud, *, transport_factory=FileServiceSerialTransport, parent=None):
         super().__init__(parent)
@@ -218,6 +221,7 @@ class MaintenanceOwner(QThread):
             if isinstance(status_client, FileServiceClient) and caps.get("status_version") != "1":
                 status_client = LegacyFirmwareStatusClient(transport, cancel=self.stop)
             next_status = 0.0
+            diagnostic_client = RuntimeDiagnosticsClient(transport, self.stop)
             while not self.stop.is_set():
                 try:
                     destination, list_only = self.jobs.get(timeout=0.05)
@@ -229,13 +233,27 @@ class MaintenanceOwner(QThread):
                                 status_client = FileServiceClient(transport, cancel=self.stop)
                             snapshot = status_client.status()
                             self.firmware_status.emit(snapshot, "")
+                            if isinstance(snapshot, LegacyFirmwareSnapshot) and diagnostic_client is None:
+                                self.diagnostic_status.emit(LegacyDiagnostics_FromSnapshot(snapshot), "Legacy 0.0 fields; completion instrumentation unavailable")
                         except (FileServiceError, TimeoutError) as exc:
                             self.firmware_status.emit(None, str(exc))
+                    if diagnostic_client is not None:
+                        try:
+                            entries = diagnostic_client.step()
+                            if entries is not None:
+                                self.diagnostic_status.emit(entries, "Maintenance 0.1; independent RAM observations")
+                        except (FileServiceError, TimeoutError) as exc:
+                            diagnostic_client = None
+                            self.diagnostic_status.emit(None, str(exc))
                     transport.check_alive()
                     continue
                 if self.stop.is_set():
                     break
                 transport.prepare_job()
+                if diagnostic_client is not None:
+                    diagnostic_client.entries, diagnostic_client.cursor = [], 0
+                    diagnostic_client.next_cycle = time.monotonic() + 1.0
+                self.diagnostic_status.emit(None, "Polling paused during file transfer; no real-time claim")
                 operation = DownloadWorker(self.port, self.baud, destination,
                     transport_factory=lambda *_: transport, close_transport=False, list_only=list_only)
                 self.operation = operation
@@ -359,6 +377,7 @@ class FileTransferManager(QObject):
         owner.connection_changed.connect(self._connection_changed, Qt.QueuedConnection)
         owner.service_status.connect(self._service_status, Qt.QueuedConnection)
         owner.firmware_status.connect(self._firmware_status, Qt.QueuedConnection)
+        owner.diagnostic_status.connect(self._diagnostic_status, Qt.QueuedConnection)
         owner.destination_validated.connect(self._destination_validated, Qt.QueuedConnection)
         owner.progress.connect(self._progress, Qt.QueuedConnection)
         owner.catalog.connect(c.window.maintenance_page.show_catalog, Qt.QueuedConnection)
@@ -375,6 +394,7 @@ class FileTransferManager(QObject):
     def disconnect_debug(self):
         if self.owner is not None:
             self.controller.window.maintenance_page.set_firmware_status(None, "Disconnected / invalidated")
+            self.controller.window.maintenance_page.set_diagnostics(None, "Disconnected / invalidated")
             self.controller.window.debug_status.setText(self._tr("maintenance.stopping"))
             self.owner.request_stop()
 
@@ -388,6 +408,7 @@ class FileTransferManager(QObject):
             window.maintenance_page.catalog.clear()
             window.maintenance_page.service_status.setText("LOGFILE: disconnected / negotiation invalidated")
             window.maintenance_page.set_firmware_status(None, "Disconnected / invalidated")
+            window.maintenance_page.set_diagnostics(None, "Disconnected / invalidated")
         window._render_data_tool_buttons()
 
     def _service_status(self, supported, detail):
@@ -399,6 +420,10 @@ class FileTransferManager(QObject):
     def _firmware_status(self, snapshot, detail):
         if self.owner is not None and not self.owner.stop.is_set():
             self.controller.window.maintenance_page.set_firmware_status(snapshot, detail)
+
+    def _diagnostic_status(self, entries, detail):
+        if self.owner is not None and not self.owner.stop.is_set():
+            self.controller.window.maintenance_page.set_diagnostics(entries, detail)
 
     def _destination_validated(self, destination):
         page = self.controller.window.maintenance_page

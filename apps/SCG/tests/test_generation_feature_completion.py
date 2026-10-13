@@ -41,7 +41,7 @@ def test_deployment_parameters_and_protocol_profiles_reach_all_outputs(
     assert model.modes["deployment"] == ["ApogeeVerticalVelocity", "Tilt"]
     assert model.ProtocolProfiles_Get() == {
         "telemetry": "air.m0",
-        "maintenance": "maintenance.serial.0_0",
+        "maintenance": "maintenance.serial.0_1",
         "logging": "flight_log.0_0",
     }
 
@@ -82,7 +82,7 @@ def test_deployment_parameters_and_protocol_profiles_reach_all_outputs(
     assert "deployment.Delay` (active)" in summary
     assert "delay=12.345" in summary
     assert "AIR Telemetry Protocol M0 (`air.m0`)" in summary
-    assert "Serial Maintenance Protocol 0.0 (`maintenance.serial.0_0`)" in summary
+    assert "Serial Maintenance Protocol 0.1 (`maintenance.serial.0_1`)" in summary
     assert "Flight Log Format 0.0 (`flight_log.0_0`)" in summary
 
     with zipfile.ZipFile(io.BytesIO(metadata["FlightConfigurationContract.ssdecoder"])) as archive:
@@ -261,7 +261,7 @@ def test_protocol_controls_artifact_gate_and_assignment_fingerprint(
             for category, combo in window.flight_configuration_page.protocol_combos.items()
         } == {
             "telemetry": (2, "AIR遥测协议 M0"),
-            "maintenance": (2, "串口维护协议 0.0"),
+            "maintenance": (3, "串口维护协议 0.1"),
             "logging": (2, "飞行日志格式 0.0"),
         }
 

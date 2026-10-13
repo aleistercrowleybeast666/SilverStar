@@ -29,6 +29,8 @@ typedef struct
 {
     uint64_t timestamp_us;
     uint32_t sequence;
+    uint64_t last_completed_write_us;
+    uint32_t completed_writes;
     uint8_t lifecycle;
     uint8_t storage_valid;
     uint8_t mounted;
@@ -41,6 +43,7 @@ typedef struct
 
 /* LoggerTask publishes only RAM observations; SerialTask never queries disk. */
 void SystemLogFile_StatusPublish(const SystemLogFileSnapshot *snapshot);
+uint8_t SystemLogFile_StatusGet(SystemLogFileSnapshot *snapshot);
 
 /* SerialTask only: bounded parse/submit/poll; never accesses FatFs. */
 SystemConsoleExecuteResult SystemLogFile_ExecuteLine(

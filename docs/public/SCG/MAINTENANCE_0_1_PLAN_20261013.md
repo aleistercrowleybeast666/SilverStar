@@ -1,4 +1,23 @@
-# Maintenance 0.1 and read-only variables: implementation plan
+# Maintenance 0.1 scope decision — 2026-10-13
+
+**Superseded proposal:** the user replaced the generic variable-directory/watch
+plan below with lightweight runtime diagnostics and log management. No generic
+watch list, arbitrary symbols, memory access, IDE, breakpoints, SWD or writes are
+included. The numbered text is retained as historical planning, not active scope.
+
+The implementation adds a bounded `SYSTEM DIAG` catalog with fixed
+task/thread/sensor/storage/communication groups and stable ID/name/state/reason,
+source and sample-age fields. Optional counters, units and finite progress use
+the shared schema. Same-schema entries render without adding device IDs to GSHC.
+Unknown states display UNKNOWN; uninstrumented completion remains unavailable.
+One maintenance owner schedules pages, pauses polling during file jobs, and
+invalidates observations on disconnect. Legacy FINAL exposes only real 0.0 text
+fields and does not acquire LOGFILE capabilities through a desktop update.
+
+Current contract: [maintenance_diagnostics_v1.json](../../../contracts/maintenance_diagnostics_v1.json).
+Implementation and evidence: [MAINTENANCE_0_1_20261013.md](MAINTENANCE_0_1_20261013.md).
+
+## Historical proposal (cancelled)
 
 Status: planned follow-up to the verified UART maintenance checkpoint; not a
 claim that the new wire operations or GUI variable directory already exist.

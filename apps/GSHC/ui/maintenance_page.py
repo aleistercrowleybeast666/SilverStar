@@ -30,6 +30,8 @@ class MaintenancePage(QWidget):
         self.state = None
         self.firmware_snapshot = None
         self.firmware_detail = "Not connected / unavailable"
+        self.diagnostic_entries = []
+        self._diagnostic_render_ns = 0
         self.details = QDialog(self)
         self.details.resize(800, 480)
         self.tree = QTreeWidget()
@@ -46,6 +48,13 @@ class MaintenancePage(QWidget):
         self.swd_status = QLabel()
         self.swd_status.setWordWrap(True)
         layout.addWidget(self.swd_status)
+        self.diagnostic_status = QLabel()
+        self.diagnostic_status.setWordWrap(True)
+        layout.addWidget(self.diagnostic_status)
+        self.diagnostic_tree = QTreeWidget()
+        self.diagnostic_tree.setColumnCount(5)
+        self.diagnostic_tree.setMinimumHeight(220)
+        layout.addWidget(self.diagnostic_tree)
         self.source = QLabel()
         self.source.setWordWrap(True)
         layout.addWidget(self.source)
@@ -102,6 +111,43 @@ class MaintenancePage(QWidget):
         self.firmware_detail = detail
         self._render_firmware()
 
+    def set_diagnostics(self, entries, detail=""):
+        self.diagnostic_entries = list(entries or [])[:16]
+        self.diagnostic_status.setText(detail)
+        self._diagnostic_render_ns = 0
+        self._render_diagnostics()
+
+    def _render_diagnostics(self):
+        now = time.monotonic_ns()
+        if now - self._diagnostic_render_ns < 250_000_000:
+            return
+        self._diagnostic_render_ns = now
+        self.diagnostic_tree.clear()
+        groups = {}
+        for entry in self.diagnostic_entries:
+            if entry.group not in groups:
+                group = QTreeWidgetItem([entry.group])
+                self.diagnostic_tree.addTopLevelItem(group)
+                groups[entry.group] = group
+            receive_age = max(0, (now - entry.received_ns) / 1e9)
+            age = (f"{receive_age:.1f}s RX; sample ?" if entry.age_ms is None else
+                   f"{receive_age + entry.age_ms / 1000:.1f}s sample")
+            if receive_age > 3 or entry.age_ms is not None and receive_age + entry.age_ms / 1000 > 3:
+                age += " · " + self.i18n.tr("maintenance.stale")
+            fields = dict(entry.fields)
+            for key in ('work_age_ms', 'data_age_ms'):
+                if key in fields:
+                    fields[key] = '?' if fields[key] == '4294967295' else str(int(fields[key]) + int(receive_age * 1000))
+            values = " · ".join(f"{key}={value}" for key, value in fields.items())
+            row = QTreeWidgetItem([entry.name.replace('_', ' ') + "\n" + entry.id,
+                entry.state + ": " + entry.reason, values, age, entry.source])
+            for column in range(5): row.setToolTip(column, row.text(column))
+            groups[entry.group].addChild(row)
+        self.diagnostic_tree.expandAll()
+        for column in range(5):
+            self.diagnostic_tree.resizeColumnToContents(column)
+            self.diagnostic_tree.setColumnWidth(column, min(420, self.diagnostic_tree.columnWidth(column)))
+
     def _render_firmware(self):
         snap = self.firmware_snapshot
         if snap is None:
@@ -144,6 +190,9 @@ class MaintenancePage(QWidget):
     def retranslate(self):
         tr = self.i18n.tr
         self._render_firmware()
+        self.diagnostic_tree.setHeaderLabels([tr("maintenance.entry"), tr("maintenance.state_reason"), tr("maintenance.value"), tr("maintenance.age"), tr("maintenance.origin")])
+        self._diagnostic_render_ns = 0
+        self._render_diagnostics()
         self.swd_status.setText(tr("maintenance.swd_unavailable"))
         self.summary.setTitle(tr("maintenance.summary"))
         self.source.setText(tr("maintenance.source"))
@@ -173,6 +222,7 @@ class MaintenancePage(QWidget):
 
     def render(self, state):
         self._render_firmware()
+        self._render_diagnostics()
         self.state = state
         unavailable = self.i18n.tr("maintenance.unavailable")
         system_stamp = state.handshake.last_preflight_status_rx_monotonic_ns

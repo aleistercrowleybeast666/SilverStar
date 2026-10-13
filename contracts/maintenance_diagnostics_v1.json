@@ -1,0 +1,25 @@
+{
+  "contract": "silverstar.maintenance-diagnostics",
+  "schema_version": 1,
+  "maintenance_version": "0.1",
+  "compatible_maintenance_versions": ["0.0"],
+  "independent_versions": {"file_service": 1, "log_container": "SSLOG 0.0", "decoder_package": "1.2", "product": "0.1.3"},
+  "transport": "maintenance-console-ascii",
+  "commands": {"capabilities": "SYSTEM DIAG", "page": "SYSTEM DIAG <cursor>"},
+  "limits": {"entries": 16, "response_bytes_excluding_crlf": 511, "entries_per_page": 1, "polling_cycle_minimum_ms": 1000, "host_stale_after_ms": 3000},
+  "groups": ["task", "thread", "sensor", "storage", "communication"],
+  "required_entry_fields": ["version", "id", "group", "name", "readonly", "state", "reason", "source", "age_ms", "next_cursor", "end"],
+  "states": ["OBSERVED", "WAIT", "BUSY", "FAULT", "UNKNOWN"],
+  "optional_numeric_fields": ["counter", "work_age_ms", "data_age_ms", "sequence", "errors", "syncs", "progress_done", "progress_total"],
+  "optional_token_fields": ["unit", "block", "warn", "phase", "mounted", "open", "healthy", "started", "quaternion_valid", "velocity_valid", "position_valid"],
+  "token_max_lengths": {"id": 64, "group": 24, "name": 64, "state": 32, "reason": 96, "source": 64, "optional_value": 48},
+  "semantics": {
+    "access": "Read-only copies of existing RAM state. No FatFs, arbitrary symbols, addresses, watch expressions, callbacks, memory writes or SWD. Observations never authorize START.",
+    "paging": "Cursor zero begins the fixed bounded catalog. Each nonterminal page has one unique ID and a strictly increasing next_cursor <= 16. Terminal page has end=1 and next_cursor=0. Publish only after the advertised entry count is received; partial scans are discarded for file jobs or disconnect.",
+    "timing": "The firmware does not enforce a client request rate. GSHC uses one serial owner, at most one diagnostic exchange per idle scheduler step, and waits at least polling_ms between completed cycles. It pauses diagnostic polling during file operations. Counts and byte limits do not establish target WCET.",
+    "freshness": "age_ms=4294967295 means sample age unknown. Host receive age is separate and keeps increasing. work_age_ms measures actual completed sink writes only; success does not prove fsync/durability. data_age_ms is sensor/estimator data time and never task completion or sensor-online proof. Independent rows are not one atomic whole-system snapshot.",
+    "progress": "Optional progress_done/progress_total represents finite work only, both required together, total > 0 and done <= total. Periodic tasks and loop existence have no invented percentage.",
+    "compatibility": "Keep all pre-existing maintenance 0.0 command arguments, response formats and errors. Ignore unknown optional fields; reject incompatible critical schema/access/bounds. Unknown state displays UNKNOWN. New same-schema IDs render without GUI code changes. Legacy FINAL uses only actual SYSTEM INFO/STATUS/CAPABILITIES and LOG STATUS text fields; missing diagnostics or LOGFILE capability remains explicitly unavailable.",
+    "identity": "Stable entry IDs describe source meaning; sequence/counters are not boot or device identity. No resume/delete authorization is derived from diagnostics. File service v1 is negotiated separately."
+  }
+}

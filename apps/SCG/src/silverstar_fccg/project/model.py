@@ -51,7 +51,7 @@ FEATURE_TIERS = ("full", "standard", "compact", "minimal")
 PROTOCOL_CATEGORIES = ("telemetry", "maintenance", "logging")
 DEFAULT_PROTOCOL_PROFILES = {
     "telemetry": "air.m0",
-    "maintenance": "maintenance.serial.0_0",
+    "maintenance": "maintenance.serial.0_1",
     "logging": "flight_log.0_0",
 }
 DEFAULT_PROTOCOL_COMPONENTS = {

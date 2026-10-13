@@ -27,7 +27,10 @@ class EnumParam:
 
 
 ZH_CN: dict[str, str] = {
-    "page.maintenance": "调试与维护",
+    "maintenance.entry": "运行诊断条目 / ID",
+    "maintenance.state_reason": "状态 / 原因",
+    "maintenance.origin": "来源",
+    "page.maintenance": "运行诊断 / 日志",
     "maintenance.summary": "只读诊断（现有遥测）",
     "maintenance.system": "自检 / 就绪",
     "maintenance.sensors": "传感器",
@@ -309,7 +312,10 @@ ZH_CN: dict[str, str] = {
 
 
 EN_US: dict[str, str] = {
-    "page.maintenance": "Debug / Maintenance",
+    "maintenance.entry": "Runtime entry / ID",
+    "maintenance.state_reason": "State / reason",
+    "maintenance.origin": "Source",
+    "page.maintenance": "Runtime / Logs",
     "maintenance.summary": "Read-only diagnostics (existing telemetry)",
     "maintenance.system": "Self-test / readiness",
     "maintenance.sensors": "Sensors",

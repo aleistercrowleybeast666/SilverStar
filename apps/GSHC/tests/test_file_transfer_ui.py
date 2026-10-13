@@ -286,6 +286,63 @@ class TransferUiTests(unittest.TestCase):
         self.assertIn(self.window.i18n.tr("maintenance.swd_unavailable"), self.window.maintenance_page.swd_status.text())
         self.assertIsNone(self.controller.file_transfer.owner)
 
+    def test_diagnostics_generic_rows_pause_for_file_job_and_disconnect(self):
+        from test_runtime_diagnostics import entry
+        class DiagnosticWire(MockTransport):
+            def exchange(self, command, timeout, cancel):
+                if command.startswith('SYSTEM DIAG'):
+                    self.commands.append(command)
+                    if command == 'SYSTEM DIAG':
+                        return 'OK SYSTEM DIAG version=1 maintenance=0.1 compatible=0.0 entries=5 max_entries=16 max_line=511 polling_ms=1000'
+                    cursor = int(command.rsplit(' ',1)[1])
+                    if cursor == 5:
+                        return 'OK SYSTEM DIAG version=1 end=1 next_cursor=0'
+                    fields = entry('new.device.'+str(cursor), state='FUTURE' if cursor == 4 else 'OBSERVED',
+                                   next_cursor=str(cursor+1), end='0', counter='12', unit='completed_samples', work_age_ms='300')
+                    fields['group'] = ('task','thread','sensor','storage','communication')[cursor]
+                    return 'OK SYSTEM DIAG ' + ' '.join(f'{k}={v}' for k,v in fields.items())
+                if command.startswith('LOGFILE POLL') and self.pending[1] == 'LIST':
+                    self.commands.append(command)
+                    return f'PENDING LOGFILE LIST request_id={self.request_id}'
+                return super().exchange(command, timeout, cancel)
+        wire = DiagnosticWire()
+        self.controller.file_transfer.transport_factory = lambda *_: wire
+        self.window.debug_port_combo.setCurrentText('COM9')
+        self.window.btn_debug_connect.click()
+        self.wait_connected()
+        page = self.window.maintenance_page
+        deadline = time.monotonic() + 4
+        while not page.diagnostic_entries and time.monotonic() < deadline:
+            QTest.qWait(10)
+        self.assertEqual(page.diagnostic_tree.topLevelItemCount(), 5)
+        self.assertIn('new.device.4', page.diagnostic_tree.topLevelItem(4).child(0).text(0))
+        self.assertIn('UNKNOWN', page.diagnostic_tree.topLevelItem(4).child(0).text(1))
+        evidence = os.environ.get('GSHC_TRANSFER_QA_DIR')
+        if evidence:
+            folder = Path(evidence)
+            folder.mkdir(parents=True, exist_ok=True)
+            self.window.resize(1280, 900)
+            QTest.qWait(50)
+            self.assertTrue(self.window.grab().save(str(folder / 'windows_runtime_01_zh.png')))
+            self.window.i18n.set_language(Language.EN_US)
+            self.window.retranslate_ui()
+            QTest.qWait(50)
+            self.assertTrue(self.window.grab().save(str(folder / 'windows_runtime_01_en.png')))
+        self.window.btn_refresh_device_logs.click()
+        deadline = time.monotonic() + 2
+        while page.diagnostic_entries and time.monotonic() < deadline:
+            QTest.qWait(10)
+        self.assertIn('paused', page.diagnostic_status.text())
+        self.assertFalse(page.diagnostic_entries)
+        count = sum(c.startswith('SYSTEM DIAG') for c in wire.commands)
+        QTest.qWait(250)
+        self.assertEqual(sum(c.startswith('SYSTEM DIAG') for c in wire.commands), count)
+        with patch('ui.file_transfer.QMessageBox.warning'):
+            self.window.btn_debug_disconnect.click()
+            self.wait_disconnected()
+        self.assertFalse(page.diagnostic_entries)
+        self.assertTrue(wire.closed)
+
     def test_baud_choices_and_custom_value_reach_maintenance_owner(self):
         from transport.serial_options import SERIAL_BAUD_CANDIDATES
         for combo in (self.window.baud_combo, self.window.debug_baud_combo):
@@ -333,6 +390,11 @@ class TransferUiTests(unittest.TestCase):
         self.assertFalse(self.window.btn_download_device.isEnabled())
         self.assertFalse(self.window.btn_refresh_device_logs.isEnabled())
         self.assertEqual(wire.commands[:5], ['LOGFILE CAPS', 'SYSTEM INFO', 'SYSTEM CAPABILITIES', 'SYSTEM STATUS', 'LOG STATUS'])
+        while not page.diagnostic_entries and time.monotonic() < deadline:
+            QTest.qWait(10)
+        legacy_entries = {item.id: item for item in page.diagnostic_entries}
+        self.assertEqual(legacy_entries['legacy.thread'].state, 'UNKNOWN')
+        self.assertEqual(legacy_entries['legacy.storage'].fields['unit'], 'write_attempts')
         evidence = os.environ.get("GSHC_TRANSFER_QA_DIR")
         if evidence:
             self.window.resize(1280, 900)

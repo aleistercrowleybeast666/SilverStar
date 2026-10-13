@@ -26,6 +26,8 @@ class LegacyWire:
         self.commands.append(command)
         if command == 'LOGFILE CAPS':
             return 'ERR CONSOLE PARSE code=BAD_MODULE reason=UNKNOWN'
+        if command == 'SYSTEM DIAG':
+            return 'ERR SYSTEM DIAG code=BAD_COMMAND reason=UNKNOWN'
         return self.responses[command]
     def check_alive(self): pass
     def close(self): self.closed = True

@@ -1,5 +1,35 @@
 # Windows log transfer, 2026-10-13
 
+## Current maintenance 0.1 follow-up
+
+The fourth page is now **Runtime / Logs** (运行诊断 / 日志). Its FC RAM diagnostics
+are independent of the labeled Ground/AIR summary. Maintenance 0.1 adds the bounded
+`SYSTEM DIAG` schema; see the shared [contract](../../../contracts/maintenance_diagnostics_v1.json)
+and [validation record](../../../docs/public/SCG/MAINTENANCE_0_1_20261013.md).
+There is no generic variable directory/watch list or SWD backend.
+
+The shared Refresh button is left of Ground COM and enumerates once for both
+selectors while preserving independent selections. Both baud boxes have the same
+editable candidate list, positive-integer validation and 230400 default; 250000
+and other representable custom values are not rejected merely for missing from
+the candidates. Actual support still depends on the selected serial driver.
+Ground COM, FC maintenance COM and optional SWD are three roles, not three COMs.
+SWD is explicitly unavailable and cannot be connected by this build.
+
+Old FINAL supports only its actual SYSTEM INFO/STATUS/CAPABILITIES and LOG STATUS
+fields. The UI labels unknown MCU sample age and missing task-work instrumentation;
+unsupported diagnostics/file service stays unavailable. Opening its UART does not
+make LIST/META/READ appear. New firmware's diagnostics and file capabilities are
+negotiated separately; one serial owner suspends diagnostics during file work.
+
+Launch from this checkout with `.venv\Scripts\python.exe apps\GSHC\main.py`. Opening the
+application does not authorize connecting a port. Existing packaged/frozen builds
+do not include these source changes.
+
+The sections below describe the earlier local-export/file-transfer checkpoint;
+statements that diagnostics were only Ground/AIR or a LOG INFO skeleton are
+historical and superseded by this follow-up.
+
 ## User flow
 
 The original three pages remain; the fourth **Debug / Maintenance** page contains

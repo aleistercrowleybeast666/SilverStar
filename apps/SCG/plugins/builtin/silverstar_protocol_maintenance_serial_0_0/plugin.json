@@ -1,11 +1,11 @@
 {
   "schema_version": 0,
   "id": "silverstar.protocol.maintenance.serial_0_0",
-  "name": "Serial Maintenance Protocol 0.0",
+  "name": "Serial Maintenance Protocol 0.0 / 0.1",
   "type": "protocol",
   "class": "maintenance",
-  "version": "0.1.0",
-  "description": "Serial maintenance profile; its unchanged Core source is selected only by this plugin.",
+  "version": "0.1.1",
+  "description": "Backward-compatible serial maintenance, bounded read-only diagnostics and separately versioned log file service.",
   "requires": {
     "components": [
       {
@@ -32,7 +32,8 @@
   },
   "payload": {
     "roots": [
-      "Protocol/metadata/maintenance_serial_0_0.json"
+      "Protocol/metadata/maintenance_serial_0_0.json",
+      "Protocol/metadata/maintenance_serial_0_1.json"
     ]
   },
   "metadata": {
@@ -59,7 +60,7 @@
   "protocol": {
     "category": "maintenance",
     "logging_metadata": "Protocol/metadata/maintenance_serial_0_0.json",
-    "maintenance_protocol_version": "0.0",
+    "maintenance_protocol_version": "0.1",
     "firmware_version": "0.1.0",
     "documentation_version": "0.1.0",
     "profiles": {
@@ -98,6 +99,48 @@
           "decoder_metadata": "Protocol/metadata/maintenance_serial_0_0.json",
           "documentation": [
             "docs/MAINTENANCE_PROTOCOL.md"
+          ],
+          "host_tests": [
+            "Tests/Host/test_console.c"
+          ],
+          "golden_tests": [
+            "Tests/Host/test_console.c"
+          ]
+        },
+        {
+          "id": "maintenance.serial.0_1",
+          "version": "0.1",
+          "display_names": {
+            "zh_CN": "串口维护协议 0.1",
+            "en_US": "Serial Maintenance Protocol 0.1"
+          },
+          "service": "maintenance_service",
+          "slot": "maintenance_protocol",
+          "codec_sources": [
+            "System/Src/system_console.c"
+          ],
+          "parser_sources": [
+            "System/Src/system_console.c"
+          ],
+          "include_dirs": [
+            "System/Inc",
+            "Interfaces/Inc"
+          ],
+          "defines": [],
+          "binding": "maintenance_console",
+          "transport_selection": "single",
+          "transport": {
+            "capability": "transport.byte_stream",
+            "kind": "byte_stream",
+            "minimum_mtu": 1,
+            "ordered": true,
+            "bidirectional": true,
+            "reliable": true,
+            "mode": "stream"
+          },
+          "decoder_metadata": "Protocol/metadata/maintenance_serial_0_1.json",
+          "documentation": [
+            "docs/MAINTENANCE_PROTOCOL_0_1.md"
           ],
           "host_tests": [
             "Tests/Host/test_console.c"
