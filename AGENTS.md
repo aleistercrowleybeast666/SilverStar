@@ -12,6 +12,16 @@ FLP: source logs and recorded datasets are immutable. Production opening require
 
 `.work/` is disposable test, build, generated-project and analysis space. Cleanup may remove only verified generated files; preserve user inputs, logs, decoder packages, archives, source fixtures and formal evidence. Generated firmware normally belongs to the user-selected external project. Do not treat a synthetic fixture as hardware validation.
 
+For the 0.1.3 development task, keep new temporary/generated outputs in a small,
+clearly versioned task directory and record their purpose, owner and retained
+evidence paths. Avoid whole-workspace/SDK copies and unnecessary intermediate
+artifacts. Before any task-end cleanup, verify resolved paths, ownership and
+hashes against that task's inventory; only the verified generated subset covered
+by the current user authorization may be removed. Source logs, decoder packages,
+archives, user inputs, source fixtures, formal evidence and frozen releases are
+never temporary-cleanup targets. This instruction does not authorize cleanup of
+old `.work/` contents or grant standing permission for future deletion.
+
 ## Generated firmware: Power of Ten and evidence
 
 Firmware safety changes belong in the owning declarative plugin payload or generator template. Verify their fresh generated output too. Never patch only a disposable generated copy and present that as a repository fix. Normal regeneration must continue to preserve user-owned source; validation uses a separate, clearly versioned project, not the user's final candidate unless explicitly requested.

@@ -25,7 +25,7 @@ def _Python_Run(code: str, *paths: Path) -> str:
 
 
 def test_one_release_version_and_independent_freertos_version() -> None:
-    assert VERSION == "0.1.2"
+    assert VERSION == "0.1.3"
     package = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     assert package["project"]["dynamic"] == ["version"]
     assert package["tool"]["setuptools"]["dynamic"]["version"]["attr"] == "tools.silverstar_version.__version__"
@@ -41,6 +41,9 @@ def test_one_release_version_and_independent_freertos_version() -> None:
         "silverstar.algorithm.estimator.sf6": "0.2.0",
         "silverstar.device.barometer.bmp280": "0.1.1",
         "silverstar.device.barometer.ms5611": "0.1.1",
+        "silverstar.core.ground.0_1_0": "0.1.2",
+        "silverstar.mcu_family.stm32c0": "0.1.1",
+        "silverstar.usb_cdc.stm32c071_mini": "0.1.1",
     }
     for path in manifests:
         manifest = json.loads(path.read_text(encoding="utf-8"))

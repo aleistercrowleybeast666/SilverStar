@@ -94,12 +94,13 @@ for app, package in [("SCG", "silverstar_fccg.app.application"), ("GSHC", "app")
             return stream.read(6)[4:] == b"\x4c\x01"
     a.binaries = [row for row in a.binaries if not incompatible_opengl(row)]
     pyz = PYZ(a.pure)
-    version = tuple(int(v) for v in (repository / "VERSION").read_text().strip().split(".")) + (0,)
+    version_text = (repository / "VERSION").read_text(encoding="ascii").strip()
+    version = tuple(int(v) for v in version_text.split(".")) + (0,)
     resource = VSVersionInfo(ffi=FixedFileInfo(filevers=version, prodvers=version,
         mask=0x3f, flags=0, OS=0x40004, fileType=1, subtype=0, date=(0,0)),
         kids=[StringFileInfo([StringTable("040904B0", [StringStruct("ProductName", "SilverStar"),
-            StringStruct("FileDescription", "SilverStar " + app), StringStruct("FileVersion", "0.1.2"),
-            StringStruct("ProductVersion", "0.1.2"), StringStruct("OriginalFilename", app + ".exe")])]),
+            StringStruct("FileDescription", "SilverStar " + app), StringStruct("FileVersion", version_text),
+            StringStruct("ProductVersion", version_text), StringStruct("OriginalFilename", app + ".exe")])]),
             VarFileInfo([VarStruct("Translation", [1033,1200])])])
     exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name=app, version=resource,
         debug=False, strip=False, upx=False, console=False,
