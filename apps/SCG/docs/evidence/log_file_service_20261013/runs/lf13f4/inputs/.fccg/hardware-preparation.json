@@ -1,0 +1,13 @@
+{
+  "board": "silverstar.board.silverstar_0_5",
+  "cubemx_version": "6.15.0",
+  "external_generator_invoked": false,
+  "fingerprint": "2d7521fceb28f6e964859d035c3b54c2e41c8cad09e2155f433f268b9473e669",
+  "firmware_package": "STM32Cube FW_F4 V1.28.3",
+  "format_version": 1,
+  "hal_cmsis_source_policy": "plugin_payload_authoritative",
+  "hardware_location": "Core",
+  "mode": "board_plugin",
+  "resource_binding_fingerprint": "e77e733bfe23251d8c01800eb9b9b21d5b1c75b1dadd782f9d199c95f5cb8da1",
+  "verified": true
+}

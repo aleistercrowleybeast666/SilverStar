@@ -1140,6 +1140,9 @@ Invoke-HostTest -Name 'lifecycle_logging' -Sources @(
     $hostPlatformMock,
     "$repoRoot\APP\Src\flight_task.c",
     "$repoRoot\APP\Src\logger_task.c",
+    "$repoRoot\System\Src\system_log_file.c",
+    "$repoRoot\Common\Src\common_format.c",
+    "$repoRoot\Tests\Host\Fixtures\log_file_storage_stub.c",
     "$repoRoot\FlightLogic\FlightCycle\Src\silverstar_flight_cycle.c",
     "$repoRoot\System\Src\system_navigation_health.c",
     "$repoRoot\System\Alignment\Src\system_alignment.c"
@@ -1176,6 +1179,8 @@ Invoke-HostTest -Name 'console' -Sources @(
     $hostPlatformMock,
     "$repoRoot\Common\Src\common_format.c",
     "$repoRoot\System\Src\system_console.c",
+    "$repoRoot\System\Src\system_log_file.c",
+    "$repoRoot\Tests\Host\Fixtures\log_file_storage_stub.c",
     "$repoRoot\System\Calibration\Src\system_mag_calibration.c",
     "$repoRoot\System\Src\system_barometer.c",
     "$repoRoot\System\Src\system_estimator_diagnostics.c",

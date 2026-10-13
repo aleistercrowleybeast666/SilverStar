@@ -1,0 +1,7 @@
+APP/Src/logger_task.c:94:16:LoggerTask_SinkWrite	48	static
+APP/Src/logger_task.c:192:13:LoggerTask_Close	8	static
+APP/Src/logger_task.c:565:16:LoggerTask_SnapshotMaintain	24	static
+APP/Src/logger_task.c:173:16:LoggerTask_Flush	16	static
+APP/Src/logger_task.c:339:16:LoggerTask_RecordAppend	40	static
+APP/Src/logger_task.c:739:6:AppTask_Logger	280	static
+APP/Src/logger_task.c:797:20:LoggerTask_DiagnosticsGet	8	static

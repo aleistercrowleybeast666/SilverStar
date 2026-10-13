@@ -44,6 +44,7 @@ C_SOURCES += \
   System/Src/system_gnss_quality.c \
   System/Src/system_health.c \
   System/Src/system_log_policy.c \
+  System/Src/system_log_file.c \
   System/Src/system_navigation_profile.c \
   System/Src/system_profile.c \
   System/Src/system_sensor_status.c \

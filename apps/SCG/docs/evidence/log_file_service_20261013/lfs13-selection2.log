@@ -1,0 +1,40 @@
+Failed to find real location of C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe
+..............F............sss................s.........                 [100%]
+================================== FAILURES ===================================
+_________ test_protocol_combos_and_logging_disabled_state_are_stable __________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/apps/SCG/.work/lfs13-select2/test_protocol_combos_and_loggi0')
+qapp = <PySide6.QtWidgets.QApplication(0x1f1f809aa50) at 0x000001F1F9EFE040>
+
+    def test_protocol_combos_and_logging_disabled_state_are_stable(
+        tmp_path: Path,
+        qapp,
+    ) -> None:
+        window = MainWindow(SettingsStore(tmp_path / "optional-protocols-ui.ini"))
+        try:
+            window.show()
+            qapp.processEvents()
+            assert set(window.flight_configuration_page.protocol_combos) == set(
+                PROTOCOL_CATEGORIES
+            )
+            for combo in window.flight_configuration_page.protocol_combos.values():
+                assert combo.count() >= 2
+                assert combo.itemData(0) is None
+                assert combo.itemText(0) == "不使用"
+    
+>           telemetry_combo = next(
+                combo
+                for combo in window.devices_page.device_combos.values()
+                if combo.findData(TELEMETRY_DEVICE) >= 0
+            )
+E           StopIteration
+
+apps\SCG\tests\test_optional_protocols.py:504: StopIteration
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+=========================== short test summary info ===========================
+SKIPPED [3] apps\SCG\tests\test_architecture_maintenance_selection.py:93: missing-scope negative requires selected Console owner
+SKIPPED [1] apps\SCG\tests\test_architecture_maintenance_selection.py:110: present-unselected-source negative requires disabled maintenance
+FAILED apps\SCG\tests\test_optional_protocols.py::test_protocol_combos_and_logging_disabled_state_are_stable
+1 failed, 51 passed, 4 skipped in 740.30s (0:12:20)

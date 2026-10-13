@@ -1,0 +1,191 @@
+{
+  "aggregate_acceptance": "NOT PROVEN; stack FAIL, unresolved UI regression, missing pre-fix race/close reproduction, F1 Flight ARM NOT RUN and hardware timing gaps remain",
+  "records": [
+    {
+      "run": "lf13final5",
+      "command": "mingw32-make -j4",
+      "exit_code": 0,
+      "scope": "real ARM compile/link"
+    },
+    {
+      "run": "lf13final5",
+      "command": "mingw32-make power10-check",
+      "exit_code": 0,
+      "scope": "6409 checks; critical contract NOT PROVEN"
+    },
+    {
+      "run": "lf13final5",
+      "command": "mingw32-make host-tests",
+      "exit_code": 0,
+      "scope": "80 executables;4446469 checks;0 failures;11 compile-pass;18 expected compile-fail;8 N/A"
+    },
+    {
+      "run": "lf13final5",
+      "command": "mingw32-make -j4 static-analysis",
+      "exit_code": 0,
+      "scope": "real ARM fanalyzer -c and link"
+    },
+    {
+      "run": "lf13final5",
+      "command": "mingw32-make architecture-check",
+      "exit_code": 0,
+      "scope": "356 checks"
+    },
+    {
+      "run": "lf13final5",
+      "command": "mingw32-make artifact-check",
+      "exit_code": 0,
+      "scope": "main SRAM102388;CCM59400;FLASH337848;heap0"
+    },
+    {
+      "run": "lf13final5",
+      "command": "mingw32-make stack-report",
+      "exit_code": 2,
+      "scope": "FAIL unknown callback binding source System/Src/system_log_file.c"
+    },
+    {
+      "run": "lf13nolog4",
+      "command": "mingw32-make -j4",
+      "exit_code": 0,
+      "scope": "real ARM compile/link"
+    },
+    {
+      "run": "lf13nomain4",
+      "command": "mingw32-make -j4",
+      "exit_code": 0,
+      "scope": "real ARM compile/link"
+    },
+    {
+      "run": "lf13min4b",
+      "command": "mingw32-make -j4",
+      "exit_code": 0,
+      "scope": "real ARM compile/link"
+    },
+    {
+      "run": "dedicated_host",
+      "command": "pytest test_log_file_service.py --basetemp=.work/lfs13-finaltest3",
+      "exit_code": 0,
+      "scope": "8 passed; real GCC fanalyzer compile/link; enabled O2 + disabled O0"
+    },
+    {
+      "run": "selection_first",
+      "command": "pytest optional_protocols architecture_maintenance_selection storage_binding_admission --basetemp=.work/lfs13-select",
+      "exit_code": 1,
+      "scope": "50 passed;4 skipped;2 workspace-policy failures"
+    },
+    {
+      "run": "selection_final",
+      "command": "pytest optional_protocols architecture_maintenance_selection storage_binding_admission --basetemp=apps/SCG/.work/lfs13-select2",
+      "exit_code": 1,
+      "scope": "51 passed;4 skipped;1 unresolved UI StopIteration"
+    },
+    {
+      "run": "lf13f4",
+      "command": "mingw32-make -j4",
+      "exit_code": 2,
+      "scope": "initial invalid macro/enum compile failure"
+    },
+    {
+      "run": "lf13f4",
+      "command": "mingw32-make power10-check",
+      "exit_code": 0,
+      "scope": "initial text gate only"
+    },
+    {
+      "run": "lf13f4",
+      "command": "mingw32-make host-tests",
+      "exit_code": null,
+      "scope": "sandbox Python path diagnostic failure; original numeric exit unavailable; complete failure log retained"
+    },
+    {
+      "run": "lf13b4",
+      "command": "mingw32-make -j4",
+      "exit_code": 0,
+      "scope": "intermediate ARM link"
+    },
+    {
+      "run": "lf13b4",
+      "command": "mingw32-make host-tests",
+      "exit_code": 0,
+      "scope": "complete 80-executable Host pass for intermediate snapshot"
+    },
+    {
+      "run": "lf13b4",
+      "command": "mingw32-make -j4 static-analysis",
+      "exit_code": 0,
+      "scope": "intermediate real ARM analyzer compile/link"
+    },
+    {
+      "run": "lf13b4",
+      "command": "mingw32-make power10-check",
+      "exit_code": 0,
+      "scope": "intermediate text gate"
+    },
+    {
+      "run": "lf13b4",
+      "command": "mingw32-make architecture-check artifact-check stack-report",
+      "exit_code": 2,
+      "scope": "architecture356 passed;artifact SRAM104628 over102400 failed;stack not reached"
+    },
+    {
+      "run": "lf13b4",
+      "command": "mingw32-make stack-report",
+      "exit_code": 2,
+      "scope": "Python strict path-resolution AccessDenied"
+    },
+    {
+      "run": "lf13final4",
+      "command": "mingw32-make -j4",
+      "exit_code": 0,
+      "scope": "ARM compile/link"
+    },
+    {
+      "run": "lf13final4",
+      "command": "mingw32-make -j4 static-analysis",
+      "exit_code": 0,
+      "scope": "real ARM analyzer compile/link"
+    },
+    {
+      "run": "lf13final4",
+      "command": "mingw32-make power10-check",
+      "exit_code": 0,
+      "scope": "text check"
+    },
+    {
+      "run": "lf13final4",
+      "command": "mingw32-make architecture-check",
+      "exit_code": 0,
+      "scope": "356 checks"
+    },
+    {
+      "run": "lf13final4",
+      "command": "mingw32-make artifact-check",
+      "exit_code": 0,
+      "scope": "memory gate"
+    },
+    {
+      "run": "lf13final4",
+      "command": "mingw32-make stack-report",
+      "exit_code": 2,
+      "scope": "unknown callback binding source"
+    },
+    {
+      "run": "lf13final4",
+      "command": "mingw32-make host-tests",
+      "exit_code": 2,
+      "scope": "duplicate lifecycle fixture definition"
+    },
+    {
+      "run": "variant_generation",
+      "command": "python .work/lfs13_gen_variants.py",
+      "exit_code": 1,
+      "scope": "first two generated; all-protocols-off refused AIR_LINK_PHY_INCOMPATIBLE"
+    },
+    {
+      "run": "contract_vectors",
+      "command": "python .work/lfs13_contract.py",
+      "exit_code": 0,
+      "scope": "CRC/size/SHA/path vectors; no full JSON Schema engine"
+    }
+  ]
+}

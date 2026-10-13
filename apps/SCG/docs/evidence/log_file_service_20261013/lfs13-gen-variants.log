@@ -1,0 +1,22 @@
+Failed to find real location of C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe
+{"directory": "D:\\python_software\\SilverStar\\.work\\lf13nolog4", "disabled": ["logging"]}
+{"directory": "D:\\python_software\\SilverStar\\.work\\lf13nomain4", "disabled": ["maintenance"]}
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\lfs13_gen_variants.py", line 23, in <module>
+    service.Project_Save(model, destination, confirm_dangerous=True)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\service.py", line 183, in Project_Save
+    return self.Project_EnsureBuildable(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        model,
+        ^^^^^^
+    ...<2 lines>...
+        progress_callback=progress_callback,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\app\service.py", line 228, in Project_EnsureBuildable
+    raise FccgError(
+    ...<3 lines>...
+    )
+silverstar_fccg.core.errors.FccgError: [AIR_LINK_PHY_INCOMPATIBLE] AIR Link protocol does not match Flight telemetry

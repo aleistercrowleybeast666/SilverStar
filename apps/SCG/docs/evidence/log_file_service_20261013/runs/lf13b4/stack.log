@@ -1,0 +1,14 @@
+python Tools/check_task_stacks.py --config Release --memory-layout legacy --prefix "arm-none-eabi-"
+Failed to find real location of C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\lf13b4\Tools\check_task_stacks.py", line 1913, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "D:\python_software\SilverStar\.work\lf13b4\Tools\check_task_stacks.py", line 1896, in main
+    root = arguments.project.resolve(strict=True)
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 943, in resolve
+    return self.with_segments(os.path.realpath(self, strict=strict))
+                              ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen ntpath>", line 738, in realpath
+PermissionError: [WinError 5] 拒绝访问。: 'D:\\python_software\\SilverStar\\.work\\lf13b4'
+mingw32-make: *** [Makefile:217: stack-report] Error 1

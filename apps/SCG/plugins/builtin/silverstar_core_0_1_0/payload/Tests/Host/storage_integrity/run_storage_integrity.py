@@ -91,6 +91,8 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
         "System/Calibration/Src/system_calibration_correction.c",
         "System/Calibration/Src/system_mag_calibration.c",
         "APP/Src/logger_bus.c", "APP/Src/logger_task.c", "Common/Src/common_spsc_queue.c",
+        "System/Src/system_log_file.c", "Common/Src/common_format.c",
+        "Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c",
         "System/Src/system_log_policy.c", "System/Src/system_profile.c",
         "System/Src/system_navigation_profile.c", "System/Src/system_estimator_profile.c",
         "Generated/Src/project_metadata.c", "Generated/Src/project_log_config.c",

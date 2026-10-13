@@ -1,0 +1,21 @@
+{
+  "scope": "Earliest retained generated sources already contain race and close-latch repairs; no pre-fix failure claimed. Missing pre-fix reproduction blocks full safety-batch acceptance.",
+  "inspected": {
+    "lf13f4/System/Src/system_log_file.c": {
+      "sha256": "b3f000601ee8cf1ee5f130b004d4fd39d0c722841e1d7e783ee0c01cbcef9633",
+      "already_contains_fixed_cancel_publication_or_close_latch": true
+    },
+    "lf13f4/Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c": {
+      "sha256": "fb3142d0ed93be6d975b18c239246eed1dc515daae592fb26f5f13a9341d68b1",
+      "already_contains_fixed_cancel_publication_or_close_latch": true
+    },
+    "lf13b4/System/Src/system_log_file.c": {
+      "sha256": "3a2ade94c6300ccc13e3f00983d66109fca2eacd6650277059cec1eb535d015c",
+      "already_contains_fixed_cancel_publication_or_close_latch": true
+    },
+    "lf13b4/Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c": {
+      "sha256": "fb3142d0ed93be6d975b18c239246eed1dc515daae592fb26f5f13a9341d68b1",
+      "already_contains_fixed_cancel_publication_or_close_latch": true
+    }
+  }
+}

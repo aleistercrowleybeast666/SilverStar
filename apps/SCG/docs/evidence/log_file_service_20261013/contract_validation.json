@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "scope": "JSON parsing, cross-contract golden CRC/size/SHA256 and declared path-pattern vectors; not a full JSON Schema engine validation",
+  "accepted_paths": [
+    "logs/flight.sslog",
+    "session-1.jsonl",
+    "decoders/exact.ssdecoder"
+  ],
+  "rejected_paths": [
+    "",
+    ".",
+    "..",
+    "/absolute",
+    "../escape",
+    "logs/../escape",
+    "logs/./x",
+    "C:/x",
+    "logs\\x",
+    "a//b"
+  ]
+}

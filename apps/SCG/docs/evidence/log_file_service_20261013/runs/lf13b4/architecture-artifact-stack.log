@@ -1,0 +1,55 @@
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_architecture.ps1
+FCCG_PROGRESS|ARCHITECTURE|PLAN|6
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|1|6|source_graph
+FCCG_PROGRESS|ARCHITECTURE|DONE|1|6|source_graph
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|2|6|directory_boundaries
+FCCG_PROGRESS|ARCHITECTURE|DONE|2|6|directory_boundaries
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|3|6|eide_consistency
+FCCG_PROGRESS|ARCHITECTURE|DONE|3|6|eide_consistency
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|4|6|freertos
+FCCG_PROGRESS|ARCHITECTURE|DONE|4|6|freertos
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|5|6|protocol
+FCCG architecture note: generated source omits installed-plugin documentation; maintenance Markdown was audited during reference import.
+FCCG_PROGRESS|ARCHITECTURE|DONE|5|6|protocol
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|6|6|summary
+SilverStar architecture check passed: checks=356 failures=0
+SSLOG codecs are ordinary endian-aware protocol source; only explicit auto linking requires Python.
+Record Catalog, decoder profile, and static instance facade contracts are valid.
+Authoritative target source graph and FreeRTOS source set are valid.
+FCCG_PROGRESS|ARCHITECTURE|DONE|6|6|summary
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_firmware_artifact.ps1 -TargetProfile SilverStar_F407 -Config Release 
+FCCG_PROGRESS|ARTIFACT|PLAN|8
+FCCG_PROGRESS|ARTIFACT|BEGIN|1|8|ELF_MAP_BIN_HEX
+FCCG_PROGRESS|ARTIFACT|DONE|1|8|ELF_MAP_BIN_HEX
+FCCG_PROGRESS|ARTIFACT|BEGIN|2|8|ELF
+FCCG_PROGRESS|ARTIFACT|DONE|2|8|ELF
+FCCG_PROGRESS|ARTIFACT|BEGIN|3|8|MAP
+FCCG_PROGRESS|ARTIFACT|DONE|3|8|MAP
+FCCG_PROGRESS|ARTIFACT|BEGIN|4|8|FLASH
+FCCG_PROGRESS|ARTIFACT|DONE|4|8|FLASH
+FCCG_PROGRESS|ARTIFACT|BEGIN|5|8|MAIN_SRAM
+FCCG_PROGRESS|ARTIFACT|DONE|5|8|MAIN_SRAM
+FCCG_PROGRESS|ARTIFACT|BEGIN|6|8|CCMRAM
+FCCG_PROGRESS|ARTIFACT|DONE|6|8|CCMRAM
+FCCG_PROGRESS|ARTIFACT|BEGIN|7|8|heap
+SilverStar memory report:
+  FLASH     used=337848 remaining=186440 capacity=524288
+  main SRAM used=104628 remaining=26444 capacity=131072
+  CCMRAM    used=57128 remaining=8408 capacity=65536
+  heap      reserved=0 runtime_symbols=0
+FCCG_PROGRESS|ARTIFACT|DONE|7|8|heap
+FCCG_PROGRESS|ARTIFACT|BEGIN|8|8|summary
+  largest static objects:
+    s_replay                         bytes= 19304 address=0x20003408 main SRAM
+    s_logger_storage                 bytes= 16000 address=0x2000D460 main SRAM
+    s_estimator                      bytes= 10944 address=0x10009740 CCMRAM
+    s_replay_storage                 bytes= 10368 address=0x10006EC0 CCMRAM
+    s_estimator_logger_storage       bytes=  9600 address=0x2000AEC4 main SRAM
+    s_hal_contexts                   bytes=  8190 address=0x200150CC main SRAM
+    s_serial_stack                   bytes=  6144 address=0x10001000 CCMRAM
+    s_io_baselines                   bytes=  4864 address=0x1000CC28 CCMRAM
+    s_aggregate_buffer               bytes=  4096 address=0x20000478 main SRAM
+    s_estimator_stack                bytes=  4096 address=0x10004400 CCMRAM
+SilverStar artifact check failed: target=SilverStar_F407 config=Release failures=1
+FAIL: Main SRAM exceeds the reviewed full-rate logging budget: used=104628 maximum=102400
+mingw32-make: *** [Makefile:233: artifact-check] Error 1

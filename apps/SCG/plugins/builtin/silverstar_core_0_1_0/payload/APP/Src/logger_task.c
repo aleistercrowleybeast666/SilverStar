@@ -7,6 +7,7 @@
 #include "task.h"
 #include "logger_bus.h"
 #include "logger_task.h"
+#include "system_log_file.h"
 #include "debug_log.h"
 #include "project_device_instances.h"
 #include "system_storage_if.h"
@@ -753,6 +754,7 @@ void AppTask_Logger(void *argument)
     {
         now_us = SystemTime_GetMonotonicUs();
         LoggerTask_IterationRecord(now_us);
+        SystemLogFile_Process();
         finalization_state = LoggerBus_FinalizationProcess(now_us);
         if (LoggerTask_SessionUnavailableProcess(now_us, finalization_state) != 0U)
         { vTaskDelay(pdMS_TO_TICKS(10U)); continue; }

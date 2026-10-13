@@ -1,0 +1,210 @@
+diff --git a/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_task.c b/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_task.c
+index f37aa23..d7f0fea 100644
+--- a/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_task.c
++++ b/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_task.c
+@@ -7,6 +7,7 @@
+ #include "task.h"
+ #include "logger_bus.h"
+ #include "logger_task.h"
++#include "system_log_file.h"
+ #include "debug_log.h"
+ #include "project_device_instances.h"
+ #include "system_storage_if.h"
+@@ -753,6 +754,7 @@ void AppTask_Logger(void *argument)
+     {
+         now_us = SystemTime_GetMonotonicUs();
+         LoggerTask_IterationRecord(now_us);
++        SystemLogFile_Process();
+         finalization_state = LoggerBus_FinalizationProcess(now_us);
+         if (LoggerTask_SessionUnavailableProcess(now_us, finalization_state) != 0U)
+         { vTaskDelay(pdMS_TO_TICKS(10U)); continue; }
+diff --git a/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/BuildSystem/first_party.mk b/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/BuildSystem/first_party.mk
+index ec57fda..6adfdef 100644
+--- a/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/BuildSystem/first_party.mk
++++ b/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/BuildSystem/first_party.mk
+@@ -44,6 +44,7 @@ C_SOURCES += \
+   System/Src/system_gnss_quality.c \
+   System/Src/system_health.c \
+   System/Src/system_log_policy.c \
++  System/Src/system_log_file.c \
+   System/Src/system_navigation_profile.c \
+   System/Src/system_profile.c \
+   System/Src/system_sensor_status.c \
+diff --git a/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c b/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c
+index 0784fde..f9df53d 100644
+--- a/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c
++++ b/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c
+@@ -1,5 +1,6 @@
+ #include "system_version.h"
+ #include "system_console.h"
++#include "system_log_file.h"
+ 
+ #include <math.h>
+ #include <stddef.h>
+@@ -4575,6 +4576,8 @@ SystemConsoleExecuteResult SystemConsole_ExecuteLine(const char *line,
+     SystemConsoleCommand parsed;
+     SystemConsoleExecuteResult result;
+ 
++    if ((line != NULL) && (strncmp(line, "LOGFILE ", 8U) == 0))
++    { return SystemLogFile_ExecuteLine(line, response, capacity); }
+     result = SystemConsole_CommandParse(line, &parsed, response, capacity);
+     if (result != SYSTEM_CONSOLE_EXECUTE_OK) { return result; }
+     SILVERSTAR_ASSERT_OBJECT(&parsed, SystemConsoleCommand,
+diff --git a/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/run_tests.ps1 b/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/run_tests.ps1
+index 797acf1..5e4ef67 100644
+--- a/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/run_tests.ps1
++++ b/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/run_tests.ps1
+@@ -1140,6 +1140,9 @@ Invoke-HostTest -Name 'lifecycle_logging' -Sources @(
+     $hostPlatformMock,
+     "$repoRoot\APP\Src\flight_task.c",
+     "$repoRoot\APP\Src\logger_task.c",
++    "$repoRoot\System\Src\system_log_file.c",
++    "$repoRoot\Common\Src\common_format.c",
++    "$repoRoot\Tests\Host\Fixtures\log_file_storage_stub.c",
+     "$repoRoot\FlightLogic\FlightCycle\Src\silverstar_flight_cycle.c",
+     "$repoRoot\System\Src\system_navigation_health.c",
+     "$repoRoot\System\Alignment\Src\system_alignment.c"
+@@ -1176,6 +1179,8 @@ Invoke-HostTest -Name 'console' -Sources @(
+     $hostPlatformMock,
+     "$repoRoot\Common\Src\common_format.c",
+     "$repoRoot\System\Src\system_console.c",
++    "$repoRoot\System\Src\system_log_file.c",
++    "$repoRoot\Tests\Host\Fixtures\log_file_storage_stub.c",
+     "$repoRoot\System\Calibration\Src\system_mag_calibration.c",
+     "$repoRoot\System\Src\system_barometer.c",
+     "$repoRoot\System\Src\system_estimator_diagnostics.c",
+diff --git a/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/storage_integrity/run_storage_integrity.py b/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/storage_integrity/run_storage_integrity.py
+index cb48c71..3f57890 100644
+--- a/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/storage_integrity/run_storage_integrity.py
++++ b/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/storage_integrity/run_storage_integrity.py
+@@ -91,6 +91,8 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
+         "System/Calibration/Src/system_calibration_correction.c",
+         "System/Calibration/Src/system_mag_calibration.c",
+         "APP/Src/logger_bus.c", "APP/Src/logger_task.c", "Common/Src/common_spsc_queue.c",
++        "System/Src/system_log_file.c", "Common/Src/common_format.c",
++        "Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c",
+         "System/Src/system_log_policy.c", "System/Src/system_profile.c",
+         "System/Src/system_navigation_profile.c", "System/Src/system_estimator_profile.c",
+         "Generated/Src/project_metadata.c", "Generated/Src/project_log_config.c",
+diff --git a/apps/SCG/plugins/builtin/silverstar_core_0_1_0/plugin.json b/apps/SCG/plugins/builtin/silverstar_core_0_1_0/plugin.json
+index 0d16d3f..d18a985 100644
+--- a/apps/SCG/plugins/builtin/silverstar_core_0_1_0/plugin.json
++++ b/apps/SCG/plugins/builtin/silverstar_core_0_1_0/plugin.json
+@@ -36,14 +36,14 @@
+       "Common/Src/common_spsc_queue.c",
+       "Common/Src/silverstar_assert.c",
+       "Common/Src/debug_log.c",
+-        "System/Src/system_barometer.c",
+-        "System/Src/system_barometer_cold.c",
++      "System/Src/system_barometer.c",
++      "System/Src/system_barometer_cold.c",
+       "System/Src/system_capabilities.c",
+       "System/Src/system_estimator_diagnostics.c",
+       "System/Src/system_estimator_profile.c",
+       "System/Src/system_gnss_quality.c",
+-        "System/Src/system_health.c",
+-        "System/Src/system_imu_epoch.c",
++      "System/Src/system_health.c",
++      "System/Src/system_imu_epoch.c",
+       "System/Src/system_navigation_profile.c",
+       "System/Src/system_profile.c",
+       "System/Src/system_sensor_status.c",
+@@ -59,7 +59,8 @@
+       "System/Inertial/Src/system_inertial.c",
+       "System/User/system_user_inertial_config.c",
+       "System/Src/system_source_selector.c",
+-      "System/Src/system_navigation_health.c"
++      "System/Src/system_navigation_health.c",
++      "System/Src/system_log_file.c"
+     ],
+     "asm_sources": [],
+     "include_dirs": [
+diff --git a/apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs/plugin.json b/apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs/plugin.json
+index 6fa4968..cf7e0aa 100644
+--- a/apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs/plugin.json
++++ b/apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs/plugin.json
+@@ -64,7 +64,8 @@
+       "Devices/Storage/SdSdioFatFs/Adapter/Src/mission_snapshot.c",
+       "Devices/Storage/SdSdioFatFs/Src/mission_radio_profile.c",
+       "Devices/Storage/SdSdioFatFs/Adapter/Src/mag_calibration_storage.c",
+-      "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c"
++      "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c",
++      "Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c"
+     ],
+     "asm_sources": [],
+     "include_dirs": [
+@@ -88,7 +89,8 @@
+       "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c",
+       "Devices/Storage/SdSdioFatFs/Adapter/Inc/persistent_storage.h",
+       "Devices/Storage/SdSdioFatFs/Adapter/Src/log_sink_service.c",
+-      "Devices/Storage/SdSdioFatFs/Inc/mission_radio_profile.h"
++      "Devices/Storage/SdSdioFatFs/Inc/mission_radio_profile.h",
++      "Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c"
+     ]
+   },
+   "metadata": {
+diff --git a/apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs_f1/plugin.json b/apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs_f1/plugin.json
+index 6c02de9..3a88e7b 100644
+--- a/apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs_f1/plugin.json
++++ b/apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs_f1/plugin.json
+@@ -64,7 +64,8 @@
+       "Devices/Storage/SdSdioFatFs/Adapter/Src/mission_snapshot.c",
+       "Devices/Storage/SdSdioFatFs/Src/mission_radio_profile.c",
+       "Devices/Storage/SdSdioFatFs/Adapter/Src/mag_calibration_storage.c",
+-      "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c"
++      "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c",
++      "Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c"
+     ],
+     "asm_sources": [],
+     "include_dirs": [
+@@ -88,7 +89,8 @@
+       "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c",
+       "Devices/Storage/SdSdioFatFs/Adapter/Inc/persistent_storage.h",
+       "Devices/Storage/SdSdioFatFs/Adapter/Src/log_sink_service.c",
+-      "Devices/Storage/SdSdioFatFs/Inc/mission_radio_profile.h"
++      "Devices/Storage/SdSdioFatFs/Inc/mission_radio_profile.h",
++      "Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c"
+     ]
+   },
+   "metadata": {
+diff --git a/contracts/log_file_service_v1.json b/contracts/log_file_service_v1.json
+index 6327dca..800dc86 100644
+--- a/contracts/log_file_service_v1.json
++++ b/contracts/log_file_service_v1.json
+@@ -61,14 +61,14 @@
+     "UNSUPPORTED"
+   ],
+   "semantics": {
+-    "submission": "CAPS/POLL/CANCEL are synchronous. Valid LIST/META/READ/DELETE submit one operation; storage owner advances it. POLL returns PENDING until complete. Completion remains replayable until the next accepted request or CANCEL. Client serializes commands and matches operation/request_id/file_id/token/offset.",
++    "submission": "CAPS/POLL/CANCEL are synchronous. Valid LIST/META/READ submit one operation; storage owner advances it. Reserved DELETE is synchronously rejected as UNSUPPORTED. POLL returns PENDING until complete. Completion remains replayable until the next accepted request or CANCEL. Client serializes commands and matches operation/request_id/file_id/token/offset.",
+     "list": "cursor=0 starts enumeration; next_cursor is opaque uint32. One entry per reply. Only fixed six-digit mission directories containing flight.sslog are exposed. closed means no active writer, not proof of successful recording/finalization.",
+     "storage_owner": "Only LoggerTask performs FatFs work; one bounded hash/read quantum per iteration. No FatFs from SerialTask or ISR.",
+     "safety": "LIST/META/READ require PREFLIGHT, READY or POSTFLIGHT; current mission is never exposed, including temporary writer closure/retry. Other mission logs can be read while current preflight recording continues, serialized through LoggerTask. DELETE is disabled. Recheck before each I/O quantum; an in-progress bounded device transaction completes before cancellation is observed. No radio/AIR/GSP bulk binding. CAPS advertises unsupported when logger service is absent.",
+     "read": "META must first compute full-file CRC32 and size in this service instance. READ requires matching cached file_id/token and unchanged length. Offset <= size; response up to 64 original bytes. Client validates each chunk CRC and final size/whole CRC, then atomically publishes. CRC32 is ISO-HDLC (zlib.crc32), empty CRC=00000000.",
+     "resume": "With unknown device or boot identity, disconnect, cancellation, timeout and reboot invalidate all partial downloads and cached selection. Repeat CAPS+META and restart read-only download at offset zero; a matching CRC/size or prefix does not authorize continuation. Never mix responses from another request. No SSLOG bytes or Descriptor are rewritten.",
+     "delete": "Reserved explicit command. Current implementation advertises delete_supported=0 and always returns UNSUPPORTED, because device_id/boot_id are unknown. No unlink is performed. A future identity-capable version requires an independent user confirmation and full identity/content validation; old confirmation never survives a reconnect.",
+-    "timeout": "30 seconds without POLL cancels outstanding work and invalidates cached metadata. POLL updates liveness; storage operations remain bounded by existing FatFs/diskio timeouts. CANCEL is asynchronous to storage I/O already in progress and prevents subsequent operations.",
++    "timeout": "30 seconds without POLL cancels outstanding work and invalidates cached metadata. POLL updates liveness; individual device transactions use existing diskio timeouts, but FatFs open/seek/close work can involve multiple transactions and has no established task-level WCET. CANCEL is asynchronous to storage I/O already in progress and prevents subsequent operations.",
+     "compatibility": "Older firmware returns unknown module and client must report unsupported. SSLOG0 remains container 0.0; exact matching .ssdecoder and embedded Descriptor are still required by FLP. Legacy flat-directory logs are not enumerated by v1."
+   },
+   "golden": {
+diff --git a/docs/public/SCG/LOG_FILE_SERVICE_V1.md b/docs/public/SCG/LOG_FILE_SERVICE_V1.md
+index 754bd6b..e573894 100644
+--- a/docs/public/SCG/LOG_FILE_SERVICE_V1.md
++++ b/docs/public/SCG/LOG_FILE_SERVICE_V1.md
+@@ -11,10 +11,14 @@ New GSHC JSONL sessions declare `log_format=silverstar.gshc-jsonl` and `log_form
+ 
+ ## Maintenance protocol
+ 
+-Use the exact request/response examples in the machine-readable contract. `CAPS` negotiates support. `LIST` exposes one numbered mission log per cursor page; `META` computes its full CRC32 and size; `READ` returns up to 64 original bytes at an explicit offset, with a chunk CRC32. `LIST`, `META`, `READ` and `DELETE` submit work and return a request ID. `POLL` retrieves completion; `CANCEL` stops further work. Clients allow one outstanding request and verify operation, request ID, file ID, token and offset before accepting data.
++Use the exact request/response examples in the machine-readable contract. `CAPS` negotiates support. `LIST` exposes one numbered mission log per cursor page; `META` computes its full CRC32 and size; `READ` returns up to 64 original bytes at an explicit offset, with a chunk CRC32. `LIST`, `META` and `READ` submit work and return a request ID. `POLL` retrieves completion; `CANCEL` stops further work. `DELETE` is recognized and immediately rejected as unsupported. Clients allow one outstanding request and verify operation, request ID, file ID, token and offset before accepting data.
+ 
+ Only LoggerTask accesses FatFs. Metadata hashing advances in bounded chunks and checks lifecycle/cancellation between chunks. Reads of old missions are allowed in PREFLIGHT, READY and POSTFLIGHT while preflight recording continues. The current mission is never exposed, even if its writer is temporarily closed for retry. FLIGHT/RECOVERY and other states reject work. A storage transaction already executing completes under the existing diskio timeout before a cancellation can be observed; this is not proof of STM32 timing or WCET.
+ 
++The 30-second firmware timeout measures time since the last matching POLL, not the total metadata-hash duration. Clients keep polling while PENDING and allow cancellation; large files can take longer than 30 seconds. A close failure latches the file service into an I/O-error state until reboot, preventing reuse of uncertain FatFs objects. Service buffers and FatFs objects use the platform CPU-fast memory section; both selected SDIO adapters copy through their existing DMA scratch sector before DMA, so these private CPU-only objects are not DMA targets.
++
++The initial READ backend opens, seeks, reads and closes each chunk. FatFs seeks can traverse a cluster chain, so the 64-byte response bound does not bound all filesystem work in an iteration. Large-file throughput, fragmented-file latency, LoggerTask deadlines and watchdog timing require separate measurement and review before hardware acceptance.
++
+ The v1 implementation exposes only `0:/missions/NNNNNN/flight.sslog`; client paths are never accepted. Older flat-directory logs remain readable through existing offline tooling, but are not enumerated by this service. `closed=1` means there is no active writer for that mission; it does not certify that recording finalized successfully after a power interruption.
+ 
+ The token `1-CRC32-SIZE` is a versioned change detector. It is not cryptographic identity or authorization. Both device ID and boot ID are explicitly `unknown` until a reliable backend is implemented. After disconnect, timeout, cancellation or reboot, clients repeat CAPS and META. They must restart from offset zero when device/boot identity is unknown; even a matching prefix cannot authorize continuation. A matching length/CRC alone does not justify appending bytes from an unknown device. A client validates final size/CRC, calculates SHA-256 locally and atomically publishes a completed download. Failures preserve the source and keep partial local data distinguishable from completed artifacts.

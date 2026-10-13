@@ -1,0 +1,15 @@
+python Tools/check_task_stacks.py --config Release --memory-layout legacy --prefix "arm-none-eabi-"
+FCCG_PROGRESS|STACK_REPORT|PLAN|1
+FCCG_PROGRESS|STACK_REPORT|BEGIN|1|1|ELF and stack budget
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\lf13final4\Tools\check_task_stacks.py", line 1913, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "D:\python_software\SilverStar\.work\lf13final4\Tools\check_task_stacks.py", line 1899, in main
+    report = StackReport_Build(root, arguments.config, arguments.prefix, arguments.memory_layout)
+  File "D:\python_software\SilverStar\.work\lf13final4\Tools\check_task_stacks.py", line 1820, in StackReport_Build
+    binding_source_proofs = BindingSources_Verify(root, sources, build)
+  File "D:\python_software\SilverStar\.work\lf13final4\Tools\check_task_stacks.py", line 1491, in BindingSources_Verify
+    raise ValueError("Changed or unknown complete callback binding source: " + path)
+ValueError: Changed or unknown complete callback binding source: System/Src/system_log_file.c
+mingw32-make: *** [Makefile:217: stack-report] Error 1

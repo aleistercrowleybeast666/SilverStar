@@ -1,0 +1,62 @@
+{
+  "captured_at_utc": "2026-10-13T04:40:46.197180+00:00",
+  "commands": {
+    "git_head": {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "2b6c48922baca7d1589a846246c85bec7e3d38dd\n",
+      "stderr": ""
+    },
+    "git_status": {
+      "command": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "exit_code": 0,
+      "stdout": " M apps/GSHC/app.py\n M apps/GSHC/services/i18n.py\n M apps/GSHC/services/logger.py\n M apps/GSHC/tests/test_ui_workflow.py\n M apps/GSHC/tests/validation/port_geometry_probe.py\n M apps/GSHC/ui/main_window.py\n M apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_task.c\n M apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/BuildSystem/first_party.mk\n M apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_console.c\n M apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/run_tests.ps1\n M apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/storage_integrity/run_storage_integrity.py\n M apps/SCG/plugins/builtin/silverstar_core_0_1_0/plugin.json\n M apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs/plugin.json\n M apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs_f1/plugin.json\n M contracts/log_file_service_v1.json\n M docs/public/SCG/LOG_FILE_SERVICE_V1.md\n?? apps/GSHC/docs/\n?? apps/GSHC/services/device_export.py\n?? apps/GSHC/services/file_service_client.py\n?? apps/GSHC/tests/requirements.txt\n?? apps/GSHC/tests/test_device_export.py\n?? apps/GSHC/tests/test_file_service_client.py\n?? apps/GSHC/tests/test_file_transfer_ui.py\n?? apps/GSHC/transport/file_service_backend.py\n?? apps/GSHC/ui/file_transfer.py\n?? apps/GSHC/ui/maintenance_page.py\n?? apps/SCG/docs/evidence/log_file_service_20261013/\n?? apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Inc/system_log_file.h\n?? apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_log_file.c\n?? apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/Fixtures/log_file_storage_stub.c\n?? apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs/payload/Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c\n?? apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs_f1/payload/Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c\n?? apps/SCG/tests/log_file_service/\n?? apps/SCG/tests/test_log_file_service.py\n?? work_build_candidates_20261006.csv\n?? work_inventory_20261006.txt\n?? work_subtree_classification_20261006.csv\n",
+      "stderr": ""
+    },
+    "gcc": {
+      "command": [
+        "gcc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "gcc (Rev5, Built by MSYS2 project) 16.1.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stderr": ""
+    },
+    "arm_gcc": {
+      "command": [
+        "arm-none-eabi-gcc",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stderr": ""
+    },
+    "make": {
+      "command": [
+        "mingw32-make",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "GNU Make 4.4.1\nBuilt for x86_64-w64-mingw32\nCopyright (C) 1988-2023 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n",
+      "stderr": ""
+    },
+    "python": {
+      "command": [
+        "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "Python 3.14.0\n",
+      "stderr": ""
+    }
+  },
+  "scope": "dirty working snapshot; no hardware actions"
+}

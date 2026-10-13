@@ -1,0 +1,314 @@
+{
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_barometer.d": {
+    "sha256": "f6c0bff562b9cbe0d1279673794355f7177ca5798b85f9d8f2e60c55a6381fcd",
+    "size": 923
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_barometer.su": {
+    "sha256": "491de6845d25a4cc9b72b3d1085433fd8f6d01f5f08b84b9ad6186539562041c",
+    "size": 79
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_barometer_cold.d": {
+    "sha256": "ff88651534c39d26416675b31039579bcddb7e3d552037c7739ab530ddc8e469",
+    "size": 1943
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_barometer_cold.su": {
+    "sha256": "d179d377bd5a836fdecaaa6357177597b44cc7f5e7c0c771ab483054d2a6e905",
+    "size": 928
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_capabilities.d": {
+    "sha256": "4b94fde39dad2c6be1805bead488d62fd23ba0535868541038d88df7ea49020a",
+    "size": 2963
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_capabilities.su": {
+    "sha256": "2e5ded3f69a5f3357f0d8383fdb19f8a6bc7df60f46ac18182ecaa4caf060797",
+    "size": 238
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_device_startup.d": {
+    "sha256": "02b2e0825eb6ce7d4ac49dc291e333005d873f88aea5d8e2308d1f74bb765012",
+    "size": 719
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_device_startup.su": {
+    "sha256": "ce5de9fd4d7246f92649dcb2b7bf73251dac94783b02b25258f56914062e6666",
+    "size": 239
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_estimator_diagnostics.d": {
+    "sha256": "12379286dcae23132b8c574acec4ec8b9fc688a35dc6ab8d1f8818a7971a15dc",
+    "size": 819
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_estimator_diagnostics.su": {
+    "sha256": "9089af800088d55298fdd2a38d20c79ae05a96b54c46349fc4875010b70aab0c",
+    "size": 1579
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_estimator_profile.d": {
+    "sha256": "b8c6b92a0a29dd23e1b9d78b491f1468f9ca67e37d85acdf2c0e75bb5b5f5231",
+    "size": 1827
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_estimator_profile.su": {
+    "sha256": "c87ba2a7c82ccb7dba5b26d53511eac3ceed2d05619dfffa06461a84783b6fbe",
+    "size": 523
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_gnss_quality.d": {
+    "sha256": "a7caa31cbdda09ccfb68889de2ebef94801550ed33b1edf86b8cee6051f3b10b",
+    "size": 1803
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_gnss_quality.su": {
+    "sha256": "98562e9b333171e5f7ec4d8a6befed8649d84d4cc40c028ebfea22c33f48fca3",
+    "size": 161
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_health.d": {
+    "sha256": "989f1ce902dfc6ad5671aa9483ce326b0506ca9dc7325d8a6feaf47f5427382f",
+    "size": 2715
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_health.su": {
+    "sha256": "d0c63a860c8fb6096e685065ea0721af2fb9bae8ea5ed0c61184198e7790fd64",
+    "size": 480
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_imu_epoch.d": {
+    "sha256": "ea89f3074c5105cb74604b1c002aee0460f1e3d27249e2cc774e8236eac80e66",
+    "size": 933
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_imu_epoch.su": {
+    "sha256": "f1c683cc97f3e43a232821fbab89e8572c1d930403da2fd94229ef6cd93176c7",
+    "size": 1616
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_log_file.d": {
+    "sha256": "14755fdafe2c0279623ca14e1b59b3459ef5fffcb12274b6c2f3f2b6f131c4ba",
+    "size": 1887
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_log_file.su": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "size": 0
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_navigation_health.d": {
+    "sha256": "3eb61483fdfb71669b97dcfd1ff755ad8458dfdb6bae893a98d8f25ba2b238f3",
+    "size": 1015
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_navigation_health.su": {
+    "sha256": "8a070062d24f14adb804baee07988badbc58026fece65c3b4f31e6c71b9864ff",
+    "size": 896
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_navigation_profile.d": {
+    "sha256": "2685a6cac3d7fffb1912ae38c18b54a796e3d237224ad44914264a7f63d586aa",
+    "size": 1635
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_navigation_profile.su": {
+    "sha256": "079f90117469f02e3f9a7c1bc5b5ea62b6eef37c4e343a88c78516398bad5386",
+    "size": 353
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_profile.d": {
+    "sha256": "9ae2d24c840f7954d9400098137528c03213d6a2b97002dd088825c2c64a5137",
+    "size": 1799
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_profile.su": {
+    "sha256": "5265abac565faa355a55102d8e0e27ed64381ffa21f802f1578a7c591f77cb5d",
+    "size": 269
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_sensor_status.d": {
+    "sha256": "c9b72dc4af9b320340035ec3109191bfa20a5cd72e62ab32438c995e91727b3f",
+    "size": 3343
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_sensor_status.su": {
+    "sha256": "d6296f086b59b6270d0bcb820b285f42856e53b7c1b88f64e16cd0eb8a45ad8b",
+    "size": 662
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_source_selector.d": {
+    "sha256": "fb5c2879f0499b82d49e10c50c96bee8eb8482686a2cd422efc28ef6bae2351c",
+    "size": 2425
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_source_selector.su": {
+    "sha256": "e0215f86925cf4e820381dd81e4e29a4204e4416a11666b7eb0341fe2e9cf5f8",
+    "size": 9603
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_startup.d": {
+    "sha256": "94d271a70619f7edc30a02bc8888654431864ea6ea0aa96059c678cefd46e266",
+    "size": 3639
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_startup.su": {
+    "sha256": "7882094dd89d59bf9796a0ce21608206a94112bcfaf1cf94849e0d4c752b539e",
+    "size": 817
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_time.d": {
+    "sha256": "7349b54969d424662745d0d8e7c8496a8a3a042397e664c6c0306102fd698d23",
+    "size": 1021
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Src/system_time.su": {
+    "sha256": "01e4ce479151f60d19fb8da591cf60f8cd4414e47e49a164ff1875223f41116e",
+    "size": 812
+  },
+  "build/FCCG/SilverStar_F407/Release/System/User/system_user_inertial_config.d": {
+    "sha256": "68043b25c9d16c60d901d37f40031cfa6451c93d9ab2ba71790286e6e9cd65f4",
+    "size": 861
+  },
+  "build/FCCG/SilverStar_F407/Release/System/User/system_user_inertial_config.su": {
+    "sha256": "89f4b932b64b8aca17de21393c3e4785c364c57cd40d170c98cc54f987a08964",
+    "size": 87
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Inertial/Src/system_inertial.d": {
+    "sha256": "0988c00de95342a5f7b93944f5463552d202dda9936c521634285831c4b6acb6",
+    "size": 1571
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Inertial/Src/system_inertial.su": {
+    "sha256": "ee16afc1da24af6e7eda1e9cb64dba4c6abed9aa01b4103e4281ce3cff445907",
+    "size": 414
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Indicator/Src/system_indicator.d": {
+    "sha256": "4d2ecd742356d95ac20d32a1ebf33f1eafce3bca8cfd1b910617cc7a3d9867a1",
+    "size": 2541
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Indicator/Src/system_indicator.su": {
+    "sha256": "96b01b5d390881a3cffcac9d35d803bf3952c88a6950e207713060a4be92dab9",
+    "size": 598
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Calibration/Src/system_calibration.d": {
+    "sha256": "1394cb879f9546724e153947e4c50d8b99ffa0774d5752b650c2629105ad8d64",
+    "size": 2367
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Calibration/Src/system_calibration.su": {
+    "sha256": "f6b170d48b88890bfdace81a416c5f2c322c09041f4be333bf643dd0d66e6ce1",
+    "size": 1818
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Calibration/Src/system_calibration_correction.d": {
+    "sha256": "5dca60e38cd975daad35f3c4e4a412ebf92c3a9cfc045a9c02eaea6faef5e553",
+    "size": 1291
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Calibration/Src/system_calibration_correction.su": {
+    "sha256": "dc0be638257d044db02449ab97284333be2ca39576916233fb568817863d9157",
+    "size": 214
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Calibration/Src/system_mag_calibration.d": {
+    "sha256": "31d0da121991769983bc3e96a778b359dd7d0b5663e3511b42af2ed5d5a353f3",
+    "size": 1809
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Calibration/Src/system_mag_calibration.su": {
+    "sha256": "97318cd069ff289110109126a84783724c683eefbb69d7f6b40d82db6e8debae",
+    "size": 1390
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Alignment/Src/system_alignment.d": {
+    "sha256": "bb2ec9672a4e7105e77f0832e61ff6ef4bc709c08a87d686e06ba33bdda2d734",
+    "size": 3089
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Alignment/Src/system_alignment.su": {
+    "sha256": "fb56aa5226a719aa43765ba860495673cce4c4c3103565aedc3ffc797e1c6ec5",
+    "size": 1838
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Alignment/Src/system_alignment_source.d": {
+    "sha256": "0029c1bc9c05462b511857e0d0526c1a3836323380990302843ee513e69ec265",
+    "size": 1043
+  },
+  "build/FCCG/SilverStar_F407/Release/System/Alignment/Src/system_alignment_source.su": {
+    "sha256": "01289a3534d4e4cf3417f6abfb30bf6eed1bf96afd1a9c25ddcd201968668545",
+    "size": 776
+  },
+  "build/FCCG/SilverStar_F407/Release/Common/Src/common_format.d": {
+    "sha256": "650bee73c4646143b758b0357c94b2b21ad6bfac54c16520b0e6abb13172fd36",
+    "size": 687
+  },
+  "build/FCCG/SilverStar_F407/Release/Common/Src/common_format.su": {
+    "sha256": "78ec6cf3340f9e6ef2ac1438072d038b6802def4975d03d54cc4c5138431a848",
+    "size": 759
+  },
+  "build/FCCG/SilverStar_F407/Release/Common/Src/common_ringbuf.d": {
+    "sha256": "3219c10d715e82f2adbdd489357b9820f7105ae8a7400c70a78c4fb505ff4710",
+    "size": 691
+  },
+  "build/FCCG/SilverStar_F407/Release/Common/Src/common_ringbuf.su": {
+    "sha256": "158e39f3f73330ffbb4c75dc4b69e0c2e9431f325aae8883c9060c4d08164f8a",
+    "size": 677
+  },
+  "build/FCCG/SilverStar_F407/Release/Common/Src/common_spsc_queue.d": {
+    "sha256": "c1021753d6fe7898aeb301e22d9588579ae7756447cfb6f0bb441816a9d16a08",
+    "size": 703
+  },
+  "build/FCCG/SilverStar_F407/Release/Common/Src/common_spsc_queue.su": {
+    "sha256": "d90695da87ebcc876d3e9fac95ed104c1a53e8103bfd4f60d5f1bfb46f6c4eea",
+    "size": 345
+  },
+  "build/FCCG/SilverStar_F407/Release/Common/Src/debug_log.d": {
+    "sha256": "510763f2697ca82b7a42007588dc627184799e4494f61417dc141e44b220304a",
+    "size": 1829
+  },
+  "build/FCCG/SilverStar_F407/Release/Common/Src/debug_log.su": {
+    "sha256": "42fd8785ceb062231b8328e404f9f507a80f3c2d899a503a5355ff4cff27680d",
+    "size": 463
+  },
+  "build/FCCG/SilverStar_F407/Release/Common/Src/silverstar_assert.d": {
+    "sha256": "8b0b1297374ca1733565fa701a9898d76026df43de47d5b7ce691ebfd39e7d8c",
+    "size": 635
+  },
+  "build/FCCG/SilverStar_F407/Release/Common/Src/silverstar_assert.su": {
+    "sha256": "679b9adab88d3eb7aa2e1f64cf0cfe0d0311630bccff0d9ec9c89676f3965f54",
+    "size": 452
+  },
+  "build/FCCG/SilverStar_F407/Release/APP/Src/app_tasks.d": {
+    "sha256": "25368c6f37b53f39e05b1fb579ad80c2ca96ebb2191867d5423505eff62d669e",
+    "size": 8751
+  },
+  "build/FCCG/SilverStar_F407/Release/APP/Src/app_tasks.su": {
+    "sha256": "7310ab24a764eafcf0e200bd34890322ad975fff473aa4d12f1c7db31802ea58",
+    "size": 190
+  },
+  "build/FCCG/SilverStar_F407/Release/APP/Src/device_task.d": {
+    "sha256": "fde6d5d624d90bf3ec28259dcf57a7ef4a4a063c2aece827aca81881c3b9914b",
+    "size": 8549
+  },
+  "build/FCCG/SilverStar_F407/Release/APP/Src/device_task.su": {
+    "sha256": "bc81a994c6bebc712327453bb141416dcf79f8e77784d66444c2a84c3b2c102e",
+    "size": 55
+  },
+  "build/FCCG/SilverStar_F407/Release/APP/Src/estimator_barometer_pending.d": {
+    "sha256": "760bf884ff011173ed37bdad5161f3e61f08488b3df350f9381a3db3acdf92ef",
+    "size": 793
+  },
+  "build/FCCG/SilverStar_F407/Release/APP/Src/estimator_barometer_pending.su": {
+    "sha256": "9e2b4b5b955158481fbe0cce42b927e1677d22921b147bfc478a3a6ef6040b0c",
+    "size": 343
+  },
+  "build/FCCG/SilverStar_F407/Release/APP/Src/estimator_bus.d": {
+    "sha256": "ae4abbe0e3ff32572199803ef3727d488108a97a1d01b58f238db3b1ce5e2b78",
+    "size": 891
+  },
+  "build/FCCG/SilverStar_F407/Release/APP/Src/estimator_bus.su": {
+    "sha256": "7c0450d9a8e8aeb8ad2051a9aa2ad4f63723b00baef15fde549341ac8d3739ba",
+    "size": 469
+  },
+  "build/FCCG/SilverStar_F407/Release/APP/Src/estimator_task.d": {
+    "sha256": "bb530b64c8f2ca094ba3bcbc2236a59dce6e19fa14c1b075e2adf6e5ff80b30b",
+    "size": 9871
+  },
+  "build/FCCG/SilverStar_F407/Release/APP/Src/estimator_task.su": {
+    "sha256": "d3f0cff287d52d0edab6dd0424b89caf077ca6309c173e5e32950f5c772f116b",
+    "size": 2008
+  },
+  "build/FCCG/SilverStar_F407/Release/APP/Src/flight_task.d": {
+    "sha256": "9c77d54465372f0f80956da1c952b4e66b5239e33cbc4e70b68d22e8f4470077",
+    "size": 10111
+  },
+  "build/FCCG/SilverStar_F407/Release/APP/Src/flight_task.su": {
+    "sha256": "794b07b43b3eca555790600548c7bd432b46af5725cbd99097854024fab8d44b",
+    "size": 1147
+  },
+  "build/FCCG/SilverStar_F407/Release/APP/Src/imu_sample_bus.d": {
+    "sha256": "2b5ec403b186a771dc858d77cfa6bd6408e427006f53ad60c33f60c5cff426f5",
+    "size": 3593
+  },
+  "build/FCCG/SilverStar_F407/Release/APP/Src/imu_sample_bus.su": {
+    "sha256": "91c3bdd14b9353b592c9c715a7d3f9a4f1a47de9696bac19d768201a5ede92bf",
+    "size": 444
+  },
+  "build/FCCG/SilverStar_F407/Release/APP/Src/ins_task.d": {
+    "sha256": "50b03fbc10b2424c748b2e371ae7b92b007d4aa3710513a0378e2072a6379c0b",
+    "size": 9771
+  },
+  "build/FCCG/SilverStar_F407/Release/APP/Src/ins_task.su": {
+    "sha256": "f7ee870b6dfcb05b170d8da1ef78d59b776a4ee17bafc95b341256e909cce882",
+    "size": 1044
+  },
+  "build/FCCG/SilverStar_F407/Release/APP/Src/telemetry_task.d": {
+    "sha256": "7ed503e71415ec29255aea39b654279226e3d1277ea2d4dd83dabb9aeb62b041",
+    "size": 5755
+  },
+  "build/FCCG/SilverStar_F407/Release/APP/Src/telemetry_task.su": {
+    "sha256": "60bcaf80788cf7e95bb57aff8418deec549ef76a4739a9fbb8a0867a229baa74",
+    "size": 59
+  }
+}

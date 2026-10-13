@@ -1,0 +1,6 @@
+Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c:43:21:SystemLogFileStorage_Check	104	static
+Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c:65:21:SystemLogFileStorage_Reset	16	static
+Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c:110:21:SystemLogFileStorage_List	144	static
+Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c:151:21:SystemLogFileStorage_HashBegin	72	static
+Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c:170:21:SystemLogFileStorage_HashRead	32	static
+Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c:187:21:SystemLogFileStorage_Read	32	static

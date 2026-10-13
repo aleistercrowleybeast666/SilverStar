@@ -1,0 +1,4 @@
+System/Src/system_log_file.c:307:17:LogFile_CrcUpdate.constprop	24	static
+System/Src/system_log_file.c:431:13:LogFile_Abort	32	static
+System/Src/system_log_file.c:278:28:SystemLogFile_ExecuteLine	240	static
+System/Src/system_log_file.c:470:6:SystemLogFile_Process	256	static

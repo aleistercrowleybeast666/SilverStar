@@ -1,0 +1,37 @@
+[
+  {
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "-std=c11",
+      "-O0",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-fanalyzer",
+      "-DSILVERSTAR_PROTOCOL_LOGGING_ENABLED=0",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\tests\\log_file_service",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc",
+      "D:\\python_software\\SilverStar\\apps\\SCG\\tests\\log_file_service\\test_log_file_service.c",
+      "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Src\\system_log_file.c",
+      "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Src\\common_format.c",
+      "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_device_storage_sd_sdio_fatfs\\payload\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Src\\log_file_storage.c",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\lfs13-finaltest3\\test_log_file_service_fault_bo1\\log-file-service.exe"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\lfs13-finaltest3\\test_log_file_service_fault_bo1\\log-file-service.exe",
+      "disabled"
+    ],
+    "exit_code": 0,
+    "stdout": "PASS logging disabled: linked at O0, capability false and no filesystem access\n",
+    "stderr": ""
+  }
+]

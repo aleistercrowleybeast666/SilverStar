@@ -1,0 +1,53 @@
+[
+  {
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-fanalyzer",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\tests\\log_file_service",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Inc",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc",
+      "D:\\python_software\\SilverStar\\apps\\SCG\\tests\\log_file_service\\test_log_file_service.c",
+      "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Src\\system_log_file.c",
+      "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Src\\common_format.c",
+      "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_device_storage_sd_sdio_fatfs\\payload\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Src\\log_file_storage.c",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\lfs13-finaltest3\\test_log_file_service_fault_bo0\\log-file-service.exe"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\lfs13-finaltest3\\test_log_file_service_fault_bo0\\log-file-service.exe"
+    ],
+    "exit_code": 0,
+    "stdout": "PASS log file service normal, path/overflow, active mission, flight lock, CRC/EOF/stale, cancel, timeout, owner interleaving, I/O fault\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\lfs13-finaltest3\\test_log_file_service_fault_bo0\\log-file-service.exe",
+      "close-fault"
+    ],
+    "exit_code": 0,
+    "stdout": "PASS close fault latches service unavailable until reboot\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\lfs13-finaltest3\\test_log_file_service_fault_bo0\\log-file-service.exe",
+      "golden"
+    ],
+    "exit_code": 0,
+    "stdout": "OK LOGFILE READ request_id=3 file_id=1 token=1-CBF43926-00000009 offset=0 length=9 crc32=CBF43926 data=313233343536373839\n\n",
+    "stderr": ""
+  }
+]

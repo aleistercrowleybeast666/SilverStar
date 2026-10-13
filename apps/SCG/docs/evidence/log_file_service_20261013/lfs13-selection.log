@@ -1,0 +1,169 @@
+Failed to find real location of C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe
+..............FF...........sss................s.........                 [100%]
+================================== FAILURES ===================================
+_________ test_protocol_combos_and_logging_disabled_state_are_stable __________
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/SCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/lfs13-select/test_protocol_combos_and_loggi0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -> Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+>           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\src\silverstar_fccg\core\workspace.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/lfs13-select/test_protocol_combos_and_loggi0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/SCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+>               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\lfs13-select\\test_protocol_combos_and_loggi0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\SCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/lfs13-select/test_protocol_combos_and_loggi0')
+qapp = <PySide6.QtWidgets.QApplication(0x225805a9920) at 0x00000225844DA9C0>
+
+    def test_protocol_combos_and_logging_disabled_state_are_stable(
+        tmp_path: Path,
+        qapp,
+    ) -> None:
+>       window = MainWindow(SettingsStore(tmp_path / "optional-protocols-ui.ini"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_optional_protocols.py:492: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\ui\main_window.py:224: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/SCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/lfs13-select/test_protocol_combos_and_loggi0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -> Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+>           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\lfs13-select\test_protocol_combos_and_loggi0\path_preferences.json
+
+apps\SCG\src\silverstar_fccg\core\workspace.py:73: WorkspacePolicyError
+_ test_logging_protocol_reopens_after_storage_is_restored_and_survives_refresh _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/SCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/lfs13-select/test_logging_protocol_reopens_0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -> Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+>           relative = resolved.relative_to(self.root)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\src\silverstar_fccg\core\workspace.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/.work/lfs13-select/test_logging_protocol_reopens_0/path_preferences.json')
+other = WindowsPath('D:/python_software/SilverStar/apps/SCG'), walk_up = False
+
+    def relative_to(self, other, *, walk_up=False):
+        """Return the relative path to another path identified by the passed
+        arguments.  If the operation is not possible (because this is not
+        related to the other path), raise ValueError.
+    
+        The *walk_up* parameter controls whether `..` may be used to resolve
+        the path.
+        """
+        if not hasattr(other, 'with_segments'):
+            other = self.with_segments(other)
+        for step, path in enumerate(chain([other], other.parents)):
+            if path == self or path in self.parents:
+                break
+            elif not walk_up:
+>               raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+E               ValueError: 'D:\\python_software\\SilverStar\\.work\\lfs13-select\\test_logging_protocol_reopens_0\\path_preferences.json' is not in the subpath of 'D:\\python_software\\SilverStar\\apps\\SCG'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:495: ValueError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/lfs13-select/test_logging_protocol_reopens_0')
+qapp = <PySide6.QtWidgets.QApplication(0x225805a9920) at 0x00000225844DA9C0>
+
+    def test_logging_protocol_reopens_after_storage_is_restored_and_survives_refresh(
+        tmp_path: Path,
+        qapp,
+    ) -> None:
+>       window = MainWindow(SettingsStore(tmp_path / "logging-reopen-ui.ini"))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_optional_protocols.py:574: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\ui\main_window.py:224: in __init__
+    self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\core\path_preferences.py:23: in __init__
+    self.path = policy.Path_Resolve(path, allow_root=False)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WorkspacePolicy(root=WindowsPath('D:/python_software/SilverStar/apps/SCG'))
+path = WindowsPath('D:/python_software/SilverStar/.work/lfs13-select/test_logging_protocol_reopens_0/path_preferences.json')
+allow_root = False
+
+    def Path_Resolve(self, path: str | Path, *, allow_root: bool = True) -> Path:
+        candidate = Path(path)
+        if not candidate.is_absolute():
+            candidate = self.root / candidate
+        resolved = candidate.resolve(strict=False)
+        try:
+            relative = resolved.relative_to(self.root)
+        except ValueError as error:
+>           raise WorkspacePolicyError(
+                f"Path escapes authorized workspace: {resolved}"
+            ) from error
+E           silverstar_fccg.core.workspace.WorkspacePolicyError: Path escapes authorized workspace: D:\python_software\SilverStar\.work\lfs13-select\test_logging_protocol_reopens_0\path_preferences.json
+
+apps\SCG\src\silverstar_fccg\core\workspace.py:73: WorkspacePolicyError
+=========================== short test summary info ===========================
+SKIPPED [3] apps\SCG\tests\test_architecture_maintenance_selection.py:93: missing-scope negative requires selected Console owner
+SKIPPED [1] apps\SCG\tests\test_architecture_maintenance_selection.py:110: present-unselected-source negative requires disabled maintenance
+FAILED apps\SCG\tests\test_optional_protocols.py::test_protocol_combos_and_logging_disabled_state_are_stable
+FAILED apps\SCG\tests\test_optional_protocols.py::test_logging_protocol_reopens_after_storage_is_restored_and_survives_refresh
+2 failed, 50 passed, 4 skipped in 759.32s (0:12:39)

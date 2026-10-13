@@ -1,0 +1,16 @@
+Host compiler runtime directory: D:\msys64\ucrt64\bin
+Host compiler command: "D:\msys64\ucrt64\bin\gcc.exe" --version
+gcc.exe (Rev5, Built by MSYS2 project) 16.1.0
+Copyright (C) 2026 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Host compiler command: "D:\msys64\ucrt64\bin\gcc.exe" -dumpmachine
+x86_64-w64-mingw32
+python.exe : Failed to find real location of D:\msys64\ucrt64\bin\python.exe
+鎵€鍦ㄤ綅缃?D:\python_software\SilverStar\.work\lf13f4\Tests\Host\run_tests.ps1:217 瀛楃: 26
++     $validatorOutput = @(& $pythonCommand.Path $validator 2>&1)
++                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Failed to find ...\bin\python.exe:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

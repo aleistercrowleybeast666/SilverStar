@@ -64,7 +64,8 @@
       "Devices/Storage/SdSdioFatFs/Adapter/Src/mission_snapshot.c",
       "Devices/Storage/SdSdioFatFs/Src/mission_radio_profile.c",
       "Devices/Storage/SdSdioFatFs/Adapter/Src/mag_calibration_storage.c",
-      "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c"
+      "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c",
+      "Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c"
     ],
     "asm_sources": [],
     "include_dirs": [
@@ -88,7 +89,8 @@
       "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c",
       "Devices/Storage/SdSdioFatFs/Adapter/Inc/persistent_storage.h",
       "Devices/Storage/SdSdioFatFs/Adapter/Src/log_sink_service.c",
-      "Devices/Storage/SdSdioFatFs/Inc/mission_radio_profile.h"
+      "Devices/Storage/SdSdioFatFs/Inc/mission_radio_profile.h",
+      "Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c"
     ]
   },
   "metadata": {

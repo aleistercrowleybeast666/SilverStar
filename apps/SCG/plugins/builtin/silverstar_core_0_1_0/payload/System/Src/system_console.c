@@ -1,5 +1,6 @@
 #include "system_version.h"
 #include "system_console.h"
+#include "system_log_file.h"
 
 #include <math.h>
 #include <stddef.h>
@@ -4575,6 +4576,8 @@ SystemConsoleExecuteResult SystemConsole_ExecuteLine(const char *line,
     SystemConsoleCommand parsed;
     SystemConsoleExecuteResult result;
 
+    if ((line != NULL) && (strncmp(line, "LOGFILE ", 8U) == 0))
+    { return SystemLogFile_ExecuteLine(line, response, capacity); }
     result = SystemConsole_CommandParse(line, &parsed, response, capacity);
     if (result != SYSTEM_CONSOLE_EXECUTE_OK) { return result; }
     SILVERSTAR_ASSERT_OBJECT(&parsed, SystemConsoleCommand,

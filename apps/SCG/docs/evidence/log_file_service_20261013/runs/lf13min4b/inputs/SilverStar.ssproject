@@ -1,0 +1,2400 @@
+{
+  "format_version": 14,
+  "project": {
+    "name": "LogFileMinimalF407",
+    "firmware_version": "0.1.3",
+    "build_target": "SilverStar_0_1_3"
+  },
+  "components": {
+    "core": "silverstar.core.0_1_0",
+    "mcu_family": "silverstar.mcu_family.stm32f4",
+    "mcu": "silverstar.mcu.stm32f407vet6",
+    "board": "silverstar.board.silverstar_0_5",
+    "os": "silverstar.os.freertos_11_3_0",
+    "devices": [
+      {
+        "instance_id": "imu0",
+        "plugin": "silverstar.device.imu.jy901b",
+        "interface": "",
+        "profile": "",
+        "installation_orientation": "vertical"
+      },
+      {
+        "instance_id": "gnss0",
+        "plugin": "silverstar.device.gnss.neo_m9n",
+        "interface": "",
+        "profile": ""
+      },
+      {
+        "instance_id": "telemetry0",
+        "plugin": "silverstar.device.telemetry.sx1281",
+        "interface": "",
+        "profile": ""
+      },
+      {
+        "instance_id": "storage0",
+        "plugin": "silverstar.device.storage.sd_sdio_fatfs",
+        "interface": "",
+        "profile": ""
+      },
+      {
+        "instance_id": "voltage_monitor0",
+        "plugin": "silverstar.device.sensor.input_voltage",
+        "interface": "",
+        "profile": ""
+      },
+      {
+        "instance_id": "launch_ignition0",
+        "plugin": "silverstar.device.actuator.launch_ignition",
+        "interface": "",
+        "profile": ""
+      },
+      {
+        "instance_id": "parachute_pyro0",
+        "plugin": "silverstar.device.actuator.parachute_pyro",
+        "interface": "",
+        "profile": ""
+      },
+      {
+        "instance_id": "system_indicator0",
+        "plugin": "silverstar.device.indicator.system_status",
+        "interface": "",
+        "profile": ""
+      }
+    ],
+    "base": [
+      "silverstar.algorithm.common",
+      "silverstar.algorithm.alignment.common",
+      "silverstar.algorithm.calibration",
+      "silverstar.flight_logic.cycle.reference",
+      "silverstar.flight_logic.deployment.multi_trigger",
+      "silverstar.flight_logic.landing.baro_imu_window",
+      "silverstar.flight_logic.mission_action.gpio_output_service",
+      "silverstar.flight_logic.indicator.gpio_status_service"
+    ],
+    "strategies": {
+      "alignment": "silverstar.algorithm.alignment.vector_constraints",
+      "estimator": "silverstar.algorithm.estimator.kf6",
+      "ins": "silverstar.algorithm.ins.coning2_sculling2",
+      "landing": "silverstar.flight_logic.landing.baro_imu_window_strategy"
+    },
+    "development_environment": "silverstar.environment.vscode_eide_gcc"
+  },
+  "modes": {
+    "calibration": [],
+    "deployment": [
+      "ApogeeVerticalVelocity",
+      "Tilt"
+    ]
+  },
+  "algorithm_parameters": {
+    "silverstar.algorithm.ins.coning2_sculling2": {
+      "gravity_mps2": 9.78,
+      "mechanization_aggregation": 2
+    },
+    "silverstar.algorithm.estimator.kf6": {
+      "gravity_mps2": 9.78,
+      "p0_position_e": 4.0,
+      "p0_position_n": 4.0,
+      "p0_position_u": 9.0,
+      "p0_velocity_e": 0.25,
+      "p0_velocity_n": 0.25,
+      "p0_velocity_u": 0.25,
+      "process_accel_std_e": 1.5,
+      "process_accel_std_n": 1.5,
+      "process_accel_std_u": 2.0,
+      "gnss_position_std_horizontal": 1.5,
+      "gnss_position_std_vertical": 2.5,
+      "gnss_velocity_std": 0.15,
+      "baro_std_m": 2.5,
+      "nis_1d_soft": 6.635,
+      "nis_1d_hard": 10.828,
+      "nis_2d_soft": 9.21,
+      "nis_2d_hard": 13.816,
+      "nis_3d_soft": 11.345,
+      "nis_3d_hard": 16.266,
+      "nis_max_r_scale": 10.0,
+      "gnss_velocity_vertical_scale": 1.75,
+      "gnss_reacquire_outage_ms": 300,
+      "gnss_position_measurement_delay_ms": 0,
+      "gnss_velocity_measurement_delay_ms": 270,
+      "baro_measurement_delay_ms": 0,
+      "gnss_integrity_enable": 1,
+      "gnss_integrity_max_gap_ms": 120,
+      "gnss_integrity_error_threshold_m": 10.0,
+      "gnss_integrity_recovery_threshold_m": 4.0,
+      "gnss_integrity_suspect_duration_ms": 2000,
+      "gnss_integrity_reject_duration_ms": 5000,
+      "gnss_integrity_recovery_duration_ms": 8000,
+      "gnss_integrity_position_r_scale": 4.0,
+      "gnss_integrity_hacc_max_m": 6.0,
+      "gnss_integrity_sacc_max_mps": 1.2
+    }
+  },
+  "alignment": {
+    "constraints": [
+      {
+        "kind": "gravity",
+        "weight": 1.0,
+        "declination_deg": 0.0,
+        "body_axis": "+X",
+        "nav_azimuth_deg": 90.0
+      },
+      {
+        "kind": "reference_direction",
+        "weight": 1.0,
+        "declination_deg": 0.0,
+        "body_axis": "+X",
+        "nav_azimuth_deg": 90.0
+      }
+    ],
+    "external_source_instance": "",
+    "external_yaw_authoritative": false,
+    "external_known_azimuth_deg": 90.0
+  },
+  "mode_parameters": {
+    "deployment": {
+      "ApogeeVerticalVelocity": {
+        "vertical_velocity_threshold": -2.0
+      },
+      "Delay": {
+        "delay": 60.0
+      },
+      "Tilt": {
+        "tilt_threshold": 45.0
+      }
+    }
+  },
+  "protocols": {
+    "logging": null,
+    "maintenance": null,
+    "telemetry": {
+      "component": "silverstar.protocol.telemetry.air_m0",
+      "version": "0.1.0",
+      "profile": "air.m0",
+      "manifest_sha256": "3787f900f6dbaabebfdd3d82bc693a725c91d2e7e5df52ad5c2b8bb38515de60"
+    }
+  },
+  "hardware": {
+    "mode": "board_plugin",
+    "source_kind": "verified_builtin",
+    "provider": "silverstar.hardware_provider.stm32_cubemx",
+    "snapshot_id": "",
+    "ioc_file": "payload/Flight_Controller0.5.ioc",
+    "mcu": "STM32F407VET6",
+    "platform_component": "silverstar.mcu.stm32f407vet6",
+    "platform_version": "0.1.0",
+    "platform_manifest_sha256": "1b1a062811663dc07da0e4fc9b2eb8ae2ae0733254d233fac66a1ff925f9ef45",
+    "cubemx_version": "6.15.0",
+    "firmware_package": "STM32Cube FW_F4 V1.28.3",
+    "hal_cmsis_source_policy": "plugin_payload_authoritative",
+    "i2c_external_pullup_confirmations": {},
+    "capabilities": [
+      "peripheral.adc",
+      "peripheral.gpio_input",
+      "peripheral.gpio_interrupt",
+      "peripheral.gpio_output",
+      "peripheral.sdio",
+      "peripheral.spi",
+      "peripheral.time",
+      "peripheral.uart"
+    ],
+    "inventory": {
+      "mcu_part": "STM32F407VET6",
+      "mcu_name": "STM32F407V(E-G)Tx",
+      "mcu_family": "STM32F4",
+      "package": "LQFP100",
+      "core": "STM32F407VETx",
+      "cubemx_version": "6.15.0",
+      "firmware_package": "STM32Cube FW_F4 V1.28.3",
+      "pins": [
+        {
+          "pin": "PA1",
+          "signal": "GPIO_Output",
+          "label": "IMU_CAL_LED",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "high",
+          "output_type": "push_pull",
+          "speed": "low",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PA10",
+          "signal": "USART1_RX",
+          "label": "IMU_MR",
+          "mode": "Asynchronous",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PA13",
+          "signal": "SYS_JTMS-SWDIO",
+          "label": "",
+          "mode": "Serial_Wire",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PA14",
+          "signal": "SYS_JTCK-SWCLK",
+          "label": "",
+          "mode": "Serial_Wire",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PA4",
+          "signal": "GPIO_Output",
+          "label": "RADIO_NSS",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "high",
+          "output_type": "push_pull",
+          "speed": "low",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PA5",
+          "signal": "SPI1_SCK",
+          "label": "RADIO_SCK",
+          "mode": "Full_Duplex_Master",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PA6",
+          "signal": "SPI1_MISO",
+          "label": "RADIO_MISDO",
+          "mode": "Full_Duplex_Master",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PA7",
+          "signal": "SPI1_MOSI",
+          "label": "RADIO_MOSI",
+          "mode": "Full_Duplex_Master",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PA9",
+          "signal": "USART1_TX",
+          "label": "IMU_MT",
+          "mode": "Asynchronous",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PB0",
+          "signal": "GPIO_Output",
+          "label": "RADIO_RST",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "high",
+          "output_type": "push_pull",
+          "speed": "low",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PB1",
+          "signal": "GPIO_Input",
+          "label": "RADIO_BUSY",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PB10",
+          "signal": "USART3_TX",
+          "label": "DBG_MT",
+          "mode": "Asynchronous",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PB11",
+          "signal": "USART3_RX",
+          "label": "DBG_MR",
+          "mode": "Asynchronous",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PB14",
+          "signal": "GPIO_Output",
+          "label": "P_CONTROL2",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "low",
+          "output_type": "push_pull",
+          "speed": "low",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PB15",
+          "signal": "GPIO_Output",
+          "label": "P_CONTROL1",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "low",
+          "output_type": "push_pull",
+          "speed": "low",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PC0",
+          "signal": "ADCx_IN10",
+          "label": "ADC",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PC10",
+          "signal": "SDIO_D2",
+          "label": "",
+          "mode": "SD_4_bits_Wide_bus",
+          "alternate_function": "",
+          "pull": "up",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PC11",
+          "signal": "SDIO_D3",
+          "label": "",
+          "mode": "SD_4_bits_Wide_bus",
+          "alternate_function": "",
+          "pull": "up",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PC12",
+          "signal": "SDIO_CK",
+          "label": "",
+          "mode": "SD_4_bits_Wide_bus",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PC7",
+          "signal": "GPIO_Input",
+          "label": "",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "down",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PC8",
+          "signal": "SDIO_D0",
+          "label": "",
+          "mode": "SD_4_bits_Wide_bus",
+          "alternate_function": "",
+          "pull": "up",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PC9",
+          "signal": "SDIO_D1",
+          "label": "",
+          "mode": "SD_4_bits_Wide_bus",
+          "alternate_function": "",
+          "pull": "up",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PD2",
+          "signal": "SDIO_CMD",
+          "label": "",
+          "mode": "SD_4_bits_Wide_bus",
+          "alternate_function": "",
+          "pull": "up",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PD5",
+          "signal": "USART2_TX",
+          "label": "GNSS_MT",
+          "mode": "Asynchronous",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PD6",
+          "signal": "USART2_RX",
+          "label": "GNSS_MR",
+          "mode": "Asynchronous",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PE5",
+          "signal": "GPIO_Output",
+          "label": "GNSS_RST",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "high",
+          "output_type": "push_pull",
+          "speed": "low",
+          "exti_trigger": "",
+          "locked": true,
+          "exti_line": null
+        },
+        {
+          "pin": "PE6",
+          "signal": "GPXTI6",
+          "label": "GNSS_TIMEPULSE",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "rising",
+          "locked": true,
+          "exti_line": 6
+        },
+        {
+          "pin": "PE7",
+          "signal": "GPXTI7",
+          "label": "RADIO_DIO1",
+          "mode": "",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "rising",
+          "locked": true,
+          "exti_line": 7
+        },
+        {
+          "pin": "PH0-OSC_IN",
+          "signal": "RCC_OSC_IN",
+          "label": "",
+          "mode": "HSE-External-Oscillator",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        },
+        {
+          "pin": "PH1-OSC_OUT",
+          "signal": "RCC_OSC_OUT",
+          "label": "",
+          "mode": "HSE-External-Oscillator",
+          "alternate_function": "",
+          "pull": "none",
+          "output_default": "",
+          "output_type": "",
+          "speed": "",
+          "exti_trigger": "",
+          "locked": false,
+          "exti_line": null
+        }
+      ],
+      "uarts": [
+        {
+          "instance": "USART1",
+          "kind": "uart",
+          "pins": {
+            "rx": "PA10",
+            "tx": "PA9"
+          },
+          "settings": {
+            "BaudRate": 230400,
+            "VirtualMode": "VM_ASYNC",
+            "baud_rate": 230400,
+            "mode": "VM_ASYNC",
+            "word_length": 8,
+            "parity": "none",
+            "stop_bits": 1.0
+          },
+          "dma": [
+            {
+              "request": "USART1_RX",
+              "instance": "DMA2_Stream2",
+              "direction": "DMA_PERIPH_TO_MEMORY",
+              "mode": "DMA_CIRCULAR",
+              "priority": "DMA_PRIORITY_HIGH",
+              "channel": ""
+            },
+            {
+              "request": "USART1_TX",
+              "instance": "DMA2_Stream7",
+              "direction": "DMA_MEMORY_TO_PERIPH",
+              "mode": "DMA_NORMAL",
+              "priority": "DMA_PRIORITY_HIGH",
+              "channel": ""
+            }
+          ],
+          "irq": {
+            "irq": "USART1_IRQn",
+            "enabled": true,
+            "preempt_priority": 5,
+            "sub_priority": 0
+          }
+        },
+        {
+          "instance": "USART2",
+          "kind": "uart",
+          "pins": {
+            "tx": "PD5",
+            "rx": "PD6"
+          },
+          "settings": {
+            "BaudRate": 921600,
+            "VirtualMode": "VM_ASYNC",
+            "baud_rate": 921600,
+            "mode": "VM_ASYNC",
+            "word_length": 8,
+            "parity": "none",
+            "stop_bits": 1.0
+          },
+          "dma": [
+            {
+              "request": "USART2_RX",
+              "instance": "DMA1_Stream5",
+              "direction": "DMA_PERIPH_TO_MEMORY",
+              "mode": "DMA_CIRCULAR",
+              "priority": "DMA_PRIORITY_HIGH",
+              "channel": ""
+            },
+            {
+              "request": "USART2_TX",
+              "instance": "DMA1_Stream6",
+              "direction": "DMA_MEMORY_TO_PERIPH",
+              "mode": "DMA_NORMAL",
+              "priority": "DMA_PRIORITY_HIGH",
+              "channel": ""
+            }
+          ],
+          "irq": {
+            "irq": "USART2_IRQn",
+            "enabled": true,
+            "preempt_priority": 5,
+            "sub_priority": 0
+          }
+        },
+        {
+          "instance": "USART3",
+          "kind": "uart",
+          "pins": {
+            "tx": "PB10",
+            "rx": "PB11"
+          },
+          "settings": {
+            "BaudRate": 230400,
+            "VirtualMode": "VM_ASYNC",
+            "baud_rate": 230400,
+            "mode": "VM_ASYNC",
+            "word_length": 8,
+            "parity": "none",
+            "stop_bits": 1.0
+          },
+          "dma": [
+            {
+              "request": "USART3_RX",
+              "instance": "DMA1_Stream1",
+              "direction": "DMA_PERIPH_TO_MEMORY",
+              "mode": "DMA_CIRCULAR",
+              "priority": "DMA_PRIORITY_LOW",
+              "channel": ""
+            },
+            {
+              "request": "USART3_TX",
+              "instance": "DMA1_Stream3",
+              "direction": "DMA_MEMORY_TO_PERIPH",
+              "mode": "DMA_NORMAL",
+              "priority": "DMA_PRIORITY_LOW",
+              "channel": ""
+            }
+          ],
+          "irq": {
+            "irq": "USART3_IRQn",
+            "enabled": true,
+            "preempt_priority": 5,
+            "sub_priority": 0
+          }
+        }
+      ],
+      "spis": [
+        {
+          "instance": "SPI1",
+          "kind": "spi",
+          "pins": {
+            "sck": "PA5",
+            "miso": "PA6",
+            "mosi": "PA7"
+          },
+          "settings": {
+            "BaudRatePrescaler": "SPI_BAUDRATEPRESCALER_16",
+            "CalculateBaudRate": "5.25 MBits/s",
+            "Direction": "SPI_DIRECTION_2LINES",
+            "mode": "master",
+            "cubemx_Mode": "SPI_MODE_MASTER",
+            "VirtualType": "VM_MASTER",
+            "clock_hz": 5250000,
+            "cpol": "low",
+            "cpha": "1edge",
+            "data_bits": 8,
+            "bit_order": "msb"
+          },
+          "dma": [],
+          "irq": null
+        }
+      ],
+      "i2cs": [],
+      "adcs": [
+        {
+          "instance": "ADC1",
+          "kind": "adc",
+          "pins": {
+            "adcx_in10": "PC0"
+          },
+          "settings": {
+            "Channel-2#ChannelRegularConversion": "ADC_CHANNEL_10",
+            "NbrOfConversionFlag": 1,
+            "Rank-2#ChannelRegularConversion": 1,
+            "SamplingTime-2#ChannelRegularConversion": "ADC_SAMPLETIME_56CYCLES",
+            "master": 1
+          },
+          "dma": [],
+          "irq": null
+        }
+      ],
+      "timers": [],
+      "pwms": [],
+      "cans": [],
+      "dmas": [
+        {
+          "request": "SDIO_RX",
+          "instance": "DMA2_Stream3",
+          "direction": "DMA_PERIPH_TO_MEMORY",
+          "mode": "DMA_PFCTRL",
+          "priority": "DMA_PRIORITY_HIGH",
+          "channel": ""
+        },
+        {
+          "request": "SDIO_TX",
+          "instance": "DMA2_Stream6",
+          "direction": "DMA_MEMORY_TO_PERIPH",
+          "mode": "DMA_PFCTRL",
+          "priority": "DMA_PRIORITY_HIGH",
+          "channel": ""
+        },
+        {
+          "request": "USART1_RX",
+          "instance": "DMA2_Stream2",
+          "direction": "DMA_PERIPH_TO_MEMORY",
+          "mode": "DMA_CIRCULAR",
+          "priority": "DMA_PRIORITY_HIGH",
+          "channel": ""
+        },
+        {
+          "request": "USART1_TX",
+          "instance": "DMA2_Stream7",
+          "direction": "DMA_MEMORY_TO_PERIPH",
+          "mode": "DMA_NORMAL",
+          "priority": "DMA_PRIORITY_HIGH",
+          "channel": ""
+        },
+        {
+          "request": "USART2_RX",
+          "instance": "DMA1_Stream5",
+          "direction": "DMA_PERIPH_TO_MEMORY",
+          "mode": "DMA_CIRCULAR",
+          "priority": "DMA_PRIORITY_HIGH",
+          "channel": ""
+        },
+        {
+          "request": "USART2_TX",
+          "instance": "DMA1_Stream6",
+          "direction": "DMA_MEMORY_TO_PERIPH",
+          "mode": "DMA_NORMAL",
+          "priority": "DMA_PRIORITY_HIGH",
+          "channel": ""
+        },
+        {
+          "request": "USART3_RX",
+          "instance": "DMA1_Stream1",
+          "direction": "DMA_PERIPH_TO_MEMORY",
+          "mode": "DMA_CIRCULAR",
+          "priority": "DMA_PRIORITY_LOW",
+          "channel": ""
+        },
+        {
+          "request": "USART3_TX",
+          "instance": "DMA1_Stream3",
+          "direction": "DMA_MEMORY_TO_PERIPH",
+          "mode": "DMA_NORMAL",
+          "priority": "DMA_PRIORITY_LOW",
+          "channel": ""
+        }
+      ],
+      "nvic": [
+        {
+          "irq": "BusFault_IRQn",
+          "enabled": true,
+          "preempt_priority": 0,
+          "sub_priority": 0
+        },
+        {
+          "irq": "DMA1_Stream1_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "DMA1_Stream3_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "DMA1_Stream5_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "DMA1_Stream6_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "DMA2_Stream2_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "DMA2_Stream3_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "DMA2_Stream6_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "DMA2_Stream7_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "DebugMonitor_IRQn",
+          "enabled": true,
+          "preempt_priority": 0,
+          "sub_priority": 0
+        },
+        {
+          "irq": "EXTI9_5_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "HardFault_IRQn",
+          "enabled": true,
+          "preempt_priority": 0,
+          "sub_priority": 0
+        },
+        {
+          "irq": "MemoryManagement_IRQn",
+          "enabled": true,
+          "preempt_priority": 0,
+          "sub_priority": 0
+        },
+        {
+          "irq": "NonMaskableInt_IRQn",
+          "enabled": true,
+          "preempt_priority": 0,
+          "sub_priority": 0
+        },
+        {
+          "irq": "PendSV_IRQn",
+          "enabled": true,
+          "preempt_priority": 15,
+          "sub_priority": 0
+        },
+        {
+          "irq": "SDIO_IRQn",
+          "enabled": true,
+          "preempt_priority": 6,
+          "sub_priority": 0
+        },
+        {
+          "irq": "SVCall_IRQn",
+          "enabled": true,
+          "preempt_priority": 0,
+          "sub_priority": 0
+        },
+        {
+          "irq": "SysTick_IRQn",
+          "enabled": true,
+          "preempt_priority": 15,
+          "sub_priority": 0
+        },
+        {
+          "irq": "TIM1_UP_TIM10_IRQn",
+          "enabled": true,
+          "preempt_priority": 15,
+          "sub_priority": 0
+        },
+        {
+          "irq": "USART1_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "USART2_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "USART3_IRQn",
+          "enabled": true,
+          "preempt_priority": 5,
+          "sub_priority": 0
+        },
+        {
+          "irq": "UsageFault_IRQn",
+          "enabled": true,
+          "preempt_priority": 0,
+          "sub_priority": 0
+        }
+      ],
+      "clocks": {
+        "RCC.48MHZClocksFreq_Value": 48000000,
+        "RCC.AHBFreq_Value": 168000000,
+        "RCC.APB1CLKDivider": "RCC_HCLK_DIV4",
+        "RCC.APB1Freq_Value": 42000000,
+        "RCC.APB1TimFreq_Value": 84000000,
+        "RCC.APB2CLKDivider": "RCC_HCLK_DIV2",
+        "RCC.APB2Freq_Value": 84000000,
+        "RCC.APB2TimFreq_Value": 168000000,
+        "RCC.CortexFreq_Value": 168000000,
+        "RCC.EthernetFreq_Value": 168000000,
+        "RCC.FCLKCortexFreq_Value": 168000000,
+        "RCC.HCLKFreq_Value": 168000000,
+        "RCC.HSE_VALUE": 25000000,
+        "RCC.HSI_VALUE": 16000000,
+        "RCC.I2SClocksFreq_Value": 192000000,
+        "RCC.LSE_VALUE": 32768,
+        "RCC.LSI_VALUE": 32000,
+        "RCC.MCO2PinFreq_Value": 168000000,
+        "RCC.PLLCLKFreq_Value": 168000000,
+        "RCC.PLLQCLKFreq_Value": 48000000,
+        "RCC.RTCFreq_Value": 32000,
+        "RCC.RTCHSEDivFreq_Value": 12500000,
+        "RCC.SYSCLKFreq_VALUE": 168000000,
+        "RCC.SYSCLKSource": "RCC_SYSCLKSOURCE_PLLCLK",
+        "RCC.VCOI2SOutputFreq_Value": 384000000,
+        "RCC.VCOInputFreq_Value": 2000000,
+        "RCC.VCOOutputFreq_Value": 336000000
+      },
+      "peripherals": [
+        "ADC1",
+        "DMA",
+        "FATFS",
+        "NVIC",
+        "RCC",
+        "SDIO",
+        "SPI1",
+        "SYS",
+        "USART1",
+        "USART2",
+        "USART3"
+      ],
+      "generated_sources": [
+        "Core/Inc/adc.h",
+        "Core/Inc/dma.h",
+        "Core/Inc/gpio.h",
+        "Core/Inc/main.h",
+        "Core/Inc/sdio.h",
+        "Core/Inc/spi.h",
+        "Core/Inc/stm32f4xx_hal_conf.h",
+        "Core/Inc/stm32f4xx_it.h",
+        "Core/Inc/usart.h",
+        "Core/Src/adc.c",
+        "Core/Src/dma.c",
+        "Core/Src/gpio.c",
+        "Core/Src/main.c",
+        "Core/Src/sdio.c",
+        "Core/Src/spi.c",
+        "Core/Src/stm32f4xx_hal_msp.c",
+        "Core/Src/stm32f4xx_hal_timebase_tim.c",
+        "Core/Src/stm32f4xx_it.c",
+        "Core/Src/syscalls.c",
+        "Core/Src/sysmem.c",
+        "Core/Src/system_stm32f4xx.c",
+        "Core/Src/usart.c",
+        "FATFS/App/fatfs.c",
+        "FATFS/App/fatfs.h",
+        "FATFS/Target/bsp_driver_sd.c",
+        "FATFS/Target/bsp_driver_sd.h",
+        "FATFS/Target/fatfs_platform.c",
+        "FATFS/Target/fatfs_platform.h",
+        "FATFS/Target/ffconf.h",
+        "FATFS/Target/sd_diskio.c",
+        "FATFS/Target/sd_diskio.h"
+      ],
+      "usb_cdc": false,
+      "timebase": {
+        "kind": "tim",
+        "source": "Core/Src/stm32f4xx_hal_timebase_tim.c",
+        "handle": "htim1",
+        "instance": "TIM1",
+        "irq": "TIM1_UP_TIM10_IRQn",
+        "counter_frequency_hz": 1000000,
+        "period_counts": 1000,
+        "tick_frequency_hz": 1000,
+        "interrupt_started": true,
+        "errors": []
+      },
+      "fatfs": {
+        "enabled": true,
+        "app_source": "FATFS/App/fatfs.c",
+        "app_header": "FATFS/App/fatfs.h",
+        "object_symbol": "SDFatFS",
+        "path_symbol": "SDPath",
+        "driver_symbol": "SD_Driver",
+        "sd_handle": "hsd",
+        "sd_instance": "SDIO",
+        "card_detect_pin": "PC7",
+        "target_sources": [
+          "FATFS/Target/bsp_driver_sd.c",
+          "FATFS/Target/fatfs_platform.c",
+          "FATFS/Target/sd_diskio.c"
+        ],
+        "errors": []
+      },
+      "issues": []
+    },
+    "resources": [],
+    "build_sources": [],
+    "asm_sources": [],
+    "include_dirs": [],
+    "defines": [],
+    "linker_script": "",
+    "source_digest": "",
+    "source_label": "SS0.5",
+    "risk_acknowledged": false,
+    "assignment_fingerprint": ""
+  },
+  "air_link": {
+    "protocol_profile": "air.m0",
+    "radio_technology": "lora",
+    "radio_family": "sx128x",
+    "phy_mode": "lora",
+    "frequency_hz": 2473000000,
+    "spreading_factor": 10,
+    "bandwidth_hz": 800000,
+    "coding_rate": "4/5",
+    "preamble_symbols": 16,
+    "header_mode": "explicit",
+    "crc_enabled": true,
+    "iq_mode": "normal",
+    "packet_mtu": 61,
+    "flight_radio_instance": "telemetry0"
+  },
+  "flight_tx_power_dbm": 12,
+  "ground_target": {
+    "enabled": false,
+    "mcu": "",
+    "board": "",
+    "hardware": {
+      "mode": "unselected",
+      "source_kind": "unselected",
+      "provider": "",
+      "snapshot_id": "",
+      "ioc_file": "",
+      "mcu": "",
+      "platform_component": "",
+      "platform_version": "",
+      "platform_manifest_sha256": "",
+      "cubemx_version": "",
+      "firmware_package": "",
+      "hal_cmsis_source_policy": "",
+      "i2c_external_pullup_confirmations": {},
+      "capabilities": [],
+      "inventory": {},
+      "resources": [],
+      "build_sources": [],
+      "asm_sources": [],
+      "include_dirs": [],
+      "defines": [],
+      "linker_script": "",
+      "source_digest": "",
+      "source_label": "",
+      "risk_acknowledged": false,
+      "assignment_fingerprint": ""
+    },
+    "radio_plugin": "",
+    "module_variant": "",
+    "resources": {},
+    "pc_interface": "",
+    "pc_resource": "",
+    "baudrate": 230400,
+    "tx_power_dbm": 12,
+    "build": {
+      "target_profile": "",
+      "make_command": "mingw32-make",
+      "toolchain_prefix": "arm-none-eabi-",
+      "gcc_path": "",
+      "flash_command": "",
+      "eide_mode": "native",
+      "tool_paths": {},
+      "memory_layout": "legacy"
+    }
+  },
+  "resources": {
+    "gnss0:data": "PLATFORM_UART_2",
+    "gnss0:reset": "PLATFORM_GPIO_7",
+    "gnss0:time": "PLATFORM_TIME_1",
+    "gnss0:timepulse": "PLATFORM_GPIO_8",
+    "imu0:data": "PLATFORM_UART_1",
+    "imu0:time": "PLATFORM_TIME_1",
+    "launch_ignition0:output": "PLATFORM_GPIO_4",
+    "launch_ignition0:time": "PLATFORM_TIME_1",
+    "parachute_pyro0:output": "PLATFORM_GPIO_5",
+    "parachute_pyro0:time": "PLATFORM_TIME_1",
+    "storage0:storage": "PLATFORM_SDIO_1",
+    "storage0:time": "PLATFORM_TIME_1",
+    "system_indicator0:output": "PLATFORM_GPIO_6",
+    "telemetry0:radio_bus": "PLATFORM_SPI_1",
+    "telemetry0:radio_busy": "PLATFORM_GPIO_2",
+    "telemetry0:radio_dio1": "PLATFORM_GPIO_3",
+    "telemetry0:radio_nss": "PLATFORM_GPIO_0",
+    "telemetry0:radio_reset": "PLATFORM_GPIO_1",
+    "telemetry0:time": "PLATFORM_TIME_1",
+    "voltage_monitor0:input_voltage": "PLATFORM_ADC_1",
+    "voltage_monitor0:time": "PLATFORM_TIME_1"
+  },
+  "capability_sources": {},
+  "logging": {
+    "streams": [
+      {
+        "record": "FLIGHT_LOG_RECORD_EVENT",
+        "enabled": true,
+        "policy": "EVENT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_STATS",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 1000000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESTIMATOR",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 40000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_SYSTEM_CONFIG",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_PURE_INS",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 40000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_KF6_DIAGNOSTIC",
+        "enabled": false,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 40000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_KF6_FULL_P",
+        "enabled": false,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 200000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_POWER",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 100000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_HEALTH",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 1000000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_TELEMETRY_DIAG",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 1000000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_INITIAL_STATE",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_GNSS_NATIVE",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_BARO_NATIVE",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_MAG_NATIVE",
+        "enabled": false,
+        "policy": "DECIMATION",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_INERTIAL_INCREMENT",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_GNSS_MEASUREMENT",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_BARO_MEASUREMENT",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_IMU_CORRECTED",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_CALIBRATION_RESULT",
+        "enabled": true,
+        "policy": "EVENT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ALIGNMENT_RESULT",
+        "enabled": true,
+        "policy": "EVENT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_MISSION_CONFIG",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_DEVICE_DESCRIPTOR",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ALGORITHM_DESCRIPTOR",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_LOG_STREAM_DESCRIPTOR",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_DECODER_PROFILE_DESCRIPTOR",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESTIMATOR_STEP",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_GNSS_RECOVERY",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_LANDING_DIAGNOSTIC",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESKF15_STATE",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 40000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESKF15_FULL_P_PART",
+        "enabled": false,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 40000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESKF15_INITIAL_STATE",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESKF15_INITIAL_P_PART",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESKF15_MEASUREMENT",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESKF15_BODY_INPUT",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_NAV_QUALITY",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE",
+        "enabled": true,
+        "policy": "EVENT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY",
+        "enabled": false,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_SF6_STATE",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 100000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_SF6_MEASUREMENT",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      }
+    ]
+  },
+  "log_decoder_profile": {
+    "relative_path": "",
+    "package_schema": "",
+    "container_plugin_id": "",
+    "generation_profile_sha256": "",
+    "package_sha256": ""
+  },
+  "build": {
+    "target_profile": "SilverStar_F407",
+    "make_command": "mingw32-make",
+    "toolchain_prefix": "arm-none-eabi-",
+    "gcc_path": "",
+    "flash_command": "",
+    "eide_mode": "native",
+    "tool_paths": {},
+    "memory_layout": "legacy"
+  },
+  "generated_glue": [
+    "project_bindings",
+    "project_capability_routes",
+    "project_device_instances",
+    "platform_resources",
+    "project_resources",
+    "project_storage_binding",
+    "project_log_config",
+    "project_metadata",
+    "project_flight_config",
+    "project_algorithm_parameters",
+    "project_log_decoder_profile",
+    "project_sources"
+  ],
+  "component_provenance": {
+    "silverstar.algorithm.alignment.common": {
+      "files": {
+        "Algorithm/Alignment/Common/Inc/alignment_strategy_types.h": "efdc88b427c9dd6742eaaf7b5f0b1de43ab082a813961e16fe9e29a119687f89",
+        "Algorithm/Alignment/Common/Inc/attitude_alignment.h": "4e37df4983621c5de582391a35519692187819d5b75897f4b2f76c066f8d3ec1",
+        "Algorithm/Alignment/Common/Inc/attitude_preflight.h": "1f75f6b5af2f177b6a646da5ef3226398f99d48439060245c964131614c812e1",
+        "Algorithm/Alignment/Common/Inc/vector_constraints.h": "49c0d039e271620102ff0e9ce67ce0344580ed33882e2408d6ea17bb50401ae4",
+        "Algorithm/Alignment/Common/Src/attitude_alignment.c": "9b73eabee2e16ef1300327ead2fb0bdffd8a969bc745983fcf0e164a45eee959",
+        "Algorithm/Alignment/Common/Src/attitude_preflight.c": "dfc69b91c2b477b4994ab9c1df6e9c4c252a14fb290a7e3aad9dd5ae22075141",
+        "Algorithm/Alignment/Common/Src/vector_constraints.c": "b510a1e8c38c691f2aed83e7e0fa00f9893554c0f8f9dafa00c2cd92e5f298c5",
+        "Algorithm/Alignment/Common/module.mk": "bea56184afc44b9de350d50e05e57763e7324ccaed9b3c0b8cd5d61cc206c478"
+      },
+      "manifest_id": "silverstar.algorithm.alignment.common",
+      "payload_digest": "30315ee863c5fa5902b147cb41b864c612f1afd80ebac2e5323b9cc0f6a08fa5",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.algorithm.alignment.vector_constraints": {
+      "files": {
+        "Algorithm/Alignment/VectorConstraints/Inc/alignment_strategy_binding.h": "23ad9e903906c554da66502b0129b87dae432e302362ccb9d4bfff664772cde2",
+        "Algorithm/Alignment/VectorConstraints/Src/alignment_strategy_binding.c": "229de0e5621d078d68568d76e3cb7a4537ca85d2675bb1e78559d806febf4207"
+      },
+      "manifest_id": "silverstar.algorithm.alignment.vector_constraints",
+      "payload_digest": "556cbdf9b71204a1aa8b518705355bd1156b7b1806f4cdc5f498c7757b5a1007",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.algorithm.calibration": {
+      "files": {
+        "Algorithm/Calibration/Inc/imu_six_face_calibration.h": "f0ee9a5a0db36300d42942181ee56e0d53c00dae35ecc9ea0d02cec1ad60a004",
+        "Algorithm/Calibration/Src/imu_six_face_calibration.c": "17b15033dbaae411531d40fac4f9c211082ba161af935c1882a4bb8125e0b26a",
+        "Algorithm/Calibration/module.mk": "77af606ebc9c5e91d59de9aa82f6ad17d233568dc7c7acfa2a69e3857137b78b"
+      },
+      "manifest_id": "silverstar.algorithm.calibration",
+      "payload_digest": "94ac2edff1a9c09a2f18672c83aad8afb7a126cc9da8b89e1913fdad8d7f35a1",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.algorithm.common": {
+      "files": {
+        "Algorithm/Common/Inc/attitude_frame.h": "a4bfa5772d2b007966842ad064168c1f091ca11cab5271bf42cad51e6dc3c36a",
+        "Algorithm/Common/Inc/geodesy_local.h": "98396597f81985680dfe0c89b703b1fcfa4f9c282b8ccb28ffd404d45c29163f",
+        "Algorithm/Common/Inc/navigation_quality.h": "3f85c7df8aff1518ab4899a8951dd70560e82d9c22c13bf9a5fcb104b8596492",
+        "Algorithm/Common/Src/attitude_frame.c": "5357a6d087d64c94658c924249b6364bc6aee79ad4301c0b4b4a51e040a17b25",
+        "Algorithm/Common/Src/geodesy_local.c": "8ee67ec55504899cb70defa90fd0f4dbb83ed9ef6b711c2ccb8e0ec62b77f312",
+        "Algorithm/Common/Src/navigation_quality.c": "bac7eebd70a66ae39afc7c53550b29f78055a80a9b01f08c952c9bdfd5ed78d0",
+        "Algorithm/Common/module.mk": "cc5135a604f2c69051d0219fd62b1201be065a721f8535717f621c5ed2dcd3e3"
+      },
+      "manifest_id": "silverstar.algorithm.common",
+      "payload_digest": "93dcede1c7a92e51667b88e2b09790d694777c981c80114165bae984438f338f",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.algorithm.estimator.kf6": {
+      "files": {
+        "Algorithm/Estimator/KF6/Inc/navigation_integrity.h": "25851a38159a197d430e641f2c2f319cf74e63abe5e32f696fbd36caf712638f",
+        "Algorithm/Estimator/KF6/Inc/navigation_kf.h": "d720fb642906a49e92f0750c3a6a73c442d7ccfd153257643bad28aa4130b986",
+        "Algorithm/Estimator/KF6/Inc/navigation_kf_replay.h": "5010cf501d911d7b3e3ad5b37b32bc41c7a0cc94e8606c4f1f1f17e2f2fac2c9",
+        "Algorithm/Estimator/KF6/Src/navigation_integrity.c": "ed378348218ff394debbc203f1c598e482d6acbf56014d0286d50d17a8f4ddeb",
+        "Algorithm/Estimator/KF6/Src/navigation_kf.c": "f803020c42174e1d36fb13fa1bb6466dda023fff63e994c37bd1a00fbbc482df",
+        "Algorithm/Estimator/KF6/Src/navigation_kf_replay.c": "75fae213ed7726999ca5cb7be61b1a5a3e03121e206c3fd706eba4b9b32cc23c",
+        "Algorithm/Estimator/KF6/module.mk": "0825943354aad90b2b9e8b21fcc38951815c3c69c16899562fd5380a489f1fcb",
+        "Tests/Host/test_kf6_process_model.c": "d06ff5fc15af4e8e82af180c3810c70b575f41a6db133f8cbea1efad692e1733"
+      },
+      "manifest_id": "silverstar.algorithm.estimator.kf6",
+      "payload_digest": "36dd99a6be47cb7c9204fe4dfc0f632d25818cbdee63c2c095802af653627634",
+      "source": "builtin",
+      "version": "0.2.0"
+    },
+    "silverstar.algorithm.ins.coning2_sculling2": {
+      "files": {
+        "Algorithm/INS/Coning2Sculling2/Inc/ins_mechanization.h": "adc1e90465641029b1203b3fd746395df3350ebb878092338b1dfae48aac7ace",
+        "Algorithm/INS/Coning2Sculling2/Src/ins_mechanization.c": "74bd3041f9d3fdece4893416f1343289af4c559935d85263d565b31c06a440ad",
+        "Algorithm/INS/Coning2Sculling2/module.mk": "5dab07b6cf1cdfd700895373b11578de01707e320dee54801887c0b03ad1510d"
+      },
+      "manifest_id": "silverstar.algorithm.ins.coning2_sculling2",
+      "payload_digest": "cdee2c160b2aa75fb7198c480d94c125a0b0799c1c4a9c1d418f42b8cdae8506",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.board.silverstar_0_5": {
+      "files": {
+        ".mxproject": "a149a622bdf051f6121022682d2e5b846fa3e7f9aaea66dec45b313c16938f5f",
+        "Board/SilverStar_0_5/module.mk": "6af61eddd123064ce6ab69dcf52c35851a054781c6cbe0548fd6824315b8d772",
+        "BuildSystem/fatfs.mk": "c79e1b4794552d56db29da904554683bb99fe59406ba45766c222c1effc190a5",
+        "Core/Inc/adc.h": "0ac97025a4065f07b7b65a906bd0c45ea800215434ed43c287c1685507f3f612",
+        "Core/Inc/dma.h": "7cf6f7450a29d26303cbba5a3ca8c6cb24a02635d6a5ba4d05141fdfc75c4c49",
+        "Core/Inc/gpio.h": "e2d62f964a0b7f238384ed6a20a181d09df9647240a268dc547acf5b35099f74",
+        "Core/Inc/main.h": "5974fca3d96695de84acce6ff7bbdece9fe2db159b432998a2da43d5131db24a",
+        "Core/Inc/sdio.h": "0bdaddb21d3b2065647ca83a7de116c7ce666199a9b876feaeba324d761fe1ac",
+        "Core/Inc/spi.h": "7ee08a1f7b3c518b8f1a33e73ee2d18830c1336be9341e774e73f137984491d8",
+        "Core/Inc/stm32f4xx_hal_conf.h": "812258028ba4569afd569b8824844ddca53cc856fdcb2f46c71e7b565b695772",
+        "Core/Inc/stm32f4xx_it.h": "add260cf6e2e9a885d66da66287a55af935c0fc808bfdcd4a3fd787699788b95",
+        "Core/Inc/usart.h": "6295c53f36a77d18300beef8324e37fd3cd769d7f0b37488e6f7bcde75a0cec8",
+        "Core/Src/adc.c": "d97ea825eda51a68af477cb98e354f16579ac3f4643ba3adb681e87c0cc50668",
+        "Core/Src/dma.c": "07b8188b8a07633bde3acc1bad31b941c281f331828e5868c9d613fa6b40cd1d",
+        "Core/Src/gpio.c": "11509870a2afdba2f4266b65aa3e8983845eb21304a625716e32c9d2fd92f20c",
+        "Core/Src/main.c": "69ba52fbab7aa725e836ea923148624732f14f66b23df7e83e302f23815c2825",
+        "Core/Src/sdio.c": "c394155c73bb00b1fc8c1b6b16008e7175c3ece31e0e7a17a1a16f744ee204cd",
+        "Core/Src/spi.c": "cc0d5bf1fdf19c1f4cfc51386dd876c18e2e62d995765c990f2c5ff1f79de181",
+        "Core/Src/stm32f4xx_hal_msp.c": "20068019c1fff792541802d587e12466025b3adc8611e3c8ed1267ab9b160688",
+        "Core/Src/stm32f4xx_hal_timebase_tim.c": "bfc01b357084f00c3799755d1c3d9ce7536a4072f31f6136fc3bdd431c1880aa",
+        "Core/Src/stm32f4xx_it.c": "02014d77cc3836c10d91b06a188aa04609d080a4a9d47e13415a784967ab2700",
+        "Core/Src/syscalls.c": "03c06c72eafb44b499814cf9234aba57dd830f345d9b8779b5d7090e78517600",
+        "Core/Src/sysmem.c": "ad20f7b1fa1e7c73330727747222cf2ffa3245ebf035230ee9a157545e79df95",
+        "Core/Src/system_stm32f4xx.c": "a31929eab936ac98db060c18917118acf79dc96e1f03ed4b57d614535dd06d70",
+        "Core/Src/usart.c": "10a26d6de620fd1bba084c89185213414080ffc421192253e8b4e26aa7288406",
+        "FATFS/App/fatfs.c": "12605169bed679d240c49f6e342e41a9c283b54d570d0eb696b27633b5326ac6",
+        "FATFS/App/fatfs.h": "97d0a8f9295f623c4f33e34e4c1b3e0ac7204bf9adbd42d34b98eca2bb8f5325",
+        "FATFS/Target/bsp_driver_sd.c": "6ef6eb4e8ba3b3e2c7c84cc1ef4512ef2e7eb84ee0dee25ab48101cf9252292b",
+        "FATFS/Target/bsp_driver_sd.h": "6a9f53e3c9406e770f3277a368cd1e9765ed5461e1d81badc8c85f0ffd6e04f1",
+        "FATFS/Target/fatfs_platform.c": "f969058b6d48636d138a99109c1d2bd53dfcc1da7f888a2ddd3e10e820d06391",
+        "FATFS/Target/fatfs_platform.h": "85436c2f6d744fd6f57104dc3b57581a5fba97575a5f3ac05609896736baba6a",
+        "FATFS/Target/ffconf.h": "3303b0909305785acb0b07de291900f2e69128a34ba204d333c390fe378f8a82",
+        "FATFS/Target/sd_diskio.c": "2a03fc2f56b14ccfbc1df0ba30e0b57ea45d49cb5b76ecdc2f153313ba273dce",
+        "FATFS/Target/sd_diskio.h": "cadc6523f5716b90637907d8e53e15a9f2463b916094264a742b6e6f53d31e6f",
+        "Flight_Controller0.5.ioc": "00aaacfc1dc7eaff250a7f0773a1b63cc44856fd5aed7aa9f6109a08d3d0eba5"
+      },
+      "manifest_id": "silverstar.board.silverstar_0_5",
+      "payload_digest": "77a3ed6290418721211a5faa041441b6c426cdfff6c183209a5f0b9831a2c664",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.core.0_1_0": {
+      "files": {
+        ".clang-format": "e89f6be10d6c7cb649057f7df8039c264993bbd2123934f299524d4003361a90",
+        "APP/Inc/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "APP/Inc/app_task_config.h": "6a1be0fd9637d373bb71c19a577e9d6138c67ea4fa48115aff7acaf05f507403",
+        "APP/Inc/app_tasks.h": "c6741585540c01d16d04a37c889f2af0f4c47e9ad8694d8b6e64f0f39cc78f9a",
+        "APP/Inc/device_native_log.h": "c1ff88432e8925454ff9d48b017f514acf34930dae4abed2e22eef1e784aac15",
+        "APP/Inc/diagnostic_log.h": "28e45d3fc50a1a507ca897cbbe4d7f660cb00eee090309a6a63908b3d8ed924f",
+        "APP/Inc/estimator_barometer_pending.h": "1e15d3cffeb4f5648df11285b8aba3698602ef7b34289c78888b46df60e7f734",
+        "APP/Inc/estimator_bus.h": "47324b25edb228d47cca02ac0b3acd10de2a9f970c33211b778279200f029b71",
+        "APP/Inc/estimator_task.h": "9e348cf14c32499b563b96904e155bdeb56906dd5d579fd44c4a227cd30e0b70",
+        "APP/Inc/imu_sample_bus.h": "43326a4eace44dd2fac5044bc6b3584a0d04f732ec8a3556e03a1e4b439926cf",
+        "APP/Inc/ins_task.h": "e9ed9a4fb12dd91dfe197b1b39f5771d039ef7a8a9993d132ac3b5cacb0de04a",
+        "APP/Inc/logger_bus.h": "8c8e4fe001466c89dea27d4652fcb627d604b49633c9f594423b06efe9fdeb8a",
+        "APP/Inc/logger_task.h": "2ca40ed005225a19b3495b24307d4e897beb5e70245324934f09a429dcb89d07",
+        "APP/Inc/serial_task.h": "de323d753d25a0672ced06f6451629284905a3819f3e0e42cf568ea76e0b65d6",
+        "APP/Src/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "APP/Src/app_tasks.c": "50a2d07ab78db80e377dfe7fda76f65540b55390263784513b32585f1d6b8b15",
+        "APP/Src/device_native_log.c": "770a305afa656a7e3b0a893b4a9c13e5852dee3b705ea5db55fa825fe9760a41",
+        "APP/Src/device_task.c": "5eba97840c5fe9e510a4d1848f0e60cec51c4a2745e581593cba7221a6f699ab",
+        "APP/Src/diagnostic_log.c": "d924b4d41916d51908da4bccc39a8289547d556fe4a9b671e251025c72495bb0",
+        "APP/Src/estimator_barometer_pending.c": "ffa6068a12158921f031cd2d33abf40977d46bb194110d23472b696ca9e4673b",
+        "APP/Src/estimator_bus.c": "0367da2761c8c375ed618ec32df667751e52c2dc19061e2fe074a41cbf02c0a6",
+        "APP/Src/estimator_task.c": "b4f04482b32c4a5548dda59b07c144eb85791e36d2c5a58080401950cdc95653",
+        "APP/Src/flight_task.c": "65f917c86522bd1002c3deea4200e3f534aad5d177518607e28cd1f82ee8e254",
+        "APP/Src/imu_sample_bus.c": "9d24622a100cd8d82cb333f617864670fb6b632ea3adeac42e91a5d6b55506b4",
+        "APP/Src/ins_task.c": "3e8e7a9ae46e6715f8cbb03f040ff5c43b71dc8b813ed85422d9a6f7ec438acc",
+        "APP/Src/logger_bus.c": "b8e574e0edd7c95da02d989cbd5d7353043c1ba032d299323d4eb036a6844e1f",
+        "APP/Src/logger_task.c": "2652970a54741b212903dc9af3c42cace6cf06970a1862165f5f132ca95c1a60",
+        "APP/Src/serial_task.c": "9e46c4b2ce4ef153e0673fcf906853422b7360380927d1c2ac7f1bfead7f68b5",
+        "APP/Src/telemetry_task.c": "3613ca2e462d06fbed1ccc0658563b62ae66a2f92928fc25a64acf137fed08a6",
+        "BuildSystem/first_party.mk": "98c660c76ed3278bd8cc4a32c94bae0f229e723ebb21e34135fa3af3fcaf6566",
+        "Common/Inc/common_format.h": "799a74ba33a50047df861e10383d9a567d9aa37e88ca56a13f2e08e15f0b59f4",
+        "Common/Inc/common_ringbuf.h": "30980affd5a852752ed86abb6434dd4dac4cc82f1cd85ea66cc7e2ab9606546d",
+        "Common/Inc/common_spsc_queue.h": "c16044db87b42276b30d569744a311ff8dfde2ac2d13c37c5dea70e14b93d77c",
+        "Common/Inc/debug_log.h": "c2141484eac01d9269d37adb57bcb1870dbac93e6b630d367ac723d275f243b1",
+        "Common/Inc/silverstar_assert.h": "aa35382c4395e5a71bc80a71944498c6aaefe4bf4fa65a63fa00bc2c67cb0452",
+        "Common/Inc/silverstar_compiler.h": "3d66165f468e3e7263ebb6d72b6c217a042dd337be39e170ffb83487815ffd57",
+        "Common/Inc/silverstar_sensor_id.h": "846a6a24e573c7d67690a5fade5e3b969241049aa0038914d6507dec6adef082",
+        "Common/Src/common_format.c": "f08f1adf348283c56d2fe63615d406092f292f518b395e58f5e49fb057c82a7f",
+        "Common/Src/common_ringbuf.c": "cc70a66e2280da847468675cb3317ced36c5b6b3091716299ee10b6fbb4c00b3",
+        "Common/Src/common_spsc_queue.c": "c24f00286f42f4f1de1bbeee66103e1fb0588b06b2ca5d8e94c14da5851517c4",
+        "Common/Src/debug_log.c": "4c9364dd6496d25730572a23b7362bc51eaa9d192106fbd3ed68c295e452b74f",
+        "Common/Src/silverstar_assert.c": "ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826",
+        "Interfaces/Inc/system_barometer_if.h": "2e87a9baac7f17289f3fa1d24c7883ce4e1596ba911425c9fb216fba00521ee1",
+        "Interfaces/Inc/system_console_if.h": "4aa0afc7dfb60cdeccbd291b707ea5afb5821fe947c9342e7eae0d67a0beeeb7",
+        "Interfaces/Inc/system_descriptor_if.h": "929da3ffb37a1264bbb4d49a1b8f9546bc624690b0c915819a236e683a0c5057",
+        "Interfaces/Inc/system_device_types.h": "3d3511dcd927ceaa90caf1a8da6cd6ba0406d7916c60021b61c36bfb67f6ae35",
+        "Interfaces/Inc/system_gnss_if.h": "075506c8927bda50585d483f606220dd331858aa44c6c7001c1d8183691b28c2",
+        "Interfaces/Inc/system_hardware_quaternion_if.h": "3b5ebb709b49246ec73f74d22ebfce1f8a8a1decdd1474186786e6785ba2061d",
+        "Interfaces/Inc/system_imu_epoch_if.h": "d568ef886fd6d295da73225a671441025ba61ee535ff4f6df74a25312af57cc1",
+        "Interfaces/Inc/system_imu_if.h": "ae5f475d1319c813c0efb7d900c90deff1a7b57b4bd15e90d5c867c8c7cdf635",
+        "Interfaces/Inc/system_indicator_if.h": "8868680d9622ac8455f8b4921287cefe0a2af0af71b22a833a9da9afe61e5ada",
+        "Interfaces/Inc/system_log_sink_if.h": "e51266870c298bbd80316152d1847735da842813b3b19d625721b65e9143940a",
+        "Interfaces/Inc/system_mag_calibration_storage_if.h": "c2fd04f7abc1d3282fad17198e5e52559dab462a30d7ef9c95e827a775f6c052",
+        "Interfaces/Inc/system_magnetometer_if.h": "95abc1b33b2e2a3d60767bb307d43582b89ad1e1d2b22691ba02eb90311abc49",
+        "Interfaces/Inc/system_mission_action_if.h": "5c961600dc46b451a542f2903d4f907efd64f02933cb8af777208598afb2479e",
+        "Interfaces/Inc/system_mission_snapshot_if.h": "eef6764f8787f5da8ef0afe1ba3630e5b75316ec5389f30571dda4685c57323f",
+        "Interfaces/Inc/system_navigation_backend.h": "5125b85dfebf87bc74133e209278e8ceb66f6ccfe23562fa5dd7a7e89bedf9e9",
+        "Interfaces/Inc/system_output_if.h": "af8390d261d639b4ff5d96adbf55ab7f9a931572067b00d40d5ce8f328daa48d",
+        "Interfaces/Inc/system_power_if.h": "25bb2336ce0024014703191031cbc21e11fff4ee98b2e6339ef7985d11ad8337",
+        "Interfaces/Inc/system_project_parameters_if.h": "00fa9e3ec1ded9548decbcfb215e4c81a40a44ce98994ec75b31dcc4b1a2c887",
+        "Interfaces/Inc/system_storage_if.h": "2740c6a84829b332c3e921331b5c674831229092522fb2196cd040789c5d08b7",
+        "Interfaces/Inc/system_telemetry_transport_if.h": "33e7f2a7767444aa6e8358a5bea60c5a3b8bfb24a837734ff910f81293976679",
+        "Modules/Inc/telemetry_service.h": "861d7f05456fbc3d3f5c6e5c80a92062840d1a6f01dd94796b805b2501a2feaf",
+        "Modules/Src/telemetry_service.c": "518838f26b6b51b2c0c3033c849e6add2e354c4efa6d5de3cf5f29334b5836a7",
+        "System/Alignment/Inc/system_alignment.h": "fdcebcb39b00dbda9390acfbd4b9fd118632507344ed6bf30d3c1b3c4b41b907",
+        "System/Alignment/Inc/system_alignment_backend.h": "f417b935bf392cad54333a9b405383ed8ccb9f0d850af82398146741545e3714",
+        "System/Alignment/Src/system_alignment.c": "8b0219ef180ed13d87dd05406c8a7383f10a42cb966fd151f101ba0052377678",
+        "System/Alignment/Src/system_alignment_source.c": "71d6fb84298b935610291e6d1b00153e088aa4dc554b2c17d9e967b66320dfe9",
+        "System/Calibration/Inc/system_calibration.h": "360619e269b922df61b9d1c9adb07b24008b38d8b80e556808b41fa5dfa9bc00",
+        "System/Calibration/Inc/system_mag_calibration.h": "3bba88420b0089cbfac8a6e281d873bc1a4f108140245135c1e981a9daab175c",
+        "System/Calibration/Src/system_calibration.c": "dc6b5d9089ddb1a94f940e43f162c26f5f2e159920f9cf3f34302c4ea8bf82f6",
+        "System/Calibration/Src/system_calibration_correction.c": "31b5f1cec29e0da78bf3a92fd8298e9082e9fc7eb5337efabb9633a546e879e7",
+        "System/Calibration/Src/system_mag_calibration.c": "8ea3f92141b61d0bada055e83bc9167d73a9aec2e72e5bc522c820d687ef75b0",
+        "System/Inc/system_barometer.h": "ec7ace9571a9bb9d000946a28f925b704311da47be327d9af978e7a319f48328",
+        "System/Inc/system_barometer_cold.h": "d25923f413fa75da1bd7078bec8b21fd979b2eb203325d3a8e5b684e07ee58fb",
+        "System/Inc/system_capabilities.h": "3d90094722cb6018e9c56e5e6ea4d9986832a9aec542c5395c4566e4704686f4",
+        "System/Inc/system_configuration_types.h": "312f97e3bf5fa8c0c05f20007cfb02f23be3adef62296de1aaf963a27a3748cd",
+        "System/Inc/system_console.h": "0b915a04a59c07538f96ac1476a88b905a3891420956ec05696e6bce4fec6d0c",
+        "System/Inc/system_device_startup.h": "489635517caafaaa90a2bf79a25204c071046d937c7a0dc5b4f7e10bd3188bdd",
+        "System/Inc/system_estimator_diagnostics.h": "e57de3adeecb0f381843dc5d973c0e8eb579e5669e42bbebbc4d1d8cced7ef1c",
+        "System/Inc/system_estimator_profile.h": "00d9fdd2a7a7db558b68a16e62df2389eb4546dfa7890f77a16e0bf3c308363c",
+        "System/Inc/system_flight_recovery.h": "c5005032bbf4dbe810e978898c07feac675032e6e07ee0b40b8130e703ea9554",
+        "System/Inc/system_gnss_quality.h": "55ff337bca32adc58e1990764a32a996850dbe53c29499105a73b2c8c9ffeb6e",
+        "System/Inc/system_health.h": "689e03c6703a3e2b1c28d0bb846f39177202de61d2545587b18b623401c29a1a",
+        "System/Inc/system_lifecycle.h": "49bcc74951c96a7ac977e1c10a2139b2ed720c88c2d35ecb056e55a308e36674",
+        "System/Inc/system_lifecycle_backend.h": "dde76e35d413eec0bacbe74eaffd948dd63545bee5d096f415a49ce97e81a7b0",
+        "System/Inc/system_log_file.h": "029b3611773f6f2642b55c6cdf05dfa52bd913be886e93d47e333c39da895e29",
+        "System/Inc/system_log_policy.h": "45e4106cabd3a76d45218542601cd2433350c851f556ddb16a7e3f2bdf0b4220",
+        "System/Inc/system_navigation_health.h": "e4b43afd6b81267e99b60ce066bfb006b4fc37edce6011e9865b9c20630cefd5",
+        "System/Inc/system_navigation_profile.h": "1b7fa07655afb4be06c0afab6af87d15a28a1aad06e14b7a4b23018e193ad3dc",
+        "System/Inc/system_profile.h": "7da5560da3360e811bf7715963ece11bca9637377686993ef4483253d7b236b3",
+        "System/Inc/system_sensor_status.h": "73f66e659993756bfd4d9e767665a96e6e675b0431c636270d6ccbcd4e8a83ba",
+        "System/Inc/system_source_selector.h": "08fa321f38e552613f866b0fd45a06e143b0e1500008bb987d9f55ccae1ceee3",
+        "System/Inc/system_startup.h": "1f906e69a8df8b3110618fb01f6c947060dabe482bd4a07e3c57ab5af7af81bd",
+        "System/Inc/system_task_stack.h": "12e447f65281c8d071b9afd3c9f249aa79c704b8322fb9d49c88d23a1c4345c0",
+        "System/Inc/system_time.h": "da4da29b9df5f5761c884534b0aa6b68aca9133b460602cb7ec59751aa10035d",
+        "System/Inc/system_version.h": "fee48e79cea350e5523a58c3feb430521af6db996577cd4ef533a0d10de20fa8",
+        "System/Indicator/Inc/system_indicator.h": "2f570db383fe5511cc7ed720b97e03510d59c36922437c0ea560e78a60524966",
+        "System/Indicator/Src/system_indicator.c": "f45ebd0934b5d4db4b8ae0bc0c3f63b91a5a05e027db3d19851a6030f44b3b82",
+        "System/Inertial/Inc/system_inertial.h": "dd06d94336c41cf4f31faea816806ec2d0b7b8e02166a6d039dc6d12adeef298",
+        "System/Inertial/Inc/system_inertial_source_if.h": "44e81dce7112d396e8fd70d74ca4a6aded030b37ce9d1fbf9c9500b77b599566",
+        "System/Inertial/Inc/system_inertial_types.h": "a54bc2626e2d6b87f36de8ad3c16b20c97a1d3082f289a2a597263888e7d64ea",
+        "System/Inertial/Src/system_inertial.c": "a334758493aa551b81bb9ef1696e2857f323b8cf05be04244751a37649ef8586",
+        "System/Src/system_barometer.c": "654ee68b304fea324762b1e52329a524d1c259d302634e95a75a2b331aaa3a60",
+        "System/Src/system_barometer_cold.c": "b415d959f48e3ab7f1489f628665143378455516b434f8195498c8300703e16f",
+        "System/Src/system_capabilities.c": "469185eefc50e5e0177ae012fed61095768892c22a63a6ffc21a8d00e32f6e71",
+        "System/Src/system_console.c": "30c5152ca9c1fe567a46cd23019a7d07c9eaf349ad11b9bad26af7590f95aadd",
+        "System/Src/system_device_startup.c": "09748fe3be2f42c7c4899a7fac1b92009b7675ff49888c6d363b880e6ac4c9d8",
+        "System/Src/system_estimator_diagnostics.c": "d869ad1548e7792a2d90918510765cdf309654a950a0587f6ec704cd11d9cecd",
+        "System/Src/system_estimator_profile.c": "d0b7ee65e2de24f139d890a3cd6ed0734272a0f5993464fba6466f4404497edc",
+        "System/Src/system_gnss_quality.c": "c6d28975184a7cdfebfd270c9591dd3fb4e077945716be69c40aaa9fd15a2a20",
+        "System/Src/system_health.c": "6a4f44bfe1b7040c4b656b44897b874daf805a1d09dd3947e3815211cd14e6f7",
+        "System/Src/system_imu_epoch.c": "0f9ea818e0a9f597ea4420be869b0a98cf1d89b4f34802d2e1f9b1341249d478",
+        "System/Src/system_log_file.c": "322ac913247b718c458bcbd1c3d56df9f586041ca58c0ad2559f00946d148a29",
+        "System/Src/system_log_policy.c": "3e31902b7162bc6321413ddfbd86d13fbd4919460137faef3dab47e7137e4cb1",
+        "System/Src/system_navigation_health.c": "468352a631b3530182571c9714882c1ce0a6ef40a76c612b81e0ebfa30d7a825",
+        "System/Src/system_navigation_profile.c": "ab9af7ef47b29caa09e06e60f44b6ddc559d8fcd4dc0da9a6c8c9502ce6510c6",
+        "System/Src/system_profile.c": "ce9599e83df26606683dd38b84aad999c571582c4ed4929d4e87af3340d5e57b",
+        "System/Src/system_sensor_status.c": "2c57f9af1e553801434047e22c6e5eda97839f108d4c8e15474231463cac20cc",
+        "System/Src/system_source_selector.c": "175ef9afa6eb5f7f2b42e96817183fc14c66e18cd9b38cdc6f0b192e28bc7368",
+        "System/Src/system_startup.c": "ef5687a0e20eb592b5f1e4a77d266cd5e7195567ffdc893869840d83992a9fc6",
+        "System/Src/system_time.c": "f46bf020352b9e0278a3d4b664ac08b10705292fe15d4e31214e1ba595c95135",
+        "System/User/README.md": "f30a6fe5158104861febcfcc4d5ae8ba177eff2a527ae3650f31e420df089acc",
+        "System/User/system_user_alignment_config.h": "9c4039ccad05399beb474764cceca4bf0a1e2ad6d5234b66272f9fad82eb1834",
+        "System/User/system_user_capability_validation.h": "08149e0dcac988034e80c76ebfa73092922fc23be343b6d8f6a13cb374a6fdd7",
+        "System/User/system_user_config.h": "925548dfea038800ec6ff5df1665560f0e1ab3906dc7f35e748a06a0d48d39d8",
+        "System/User/system_user_flight_config.h": "6fe33159ad41d93ce2d31324aa073af9e871c8601e30aa3729ba67479fa57e6d",
+        "System/User/system_user_inertial_config.c": "fb38f178e07cf79d22299cd7c065ee5d66e540c8dd84ebd38e934e49bc012f47",
+        "System/User/system_user_inertial_config.h": "5c1f98d3ea600903b4e2d6cc0d8e3fc616103f2ac67de01ee84365088f32b727",
+        "System/User/system_user_platform_capabilities.h": "b9ee041df54a4667232adcab28154f13deb7a0b59e699ed822b6475674b0e94a",
+        "System/User/system_user_startup_config.h": "95e0f24f9937b46b97488657325b5aa0635388de137a46c97b2a5fed914c5cdb",
+        "Tests/Host/Fixtures/MultiInstance/Inc/project_resources.h": "29ceac27d1128a269f7c43348d2975ec0986b2c319e57a480c93bfd95a284ac9",
+        "Tests/Host/Fixtures/MultiInstance/multi_instance_resources.c": "c0c68d9a876e1183a533d0c605fc7d8fca3518b60909f0e5b9a8b78938a2c55b",
+        "Tests/Host/Fixtures/algorithm_noise_absent.h": "f075fcb2d22e98811a4082ac4e782e44d748bda9cfbeffe41620693d9800be7a",
+        "Tests/Host/Fixtures/log_file_storage_stub.c": "f68e207432c583eef67f17d7f12376c38003a0d20b189bc285f149c35bc6043a",
+        "Tests/Host/Fixtures/multi_instance_build_contract.h": "8f0380c9865810d3d282f80591e9826687da095f9486b0f423bada6e85f3549e",
+        "Tests/Host/Fixtures/multi_instance_project_fixture.c": "32fb68060209798f2d7fc7a331383334fc51b76163ec1a693d1d0dfdf02317af",
+        "Tests/Host/Fixtures/source_selector_lock_stub.c": "a02ddd58c537c6362deb0a77a3715aa1d1a31dd36022ecd7401cb911ba731003",
+        "Tests/Host/FreeRTOS.h": "a94897e70ea6c6a2b84886a000adfc79460b08fc7415d474b989552e12d32b05",
+        "Tests/Host/compact_assert_trap.c": "91cd919f57239491ca9e93aba75a39eb86c934555fc006d890bef582ba88e37f",
+        "Tests/Host/generate_golden_sample.c": "fe234cac583db28393c8b40104c72ad5cdb9e393f33d2547a0c5f3466523a566",
+        "Tests/Host/host_contract.ps1": "20627bec4027bbb41d61d236cb7b177223c773dc0e682056d73e21b95327956c",
+        "Tests/Host/host_platform_mock.c": "67695da0216e7a58b72141382dd41d03f470d9e459a31253d874d23132c846ca",
+        "Tests/Host/host_platform_mock.h": "23cce5863c7704bcfdf3582e84c216b6c89f50803589ec451a86df8577aa899e",
+        "Tests/Host/optional_start_inputs.h": "aa315d0d30f2f2c4f7fbcd4b7875abc9b7a4cbad8e3dc450ee67e51cb7a25986",
+        "Tests/Host/optional_start_ins_inputs.c": "64f3edace371ef1ead90326c6db568a78dc919500ddd31e16fe9cd16035da5bc",
+        "Tests/Host/optional_start_mag_inputs.c": "2edab87a0abb637eff2fc0b55daf5e6a90ff91f3e8a7aa5ba686c63f7e54da8f",
+        "Tests/Host/optional_start_storage_inputs.c": "84d1e7da450dd84f6b53c8850407a24a8a067af9d0cdce7b842531aff12325b0",
+        "Tests/Host/run_tests.ps1": "48c4223e0b2d609252f675ac21b60c7516ab5e333b5fc7f999765529925f7d8b",
+        "Tests/Host/storage_integrity/FreeRTOS.h": "9b5477accfd1bbeb280caa276d160296a64d5e8c662c04e3a016dde78e1462f5",
+        "Tests/Host/storage_integrity/check_rf_actual_rates_records.py": "bc569a3a4298fa2a5a80467cceb5d9aca9e8e9b8ff340ae7eb19522385197289",
+        "Tests/Host/storage_integrity/fatfs.h": "02cbfc0e595ee65bdb060bb19f9d0fada37fb40464ac52049f1ea90fb82d56d3",
+        "Tests/Host/storage_integrity/queue.h": "587a7e6fb76a9a6cf93e436949a158664a37bb5a05eb3289781673b60f65b491",
+        "Tests/Host/storage_integrity/run_rf_actual_rates_storage.py": "c496a2a11eda3544ce6bd767198234a9adb495986c19c7c66a34ef0e7f628e23",
+        "Tests/Host/storage_integrity/run_storage_integrity.py": "115bef7c8eb9f666fbf642c323829fe3fd59f80a9c0e2fc60e40b3a34122a734",
+        "Tests/Host/storage_integrity/sd_diskio.h": "61eb71a3e847cbd846d2cc1d1b14f7c19d456a90a4d5b0fbd7db2066858e9b46",
+        "Tests/Host/storage_integrity/task.h": "122aa80bac134cde0aa357f3b60df1dc374e77c7fae833eff70390ae23978f52",
+        "Tests/Host/storage_integrity/test_eskf_storage.h": "bc9be9b942fa4657874f7414c495a3fe4db1d97fdfc3cc521153ebcd901af8f4",
+        "Tests/Host/storage_integrity/test_logger_storage.c": "1415e35ac430664109e114b4579e4a3f133884dc265f0d09417b50be2888d937",
+        "Tests/Host/storage_integrity/test_rf_actual_rates_storage.c": "0e20d8b482b061d53d139b703a067fe2c0182e941a512ad7cc9ab189e9c72887",
+        "Tests/Host/storage_integrity/test_sf6_compact_storage.h": "9e50e233105d8a3f7d9257fe88c5f3c669a7748ed4ee7b9ebf0a7fa687159c2b",
+        "Tests/Host/storage_integrity/test_sparse_preflight.h": "48eef9120224f88e342e9a9bfc300d995eaabeb6aa360dc27fa21a14ecd1854a",
+        "Tests/Host/storage_integrity/test_storage_integrity.c": "423df3c72127a17953e74102a02f608d0ee66bf180488a402dbcdc5e7ca00407",
+        "Tests/Host/task.h": "db5f25612249f808909b0f3adfacabab4425e84bdab474d188a28a77ae8069ba",
+        "Tests/Host/test_air_kf.c": "e129ba7d241eef27dc9c984a31e73cf2b6478abc1fae29f44b62801d67409801",
+        "Tests/Host/test_algorithm_parameters.c": "390c664d072cac79027bbfb717e2e49a972b22d0e218ed009dfd234065d7975d",
+        "Tests/Host/test_alignment_strategy.c": "4bfe39ebdbd7841f989d87d677c46f64d867028e3276c7ad877260e88be29f99",
+        "Tests/Host/test_attitude_alignment.c": "58c33aacc452754a0d2c6fe916ed1ee80aea59f996a2538b012975af99c85a85",
+        "Tests/Host/test_barometer_cold.c": "e7653a8bc2785468a8d0b5964f1a009253c4b1fadf886aa1754031360e30b0ae",
+        "Tests/Host/test_board_mission_action_service.c": "d0619c438df5294e75039d6f8bd3a9f567d481c949591853caf43e883c84817f",
+        "Tests/Host/test_board_power_service.c": "967bf46b74af97a527fe2f03e9428b0cfa95000cac40f4b21cb0b41f11bc3109",
+        "Tests/Host/test_build_capability_contract.c": "b7a66ec15899373b86666685a417c9e4eaf7957e6409fbd0a96870062b69f400",
+        "Tests/Host/test_calibration_build_gate.c": "e81862161d4e3c3b321841a251a99fc947baf69f854a411d91331ecd8edbe7e4",
+        "Tests/Host/test_common.h": "7a2aaf9a47d09824c6399d662989ae533dcc8441c1502b7327f0dc33b6e32db2",
+        "Tests/Host/test_common_format.c": "5007965f5709b759fac729a23b6f64639302177238f8aecb8d78c7bfff9a843a",
+        "Tests/Host/test_compact_log_slots.c": "0c55e6e3dd0e836fab23d407b7a8697377f931626e3bcb40ed6459eaf25872e5",
+        "Tests/Host/test_console.c": "344635bd744374cbcd602aafc4bd45772f74182ead553e606ce2de6d68bc389a",
+        "Tests/Host/test_device_native_log.c": "28af7835067d5625d6b7f3cb8fcc2b1a20ba0c6d35aafbba60ed2242274d290b",
+        "Tests/Host/test_device_startup_fsm.c": "f014a0bb6c3e02450b1e4a62a452dd09e40fe15c8c5f981d70de76a6ecbf5db2",
+        "Tests/Host/test_eskf_backend.c": "1ea8520e204545213a24a85d92928492c40fb66416e18d657e0863b4b4979403",
+        "Tests/Host/test_estimator_barometer_pending.c": "ccaf8cdcc5e4b45edf720278d8d85ed887452bfd741aab9aa84d1432889ccadc",
+        "Tests/Host/test_estimator_preparation.c": "b5fa1b90603e84bc41bf6560f18e2c4f286902cc5fef46f4e580225bab1593c6",
+        "Tests/Host/test_fault_hook.c": "e2f9fb1b03d00cd1bf1d8c2c7995915176fde6dc7eda4b2745a0dbabc3df4668",
+        "Tests/Host/test_flight_config_compile.c": "3ade76135805557252ab80cb4fb813408cb9877fb741a853b0803365c072b33c",
+        "Tests/Host/test_flight_recovery.c": "9185eef167d4839eaf58ce8eee54105819b4a29b1826945ef2f7246d5855a7e5",
+        "Tests/Host/test_health.c": "bf8d9704765b7d95e89c0a4c02c0e65326aebd29214fc0a165434cc93c787e7a",
+        "Tests/Host/test_imu_sample_bus.c": "bb80421a0b6e06579cb8df79112591747d1996b50495b8074b344a1a8636c0a0",
+        "Tests/Host/test_interfaces.c": "59bd812f5a7ceb704df60ca638b718c9b6b8cfac6138f5dcdc7ab4242791a7f7",
+        "Tests/Host/test_jy901b_adapter.c": "e9a7c638547c075224bd0a56e34cd1a3faf86ac48520c98cfa6a9bbb8be9decd",
+        "Tests/Host/test_jy901b_device.c": "736b1917bb9f2180eb244f350810cdec1a5abd147f430d0e527ef1f998494681",
+        "Tests/Host/test_jy901b_multi_instance.c": "2060667c17c787f06fe07168f4409fb4ab72f3c59aab513aa633d8d12ba8a5b2",
+        "Tests/Host/test_jy901b_startup.c": "995b3f89586d19e099b22e42a43f793027c65f3eae4446ea75853d0bae8ac556",
+        "Tests/Host/test_kf6_outage.c": "acd1c21e207990fdb6b2a79c93b43d93f645d7d568917e39d2e1097bffa139f1",
+        "Tests/Host/test_lifecycle.c": "d55c47cd11a7629902d1fd415ec37e8a105126d4c53ebaead5a4df3ce2da1c5d",
+        "Tests/Host/test_lifecycle_logging.c": "43f7accf56df0b918c7659ae766d968e0b2341426e7408442d365f4862c608e0",
+        "Tests/Host/test_logger.c": "50b4d3f2f09511598f2bd843bcdf1cfce90ee6c5e28efde1d321fece4fe86d9f",
+        "Tests/Host/test_logger_alignment.c": "fdd4d5e9ba43c54f917f65a1e19387e783a0b05b3d2bb8ceaf6787198c4abba4",
+        "Tests/Host/test_logger_snapshot.c": "b76fedc747516521b085c71d5b8e42903d57dc448b41f23888c900a870e86df6",
+        "Tests/Host/test_logger_streaming.c": "f39e1c0de82553674941d99d8ea69409fe2dd9c75ae179469f78138a3c260b44",
+        "Tests/Host/test_navigation_kf_replay.c": "63f87923632fe05df63fc028d89b3f6531c4d00773d3a91b89322825bd38adac",
+        "Tests/Host/test_navigation_quality_supervisor.c": "ca541e76fb66f2d4586b089a5cec93f1bfc34789954f29126b1594a6696fd8ea",
+        "Tests/Host/test_neo_m9n_adapter.c": "ab3681204c3853242776d0fe7b791b7c5c51b17c2b52fff08c333aa570b0fd4d",
+        "Tests/Host/test_neo_m9n_device.c": "41167f82aa0a3ee67dd22ddbda0f887224ed9fc690ddd2d9b0fff758207a703f",
+        "Tests/Host/test_neo_m9n_multi_instance.c": "5767e3bf913f3e050ffd50c600649e304d6fd999eb940d2d899cc34721b7b811",
+        "Tests/Host/test_optional_gnss_start.c": "8ccdd9e65d14667e1d4e701980bca9e4b4ff35628149b67350a27ce6f24fd7e8",
+        "Tests/Host/test_profiles.c": "76877f8ea21ff2903bf62d45921ce14847b2b3968900d726c406a3886faec1a1",
+        "Tests/Host/test_runtime_commands.c": "68e8a140aeed88b5aaac2a224608f6856fe073e122bb19b8b6fe0543bdb61e9a",
+        "Tests/Host/test_runtime_startup.c": "5e95acc4fc35ce36c0400462e33cdcb2bca47b16eed3b048fd4eea6ec9d62811",
+        "Tests/Host/test_sensor_quality.c": "52ac7f6dd80c558025d1928532d649b5df9026f64f534956a4f2fbca6c97769b",
+        "Tests/Host/test_sensor_status.c": "5202a71c4770e1a29b4d8dbbfdbf4be03191d5470b90f5c2184d01121f48b568",
+        "Tests/Host/test_source_selector.c": "1e3df75fdf1634326571ff1be187028b272645a6f169c6187597667a1e565ef1",
+        "Tests/Host/test_sx1280_hal_multi_instance.c": "e4e0876c2f00c274133466a98d84df1f888b516d2ba09aa5e3868a4be8aecd10",
+        "Tests/Host/test_sx1281_device.c": "194ea58d672015adeace7543696f41a47bc4e8a89ca46d924446b6280aba76e8",
+        "Tests/Host/test_sx1281_multi_instance.c": "ce00f32e74de449c9350b79ce09af0e5ed26e90e9bbb9098b90bcff6d00262da",
+        "Tests/Host/test_system_alignment.c": "0b4c4076f9e44096a1a7e7b55c4d78625b025b7b74752159d0d6aca322889410",
+        "Tests/Host/test_system_calibration.c": "71870424e4a000451f0796981dd0869101ff2923742cc3ee57818731aaf86e6e",
+        "Tests/Host/test_system_indicator.c": "17c33676488d275e92a2d8e4f22a018e6d067f86593fc1f8ddf633a8e50023e7",
+        "Tests/Host/test_system_inertial.c": "6113056a12f1c61e1417c9655c9357d37df286b063c3b13d7d232afdb76823d7",
+        "Tests/Host/test_system_startup.c": "d0fb580a7cc83c3e40d99346fd2bac0a17ffa5dacda3e0f3bbb16fde3da4f256",
+        "Tests/Host/test_system_time.c": "e6b858050b13d321f44b1ed2bf353dbca8a300b78814ba8e797ffbfc6962c458",
+        "Tests/Host/test_telemetry.c": "1c7d867b802927786fa05ed509834597826757a2e26efafa733a351975b4cdde",
+        "Tests/Host/test_timing_bench.c": "8263a6af7a9c11367c01d9fe310d7980b60d6cae3378b8b57b2e611c100819c0",
+        "Tests/Target/TIMING_BENCH.md": "e1e8b407538f7c244a6c42121d20546945adff225351b88e506c0643e25442fd",
+        "Tests/Target/storage_integrity.c": "8ff6db420d626af8e590c1afeacd5be6efa28a30c8f4c5c11c5a578cec59d94b",
+        "Tests/Target/storage_integrity.h": "17126e6f3aaa085a8e9874b488d2c210480190fc9dbf39c561ae9552bfd3facc",
+        "Tests/Target/timing_bench.c": "4682c19b60b2aad027bc45a778bf6bfb4e38213468793b024569615ed50d9894",
+        "Tests/Target/timing_bench.h": "827c572383a80b2ee907ca40d3634cafe458d8103e456fd2961760d7397e49eb",
+        "Tests/Target/timing_bench_example.c": "449b4f8fd38ab346b2e506768cccb01b25803b54ed5369dfff8220dfa8b34330",
+        "Tests/Target/timing_bench_example.h": "61c97a74f5200eda957633be1dcca87bbc333315f21e5abcefb431f5404d83ee",
+        "Tests/Target/timing_bench_f407.c": "ff329c9ba7d85b6f30d593bd4920639ac6f06928fbc0753dbb90b3c9b4964cc6",
+        "Tests/Target/timing_bench_f407.h": "3cba9906b7ca42bbf22b82110916f3d814a18bf22fee6de3501010842a4d3069",
+        "Tools/auto_memory_layout.py": "1461385fa1cbe0e9f827b7510e1be05a6ff23fd330ed57868199dae37d399546",
+        "Tools/check_architecture.ps1": "d46e21ef337799bf93961ed93b9ff11aba851e67c61b516086fe2d90f485cc96",
+        "Tools/check_firmware_artifact.ps1": "eb5c5529e2c6982473cef60ac328e7bb6d17b40c96c0cf589640307d7895baf6",
+        "Tools/check_power_of_ten.ps1": "a02b24e2305dd65f99aff49f58a0cd10ddf954b8860f90b3d01096f499f06286",
+        "Tools/check_task_stacks.py": "8de5e90798c76a53c3acd3f178726cf6d0a94ed06b996ea717e892748c23bb47",
+        "Tools/read_firmware_identity.ps1": "91ca80b7e93489159b12ab4c52c9dd05060bd4230e2afa9bc07c23d6e7053c10",
+        "Tools/sslog_audit.py": "d48a5bc8e97f3f0c7c37a26b2b843f75910268c8bac5ea9997566714001838d3",
+        "Tools/validate_sslog_record_catalog.py": "62580e7de294e4a7967953f2abf821c00d337ae21eb5169eb1ec514d69789ae8"
+      },
+      "manifest_id": "silverstar.core.0_1_0",
+      "payload_digest": "e58b613db7fa2eadaee1dfa250f529cd92014b9d5830dfb687be6dcead78acb1",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.device.actuator.launch_ignition": {
+      "files": {},
+      "manifest_id": "silverstar.device.actuator.launch_ignition",
+      "payload_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.device.actuator.parachute_pyro": {
+      "files": {},
+      "manifest_id": "silverstar.device.actuator.parachute_pyro",
+      "payload_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.device.gnss.neo_m9n": {
+      "files": {
+        "Devices/GNSS/NEO_M9N/Adapter/Inc/neo_m9n_instance.h": "73ca247316bc8de730a038365e44b12c3a4f883f4257dfefc500f2a8ffa39f3c",
+        "Devices/GNSS/NEO_M9N/Adapter/Inc/neo_m9n_startup.h": "cf6c8e2d4b634518a5aef2ce2881af5384a451bd2e554e6f020b66e5c1f5dba3",
+        "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_startup.c": "5e283519dac1e1e08b95b5423145a1383e24e1f742b907d9b0e3388f5a0d45af",
+        "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_system_adapter.c": "0cd22b1274df54133e84d4c81c7b1447719efae8c13726a809160281bd5285c4",
+        "Devices/GNSS/NEO_M9N/Inc/neo_m9n_build_capabilities.h": "793b542715ea21596e985fda1c74585d391c76893c63d1889137a8d10d6492ac",
+        "Devices/GNSS/NEO_M9N/Inc/neo_m9n_config.h": "15c6ec4f42ff903a99bd0501149a3ca7a508137773da335f0ed7ea5afb6c8e04",
+        "Devices/GNSS/NEO_M9N/Inc/neo_m9n_config_keys.h": "c2a38087f7c8acfa9989884d7c6a9d4eccb15602c2f02ff03c139907aa917f65",
+        "Devices/GNSS/NEO_M9N/Inc/neo_m9n_device.h": "d1a92bc14512fe30579acbc3e867ad89f415c621a9b4762ce7e2209519bc64fb",
+        "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c": "c7d1019f3b95db2fcc2ef44b8c6601bb989b1965c2a409416fff68d860bb7f08",
+        "Devices/GNSS/NEO_M9N/module.mk": "da3dbaa4be1f24f280e6e90f5c5f5f268c6be98f6896a8e189eed77cc2eb19bd"
+      },
+      "manifest_id": "silverstar.device.gnss.neo_m9n",
+      "payload_digest": "97f443fe1a81785a55bcf822f766565f31967ca215c3488abe7d1abf8045d827",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.device.imu.jy901b": {
+      "files": {
+        "Devices/IMU/JY901B/Adapter/Inc/jy901b_barometer_build_capabilities.h": "f53dabf6ee1557181d7dcd52a42041afc41c713e9ce4613ecc6c15e75d360d7d",
+        "Devices/IMU/JY901B/Adapter/Inc/jy901b_instance.h": "db0b6676b83d80f7eb5fdf382736d704eea50efe563b2343974402c1d6b84bc0",
+        "Devices/IMU/JY901B/Adapter/Inc/jy901b_magnetometer_build_capabilities.h": "e2e883385dea4202f6803a8c66ff3101c3d243c69ff159868a2f543157602fdf",
+        "Devices/IMU/JY901B/Adapter/Inc/jy901b_magnetometer_config.h": "f124399d9771669f2d14a7b6e4e79c33283f5e8029534318a3d9f8b7e5e5a4d1",
+        "Devices/IMU/JY901B/Adapter/Inc/jy901b_quaternion_build_capabilities.h": "87b336d66a7d16246e4406d8f1a769c014b93a84d36ef4fdbae735d3f28a2a5b",
+        "Devices/IMU/JY901B/Adapter/Inc/jy901b_sample_quality.h": "082013b92d32722fcf2c263c9879b10b929cbcc9e996ed80ba2ba76620d3e768",
+        "Devices/IMU/JY901B/Adapter/Inc/jy901b_sensor_adapter.h": "972a2d95250eadb05a3d4a87c3366bb8ead1438b1fc758a321a7d27c55cdc40d",
+        "Devices/IMU/JY901B/Adapter/Inc/jy901b_startup.h": "620d9f50f27bff5a2a3100b319df9844a5a85392cfdb33e1b6d23d98154023c1",
+        "Devices/IMU/JY901B/Adapter/Src/jy901b_barometer_adapter.c": "2820f2ea2b62452b36f621c4cfdec36893fe780c1eb08a0959c406bcc776027b",
+        "Devices/IMU/JY901B/Adapter/Src/jy901b_imu_adapter.c": "2cf152a82d9965b8910e2c8100f5eddf5cbe9eabab6e88e10ac9cee69983e09d",
+        "Devices/IMU/JY901B/Adapter/Src/jy901b_magnetometer_adapter.c": "e0176f486cfab7b2f8ad778fa16671545039ce8635f7bab20f1871e0ae808f30",
+        "Devices/IMU/JY901B/Adapter/Src/jy901b_quaternion_adapter.c": "8375f1f7f6e7c600cff5b45c78498aafc231d4c52faee2e8103f2ff5c3f04f30",
+        "Devices/IMU/JY901B/Adapter/Src/jy901b_sample_quality.c": "da3ae46be9723782bc0816d0ebd313b5f807359c03e50baf3fca15aababd9e2e",
+        "Devices/IMU/JY901B/Adapter/Src/jy901b_startup.c": "4568ba2a3b3f11bb5476a63ce04196280c1cb5ef7ee07170e14de2c6d4f1aecb",
+        "Devices/IMU/JY901B/Inc/jy901b_config.h": "268eaef696cc42ea665475d4c49ad28ac4f93452c9227ae9cd25ffa04bbc9e74",
+        "Devices/IMU/JY901B/Inc/jy901b_device.h": "d1b459c5b3b39273dc93b88010175e87403f32d45ec806c3c67465c9ab555e1b",
+        "Devices/IMU/JY901B/Inc/jy901b_imu_build_capabilities.h": "fb7da40857bf2364e226f620bf975f77885e3a283841fe0b78aec29d64d0aec6",
+        "Devices/IMU/JY901B/Src/jy901b_device.c": "09394876d0390eec95a8982b8648c329625c02f1f9998024878cee5c079b4a0b",
+        "Devices/IMU/JY901B/module.mk": "053824b7096618def49011e13f5b42b0e9d1023d2b29f4bb01eb74e369bb0566"
+      },
+      "manifest_id": "silverstar.device.imu.jy901b",
+      "payload_digest": "2ea4dc5e80bfa2dfd549b0677b4f7435d0ec8d824cd09d9617474eebd28ce316",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.device.indicator.system_status": {
+      "files": {},
+      "manifest_id": "silverstar.device.indicator.system_status",
+      "payload_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.device.sensor.input_voltage": {
+      "files": {
+        "Devices/Power/InputVoltage/Adapter/Src/power_service.c": "57a7b5b469c1e9bc05708d7bb7d25300264686bf20e1b5aa70cc236c709ab263",
+        "Devices/Power/InputVoltage/Inc/adc_power_config.h": "d8e67940c269f5527847e646b446b92ca661996e23dc6a14621b18132b7b7776"
+      },
+      "manifest_id": "silverstar.device.sensor.input_voltage",
+      "payload_digest": "1445abd03ab3f5709f8260b6d02007b527cb80b79080af6ba2086847068f92a1",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.device.storage.sd_sdio_fatfs": {
+      "files": {
+        "Devices/Storage/SdSdioFatFs/Adapter/Inc/persistent_storage.h": "6e3ec015a28fba2e73d8475ef76aef51bffb646ee50b2d112d050c0b5655ce8f",
+        "Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c": "ab0987e03d0c04e8833f234674e888e033355a11f07c4849dc448bf38a187a88",
+        "Devices/Storage/SdSdioFatFs/Adapter/Src/log_sink_service.c": "8cd7d81f99b66557fb1352bfdaa4fe868704aae52ac66eca27558615cc81f2e7",
+        "Devices/Storage/SdSdioFatFs/Adapter/Src/mag_calibration_storage.c": "2ee9d455ba288e9dd0f6f2eb4876c2b9dba85a9fd3408eb6dca79c91e00372b4",
+        "Devices/Storage/SdSdioFatFs/Adapter/Src/mission_snapshot.c": "aae29118d7644bf869437a84ab72d4a7066c71e648e27fc03f7e233103faeb81",
+        "Devices/Storage/SdSdioFatFs/Adapter/Src/persistent_storage.c": "6fa7fc48d1b407f8fdd77100beeec2879c13f2eadc2bf77ae31be67ce3ef7bda",
+        "Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service.c": "a0655f6b2065f8c10212df1287c5f56e9df427e9a8864362dd3e92ee0ed4f761",
+        "Devices/Storage/SdSdioFatFs/Inc/mission_radio_profile.h": "a5c728e921171333e179e2079539f1d2932141ce68ffeff35119e6d73f1f014e",
+        "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c": "be5f2e0daeaf8f2623e6f1eaa6ca8681e1323ce42d594464dada11dca1977ce3",
+        "Devices/Storage/SdSdioFatFs/Src/mission_radio_profile.c": "ff94c651feebc15f570527f07ddf96ec7c0583d5bcaca664939f568c179785c7"
+      },
+      "manifest_id": "silverstar.device.storage.sd_sdio_fatfs",
+      "payload_digest": "f4aa77685454407839e2c973b2433f9ce50eee013f75e52dfc1c60132526f385",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.device.telemetry.sx1281": {
+      "files": {
+        "Devices/Telemetry/SX1281/Adapter/Inc/sx1281_instance.h": "4fda64a4ee0649e91a40086790f700d8754c60098b3d39b9e6ec6d34c6bbe779",
+        "Devices/Telemetry/SX1281/Adapter/Src/sx1281_telemetry_adapter.c": "e4d2f6457012ac9fa12a512f666334ec37d5289627df93e66bf4e969c5df9576",
+        "Devices/Telemetry/SX1281/Inc/sx1281_bus.h": "2dbdb5f5c8f6541f5cdb454582cca9cf8337f76671e25e31f6f44d01ee748e70",
+        "Devices/Telemetry/SX1281/Inc/sx1281_config.h": "829a8a29dbce2cfd7dcb30df893c0306ece11915e6207105b657f8992cf43aac",
+        "Devices/Telemetry/SX1281/Inc/sx1281_device.h": "b99c121794e6c7e7b406d9aa8cc58e95ecd1432c9f6175f2f152f7e4c2cc528f",
+        "Devices/Telemetry/SX1281/Src/sx1281_bus.c": "81395fa07a3ee0fdc4bf39d240a73cf6455d67eedcbbe254b66e6d4ce7a3efcd",
+        "Devices/Telemetry/SX1281/Src/sx1281_device.c": "56ee9b35e54535249816363d0328120a6018f157ce51f8bad93185ebea78428c",
+        "Devices/Telemetry/SX1281/module.mk": "eb2e611ab9a607fea080b25443ac4098641625963759bcc580a77bd75d0306e8",
+        "Middlewares/Third_Party/SX1280lib/RangingCorrection.h": "74f6fec9eaf91a2111ea8b5e1d5ab0d8a81ca1744b5a596054a10be7df3e8c0f",
+        "Middlewares/Third_Party/SX1280lib/hw.h": "b402aa1984d232ebf382cb6a7337fc0c11dd201ec37a28d20b114b663101e195",
+        "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF10BW0400.h": "5c5f86fe2f3a50a1b4f3365d2d1eaaddd0cb2d84493db029704e0d5397757aab",
+        "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF10BW0800.h": "b24c1cf925ed504244cdf44e11d02064c4717868d1f57517fdf7c358aa7feebd",
+        "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF10BW1600.h": "31494c5f8e0110a477535790581071ec98f4de17fabd40272e84da109db796b8",
+        "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF5BW0400.h": "1e015d973f0a02b9a81a7bf0f8088304d25f49c199ca4e291dc36e8005e89068",
+        "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF5BW0800.h": "5f01237f6ce5398e44b4b8966cdc3eb64a813d05d1189bf2f96ca10066120ee3",
+        "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF5BW1600.h": "9496afc66a957bf4a3bc11b450e37073fafcf314f6ac6c99db052f3c63d9dee0",
+        "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF6BW0400.h": "62f2ee4dbd66bd944fc31e6681174b5d4553bb64935bdbd0ee7c40973936cf12",
+        "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF6BW0800.h": "b208b46096c56d78bfd895a9512d83959d6d636d5fa483124c3d03fe5b313fab",
+        "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF6BW1600.h": "e4bfc1bac9a2023a7c9e76262998f7ec0092a72ec98860a9a8997e9be8ee8478",
+        "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF7BW0400.h": "6c4da0aa939a52e2823cfb130987fd4c6e968e40f31d932678b12845417baa14",
+        "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF7BW0800.h": "15c05a8b9645479ec18789dd4254cdbdad19be84443c8f085e50549e8d0b3fd1",
+        "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF7BW1600.h": "dadf5e2cbc546435fd40b6a8f75be84a6dcf0570be905d803f6fb1430fad56fb",
+        "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF8BW0400.h": "074fa8a43cdf9adeababdf658f1ddd94577c62d541e58aafeed0f0c1c798afa8",
+        "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF8BW0800.h": "819285d0b732d5d6ba2ac01ef9a01b269925cbda422f7c302e8639637a78c1dd",
+        "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF8BW1600.h": "8942988cb9527a19655676f77e2b7f619d6df9c63e8adc07a3567ee25370c779",
+        "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF9BW0400.h": "4ec83afa50f6a7d462ee95b21ca8eb4986e6c42e2473db94ed985e5693620b6d",
+        "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF9BW0800.h": "e9e2fa1138a60ea35fbd271f86ac2894f87a0cd049029ca40b0d9045d3fb745c",
+        "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrectionSF9BW1600.h": "3adde20ed4cae32a31e6e9bd68b101d0ab666c2ead4ccb3790f325cff98dc87c",
+        "Middlewares/Third_Party/SX1280lib/rangingCorrection/rangingCorrection_defines.h": "3b0a743e401f5e76d2d1cb8edcfa5654b7a7013288a3865e121cd80fe6403879",
+        "Middlewares/Third_Party/SX1280lib/sx1280-hal.c": "b8caf4dd85dd3307897fa8f923adcaf7153b0d4c91a787eb58537d0b34eb783d",
+        "Middlewares/Third_Party/SX1280lib/sx1280-hal.h": "7bef829a1cdce0e4306298e952fe8623a0e37edd6b31ef61d2d2d91754046aa4",
+        "Middlewares/Third_Party/SX1280lib/sx1280.c": "8afe88a8156575e181830407295d68d5f0e2221749a9dd312a0cf6a66bc910f9",
+        "Middlewares/Third_Party/SX1280lib/sx1280.h": "b6ad13b77f1c7fef35c9a17153cb1ee0d9eac1869dea3812ed419678b44ecffd"
+      },
+      "manifest_id": "silverstar.device.telemetry.sx1281",
+      "payload_digest": "b9af9871aa0ae145f595db5c8266ba65c557cdb573dd4181dfc0befa370f7f87",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.environment.vscode_eide_gcc": {
+      "files": {},
+      "manifest_id": "silverstar.environment.vscode_eide_gcc",
+      "payload_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.flight_logic.cycle.reference": {
+      "files": {
+        "FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c": "147ceaaab3a5928a19b2208a3a95749d453a4c95071ad339163e795d173f1ccb",
+        "FlightLogic/FlightCycle/Src/silverstar_flight_recovery.c": "1178d688aadffc5e468fe8b3b5384bfc9ce31e4f0dc957d7f77603ae17211f12"
+      },
+      "manifest_id": "silverstar.flight_logic.cycle.reference",
+      "payload_digest": "7dec493da39e3e7e8a7afbaf16e5aaea3096d662ea941e40ffe165b50404dc32",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.flight_logic.deployment.multi_trigger": {
+      "files": {
+        "FlightLogic/Deployment/MultiTrigger/Inc/flight_deployment.h": "ea81984ad9138e5bca7b1742be5c97a2e496303512edb87ce90408739116a365",
+        "FlightLogic/Deployment/MultiTrigger/Src/flight_deployment.c": "52430dbd560f4dacf218391e8ec2c9cf09883d7aebfffdd93d018ca390c6898d",
+        "FlightLogic/Deployment/MultiTrigger/module.mk": "9f09bff3710ef439c737121bc36c1eec1d723e696a211089150cc20c83b25a3a"
+      },
+      "manifest_id": "silverstar.flight_logic.deployment.multi_trigger",
+      "payload_digest": "bec1e93fd844d83e69656c157cf6f84d8dca22fb97408584124da17608240cb7",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.flight_logic.indicator.gpio_status_service": {
+      "files": {
+        "FlightLogic/Indicator/GpioStatus/Src/indicator_service.c": "9e5c214b361dc69abf18e078dfc9db73b770ff999ccf9aa8a609cdba238c3e95"
+      },
+      "manifest_id": "silverstar.flight_logic.indicator.gpio_status_service",
+      "payload_digest": "7fc69dc1dfd40f49bc10c9fd4ce4be3cd41fee56d907a6faa8c40dcc81d2f27a",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.flight_logic.landing.baro_imu_window": {
+      "files": {
+        "FlightLogic/Landing/BarometerImuWindow/Inc/flight_landing.h": "e6ac1290855307ee9565dc597b4960ec8573d7e2eb2411fddaa28f92b404522c",
+        "FlightLogic/Landing/BarometerImuWindow/Src/flight_landing.c": "f0249d68b6214557d0283b920de5c990742e0dac6a781fdd330bd0e4396ce873",
+        "FlightLogic/Landing/BarometerImuWindow/module.mk": "4c3a3f870e8eaf993a191d08f792b1094bb5dd2f57e6e4f6f1d777ba98de87a5"
+      },
+      "manifest_id": "silverstar.flight_logic.landing.baro_imu_window",
+      "payload_digest": "1fce6da1b1970fa6ce60e459f7738d278ce917bcc5085c974d9c54045d7c41c7",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.flight_logic.landing.baro_imu_window_strategy": {
+      "files": {},
+      "manifest_id": "silverstar.flight_logic.landing.baro_imu_window_strategy",
+      "payload_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.flight_logic.mission_action.gpio_output_service": {
+      "files": {
+        "FlightLogic/MissionAction/GpioOutput/Inc/mission_action_output_config.h": "042a79c0d1d5cedcc2c19ce824a506929776cd5eeda60ad82d752b4414f4795e",
+        "FlightLogic/MissionAction/GpioOutput/Src/mission_action_service.c": "10d127b961c3602f68bca6c2e19bed89dc8fa0b840602c410f9d36e1a1a10c2b",
+        "FlightLogic/MissionAction/GpioOutput/Src/output_service.c": "448d893d8c626105cf103d1a77ddc455770c3e59a6eeaba011486678efcc3e75"
+      },
+      "manifest_id": "silverstar.flight_logic.mission_action.gpio_output_service",
+      "payload_digest": "9186eda0f790c11b5009b760151b0b2c39e2546cf2254108cae4d833c6d19c26",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.mcu.stm32f407vet6": {
+      "files": {
+        "STM32F407XX_FLASH.ld": "0d57b9ad0364475a0562721340b0f537a3770439b2f6ce66a932310ed4178406",
+        "Targets/SilverStar_F407/Inc/mission_action_output_build_capabilities.h": "ffcf1b27fafe7638e7968134fb61cbd4f65616e9b154e364faed98674fd4f1bf",
+        "Targets/SilverStar_F407/Inc/platform_memory_target.h": "8c7a7d6253ce1674f927e4eeaee322e0332f538d39cc5d468d5e7338568c2748",
+        "Targets/SilverStar_F407/Inc/target_build_capabilities.h": "4fbf0a3c4f448409261468b1229d34e9cac80533d9e53d4cd3254ea9d2749208",
+        "Targets/SilverStar_F407/Inc/target_system_config.h": "9d35ef271c86232e1cd2693441584083ba2555f20d17d73d424592d1761fa826",
+        "startup_stm32f407xx.s": "aeb00df33b3a9cce01b9e821631bf61bc80a75c40182fb97fa9bb9f08fc33442"
+      },
+      "manifest_id": "silverstar.mcu.stm32f407vet6",
+      "payload_digest": "6442921532c593d33d95ca7dd71740964f97c0d3cbe19416590a93c8e2b0d721",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.mcu_family.stm32f4": {
+      "files": {
+        "BuildSystem/stm32_hal.mk": "53d1ecf191ee51126dac44def52ada28b06e1839eab14bce01fd0aaf17cf4b4e",
+        "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h": "bd21220ea8b6858c2d727cca1d2a5f1077f8a81717acdac583a1e9165d858160",
+        "Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h": "a19edea6b2f4df2ab3c567782c4d313a52319c4303bd56ad7dd1d0e077014657",
+        "Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h": "02c067d5a135f540c03215dc834b1e60a97bbd4e55bfd3994b0c82a15ea3012a",
+        "Drivers/CMSIS/Device/ST/STM32F4xx/LICENSE.txt": "135fb2d86e9ecdf6824cc3bba21c72b8e380c07b055fbebb6b995463eb609baf",
+        "Drivers/CMSIS/Include/cachel1_armv7.h": "2e336a64f60a9c0eaf5a08e2c4845d94da86c3fd84d219d0d0c9f530e63bc9c3",
+        "Drivers/CMSIS/Include/cmsis_armcc.h": "5bc0d7ed8e36e9bcb868c4042fff350c702eca305df4162fb00384789e35ee1c",
+        "Drivers/CMSIS/Include/cmsis_armclang.h": "d5da2b48204f0d0cf1ff38ffccb527e5706cd0a091ff0a331eb41d6596c33fe5",
+        "Drivers/CMSIS/Include/cmsis_armclang_ltm.h": "3e8ffb284f4f155de3ea93841cca853b41d5e812b53e52c64c3d4a67b7f1ec7c",
+        "Drivers/CMSIS/Include/cmsis_compiler.h": "b51963d271c1571ca3463654c76aa7ea50c4eac5d0a2710df10414ac64d9e0f8",
+        "Drivers/CMSIS/Include/cmsis_gcc.h": "43bfd1fe69fbbc2ca70aaf7d43cc3e20f16e0c7f66e1bdef9b51af6dc14b2617",
+        "Drivers/CMSIS/Include/cmsis_iccarm.h": "2d255c8429e507e52cb603f2970bed4cc4a6cdcc3eb7fc7997385abad7364837",
+        "Drivers/CMSIS/Include/cmsis_version.h": "184c19fd3ee73632edf35a0b4d49cd48be75fbf49e6ccb19d9db05fa83bea4b3",
+        "Drivers/CMSIS/Include/core_armv81mml.h": "a40954bccbf202bd65ee721ea688122561e005c9f9f9d18e082280c5b897d0e4",
+        "Drivers/CMSIS/Include/core_armv8mbl.h": "458b1e6788079ded52adc7d06383701c865ca97b67c5e7a0a44884194f91a842",
+        "Drivers/CMSIS/Include/core_armv8mml.h": "5a68204fa31cda7d04d41c9ceaf3f4b1217908f59366f757ee778181c7cc8cb9",
+        "Drivers/CMSIS/Include/core_cm0.h": "ac13cb645f108666a0e57c93467872660d6bc860a839f840dc870b7a5863b4bf",
+        "Drivers/CMSIS/Include/core_cm0plus.h": "a09fa9c6b8b21d1920bce15b98aa56182b027e9278cca0b154812bac2aea3cfa",
+        "Drivers/CMSIS/Include/core_cm1.h": "944bf0c4f940eef30a632cd99d5dcfe8270e8a8431eb98c0f081bcf4f61f728e",
+        "Drivers/CMSIS/Include/core_cm23.h": "77822e9738885394ec52fca6f617452b823a0b55e2664ee225e65576cf0e8f2d",
+        "Drivers/CMSIS/Include/core_cm3.h": "c9937781259a8897adf514445441c68570087d6a72a558d8a4afe75cdb62dbd2",
+        "Drivers/CMSIS/Include/core_cm33.h": "225c47c36230edaa314f1e7a45b38279f6ab4d58faeb132226db35f7007d58aa",
+        "Drivers/CMSIS/Include/core_cm35p.h": "206b427589981b78169c1d9b73e898e4e8de4efbd76fd0c2df7df81d645b9fa2",
+        "Drivers/CMSIS/Include/core_cm4.h": "f5b63d52dd1557b15ca414cb59c264f595a7b5669db2a5878dffe22f4caedc8c",
+        "Drivers/CMSIS/Include/core_cm55.h": "5707f716cf03f7e80151108ae94601fcfdf362dd2d830876040213318f6dee3a",
+        "Drivers/CMSIS/Include/core_cm7.h": "e974d0a91752487d0154457cd422c37667328e9ddb7ba4fa2fed479a63577f63",
+        "Drivers/CMSIS/Include/core_cm85.h": "75bc123889f0f5ca33c4d16b6cbdd580a3572663c899fadb2c8e28f6a5e6fead",
+        "Drivers/CMSIS/Include/core_sc000.h": "c81377a69a4ea8ecaead42194f2ce8ab59bd4ee7bd638e423f5b1f5ec283d154",
+        "Drivers/CMSIS/Include/core_sc300.h": "73dd461c12c7d3a693840df3084fd8f85122095c6f21fa3d779b0f3eceaebad5",
+        "Drivers/CMSIS/Include/core_starmc1.h": "92d8661f2947d00da91653d04794cde0593fdaafb3438842a0477775716aafc5",
+        "Drivers/CMSIS/Include/mpu_armv7.h": "29206b52ee02290ed6f5a5415ebd4187de802cf176d9b3cb844390d8e5571372",
+        "Drivers/CMSIS/Include/mpu_armv8.h": "2c7d22a344cedcc1e35380d1f76f0e6c55da5e3101e6a41fd85497d1841fe8c9",
+        "Drivers/CMSIS/Include/pac_armv81.h": "d76f5cc0c59a59e035115f700b8e8d95b7b98ecb99a2924e885f82a94903d984",
+        "Drivers/CMSIS/Include/pmu_armv8.h": "cea8c105c5f41ba831fe4d9e8e39758068cd4c414383348dc2835d6be447cca0",
+        "Drivers/CMSIS/Include/tz_context.h": "45565c8cb04c653aabaf3cceddfc848b6a0de28c20d4f7e3d475a992c7eee788",
+        "Drivers/CMSIS/LICENSE.txt": "b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h": "8c2d2feb90e8ed88fe5756f3f1616a2b67aa1cd0858da8b130ed69607688c8c0",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h": "6942f40453fee331e026179cfac4c0f24ffe6313fedcb68af9c3382f702dbaf5",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h": "d1be882b4bef7d53646e85e3d1783b47e7880647ee8a1436da58d652c803b12f",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h": "c7da815c495df4b6d5e0764af990c1ae8df871fdd9e7f6e49416e931d40b3a0f",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h": "d96dba22903abda49d66cad29ac0c49357e6a27cf9cb03dfd8c6db71b61a7fca",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h": "c8eb3f7b393f8c5a0c32e16ccfa101c83ddb59e96bd42239b8a5c5d4da83e97f",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h": "71c38dfd65c5415b388375147e5317c7ac018b39893d6fd0ac1c897f4313329c",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h": "3ee15423d73ac394de39e7b65821775966389b13749ff0849894548ab6968676",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h": "61e8f76bdb45dedf38fef592504e10418ca410952c7a209cd271b45ac835833a",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h": "10be06c6e06fcf4eb11e236641948aed861898fea235c606ae221fa72bc46638",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h": "7c206f5dbed3c147a6f090ab808933132a1b06b8339623ad7174fd0a222e981c",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h": "f18a6eabc99f56483566f9231ca33c780afa98bc93929e60bb419b5e544eee2a",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h": "0b40fc83363b64d3c7396a202be7a914ceaa7735ab0fa81d566ed320102b23fb",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h": "4091beefc5bf8b250f376d400f43ca028ef7378e1c7ba5c9eb5de64ec74231c0",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_mmc.h": "68800c57aa0166c8d5e9e4687561ac8e284e9911289afac57dcf5093e28bcb0a",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h": "6694ecb5f99106582053b1080ea192b9685131a789c37e14cd75e0952c6d6026",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h": "3dcb909d0aafba72741ab372c038ee0086e4b21dec0d876da48fc2646e17d209",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h": "d6f6abc4af3d5a1ca59d886f5a9154e44f257a43af77c7f18173f160825ed6b5",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h": "1794b88c5e080858c0205a2e94340c0250ac9171b3a3f01cad6d050005a1b09d",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h": "eb6911d964b1cf8a83993b19c8feb9845e8793d7c0e5d643390b53207c8b078e",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h": "49f0c8068524e1de248738530cff3bbe630dc4784b6e8b5568fbc7e1a154f772",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_sd.h": "86fe44effc4ee65ed2a46dca2362dfb175d563fe4586b4caadd9dfa6bd6f6fb6",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h": "330803c32d1d5ec40df5a827a74cb1d850ec60b207eda5bf6299c57d575795a6",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h": "63f00354e2a5e8d3a8d211fc736517273e12b99a1eb782aa7a2670cb1264a16d",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h": "aa6695d64677e8a7b46d719da3d81049290f42383c17e76271605bc68143fd1e",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h": "42528bc9caa6e2fe96b7e6d7b3fcdf35d8d85ae38d33195a233e18a072f157a1",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h": "fabfc9706709a9997e96d87aee25356b3ca84021668a915ad816ba42e1babadc",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_bus.h": "95a518139f74d14a4477519b5172675347990e9fa637bd3948c69bd475bd7c88",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_cortex.h": "d8b268ca207e51864d1a71ce14fff316c57d09e62a04d0c28310b4a1008e6f17",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_dma.h": "39e89050700e16304e04643e29c162b6aaa9f3bfe53880cd78c255ce46104e82",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_exti.h": "6da580d41ebdcfd7349e29666a2e561c8e2c2e01f6e7ef29dfec6ebf6ae237df",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_gpio.h": "e46857f5f9a5f5a2d13ca2d6925dc9e66dfa7fc56a2cc72e54b891bdb88e2f16",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_pwr.h": "229af558bfeef8bb88d2224277b083c3b927c5c2612991fdeba00dad56255abc",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_rcc.h": "605960f2e8e57a702b912475f9c154bb58711b58c8f2ff27dd4e75b5d767dc4e",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h": "46fafb73c1c6fe5390a5a80049a28a443877c03f6dc42586cac11294f5f5a642",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_spi.h": "3b053ed6c58bc9ae4de03fcae86f64a14fb86ad4a36ef27a3bdf1524e93e9b54",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_system.h": "d634a419a55e99b4a641fecc055e1f602d8a418bd7d822cf2f812a0965ac9a3e",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usart.h": "982c4448c49ddc7c6c71bd788e5354f05e96aca5e98edd0626f8ffcaefc65e79",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h": "b9b9f9da33abf806bf1a79018138ef6cab3e4e657316c299740809d86f239758",
+        "Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_utils.h": "535cb625cfcd461d6054549bf04d25ef939ec5754f77731a5f9fd92728280ded",
+        "Drivers/STM32F4xx_HAL_Driver/LICENSE.txt": "d5a162f3eaf2b7b6762f00700017cae5695ebbdce7932fead8316448baafd9c1",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c": "97e715cda2a34bd564b59ce4ba9b16bd29651f8f229161105aaec666d76ea91a",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c": "275b278044c92159719b25adebe672454387976ee5baeb1eb61e83c34deb13d1",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c": "54378229ed51c2b3e4665983bc0e9a644eca93a7838f622f7234710071967965",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c": "67be4e0b3a9dc93552eb0a506991f5b4042b38c125270d9e703133808c2d40d3",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c": "9aaa0f19137d700616bec01a5a806786c24e3f3386120365c5d2addaa4055505",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c": "a345a1b1fe0221c827d5ad21d5a0f5387296bc2c075e06e5b8539c23da5678e4",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c": "90cafb5a5b17a46b478770ef4abdc9a641cb395419abbb80f288138a63d44582",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c": "f56651f86e5d89e8bba3bcb331353e00f291db15c902927a205d81bbe8951e6d",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c": "8bf12eeb6e6cfc12a17587ed6d761724e0835a4a3dc0f6b14a8d1ca068bcb55b",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c": "51a70deb9b19dd43f6f202430fae052f2deb26c39232c09c79230c8d8a61f773",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c": "d3b426e8cb9d617f9064d2b0cea2a1d02b7bb6a74cba3f094779d6e922e477e3",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c": "408908b15477b6ce2b0b9703caabcb053293d98f2f109d6e6940e076a6a3902b",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c": "d3686886a87d018a6a5f26c9760fc7a80ad2d520b9e856916a983302fc6a3442",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c": "6f0863aaf210e9f446f194c34035b59b7de4ad617743e7e94a0f7a4232c96596",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_mmc.c": "50e2f73da11c3b631b9c85560db6f25b2edc7b42f03bb663876ef37d7e03f6d7",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c": "9084fe7346bad811d9f4c71bc04002cffc5bd9d0583dfa2e9306250399a919f4",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c": "1db062fd007ce9bd838da2c7b97de938a661da237aa3fe52d0b7fd4c15af59bc",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c": "d779468a95df34421bf6c8417136a79aa910753381a644afa9ed10b185ae18b5",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c": "4409dddc0d2019f918d0ddebecf659f06d4de3f9aa28566621a16ea47203331f",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c": "f3ac468e2f415adb74281107c0dec1448008950b64a7bb11c14cbe3ee1a936de",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c": "526324811fa113c3eadfa84cd24ea5e607ad8e8bf003a2085456c04b734ca25e",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c": "02d7ccefa2b8574febacb1ad595bf1c20f3f0601853d4dd5ff536ce4f815c29b",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c": "641ad467e834c17a83c445cf8eea7c8317a71976d7e0c77da740be999251efe4",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c": "a7dea3b10a771a380915007b9ece123654c6bd2a40f611102220df9bfdd143e4",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c": "4471b582d56545fbd48725401249b4a2a728ccc0d933b3f1a02e2b09dda8d8fa",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c": "a74ed3a9a13a4fcbaada9e6f88f7d4fcabe2a75852a6ce4c09f8d4314a2e851a",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c": "9fe6fbeee8b8d44d8bc548f6d4abd8ee06693f56f12be013277dac2f767f19ec",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_sdmmc.c": "888999f70d05daa37f57dc144c6cd31aa50259ac30d73a33ed628e663247f7a4",
+        "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c": "a4a3827fba7ad9d0df9457a87e1bf31ede88eeeb9dc750b3fff639f59c8dff5c",
+        "Middlewares/Third_Party/FatFs/src/diskio.c": "cc80dbfeed02589df9effc6b45b250f521fc1a3db5abe58461b28e99b17900ea",
+        "Middlewares/Third_Party/FatFs/src/diskio.h": "1c30db73df9e5ce75e3e752a4bda0938a1312575168365d678e21bf33e4a311f",
+        "Middlewares/Third_Party/FatFs/src/ff.c": "511a87724dadd27a358bac32e37e66d6808eeb514eb773734f18878ed731b3dc",
+        "Middlewares/Third_Party/FatFs/src/ff.h": "644ecaf33339fc46ff447386f001c0199c54213ec14ea78b0ab77bba2184841d",
+        "Middlewares/Third_Party/FatFs/src/ff_gen_drv.c": "3480734146b7b7cf86f752ad584cfbb6b95cf5be7e25ab8917caa325d4fee46b",
+        "Middlewares/Third_Party/FatFs/src/ff_gen_drv.h": "8013f8285c86ab73059f531ef9bb7941fe4675e5b72820fe5d7900b36f11f1e3",
+        "Middlewares/Third_Party/FatFs/src/integer.h": "20304085ec29f6cdd6218f411b134d3c677bd8eb9dd46c694871e0d88c2d2cc4",
+        "Platform/STM32F4/Inc/platform_stm32f4_resources.h": "b87acfbd074ddf5b73cf1bf5d83711358a76168dcc7d5f25f6e9cf315cf133d8",
+        "Platform/STM32F4/Src/platform_adc_stm32f4.c": "dac78aecb3a556a8b98af9c73e83cd43c3c99871500a104437e33e9583579227",
+        "Platform/STM32F4/Src/platform_can_stm32f4.c": "70bc2be54beb4cbb42f6030575b5fbbbac180e8e34aee6a9d1b8d6d7e19da714",
+        "Platform/STM32F4/Src/platform_critical_stm32f4.c": "2b6cea5bd4569f6b1e7a054558a9e00587d8600beb11b00e5962324ec19abc34",
+        "Platform/STM32F4/Src/platform_gpio_stm32f4.c": "0c5d45774a521daf25bda3126769f19340986f1063c5322f0bb101248fe75138",
+        "Platform/STM32F4/Src/platform_i2c_stm32f4.c": "66774ea261525b4647b01fa16498aa839cf8dd13eebf5c7b05defa866bdceb9c",
+        "Platform/STM32F4/Src/platform_memory_stm32f4.c": "0a339dca6f0c4366e73b216270b52b0bd8503d100231e43e6f087c55047172c2",
+        "Platform/STM32F4/Src/platform_pwm_stm32f4.c": "ed16fe88af1d357bfe4dce26385782c299ae0c292efa55a7210dbbca5837133b",
+        "Platform/STM32F4/Src/platform_spi_stm32f4.c": "2e9c5d25ce24b0273b31bed08fb8c65c64c315d1fd56b5cd81015799837f4b0f",
+        "Platform/STM32F4/Src/platform_time_stm32f4.c": "1410dad1ed2d52aa9583db12cae186cc1b5c16e46f9f563dc61581b052f952ba",
+        "Platform/STM32F4/Src/platform_uart_stm32f4.c": "92ac12cbf737e3acc05237306603e11c5adbc4faec5eca30eafde88775378735",
+        "Platform/STM32F4/module.mk": "7b617644152984ef292325b9a5f2f6c4b97debcc34588645a1226278c2f8ae38"
+      },
+      "manifest_id": "silverstar.mcu_family.stm32f4",
+      "payload_digest": "7583207070dd0706f1c16de59dc07267d28f1ed964fe660d2e7db0d3197aaaf9",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.os.freertos_11_3_0": {
+      "files": {
+        "BuildSystem/freertos.mk": "766403ef2537189dab386f91b82cdb9b4c4546a500a9f57463dbfd7310fd16e9",
+        "OS/FreeRTOS/FreeRTOSConfig.h": "60eec0289944fa1bfe6e605d059656c99fe7f1f1dc428e8e01b91b81a8c17f08",
+        "OS/FreeRTOS/freertos_hooks.c": "90223091d13dee64fcdcbc71b1bcc62d16f62e0299180909fb1c0cb09a1eeeea",
+        "Targets/SilverStar_F407/Inc/freertos_target_config.h": "2b1de4d3e58a064f012a53a3720860beb12c9a481e6aaee99a27b7fff3c942f9",
+        "Targets/SilverStar_F407/Src/freertos_target_irq.c": "c0b43c4e644501589d039a6a2f64350a4e43b251bf0bdfd5b0a6488462906da5",
+        "ThirdParty/FreeRTOS-Kernel/FreeRTOS-Kernel-V11.3.0-repository-SPDX2.3.spdx": "c14bce8ac8316c10820e078cbd0ec9af495a86579e8be89139df5d9bd3f5c4a1",
+        "ThirdParty/FreeRTOS-Kernel/LICENSE.md": "9eb6f69d48a1dd764e8a33f14a584f460d3cec653477c136a95dd6df9c249211",
+        "ThirdParty/FreeRTOS-Kernel/README.md": "f2faa06938a7d4f98de7d0d78fa9f2f54954992f613885ddb04780e2563afce5",
+        "ThirdParty/FreeRTOS-Kernel/include/CMakeLists.txt": "52741830c9909c41edcda8328f223226c8ce682990b83bfbd8c6c0c95f7be9b7",
+        "ThirdParty/FreeRTOS-Kernel/include/FreeRTOS.h": "1e34335d39150f5c29709377119477c44437519fbbc20dffa6b59844b35ab76f",
+        "ThirdParty/FreeRTOS-Kernel/include/StackMacros.h": "d95a10a836870a4f926ef34c8172e6f2fae2ae16ecfd5f9ec083f181adcee8ea",
+        "ThirdParty/FreeRTOS-Kernel/include/atomic.h": "2d0a3cd04fbfa4ca04e4dc8f417802c2615d441cabe45cd2a39f6224870ff0a2",
+        "ThirdParty/FreeRTOS-Kernel/include/croutine.h": "35a03797355a7bca500104549fab4d4acb2b086939d27a4b947b0cbc66ca7c80",
+        "ThirdParty/FreeRTOS-Kernel/include/deprecated_definitions.h": "7f0dcbc6a61aec1f775a566b7307e9e8e924581ee88611d04e2c19420cfdb067",
+        "ThirdParty/FreeRTOS-Kernel/include/event_groups.h": "d6c98bc262f23639193748625728c3036fbc39374022e848e9649c8f838533e0",
+        "ThirdParty/FreeRTOS-Kernel/include/list.h": "63b5cf31c558a7e99151d83c75781eaa12e77d6e5b6f7f8000e8125d0c761785",
+        "ThirdParty/FreeRTOS-Kernel/include/message_buffer.h": "03a2aca7e2108e7c7623a253285cd03dd4e34daea581fd71bebb02b567b16e61",
+        "ThirdParty/FreeRTOS-Kernel/include/mpu_prototypes.h": "ecd086f5c8307e993617f6ee36f90e569090700a3495b4646b4438a7db0b8d86",
+        "ThirdParty/FreeRTOS-Kernel/include/mpu_syscall_numbers.h": "a2bd18e4f073cabcbe38b28675c3859f7e2f8f69fb9752e792c4c8d6b1a0bc80",
+        "ThirdParty/FreeRTOS-Kernel/include/mpu_wrappers.h": "94908af88ea2ac3047b0f7fa69c0fbbdaca70f0f9fc7cca8c36884af8f6bf582",
+        "ThirdParty/FreeRTOS-Kernel/include/newlib-freertos.h": "cbbd99a422ce78d91f2c29447273192bf088c1bd9c3d5ac548dcf5286bded06e",
+        "ThirdParty/FreeRTOS-Kernel/include/picolibc-freertos.h": "a8b34cf596f95498caddc768d3db6dc16dcc7a12d16771499fbff54e9fbef294",
+        "ThirdParty/FreeRTOS-Kernel/include/portable.h": "01d1f5dada6b9703feadd65a619a72d9733d95c6de3aeaa183c52374ca1ff8f1",
+        "ThirdParty/FreeRTOS-Kernel/include/projdefs.h": "99fe2af841e291b21e60c8cd36f62357ddc1f8c849264b8f050c1d3194f59fd8",
+        "ThirdParty/FreeRTOS-Kernel/include/queue.h": "a6db434775b9e88f2f7ec0489fc7d50c17e2415c158be7832374de5202bea9c4",
+        "ThirdParty/FreeRTOS-Kernel/include/semphr.h": "a04715e82cb6899e1780bbf341cfa2c7f7fe68ef81bc2416b77fa23d2ac4ffb2",
+        "ThirdParty/FreeRTOS-Kernel/include/stack_macros.h": "94665e537208ffd03d6df088de34c42734b0085d2efbd7b71516ae8cd785af03",
+        "ThirdParty/FreeRTOS-Kernel/include/stdint.readme": "a99b59d5f8fab6953a465b74f20deffdee3a6e2106846cacf4efdeb4a7069f10",
+        "ThirdParty/FreeRTOS-Kernel/include/stream_buffer.h": "dc24c3241267911b1ae22ff7cc22a77c4ec1258821902568c9bdde44d8471db5",
+        "ThirdParty/FreeRTOS-Kernel/include/task.h": "1461d6d125676a9bff0842dd97460cd72b3c7fd0a1db64b39e634b99e947e6b1",
+        "ThirdParty/FreeRTOS-Kernel/include/timers.h": "e84a6b34a3bc061d0174bcb380ba176c1e7967c31f1a3a5670ed1ba11f09fae4",
+        "ThirdParty/FreeRTOS-Kernel/list.c": "729cbade5c3a032a1572d4a94719af0c86aafab795ca2dc69d0f1975438730ca",
+        "ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM4F/port.c": "7fd7815cad4ceea4794fc75703aaee051ebdea5be4d8f6317d9593bd1bf763d2",
+        "ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM4F/portmacro.h": "988c882fab36fff03da1c3512716a3a259c3a69fdc5b5a7c2004b9cb9f9b1846",
+        "ThirdParty/FreeRTOS-Kernel/queue.c": "12b7f97c1f39bdda91735edc0718f45ef5a369fa1c1bed6e4175ead72456701d",
+        "ThirdParty/FreeRTOS-Kernel/tasks.c": "c781a9fcd5c8456a6f8a7c0b47bfeb2ea33f998b275a54bbdd4bf348d4735af5"
+      },
+      "manifest_id": "silverstar.os.freertos_11_3_0",
+      "payload_digest": "4385b43597ef6870e399cc125ca7d6b0d6a9df9512b3f5c176c0c2cc40b90a08",
+      "source": "builtin",
+      "version": "11.3.0"
+    },
+    "silverstar.platform.api": {
+      "files": {
+        "Platform/Inc/platform_adc.h": "5038d93afcdfef7cd808b3a4a5580c9109f630126d30f9aaee3b8ab7bd176a02",
+        "Platform/Inc/platform_can.h": "b5b8aff2b064068d8edf49c21ed36e452ab55da14c1d6c4248fa8ca3329190d9",
+        "Platform/Inc/platform_critical.h": "77f0d7141c4cf906171cf6c0019130949385d6e51e1ed9475c4ee50140157875",
+        "Platform/Inc/platform_gpio.h": "a2d382188da0b09a2362f7d7c123262cf6a414cef950cb185f72f4469e022d8d",
+        "Platform/Inc/platform_i2c.h": "e59180913673babc6b3b216b8e16676ee078fb26d8c69d62ddd5ade0db774de0",
+        "Platform/Inc/platform_memory.h": "d60ad568042f904cbc4466d582fbe757570f0875adabd47b018a5eb648bb6b4d",
+        "Platform/Inc/platform_pwm.h": "27e954b8d283a5a96bd00094926d8efe3a577aec982079aea13c45bc60991cc2",
+        "Platform/Inc/platform_spi.h": "ad6b1451f284a892e819c6768907414b4d2cb56701fddf42928045c2e5968b75",
+        "Platform/Inc/platform_time.h": "b9839aea07741c962d836b6ddec066805bdcca17a0e7f7532449ca74dcde25ac",
+        "Platform/Inc/platform_types.h": "9eccf8476d8ebb58f251f9049de631651c6ae4e19a415d63579e703a6cfd8785",
+        "Platform/Inc/platform_uart.h": "0dc6cb85829afe8193bd04e5efc04d503516356c3ee707245d2f00f5f815d09b"
+      },
+      "manifest_id": "silverstar.platform.api",
+      "payload_digest": "994379b1c4ebd909e280100b729eff6c0957555b1dfbbcea391a3141c063d621",
+      "source": "builtin",
+      "version": "0.1.0"
+    },
+    "silverstar.protocol.telemetry.air_m0": {
+      "files": {
+        "Protocol/Inc/air_protocol.h": "006a4184bf7f5cb6bbc69716726f2d764ca3680e9ba4e70bace765a7d2cf9ec4",
+        "Protocol/Src/air_protocol.c": "f9b3a9ef4637468e89e2ba415a7eab79814b5cc8bd2a133aa246c959a1a1dec4",
+        "Protocol/metadata/air_m0.json": "d1aa3506a7f3c93977f6244ac56b9898c15c525687034560f73cc838fadb32d3"
+      },
+      "manifest_id": "silverstar.protocol.telemetry.air_m0",
+      "payload_digest": "4da3b385c10b65d8e7d6c5217fdf8d3439bd6e8c3c66f7e55cb54037b9771ee9",
+      "source": "builtin",
+      "version": "0.1.0"
+    }
+  },
+  "reference_provenance": {
+    "path": "C:\\Users\\chdxm\\Desktop\\stm32-1\\Flight_Controller0.5",
+    "commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+    "commit_time_utc": "2026-08-28T02:07:29+08:00",
+    "branch": "main",
+    "working_tree": "clean",
+    "status": [],
+    "snapshot_digest": "7998cace3e609d4e0c3f16f8d9e4cdf531f3f82939670638d4fe4d02f3c4e942",
+    "protocol_source_sha256": {
+      "Protocol/Src/air_protocol.c": "4537b3588b65baa051c13605eed5715a42f530abe5a0bdfad11a4925a2a0b418",
+      "System/Src/system_console.c": "c1efc4849c33c9fca361015ec6068d027eeac95bd275f56d139146ea3c781d99",
+      "Protocol/SSLOG/Src/sslog_protocol.c": "b065b6733fe87dea5e220e8eaed4ef61569fff831e3dd3d14f1c218fc6aaa3bc",
+      "Protocol/SSLOG/Src/sslog_records.c": "871b73bd1cecf9a39a2b95006f34bb32d303a5cba23d55aa02aedb934fe03d30"
+    },
+    "recorded_at_utc": "2026-08-27T18:07:29+00:00",
+    "audit": {
+      "required_files": [
+        "Generated/Inc/project_device_instances.h",
+        "Generated/Inc/project_log_decoder_profile.h",
+        "Generated/Src/project_device_instances.c",
+        "Generated/Src/project_log_decoder_profile.c",
+        "Generated/Src/project_log_config.c",
+        "Generated/Src/project_metadata.c",
+        "Generated/project_semantics.json",
+        "Interfaces/Inc/system_descriptor_if.h",
+        "System/Src/system_console.c",
+        "System/Src/system_sensor_status.c",
+        "Protocol/SSLOG/Inc/sslog_records.h",
+        "Protocol/SSLOG/Src/sslog_records.c",
+        "Protocol/SSLOG/schema/sslog_schema.json",
+        "Protocol/SSLOG/schema/sslog_parser_metadata.json",
+        "Protocol/SSLOG/schema/sslog_record_catalog.schema.json",
+        "APP/Inc/diagnostic_log.h",
+        "APP/Src/diagnostic_log.c",
+        "APP/Src/device_task.c",
+        "APP/Src/device_native_log.c",
+        "APP/Src/logger_task.c",
+        "APP/Src/telemetry_task.c",
+        "Tests/Host/Fixtures/multi_instance_project_fixture.c",
+        "Tests/Host/run_tests.ps1",
+        "Tests/Host/test_console.c",
+        "Tests/Host/test_device_native_log.c",
+        "Tests/Host/test_logger.c",
+        "Tools/check_architecture.ps1",
+        "Tools/validate_sslog_record_catalog.py",
+        "docs/details/MAINTENANCE_PROTOCOL.md",
+        "docs/details/STORAGE_AND_FLIGHT_LOG.md",
+        "docs/details/AIR_PROTOCOL.md",
+        "docs/details/ARCHITECTURE.md",
+        "docs/details/FCCG_COMPONENT_BOUNDARIES.md",
+        "docs/details/VALIDATION_REQUIREMENTS.md"
+      ],
+      "missing_required_files": [],
+      "maintenance_document_findings": [],
+      "maintenance_document_accepted": true,
+      "import_groups": [
+        "Generated device-instance facade contract",
+        "Generated decoder-profile descriptor and project-semantics contract",
+        "descriptor and physical-device identity interfaces",
+        "native capability logging production code and Host Tests",
+        "periodic STATS and TELEMETRY_DIAG producers and Host validation",
+        "SSLOG codec, schema and parser metadata",
+        "SSLOG Record Catalog schema and validator",
+        "maintenance instance-command implementation and Host Tests",
+        "AIR M0 Sensor Status metadata and golden tests",
+        "official architecture, protocol and component-boundary documents"
+      ]
+    },
+    "fccg_protocol_source_sha256": {
+      "Protocol/SSLOG/Src/sslog_records.c": "0c3d2419306d32ed7495030f6069317aaff4d7dd6cd8a1c92655f235a4830194",
+      "Protocol/Src/air_protocol.c": "f9b3a9ef4637468e89e2ba415a7eab79814b5cc8bd2a133aa246c959a1a1dec4"
+    }
+  }
+}
