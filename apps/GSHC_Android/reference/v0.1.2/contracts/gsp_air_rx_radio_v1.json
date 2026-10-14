@@ -1,0 +1,18 @@
+{
+  "schema_id": "silverstar.gsp.air-rx-radio/1",
+  "gsp_type": 5,
+  "version": 1,
+  "version_dispatch": "The GSP type identifies v1. Unsupported future versions require a distinct type.",
+  "payload_max_bytes": 64,
+  "logical_air_max_bytes": 61,
+  "fields": [
+    {"name": "radio_backend", "offset": 0, "type": "u8", "accepted": {"1": "nrf24l01p"}},
+    {"name": "metrics_flags", "offset": 1, "type": "u8", "accepted": {"0": "RSSI and SNR unsupported; no numeric fields exist"}},
+    {"name": "air_length", "offset": 2, "type": "u8", "minimum": 1, "maximum": 61},
+    {"name": "air_frame", "offset": 3, "type": "bytes", "length": "air_length"}
+  ],
+  "validation": "Exact payload length 3+air_length, known backend and zero flags required.",
+  "metrics": "Live state, raw/parsed logs and exports carry None. Do not synthesize numeric measurements.",
+  "legacy": "SX uses existing type2 with unchanged signed metrics and bytes. Old clients safely ignore type5 and cannot display NRF AIR data; functional backward compatibility is not claimed.",
+  "business": "M0 bytes, CMD/ACK and GSP AIR_TX/ACK unchanged. No hardware ACK is a business ACK."
+}

@@ -1,0 +1,37 @@
+# Shared contracts implemented in Android
+
+Base shared contract commit: **cb944b7c5a844da2f277494662801f2179a268ad**. Current read-only LOGFILE policy: **f2ce541382589cb606e1f5b21f6fd982357eaa54**, recorded independently in `reference/integration-f2ce541/SOURCE.json`. The original shared snapshot and export schema remain unchanged. Product development version remains `0.1.3-dev.1`; these identities do not imply firmware USB integration or real-device readiness.
+
+## Export schema v1
+
+Only the shared `session_export_v1.schema.json` defines the manifest. Required root fields are `schema_version`, `format`, `session_id`, `created_at`, `source_app`, `protocols`, `files`. `source_app` has name/version. Each file has path/role/format/format_version/size_bytes/sha256. Do not add independent root fields.
+
+Android emits `manifest.json` and `sessions/<id>/fc_session_<id>.jsonl`, plus the display-name/time/mode sidecar `session.properties` as an `attachment`. JSONL role is `session_log`, format is `silverstar.gshc-jsonl`. New SESSION_START declares `log_format=silverstar.gshc-jsonl`, `log_format_version=1`; old raw logs are preserved and exported as `legacy-unversioned`. Recognized version-1 imports retain version 1. Imported protocol provenance is unknown unless actually established, so exported protocol values are null rather than invented.
+
+Product/App version is `0.1.3-dev.1` (Android versionCode 1); this does not alter AIR M0/GSP bytes. AIR/session encoding source remains v0.1.2 `c31c13cc0686a56a3184d4f207fd3816c5d39696`. SSLOG remains **0.0**, `.ssdecoder` packages remain **1.2**, and original firmware headers and embedded Descriptor are not rewritten.
+
+Copy/cut writes a new ZIP, closes it, reopens the target, and checks the complete ZIP (including central directory) and each declared uncompressed file's length/SHA-256. Exact manifest bytes, missing/extra/duplicate names and case-folded collisions are checked. Cut obtains a fresh source reservation, rechecks source and destination after human confirmation, then atomically moves the source session to the app's recoverable recycle area. UI explicitly discloses that this first version does not physically purge storage. Restore is available; no permanent purge is implemented. Failures/permission revocation/interruption before this commit leave source intact. An active session cannot export/cut. A slow export reserves only its closed session and does not block another recorder.
+
+SAF targets must support document creation and readback for verified cut. Unverifiable copies are explicitly reported; they cannot authorize source removal. Standard Android sharing is always a copy and never a delivery acknowledgment. The app has no broad storage permission or cloud sync. App uninstall/clear-data removes internal sessions and recycle data. A phone's USB Host role while attached to a ground station must not be assumed simultaneously to provide MTP to a PC on the same port; SAF availability for a USB drive depends on the phone/provider/hub/power setup. Automatic device-to-device transfer is not implemented.
+
+## Maintenance LOGFILE v1 client
+
+`MaintenanceTfSource(LineTransport)` implements the exact shared ASCII service, separate from GSP/AIR and from USB ownership. CAPS negotiates version 1/support/64-byte chunks. LIST/META/READ submit one request; POLL checks operation and request_id before accepting completion, followed by file_id/token/offset/length/CRC32 checks. Requests/responses are bounded by 191/511 bytes, polling has a 30-second deadline, and CANCEL/reset invalidate cached state. The future owner must call `transportReset()` after reconnect; it must never silently reconnect inside an exchange.
+
+`TfLogClient` enumerates only closed files and validates fresh META. It accepts SSLOG 0.0, preserves the original bytes, checks each <=64-byte block CRC32 ISO-HDLC and final size/whole CRC32, calculates local SHA-256, and atomically publishes `.sslog` plus a metadata sidecar. `closed` means no active writer, not proof of a successfully finalized recording. The client never invents a generation, device identity, boot identity or decoder fingerprint. Every attempt creates a unique new partial file and reads from offset 0; old partial and completed files remain unchanged. Cross-connection resume and local-file reuse are disabled. Matching token, CRC, or prefix bytes do not authorize resume when identity is unknown. `Result.resumed()` is always false. No `resume_supported` wire field is invented.
+
+The fourth page's mock TF buttons run a clearly labeled generated fixture through MockTfSource, with `delete_supported=0` by default. It is not a valid recorded flight log and cannot grant real-device capabilities. The ASCII adapter is exercised separately by tests against the common golden and a complete mock conversation. A separate debug-port USB binding exists behind `ALLOW_USB=false`; actual build/test status is in `evidence/VERIFICATION.md`. No real device connection/download/delete happened. Verified downloads can be registered in the local session list and exported without byte conversion; mock content uses synthetic-fixture identity, never flight-log identity. Real CAPS remains authoritative; unsupported capabilities stay unavailable. The f2ce541 firmware's USB callbacks and stack/SRAM gates are not validated by these client tests.
+
+## Device deletion requirements (design only)
+
+Current f2ce541 CAPS advertises deletion disabled. Cross-connection resume is also unavailable under the current identity contract. A future revision must first supply stable device identity, boot/generation identity, immutable file identity and explicit capability/version negotiation. Reconnect must invalidate old state; revalidated metadata and a verified local prefix are additional checks, never substitutes for missing identity. Interrupted downloads retain originals and may restart from zero today. Legacy firmware without LOGFILE has no download/delete compatibility fallback.
+
+Future UI may expose the shared `LOGFILE DELETE <file_id> <token> CONFIRM` only after explicit file selection, fresh CAPS+META, and a second user confirmation identifying the file/size/token. It must invalidate selection and confirmation on reconnect, timeout, cancellation or state change. Firmware remains authoritative: POSTFLIGHT, no open writer, no current mission, and full fresh CRC/size validation before deleting only selected `flight.sslog`. Download success must never trigger deletion. Other mission files/manifest/decoder are retained. CANCEL cannot undo an unlink already committed. The Android client deliberately has **no DELETE API** at this stage.
+
+## PC acceptance boundaries
+
+Frozen GSHC's actual JSONL read/extract methods are verified using Java-generated sessions; desktop plotting/UI dependencies are stubbed only for that data-path test. Extract JSONL and open through GSHC's supported path. A legacy desktop build is not claimed to understand the new ZIP wrapper.
+
+FLP continues to require native `.bin/.sslog`, the exact `.ssdecoder`, and embedded Descriptor through LogOpenCoordinator. Neither adding a decoder file nor a successful CRC/SHA transfer establishes a decoder match. AIR JSONL cannot reconstruct missing onboard high-rate records.
+
+Validation uses generated inputs only. Shared golden `123456789` is test content, not valid SSLOG. Passing mock/wire/schema tests does not establish real Android/USB/FatFs/device interoperability.

@@ -1,0 +1,22 @@
+{
+  "mock": true,
+  "hardware_access": false,
+  "result": "OK",
+  "data": {
+    "device_ref": "mock-fc-001",
+    "device_id": "unknown",
+    "boot_id": "unknown",
+    "connected": false,
+    "readiness": "unknown",
+    "motion_enabled": false,
+    "source": "fixed-mock-snapshot",
+    "live": false,
+    "connection_lease": {
+      "scope": "single-python-object-only",
+      "hardware_exclusion": false,
+      "owner": null,
+      "generation": null
+    }
+  },
+  "detail": ""
+}

@@ -2,13 +2,15 @@
 
 当前开发分支版本为 **0.1.3**，尚未发布。现有 `v0.1.2` 标签、分发包和历史验收证据保持不变；下文 0.1.2 分发说明记录上一冻结版本。
 
-SilverStar 是面向火箭航电开发的三应用软件套件。此分发提供 Python 源码、界面资源、声明式插件及生成模板，适合在 Windows 上配置项目、查看地面站数据、解析与重算飞行日志。
+SilverStar 是面向火箭航电开发的统一仓库，包含三套 Windows 应用、Android 开发版和 DeviceService 模拟原型。此分发提供 Python 源码、界面资源、声明式插件及生成模板，适合在 Windows 上配置项目、查看地面站数据、解析与重算飞行日志。
 
-| 应用 | 用途 | 根目录入口 |
+| 应用 | 用途 | 入口 / 源码位置 |
 |---|---|---|
 | SCG（System Configuration & Generation） | 配置设备、导航、协议与 Flight/Ground 硬件；生成项目和构建配置 | `SCG.py` |
 | GSHC（Ground Station Host Computer） | AIR M0 地面站界面、接收状态、命令与日志/图表导出 | `GSHC.py` |
 | FLP（Flight Log Processor） | exact decoder 日志打开、Recorded/Recomputed/What-if 分析、图表及数据导出 | `FLP.py` |
+| GSHC Android（开发版） | Java17 原生 Android、模拟/只读默认；真实 USB 门禁关闭 | [apps/GSHC_Android](apps/GSHC_Android/README.md) |
+| DeviceService（原型） | 有界 mock-only Python API/CLI | [apps/DeviceService](apps/DeviceService/README.md) |
 
 **0.1.2 是本次准备的软件分发版本。** 新增 [Windows 便携包](docs/public/WINDOWS_PACKAGE.md)：SCG.exe、GSHC.exe、FLP.exe 共用单一依赖目录，含运行所需 Python/Qt 与资源；另保留源码候选。没有安装器、Arm 工具链、CubeMX SDK 或已验收最终固件。实包验证以其 receipt 为准；尚未公开推送，不宣称纯净机器或硬件/飞行验收。USB Ground 普通生成入口仍保持阻断，不能作为通用可用 CDC 产品交付。
 

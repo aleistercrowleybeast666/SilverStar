@@ -1,0 +1,47 @@
+[
+  {
+    "path": ".gitignore",
+    "size_bytes": 45,
+    "sha256": "23a2c3c02b184e6ce4aa5ba65acced7a84a0359c9ccdd18db0e4c81e4a941b91"
+  },
+  {
+    "path": "AGENTS.md",
+    "size_bytes": 1815,
+    "sha256": "2c1df541332d7cdcd40c6c1252f3f1882f0591fa24f58c0060fb0d8ab31c2012"
+  },
+  {
+    "path": "device_service.py",
+    "size_bytes": 14254,
+    "sha256": "d80c1dc089e9fc8ceedd1e3ee119eb28c33294d3ab5e05a5cbc237801579cd31"
+  },
+  {
+    "path": "README.md",
+    "size_bytes": 11507,
+    "sha256": "205b27576dad4868b06c3a3aed5413f6111ec25f83ea39fc0129de4eee544276"
+  },
+  {
+    "path": "VALIDATION.md",
+    "size_bytes": 3637,
+    "sha256": "2f079e3849cbf1f1b761555efd243f70d9d226105c7ef6f6cc8eb2f31f6824d0"
+  },
+  {
+    "path": "contracts/log_file_service_v1.json",
+    "size_bytes": 5696,
+    "sha256": "56ee90b08d1c2f55704d91857d3cbd2840ba64932a5b831244c87aa451e3b2ab"
+  },
+  {
+    "path": "contracts/session_export_v1.golden.json",
+    "size_bytes": 473,
+    "sha256": "d998062d184fd1c8f1d73677faf93ccb55c53cf32c66efc37d943133e702cf9e"
+  },
+  {
+    "path": "contracts/session_export_v1.schema.json",
+    "size_bytes": 2248,
+    "sha256": "ed2ce84f55d26ccdc28fc37683e83bdb9a114078f717294e49cd63f4c1d17feb"
+  },
+  {
+    "path": "tests/test_device_service.py",
+    "size_bytes": 14050,
+    "sha256": "03d3ee886028929bdcd1b4acba885b174c03873919605662232ad8485b5becd5"
+  }
+]

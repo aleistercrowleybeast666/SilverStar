@@ -1,0 +1,809 @@
+{
+  "scope": "HTML browser design preview ONLY; not Android APK/emulator/device screenshots",
+  "requested_cases": 16,
+  "additional_short_window_cases": 4,
+  "retained_screenshots": 6,
+  "limitations": [
+    "CSS font scaling approximates 200% text; no Android fontScale execution.",
+    "Compact collapsible header is a proposed native adaptation, not evidence that MainActivity implements it.",
+    "Static synthetic values and curves; device and file actions are not executed.",
+    "Maintenance screenshots are scrolled to the TF target-selection card; others show initial viewport. DOM checks verify vertical scroll reachability."
+  ],
+  "cases": [
+    {
+      "name": "phone-preflight-layout-preview",
+      "screenshot": "phone-preflight-layout-preview.png",
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 0,
+      "pageName": "预飞行",
+      "width": 360,
+      "height": 800,
+      "scale": 1,
+      "compactHeader": false,
+      "headerCollapsed": false,
+      "mainAvailablePx": 531,
+      "mainScrollHeight": 752,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "vertical",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 81
+        },
+        {
+          "x": 12,
+          "y": 143
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": false,
+      "screenshotSection": "top",
+      "columns": 0,
+      "order": []
+    },
+    {
+      "name": "phone-flight-layout-preview",
+      "screenshot": "phone-flight-layout-preview.png",
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 1,
+      "pageName": "飞行",
+      "width": 360,
+      "height": 800,
+      "scale": 1,
+      "compactHeader": false,
+      "headerCollapsed": false,
+      "mainAvailablePx": 531,
+      "mainScrollHeight": 895,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "vertical",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 81
+        },
+        {
+          "x": 12,
+          "y": 143
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": false,
+      "screenshotSection": "top",
+      "columns": 2,
+      "order": [
+        0,
+        3,
+        1,
+        4,
+        2,
+        5
+      ]
+    },
+    {
+      "name": "phone-postprocessing-layout-preview",
+      "screenshot": "phone-postprocessing-layout-preview.png",
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 2,
+      "pageName": "后期处理",
+      "width": 360,
+      "height": 800,
+      "scale": 1,
+      "compactHeader": false,
+      "headerCollapsed": false,
+      "mainAvailablePx": 531,
+      "mainScrollHeight": 576,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "vertical",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 81
+        },
+        {
+          "x": 12,
+          "y": 143
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": false,
+      "screenshotSection": "top",
+      "columns": 0,
+      "order": []
+    },
+    {
+      "name": "phone-maintenance-layout-preview",
+      "screenshot": "phone-maintenance-layout-preview.png",
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 3,
+      "pageName": "调试与维护",
+      "width": 360,
+      "height": 800,
+      "scale": 1,
+      "compactHeader": false,
+      "headerCollapsed": false,
+      "mainAvailablePx": 531,
+      "mainScrollHeight": 800,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "vertical",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 81
+        },
+        {
+          "x": 12,
+          "y": 143
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": true,
+      "screenshotSection": "tf-maintenance-card",
+      "columns": 0,
+      "order": []
+    },
+    {
+      "name": "tablet-preflight-layout-preview",
+      "screenshot": null,
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 0,
+      "pageName": "预飞行",
+      "width": 1200,
+      "height": 800,
+      "scale": 1,
+      "compactHeader": false,
+      "headerCollapsed": false,
+      "mainAvailablePx": 593,
+      "mainScrollHeight": 593,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "horizontal",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 81
+        },
+        {
+          "x": 603,
+          "y": 81
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": false,
+      "screenshotSection": "top",
+      "columns": 0,
+      "order": []
+    },
+    {
+      "name": "tablet-flight-layout-preview",
+      "screenshot": "tablet-flight-layout-preview.png",
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 1,
+      "pageName": "飞行",
+      "width": 1200,
+      "height": 800,
+      "scale": 1,
+      "compactHeader": false,
+      "headerCollapsed": false,
+      "mainAvailablePx": 593,
+      "mainScrollHeight": 685,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "horizontal",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 81
+        },
+        {
+          "x": 603,
+          "y": 81
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": false,
+      "screenshotSection": "top",
+      "columns": 3,
+      "order": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "name": "tablet-postprocessing-layout-preview",
+      "screenshot": null,
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 2,
+      "pageName": "后期处理",
+      "width": 1200,
+      "height": 800,
+      "scale": 1,
+      "compactHeader": false,
+      "headerCollapsed": false,
+      "mainAvailablePx": 593,
+      "mainScrollHeight": 593,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "horizontal",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 81
+        },
+        {
+          "x": 603,
+          "y": 81
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": false,
+      "screenshotSection": "top",
+      "columns": 0,
+      "order": []
+    },
+    {
+      "name": "tablet-maintenance-layout-preview",
+      "screenshot": null,
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 3,
+      "pageName": "调试与维护",
+      "width": 1200,
+      "height": 800,
+      "scale": 1,
+      "compactHeader": false,
+      "headerCollapsed": false,
+      "mainAvailablePx": 593,
+      "mainScrollHeight": 735,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "horizontal",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 81
+        },
+        {
+          "x": 603,
+          "y": 81
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": true,
+      "screenshotSection": "tf-maintenance-card",
+      "columns": 0,
+      "order": []
+    },
+    {
+      "name": "split-preflight-layout-preview",
+      "screenshot": null,
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 0,
+      "pageName": "预飞行",
+      "width": 480,
+      "height": 800,
+      "scale": 1,
+      "compactHeader": false,
+      "headerCollapsed": false,
+      "mainAvailablePx": 531,
+      "mainScrollHeight": 708,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "vertical",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 81
+        },
+        {
+          "x": 12,
+          "y": 143
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": false,
+      "screenshotSection": "top",
+      "columns": 0,
+      "order": []
+    },
+    {
+      "name": "split-flight-layout-preview",
+      "screenshot": null,
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 1,
+      "pageName": "飞行",
+      "width": 480,
+      "height": 800,
+      "scale": 1,
+      "compactHeader": false,
+      "headerCollapsed": false,
+      "mainAvailablePx": 531,
+      "mainScrollHeight": 895,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "vertical",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 81
+        },
+        {
+          "x": 12,
+          "y": 143
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": false,
+      "screenshotSection": "top",
+      "columns": 2,
+      "order": [
+        0,
+        3,
+        1,
+        4,
+        2,
+        5
+      ]
+    },
+    {
+      "name": "split-postprocessing-layout-preview",
+      "screenshot": null,
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 2,
+      "pageName": "后期处理",
+      "width": 480,
+      "height": 800,
+      "scale": 1,
+      "compactHeader": false,
+      "headerCollapsed": false,
+      "mainAvailablePx": 531,
+      "mainScrollHeight": 555,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "vertical",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 81
+        },
+        {
+          "x": 12,
+          "y": 143
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": false,
+      "screenshotSection": "top",
+      "columns": 0,
+      "order": []
+    },
+    {
+      "name": "split-maintenance-layout-preview",
+      "screenshot": null,
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 3,
+      "pageName": "调试与维护",
+      "width": 480,
+      "height": 800,
+      "scale": 1,
+      "compactHeader": false,
+      "headerCollapsed": false,
+      "mainAvailablePx": 531,
+      "mainScrollHeight": 778,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "vertical",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 81
+        },
+        {
+          "x": 12,
+          "y": 143
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": true,
+      "screenshotSection": "tf-maintenance-card",
+      "columns": 0,
+      "order": []
+    },
+    {
+      "name": "phone-font200-preflight-layout-preview",
+      "screenshot": null,
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 0,
+      "pageName": "预飞行",
+      "width": 360,
+      "height": 800,
+      "scale": 2,
+      "compactHeader": true,
+      "headerCollapsed": true,
+      "mainAvailablePx": 498,
+      "mainScrollHeight": 1190,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "vertical",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 63
+        },
+        {
+          "x": 12,
+          "y": 120
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": false,
+      "screenshotSection": "top",
+      "columns": 0,
+      "order": []
+    },
+    {
+      "name": "phone-font200-flight-layout-preview",
+      "screenshot": null,
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 1,
+      "pageName": "飞行",
+      "width": 360,
+      "height": 800,
+      "scale": 2,
+      "compactHeader": true,
+      "headerCollapsed": true,
+      "mainAvailablePx": 498,
+      "mainScrollHeight": 1759,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "vertical",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 63
+        },
+        {
+          "x": 12,
+          "y": 120
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": false,
+      "screenshotSection": "top",
+      "columns": 2,
+      "order": [
+        0,
+        3,
+        1,
+        4,
+        2,
+        5
+      ]
+    },
+    {
+      "name": "phone-font200-postprocessing-layout-preview",
+      "screenshot": null,
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 2,
+      "pageName": "后期处理",
+      "width": 360,
+      "height": 800,
+      "scale": 2,
+      "compactHeader": true,
+      "headerCollapsed": true,
+      "mainAvailablePx": 498,
+      "mainScrollHeight": 1020,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "vertical",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 63
+        },
+        {
+          "x": 12,
+          "y": 120
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": false,
+      "screenshotSection": "top",
+      "columns": 0,
+      "order": []
+    },
+    {
+      "name": "phone-font200-maintenance-layout-preview",
+      "screenshot": "phone-font200-maintenance-layout-preview.png",
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 3,
+      "pageName": "调试与维护",
+      "width": 360,
+      "height": 800,
+      "scale": 2,
+      "compactHeader": true,
+      "headerCollapsed": true,
+      "mainAvailablePx": 498,
+      "mainScrollHeight": 1705,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "vertical",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 63
+        },
+        {
+          "x": 12,
+          "y": 120
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": true,
+      "screenshotSection": "tf-maintenance-card",
+      "columns": 0,
+      "order": []
+    },
+    {
+      "name": "short-landscape-preflight-layout-preview",
+      "screenshot": null,
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 0,
+      "pageName": "预飞行",
+      "width": 640,
+      "height": 360,
+      "scale": 1,
+      "compactHeader": true,
+      "headerCollapsed": true,
+      "mainAvailablePx": 166,
+      "mainScrollHeight": 708,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "horizontal",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 47
+        },
+        {
+          "x": 323,
+          "y": 47
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": false,
+      "screenshotSection": "top",
+      "columns": 0,
+      "order": []
+    },
+    {
+      "name": "short-landscape-flight-layout-preview",
+      "screenshot": null,
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 1,
+      "pageName": "飞行",
+      "width": 640,
+      "height": 360,
+      "scale": 1,
+      "compactHeader": true,
+      "headerCollapsed": true,
+      "mainAvailablePx": 166,
+      "mainScrollHeight": 895,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "horizontal",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 47
+        },
+        {
+          "x": 323,
+          "y": 47
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": false,
+      "screenshotSection": "top",
+      "columns": 2,
+      "order": [
+        0,
+        3,
+        1,
+        4,
+        2,
+        5
+      ]
+    },
+    {
+      "name": "short-landscape-postprocessing-layout-preview",
+      "screenshot": null,
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 2,
+      "pageName": "后期处理",
+      "width": 640,
+      "height": 360,
+      "scale": 1,
+      "compactHeader": true,
+      "headerCollapsed": true,
+      "mainAvailablePx": 166,
+      "mainScrollHeight": 533,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "horizontal",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 47
+        },
+        {
+          "x": 323,
+          "y": 47
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": false,
+      "screenshotSection": "top",
+      "columns": 0,
+      "order": []
+    },
+    {
+      "name": "short-landscape-maintenance-layout-preview",
+      "screenshot": null,
+      "previewOnly": true,
+      "androidExecuted": false,
+      "page": 3,
+      "pageName": "调试与维护",
+      "width": 640,
+      "height": 360,
+      "scale": 1,
+      "compactHeader": true,
+      "headerCollapsed": true,
+      "mainAvailablePx": 166,
+      "mainScrollHeight": 757,
+      "scrollReachable": true,
+      "overflow": [],
+      "portCount": 2,
+      "portOrder": [
+        "ground",
+        "debug"
+      ],
+      "portLayout": "horizontal",
+      "portRects": [
+        {
+          "x": 12,
+          "y": 47
+        },
+        {
+          "x": 323,
+          "y": 47
+        }
+      ],
+      "duplicatePagePortControls": 0,
+      "downloadRequiresTarget": true,
+      "screenshotSection": "tf-maintenance-card",
+      "columns": 0,
+      "order": []
+    }
+  ]
+}

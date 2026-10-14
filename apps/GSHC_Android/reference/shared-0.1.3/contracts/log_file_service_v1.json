@@ -1,0 +1,82 @@
+{
+  "contract": "silverstar.log-file-service",
+  "protocol_version": 1,
+  "transport": "maintenance-console-ascii",
+  "encoding": "ASCII lines terminated by CRLF; requests may use LF",
+  "limits": {
+    "request_bytes": 191,
+    "response_bytes": 511,
+    "chunk_bytes": 64,
+    "pending_requests": 1,
+    "idle_timeout_ms": 30000,
+    "file_id_min": 1,
+    "file_id_max": 999999
+  },
+  "versions": {
+    "maintenance": "0.0",
+    "log_container": "SSLOG 0.0",
+    "decoder_package": "1.2",
+    "independent_of_product_version": true
+  },
+  "commands": {
+    "CAPS": "LOGFILE CAPS",
+    "LIST": "LOGFILE LIST <cursor>",
+    "META": "LOGFILE META <file_id>",
+    "READ": "LOGFILE READ <file_id> <token> <offset>",
+    "DELETE": "LOGFILE DELETE <file_id> <token> CONFIRM",
+    "CANCEL": "LOGFILE CANCEL",
+    "POLL": "LOGFILE POLL <request_id>"
+  },
+  "numbers": "Unsigned decimal without sign; CRC and token components are eight uppercase hexadecimal digits",
+  "token": {
+    "pattern": "^1-[0-9A-F]{8}-[0-9A-F]{8}$",
+    "components": [
+      "file-service identity version 1",
+      "whole-file CRC32",
+      "size_bytes"
+    ],
+    "security": "Change detector only, not authentication or collision-resistant identity. Includes no invented boot/device identity."
+  },
+  "responses": {
+    "CAPS": "OK LOGFILE CAPS file_service_version=1 supported=1 max_chunk=64 delete_supported=1 telemetry_bulk=0 device_id=unknown boot_id=unknown",
+    "PENDING": "PENDING LOGFILE <OP> request_id=<request_id>",
+    "LIST": "OK LOGFILE LIST request_id=<request_id> file_id=<file_id> size=<size_bytes> closed=1 next_cursor=<cursor> end=0",
+    "LIST_END": "OK LOGFILE LIST request_id=<request_id> end=1 next_cursor=0",
+    "META": "OK LOGFILE META request_id=<request_id> file_id=<file_id> token=<token> size=<size_bytes> crc32=<crc32> format=SSLOG format_version=0.0 closed=1",
+    "READ": "OK LOGFILE READ request_id=<request_id> file_id=<file_id> token=<token> offset=<offset> length=<length> crc32=<chunk_crc32> data=<uppercase_hex_or_dash_for_empty>",
+    "DELETE": "OK LOGFILE DELETE request_id=<request_id> file_id=<file_id> deleted=1",
+    "CANCEL": "OK LOGFILE CANCEL cancelled=1",
+    "ERR": "ERR LOGFILE <OP> request_id=<request_id_or_zero> code=<error>"
+  },
+  "errors": [
+    "BAD_ARGUMENT",
+    "BUSY",
+    "LOCKED",
+    "NOT_READY",
+    "NOT_FOUND",
+    "STALE",
+    "IO_ERROR",
+    "CANCELLED",
+    "TIMEOUT",
+    "UNSUPPORTED"
+  ],
+  "semantics": {
+    "submission": "CAPS/POLL/CANCEL are synchronous. Valid LIST/META/READ/DELETE submit one operation; storage owner advances it. POLL returns PENDING until complete. Completion remains replayable until the next accepted request or CANCEL. Client serializes commands and matches operation/request_id/file_id/token/offset.",
+    "list": "cursor=0 starts enumeration; next_cursor is opaque uint32. One entry per reply. Only fixed six-digit mission directories containing flight.sslog are exposed. closed means no active writer, not proof of successful recording/finalization.",
+    "storage_owner": "Only LoggerTask performs FatFs work; one bounded hash/read quantum per iteration. No FatFs from SerialTask or ISR.",
+    "safety": "LIST/META/READ require PREFLIGHT, READY or POSTFLIGHT; current mission is never exposed, including temporary writer closure/retry. Other mission logs can be read while current preflight recording continues, serialized through LoggerTask. DELETE additionally requires POSTFLIGHT and no open writer. Recheck before each I/O quantum; an in-progress bounded device transaction completes before cancellation is observed. No radio/AIR/GSP bulk binding. CAPS advertises unsupported when logger service is absent.",
+    "read": "META must first compute full-file CRC32 and size in this service instance. READ requires matching cached file_id/token and unchanged length. Offset <= size; response up to 64 original bytes. Client validates each chunk CRC and final size/whole CRC, then atomically publishes. CRC32 is ISO-HDLC (zlib.crc32), empty CRC=00000000.",
+    "resume": "After disconnect, timeout, cancellation or reboot, repeat CAPS+META. With unknown device/boot identity, do not trust a partial file by token alone: reread and compare the saved prefix, or restart. Never mix responses from another request. No SSLOG bytes or Descriptor are rewritten.",
+    "delete": "Independent explicit user-confirmed action; CONFIRM is mandatory. Requires fresh whole-file CRC/size revalidation against the complete token before unlinking only the selected flight.sslog. Reconnect invalidates the selection and confirmation: repeat META and ask for a new explicit confirmation. Never implicit after download; leaves manifest, decoder packages and other mission files intact. Cancellation after a committed unlink cannot restore the file.",
+    "timeout": "30 seconds without POLL cancels outstanding work and invalidates cached metadata. POLL updates liveness; storage operations remain bounded by existing FatFs/diskio timeouts. CANCEL is asynchronous to storage I/O already in progress and prevents subsequent operations.",
+    "compatibility": "Older firmware returns unknown module and client must report unsupported. SSLOG0 remains container 0.0; exact matching .ssdecoder and embedded Descriptor are still required by FLP. Legacy flat-directory logs are not enumerated by v1."
+  },
+  "golden": {
+    "file_bytes_hex": "313233343536373839",
+    "size": 9,
+    "crc32": "CBF43926",
+    "token": "1-CBF43926-00000009",
+    "read_request": "LOGFILE READ 1 1-CBF43926-00000009 0\r\n",
+    "read_response": "OK LOGFILE READ request_id=3 file_id=1 token=1-CBF43926-00000009 offset=0 length=9 crc32=CBF43926 data=313233343536373839\r\n"
+  }
+}

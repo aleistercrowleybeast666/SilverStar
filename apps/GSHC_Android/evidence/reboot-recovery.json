@@ -1,0 +1,16 @@
+{
+  "checked_utc": "2026-10-13T05:25:34.101696+00:00",
+  "git_repository": false,
+  "commandline_archive_sha256_matches": true,
+  "commandline_archive_crc_valid": true,
+  "installed_jars_crc_valid": 188,
+  "previous_build_session_lost_after_reboot": true,
+  "previous_lint_and_android_tests_not_confirmed": true,
+  "project_bytes": 1478579159,
+  "latest_recovery_utc": "2026-10-13T11:02:17.752825+00:00",
+  "latest_archive_sha256_verified": true,
+  "latest_key_jars_crc_verified": 3,
+  "java_processes_before_restart": 0,
+  "current_status": "Recovered; subsequent unified build, lint and 14 Android framework tests passed. Earlier failed/unconfirmed fields are historical.",
+  "final_build_record": "android-build.json"
+}

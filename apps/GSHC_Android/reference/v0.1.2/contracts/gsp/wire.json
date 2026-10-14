@@ -1,0 +1,28 @@
+{
+  "name": "GSP-MIN",
+  "reference_commit": "7fe0f61142c7360f7dbae0ac0000036315631320",
+  "sof": [165, 90],
+  "byte_order": "little",
+  "payload_max": 64,
+  "crc": {
+    "name": "CRC-16/CCITT-FALSE",
+    "polynomial": 4129,
+    "initial": 65535,
+    "input": "type || payload_length || payload",
+    "output_byte_order": "little"
+  },
+  "types": {
+    "GS_STATUS": {"id": 1, "payload_length": 12},
+    "AIR_RX": {"id": 2, "payload": "rssi_dbm:i8, snr_q4:i8, air_len:u8, air_frame:bytes"},
+    "AIR_TX": {"id": 3, "payload": "air_len:u8, air_frame:bytes"},
+    "ACK": {"id": 4, "payload_length": 3}
+  },
+  "ack_results": {
+    "OK": 0,
+    "BAD_CRC": 1,
+    "BAD_LEN": 2,
+    "BAD_TYPE": 3,
+    "BAD_PARAM": 4,
+    "BUSY": 5
+  }
+}

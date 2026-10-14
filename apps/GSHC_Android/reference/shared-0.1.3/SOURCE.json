@@ -1,0 +1,11 @@
+{
+  "contract_commit": "cb944b7c5a844da2f277494662801f2179a268ad",
+  "product_version_commit": "b543e2369096a9388ad0d0f7f10b6c35260ad827",
+  "working_copy_matches_except_line_endings": true,
+  "sha256": {
+    "contracts/log_file_service_v1.json": "74591083dab74fa703b9e0794f7070bcbd83c2a61477b755798516a2e84267c6",
+    "contracts/session_export_v1.schema.json": "ed2ce84f55d26ccdc28fc37683e83bdb9a114078f717294e49cd63f4c1d17feb",
+    "contracts/session_export_v1.golden.json": "d998062d184fd1c8f1d73677faf93ccb55c53cf32c66efc37d943133e702cf9e",
+    "docs/public/SCG/LOG_FILE_SERVICE_V1.md": "a3a03c0570613f35ff2f3103d9cbb882074a781383bfec93a2c91b70b97b143e"
+  }
+}

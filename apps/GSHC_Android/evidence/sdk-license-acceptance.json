@@ -1,0 +1,27 @@
+{
+  "accepted": true,
+  "accepted_at_utc": "2026-10-13T05:06:19.522497+00:00",
+  "license_id": "android-sdk-license",
+  "license_date": "2019-01-16",
+  "text_sha256_utf8_lf": "1f8729233617b193fd619213792ae16a41b95d2bbbf525dfe66998252ba68b16",
+  "local_copy_sha256_bytes": "00eceefbf21af958ba76722fdf3330143d7176e4626f341c3d8925a6e40726ea",
+  "source": "https://dl.google.com/android/repository/repository2-3.xml",
+  "current_terms": "https://developer.android.com/studio/terms",
+  "authorization": "Parent explicitly confirmed the existing user approval covers this exact SDK license after clause comparison.",
+  "scope": [
+    "cmdline-tools 23.0",
+    "platforms;android-36 revision2",
+    "build-tools;35.0.0"
+  ],
+  "other_licenses_auto_accepted": false,
+  "initial_fingerprint_check": "Initial byte check detected Windows CRLF rather than text change; normalized full text verified identical.",
+  "metrics_opt_out": "Subsequent Android CLI commands explicitly use --no-metrics. Initial legacy sdkmanager delegation showed a default metrics notice; actual prior upload is unknown.",
+  "installer_license_marker": "24333f8a63b6825ea9c5514f83c2829b004d1fee",
+  "installed_at_utc": "2026-10-13T05:09:29.849150+00:00",
+  "installed_sdk_packages": [
+    "cmdline-tools 23.0",
+    "platforms/android-36 r2",
+    "build-tools/35.0.0"
+  ],
+  "project_bytes_after_sdk": 986581669
+}

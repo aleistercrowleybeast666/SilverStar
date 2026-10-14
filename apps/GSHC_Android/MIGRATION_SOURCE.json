@@ -1,0 +1,523 @@
+{
+  "source": "D:\\python_software\\SilverStar_GSHC_Android",
+  "git": "not a git repository; confirmed by authorized git -C status",
+  "suggested_destination": "apps/GSHC_Android",
+  "source_files": [
+    {
+      "path": ".gitignore",
+      "bytes": 55,
+      "sha256": "1979bfa0f8e56bd0f69ecd9e1ac41f9bc690ec86387308b02401b7b5884dbfb0"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 2567,
+      "sha256": "8193ac4fa946c492f00077870398beb1b635bed031c84891f883d50aea56f409"
+    },
+    {
+      "path": "build.gradle",
+      "bytes": 70,
+      "sha256": "96a33edb21d173da2c36f5312f50cdfb9f71d9f5078c081c81f2d029547f6cb9"
+    },
+    {
+      "path": "gradle.properties",
+      "bytes": 127,
+      "sha256": "acdd4f0b0d6e7d0f47cb74f0d2736a934bbe693ede989eb823de6b397665fb66"
+    },
+    {
+      "path": "HANDOFF.md",
+      "bytes": 3696,
+      "sha256": "e3f1ecc023949bb3830dfab4003f0247b79d1edede2eae3c0e6e53b1a579ca8d"
+    },
+    {
+      "path": "README.md",
+      "bytes": 5454,
+      "sha256": "7f3586774b53f063a7bcf7a4394a9de9cafe8cf9ca291edf7449253937b14869"
+    },
+    {
+      "path": "settings.gradle",
+      "bytes": 348,
+      "sha256": "9ce900aa833f864361c5f663d92dc9e4818cec69602bccf6289889f1333fbff2"
+    },
+    {
+      "path": "app/build.gradle",
+      "bytes": 2354,
+      "sha256": "193f229f087d9620dddc393911d964079002ee9e08526ae74df4b5137bd91c02"
+    },
+    {
+      "path": "app/src/main/AndroidManifest.xml",
+      "bytes": 1659,
+      "sha256": "a51c4f73918c63af7532351b5a18e2a658baa3b245378970709f670905f23286"
+    },
+    {
+      "path": "app/src/main/java/cn/silverstar/gshc/AppRuntime.java",
+      "bytes": 9686,
+      "sha256": "89a826b0b19a322c5ff64a3cdb4dc902d0d3c151dbc02a18f0971769e97a7472"
+    },
+    {
+      "path": "app/src/main/java/cn/silverstar/gshc/GshcApplication.java",
+      "bytes": 550,
+      "sha256": "f01424ee3d955b4855872571f08a10d6fd05da060ab3e6b0ba43569fb8baaac7"
+    },
+    {
+      "path": "app/src/main/java/cn/silverstar/gshc/MainActivity.java",
+      "bytes": 31186,
+      "sha256": "ef7c9f945b6cf66b26bf76f84f74aa98a8262c9c73559f2262324e816dcefcc7"
+    },
+    {
+      "path": "app/src/main/java/cn/silverstar/gshc/PlotView.java",
+      "bytes": 2680,
+      "sha256": "7b468eba61ab9358ef9d76b58f07a7bf01a5c2496226bf88e14b393e5395bffb"
+    },
+    {
+      "path": "app/src/main/java/cn/silverstar/gshc/SafDirectory.java",
+      "bytes": 3973,
+      "sha256": "458ae4487bc0b43b6af1554f241f3cda54ef72f01904c8c34e892025d93bf8cf"
+    },
+    {
+      "path": "app/src/main/java/cn/silverstar/gshc/UsbConnections.java",
+      "bytes": 4821,
+      "sha256": "914b5573c60c1a961c8db9843d61e454dac311a4f79ec4abb0b3b56f7d21b992"
+    },
+    {
+      "path": "app/src/main/java/cn/silverstar/gshc/UsbMaintenanceService.java",
+      "bytes": 7759,
+      "sha256": "5aae0905bcf8c9e3636b728d98caa7f30d62d86f15d9e97782e6074bb43a1822"
+    },
+    {
+      "path": "app/src/main/java/cn/silverstar/gshc/UsbReadService.java",
+      "bytes": 5512,
+      "sha256": "ae121935f66089df50ab5ebe87ef0b440aeb6d8c06c83da002227cff351d651a"
+    },
+    {
+      "path": "app/src/main/res/drawable/ic_launcher.xml",
+      "bytes": 434,
+      "sha256": "833f319504cb872226b7d9b8e6e941fa8c7a65e614da5fe6fc8eb2551a424067"
+    },
+    {
+      "path": "app/src/main/res/xml/data_extraction_rules.xml",
+      "bytes": 960,
+      "sha256": "6feb49ce88656e6c7bfe6d1aaf5f7d5160216d77e773e2c4038d62b697d06a2b"
+    },
+    {
+      "path": "app/src/main/res/xml/share_paths.xml",
+      "bytes": 159,
+      "sha256": "cdd1bacb5faf545dba0f099da353c1b3a14e71f93210f2c9cd8354aa3461c01a"
+    },
+    {
+      "path": "app/src/test/java/cn/silverstar/gshc/AndroidIntegrationTest.java",
+      "bytes": 8187,
+      "sha256": "189dff4d0b7e094a6cd1d533e2038ab804b9e25ee8bbe28ee83a066df5b418a2"
+    },
+    {
+      "path": "app/src/test/java/cn/silverstar/gshc/LifecycleRegressionTest.java",
+      "bytes": 7168,
+      "sha256": "9c3cb651e8c03de35d575bf7e69124081ffadc6f23696d47ba866f0b91300ca8"
+    },
+    {
+      "path": "app/src/test/java/cn/silverstar/gshc/RuntimeRegressionTest.java",
+      "bytes": 8126,
+      "sha256": "2c90633d728ce6dd86cc48ab962af382d0d068940cfc1e29d91220998ec7c328"
+    },
+    {
+      "path": "core/build.gradle",
+      "bytes": 132,
+      "sha256": "75a893713e875b7f4e71ba9f9a93f7cfabd5bd896feb9ea51ffaec8ac026995e"
+    },
+    {
+      "path": "core/src/main/java/cn/silverstar/gshc/core/AirDecoder.java",
+      "bytes": 5571,
+      "sha256": "ee0eb10cb340efabab7af5c47241aa7199bbe5115531fe10e36af4eb0b731895"
+    },
+    {
+      "path": "core/src/main/java/cn/silverstar/gshc/core/DangerousCommandPolicy.java",
+      "bytes": 1445,
+      "sha256": "21d4db370d124cc55c2449ff985606403a3e2d05d1431a6c84195791aa9d17e1"
+    },
+    {
+      "path": "core/src/main/java/cn/silverstar/gshc/core/GspCodec.java",
+      "bytes": 4760,
+      "sha256": "26dcec80a09e813c90a713f9c41affc38467700c7f375d11b0406e07c4588c9a"
+    },
+    {
+      "path": "core/src/main/java/cn/silverstar/gshc/core/RawReplay.java",
+      "bytes": 1506,
+      "sha256": "d59a095f0ab4842162c3de20059271287f81ce957cd79d61280e9cc89818f28f"
+    },
+    {
+      "path": "core/src/main/java/cn/silverstar/gshc/core/ReceivePipeline.java",
+      "bytes": 6077,
+      "sha256": "a3f1a7602891924672f17abd496a094259b730c5d5044780d959d9671c9fd36f"
+    },
+    {
+      "path": "core/src/main/java/cn/silverstar/gshc/core/Simulator.java",
+      "bytes": 1951,
+      "sha256": "3cfed7f0669255d159b2b2bd1c99c5b9953032ecca5fe24c049df7aa2ba77497"
+    },
+    {
+      "path": "core/src/main/java/cn/silverstar/gshc/core/TelemetryState.java",
+      "bytes": 3559,
+      "sha256": "a0a5a599895ece60605eb7a442466cb6cff4cd30ad4f346e61835c1c15518879"
+    },
+    {
+      "path": "core/src/main/java/cn/silverstar/gshc/core/tf/MaintenanceTfSource.java",
+      "bytes": 10174,
+      "sha256": "45bf53fba5ad2b3532f190484c236a0e7137f6cb647a50c1de103312744321e1"
+    },
+    {
+      "path": "core/src/main/java/cn/silverstar/gshc/core/tf/MockTfSource.java",
+      "bytes": 2516,
+      "sha256": "c50322b0f7b445c35e3fd2c547fafa11eeb89f35c38765d5c17c743e8175145e"
+    },
+    {
+      "path": "core/src/main/java/cn/silverstar/gshc/core/tf/TfLogClient.java",
+      "bytes": 9131,
+      "sha256": "c5cbc4d4b2a3a897820a3b48bf848ed0754a9e900c6f8ec307325d2d1c34aa0a"
+    },
+    {
+      "path": "docs/layout-preview.html",
+      "bytes": 14372,
+      "sha256": "5e7426e3a132a86f25e468ab0dc8b0fc67206d9a5e7a21800493c712c3bd94f9"
+    },
+    {
+      "path": "docs/SDK_LICENSE_COMPARISON.md",
+      "bytes": 3438,
+      "sha256": "5fa8c557f6b1934c18f8ff7568b698111e73edecb2591c8cd2d17a03b5b23ad6"
+    },
+    {
+      "path": "docs/SDK_SETUP.md",
+      "bytes": 5082,
+      "sha256": "3fd144a6fd2865628666487eb03310a74ffef59206421fcac9dc3c7de0dbe160"
+    },
+    {
+      "path": "docs/SHARED_CONTRACTS.md",
+      "bytes": 7464,
+      "sha256": "07198782c664e676b5c8c0c02ac0acdeae550ffd4bea8302ac5703b475d4cb1a"
+    },
+    {
+      "path": "docs/SHARED_EXPORT_PROPOSAL.md",
+      "bytes": 589,
+      "sha256": "af5698347bcc71b7c2115880fa5cb4ab7e5d000744031861f0d35091e255a6e0"
+    },
+    {
+      "path": "evidence/android-build.json",
+      "bytes": 3426,
+      "sha256": "2dc5d4f9af6e9dbd43306bdeb741ac389f5ce88e0486bda635fad555ad49d655"
+    },
+    {
+      "path": "evidence/layout-preview-checks.json",
+      "bytes": 19080,
+      "sha256": "d4ec159f4a15de5c2a63ef02b5d3b01584f1f156599413d41f70017042434e74"
+    },
+    {
+      "path": "evidence/layout-preview-visual-review.json",
+      "bytes": 1920,
+      "sha256": "7b78eb24ce29b7fec897d14d8e270415e63f2b04c9e17348eea64c62f6b0c227"
+    },
+    {
+      "path": "evidence/library-delivery.json",
+      "bytes": 851,
+      "sha256": "c08c69fa3719613f9c5a50ceff292876d3358bbe49ff1f8c3fe30a2c2bd9802b"
+    },
+    {
+      "path": "evidence/phone-flight-layout-preview.png",
+      "bytes": 40219,
+      "sha256": "f686d9d36985bd6c73ce6b512bfda58006d5f00a09c4e7e30c8860b3dbfe37cb"
+    },
+    {
+      "path": "evidence/phone-font200-maintenance-layout-preview.png",
+      "bytes": 76726,
+      "sha256": "f45959679ea722c378911ee2e7feb4dd840a7ec8d50646d4c2eb963d0def9bbe"
+    },
+    {
+      "path": "evidence/phone-maintenance-layout-preview.png",
+      "bytes": 45201,
+      "sha256": "1df9330062104fa362b6d01561bb4b4edf2d7d0fb4bbb947518fbf53a1b7553e"
+    },
+    {
+      "path": "evidence/phone-postprocessing-layout-preview.png",
+      "bytes": 41357,
+      "sha256": "a2758b8d1a98de50b91e2ab510a74677420c67b937bc3cae35b26dbeaece3be8"
+    },
+    {
+      "path": "evidence/phone-preflight-layout-preview.png",
+      "bytes": 38453,
+      "sha256": "cf3613ef3513ca3ad3ead8503ff40ed3346a5b06528761fec96131e7fab61ee5"
+    },
+    {
+      "path": "evidence/reboot-recovery.json",
+      "bytes": 739,
+      "sha256": "6de1d153163fd2b86b6dbab40df5b0191a7ddd39691c8f3b1806e5fa3e6f255a"
+    },
+    {
+      "path": "evidence/sdk-license-acceptance.json",
+      "bytes": 1402,
+      "sha256": "fcb44c9061922e85480c390540eb5d746dc504baac2a7165d0171c0073d3b583"
+    },
+    {
+      "path": "evidence/sdk-license-comparison.json",
+      "bytes": 1953,
+      "sha256": "1e993290f3deab9bdb5a7bea5d0db85c9ee78eec5a46ee153cef7001220837c0"
+    },
+    {
+      "path": "evidence/setup-status.json",
+      "bytes": 1234,
+      "sha256": "03fcc57df7d91e51303bb69c1e0e570fc930742b6bdcfb6dac44aa00197dd795"
+    },
+    {
+      "path": "evidence/tablet-flight-layout-preview.png",
+      "bytes": 55903,
+      "sha256": "dcd0afd984d01b2d9c06fc12f5c465c2fe01040afa9f66fceb98c77bc5e81500"
+    },
+    {
+      "path": "evidence/VERIFICATION.md",
+      "bytes": 8794,
+      "sha256": "b2776abae73da95a5f35044f638ec329d093060e8e8f23cbb917973286eb8045"
+    },
+    {
+      "path": "reference/SOURCE.json",
+      "bytes": 2035,
+      "sha256": "74d005970f1658d098c87ca48b340772c86b3450421d51c74440e929081b6a7e"
+    },
+    {
+      "path": "reference/integration-f2ce541/log_file_service_v1.json",
+      "bytes": 5762,
+      "sha256": "4695f0cb403e250c0c00e3cceebc4a7c85cd41d5c98530f92e7aa298521a4e97"
+    },
+    {
+      "path": "reference/integration-f2ce541/SOURCE.json",
+      "bytes": 404,
+      "sha256": "a1ba98f0da5a7be25d91df051c9e11cc1724b85985a2286da317f1b54bc98262"
+    },
+    {
+      "path": "reference/shared-0.1.3/SOURCE.json",
+      "bytes": 673,
+      "sha256": "bb7978c79c09f67bd0bc7dc28adc6f77137bbfca8677adf57ec988da15eb467e"
+    },
+    {
+      "path": "reference/shared-0.1.3/contracts/log_file_service_v1.json",
+      "bytes": 5709,
+      "sha256": "74591083dab74fa703b9e0794f7070bcbd83c2a61477b755798516a2e84267c6"
+    },
+    {
+      "path": "reference/shared-0.1.3/contracts/session_export_v1.golden.json",
+      "bytes": 473,
+      "sha256": "d998062d184fd1c8f1d73677faf93ccb55c53cf32c66efc37d943133e702cf9e"
+    },
+    {
+      "path": "reference/shared-0.1.3/contracts/session_export_v1.schema.json",
+      "bytes": 2248,
+      "sha256": "ed2ce84f55d26ccdc28fc37683e83bdb9a114078f717294e49cd63f4c1d17feb"
+    },
+    {
+      "path": "reference/shared-0.1.3/docs/public/SCG/LOG_FILE_SERVICE_V1.md",
+      "bytes": 4445,
+      "sha256": "a3a03c0570613f35ff2f3103d9cbb882074a781383bfec93a2c91b70b97b143e"
+    },
+    {
+      "path": "reference/v0.1.2/AGENTS.md",
+      "bytes": 10040,
+      "sha256": "c5f1f47414d6b57b33630171a1e793c017ffef35434247e16af08536f22cf768"
+    },
+    {
+      "path": "reference/v0.1.2/LICENSE",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "reference/v0.1.2/apps/FLP/src/silverstar_flp/log_open.py",
+      "bytes": 18602,
+      "sha256": "cbdcadd3ada4de2e01373330d776848b8990adec955ec4b934ba124f293c074f"
+    },
+    {
+      "path": "reference/v0.1.2/apps/GSHC/processing/flight_log_processor.py",
+      "bytes": 59138,
+      "sha256": "9a05664602567b4fb0ce2b22dc0e469da563929f9e8ffce82773c63bf21e4c19"
+    },
+    {
+      "path": "reference/v0.1.2/apps/GSHC/protocol/air.py",
+      "bytes": 14210,
+      "sha256": "9e9b241be3ac021298b6cb13c53dcf3ab342afed8ac384c6bd250c54e2c0111f"
+    },
+    {
+      "path": "reference/v0.1.2/apps/GSHC/protocol/common.py",
+      "bytes": 5827,
+      "sha256": "f41029c1537e2b580791e3d3e1f75f408e02761812f791e62f53bbb9721b2b53"
+    },
+    {
+      "path": "reference/v0.1.2/apps/GSHC/protocol/gsp_min.py",
+      "bytes": 5745,
+      "sha256": "f4b6ef6f9105cafbe46bd982ae04b03c3dfc9a497d0915182000b984baa1e923"
+    },
+    {
+      "path": "reference/v0.1.2/apps/GSHC/protocol/receive_pipeline.py",
+      "bytes": 19526,
+      "sha256": "54a8ee81eb7c5e12f0645c042954c2b49ed7b34da10a281dda7561104b3c872a"
+    },
+    {
+      "path": "reference/v0.1.2/apps/GSHC/services/logger.py",
+      "bytes": 12274,
+      "sha256": "f7b00927031bf5025436baa2d000f5570b53d899ff4f4e8efd52c51d746d125a"
+    },
+    {
+      "path": "reference/v0.1.2/apps/GSHC/tests/test_air_protocol.py",
+      "bytes": 10484,
+      "sha256": "5ed3bffce6cfa76144db719244451158ddad278a9fe5e4df7a8bd977e2d8f025"
+    },
+    {
+      "path": "reference/v0.1.2/apps/GSHC/transport/protocol_worker.py",
+      "bytes": 10464,
+      "sha256": "a48ec36d3515dafd6a549db3f326954e08ecdef20011195ad91045cbda03baf2"
+    },
+    {
+      "path": "reference/v0.1.2/contracts/gsp_air_rx_radio_v1.json",
+      "bytes": 1146,
+      "sha256": "f4aa35b83f57e3dfe7777910896a5f36a4ff192d9519eda21e213d881d7dfecb"
+    },
+    {
+      "path": "reference/v0.1.2/contracts/gsp/golden.json",
+      "bytes": 802,
+      "sha256": "a198aea5d420bfe359a8d2876d24e2ef0b91cd357264d4b64068bae822a0926c"
+    },
+    {
+      "path": "reference/v0.1.2/contracts/gsp/wire.json",
+      "bytes": 731,
+      "sha256": "6f420d7343a62de9e6137e2be8c362c2ed1bef96af049f147b74818cd3447811"
+    },
+    {
+      "path": "reference/v0.1.2/docs/public/FLP/Architecture.md",
+      "bytes": 15767,
+      "sha256": "344e3c41dd73e9917d9a497414877c37f7b491e0bfa121440c8e0e75baf0a63f"
+    },
+    {
+      "path": "reference/v0.1.2/docs/public/GSHC/AIR_PROTOCOL.md",
+      "bytes": 40840,
+      "sha256": "05e8bf316ad2e92045c206fe506f4a535b816cf635210018a8211a551569cf2c"
+    },
+    {
+      "path": "reference/v0.1.2/docs/public/GSHC/GSP_MIN_PROTOCOL.md",
+      "bytes": 2140,
+      "sha256": "ccccf56e809359cf93e98b80b294ccd6d5d0cf8834f62ee699abc6b6ad349835"
+    },
+    {
+      "path": "reference/v0.1.2/docs/public/GSHC/UPPER_COMPUTER_ARCHITECTURE.md",
+      "bytes": 3731,
+      "sha256": "38f9ff91584dca8dc96939c153abdcbf2413238029002017051af9bfa8465657"
+    },
+    {
+      "path": "storage/build.gradle",
+      "bytes": 130,
+      "sha256": "9585cdb6465d659b1c455bb39d63feb29cf89438d8f2525daa071c76c43ab0ac"
+    },
+    {
+      "path": "storage/src/main/java/cn/silverstar/gshc/storage/CloseScope.java",
+      "bytes": 1113,
+      "sha256": "f78bed0e354603abfbcc3b59d8cc6012ca02350dea8f2affc438ffc03463cca9"
+    },
+    {
+      "path": "storage/src/main/java/cn/silverstar/gshc/storage/Json.java",
+      "bytes": 2081,
+      "sha256": "4f207d302ff9a904a53e0b77688755a474529231fec1f100725b5219265b3f14"
+    },
+    {
+      "path": "storage/src/main/java/cn/silverstar/gshc/storage/LayoutPolicy.java",
+      "bytes": 625,
+      "sha256": "c777ae863054ec52197b523a48d61a5be11e8a148c16f20daf56c368d9281f66"
+    },
+    {
+      "path": "storage/src/main/java/cn/silverstar/gshc/storage/PortClaims.java",
+      "bytes": 2003,
+      "sha256": "9c641aba260612f4e7a36326098e79fd8bc05c786bca07136b1496e330a6c7f5"
+    },
+    {
+      "path": "storage/src/main/java/cn/silverstar/gshc/storage/SessionStore.java",
+      "bytes": 13001,
+      "sha256": "27e03405a28fb10671719fb8afc0c65ae4255defb30dd7ed2282dbd452766873"
+    },
+    {
+      "path": "storage/src/main/java/cn/silverstar/gshc/storage/UsbPermissions.java",
+      "bytes": 2043,
+      "sha256": "eb36be6868624cf1631ef85bbcc2b783fdc4202aa78e645db531de8b13ccbb8d"
+    },
+    {
+      "path": "storage/src/main/java/cn/silverstar/gshc/storage/VerifiedExport.java",
+      "bytes": 9397,
+      "sha256": "fa6bd55abafa5aa97b6e4032ec10d83abdcd4a387a29a51a45bb7ffa9565f361"
+    },
+    {
+      "path": "storage/src/main/java/cn/silverstar/gshc/storage/VerifiedFileCopy.java",
+      "bytes": 1851,
+      "sha256": "676dfc568566106cda51f0f9f1e6289fb096849abc71a5ba06e2b7397270f9df"
+    },
+    {
+      "path": "storage/src/test/java/cn/silverstar/gshc/storage/StorageTests.java",
+      "bytes": 20033,
+      "sha256": "7e41084e721b4db50abbd97e58acf44e6db3eddf627aedbcced7cc131d9645ea"
+    },
+    {
+      "path": "tests/CORE_EVIDENCE.md",
+      "bytes": 6000,
+      "sha256": "b743698c53e4ece8b0d58130f6d032be450434108b99461edfa5b47d0d711131"
+    },
+    {
+      "path": "tests/core/CoreTests.java",
+      "bytes": 8316,
+      "sha256": "80fa229b434abec454c698563cea7595b7ee6559ae51aa8184f5c952944c8c2d"
+    },
+    {
+      "path": "tests/core/TfTests.java",
+      "bytes": 15294,
+      "sha256": "f366fcc1d1de3fe16a32c115ef82de3aeb292327a5f02df8cd265def7ddcebe0"
+    },
+    {
+      "path": "tools/build-android.ps1",
+      "bytes": 1576,
+      "sha256": "45f3d44a69d77f61ddd563cf909e438e26dda540f37ef16c6656ee8c5b36ff88"
+    },
+    {
+      "path": "tools/ParseJava.java",
+      "bytes": 1306,
+      "sha256": "0a524a877bf24b303bec40f67845e67cc1fe0c678f658c7ad7311fe543559a5f"
+    },
+    {
+      "path": "tools/render-layout-previews.py",
+      "bytes": 4435,
+      "sha256": "b0b69d19d803aa41a33a115d08c74aba9df1ef66df153ea5e50f487097024637"
+    },
+    {
+      "path": "tools/test-core.ps1",
+      "bytes": 1100,
+      "sha256": "2dd9e5378643f854b7326b62233ba8c86d64f2b6f2b924553e19401ce3147962"
+    },
+    {
+      "path": "tools/test-pc-compatibility.py",
+      "bytes": 3072,
+      "sha256": "da58158bfeb789e54ac3c3450cb044a60859930b8007baf04889e401d26e82b5"
+    },
+    {
+      "path": "tools/test-shared-export.py",
+      "bytes": 5098,
+      "sha256": "c96761d99b4d788c728f483aa23bcf0010ab0add5c890714712111044487a2c0"
+    },
+    {
+      "path": "tools/test-storage.ps1",
+      "bytes": 770,
+      "sha256": "82e4d568d960f40eb7930db4f191039025c5b733d9b985d0a522b21eb10e9e5e"
+    }
+  ],
+  "source_bytes": 886374,
+  "excluded_paths": [
+    ".gradle",
+    "build",
+    "local.properties",
+    "app/build",
+    "core/build",
+    "reference/v0.1.2/apps/GSHC/processing/__pycache__",
+    "reference/v0.1.2/apps/GSHC/protocol/__pycache__",
+    "storage/build"
+  ],
+  "action": "read-only survey, no migration or source removal performed",
+  "import_base_commit": "355b3df2d297658eb958d02882902ec6a502c98e",
+  "imported_utc": "2026-10-14T05:54:25.517755+00:00",
+  "strategy": "source-only import, hash-verified originals reversibly relocated after passing tests; source directory retained with MIGRATED.md and caches unchanged",
+  "recoverable_source_snapshot": "D:\\python_software\\SilverStar\\.work\\dev013_monorepo01\\origins\\GSHC_Android"
+}

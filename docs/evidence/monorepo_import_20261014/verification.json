@@ -1,0 +1,43 @@
+{
+  "base_commit": "355b3df2d297658eb958d02882902ec6a502c98e",
+  "source_files": 116,
+  "source_bytes": 946575,
+  "source_git_history": "neither origin was a git repository",
+  "origin_relocated": true,
+  "source_directories_retained": true,
+  "jdk": "existing Microsoft21.0.12.101",
+  "toolchain": "existing external Gradle8.13/AGP8.13.2/SDK36/build-tools35",
+  "gradle_mode": "--offline; sdkDownload=false",
+  "usb_enabled": false,
+  "device_service": "mock-only",
+  "robolectric": {
+    "tests": 14,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "lint": {
+    "errors": 0,
+    "warnings": 7
+  },
+  "apk": {
+    "path": "D:\\python_software\\SilverStar\\.work\\dev013_monorepo01\\android-build\\app\\outputs\\apk\\debug\\app-debug.apk",
+    "bytes": 2479069,
+    "sha256": "7e2d2118c0da9ef0b9643e3335fe63f782ac626b3cfa785771ebebed10605b66"
+  },
+  "hardware_actions": false,
+  "cleanup_performed": false,
+  "signature": {
+    "command": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$env:JAVA_HOME='C:/Program Files/Microsoft/jdk-21.0.12.101-hotspot'; & 'D:/python_software/SilverStar_GSHC_Android/build/toolchain/android-sdk/build-tools/35.0.0/apksigner.bat' verify --print-certs 'D:/python_software/SilverStar/.work/dev013_monorepo01/android-build/app/outputs/apk/debug/app-debug.apk'"
+    ],
+    "exit_code": 0,
+    "stdout": "Signer #1 certificate DN: C=US, O=Android, CN=Android Debug\nSigner #1 certificate SHA-256 digest: f85db72c9e2213b19aa90219cbd0c78e4f5099716f9c56eca456a89fe162a483\nSigner #1 certificate SHA-1 digest: 68a19eb72da2b3eb2fc6660f4bc1b8e7ed37ca82\nSigner #1 certificate MD5 digest: e957dba51257d4e453c8a7bb0e3b1e86\n",
+    "stderr": ""
+  },
+  "evidence_zip_sha256": "90c1603b6b28532a8d80d7ca46718d713fceacb63496c19009082cfbda089444"
+}

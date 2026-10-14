@@ -1,0 +1,46 @@
+{
+  "mock": true,
+  "hardware_access": false,
+  "result": "OK",
+  "data": {
+    "scope": "single-python-object-only",
+    "hardware_exclusion": false,
+    "gshc_acquire": {
+      "mock": true,
+      "hardware_access": false,
+      "result": "OK",
+      "data": {
+        "owner": "gshc",
+        "generation": 1,
+        "ttl_seconds": 10.0
+      },
+      "detail": ""
+    },
+    "ai_conflict": {
+      "mock": true,
+      "hardware_access": false,
+      "result": "BUSY",
+      "data": null,
+      "detail": "Mock connection already has an owner"
+    },
+    "gshc_release": {
+      "mock": true,
+      "hardware_access": false,
+      "result": "OK",
+      "data": null,
+      "detail": ""
+    },
+    "ai_acquire_after_release": {
+      "mock": true,
+      "hardware_access": false,
+      "result": "OK",
+      "data": {
+        "owner": "ai",
+        "generation": 2,
+        "ttl_seconds": 10.0
+      },
+      "detail": ""
+    }
+  },
+  "detail": ""
+}

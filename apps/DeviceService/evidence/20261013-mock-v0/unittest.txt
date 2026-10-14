@@ -1,0 +1,23 @@
+test_caps_use_logfile_v1_fields_and_disable_delete (test_device_service.DeviceServiceTests.test_caps_use_logfile_v1_fields_and_disable_delete) ... ok
+test_cli_download_and_rejection (test_device_service.DeviceServiceTests.test_cli_download_and_rejection) ... ok
+test_cli_read_operations_json_and_exit_status (test_device_service.DeviceServiceTests.test_cli_read_operations_json_and_exit_status) ... ok
+test_corrupt_or_short_sample_is_not_published (test_device_service.DeviceServiceTests.test_corrupt_or_short_sample_is_not_published) ... ok
+test_download_package_preserves_bytes_and_shared_manifest_fields (test_device_service.DeviceServiceTests.test_download_package_preserves_bytes_and_shared_manifest_fields) ... ok
+test_enumeration_is_only_mock_with_unknown_identity (test_device_service.DeviceServiceTests.test_enumeration_is_only_mock_with_unknown_identity) ... ok
+test_forbidden_commands_and_extra_fields_cannot_execute (test_device_service.DeviceServiceTests.test_forbidden_commands_and_extra_fields_cannot_execute) ... ok
+test_lease_expiry_invalidates_old_owner (test_device_service.DeviceServiceTests.test_lease_expiry_invalidates_old_owner) ... ok
+test_lease_race_has_exactly_one_winner (test_device_service.DeviceServiceTests.test_lease_race_has_exactly_one_winner) ... ok
+test_lease_scope_and_argument_bounds_are_honest (test_device_service.DeviceServiceTests.test_lease_scope_and_argument_bounds_are_honest) ... ok
+test_log_text_remains_inert_bytes (test_device_service.DeviceServiceTests.test_log_text_remains_inert_bytes) ... ok
+test_logs_and_metadata_match_golden_not_new_format (test_device_service.DeviceServiceTests.test_logs_and_metadata_match_golden_not_new_format) ... ok
+test_output_io_failure_reports_no_completed_sample (test_device_service.DeviceServiceTests.test_output_io_failure_reports_no_completed_sample) ... ok
+test_single_owner_conflict_release_and_fencing_generation (test_device_service.DeviceServiceTests.test_single_owner_conflict_release_and_fencing_generation) ... ok
+test_source_has_no_transport_or_dynamic_execution_entry_points (test_device_service.DeviceServiceTests.test_source_has_no_transport_or_dynamic_execution_entry_points) ... ok
+test_status_does_not_invent_readiness_or_active_collection (test_device_service.DeviceServiceTests.test_status_does_not_invent_readiness_or_active_collection) ... ok
+test_unknown_devices_and_file_ids_fail_without_io (test_device_service.DeviceServiceTests.test_unknown_devices_and_file_ids_fail_without_io) ... ok
+test_unsupported_device_log_service_is_explicit (test_device_service.DeviceServiceTests.test_unsupported_device_log_service_is_explicit) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.554s
+
+OK

@@ -1,0 +1,18 @@
+{
+  "started_at_utc": "2026-10-13T04:10:48.2826164Z",
+  "completed_at_utc": "2026-10-13T04:10:52.1942848Z",
+  "execution_directory": "D:\\python_software\\SilverStar_DeviceService",
+  "python_executable": "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+  "test_command": "python -B -m unittest discover -s tests -v",
+  "test_exit_code": 0,
+  "tests_reported": 18,
+  "unittest_seconds": "0.554",
+  "cli_status_command": "python -B device_service.py status mock-fc-001",
+  "cli_status_exit_code": 0,
+  "cli_lease_command": "python -B device_service.py lease-demo",
+  "cli_lease_exit_code": 0,
+  "temporary_root": "C:\\Users\\chdxm\\AppData\\Local\\Temp",
+  "mock_only": true,
+  "hardware_verified": false,
+  "neighboring_projects_modified": false
+}

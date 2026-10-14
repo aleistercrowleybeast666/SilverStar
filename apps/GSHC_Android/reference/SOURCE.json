@@ -1,0 +1,24 @@
+{
+  "tag": "v0.1.2",
+  "commit": "c31c13cc0686a56a3184d4f207fd3816c5d39696",
+  "sha256": {
+    "AGENTS.md": "c5f1f47414d6b57b33630171a1e793c017ffef35434247e16af08536f22cf768",
+    "LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "contracts/gsp_air_rx_radio_v1.json": "f4aa35b83f57e3dfe7777910896a5f36a4ff192d9519eda21e213d881d7dfecb",
+    "docs/public/FLP/Architecture.md": "344e3c41dd73e9917d9a497414877c37f7b491e0bfa121440c8e0e75baf0a63f",
+    "docs/public/GSHC/AIR_PROTOCOL.md": "05e8bf316ad2e92045c206fe506f4a535b816cf635210018a8211a551569cf2c",
+    "docs/public/GSHC/GSP_MIN_PROTOCOL.md": "ccccf56e809359cf93e98b80b294ccd6d5d0cf8834f62ee699abc6b6ad349835",
+    "docs/public/GSHC/UPPER_COMPUTER_ARCHITECTURE.md": "38f9ff91584dca8dc96939c153abdcbf2413238029002017051af9bfa8465657",
+    "contracts/gsp/golden.json": "a198aea5d420bfe359a8d2876d24e2ef0b91cd357264d4b64068bae822a0926c",
+    "contracts/gsp/wire.json": "6f420d7343a62de9e6137e2be8c362c2ed1bef96af049f147b74818cd3447811",
+    "apps/GSHC/processing/flight_log_processor.py": "9a05664602567b4fb0ce2b22dc0e469da563929f9e8ffce82773c63bf21e4c19",
+    "apps/GSHC/protocol/air.py": "9e9b241be3ac021298b6cb13c53dcf3ab342afed8ac384c6bd250c54e2c0111f",
+    "apps/GSHC/protocol/common.py": "f41029c1537e2b580791e3d3e1f75f408e02761812f791e62f53bbb9721b2b53",
+    "apps/GSHC/protocol/gsp_min.py": "f4b6ef6f9105cafbe46bd982ae04b03c3dfc9a497d0915182000b984baa1e923",
+    "apps/GSHC/protocol/receive_pipeline.py": "54a8ee81eb7c5e12f0645c042954c2b49ed7b34da10a281dda7561104b3c872a",
+    "apps/GSHC/services/logger.py": "f7b00927031bf5025436baa2d000f5570b53d899ff4f4e8efd52c51d746d125a",
+    "apps/GSHC/tests/test_air_protocol.py": "5ed3bffce6cfa76144db719244451158ddad278a9fe5e4df7a8bd977e2d8f025",
+    "apps/GSHC/transport/protocol_worker.py": "a48ec36d3515dafd6a549db3f326954e08ecdef20011195ad91045cbda03baf2",
+    "apps/FLP/src/silverstar_flp/log_open.py": "cbdcadd3ada4de2e01373330d776848b8990adec955ec4b934ba124f293c074f"
+  }
+}

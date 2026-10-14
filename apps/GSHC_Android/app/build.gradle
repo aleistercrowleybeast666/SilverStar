@@ -1,0 +1,50 @@
+plugins { id 'com.android.application' }
+def testCacheRoot = providers.gradleProperty('silverstar.testCacheRoot').map { new File(it) }.getOrElse(rootProject.layout.buildDirectory.get().asFile)
+def testTempRoot = rootProject.layout.buildDirectory.dir('test-temp').get().asFile
+android {
+    namespace 'cn.silverstar.gshc'
+    compileSdk 36
+    defaultConfig {
+        applicationId 'cn.silverstar.gshc'
+        minSdk 26
+        targetSdk 36
+        versionCode 1
+        versionName '0.1.3-dev.1'
+    }
+    buildFeatures { buildConfig true }
+    signingConfigs { debug { storeFile providers.gradleProperty('silverstar.debugKeyStore').map { new File(it) }.getOrElse(rootProject.layout.buildDirectory.file('android-user/debug.keystore').get().asFile) } }
+    buildTypes {
+        debug { buildConfigField 'boolean', 'ALLOW_USB', 'false' }
+        release { buildConfigField 'boolean', 'ALLOW_USB', 'false'; minifyEnabled false }
+    }
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    testOptions {
+        unitTests.includeAndroidResources = true
+        unitTests.all {
+            maxHeapSize = '1024m'
+            doFirst {
+                new File(testCacheRoot, 'test-home').mkdirs()
+                new File(testCacheRoot, 'test-maven').mkdirs()
+                testTempRoot.mkdirs()
+            }
+            systemProperty 'user.home', new File(testCacheRoot, 'test-home').absolutePath
+            systemProperty 'java.io.tmpdir', testTempRoot.absolutePath
+            systemProperty 'maven.repo.local', new File(testCacheRoot, 'test-maven').absolutePath
+            systemProperty 'robolectric.dependency.repo.url', 'https://repo.maven.apache.org/maven2'
+            jvmArgs '--add-opens=java.base/java.lang=ALL-UNNAMED', '--add-opens=java.base/java.util=ALL-UNNAMED', '--add-opens=java.base/java.io=ALL-UNNAMED', '--add-opens=java.base/java.net=ALL-UNNAMED', '--add-opens=java.base/java.security=ALL-UNNAMED', '--add-opens=java.base/java.text=ALL-UNNAMED', '--add-opens=java.base/jdk.internal.access=ALL-UNNAMED', '--add-opens=java.desktop/java.awt.font=ALL-UNNAMED', '--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED'
+        }
+    }
+}
+dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
+    implementation project(':core')
+    implementation project(':storage')
+    implementation 'com.github.mik3y:usb-serial-for-android:3.11.0'
+    implementation 'androidx.core:core:1.15.0'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.17'
+}

@@ -1,0 +1,8 @@
+plugins { id 'com.android.application' version '8.13.2' apply false }
+
+def outputRoot = providers.gradleProperty('silverstar.buildRoot').orNull
+if (outputRoot) {
+    allprojects { project ->
+        project.layout.buildDirectory.set(new File(outputRoot, project == rootProject ? 'root' : project.name))
+    }
+}

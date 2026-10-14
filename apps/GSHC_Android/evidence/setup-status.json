@@ -1,0 +1,36 @@
+{
+  "utc": "2026-10-13T11:19:43.491896+00:00",
+  "sdk_installed": [
+    "cmdline-tools 23.0",
+    "platforms/android-36 r2",
+    "build-tools/35.0.0"
+  ],
+  "gradle": "8.13",
+  "jdk": "Microsoft 21.0.12.1",
+  "sdk_license_accepted": true,
+  "sdk_license_id": "android-sdk-license",
+  "sdk_license_date": "2019-01-16",
+  "sdk_license_url": "https://dl.google.com/android/repository/repository2-3.xml",
+  "acceptance_record": "sdk-license-acceptance.json",
+  "build_success": true,
+  "apk_sha256": "ebd76cfd2bc0be8c566d47cfec01628aaa150d37d4558bf5ef80e108ebcacd77",
+  "apk_bytes": 2527905,
+  "core_assertions": 56,
+  "tf_assertions": 287,
+  "storage_assertions": 113,
+  "shared_schema_assertions": 56,
+  "android_framework_tests": 14,
+  "lint_errors": 0,
+  "lint_warnings": 9,
+  "html_preview_cases": 20,
+  "retained_preview_pngs": 6,
+  "disk_bytes": {
+    "sdk": 430620815,
+    "gradle_distribution": 151645130,
+    "gradle_cache": 815367393,
+    "robolectric_cache": 213433269,
+    "android_cli_and_user": 243523060,
+    "whole_project": 1923679536
+  },
+  "archive_cleanup": "Removed only the verified task-owned command-line-tools archive after successful installation, revalidation and build."
+}

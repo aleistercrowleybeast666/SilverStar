@@ -1,0 +1,8 @@
+{
+  "source_repository": "D:\\python_software\\SilverStar",
+  "source_commit": "f2ce541382589cb606e1f5b21f6fd982357eaa54",
+  "source_path": "contracts/log_file_service_v1.json",
+  "sha256": "4695f0cb403e250c0c00e3cceebc4a7c85cd41d5c98530f92e7aa298521a4e97",
+  "method": "read-only git show byte-preserved snapshot",
+  "scope": "LOGFILE runtime policy; export schemas remain shared-0.1.3 cb944b7"
+}

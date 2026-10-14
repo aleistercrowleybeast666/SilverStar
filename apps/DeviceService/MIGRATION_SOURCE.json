@@ -1,0 +1,94 @@
+{
+  "source": "D:\\python_software\\SilverStar_DeviceService",
+  "git": "not a git repository; confirmed by authorized git -C status",
+  "suggested_destination": "apps/DeviceService",
+  "source_files": [
+    {
+      "path": ".gitignore",
+      "bytes": 45,
+      "sha256": "23a2c3c02b184e6ce4aa5ba65acced7a84a0359c9ccdd18db0e4c81e4a941b91"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 1815,
+      "sha256": "2c1df541332d7cdcd40c6c1252f3f1882f0591fa24f58c0060fb0d8ab31c2012"
+    },
+    {
+      "path": "device_service.py",
+      "bytes": 14254,
+      "sha256": "d80c1dc089e9fc8ceedd1e3ee119eb28c33294d3ab5e05a5cbc237801579cd31"
+    },
+    {
+      "path": "README.md",
+      "bytes": 11507,
+      "sha256": "205b27576dad4868b06c3a3aed5413f6111ec25f83ea39fc0129de4eee544276"
+    },
+    {
+      "path": "VALIDATION.md",
+      "bytes": 3637,
+      "sha256": "2f079e3849cbf1f1b761555efd243f70d9d226105c7ef6f6cc8eb2f31f6824d0"
+    },
+    {
+      "path": "contracts/log_file_service_v1.json",
+      "bytes": 5696,
+      "sha256": "56ee90b08d1c2f55704d91857d3cbd2840ba64932a5b831244c87aa451e3b2ab"
+    },
+    {
+      "path": "contracts/session_export_v1.golden.json",
+      "bytes": 473,
+      "sha256": "d998062d184fd1c8f1d73677faf93ccb55c53cf32c66efc37d943133e702cf9e"
+    },
+    {
+      "path": "contracts/session_export_v1.schema.json",
+      "bytes": 2248,
+      "sha256": "ed2ce84f55d26ccdc28fc37683e83bdb9a114078f717294e49cd63f4c1d17feb"
+    },
+    {
+      "path": "evidence/20261013-mock-v0/cli-lease-demo.json",
+      "bytes": 999,
+      "sha256": "cb18ae841bbdc56db82197739731d627eef3308b4a125ee05193c63f364dcaf7"
+    },
+    {
+      "path": "evidence/20261013-mock-v0/cli-lease-demo.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/20261013-mock-v0/cli-status.json",
+      "bytes": 501,
+      "sha256": "15904b914b93bc3da686665734e0cb1c7b4c4e27f78bd68ce5ca5008e377d590"
+    },
+    {
+      "path": "evidence/20261013-mock-v0/cli-status.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/20261013-mock-v0/source_sha256.json",
+      "bytes": 1418,
+      "sha256": "3d3d4274f98d1182d2311289891ddda887c5a3bf02f9b626ba081054b4213321"
+    },
+    {
+      "path": "evidence/20261013-mock-v0/summary.json",
+      "bytes": 794,
+      "sha256": "5b88b21e5c59f7204ca9e4d0ff71cd49a7aaca164f8daaaa322b15f63f209078"
+    },
+    {
+      "path": "evidence/20261013-mock-v0/unittest.txt",
+      "bytes": 2764,
+      "sha256": "b541aeab3308a40c42a7061dbece743c9c96ea001cb859da236e168eafd23526"
+    },
+    {
+      "path": "tests/test_device_service.py",
+      "bytes": 14050,
+      "sha256": "03d3ee886028929bdcd1b4acba885b174c03873919605662232ad8485b5becd5"
+    }
+  ],
+  "source_bytes": 60201,
+  "excluded_paths": [],
+  "action": "read-only survey, no migration or source removal performed",
+  "import_base_commit": "355b3df2d297658eb958d02882902ec6a502c98e",
+  "imported_utc": "2026-10-14T05:54:23.170807+00:00",
+  "strategy": "source-only import, hash-verified originals reversibly relocated after passing tests; source directory retained with MIGRATED.md and caches unchanged",
+  "recoverable_source_snapshot": "D:\\python_software\\SilverStar\\.work\\dev013_monorepo01\\origins\\DeviceService"
+}

@@ -1,0 +1,27 @@
+{
+  "scope": "Manual visual inspection of HTML screenshots only; not APK/emulator/device",
+  "dom_checked_cases": 20,
+  "retained_screenshots": [
+    "phone-preflight-layout-preview.png",
+    "phone-flight-layout-preview.png",
+    "phone-postprocessing-layout-preview.png",
+    "phone-maintenance-layout-preview.png",
+    "tablet-flight-layout-preview.png",
+    "phone-font200-maintenance-layout-preview.png"
+  ],
+  "visually_reviewed_retained_count": 6,
+  "observations": [
+    "Four phone pages, one tablet flight page and one 200% text maintenance page retained; all six were visually inspected.",
+    "Exactly two independent top port entries remain; the fourth page contains no duplicate connection controls.",
+    "The maintenance screenshots are scrolled to the target-selection card. Both real and mock download buttons are disabled until a destination is selected.",
+    "Destination copy semantics are explicit: internal staging and verification, copy, target reread verification, no same-name overwrite and no TF source deletion.",
+    "Phone velocity/position cards are paired ENU by row; tablet uses a three-column/two-row grid.",
+    "All 20 DOM cases passed horizontal overflow, port placement, chart order and vertical scroll reachability checks. CSS font 200% retains 498 px of content; short landscape retains 166 px."
+  ],
+  "native_alignment": "Four pages, independent port roles, 600dp port orientation, two-line summaries, 840dp chart breakpoint and target-selection intent are aligned. Pixel-perfect/native runtime equivalence is not established; collapsed-header interaction and SAF persistence are design intent to be implemented/verified by the native owner.",
+  "limitations": [
+    "CSS scaling is not Android fontScale execution.",
+    "No APK/emulator/device execution.",
+    "No USB, SAF picker, permission persistence or actual file copying was performed."
+  ]
+}

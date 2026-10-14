@@ -1,0 +1,20 @@
+{
+  "operation": "create_library_file",
+  "status": "succeeded",
+  "library_file_id": "libfile_4a4dda97f2208191877d63ac588f6a04",
+  "file_id": "file_00000000bb2881f5aed6076131662620",
+  "file_name": "app-debug.apk",
+  "path": "/app-debug.apk",
+  "current_version_number": 0,
+  "local_path": "D:\\python_software\\SilverStar_GSHC_Android\\app\\build\\outputs\\apk\\debug\\app-debug.apk",
+  "file_size_bytes": 2527905,
+  "sha256": "ebd76cfd2bc0be8c566d47cfec01628aaa150d37d4558bf5ef80e108ebcacd77",
+  "local_xattrs_applied": false,
+  "local_identity_note": "Upload succeeded. Unmodified current Library helper failed on Windows because os.setxattr is unavailable. Identity retained in this JSON; no claim that filesystem extended attributes were persisted.",
+  "xattrs": [
+    {
+      "name": "user.library-file-version",
+      "value": "0"
+    }
+  ]
+}
