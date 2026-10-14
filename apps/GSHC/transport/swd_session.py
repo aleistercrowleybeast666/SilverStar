@@ -82,16 +82,8 @@ class SwdReply:
 
 
 def _ValidateProbe(probe):
-    if not isinstance(probe, HostProbe) or not probe.identity or len(probe.identity) > 512:
-        raise SwdError(SwdResult.InvalidRequest, 'An explicit host probe identity is required')
-    # First adapter profile is deliberately narrow; descriptor discovery is wider.
-    if probe.usb_id.upper() != 'FAED:4870' or probe.family != 'CMSIS-DAP':
-        raise SwdError(SwdResult.Unsupported, 'Only the Horco FAED:4870 CMSIS-DAP profile is implemented')
-    if probe.identity_kind != 'USB serial' or not re.fullmatch(r'[A-Za-z0-9_-]{1,64}', probe.serial):
-        raise SwdError(SwdResult.Unsupported, 'A stable, command-safe USB serial identity is required')
-    expected = rf'USB\VID_FAED&PID_4870\{probe.serial}'
-    if probe.identity.upper() != expected.upper():
-        raise SwdError(SwdResult.InvalidRequest, 'Probe serial does not match the selected USB identity')
+    from transport.swd_backends import ProbeKind_Get
+    return ProbeKind_Get(probe)
 
 
 class SwdSession:
@@ -145,8 +137,8 @@ class SwdSession:
                 if self._firmware and self._profile != self._firmware.target:
                     return SwdReply(SwdResult.TargetMismatch, 'Selected target disagrees with imported firmware')
             self._acquire_process_owner(probe.identity)
-            from transport._swd_pyocd import PyOcdMemAp
-            self._backend = (self._factory or PyOcdMemAp)(self.cancel)
+            from transport.swd_backends import ProbeBackend_Create
+            self._backend = self._factory(self.cancel) if self._factory else ProbeBackend_Create(probe,self.cancel)
             if self._profile is not None:
                 self._backend.configure(self._profile)
             self._probe = probe

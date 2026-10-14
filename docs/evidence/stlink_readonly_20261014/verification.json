@@ -1,0 +1,172 @@
+{
+  "created_utc": "2026-10-14T07:31:14.811612+00:00",
+  "base_commit": "43ee0e82d421be52b8f3b38935104baae96c778c",
+  "scope": "254 scoped GSHC tests, ten files; not whole monorepo or hardware",
+  "hardware_access": false,
+  "new_dependencies_installed": false,
+  "firmware_C_changed": false,
+  "openocd_enabled": false,
+  "source_snapshot": {
+    "base_commit": "43ee0e82d421be52b8f3b38935104baae96c778c",
+    "files": [
+      {
+        "path": "apps/GSHC/tests/test_swd_stlink.py",
+        "bytes": 15462,
+        "sha256": "8ec1da7ec0b2050442e1c65704178b3004e2de453166aea34d51f125786bd68e"
+      },
+      {
+        "path": "apps/GSHC/transport/_swd_stlink.py",
+        "bytes": 11971,
+        "sha256": "463f27a5a1afc3ceeabae4cbdc466cf930851f6a9e862fea44a7f35b5d4528fd"
+      },
+      {
+        "path": "apps/GSHC/transport/swd_backends.py",
+        "bytes": 2372,
+        "sha256": "333a64e8687d4a7d747e705fea0f966f97161022e52a1f169a14eb3a9ba1183a"
+      },
+      {
+        "path": "docs/public/GSHC/STLINK_READONLY_0_1_3.md",
+        "bytes": 5197,
+        "sha256": "15a3e222fe0695f5aaeb8d779157899a9a3eea777c98ff418274f9c013af4686"
+      },
+      {
+        "path": "apps/GSHC/services/i18n.py",
+        "bytes": 85446,
+        "sha256": "98e0db6f4407a73246c195b7c12f2e67a5d0ce52f03b582c2300930d3e273b3e"
+      },
+      {
+        "path": "apps/GSHC/transport/_swd_pyocd.py",
+        "bytes": 13558,
+        "sha256": "61699337b4b735af7063c4a83ff180cb79e489f259cf2426496c5d410560b1e3"
+      },
+      {
+        "path": "apps/GSHC/transport/swd_session.py",
+        "bytes": 18860,
+        "sha256": "80acae693b8fe3a18e9bae9b9edbf510467db45463919a79d0860e1281666a15"
+      },
+      {
+        "path": "apps/GSHC/ui/main_window.py",
+        "bytes": 150220,
+        "sha256": "29a03cdff44c0a23dba063bc077feb9596af07795b4c071df4dc7fe3e9fd77bf"
+      },
+      {
+        "path": "apps/GSHC/ui/swd_connection.py",
+        "bytes": 11720,
+        "sha256": "206a957b8f0378175bbd056533a3ea5d4b0a267234d6123639d38ca215b3c49a"
+      },
+      {
+        "path": "docs/public/GSHC/TARGET_ELF_0_1_3.md",
+        "bytes": 11306,
+        "sha256": "261735fd9f851786afe33e16ad861eedfdd8e0027b5f902a4f5fb78db4863813"
+      }
+    ]
+  },
+  "members": [
+    {
+      "path": "task/HANDOFF.md",
+      "bytes": 4224,
+      "sha256": "19c92adebce726f16865f8e924b5b521d53befcecc890e2d71ce37973d6ab08c"
+    },
+    {
+      "path": "task/header_post01.json",
+      "bytes": 769,
+      "sha256": "fb8583180417f660386c8d1c264cdf4170515e46917de29d903d26b099cd5507"
+    },
+    {
+      "path": "task/header_post01.log",
+      "bytes": 114,
+      "sha256": "ecb89648f36013c19de670895926aa6467e5d86e4da4925f1c938dcc6a3040a5"
+    },
+    {
+      "path": "task/header_repro01.json",
+      "bytes": 769,
+      "sha256": "7f4c99467b349cde2d04bdf67168910ee44315e3b6bce9a9e94499e8f602a72e"
+    },
+    {
+      "path": "task/header_repro01.log",
+      "bytes": 2880,
+      "sha256": "8214a9aa67242f09923baf31fd5d09fc4def92237a393d7d276a9e6f079241fa"
+    },
+    {
+      "path": "task/inventory.json",
+      "bytes": 76370,
+      "sha256": "3ae27ac97195270b1457ca1c9f8d8994b6528278b54f606bbb0ec19df67e36cc"
+    },
+    {
+      "path": "task/package_evidence.py",
+      "bytes": 3217,
+      "sha256": "7a19a4c7a31584de1a7cf138cf49db9eebd36f9f075324df14437abce860db93"
+    },
+    {
+      "path": "task/README.md",
+      "bytes": 136,
+      "sha256": "b0f1c767823f0c0da8e3c131b10721ef00443279abbb737d36ea50135979c4b4"
+    },
+    {
+      "path": "task/regression01.json",
+      "bytes": 1114,
+      "sha256": "964c7b2622759ed88bcd1d4f75d75ddabba17c6e9f544e92eac4f9850e04235c"
+    },
+    {
+      "path": "task/regression01.log",
+      "bytes": 3123,
+      "sha256": "f0e6897860afa1b87bc56b7388937eea29115a7f5a54aac6260c9b470702383c"
+    },
+    {
+      "path": "task/regression02.json",
+      "bytes": 1114,
+      "sha256": "154bd6c2a4ece14d9d1fe0ed0f4639803fd6d255e4448b8c43c3489c8cb184fd"
+    },
+    {
+      "path": "task/regression02.log",
+      "bytes": 357,
+      "sha256": "413e894bfdaeddd1dd01eb8aded4a2db2fa752937a8afdbf220a47264e69978f"
+    },
+    {
+      "path": "task/reviewed_dependencies.json",
+      "bytes": 1037,
+      "sha256": "e6dcc1703d406ac1ebf380ef5ac69d00b903c00a67fb91e82a6b8c112e573a8e"
+    },
+    {
+      "path": "task/run.py",
+      "bytes": 870,
+      "sha256": "7c0e268991d4df18c5e3100d077158f7ab08c8389a0f4ecb222d2ed551bed054"
+    },
+    {
+      "path": "task/source_delta.patch",
+      "bytes": 10328,
+      "sha256": "675b0d0b504d0b3a9a1f5682d3fcbb7375d4c3cbc2d18e10c0a41914b816853f"
+    },
+    {
+      "path": "task/stlink_tests01.json",
+      "bytes": 725,
+      "sha256": "506b7040d77f826080764159efa8c420ab3d2c1652b94a2e791157be81e48f65"
+    },
+    {
+      "path": "task/stlink_tests01.log",
+      "bytes": 101,
+      "sha256": "a8221b6a975dfedbeb6c040e121588825d008dac0a89a0c6af45a79ce1eecf76"
+    },
+    {
+      "path": "task/stlink_tests02.json",
+      "bytes": 725,
+      "sha256": "3b6d0bb624e1855cc011e86f6c052579f6147da746e36b54f4df6acbc46d00a9"
+    },
+    {
+      "path": "task/stlink_tests02.log",
+      "bytes": 101,
+      "sha256": "1ba08d06e407e533ca86169fa317233790a430ce7a9b06956a1b90ea84ca20ef"
+    },
+    {
+      "path": "task/tested_source_snapshot.json",
+      "bytes": 1823,
+      "sha256": "581441bae53b77bfedccee08e66a026a540942a8d168db8ed06a76a41d5bd1a3"
+    }
+  ],
+  "evidence_zip_sha256": "a7032a7814511d4e046668d08ad21ef747ccd2771ac683cf1effbd93d94b3794",
+  "evidence_zip_bytes": 109979,
+  "task_bytes": 13959260,
+  "cleanup_performed": false,
+  "frozen_tag": "942f20ef64df3cb1aa65be7349361c409418aa0f",
+  "frozen_commit": "c31c13cc0686a56a3184d4f207fd3816c5d39696"
+}

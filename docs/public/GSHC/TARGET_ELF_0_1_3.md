@@ -2,8 +2,8 @@
 
 本轮完成 SCG 生成/构建描述、GSHC 统一导入和有限 SWD 诊断框架。
 软件回归可验收；**尚无板载固件与已选 ELF 全量匹配的实机正例**。
-401 项是官方元数据覆盖，不是 401 种芯片上板通过。当前设备后端仍只准入
-已审查的 Horco FAED:4870 CMSIS-DAPv2，ST-Link/OpenOCD 扩展见下文。
+401 项是官方元数据覆盖，不是 401 种芯片上板通过。当前设备后端包括已审查的 Horco FAED:4870 CMSIS-DAPv2 和受限 ST-Link 实验路径；
+[ST-Link支持矩阵](STLINK_READONLY_0_1_3.md)给出软件/硬件证据边界，OpenOCD仍关闭。
 
 ## 验收入口
 
@@ -61,7 +61,8 @@ CLI 的 `diagnostics --probe <完整身份> --descriptor <文件>` 会实际打�
 | STM32F4：211 项 | Keil STM32F4xx_DFP 3.1.1 元数据；F407 Cortex-M4 新工程真实 ARM 链接；只读实机见证据 |
 | STM32C0：95 项 | Keil STM32C0xx_DFP 2.4.0 元数据；C071 Cortex-M0+ 编译/模拟 DP2；未上板 |
 | Horco CMSIS-DAPv2 | 当前实现，使用显式 USB serial、MI00 claim；用户另已反馈 DAPLink 连接验收通过 |
-| ST-Link / 其他 CMSIS-DAP / OpenOCD | 扩展设计，当前运行时仍拒绝未审查后端；没有实物验证 |
+| ST-Link | 受限实验后端，固定PID/版本/mode/AP条件；仅模拟验证，无实物 |
+| 其他 CMSIS-DAP / OpenOCD | 扩展接口保留，未审查后端仍拒绝 |
 | 其他内核/系列、多核、TrustZone、其他 AP、特殊复位/认证/唤醒 | 当前未准入，需要独立能力审查；不能仅增加名称即可使用 |
 
 当前能力仅单核 little-endian Cortex-M0/M0+/M3/M4、ADIv5 DP1/DP2 AP0。
@@ -147,13 +148,9 @@ construct 保留独立许可）、libusb 和既有 Qt 环境；不自动联网�
 PDSC 目录只发布提取的器件事实和版本/URL/SHA-256，未复制 HAL/SDK/pack 算法；
 F4/C0 来源分别标示 LICENSES/LICENSE，F1 须查原包许可。后续分发整包须保留其原始许可证。
 
-下一独立阶段优先复用 pyOCD `StlinkProbe`/`STLink`，对 `open/enter_debug/read/close`
-做有界、busy 失败即停止的适配，审计 `enter_idle`、显式 USB interface claim、取消和部分失败释放，
-保留当前 `configure/open/read/close` 后端分界。不得调用 Board/CortexM 完整初始化、
-reset/halt/resume/写内存，不能因为没有实物就把模拟 PASS 标成实测。
-OpenOCD 阶段只允许仓库审查的 adapter/target 配置和受限命令；Tcl 配置可执行，
-不能接收任意用户脚本，也不能回退到已知 claim 失败后仍继续初始化的旧路径。
-两者均需独立命令/故障回归和后续实物验收，此提交没有扩大后端准入。
+ST-Link独立阶段已实现受限 `StlinkProbe` 后端，具体命令边界、busy/释放与支持矩阵见
+[ST-Link只读后端](STLINK_READONLY_0_1_3.md)。没有实物通过声明。OpenOCD仍只预留接口，
+不接受用户Tcl/config，不回退到claim失败后继续初始化的旧路径；其他后端需要独立审查。
 
 依据：[pyOCD probes](https://pyocd.io/docs/debug_probes.html)、
 [固定 0.45.1 ST-Link 源码](https://github.com/pyocd/pyOCD/blob/v0.45.1/pyocd/probe/stlink_probe.py)、

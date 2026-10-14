@@ -2415,8 +2415,12 @@ class MainWindow(QMainWindow):
         widths = [group.minimumSizeHint().width() for group in groups]
         gap = self.header_connection_layout.horizontalSpacing()
         mode = 0 if sum(widths) + gap * 2 <= width else (1 if sum(widths[:2]) + gap <= width else 2)
-        if getattr(self, '_connection_layout_mode', None) == mode:
+        # Translated text/style can change child hints without changing the row
+        # mode. Reinsert those items so QGridLayout drops its old cached minima.
+        signature = (mode, tuple((g.minimumSizeHint().width(), g.minimumSizeHint().height()) for g in groups))
+        if getattr(self, '_connection_layout_signature', None) == signature:
             return
+        self._connection_layout_signature = signature
         self._connection_layout_mode = mode
         layout = self.header_connection_layout
         for group in groups:

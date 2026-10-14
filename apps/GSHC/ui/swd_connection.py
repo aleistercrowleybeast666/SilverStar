@@ -163,6 +163,9 @@ class SwdConnectionManager(QObject):
         page.swd_target.setEnabled(not active and not importing and not self.closing and not self._failed_owner)
         page.swd_import_status.setText(self.import_detail)
         text = tr(self.status)
+        selected = next((p for p in self.probes.selection.probes if p.identity == self.probes.selection.identity), None)
+        if selected is not None and selected.family == 'ST-Link':
+            text += '\n' + tr('swd.stlink_experimental')
         if self.snapshot:
             snapshot = self.snapshot
             identity = (f'ID 0x{snapshot.device_id:03X} REV 0x{snapshot.revision_id:04X}' if snapshot.device_id else tr('swd.core_verified'))

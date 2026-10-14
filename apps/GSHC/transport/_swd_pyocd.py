@@ -215,7 +215,9 @@ class PyOcdMemAp:
             raise SwdError(SwdResult.Timeout, 'SWD operation deadline reached')
 
     def open(self, selected):
-        _ValidateProbe(selected)
+        from transport.swd_backends import SwdBackendKind
+        if _ValidateProbe(selected) != SwdBackendKind.CmsisDap:
+            raise SwdError(SwdResult.Unsupported, 'This backend requires the reviewed CMSIS-DAP bulk profile')
         if not _LibraryOwner.acquire(blocking=False):
             raise SwdError(SwdResult.Busy, 'Another SilverStar pyOCD operation owns the library session')
         self._owned = True
@@ -247,16 +249,19 @@ class PyOcdMemAp:
             raise SwdError(SwdResult.Unsupported, 'AP0 is not a memory access port')
         self._guard()
 
-    def read(self, address, length):
-        if self._ap is None:
-            raise SwdError(SwdResult.NotAttached, 'MEM-AP is not attached')
+    def _ReadAllowed(self, address, length):
         profile = self._target_profile
         allowed = ((address in (0xE000ED00, 0xE000EDF0) and length == 4) or
                    (profile is not None and (profile.Contains(address,length,'ram') or profile.Contains(address,length,'flash'))) or
                    (profile is None and ((address == 0xE0042000 and length == 4) or
                     0x20000000 <= address < address + length <= 0x20020000 or
                     0x10000000 <= address < address + length <= 0x10010000))) if type(address) is int and type(length) is int else False
-        if not (type(length) is int and 1 <= length <= 1024 and allowed):
+        return type(length) is int and 1 <= length <= 1024 and allowed
+
+    def read(self, address, length):
+        if self._ap is None:
+            raise SwdError(SwdResult.NotAttached, 'MEM-AP is not attached')
+        if not self._ReadAllowed(address,length):
             raise SwdError(SwdResult.InvalidRequest, 'Backend read is outside the approved identity/RAM profile')
         self._deadline = time.monotonic() + self.TIMEOUT
         self._guard()

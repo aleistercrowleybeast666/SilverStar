@@ -1343,6 +1343,10 @@ class I18n:
         return self.tr(str(key), **resolved) if key else "—"
 
 
+ZH_CN['swd.stlink_experimental'] = 'ST-Link：实验支持，未有实物验收；只连接空闲且兼容的接口，已有调试状态不会被改变。'
+EN_US['swd.stlink_experimental'] = 'ST-Link: experimental, no hardware validation; requires an idle compatible interface. Existing debug state is preserved.'
+
+
 def translation_keys_match() -> bool:
     return set(ZH_CN) == set(EN_US)
 
