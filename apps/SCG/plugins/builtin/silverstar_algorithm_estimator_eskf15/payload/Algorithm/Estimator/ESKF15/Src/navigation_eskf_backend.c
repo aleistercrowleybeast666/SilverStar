@@ -123,7 +123,9 @@ static const NavigationEskfConfig s_config = {
     SYSTEM_ESKF_ACCEL_BIAS_RW,
     {SYSTEM_ESKF_NIS_1D_SOFT, SYSTEM_ESKF_NIS_2D_SOFT},
     {SYSTEM_ESKF_NIS_1D_HARD, SYSTEM_ESKF_NIS_2D_HARD},
-    SYSTEM_ESKF_NIS_MAX_R_SCALE
+    SYSTEM_ESKF_NIS_MAX_R_SCALE,
+    (uint8_t)((1U - SYSTEM_ESKF_NIS_SOFT_ENABLED) |
+        ((1U - SYSTEM_ESKF_NIS_HARD_ENABLED) << 1U))
 };
 static const NavigationWindowConfig s_window_config = {
     10000000ULL, 5000000ULL, 6000000ULL, 120000U, 10.0f, 4.0f

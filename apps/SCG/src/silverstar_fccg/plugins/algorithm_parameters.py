@@ -7,6 +7,8 @@ import struct
 from dataclasses import dataclass
 from typing import Any
 
+from silverstar_fccg.core.nis_probability import NisInput_Resolve
+
 PARAMETER_SCHEMA_ID = "silverstar.algorithm-parameters/1.0"
 
 
@@ -30,6 +32,7 @@ class AlgorithmParameterDefinition:
     greater_than: str = ""
     legacy_default: float | int | None = None
     lifecycle: str = "active"
+    nis_df: int = 0
 
     def DisplayName_Get(self, language: str) -> str:
         return self.display_names.get(language, self.display_names["en_US"])
@@ -38,6 +41,10 @@ class AlgorithmParameterDefinition:
         return self.description.get(language, self.description["en_US"])
 
     def Value_Resolve(self, value: Any) -> float | int:
+        if isinstance(value, dict):
+            if not self.nis_df:
+                raise ValueError(f"{self.parameter_id}: probability input is not declared")
+            value = NisInput_Resolve(value, self.nis_df)
         if type(value) not in (int, float) or (type(value) is float and not math.isfinite(value)):
             raise ValueError(f"{self.parameter_id}: expected a finite number")
         if self.value_type == "integer" and type(value) is not int:
@@ -69,7 +76,7 @@ def AlgorithmParameters_Parse(value: Any) -> tuple[AlgorithmParameterDefinition,
                 "generated_symbol"}
     definitions = []
     for entry in value["parameters"]:
-        if not isinstance(entry, dict) or not required <= set(entry) or set(entry) - required - {"greater_than", "shared_key", "legacy_default", "lifecycle"}:
+        if not isinstance(entry, dict) or not required <= set(entry) or set(entry) - required - {"greater_than", "shared_key", "legacy_default", "lifecycle", "nis_df"}:
             raise ValueError("Algorithm parameter has missing or unknown fields")
         if not isinstance(entry["id"], str) or not re.fullmatch(r"[a-z][a-z0-9_]*", entry["id"]):
             raise ValueError("Invalid algorithm parameter id")
@@ -112,11 +119,16 @@ def AlgorithmParameters_Parse(value: Any) -> tuple[AlgorithmParameterDefinition,
             raise ValueError("Legacy parameters cannot own shared runtime values")
         if not isinstance(greater, str):
             raise TypeError("Invalid parameter comparison")
+        nis_df = entry.get("nis_df", 0)
+        if type(nis_df) is not int or nis_df not in (0, 1, 2, 3):
+            raise ValueError("Invalid NIS residual degrees of freedom")
+        if nis_df and (entry["unit"] != "1" or entry["representation"] != "value" or entry["type"] != "float" or shared_key):
+            raise ValueError("NIS input requires a private raw dimensionless float threshold")
         definition = AlgorithmParameterDefinition(
             entry["id"], entry["type"], entry["default"], entry["unit"],
             entry["representation"], entry["min"], entry["max"], entry["precision"],
             entry["step"], entry["group"], entry["order"], entry["description"],
-            entry["display_names"], entry["generated_symbol"], shared_key, greater, entry.get("legacy_default"), lifecycle)
+            entry["display_names"], entry["generated_symbol"], shared_key, greater, entry.get("legacy_default"), lifecycle, nis_df)
         definition.Value_Resolve(definition.default)
         if definition.legacy_default is not None:
             definition.Value_Resolve(definition.legacy_default)

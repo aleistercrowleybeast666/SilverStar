@@ -163,6 +163,13 @@
 #ifndef SYSTEM_ESTIMATOR_NIS_2D_HARD_THRESHOLD
 #define SYSTEM_ESTIMATOR_NIS_2D_HARD_THRESHOLD          13.816f
 #endif
+/* Explicit gate controls; 100% and infinity are not disable encodings. */
+#ifndef SYSTEM_ESTIMATOR_NIS_SOFT_ENABLED
+#define SYSTEM_ESTIMATOR_NIS_SOFT_ENABLED                1U
+#endif
+#ifndef SYSTEM_ESTIMATOR_NIS_HARD_ENABLED
+#define SYSTEM_ESTIMATOR_NIS_HARD_ENABLED                1U
+#endif
 #ifndef SYSTEM_ESTIMATOR_NIS_1D_SOFT_THRESHOLD
 #define SYSTEM_ESTIMATOR_NIS_1D_SOFT_THRESHOLD          6.635f
 #endif

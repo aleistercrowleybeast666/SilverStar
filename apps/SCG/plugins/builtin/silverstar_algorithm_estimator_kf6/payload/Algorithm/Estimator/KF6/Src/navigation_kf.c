@@ -578,7 +578,8 @@ static uint8_t NavigationKf_VectorSoftWeightProcess(
                              SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     SILVERSTAR_ASSERT_OBJECT(work, NavigationKfVectorWork,
                              SILVERSTAR_ASSERT_MODULE_ALGORITHM);
-    if (work->nis <= context->nis_soft_threshold[dimension - 1U])
+    if ((SYSTEM_ESTIMATOR_NIS_SOFT_ENABLED == 0U) ||
+        (work->nis <= context->nis_soft_threshold[dimension - 1U]))
     {
         return 1U;
     }
@@ -740,7 +741,8 @@ static NavigationKfUpdateResult NavigationKf_UpdateVector(
     if (NavigationKf_VectorNisCalculate(
             context, &work, dimension, last_nis) == 0U)
     { return NAV_KF_UPDATE_NUMERIC_ERROR; }
-    if (work.nis >= context->nis_hard_threshold[dimension - 1U])
+    if ((SYSTEM_ESTIMATOR_NIS_HARD_ENABLED != 0U) &&
+        (work.nis >= context->nis_hard_threshold[dimension - 1U]))
     { return NAV_KF_UPDATE_REJECTED_NIS; }
     if (NavigationKf_VectorSoftWeightProcess(
             context, variance, dimension, state_offset,

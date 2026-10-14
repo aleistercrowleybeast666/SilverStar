@@ -252,7 +252,8 @@
         "unit": "1",
         "representation": "value",
         "min": 0.001,
-        "max": 10000
+        "max": 10000,
+        "nis_df": 1
       },
       "nis_1d_hard": {
         "type": "float",
@@ -260,7 +261,8 @@
         "unit": "1",
         "representation": "value",
         "min": 0.001,
-        "max": 10000
+        "max": 10000,
+        "nis_df": 1
       },
       "nis_2d_soft": {
         "type": "float",
@@ -268,7 +270,8 @@
         "unit": "1",
         "representation": "value",
         "min": 0.001,
-        "max": 10000
+        "max": 10000,
+        "nis_df": 2
       },
       "nis_2d_hard": {
         "type": "float",
@@ -276,7 +279,8 @@
         "unit": "1",
         "representation": "value",
         "min": 0.001,
-        "max": 10000
+        "max": 10000,
+        "nis_df": 2
       },
       "nis_max_r_scale": {
         "type": "float",
@@ -333,6 +337,24 @@
         "representation": "value",
         "min": 0,
         "max": 550
+      },
+      "nis_soft_enabled": {
+        "type": "integer",
+        "default": 1,
+        "min": 0,
+        "max": 1,
+        "unit": "1",
+        "representation": "value",
+        "required": false
+      },
+      "nis_hard_enabled": {
+        "type": "integer",
+        "default": 1,
+        "min": 0,
+        "max": 1,
+        "unit": "1",
+        "representation": "value",
+        "required": false
       }
     },
     "initial_covariance_diagonal": [

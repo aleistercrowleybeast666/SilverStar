@@ -101,7 +101,7 @@ class FixedLagReplay:
         initial = self.checkpoints[0][1]
         return all(np.array_equal(getattr(initial, field), getattr(self.state, field))
                    for field in ('process_accel_std_mps2', 'nis_soft_threshold',
-                                 'nis_hard_threshold', 'nis_max_r_scale',
+                                 'nis_hard_threshold', 'nis_max_r_scale', 'nis_soft_enabled', 'nis_hard_enabled',
                                  'require_effective_gain', 'algorithm_revision'))
 
     def _Prune(self):
@@ -415,6 +415,7 @@ def EpochState_Restore(dataset, epoch, template):
         nis_soft_threshold=template.nis_soft_threshold,
         nis_hard_threshold=template.nis_hard_threshold,
         nis_max_r_scale=template.nis_max_r_scale,
+        nis_soft_enabled=template.nis_soft_enabled, nis_hard_enabled=template.nis_hard_enabled,
         gnss_reacquire_outage_ms=template.gnss_reacquire_outage_ms,
         algorithm_revision=template.algorithm_revision,
     )

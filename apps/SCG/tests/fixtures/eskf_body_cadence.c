@@ -20,8 +20,8 @@ int main(void)
         SYSTEM_ESKF_ACCEL_BIAS_RW,
         {SYSTEM_ESKF_NIS_1D_SOFT, SYSTEM_ESKF_NIS_2D_SOFT},
         {SYSTEM_ESKF_NIS_1D_HARD, SYSTEM_ESKF_NIS_2D_HARD},
-        SYSTEM_ESKF_NIS_MAX_R_SCALE
-    };
+        SYSTEM_ESKF_NIS_MAX_R_SCALE, (uint8_t)((1U - SYSTEM_ESKF_NIS_SOFT_ENABLED) | ((1U - SYSTEM_ESKF_NIS_HARD_ENABLED) << 1U))
+};
     float nominal[16] = {0};
     float covariance[NAV_ESKF_DIM][NAV_ESKF_DIM] = {{0}};
     InsImuSample raw = {0};

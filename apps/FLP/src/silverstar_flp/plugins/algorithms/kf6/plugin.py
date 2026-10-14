@@ -124,6 +124,12 @@ def _Result_Aggregate(first: Kf6UpdateResult, second: Kf6UpdateResult) -> int:
     return int(Kf6UpdateResult.NUMERIC_ERROR)
 
 
+# Audited residual/compatibility contract, independent of state dimension.
+_NIS_THRESHOLD_DF = {"nis_1d_soft": 1, "nis_1d_hard": 1,
+                     "nis_2d_soft": 2, "nis_2d_hard": 2,
+                     "nis_3d_soft": 3, "nis_3d_hard": 3}
+
+
 class Kf6AlgorithmPlugin(AlgorithmPlugin):
     metadata = AlgorithmMetadata(
         what_if_quality_revisions=(3,),
@@ -913,14 +919,28 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
         ),
     )
 
+    metadata = replace(metadata, parameter_schema=tuple(
+        replace(spec, nis_df=_NIS_THRESHOLD_DF[spec.parameter_id])
+        if spec.parameter_id in _NIS_THRESHOLD_DF
+        else spec for spec in metadata.parameter_schema
+    ) + tuple(ParameterSpec(f"nis_{kind}_enabled", "int", 1, 0, 1, "1",
+        required=False, precision=0, step=1, order=99 + index,
+        label_key=f"parameter.nis_{kind}_enabled", group_key="parameter_group.consistency_gating")
+        for index, kind in enumerate(("soft", "hard"))))
+
     def ParameterSchemaCompatible_Is(self, identity: str) -> bool:
         if super().ParameterSchemaCompatible_Is(identity):
             return True
+        pre_probability = replace(self.metadata, parameter_schema=tuple(
+            spec for spec in self.metadata.parameter_schema
+            if spec.parameter_id not in {"nis_soft_enabled", "nis_hard_enabled"}))
+        if identity == pre_probability.ParameterSchemaIdentity_Get():
+            return True
         legacy = replace(
-            self.metadata,
+            pre_probability,
             parameter_schema=tuple(
                 spec
-                for spec in self.metadata.parameter_schema
+                for spec in pre_probability.parameter_schema
                 if spec.parameter_id
                 not in {"gnss_reacquire_outage_ms", "gnss_velocity_vertical_scale"}
             ),
@@ -1124,6 +1144,8 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
                 dtype=np.float32,
             ),
             nis_max_r_scale=parameters["nis_max_r_scale"],
+            nis_soft_enabled=bool(parameters.get("nis_soft_enabled", 1)),
+            nis_hard_enabled=bool(parameters.get("nis_hard_enabled", 1)),
         )
         q_nb = Quaternion_Normalize(np.asarray(initial.payload["q_nb"], dtype=np.float32))
         schedule, schedule_inferred = self._MeasurementSchedule_Build(dataset, increments)

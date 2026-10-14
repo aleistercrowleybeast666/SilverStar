@@ -41,7 +41,12 @@ def test_fccg_ids_units_representations_defaults_match_audited_contract():
             "parameters"
         ]
         actual = {p.parameter_id: p for p in plugin.metadata.parameter_schema}
-        assert set(actual) == {p["id"] for p in expected}
+        extension = {"nis_soft_enabled", "nis_hard_enabled"} if name in {"kf6", "eskf15"} else set()
+        assert set(actual) == {p["id"] for p in expected} | extension
+        for parameter_id in extension:
+            spec = actual[parameter_id]
+            assert (spec.kind, spec.default, spec.minimum, spec.maximum, spec.unit, spec.required) == (
+                "int", 1, 0, 1, "1", False)
         for item in expected:
             spec = actual[item["id"]]
             assert (spec.default, spec.unit, spec.representation, spec.minimum, spec.maximum) == (

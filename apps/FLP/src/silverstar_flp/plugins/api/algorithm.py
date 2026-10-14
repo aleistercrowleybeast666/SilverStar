@@ -180,6 +180,7 @@ class ParameterSpec:
     order: int = 0
     required: bool = True
     greater_than: str = ""
+    nis_df: int = 0
 
     def Value_Validate(self, value: Any) -> None:
         valid_type = {
@@ -259,6 +260,12 @@ class AlgorithmMetadata:
         for name, spec in schema.items():
             if name in values:
                 spec.Value_Validate(values[name])
+                if spec.nis_df and spec.greater_than in values:
+                    import struct
+                    soft = struct.unpack("<f", struct.pack("<f", values[spec.greater_than]))[0]
+                    hard = struct.unpack("<f", struct.pack("<f", values[name]))[0]
+                    if hard <= soft:
+                        raise ValueError(f"parameter_target_order_invalid:{name}")
                 if spec.greater_than in values and values[name] <= values[spec.greater_than]:
                     raise ValueError(f"parameter_order_invalid:{name}")
             elif complete and spec.required:

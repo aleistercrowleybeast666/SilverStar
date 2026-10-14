@@ -117,7 +117,7 @@ NavigationEskfResult NavigationEskf_ConfigValidate(const NavigationEskfConfig *c
     if ((config == NULL) || !isfinite(config->gravity_mps2) ||
         (config->gravity_mps2 < 1.0f) || (config->gravity_mps2 > 20.0f) ||
         !isfinite(config->maximum_r_scale) || (config->maximum_r_scale < 1.0f) ||
-        (config->maximum_r_scale > 4.0f)) { return NAV_ESKF_INVALID_INPUT; }
+        (config->maximum_r_scale > 4.0f) || (config->nis_disabled_mask > 3U)) { return NAV_ESKF_INVALID_INPUT; }
     if (!isfinite(config->gyro_noise_density) || (config->gyro_noise_density <= 0.0f) ||
         !isfinite(config->accel_noise_density) || (config->accel_noise_density <= 0.0f) ||
         !isfinite(config->gyro_bias_rw) || (config->gyro_bias_rw <= 0.0f) ||
@@ -574,9 +574,11 @@ NavigationEskfResult NavigationEskf_Update(NavigationEskfState *state,
     if (result != NAV_ESKF_OK) { outcome->result = result; return result; }
     result = Eskf_InnovationSolve(state, work, outcome);
     if (result != NAV_ESKF_OK) { outcome->result = result; return result; }
-    if (outcome->nis > config->nis_hard[outcome->dimension - 1U])
+    if (((config->nis_disabled_mask & 2U) == 0U) &&
+        (outcome->nis > config->nis_hard[outcome->dimension - 1U]))
     { outcome->result = NAV_ESKF_REJECTED_NIS; return outcome->result; }
-    if (outcome->nis > config->nis_soft[outcome->dimension - 1U])
+    if (((config->nis_disabled_mask & 1U) == 0U) &&
+        (outcome->nis > config->nis_soft[outcome->dimension - 1U]))
     {
         outcome->r_scale = fminf(config->maximum_r_scale,
             outcome->nis / config->nis_soft[outcome->dimension - 1U]);

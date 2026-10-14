@@ -16,9 +16,13 @@ from silverstar_fccg.project.algorithm_parameters import (
     AlgorithmParameterSharedGroups_Get,
 )
 from silverstar_fccg.ui.committed_spin import EnterCommittedDoubleSpinBox
+from silverstar_fccg.ui.nis_editor import GateEnableEditor, NisProbabilityEditor
 from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
 from silverstar_fccg.ui.pages.navigation_alignment import AlignmentConfigurationEditor
 from silverstar_fccg.ui.widgets import CollapsibleSection
+
+
+AlgorithmParameterEditor = EnterCommittedDoubleSpinBox | NisProbabilityEditor | GateEnableEditor
 
 
 class NavigationConfigurationPage(ScrollableLocalizedPage):
@@ -55,7 +59,7 @@ class NavigationConfigurationPage(ScrollableLocalizedPage):
         self._values: dict = {}
         self._recommendations: tuple[dict, ...] = ()
         self._expanded: dict[tuple[str, str], bool] = {}
-        self.editors: dict[tuple[str, str], EnterCommittedDoubleSpinBox] = {}
+        self.editors: dict[tuple[str, str], AlgorithmParameterEditor] = {}
         self._rate_plan = None
         self._rate_error = ""
         self.Language_Apply(translator)
@@ -197,7 +201,16 @@ class NavigationConfigurationPage(ScrollableLocalizedPage):
         self._content.deleteLater()
         self._content = content
 
-    def _Editor_Create(self, parameter, value: object, language: str) -> EnterCommittedDoubleSpinBox:
+    def _Editor_Create(self, parameter, value: object, language: str) -> AlgorithmParameterEditor:
+        if parameter.parameter_id in {"nis_soft_enabled", "nis_hard_enabled"}:
+            editor = GateEnableEditor()
+            editor.CommittedValue_Set(value)
+            return editor
+        if parameter.nis_df:
+            editor = NisProbabilityEditor(parameter.nis_df, parameter.minimum, parameter.maximum, language)
+            editor.CommittedValue_Set(value)
+            editor.setReadOnly(parameter.lifecycle == "legacy_read_only")
+            return editor
         editor = EnterCommittedDoubleSpinBox()
         editor.setDecimals(parameter.precision)
         editor.setRange(parameter.minimum, parameter.maximum)

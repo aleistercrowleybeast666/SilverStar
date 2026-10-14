@@ -1,0 +1,40 @@
+# NIS probability input — development evidence (2026-10-14)
+
+Implemented on feature/usb-transport-0.1.3-20261013, baseline 682b7bccbb404b119a35e85c061495018fb26c42. Local NIS commit is recorded by the task completion message. Source files and dirty-patch hashes are saved in evidence.zip; no push/tag/Release/hardware operation occurred.
+
+## Result and limits
+
+SCG and FLP use CDF coverage percentages for declared raw-NIS thresholds, showing numeric thresholds and residual df. Larger probability means a more permissive threshold, not measurement correctness. Product GNSS horizontal position/velocity use df2 joint EN residuals; vertical and baro use df1. KF6 df3 remains compatibility configuration; actual C tests set it deliberately tight and demonstrate no effect on product position/velocity 2+1 updates. SF6 has no NIS. State dimensions6/15 are not used as df.
+
+Edited probability is a primary silverstar.nis-cdf-input/1.0 value with explicit fraction unit and df. SCG format18 preserves it; FLP saves it separately from actual_values. Untouched numeric values remain exact, including finite values whose displayed CDF rounds100%. Edits0/100%, nonfinite values, unknown units/versions/df and nonordered/float32-equal soft/hard pairs fail validation. Independent default-on soft/hard controls preserve all original comparisons and formulas when enabled. Other input/variance/validity checks remain active when gates are disabled. No sample-path CDF/PPF conversion.
+
+Identical conversion modules and110 SciPy1.16.3 reference vectors cover df1/2/3/5/6/10/15/30/100/256, lower tails1e-12 and upper tails through1-2^-53. Runtime has no SciPy dependency. New probability values agree bit-for-bit in both apps; df2 soft95% =5.991464614868164 (14babf40 LE) and hard99.9% =13.815510749816895 (550c5d41 LE). Existing legacy values are not coerced through display rounding.
+
+ESKF C recomputes the reported outcome NIS after soft R inflation; Python retains pre-inflation gate NIS. This pre-existing stage difference was documented and preserved; no filter design/math fix was introduced for it. Recorded/recomputed configurations remain separate. Historical packages lacking a supported raw-NIS/fraction/df declaration display numeric thresholds and unknown df; malformed declarations never fabricate probabilities.
+
+## Verification
+
+- scg_final01:182 passed,1 historical frozen-golden mismatch, no skip. scg_precision_final02:142 passed after final metadata/typing review and actual C reserved-df checks.
+- flp_migration_final02:203 passed,7 pre-existing missing-model-revision failures, no skip (real C parity enabled). flp_precision_final02:152 passed after final metadata/typing review, including primary probability save/reopen/language/reset and invalid drafts. These are selected scopes, not full-repository suite passes.
+- Both apps' current C gate tests retain finite thresholds, verify normal/soft/hard/equality cases and reject invalid external inputs without covariance publication. Pre-feature KF6:3 unsupported-switch failures/1 pass; post:4 pass. Pre-feature ESKF:4 unsupported-switch/invalid-mask failures/4 passes; corrected post cases pass. Old-version absence of a new switch is not claimed as an old safety defect.
+- interface_layout01:exact pre-NIS system_device_types.h content unchanged (CRLF normalized). Existing ESKF compile selection extends SystemInertialIncrement from40 to96 bytes (gyro offset40/24bytes, acceleration offset64/24bytes, quality flags offset88). Auto placement does not change this interface. Original unconditional40 test fails both ESKF memory variants; corrected strict conditional sizes/offsets pass both estimator selections × both memory modes. No product interface or memory constraint was relaxed.
+- KF6 default full emitted gates (kf6_default_gates01):architecture=0,power10=0,real static_analysis=0,Host=0,artifact=0. Final fresh KF6 ARM build/descriptor (generated_kf602) succeeds; its final architecture/power10/artifact checks are recorded separately. Do not treat separate configurations as one unexecuted suite.
+- ESKF15 final fresh default auto project (generated_eskf1503):ARM compile/link/descriptor binding succeeds; full emitted architecture/power10/real static_analysis/Host/artifact gates all0 (eskf_final_gates01). Real analyzer logs compile objects with -fanalyzer; no syntax-only substitute.
+- Custom probability95 builds linked successfully and their artifacts/configurations were archived before default validation. Generic unmodified Host tests assume literal default soft2D9.210, so the custom5.99146 configuration failed that assumption; both failed gate records are retained. Default validation restores only task-owned configurations, not tests/assertions.
+- ESKF legacy layout overflowed CCMRAM1664bytes; failed project retained. Existing auto placement links without algorithm/buffer changes. RAM occupied117568/spare13504 (yellow), CCM occupied50208/spare15328 (green). These bytes are not task/MSP/ISR stack proof, STM32 WCET, navigation accuracy or flight qualification.
+- Power10 keeps first-party source coverage, unchanged thresholds/exceptions, F Prime-inspired project adaptation and explicit critical-contract review NOT PROVEN. No assertion-density manufacture, allowlist expansion, hidden source, or original-P10/NASA certification claim.
+- lint_final02 (--select F) and git diff --check pass. Actual Qt widgets rendered offscreen in Chinese/English, with numerical readout capture. Initial offscreen glyphs failed visual inspection because Qt font discovery was unavailable; explicit loading of an existing Windows font corrected this without product-code/font installation changes. This is not native GUI/hardware validation.
+
+## Preserved failures and provenance
+
+Default trajectory comparison uses same GCC16.1.0, same input fixture, exact generated numeric thresholds and common headers: pre-NIS682b7bcc and current KF6 produce identical1,109,911 bytes/5005lines, SHA4deb49b19d86bd4a8ade8fb35013fb3f9b1e5347bc0b7cde9ace5266ff9525cb. Frozen expected ad64bc875b4ec87f0bafdd65e868bb99822b79dfe79fc0debf13ec9484486aa1 remains failed. Recorded b2e05fb cannot be resolved here; golden unchanged. Scoped before/after equality proves NIS did not introduce the difference, not historical golden reconstruction.
+
+Seven old FLP missing-KF6-model failures were reproduced using exact pre-NIS KF6 filter/fixed_lag/plugin and the old navigation contract (flp_baseline02). This is a scoped baseline, not a whole old checkout run. Unknown recorded model identity remains fail-closed.
+
+All failed authoring/build/test attempts and completed skip details remain in the task evidence. scg_selected03 was interrupted with no completion code: NOT PROVEN. One FLP attempt omitted the actual-C environment and skipped a parity test; final02 ran it. First layout comparison needed CRLF normalization; first fixture edits stopped before dependent changes; no passing outcome was inferred from those errors. NumPy2.4.0 inherited by the existing venv was blocked by the unchanged safety check; NumPy2.4.1 was installed only in the existing repo venv. System Python preserved; no new venv/SDK/full checkout copy.
+
+## Deliverables and acceptance
+
+Guide: docs/public/SCG/NIS_PROBABILITY_0_1_3.md. Primary numerical contract: contracts/nis_probability_v1.json. Evidence archive includes complete available command/result logs, versions, configurations, source snapshots/patch, exact before/after traces, interface matrix, screenshots, generated numeric headers, ELF/map/descriptor hashes and inventories. Large task-owned generated outputs remain in .work/dev013_nis01 and apps/SCG/.work/dev013_nis01; no cleanup was performed/authorized.
+
+Frozen v0.1.2 tag object942f20ef64df3cb1aa65be7349361c409418aa0f/commitc31c13cc0686a56a3184d4f207fd3816c5d39696 and the three pre-existing user lists are reverified unchanged. Source logs/decoder archives/source fixtures/formal prior evidence were not removed or rewritten. Manual critical-contract acceptance and historical regression gaps remain open. A software gate pass does not claim complete compliance or board/flight qualification.

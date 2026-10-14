@@ -981,5 +981,8 @@
   "integrity.end_unavailable": "window evidence unavailable",
   "integrity.interval_summary": "Last evidence ({time} s): {end}, multiplier {scale} | Selected interval: {valid}/{samples} valid, peak closure {error} m, peak multiplier {peak}, {weighted} weighted rows | {source}",
   "integrity.revision3_explanation": "GNSS window closure and horizontal-position variance multiplier. Recorded values retain their sample holds; offline points show completed windows. Invalid/non-finite coordinates are omitted; gaps do not imply GNSS outages or absolute navigation error.",
-  "integrity.vertical_display_explanation": "Offline vertical consistency only; it never feeds KF6 gating. Gray lines mark local reference resets, not recorded GNSS outages or rejection."
+  "integrity.vertical_display_explanation": "Offline vertical consistency only; it never feeds KF6 gating. Gray lines mark local reference resets, not recorded GNSS outages or rejection.",
+  "parameter.nis_soft_enabled": "Enable NIS soft gate",
+  "parameter.nis_hard_enabled": "Enable NIS hard gate",
+  "parameter_group.nis": "NIS gates"
 }

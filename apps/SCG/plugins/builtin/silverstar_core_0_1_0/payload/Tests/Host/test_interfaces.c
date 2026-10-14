@@ -20,8 +20,25 @@ _Static_assert(offsetof(SystemInertialIncrement,
 _Static_assert(offsetof(SystemInertialIncrement,
                         delta_velocity_b_sculling_corrected) == 28U,
                "body delta-velocity layout changed");
+/* The existing ESKF selection appends two raw BODY half-samples. Memory
+ * placement (legacy/auto) must not change either interface layout. */
+#if defined(SYSTEM_BUILD_ESKF15_ENABLED) && (SYSTEM_BUILD_ESKF15_ENABLED != 0U)
+_Static_assert(offsetof(SystemInertialIncrement, body_gyro_radps) == 40U,
+               "ESKF body gyro layout changed");
+_Static_assert(sizeof(((SystemInertialIncrement *)0)->body_gyro_radps) == 24U,
+               "ESKF requires two three-axis gyro half-samples");
+_Static_assert(offsetof(SystemInertialIncrement, body_accel_mps2) == 64U,
+               "ESKF body acceleration layout changed");
+_Static_assert(sizeof(((SystemInertialIncrement *)0)->body_accel_mps2) == 24U,
+               "ESKF requires two three-axis acceleration half-samples");
+_Static_assert(offsetof(SystemInertialIncrement, quality_flags) == 88U,
+               "ESKF quality flags layout changed");
+_Static_assert(sizeof(SystemInertialIncrement) == 96U,
+               "ESKF inertial increment layout changed");
+#else
 _Static_assert(sizeof(SystemInertialIncrement) == 40U,
-               "inertial increment layout changed");
+               "non-ESKF inertial increment layout changed");
+#endif
 
 _Static_assert(offsetof(SystemPowerSample, sample_timestamp_us) == 0U,
                "power sample time layout changed");

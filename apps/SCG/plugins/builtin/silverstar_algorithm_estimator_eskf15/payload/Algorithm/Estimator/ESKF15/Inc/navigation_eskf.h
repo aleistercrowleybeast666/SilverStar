@@ -1,5 +1,6 @@
 #ifndef __NAVIGATION_ESKF_H
 #define __NAVIGATION_ESKF_H
+#define NAV_ESKF_NIS_GATE_CONFIGURATION_VERSION 1U
 
 #include <stdint.h>
 
@@ -33,6 +34,8 @@ typedef struct
     float nis_soft[2];
     float nis_hard[2];
     float maximum_r_scale;
+    /* bit 0 disables soft weighting; bit 1 disables hard rejection. Default 0. */
+    uint8_t nis_disabled_mask;
 } NavigationEskfConfig;
 
 typedef struct

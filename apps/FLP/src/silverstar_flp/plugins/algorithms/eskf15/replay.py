@@ -86,6 +86,8 @@ class DelayedReplay:
         soft: tuple[float, float] = (6.635, 9.21),
         hard: tuple[float, float] = (10.828, 13.816),
         max_r_scale: float = 4.0,
+        soft_enabled: bool = True,
+        hard_enabled: bool = True,
         lever_arm: np.ndarray | None = None,
     ):
         self.kernel, self.present_us = kernel, start_us
@@ -94,6 +96,7 @@ class DelayedReplay:
         self.horizon_us, self.max_steps = horizon_us, max_steps
         self.max_measurements, self.max_replay_steps = max_measurements, max_replay_steps
         self.soft, self.hard, self.max_r_scale = soft, hard, max_r_scale
+        self.soft_enabled, self.hard_enabled = soft_enabled, hard_enabled
         self.lever_arm = np.zeros(3) if lever_arm is None else np.asarray(lever_arm)
         self.steps: list[BodyStep] = []
         self.measurements: list[Measurement] = []
@@ -164,6 +167,7 @@ class DelayedReplay:
             soft=self.soft[len(axes) - 1],
             hard=self.hard[len(axes) - 1],
             max_scale=self.max_r_scale,
+            soft_enabled=self.soft_enabled, hard_enabled=self.hard_enabled,
         )
 
     def Measurement_Receive(self, measurement: Measurement) -> EskfMeasurementResult:

@@ -11,8 +11,9 @@
 #include "navigation_eskf_replay.h"
 
 static const NavigationEskfConfig s_config = {
-    9.80665f, 0.002f, 0.02f, 0.0001f, 0.001f,
-    {6.0f, 9.0f}, {20.0f, 25.0f}, 4.0f
+    .gravity_mps2 = 9.80665f, .gyro_noise_density = 0.002f,
+    .accel_noise_density = 0.02f, .gyro_bias_rw = 0.0001f, .accel_bias_rw = 0.001f,
+    .nis_soft = {6.0f, 9.0f}, .nis_hard = {20.0f, 25.0f}, .maximum_r_scale = 4.0f
 };
 static NavigationEskfState s_state[2], s_reference[2];
 static NavigationEskfWorkspace s_work[2], s_reference_work[2];

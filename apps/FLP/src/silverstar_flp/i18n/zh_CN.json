@@ -981,5 +981,8 @@
   "integrity.end_unavailable": "窗口证据不可用",
   "integrity.interval_summary": "末条证据（{time} s）：{end}，倍率 {scale}；所选区间：有效 {valid}/{samples}，闭合峰值 {error} m，最高倍率 {peak}，加权条目 {weighted}；{source}",
   "integrity.revision3_explanation": "显示当前 GNSS 窗口闭合误差与水平位置方差倍率。飞控记录按原样保持，复算仅显示完成窗口；无效或非有限坐标留空，空白不等于断流或绝对导航误差。",
-  "integrity.vertical_display_explanation": "仅为离线垂直一致性诊断，不参与 KF6 门控。灰线表示本地参考重置，不代表机载 GNSS 断流或拒绝。"
+  "integrity.vertical_display_explanation": "仅为离线垂直一致性诊断，不参与 KF6 门控。灰线表示本地参考重置，不代表机载 GNSS 断流或拒绝。",
+  "parameter.nis_soft_enabled": "启用 NIS 软降权",
+  "parameter.nis_hard_enabled": "启用 NIS 硬拒绝",
+  "parameter_group.nis": "NIS 门控"
 }

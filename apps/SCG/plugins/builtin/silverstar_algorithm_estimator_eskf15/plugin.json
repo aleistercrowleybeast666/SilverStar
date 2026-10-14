@@ -4,7 +4,7 @@
   "name": "ESKF15 Navigation Estimator",
   "type": "algorithm",
   "class": "estimator",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Right-local 15-state error Kalman navigation with calibrated body replay.",
   "requires": {
     "components": [
@@ -46,9 +46,17 @@
     ]
   },
   "metadata": {
-    "measurement_any_of": ["gnss.position", "gnss.velocity", "barometer.altitude"],
-    "arithmetic_requirements": ["fp32"],
-    "qualified_timing_profiles": ["cortex_m4f_hardfp"],
+    "measurement_any_of": [
+      "gnss.position",
+      "gnss.velocity",
+      "barometer.altitude"
+    ],
+    "arithmetic_requirements": [
+      "fp32"
+    ],
+    "qualified_timing_profiles": [
+      "cortex_m4f_hardfp"
+    ],
     "replay_contract": {
       "window_ms": 600,
       "history_capacity": 192
@@ -71,6 +79,25 @@
     ],
     "source_origins": {
       "default": "fccg_joint_navigation"
+    },
+    "navigation_semantics": {
+      "nis_gating": {
+        "schema_id": "silverstar.nis-gating/1.0",
+        "definition": "raw_r_transpose_S_inverse_r",
+        "threshold_df": {
+          "nis_1d_soft": 1,
+          "nis_1d_hard": 1,
+          "nis_2d_soft": 2,
+          "nis_2d_hard": 2
+        },
+        "probability_unit": "fraction",
+        "soft_enabled_parameter": "nis_soft_enabled",
+        "hard_enabled_parameter": "nis_hard_enabled",
+        "hard_comparison": ">",
+        "soft_comparison": ">",
+        "gate_input_stage": "before_robust_variance_inflation",
+        "reported_nis_stage": "after_robust_variance_inflation_when_soft_weighted"
+      }
     }
   },
   "selection": {
@@ -630,13 +657,14 @@
         "order": 24,
         "generated_symbol": "SYSTEM_ESKF_NIS_1D_SOFT",
         "display_names": {
-          "en_US": "1D NIS soft threshold",
-          "zh_CN": "1 维 NIS 软降权阈值"
+          "en_US": "NIS 1D soft CDF coverage",
+          "zh_CN": "NIS 1 维 软 CDF 覆盖概率"
         },
         "description": {
           "en_US": "ESKF15 actual nis_1d_soft; 1; value.",
           "zh_CN": "ESKF15 实际参数 nis_1d_soft；1。"
-        }
+        },
+        "nis_df": 1
       },
       {
         "id": "nis_1d_hard",
@@ -652,14 +680,15 @@
         "order": 25,
         "generated_symbol": "SYSTEM_ESKF_NIS_1D_HARD",
         "display_names": {
-          "en_US": "1D NIS hard threshold",
-          "zh_CN": "1 维 NIS 硬拒绝阈值"
+          "en_US": "NIS 1D hard CDF coverage",
+          "zh_CN": "NIS 1 维 硬 CDF 覆盖概率"
         },
         "description": {
           "en_US": "ESKF15 actual nis_1d_hard; 1; value.",
           "zh_CN": "ESKF15 实际参数 nis_1d_hard；1。"
         },
-        "greater_than": "nis_1d_soft"
+        "greater_than": "nis_1d_soft",
+        "nis_df": 1
       },
       {
         "id": "nis_2d_soft",
@@ -675,13 +704,14 @@
         "order": 26,
         "generated_symbol": "SYSTEM_ESKF_NIS_2D_SOFT",
         "display_names": {
-          "en_US": "2D NIS soft threshold",
-          "zh_CN": "2 维 NIS 软降权阈值"
+          "en_US": "NIS 2D soft CDF coverage",
+          "zh_CN": "NIS 2 维 软 CDF 覆盖概率"
         },
         "description": {
           "en_US": "ESKF15 actual nis_2d_soft; 1; value.",
           "zh_CN": "ESKF15 实际参数 nis_2d_soft；1。"
-        }
+        },
+        "nis_df": 2
       },
       {
         "id": "nis_2d_hard",
@@ -697,14 +727,15 @@
         "order": 27,
         "generated_symbol": "SYSTEM_ESKF_NIS_2D_HARD",
         "display_names": {
-          "en_US": "2D NIS hard threshold",
-          "zh_CN": "2 维 NIS 硬拒绝阈值"
+          "en_US": "NIS 2D hard CDF coverage",
+          "zh_CN": "NIS 2 维 硬 CDF 覆盖概率"
         },
         "description": {
           "en_US": "ESKF15 actual nis_2d_hard; 1; value.",
           "zh_CN": "ESKF15 实际参数 nis_2d_hard；1。"
         },
-        "greater_than": "nis_2d_soft"
+        "greater_than": "nis_2d_soft",
+        "nis_df": 2
       },
       {
         "id": "nis_max_r_scale",
@@ -861,6 +892,52 @@
         "description": {
           "en_US": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
           "zh_CN": "实验性固定滞后延迟。仅接收时间回退使用；可信 MCU 量测时刻不重复扣除。硬上限预留历史调度余量。"
+        }
+      },
+      {
+        "id": "nis_soft_enabled",
+        "type": "integer",
+        "default": 1,
+        "legacy_default": 1,
+        "unit": "1",
+        "representation": "value",
+        "min": 0,
+        "max": 1,
+        "precision": 0,
+        "step": 1,
+        "group": "advanced",
+        "order": 99,
+        "generated_symbol": "SYSTEM_ESKF_NIS_SOFT_ENABLED",
+        "display_names": {
+          "en_US": "Enable NIS soft gate",
+          "zh_CN": "启用 NIS 软降权"
+        },
+        "description": {
+          "en_US": "Explicit gate switch (0 disabled, 1 enabled); finite thresholds remain unchanged.",
+          "zh_CN": "独立门控开关（0 禁用，1 启用）；保留有限门限值。"
+        }
+      },
+      {
+        "id": "nis_hard_enabled",
+        "type": "integer",
+        "default": 1,
+        "legacy_default": 1,
+        "unit": "1",
+        "representation": "value",
+        "min": 0,
+        "max": 1,
+        "precision": 0,
+        "step": 1,
+        "group": "advanced",
+        "order": 100,
+        "generated_symbol": "SYSTEM_ESKF_NIS_HARD_ENABLED",
+        "display_names": {
+          "en_US": "Enable NIS hard gate",
+          "zh_CN": "启用 NIS 硬拒绝"
+        },
+        "description": {
+          "en_US": "Explicit gate switch (0 disabled, 1 enabled); finite thresholds remain unchanged.",
+          "zh_CN": "独立门控开关（0 禁用，1 启用）；保留有限门限值。"
         }
       }
     ]

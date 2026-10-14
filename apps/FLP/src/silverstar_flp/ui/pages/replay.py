@@ -29,6 +29,9 @@ from silverstar_flp.core.analysis_source import (
 from silverstar_flp.core.comparison import Series_Compare
 from silverstar_flp.core.dataset import FlightDataset
 from silverstar_flp.core.i18n import Translator
+from silverstar_flp.core.nis_probability import RecordedNisDf_Get
+from silverstar_flp.ui.nis_editor import GateEnableEditor, NisProbabilityEditor
+
 from silverstar_flp.plugins.api.algorithm import (
     AlgorithmResult,
     ParameterSpec,
@@ -65,7 +68,7 @@ class ReplayPage(QWidget):
         self._process_model_preferences: dict[tuple[str, ReplayMode], int] = {}
         self._last_error: str | None = None
         self._store: ReplayResultStore | None = None
-        self._parameter_widgets: dict[str, QDoubleSpinBox] = {}
+        self._parameter_widgets: dict[str, QDoubleSpinBox | NisProbabilityEditor | GateEnableEditor] = {}
         self._parameter_labels: dict[str, QLabel] = {}
         self._parameter_specs: dict[str, ParameterSpec] = {}
         self._recorded_parameter_values: dict[str, float] = {}
@@ -348,22 +351,30 @@ class ReplayPage(QWidget):
         for parameter in plugin.metadata.parameter_schema:
             if parameter.kind not in ("float", "int"):
                 continue
-            editor = QDoubleSpinBox(self.parameters_group)
-            editor.setDecimals(parameter.precision)
-            editor.setKeyboardTracking(False)
-            editor.setRange(
-                parameter.minimum if parameter.minimum is not None else -1.0e12,
-                parameter.maximum if parameter.maximum is not None else 1.0e12,
-            )
-            if parameter.step is not None:
-                editor.setSingleStep(float(parameter.step))
+            if parameter.nis_df:
+                editor = NisProbabilityEditor(parameter.nis_df, parameter.minimum, parameter.maximum,
+                                              self._translator.language, self.parameters_group)
+            elif parameter.parameter_id in {"nis_soft_enabled", "nis_hard_enabled"}:
+                editor = GateEnableEditor(self.parameters_group)
+            else:
+                editor = QDoubleSpinBox(self.parameters_group)
+            if isinstance(editor, QDoubleSpinBox):
+                editor.setDecimals(parameter.precision)
+                editor.setKeyboardTracking(False)
+                editor.setRange(
+                    parameter.minimum if parameter.minimum is not None else -1.0e12,
+                    parameter.maximum if parameter.maximum is not None else 1.0e12,
+                )
+                if parameter.step is not None:
+                    editor.setSingleStep(float(parameter.step))
             editor.setValue(
                 self._offline_parameter_values.get(
                     parameter.parameter_id,
                     float(parameter.default),
                 )
             )
-            editor.setSuffix(f" {parameter.unit}" if parameter.unit else "")
+            if isinstance(editor, QDoubleSpinBox):
+                editor.setSuffix(f" {parameter.unit}" if parameter.unit else "")
             editor.valueChanged.connect(self._ParametersDirty_Refresh)
             label = QLabel(self._Parameter_Label(parameter), self.parameters_group)
             self._parameter_widgets[parameter.parameter_id] = editor
@@ -449,7 +460,7 @@ class ReplayPage(QWidget):
             editor.setValue(
                 self._parameter_baseline_values.get(
                     parameter_id,
-                    self._offline_parameter_values.get(parameter_id, editor.value()),
+                    self._offline_parameter_values.get(parameter_id, self._parameter_specs[parameter_id].default),
                 )
             )
             editor.setProperty("actualValue", self._parameter_baseline_values.get(parameter_id))
@@ -458,7 +469,7 @@ class ReplayPage(QWidget):
 
     def _ParametersDirty_Refresh(self, *_args: object) -> None:
         self._parameters_dirty = any(
-            not math.isclose(
+            (isinstance(editor, NisProbabilityEditor) and not editor.InputValid_Is()) or not math.isclose(
                 editor.value(),
                 self._parameter_baseline_values.get(parameter_id, editor.value()),
                 rel_tol=1.0e-9,
@@ -489,13 +500,18 @@ class ReplayPage(QWidget):
             unit=parameter.unit,
         )
 
+        if parameter.nis_df:
+            text += "\n" + ("CDF 覆盖概率（%）；越高越宽松，不是量测正确率。下方范围是实际 NIS 数值范围。"
+                            if self._translator.language == "zh_CN" else
+                            "CDF coverage (%); higher is more permissive, not measurement correctness. Range refers to numeric NIS.")
         self._parameter_labels[parameter.parameter_id].setToolTip(text)
         self._parameter_widgets[parameter.parameter_id].setToolTip(text)
 
     def _Parameter_Label(self, parameter: ParameterSpec) -> str:
         code = parameter.label_key or f"parameter.{parameter.parameter_id}"
         translated = self._translator.Text_Get(code)
-        return parameter.parameter_id if translated == code else translated
+        label = parameter.parameter_id if translated == code else translated
+        return label + (" · CDF 覆盖概率" if self._translator.language == "zh_CN" else " · CDF coverage") if parameter.nis_df else label
 
     def _ModePreference_Set(self, index: int) -> None:
         mode = self.mode_combo.itemData(index)
@@ -575,6 +591,12 @@ class ReplayPage(QWidget):
             for p in self._CurrentPlugin_Get().RuntimeParameterSchema_Get(self._dataset, revision)
         }
         for name, editor in self._parameter_widgets.items():
+            if isinstance(editor, NisProbabilityEditor):
+                declaration = (self._dataset.semantic_context.raw_metadata
+                    if self._dataset is not None and self._dataset.semantic_context is not None else {})
+                declared = declaration.get("metadata_declarations", {}).get("nis_gating", {})
+                known_df = RecordedNisDf_Get(declared, name) == editor.df
+                editor.NumericDisplay_Set(mode == ReplayMode.RECORDED_CONFIGURATION and not known_df)
             editor.setReadOnly(mode != ReplayMode.WHAT_IF or name not in runtime)
             self._ParameterTooltip_Apply(runtime.get(name, self._parameter_specs[name]))
             if name not in runtime:
@@ -590,9 +612,14 @@ class ReplayPage(QWidget):
                 )
         self.configurationChanged.emit()
 
-    def _ActualValues_Get(self) -> dict[str, float]:
+    def _ActualValues_Get(self, *, allow_invalid: bool = False) -> dict[str, float]:
         values = {}
         for name, editor in self._parameter_widgets.items():
+            if isinstance(editor, NisProbabilityEditor):
+                if allow_invalid and not editor.InputValid_Is():
+                    continue
+                values[name] = editor.value()
+                continue
             actual = editor.property("actualValue")
             if actual is not None and editor.value() == round(actual, editor.decimals()):
                 values[name] = actual
@@ -622,6 +649,10 @@ class ReplayPage(QWidget):
             "parameter_schema_identity": plugin.metadata.ParameterSchemaIdentity_Get(),
             "provenance": plugin.ParameterAudit_Get(self._dataset, request)["config_source"],
         }
+        nis_inputs = {name: editor.Input_Get() for name, editor in self._parameter_widgets.items()
+                      if isinstance(editor, NisProbabilityEditor) and isinstance(editor.Input_Get(), dict)}
+        if mode == ReplayMode.WHAT_IF and nis_inputs:
+            configuration["nis_inputs"] = nis_inputs
         if mode == ReplayMode.WHAT_IF and self.quality_policy_combo.currentData() is not None:
             configuration["quality_policy_revision"] = self.quality_policy_combo.currentData()
         revision = plugin.ProcessModelRevision_Resolve(self._dataset, request, required=False)
@@ -663,6 +694,8 @@ class ReplayPage(QWidget):
         for name, value in request.parameters.items():
             self._parameter_widgets[name].setValue(value)
             self._parameter_widgets[name].setProperty("actualValue", value)
+        for name, value in configuration.get("nis_inputs", {}).items():
+            self._parameter_widgets[name].setValue(value)
         self._ParametersDirty_Refresh()
 
     def _CurrentPlugin_Get(self):
@@ -1191,9 +1224,12 @@ class ReplayPage(QWidget):
         self.mode_combo.blockSignals(False)
 
     def Language_Apply(self, translator: Translator) -> None:
-        edited = (
-            self._ActualValues_Get() if self.mode_combo.currentData() == ReplayMode.WHAT_IF else {}
-        )
+        what_if = self.mode_combo.currentData() == ReplayMode.WHAT_IF
+        edited = self._ActualValues_Get(allow_invalid=True) if what_if else {}
+        nis_inputs = {name: editor.Input_Get() for name, editor in self._parameter_widgets.items()
+                      if what_if and isinstance(editor, NisProbabilityEditor) and editor.InputValid_Is()}
+        invalid_percent = {name: editor.percent.value() for name, editor in self._parameter_widgets.items()
+                           if what_if and isinstance(editor, NisProbabilityEditor) and not editor.InputValid_Is()}
         self._translator = translator
         self.result_delete_button.setText(translator.Text_Get("replay.run_delete"))
         self.result_restore_button.setText(translator.Text_Get("replay.run_restore"))
@@ -1251,6 +1287,9 @@ class ReplayPage(QWidget):
             ]
         )
         for parameter_id, label in self._parameter_labels.items():
+            editor = self._parameter_widgets[parameter_id]
+            if isinstance(editor, NisProbabilityEditor):
+                editor.Language_Set(translator.language)
             parameter = self._parameter_specs[parameter_id]
             label.setText(self._Parameter_Label(parameter))
             self._ParameterTooltip_Apply(parameter)
@@ -1261,6 +1300,10 @@ class ReplayPage(QWidget):
         for key, value in edited.items():
             self._parameter_widgets[key].setValue(value)
             self._parameter_widgets[key].setProperty("actualValue", value)
+        for key, value in nis_inputs.items():
+            self._parameter_widgets[key].setValue(value)
+        for key, percent in invalid_percent.items():
+            self._parameter_widgets[key].percent.setValue(percent)
         self._ParametersDirty_Refresh()
         self._Availability_Refresh()
         if self._last_entry is not None:

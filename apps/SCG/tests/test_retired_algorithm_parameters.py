@@ -15,7 +15,7 @@ def test_revision3_retained_parameters_are_read_only_and_overscale_rejected(buil
     owner = builtin_catalog.Component_Get(KF)
     retired = tuple(p for p in owner.algorithm_parameters if p.lifecycle == 'legacy_read_only')
     assert len(retired) == 6
-    assert len([p for p in owner.algorithm_parameters if p.lifecycle == 'active']) == 30
+    assert len([p for p in owner.algorithm_parameters if p.lifecycle == 'active']) == 32
     model = ReferenceProject_Create(catalog=builtin_catalog)
     legacy = retired[0]
     model.algorithm_parameters[KF][legacy.parameter_id] = 3.5

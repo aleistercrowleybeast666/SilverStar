@@ -4,7 +4,7 @@
   "name": "KF6 Navigation Estimator",
   "type": "algorithm",
   "class": "estimator",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Optional build-selected KF6 fusion estimator.",
   "requires": {
     "components": [
@@ -50,17 +50,52 @@
       "kf6": {
         "revision": 2,
         "process_noise_model": "original_increment_equivalent_white_acceleration",
-        "state_order": ["pE", "pN", "pU", "vE", "vN", "vU"],
+        "state_order": [
+          "pE",
+          "pN",
+          "pU",
+          "vE",
+          "vN",
+          "vU"
+        ],
         "sigma_unit": "m/s^2",
         "density": "q_axis = sigma_axis^2 * original_prediction_increment_dt_s",
         "original_interval": "immutable NavigationReplayImu.dt_s, not observation fragment length",
         "Q_fragment": "q * [[h^3/3,h^2/2],[h^2/2,h]] per axis",
         "compatibility": "Qvv/Qpv retained for a whole original interval; Qpp is 4/3 of revision1. No resampling or old-trajectory equivalence claim."
+      },
+      "nis_gating": {
+        "schema_id": "silverstar.nis-gating/1.0",
+        "definition": "raw_r_transpose_S_inverse_r",
+        "threshold_df": {
+          "nis_1d_soft": 1,
+          "nis_1d_hard": 1,
+          "nis_2d_soft": 2,
+          "nis_2d_hard": 2,
+          "nis_3d_soft": 3,
+          "nis_3d_hard": 3
+        },
+        "probability_unit": "fraction",
+        "soft_enabled_parameter": "nis_soft_enabled",
+        "hard_enabled_parameter": "nis_hard_enabled",
+        "hard_comparison": ">=",
+        "soft_comparison": ">",
+        "gate_input_stage": "before_robust_variance_inflation",
+        "reported_nis_stage": "gate_input"
       }
     },
-    "measurement_any_of": ["gnss.position", "gnss.velocity", "barometer.altitude"],
-    "arithmetic_requirements": ["fp32"],
-    "qualified_timing_profiles": ["cortex_m3_softfp", "cortex_m4f_hardfp"],
+    "measurement_any_of": [
+      "gnss.position",
+      "gnss.velocity",
+      "barometer.altitude"
+    ],
+    "arithmetic_requirements": [
+      "fp32"
+    ],
+    "qualified_timing_profiles": [
+      "cortex_m3_softfp",
+      "cortex_m4f_hardfp"
+    ],
     "replay_contract": {
       "window_ms": 600,
       "history_capacity": 144
@@ -452,13 +487,14 @@
         "order": 14,
         "generated_symbol": "SYSTEM_ESTIMATOR_NIS_1D_SOFT_THRESHOLD",
         "display_names": {
-          "en_US": "NIS 1D soft",
-          "zh_CN": "NIS 1 维 软门限"
+          "en_US": "NIS 1D soft CDF coverage",
+          "zh_CN": "NIS 1 维 软 CDF 覆盖概率"
         },
         "description": {
           "en_US": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
           "zh_CN": "无量纲实际 NIS 门限。float32 舍入后硬门限必须大于软门限。"
-        }
+        },
+        "nis_df": 1
       },
       {
         "id": "nis_1d_hard",
@@ -474,14 +510,15 @@
         "order": 15,
         "generated_symbol": "SYSTEM_ESTIMATOR_NIS_1D_HARD_THRESHOLD",
         "display_names": {
-          "en_US": "NIS 1D hard",
-          "zh_CN": "NIS 1 维 硬门限"
+          "en_US": "NIS 1D hard CDF coverage",
+          "zh_CN": "NIS 1 维 硬 CDF 覆盖概率"
         },
         "description": {
           "en_US": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
           "zh_CN": "无量纲实际 NIS 门限。float32 舍入后硬门限必须大于软门限。"
         },
-        "greater_than": "nis_1d_soft"
+        "greater_than": "nis_1d_soft",
+        "nis_df": 1
       },
       {
         "id": "nis_2d_soft",
@@ -497,13 +534,14 @@
         "order": 16,
         "generated_symbol": "SYSTEM_ESTIMATOR_NIS_2D_SOFT_THRESHOLD",
         "display_names": {
-          "en_US": "NIS 2D soft",
-          "zh_CN": "NIS 2 维 软门限"
+          "en_US": "NIS 2D soft CDF coverage",
+          "zh_CN": "NIS 2 维 软 CDF 覆盖概率"
         },
         "description": {
           "en_US": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
           "zh_CN": "无量纲实际 NIS 门限。float32 舍入后硬门限必须大于软门限。"
-        }
+        },
+        "nis_df": 2
       },
       {
         "id": "nis_2d_hard",
@@ -519,14 +557,15 @@
         "order": 17,
         "generated_symbol": "SYSTEM_ESTIMATOR_NIS_2D_HARD_THRESHOLD",
         "display_names": {
-          "en_US": "NIS 2D hard",
-          "zh_CN": "NIS 2 维 硬门限"
+          "en_US": "NIS 2D hard CDF coverage",
+          "zh_CN": "NIS 2 维 硬 CDF 覆盖概率"
         },
         "description": {
           "en_US": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
           "zh_CN": "无量纲实际 NIS 门限。float32 舍入后硬门限必须大于软门限。"
         },
-        "greater_than": "nis_2d_soft"
+        "greater_than": "nis_2d_soft",
+        "nis_df": 2
       },
       {
         "id": "nis_3d_soft",
@@ -542,13 +581,14 @@
         "order": 18,
         "generated_symbol": "SYSTEM_ESTIMATOR_NIS_3D_SOFT_THRESHOLD",
         "display_names": {
-          "en_US": "NIS 3D soft",
-          "zh_CN": "NIS 3 维 软门限"
+          "en_US": "NIS 3D soft CDF coverage",
+          "zh_CN": "NIS 3 维 软 CDF 覆盖概率"
         },
         "description": {
           "en_US": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
           "zh_CN": "无量纲实际 NIS 门限。float32 舍入后硬门限必须大于软门限。"
-        }
+        },
+        "nis_df": 3
       },
       {
         "id": "nis_3d_hard",
@@ -564,14 +604,15 @@
         "order": 19,
         "generated_symbol": "SYSTEM_ESTIMATOR_NIS_3D_HARD_THRESHOLD",
         "display_names": {
-          "en_US": "NIS 3D hard",
-          "zh_CN": "NIS 3 维 硬门限"
+          "en_US": "NIS 3D hard CDF coverage",
+          "zh_CN": "NIS 3 维 硬 CDF 覆盖概率"
         },
         "description": {
           "en_US": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
           "zh_CN": "无量纲实际 NIS 门限。float32 舍入后硬门限必须大于软门限。"
         },
-        "greater_than": "nis_3d_soft"
+        "greater_than": "nis_3d_soft",
+        "nis_df": 3
       },
       {
         "id": "nis_max_r_scale",
@@ -944,6 +985,52 @@
           "zh_CN": "质量策略 revision 3 已退役：仅保留旧配置值，不参与新算法执行；revision 2 历史日志保持原含义。"
         },
         "lifecycle": "legacy_read_only"
+      },
+      {
+        "id": "nis_soft_enabled",
+        "type": "integer",
+        "default": 1,
+        "legacy_default": 1,
+        "unit": "1",
+        "representation": "value",
+        "min": 0,
+        "max": 1,
+        "precision": 0,
+        "step": 1,
+        "group": "advanced",
+        "order": 99,
+        "generated_symbol": "SYSTEM_ESTIMATOR_NIS_SOFT_ENABLED",
+        "display_names": {
+          "en_US": "Enable NIS soft gate",
+          "zh_CN": "启用 NIS 软降权"
+        },
+        "description": {
+          "en_US": "Explicit gate switch (0 disabled, 1 enabled); finite thresholds remain unchanged.",
+          "zh_CN": "独立门控开关（0 禁用，1 启用）；保留有限门限值。"
+        }
+      },
+      {
+        "id": "nis_hard_enabled",
+        "type": "integer",
+        "default": 1,
+        "legacy_default": 1,
+        "unit": "1",
+        "representation": "value",
+        "min": 0,
+        "max": 1,
+        "precision": 0,
+        "step": 1,
+        "group": "advanced",
+        "order": 100,
+        "generated_symbol": "SYSTEM_ESTIMATOR_NIS_HARD_ENABLED",
+        "display_names": {
+          "en_US": "Enable NIS hard gate",
+          "zh_CN": "启用 NIS 硬拒绝"
+        },
+        "description": {
+          "en_US": "Explicit gate switch (0 disabled, 1 enabled); finite thresholds remain unchanged.",
+          "zh_CN": "独立门控开关（0 禁用，1 启用）；保留有限门限值。"
+        }
       }
     ]
   }

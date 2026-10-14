@@ -19,7 +19,7 @@ from silverstar_fccg.generator.eide_ownership import (
 from silverstar_fccg.generator.hardware_preparation import (
     HardwareResourceBindingFingerprint_Get,
 )
-from silverstar_fccg.generator.kf6_identity import Kf6Identity_Validate
+from silverstar_fccg.generator.kf6_identity import EskfNisIdentity_Validate, Kf6Identity_Validate
 from silverstar_fccg.generator.render import (
     ComponentProvenance_Get,
     GeneratedFiles_Render,
@@ -386,6 +386,9 @@ class ProjectAssembler:
         if "silverstar.algorithm.estimator.kf6" in model.ComponentIds_Get():
             Kf6Identity_Validate(project_root, previous, ComponentProvenance_Get(
                 self.catalog, "silverstar.algorithm.estimator.kf6"))
+        if "silverstar.algorithm.estimator.eskf15" in model.ComponentIds_Get():
+            EskfNisIdentity_Validate(project_root, previous, ComponentProvenance_Get(
+                self.catalog, "silverstar.algorithm.estimator.eskf15"))
         components = dict(previous.get("components", {}))
         upstream_components = {}
         for component_id in model.ComponentIds_Get():

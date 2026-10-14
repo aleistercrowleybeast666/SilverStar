@@ -285,13 +285,16 @@ class Eskf15Filter:
         hard: float = 25.0,
         max_scale: float = 16.0,
         max_injection_rad: float = 0.35,
+        soft_enabled: bool = True,
+        hard_enabled: bool = True,
     ) -> EskfMeasurementResult:
         z, variance = np.asarray(measurement), np.asarray(variance)
         invalid = EskfMeasurementResult(
             EskfUpdateResult.REJECTED_INVALID, np.full(len(axes), np.nan), np.nan, variance.copy()
         )
         if (
-            not physically_valid
+            type(soft_enabled) is not bool or type(hard_enabled) is not bool
+            or not physically_valid
             or z.shape != (len(axes),)
             or variance.shape != z.shape
             or not np.isfinite(z).all()
@@ -308,10 +311,10 @@ class Eskf15Filter:
             chol = np.linalg.cholesky(s)
             whitened = np.linalg.solve(chol, innovation)
             nis = float(whitened @ whitened)
-            if nis > hard:
+            if hard_enabled and nis > hard:
                 return EskfMeasurementResult(EskfUpdateResult.REJECTED_NIS, innovation, nis, r)
             result = EskfUpdateResult.ACCEPTED
-            if nis > soft:
+            if soft_enabled and nis > soft:
                 r *= min(max_scale, nis / soft)
                 result = EskfUpdateResult.SOFT_WEIGHTED
                 s = h @ p @ h.T + np.diag(r)

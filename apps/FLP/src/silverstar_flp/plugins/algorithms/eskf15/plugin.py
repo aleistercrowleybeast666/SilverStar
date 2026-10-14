@@ -61,6 +61,9 @@ def _Parameters_Build() -> tuple[ParameterSpec, ...]:
             label_key="parameter." + name,
             group_key="parameter_group.process_model",
             tooltip_key="parameter.tooltip." + name,
+            nis_df=item.get("nis_df", 0),
+            greater_than=name.replace("_hard", "_soft") if item.get("nis_df") and name.endswith("_hard") else "",
+            required=item.get("required", True),
         )
         for index, (name, item) in enumerate(CONTRACT["eskf15"]["parameters"].items())
     )
@@ -220,6 +223,15 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
             ("eskf15_host_parity_scope_limited",),
             ("corrected_imu",),
         )
+
+    def ParameterSchemaCompatible_Is(self, identity: str) -> bool:
+        if super().ParameterSchemaCompatible_Is(identity):
+            return True
+        from dataclasses import replace
+        legacy = replace(self.metadata, parameter_schema=tuple(
+            replace(spec, greater_than="") for spec in self.metadata.parameter_schema
+            if spec.parameter_id not in {"nis_soft_enabled", "nis_hard_enabled"}))
+        return identity == legacy.ParameterSchemaIdentity_Get()
 
     def _Measurements_Build(self, dataset, parameters, start_us, end_us, request):
         if dataset.Records_Get("ESKF15_MEASUREMENT"):
@@ -592,6 +604,8 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
             soft=(parameters["nis_1d_soft"], parameters["nis_2d_soft"]),
             hard=(parameters["nis_1d_hard"], parameters["nis_2d_hard"]),
             max_r_scale=parameters["nis_max_r_scale"],
+            soft_enabled=bool(parameters.get("nis_soft_enabled", 1)),
+            hard_enabled=bool(parameters.get("nis_hard_enabled", 1)),
             lever_arm=np.array([parameters["lever_arm_body_" + axis + "_m"] for axis in "xyz"]),
         )
         supervisor = FusionSupervisor(start)

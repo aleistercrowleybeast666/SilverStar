@@ -47,6 +47,8 @@ PROJECT_FORMAT_VERSION = 14
 PROJECT_GROUND_RADIOS_FORMAT_VERSION = 15
 PROJECT_RADIO_VARIANTS_FORMAT_VERSION = 16
 PROJECT_FEATURE_TIERS_FORMAT_VERSION = 17
+PROJECT_NIS_INPUT_FORMAT_VERSION = 18
+AlgorithmParameterInput = float | int | dict[str, Any]
 FEATURE_TIERS = ("full", "standard", "compact", "minimal")
 PROTOCOL_CATEGORIES = ("telemetry", "maintenance", "logging")
 DEFAULT_PROTOCOL_PROFILES = {
@@ -301,7 +303,7 @@ class ProjectModel:
     strategies: dict[str, str | None] = field(default_factory=dict)
     alignment: AlignmentConfiguration = field(default_factory=AlignmentConfiguration)
     modes: dict[str, list[str]] = field(default_factory=dict)
-    algorithm_parameters: dict[str, dict[str, float | int]] = field(default_factory=dict)
+    algorithm_parameters: dict[str, dict[str, AlgorithmParameterInput]] = field(default_factory=dict)
     mode_parameters: dict[str, dict[str, dict[str, float | int]]] = field(
         default_factory=lambda: deepcopy(DEFAULT_MODE_PARAMETERS)
     )
@@ -390,7 +392,9 @@ class ProjectModel:
 
     def Dictionary_Get(self) -> dict[str, Any]:
         return {
-            "format_version": (PROJECT_FEATURE_TIERS_FORMAT_VERSION
+            "format_version": (PROJECT_NIS_INPUT_FORMAT_VERSION
+                if any(isinstance(v, dict) for params in self.algorithm_parameters.values() for v in params.values()) or self.format_version == PROJECT_NIS_INPUT_FORMAT_VERSION
+                else PROJECT_FEATURE_TIERS_FORMAT_VERSION
                 if self.build.feature_tier != "full" or self.feature_tier_presets
                 else PROJECT_RADIO_VARIANTS_FORMAT_VERSION
                 if any(instance.module_variant or instance.tx_power_dbm is not None for instance in self.device_instances)
@@ -1218,7 +1222,7 @@ def _Modes_Parse(value: Any) -> dict[str, list[str]]:
     return modes
 
 
-def _AlgorithmParameters_Parse(value: Any) -> dict[str, dict[str, float | int]]:
+def _AlgorithmParameters_Parse(value: Any) -> dict[str, dict[str, AlgorithmParameterInput]]:
     data = _Object_Require(value, "algorithm_parameters")
     result = {}
     for component, parameters in data.items():
@@ -1226,6 +1230,16 @@ def _AlgorithmParameters_Parse(value: Any) -> dict[str, dict[str, float | int]]:
             raise ProjectModelError("Invalid algorithm component id")
         result[component] = {}
         for key, number in _Object_Require(parameters, component).items():
+            if isinstance(number, dict):
+                from silverstar_fccg.core.nis_probability import NisInput_Resolve
+                try:
+                    NisInput_Resolve(number)
+                except (TypeError, ValueError) as error:
+                    raise ProjectModelError("Invalid versioned NIS probability input") from error
+                if not isinstance(key, str) or not re.fullmatch(r"[a-z][a-z0-9_]*", key):
+                    raise ProjectModelError("Invalid algorithm parameter id")
+                result[component][key] = deepcopy(number)
+                continue
             if (not isinstance(key, str) or not re.fullmatch(r"[a-z][a-z0-9_]*", key)
                     or type(number) not in (float, int)
                     or (type(number) is float and not math.isfinite(number))):
@@ -1936,9 +1950,9 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
             *(f"unknown {name}" for name in sorted(unknown)),
         ]
         raise ProjectModelError("Project fields are invalid: " + ", ".join(details))
-    if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION):
+    if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION, PROJECT_NIS_INPUT_FORMAT_VERSION):
         raise ProjectModelError(
-            "Only project format_version 14, 15, 16 or 17 is supported"
+            "Only project format_version 14 through 18 is supported"
         )
     project_data = _Object_Require(root.get("project"), "project")
     if set(project_data) != {"name", "firmware_version", "build_target"}:
@@ -1971,6 +1985,9 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         raise ProjectModelError("Per-instance radio configuration requires project format 16")
     modes = _Modes_Parse(root.get("modes"))
     algorithm_parameters = _AlgorithmParameters_Parse(root.get("algorithm_parameters"))
+    if root["format_version"] < PROJECT_NIS_INPUT_FORMAT_VERSION and any(
+            isinstance(v, dict) for params in algorithm_parameters.values() for v in params.values()):
+        raise ProjectModelError("NIS probability input requires project format 18")
     try:
         alignment = AlignmentConfiguration_Parse(root.get("alignment"))
     except ValueError as error:

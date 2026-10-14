@@ -2,6 +2,12 @@
 #define __NAVIGATION_ESKF_CONFIG_H
 /* Values are supplied only by the generated project configuration.
  * Missing bindings are build errors, never silent alternate defaults. */
+#ifndef SYSTEM_ESKF_NIS_SOFT_ENABLED
+#error "Missing generated algorithm parameter: SYSTEM_ESKF_NIS_SOFT_ENABLED"
+#endif
+#ifndef SYSTEM_ESKF_NIS_HARD_ENABLED
+#error "Missing generated algorithm parameter: SYSTEM_ESKF_NIS_HARD_ENABLED"
+#endif
 #ifndef SYSTEM_ESKF_GRAVITY_MPS2
 #error "Missing generated algorithm parameter: SYSTEM_ESKF_GRAVITY_MPS2"
 #endif

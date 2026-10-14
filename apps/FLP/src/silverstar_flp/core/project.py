@@ -189,7 +189,7 @@ def ReplayConfiguration_Validate(configuration: Any) -> None:
         "parameter_schema_identity",
         "provenance",
     }
-    optional_fields = {"quality_policy_revision", "process_model_revision"}
+    optional_fields = {"quality_policy_revision", "process_model_revision", "nis_inputs"}
     if not isinstance(configuration, dict) or not (
         fields <= set(configuration) <= fields | optional_fields
     ):
@@ -232,6 +232,12 @@ def ReplayConfiguration_Validate(configuration: Any) -> None:
     if not isinstance(configuration["actual_values"], dict):
         raise ValueError("project_actual_values_invalid")
     plugin.metadata.Parameters_Validate(configuration["actual_values"])
+    if "nis_inputs" in configuration:
+        from silverstar_flp.core.nis_probability import NisInputs_Validate
+        if configuration["mode"] != ReplayMode.WHAT_IF:
+            raise ValueError("nis_input_requires_what_if")
+        NisInputs_Validate(configuration["nis_inputs"], configuration["actual_values"],
+            {spec.parameter_id: spec.nis_df for spec in plugin.metadata.parameter_schema if spec.nis_df})
 
 
 def Project_Save(document: ProjectDocument, path: Path, *, replay_store=None,

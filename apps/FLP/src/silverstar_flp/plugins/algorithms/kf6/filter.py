@@ -67,6 +67,8 @@ class Kf6Filter:
     nis_soft_threshold: NDArray[np.float32]
     nis_hard_threshold: NDArray[np.float32]
     nis_max_r_scale: np.float32
+    nis_soft_enabled: bool = True
+    nis_hard_enabled: bool = True
     state: NDArray[np.float32] = field(default_factory=lambda: np.zeros(6, dtype=np.float32))
     covariance: NDArray[np.float32] = field(
         default_factory=lambda: np.diag(
@@ -130,6 +132,8 @@ class Kf6Filter:
         nis_max_r_scale: float,
         gnss_reacquire_outage_ms: int = 300,
         algorithm_revision: int = 1,
+        nis_soft_enabled: bool = True,
+        nis_hard_enabled: bool = True,
     ) -> Kf6Filter:
         process = np.asarray(process_accel_std_mps2, dtype=np.float32)
         p0 = np.asarray(p0_diagonal, dtype=np.float32)
@@ -151,6 +155,7 @@ class Kf6Filter:
             or np.any(hard <= soft)
             or not 100 <= gnss_reacquire_outage_ms <= 10000
             or nis_max_r_scale < 1.0
+            or type(nis_soft_enabled) is not bool or type(nis_hard_enabled) is not bool
             or type(algorithm_revision) is not int or algorithm_revision not in (1, 2)
         ):
             raise ValueError("kf6_configuration_invalid")
@@ -161,6 +166,7 @@ class Kf6Filter:
             nis_max_r_scale=max_r_scale,
             gnss_reacquire_outage_ms=gnss_reacquire_outage_ms,
             algorithm_revision=algorithm_revision,
+            nis_soft_enabled=nis_soft_enabled, nis_hard_enabled=nis_hard_enabled,
         )
         instance.covariance = np.diag(np.maximum(p0, P_DIAGONAL_MIN)).astype(np.float32)
         instance.state[3:6] = velocity
@@ -320,13 +326,13 @@ class Kf6Filter:
             result = Kf6UpdateResult.NUMERIC_ERROR
             self._Counter_Update("baro", result)
             return result
-        if nis >= self.nis_hard_threshold[0]:
+        if self.nis_hard_enabled and nis >= self.nis_hard_threshold[0]:
             result = Kf6UpdateResult.REJECTED_NIS
             self._Counter_Update("baro", result)
             return result
         scale = np.float32(1.0)
         result = Kf6UpdateResult.ACCEPTED
-        if nis > self.nis_soft_threshold[0]:
+        if self.nis_soft_enabled and nis > self.nis_soft_threshold[0]:
             scale = min(np.float32(nis / self.nis_soft_threshold[0]), self.nis_max_r_scale)
             result = Kf6UpdateResult.SOFT_WEIGHTED
         effective_variance = np.float32(variance * scale)
@@ -588,10 +594,10 @@ class Kf6Filter:
         if not np.isfinite(nis) or nis < 0.0:
             self.health_flags |= 4
             return Kf6UpdateResult.NUMERIC_ERROR
-        if nis >= self.nis_hard_threshold[dimension - 1]:
+        if self.nis_hard_enabled and nis >= self.nis_hard_threshold[dimension - 1]:
             return Kf6UpdateResult.REJECTED_NIS
         result = Kf6UpdateResult.ACCEPTED
-        if nis > self.nis_soft_threshold[dimension - 1]:
+        if self.nis_soft_enabled and nis > self.nis_soft_threshold[dimension - 1]:
             scale = min(
                 np.float32(nis / self.nis_soft_threshold[dimension - 1]),
                 self.nis_max_r_scale,

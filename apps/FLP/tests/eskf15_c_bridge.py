@@ -17,7 +17,7 @@ class Config(ct.Structure):
         (name, ct.c_float)
         for name in ("gravity", "gyro_noise", "accel_noise", "gyro_rw", "accel_rw")
     ]
-    _fields_ += [("soft", Float2), ("hard", Float2), ("r_max", ct.c_float)]
+    _fields_ += [("soft", Float2), ("hard", Float2), ("r_max", ct.c_float), ("nis_disabled_mask", ct.c_uint8)]
 
 
 class State(ct.Structure):
