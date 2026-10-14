@@ -67,7 +67,7 @@ current-session 选项。底层 claim 的拒绝行为用真实库/模拟 USB 故
 | 上述 Horco + Cortex-M4 / STM32 ID 0x413 / DPv1 / AP0 | 已完成所列台架读取和释放 |
 | 同家族其他实物、其他 Horco 序列号 | 代码 profile 可识别，未经本次实物测试 |
 | ST-Link、J-Link、HID-only CMSIS-DAP、其他 STM32/ADIv6 | 明确拒绝；没有推断兼容 |
-| GUI 实机交互 | 路由复用已验证 API；Qt 交互测试为模拟，未操作真实 GUI 连接 |
+| GUI 路径 | 后续已用 Windows 原生 QtTest / 真实后端核对，人工鼠标操作未做；见[GUI 核验](SWD_GUI_CHECK_20261014.md) |
 
 USB CDC、TF 日志文件服务/删除、固件刷写、校准、START、导航/开伞算法均不在本轮范围。
 
@@ -91,6 +91,8 @@ $env:SILVERSTAR_SWD_PYOCD_PATH='<isolated-deps>'
 本机默认目录已可用，不必再次安装。缺依赖或 pyOCD 版本不符会明确拒绝。
 GUI 仍由 `.venv/Scripts/python.exe apps/GSHC/main.py` 启动，在维护页显式连接，
 状态显示核心运行状态、时间、非原子读取及符号未匹配，不提供暂停或恢复操作。
+默认依赖发现和窗口退出释放已追加[原生 Qt 路径证据](SWD_GUI_CHECK_20261014.md)，
+该后续记录不改写本页前序台架归档的当时范围。
 
 pyOCD 与 libusb-package 包装代码为 Apache-2.0，PyUSB 为 BSD-3-Clause；
 bundled libusb 的许可另见[官方 COPYING](https://github.com/libusb/libusb/blob/v1.0.30/COPYING)。
