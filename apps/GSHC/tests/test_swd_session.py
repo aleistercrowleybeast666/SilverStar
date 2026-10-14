@@ -156,14 +156,14 @@ def test_short_read_and_release_failure_reported_and_retryable():
     assert session.Swd_Detach().result == R.Ok
 
 
-def test_live_adapter_is_blocked_before_process_or_device_open(tmp_path):
+def test_legacy_openocd_is_blocked_before_process_or_device_open(tmp_path):
     executable = tmp_path/'openocd.exe'; executable.write_bytes(b'unaudited binary')
     with patch('transport._swd_openocd.shutil.which',return_value=str(executable)), patch('subprocess.Popen') as popen:
-        reply = SwdSession().Swd_Attach(PROBE)
+        reply = SwdSession(_backend_factory=OpenOcdMemAp).Swd_Attach(PROBE)
         assert reply.result == R.SafetyNotProven and 'SHA256=' in reply.detail
         popen.assert_not_called()
     with patch('transport._swd_openocd.shutil.which',return_value=None):
-        assert SwdSession().Swd_Attach(PROBE).result == R.MissingDependency
+        assert SwdSession(_backend_factory=OpenOcdMemAp).Swd_Attach(PROBE).result == R.MissingDependency
 
 
 def test_configuration_no_board_scripts_core_driver_or_network():

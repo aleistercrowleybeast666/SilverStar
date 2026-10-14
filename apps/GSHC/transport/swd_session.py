@@ -131,8 +131,8 @@ class SwdSession:
                 return SwdReply(SwdResult.Busy, 'Detach the current target before attaching')
             _ValidateProbe(probe)
             self._acquire_process_owner(probe.identity)
-            from transport._swd_openocd import OpenOcdMemAp
-            self._backend = (self._factory or OpenOcdMemAp)(self.cancel)
+            from transport._swd_pyocd import PyOcdMemAp
+            self._backend = (self._factory or PyOcdMemAp)(self.cancel)
             self._probe = probe
             self._started, self._bytes, self._samples = time.monotonic(), 0, 0
             self._last_sample = float('-inf')

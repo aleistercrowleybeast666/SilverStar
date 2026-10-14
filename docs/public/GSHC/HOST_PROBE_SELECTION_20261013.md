@@ -3,8 +3,9 @@
 This development increment adds a host probe selector to the connection header.
 The original increment did not implement a debug session or an IDE backend.
 The subsequent [SWD read-only groundwork](SWD_READ_ONLY_20261013.md) adds the API,
-CLI and explicit Maintenance-page controls, with live admission still blocked
-pending the documented safety evidence. Discovery alone never connects a target.
+CLI and explicit Maintenance-page controls; its original live admission was blocked.
+The current [pyOCD/Horco adapter and bench results](SWD_PYOCD_BENCH_20261014.md)
+record the subsequent bounded read-only connection. Discovery alone never connects a target.
 The frozen 0.1.2 tag,
 release packages, firmware and flight algorithms are outside this change.
 

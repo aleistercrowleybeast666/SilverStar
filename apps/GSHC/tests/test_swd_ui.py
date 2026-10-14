@@ -114,14 +114,25 @@ def test_release_failure_is_retained_and_blocks_reconnect(swd_panel):
     assert manager.status=='swd.release_failed'
 
 
-def test_real_admission_path_in_worker_is_bounded_and_opens_no_device(swd_panel,tmp_path):
+def test_legacy_admission_path_in_worker_is_bounded_and_opens_no_device(swd_panel,tmp_path):
     window,probes,create=swd_panel
     executable=tmp_path/'unapproved-openocd.exe'
     executable.write_bytes(b'not executable\0'*330000)
-    manager=create(SwdSession)
+    from transport._swd_openocd import OpenOcdMemAp
+    manager=create(lambda **kwargs: SwdSession(**kwargs, _backend_factory=OpenOcdMemAp))
     with patch('transport._swd_openocd.shutil.which',return_value=str(executable)),patch('subprocess.Popen') as popen:
         manager.attach();wait_for(lambda:manager.worker is None)
         assert manager.status=='swd.safety_not_proven'
         popen.assert_not_called()
         label=window.probe_status
         assert label.height()>=label.heightForWidth(label.width())
+
+
+def test_default_pyocd_missing_dependency_in_worker_opens_no_device(swd_panel, tmp_path, monkeypatch):
+    window, probes, create = swd_panel
+    monkeypatch.setenv('SILVERSTAR_SWD_PYOCD_PATH', str(tmp_path))
+    manager = create(SwdSession)
+    manager.attach()
+    wait_for(lambda: manager.worker is None)
+    assert manager.status == 'swd.missing_dependency' and manager.snapshot is None
+    assert not probes.target_active and window.maintenance_page.btn_swd_attach.isEnabled()

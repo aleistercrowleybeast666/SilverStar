@@ -19,7 +19,7 @@ def _JsonValue(value):
 
 
 def SwdCli_Run(argv=None, *, _inventory=ProbeInventory_Read, _session=SwdSession):
-    parser = argparse.ArgumentParser(description='Bounded SWD read-only JSON API; live admission may be blocked')
+    parser = argparse.ArgumentParser(description='Bounded SWD read-only JSON API; Horco CMSIS-DAPv2 / pyOCD 0.45.1')
     parser.add_argument('operation', choices=('inventory', 'snapshot', 'read'))
     parser.add_argument('--probe', help='Exact USB identity from inventory; never selects the first probe')
     parser.add_argument('--address', type=lambda value: int(value, 0))
