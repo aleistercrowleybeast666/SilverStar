@@ -476,6 +476,8 @@ def MetadataFiles_Render(
                 decoder_profile.relative_path: decoder_profile.content,
             }
         )
+    from silverstar_fccg.generator.swd_diagnostics import SwdDiagnostics_Render
+    files.update(SwdDiagnostics_Render(render_model, catalog))
     return {
         name: content if isinstance(content, bytes) else content.encode("utf-8")
         for name, content in files.items()

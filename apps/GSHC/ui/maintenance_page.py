@@ -7,6 +7,7 @@ from services.legacy_firmware_status import LegacyFirmwareSnapshot
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QDialog,
+    QComboBox,
     QGridLayout,
     QGroupBox,
     QHBoxLayout,
@@ -58,10 +59,29 @@ class MaintenancePage(QWidget):
         swd_row.addWidget(self.btn_swd_detach)
         swd_row.addStretch(1)
         layout.addLayout(swd_row)
+        import_row = QHBoxLayout()
+        self.swd_target = QComboBox()
+        self.swd_target.setEditable(True)
+        self.swd_target.setInsertPolicy(QComboBox.NoInsert)
+        self.btn_swd_import = QPushButton()
+        import_row.addWidget(self.swd_target,1)
+        import_row.addWidget(self.btn_swd_import)
+        layout.addLayout(import_row)
+        self.swd_import_status = QLabel()
+        self.swd_import_status.setTextFormat(Qt.PlainText)
+        self.swd_import_status.setWordWrap(True)
+        layout.addWidget(self.swd_import_status)
         self.swd_target_status = QLabel()
         self.swd_target_status.setTextFormat(Qt.PlainText)
         self.swd_target_status.setWordWrap(True)
         layout.addWidget(self.swd_target_status)
+        self.swd_diagnostics = QTreeWidget()
+        self.swd_diagnostics.setColumnCount(4)
+        for column, width in enumerate((210, 240, 340, 220)):
+            self.swd_diagnostics.setColumnWidth(column, width)
+        self.swd_diagnostics.setMaximumHeight(200)
+        self.swd_diagnostics.hide()
+        layout.addWidget(self.swd_diagnostics)
         self.diagnostic_status = QLabel()
         self.diagnostic_status.setWordWrap(True)
         layout.addWidget(self.diagnostic_status)
@@ -211,6 +231,9 @@ class MaintenancePage(QWidget):
         self.swd_status.setText(tr("maintenance.swd_unavailable"))
         self.btn_swd_attach.setText(tr('swd.attach'))
         self.btn_swd_detach.setText(tr('swd.detach'))
+        self.btn_swd_import.setText(tr('swd.import'))
+        self.swd_target.setToolTip(tr('swd.target_select'))
+        self.swd_diagnostics.setHeaderLabels([tr('maintenance.entry'),tr('maintenance.state_reason'),tr('maintenance.value'),tr('maintenance.age')])
         self.swd_target_status.setText(tr('swd.detached'))
         self.summary.setTitle(tr("maintenance.summary"))
         self.source.setText(tr("maintenance.source"))

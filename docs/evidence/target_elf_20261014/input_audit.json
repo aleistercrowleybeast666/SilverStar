@@ -1,0 +1,244 @@
+{
+  "purpose": "Offline retained ELF LMA/VMA audit only; no hardware access; no candidate asserted onboard",
+  "elfs": [
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\dev013_target_elf01\\project02\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.elf",
+      "exists": true,
+      "bytes": 3388512,
+      "sha256": "786daca9a0687109d8792ed9c825666c2f6be2d4d74b5ce8872f210aa69b52e4",
+      "load_bytes": 343196,
+      "load_manifest": [
+        {
+          "address": 134217728,
+          "size": 342056,
+          "sha256": "2d4fed67b79461d64cf3491233e043c5008e264cd824e2c70f892d80f63e153f"
+        },
+        {
+          "address": 134559784,
+          "size": 1140,
+          "sha256": "161d6ae08cf6128308e9fc0899fd57466eef149a76ff839c6307fdf9ae163e2b"
+        }
+      ],
+      "fields_available": 4,
+      "vector_first16": "00000220c1780408350d0208390d0208",
+      "load_headers": [
+        {
+          "p_paddr": 134217728,
+          "p_vaddr": 134217728,
+          "p_filesz": 342056,
+          "p_memsz": 342056,
+          "p_flags": 5
+        },
+        {
+          "p_paddr": 134559784,
+          "p_vaddr": 536870912,
+          "p_filesz": 1140,
+          "p_memsz": 1140,
+          "p_flags": 6
+        },
+        {
+          "p_paddr": 134560924,
+          "p_vaddr": 268435456,
+          "p_filesz": 0,
+          "p_memsz": 59176,
+          "p_flags": 6
+        },
+        {
+          "p_paddr": 536872056,
+          "p_vaddr": 536872056,
+          "p_filesz": 0,
+          "p_memsz": 100752,
+          "p_flags": 6
+        }
+      ],
+      "sections": {
+        ".data": {
+          "sh_addr": 536870912,
+          "sh_type": "SHT_PROGBITS",
+          "sh_size": 1140
+        },
+        ".bss": {
+          "sh_addr": 536880960,
+          "sh_type": "SHT_NOBITS",
+          "sh_size": 90824
+        }
+      }
+    },
+    {
+      "path": "D:\\stm32_project\\SS_0_5_TEST_FINAL\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_2.elf",
+      "exists": true,
+      "bytes": 3325868,
+      "sha256": "86f951ac3dab0611232d1177ea649c2c219f9afdd47bd923d6ab716de93ffd4a",
+      "load_bytes": 330812,
+      "load_manifest": [
+        {
+          "address": 134217728,
+          "size": 329672,
+          "sha256": "141c50b807f96fee8795b9eed348b2fd3c2732cb162d4c8786f271c60e23fa0b"
+        },
+        {
+          "address": 134547400,
+          "size": 1140,
+          "sha256": "e82748387abd1cd76967a7af0a602ed97af5072f9aae28d97234906766514f34"
+        }
+      ],
+      "fields_available": 3,
+      "vector_first16": "0000022075550408cdf50108d1f50108",
+      "load_headers": [
+        {
+          "p_paddr": 134217728,
+          "p_vaddr": 134217728,
+          "p_filesz": 329672,
+          "p_memsz": 329672,
+          "p_flags": 5
+        },
+        {
+          "p_paddr": 134547400,
+          "p_vaddr": 536870912,
+          "p_filesz": 1140,
+          "p_memsz": 1140,
+          "p_flags": 6
+        },
+        {
+          "p_paddr": 134548540,
+          "p_vaddr": 268435456,
+          "p_filesz": 0,
+          "p_memsz": 46760,
+          "p_flags": 6
+        },
+        {
+          "p_paddr": 536872056,
+          "p_vaddr": 536872056,
+          "p_filesz": 0,
+          "p_memsz": 111616,
+          "p_flags": 6
+        }
+      ],
+      "sections": {
+        ".data": {
+          "sh_addr": 536870912,
+          "sh_type": "SHT_PROGBITS",
+          "sh_size": 1140
+        },
+        ".bss": {
+          "sh_addr": 536880960,
+          "sh_type": "SHT_NOBITS",
+          "sh_size": 101688
+        }
+      }
+    },
+    {
+      "path": "D:\\stm32_project\\SS_0_5_TEST_FINAL\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\EIDE\\Release\\SS_0_5_TEST_FINAL.elf",
+      "exists": true,
+      "bytes": 3326580,
+      "sha256": "bcd2c8d66aaea93ecff9fbff2dfadacc32c8e2fe9ffe3842088f0071f83e1c69",
+      "load_bytes": 331012,
+      "load_manifest": [
+        {
+          "address": 134217728,
+          "size": 329872,
+          "sha256": "e2ae520683f74979566deac257c1151150168f5b88abae7256fdd6c6cb17bec5"
+        },
+        {
+          "address": 134547600,
+          "size": 1140,
+          "sha256": "8f2bc691f72884541f2ef1636d273a96bdf0e282c22abeecee7967490a569bc2"
+        }
+      ],
+      "fields_available": 3,
+      "vector_first16": "000002207d550408b94f0108bd4f0108",
+      "load_headers": [
+        {
+          "p_paddr": 134217728,
+          "p_vaddr": 134217728,
+          "p_filesz": 329872,
+          "p_memsz": 329872,
+          "p_flags": 5
+        },
+        {
+          "p_paddr": 134547600,
+          "p_vaddr": 536870912,
+          "p_filesz": 1140,
+          "p_memsz": 1140,
+          "p_flags": 6
+        },
+        {
+          "p_paddr": 134548740,
+          "p_vaddr": 268435456,
+          "p_filesz": 0,
+          "p_memsz": 46440,
+          "p_flags": 6
+        },
+        {
+          "p_paddr": 536872056,
+          "p_vaddr": 536872056,
+          "p_filesz": 0,
+          "p_memsz": 111960,
+          "p_flags": 6
+        }
+      ],
+      "sections": {
+        ".data": {
+          "sh_addr": 536870912,
+          "sh_type": "SHT_PROGBITS",
+          "sh_size": 1140
+        },
+        ".bss": {
+          "sh_addr": 536880960,
+          "sh_type": "SHT_NOBITS",
+          "sh_size": 102028
+        }
+      }
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\bench08c_f407\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\auto\\SilverStar_0_1_1.elf",
+      "exists": false
+    }
+  ],
+  "catalog_counts": {
+    "Keil.STM32C0xx_DFP.2.4.0": 95,
+    "Keil.STM32F1xx_DFP.2.2.0": 95,
+    "Keil.STM32F4xx_DFP.3.1.1": 211
+  },
+  "catalog_sources": [
+    {
+      "bytes": 216846,
+      "license": "See original pack license; metadata facts only",
+      "sha256": "65484834d7311896407ac204be986c1823e14163af6e6bf8956475a62115adef",
+      "source": "Keil.STM32F1xx_DFP.2.2.0",
+      "url": "https://www.keil.com/pack/Keil.STM32F1xx_DFP.pdsc"
+    },
+    {
+      "bytes": 239205,
+      "license": "LICENSES",
+      "sha256": "ec02212e78841a217c4e60ea8be110867f3a99080624fc68747b98697447f5a7",
+      "source": "Keil.STM32F4xx_DFP.3.1.1",
+      "url": "https://www.keil.com/pack/Keil.STM32F4xx_DFP.pdsc"
+    },
+    {
+      "bytes": 65385,
+      "license": "LICENSE",
+      "sha256": "de911c48b46337e829bffc840bcf99283a5c1b67aabb5557fe4f6aeee9e18674",
+      "source": "Keil.STM32C0xx_DFP.2.4.0",
+      "url": "https://www.keil.com/pack/Keil.STM32C0xx_DFP.pdsc"
+    }
+  ],
+  "versions": {
+    "python": {
+      "exit": 0,
+      "output": "Python 3.14.0\n"
+    },
+    "arm_gcc": {
+      "exit": 0,
+      "output": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+    },
+    "host_gcc": {
+      "exit": 0,
+      "output": "gcc.exe (Rev5, Built by MSYS2 project) 16.1.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+    },
+    "make": {
+      "exit": 0,
+      "output": "GNU Make 4.4.1\nBuilt for x86_64-w64-mingw32\nCopyright (C) 1988-2023 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n"
+    }
+  }
+}

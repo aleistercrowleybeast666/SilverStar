@@ -3,7 +3,9 @@ import runpy
 from pathlib import Path
 
 product_resource = runpy.run_path(str(Path(SPECPATH) / "packaging/product_version.py"))["ProductVersionResource_Create"]()
-datas = []
+shared = Path(SPECPATH).resolve().parent / 'SCG/src'
+datas = [(str(shared / 'silverstar_diagnostics/stm32_targets.json'), 'silverstar_diagnostics'),
+         (str(Path(SPECPATH).resolve().parents[1] / 'contracts/swd_diagnostics_v1.json'), 'silverstar_diagnostics')]
 binaries = []
 hiddenimports = [
     "OpenGL.platform.win32",
@@ -13,7 +15,7 @@ hiddenimports = [
 
 a = Analysis(
     ["main.py"],
-    pathex=[],
+    pathex=[str(shared)],
     binaries=binaries,
     datas=datas,
     hiddenimports=hiddenimports,

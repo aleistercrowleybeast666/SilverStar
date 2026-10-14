@@ -80,6 +80,8 @@ class BuildResult:
     plan: BuildPlan = BuildPlan(0, 0)
     completed_steps: int = 0
     live_streamed: bool = False
+    diagnostic_status: str = 'not_requested'
+    diagnostic_detail: str = ''
 
     @property
     def succeeded(self) -> bool:
@@ -373,6 +375,12 @@ class BuildRunner:
             token,
             output_line,
         )
+        diagnostic_status, diagnostic_detail = 'not_requested', ''
+        if return_code == 0 and action == BuildAction.BUILD and target_kind == 'flight':
+            diagnostic_status, diagnostic_detail = self._Diagnostics_Bind(model, root, token)
+            diagnostic_line = f'DIAGNOSTICS|{diagnostic_status}|{diagnostic_detail}\n'
+            lines.append(diagnostic_line)
+            if line_callback: line_callback(diagnostic_line.rstrip())
         if return_code == 0 and completed < plan.total_steps:
             completed = plan.total_steps
         if progress_callback is not None and return_code == 0:
@@ -393,7 +401,27 @@ class BuildRunner:
             plan,
             completed,
             line_callback is not None,
+            diagnostic_status,
+            diagnostic_detail,
         )
+
+    def _Diagnostics_Bind(self, model, root, token):
+        """Host operation after successful build; never part of firmware manifests."""
+        from silverstar_diagnostics.bind import Binding_Write
+        schema = root / f'{model.identity.name}.ssdiag'
+        directory = root / 'build/FCCG' / model.build.target_profile / 'Release'
+        if model.build.memory_layout != 'legacy': directory /= model.build.memory_layout
+        elf = directory / f'{model.identity.build_target}.elf'
+        if not schema.is_file():
+            return 'unavailable', 'No generated diagnostic schema; regenerate metadata or import ELF explicitly'
+        class Cancel:
+            def is_set(self): return token is not None and token.cancelled
+        try:
+            elf = self.policy.Path_Resolve(elf)
+            status, detail, output = Binding_Write(schema,elf,Cancel())
+            return status.value, str(output) + ('; '+detail if detail else '')
+        except Exception as exc:
+            return 'unavailable', str(exc)[:400]
 
     def Target_Run(
         self, model: ProjectModel, project_root: Path,
@@ -427,10 +455,15 @@ class BuildRunner:
         # entire recipe. A mkdir/echo/compile launch or intermediate reap does not.
         actual = command if plan.markers else (command[0], "--debug=j", *command[1:])
         code, lines = self._Process_Run(actual, root, environment, token, tracker.Line_Report)
+        diagnostic_status, diagnostic_detail = 'not_requested', ''
         if code == 0:
+            diagnostic_status, diagnostic_detail = self._Diagnostics_Bind(model, root, token)
+            diagnostic_line = f'DIAGNOSTICS|{diagnostic_status}|{diagnostic_detail}\n'
+            lines.append(diagnostic_line)
+            if line_callback: line_callback(diagnostic_line.rstrip())
             tracker.Progress_Report("COMPLETE")
         return BuildResult(BuildAction.BUILD, actual, code, "".join(lines), plan.build_plan,
-                           len(tracker.completed), line_callback is not None)
+                           len(tracker.completed), line_callback is not None, diagnostic_status, diagnostic_detail)
 
     def _GroundQuality_Run(self, model, root, action, token, line_callback, progress_callback):
         from silverstar_fccg.build.target_progress import TargetProgressPlan, TargetProgressTracker

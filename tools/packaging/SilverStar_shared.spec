@@ -44,7 +44,7 @@ for app, package in [("SCG", "silverstar_fccg.app.application"), ("GSHC", "app")
     else:
         a = Analysis(
             [str(Path(SPECPATH) / ("entry_" + app + ".py"))],
-            pathex=[str(app_root), str(app_root / "src")],
+            pathex=[str(app_root), str(app_root / "src"), str(repository / "apps/SCG/src")],
             binaries=[], datas=resources if app == "SCG" else [], hiddenimports=hidden,
             hookspath=[], runtime_hooks=[],
             hooksconfig={"matplotlib": {"backends": ["Agg", "QtAgg"]}},

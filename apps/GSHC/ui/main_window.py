@@ -1652,6 +1652,8 @@ class MainWindow(QMainWindow):
         self._bind_text(debug_title, "maintenance.port_title")
         self.debug_port_combo = PortComboBox()
         self.debug_port_combo.setEditable(True)
+        self.lbl_debug_baud_name = QLabel()
+        self._bind_text(self.lbl_debug_baud_name, "field.baudrate")
         self.debug_baud_combo = BaudComboBox()
         self.debug_baud_combo.setCurrentText("230400")
         self.btn_debug_connect = QPushButton()
@@ -1665,7 +1667,7 @@ class MainWindow(QMainWindow):
         self.debug_status.setWordWrap(True)
         self.debug_status.setMinimumWidth(56)
         self.debug_status.setMaximumWidth(170)
-        for widget in (debug_title, self.debug_port_combo, self.debug_baud_combo,
+        for widget in (debug_title, self.debug_port_combo, self.lbl_debug_baud_name, self.debug_baud_combo,
                        self.btn_debug_connect, self.btn_debug_disconnect, self.debug_status):
             debug_layout.addWidget(widget)
         for button in (self.btn_debug_connect, self.btn_debug_disconnect):

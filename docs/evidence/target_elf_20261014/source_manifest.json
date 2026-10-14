@@ -1,0 +1,140 @@
+{
+  "base_commit": "034e491bc6e4c6f4e69a59d467db677640c23e8e",
+  "modified_and_new_source_files": [
+    {
+      "path": "apps/GSHC/SilverStar_GSHC.spec",
+      "bytes": 1365,
+      "sha256": "cfae98243933deb767fc5b23c3ab35e5226017c62eca309cd5eea16582b4c7c5"
+    },
+    {
+      "path": "apps/GSHC/services/i18n.py",
+      "bytes": 85126,
+      "sha256": "7060958601b664a30f6668d1a8967b450b0eda5f465878f20a17649d198c6ff5"
+    },
+    {
+      "path": "apps/GSHC/swd_cli.py",
+      "bytes": 4788,
+      "sha256": "f8ee38c39ff5ea3f0d47fd88313368f13361570fe5854b35d4aa7956523557c7"
+    },
+    {
+      "path": "apps/GSHC/tests/test_swd_firmware.py",
+      "bytes": 18071,
+      "sha256": "5cff81622bc30dca16575046d0fa3cf85d54548a1f7dca80bc9c5a7407242af4"
+    },
+    {
+      "path": "apps/GSHC/tests/test_swd_pyocd.py",
+      "bytes": 17077,
+      "sha256": "3ce570c5d7f34e6a5852d2e54d70fb4eea47536faf50c0ff275a8cf89bf78702"
+    },
+    {
+      "path": "apps/GSHC/transport/_swd_pyocd.py",
+      "bytes": 13265,
+      "sha256": "754a79e7cdbde47769fb88fc4c778054310e685e05f08da094587fa4459eeaea"
+    },
+    {
+      "path": "apps/GSHC/transport/swd_firmware.py",
+      "bytes": 2529,
+      "sha256": "96fa8a051a13c3a34aa1a7fe197d9ef3d655d6efbbc61a1c2da11f0608e5df9c"
+    },
+    {
+      "path": "apps/GSHC/transport/swd_session.py",
+      "bytes": 19599,
+      "sha256": "4f7c756b713f888c2d4f99a8d71ef8f36bec99746414429e078c6bfc9b08d9b4"
+    },
+    {
+      "path": "apps/GSHC/ui/main_window.py",
+      "bytes": 149880,
+      "sha256": "104652e65de3207a3e0fb1fa39fd9581e51d8bbda37ea78e803f1efbd3a8cd84"
+    },
+    {
+      "path": "apps/GSHC/ui/maintenance_page.py",
+      "bytes": 16365,
+      "sha256": "da9091d8f6445a38c58f34c8c6511db18852e1486104c08a530037c6bd280d44"
+    },
+    {
+      "path": "apps/GSHC/ui/swd_connection.py",
+      "bytes": 11473,
+      "sha256": "b54893ec52a92985d4bbf475334151b408783e72918e6f3e38daa5b30eed2846"
+    },
+    {
+      "path": "apps/SCG/pyproject.toml",
+      "bytes": 1386,
+      "sha256": "a2f9cc59ad4f9a7bb9194f1d420e975153a58dbae304c3ae69057d2aead3199e"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_diagnostics/__init__.py",
+      "bytes": 83,
+      "sha256": "5d68ba3bf6ff397a1b94a419ea9ee2259006a945e9158bf69d8a69b8a685542a"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_diagnostics/bind.py",
+      "bytes": 1986,
+      "sha256": "46c1684ec6c35ea91afc3e7ba3dc149c36710b1a07178144f8103ed1a61af667"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_diagnostics/contract.py",
+      "bytes": 4209,
+      "sha256": "5adf14d066a907f022e12445ba410ac7dc67b70be3168b4f14744f9100ba0be3"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_diagnostics/dependencies.py",
+      "bytes": 1142,
+      "sha256": "cac7b478b1f7e480cd9af09247f9d04cc1795763062e97e041a5e961075ef9c3"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_diagnostics/elf.py",
+      "bytes": 13290,
+      "sha256": "3adc95a8ff8780eccf0ac7fe12d2ca308a72ca331b51c491fb4cb93eceda3c55"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_diagnostics/stm32_targets.json",
+      "bytes": 59715,
+      "sha256": "efd14c5d74cc7d9b8b0f79a2834aee9ae863fde5af2a9ae01aeed820f8641ff5"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_diagnostics/targets.py",
+      "bytes": 2698,
+      "sha256": "96742cc59d8fb1236c3d833156f8fe9aa51d42a6194005b741ec65ec7c6515dd"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/build/runner.py",
+      "bytes": 27160,
+      "sha256": "b72cb76c27e9195e9da6e0f0e50d2768763cd3b38029ac99b86f4bc5bc5afca3"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/render.py",
+      "bytes": 176431,
+      "sha256": "acf2cff882e21ece2bafec72bdc85f257a034e9fdb5f6ebe357d60760b3ffb1f"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/swd_diagnostics.py",
+      "bytes": 737,
+      "sha256": "bcbe7310cf3deafdb7777146bd368ea2eb147627b9d7c1b1e3e5375558145604"
+    },
+    {
+      "path": "apps/SCG/tests/test_build_progress.py",
+      "bytes": 13733,
+      "sha256": "fc0aa3723756a8154c1771fe516b291c431d21544a14043007986f5df59757c2"
+    },
+    {
+      "path": "apps/SCG/tests/test_swd_diagnostics_generation.py",
+      "bytes": 1750,
+      "sha256": "f4cd053e9fee2592526b36a6ef9008fbc12e53a547c6620a118eb567c04219a1"
+    },
+    {
+      "path": "contracts/swd_diagnostics_v1.json",
+      "bytes": 2518,
+      "sha256": "547b89c1f956f7609ba084bd26bffe9da66cbbc2d9aae11fb721fea27b9746be"
+    },
+    {
+      "path": "tools/diagnostics/update_target_catalog.py",
+      "bytes": 3064,
+      "sha256": "4f44a89214377e284b192a7c23587b9feeab9c765990eefb2819161d6245888b"
+    },
+    {
+      "path": "tools/packaging/SilverStar_shared.spec",
+      "bytes": 7812,
+      "sha256": "fd0d7c0ec53aec3cf688adfd39be53e222e3d442adb1e0f610533b813f5055d3"
+    }
+  ]
+}

@@ -136,6 +136,35 @@ def test_actual_probe_dp_ap_normal_reads_and_only_transport_writes(synthetic):
     synthetic.dispose.assert_called_once_with(synthetic.device)
 
 
+@pytest.mark.parametrize('part,cpuid,dp_version', [('STM32F103C8',0x411FC231,1),
+    ('STM32F407VET6',0x410FC241,1),('STM32C071FBP6',0x410CC601,2)])
+def test_official_target_profiles_share_actual_pyocd_read_only_path(synthetic,part,cpuid,dp_version):
+    class Link(RegisterLink):
+        def __init__(self,*args,**kwargs):
+            super().__init__(*args,**kwargs)
+            self.memory[0xE000ED00]=cpuid
+        def read_reg(self,reg,now=True):
+            if reg.value==0:
+                value=(0x2BA01477 & ~0xF000) | (dp_version<<12)
+                return value if now else lambda:value
+            return super().read_reg(reg,now)
+    synthetic.api.Link=Link
+    backend=PyOcdMemAp(Event())
+    session=SwdSession(target=part,_backend_factory=lambda _:backend)
+    reply=session.Swd_Attach(PROBE)
+    assert reply.result==R.Ok and reply.snapshot.cpuid==cpuid
+    assert reply.snapshot.target_evidence=='selected_part_core_verified'
+    assert reply.snapshot.device_id==0  # No guessed family-specific MMIO read.
+    link=backend._link
+    tick(session)
+    assert session.Swd_ReadMemory(0x20000000,4).result==R.Ok
+    assert session.Swd_ReadMemory(0x40000000,4).result==R.InvalidRequest
+    assert session.Swd_ReadMemory(0x08000000,4).result==R.InvalidRequest
+    assert session.Swd_Detach().result==R.Ok
+    assert link.controls[-1]==('disconnect',)
+    assert all(raw<4 or ((raw & 3)*4 | select & 0xF0) in (0,4) for raw,select,_ in link.writes)
+
+
 def test_actual_link_claim_failure_sends_no_packet_and_disposes(synthetic, library):
     synthetic.api.Link = library.Link
     synthetic.claim.side_effect = library.bulk.usb.core.USBError('owned by another client')

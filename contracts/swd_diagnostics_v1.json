@@ -1,0 +1,18 @@
+{
+  "contract": "silverstar.swd-diagnostics",
+  "version": 1,
+  "semantic_source": "silverstar.maintenance-diagnostics/1",
+  "limits": {"descriptor_bytes": 65536, "elf_bytes": 33554432, "flash_bytes": 2097152, "entries": 16, "members_per_entry": 16, "read_bytes": 1024, "member_depth": 4},
+  "entries": [
+    {"id":"task.preparation","group":"task","name":"准备状态与阻塞原因","source":"System/Src/system_health.c","symbol":"s_health","consistency":"non_atomic_live_read","valid":"timestamp_us","fields":["timestamp_us","sequence","start_blocking_mask","warning_mask","attitude_status","ready"]},
+    {"id":"thread.estimator","group":"thread","name":"估计任务运行进度","source":"APP/Src/estimator_task.c","symbol":"s_estimator_task_timing","consistency":"sequence_even","valid":"last_end_us","fields":["sequence","last_start_us","last_end_us","last_interval_us","last_duration_us","max_duration_us","duration_over_20ms_count","last_prediction_count","prediction_cap_count"]},
+    {"id":"sensor.ins_solution","group":"sensor","name":"惯导输出时序与有效性","source":"APP/Src/ins_task.c","symbol":"s_published_output","consistency":"non_atomic_live_read","valid":"timestamp_us","fields":["timestamp_us","update_seq","health_flags","alignment_valid","ins_valid","mission_running"]},
+    {"id":"thread.logger","group":"thread","name":"日志完成写入与存储健康","source":"System/Src/system_log_file.c","symbol":"s_snapshot","consistency":"non_atomic_live_read","valid":"valid","fields":["timestamp_us","sequence","last_completed_write_us","completed_writes","storage_valid","mounted","healthy","writer_open","log_fault","finalization","valid"]}
+  ],
+  "semantics": {
+    "access":"Only these source/symbol/member tuples, resolved anew from matching ELF/DWARF, may be read. No user expressions, pointers, callbacks, writes or arbitrary arrays.",
+    "time":"Raw MCU microsecond timestamps are not host time or measured current sample age. Host receipt age is separate. Zero valid field means unpublished; read does not prove online/READY/START.",
+    "sequence":"Only estimator timing has an existing sole-writer odd/even sequence protocol. Read sequence, fields, sequence once; differing or odd discards the row. No unlimited retry.",
+    "identity":"ELF SHA binds the selected file; complete nonempty PT_LOAD flash bytes must match the live target before diagnostic reads. No authentication or atomic whole-flash snapshot is implied. No external flash, MMIO or unmapped segments."
+  }
+}

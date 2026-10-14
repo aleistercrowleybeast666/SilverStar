@@ -36,6 +36,7 @@ class SwdResult(Enum):
     TargetMismatch = 'target_mismatch'
     BudgetExceeded = 'budget_exceeded'
     ReleaseFailed = 'release_failed'
+    FirmwareMismatch = 'firmware_mismatch'
 
 
 class SwdError(Exception):
@@ -58,6 +59,8 @@ class SwdSnapshot:
     duration_ms: float
     symbols: str = 'unmatched'
     consistency: str = 'non_atomic_live_read'
+    target_evidence: str = 'device_family_id'
+    firmware_status: str = 'not_imported'
 
     @property
     def age_ms(self):
@@ -75,6 +78,7 @@ class SwdReply:
     captured_utc: str = ''
     duration_ms: float = 0.0
     consistency: str = 'non_atomic_live_read'
+    diagnostics: tuple = ()
 
 
 def _ValidateProbe(probe):
@@ -104,7 +108,7 @@ class SwdSession:
     # F405/F407/F415/F417 shared ID 0x413: never claim an exact F407 part.
     _RAM = ((0x20000000, 0x20020000), (0x10000000, 0x10010000))
 
-    def __init__(self, *, cancel=None, _backend_factory=None):
+    def __init__(self, *, cancel=None, _backend_factory=None, target=None, firmware=None):
         self.cancel = cancel if cancel is not None else Event()
         self._factory = _backend_factory
         self._backend = None
@@ -115,6 +119,11 @@ class SwdSession:
         self._bytes = 0
         self._samples = 0
         self._last_sample = float('-inf')
+        self._target_name = target or (firmware.target.name if firmware else None)
+        self._profile = None
+        self._firmware = firmware
+        self._firmware_status = 'unmatched' if firmware else 'not_imported'
+        self._verify_attempted = False
 
     def __enter__(self):
         return self
@@ -130,12 +139,21 @@ class SwdSession:
                 # A local repeated request must not release the current owner.
                 return SwdReply(SwdResult.Busy, 'Detach the current target before attaching')
             _ValidateProbe(probe)
+            if self._target_name is not None:
+                from transport.swd_firmware import Target_Get
+                self._profile = Target_Get(self._target_name)
+                if self._firmware and self._profile != self._firmware.target:
+                    return SwdReply(SwdResult.TargetMismatch, 'Selected target disagrees with imported firmware')
             self._acquire_process_owner(probe.identity)
             from transport._swd_pyocd import PyOcdMemAp
             self._backend = (self._factory or PyOcdMemAp)(self.cancel)
+            if self._profile is not None:
+                self._backend.configure(self._profile)
             self._probe = probe
             self._started, self._bytes, self._samples = time.monotonic(), 0, 0
             self._last_sample = float('-inf')
+            self._firmware_status = 'unmatched' if self._firmware else 'not_imported'
+            self._verify_attempted = False
             if self._backend.open(probe) is not None:
                 raise SwdError(SwdResult.TransportError, 'Backend open must succeed with None or raise SwdError')
             return self._snapshot()
@@ -149,7 +167,8 @@ class SwdSession:
             # MMIO/flash/aliases are excluded; even reads can clear peripheral flags.
             if (type(address) is not int or type(length) is not int or
                     not 1 <= length <= self.MAX_READ or
-                    not any(lo <= address < address + length <= hi for lo, hi in self._RAM)):
+                    not (self._profile.Contains(address,length,'ram') if self._profile else
+                         any(lo <= address < address + length <= hi for lo, hi in self._RAM))):
                 return SwdReply(SwdResult.InvalidRequest, 'Read must fit one approved RAM region, 1..1024 bytes')
             limited = self._budget(length)
             if limited is not None:
@@ -173,6 +192,7 @@ class SwdSession:
     def _release(self):
         backend, self._backend = self._backend, None
         self._probe = None
+        self._firmware_status = 'unmatched' if self._firmware else 'not_imported'
         if backend is not None:
             try:
                 if backend.close() is not None:
@@ -208,7 +228,10 @@ class SwdSession:
             except SwdError as exc:
                 result, detail = exc.result, str(exc)
             except Exception as exc:
-                result, detail = SwdResult.TransportError, str(exc)
+                from transport.swd_firmware import DiagnosticError, DiagnosticResult
+                result = (SwdResult.Unsupported if isinstance(exc,DiagnosticError) and exc.result==DiagnosticResult.Unsupported
+                          else SwdResult.InvalidRequest if isinstance(exc,DiagnosticError) else SwdResult.TransportError)
+                detail = str(exc)
             # Every backend exception can follow a partial claim. Local Busy,
             # invalid parameters and pre-I/O rate limiting return replies above.
             released = self._release()
@@ -248,12 +271,17 @@ class SwdSession:
             return limited
         started = time.monotonic_ns()
         cpuid = int.from_bytes(self._read(0xE000ED00, 4), 'little')
-        # Check Cortex-M4 before reading the STM32-specific debug register.
-        if cpuid & 0xFF00FFF0 != 0x4100C240:
+        # A selected official memory map verifies core capability, not package ID.
+        if self._profile is not None:
+            if not self._profile.CoreMatches(cpuid):
+                raise SwdError(SwdResult.TargetMismatch, 'CPUID does not match selected target core')
+            idcode = 0
+        elif cpuid & 0xFF00FFF0 != 0x4100C240:
             raise SwdError(SwdResult.TargetMismatch, 'Target is not an Arm Cortex-M4')
-        idcode = int.from_bytes(self._read(0xE0042000, 4), 'little')
-        if idcode & 0xFFF != 0x413:
-            raise SwdError(SwdResult.TargetMismatch, 'Device ID is not STM32F405/407/415/417 (0x413)')
+        else:
+            idcode = int.from_bytes(self._read(0xE0042000, 4), 'little')
+            if idcode & 0xFFF != 0x413:
+                raise SwdError(SwdResult.TargetMismatch, 'Device ID is not STM32F405/407/415/417 (0x413); select an installed target')
         dhcsr = int.from_bytes(self._read(0xE000EDF0, 4), 'little')
         # DHCSR S_RESET_ST/S_RETIRE_ST are sticky read-clear bits. Document that
         # status observation consumes them; do not infer a continuous trace.
@@ -262,7 +290,94 @@ class SwdSession:
                  'halted' if dhcsr & (1 << 17) else
                  'sleeping' if dhcsr & (1 << 18) else 'running')
         received = time.monotonic_ns()
-        snapshot = SwdSnapshot(self._probe.identity, 'STM32F405/407/415/417', cpuid,
+        snapshot = SwdSnapshot(self._probe.identity, self._profile.name if self._profile else 'STM32F405/407/415/417', cpuid,
                                idcode & 0xFFF, idcode >> 16, state, dhcsr, received,
-                               datetime.now(timezone.utc).isoformat(), (received-started)/1e6)
+                               datetime.now(timezone.utc).isoformat(), (received-started)/1e6,
+                               symbols='matched' if self._firmware_status == 'matched' else 'unmatched',
+                               target_evidence='selected_part_core_verified' if self._profile else 'device_family_id',
+                               firmware_status=self._firmware_status)
         return SwdReply(SwdResult.Ok, snapshot=snapshot)
+
+    def Swd_VerifyFirmware(self) -> SwdReply:
+        def operation():
+            if not self._firmware or not self._profile:
+                return SwdReply(SwdResult.InvalidRequest, 'Import an ELF and target before attaching')
+            if self._verify_attempted:
+                return SwdReply(SwdResult.InvalidRequest, 'One firmware scan per connection; detach before retry')
+            limited = self._budget(0)
+            if limited: return limited
+            self._verify_attempted = True
+            self._firmware_status = 'unmatched'
+            total = sum(len(data) for _,data in self._firmware.segments)
+            if not 1 <= total <= 2097152:
+                raise SwdError(SwdResult.BudgetExceeded, 'Flash verification exceeds 2 MiB')
+            deadline = time.monotonic()+120
+            compared = 0
+            ranges = tuple((address, len(data)) for address, data in self._firmware.segments)
+            for address, data in self._firmware.segments:
+                if not self._profile.Contains(address,len(data),'flash'):
+                    raise SwdError(SwdResult.InvalidRequest, 'ELF segment outside trusted flash')
+                for offset in range(0,len(data),1024):
+                    if time.monotonic() >= deadline:
+                        raise SwdError(SwdResult.Timeout, 'Firmware verification exceeded 120 seconds')
+                    expected = data[offset:offset+1024]
+                    actual = self._read(address+offset,len(expected))
+                    if actual != expected:
+                        first = next(i for i, pair in enumerate(zip(expected, actual)) if pair[0] != pair[1])
+                        self._firmware_status = 'mismatch'
+                        return SwdReply(SwdResult.FirmwareMismatch,
+                            f'Flash LMA differs at 0x{address+offset+first:08X}: ELF {expected[first]:02X}, target {actual[first]:02X}; '
+                            f'read block [0x{address+offset:08X},0x{address+offset+len(expected):08X}); '
+                            f'{compared} prior bytes matched of {total}; scan stopped, diagnostic reads disabled',
+                            address=address+offset+first)
+                    compared += len(expected)
+            self._firmware_status = 'matched'
+            coverage = ', '.join(f'[0x{a:08X},0x{a+n:08X})' for a,n in ranges)
+            return SwdReply(SwdResult.Ok, f'Complete ELF load contents matched ({compared}/{total} bytes); '
+                            f'flash LMA ranges {coverage}; live non-atomic observation')
+        return self._run(operation)
+
+    def Swd_Diagnostics(self) -> SwdReply:
+        def operation():
+            if self._firmware_status != 'matched' or self._firmware is None:
+                return SwdReply(SwdResult.FirmwareMismatch, 'Diagnostic reads require a matched firmware in this connection')
+            reply = self._snapshot()
+            if reply.result != SwdResult.Ok: return reply
+            if reply.snapshot.core_state == 'reset_observed':
+                self._firmware_status = 'unmatched'
+                return SwdReply(SwdResult.FirmwareMismatch, 'Reset observed; reconnect and verify firmware again')
+            from transport.swd_firmware import Contract_Get
+            specs = {entry['id']:entry for entry in Contract_Get()['entries']}
+            rows = []
+            for entry in self._firmware.entries:
+                spec = specs[entry.id]
+                row = dict(id=entry.id,group=spec['group'],name=spec['name'],fields={},
+                           state='UNKNOWN',reason=entry.unavailable,consistency=spec['consistency'])
+                if entry.fields:
+                    lo = min(f.address for f in entry.fields)
+                    hi = max(f.address+f.size for f in entry.fields)
+                    if not self._profile.Contains(lo,hi-lo,'ram') or hi-lo > self.MAX_READ:
+                        raise SwdError(SwdResult.InvalidRequest, 'Diagnostic row outside trusted RAM')
+                    count = hi-lo+(8 if spec['consistency']=='sequence_even' else 0)
+                    if self._bytes+count > self.MAX_BYTES:
+                        raise SwdError(SwdResult.BudgetExceeded, 'Diagnostic RAM budget reached')
+                    self._bytes += count
+                    sequence = next((f for f in entry.fields if f.name=='sequence'),None)
+                    before = self._read(sequence.address,4) if spec['consistency']=='sequence_even' else None
+                    data = self._read(lo,hi-lo)
+                    after = self._read(sequence.address,4) if before is not None else None
+                    if before is not None and (before != after or int.from_bytes(before,'little') & 1):
+                        row['reason'] = 'sequence_changed_or_writer_active'
+                    else:
+                        row['fields'] = {f.name:int.from_bytes(data[f.address-lo:f.address-lo+f.size],'little',signed=f.signed) for f in entry.fields}
+                        if before is not None and row['fields']['sequence'] != int.from_bytes(before,'little'):
+                            row['fields'] = {}; row['reason'] = 'sequence_changed'
+                        else:
+                            valid = bool(row['fields'].get(spec['valid']))
+                            row['state'] = 'OBSERVED' if valid else 'UNKNOWN'
+                            row['reason'] = 'ram_observation_not_readiness' if valid else 'not_published'
+                row['received_ns'] = time.monotonic_ns()
+                rows.append(row)
+            from dataclasses import replace
+            return replace(reply,diagnostics=tuple(rows))
+        return self._run(operation)

@@ -177,8 +177,8 @@ def _DebugPort(api, probe, session):
             try:
                 self._get_probe_capabilities()
                 self._connect()
-                if self.dpidr.version != 1:
-                    raise SwdError(SwdResult.Unsupported, 'Only the audited ADIv5 DPv1/AP0 profile is implemented')
+                if self.dpidr.version not in (1, 2):
+                    raise SwdError(SwdResult.Unsupported, 'Only ADIv5 DPv1/DPv2 with a single default DP and AP0 is implemented')
                 self.clear_sticky_err()
                 if not self.power_up_debug():
                     raise SwdError(SwdResult.Timeout, 'DP debug/system power acknowledgement timed out')
@@ -199,6 +199,14 @@ class PyOcdMemAp:
         self._connect_attempted = False
         self._closing = False
         self._deadline = 0
+        self._target_profile = None
+
+    def configure(self, profile):
+        from transport.swd_firmware import Target_Get
+        if self._owned:
+            raise SwdError(SwdResult.Busy, 'Cannot change target metadata while attached')
+        # Resolve by name again; a caller-provided object cannot expand permissions.
+        self._target_profile = Target_Get(profile.name)
 
     def _guard(self):
         if not self._closing and self.cancel.is_set():
@@ -242,10 +250,13 @@ class PyOcdMemAp:
     def read(self, address, length):
         if self._ap is None:
             raise SwdError(SwdResult.NotAttached, 'MEM-AP is not attached')
-        if (type(address) is not int or type(length) is not int or not 1 <= length <= 1024 or
-                not ((address in (0xE000ED00, 0xE0042000, 0xE000EDF0) and length == 4) or
-                     0x20000000 <= address < address + length <= 0x20020000 or
-                     0x10000000 <= address < address + length <= 0x10010000)):
+        profile = self._target_profile
+        allowed = ((address in (0xE000ED00, 0xE000EDF0) and length == 4) or
+                   (profile is not None and (profile.Contains(address,length,'ram') or profile.Contains(address,length,'flash'))) or
+                   (profile is None and ((address == 0xE0042000 and length == 4) or
+                    0x20000000 <= address < address + length <= 0x20020000 or
+                    0x10000000 <= address < address + length <= 0x10010000))) if type(address) is int and type(length) is int else False
+        if not (type(length) is int and 1 <= length <= 1024 and allowed):
             raise SwdError(SwdResult.InvalidRequest, 'Backend read is outside the approved identity/RAM profile')
         self._deadline = time.monotonic() + self.TIMEOUT
         self._guard()

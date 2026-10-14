@@ -135,7 +135,9 @@ def test_dry_run_plans_incremental_steps_and_streams_live_progress(
     assert result.plan.compile_steps == 1
     assert result.completed_steps == 5
     assert calls[0][1] == "-n"
-    assert live_lines == ["compiler output"]
+    assert result.diagnostic_status == 'unavailable'
+    assert live_lines == ["compiler output",
+        "DIAGNOSTICS|unavailable|No generated diagnostic schema; regenerate metadata or import ELF explicitly"]
     assert progress[0].stage == "PLAN"
     assert [item.stage for item in progress[1:-1]] == [
         stage

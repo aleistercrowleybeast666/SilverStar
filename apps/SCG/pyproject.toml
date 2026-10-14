@@ -12,6 +12,7 @@ dependencies = ["PySide6>=6.8", "PyYAML>=6.0,<7"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8.3"]
+diagnostics = ["pyelftools==0.33"]
 
 [project.scripts]
 silverstar-scg = "silverstar_fccg.app.application:main"
@@ -25,6 +26,7 @@ version = {attr = "silverstar_fccg.app.version.__version__"}
 
 [tool.setuptools.package-data]
 silverstar_fccg = ["i18n/*.json", "ui/assets/*.svg", "hardware/usb_profiles/*.json"]
+silverstar_diagnostics = ["*.json"]
 
 [tool.pytest.ini_options]
 addopts = "-ra --basetemp=.work/pytest"

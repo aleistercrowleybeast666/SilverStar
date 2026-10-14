@@ -1,0 +1,6 @@
+{
+  "source": "D:\\python_software\\SilverStar\\.work\\dev013_swd_pyocd01\\bench_readonly.py",
+  "sha256": "8c830a727b5f034286ef08ef57ec20702965e9d3dade00002b63712a843f3e62",
+  "copy": "packet_guard_reference.py",
+  "purpose": "Exact reused independent DAP packet guard; retained as source evidence, do not execute its hardware main without authorization"
+}
