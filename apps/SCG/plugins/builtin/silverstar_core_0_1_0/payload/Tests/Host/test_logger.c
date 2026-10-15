@@ -96,7 +96,7 @@ static void Test_RecordMetadata(void)
         FLIGHT_LOG_RECORD_ESKF15_MEASUREMENT, FLIGHT_LOG_RECORD_ESKF15_BODY_INPUT,
         FLIGHT_LOG_RECORD_NAV_QUALITY
     };
-    static const uint16_t navigation_sizes[7] = {144U, 144U, 144U, 144U, 100U, 84U, 100U};
+    static const uint16_t navigation_sizes[7] = {144U, 144U, 144U, 144U, 116U, 84U, 100U};
     const SslogRecordMetadata *metadata;
     uint16_t index;
 
@@ -141,7 +141,8 @@ static void Test_RecordMetadata(void)
         if (metadata != NULL)
         {
             TEST_CHECK(metadata->record_type == navigation_records[index]);
-            TEST_CHECK(metadata->record_version == 1U);
+            TEST_CHECK(metadata->record_version ==
+                ((navigation_records[index] == FLIGHT_LOG_RECORD_ESKF15_MEASUREMENT) ? 2U : 1U));
             TEST_CHECK(metadata->payload_size == navigation_sizes[index]);
         }
     }
@@ -170,7 +171,10 @@ static void Test_RecordMetadata(void)
         TEST_CHECK(metadata != NULL);
         if (metadata != NULL)
         {
-            TEST_CHECK(metadata->record_version <= 1U);
+            TEST_CHECK(((metadata->record_type == FLIGHT_LOG_RECORD_GNSS_MEASUREMENT) ||
+                        (metadata->record_type == FLIGHT_LOG_RECORD_BARO_MEASUREMENT) ||
+                        (metadata->record_type == FLIGHT_LOG_RECORD_ESKF15_MEASUREMENT)) ?
+                       (metadata->record_version == 2U) : (metadata->record_version <= 1U));
             TEST_CHECK(metadata->payload_size != 0U);
             TEST_CHECK(metadata->payload_size <= SSLOG_MAX_PAYLOAD_SIZE);
             TEST_CHECK(metadata->name != NULL);

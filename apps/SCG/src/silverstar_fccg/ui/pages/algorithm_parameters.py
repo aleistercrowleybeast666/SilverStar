@@ -16,19 +16,21 @@ from silverstar_fccg.project.algorithm_parameters import (
     AlgorithmParameterSharedGroups_Get,
 )
 from silverstar_fccg.ui.committed_spin import EnterCommittedDoubleSpinBox
+from silverstar_fccg.ui.fusion_timing_editor import FusionTimingEditor
 from silverstar_fccg.ui.nis_editor import GateEnableEditor, NisProbabilityEditor
 from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
 from silverstar_fccg.ui.pages.navigation_alignment import AlignmentConfigurationEditor
 from silverstar_fccg.ui.widgets import CollapsibleSection
 
 
-AlgorithmParameterEditor = EnterCommittedDoubleSpinBox | NisProbabilityEditor | GateEnableEditor
+AlgorithmParameterEditor = EnterCommittedDoubleSpinBox | NisProbabilityEditor | GateEnableEditor | FusionTimingEditor
 
 # Presentation only: preserve plugin/decoder parameter schemas and all values.
 _COMMON_FUSION_PARAMETERS = frozenset({
     "gnss_position_std_horizontal", "gnss_position_std_vertical", "gnss_velocity_std", "baro_std_m",
     "gnss_position_measurement_delay_ms", "gnss_velocity_measurement_delay_ms", "baro_measurement_delay_ms",
     "nis_soft_enabled", "nis_hard_enabled",
+    "fusion_timing_mode",
 })
 
 
@@ -210,6 +212,12 @@ class NavigationConfigurationPage(ScrollableLocalizedPage):
         self._content = content
 
     def _Editor_Create(self, parameter, value: object, language: str) -> AlgorithmParameterEditor:
+        if parameter.parameter_id == "fusion_timing_mode":
+            editor = FusionTimingEditor(language)
+            editor.CommittedValue_Set(value)
+            editor.setToolTip(parameter.Description_Get(language))
+            editor.setReadOnly(parameter.lifecycle == "legacy_read_only")
+            return editor
         if parameter.parameter_id in {"nis_soft_enabled", "nis_hard_enabled"}:
             editor = GateEnableEditor()
             editor.CommittedValue_Set(value)

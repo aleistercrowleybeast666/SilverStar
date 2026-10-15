@@ -57,6 +57,7 @@ def InertialRatePlan_Resolve(
     history_capacity = 0
     arithmetic: tuple[str, ...] = ()
     issues: list[InertialRateIssue] = []
+    current = False
     cpu_profile = str(catalog.Component_Get(model.mcu).metadata.get("cpu_profile", ""))
     if estimator is not None:
         values = model.algorithm_parameters.get(estimator_id, {})
@@ -78,8 +79,16 @@ def InertialRatePlan_Resolve(
                 f"{estimator.component_id} has no qualified timing profile for {cpu_profile}",
             ))
         no_replay = contract.get("mode") == "none"
+        if estimator.metadata.get("fusion_timing_contract") is not None:
+            mode = values.get("fusion_timing_mode")
+            if type(mode) is not int or mode not in (0, 1):
+                raise ValueError("Fusion timing mode must be integer 0 or 1")
+            current = mode == 0
+            if current:
+                window_ms = 0
+                history_capacity = 0
         if ((no_replay and (delay_ms != 0 or window_ms != 0 or history_capacity != 0))
-                or (not no_replay and (window_ms < delay_ms or history_capacity <= 0))):
+                or (not no_replay and not current and (window_ms < delay_ms or history_capacity <= 0))):
             issues.append(InertialRateIssue(
                 "REPLAY_CONTRACT_INVALID",
                 "Estimator history window or capacity cannot cover configured delay",
@@ -93,7 +102,7 @@ def InertialRatePlan_Resolve(
             f"{required_history} inertial history slots are required at "
             f"{propagation_hz:g} Hz, but the estimator has {history_capacity}",
         ))
-    maximum_replay_steps = math.ceil(delay_ms * propagation_hz / 1000)
+    maximum_replay_steps = 0 if current else math.ceil(delay_ms * propagation_hz / 1000)
     return InertialRatePlan(
         raw_imu_odr_hz=odr_hz,
         aggregation=aggregation,

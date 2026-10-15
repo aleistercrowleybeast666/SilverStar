@@ -469,6 +469,10 @@ Invoke-HostTest -Name 'interfaces' -Sources @(
     "$repoRoot\Tests\Host\test_interfaces.c"
 )
 
+Invoke-HostTest -Name 'fusion_timing' -Sources @(
+    "$repoRoot\Tests\Host\test_fusion_timing.c"
+)
+
 Invoke-HostTest -Name 'common_format' -Sources @(
     "$repoRoot\Tests\Host\test_common_format.c",
     "$repoRoot\Common\Src\common_format.c"
@@ -890,6 +894,12 @@ Invoke-HostTest -Name 'navigation_kf_replay' -Sources @(
     "$repoRoot\System\Src\system_time.c"
 )
 
+Invoke-HostTest -Name 'navigation_kf_current' -Sources @(
+    "$repoRoot\Tests\Host\test_navigation_kf_current.c",
+    "$repoRoot\Algorithm\Estimator\KF6\Src\navigation_kf.c",
+    "$repoRoot\Algorithm\Estimator\KF6\Src\navigation_kf_replay.c"
+)
+
 Invoke-HostTest -Name 'kf6_process_model_revision2' -Sources @(
     "$repoRoot\Tests\Host\test_kf6_process_model.c",
     "$repoRoot\Algorithm\Estimator\KF6\Src\navigation_kf.c",
@@ -979,6 +989,11 @@ if ((Get-Content -LiteralPath "$repoRoot\Generated\Inc\project_flight_config.h" 
     '(?m)^#define\s+SYSTEM_BUILD_BAROMETER_COLD_ENABLED\s+1U\s*$') {
     Invoke-HostTest -Name 'barometer_cold' -Sources @(
         "$repoRoot\Tests\Host\test_barometer_cold.c",
+        "$repoRoot\System\Src\system_barometer_cold.c",
+        "$repoRoot\System\Src\system_barometer.c"
+    )
+    Invoke-HostTest -Name 'fusion_timing_cold' -ExtraCompilerArgs @('-DFUSION_TIMING_COLD_TEST=1') -Sources @(
+        "$repoRoot\Tests\Host\test_fusion_timing.c",
         "$repoRoot\System\Src\system_barometer_cold.c",
         "$repoRoot\System\Src\system_barometer.c"
     )
@@ -1236,7 +1251,8 @@ if ($preparationFusion -eq 'SYSTEM_FUSION_KF6') {
     $preparationSources += @(
         "$repoRoot\Algorithm\Estimator\KF6\Src\navigation_kf.c",
         "$repoRoot\Algorithm\Estimator\KF6\Src\navigation_kf_replay.c",
-        "$repoRoot\Algorithm\Estimator\KF6\Src\navigation_integrity.c"
+        "$repoRoot\Algorithm\Estimator\KF6\Src\navigation_integrity.c",
+        "$repoRoot\System\Calibration\Src\system_calibration.c"
     )
 }
 elseif ($preparationFusion -eq 'SYSTEM_FUSION_ESKF15') {
@@ -1323,6 +1339,12 @@ $loggerSources = @(
 ) + $sslogSources
 Invoke-HostTest -Name 'logger' `
     -ExtraCompilerArgs $estimatorLoggerArgs -Sources $loggerSources
+Invoke-HostTest -Name 'fusion_timing_records' -ExtraCompilerArgs @(
+    '-DFUSION_TIMING_RECORDS_LOGGER_TEST=1', '-flto=1', '-flto-partition=one',
+    '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections'
+) -Sources (@($loggerSources | Where-Object {
+    $_ -notmatch '(test_logger|diagnostic_log)\.c$'
+}) + @("$repoRoot\Tests\Host\test_fusion_timing_records.c"))
 $loggerSnapshotSources = @($loggerSources | Where-Object {
     $_ -notmatch '(test_logger|diagnostic_log|host_platform_mock)\.c$'
 }) + @("$repoRoot\Tests\Host\test_logger_snapshot.c")
@@ -1360,6 +1382,15 @@ if ($preparationFusion -eq 'SYSTEM_FUSION_ESKF15') {
         '-DSYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_ESKF15',
         "-I$repoRoot\Algorithm\Estimator\ESKF15\Inc"
     ) -Sources $backendSources
+    Invoke-HostTest -Name 'eskf_current' -ExtraCompilerArgs @(
+        '-flto=1', '-flto-partition=one', '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections',
+        '-DSYSTEM_FUSION_TIMING_MODE=0', '-DSYSTEM_ESKF_LEVER_ARM_BODY_X_M=1.25f',
+        '-DSYSTEM_BUILD_ESTIMATOR_ENABLED=0U',
+        '-DSYSTEM_BUILD_ESKF15_ENABLED=1U', '-DSYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_ESKF15',
+        "-I$repoRoot\Algorithm\Estimator\ESKF15\Inc"
+    ) -Sources (@($backendSources | Where-Object {
+        $_ -notmatch '(test_eskf_backend|navigation_eskf_backend)\.c$'
+    }) + @("$repoRoot\Tests\Host\test_eskf_current.c"))
 }
 if ($preparationFusion -eq 'SYSTEM_FUSION_SF6') {
     $sf6BackendSources = @($loggerSources | Where-Object {

@@ -119,8 +119,15 @@ static void Test_GnssHealthProducerVariance(void)
         float robust = fminf(target_nis / soft, profile->nis_max_r_scale);
         float scale = (group == 0U) ? 4.5f : 1.5f;
         NavigationKf_Init(&s_estimator.kf);
+#if (SYSTEM_FUSION_TIMING_MODE == 0U)
+        TEST_CHECK(NavigationCurrent_Reset(&s_current_fusion, &s_estimator.kf, 1000000ULL,
+            7U, SystemCalibration_GenerationGet()) == NAV_CURRENT_OK);
+        TEST_CHECK(NavigationCurrent_Predict(&s_current_fusion, &s_estimator.kf,
+            1010000ULL, delta, 0.01f) == NAV_CURRENT_OK);
+#else
         NavigationReplay_Reset(&s_replay, &s_replay_storage, &s_estimator.kf, 1000000ULL, 7U);
         TEST_CHECK(NavigationReplay_Predict(&s_replay, &s_estimator.kf, 1010000ULL, delta, 0.01f) == NAV_REPLAY_OK);
+#endif
         SystemNavigationHealth_Reset(1000000ULL);
         work.sample.satellite_count = 5U;
         work.sample.valid_fields = SYSTEM_GNSS_FIELD_SATELLITE_COUNT;

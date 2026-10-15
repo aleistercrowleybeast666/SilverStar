@@ -2,6 +2,7 @@
 #define __NAVIGATION_KF_REPLAY_H
 
 #include "navigation_kf.h"
+#include "system_fusion_timing.h"
 
 /* Static budget: 600 ms at 200 Hz plus checkpoint/scheduling margin. */
 #define NAV_REPLAY_WINDOW_US 600000ULL
@@ -46,6 +47,7 @@ typedef struct
     uint32_t epoch;
     uint32_t sequence;
     uint32_t source;
+    uint32_t calibration_generation; /* Current identity; ignored by legacy replay. */
     uint8_t kind;
     uint8_t valid_group_mask;
     uint8_t consistency_mask;
@@ -161,5 +163,44 @@ NavigationReplayResult NavigationReplay_Insert(
     const NavigationReplayEvent *event, NavigationReplayOutcome *outcome);
 void NavigationReplay_RuntimeRecord(NavigationReplayContext *history,
                                     uint64_t elapsed_us);
+
+typedef enum
+{
+    NAV_CURRENT_OK = SYSTEM_FUSION_EXEC_COMPLETE,
+    NAV_CURRENT_INVALID = SYSTEM_FUSION_EXEC_INVALID,
+    NAV_CURRENT_STALE = SYSTEM_FUSION_EXEC_STALE,
+    NAV_CURRENT_DUPLICATE = SYSTEM_FUSION_EXEC_DUPLICATE,
+    NAV_CURRENT_EPOCH_MISMATCH = SYSTEM_FUSION_EXEC_EPOCH_MISMATCH,
+    NAV_CURRENT_DISCONTINUITY = SYSTEM_FUSION_EXEC_DISCONTINUITY,
+    NAV_CURRENT_NUMERIC_ERROR = SYSTEM_FUSION_EXEC_NUMERIC_ERROR,
+    NAV_CURRENT_NOT_READY = SYSTEM_FUSION_EXEC_NOT_READY
+} NavigationCurrentResult;
+
+typedef struct
+{
+    NavigationKfContext receive_tracker;
+    NavigationKfContext working;
+    NavigationReplayDiagnostics diagnostics; /* Replay counters remain zero. */
+    SystemFusionReceipt gnss[SYSTEM_FUSION_SOURCE_COUNT];
+    SystemFusionReceipt barometer;
+    uint64_t present_us;
+    uint64_t epoch_start_us;
+    uint32_t epoch;
+    uint32_t calibration_generation;
+    uint8_t initialized;
+    uint8_t faulted;
+} NavigationCurrentContext;
+
+NavigationCurrentResult NavigationCurrent_Reset(NavigationCurrentContext *current,
+    const NavigationKfContext *state, uint64_t timestamp_us, uint32_t epoch,
+    uint32_t calibration_generation);
+NavigationCurrentResult NavigationCurrent_Predict(NavigationCurrentContext *current,
+    NavigationKfContext *state, uint64_t timestamp_us,
+    const float delta_velocity[3], float dt_s);
+NavigationCurrentResult NavigationCurrent_ReceiveTrack(NavigationCurrentContext *current,
+    const NavigationKfGnssEpoch *receive_epoch, NavigationReplayEvent *event);
+NavigationCurrentResult NavigationCurrent_Insert(NavigationCurrentContext *current,
+    NavigationKfContext *state, const NavigationReplayEvent *event,
+    NavigationReplayOutcome *outcome);
 
 #endif /* __NAVIGATION_KF_REPLAY_H */

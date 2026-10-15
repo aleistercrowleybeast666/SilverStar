@@ -29,7 +29,7 @@ static const SslogRecordMetadata s_sslog_metadata[] =
     { FLIGHT_LOG_RECORD_ESKF15_FULL_P_PART, 1U, FLIGHT_LOG_ESKF15_FULL_P_PART_PAYLOAD_SIZE, "ESKF15_FULL_P_PART" },
     { FLIGHT_LOG_RECORD_ESKF15_INITIAL_STATE, 1U, FLIGHT_LOG_ESKF15_INITIAL_STATE_PAYLOAD_SIZE, "ESKF15_INITIAL_STATE" },
     { FLIGHT_LOG_RECORD_ESKF15_INITIAL_P_PART, 1U, FLIGHT_LOG_ESKF15_INITIAL_P_PART_PAYLOAD_SIZE, "ESKF15_INITIAL_P_PART" },
-    { FLIGHT_LOG_RECORD_ESKF15_MEASUREMENT, 1U, FLIGHT_LOG_ESKF15_MEASUREMENT_PAYLOAD_SIZE, "ESKF15_MEASUREMENT" },
+    { FLIGHT_LOG_RECORD_ESKF15_MEASUREMENT, 2U, FLIGHT_LOG_ESKF15_MEASUREMENT_PAYLOAD_SIZE, "ESKF15_MEASUREMENT" },
 
     { FLIGHT_LOG_RECORD_LANDING_DIAGNOSTIC, 0U, FLIGHT_LOG_LANDING_DIAGNOSTIC_PAYLOAD_SIZE, "LANDING_DIAGNOSTIC" },
     { FLIGHT_LOG_RECORD_GNSS_RECOVERY, 1U, FLIGHT_LOG_GNSS_RECOVERY_PAYLOAD_SIZE, "GNSS_RECOVERY" },
@@ -95,11 +95,11 @@ static const SslogRecordMetadata s_sslog_metadata[] =
         FLIGHT_LOG_INERTIAL_INCREMENT_PAYLOAD_SIZE, "INERTIAL_INCREMENT"
     },
     {
-        FLIGHT_LOG_RECORD_GNSS_MEASUREMENT, 1U,
+        FLIGHT_LOG_RECORD_GNSS_MEASUREMENT, 2U,
         FLIGHT_LOG_GNSS_MEASUREMENT_PAYLOAD_SIZE, "GNSS_MEASUREMENT"
     },
     {
-        FLIGHT_LOG_RECORD_BARO_MEASUREMENT, 1U,
+        FLIGHT_LOG_RECORD_BARO_MEASUREMENT, 2U,
         FLIGHT_LOG_BARO_MEASUREMENT_PAYLOAD_SIZE, "BARO_MEASUREMENT"
     },
     {
@@ -1044,6 +1044,31 @@ static uint16_t SslogRecords_LandingDiagnosticSerialize(
     return writer.offset;
 }
 
+static void SslogRecords_GnssTimingSerialize(
+    SslogWriteCursor *cursor, const FlightLogGnssMeasurementRecord *payload)
+{
+    SILVERSTAR_ASSERT_OBJECT(cursor, SslogWriteCursor,
+                             SILVERSTAR_ASSERT_MODULE_PROTOCOL);
+    SILVERSTAR_ASSERT(payload != NULL, SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+                      SILVERSTAR_ASSERT_REASON_NULL_POINTER);
+    SILVERSTAR_ASSERT(cursor->offset == 164U, SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+                      SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+    SslogRecords_WriterU64Put(cursor, payload->position_source_timestamp_us);
+    SslogRecords_WriterU64Put(cursor, payload->velocity_source_timestamp_us);
+    SslogRecords_WriterU64Put(cursor, payload->position_application_timestamp_us);
+    SslogRecords_WriterU64Put(cursor, payload->velocity_application_timestamp_us);
+    SslogRecords_WriterU8Put(cursor, payload->fusion_timing_mode);
+    SslogRecords_WriterU8Put(cursor, payload->position_timing_flags);
+    SslogRecords_WriterU8Put(cursor, payload->velocity_timing_flags);
+    SslogRecords_WriterU8Put(cursor, payload->position_execution_result);
+    SslogRecords_WriterU8Put(cursor, payload->velocity_execution_result);
+    SslogRecords_WriterU8Put(cursor, payload->timing_reserved[0]);
+    SslogRecords_WriterU8Put(cursor, payload->timing_reserved[1]);
+    SslogRecords_WriterU8Put(cursor, payload->timing_reserved[2]);
+    SslogRecords_WriterU32Put(cursor, payload->source_id);
+    SslogRecords_WriterU32Put(cursor, payload->calibration_generation);
+}
+
 static uint16_t SslogRecords_GnssMeasurementSerialize(
     const FlightLogGnssMeasurementRecord *payload,
     uint8_t *buffer, uint16_t buffer_size)
@@ -1098,6 +1123,7 @@ static uint16_t SslogRecords_GnssMeasurementSerialize(
     SslogRecords_WriterF32Put(&writer, (float)(payload->velocity_innovation_mps[0]));
     SslogRecords_WriterF32Put(&writer, (float)(payload->velocity_innovation_mps[1]));
     SslogRecords_WriterF32Put(&writer, (float)(payload->velocity_innovation_mps[2]));
+    SslogRecords_GnssTimingSerialize(&writer, payload);
     SILVERSTAR_ASSERT(writer.offset == buffer_size, SILVERSTAR_ASSERT_MODULE_PROTOCOL,
                       SILVERSTAR_ASSERT_REASON_POSTCONDITION);
     return writer.offset;
@@ -1129,6 +1155,14 @@ static uint16_t SslogRecords_BaroMeasurementSerialize(
     SslogRecords_WriterU8Put(&writer, (uint8_t)(payload->reserved));
     SslogRecords_WriterF32Put(&writer, (float)(payload->innovation_m));
     SslogRecords_WriterF32Put(&writer, (float)(payload->nis));
+    SslogRecords_WriterU64Put(&writer, payload->source_timestamp_us);
+    SslogRecords_WriterU64Put(&writer, payload->application_timestamp_us);
+    SslogRecords_WriterU8Put(&writer, payload->fusion_timing_mode);
+    SslogRecords_WriterU8Put(&writer, payload->timing_flags);
+    SslogRecords_WriterU8Put(&writer, payload->execution_result);
+    SslogRecords_WriterU8Put(&writer, payload->timing_reserved);
+    SslogRecords_WriterU32Put(&writer, payload->source_id);
+    SslogRecords_WriterU32Put(&writer, payload->calibration_generation);
     SILVERSTAR_ASSERT(writer.offset == buffer_size, SILVERSTAR_ASSERT_MODULE_PROTOCOL,
                       SILVERSTAR_ASSERT_REASON_POSTCONDITION);
     return writer.offset;
@@ -2190,6 +2224,31 @@ static uint16_t SslogRecords_LandingDiagnosticDeserialize(
     return reader.offset;
 }
 
+static void SslogRecords_GnssTimingDeserialize(
+    SslogReadCursor *cursor, FlightLogGnssMeasurementRecord *payload)
+{
+    SILVERSTAR_ASSERT_OBJECT(cursor, SslogReadCursor,
+                             SILVERSTAR_ASSERT_MODULE_PROTOCOL);
+    SILVERSTAR_ASSERT(payload != NULL, SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+                      SILVERSTAR_ASSERT_REASON_NULL_POINTER);
+    SILVERSTAR_ASSERT(cursor->offset == 164U, SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+                      SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+    payload->position_source_timestamp_us = SslogRecords_ReaderU64Get(cursor);
+    payload->velocity_source_timestamp_us = SslogRecords_ReaderU64Get(cursor);
+    payload->position_application_timestamp_us = SslogRecords_ReaderU64Get(cursor);
+    payload->velocity_application_timestamp_us = SslogRecords_ReaderU64Get(cursor);
+    payload->fusion_timing_mode = SslogRecords_ReaderU8Get(cursor);
+    payload->position_timing_flags = SslogRecords_ReaderU8Get(cursor);
+    payload->velocity_timing_flags = SslogRecords_ReaderU8Get(cursor);
+    payload->position_execution_result = SslogRecords_ReaderU8Get(cursor);
+    payload->velocity_execution_result = SslogRecords_ReaderU8Get(cursor);
+    payload->timing_reserved[0] = SslogRecords_ReaderU8Get(cursor);
+    payload->timing_reserved[1] = SslogRecords_ReaderU8Get(cursor);
+    payload->timing_reserved[2] = SslogRecords_ReaderU8Get(cursor);
+    payload->source_id = SslogRecords_ReaderU32Get(cursor);
+    payload->calibration_generation = SslogRecords_ReaderU32Get(cursor);
+}
+
 static uint16_t SslogRecords_GnssMeasurementDeserialize(
     FlightLogGnssMeasurementRecord *payload,
     const uint8_t *buffer, uint16_t buffer_size)
@@ -2244,6 +2303,7 @@ static uint16_t SslogRecords_GnssMeasurementDeserialize(
     payload->velocity_innovation_mps[0] = (float)SslogRecords_ReaderF32Get(&reader);
     payload->velocity_innovation_mps[1] = (float)SslogRecords_ReaderF32Get(&reader);
     payload->velocity_innovation_mps[2] = (float)SslogRecords_ReaderF32Get(&reader);
+    SslogRecords_GnssTimingDeserialize(&reader, payload);
     SILVERSTAR_ASSERT(reader.offset == buffer_size, SILVERSTAR_ASSERT_MODULE_PROTOCOL,
                       SILVERSTAR_ASSERT_REASON_POSTCONDITION);
     return reader.offset;
@@ -2275,6 +2335,14 @@ static uint16_t SslogRecords_BaroMeasurementDeserialize(
     payload->reserved = (uint8_t)SslogRecords_ReaderU8Get(&reader);
     payload->innovation_m = (float)SslogRecords_ReaderF32Get(&reader);
     payload->nis = (float)SslogRecords_ReaderF32Get(&reader);
+    payload->source_timestamp_us = SslogRecords_ReaderU64Get(&reader);
+    payload->application_timestamp_us = SslogRecords_ReaderU64Get(&reader);
+    payload->fusion_timing_mode = SslogRecords_ReaderU8Get(&reader);
+    payload->timing_flags = SslogRecords_ReaderU8Get(&reader);
+    payload->execution_result = SslogRecords_ReaderU8Get(&reader);
+    payload->timing_reserved = SslogRecords_ReaderU8Get(&reader);
+    payload->source_id = SslogRecords_ReaderU32Get(&reader);
+    payload->calibration_generation = SslogRecords_ReaderU32Get(&reader);
     SILVERSTAR_ASSERT(reader.offset == buffer_size, SILVERSTAR_ASSERT_MODULE_PROTOCOL,
                       SILVERSTAR_ASSERT_REASON_POSTCONDITION);
     return reader.offset;
@@ -2906,7 +2974,7 @@ static uint16_t SslogRecords_Eskf15MeasurementSerialize(
     if ((payload == NULL) || (buffer == NULL)) { return 0U; }
     SILVERSTAR_ASSERT_OBJECT(payload, FlightLogEskf15MeasurementRecord,
                              SILVERSTAR_ASSERT_MODULE_PROTOCOL);
-    SILVERSTAR_ASSERT(buffer_size == 100U, SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+    SILVERSTAR_ASSERT(buffer_size == FLIGHT_LOG_ESKF15_MEASUREMENT_PAYLOAD_SIZE, SILVERSTAR_ASSERT_MODULE_PROTOCOL,
                       SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
     SslogRecords_WriterU64Put(&writer, payload->sample_timestamp_us);
     SslogRecords_WriterU64Put(&writer, payload->receive_timestamp_us);
@@ -2940,6 +3008,12 @@ static uint16_t SslogRecords_Eskf15MeasurementSerialize(
     SslogRecords_WriterF32Put(&writer, payload->quality_scale);
     SslogRecords_WriterF32Put(&writer, payload->consistency_scale);
     SslogRecords_WriterF32Put(&writer, payload->robust_scale);
+    SslogRecords_WriterU64Put(&writer, payload->application_timestamp_us);
+    SslogRecords_WriterU8Put(&writer, payload->fusion_timing_mode);
+    SslogRecords_WriterU8Put(&writer, payload->timing_flags);
+    SslogRecords_WriterU8Put(&writer, payload->execution_result);
+    SslogRecords_WriterU8Put(&writer, payload->timing_reserved);
+    SslogRecords_WriterU32Put(&writer, payload->source_sequence);
     return (writer.offset == buffer_size) ? writer.offset : 0U;
 }
 
@@ -2951,7 +3025,7 @@ static uint16_t SslogRecords_Eskf15MeasurementDeserialize(
     if ((payload == NULL) || (buffer == NULL)) { return 0U; }
     SILVERSTAR_ASSERT_OBJECT(payload, FlightLogEskf15MeasurementRecord,
                              SILVERSTAR_ASSERT_MODULE_PROTOCOL);
-    SILVERSTAR_ASSERT(buffer_size == 100U, SILVERSTAR_ASSERT_MODULE_PROTOCOL,
+    SILVERSTAR_ASSERT(buffer_size == FLIGHT_LOG_ESKF15_MEASUREMENT_PAYLOAD_SIZE, SILVERSTAR_ASSERT_MODULE_PROTOCOL,
                       SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
     payload->sample_timestamp_us = SslogRecords_ReaderU64Get(&reader);
     payload->receive_timestamp_us = SslogRecords_ReaderU64Get(&reader);
@@ -2985,6 +3059,12 @@ static uint16_t SslogRecords_Eskf15MeasurementDeserialize(
     payload->quality_scale = SslogRecords_ReaderF32Get(&reader);
     payload->consistency_scale = SslogRecords_ReaderF32Get(&reader);
     payload->robust_scale = SslogRecords_ReaderF32Get(&reader);
+    payload->application_timestamp_us = SslogRecords_ReaderU64Get(&reader);
+    payload->fusion_timing_mode = SslogRecords_ReaderU8Get(&reader);
+    payload->timing_flags = SslogRecords_ReaderU8Get(&reader);
+    payload->execution_result = SslogRecords_ReaderU8Get(&reader);
+    payload->timing_reserved = SslogRecords_ReaderU8Get(&reader);
+    payload->source_sequence = SslogRecords_ReaderU32Get(&reader);
     return (reader.offset == buffer_size) ? reader.offset : 0U;
 }
 

@@ -4,7 +4,7 @@
   "name": "ESKF15 Navigation Estimator",
   "type": "algorithm",
   "class": "estimator",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Right-local 15-state error Kalman navigation with calibrated body replay.",
   "requires": {
     "components": [
@@ -98,6 +98,11 @@
         "gate_input_stage": "before_robust_variance_inflation",
         "reported_nis_stage": "after_robust_variance_inflation_when_soft_weighted"
       }
+    },
+    "fusion_timing_contract": {
+      "schema_id": "silverstar.navigation-fusion-timing/1",
+      "revision": 1,
+      "parameter": "fusion_timing_mode"
     }
   },
   "selection": {
@@ -938,6 +943,29 @@
         "description": {
           "en_US": "Explicit gate switch (0 disabled, 1 enabled); finite thresholds remain unchanged.",
           "zh_CN": "独立门控开关（0 禁用，1 启用）；保留有限门限值。"
+        }
+      },
+      {
+        "id": "fusion_timing_mode",
+        "type": "integer",
+        "default": 1,
+        "legacy_default": 1,
+        "unit": "1",
+        "representation": "value",
+        "min": 0,
+        "max": 1,
+        "precision": 0,
+        "step": 1,
+        "group": "basic",
+        "order": 200,
+        "generated_symbol": "SYSTEM_FUSION_TIMING_MODE",
+        "display_names": {
+          "en_US": "Fusion timing (0 current, 1 legacy replay)",
+          "zh_CN": "融合时序（0 当前，1 传统回放）"
+        },
+        "description": {
+          "en_US": "0 applies admitted observations once at estimator present without history replay; 1 preserves legacy replay. Source and receive ages in current mode must each be at most 500 ms.",
+          "zh_CN": "0 在当前估计时刻单次融合，不回放历史；1 保持传统回放。当前模式的源时间与接收时间年龄均不得超过 500 ms。"
         }
       }
     ]

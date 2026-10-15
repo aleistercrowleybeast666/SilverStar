@@ -4,7 +4,7 @@
   "name": "SilverStar Core 0.1.0",
   "type": "core",
   "class": "flight_controller_core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCU-independent SilverStar application, system, interfaces and host validation sources.",
   "requires": {
     "components": [],
@@ -185,7 +185,12 @@
       "APP/Src/logger_bus.c": "fccg_storage_integrity",
       "Interfaces/Inc/system_storage_if.h": "fccg_storage_integrity",
       "System/Src/system_navigation_health.c": "fccg_joint_navigation",
-      "System/Inc/system_navigation_health.h": "fccg_joint_navigation"
+      "System/Inc/system_navigation_health.h": "fccg_joint_navigation",
+      "System/Inc/system_fusion_timing.h": "fccg_fusion_timing",
+      "Tests/Host/test_fusion_timing.c": "fccg_fusion_timing",
+      "Tests/Host/test_navigation_kf_current.c": "fccg_fusion_timing",
+      "Tests/Host/test_eskf_current.c": "fccg_fusion_timing",
+      "Tests/Host/test_fusion_timing_records.c": "fccg_fusion_timing"
     },
     "device_descriptors": [
       {

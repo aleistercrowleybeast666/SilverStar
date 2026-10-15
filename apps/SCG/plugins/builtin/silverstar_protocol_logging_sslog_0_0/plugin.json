@@ -4,7 +4,7 @@
   "name": "Flight Log Format 0.0",
   "type": "protocol",
   "class": "logging",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "SSLOG 0.0 container, Record Catalog and declarative decoder metadata.",
   "requires": {
     "components": [
@@ -54,13 +54,20 @@
         "source_root": "tools/reference_overlays",
         "purpose": "independent protocol ownership and metadata"
       },
-      "Protocol/SSLOG/Inc/sslog_protocol.h": "fccg_multi_instance_failover",
-      "Protocol/SSLOG/schema/sslog_parser_metadata.json": "fccg_multi_instance_failover",
-      "Protocol/SSLOG/schema/sslog_schema.json": "fccg_multi_instance_failover"
+      "Protocol/SSLOG/Inc/sslog_protocol.h": "fccg_navigation_fusion_timing_v2",
+      "Protocol/SSLOG/schema/sslog_parser_metadata.json": "fccg_navigation_fusion_timing_v2",
+      "Protocol/SSLOG/schema/sslog_schema.json": "fccg_navigation_fusion_timing_v2",
+      "Protocol/SSLOG/Inc/sslog_records.h": "fccg_navigation_fusion_timing_v2",
+      "Protocol/SSLOG/Src/sslog_records.c": "fccg_navigation_fusion_timing_v2"
     },
     "container_decoder": {
       "id": "silverstar.sslog.container/0.0",
       "version": "0.0"
+    },
+    "fusion_timing_records_contract": {
+      "schema_id": "silverstar.navigation-fusion-timing-records/2",
+      "revision": 1,
+      "source": "contracts/navigation_fusion_timing_records_v2.json"
     }
   },
   "protocol": {
@@ -108,7 +115,8 @@
           ],
           "host_tests": [
             "Tests/Host/test_logger.c",
-            "Tests/Host/test_device_native_log.c"
+            "Tests/Host/test_device_native_log.c",
+            "Tests/Host/test_fusion_timing_records.c"
           ],
           "golden_tests": [
             "Tests/Host/test_logger.c"

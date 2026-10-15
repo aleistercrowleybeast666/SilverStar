@@ -1360,8 +1360,8 @@
       "id": "0x14",
       "enum": "FLIGHT_LOG_RECORD_GNSS_MEASUREMENT",
       "name": "GNSS_MEASUREMENT",
-      "version": 1,
-      "payload_size": 164,
+      "version": 2,
+      "payload_size": 212,
       "size_macro": "FLIGHT_LOG_GNSS_MEASUREMENT_PAYLOAD_SIZE",
       "c_type": "FlightLogGnssMeasurementRecord",
       "member": "gnss_measurement",
@@ -1487,6 +1487,61 @@
           "name": "velocity_innovation_mps",
           "type": "f32",
           "count": 3
+        },
+        {
+          "name": "position_source_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "velocity_source_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "position_application_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "velocity_application_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "fusion_timing_mode",
+          "type": "u8",
+          "enum": "silverstar.navigation-fusion-timing-records/2.modes"
+        },
+        {
+          "name": "position_timing_flags",
+          "type": "u8",
+          "bitfield": "silverstar.navigation-fusion-timing-records/2.timing_flags"
+        },
+        {
+          "name": "velocity_timing_flags",
+          "type": "u8",
+          "bitfield": "silverstar.navigation-fusion-timing-records/2.timing_flags"
+        },
+        {
+          "name": "position_execution_result",
+          "type": "u8",
+          "enum": "silverstar.navigation-fusion-timing-records/2.execution_results"
+        },
+        {
+          "name": "velocity_execution_result",
+          "type": "u8",
+          "enum": "silverstar.navigation-fusion-timing-records/2.execution_results"
+        },
+        {
+          "name": "timing_reserved",
+          "type": "u8",
+          "count": 3,
+          "validity": "zero as required by silverstar.navigation-fusion-timing-records/2"
+        },
+        {
+          "name": "source_id",
+          "type": "u32"
+        },
+        {
+          "name": "calibration_generation",
+          "type": "u32"
         }
       ]
     },
@@ -1494,8 +1549,8 @@
       "id": "0x15",
       "enum": "FLIGHT_LOG_RECORD_BARO_MEASUREMENT",
       "name": "BARO_MEASUREMENT",
-      "version": 1,
-      "payload_size": 72,
+      "version": 2,
+      "payload_size": 100,
       "size_macro": "FLIGHT_LOG_BARO_MEASUREMENT_PAYLOAD_SIZE",
       "c_type": "FlightLogBaroMeasurementRecord",
       "member": "baro_measurement",
@@ -1573,6 +1628,42 @@
         {
           "name": "nis",
           "type": "f32"
+        },
+        {
+          "name": "source_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "application_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "fusion_timing_mode",
+          "type": "u8",
+          "enum": "silverstar.navigation-fusion-timing-records/2.modes"
+        },
+        {
+          "name": "timing_flags",
+          "type": "u8",
+          "bitfield": "silverstar.navigation-fusion-timing-records/2.timing_flags"
+        },
+        {
+          "name": "execution_result",
+          "type": "u8",
+          "enum": "silverstar.navigation-fusion-timing-records/2.execution_results"
+        },
+        {
+          "name": "timing_reserved",
+          "type": "u8",
+          "validity": "zero as required by silverstar.navigation-fusion-timing-records/2"
+        },
+        {
+          "name": "source_id",
+          "type": "u32"
+        },
+        {
+          "name": "calibration_generation",
+          "type": "u32"
         }
       ]
     },
@@ -2781,8 +2872,8 @@
       "id": "0x25",
       "enum": "FLIGHT_LOG_RECORD_ESKF15_MEASUREMENT",
       "name": "ESKF15_MEASUREMENT",
-      "version": 1,
-      "payload_size": 100,
+      "version": 2,
+      "payload_size": 116,
       "size_macro": "FLIGHT_LOG_ESKF15_MEASUREMENT_PAYLOAD_SIZE",
       "c_type": "FlightLogEskf15MeasurementRecord",
       "member": "eskf15_measurement",
@@ -2916,6 +3007,34 @@
           "type": "f32",
           "unit": "1",
           "quantity": "dimensionless"
+        },
+        {
+          "name": "application_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "fusion_timing_mode",
+          "type": "u8",
+          "enum": "silverstar.navigation-fusion-timing-records/2.modes"
+        },
+        {
+          "name": "timing_flags",
+          "type": "u8",
+          "bitfield": "silverstar.navigation-fusion-timing-records/2.timing_flags"
+        },
+        {
+          "name": "execution_result",
+          "type": "u8",
+          "enum": "silverstar.navigation-fusion-timing-records/2.execution_results"
+        },
+        {
+          "name": "timing_reserved",
+          "type": "u8",
+          "validity": "zero as required by silverstar.navigation-fusion-timing-records/2"
+        },
+        {
+          "name": "source_sequence",
+          "type": "u32"
         }
       ]
     },

@@ -199,10 +199,9 @@ static void NavigationReplay_Prune(NavigationReplayContext *history)
     NavigationReplay_EventsPrune(history, oldest);
 }
 
-static uint8_t NavigationReplay_ModelMatches(
-    const NavigationReplayContext *history, const NavigationKfContext *state)
+static uint8_t NavigationFusion_ModelMatches(
+    const NavigationKfContext *initial, const NavigationKfContext *state)
 {
-    const NavigationKfContext *initial = &history->storage->checkpoints[0].state;
     return (uint8_t)(
         (memcmp(initial->process_accel_std_mps2, state->process_accel_std_mps2,
                 sizeof(state->process_accel_std_mps2)) == 0) &&
@@ -214,12 +213,15 @@ static uint8_t NavigationReplay_ModelMatches(
         (initial->nis_max_r_scale == state->nis_max_r_scale));
 }
 
-static uint8_t NavigationReplay_EventValid(const NavigationReplayContext *history,
-    const NavigationReplayEvent *event)
+static uint8_t NavigationReplay_ModelMatches(
+    const NavigationReplayContext *history, const NavigationKfContext *state)
+{
+    return NavigationFusion_ModelMatches(&history->storage->checkpoints[0].state, state);
+}
+
+static uint8_t NavigationFusion_EventValid(const NavigationReplayEvent *event)
 {
     uint8_t axis;
-    SILVERSTAR_ASSERT_OBJECT(history, NavigationReplayContext,
-                             SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     SILVERSTAR_ASSERT_OBJECT(event, NavigationReplayEvent,
                              SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     if ((event->kind == 0U) || (event->kind > NAV_REPLAY_BAROMETER) ||
@@ -247,6 +249,13 @@ static uint8_t NavigationReplay_EventValid(const NavigationReplayContext *histor
          (event->altitude_variance <= 0.0f)))
     { return 0U; }
     return 1U;
+}
+
+static uint8_t NavigationReplay_EventValid(const NavigationReplayContext *history,
+    const NavigationReplayEvent *event)
+{
+    SILVERSTAR_ASSERT_OBJECT(history, NavigationReplayContext, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    return NavigationFusion_EventValid(event);
 }
 
 static uint8_t NavigationReplay_PredictionInputValid(
@@ -363,25 +372,17 @@ NavigationReplayResult NavigationReplay_Predict(
     return NAV_REPLAY_OK;
 }
 
-NavigationReplayResult NavigationReplay_ReceiveTrack(
-    NavigationReplayContext *history, const NavigationKfGnssEpoch *receive_epoch,
-    NavigationReplayEvent *event)
+static void NavigationFusion_ReceiveTrack(NavigationKfContext *receive_tracker,
+    uint32_t epoch, const NavigationKfGnssEpoch *receive_epoch, NavigationReplayEvent *event)
 {
     uint8_t group;
     const NavigationKfGnssReacquisitionContext *tracker;
-    if ((history == NULL) || (receive_epoch == NULL) || (event == NULL) ||
-        (receive_epoch->timestamp_us == 0U))
-    { return NavigationReplay_Reject(history, NAV_REPLAY_INVALID); }
-    if (receive_epoch->timestamp_us < history->epoch_start_us)
-    { return NavigationReplay_Reject(history, NAV_REPLAY_HISTORY_MISS); }
-    SILVERSTAR_ASSERT_OBJECT(history, NavigationReplayContext,
-                             SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     /* This is the existing availability/consistency implementation. The only
      * clock supplied to it is the actual packet receive clock. Never replay it. */
-    NavigationKf_GnssEpochTrack(&history->receive_tracker, receive_epoch);
-    tracker = &history->receive_tracker.gnss_reacquisition;
+    NavigationKf_GnssEpochTrack(receive_tracker, receive_epoch);
+    tracker = &receive_tracker->gnss_reacquisition;
     event->receive_timestamp_us = receive_epoch->timestamp_us;
-    event->epoch = history->epoch;
+    event->epoch = epoch;
     event->valid_group_mask = receive_epoch->valid_group_mask;
     event->consistency_mask = tracker->consistency_mask;
     for (group = 0U; group < NAV_KF_GNSS_GROUP_COUNT; group++)
@@ -396,6 +397,20 @@ NavigationReplayResult NavigationReplay_ReceiveTrack(
         event->evidence[group].recovery_valid = (uint8_t)(
             (tracker->previous_epoch.valid_group_mask & NAV_KF_GNSS_GROUP_MASK(group)) != 0U);
     }
+}
+
+NavigationReplayResult NavigationReplay_ReceiveTrack(
+    NavigationReplayContext *history, const NavigationKfGnssEpoch *receive_epoch,
+    NavigationReplayEvent *event)
+{
+    if ((history == NULL) || (receive_epoch == NULL) || (event == NULL) ||
+        (receive_epoch->timestamp_us == 0U))
+    { return NavigationReplay_Reject(history, NAV_REPLAY_INVALID); }
+    if (receive_epoch->timestamp_us < history->epoch_start_us)
+    { return NavigationReplay_Reject(history, NAV_REPLAY_HISTORY_MISS); }
+    SILVERSTAR_ASSERT_OBJECT(history, NavigationReplayContext,
+                             SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    NavigationFusion_ReceiveTrack(&history->receive_tracker, history->epoch, receive_epoch, event);
     return NAV_REPLAY_OK;
 }
 
@@ -508,15 +523,13 @@ static void NavigationReplay_GnssPositionApply(NavigationKfContext *state,
     }
 }
 
-static NavigationReplayResult NavigationReplay_EventApply(
-    const NavigationReplayContext *history, NavigationKfContext *state,
+static NavigationReplayResult NavigationFusion_EventApply(
+    NavigationKfContext *state,
     const NavigationReplayEvent *event,
                                         NavigationReplayOutcome *outcome)
 {
     uint8_t admitted_mask = (event->integrity_admission_valid != 0U) ?
         event->integrity_admitted_group_mask : event->valid_group_mask;
-    SILVERSTAR_ASSERT_OBJECT(history, NavigationReplayContext,
-                             SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     SILVERSTAR_ASSERT_OBJECT(state, NavigationKfContext,
                              SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     SILVERSTAR_ASSERT_OBJECT(event, NavigationReplayEvent,
@@ -546,6 +559,14 @@ static NavigationReplayResult NavigationReplay_EventApply(
             (outcome->velocity == NAV_KF_UPDATE_NUMERIC_ERROR) ||
             (outcome->barometer == NAV_KF_UPDATE_NUMERIC_ERROR)) ?
         NAV_REPLAY_NUMERIC_ERROR : NAV_REPLAY_OK;
+}
+
+static NavigationReplayResult NavigationReplay_EventApply(
+    const NavigationReplayContext *history, NavigationKfContext *state,
+    const NavigationReplayEvent *event, NavigationReplayOutcome *outcome)
+{
+    SILVERSTAR_ASSERT_OBJECT(history, NavigationReplayContext, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    return NavigationFusion_EventApply(state, event, outcome);
 }
 
 static uint8_t NavigationReplay_EventBefore(const NavigationReplayEvent *a,
@@ -835,4 +856,158 @@ void NavigationReplay_RuntimeRecord(NavigationReplayContext *history,
     history->diagnostics.last_runtime_us = (elapsed_us > UINT32_MAX) ? UINT32_MAX : (uint32_t)elapsed_us;
     if (history->diagnostics.last_runtime_us > history->diagnostics.max_runtime_us)
     { history->diagnostics.max_runtime_us = history->diagnostics.last_runtime_us; }
+}
+
+static NavigationCurrentResult NavigationCurrent_Reject(
+    NavigationCurrentContext *current, NavigationCurrentResult result)
+{
+    if (current != NULL)
+    {
+        current->diagnostics.rejection_count++;
+        current->diagnostics.last_result = (result == NAV_CURRENT_NUMERIC_ERROR) ?
+            NAV_REPLAY_NUMERIC_ERROR : NAV_REPLAY_INVALID;
+    }
+    return result;
+}
+
+NavigationCurrentResult NavigationCurrent_Reset(NavigationCurrentContext *current,
+    const NavigationKfContext *state, uint64_t timestamp_us, uint32_t epoch,
+    uint32_t calibration_generation)
+{
+    if ((current == NULL) || (state == NULL)) { return NAV_CURRENT_INVALID; }
+    (void)memset(current, 0, sizeof(*current));
+    current->receive_tracker = *state;
+    current->present_us = timestamp_us;
+    current->epoch_start_us = timestamp_us;
+    current->epoch = epoch;
+    current->calibration_generation = calibration_generation;
+    current->initialized = 1U;
+    return NAV_CURRENT_OK;
+}
+
+static NavigationCurrentResult NavigationCurrent_PredictionValidate(
+    NavigationCurrentContext *current, const NavigationKfContext *state,
+    uint64_t timestamp_us, const float delta_velocity[3], float dt_s)
+{
+    uint64_t duration_us, present_us;
+    uint8_t axis;
+    if ((current == NULL) || (state == NULL) || (delta_velocity == NULL) ||
+        !isfinite(dt_s) || (dt_s <= 0.0f) || (dt_s > SYSTEM_KF_PREDICTION_DT_MAX_S))
+    { return NAV_CURRENT_INVALID; }
+    if ((current->initialized == 0U) || current->faulted) { return NAV_CURRENT_NOT_READY; }
+    for (axis = 0U; axis < 3U; axis++)
+    { if (!isfinite(delta_velocity[axis])) { return NAV_CURRENT_INVALID; } }
+    if (!NavigationFusion_ModelMatches(&current->receive_tracker, state))
+    { return NAV_CURRENT_EPOCH_MISMATCH; }
+    duration_us = (uint64_t)((double)dt_s * 1000000.0 + 0.5);
+    present_us = current->present_us;
+    if ((present_us == 0U) && (timestamp_us >= duration_us))
+    { present_us = timestamp_us - duration_us; }
+    if ((timestamp_us <= present_us) ||
+        (timestamp_us - present_us > duration_us + 1U) ||
+        (timestamp_us - present_us + 1U < duration_us))
+    { return NAV_CURRENT_DISCONTINUITY; }
+    return NAV_CURRENT_OK;
+}
+
+NavigationCurrentResult NavigationCurrent_Predict(NavigationCurrentContext *current,
+    NavigationKfContext *state, uint64_t timestamp_us,
+    const float delta_velocity[3], float dt_s)
+{
+    NavigationCurrentResult result = NavigationCurrent_PredictionValidate(
+        current, state, timestamp_us, delta_velocity, dt_s);
+    if (result != NAV_CURRENT_OK)
+    {
+        if ((current != NULL) && ((result == NAV_CURRENT_DISCONTINUITY) ||
+            (result == NAV_CURRENT_EPOCH_MISMATCH))) { current->faulted = 1U; }
+        return NavigationCurrent_Reject(current, result);
+    }
+    current->working = *state;
+    if (NavigationKf_Predict(&current->working, delta_velocity, dt_s) == 0U)
+    {
+        current->faulted = 1U;
+        return NavigationCurrent_Reject(current, NAV_CURRENT_NUMERIC_ERROR);
+    }
+    if (current->present_us == 0U)
+    { current->epoch_start_us = timestamp_us - (uint64_t)((double)dt_s * 1000000.0 + 0.5); }
+    *state = current->working;
+    current->present_us = timestamp_us;
+    current->diagnostics.last_result = NAV_REPLAY_OK;
+    return NAV_CURRENT_OK;
+}
+
+NavigationCurrentResult NavigationCurrent_ReceiveTrack(NavigationCurrentContext *current,
+    const NavigationKfGnssEpoch *receive_epoch, NavigationReplayEvent *event)
+{
+    SystemFusionExecutionResult result;
+    if ((current == NULL) || (receive_epoch == NULL) || (event == NULL) ||
+        (event->source >= SYSTEM_FUSION_SOURCE_COUNT)) { return NAV_CURRENT_INVALID; }
+    if (!current->initialized || current->faulted) { return NAV_CURRENT_NOT_READY; }
+    if (event->calibration_generation != current->calibration_generation)
+    { return NavigationCurrent_Reject(current, NAV_CURRENT_EPOCH_MISMATCH); }
+    result = SystemFusionTiming_CurrentValidate(receive_epoch->timestamp_us,
+        receive_epoch->timestamp_us, current->present_us, current->epoch_start_us);
+    if (result == SYSTEM_FUSION_EXEC_COMPLETE)
+    { result = SystemFusionTiming_ReceiptCheck(&current->gnss[event->source], event->sequence, 0x80U); }
+    if (result != SYSTEM_FUSION_EXEC_COMPLETE)
+    { return NavigationCurrent_Reject(current, (NavigationCurrentResult)result); }
+    NavigationFusion_ReceiveTrack(&current->receive_tracker, current->epoch, receive_epoch, event);
+    event->calibration_generation = current->calibration_generation;
+    SystemFusionTiming_ReceiptCommit(&current->gnss[event->source], event->sequence, 0x80U);
+    return NAV_CURRENT_OK;
+}
+
+static NavigationCurrentResult NavigationCurrent_EventValidate(
+    const NavigationCurrentContext *current, const NavigationKfContext *state,
+    const NavigationReplayEvent *event)
+{
+    if (!current->initialized || current->faulted) { return NAV_CURRENT_NOT_READY; }
+    if (!NavigationFusion_EventValid(event) ||
+        ((event->kind == NAV_REPLAY_BAROMETER) ?
+         (event->source != SYSTEM_FUSION_BAROMETER_SOURCE) :
+         (event->source >= SYSTEM_FUSION_SOURCE_COUNT))) { return NAV_CURRENT_INVALID; }
+    if ((event->epoch != current->epoch) ||
+        (event->calibration_generation != current->calibration_generation) ||
+        !NavigationFusion_ModelMatches(&current->receive_tracker, state))
+    { return NAV_CURRENT_EPOCH_MISMATCH; }
+    return (NavigationCurrentResult)SystemFusionTiming_CurrentValidate(
+        event->receive_timestamp_us, event->receive_timestamp_us,
+        current->present_us, current->epoch_start_us);
+}
+
+NavigationCurrentResult NavigationCurrent_Insert(NavigationCurrentContext *current,
+    NavigationKfContext *state, const NavigationReplayEvent *event,
+    NavigationReplayOutcome *outcome)
+{
+    NavigationCurrentResult result;
+    SystemFusionReceipt *receipt;
+    if (outcome != NULL) { NavigationReplay_OutcomeReset(outcome); }
+    if ((current == NULL) || (state == NULL) || (event == NULL) || (outcome == NULL))
+    { return NavigationCurrent_Reject(current, NAV_CURRENT_INVALID); }
+    result = NavigationCurrent_EventValidate(current, state, event);
+    if (result != NAV_CURRENT_OK) { return NavigationCurrent_Reject(current, result); }
+    receipt = (event->kind == NAV_REPLAY_BAROMETER) ?
+        &current->barometer : &current->gnss[event->source];
+    result = (NavigationCurrentResult)SystemFusionTiming_ReceiptCheck(receipt, event->sequence, event->kind);
+    if (result != NAV_CURRENT_OK) { return NavigationCurrent_Reject(current, result); }
+    /* A delivered group is handled once, including source-age rejection. A
+     * later call cannot revise its source epoch while reusing the identity. */
+    SystemFusionTiming_ReceiptCommit(receipt, event->sequence, event->kind);
+    result = (NavigationCurrentResult)SystemFusionTiming_CurrentValidate(
+        event->measurement_timestamp_us, event->receive_timestamp_us,
+        current->present_us, current->epoch_start_us);
+    if (result != NAV_CURRENT_OK) { return NavigationCurrent_Reject(current, result); }
+    current->working = *state;
+    if (NavigationFusion_EventApply(&current->working, event, outcome) != NAV_REPLAY_OK)
+    {
+        current->faulted = 1U;
+        NavigationReplay_OutcomeReset(outcome);
+        outcome->position = NAV_KF_UPDATE_NUMERIC_ERROR;
+        outcome->velocity = NAV_KF_UPDATE_NUMERIC_ERROR;
+        outcome->barometer = NAV_KF_UPDATE_NUMERIC_ERROR;
+        return NavigationCurrent_Reject(current, NAV_CURRENT_NUMERIC_ERROR);
+    }
+    *state = current->working;
+    current->diagnostics.last_result = NAV_REPLAY_OK;
+    return NAV_CURRENT_OK;
 }

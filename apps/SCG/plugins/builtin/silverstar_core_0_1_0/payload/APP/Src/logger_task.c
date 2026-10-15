@@ -791,6 +791,39 @@ static void LoggerTask_StatusPublish(uint64_t now_us)
     SystemLogFile_StatusPublish(&snapshot);
 }
 
+/* Amortize status/lifecycle work over a bounded batch. Every record still
+ * follows the same append/start-barrier failure path; queues and wire cadence
+ * are unchanged. Maintenance is serviced before and after at most four pops.
+ * Iteration diagnostics count each real drain attempt, including an empty one. */
+static void LoggerTask_RecordsDrain(uint64_t now_us)
+{
+    for (uint8_t index = 0U; index < 4U; index++)
+    {
+        FlightLogRecord record;
+        LoggerBusResult result;
+        if (index != 0U)
+        {
+            now_us = SystemTime_GetMonotonicUs();
+            LoggerTask_IterationRecord(now_us);
+        }
+        result = LoggerBus_NextPop(&record);
+        if (result != LOGGER_BUS_RESULT_OK)
+        {
+            if (index == 0U) { vTaskDelay(pdMS_TO_TICKS(2U)); }
+            return;
+        }
+        s_diagnostics.drain_count++;
+        (void)LoggerTask_DecoderProfileQueue(now_us);
+        if ((LoggerTask_RecordAppend(&record) == 0U) ||
+            (LoggerTask_StartBarrierProcess() == 0U))
+        {
+            LoggerTask_Close();
+            s_logger.next_retry_us = now_us + SYSTEM_LOG_RETRY_PERIOD_US;
+            return;
+        }
+    }
+}
+
 void AppTask_Logger(void *argument)
 {
     LoggerBusFinalizationState finalization_state;
@@ -818,25 +851,8 @@ void AppTask_Logger(void *argument)
         if (LoggerTask_SessionUnavailableProcess(now_us, finalization_state) != 0U)
         { vTaskDelay(pdMS_TO_TICKS(10U)); continue; }
 
-        {
-            /* Queue scratch expires before snapshot/finalization I/O. */
-            FlightLogRecord record;
-            if (LoggerBus_NextPop(&record) == LOGGER_BUS_RESULT_OK)
-            {
-                s_diagnostics.drain_count++;
-                (void)LoggerTask_DecoderProfileQueue(now_us);
-                if ((LoggerTask_RecordAppend(&record) == 0U) ||
-                    (LoggerTask_StartBarrierProcess() == 0U))
-                {
-                    LoggerTask_Close();
-                    s_logger.next_retry_us = now_us + SYSTEM_LOG_RETRY_PERIOD_US;
-                }
-            }
-            else
-            {
-                vTaskDelay(pdMS_TO_TICKS(2U));
-            }
-        }
+        /* The callee's record scratch expires before snapshot/finalization I/O. */
+        LoggerTask_RecordsDrain(now_us);
 
         now_us = SystemTime_GetMonotonicUs();
         finalization_state = LoggerBus_FinalizationProcess(now_us);

@@ -376,6 +376,19 @@ typedef struct
     float group_nis[4];
     float position_innovation_m[3];
     float velocity_innovation_mps[3];
+    /* v2 append-only wire extension: navigation_fusion_timing_records_v2.json. */
+    uint64_t position_source_timestamp_us;
+    uint64_t velocity_source_timestamp_us;
+    uint64_t position_application_timestamp_us;
+    uint64_t velocity_application_timestamp_us;
+    uint8_t fusion_timing_mode;
+    uint8_t position_timing_flags;
+    uint8_t velocity_timing_flags;
+    uint8_t position_execution_result;
+    uint8_t velocity_execution_result;
+    uint8_t timing_reserved[3];
+    uint32_t source_id;
+    uint32_t calibration_generation;
 } FlightLogGnssMeasurementRecord;
 
 typedef struct
@@ -397,6 +410,15 @@ typedef struct
     uint8_t reserved;
     float innovation_m;
     float nis;
+    /* v2 append-only wire extension: navigation_fusion_timing_records_v2.json. */
+    uint64_t source_timestamp_us;
+    uint64_t application_timestamp_us;
+    uint8_t fusion_timing_mode;
+    uint8_t timing_flags;
+    uint8_t execution_result;
+    uint8_t timing_reserved;
+    uint32_t source_id;
+    uint32_t calibration_generation;
 } FlightLogBaroMeasurementRecord;
 
 typedef struct
@@ -692,6 +714,13 @@ typedef struct
     float quality_scale;
     float consistency_scale;
     float robust_scale;
+    /* v2 append-only wire extension: navigation_fusion_timing_records_v2.json. */
+    uint64_t application_timestamp_us;
+    uint8_t fusion_timing_mode;
+    uint8_t timing_flags;
+    uint8_t execution_result;
+    uint8_t timing_reserved;
+    uint32_t source_sequence;
 } FlightLogEskf15MeasurementRecord;
 
 typedef struct

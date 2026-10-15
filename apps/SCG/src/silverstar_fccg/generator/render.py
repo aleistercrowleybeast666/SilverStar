@@ -1784,6 +1784,7 @@ def _BoardPlatformResources_Get(
 
 def _LogMetadataDeclarations_Get(model: ProjectModel, catalog: PluginCatalog,
     metadata: dict[str, Any]) -> dict[str, Any]:
+    from silverstar_fccg.generator.fusion_timing import FusionTimingDeclaration_Get
     declarations = deepcopy(metadata.get("project_semantics", {}))
     owners: set[str] = set()
     for component_id in model.ComponentIds_Get():
@@ -1810,6 +1811,11 @@ def _LogMetadataDeclarations_Get(model: ProjectModel, catalog: PluginCatalog,
                     raise ValueError("KF6 source model identity NOT PROVEN: catalog declaration differs from kernel provenance")
                 declarations[name]["kernel_sha256"] = {
                     path: files[path] for path in KERNEL_PATHS}
+    timing = FusionTimingDeclaration_Get(model, catalog)
+    if timing is not None:
+        if "fusion_timing" in declarations:
+            raise ValueError("Fusion timing declaration must come from resolved actual values")
+        declarations["fusion_timing"] = timing
     return declarations
 
 

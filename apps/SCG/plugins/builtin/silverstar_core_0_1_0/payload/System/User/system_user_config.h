@@ -271,7 +271,7 @@
 #define SYSTEM_LOG_RECORD_SLOT_SIZE                    200U
 #endif
 #ifndef SYSTEM_LOG_ESTIMATOR_SLOT_SIZE
-#define SYSTEM_LOG_ESTIMATOR_SLOT_SIZE                 200U
+#define SYSTEM_LOG_ESTIMATOR_SLOT_SIZE                 240U
 #endif
 #ifndef SYSTEM_LOG_RECORD_QUEUE_DEPTH
 #define SYSTEM_LOG_RECORD_QUEUE_DEPTH                   80U

@@ -176,7 +176,9 @@ def test_product_patch_binding_accepts_only_authorized_complete_header(tmp_path,
     payload = Path(__file__).resolve().parents[1] / 'plugins/builtin/silverstar_core_0_1_0/payload'
     relative = 'System/User/system_user_config.h'
     text = (payload / relative).read_text(encoding='utf-8')
-    assert stacks.BindingSourceHash_Get(text) == 'ffb28f9bf8e08e73c80a16c1121e8c37954f7bb7ade95f2aa47a5226787cc840'
+    # The current timing header is a separately reviewed complete v18 input.
+    # Both original forbidden mutations below remain rejected.
+    assert stacks.BindingSourceHash_Get(text) == '8a853b969d5ac53177ac19dc99779c49702bcbbbc0cb76114b089ef7578a355e'
     target = tmp_path / relative
     target.parent.mkdir(parents=True)
     target.write_text(text, encoding='utf-8')
@@ -188,6 +190,40 @@ def test_product_patch_binding_accepts_only_authorized_complete_header(tmp_path,
     target.write_text(changed, encoding='utf-8')
     with pytest.raises(ValueError, match='Changed or missing reviewed callback compilation input'):
         stacks.BindingHeader_Verify(tmp_path, relative)
+
+
+@pytest.mark.parametrize("fault", ["placement", "missing_header", "compiled_graph"])
+def test_navigation_review_still_binds_real_complete_compiler_inputs(tmp_path, fault):
+    archive_path = Path(__file__).resolve().parents[3] / "docs/evidence/algorithm_stack_binding_20261015/inputs_v2.zip"
+    with zipfile.ZipFile(archive_path) as archive:
+        assert len(archive.namelist()) == len(set(archive.namelist()))
+        for name in archive.namelist():
+            if not name.startswith("compiler_fixture/"):
+                continue
+            target = tmp_path / name.removeprefix("compiler_fixture/")
+            assert target.resolve().is_relative_to(tmp_path.resolve())
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(archive.read(name))
+    source = "APP/Src/estimator_bus.c"
+    build = tmp_path / "build"
+    dependency = build / "APP/Src/estimator_bus.d"
+    dependency.parent.mkdir(parents=True)
+    dependency.write_bytes((tmp_path / "estimator_bus.d").read_bytes())
+    assert stacks.BindingSources_Verify(tmp_path, [source], build)
+    if fault == "placement":
+        path = tmp_path / source
+        text = path.read_text(encoding="utf-8")
+        assert "static PLATFORM_CPU_FAST_BSS SystemInertialIncrement" in text
+        path.write_text(text.replace("static PLATFORM_CPU_FAST_BSS SystemInertialIncrement",
+                                     "static SystemInertialIncrement"), encoding="utf-8")
+    elif fault == "missing_header":
+        (tmp_path / "Platform/Inc/platform_memory.h").unlink()
+    else:
+        text = dependency.read_text(encoding="utf-8")
+        assert "Platform/Inc/platform_memory.h" in text
+        dependency.write_text(text.replace("Platform/Inc/platform_memory.h", ""), encoding="utf-8")
+    with pytest.raises(ValueError):
+        stacks.BindingSources_Verify(tmp_path, [source], build)
 
 
 @pytest.mark.parametrize('mutation', ['digest', 'function'])

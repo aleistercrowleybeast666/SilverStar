@@ -20,6 +20,7 @@ from silverstar_fccg.generator.hardware_preparation import (
     HardwareResourceBindingFingerprint_Get,
 )
 from silverstar_fccg.generator.kf6_identity import EskfNisIdentity_Validate, Kf6Identity_Validate
+from silverstar_fccg.generator.fusion_timing import FusionTimingIdentity_Validate
 from silverstar_fccg.generator.render import (
     ComponentProvenance_Get,
     GeneratedFiles_Render,
@@ -383,6 +384,7 @@ class ProjectAssembler:
         progress_callback: GenerationProgressCallback | None = None,
     ) -> tuple[dict[str, bytes], dict]:
         previous = self._Ownership_Load(project_root)
+        FusionTimingIdentity_Validate(project_root, previous, model, self.catalog)
         if "silverstar.algorithm.estimator.kf6" in model.ComponentIds_Get():
             Kf6Identity_Validate(project_root, previous, ComponentProvenance_Get(
                 self.catalog, "silverstar.algorithm.estimator.kf6"))

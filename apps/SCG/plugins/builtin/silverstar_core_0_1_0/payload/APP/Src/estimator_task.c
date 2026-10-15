@@ -319,8 +319,14 @@ static PLATFORM_CPU_FAST_BSS EstimatorRuntime s_estimator;
 /* Single EstimatorTask owner. Event data uses main SRAM; CPU-only
  * IMU/checkpoint storage uses reviewed CCM capacity. Neither is DMA memory. */
 #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
+_Static_assert((SYSTEM_FUSION_TIMING_MODE == 0U) || (SYSTEM_FUSION_TIMING_MODE == 1U),
+    "Unsupported fusion timing mode");
+/* Both implementations are compiled and checked. Constant mode selection plus
+ * section garbage collection must exclude the unselected storage from the ELF. */
+static NavigationCurrentContext s_current_fusion;
 static NavigationReplayContext s_replay;
 static PLATFORM_KF_REPLAY_BSS NavigationReplayStorage s_replay_storage;
+static SystemFusionExecutionResult s_fusion_execution;
 static PLATFORM_CPU_FAST_BSS NavigationWindowContext s_integrity;
 static uint64_t s_native_week_us;
 static uint32_t s_native_previous_tow_ms;
@@ -331,6 +337,72 @@ static uint32_t s_replay_epoch;
 #endif
 
 #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
+static NavigationReplayDiagnostics *Estimator_FusionDiagnosticsGet(void)
+{
+    return (SYSTEM_FUSION_TIMING_MODE == 0U) ? &s_current_fusion.diagnostics : &s_replay.diagnostics;
+}
+
+static uint64_t Estimator_FusionPresentGet(void)
+{
+    return (SYSTEM_FUSION_TIMING_MODE == 0U) ? s_current_fusion.present_us : s_replay.present_us;
+}
+
+static uint32_t Estimator_FusionEpochGet(void)
+{
+    return (SYSTEM_FUSION_TIMING_MODE == 0U) ? s_current_fusion.epoch : s_replay.epoch;
+}
+
+static uint8_t Estimator_FusionFaultGet(void)
+{
+    return (SYSTEM_FUSION_TIMING_MODE == 0U) ? s_current_fusion.faulted : s_replay.faulted;
+}
+
+static NavigationReplayResult Estimator_CurrentResultConvert(NavigationCurrentResult result)
+{
+    s_fusion_execution = (SystemFusionExecutionResult)result;
+    switch (result)
+    {
+        case NAV_CURRENT_OK: return NAV_REPLAY_OK;
+        case NAV_CURRENT_STALE: return NAV_REPLAY_HISTORY_MISS;
+        case NAV_CURRENT_EPOCH_MISMATCH: return NAV_REPLAY_EPOCH_MISMATCH;
+        case NAV_CURRENT_DISCONTINUITY: return NAV_REPLAY_DISCONTINUITY;
+        case NAV_CURRENT_NUMERIC_ERROR: return NAV_REPLAY_NUMERIC_ERROR;
+        case NAV_CURRENT_INVALID:
+        case NAV_CURRENT_DUPLICATE:
+        case NAV_CURRENT_NOT_READY:
+        default: return NAV_REPLAY_INVALID;
+    }
+}
+
+static SystemFusionExecutionResult Estimator_LegacyExecutionGet(NavigationReplayResult result)
+{
+    switch (result)
+    {
+        case NAV_REPLAY_OK: return SYSTEM_FUSION_EXEC_COMPLETE;
+        case NAV_REPLAY_HISTORY_MISS: return SYSTEM_FUSION_EXEC_HISTORY_MISS;
+        case NAV_REPLAY_OVERFLOW: return SYSTEM_FUSION_EXEC_CAPACITY;
+        case NAV_REPLAY_EPOCH_MISMATCH: return SYSTEM_FUSION_EXEC_EPOCH_MISMATCH;
+        case NAV_REPLAY_DISCONTINUITY: return SYSTEM_FUSION_EXEC_DISCONTINUITY;
+        case NAV_REPLAY_NUMERIC_ERROR: return SYSTEM_FUSION_EXEC_NUMERIC_ERROR;
+        case NAV_REPLAY_WORK_LIMIT: return SYSTEM_FUSION_EXEC_WORK_LIMIT;
+        case NAV_REPLAY_INVALID:
+        default: return SYSTEM_FUSION_EXEC_INVALID;
+    }
+}
+
+static void Estimator_FusionReset(void)
+{
+    if (SYSTEM_FUSION_TIMING_MODE == 0U)
+    {
+        NavigationCurrentResult result = NavigationCurrent_Reset(&s_current_fusion, &s_estimator.kf,
+            0U, ++s_replay_epoch, SystemCalibration_GenerationGet());
+        if (result != NAV_CURRENT_OK) { s_current_fusion.faulted = 1U; }
+    }
+    else
+    { NavigationReplay_Reset(&s_replay, &s_replay_storage, &s_estimator.kf, 0U, ++s_replay_epoch); }
+    s_fusion_execution = SYSTEM_FUSION_EXEC_NOT_READY;
+}
+
 static uint32_t Estimator_OperationNext(void)
 {
     SILVERSTAR_ASSERT(s_estimator.operation_sequence < UINT32_MAX,
@@ -1663,6 +1735,48 @@ static EstimatorGnssPrepareResult Estimator_GnssSamplePrepare(
 }
 
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
+static void Estimator_TimingSourceResolve(uint64_t receive_us, uint64_t sample_us,
+    uint8_t trusted, uint32_t delay_ms, uint64_t *source_us, uint8_t *flags)
+{
+    *source_us = 0U; *flags = 0U;
+    if (SystemTime_MeasurementTimestampResolve(receive_us, sample_us, trusted,
+        delay_ms, source_us) == SYSTEM_MEASUREMENT_TIME_OK)
+    {
+        *flags = SYSTEM_FUSION_SOURCE_RESOLVED | ((trusted != 0U) ?
+            SYSTEM_FUSION_TRUSTED_SOURCE : SYSTEM_FUSION_DELAY_FALLBACK);
+    }
+}
+
+static uint8_t Estimator_ReplayWireResult(NavigationReplayResult result)
+{
+    return (SYSTEM_FUSION_TIMING_MODE == 0U) ? SYSTEM_FUSION_REPLAY_NOT_RUN : (uint8_t)result;
+}
+
+static void Estimator_GnssTimingOutcome(const NavigationReplayEvent *event,
+    EstimatorGnssUpdateWork *work, NavigationReplayResult result, const NavigationReplayOutcome *outcome)
+{
+    uint8_t part;
+    for (part = 0U; part < 2U; part++)
+    {
+        uint8_t kind = (part == 0U) ? NAV_REPLAY_POSITION : NAV_REPLAY_VELOCITY;
+        uint8_t *flags = (part == 0U) ? &work->measurement.position_timing_flags : &work->measurement.velocity_timing_flags;
+        uint64_t *application = (part == 0U) ? &work->measurement.position_application_timestamp_us : &work->measurement.velocity_application_timestamp_us;
+        uint8_t *execution = (part == 0U) ? &work->measurement.position_execution_result : &work->measurement.velocity_execution_result;
+        const NavigationKfGnssSeparatedUpdateResult *groups = (part == 0U) ? &outcome->position_groups : &outcome->velocity_groups;
+        uint32_t delay = (part == 0U) ? SYSTEM_ESTIMATOR_GNSS_POSITION_MEASUREMENT_DELAY_MS : SYSTEM_ESTIMATOR_GNSS_VELOCITY_MEASUREMENT_DELAY_MS;
+        if ((event->kind & kind) == 0U) { continue; }
+        *execution = (uint8_t)s_fusion_execution;
+        if (((result == NAV_REPLAY_OK) && (groups->horizontal_attempted || groups->vertical_attempted)) ||
+            ((SYSTEM_FUSION_TIMING_MODE == 0U) && (s_fusion_execution == SYSTEM_FUSION_EXEC_NUMERIC_ERROR)))
+        {
+            *application = (SYSTEM_FUSION_TIMING_MODE == 0U) ? Estimator_FusionPresentGet() : event->measurement_timestamp_us;
+            *flags |= SYSTEM_FUSION_APPLICATION_EPOCH_VALID;
+            if ((SYSTEM_FUSION_TIMING_MODE == 1U) && (work->sample.measurement_timestamp_trusted == 0U) && (delay == 0U))
+            { *flags |= SYSTEM_FUSION_LEGACY_PRESENT_OVERRIDE; }
+        }
+    }
+}
+
 static void Estimator_GnssMeasurementLogPrepare(uint64_t state_timestamp_us,
     EstimatorGnssUpdateWork *work)
 {
@@ -1675,10 +1789,21 @@ static void Estimator_GnssMeasurementLogPrepare(uint64_t state_timestamp_us,
     work->measurement.receive_timestamp_us = sample->receive_timestamp_us;
     work->measurement.sequence = sample->sequence;
     work->measurement.estimator_present_timestamp_us = state_timestamp_us;
-    work->measurement.replay_epoch = s_replay.epoch;
+    work->measurement.replay_epoch = Estimator_FusionEpochGet();
     work->measurement.valid_group_mask = sample->valid_group_mask;
-    work->measurement.position_replay_result = NAV_REPLAY_INVALID;
-    work->measurement.velocity_replay_result = NAV_REPLAY_INVALID;
+    work->measurement.position_replay_result = Estimator_ReplayWireResult(NAV_REPLAY_INVALID);
+    work->measurement.velocity_replay_result = Estimator_ReplayWireResult(NAV_REPLAY_INVALID);
+    work->measurement.fusion_timing_mode = SYSTEM_FUSION_TIMING_MODE;
+    work->measurement.position_execution_result = SYSTEM_FUSION_EXEC_INVALID;
+    work->measurement.velocity_execution_result = SYSTEM_FUSION_EXEC_INVALID;
+    work->measurement.source_id = s_estimator.last_gnss_source;
+    work->measurement.calibration_generation = SystemCalibration_GenerationGet();
+    Estimator_TimingSourceResolve(sample->receive_timestamp_us, sample->sample_timestamp_us,
+        sample->measurement_timestamp_trusted, SYSTEM_ESTIMATOR_GNSS_POSITION_MEASUREMENT_DELAY_MS,
+        &work->measurement.position_source_timestamp_us, &work->measurement.position_timing_flags);
+    Estimator_TimingSourceResolve(sample->receive_timestamp_us, sample->sample_timestamp_us,
+        sample->measurement_timestamp_trusted, SYSTEM_ESTIMATOR_GNSS_VELOCITY_MEASUREMENT_DELAY_MS,
+        &work->measurement.velocity_source_timestamp_us, &work->measurement.velocity_timing_flags);
     work->measurement.receive_result = NAV_REPLAY_INVALID;
     (void)memset(work->measurement.group_update_result,
         NAV_KF_UPDATE_REJECTED_INVALID, sizeof(work->measurement.group_update_result));
@@ -2035,9 +2160,9 @@ static void Estimator_GnssRecoveryLogPush(uint64_t timestamp_us, uint32_t source
     (void)memset(&record, 0, sizeof(record));
     record.estimator_present_timestamp_us = timestamp_us;
     record.source_sequence = source_sequence;
-    record.replay_epoch = s_replay.epoch;
+    record.replay_epoch = Estimator_FusionEpochGet();
     record.operation_sequence = s_estimator.operation_sequence;
-    record.replay_generation = s_replay.diagnostics.replay_count;
+    record.replay_generation = Estimator_FusionDiagnosticsGet()->replay_count;
     for (group = 0U; group < NAV_KF_GNSS_GROUP_COUNT; group++)
     {
         const SystemEstimatorGnssGroupDiagnostics *diagnostic =
@@ -2144,10 +2269,10 @@ static SystemMeasurementTimeResult Estimator_MeasurementTimeResolve(
         receive_us, sample_us, trusted, delay_ms, measurement_us);
     if (result != SYSTEM_MEASUREMENT_TIME_OK)
     {
-        s_replay.diagnostics.last_result = NAV_REPLAY_INVALID;
-        s_replay.diagnostics.rejection_count++;
+        Estimator_FusionDiagnosticsGet()->last_result = NAV_REPLAY_INVALID;
+        Estimator_FusionDiagnosticsGet()->rejection_count++;
     }
-    else if ((trusted == 0U) && (delay_ms == 0U))
+    else if ((SYSTEM_FUSION_TIMING_MODE == 1U) && (trusted == 0U) && (delay_ms == 0U))
     {
         /* Legacy zero-delay application boundary. Original receive timestamp
          * remains in native and estimator input records. */
@@ -2172,9 +2297,23 @@ static NavigationReplayResult Estimator_ReplayInsert(
     const NavigationReplayEvent *event, NavigationReplayOutcome *outcome)
 {
     uint64_t start_us = SystemTime_GetMonotonicUs();
-    NavigationReplayResult result = NavigationReplay_Insert(
-        &s_replay, &s_estimator.kf, event, outcome);
-    NavigationReplay_RuntimeRecord(&s_replay, SystemTime_GetMonotonicUs() - start_us);
+    NavigationReplayResult result;
+    if (SYSTEM_FUSION_TIMING_MODE == 0U)
+    {
+        uint64_t elapsed_us;
+        result = Estimator_CurrentResultConvert(
+            NavigationCurrent_Insert(&s_current_fusion, &s_estimator.kf, event, outcome));
+        elapsed_us = SystemTime_GetMonotonicUs() - start_us;
+        s_current_fusion.diagnostics.last_runtime_us = (elapsed_us > UINT32_MAX) ? UINT32_MAX : (uint32_t)elapsed_us;
+        if (s_current_fusion.diagnostics.last_runtime_us > s_current_fusion.diagnostics.max_runtime_us)
+        { s_current_fusion.diagnostics.max_runtime_us = s_current_fusion.diagnostics.last_runtime_us; }
+    }
+    else
+    {
+        result = NavigationReplay_Insert(&s_replay, &s_estimator.kf, event, outcome);
+        NavigationReplay_RuntimeRecord(&s_replay, SystemTime_GetMonotonicUs() - start_us);
+        s_fusion_execution = Estimator_LegacyExecutionGet(result);
+    }
     return result;
 }
 
@@ -2237,14 +2376,15 @@ static void Estimator_GnssReplayEventApply(const NavigationReplayEvent *event,
         if ((event->kind & NAV_REPLAY_POSITION) != 0U)
         {
             work->measurement.position_operation_sequence = operation_sequence;
-            work->measurement.position_replay_result = (uint8_t)result;
+            work->measurement.position_replay_result = Estimator_ReplayWireResult(result);
         }
         if ((event->kind & NAV_REPLAY_VELOCITY) != 0U)
         {
             work->measurement.velocity_operation_sequence = operation_sequence;
-            work->measurement.velocity_replay_result = (uint8_t)result;
+            work->measurement.velocity_replay_result = Estimator_ReplayWireResult(result);
         }
-        work->measurement.replay_generation = s_replay.diagnostics.replay_count;
+        work->measurement.replay_generation = Estimator_FusionDiagnosticsGet()->replay_count;
+        Estimator_GnssTimingOutcome(event, work, result, &outcome);
 #endif
         Estimator_GnssReplayOutcomeCopy(work, event->kind, &outcome);
         for (uint8_t group = 0U; group < 4U; group++)
@@ -2260,7 +2400,7 @@ static void Estimator_GnssReplayEventApply(const NavigationReplayEvent *event,
                 SystemNavigationFusionEvidence evidence = {0};
                 evidence.receive_us = event->receive_timestamp_us;
                 evidence.measurement_us = event->measurement_timestamp_us;
-                evidence.evaluation_us = s_replay.present_us;
+                evidence.evaluation_us = Estimator_FusionPresentGet();
                 evidence.sequence = event->sequence;
                 evidence.source = (uint8_t)event->source;
                 evidence.physically_valid = (uint8_t)((event->valid_group_mask & (1U << group)) != 0U);
@@ -2311,7 +2451,7 @@ static void Estimator_GnssIntegrityApply(EstimatorGnssUpdateWork *work,
     s_native_previous_tow_ms = native_time.time_of_week_ms;
     input.epoch_us = s_native_week_us + (uint64_t)native_time.time_of_week_ms * 1000ULL;
     input.sequence = work->sample.sequence; input.source = event->source;
-    input.generation = s_replay.epoch;
+    input.generation = Estimator_FusionEpochGet();
     input.position_valid = (uint8_t)((event->valid_group_mask & 1U) != 0U);
     input.velocity_valid = (uint8_t)((event->valid_group_mask & 4U) != 0U);
     memcpy(input.position_en, work->position_enu_m, sizeof(input.position_en));
@@ -2366,6 +2506,48 @@ static void Estimator_GnssReplayEventPrepare(EstimatorGnssUpdateWork *work,
     (void)memcpy(event->velocity_variance, work->velocity_variance, sizeof(event->velocity_variance));
 }
 
+static NavigationReplayResult Estimator_GnssReceiveAdmit(
+    EstimatorGnssUpdateWork *work, NavigationReplayEvent *event)
+{
+    NavigationReplayResult result;
+    uint32_t operation_sequence;
+    SILVERSTAR_ASSERT_OBJECT(work, EstimatorGnssUpdateWork, SILVERSTAR_ASSERT_MODULE_APP);
+    SILVERSTAR_ASSERT_OBJECT(event, NavigationReplayEvent, SILVERSTAR_ASSERT_MODULE_APP);
+    work->epoch.timestamp_us = work->sample.receive_timestamp_us;
+    operation_sequence = Estimator_OperationNext();
+    {
+        uint8_t source_instance = 0U;
+        if (SystemSourceSelector_GnssActiveInstanceGet(&source_instance) !=
+            SYSTEM_DEVICE_OK)
+        { source_instance = UINT8_MAX; }
+        event->source = source_instance;
+    }
+    event->sequence = work->sample.sequence;
+    event->calibration_generation = SystemCalibration_GenerationGet();
+    if (SYSTEM_FUSION_TIMING_MODE == 0U)
+    {
+        if (event->source == UINT8_MAX) { event->source = UINT32_MAX; }
+        result = Estimator_CurrentResultConvert(NavigationCurrent_ReceiveTrack(&s_current_fusion, &work->epoch, event));
+    }
+    else
+    {
+        result = NavigationReplay_ReceiveTrack(&s_replay, &work->epoch, event);
+        s_fusion_execution = Estimator_LegacyExecutionGet(result);
+    }
+    (void)operation_sequence;
+#if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
+    work->measurement.receive_operation_sequence = operation_sequence;
+    work->measurement.receive_result = (uint8_t)result;
+    work->measurement.source_id = event->source;
+    if (result != NAV_REPLAY_OK)
+    {
+        work->measurement.position_execution_result = (uint8_t)s_fusion_execution;
+        work->measurement.velocity_execution_result = (uint8_t)s_fusion_execution;
+    }
+#endif
+    return result;
+}
+
 static void Estimator_GnssReplay(uint64_t state_timestamp_us,
                                  EstimatorGnssUpdateWork *work)
 {
@@ -2374,27 +2556,12 @@ static void Estimator_GnssReplay(uint64_t state_timestamp_us,
     uint64_t velocity_us;
     uint8_t part;
     NavigationReplayResult result;
-    uint32_t operation_sequence;
     SILVERSTAR_ASSERT_OBJECT(work, EstimatorGnssUpdateWork,
                              SILVERSTAR_ASSERT_MODULE_APP);
     (void)memset(&event, 0, sizeof(event));
     work->replay_outcome.position = NAV_KF_UPDATE_REJECTED_INVALID;
     work->replay_outcome.velocity = NAV_KF_UPDATE_REJECTED_INVALID;
-    work->epoch.timestamp_us = work->sample.receive_timestamp_us;
-    operation_sequence = Estimator_OperationNext();
-    {
-        uint8_t source_instance = 0U;
-        if (SystemSourceSelector_GnssActiveInstanceGet(&source_instance) !=
-            SYSTEM_DEVICE_OK)
-        { source_instance = UINT8_MAX; }
-        event.source = source_instance;
-    }
-    result = NavigationReplay_ReceiveTrack(&s_replay, &work->epoch, &event);
-    (void)operation_sequence;
-#if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
-    work->measurement.receive_operation_sequence = operation_sequence;
-    work->measurement.receive_result = (uint8_t)result;
-#endif
+    result = Estimator_GnssReceiveAdmit(work, &event);
     if (result != NAV_REPLAY_OK)
     { return; }
     if ((Estimator_MeasurementTimeResolve(work->sample.receive_timestamp_us,
@@ -2416,8 +2583,8 @@ static void Estimator_GnssReplay(uint64_t state_timestamp_us,
     {
         /* Insert this packet's older component first, so its rewind cannot
          * invalidate the newer component's published result in the same packet. */
-        event.kind = ((part == 0U) == (position_us <= velocity_us)) ?
-            NAV_REPLAY_POSITION : NAV_REPLAY_VELOCITY;
+        event.kind = ((part == 0U) == ((SYSTEM_FUSION_TIMING_MODE == 0U) ||
+            (position_us <= velocity_us))) ? NAV_REPLAY_POSITION : NAV_REPLAY_VELOCITY;
         event.measurement_timestamp_us = (event.kind == NAV_REPLAY_POSITION) ?
             position_us : velocity_us;
         if (position_us == velocity_us)
@@ -2548,6 +2715,31 @@ static EstimatorBarometerPrepareResult Estimator_BarometerPendingPrepare(
     return ESTIMATOR_BAROMETER_PREPARE_CONTINUE;
 }
 
+#if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
+static void Estimator_BarometerLogPrepare(uint64_t state_timestamp_us,
+    EstimatorBarometerUpdateWork *work)
+{
+    SILVERSTAR_ASSERT_OBJECT(work, EstimatorBarometerUpdateWork, SILVERSTAR_ASSERT_MODULE_APP);
+    (void)memset(&work->measurement, 0, sizeof(work->measurement));
+    work->measurement.sample_timestamp_us = work->pressure.timestamp_us;
+    work->measurement.receive_timestamp_us = work->pressure.receive_timestamp_us;
+    work->measurement.sequence = work->pressure.sequence;
+    work->measurement.estimator_present_timestamp_us = state_timestamp_us;
+    work->measurement.replay_epoch = Estimator_FusionEpochGet();
+    work->measurement.replay_result = Estimator_ReplayWireResult(NAV_REPLAY_INVALID);
+    work->measurement.fusion_timing_mode = SYSTEM_FUSION_TIMING_MODE;
+    work->measurement.execution_result = SYSTEM_FUSION_EXEC_INVALID;
+    work->measurement.source_id = SYSTEM_FUSION_BAROMETER_SOURCE;
+    work->measurement.calibration_generation = SystemCalibration_GenerationGet();
+    Estimator_TimingSourceResolve(work->pressure.receive_timestamp_us, work->pressure.timestamp_us,
+        work->pressure.measurement_timestamp_trusted, SYSTEM_ESTIMATOR_BARO_MEASUREMENT_DELAY_MS,
+        &work->measurement.source_timestamp_us, &work->measurement.timing_flags);
+    work->measurement.update_result = NAV_KF_UPDATE_REJECTED_INVALID;
+    work->measurement.measurement_timestamp_trusted =
+        work->pressure.measurement_timestamp_trusted;
+}
+#endif
+
 static EstimatorBarometerPrepareResult Estimator_BarometerSampleValidate(
     uint64_t state_timestamp_us,
     EstimatorBarometerUpdateWork *work)
@@ -2560,16 +2752,7 @@ static EstimatorBarometerPrepareResult Estimator_BarometerSampleValidate(
         work->pressure.timestamp_us;
     s_estimator.baro_diagnostics.sample_valid = 0U;
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
-    (void)memset(&work->measurement, 0, sizeof(work->measurement));
-    work->measurement.sample_timestamp_us = work->pressure.timestamp_us;
-    work->measurement.receive_timestamp_us = work->pressure.receive_timestamp_us;
-    work->measurement.sequence = work->pressure.sequence;
-    work->measurement.estimator_present_timestamp_us = state_timestamp_us;
-    work->measurement.replay_epoch = s_replay.epoch;
-    work->measurement.replay_result = NAV_REPLAY_INVALID;
-    work->measurement.update_result = NAV_KF_UPDATE_REJECTED_INVALID;
-    work->measurement.measurement_timestamp_trusted =
-        work->pressure.measurement_timestamp_trusted;
+    Estimator_BarometerLogPrepare(state_timestamp_us, work);
 #endif
     if ((work->pressure.valid == 0U) ||
         (Estimator_BarometerAltitudeResolve(
@@ -2604,6 +2787,7 @@ static EstimatorBarometerPrepareResult Estimator_BarometerSampleValidate(
     { return ESTIMATOR_BAROMETER_PREPARE_CONTINUE; }
     s_snapshot.health_flags |= ESTIMATOR_HEALTH_BARO_MEASUREMENT_INVALID;
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
+    work->measurement.execution_result = SYSTEM_FUSION_EXEC_STALE;
     (void)LoggerBus_BaroMeasurementPush(
         work->pressure.timestamp_us, 0U, &work->measurement);
 #endif
@@ -2676,7 +2860,8 @@ static void Estimator_BarometerReplay(uint64_t state_timestamp_us,
         event.kind = NAV_REPLAY_BAROMETER;
         event.source = 1U;
         event.sequence = work->pressure.sequence;
-        event.epoch = s_replay.epoch;
+        event.epoch = Estimator_FusionEpochGet();
+        event.calibration_generation = SystemCalibration_GenerationGet();
         event.receive_timestamp_us = work->pressure.receive_timestamp_us;
         event.altitude = work->relative_altitude_m;
         event.altitude_variance = work->variance_m2;
@@ -2693,10 +2878,20 @@ static void Estimator_BarometerReplay(uint64_t state_timestamp_us,
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
             work->measurement.measurement_timestamp_us = event.measurement_timestamp_us;
             work->measurement.operation_sequence = operation_sequence;
-            work->measurement.replay_result = (uint8_t)result;
+            work->measurement.replay_result = Estimator_ReplayWireResult(result);
+            work->measurement.execution_result = (uint8_t)s_fusion_execution;
+            if ((result == NAV_REPLAY_OK) || ((SYSTEM_FUSION_TIMING_MODE == 0U) &&
+                (s_fusion_execution == SYSTEM_FUSION_EXEC_NUMERIC_ERROR)))
+            {
+                work->measurement.application_timestamp_us = (SYSTEM_FUSION_TIMING_MODE == 0U) ? state_timestamp_us : event.measurement_timestamp_us;
+                work->measurement.timing_flags |= SYSTEM_FUSION_APPLICATION_EPOCH_VALID;
+                if ((SYSTEM_FUSION_TIMING_MODE == 1U) && (work->pressure.measurement_timestamp_trusted == 0U) &&
+                    (SYSTEM_ESTIMATOR_BARO_MEASUREMENT_DELAY_MS == 0U))
+                { work->measurement.timing_flags |= SYSTEM_FUSION_LEGACY_PRESENT_OVERRIDE; }
+            }
             work->measurement.update_result = (uint8_t)
                 Estimator_MeasurementResultConvert(outcome.barometer);
-            work->measurement.replay_generation = s_replay.diagnostics.replay_count;
+            work->measurement.replay_generation = Estimator_FusionDiagnosticsGet()->replay_count;
             work->measurement.innovation_m = outcome.baro_innovation;
             work->measurement.nis = outcome.baro_nis;
 #endif
@@ -2856,9 +3051,9 @@ static void Estimator_FaultSnapshotPublish(void)
 
 static uint8_t Estimator_ReplayFaultStop(void)
 {
-    SILVERSTAR_ASSERT(s_replay.faulted <= 1U,
+    SILVERSTAR_ASSERT(Estimator_FusionFaultGet() <= 1U,
         SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
-    if (s_replay.faulted == 0U) { return 0U; }
+    if (Estimator_FusionFaultGet() == 0U) { return 0U; }
     Estimator_FaultSnapshotPublish();
     return 1U;
 }
@@ -2900,7 +3095,7 @@ static void Estimator_SnapshotPublish(uint64_t timestamp_us)
     s_snapshot.prediction_queue_overflow_count =
         bus_stats.prediction_overflow_count;
     s_snapshot.health_flags |= Estimator_CoreHealthFlagsMap(
-        s_estimator.kf.health_flags, s_replay.faulted);
+        s_estimator.kf.health_flags, Estimator_FusionFaultGet());
     s_snapshot.initialized = s_estimator.initialized;
     s_snapshot.mission_running = s_estimator.mission_running;
     s_snapshot.gnss_origin_valid = s_estimator.gnss_origin_valid;
@@ -2985,7 +3180,7 @@ static void Estimator_BaseLogBuild(FlightLogEstimatorRecord *base)
     memcpy(base->q_nb, s_snapshot.q_nb, sizeof(base->q_nb));
     memcpy(base->acceleration_enu_mps2, s_snapshot.acceleration_enu_mps2, sizeof(base->acceleration_enu_mps2));
     base->operation_sequence = s_estimator.operation_sequence;
-    base->replay_epoch = s_replay.epoch;
+    base->replay_epoch = Estimator_FusionEpochGet();
     memcpy(base->position_enu_m, s_snapshot.position_enu_m,
            sizeof(base->position_enu_m));
     memcpy(base->velocity_enu_mps, s_snapshot.velocity_enu_mps,
@@ -3081,8 +3276,8 @@ static void Estimator_LogPush(uint64_t timestamp_us)
     FlightLogKf6DiagnosticRecord diagnostic;
     FlightLogKf6FullPRecord full_p;
     uint8_t critical = (uint8_t)((s_estimator.output_sequence <= 1U) ||
-        (s_estimator.logged_replay_epoch != s_replay.epoch));
-    s_estimator.logged_replay_epoch = s_replay.epoch;
+        (s_estimator.logged_replay_epoch != Estimator_FusionEpochGet()));
+    s_estimator.logged_replay_epoch = Estimator_FusionEpochGet();
     uint8_t lifecycle_state = (uint8_t)SystemLifecycle_GetState();
     SILVERSTAR_ASSERT(s_estimator.initialized <= 1U,
         SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
@@ -3183,12 +3378,12 @@ static void Estimator_PredictionLogPush(const SystemInertialIncrement *predictio
     SILVERSTAR_ASSERT(attitude_result <= 1U,
         SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
     (void)memset(&record, 0, sizeof(record));
-    record.estimator_present_timestamp_us = s_replay.present_us;
+    record.estimator_present_timestamp_us = Estimator_FusionPresentGet();
     record.interval_end_timestamp_us = prediction->timestamp_us;
     record.operation_sequence = operation_sequence;
     record.source_sequence = prediction->sequence;
-    record.replay_epoch = s_replay.epoch;
-    record.replay_generation = s_replay.diagnostics.replay_count;
+    record.replay_epoch = Estimator_FusionEpochGet();
+    record.replay_generation = Estimator_FusionDiagnosticsGet()->replay_count;
     record.replay_result = (uint8_t)result;
     record.attitude_result = attitude_result;
     (void)LoggerBus_EstimatorStepPush(prediction->timestamp_us, &record);
@@ -3199,9 +3394,13 @@ static NavigationReplayResult Estimator_PredictionApply(
     const SystemInertialIncrement *prediction, const float delta_velocity[3])
 {
     uint32_t operation_sequence = Estimator_OperationNext();
-    NavigationReplayResult result = NavigationReplay_Predict(
-        &s_replay, &s_estimator.kf, prediction->timestamp_us,
-        delta_velocity, prediction->dt_s);
+    NavigationReplayResult result;
+    if (SYSTEM_FUSION_TIMING_MODE == 0U)
+    { result = Estimator_CurrentResultConvert(NavigationCurrent_Predict(
+        &s_current_fusion, &s_estimator.kf, prediction->timestamp_us, delta_velocity, prediction->dt_s)); }
+    else
+    { result = NavigationReplay_Predict(&s_replay, &s_estimator.kf,
+        prediction->timestamp_us, delta_velocity, prediction->dt_s); }
     (void)operation_sequence;
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
     Estimator_PredictionLogPush(prediction, operation_sequence, result, 1U);
@@ -3249,8 +3448,18 @@ static uint8_t Estimator_KfPredictionApply(
 #if (SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED != 0U)
 static void Estimator_BackendPredictionProcess(const SystemInertialIncrement *prediction)
 {
-    if (SystemNavigationBackend_Predict(prediction, &s_snapshot) != SYSTEM_DEVICE_OK)
+    SystemDeviceResult result = SystemNavigationBackend_Predict(prediction, &s_snapshot);
+    if (result != SYSTEM_DEVICE_OK)
     { s_snapshot.health_flags |= ESTIMATOR_HEALTH_KF_NUMERIC_ERROR; }
+    /* Current ESKF's terminal fault certificate clears both snapshot lifecycle
+     * flags. Legacy ESKF never emits this cleared VERIFY_FAILED certificate. */
+    if ((SYSTEM_BUILD_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15) &&
+        (result == SYSTEM_DEVICE_VERIFY_FAILED) && (s_snapshot.initialized == 0U) &&
+        (s_snapshot.mission_running == 0U))
+    {
+        s_estimator.initialized = 0U;
+        s_estimator.mission_running = 0U;
+    }
     EstimatorTask_SnapshotCommit();
     Estimator_DiagnosticsPublish(prediction->timestamp_us);
 }
@@ -3777,7 +3986,7 @@ static SystemDeviceResult Estimator_InitializeNavigation(uint8_t activate)
     Estimator_KfInitialVelocityApply();
     Estimator_KfRuntimeInitialize(activate);
     SystemNavigationHealth_Reset(SystemTime_GetMonotonicUs());
-    NavigationReplay_Reset(&s_replay, &s_replay_storage, &s_estimator.kf, 0U, ++s_replay_epoch);
+    Estimator_FusionReset();
     if (SYSTEM_ESTIMATOR_GNSS_INTEGRITY_ENABLE != 0U)
     {
         if (NavigationWindow_Reset(&s_integrity) != NAV_QUALITY_OK)
@@ -3866,7 +4075,7 @@ void EstimatorTask_RollbackMissionStart(void)
 #endif
 #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
     NavigationKf_Reset(&s_estimator.kf);
-    NavigationReplay_Reset(&s_replay, &s_replay_storage, &s_estimator.kf, 0U, ++s_replay_epoch);
+    Estimator_FusionReset();
 #endif
     s_snapshot.initialized = 0U;
     s_snapshot.mission_running = 0U;
@@ -3916,7 +4125,7 @@ void EstimatorTask_AbortMission(void)
     s_estimator.initialized = 0U;
 #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
     NavigationKf_Reset(&s_estimator.kf);
-    NavigationReplay_Reset(&s_replay, &s_replay_storage, &s_estimator.kf, 0U, ++s_replay_epoch);
+    Estimator_FusionReset();
 #endif
     s_snapshot.initialized = 0U;
     s_snapshot.mission_running = 0U;
