@@ -78,9 +78,13 @@ def test_replay_uses_fixed_corrected_imu_and_translates_every_visible_field(
     assert len(page._parameter_labels) == 38
     assert page._parameter_widgets["nis_soft_enabled"].value() == 1
     assert page._parameter_widgets["nis_hard_enabled"].value() == 1
-    assert page.parameter_group_combo.count() == 5
-    assert page.parameter_group_combo.currentText() == "过程模型"
-    assert page.parameters_form.rowCount() == 4
+    assert page.parameter_group_combo.count() == 3
+    assert page.parameter_group_combo.currentText() == "初始不确定度"
+    assert page.common_parameters_form.rowCount() == 14
+    assert page.parameters_form.rowCount() == 6
+    assert not page.advanced_button.isChecked() and not page.advanced_parameters.isVisible()
+    assert page._parameter_widgets["nis_soft_enabled"].isVisible()
+    assert page._parameter_widgets["gnss_velocity_measurement_delay_ms"].isVisible()
     assert page._parameter_labels["process_accel_std_e"].text() == ("过程加速度标准差 E")
     for parameter_id, label in page._parameter_labels.items():
         assert label.text() != parameter_id
@@ -141,13 +145,11 @@ def test_what_if_groups_dirty_and_reset_use_recorded_configuration(
         page.parameter_group_combo.itemText(index)
         for index in range(page.parameter_group_combo.count())
     ] == [
-        "Process Model",
         "Initial Covariance",
-        "Measurement Noise",
         "Consistency Gating",
         "GNSS Position Self-Check",
     ]
-    assert page.parameters_form.rowCount() == 4
+    assert page.common_parameters_form.rowCount() == 14
     for axis, expected in zip("enu", recorded_process, strict=True):
         assert math.isclose(
             page._parameter_widgets[f"process_accel_std_{axis}"].value(),
@@ -155,10 +157,10 @@ def test_what_if_groups_dirty_and_reset_use_recorded_configuration(
         )
     assert "prediction squares sigma" in page._parameter_labels["process_accel_std_e"].toolTip()
 
-    measurement_index = page.parameter_group_combo.findData("parameter_group.measurement_noise")
-    page.parameter_group_combo.setCurrentIndex(measurement_index)
+    assert page.parameter_group_combo.findData("parameter_group.measurement_noise")==-1
     application.processEvents()
-    assert page.parameters_form.rowCount() == 8
+    assert page._parameter_widgets["gnss_position_std_horizontal"].isVisible()
+    assert not page._parameter_widgets["p0_position_e"].isVisible()
     assert "Actual sigma floor" in page._parameter_labels["gnss_position_std_horizontal"].toolTip()
 
     page._parameter_widgets["process_accel_std_e"].setValue(8.25)
@@ -213,6 +215,10 @@ def test_what_if_group_switch_removes_residual_rows_and_preserves_values(
     }
     for parameter_id, value in edited_values.items():
         page._parameter_widgets[parameter_id].setValue(value)
+    common_ids={parameter_id for parameter_id,spec in page._parameter_specs.items()
+                if page._CommonParameter_Is(spec)}
+    page.advanced_button.click()
+    application.processEvents()
 
     group_keys = tuple(
         page.parameter_group_combo.itemData(index)
@@ -222,7 +228,7 @@ def test_what_if_group_switch_removes_residual_rows_and_preserves_values(
         group_key: tuple(
             parameter_id
             for parameter_id, spec in page._parameter_specs.items()
-            if (spec.group_key or "parameter_group.general") == group_key
+            if (spec.group_key or "parameter_group.general") == group_key and parameter_id not in common_ids
         )
         for group_key in group_keys
     }
@@ -256,7 +262,9 @@ def test_what_if_group_switch_removes_residual_rows_and_preserves_values(
                 assert editor.isVisible()
                 attached_widgets.extend((label, editor))
             assert len(attached_widgets) == len({id(widget) for widget in attached_widgets})
-            hidden_ids = set(page._parameter_specs) - set(visible_ids)
+            assert page.common_parameters_form.rowCount()==len(common_ids)
+            assert all(page._parameter_widgets[key].isVisible() for key in common_ids)
+            hidden_ids = set(page._parameter_specs) - set(visible_ids) - common_ids
             for parameter_id in hidden_ids:
                 label = page._parameter_labels[parameter_id]
                 editor = page._parameter_widgets[parameter_id]
@@ -333,4 +341,44 @@ def test_replay_is_the_only_global_source_selector_and_can_return_to_recorded(
     page.Language_Apply(Translator("zh_CN"))
     assert page.analysis_source_combo.itemText(0) == "飞控记录 · Pure INS"
     assert "固件构建版本" in page.result_information_label.text()
+    page.close()
+
+
+def test_current_state_sf6_and_pure_ins_never_get_kalman_fusion_controls() -> None:
+    application=QApplication.instance() or QApplication([])
+    page=ReplayPage(Translator('en_US'),builtin_registry())
+    page.show()
+    for identifier in ('silverstar.algorithm.sf6','silverstar.algorithm.pure_ins'):
+        index=page.algorithm_combo.findData(identifier)
+        assert index>=0
+        page.algorithm_combo.setCurrentIndex(index)
+        application.processEvents()
+        names=set(page._parameter_widgets)
+        assert not any('delay' in name or 'nis_' in name or name.startswith('p0_') for name in names)
+        assert not page.advanced_button.isVisible()
+        assert all(widget.isVisible() for widget in page._parameter_widgets.values())
+        if identifier.endswith('.sf6'):
+            assert {'gain_ve','gain_vn','gain_vu','gain_pe','gain_pn','gain_pu'}<=names
+        else:
+            assert not any('gain_' in name or 'gnss' in name or 'baro' in name for name in names)
+    page.close()
+
+
+def test_eskf_legacy_flat_schema_keeps_covariance_and_lever_arm_advanced() -> None:
+    from silverstar_flp.plugins.algorithms.eskf15.plugin import Eskf15AlgorithmPlugin
+    application=QApplication.instance() or QApplication([])
+    page=ReplayPage(Translator('en_US'),builtin_registry())
+    index=page.algorithm_combo.findData(Eskf15AlgorithmPlugin.metadata.plugin_id)
+    assert index>=0
+    page.algorithm_combo.setCurrentIndex(index)
+    page.show();application.processEvents()
+    for name in ('gyro_noise_density','gnss_position_std_horizontal','nis_soft_enabled'):
+        assert page._parameter_widgets[name].isVisible()
+    for name in ('p0_theta_x','lever_arm_body_x_m','nis_1d_soft'):
+        assert not page._parameter_widgets[name].isVisible()
+    page.advanced_button.click()
+    page.parameter_group_combo.setCurrentIndex(page.parameter_group_combo.findData('replay.parameter_geometry'))
+    application.processEvents()
+    assert page._parameter_widgets['lever_arm_body_x_m'].isVisible()
+    assert not page._parameter_widgets['p0_theta_x'].isVisible()
     page.close()

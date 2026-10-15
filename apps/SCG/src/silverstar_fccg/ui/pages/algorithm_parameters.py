@@ -24,6 +24,13 @@ from silverstar_fccg.ui.widgets import CollapsibleSection
 
 AlgorithmParameterEditor = EnterCommittedDoubleSpinBox | NisProbabilityEditor | GateEnableEditor
 
+# Presentation only: preserve plugin/decoder parameter schemas and all values.
+_COMMON_FUSION_PARAMETERS = frozenset({
+    "gnss_position_std_horizontal", "gnss_position_std_vertical", "gnss_velocity_std", "baro_std_m",
+    "gnss_position_measurement_delay_ms", "gnss_velocity_measurement_delay_ms", "baro_measurement_delay_ms",
+    "nis_soft_enabled", "nis_hard_enabled",
+})
+
 
 class NavigationConfigurationPage(ScrollableLocalizedPage):
     alignmentConfirmed = Signal(str, object)
@@ -65,11 +72,6 @@ class NavigationConfigurationPage(ScrollableLocalizedPage):
         self.Language_Apply(translator)
 
     def _Section_Create(self, key: str) -> tuple[QWidget, QVBoxLayout]:
-        if key == "navigation.parameters":
-            section = CollapsibleSection(self._translator.Text_Get(key), expanded=False)
-            layout = QVBoxLayout(section.body)
-            self.root_layout.addWidget(section)
-            return section, layout
         # The reparented editors already own their titled group boxes.  A
         # second QGroupBox here produces two identical frames and titles.
         section = QWidget()
@@ -157,14 +159,20 @@ class NavigationConfigurationPage(ScrollableLocalizedPage):
             group = QGroupBox(owner.DisplayName_Get(language))
             group_layout = QVBoxLayout(group)
             for level in ("basic", "advanced", "gnss_integrity"):
-                parameters = [p for p in owner.algorithm_parameters if p.group == level and not p.shared_key]
+                parameters = [p for p in owner.algorithm_parameters if not p.shared_key and
+                              ("basic" if p.parameter_id in _COMMON_FUSION_PARAMETERS else p.group) == level]
                 if not parameters:
                     continue
                 key = (owner.component_id, level)
-                section = CollapsibleSection(expanded=self._expanded.get(key, level == "basic"))
-                section.ExpandedChanged.connect(lambda expanded, k=key: self._expanded.__setitem__(k, expanded))
-                section.Title_Set(self._translator.Text_Get("algorithm_parameters." + level))
-                form = QFormLayout(section.body)
+                if level == "basic":
+                    section = QGroupBox(self._translator.Text_Get("algorithm_parameters.basic"))
+                    body = section
+                else:
+                    section = CollapsibleSection(expanded=self._expanded.get(key, False))
+                    section.ExpandedChanged.connect(lambda expanded, k=key: self._expanded.__setitem__(k, expanded))
+                    section.Title_Set(self._translator.Text_Get("algorithm_parameters." + level))
+                    body = section.body
+                form = QFormLayout(body)
                 form.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
                 for parameter in parameters:
                     editor = self._Editor_Create(parameter, values.get(owner.component_id, {}).get(parameter.parameter_id, parameter.default), language)
@@ -226,7 +234,6 @@ class NavigationConfigurationPage(ScrollableLocalizedPage):
 
     def Language_Apply(self, translator: Translator) -> None:
         super().Language_Apply(translator)
-        self.parameters_section.Title_Set(self._translator.Text_Get("navigation.parameters"))
         for heading in self.findChildren(QLabel):
             key = heading.property("navigationSectionKey")
             if key:

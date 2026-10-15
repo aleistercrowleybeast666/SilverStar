@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QLayout,
     QPushButton,
+    QToolButton,
     QScrollArea,
     QTableWidget,
     QTableWidgetItem,
@@ -145,6 +146,19 @@ class ReplayPage(QWidget):
 
         self.parameters_group = QGroupBox()
         parameters_layout = QVBoxLayout(self.parameters_group)
+        self.common_parameters_form = QFormLayout()
+        self.common_parameters_form.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
+        self.common_parameters_form.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
+        parameters_layout.addLayout(self.common_parameters_form)
+        self.advanced_button = QToolButton()
+        self.advanced_button.setCheckable(True)
+        self.advanced_button.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.advanced_button.setArrowType(Qt.ArrowType.RightArrow)
+        parameters_layout.addWidget(self.advanced_button)
+        self.advanced_parameters = QWidget()
+        advanced_layout = QVBoxLayout(self.advanced_parameters)
+        advanced_layout.setContentsMargins(0,0,0,0)
+        self.advanced_button.toggled.connect(self._AdvancedParameters_Set)
         parameter_controls = QHBoxLayout()
         self.parameter_group_label = QLabel()
         self.parameter_group_combo = StandardComboBox()
@@ -155,15 +169,21 @@ class ReplayPage(QWidget):
         self.parameter_reset_button.clicked.connect(self._Parameters_Reset)
         parameter_controls.addWidget(self.parameter_group_label)
         parameter_controls.addWidget(self.parameter_group_combo)
-        parameter_controls.addWidget(self.parameter_modified_label)
         parameter_controls.addStretch(1)
-        parameter_controls.addWidget(self.parameter_reset_button)
-        parameters_layout.addLayout(parameter_controls)
+        advanced_layout.addLayout(parameter_controls)
         self.parameters_form = QFormLayout()
         self.parameters_form.setFieldGrowthPolicy(
             QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow
         )
-        parameters_layout.addLayout(self.parameters_form)
+        self.parameters_form.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
+        advanced_layout.addLayout(self.parameters_form)
+        parameters_layout.addWidget(self.advanced_parameters)
+        self.advanced_parameters.hide()
+        reset_row=QHBoxLayout()
+        reset_row.addWidget(self.parameter_modified_label)
+        reset_row.addStretch(1)
+        reset_row.addWidget(self.parameter_reset_button)
+        parameters_layout.addLayout(reset_row)
         content_layout.addWidget(self.parameters_group)
 
         action_layout = QHBoxLayout()
@@ -382,10 +402,6 @@ class ReplayPage(QWidget):
             self._parameter_specs[parameter.parameter_id] = parameter
             self._ParameterTooltip_Apply(parameter)
         self._ParameterGroups_Refresh()
-        if plugin.metadata.plugin_id == "silverstar.algorithm.sf6":
-            self.parameter_group_combo.setCurrentIndex(
-                self.parameter_group_combo.findData("parameter_group.sf6_gain")
-            )
         self._ParameterForm_Refresh()
         self._ParametersDirty_Refresh()
         self._Mode_Refresh()
@@ -411,12 +427,34 @@ class ReplayPage(QWidget):
                 continue
         return values
 
+    @staticmethod
+    def _ParameterGroup_Get(parameter) -> str:
+        # Some historical ESKF schemas group every scalar as process_model.
+        # Refine presentation without changing the recorded schema identity.
+        name=parameter.parameter_id
+        if name.startswith('p0_'): return 'parameter_group.initial_covariance'
+        if name.startswith('lever_arm_body_'): return 'replay.parameter_geometry'
+        if name.startswith('nis_'): return 'parameter_group.consistency_gating'
+        return parameter.group_key or 'parameter_group.general'
+
+    @classmethod
+    def _CommonParameter_Is(cls, parameter) -> bool:
+        return cls._ParameterGroup_Get(parameter) in {
+            "parameter_group.process_model", "parameter_group.measurement_noise",
+            "parameter_group.sf6_gain", "parameter_group.general", "",
+        } or parameter.parameter_id in {"nis_soft_enabled", "nis_hard_enabled"}
+
+    def _AdvancedParameters_Set(self, expanded: bool) -> None:
+        self.advanced_button.setArrowType(Qt.ArrowType.DownArrow if expanded else Qt.ArrowType.RightArrow)
+        self.advanced_parameters.setVisible(expanded and self.parameter_group_combo.count()>0)
+
     def _ParameterGroups_Refresh(self) -> None:
         selected = self.parameter_group_combo.currentData()
         group_keys = tuple(
             dict.fromkeys(
-                parameter.group_key or "parameter_group.general"
+                self._ParameterGroup_Get(parameter)
                 for parameter in self._parameter_specs.values()
+                if not self._CommonParameter_Is(parameter)
             )
         )
         self.parameter_group_combo.blockSignals(True)
@@ -429,19 +467,22 @@ class ReplayPage(QWidget):
         index = self.parameter_group_combo.findData(selected)
         self.parameter_group_combo.setCurrentIndex(max(index, 0))
         self.parameter_group_combo.blockSignals(False)
+        self.advanced_button.setVisible(bool(group_keys))
+        self._AdvancedParameters_Set(self.advanced_button.isChecked())
 
     def _ParameterForm_Refresh(self, *_args: object) -> None:
         self._ParameterForm_Clear()
         group_key = self.parameter_group_combo.currentData()
         for parameter_id, parameter in self._parameter_specs.items():
-            current_group = parameter.group_key or "parameter_group.general"
-            if current_group != group_key:
+            current_group = self._ParameterGroup_Get(parameter)
+            common = self._CommonParameter_Is(parameter)
+            if not common and current_group != group_key:
                 continue
             label = self._parameter_labels[parameter_id]
             editor = self._parameter_widgets[parameter_id]
             label.show()
             editor.show()
-            self.parameters_form.addRow(label, editor)
+            (self.common_parameters_form if common else self.parameters_form).addRow(label, editor)
         self.parameters_form.invalidate()
         self.parameters_form.activate()
         self.parameters_group.updateGeometry()
@@ -450,8 +491,11 @@ class ReplayPage(QWidget):
         for widget in (*self._parameter_labels.values(), *self._parameter_widgets.values()):
             widget.hide()
             self.parameters_form.removeWidget(widget)
+            self.common_parameters_form.removeWidget(widget)
         while self.parameters_form.rowCount():
             self.parameters_form.takeRow(0)
+        while self.common_parameters_form.rowCount():
+            self.common_parameters_form.takeRow(0)
         self.parameters_form.invalidate()
 
     def _Parameters_Reset(self) -> None:
@@ -1255,6 +1299,7 @@ class ReplayPage(QWidget):
         self.primary_source_label.setText(translator.Text_Get("comparison.primary"))
         self.secondary_source_label.setText(translator.Text_Get("comparison.secondary"))
         self.parameters_group.setTitle(translator.Text_Get("replay.what_if_parameters"))
+        self.advanced_button.setText(translator.Text_Get("replay.advanced_parameters"))
         self.parameter_group_label.setText(translator.Text_Get("replay.parameter_group"))
         self.parameter_reset_button.setText(translator.Text_Get("action.reset_parameters"))
         self.parameter_reset_button.setToolTip(

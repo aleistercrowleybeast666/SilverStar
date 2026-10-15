@@ -1,4 +1,6 @@
 {
+  "replay.parameter_geometry": "GNSS lever arm",
+  "replay.advanced_parameters": "Advanced parameters",
   "progress.stage_note": "Work stages completed; not an estimate of time remaining.",
   "progress.stage_percent": "Stages %p%",
   "progress.save.references": "Saving: resolve project references",

@@ -1,0 +1,7 @@
+{
+  "bytes": 415422,
+  "sha256": "66e5c6f5a2b1a9e47937dbca3f48f3f5b2265ae6a69170293853eb78c9ee7f1e",
+  "verification": "Closed archive CRC and every manifest entry verified; current source hashes match",
+  "packaging_attempt": "record_fusion_ui_evidence.py exited 1 when testzip was called on the still-open write archive; read-only validation after closing passed; artifact not rewritten",
+  "cleanup_authorized": false
+}

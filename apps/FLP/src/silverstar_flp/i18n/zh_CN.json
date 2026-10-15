@@ -1,4 +1,6 @@
 {
+  "replay.parameter_geometry": "GNSS 天线杆臂",
+  "replay.advanced_parameters": "高级参数",
   "progress.stage_note": "已完成的工作阶段；不代表剩余时间估计。",
   "progress.stage_percent": "阶段 %p%",
   "progress.save.references": "保存：解析工程引用路径",

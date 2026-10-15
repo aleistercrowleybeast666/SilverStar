@@ -1,0 +1,160 @@
+{
+  "base_commit": "176733d7fff96e76fb3281e6f59bcb3777119850",
+  "owner": "watch_fusion root",
+  "scope": "SCG/FLP parameter presentation only",
+  "scg": "166 passed, one known historical golden mismatch explicitly deselected",
+  "flp": "148 passed",
+  "visual": "Offline component previews; SCG Chinese and FLP English inspected by root",
+  "hardware": "NOT TESTED",
+  "cleanup_authorized": false,
+  "files": {
+    "apps/SCG/src/silverstar_fccg/ui/pages/algorithm_parameters.py": {
+      "size": 13355,
+      "sha256": "3386fe074566e9ee48d8b22bc5c6c3771fe8e6b8c3dafcab758751a81b4a867b"
+    },
+    "apps/SCG/tests/test_algorithm_parameters.py": {
+      "size": 18055,
+      "sha256": "e3d0234e6205b5d83bb62e7e8be5f0a985de0cbed449ee04d123f7529e969de5"
+    },
+    "apps/SCG/tests/test_common_navigation_parameters_ui.py": {
+      "size": 1706,
+      "sha256": "a9f33a655c9c37f3e2a5473f9223112264c02b42e43dc6da7943b7c23979b00a"
+    },
+    "apps/FLP/src/silverstar_flp/ui/pages/replay.py": {
+      "size": 68668,
+      "sha256": "3199fd56929c6d80eec68ea26caa06edcb5970d655ecd3a0199296769b74b741"
+    },
+    "apps/FLP/src/silverstar_flp/i18n/en_US.json": {
+      "size": 70286,
+      "sha256": "c1270ecf687b020ac9d7429630c1b68507d5c6a932d186252b3cbc20501f9dea"
+    },
+    "apps/FLP/src/silverstar_flp/i18n/zh_CN.json": {
+      "size": 66892,
+      "sha256": "73d7f523245a2f3725cf9e5d217ced23771d41c7c706dd1573d11efb56316538"
+    },
+    "apps/FLP/tests/test_replay_page.py": {
+      "size": 16518,
+      "sha256": "b550c9be5a8d1b8044328da4a80a81501c2defdf3adbb5809877a6aa154dbea1"
+    },
+    "docs/public/SCG/NAVIGATION_PARAMETER_VISIBILITY_20261015.md": {
+      "size": 2028,
+      "sha256": "461e09e4e34f8d042e15ce5564dedc143ea825d431b16ebd9019e0ab3bd2b4a4"
+    },
+    "execution/fusion_ui01.json": {
+      "size": 1125,
+      "sha256": "55c67a8d4288f61796a0d53fbe4b1eb1e23598b0c2ec0fbff5d38c1a5199e280"
+    },
+    "execution/fusion_ui02.json": {
+      "size": 1176,
+      "sha256": "37fcbb67a793d47b31638c9e6c86a0a4cb70bc35878011c3f3808203fd87983c"
+    },
+    "execution/fusion_ui03.json": {
+      "size": 1177,
+      "sha256": "6ce08a176497f730f0e3bc02f700710ae43b3431aa91bbcefeeb1980c5747275"
+    },
+    "execution/fusion_ui04.json": {
+      "size": 1174,
+      "sha256": "8160f2b2b4ddb60333321cddb0266f931bde4b1aebd595030ead09373623bc0b"
+    },
+    "execution/fusion_ui05.json": {
+      "size": 1177,
+      "sha256": "179c634c0503ea6e0bba47daa5cd4e038477c2ee646f23dae9591963d5cd9b93"
+    },
+    "execution/fusion_ui06.json": {
+      "size": 1176,
+      "sha256": "a6351fffe058035b8ed13d12b1edf7ca8935c1101e3945a4ba62c26d1a5a9af6"
+    },
+    "execution/fusion_ui01.log": {
+      "size": 3886,
+      "sha256": "7743a002aa4a0fec9c1241c1a974600118fa26eba1d19e619675df77969c95fd"
+    },
+    "execution/fusion_ui02.log": {
+      "size": 3935,
+      "sha256": "a737860a2ee74924e5f15bb45718f5725cbafe8ccb648466b44e7d6b2154d3c7"
+    },
+    "execution/fusion_ui03.log": {
+      "size": 264,
+      "sha256": "1e53670f16e6147aec871f411f7e379ca01af17014b014ebb9d9b358c0383f64"
+    },
+    "execution/fusion_ui04.log": {
+      "size": 264,
+      "sha256": "5fb76a1562c079b4289583a96c081234b62d1b04b91c4c38d537696549a80fbe"
+    },
+    "execution/fusion_ui05.log": {
+      "size": 4376,
+      "sha256": "0355602976865b5a74b60bb82011b8f8d81f149bb7da5ef0c472c1a9e46b2a9b"
+    },
+    "execution/fusion_ui06.log": {
+      "size": 264,
+      "sha256": "62e28649a9874f806508e54c41d072701bc3aa2b30e9f7a11ad3d78a845935e0"
+    },
+    "execution/scg_ui01.json": {
+      "size": 1055,
+      "sha256": "22c57e25d4557954b5fa9fc8ceca293e60d0374ced77219ff7acd4cee7a9e323"
+    },
+    "execution/scg_ui02.json": {
+      "size": 1109,
+      "sha256": "1d9b7a2c28958b0af5420cc081eab03ee596087677388ab52f31b4315cce3de5"
+    },
+    "execution/scg_ui03.json": {
+      "size": 1110,
+      "sha256": "f6878c85dbf46a8fe9e08639b690b59e7364b6c2532baf7b864f7c571ae4e316"
+    },
+    "execution/scg_ui04.json": {
+      "size": 1284,
+      "sha256": "f1b24c1d95e2fa00d0d0148c70cb470b44600c84e271de2380ae8f31b1d7108e"
+    },
+    "execution/scg_ui01.log": {
+      "size": 4851,
+      "sha256": "11c36178d1847fec691a58d0551e1dd96b6fa15cd309854b1cf9361d593679cb"
+    },
+    "execution/scg_ui02.log": {
+      "size": 1762,
+      "sha256": "e82ef150c6d93bc337dd3e031e51c0deb4f470df1d1f65ebc9b194261490509e"
+    },
+    "execution/scg_ui03.log": {
+      "size": 115,
+      "sha256": "212fef70fb9316cb8129bb99982e904137f9cfbe7c1e5061e01052528c723df2"
+    },
+    "execution/scg_ui04.log": {
+      "size": 279,
+      "sha256": "1d4430f145376a56064ad42c233490d79c6098c2b1978b77be62280bc8446ce4"
+    },
+    "execution/fusion_visual01.json": {
+      "size": 949,
+      "sha256": "b80c569ad4a2a87f490e6e62e2f0a15f715ce426f9c661c5bf2e1a25d0ddd564"
+    },
+    "execution/fusion_visual01.log": {
+      "size": 60,
+      "sha256": "1071a33408a038119a29b87cceaabaaa1a03baefac0deb74f6717fc8a200d941"
+    },
+    "execution/flp_common_en_US.png": {
+      "size": 86367,
+      "sha256": "d23b4aaf5ab6db5c22336afa98fabc90f91e4e719920bf8de0def097da9f2a0a"
+    },
+    "execution/flp_common_zh_CN.png": {
+      "size": 101232,
+      "sha256": "49415fb34443fc6e6f86d6b70acdbe24ed06ca09d067f66863a75045a647dd15"
+    },
+    "execution/scg_common_en_US.png": {
+      "size": 81928,
+      "sha256": "883e839eebbdc8fd9bff2d2fecba44f44d96a54fefd966e1ed72989146df13b0"
+    },
+    "execution/scg_common_zh_CN.png": {
+      "size": 99538,
+      "sha256": "b220d98012419d6c10e7bf38454beb6ca14769f7e0892b920b48fe1d29ceb943"
+    },
+    "execution/run.py": {
+      "size": 2552,
+      "sha256": "fdd3728366465b1ace117b106919abac5adfa949dc571b720ca4222ea83ab034"
+    },
+    "execution/fusion_preview.py": {
+      "size": 1817,
+      "sha256": "e5abb00a7bca94a98f52655223c291a4f1ecec4d0eb741e9423c409deb93367d"
+    },
+    "execution/record_fusion_ui_evidence.py": {
+      "size": 2917,
+      "sha256": "1c99e8799f83a721d3b5aac5d20f82b80b225a85028f755571003d62ac1f2222"
+    }
+  }
+}

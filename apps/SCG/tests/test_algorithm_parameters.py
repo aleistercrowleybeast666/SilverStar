@@ -256,6 +256,14 @@ def test_gui_page_edit_reset_dirty_and_readonly_display(tmp_path,qapp,monkeypatc
         assert window._model.algorithm_parameters[KF]['gravity_mps2']==9.81
         assert 'dirty' in window._project_state.value.lower()
         sections = window.algorithm_parameters_page._content.findChildren(CollapsibleSection)
+        page=window.algorithm_parameters_page
+        assert not isinstance(page.parameters_section,CollapsibleSection)
+        for name in ('process_accel_std_e','gnss_position_std_horizontal',
+                     'gnss_velocity_measurement_delay_ms','nis_soft_enabled','nis_hard_enabled'):
+            ancestor=page.editors[(KF,name)].parentWidget()
+            while ancestor is not None and ancestor is not page:
+                assert not isinstance(ancestor,CollapsibleSection)
+                ancestor=ancestor.parentWidget()
         collapsed = [section for section in sections if not section.Expanded_Is()]
         assert collapsed
         for section in collapsed:
