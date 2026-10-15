@@ -111,6 +111,101 @@ static NavigationEskfResult Eskf_CovarianceValidate(
     return NAV_ESKF_OK;
 }
 
+/* Subtraction avoids overflow when testing the ends of typed object ranges. */
+static uint8_t Eskf_ObjectRangesOverlap(
+    const void *a, size_t a_size, const void *b, size_t b_size)
+{
+    uintptr_t a_address = (uintptr_t)a, b_address = (uintptr_t)b;
+    return (uint8_t)((a_address <= b_address) ?
+        (b_address - a_address < a_size) : (a_address - b_address < b_size));
+}
+
+static NavigationEskfCovarianceScaleResult Eskf_CovarianceScaleParametersValidate(
+    const NavigationEskfState *state, const NavigationEskfWorkspace *work,
+    const float scale[NAV_ESKF_DIM], const float cap[NAV_ESKF_DIM])
+{
+    const size_t vector_size = NAV_ESKF_DIM * sizeof(float);
+    uint32_t i;
+    if (Eskf_ObjectRangesOverlap(state, sizeof(*state), work, sizeof(*work)) ||
+        Eskf_ObjectRangesOverlap(scale, vector_size, state, sizeof(*state)) ||
+        Eskf_ObjectRangesOverlap(scale, vector_size, work, sizeof(*work)) ||
+        Eskf_ObjectRangesOverlap(cap, vector_size, state, sizeof(*state)) ||
+        Eskf_ObjectRangesOverlap(cap, vector_size, work, sizeof(*work)))
+    { return NAV_ESKF_COVARIANCE_SCALE_INVALID_ARGUMENT; }
+    for (i = 0U; i < NAV_ESKF_DIM; i++)
+    {
+        if (!isfinite(scale[i]) || (scale[i] < 1.0f) || (scale[i] > 2.0f) ||
+            !isfinite(cap[i]) || (cap[i] <= 0.0f))
+        { return NAV_ESKF_COVARIANCE_SCALE_INVALID_ARGUMENT; }
+    }
+    return NAV_ESKF_COVARIANCE_SCALE_APPLIED;
+}
+
+static NavigationEskfCovarianceScaleResult Eskf_CovarianceSymmetryValidate(
+    const float p[NAV_ESKF_DIM][NAV_ESKF_DIM])
+{
+    uint32_t i, j;
+    for (i = 0U; i < NAV_ESKF_DIM; i++)
+    {
+        for (j = 0U; j < i; j++)
+        {
+            if (memcmp(&p[i][j], &p[j][i], sizeof(float)) != 0)
+            { return NAV_ESKF_COVARIANCE_SCALE_NUMERIC_ERROR; }
+        }
+    }
+    return NAV_ESKF_COVARIANCE_SCALE_APPLIED;
+}
+
+static NavigationEskfCovarianceScaleResult Eskf_CovarianceScaledBuild(
+    const NavigationEskfState *state, NavigationEskfWorkspace *work,
+    const float scale[NAV_ESKF_DIM])
+{
+    uint32_t i, j;
+    for (i = 0U; i < NAV_ESKF_DIM; i++)
+    {
+        for (j = 0U; j <= i; j++)
+        {
+            float value = (state->covariance[i][j] * scale[i]) * scale[j];
+            if (!isfinite(value)) { return NAV_ESKF_COVARIANCE_SCALE_NUMERIC_ERROR; }
+            work->candidate_p[i][j] = value;
+            work->candidate_p[j][i] = value;
+        }
+    }
+    return NAV_ESKF_COVARIANCE_SCALE_APPLIED;
+}
+
+NavigationEskfCovarianceScaleResult NavigationEskf_CovarianceScale(
+    NavigationEskfState *state, NavigationEskfWorkspace *work,
+    const float scale[NAV_ESKF_DIM], const float variance_cap[NAV_ESKF_DIM])
+{
+    uint32_t i;
+    if ((state == NULL) || (work == NULL) || (scale == NULL) || (variance_cap == NULL))
+    { return NAV_ESKF_COVARIANCE_SCALE_INVALID_ARGUMENT; }
+    SILVERSTAR_ASSERT_OBJECT(state, NavigationEskfState, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    SILVERSTAR_ASSERT_OBJECT(work, NavigationEskfWorkspace, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    SILVERSTAR_ASSERT_OBJECT(scale, float, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    SILVERSTAR_ASSERT_OBJECT(variance_cap, float, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    if ((state->initialized != 1U) ||
+        (Eskf_CovarianceScaleParametersValidate(state, work, scale, variance_cap) !=
+         NAV_ESKF_COVARIANCE_SCALE_APPLIED)) { return NAV_ESKF_COVARIANCE_SCALE_INVALID_ARGUMENT; }
+    if ((Eskf_CovarianceSymmetryValidate((const float (*)[NAV_ESKF_DIM])state->covariance) !=
+         NAV_ESKF_COVARIANCE_SCALE_APPLIED) ||
+        (Eskf_CovarianceValidate((const float (*)[NAV_ESKF_DIM])state->covariance, work->f) != NAV_ESKF_OK))
+    { return NAV_ESKF_COVARIANCE_SCALE_NUMERIC_ERROR; }
+    if ((Eskf_CovarianceScaledBuild(state, work, scale) != NAV_ESKF_COVARIANCE_SCALE_APPLIED) ||
+        (Eskf_CovarianceValidate((const float (*)[NAV_ESKF_DIM])work->candidate_p, work->f) != NAV_ESKF_OK))
+    { return NAV_ESKF_COVARIANCE_SCALE_NUMERIC_ERROR; }
+    for (i = 0U; i < NAV_ESKF_DIM; i++)
+    {
+        if (work->candidate_p[i][i] > variance_cap[i])
+        { return NAV_ESKF_COVARIANCE_SCALE_AT_CAP; }
+    }
+    if (memcmp(state->covariance, work->candidate_p, sizeof(state->covariance)) == 0)
+    { return NAV_ESKF_COVARIANCE_SCALE_NO_CHANGE; }
+    memcpy(state->covariance, work->candidate_p, sizeof(state->covariance));
+    return NAV_ESKF_COVARIANCE_SCALE_APPLIED;
+}
+
 NavigationEskfResult NavigationEskf_ConfigValidate(const NavigationEskfConfig *config)
 {
     uint32_t i;

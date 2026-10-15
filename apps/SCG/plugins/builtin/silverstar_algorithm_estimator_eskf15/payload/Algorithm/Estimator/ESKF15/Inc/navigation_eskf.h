@@ -23,6 +23,16 @@ typedef enum
     NAV_ESKF_MODEL_MISMATCH
 } NavigationEskfResult;
 
+/* Covariance-only operation; none of these results accepts a measurement. */
+typedef enum
+{
+    NAV_ESKF_COVARIANCE_SCALE_APPLIED = 0,
+    NAV_ESKF_COVARIANCE_SCALE_NO_CHANGE,
+    NAV_ESKF_COVARIANCE_SCALE_AT_CAP,
+    NAV_ESKF_COVARIANCE_SCALE_INVALID_ARGUMENT,
+    NAV_ESKF_COVARIANCE_SCALE_NUMERIC_ERROR
+} NavigationEskfCovarianceScaleResult;
+
 typedef struct
 {
     float gravity_mps2;
@@ -114,5 +124,23 @@ NavigationEskfResult NavigationEskf_Update(
     const NavigationEskfConfig *config, const NavigationEskfMeasurement *measurement,
     NavigationEskfOutcome *outcome);
 NavigationEskfResult NavigationEskf_ConfigValidate(const NavigationEskfConfig *config);
+
+/* P' = D P D-transpose, D = diag(scale). Scale is finite [1,2]; caps are
+ * finite positive variances in each error coordinate's squared units.
+ * Requires initialized == 1 and bit-identical covariance triangles. This
+ * conservative representation rule also rejects differing signed-zero bits;
+ * that rejection does not imply a mathematically non-SPD covariance.
+ * Only uniform D=sI proves P'-P positive semidefinite in every direction.
+ * Selective scaling preserves SPD/correlation mathematically, not that order.
+ * Validate original/candidate SPD without repair; finite cap excess returns
+ * AT_CAP without clamping. NO_CHANGE validates P/caps but does not publish.
+ * Only APPLIED writes P; all results preserve nominal, time and identity.
+ * Non-APPLIED leaves the complete state byte unchanged. Workspace F and
+ * candidate_p are scratch on all outcomes. Arrays must not overlap state or
+ * workspace; overlapping object ranges return INVALID_ARGUMENT before writes.
+ * Caller must serialize its state/workspace pair; no recovery policy is implied. */
+NavigationEskfCovarianceScaleResult NavigationEskf_CovarianceScale(
+    NavigationEskfState *state, NavigationEskfWorkspace *workspace,
+    const float scale[NAV_ESKF_DIM], const float variance_cap[NAV_ESKF_DIM]);
 
 #endif /* __NAVIGATION_ESKF_H */
