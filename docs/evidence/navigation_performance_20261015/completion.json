@@ -1,0 +1,28 @@
+{
+  "owner": "navigation_performance",
+  "utc": "2026-10-15T08:25:28.324497+00:00",
+  "baseline_commit": "57b78fbb56d64eb09a76c8b7e961aa4027a6eb70",
+  "head_at_handoff": "176733d7fff96e76fb3281e6f59bcb3777119850",
+  "status": "DIFFERENTIAL_PASS; FRESH_STACK_FAIL; CRITICAL_CONTRACT_NOT_PROVEN",
+  "differential": {
+    "passed": 21,
+    "failed": 0,
+    "skipped": 0,
+    "log": "post_test04.log"
+  },
+  "fresh_summary_paths": [
+    "kf6_summary.json",
+    "eskf15_summary.json"
+  ],
+  "stack_blocker": "Unchanged emitted BindingHeader_Verify rejects the same prior/fresh generated parameter header hashes; later stack checks not completed.",
+  "source_manifest": "final_source_inputs_manifest.json",
+  "changed_product_files": [
+    "apps\\SCG\\plugins\\builtin\\silverstar_algorithm_estimator_eskf15\\payload\\Algorithm\\Estimator\\ESKF15\\Src\\navigation_eskf.c",
+    "apps\\SCG\\plugins\\builtin\\silverstar_algorithm_ins_coning2_sculling2\\payload\\Algorithm\\INS\\Coning2Sculling2\\Src\\ins_mechanization.c"
+  ],
+  "kf6_product_modified": false,
+  "commit_performed": false,
+  "hardware_performed": false,
+  "publication_performed": false,
+  "cleanup_authorized": false
+}

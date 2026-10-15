@@ -528,6 +528,43 @@ static void Eskf_JosephBuild(const NavigationEskfState *state,
     }
 }
 
+static void Eskf_ResetCongruence(NavigationEskfWorkspace *work,
+    const float p[NAV_ESKF_DIM][NAV_ESKF_DIM])
+{
+    SILVERSTAR_ASSERT_OBJECT(work, NavigationEskfWorkspace, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    SILVERSTAR_ASSERT_OBJECT(p, float, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+
+    uint32_t i, j, k;
+    /* Only the reset Jacobian is diag(I6, Jtheta, I6). P remains fully dense.
+     * Retain ascending k order and the initial +0 of the general products.
+     * Any nonfinite intermediate uses the general path, including its zero
+     * products, so sparsity cannot hide the established numeric failure. */
+    for (i = 0U; i < NAV_ESKF_DIM; i++)
+    {
+        uint32_t row_start = ((i >= 6U) && (i < 9U)) ? 6U : i;
+        uint32_t row_end = ((i >= 6U) && (i < 9U)) ? 9U : i + 1U;
+        for (j = 0U; j < NAV_ESKF_DIM; j++)
+        {
+            float sum = 0.0f;
+            for (k = row_start; k < row_end; k++)
+            { sum += work->transition[i][k] * p[k][j]; }
+            if (!isfinite(sum)) { Eskf_Congruence(work, p); return; }
+            work->product_row[j] = sum;
+        }
+        for (j = 0U; j <= i; j++)
+        {
+            uint32_t column_start = ((j >= 6U) && (j < 9U)) ? 6U : j;
+            uint32_t column_end = ((j >= 6U) && (j < 9U)) ? 9U : j + 1U;
+            float sum = 0.0f;
+            for (k = column_start; k < column_end; k++)
+            { sum += work->product_row[k] * work->transition[j][k]; }
+            if (!isfinite(sum)) { Eskf_Congruence(work, p); return; }
+            work->candidate_p[i][j] = sum;
+            work->candidate_p[j][i] = sum;
+        }
+    }
+}
+
 static void Eskf_ResetJacobianBuild(NavigationEskfWorkspace *work)
 {
     SILVERSTAR_ASSERT_OBJECT(work, NavigationEskfWorkspace, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
@@ -553,7 +590,7 @@ static void Eskf_ResetJacobianBuild(NavigationEskfWorkspace *work)
         }
     }
     memcpy(work->f, work->candidate_p, sizeof(work->f));
-    Eskf_Congruence(work, (const float (*)[NAV_ESKF_DIM])work->f);
+    Eskf_ResetCongruence(work, (const float (*)[NAV_ESKF_DIM])work->f);
 }
 
 NavigationEskfResult NavigationEskf_Update(NavigationEskfState *state,

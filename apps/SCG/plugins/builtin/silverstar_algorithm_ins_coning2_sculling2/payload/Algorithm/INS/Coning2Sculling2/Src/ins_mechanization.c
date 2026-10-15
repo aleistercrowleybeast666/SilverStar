@@ -399,6 +399,8 @@ static void InsMechanization_CorrectionsCompute(
     InsState *state)
 {
     float rotation_cross[3];
+    float sculling_cross_1[3];
+    float sculling_cross_2[3];
     uint8_t index;
 
     SILVERSTAR_ASSERT_OBJECT(work, InsMechanizationWork,
@@ -417,16 +419,22 @@ static void InsMechanization_CorrectionsCompute(
     Ins_ComputeSecondOrderConing(
         work->delta_theta_1, work->delta_theta_2,
         state->delta_theta_b_coning_corrected);
-    Ins_ComputeSecondOrderSculling(
-        work->delta_theta_1, work->delta_velocity_1,
-        work->delta_theta_2, work->delta_velocity_2,
-        state->delta_velocity_b_sculling_corrected);
+    /* Reuse this call's sums and rotation cross product. The standalone
+     * sculling API remains independent; no increment survives a bias update. */
+    Ins_VectorCross(work->delta_theta_1, work->delta_velocity_2,
+                    sculling_cross_1);
+    Ins_VectorCross(work->delta_velocity_1, work->delta_theta_2,
+                    sculling_cross_2);
     for (index = 0U; index < 3U; index++)
     {
         state->delta_theta_b[index] = work->delta_theta_sum[index];
         state->delta_velocity_b[index] = work->delta_velocity_sum[index];
         state->delta_velocity_b_rotation_corrected[index] =
             work->delta_velocity_sum[index] + (0.5f * rotation_cross[index]);
+        state->delta_velocity_b_sculling_corrected[index] =
+            state->delta_velocity_b_rotation_corrected[index] +
+            ((2.0f / 3.0f) *
+             (sculling_cross_1[index] + sculling_cross_2[index]));
     }
 }
 
