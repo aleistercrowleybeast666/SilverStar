@@ -437,6 +437,8 @@ class LogOpenCoordinator:
                 if (FileHash_Get(log_path, progress.Context_Build(0.96, 0.99), quantified=True) != identity["log_sha256"]
                         or log_path.stat().st_size != identity["log_bytes"]):
                     raise ValueError("log_source_changed_during_parse")
+                from silverstar_flp.decoder_profiles.fusion_timing_records import FusionTimingRecords_Validate
+                FusionTimingRecords_Validate(dataset)
                 progress.Progress_Report(1.0, "log_open.complete")
                 return LogOpenResult(dataset, package, descriptor, reference,
                     Path(source_package_path), dataset.diagnostics, dataset.data_quality)
@@ -449,6 +451,8 @@ class LogOpenCoordinator:
         dataset = SilverStarSslog0SemanticAdapter(package).Apply(dataset)
         from silverstar_flp.decoder_profiles.algorithm_parameters import FirmwareMechanizationRecords_Validate
         FirmwareMechanizationRecords_Validate(dataset)
+        from silverstar_flp.decoder_profiles.fusion_timing_records import FusionTimingRecords_Validate
+        FusionTimingRecords_Validate(dataset)
         from silverstar_flp.decoder_profiles.sf6_revision import Sf6Revision_Get
         Sf6Revision_Get(dataset)
         progress.Progress_Report(0.96, "progress.open.source_check")

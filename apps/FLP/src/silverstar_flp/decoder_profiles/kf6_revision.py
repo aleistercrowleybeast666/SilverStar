@@ -35,7 +35,7 @@ def Kf6Revision_FromSemantics(document):
         raise DecoderProfileError("kf6_component_identity_ambiguous")
     if any(not isinstance(item.get("version"), str) for item in locks):
         raise DecoderProfileError("kf6_component_version_invalid")
-    expected = {"0.1.0": 1, "0.2.0": 2, "0.2.1": 2}.get(locks[0]["version"]) if len(locks) == 1 else None
+    expected = {"0.1.0": 1, "0.2.0": 2, "0.2.1": 2, "0.3.0": 2}.get(locks[0]["version"]) if len(locks) == 1 else None
     # Audited legacy packages identify their original model by the exact
     # pre-upgrade component version. Never infer revision 2 from membership.
     revision = declared if declared is not None else (1 if expected == 1 else None)

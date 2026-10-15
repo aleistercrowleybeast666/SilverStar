@@ -8,6 +8,7 @@ from types import MappingProxyType
 from typing import Any
 
 import numpy as np
+from silverstar_flp.decoder_profiles.fusion_timing_records import APPLICATION_EPOCH_VALID
 
 from silverstar_flp.core.dataset import DecodedRecord, FlightDataset, TimeSeries
 from silverstar_flp.core.semantic_context import (
@@ -625,6 +626,9 @@ def _StableSeries_Adapt(
         )
         group_valid = np.asarray(
             [bool(int(record.payload.get("valid_group_mask", 0)) & (1 << group_index))
+             and (record.record_version != 2 or (
+                 int(record.payload[('position_' if group_index < 2 else 'velocity_') + 'execution_result']) == 0
+                 and int(record.payload[('position_' if group_index < 2 else 'velocity_') + 'timing_flags']) & APPLICATION_EPOCH_VALID))
              for record in selected], dtype=np.bool_
         )
         results = np.asarray(
@@ -815,6 +819,11 @@ def _BaroDiagnosticSeries_Get(
             valid &= values >= 0
         elif suffix == "measurement_r":
             valid &= values > 0
+        if suffix in ('nis', 'innovation'):
+            valid &= np.asarray([record.record_version != 2 or (
+                record.payload['execution_result'] == 0
+                and record.payload['timing_flags'] & APPLICATION_EPOCH_VALID)
+                for record in selected], dtype=bool)
         channels[f"kf6.recorded.{suffix}.baro"] = TimeSeries(
             timestamp_us=timestamps, values=values, valid=valid,
             unit=unit, quantity=quantity, source="BARO_MEASUREMENT",

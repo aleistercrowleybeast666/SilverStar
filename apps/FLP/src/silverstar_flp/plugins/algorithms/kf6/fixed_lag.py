@@ -383,7 +383,7 @@ def Operations_Build(dataset):
     return operations
 
 
-def EpochState_Restore(dataset, epoch, template):
+def EpochState_Restore(dataset, epoch, template, *, executor_factory=None):
     """Only an explicit epoch-start x/P snapshot can authorize a reset.
 
     FCCG resets recovery/internal counters at epoch start. A decimated mid-epoch
@@ -429,7 +429,7 @@ def EpochState_Restore(dataset, epoch, template):
         raise ValueError('replay_epoch_attitude_invalid')
     if not np.isfinite(state.state).all():
         raise ValueError('replay_epoch_state_invalid')
-    return FixedLagReplay(state, epoch=epoch), q.copy()
+    return (executor_factory(state, epoch) if executor_factory else FixedLagReplay(state, epoch=epoch)), q.copy()
 
 
 def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, context,
@@ -444,7 +444,23 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
     ]
     if not operations:
         raise ValueError('replay_operation_timing_missing')
-    history = FixedLagReplay(filter_instance, epoch=operations[0][0])
+    current_mode = parameters.get('fusion_timing_mode', 1) == 0
+    from silverstar_flp.decoder_profiles.fusion_timing import FusionTiming_FromSemantics
+    timing_identity = FusionTiming_FromSemantics(getattr(dataset.semantic_context, 'raw_metadata', {}))
+    recorded_current = timing_identity is not None and timing_identity.mode == 0
+    def executor_create(state, epoch):
+        if not current_mode:
+            return FixedLagReplay(state, epoch=epoch)
+        from silverstar_flp.plugins.algorithms.kf6.current_state import CurrentState
+        records = [r for name in ('GNSS_MEASUREMENT', 'BARO_MEASUREMENT')
+                   for r in dataset.Records_Get(name) if r.payload['replay_epoch'] == epoch]
+        if not records:
+            raise ValueError('fusion_timing_epoch_identity_missing')
+        return CurrentState(state, epoch=epoch,
+            calibration_generation=int(records[0].payload['calibration_generation']))
+    if current_mode and assistance is not None:
+        raise ValueError('fusion_timing_current_integrity_reanchor_unavailable')
+    history = executor_create(filter_instance, operations[0][0])
     # Timestamp matching is exact identity, never measurement arrival inference.
     increments_by_end = {i.interval_end_timestamp_us: i for i in increments}
     by_sequence = {
@@ -509,7 +525,7 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
         context.Cancel_RaiseIfRequested()
         if epoch != history.epoch:
             snapshot_append()
-            history, q = EpochState_Restore(dataset, epoch, filter_instance)
+            history, q = EpochState_Restore(dataset, epoch, filter_instance, executor_factory=executor_create)
             evidence.clear()
             last_prediction = previous_order = None
             results, attempt_mask = [3, 3, 3], 0
@@ -519,6 +535,8 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
         previous_order = order
         p = record.payload
         if kind == 'predict':
+            if recorded_current and (record.record_version != 0 or int(p['replay_result']) not in (0, 1, 4, 5, 6)):
+                raise ValueError('fusion_timing_current_prediction_result_invalid')
             snapshot_append()
             last_prediction = None
             results = [3, 3, 3]
@@ -546,6 +564,10 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
             result, event = history.Receive(p)
             evidence[record.record_sequence] = event
             expected = int(p['receive_result'])
+            if current_mode:
+                # This unchanged prefix is the legacy adapter enum; the new
+                # per-group execution fields carry the richer current reason.
+                result = {0: 0, 1: 1, 2: 2, 3: 1, 4: 4, 5: 5, 6: 6, 7: 1}[int(result)]
         else:
             if kind == 'baro':
                 event = ReplayEvent(
@@ -556,7 +578,7 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
                     epoch,
                     dict(p),
                 )
-                expected = int(p['replay_result'])
+                expected = int(p['execution_result'] if current_mode else p['replay_result'])
                 attempt_mask |= 4
             else:
                 event = evidence.get(record.record_sequence)
@@ -567,7 +589,7 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
                 )
                 event = replace(event, kind=3 if combined else 1 if kind == 'position' else 2,
                                 measurement_us=int(p[kind + '_measurement_timestamp_us']))
-                expected = int(p[kind + '_replay_result'])
+                expected = int(p[kind + ('_execution_result' if current_mode else '_replay_result')])
                 attempt_mask |= event.kind
             decision = None
             if assistance is not None and event.kind & 1:
@@ -588,7 +610,7 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
             parts = [event]
             if (
                 event.kind == 3
-                and p["position_measurement_timestamp_us"] != p["velocity_measurement_timestamp_us"]
+                and (current_mode or p["position_measurement_timestamp_us"] != p["velocity_measurement_timestamp_us"])
             ):
                 # What-if may split a formerly simultaneous packet; historical ordering
                 # is still by measurement time on the same receive operation.
@@ -599,7 +621,8 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
                         (2, "velocity_measurement_timestamp_us"),
                     )
                 ]
-                parts.sort(key=lambda part: part.Order_Get())
+                if not current_mode:
+                    parts.sort(key=lambda part: part.Order_Get())
             result = ReplayResult.OK
             outcome = _Outcome_Invalid()
             part_results = {}
@@ -608,12 +631,20 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
                 part_result = None if stopped else history.Insert(part)
                 committed = part_result == ReplayResult.OK
                 current = history.last_outcome if committed else _Outcome_Invalid()
-                fatal = part_result is not None and ReplayResult_IsFatal(part_result, history.faulted)
+                fatal = part_result is not None and (history.faulted if current_mode else ReplayResult_IsFatal(part_result, history.faulted))
                 measurement_operations.append(dict(operation_sequence=order, source_sequence=event.sequence,
                     kind=part.kind, receive_timestamp_us=part.receive_us,
                     resolved_measurement_timestamp_us=part.measurement_us,
-                    replay_result=None if part_result is None else int(part_result),
-                    attempted=part_result is not None, committed=committed))
+                    replay_result=(255 if current_mode else int(part_result)) if part_result is not None else None,
+                    attempted=part_result is not None, committed=committed,
+                    **({'fusion_timing_mode': 0, 'execution_result': int(part_result) if part_result is not None else None,
+                        'source_timestamp_us': part.measurement_us,
+                        'application_timestamp_us': history.Audit_Get().get('last_application_us', 0),
+                        'source_id': int(p['source_id']), 'calibration_generation': int(p['calibration_generation']),
+                        'mission_epoch': epoch, 'record_sequence': record.record_sequence,
+                        'recorded_fusion_timing_mode': int(p['fusion_timing_mode']),
+                        'recorded_application_timestamp_us': int(p[('position_' if part.kind == 1 else 'velocity_' if part.kind == 2 else '') + 'application_timestamp_us']),
+                        'recorded_execution_result': int(p[('position_' if part.kind == 1 else 'velocity_' if part.kind == 2 else '') + 'execution_result'])} if current_mode else {})))
                 for operation in (1, 2, 4):
                     if not part.kind & operation:
                         continue
@@ -767,7 +798,7 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
                         results[group] = int(Kf6UpdateResult.NUMERIC_ERROR) if fatal else min(group_results)
             final_group = kind == "baro" or order == max(
                 int(p["position_operation_sequence"]), int(p["velocity_operation_sequence"]))
-            if final_group and history.replays != int(p['replay_generation']):
+            if not current_mode and final_group and history.replays != int(p['replay_generation']):
                 mismatches.append(
                     ("generation", order, history.replays, int(p["replay_generation"]))
                 )
@@ -792,10 +823,18 @@ def Faithful_Run(dataset, filter_instance, initial_q, increments, parameters, co
         history.state.gnss_result_counts[group][row['result']] += 1
         if np.isfinite(row['nis']):
             history.state.gnss_nis_samples[group].append(row['nis'])
+    if current_mode:
+        by_operation = {(row['operation_sequence'], row['kind']): row for row in measurement_operations}
+        for row in measurement_events:
+            kind = 4 if row['group'] == 'baro' else 1 if row['group'].startswith('position') else 2
+            operation = by_operation[(row['operation_sequence'], kind)]
+            row.update({key: operation[key] for key in ('fusion_timing_mode', 'execution_result',
+                'source_timestamp_us', 'application_timestamp_us', 'replay_result')})
     return tuple(snapshots), history.state, {'operation_count': len(operations),
         'replay_count': history.replays, 'execution_mismatches': mismatches,
         'measurement_timing_inferred': False, 'reanchor_counts': history.state.reanchor_counts,
         'gnss_group_updates': group_updates, 'measurement_events': measurement_events,
         'measurement_operations': measurement_operations,
+        **(history.Audit_Get() if current_mode else {}),
         'integrity_analysis_events': analysis_events,
         'reanchor_timestamps_us': reanchor_times}

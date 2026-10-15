@@ -185,6 +185,21 @@ def Eskf15Records_Adapt(records):
         )
         if not selected:
             continue
+        from silverstar_flp.decoder_profiles.fusion_timing_records import FusionTimingOperations_Get
+        timed = [(r, FusionTimingOperations_Get(r, declared_mode=r.payload['fusion_timing_mode'])[0])
+                 for r in selected if r.record_version == 2]
+        for suffix, values, unit in (
+            ('source_timestamp_us', [op.source_us for _, op in timed], 'us'),
+            ('application_timestamp_us', [op.application_us for _, op in timed], 'us'),
+            ('fusion_timing_mode', [op.mode for _, op in timed], 'enum'),
+            ('execution_result', [int(op.execution_result) for _, op in timed], 'enum'),
+            ('source_sequence', [op.identity.source_sequence for _, op in timed], 'count'),
+        ):
+            if timed:
+                array = np.asarray(values, dtype=float)
+                channels[f'eskf15.recorded.{suffix}.{name}'] = TimeSeries(
+                    np.asarray([op.present_us for _, op in timed], dtype=np.uint64),
+                    array, unit, suffix, 'ESKF15_MEASUREMENT', np.isfinite(array))
         dimension = 2 if group in (0, 2) else 1
         timestamps = np.asarray(
             [r.payload["evaluation_timestamp_us"] for r in selected], dtype=np.uint64

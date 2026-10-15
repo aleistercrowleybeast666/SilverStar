@@ -13,6 +13,19 @@ LEGACY_VERSIONS = {
     "silverstar.algorithm.estimator.kf6": frozenset(("0.1.0", "0.2.0", "0.2.1")),
     "silverstar.algorithm.estimator.eskf15": frozenset(("0.1.0", "0.1.1")),
 }
+TIMING_VERSIONS = {
+    "silverstar.algorithm.estimator.kf6": "0.3.0",
+    "silverstar.algorithm.estimator.eskf15": "0.2.0",
+}
+PREDICTION_ADAPTER = {
+    "component": "silverstar.algorithm.estimator.kf6", "component_version": "0.3.0",
+    "fusion_timing_mode": 0, "record": "ESTIMATOR_STEP", "record_id": 30, "record_version": 0,
+    "result_field": "replay_result",
+    "result_namespace": "legacy_navigation_replay_result_used_for_current_prediction_adapter",
+    "reachable_results": [0, 1, 4, 5, 6], "committed_results": [0],
+    "fault_latched_results": [4, 5, 6], "not_called_when": {"attitude_result": 0},
+    "history_replay_executed": False,
+}
 _FIELDS = frozenset((
     "schema_id", "revision", "component", "mode", "source_time", "application_time",
     "evaluation_time", "output_state_time", "output_covariance_time", "replays_history",
@@ -72,7 +85,7 @@ def FusionTiming_FromSemantics(document: Mapping) -> FusionTimingIdentity | None
     """Missing declarations are legacy only for an audited component version.
 
     An explicit declaration is a package assertion, not proof of implementation
-    or runtime record completeness. Current mode is always unavailable here.
+    or runtime record completeness. Runtime admission validates v2 records too.
     No defaults or parameter values are synthesized into the input document.
     """
     declarations = document.get("metadata_declarations", {})
@@ -94,15 +107,39 @@ def FusionTiming_FromSemantics(document: Mapping) -> FusionTimingIdentity | None
     component = owners[0]
     version = _Version_Get(document, component)
     legacy = version in LEGACY_VERSIONS[component]
+    current_contract = version == TIMING_VERSIONS[component]
     if not declared:
+        if current_contract:
+            raise DecoderProfileError("fusion_timing_declaration_missing")
         return FusionTimingIdentity(component, version, 0 if legacy else None,
                                     1 if legacy else None, "legacy_component_lock" if legacy else "unknown",
                                     "" if legacy else "fusion_timing_identity_unproven")
     mode = _Declaration_Validate(declarations["fusion_timing"], component)
     if legacy and mode != 1:
         raise DecoderProfileError("fusion_timing_legacy_component_mismatch")
-    reason = "fusion_timing_current_replay_not_implemented" if mode == 0 else (
-        "" if legacy else "fusion_timing_identity_unproven")
+    if current_contract:
+        sets = document.get("firmware_algorithm_parameters", ())
+        parameters = [p for row in sets if row.get("component") == component
+                      for p in row.get("parameters", ()) if p.get("id") == PARAMETER_ID]
+        if len(parameters) != 1:
+            raise DecoderProfileError("fusion_timing_actual_parameter_missing_or_ambiguous")
+        parameter = parameters[0]
+        if (type(parameter.get("value")) is not int or parameter["value"] != mode
+                or parameter.get("storage_type") != "int32" or parameter.get("unit") != "1"
+                or parameter.get("representation") != "value"):
+            raise DecoderProfileError("fusion_timing_actual_parameter_mismatch")
+        if component.endswith('kf6') and mode == 0:
+            adapter = declarations.get('fusion_prediction_adapter')
+            # Frozen semantic contexts normalize arrays to tuples.
+            def normalize(value):
+                if isinstance(value, Mapping):
+                    return {key: normalize(item) for key, item in value.items()}
+                if isinstance(value, (list, tuple)):
+                    return [normalize(item) for item in value]
+                return value
+            if normalize(adapter) != PREDICTION_ADAPTER:
+                raise DecoderProfileError('fusion_timing_prediction_adapter_identity_invalid')
+    reason = "" if legacy or current_contract else "fusion_timing_identity_unproven"
     return FusionTimingIdentity(component, version, 1, mode, "explicit_declaration", reason)
 
 
@@ -122,6 +159,43 @@ def FusionTimingUnavailable_Get(dataset) -> tuple[str, ...]:
         return ()
     try:
         identity = FusionTiming_FromSemantics(document)
+        if identity and identity.version == TIMING_VERSIONS.get(identity.component):
+            from silverstar_flp.decoder_profiles.fusion_timing_records import FusionTimingRecords_Validate
+            FusionTimingRecords_Validate(dataset)
+            required = ("ESKF15_MEASUREMENT",) if identity.component.endswith("eskf15") else (
+                "GNSS_MEASUREMENT", "BARO_MEASUREMENT")
+            records = [r for name in required for r in dataset.Records_Get(name)]
+            if not records or any(r.record_version != 2 for r in records):
+                return ("fusion_timing_v2_records_required",)
+            if identity.mode == 0:
+                from silverstar_flp.decoder_profiles.fusion_timing_records import FusionTimingCurrentPackets_Validate
+                FusionTimingCurrentPackets_Validate(dataset)
     except DecoderProfileError as error:
         return (str(error),)
     return (identity.unavailable_reason,) if identity and identity.unavailable_reason else ()
+
+
+def FusionTimingRun_Resolve(dataset, parameters):
+    """Select execution only after parameter resolution, without mutating records."""
+    selected = parameters.get(PARAMETER_ID, 1)
+    if type(selected) is not int or selected not in (0, 1):
+        raise ValueError("fusion_timing_mode_unsupported")
+    context = getattr(dataset, "semantic_context", None)
+    identity = FusionTiming_FromSemantics(getattr(context, "raw_metadata", {}))
+    if selected == 0:
+        if identity is None or identity.version != TIMING_VERSIONS.get(identity.component):
+            raise ValueError("fusion_timing_current_v2_identity_required")
+        blockers = FusionTimingUnavailable_Get(dataset)
+        if blockers:
+            raise ValueError(",".join(blockers))
+        from silverstar_flp.decoder_profiles.fusion_timing_records import FusionTimingCurrentPackets_Validate
+        FusionTimingCurrentPackets_Validate(dataset)
+    return selected, {
+        "fusion_timing_mode": selected,
+        "recorded_fusion_timing_mode": identity.mode if identity else None,
+        "fusion_timing_identity_evidence": identity.evidence if identity else "unavailable",
+        "fusion_timing_mode_parameter_recorded": bool(identity and identity.version == TIMING_VERSIONS.get(identity.component)),
+        "fusion_source_time": "resolved_measurement_epoch",
+        "fusion_application_time": "estimator_present" if selected == 0 else "legacy_algorithm_epoch",
+        "fusion_output_time": "estimator_present",
+    }

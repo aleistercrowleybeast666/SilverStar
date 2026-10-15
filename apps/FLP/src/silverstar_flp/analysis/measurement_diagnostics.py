@@ -54,7 +54,27 @@ def _Rows_Channels(rows: Sequence[Mapping[str, object]], prefix: str,
         result[f"{prefix}.measurement_{name}.{group}"] = _Series(
             shaped, name, unit=unit, quantity=quantity, columns=selected_columns
         )
+    for name, unit in (("source_timestamp_us", "us"), ("application_timestamp_us", "us"),
+                       ("fusion_timing_mode", "enum"), ("execution_result", "enum")):
+        selected = [row for row in rows if name in row]
+        if selected:
+            shaped = [{"timestamp_us": row["timestamp_us"], "valid": True,
+                name: row[name] if name != 'application_timestamp_us' or row[name] else np.nan}
+                for row in selected]
+            result[f"{prefix}.measurement_{name}.{group}"] = _Series(
+                shaped, name, unit=unit, quantity=name, columns=())
     return result
+
+
+def _TimingFields_Get(record, group):
+    if record.record_version != 2:
+        return {}
+    from silverstar_flp.decoder_profiles.fusion_timing_records import FusionTimingOperations_Get
+    operation = next(op for op in FusionTimingOperations_Get(record,
+        declared_mode=record.payload['fusion_timing_mode']) if op.identity.group == group)
+    return {'source_timestamp_us': operation.source_us,
+            'application_timestamp_us': operation.application_us,
+            'fusion_timing_mode': operation.mode, 'execution_result': int(operation.execution_result)}
 
 
 def _Effective_Get(base: np.ndarray, nis: float, result: int,
@@ -119,6 +139,7 @@ def RecordedMeasurementChannels_Build(
                     float(effective[0] / base[0])
                     if np.all(np.isfinite(effective)) else math.nan
                 ),
+                **_TimingFields_Get(record, index),
             })
         channels.update(_Rows_Channels(
             rows, "kf6.recorded", group, axes,
@@ -155,7 +176,7 @@ def RecordedMeasurementChannels_Build(
                      "r_scale": (
                          float(effective[0] / base[0])
                          if np.isfinite(effective[0]) else math.nan
-                     )})
+                     ), **_TimingFields_Get(record, 4)})
     baro_channels = _Rows_Channels(rows, "kf6.recorded", "baro", (0,), "m^2")
     channels.update({
         name: replace(series, source="BARO_MEASUREMENT", metadata={

@@ -91,7 +91,9 @@ def _Parameters_Build() -> tuple[ParameterSpec, ...]:
             required=item.get("required", True),
         )
         for index, (name, item) in enumerate(CONTRACT["eskf15"]["parameters"].items())
-    )
+    ) + (ParameterSpec("fusion_timing_mode", "int", 1, 0, 1, "1", required=False,
+            precision=0, step=1, order=101, label_key="parameter.fusion_timing_mode",
+            group_key="parameter_group.process_model"),)
 
 
 def _Visualization_Build() -> EstimatorVisualizationSpec:
@@ -256,20 +258,34 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
         if super().ParameterSchemaCompatible_Is(identity):
             return True
         from dataclasses import replace
-        legacy = replace(self.metadata, parameter_schema=tuple(
-            replace(spec, greater_than="") for spec in self.metadata.parameter_schema
+        before_timing = replace(self.metadata, parameter_schema=tuple(
+            spec for spec in self.metadata.parameter_schema if spec.parameter_id != "fusion_timing_mode"))
+        if identity == before_timing.ParameterSchemaIdentity_Get():
+            return True
+        legacy = replace(before_timing, parameter_schema=tuple(
+            replace(spec, greater_than="") for spec in before_timing.parameter_schema
             if spec.parameter_id not in {"nis_soft_enabled", "nis_hard_enabled"}))
         return identity == legacy.ParameterSchemaIdentity_Get()
 
     def _Measurements_Build(self, dataset, parameters, start_us, end_us, request):
         if dataset.Records_Get("ESKF15_MEASUREMENT"):
             events = []
+            if request.mode != ReplayMode.RECORDED_CONFIGURATION and any(
+                    getattr(r, 'record_version', 1) == 2 for r in dataset.Records_Get('ESKF15_MEASUREMENT')):
+                floors = {'gnss_position_std_horizontal', 'gnss_position_std_vertical',
+                          'gnss_velocity_std', 'baro_std_m'} & request.parameters.keys()
+                baseline = self.recorded_parameters(dataset) if floors else {}
+                for name in sorted(floors):
+                    if parameters[name] != baseline.get(name):
+                        reason = ('parameter_dynamic_uncertainty_missing:BARO_NATIVE_logical_producer_identity'
+                                  if name == 'baro_std_m' else 'fusion_timing_v2_noise_recompute_unavailable:' + name)
+                        raise ValueError(reason)
             baro_trust = (
                 _BarometerTrustIndex_Build(dataset)
                 if request.mode != ReplayMode.RECORDED_CONFIGURATION
                 and "baro_measurement_delay_ms" in request.parameters else {}
             )
-            for record in dataset.Records_Get("ESKF15_MEASUREMENT"):
+            for recorded_order, record in enumerate(dataset.Records_Get("ESKF15_MEASUREMENT")):
                 p = record.payload
                 evaluation = int(p["evaluation_timestamp_us"])
                 if not start_us <= evaluation <= end_us:
@@ -283,7 +299,13 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
                 physically_valid = bool(p["physically_valid"])
                 if request.mode != ReplayMode.RECORDED_CONFIGURATION:
                     receive = int(p["receive_timestamp_us"])
-                    native = next(
+                    candidates = [r.payload for r in dataset.Records_Get("GNSS_NATIVE")
+                        if int(r.payload["receive_timestamp_us"]) == receive
+                        and (getattr(record, "record_version", 1) != 2 or (
+                            int(r.payload["instance_id"]) == int(p["source_id"])
+                            and int(r.payload["sequence"]) == int(p["source_sequence"])
+                            and int(r.payload["sample_timestamp_us"]) == int(p["sample_timestamp_us"])))]
+                    native = (candidates[0] if len(candidates) == 1 else None) if getattr(record, "record_version", 1) == 2 else next(
                         (
                             r.payload
                             for r in dataset.Records_Get("GNSS_NATIVE")
@@ -300,7 +322,7 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
                         if group in (2, 3)
                         else "baro_std_m"
                     )
-                    if floor_key in request.parameters:
+                    if floor_key in request.parameters and getattr(record, 'record_version', 1) != 2:
                         if group == 4:
                             variance = np.array([parameters[floor_key] ** 2])
                         elif native is None:
@@ -324,7 +346,15 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
                         else "baro_measurement_delay_ms"
                     )
                     if delay_key in request.parameters:
-                        if group == 4:
+                        if getattr(record, "record_version", 1) == 2:
+                            from silverstar_flp.decoder_profiles.fusion_timing_records import TRUSTED_SOURCE, DELAY_FALLBACK
+                            if not int(p['timing_flags']) & (TRUSTED_SOURCE | DELAY_FALLBACK):
+                                raise ValueError('fusion_timing_what_if_timestamp_trust_evidence_missing')
+                            trusted = bool(int(p['timing_flags']) & TRUSTED_SOURCE)
+                            measurement_time, time_valid = _BarometerTime_Resolve(
+                                receive, int(p['sample_timestamp_us']), trusted, parameters[delay_key])
+                            physically_valid = physically_valid and time_valid
+                        elif group == 4:
                             trusted = baro_trust.get((int(p["sample_timestamp_us"]), receive))
                             if trusted is None:
                                 raise ValueError("eskf15_what_if_timestamp_trust_evidence_missing")
@@ -351,10 +381,12 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
                     physically_valid,
                     float(p["quality_scale"]),
                     float(p["consistency_scale"]),
-                    int(p["source_id"]),
+                    (1 if getattr(record, "record_version", 1) == 2 and parameters.get('fusion_timing_mode', 1) == 0 and group == 4 else int(p["source_id"])),
                     int(p["calibration_generation"]),
+                    int(p['source_sequence']) if getattr(record, "record_version", 1) == 2 else None,
+                    int(p['epoch']) if getattr(record, "record_version", 1) == 2 else None,
                 )
-                events.append((evaluation, record.record_sequence, item))
+                events.append((evaluation, recorded_order if getattr(record, "record_version", 1) == 2 else record.record_sequence, item))
             evidence, seen = [], set()
             for quality in dataset.Records_Get("NAV_QUALITY"):
                 q = quality.payload
@@ -537,6 +569,10 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
         ):
             raise ValueError("eskf15_not_recorded_use_what_if")
         parameters = self.Parameters_Resolve(dataset, request)
+        from silverstar_flp.decoder_profiles.fusion_timing import FusionTimingRun_Resolve
+        timing_mode, timing_audit = FusionTimingRun_Resolve(dataset, parameters)
+        if any(getattr(r, 'record_version', 1) == 2 for r in dataset.Records_Get('ESKF15_MEASUREMENT')):
+            timing_audit['quality_input_scope'] = 'recorded_v2'
         bounds = MissionReplayBounds_Get(dataset)
         steps, input_failure, exact_body = BodySteps_Build(dataset, bounds)
         if not steps:
@@ -596,7 +632,7 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
                 for step in steps
             ):
                 raise ValueError("eskf15_body_calibration_or_source_identity_mismatch")
-            if any(
+            if timing_mode != 0 and any(
                 int(record.payload["epoch"]) != int(snapshot.payload["epoch"])
                 or int(record.payload["calibration_generation"])
                 != int(snapshot.payload["calibration_generation"])
@@ -646,9 +682,12 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
                 parameters["accel_bias_rw"],
             ),
         )
-        replay = DelayedReplay(
+        from silverstar_flp.plugins.algorithms.eskf15.current_state import CurrentState
+        executor = CurrentState if timing_mode == 0 else DelayedReplay
+        replay = executor(
             kernel,
             start,
+            **({'epoch': int(snapshot.payload['epoch'])} if timing_mode == 0 else {}),
             soft=(parameters["nis_1d_soft"], parameters["nis_2d_soft"]),
             hard=(parameters["nis_1d_hard"], parameters["nis_2d_hard"]),
             max_r_scale=parameters["nis_max_r_scale"],
@@ -665,34 +704,59 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
         warnings.update(available.warnings)
         histories, timestamps, health = [], [], []
         measurements = [[] for _ in range(5)]
+        timing_operations = []
+        recorded_timing = {(int(r.payload['operation_sequence']), int(r.payload['group'])): r
+            for r in dataset.Records_Get('ESKF15_MEASUREMENT')}
         event_index = 0
         failure = input_failure
+        def measurements_apply():
+            nonlocal event_index
+            while event_index < len(events) and events[event_index][0] <= replay.present_us:
+                evaluation, _, item = events[event_index]
+                if timing_mode == 0 and evaluation != replay.present_us:
+                    raise ValueError('fusion_timing_application_body_epoch_mismatch')
+                result = replay.Measurement_Receive(item)
+                if timing_mode == 0:
+                    recorded = recorded_timing[item.key]
+                    timing_operations.append({'operation_sequence': item.key[0], 'group': item.group,
+                        'source_id': item.source, 'source_sequence': item.source_sequence,
+                        'calibration_generation': item.generation, 'mission_epoch': item.mission_epoch,
+                        'receive_timestamp_us': item.receive_us, 'evaluation_timestamp_us': evaluation,
+                        'fusion_timing_mode': 0, 'record_sequence': recorded.record_sequence,
+                        'recorded_fusion_timing_mode': int(recorded.payload['fusion_timing_mode']),
+                        'recorded_source_timestamp_us': int(recorded.payload['measurement_timestamp_us']),
+                        'recorded_application_timestamp_us': int(recorded.payload['application_timestamp_us']),
+                        'recorded_execution_result': int(recorded.payload['execution_result']),
+                        **replay.Audit_Get()})
+                supervisor.Decision_Record(
+                    item.group,
+                    item.receive_us,
+                    physically_valid=item.physically_valid,
+                    result=int(result.result),
+                    nis=result.nis,
+                    gain_norm=result.gain_norm,
+                    variance_scale=(
+                        float(np.max(result.effective_r / item.variance))
+                        if int(result.result) == 1
+                        else item.quality_scale * item.consistency_scale
+                    ),
+                    evaluation_us=evaluation,
+                    source=item.source,
+                )
+                measurements[item.group].append((evaluation, item, result))
+                event_index += 1
+
+        if timing_mode == 0:
+            measurements_apply()  # Initial epoch: endpoint is not ready until a successful body.
         for index, step in enumerate(steps):
             context.Cancel_RaiseIfRequested()
             if index % 200 == 0:
                 context.Progress_Report(index / len(steps), "replay.running")
             try:
                 replay.Body_Receive(step)
-                while event_index < len(events) and events[event_index][0] <= replay.present_us:
-                    evaluation, _, item = events[event_index]
-                    result = replay.Measurement_Receive(item)
-                    supervisor.Decision_Record(
-                        item.group,
-                        item.receive_us,
-                        physically_valid=item.physically_valid,
-                        result=int(result.result),
-                        nis=result.nis,
-                        gain_norm=result.gain_norm,
-                        variance_scale=(
-                            float(np.max(result.effective_r / item.variance))
-                            if int(result.result) == 1
-                            else item.quality_scale * item.consistency_scale
-                        ),
-                        evaluation_us=evaluation,
-                        source=item.source,
-                    )
-                    measurements[item.group].append((evaluation, item, result))
-                    event_index += 1
+                measurements_apply()
+                if timing_mode == 0 and replay.faulted:
+                    raise ValueError('eskf_current_numeric_failure')
             except ValueError as exc:
                 failure = {"timestamp_us": step.end_us, "reason": str(exc)}
                 break
@@ -758,10 +822,20 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
                 "receive_age": ([(e[0] - e[1].receive_us) * 0.001 for e in entries], "ms"),
                 "latency": ([(e[0] - e[1].timestamp_us) * 0.001 for e in entries], "ms"),
             }
+            if timing_mode == 0:
+                operations = [op for op in timing_operations if op['group'] == group]
+                definitions.update({
+                    'source_timestamp_us': ([op['last_source_us'] for op in operations], 'us'),
+                    'application_timestamp_us': ([op['last_application_us'] or np.nan for op in operations], 'us'),
+                    'fusion_timing_mode': ([0] * len(operations), 'enum'),
+                    'execution_result': ([op['last_execution_result'] for op in operations], 'enum'),
+                })
             for quantity, (values, unit) in definitions.items():
                 channels[f"eskf15.{quantity}.{name}"] = _Series_Create(t, values, unit, quantity)
         diagnostics = {
             **self.ParameterAudit_Get(dataset, request),
+            **timing_audit,
+            'fusion_timing_operations': timing_operations,
             "algorithm_revision": 1,
             "quality_policy_revision": 3,
             "fusion_groups": [asdict(g) for g in supervisor.groups],
@@ -783,7 +857,10 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
             "fusion_timeout_policy": "degrade_then_invalid_without_independent_reset_evidence",
         }
         fidelity = ReplayFidelity.APPROXIMATE
-        if request.mode == ReplayMode.RECORDED_CONFIGURATION and exact_body and not failure:
+        if timing_mode == 0:
+            diagnostics.update(replay.Audit_Get())
+            warnings.add('fusion_timing_current_backend_parity_scope_limited')
+        if timing_mode != 0 and request.mode == ReplayMode.RECORDED_CONFIGURATION and exact_body and not failure:
             parity = RecordedParity_Verify(dataset, channels)
             diagnostics["recorded_parity"] = parity
             if parity["passed"]:

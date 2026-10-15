@@ -1,4 +1,4 @@
-"""Declaration admission and unavailable replay, without activating firmware modes."""
+"""Versioned timing declaration admission and immutable raw package boundaries."""
 
 from copy import deepcopy
 from dataclasses import replace
@@ -53,6 +53,59 @@ def _Package_Load(tmp_path, document):
     return result
 
 
+def _TimingDocument(component=KF6, mode=0):
+    from silverstar_flp.decoder_profiles.fusion_timing import PREDICTION_ADAPTER, TIMING_VERSIONS
+    document = _Document(component, TIMING_VERSIONS[component], mode)
+    document['firmware_algorithm_parameters'] = [{
+        'component': component, 'schema_id': 'silverstar.algorithm-parameters/1.0',
+        'manifest_sha256': '0' * 64, 'parameters': [{
+            'id': 'fusion_timing_mode', 'value': mode, 'storage_type': 'int32',
+            'unit': '1', 'representation': 'value', 'description': 'Synthetic timing input',
+        }],
+    }]
+    if component == KF6:
+        document['metadata_declarations']['fusion_prediction_adapter'] = deepcopy(PREDICTION_ADAPTER)
+    return document
+
+
+@pytest.mark.parametrize('component', [KF6, ESKF15])
+@pytest.mark.parametrize('mode', [0, 1])
+def test_exact_new_versions_require_matching_actual_mode_and_complete_v2_identity(component, mode):
+    from tests.test_fusion_timing_records_v2 import _Record_Create
+    from silverstar_flp.decoder_profiles.fusion_timing import FusionTimingRun_Resolve
+    document = _TimingDocument(component, mode)
+    names = ['ESKF15_MEASUREMENT'] if component == ESKF15 else ['GNSS_MEASUREMENT', 'BARO_MEASUREMENT']
+    records = {name: (_Record_Create(name, mode),) for name in names}
+    if component == ESKF15:
+        base = records[names[0]][0]
+        records[names[0]] = tuple(replace(base, record_sequence=i+1,
+            payload={**base.payload, 'group': i, 'operation_sequence': i+1}) for i in range(4))
+    dataset = SimpleNamespace(semantic_context=SimpleNamespace(raw_metadata=document),
+                              Records_Get=lambda name: records.get(name, ()))
+    assert FusionTimingUnavailable_Get(dataset) == ()
+    selected, audit = FusionTimingRun_Resolve(dataset, {'fusion_timing_mode': 0})
+    assert selected == 0 and audit['recorded_fusion_timing_mode'] == mode
+    assert audit['fusion_timing_mode_parameter_recorded'] is True
+    records[names[0]] = (replace(records[names[0]][0], record_version=1),)
+    with pytest.raises(ValueError, match='fusion_timing_v2_records_required'):
+        FusionTimingRun_Resolve(dataset, {'fusion_timing_mode': 0})
+
+
+@pytest.mark.parametrize('change,reason', [
+    (lambda d: d['metadata_declarations'].pop('fusion_timing'), 'declaration_missing'),
+    (lambda d: d.update(firmware_algorithm_parameters=[]), 'actual_parameter_missing'),
+    (lambda d: d['firmware_algorithm_parameters'][0]['parameters'][0].update(value=1), 'actual_parameter_mismatch'),
+    (lambda d: d['firmware_algorithm_parameters'][0]['parameters'][0].update(value=False), 'actual_parameter_mismatch'),
+    (lambda d: d['metadata_declarations'].pop('fusion_prediction_adapter'), 'prediction_adapter_identity_invalid'),
+    (lambda d: d['metadata_declarations']['fusion_prediction_adapter'].update(history_replay_executed=True), 'prediction_adapter_identity_invalid'),
+])
+def test_new_current_declaration_cannot_invent_actual_mode_or_step_semantics(change, reason):
+    document = _TimingDocument()
+    change(document)
+    with pytest.raises(DecoderProfileError, match=reason):
+        FusionTiming_FromSemantics(document)
+
+
 @pytest.mark.parametrize("component,version", [(key, value) for key, values in LEGACY_VERSIONS.items() for value in sorted(values)])
 def test_missing_declaration_resolves_only_known_legacy_version(component, version):
     document = _Document(component, version)
@@ -82,7 +135,7 @@ def test_current_declaration_preserves_raw_package_and_is_unavailable(tmp_path, 
     identity = FusionTiming_FromSemantics(document)
     assert identity.mode == 0 and identity.revision == 1
     dataset = SimpleNamespace(semantic_context=SimpleNamespace(raw_metadata=document))
-    assert FusionTimingUnavailable_Get(dataset) == ("fusion_timing_current_replay_not_implemented",)
+    assert FusionTimingUnavailable_Get(dataset) == ("fusion_timing_identity_unproven",)
 
 
 @pytest.mark.parametrize("mutation,reason", [
@@ -176,7 +229,7 @@ def test_present_non_mapping_metadata_is_an_explicit_blocker(document):
     assert FusionTimingUnavailable_Get(dataset) == ("fusion_timing_metadata_invalid",)
 
 
-def test_new_actual_parameter_stays_unsupported_until_firmware_integration(tmp_path):
+def test_future_component_actual_parameter_does_not_prove_implementation(tmp_path):
     document = _Document()
     document["firmware_algorithm_parameters"] = [{
         "component": KF6, "schema_id": "silverstar.algorithm-parameters/1.0",
@@ -185,8 +238,8 @@ def test_new_actual_parameter_stays_unsupported_until_firmware_integration(tmp_p
             "storage_type": "int32", "description": "Future inactive mode",
         }],
     }]
-    with pytest.raises(DecoderProfileError, match="parameter_unknown:fusion_timing_mode"):
-        _Package_Load(tmp_path, document)
+    _Package_Load(tmp_path, document)
+    assert FusionTiming_FromSemantics(document).unavailable_reason == "fusion_timing_identity_unproven"
 
 
 @pytest.mark.parametrize("algorithm_id", ["silverstar.algorithm.kf6", ESKF15])
@@ -203,9 +256,9 @@ def test_plugins_refuse_current_declaration_before_numerical_work(tmp_path, algo
     available = plugin.availability(dataset)
     assert not available.available
     assert available.fidelity == ReplayFidelity.UNAVAILABLE
-    assert "fusion_timing_current_replay_not_implemented" in available.missing_inputs
+    assert "fusion_timing_identity_unproven" in available.missing_inputs
     request = ReplayRequest(mode=ReplayMode.WHAT_IF, process_model_revision=2 if algorithm_id.endswith("kf6") else None)
-    with pytest.raises(ValueError, match="fusion_timing_current_replay_not_implemented"):
+    with pytest.raises(ValueError, match="fusion_timing_identity_unproven"):
         plugin.run(dataset, request)
 
 

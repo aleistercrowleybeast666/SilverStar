@@ -71,6 +71,8 @@ class Measurement:
     consistency_scale: float = 1.0
     source: int = 0
     generation: int = 0
+    source_sequence: int | None = None
+    mission_epoch: int | None = None
 
 
 class DelayedReplay:

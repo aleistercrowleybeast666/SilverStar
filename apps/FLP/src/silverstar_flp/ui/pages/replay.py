@@ -32,6 +32,7 @@ from silverstar_flp.core.dataset import FlightDataset
 from silverstar_flp.core.i18n import Translator
 from silverstar_flp.core.nis_probability import RecordedNisDf_Get
 from silverstar_flp.ui.nis_editor import GateEnableEditor, NisProbabilityEditor
+from silverstar_flp.ui.fusion_timing_editor import FusionTimingEditor
 
 from silverstar_flp.plugins.api.algorithm import (
     AlgorithmResult,
@@ -69,7 +70,7 @@ class ReplayPage(QWidget):
         self._process_model_preferences: dict[tuple[str, ReplayMode], int] = {}
         self._last_error: str | None = None
         self._store: ReplayResultStore | None = None
-        self._parameter_widgets: dict[str, QDoubleSpinBox | NisProbabilityEditor | GateEnableEditor] = {}
+        self._parameter_widgets: dict[str, QDoubleSpinBox | NisProbabilityEditor | GateEnableEditor | FusionTimingEditor] = {}
         self._parameter_labels: dict[str, QLabel] = {}
         self._parameter_specs: dict[str, ParameterSpec] = {}
         self._recorded_parameter_values: dict[str, float] = {}
@@ -371,7 +372,9 @@ class ReplayPage(QWidget):
         for parameter in plugin.metadata.parameter_schema:
             if parameter.kind not in ("float", "int"):
                 continue
-            if parameter.nis_df:
+            if parameter.parameter_id == "fusion_timing_mode":
+                editor = FusionTimingEditor(self._translator.language, self.parameters_group)
+            elif parameter.nis_df:
                 editor = NisProbabilityEditor(parameter.nis_df, parameter.minimum, parameter.maximum,
                                               self._translator.language, self.parameters_group)
             elif parameter.parameter_id in {"nis_soft_enabled", "nis_hard_enabled"}:
@@ -442,7 +445,7 @@ class ReplayPage(QWidget):
         return cls._ParameterGroup_Get(parameter) in {
             "parameter_group.process_model", "parameter_group.measurement_noise",
             "parameter_group.sf6_gain", "parameter_group.general", "",
-        } or parameter.parameter_id in {"nis_soft_enabled", "nis_hard_enabled"}
+        } or parameter.parameter_id in {"nis_soft_enabled", "nis_hard_enabled", "fusion_timing_mode"}
 
     def _AdvancedParameters_Set(self, expanded: bool) -> None:
         self.advanced_button.setArrowType(Qt.ArrowType.DownArrow if expanded else Qt.ArrowType.RightArrow)
@@ -1333,7 +1336,7 @@ class ReplayPage(QWidget):
         )
         for parameter_id, label in self._parameter_labels.items():
             editor = self._parameter_widgets[parameter_id]
-            if isinstance(editor, NisProbabilityEditor):
+            if isinstance(editor, (NisProbabilityEditor, FusionTimingEditor)):
                 editor.Language_Set(translator.language)
             parameter = self._parameter_specs[parameter_id]
             label.setText(self._Parameter_Label(parameter))

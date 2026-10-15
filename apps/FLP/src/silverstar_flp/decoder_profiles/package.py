@@ -195,7 +195,9 @@ class DecoderProfilePackage:
         if type(integrity_revision) is not int or integrity_revision not in (0, 2, 3):
             raise DecoderProfileError("gnss_integrity_revision_unsupported")
         from silverstar_flp.decoder_profiles.fusion_timing import FusionTiming_FromSemantics
-        FusionTiming_FromSemantics(semantics_document)
+        timing = FusionTiming_FromSemantics(semantics_document)
+        from silverstar_flp.decoder_profiles.fusion_timing_records import FusionTimingCatalog_Validate
+        FusionTimingCatalog_Validate(catalog, timing)
         from silverstar_flp.decoder_profiles.sf6_revision import Sf6Revision_FromSemantics
         sf6_revision = Sf6Revision_FromSemantics(semantics_document)
         from silverstar_flp.decoder_profiles.kf6_revision import Kf6Revision_FromSemantics

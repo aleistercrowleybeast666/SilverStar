@@ -927,12 +927,21 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
         required=False, precision=0, step=1, order=99 + index,
         label_key=f"parameter.nis_{kind}_enabled", group_key="parameter_group.consistency_gating")
         for index, kind in enumerate(("soft", "hard"))))
+    metadata = replace(metadata, parameter_schema=metadata.parameter_schema + (
+        ParameterSpec("fusion_timing_mode", "int", 1, 0, 1, "1", required=False,
+            precision=0, step=1, order=101, label_key="parameter.fusion_timing_mode",
+            group_key="parameter_group.process_model"),))
 
     def ParameterSchemaCompatible_Is(self, identity: str) -> bool:
         if super().ParameterSchemaCompatible_Is(identity):
             return True
-        pre_probability = replace(self.metadata, parameter_schema=tuple(
+        before_timing = replace(self.metadata, parameter_schema=tuple(
             spec for spec in self.metadata.parameter_schema
+            if spec.parameter_id != "fusion_timing_mode"))
+        if identity == before_timing.ParameterSchemaIdentity_Get():
+            return True
+        pre_probability = replace(before_timing, parameter_schema=tuple(
+            spec for spec in before_timing.parameter_schema
             if spec.parameter_id not in {"nis_soft_enabled", "nis_hard_enabled"}))
         if identity == pre_probability.ParameterSchemaIdentity_Get():
             return True
@@ -1108,6 +1117,12 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
                 source_end_timestamp_us=increments[-1].interval_end_timestamp_us,
             )
         parameters = self._Parameters_Resolve(dataset, request)
+        from silverstar_flp.decoder_profiles.fusion_timing import FusionTimingRun_Resolve
+        timing_mode, timing_audit = FusionTimingRun_Resolve(dataset, parameters)
+        source_diagnostics.update(timing_audit)
+        self._TimingQualityParameters_Validate(dataset, parameters, request.quality_policy_revision)
+        if timing_mode == 0 and not dataset.Records_Get("ESTIMATOR_STEP"):
+            raise ValueError("fusion_timing_current_operation_stream_required")
         source_diagnostics.update({"algorithm_revision": algorithm_revision,
             "process_model_revision": algorithm_revision,
             "dataset_algorithm_revision": dataset_revision,
@@ -1293,6 +1308,11 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
                 start_timestamp,
             )
             source_diagnostics.update(health_diagnostics)
+            if source_diagnostics.get('gnss_integrity', {}).get('health_quality_scale_unavailable'):
+                health = channels['kf6.navigation_health']
+                channels['kf6.navigation_health'] = replace(health, valid=np.zeros(health.count, dtype=bool),
+                    metadata={**health.metadata, 'unavailable_reason': 'fusion_timing_quality_scale_evidence_missing'})
+                warnings.append('fusion_timing_quality_scale_evidence_missing')
         for channel_id in ("navigation.position_enu", "navigation.velocity_enu"):
             series = channels[channel_id]
             channels[channel_id] = replace(
@@ -1544,6 +1564,62 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
                 result[index] = max(initial[index], after)
         return result
 
+    def _TimingQualityParameters_Validate(self, dataset, parameters, revision_override=None):
+        if not any(r.record_version == 2 for name in ('GNSS_MEASUREMENT', 'BARO_MEASUREMENT')
+                   for r in dataset.Records_Get(name)):
+            return
+        baseline = self.recorded_parameters(dataset)
+        restricted = {name for name in parameters if name.startswith('gnss_integrity_')} | {
+            'gnss_position_std_horizontal', 'gnss_position_std_vertical',
+            'gnss_velocity_std', 'gnss_velocity_vertical_scale'}
+        changed = sorted(name for name in restricted if parameters.get(name) != baseline.get(name))
+        if changed:
+            raise ValueError('fusion_timing_v2_quality_recompute_unavailable:' + ','.join(changed))
+        if parameters.get('baro_std_m') != baseline.get('baro_std_m') and any(
+                r.record_version == 2 for r in dataset.Records_Get('BARO_MEASUREMENT')):
+            raise ValueError('parameter_dynamic_uncertainty_missing:BARO_NATIVE_logical_producer_identity')
+        recorded_revision = dataset.semantic_context.raw_metadata.get('metadata_declarations', {}).get(
+            'navigation_replay', {}).get('gnss_integrity_revision', 0)
+        if revision_override is not None and revision_override != recorded_revision:
+            raise ValueError('fusion_timing_v2_quality_policy_override_unavailable')
+
+    @staticmethod
+    def _TimingQualitySchedule_Apply(dataset, schedule, revision):
+        from silverstar_flp.analysis.navigation_policy import GnssQuality_VarianceScale
+        output, unavailable = [], False
+        for item in schedule:
+            if item.kind != 'gnss':
+                output.append(item)
+                continue
+            p = dict(item.record.payload)
+            natives = [r.payload for r in dataset.Records_Get('GNSS_NATIVE')
+                if all(r.payload.get(native) == p[field] for native, field in (
+                    ('instance_id', 'source_id'), ('sequence', 'sequence'),
+                    ('sample_timestamp_us', 'sample_timestamp_us'),
+                    ('receive_timestamp_us', 'receive_timestamp_us')))]
+            qualities = [r.payload for r in dataset.Records_Get('NAV_QUALITY')
+                if r.payload.get('quality_revision') == 3 and all(r.payload.get(native) == p[field]
+                    for native, field in (('source_id', 'source_id'), ('native_sequence', 'sequence'),
+                        ('receive_us', 'receive_timestamp_us'), ('evaluation_us', 'estimator_present_timestamp_us'),
+                        ('calibration_generation', 'calibration_generation')))]
+            scales = (float('nan'),) * 4
+            if len(natives) == len(qualities) == 1:
+                native, quality = natives[0], qualities[0]
+                scale = GnssQuality_VarianceScale(int(native.get('satellite_count', 0))) if (
+                    int(native.get('supported_fields', 0)) & int(native.get('valid_fields', 0)) & 4) else 1.0
+                consistency = float(quality['variance_scale'])
+                if np.isfinite(consistency) and consistency >= 1:
+                    scales = (scale * consistency, scale, scale, scale)
+            unavailable |= not np.isfinite(scales).all()
+            # The v2 prefix records the actual numerical mask/R input. Retain
+            # it; replaying all native packets would bypass packet admission.
+            p.update(_integrity_native_valid_group_mask=int(p['valid_group_mask']),
+                     _quality_source_id=int(p['source_id']), _quality_variance_scales=scales)
+            output.append(replace(item, record=replace(item.record, payload=p)))
+        return tuple(output), {'revision': revision, 'quality_input_scope': 'recorded_v2',
+            'window_evidence': [], 'health_quality_scale_unavailable': bool(unavailable),
+            'quality_recomputation': 'unavailable_without_current_packet_policy_execution'}
+
     def _IntegritySchedule_Apply(
         self,
         dataset: FlightDataset,
@@ -1562,6 +1638,8 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
         )
         if revision_override is not None:
             revision = revision_override
+        if any(item.record.record_version == 2 for item in schedule):
+            return self._TimingQualitySchedule_Apply(dataset, schedule, revision)
         if revision == 3:
             from silverstar_flp.analysis.navigation_revision3 import QualitySchedule_Apply
 
@@ -1701,8 +1779,13 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
                 result.append(item)
                 continue
             kind = "GNSS_NATIVE" if is_gnss else "BARO_NATIVE"
+            if record.record_version == 2 and not is_gnss:
+                raise ValueError('parameter_dynamic_uncertainty_missing:BARO_NATIVE_logical_producer_identity')
             key = (kind, record.payload.get("sample_timestamp_us"), record.payload.get("sequence"))
             matches = native_records.get(key, ())
+            if record.record_version == 2:
+                matches = [r for r in matches if r.payload.get('instance_id') == record.payload['source_id']
+                    and r.payload.get('receive_timestamp_us') == record.payload['receive_timestamp_us']]
             if len(matches) != 1:
                 raise ValueError(f"parameter_dynamic_uncertainty_missing:{kind}")
             native = matches[0].payload
