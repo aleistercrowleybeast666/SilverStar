@@ -1,0 +1,164 @@
+{
+  "created_utc": "2026-10-15T10:33:04.365989+00:00",
+  "owner": "root",
+  "version": "0.1.3",
+  "source_commit": "cb53daf3f3a88b55b7ed1fbf1fd39678487f6f18",
+  "source_scope": [
+    "apps/SCG/src/silverstar_fccg/app/native_usb.py",
+    "apps/SCG/src/silverstar_fccg/app/usb_transport.py",
+    "apps/SCG/src/silverstar_fccg/app/service.py",
+    "apps/SCG/src/silverstar_fccg/build/native_usb.py",
+    "apps/SCG/src/silverstar_fccg/generator/native_usb_graph.py",
+    "apps/SCG/src/silverstar_fccg/generator/usb_cdc_integration.py",
+    "apps/SCG/src/silverstar_fccg/hardware/usb_transport_capabilities.py",
+    "apps/SCG/src/silverstar_fccg/hardware/usb_transport_profiles.py",
+    "apps/SCG/src/silverstar_fccg/project/model.py",
+    "apps/SCG/src/silverstar_fccg/project/native_usb.py",
+    "apps/SCG/src/silverstar_fccg/ui/main_window.py",
+    "apps/SCG/src/silverstar_fccg/ui/pages/build.py",
+    "apps/SCG/src/silverstar_fccg/ui/pages/native_usb.py",
+    "apps/SCG/tests/test_native_usb_workflow.py",
+    "apps/SCG/tests/test_usb_transport.py",
+    "apps/SCG/tests/test_usb_transport_capabilities.py",
+    "apps/SCG/tests/test_usb_transport_integration.py",
+    "apps/SCG/tools/validation/usb_transport_validate.py",
+    "apps/SCG/docs/USB_CDC_COMPATIBILITY_20261015.md",
+    "apps/SCG/docs/USB_NATIVE_WORKFLOW_20261015.md"
+  ],
+  "compatibility_source_binding": {
+    "apps\\SCG\\src\\silverstar_fccg\\app\\usb_transport.py": {
+      "executed": "7e54a78f9cb2e2c038084954ac9670ce68228d437f0c5b6be1a43eadc7876d3a",
+      "current": "7e54a78f9cb2e2c038084954ac9670ce68228d437f0c5b6be1a43eadc7876d3a",
+      "identical": true
+    },
+    "apps\\SCG\\src\\silverstar_fccg\\generator\\usb_cdc_transport.py": {
+      "executed": "8e24afa217fe9b90553befbebc2666381614f9a242c14129e8f6fa046c608aeb",
+      "current": "8e24afa217fe9b90553befbebc2666381614f9a242c14129e8f6fa046c608aeb",
+      "identical": true
+    },
+    "apps\\SCG\\src\\silverstar_fccg\\generator\\usb_cdc_integration.py": {
+      "executed": "183bacd85760d851cac6d0abb5e55a15c211f434a0cc801b5a7ee0b44f08b079",
+      "current": "183bacd85760d851cac6d0abb5e55a15c211f434a0cc801b5a7ee0b44f08b079",
+      "identical": true
+    },
+    "apps\\SCG\\src\\silverstar_fccg\\hardware\\usb_transport_capabilities.py": {
+      "executed": "4ab48b1526cf626dfa94497fdcb92ef5f223af96d42673a8f699c993748d2c04",
+      "current": "4ab48b1526cf626dfa94497fdcb92ef5f223af96d42673a8f699c993748d2c04",
+      "identical": true
+    },
+    "apps\\SCG\\src\\silverstar_fccg\\hardware\\usb_transport_profiles.py": {
+      "executed": "93594b76aa2fdba6c10909f5ab106496ac49a140e09dd21719e8dcb82bb37b41",
+      "current": "93594b76aa2fdba6c10909f5ab106496ac49a140e09dd21719e8dcb82bb37b41",
+      "identical": true
+    },
+    "apps\\SCG\\src\\silverstar_fccg\\generator\\native_usb_data.py": {
+      "executed": "49a3c29253e43cf18ef268c8d2979c7623d77a01bcbac9060df3ef0706223e88",
+      "current": "49a3c29253e43cf18ef268c8d2979c7623d77a01bcbac9060df3ef0706223e88",
+      "identical": true
+    },
+    "apps\\SCG\\src\\silverstar_fccg\\generator\\native_usb_indexed.py": {
+      "executed": "fb99ac9cf136409ea3ab6d30517cfb385051576efd3dbad07dcb44b141e25f02",
+      "current": "fb99ac9cf136409ea3ab6d30517cfb385051576efd3dbad07dcb44b141e25f02",
+      "identical": true
+    },
+    "apps\\SCG\\src\\silverstar_fccg\\generator\\native_hal.py": {
+      "executed": "2688a42da428b05129327f9e87d0bcc83ea55933ca9f243aa3c2a1b72cc9b443",
+      "current": "2688a42da428b05129327f9e87d0bcc83ea55933ca9f243aa3c2a1b72cc9b443",
+      "identical": true
+    },
+    "apps\\SCG\\src\\silverstar_fccg\\generator\\multi_target.py": {
+      "executed": "9f453b04c3e3e98d9e6c67842cc539b5c474c9258d4ecf3f1aaf6280e9b91928",
+      "current": "9f453b04c3e3e98d9e6c67842cc539b5c474c9258d4ecf3f1aaf6280e9b91928",
+      "identical": true
+    },
+    "apps\\SCG\\src\\silverstar_fccg\\hardware\\native_machine_contract.py": {
+      "executed": "10dbb135a85f99479ae39119be777ebd192151ad48b20af54a549229e3832a1e",
+      "current": "10dbb135a85f99479ae39119be777ebd192151ad48b20af54a549229e3832a1e",
+      "identical": true
+    },
+    "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tools\\check_power_of_ten.ps1": {
+      "executed": "a02b24e2305dd65f99aff49f58a0cd10ddf954b8860f90b3d01096f499f06286",
+      "current": "a02b24e2305dd65f99aff49f58a0cd10ddf954b8860f90b3d01096f499f06286",
+      "identical": true
+    },
+    "apps\\SCG\\tests\\test_usb_transport.py": {
+      "executed": "a7f02b10faeb178c3647daadf4da7160ae67f69fb4d960b23ab94523d333205b",
+      "current": "a7f02b10faeb178c3647daadf4da7160ae67f69fb4d960b23ab94523d333205b",
+      "identical": true
+    },
+    "apps\\SCG\\tests\\test_usb_transport_capabilities.py": {
+      "executed": "7d76e94b8ed7237e2e1a93a58f8bf6ddee55cc3f3a3f5c852095bdc882e3e636",
+      "current": "7d76e94b8ed7237e2e1a93a58f8bf6ddee55cc3f3a3f5c852095bdc882e3e636",
+      "identical": true
+    },
+    "apps\\SCG\\tests\\test_usb_transport_integration.py": {
+      "executed": "d6270d54d52ab220500626b91e82f5b4a28cffad4b03374fe6fa38651f80f66d",
+      "current": "d6270d54d52ab220500626b91e82f5b4a28cffad4b03374fe6fa38651f80f66d",
+      "identical": true
+    },
+    "apps\\SCG\\tests\\test_ground_usb_cdc_ring.py": {
+      "executed": "88b69c0431e76b7a076210b4466218a8ea0965d4e5502befff9ec3c9605ed1c1",
+      "current": "88b69c0431e76b7a076210b4466218a8ea0965d4e5502befff9ec3c9605ed1c1",
+      "identical": true
+    },
+    "apps\\SCG\\tools\\validation\\usb_transport_validate.py": {
+      "executed": "71061ea78a4a57736c0205927f9edddef78bb147ceae8e9c7728080dd33e8d42",
+      "current": "71061ea78a4a57736c0205927f9edddef78bb147ceae8e9c7728080dd33e8d42",
+      "identical": true
+    }
+  },
+  "source_snapshot_scope": "USB implementation and workflow; unrelated concurrent navigation source is not this batch",
+  "tests": {
+    "workflow06": "26 passed, no skips; ordinary local permissions for owned process-tree termination",
+    "existing01": "156 passed",
+    "ui01": "4 passed, 40 deselected; not a 44-test pass",
+    "compatibility_validate12": "98 passed, 5 skipped, 1 warning; aggregate exit 1"
+  },
+  "builds": [
+    {
+      "target": "f103",
+      "analyzer": false,
+      "status": "COMPILED_LINKED",
+      "elf_sha256": "a12042d60e1f0953e0075cd08364bb514e5cf5d4e9e19c94dc0b1838ed690024",
+      "commands": 49,
+      "headers": 88,
+      "receipt_rechecked": true
+    },
+    {
+      "target": "f103",
+      "analyzer": true,
+      "status": "COMPILED_WITH_DIAGNOSTICS",
+      "elf_sha256": "a12042d60e1f0953e0075cd08364bb514e5cf5d4e9e19c94dc0b1838ed690024",
+      "commands": 49,
+      "headers": 88,
+      "receipt_rechecked": true
+    },
+    {
+      "target": "f407",
+      "analyzer": false,
+      "status": "COMPILED_LINKED",
+      "elf_sha256": "9b6ef31897be6fdfbd6834d677dd2d363aa1eafc43019f7ceb32a95d60e0f225",
+      "commands": 58,
+      "headers": 97,
+      "receipt_rechecked": true
+    },
+    {
+      "target": "f407",
+      "analyzer": true,
+      "status": "COMPILED_WITH_DIAGNOSTICS",
+      "elf_sha256": "9b6ef31897be6fdfbd6834d677dd2d363aa1eafc43019f7ceb32a95d60e0f225",
+      "commands": 58,
+      "headers": 97,
+      "receipt_rechecked": true
+    }
+  ],
+  "hardware": "NOT_TESTED",
+  "critical_contracts": "NOT_PROVEN",
+  "power10": {
+    "compatibility": "FAIL: F103 7 groups / F407 10 groups",
+    "product_build": "NOT_RUN_BY_THIS_BUILD"
+  },
+  "native_f407": "Missing TX2; isolated CubeMX template generation blocked; original remains unchanged",
+  "runner_revision_note": "After the four ARM03 builds only Windows failure/timeout termination reporting was strengthened in build/native_usb.py; normal compiler flags and all C/header/startup/linker inputs are unchanged. workflow06 executes the final runner, including process cancellation. ARM receipts bind their actual C graph and artifacts, not an inferred re-execution of the changed error branch.",
+  "cleanup_authorized": false
+}

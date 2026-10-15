@@ -1,0 +1,28 @@
+{
+  "file": "evidence.zip",
+  "sha256": "e56970d3112424d4f5ef40e8e69f11fa302a4a706002e873c37f53f69c307061",
+  "bytes": 5884598,
+  "entries": 3461,
+  "source_files": {
+    "apps/SCG/src/silverstar_fccg/app/native_usb.py": "8b4c46fdc09d28d1dcffd782ff1e450d0b78114f639f97fca1e58ed251b67843",
+    "apps/SCG/src/silverstar_fccg/app/usb_transport.py": "7e54a78f9cb2e2c038084954ac9670ce68228d437f0c5b6be1a43eadc7876d3a",
+    "apps/SCG/src/silverstar_fccg/app/service.py": "d137a7f7075e4e4db95599bbfe09180b281d458ee751f5cadb69d8fe2bec9094",
+    "apps/SCG/src/silverstar_fccg/build/native_usb.py": "f4bad4c08e1e056b3772d7693be0728263fb00bb40e220d3261df4cec241018c",
+    "apps/SCG/src/silverstar_fccg/generator/native_usb_graph.py": "1f83a2d42b8877161752d945743f61d4b9dcad61f9381ad964c85cc8def7e0f5",
+    "apps/SCG/src/silverstar_fccg/generator/usb_cdc_integration.py": "183bacd85760d851cac6d0abb5e55a15c211f434a0cc801b5a7ee0b44f08b079",
+    "apps/SCG/src/silverstar_fccg/hardware/usb_transport_capabilities.py": "4ab48b1526cf626dfa94497fdcb92ef5f223af96d42673a8f699c993748d2c04",
+    "apps/SCG/src/silverstar_fccg/hardware/usb_transport_profiles.py": "93594b76aa2fdba6c10909f5ab106496ac49a140e09dd21719e8dcb82bb37b41",
+    "apps/SCG/src/silverstar_fccg/project/model.py": "dfb5f10573ebbe40557c7012c030ae93c3a9ca58e56a1c6deb38f5a80fe2a56b",
+    "apps/SCG/src/silverstar_fccg/project/native_usb.py": "f4f7c538d192ac3bed1e471d27427f21ab2d1d17cc1abf8ce9175bfe227812ad",
+    "apps/SCG/src/silverstar_fccg/ui/main_window.py": "6717fe9c0feb3453c3fbe9493caee8580ce4167b8e27d50ed1b36066c69a2120",
+    "apps/SCG/src/silverstar_fccg/ui/pages/build.py": "5f642601191156f0fed2ddc60c1eeb358fd62a22b31aeb3124268a90fecc74e3",
+    "apps/SCG/src/silverstar_fccg/ui/pages/native_usb.py": "d451c4146937933b5b83ba5436ac8e602644b18a6e4af015e478def48bdac111",
+    "apps/SCG/tests/test_native_usb_workflow.py": "d130d8d25747d3b27f50c1dc876c28b568e90c07eec6536e8694b353937971e1",
+    "apps/SCG/tests/test_usb_transport.py": "a7f02b10faeb178c3647daadf4da7160ae67f69fb4d960b23ab94523d333205b",
+    "apps/SCG/tests/test_usb_transport_capabilities.py": "7d76e94b8ed7237e2e1a93a58f8bf6ddee55cc3f3a3f5c852095bdc882e3e636",
+    "apps/SCG/tests/test_usb_transport_integration.py": "d6270d54d52ab220500626b91e82f5b4a28cffad4b03374fe6fa38651f80f66d",
+    "apps/SCG/tools/validation/usb_transport_validate.py": "71061ea78a4a57736c0205927f9edddef78bb147ceae8e9c7728080dd33e8d42",
+    "apps/SCG/docs/USB_CDC_COMPATIBILITY_20261015.md": "36fa5ac4ccff1c31c6d971fbf00b1e59f8570dd83d6f6b6d57c6ed63514e1c89",
+    "apps/SCG/docs/USB_NATIVE_WORKFLOW_20261015.md": "b90e1308686556bd6cb15d36231ff0441a2ebf29fca7f62a43d7242bd9e83771"
+  }
+}

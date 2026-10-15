@@ -109,6 +109,26 @@ class LogDecoderProfileExportResult:
 
 
 class FccgService:
+    @staticmethod
+    def NativeUsb_Inspect(native, context):
+        from silverstar_fccg.app.native_usb import NativeUsb_Inspect
+        return NativeUsb_Inspect(native, context)
+
+    @staticmethod
+    def NativeUsb_Prepare(reference, output, context):
+        from silverstar_fccg.app.native_usb import NativeUsb_Prepare
+        return NativeUsb_Prepare(reference, output, context)
+
+    @staticmethod
+    def NativeUsb_Build(reference, compiler, context, *, analyzer=False):
+        from silverstar_fccg.app.native_usb import NativeUsb_Build
+        return NativeUsb_Build(reference, compiler, context, analyzer=analyzer)
+
+    @staticmethod
+    def NativeUsb_Refresh(reference, context):
+        from silverstar_fccg.app.native_usb import NativeUsb_Refresh
+        return NativeUsb_Refresh(reference, context)
+
     def __init__(self, workspace_root: Path) -> None:
         self.workspace_root = workspace_root.resolve()
         self.policy = WorkspacePolicy(self.workspace_root)

@@ -23,6 +23,7 @@ from silverstar_fccg.core.i18n import Translator
 from silverstar_fccg.core.view_models import ToolchainToolView
 from silverstar_fccg.project.artifact_memory import ArtifactMemorySummary_Decode, ArtifactMemoryMarginLevel_Get
 from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
+from silverstar_fccg.ui.pages.native_usb import NativeUsbPanel
 from silverstar_fccg.ui.widgets import (
     CollapsibleSection,
 )
@@ -80,6 +81,8 @@ class BuildPage(ScrollableLocalizedPage):
         )
 
         self.action_buttons: dict[str, QPushButton] = {}
+        self.native_usb = NativeUsbPanel(translator.language)
+        self.root_layout.addWidget(self.native_usb)
         self.target_status_labels: dict[str, QLabel] = {}
         for target, group_key in (
             ("flight", "group.flight_build"),
@@ -567,6 +570,7 @@ class BuildPage(ScrollableLocalizedPage):
 
     def Language_Apply(self, translator: Translator) -> None:
         super().Language_Apply(translator)
+        self.native_usb.Language_Set(translator.language)
         for index in range(self.memory_layout_combo.count()):
             self.memory_layout_combo.setItemText(index, translator.Text_Get("memory.layout." + self.memory_layout_combo.itemData(index)))
         self.advanced_section.Title_Set(translator.Text_Get("group.advanced_build"))

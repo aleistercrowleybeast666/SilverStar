@@ -16,6 +16,7 @@ import re
 from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.generator.usb_cdc_transport import UsbCdcTransport_Render
 from silverstar_fccg.hardware.cubemx import CubeMxImportError
+from silverstar_fccg.hardware.usb_transport_capabilities import UsbCapabilities_Inspect
 
 
 class UsbTransportPlanResult(str, Enum):
@@ -34,6 +35,7 @@ class UsbTransportPlan:
     owners: dict[str, str]
     licenses: tuple[str, ...]
     review: tuple[str, ...]
+    capabilities: dict
 
 
 _REVIEW = (
@@ -71,7 +73,7 @@ def _Project_Read(root: Path) -> dict[str, bytes]:
                 continue
             if ("license" not in name.casefold() and "release_notes" not in name.casefold() and
                     path.suffix.casefold() not in {".ioc", ".c", ".h", ".s", ".ld", ".txt", ".cmake", ".md"}
-                    and path.name not in {"Makefile", "LICENSE", "COPYING"}):
+                    and path.name not in {"Makefile", "LICENSE", "COPYING", "scg-usb-build.json"}):
                 continue
             remaining = 64 * 1024 * 1024 - total
             if path.stat().st_size > remaining:
@@ -108,7 +110,8 @@ def UsbTransport_Plan(input_path: str | Path) -> UsbTransportPlan:
         not any(part.casefold() in {"drivers", "middlewares"} for part in Path(p).parts))
     usbx = ("USBX" in ioc.upper() or any("ux_device" in p.lower() or
             "usbx" in p.lower() for p in files))
-    required = ("usbd_cdc.c", "usbd_cdc.h", "usbd_def.h", "usbd_core.c",
+    required = ("usbd_cdc.c", "usbd_cdc.h", "usbd_def.h", "usbd_core.c", "usbd_core.h",
+                "usbd_ctlreq.c", "usbd_ctlreq.h", "usbd_ioreq.c", "usbd_ioreq.h", "usbd_desc.c", "usbd_desc.h",
                 "usbd_cdc_if.c", "usbd_cdc_if.h", "usb_device.c", "usb_device.h",
                 "usbd_conf.c", "usbd_conf.h", "main.c", "main.h")
     for name in required:
@@ -149,15 +152,76 @@ def UsbTransport_Plan(input_path: str | Path) -> UsbTransportPlan:
         reasons.append("NATIVE_IRQ_AND_STARTUP_REQUIRED")
     if not any(p.endswith(".ld") for p in files):
         reasons.append("NATIVE_LINKER_REQUIRED")
-    if not any(Path(p).name in {"Makefile", "CMakeLists.txt"} for p in files):
+    if not any(Path(p).name in {"Makefile", "CMakeLists.txt", "scg-usb-build.json"} for p in files):
         reasons.append("NATIVE_BUILD_DESCRIPTION_REQUIRED")
     if "SystemClock_Config" not in native:
         reasons.append("NATIVE_CLOCK_OWNER_REQUIRED")
     licenses = tuple(sorted(p for p in files if "license" in Path(p).name.lower() or
                             Path(p).name == "COPYING"))
+    capabilities, capability_reasons = UsbCapabilities_Inspect(files, owners)
+    reasons.extend(capability_reasons)
+    capabilities["layers"] = {
+        "stack": stack, "class_abi": ("indexed" if indexed else "legacy") if stack == "ST_USB_DEVICE_CDC" else "NOT_CLASSIC",
+        "link": "FS_SINGLE_CDC" if stack == "ST_USB_DEVICE_CDC" else "UNRESOLVED",
+        "scheduler": "UNRESOLVED_USBX_EXECUTION" if usbx else "MAIN_PLUS_USB_IRQ_ONLY", "buffer_owner": "CPU_STATIC_COPY",
+        "unsupported": ["USBX_STANDALONE_ADAPTER", "USBX_THREADX_ADAPTER", "HS",
+                        "DMA", "DATA_CACHE", "COMPOSITE", "CLASSIC_RTOS"],
+        "native_configuration_owner": "CUBEMX_INPUT",
+    }
+    conf = code.get(owners.get("usbd_conf.c", ""), "")
+    capabilities["configuration_findings"] = []
+    if ("HAL_PCDEx_SetTxFiFo" in conf and not
+            re.search(r"HAL_PCDEx_SetTxFiFo\s*\([^,]+,\s*2[Uu]?\s*,", conf)):
+        capabilities["configuration_findings"].append(
+            "NATIVE_TX_FIFO_EP2_NOT_EXPLICIT: inspect CDC notification endpoint allocation; runtime configuration guard must pass")
+    if not reasons:
+        from silverstar_fccg.generator.usb_cdc_integration import UsbIntegrationProfile_Get
+        try:
+            profile = UsbIntegrationProfile_Get(files)
+            capabilities["automatic_integration"] = {"status": "SOURCE_SHAPE_AVAILABLE", "profile": profile}
+        except ValueError as error:
+            capabilities["automatic_integration"] = {"status": "MANUAL_HOOKS_REQUIRED", "reason": str(error)}
+    else:
+        capabilities["automatic_integration"] = {"status": "BLOCKED_BY_CAPABILITY_FINDINGS"}
     return UsbTransportPlan(UsbTransportPlanResult.Rejected if reasons else
         UsbTransportPlanResult.Experimental, stack, part, indexed,
-        tuple(reasons), hashes, owners, licenses, _REVIEW)
+        tuple(dict.fromkeys(reasons)), hashes, owners, licenses, _REVIEW, capabilities)
+
+
+def UsbAdaptation_Describe(plan: UsbTransportPlan, *, integrated: bool = False) -> dict:
+    """Local import/audit description, never an assertion of runtime readiness.
+
+    This does not create a second contracts/ authority or authorize arbitrary
+    patch instructions. Source replacement remains generator-owned and bounded.
+    """
+    return {
+        "format": "silverstar.usb.adaptation", "version": 1,
+        "readiness": "BLOCKED" if plan.reasons else "EXPERIMENTAL_UNVERIFIED",
+        "native_sources_sha256": plan.files_sha256, "native_owners": plan.owners,
+        "capability_layers": plan.capabilities["layers"],
+        "native_build_inventory": plan.capabilities.get("build", {}),
+        "native_authority": ["clock", "pins", "PCD initialization", "USB initialization",
+                             "PMA/FIFO layout", "startup", "linker", "IRQ wiring"],
+        "bindings": {"device": "hUsbDeviceFS", "initialize": "MX_USB_DEVICE_Init",
+                     "receive": "CDC_Receive_FS", "transmit": "CDC_Transmit_FS",
+                     "class_data": "pClassDataCmsit[0]" if plan.indexed else "pClassData"},
+        "transport": {"rx_capacity": 512, "tx_capacity": 256, "packet_size": 64,
+                      "queue_success_is_delivery_ack": False},
+        "lifecycle_hooks": {name: "GENERATED_NOT_ACCEPTED" if integrated else "UNBOUND_REQUIRES_REVIEW"
+            for name in ("configure_after_native_success", "receive_copy_and_deferred_rearm", "single_main_service",
+                         "invalidate_on_reset_disconnect_suspend_fault", "retire_only_after_checked_cancellation")},
+        "build_attachment": {"source_replacements": "lifecycle-integration.json" if integrated else None,
+            "additional_sources": ["Src/usb_cdc_transport.c", "Src/usb_cdc_port.c"] +
+                (["Src/usb_cdc_retire.c"] if integrated else []),
+            "assertion_owner": "CHOOSE_BUNDLED_OR_EXISTING_EXACTLY_ONCE"},
+        "automatic_integration": plan.capabilities["automatic_integration"],
+        "missing_capabilities": list(plan.reasons),
+        "configuration_findings": plan.capabilities["configuration_findings"],
+        "required_evidence": ["effective compiler dependencies and ABI", "unique source replacement graph",
+            "normal and fault Host cases", "ARM link and analyzer", "critical-contract review",
+            "controller cancellation and IRQ timing on board", "complete stack bounds"],
+        "acceptance": "NOT_PROVEN",
+    }
 
 
 def _AssertionFiles_Read() -> dict[str, bytes]:
@@ -169,7 +233,7 @@ def _AssertionFiles_Read() -> dict[str, bytes]:
             "LICENSE-SilverStar.txt": (scg.parents[1] / "LICENSE").read_bytes()}
 
 
-def UsbTransport_Export(input_path: str | Path, output_path: str | Path) -> UsbTransportPlan:
+def UsbTransport_Export(input_path: str | Path, output_path: str | Path, *, integrate: bool = False) -> UsbTransportPlan:
     root = Path(input_path).absolute()
     output = Path(output_path).absolute()
     if any(p.is_symlink() or p.is_junction() for p in (output, *output.parents)):
@@ -177,6 +241,16 @@ def UsbTransport_Export(input_path: str | Path, output_path: str | Path) -> UsbT
     plan = UsbTransport_Plan(root)
     if plan.result != UsbTransportPlanResult.Experimental:
         raise CubeMxImportError("USB integration rejected: " + "; ".join(plan.reasons))
+    integrated = {}
+    if integrate:
+        from silverstar_fccg.generator.usb_cdc_integration import UsbCdcIntegration_Render
+        native = _Project_Read(root)
+        if {p: hashlib.sha256(b).hexdigest() for p, b in native.items()} != plan.files_sha256:
+            raise CubeMxImportError("Native USB input changed before integration")
+        try:
+            integrated = UsbCdcIntegration_Render(native, plan.owners)
+        except ValueError as error:
+            raise CubeMxImportError(str(error)) from error
     if output.resolve().is_relative_to(root.resolve()) or root.resolve().is_relative_to(output.resolve()):
         raise CubeMxImportError("USB kit output must be disjoint from the input")
     policy = WorkspacePolicy(output.parent)
@@ -188,6 +262,7 @@ def UsbTransport_Export(input_path: str | Path, output_path: str | Path) -> UsbT
     stage = policy.StagingDirectory_Create("usb-kit-")
     try:
         rendered = UsbCdcTransport_Render(indexed=plan.indexed)
+        rendered.update(integrated)
         assertion_files = _AssertionFiles_Read()
         rendered.update(assertion_files)
         rendered["assertion-owner.json"] = json.dumps({
@@ -196,6 +271,7 @@ def UsbTransport_Export(input_path: str | Path, output_path: str | Path) -> UsbT
             "files_sha256": {p: hashlib.sha256(b).hexdigest() for p, b in assertion_files.items()},
         }, indent=2).encode()
         rendered["integration.json"] = json.dumps(asdict(plan), indent=2).encode()
+        rendered["usb-adaptation.json"] = json.dumps(UsbAdaptation_Describe(plan, integrated=integrate), indent=2).encode()
         rendered["README.txt"] = (
             "Experimental integration kit, not a ready firmware. Native project unchanged.\n"
             "See apps/SCG/docs/USB_CDC_TRANSPORT_20261013.md for all hook contracts.\n"
@@ -213,6 +289,16 @@ def UsbTransport_Export(input_path: str | Path, output_path: str | Path) -> UsbT
             "only when the native target does not already link that assertion owner.\n"
             "No hooks, stack source patches, clock or IRQ edits are applied automatically.\n"
         ).encode()
+        if integrate:
+            rendered["README.txt"] += (
+                "\nOPT-IN SOURCE-BOUND INTEGRATION: lifecycle-integration.json lists exact replacements.\n"
+                "Compile each Native derivative instead of its original, never both; add all additional_sources.\n"
+                "CubeMX clock/PMA/FIFO/initialization/startup remain authoritative. Input project is unchanged.\n"
+                "Configuration is checked before class initialization; invalid PMA/FIFO layout blocks online state.\n"
+                "Do not use the plain UsbCdc_Attach fragment alone for an integrated build.\n"
+                "Suspend invalidates the session; resume stays offline until reset/reconfiguration.\n"
+                "This connects callbacks in source, not a hardware or full safety acceptance.\n"
+            ).encode()
         for relative, body in rendered.items():
             path = stage / relative
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -240,8 +326,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("input", type=Path)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--integrate", action="store_true",
+                        help="Export source-bound native lifecycle derivatives; requires --output")
     args = parser.parse_args()
-    plan = UsbTransport_Export(args.input, args.output) if args.output else UsbTransport_Plan(args.input)
+    if args.integrate and not args.output:
+        parser.error("--integrate requires --output")
+    plan = UsbTransport_Export(args.input, args.output, integrate=args.integrate) if args.output else UsbTransport_Plan(args.input)
     print(json.dumps(asdict(plan), indent=2))
     return 0 if plan.result == UsbTransportPlanResult.Experimental else 2
 

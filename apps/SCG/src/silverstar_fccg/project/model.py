@@ -15,6 +15,7 @@ from silverstar_fccg.app.version import (
 )
 from silverstar_fccg.core.errors import FccgError
 from silverstar_fccg.core.workspace import WorkspacePolicy
+from silverstar_fccg.project.native_usb import NativeUsbReference, NativeUsbReference_Parse
 from silverstar_fccg.project.alignment import (
     AlignmentConfiguration,
     AlignmentConfiguration_Parse,
@@ -48,6 +49,7 @@ PROJECT_GROUND_RADIOS_FORMAT_VERSION = 15
 PROJECT_RADIO_VARIANTS_FORMAT_VERSION = 16
 PROJECT_FEATURE_TIERS_FORMAT_VERSION = 17
 PROJECT_NIS_INPUT_FORMAT_VERSION = 18
+PROJECT_NATIVE_USB_FORMAT_VERSION = 19
 AlgorithmParameterInput = float | int | dict[str, Any]
 FEATURE_TIERS = ("full", "standard", "compact", "minimal")
 PROTOCOL_CATEGORIES = ("telemetry", "maintenance", "logging")
@@ -343,6 +345,7 @@ class ProjectModel:
     component_provenance: dict[str, dict[str, Any]] = field(default_factory=dict)
     reference_provenance: dict[str, Any] = field(default_factory=dict)
     feature_tier_presets: dict[str, dict[str, Any]] = field(default_factory=dict)
+    native_usb: NativeUsbReference | None = None
     format_version: int = PROJECT_FORMAT_VERSION
 
     def ComponentIds_Get(self) -> tuple[str, ...]:
@@ -392,7 +395,9 @@ class ProjectModel:
 
     def Dictionary_Get(self) -> dict[str, Any]:
         return {
-            "format_version": (PROJECT_NIS_INPUT_FORMAT_VERSION
+            "format_version": (PROJECT_NATIVE_USB_FORMAT_VERSION
+                if self.native_usb is not None or self.format_version == PROJECT_NATIVE_USB_FORMAT_VERSION
+                else PROJECT_NIS_INPUT_FORMAT_VERSION
                 if any(isinstance(v, dict) for params in self.algorithm_parameters.values() for v in params.values()) or self.format_version == PROJECT_NIS_INPUT_FORMAT_VERSION
                 else PROJECT_FEATURE_TIERS_FORMAT_VERSION
                 if self.build.feature_tier != "full" or self.feature_tier_presets
@@ -571,6 +576,7 @@ class ProjectModel:
             "component_provenance": self.component_provenance,
             "reference_provenance": self.reference_provenance,
             **({"feature_tier_presets": deepcopy(self.feature_tier_presets)} if self.feature_tier_presets else {}),
+            **({"native_usb": self.native_usb.Dictionary_Get()} if self.native_usb is not None else {}),
         }
 
 
@@ -1942,7 +1948,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
     }
     if "flight_tx_power_dbm" not in root:
         root["flight_tx_power_dbm"] = 12
-    if set(root) - {"feature_tier_presets"} != required_root:
+    if set(root) - {"feature_tier_presets", "native_usb"} != required_root:
         missing = required_root - set(root)
         unknown = set(root) - required_root
         details = [
@@ -1950,10 +1956,18 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
             *(f"unknown {name}" for name in sorted(unknown)),
         ]
         raise ProjectModelError("Project fields are invalid: " + ", ".join(details))
-    if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION, PROJECT_NIS_INPUT_FORMAT_VERSION):
+    if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION, PROJECT_NIS_INPUT_FORMAT_VERSION, PROJECT_NATIVE_USB_FORMAT_VERSION):
         raise ProjectModelError(
-            "Only project format_version 14 through 18 is supported"
+            "Only project format_version 14 through 19 is supported"
         )
+    native_usb = None
+    if "native_usb" in root:
+        if root["format_version"] < PROJECT_NATIVE_USB_FORMAT_VERSION:
+            raise ProjectModelError("native_usb requires project format_version 19")
+        try:
+            native_usb = NativeUsbReference_Parse(root["native_usb"])
+        except ValueError as error:
+            raise ProjectModelError(str(error)) from error
     project_data = _Object_Require(root.get("project"), "project")
     if set(project_data) != {"name", "firmware_version", "build_target"}:
         raise ProjectModelError(
@@ -2074,6 +2088,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         component_provenance=_Provenance_Parse(root.get("component_provenance")),
         reference_provenance=dict(reference_provenance),
         feature_tier_presets=deepcopy(feature_tier_presets),
+        native_usb=native_usb,
         format_version=root["format_version"],
     )
 

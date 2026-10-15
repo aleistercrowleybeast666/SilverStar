@@ -194,28 +194,38 @@ def native_project(tmp_path):
     root.mkdir()
     content = {
         "test.ioc": "Mcu.CPN=STM32_UNKNOWN_EXPERIMENTAL\nUSB_DEVICE.CLASS_NAME_FS=Cdc\n",
-        "main.c": "void SystemClock_Config(void) {} void IRQ(void) { HAL_PCD_IRQHandler(); }",
-        "main.h": "", "usbd_cdc.c": "", "usbd_cdc.h": "TxState",
-        "usbd_core.c": "", "usbd_def.h": "pClassData", "usbd_cdc_if.h": "",
-        "usbd_cdc_if.c": "CDC_Transmit_FS CDC_Receive_FS USBD_CDC_ReceivePacket",
-        "usb_device.c": "hUsbDeviceFS MX_USB_DEVICE_Init USBD_RegisterClass()",
-        "usb_device.h": "", "usbd_conf.c": "", "usbd_conf.h": "",
-        "startup.s": "", "memory.ld": "", "Makefile": "", "LICENSE.md": "test fixture",
+        "main.c": "void SystemClock_Config(void) {} void IRQ(void) { HAL_PCD_IRQHandler(); } int main(void) { MX_USB_DEVICE_Init(); }",
+        "main.h": "", "usbd_cdc.c": "void USBD_CDC_Init(void) {} void USBD_CDC_DeInit(void) {} void USBD_CDC_DataIn(void) {} void USBD_CDC_DataOut(void) {}",
+        "usbd_cdc.h": "TxState",
+        "usbd_core.c": "void USBD_Init(void) {} void USBD_SetClassConfig(void) {} void USBD_ClrClassConfig(void) {}",
+        "usbd_core.h": "", "usbd_def.h": "pClassData", "usbd_cdc_if.h": "",
+        "usbd_cdc_if.c": "void CDC_Init_FS(void) {} void CDC_DeInit_FS(void) {} void CDC_Transmit_FS(void) {} void CDC_Receive_FS(void) { USBD_CDC_ReceivePacket(); }",
+        "usb_device.c": "void MX_USB_DEVICE_Init(void) { USBD_RegisterClass(&hUsbDeviceFS, &USBD_CDC); }",
+        "usb_device.h": "", "usbd_conf.c": "void USBD_LL_Transmit(void) {} void USBD_LL_PrepareReceive(void) {} void USBD_LL_CloseEP(void) {} void USBD_static_malloc(void) { pcd.speed = PCD_SPEED_FULL; }",
+        "usbd_conf.h": "#define USBD_malloc USBD_static_malloc\n",
+        "usbd_ctlreq.c": "/* fixture */", "usbd_ctlreq.h": "",
+        "usbd_ioreq.c": "/* fixture */", "usbd_ioreq.h": "",
+        "usbd_desc.c": "/* fixture */", "usbd_desc.h": "",
+        "startup.s": "Reset_Handler:", "memory.ld": "MEMORY {}", "LICENSE.md": "test fixture",
     }
+    content["Makefile"] = ("C_SOURCES = " + " ".join(p for p in content if p.endswith(".c")) +
+        "\nASM_SOURCES = startup.s\nC_INCLUDES = -IInc\nC_DEFS = -DUSE_HAL_DRIVER\nLDSCRIPT = memory.ld\nCPU = -mcpu=cortex-m3\n")
+    (root / "Inc").mkdir()
+    (root / "Inc/fixture.h").write_text("/* fixture include directory */")
     for name, text in content.items():
         (root / name).write_text(text)
     return root
 
 
 def test_capability_is_not_a_family_admission_and_export_preserves_source(native_project, tmp_path):
-    before = {p.name: p.read_bytes() for p in native_project.iterdir()}
+    before = {p.relative_to(native_project).as_posix(): p.read_bytes() for p in native_project.rglob("*") if p.is_file()}
     plan = UsbTransport_Export(native_project, tmp_path / "kit")
     assert plan.result == UsbTransportPlanResult.Experimental
     assert plan.part == "STM32_UNKNOWN_EXPERIMENTAL"
     assert any("NOT PROVEN" in review for review in plan.review)
     assert plan.licenses == ("LICENSE.md",)
     assert (tmp_path / "kit/Common/Inc/silverstar_assert.h").read_bytes() == (COMMON / "silverstar_assert.h").read_bytes()
-    assert before == {p.name: p.read_bytes() for p in native_project.iterdir()}
+    assert before == {p.relative_to(native_project).as_posix(): p.read_bytes() for p in native_project.rglob("*") if p.is_file()}
     assert UsbTransport_Plan(native_project) == plan
     with pytest.raises(CubeMxImportError, match="already exist"):
         UsbTransport_Export(native_project, tmp_path / "kit")

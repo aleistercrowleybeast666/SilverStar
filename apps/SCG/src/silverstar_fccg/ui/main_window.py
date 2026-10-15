@@ -585,6 +585,7 @@ class MainWindow(QMainWindow):
         self.build_page.detectionRequested.connect(self._Toolchains_Detect)
         self.build_page.actionRequested.connect(self._Build_Request)
         self.build_page.memoryLayoutChanged.connect(self._MemoryLayout_Change)
+        self.build_page.native_usb.actionRequested.connect(self._NativeUsb_Request)
         self.devices_page.featureTierChanged.connect(self._FeatureTier_Change)
         self.plugin_manager_dialog.panel.installRequested.connect(
             self._PluginInstall_Dialog
@@ -794,6 +795,7 @@ class MainWindow(QMainWindow):
 
     def _Project_Display(self, display: _ProjectDisplayState) -> None:
         self._ValidationIssue_Clear()
+        self.build_page.native_usb.Reference_Set(display.model.native_usb)
         self._displaying_model = True
         try:
             self.algorithm_parameters_page.Configuration_Set(
@@ -3531,6 +3533,46 @@ class MainWindow(QMainWindow):
                     self._translator.Text_Get("quality.target.unavailable"))
             self.build_page.TargetQualityResults_Set(target, records, states)
 
+    def _NativeUsb_Request(self, action: str) -> None:
+        if self._active_worker is not None:
+            self._Error_Show(self._translator.Text_Get("error.background_task_active"))
+            return
+        self._ProjectModel_Sync()
+        model, project, service = deepcopy(self._model), self._project_root, self._service
+        panel = self.build_page.native_usb
+        zh = self._translator.language == "zh_CN"
+        if action == "inspect":
+            selected = QFileDialog.getExistingDirectory(self, "选择完整 CubeMX CDC 工程" if zh else "Select complete CubeMX CDC project")
+            if not selected:
+                return
+            operation = lambda context: service.NativeUsb_Inspect(Path(selected), context)
+        elif model.native_usb is None:
+            return
+        elif action == "prepare":
+            selected, _filter = QFileDialog.getSaveFileName(self, "选择新的独立工程目录" if zh else "Choose a new separate project directory")
+            if not selected:
+                return
+            operation = lambda context: service.NativeUsb_Prepare(model.native_usb, Path(selected), context)
+        elif action in {"compile", "analyze"}:
+            operation = lambda context: service.NativeUsb_Build(model.native_usb, model.build.gcc_path, context,
+                analyzer=action == "analyze")
+        elif action == "refresh":
+            operation = lambda context: service.NativeUsb_Refresh(model.native_usb, context)
+        else:
+            return
+        def complete(outcome):
+            if self._UsbGroundRequest_Current(model, project):
+                self._model.native_usb = outcome.reference
+                self._project_state = ProjectLifecycleState.DIRTY
+                self._generation_plan = None
+                panel.Outcome_Set(outcome)
+                self._HeaderProject_Refresh()
+        def error(exception):
+            if self._UsbGroundRequest_Current(model, project):
+                panel.Failure_Set(exception)
+                self._Error_Show(exception)
+        self.Task_Run(operation, complete, error, line_callback=self.build_page.BuildDetailLog_Append)
+
     def _UsbGroundRequest_Current(self, model, project) -> bool:
         return (not self._close_after_worker and project == self._project_root and
                 model.Dictionary_Get() == self._model.Dictionary_Get())
@@ -4775,6 +4817,7 @@ class MainWindow(QMainWindow):
             *self.build_page.action_buttons.values(),
             *self.build_page.quality_target_checks.values(),
             self.build_page.detect_button,
+            *self.build_page.native_usb.buttons.values(),
         )
         if not enabled:
             self._action_enabled_snapshot = {
