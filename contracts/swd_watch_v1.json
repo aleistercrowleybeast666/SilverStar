@@ -1,0 +1,11 @@
+{
+  "contract": "silverstar.swd-watch",
+  "version": 1,
+  "limits": {"catalog_entries": 8192, "members_per_structure": 256, "member_depth": 4, "watch_entries": 16, "sample_bytes": 128, "minimum_interval_ms": 1000},
+  "scope": "ELF/DWARF file-scope globals and statics with exact DW_OP_addr and matching allocated symtab object; constant structure-member offsets; RAM scalars only",
+  "types": ["integer", "boolean", "enumeration", "IEEE754 binary32", "IEEE754 binary64"],
+  "unsupported": ["function-local variables including local statics", "optimized/missing/dynamic locations", "pointer dereference", "arrays", "bitfields", "unions", "user expressions", "MMIO", "ambiguous objects"],
+  "identity": "Complete internal flash PT_LOAD LMA contents must match in this connection before watch RAM reads; no authentication or atomic flash identity proof",
+  "consistency": "non_atomic_live_read; host read time is not MCU sample time; no implicit MCU age or readiness inferred",
+  "control": "No target writes, halt, reset, resume, call, breakpoint or configuration commands. Existing explicitly documented core-identity observations remain separate from RAM watch."
+}

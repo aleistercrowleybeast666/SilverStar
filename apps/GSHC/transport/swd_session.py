@@ -1,4 +1,4 @@
-"""Bounded, symbol-free SWD service shared by the GUI and local CLI.
+"""Bounded SWD service shared by the GUI and local CLI.
 
 Target access is opt-in and fail-closed. No Qt, serial, reset, halt, resume,
 flash, register-write or arbitrary debugger-command operation is exposed.
@@ -79,6 +79,12 @@ class SwdReply:
     duration_ms: float = 0.0
     consistency: str = 'non_atomic_live_read'
     diagnostics: tuple = ()
+    watches: tuple = ()
+    firmware_sha256: str = ''
+    watch_revision: int = 0
+    budget: dict | None = None
+    core_observation: str = ''
+    watch_identity: dict | None = None
 
 
 def _ValidateProbe(probe):
@@ -233,15 +239,15 @@ class SwdSession:
         finally:
             self._lock.release()
 
-    def _budget(self, count):
+    def _budget(self, count, minimum_interval=.1):
         if self._backend is None or self._probe is None:
             raise SwdError(SwdResult.NotAttached, 'No target attached')
         now = time.monotonic()
         if (time.monotonic() - self._started >= self.MAX_SECONDS or
                 self._samples >= self.MAX_SAMPLES or self._bytes + count > self.MAX_BYTES):
             raise SwdError(SwdResult.BudgetExceeded, 'Session time, sample or byte limit reached; explicitly reconnect')
-        if now - self._last_sample < .1:
-            return SwdReply(SwdResult.RateLimited, 'At most 10 operations/second; no request queued')
+        if now - self._last_sample < minimum_interval:
+            return SwdReply(SwdResult.RateLimited, f'Minimum interval {minimum_interval:g}s; no request queued')
         self._last_sample = now
         self._samples += 1
         self._bytes += count
@@ -256,9 +262,9 @@ class SwdSession:
             raise SwdError(SwdResult.TransportError, 'Incomplete memory read')
         return data
 
-    def _snapshot(self):
+    def _snapshot(self, minimum_interval=.1):
         from datetime import datetime, timezone
-        limited = self._budget(12)
+        limited = self._budget(12,minimum_interval)
         if limited is not None:
             return limited
         started = time.monotonic_ns()
@@ -329,11 +335,75 @@ class SwdSession:
                             f'flash LMA ranges {coverage}; live non-atomic observation')
         return self._run(operation)
 
-    def Swd_Diagnostics(self) -> SwdReply:
+    def _watch_selection(self, identifiers):
+        from silverstar_diagnostics.watch import MAX_WATCH
+        if (type(identifiers) not in (tuple,list) or len(identifiers) > MAX_WATCH or
+                any(type(item) is not str for item in identifiers) or len(set(identifiers)) != len(identifiers)):
+            raise ValueError('Select at most 16 unique ELF catalog IDs')
+        catalog = {item.id:item for item in self._firmware.watches} if self._firmware else {}
+        if any(item not in catalog or catalog[item].unavailable for item in identifiers):
+            raise ValueError('Unknown or unavailable ELF variable; no address expressions accepted')
+        return tuple(catalog[item] for item in identifiers)
+
+    def _watch_read(self, fields):
+        from datetime import datetime, timezone
+        from silverstar_diagnostics.watch import Value_Decode
+        count = sum(field.size for field in fields)
+        if count > 128 or self._bytes+count > self.MAX_BYTES:
+            raise SwdError(SwdResult.BudgetExceeded, 'Watch RAM byte budget reached')
+        if any(not self._profile.Contains(field.address,field.size,'ram') or field.size not in (1,2,4,8) for field in fields):
+            raise SwdError(SwdResult.InvalidRequest, 'Watch outside trusted RAM scalar ranges')
+        self._bytes += count
+        rows = []
+        for field in fields:
+            started = time.monotonic_ns()
+            data = self._read(field.address,field.size)
+            value, state = Value_Decode(field,data)
+            received = time.monotonic_ns()
+            rows.append(dict(id=field.id,source=field.source,symbol=field.symbol,member=field.member,
+                type=field.type_name,address=field.address,size=field.size,value=value,raw_hex=data.hex(),
+                state=state,reason='RAM observation; no readiness or MCU sample age inferred',
+                received_ns=received,captured_utc=datetime.now(timezone.utc).isoformat(),
+                duration_ms=(received-started)/1e6,consistency='non_atomic_live_read',mcu_sample_age_ms=None))
+        return tuple(rows)
+
+    def _budget_report(self):
+        return dict(bytes_used=self._bytes,bytes_limit=self.MAX_BYTES,samples_used=self._samples,
+                    samples_limit=self.MAX_SAMPLES,seconds_used=max(0,time.monotonic()-self._started),seconds_limit=self.MAX_SECONDS)
+
+    def Swd_ReadWatches(self, identifiers) -> SwdReply:
+        """Read selected catalog scalars only; no MMIO or core-status reads.
+
+        Match belongs to this connection. An unobserved reset/reflash cannot be
+        detected by RAM reads alone; reattach/verify after a known target change.
+        """
         def operation():
+            try: fields = self._watch_selection(identifiers)
+            except ValueError as exc: return SwdReply(SwdResult.InvalidRequest,str(exc))
+            if self._firmware_status != 'matched':
+                return SwdReply(SwdResult.FirmwareMismatch,'Watch reads require matched firmware in this connection')
+            limited = self._budget(0,1.0)
+            if limited: return limited
+            return SwdReply(SwdResult.Ok,watches=self._watch_read(fields),
+                            firmware_sha256=self._firmware.sha256,budget=self._budget_report(),
+                            watch_identity=dict(probe_identity=self._probe.identity,target=self._profile.name,
+                                firmware_status=self._firmware_status,match_scope='load_bytes_in_this_connection'),
+                            core_observation='not_read; reset during RAM-only sampling is not detectable')
+        return self._run(operation)
+
+    def Swd_Inspect(self, identifiers=()) -> SwdReply:
+        """One bounded summary + watch sample. Existing core status explicitly
+        consumes DHCSR sticky history bits; watch locations themselves are RAM.
+        """
+        return self.Swd_Diagnostics(identifiers)
+
+    def Swd_Diagnostics(self, identifiers=()) -> SwdReply:
+        def operation():
+            try: fields = self._watch_selection(identifiers)
+            except ValueError as exc: return SwdReply(SwdResult.InvalidRequest,str(exc))
             if self._firmware_status != 'matched' or self._firmware is None:
                 return SwdReply(SwdResult.FirmwareMismatch, 'Diagnostic reads require a matched firmware in this connection')
-            reply = self._snapshot()
+            reply = self._snapshot(1.0 if fields else .1)
             if reply.result != SwdResult.Ok: return reply
             if reply.snapshot.core_state == 'reset_observed':
                 self._firmware_status = 'unmatched'
@@ -371,5 +441,7 @@ class SwdSession:
                 row['received_ns'] = time.monotonic_ns()
                 rows.append(row)
             from dataclasses import replace
-            return replace(reply,diagnostics=tuple(rows))
+            return replace(reply,diagnostics=tuple(rows),watches=self._watch_read(fields),
+                           firmware_sha256=self._firmware.sha256,budget=self._budget_report(),
+                           core_observation='CPUID / selected family ID / DHCSR; DHCSR consumes S_RESET_ST and S_RETIRE_ST')
         return self._run(operation)

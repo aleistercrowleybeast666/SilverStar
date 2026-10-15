@@ -75,6 +75,10 @@ class MaintenancePage(QWidget):
         self.swd_target_status.setTextFormat(Qt.PlainText)
         self.swd_target_status.setWordWrap(True)
         layout.addWidget(self.swd_target_status)
+        self.swd_summary = QLabel()
+        self.swd_summary.setTextFormat(Qt.PlainText)
+        self.swd_summary.setWordWrap(True)
+        layout.addWidget(self.swd_summary)
         self.swd_diagnostics = QTreeWidget()
         self.swd_diagnostics.setColumnCount(4)
         for column, width in enumerate((210, 240, 340, 220)):
@@ -82,6 +86,9 @@ class MaintenancePage(QWidget):
         self.swd_diagnostics.setMaximumHeight(200)
         self.swd_diagnostics.hide()
         layout.addWidget(self.swd_diagnostics)
+        from ui.swd_watch import SwdWatchPanel
+        self.swd_watch = SwdWatchPanel(i18n,self)
+        layout.addWidget(self.swd_watch)
         self.diagnostic_status = QLabel()
         self.diagnostic_status.setWordWrap(True)
         layout.addWidget(self.diagnostic_status)
@@ -235,6 +242,7 @@ class MaintenancePage(QWidget):
         self.swd_target.setToolTip(tr('swd.target_select'))
         self.swd_diagnostics.setHeaderLabels([tr('maintenance.entry'),tr('maintenance.state_reason'),tr('maintenance.value'),tr('maintenance.age')])
         self.swd_target_status.setText(tr('swd.detached'))
+        self.swd_watch.retranslate()
         self.summary.setTitle(tr("maintenance.summary"))
         self.source.setText(tr("maintenance.source"))
         self.detail_source.setText(tr("maintenance.source"))

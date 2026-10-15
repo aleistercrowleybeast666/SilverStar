@@ -37,7 +37,7 @@ def Firmware_Import(paths, *, target=None, cancel=None):
             Require(not elf.is_symlink() and elf.resolve().parent == descriptors[0].resolve().parent,
                     'Sibling ELF path escaped descriptor directory')
         else: elf = elfs[0]
-        firmware = Firmware_Load(elf,descriptor,target=target,cancel=cancel)
+        firmware = Firmware_Load(elf,descriptor,target=target,cancel=cancel,include_watch=True)
         available = sum(not entry.unavailable for entry in firmware.entries)
         return FirmwareReply(DiagnosticResult.Ok,
             f'{firmware.target.name}; ELF {firmware.sha256[:12]}; DWARF={firmware.dwarf}; fields={available}/{len(firmware.entries)}; each connection requires live flash verification',firmware)

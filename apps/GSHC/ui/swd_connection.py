@@ -1,5 +1,6 @@
 """One bounded SWD owner thread; no automatic attach or reconnect."""
-from threading import Event
+from threading import Event, Lock
+from dataclasses import replace
 from PySide6.QtCore import QObject, QThread, QTimer, Signal
 from PySide6.QtWidgets import QFileDialog, QTreeWidgetItem
 from transport.swd_session import SwdSession, SwdResult, SwdReply
@@ -28,12 +29,27 @@ class SwdWorker(QThread):
         self.cancel = Event()
         self.session = None
         self.options = {}
+        self._selection_lock = Lock()
+        self._selection = ((),1.0,False,0)
         if target: self.options['target'] = target
         if firmware: self.options['firmware'] = firmware
+
+    def set_selection(self, identifiers, interval, paused, revision):
+        # One replaceable configuration, never a growing work queue.
+        if (type(interval) not in (int,float) or interval not in (1,2,5) or type(paused) is not bool or
+                type(revision) is not int or revision < 0 or type(identifiers) not in (tuple,list) or
+                len(identifiers)>16 or any(type(item) is not str for item in identifiers)):
+            raise ValueError('Invalid watch sampling configuration')
+        with self._selection_lock:
+            self._selection = (tuple(identifiers),interval,paused,revision)
+
+    def _get_selection(self):
+        with self._selection_lock: return self._selection
 
     def run(self):
         try:
             session = self.session = self.factory(cancel=self.cancel,**self.options)
+            started = time.monotonic()
             reply = session.Swd_Attach(self.probe)
             self.update.emit(reply)
             if reply.result == SwdResult.Ok and self.options.get('firmware'):
@@ -41,9 +57,20 @@ class SwdWorker(QThread):
                     self.update.emit(SwdReply(SwdResult.Ok,'正在只读核对固件加载内容…'))
                     reply = session.Swd_VerifyFirmware()
                     self.update.emit(reply)
-            while reply.result == SwdResult.Ok and not self.cancel.wait(1.0):
-                reply = session.Swd_Diagnostics() if self.options.get('firmware') else session.Swd_Snapshot()
-                self.update.emit(reply)
+            while reply.result == SwdResult.Ok:
+                identifiers,interval,paused,revision = self._get_selection()
+                if self.cancel.wait(interval): break
+                # Recheck after waiting; a paused or replaced selection does not
+                # cause one more read using stale configuration.
+                identifiers,_,paused,revision = self._get_selection()
+                if time.monotonic()-started >= SwdSession.MAX_SECONDS:
+                    reply = SwdReply(SwdResult.BudgetExceeded,'Session time limit reached; explicitly reconnect')
+                    self.update.emit(reply)
+                    break
+                if paused: continue
+                reply = (session.Swd_Inspect(identifiers) if identifiers and self.options.get('firmware') else
+                         session.Swd_Diagnostics() if self.options.get('firmware') else session.Swd_Snapshot())
+                self.update.emit(replace(reply,watch_revision=revision))
         except Exception as exc:
             self.update.emit(SwdReply(SwdResult.TransportError, str(exc)[:400]))
         finally:
@@ -69,6 +96,10 @@ class SwdConnectionManager(QObject):
         self.firmware = None
         self.rows = ()
         self.import_detail = ''
+        self.watch_rows = ()
+        self._watch_revision = 0
+        self.budget = None
+        self.core_observation = ''
         page = self.window.maintenance_page
         page.btn_swd_attach.clicked.connect(self.attach)
         page.btn_swd_detach.clicked.connect(self.detach)
@@ -76,6 +107,7 @@ class SwdConnectionManager(QObject):
         for name in Targets_List(): page.swd_target.addItem(name,name)
         page.btn_swd_import.clicked.connect(self.import_files)
         page.swd_target.currentTextChanged.connect(self._target_changed)
+        page.swd_watch.selection_changed.connect(self._watch_changed)
         self.window.on_swd_render = self.render
         self.timer = QTimer(self)
         self.timer.setInterval(500)
@@ -97,6 +129,8 @@ class SwdConnectionManager(QObject):
         self.probes.render()
         target = self._selected_target()
         self.worker = SwdWorker(probe, self.factory, self, target=target, firmware=self.firmware)
+        panel = self.window.maintenance_page.swd_watch
+        self.worker.set_selection(panel.selected,panel.interval.currentData(),panel.pause.isChecked(),self._watch_revision)
         self.worker.update.connect(self._updated)
         self.worker.finished.connect(self._finished)
         self.worker.start()
@@ -106,6 +140,7 @@ class SwdConnectionManager(QObject):
     def detach(self):
         self.snapshot = None
         self.rows = ()
+        self.watch_rows = ()
         if self.import_worker:
             self.import_worker.cancel.set()
         if self._failed_owner:
@@ -129,6 +164,9 @@ class SwdConnectionManager(QObject):
         self.status = 'swd.' + (reply.snapshot.core_state if self.snapshot else reply.result.value)
         self.detail = reply.detail
         self.rows = reply.diagnostics if reply.result == SwdResult.Ok else ()
+        self.watch_rows = reply.watches if reply.result == SwdResult.Ok and reply.watch_revision == self._watch_revision else ()
+        self.budget = reply.budget
+        self.core_observation = reply.core_observation
         self.render()
 
     def _finished(self):
@@ -141,6 +179,7 @@ class SwdConnectionManager(QObject):
             worker.deleteLater()
         self.snapshot = None
         self.rows = ()
+        self.watch_rows = ()
         if self.status in ('swd.disconnecting', 'swd.connecting') or self.status in (
                 'swd.running', 'swd.halted', 'swd.sleeping', 'swd.lockup', 'swd.reset_observed'):
             self.status = 'swd.detached'
@@ -162,6 +201,8 @@ class SwdConnectionManager(QObject):
         page.btn_swd_import.setEnabled(not active and not importing and not self.closing and not self._failed_owner)
         page.swd_target.setEnabled(not active and not importing and not self.closing and not self._failed_owner)
         page.swd_import_status.setText(self.import_detail)
+        page.swd_watch.set_firmware(self.firmware)
+        page.swd_watch.update_rows(self.watch_rows,active)
         text = tr(self.status)
         selected = next((p for p in self.probes.selection.probes if p.identity == self.probes.selection.identity), None)
         if selected is not None and selected.family == 'ST-Link':
@@ -173,7 +214,19 @@ class SwdConnectionManager(QObject):
                      f' | {tr("swd.age")}: {snapshot.age_ms / 1000:.1f}s | ' + tr('swd.non_atomic'))
         if self.detail:
             text += '\n' + self.detail
+        if self.budget and active:
+            text += '\n' + tr('watch.budget').format(used=self.budget['bytes_used'],limit=self.budget['bytes_limit'],
+                        samples=self.budget['samples_used'],seconds=int(self.budget['seconds_used']))
+        if self.core_observation and active:
+            text += '\n' + tr('watch.core_effects')
         page.swd_target_status.setText(text)
+        from services.swd_summary import Summary_Build
+        summary = Summary_Build(self.rows,bool(self.snapshot and self.snapshot.symbols=='matched'))
+        page.swd_summary.setText('\n'.join(
+            tr('watch.summary.'+row['id'])+': '+
+            ('; '.join(f'{key}={value}' for key,value in row['values'].items())+
+             f" | {row['state']} | RX {row['host_age_ms']/1000:.1f}s; MCU ?" if row['values'] else
+             'UNKNOWN ('+row['reason']+')') for row in summary))
         page.swd_diagnostics.setVisible(bool(self.rows))
         page.swd_diagnostics.clear()
         for row in self.rows:
@@ -183,6 +236,12 @@ class SwdConnectionManager(QObject):
                     f'{age:.1f}s RX; '+row['consistency']])
             for column in range(4): item.setToolTip(column,item.text(column))
             page.swd_diagnostics.addTopLevelItem(item)
+
+    def _watch_changed(self, identifiers, interval, paused):
+        self._watch_revision += 1
+        self.watch_rows = ()
+        if self.worker:
+            self.worker.set_selection(identifiers,interval,paused,self._watch_revision)
 
     def _selected_target(self):
         page = self.window.maintenance_page

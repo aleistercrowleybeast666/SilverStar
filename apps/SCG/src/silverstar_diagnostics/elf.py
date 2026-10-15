@@ -38,6 +38,7 @@ class Firmware:
     descriptor: dict
     dwarf: bool
     provenance: str
+    watches: tuple = ()
 
 
 class ElfReader:
@@ -215,7 +216,7 @@ class ElfReader:
             return Entry(spec['id'],(),str(exc))
 
 
-def Firmware_Load(elf_path, descriptor=None, *, target=None, cancel=None):
+def Firmware_Load(elf_path, descriptor=None, *, target=None, cancel=None, include_watch=False):
     """Import through one path shared by build binder, GUI and CLI. No target I/O."""
     from .contract import Json_Read
     value = Schema_Validate(Json_Read(descriptor) if isinstance(descriptor,(str,Path)) else descriptor) if descriptor is not None else Schema_Create(target)
@@ -237,8 +238,10 @@ def Firmware_Load(elf_path, descriptor=None, *, target=None, cancel=None):
             Require(expected == binding, 'Descriptor does not match actual ELF/layout', R.Mismatch)
         resolved = dict(value,binding=binding)
         Schema_Validate(resolved)
+        from .watch import Catalog_Build
+        watches = Catalog_Build(reader) if include_watch else ()
         return Firmware(profile,binding['sha256'],segments,entries,resolved,reader.dwarf,
-                        'build_bound' if value['binding'] else 'manual_elf_unbound')
+                        'build_bound' if value['binding'] else 'manual_elf_unbound', watches)
     except DiagnosticError: raise
     except Exception as exc:
         raise DiagnosticError(R.InvalidFile, f'ELF parsing failed: {str(exc)[:180]}') from exc

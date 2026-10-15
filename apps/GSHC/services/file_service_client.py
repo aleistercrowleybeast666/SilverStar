@@ -46,7 +46,9 @@ def validate_download_directory(destination: Path) -> Path:
 
 def _download_checkpoint(path: Path, metadata: dict) -> None:
     encoded = json.dumps(metadata, indent=2).encode("utf-8")
-    temporary = path.with_name(path.name + "." + uuid4().hex + ".tmp")
+    # Keep the atomic sibling short: the partial already contains a unique ID.
+    # Appending another UUID can exceed Windows' path limit in a valid folder.
+    temporary = path.with_name(".checkpoint-" + uuid4().hex + ".tmp")
     try:
         with temporary.open("xb") as fp:
             if fp.write(encoded) != len(encoded):
