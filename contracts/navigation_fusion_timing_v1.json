@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "silverstar.navigation-fusion-timing/1",
+  "title": "Independent navigation fusion timing declaration",
+  "description": "Data-only metadata_declarations.fusion_timing contract. The current firmware catalog does not emit or enable this mode parameter. A declaration does not establish numerical replay support or hardware validation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_id", "revision", "component", "mode", "source_time", "application_time", "evaluation_time", "output_state_time", "output_covariance_time", "replays_history"],
+  "properties": {
+    "schema_id": {"const": "silverstar.navigation-fusion-timing/1"},
+    "revision": {"const": 1},
+    "component": {"enum": ["silverstar.algorithm.estimator.kf6", "silverstar.algorithm.estimator.eskf15"]},
+    "mode": {"type": "integer", "enum": [0, 1]},
+    "source_time": {"const": "resolved_measurement_epoch"},
+    "application_time": {"enum": ["estimator_present", "legacy_algorithm_epoch"], "description": "legacy_algorithm_epoch preserves the recorded algorithm's application rule: KF6 untrusted zero-delay uses estimator present; otherwise KF6 and ESKF15 use their resolved measurement epoch. It must not be inferred as identical to source_time for every legacy input."},
+    "evaluation_time": {"const": "estimator_present"},
+    "output_state_time": {"const": "estimator_present"},
+    "output_covariance_time": {"const": "estimator_present"},
+    "replays_history": {"type": "boolean"}
+  },
+  "oneOf": [
+    {"properties": {"mode": {"const": 0}, "application_time": {"const": "estimator_present"}, "replays_history": {"const": false}}},
+    {"properties": {"mode": {"const": 1}, "application_time": {"const": "legacy_algorithm_epoch"}, "replays_history": {"const": true}}}
+  ]
+}

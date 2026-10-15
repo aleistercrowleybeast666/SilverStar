@@ -952,6 +952,8 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
     ) -> AlgorithmAvailability:
         source = input_source or SOURCE_CORRECTED_IMU
         missing: list[str] = []
+        from silverstar_flp.decoder_profiles.fusion_timing import FusionTimingUnavailable_Get
+        missing.extend(FusionTimingUnavailable_Get(dataset))
         warnings: list[str] = []
         supported: list[str] = []
         config = Mechanization_ConfigurationGet(dataset)

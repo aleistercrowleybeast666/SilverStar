@@ -1,0 +1,352 @@
+{
+  "utc": "2026-10-15T09:30:21.321254+00:00",
+  "owner": "root",
+  "purpose": "FLP timing-declaration boundary and ESKF barometer timestamp correction, before actual timing-mode activation",
+  "source_base_commit": "5af1efa18c4770a4fc91e8b4e87e94a60728eb65",
+  "baseline_modules_commit": "08e76ec5df7ba087915143fd7926b128f444ec6f",
+  "cleanup_authorized": false,
+  "files": {
+    "source/apps/FLP/src/silverstar_flp/decoder_profiles/package.py": {
+      "size": 31855,
+      "sha256": "87c89cc4174074eeb7ba0ba02105d001ea40bc399f9c9b528df3fec1a219ea15"
+    },
+    "source/apps/FLP/src/silverstar_flp/decoder_profiles/fusion_timing.py": {
+      "size": 6166,
+      "sha256": "f2b3f52e42705b256b680352e4d6159224cb7c910904f0a1be73abe0655d69d8"
+    },
+    "source/apps/FLP/src/silverstar_flp/plugins/algorithms/kf6/plugin.py": {
+      "size": 105148,
+      "sha256": "f9173863e187ae49753c410a854c4174dab04ee441577b8161c48163276afdde"
+    },
+    "source/apps/FLP/src/silverstar_flp/plugins/algorithms/eskf15/plugin.py": {
+      "size": 38160,
+      "sha256": "b2cd06eba51419fbdc8ba9c4597f4a29dd8c0f581043e1cef1456234ed4934c9"
+    },
+    "source/apps/FLP/tests/test_fusion_timing_contract.py": {
+      "size": 10408,
+      "sha256": "7a24c448887a92c60dfb7303646883755f51ff47a06ad5ead80eb672b28b843e"
+    },
+    "source/apps/FLP/tests/test_eskf15_baro_time.py": {
+      "size": 9654,
+      "sha256": "68470e314fa4450df524f93c960e4146b79b74c3d6d0f58d042bdc0c5a7c666e"
+    },
+    "source/contracts/navigation_fusion_timing_v1.json": {
+      "size": 1852,
+      "sha256": "c906d8d1210845446467e3da2d927c312d1d4c690c55ea233ad28e23348fd438"
+    },
+    "source/docs/public/SCG/FUSION_TIMING_BOUNDARY_20261015.md": {
+      "size": 6843,
+      "sha256": "f3eae681af793c11d38044b69ac8a0ba09556c8cfd4d8c1e7957f6d1bea16b65"
+    },
+    ".work/dev013_timing01/after_integration01.json": {
+      "size": 636,
+      "sha256": "4df1e53b512b43a8bf0ad9fc3bc6008aa14b773fc79a89dfba148a775173ac9d"
+    },
+    ".work/dev013_timing01/after_integration01.log": {
+      "size": 34116,
+      "sha256": "caa61008ab25612179ca07e85c1686911153efbfad07912c87afadcde4368337"
+    },
+    ".work/dev013_timing01/archive_boundary.py": {
+      "size": 3875,
+      "sha256": "bb05669c46d2333114adf19fd3f132abf96ee09dc1a367909ecd4c2061436eed"
+    },
+    ".work/dev013_timing01/baseline_comparison.json": {
+      "size": 2971,
+      "sha256": "e4d3961fd02d5f14c518725f6d3f784e4300b0959aac42f7561de5be9688d41f"
+    },
+    ".work/dev013_timing01/baseline_modules.py": {
+      "size": 1466,
+      "sha256": "9306945b96b9bfffd21551f184c0b3e2171b11f82178bfeb4cb3bb66e3a64e26"
+    },
+    ".work/dev013_timing01/before_integration01.json": {
+      "size": 593,
+      "sha256": "575574d61df2e38a2ee8b05a2971ffea8a7b4e6479cd0b5a21c2672c45836714"
+    },
+    ".work/dev013_timing01/before_integration01.log": {
+      "size": 36164,
+      "sha256": "81f57390213c6b058a80c432a87a1331bce96003f403eb3a412da90b21edd71d"
+    },
+    ".work/dev013_timing01/final_source_manifest.json": {
+      "size": 1271,
+      "sha256": "9a344c0cb7d423c433dbe9e6215ac2f06fa6dceb80dc1aee21d29d96dd416ccf"
+    },
+    ".work/dev013_timing01/final_source_manifest02.json": {
+      "size": 1493,
+      "sha256": "d3b089cafa29db34360be6825f5eb613720145212d05d27587ecfdcea266d016"
+    },
+    ".work/dev013_timing01/full01_failure_comparison.json": {
+      "size": 12926,
+      "sha256": "0aa534dafc1138e692d8e7e54aeb3a072302d0321fd4d1b74ecfa95bbd759949"
+    },
+    ".work/dev013_timing01/full01_inferred_failures.json": {
+      "size": 5919,
+      "sha256": "6bb6b6d3d28154cdece7bf4fe1271ef321263d80eeeb27873f6dd9b790488462"
+    },
+    ".work/dev013_timing01/full01_interruption.json": {
+      "size": 573,
+      "sha256": "0b21f6c721b97dfbf818df9af7bf150448c436ff3bedbb081678d3a7ee98447a"
+    },
+    ".work/dev013_timing01/hang_reproduce.py": {
+      "size": 296,
+      "sha256": "c896e58d43f97c75817133240ecf6928a3c3f57bfa569f411089eff60756f731"
+    },
+    ".work/dev013_timing01/inventory.json": {
+      "size": 1246,
+      "sha256": "fe29e66792a4d3f2eef3e9f04ddefe71fa0afa07099605f29bb06898f2bbc867"
+    },
+    ".work/dev013_timing01/run_failed_nodes.py": {
+      "size": 725,
+      "sha256": "d30817068dea70a14233e2e0d15cbee2686d9e60f8e0ffb8430c6c15a173c8a3"
+    },
+    ".work/dev013_watch_fusion01/timing_repair01.log": {
+      "size": 104,
+      "sha256": "200d1781b9aa0a14fe9169df22358f8dfce6c96a8f26cbb82e48cb9a5340be63"
+    },
+    ".work/dev013_watch_fusion01/timing_repair01.json": {
+      "size": 1369,
+      "sha256": "356c4effa2d1442deb5b86e9815283b2402c48b79e5c471b2bc94b7edc0ba72e"
+    },
+    ".work/dev013_watch_fusion01/timing_repair02.log": {
+      "size": 21980,
+      "sha256": "39168d0902de8301a7e641d464965140fbde364af89a5dd7cf86b170428afc38"
+    },
+    ".work/dev013_watch_fusion01/timing_repair02.json": {
+      "size": 1371,
+      "sha256": "dcb191aa222ad545baa14745489b2131b62492650b3b452f55f5a647d0c93d79"
+    },
+    ".work/dev013_watch_fusion01/timing_repair03.log": {
+      "size": 21980,
+      "sha256": "cdbfe0f572ddbab963f3c5e8582c6ddcbb136734a669ed6acd99dc69a41182da"
+    },
+    ".work/dev013_watch_fusion01/timing_repair03.json": {
+      "size": 1371,
+      "sha256": "339f9392fa5cfa985a9a6374237bc6350b4e994ef88488f438b7fcc6ee052f47"
+    },
+    ".work/dev013_watch_fusion01/timing_repair04.log": {
+      "size": 22061,
+      "sha256": "e29103e8f0d65b778ba38736909d5573ec3fa83a3a3c3095518fbffd2b376b04"
+    },
+    ".work/dev013_watch_fusion01/timing_repair04.json": {
+      "size": 1432,
+      "sha256": "8eb57b4a00a38dbeb2f1b70bba73c31d3945d19550854a57ee82c90d323e068d"
+    },
+    ".work/dev013_watch_fusion01/timing_baseline01.log": {
+      "size": 21868,
+      "sha256": "2bb516dbaa5da112e517c8573107f6a6b9b83043468c1f97c4a4a7616cf525ca"
+    },
+    ".work/dev013_watch_fusion01/timing_baseline01.json": {
+      "size": 1310,
+      "sha256": "7986c52e830ed4b2598000fcd11bd2455995cfbdf8917dad77a87dbee1dd21e6"
+    },
+    ".work/dev013_watch_fusion01/flp_full_timing01.log": {
+      "size": 1067,
+      "sha256": "3d8fd6115c377c1c0074120ca2f45ef718677fdc1ab7b30e535ffc87ac6efe91"
+    },
+    ".work/dev013_watch_fusion01/flp_collect_timing01.log": {
+      "size": 134734,
+      "sha256": "0ef89af1c8fd1bbed8601a90a59472eadb7258f8e9300ac490d69cb3f37ab9d2"
+    },
+    ".work/dev013_watch_fusion01/flp_collect_timing01.json": {
+      "size": 1040,
+      "sha256": "e1ebeb10229b5f52ad1de61b40b566006fca8195dfe7ac30893c69775a1a26de"
+    },
+    ".work/dev013_watch_fusion01/flp_modal_baseline01.log": {
+      "size": 4440,
+      "sha256": "31e011fcb61b1e0ab88f7d881b76ed523e437df14636db613f79a94cccb36f3f"
+    },
+    ".work/dev013_watch_fusion01/flp_modal_baseline01.json": {
+      "size": 1220,
+      "sha256": "33b3e8690e595b766acad9ce81a146798cbda95bb454fb5c039554d64febaa19"
+    },
+    ".work/dev013_watch_fusion01/flp_failed_current01.log": {
+      "size": 279184,
+      "sha256": "1d04f84ef05641317fb33a3eadeba3e0de6507b7a8adb53406f2b9cdede989fa"
+    },
+    ".work/dev013_watch_fusion01/flp_failed_current01.json": {
+      "size": 1035,
+      "sha256": "5fabc7d383914078d4420e44329faf18f72a44a1684c743c3586145d9ddc3f0c"
+    },
+    ".work/dev013_watch_fusion01/flp_failed_baseline01.log": {
+      "size": 6486,
+      "sha256": "85e80429c3eb51cbe164f8e39f5d5e1331f579586b8748c1ecd7a8bc077e2787"
+    },
+    ".work/dev013_watch_fusion01/flp_optional_baseline01.log": {
+      "size": 2630,
+      "sha256": "d69eaae316a75ba63908ab5a2cbac478e29ea32ed156a8d03b6030363b9181f2"
+    },
+    ".work/dev013_watch_fusion01/flp_optional_baseline01.json": {
+      "size": 1369,
+      "sha256": "66ec3d3a2571d5099b8c10b7d75e01c71c2f56744498657a0442e60a8ad2e1af"
+    },
+    ".work/dev013_watch_fusion01/run.py": {
+      "size": 2552,
+      "sha256": "fdd3728366465b1ace117b106919abac5adfa949dc571b720ca4222ea83ab034"
+    },
+    ".work/dev013_watch_fusion01/design_notes/baro_run.py": {
+      "size": 2226,
+      "sha256": "2d494febddf768fda377659177845de18c7e91d52928143765fdae7bd2626f9a"
+    },
+    ".work/dev013_watch_fusion01/design_notes/fusion_delay_inventory_20261015.json": {
+      "size": 6127,
+      "sha256": "6285f81cb04306b37621ef22ae567e4e57ba5dd1f1099b06b82adba3b2d1064a"
+    },
+    ".work/dev013_watch_fusion01/design_notes/fusion_delay_plan_20261015.md": {
+      "size": 15712,
+      "sha256": "ff209f02f9fbc6545af0836dcd7b22cd0818d5c2c58a10bf6dc877f072dc4135"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt01/plugin_snapshot.py.txt": {
+      "size": 35889,
+      "sha256": "6226a6e309824c8b81e6c27b991d45a3854d566e8d051371ad62faf63e7e97e2"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt01/pytest.log": {
+      "size": 239352,
+      "sha256": "8a0d9c29d3eb6de062d592c447737d1dff14fcb18f819545c0fa12215a1b9dee"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt01/result.json": {
+      "size": 1442,
+      "sha256": "23c164569b8a0e1b929e4132432a72a74b219ef62b1e2cf3fbe9f0557d161dde"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt01/test/baro_time_O00/compile.json": {
+      "size": 2012,
+      "sha256": "7c92fd0fb86fbbf6007d7ff024ead3e68f0431ad926ff073d72542564696ca56"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt01/test/baro_time_O00/unused_platform.c": {
+      "size": 596,
+      "sha256": "be894b3ff133769c110e2cfb76c027d147b5adf9dcbe90f1644f68f0b0a5702b"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt01/test/baro_time_O20/compile.json": {
+      "size": 2296,
+      "sha256": "1adb7ed73d4d7fe25df06915cc9daa43be23115ca496c82f4b65634c1f55b2f0"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt01/test/baro_time_O20/unused_platform.c": {
+      "size": 596,
+      "sha256": "be894b3ff133769c110e2cfb76c027d147b5adf9dcbe90f1644f68f0b0a5702b"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt02/plugin_snapshot.py.txt": {
+      "size": 35889,
+      "sha256": "6226a6e309824c8b81e6c27b991d45a3854d566e8d051371ad62faf63e7e97e2"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt02/pytest.log": {
+      "size": 72883,
+      "sha256": "fdcf8fac9b37bf749d68c19e6ac44abb1aaff95849ce0d60bfb1833429199b3c"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt02/result.json": {
+      "size": 1442,
+      "sha256": "84d33ef68fd795d22b23f6272f52d3a2bd396fdacf0feeb50d56dee04e9b8532"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt02/test/baro_time_O00/compile.json": {
+      "size": 1396,
+      "sha256": "cc4e22ef9ea1ee20bfd8f1b7a82722db867ebd3d4dab70628e8e20a84c3ba88f"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt02/test/baro_time_O00/unused_platform.c": {
+      "size": 834,
+      "sha256": "9a26a843a8acc39f6c1320dae5eed660d84d81e0404876ce70f22f3b3b5429ca"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt02/test/baro_time_O20/compile.json": {
+      "size": 1396,
+      "sha256": "eae148b22820fc4d5c37d25bde2b2f18717730a33cbad3053e0d4295b0c82a28"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt02/test/baro_time_O20/unused_platform.c": {
+      "size": 834,
+      "sha256": "9a26a843a8acc39f6c1320dae5eed660d84d81e0404876ce70f22f3b3b5429ca"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt03/plugin_snapshot.py.txt": {
+      "size": 38001,
+      "sha256": "0c95d28e1629a63d7b1b1b33fc767f0329c88e5f12e31e202358b3c3135306c5"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt03/pytest.log": {
+      "size": 101,
+      "sha256": "7f2473e8f05d808569a8d0001d736a30283b41b068c0f9f7a3ea65a0c0d91188"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt03/result.json": {
+      "size": 1442,
+      "sha256": "96f05051b70056968c5323ef498668da0f147484b4506300763634928e788e6d"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt03/test/baro_time_O00/compile.json": {
+      "size": 1396,
+      "sha256": "79e91de3c084de47aeef936f59e7f031020badd4167197bf045ef686af07774f"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt03/test/baro_time_O00/unused_platform.c": {
+      "size": 834,
+      "sha256": "9a26a843a8acc39f6c1320dae5eed660d84d81e0404876ce70f22f3b3b5429ca"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt03/test/baro_time_O20/compile.json": {
+      "size": 1396,
+      "sha256": "f376f8a5b35245379511b425a7e6e674341f36fa0a19ad5bae3f9ced6a138793"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt03/test/baro_time_O20/unused_platform.c": {
+      "size": 834,
+      "sha256": "9a26a843a8acc39f6c1320dae5eed660d84d81e0404876ce70f22f3b3b5429ca"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt04/plugin_snapshot.py.txt": {
+      "size": 38160,
+      "sha256": "b2cd06eba51419fbdc8ba9c4597f4a29dd8c0f581043e1cef1456234ed4934c9"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt04/pytest.log": {
+      "size": 25370,
+      "sha256": "a01b87f134597ce2bb2f891a9fdfce41f37315933ab80c3447ea62d13b67cf06"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt04/result.json": {
+      "size": 1552,
+      "sha256": "a99068a4e7836cf337b2a29a87ca36053f0313b863378e954742dc6fefc039c6"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt04/test/baro_time_O00/compile.json": {
+      "size": 1396,
+      "sha256": "3faae88e2ced042043d46d20ee3930e3771c4a06a804ab447db299fe4bf087e9"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt04/test/baro_time_O00/unused_platform.c": {
+      "size": 834,
+      "sha256": "9a26a843a8acc39f6c1320dae5eed660d84d81e0404876ce70f22f3b3b5429ca"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt04/test/baro_time_O20/compile.json": {
+      "size": 1396,
+      "sha256": "889578893bf9087a4d508fd7fbab36ae887fac0a83a85b6e165099ecf590164d"
+    },
+    ".work/dev013_watch_fusion01/design_notes/bt04/test/baro_time_O20/unused_platform.c": {
+      "size": 834,
+      "sha256": "9a26a843a8acc39f6c1320dae5eed660d84d81e0404876ce70f22f3b3b5429ca"
+    },
+    ".work/dev013_timing01/pytest06/baro_time_O00/compile.json": {
+      "size": 1352,
+      "sha256": "87187db0d2e61d6c73b5611cced50b2a46bb605c5f019736c47256fd0e77f130"
+    },
+    ".work/dev013_timing01/pytest06/baro_time_O00/unused_platform.c": {
+      "size": 834,
+      "sha256": "9a26a843a8acc39f6c1320dae5eed660d84d81e0404876ce70f22f3b3b5429ca"
+    },
+    ".work/dev013_timing01/pytest06/baro_time_O20/compile.json": {
+      "size": 1352,
+      "sha256": "6579b58a986f9ccf1ddd5fbb0f2de12f76d18875e8db22a592eec1117873cc79"
+    },
+    ".work/dev013_timing01/pytest06/baro_time_O20/unused_platform.c": {
+      "size": 834,
+      "sha256": "9a26a843a8acc39f6c1320dae5eed660d84d81e0404876ce70f22f3b3b5429ca"
+    },
+    "source/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_time.c": {
+      "size": 7254,
+      "sha256": "f46bf020352b9e0278a3d4b664ac08b10705292fe15d4e31214e1ba595c95135"
+    },
+    "source/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Inc/system_time.h": {
+      "size": 1793,
+      "sha256": "da4da29b9df5f5761c884534b0aa6b68aca9133b460602cb7ec59751aa10035d"
+    },
+    "baseline/apps/FLP/src/silverstar_flp/decoder_profiles/package.py": {
+      "size": 30903,
+      "sha256": "9a0c0a2b827e91d1ac850089514d65c298d800c5e6ba8b8088d8a50c5a1a6b62"
+    },
+    "baseline/apps/FLP/src/silverstar_flp/plugins/algorithms/kf6/plugin.py": {
+      "size": 102606,
+      "sha256": "05462973e3f2ca12ae8b165a2ba14bf917659b8c1b72bcf439285a7419ca5045"
+    },
+    "baseline/apps/FLP/src/silverstar_flp/plugins/algorithms/eskf15/plugin.py": {
+      "size": 35123,
+      "sha256": "1fb2468e677c33e2dca74d9f0b5d190e257d5d5429e036a77ccdcbeb0b368df3"
+    }
+  },
+  "limitations": [
+    "Full FLP run interrupted at an unmocked save modal dialog; no full-suite result",
+    "Baseline 46-node attribution interrupted after 44 outcomes; last two independently reproduced",
+    "Existing failures remain; no hardware/firmware acceptance claim",
+    "Independent later current/kernel changes are not included in this tested source snapshot"
+  ]
+}

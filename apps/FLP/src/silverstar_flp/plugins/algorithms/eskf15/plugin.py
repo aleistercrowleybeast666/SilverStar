@@ -47,6 +47,31 @@ ALGORITHM_ID = CONTRACT["eskf15"]["component_id"]
 GROUPS = ("position_en", "position_u", "velocity_en", "velocity_u", "baro")
 
 
+def _BarometerTime_Resolve(receive_us, sample_us, trusted, delay_ms):
+    """Match SystemTime_MeasurementTimestampResolve and its zeroed caller event."""
+    if receive_us <= 0 or trusted not in (0, 1):
+        return 0, False
+    if trusted:
+        if sample_us <= 0 or sample_us > receive_us:
+            return 0, False
+        return sample_us, True
+    delay_us = int(delay_ms) * 1000
+    if receive_us < delay_us:
+        return 0, False
+    return receive_us - delay_us, True
+
+
+def _BarometerTrustIndex_Build(dataset):
+    # ESKF15_MEASUREMENT has neither barometer instance nor packet sequence.
+    # Only a unique sample/receive pair can supply its original trust flag.
+    result = {}
+    for record in dataset.Records_Get("BARO_NATIVE"):
+        payload = record.payload
+        key = (payload["sample_timestamp_us"], payload["receive_timestamp_us"])
+        result[key] = None if key in result else payload.get("measurement_timestamp_trusted")
+    return result
+
+
 def _Parameters_Build() -> tuple[ParameterSpec, ...]:
     return tuple(
         ParameterSpec(
@@ -197,9 +222,12 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
     )
 
     def availability(self, dataset, input_source=None):
+        from silverstar_flp.decoder_profiles.fusion_timing import FusionTimingUnavailable_Get
+
         missing = [
             name for name in ("INITIAL_STATE", "IMU_CORRECTED") if not dataset.Records_Get(name)
         ]
+        missing.extend(FusionTimingUnavailable_Get(dataset))
         if dataset.Records_Get("ESKF15_BODY_INPUT") and "IMU_CORRECTED" in missing:
             missing.remove("IMU_CORRECTED")
         if not dataset.Records_Get("ESKF15_BODY_INPUT"):
@@ -236,6 +264,11 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
     def _Measurements_Build(self, dataset, parameters, start_us, end_us, request):
         if dataset.Records_Get("ESKF15_MEASUREMENT"):
             events = []
+            baro_trust = (
+                _BarometerTrustIndex_Build(dataset)
+                if request.mode != ReplayMode.RECORDED_CONFIGURATION
+                and "baro_measurement_delay_ms" in request.parameters else {}
+            )
             for record in dataset.Records_Get("ESKF15_MEASUREMENT"):
                 p = record.payload
                 evaluation = int(p["evaluation_timestamp_us"])
@@ -247,6 +280,7 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
                 dimension = 2 if group in (0, 2) else 1
                 variance = np.asarray(p["base_variance"])[:dimension]
                 measurement_time = int(p["measurement_timestamp_us"])
+                physically_valid = bool(p["physically_valid"])
                 if request.mode != ReplayMode.RECORDED_CONFIGURATION:
                     receive = int(p["receive_timestamp_us"])
                     native = next(
@@ -290,16 +324,23 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
                         else "baro_measurement_delay_ms"
                     )
                     if delay_key in request.parameters:
-                        if group < 4 and native is None:
-                            raise ValueError("eskf15_what_if_timestamp_trust_evidence_missing")
-                        trusted = group == 4 or native.get("measurement_timestamp_trusted")
-                        measurement_time = (
-                            int(p["sample_timestamp_us"])
-                            if trusted
-                            else receive - int(parameters[delay_key]) * 1000
-                        )
                         if group == 4:
-                            measurement_time -= int(parameters[delay_key]) * 1000
+                            trusted = baro_trust.get((int(p["sample_timestamp_us"]), receive))
+                            if trusted is None:
+                                raise ValueError("eskf15_what_if_timestamp_trust_evidence_missing")
+                            measurement_time, time_valid = _BarometerTime_Resolve(
+                                receive, int(p["sample_timestamp_us"]),
+                                trusted, parameters[delay_key],
+                            )
+                            physically_valid = physically_valid and time_valid
+                        else:
+                            if native is None:
+                                raise ValueError("eskf15_what_if_timestamp_trust_evidence_missing")
+                            measurement_time = (
+                                int(p["sample_timestamp_us"])
+                                if native.get("measurement_timestamp_trusted")
+                                else receive - int(parameters[delay_key]) * 1000
+                            )
                 item = Measurement(
                     (int(p["operation_sequence"]), group),
                     measurement_time,
@@ -307,7 +348,7 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
                     group,
                     np.asarray(p["observation"])[:dimension],
                     variance,
-                    bool(p["physically_valid"]),
+                    physically_valid,
                     float(p["quality_scale"]),
                     float(p["consistency_scale"]),
                     int(p["source_id"]),
@@ -464,14 +505,21 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
             evaluation = int(p.get("estimator_present_timestamp_us", receive))
             if not start_us <= evaluation <= end_us:
                 continue
+            if "measurement_timestamp_trusted" not in p:
+                raise ValueError("eskf15_what_if_timestamp_trust_evidence_missing")
+            timestamp, time_valid = _BarometerTime_Resolve(
+                receive, int(p["sample_timestamp_us"]), p["measurement_timestamp_trusted"],
+                parameters["baro_measurement_delay_ms"],
+            )
             item = Measurement(
                 (record.record_sequence, 4),
-                int(p["sample_timestamp_us"]) - int(parameters["baro_measurement_delay_ms"]) * 1000,
+                timestamp,
                 receive,
                 4,
                 np.array([p["relative_altitude_m"]]),
                 np.array([parameters["baro_std_m"] ** 2]),
-                bool(int(p.get("valid_mask", 0)) & 1) and 0 <= evaluation - receive <= 500_000,
+                time_valid and bool(int(p.get("valid_mask", 0)) & 1)
+                and 0 <= evaluation - receive <= 500_000,
             )
             events.append((evaluation, record.record_sequence, item))
         return sorted(events, key=lambda e: (e[0], e[1], e[2].group)), evidence, warnings
