@@ -4,9 +4,12 @@
 #include <string.h>
 
 #include "platform_critical.h"
+#include "platform_memory.h"
 #include "silverstar_assert.h"
 
-static SystemInertialIncrement s_queue[ESTIMATOR_BUS_DEPTH];
+/* CPU-owned value copies only. No queue address escapes to a device or DMA;
+ * target startup clears the selected BSS bank before task/ISR use. */
+static PLATFORM_CPU_FAST_BSS SystemInertialIncrement s_queue[ESTIMATOR_BUS_DEPTH];
 static volatile uint16_t s_head;
 static volatile uint16_t s_tail;
 static uint8_t s_initialized;

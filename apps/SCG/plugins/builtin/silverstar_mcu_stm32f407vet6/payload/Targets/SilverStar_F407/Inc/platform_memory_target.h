@@ -18,6 +18,12 @@
     __attribute__((section(".ccmram_data"), aligned(8)))
 #define PLATFORM_CPU_FAST_BSS \
     __attribute__((section(".ccmram_bss"), aligned(8)))
+#if (SILVERSTAR_MEMORY_LAYOUT_AUTO == 0)
+/* Keep optional KF history independently collectable at every optimization
+ * level; live CCM objects must not retain an unused history allocation. */
+#define PLATFORM_KF_REPLAY_BSS \
+    __attribute__((section(".ccmram_bss.kf_replay"), aligned(8)))
+#endif
 #define PLATFORM_DMA_ACCESSIBLE \
     __attribute__((section(".dma_bss"), aligned(8)))
 #else

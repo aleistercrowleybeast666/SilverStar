@@ -120,14 +120,72 @@ int main(void) { return s_work[0] + s_history[0] + s_eskf_window[0] +
     return root, cc, objdump, owner, startup, script, source, base
 
 
-def link_fixture(fixture, *, name="auto", script=None, link_function=None):
+def link_fixture(fixture, *, name="auto", script=None, link_function=None, link_flags=()):
     root, cc, objdump, owner, startup, default_script, _, _ = fixture
     output = root / name / "test.elf"
     args = type("Args", (), dict(linker=str(script or default_script), output=str(output), compiler=cc,
                                objdump=objdump, project=str(root), command=[str(owner), str(startup), "-mcpu=cortex-m4", "-mthumb", "-nostdlib",
-                                                        "-Wl,-Map=" + str(output.with_suffix(".map"))]))()
+                                                        "-Wl,-Map=" + str(output.with_suffix(".map")) + ",--cref", *link_flags]))()
     (link_function or auto.Layout_Link)(args)
     return output, json.loads((output.parent / "memory_layout/decision.json").read_text())
+
+
+def test_actual_o0_gc_records_unused_history_instead_of_claiming_placement(arm_fixture):
+    root, _, _, owner, _, _, source, base = arm_fixture
+    text = source.read_text().replace("s_work[0] + s_history[0] +", "s_work[0] +")
+    text = text.replace("int main(void) {", "unsigned History_Read(void) { return s_history[0]; }\nint main(void) {")
+    source.write_text(text)
+    subprocess.run([*base, "-O0", "-fdata-sections", "-ffunction-sections",
+                    "-DSILVERSTAR_MEMORY_LAYOUT_AUTO=1", "-c", str(source), "-o", str(owner)], check=True)
+    identity = json.loads((root / "SilverStar.ssproject").read_text())
+    identity["component_provenance"]["silverstar.algorithm.estimator.eskf15"]["files"][
+        "Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c"] = hashlib.sha256(source.read_bytes()).hexdigest()
+    (root / "SilverStar.ssproject").write_text(json.dumps(identity))
+    elf, report = link_fixture(arm_fixture, name="gc", link_flags=["-Wl,--gc-sections"])
+    history = report["groups"]["eskf_history"]
+    assert history["status"] == "discarded-by-linker-gc"
+    assert history["discarded_section"] == ".bss.silverstar_auto_eskf_history"
+    assert "address" not in history and "region" not in history
+    symbols = auto.Tool_Run([arm_fixture[2], "-t", str(elf)])
+    assert not any(line.endswith(" s_history") for line in symbols.splitlines())
+
+
+@pytest.mark.parametrize("fault", ["missing_block", "wrong_object", "wrong_size", "not_discarded", "duplicate"])
+def test_absent_history_requires_exact_unambiguous_discard_evidence(tmp_path, fault):
+    owner = tmp_path / "reviewed.o"
+    entry = " .bss.silverstar_auto_eskf_history\n                0x00000000 0x400 " + str(owner) + "\n"
+    text = "Discarded input sections\n" + entry + "\nMemory Configuration\n"
+    if fault == "missing_block":
+        text = text.replace("Discarded input sections", "Unreviewed text")
+    elif fault == "wrong_object":
+        text = text.replace(str(owner), str(tmp_path / "other.o"))
+    elif fault == "wrong_size":
+        text = text.replace("0x400", "0x401")
+    elif fault == "not_discarded":
+        text = "Discarded input sections\n\nMemory Configuration\n" + entry
+    else:
+        text = text.replace(entry, entry + entry)
+    with pytest.raises(ValueError):
+        auto.DiscardedGroup_Prove(text, "eskf_history", {"object": str(owner), "size": 1024})
+
+
+def test_actual_legacy_kf_history_is_collectable_without_removing_live_cpu_bss(arm_fixture):
+    root, _, objdump, owner, startup, script, source, base = arm_fixture
+    source.write_text('''#include "platform_memory.h"
+static PLATFORM_KF_REPLAY_BSS unsigned char s_replay_storage[10368];
+static PLATFORM_CPU_FAST_BSS volatile unsigned live_cpu;
+void SystemInit(void) {} void __libc_init_array(void) {}
+unsigned History_Read(void) { return s_replay_storage[0]; }
+int main(void) { return (int)live_cpu; }
+''')
+    subprocess.run([*base, "-O0", "-fdata-sections", "-ffunction-sections",
+                    "-c", str(source), "-o", str(owner)], check=True)
+    elf = root / "legacy.elf"
+    subprocess.run([base[0], str(owner), str(startup), "-mcpu=cortex-m4", "-mthumb",
+                    "-nostdlib", "-Wl,--gc-sections", "-T" + str(script), "-o", str(elf)], check=True)
+    symbols = auto.Tool_Run([objdump, "-t", str(elf)])
+    assert any(line.endswith(" live_cpu") for line in symbols.splitlines())
+    assert not any(line.endswith(" s_replay_storage") for line in symbols.splitlines())
 
 
 def test_actual_f407_links_overflow_relief_determinism_alignment_and_startup(arm_fixture, capsys):

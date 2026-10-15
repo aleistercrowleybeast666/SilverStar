@@ -183,6 +183,7 @@ SECTIONS
     _sccmram_bss = .;
     /* SILVERSTAR_AUTO_CCM_BSS */
     *(.ccmram_bss)
+    *(.ccmram_bss.*)
     *(.ccmram_bss*)
     . = ALIGN(8);
     _eccmram_bss = .;

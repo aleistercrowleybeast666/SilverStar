@@ -185,7 +185,25 @@ def Score_Get(usage: dict[str, int], regions: dict, assignment: dict) -> tuple:
     return max(used), max(used) - min(used), sum(value == "RAM" for value in assignment.values()), tuple(assignment.items())
 
 
-def LinkedGroups_Check(objdump: str, elf: Path, groups: dict, assignment: dict, regions: dict) -> None:
+def DiscardedGroup_Prove(map_text: str, group: str, info: dict) -> dict:
+    """Absence is accepted only with the exact input section's real GC evidence."""
+    parts = map_text.split("Discarded input sections\n")
+    if len(parts) != 2 or "\nMemory Configuration\n" not in parts[1]:
+        raise ValueError("Missing unambiguous linker discard evidence")
+    discarded = parts[1].split("\nMemory Configuration\n", 1)[0]
+    section = PREFIX + group
+    entries = re.findall(r"^ " + re.escape(section) +
+                         r"(?:[ \t]*\n)?[ \t]+0x0+[ \t]+0x([\da-fA-F]+)[ \t]+(.+?)[ \t]*$",
+                         discarded, re.MULTILINE)
+    if (len(entries) != 1 or int(entries[0][0], 16) != info["size"] or
+            Path(entries[0][1]).resolve() != Path(info["object"]).resolve()):
+        raise ValueError("Missing exact discarded private input section: " + group)
+    return {"status": "discarded-by-linker-gc", "discarded_section": section,
+            "discard_map_sha256": hashlib.sha256(map_text.encode("utf-8")).hexdigest()}
+
+
+def LinkedGroups_Check(objdump: str, elf: Path, groups: dict, assignment: dict, regions: dict,
+                       map_text: str = "") -> None:
     dump = Tool_Run([objdump, "-t", str(elf)])
     symbols = {}
     for address, section, size, name in re.findall(
@@ -194,6 +212,9 @@ def LinkedGroups_Check(objdump: str, elf: Path, groups: dict, assignment: dict, 
         symbols.setdefault(name, []).append((int(address, 16), int(size, 16), section))
     for group, info in groups.items():
         entries = symbols.get(info["symbol"], [])
+        if not entries:
+            info.update(DiscardedGroup_Prove(map_text, group, info))
+            continue
         if len(entries) != 1:
             raise ValueError(f"Linked whitelist symbol missing or ambiguous: {info['symbol']}")
         address, size, section = entries[0]
@@ -206,7 +227,7 @@ def LinkedGroups_Check(objdump: str, elf: Path, groups: dict, assignment: dict, 
                 start <= address and address + size <= start + capacity and
                 symbols[bounds[0]][0][0] <= address and address + size <= symbols[bounds[1]][0][0]):
             raise ValueError(f"Placement, size, alignment or startup zero bounds failed: {group}")
-        info.update(address=address, region=region, output_section=section, zero_bounds=bounds)
+        info.update(status="linked", address=address, region=region, output_section=section, zero_bounds=bounds)
 
 
 def LayoutCandidates_Link(args: argparse.Namespace) -> None:
@@ -259,7 +280,12 @@ def LayoutCandidates_Link(args: argparse.Namespace) -> None:
     _, index, assignment, candidate = min(successful)
     # One final real link ensures ELF and map belong to the selected assignment.
     Tool_Run([args.compiler, *args.command, "-T" + candidate.as_posix(), "-o", str(output)])
-    LinkedGroups_Check(args.objdump, output, groups, assignment, regions)
+    maps = [value.removeprefix("-Wl,-Map=").split(",", 1)[0]
+            for value in args.command if value.startswith("-Wl,-Map=")]
+    if len(maps) != 1:
+        raise ValueError("One actual linker map is required for placement and discard evidence")
+    map_text = Path(maps[0]).read_text(encoding="utf-8")
+    LinkedGroups_Check(args.objdump, output, groups, assignment, regions, map_text)
     usage = Usage_Read(args.objdump, output, regions)
     report.update(status="linked", selected=index, assignment=assignment, usage=usage,
                   elf_sha256=hashlib.sha256(output.read_bytes()).hexdigest(),
@@ -267,7 +293,10 @@ def LayoutCandidates_Link(args: argparse.Namespace) -> None:
     report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(f"MEMORY_LAYOUT:auto selected={index} attempts={len(attempts)} decision={report_path}", flush=True)
     for group, info in groups.items():
-        print(f"MEMORY_LAYOUT: {group} {info['symbol']} bytes={info['size']} address=0x{info['address']:08x} -> {info['region']}", flush=True)
+        if info["status"] == "discarded-by-linker-gc":
+            print(f"MEMORY_LAYOUT: {group} {info['symbol']} bytes={info['size']} discarded by actual linker GC", flush=True)
+        else:
+            print(f"MEMORY_LAYOUT: {group} {info['symbol']} bytes={info['size']} address=0x{info['address']:08x} -> {info['region']}", flush=True)
     for name, (_, capacity) in sorted(regions.items()):
         remaining = capacity - usage[name]
         color = "red" if remaining * 100 < capacity * 10 else "yellow" if remaining * 100 <= capacity * 20 else "green"
