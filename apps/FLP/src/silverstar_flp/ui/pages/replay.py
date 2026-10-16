@@ -393,7 +393,7 @@ class ReplayPage(QWidget):
             editor.setValue(
                 self._offline_parameter_values.get(
                     parameter.parameter_id,
-                    float(parameter.default),
+                    parameter.default,
                 )
             )
             if isinstance(editor, QDoubleSpinBox):
@@ -605,7 +605,7 @@ class ReplayPage(QWidget):
             editor.setValue(
                 self._parameter_baseline_values.get(
                     parameter_id,
-                    float(self._parameter_specs[parameter_id].default),
+                    self._parameter_specs[parameter_id].default,
                 )
             )
             editor.setProperty("actualValue", self._parameter_baseline_values.get(parameter_id))
@@ -657,6 +657,12 @@ class ReplayPage(QWidget):
                 self._parameter_labels[name].setText(
                     self._Parameter_Label(self._parameter_specs[name])
                 )
+            if (name == 'fusion_horizon_ms' and mode == ReplayMode.RECORDED_CONFIGURATION
+                    and name not in self._recorded_parameter_values):
+                editor.clear()
+                note = self._translator.Text_Get('replay.parameter_not_recorded')
+                self._parameter_labels[name].setText(self._Parameter_Label(self._parameter_specs[name]) + ' · ' + note)
+                editor.setToolTip(note)
         self.configurationChanged.emit()
 
     def _ActualValues_Get(self, *, allow_invalid: bool = False) -> dict[str, float]:

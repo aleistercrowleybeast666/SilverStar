@@ -20,14 +20,14 @@ def test_only_implemented_modes_have_named_common_selector(builtin_catalog, qapp
     else:
         editor = page.editors[key]
         assert isinstance(editor, FusionTimingEditor)
-        assert editor.isVisible() and editor.count() == 2 and editor.value() == 1
-        assert [editor.itemData(i) for i in range(2)] == [0, 1]
-        assert all(editor.itemText(i) for i in range(2))
+        assert editor.isVisible() and editor.count() == 3 and editor.value() == 1
+        assert [editor.itemData(i) for i in range(3)] == [0, 1, 2]
+        assert all(editor.itemText(i) for i in range(3))
         changes = []
         page.parameterChanged.connect(lambda *args: changes.append(args))
-        editor.setValue(0)
+        editor.setValue(2)
         assert changes == []
-        editor.activated.emit(0)
+        editor.activated.emit(2)
         qapp.processEvents()  # Page commits use its existing queued signal boundary.
-        assert changes == [(owner.component_id, "fusion_timing_mode", 0)]
+        assert changes == [(owner.component_id, "fusion_timing_mode", 2)]
     page.close()

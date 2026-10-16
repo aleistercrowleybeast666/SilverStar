@@ -1,5 +1,6 @@
 #include "system_navigation_backend.h"
 #include "navigation_eskf_replay.h"
+#include "navigation_eskf_horizon.h"
 #include "navigation_eskf_config.h"
 #include "navigation_quality.h"
 #include "geodesy_local.h"
@@ -11,7 +12,8 @@
 #include "system_gnss_quality.h"
 #include "system_user_config.h"
 #include "system_fusion_timing.h"
-_Static_assert((SYSTEM_FUSION_TIMING_MODE == 0U) || (SYSTEM_FUSION_TIMING_MODE == 1U),
+_Static_assert((SYSTEM_FUSION_TIMING_MODE == 0U) || (SYSTEM_FUSION_TIMING_MODE == 1U) ||
+    (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON),
     "Unsupported fusion timing mode");
 #include "platform_memory.h"
 #include "silverstar_assert.h"
@@ -49,10 +51,14 @@ typedef struct
     uint32_t source_sequence;
     uint8_t timing_flags;
     uint8_t execution_result;
+    uint8_t phase;
+    uint8_t effective_update;
+    float prepared_variance[2];
 } BackendMeasurementContext;
 
 /* EstimatorTask is the only runtime owner. No DMA, heap, or replay side effects. */
 static NavigationEskfState s_state; /* CPU main SRAM, never DMA. */
+static NavigationEskfHorizon s_horizon; /* CPU main SRAM, independently collectable. */
 static PLATFORM_ESKF_WORK_BSS NavigationEskfWorkspace s_work;
 static PLATFORM_ESKF_HISTORY_BSS NavigationEskfReplay s_history;
 static NavigationEskfHistoryInput s_body_history[NAV_ESKF_HISTORY_CAPACITY];
@@ -80,6 +86,35 @@ static uint8_t s_started;
 static uint8_t s_gnss_source;
 static uint32_t s_imu_quality_flags;
 static uint32_t s_calibration_generation;
+
+static uint64_t Backend_EvaluationTimeGet(void)
+{
+    return (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON) ?
+        s_horizon.present_us : s_state.timestamp_us;
+}
+
+static SystemFusionExecutionResult Backend_HorizonExecutionGet(NavigationEskfHorizonResult result)
+{
+    switch (result)
+    {
+        case NAV_ESKF_HORIZON_OK: return SYSTEM_FUSION_EXEC_COMPLETE;
+        case NAV_ESKF_HORIZON_QUEUED: return SYSTEM_FUSION_EXEC_QUEUED;
+        case NAV_ESKF_HORIZON_WARMUP: return SYSTEM_FUSION_EXEC_WARMUP;
+        case NAV_ESKF_HORIZON_STALE: return SYSTEM_FUSION_EXEC_STALE;
+        case NAV_ESKF_HORIZON_LATE: return SYSTEM_FUSION_EXEC_LATE;
+        case NAV_ESKF_HORIZON_CAPACITY: return SYSTEM_FUSION_EXEC_CAPACITY;
+        case NAV_ESKF_HORIZON_DUPLICATE: return SYSTEM_FUSION_EXEC_DUPLICATE;
+        case NAV_ESKF_HORIZON_EPOCH_MISMATCH: return SYSTEM_FUSION_EXEC_EPOCH_MISMATCH;
+        case NAV_ESKF_HORIZON_DISCONTINUITY: return SYSTEM_FUSION_EXEC_DISCONTINUITY;
+        case NAV_ESKF_HORIZON_NUMERIC_ERROR: return SYSTEM_FUSION_EXEC_NUMERIC_ERROR;
+        case NAV_ESKF_HORIZON_MODEL_MISMATCH: return SYSTEM_FUSION_EXEC_MODEL_MISMATCH;
+        case NAV_ESKF_HORIZON_NOT_READY: return SYSTEM_FUSION_EXEC_NOT_READY;
+        case NAV_ESKF_HORIZON_BUSY: return SYSTEM_FUSION_EXEC_BUSY;
+        case NAV_ESKF_HORIZON_EMPTY:
+        case NAV_ESKF_HORIZON_INVALID:
+        default: return SYSTEM_FUSION_EXEC_INVALID;
+    }
+}
 
 /* EstimatorTask is the sole writer. A live DAP reader accepts only equal,
  * even sequence values around a read of this history-insertion evidence. */
@@ -159,13 +194,15 @@ void SystemNavigationBackend_Reset(void)
     s_baro_origin = 0.0f; s_baro_origin_valid = 0U;
     s_native_week_us = 0U; s_native_tow_ms = 0U; s_log_failures = 0U;
     s_imu_quality_flags = 0U;
-    if (SYSTEM_FUSION_TIMING_MODE == 0U)
+    if (SYSTEM_FUSION_TIMING_MODE != SYSTEM_FUSION_TIMING_LEGACY_REPLAY)
     {
         memset(s_current_gnss, 0, sizeof(s_current_gnss));
         memset(&s_current_baro, 0, sizeof(s_current_baro));
         memset(s_current_endpoint_rate, 0, sizeof(s_current_endpoint_rate));
         s_current_epoch_start_us = 0U; s_current_endpoint_valid = 0U; s_current_faulted = 0U;
     }
+    if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON)
+    { s_horizon.initialized = 0U; }
     (void)NavigationWindow_Reset(&s_eskf_window);
 }
 
@@ -225,11 +262,40 @@ static void Backend_LogResult(LoggerBusResult result)
     { s_log_failures++; }
 }
 
+static void Backend_HorizonMeasurementLog(const BackendMeasurementContext *measurement)
+{
+    FlightLogFusionHorizonMeasurementRecord record = {0};
+    record.sample_timestamp_us = measurement->sample_timestamp_us;
+    record.receive_timestamp_us = measurement->receive_timestamp_us;
+    record.measurement_timestamp_us = measurement->measurement_timestamp_us;
+    record.application_timestamp_us = measurement->application_timestamp_us;
+    record.evaluation_timestamp_us = measurement->evaluation_timestamp_us;
+    record.operation_sequence = measurement->operation_sequence; record.epoch = measurement->epoch;
+    record.source_id = measurement->source_id; record.calibration_generation = measurement->calibration_generation;
+    record.source_sequence = measurement->source_sequence;
+    record.algorithm_id = 2U; record.algorithm_revision = NAV_ESKF_REVISION;
+    record.numerical_revision = NAV_ESKF_NUMERICAL_REVISION_STABLE_RESET;
+    record.phase = measurement->phase; record.group = measurement->group;
+    record.physically_valid = measurement->physically_valid; record.admitted = measurement->admitted;
+    record.update_result = measurement->update_result; record.fusion_timing_mode = SYSTEM_FUSION_TIMING_HORIZON;
+    record.timing_flags = measurement->timing_flags; record.execution_result = measurement->execution_result;
+    record.effective_update = measurement->effective_update;
+    memcpy(record.observation,measurement->observation,sizeof(record.observation));
+    memcpy(record.innovation,measurement->innovation,sizeof(record.innovation));
+    memcpy(record.prepared_variance,measurement->prepared_variance,sizeof(record.prepared_variance));
+    memcpy(record.effective_variance,measurement->effective_variance,sizeof(record.effective_variance));
+    record.nis = measurement->nis; record.quality_scale = measurement->quality_scale;
+    record.consistency_scale = measurement->consistency_scale; record.robust_scale = measurement->robust_scale;
+    Backend_LogResult(LoggerBus_FusionHorizonMeasurementPush(measurement->evaluation_timestamp_us,&record));
+}
+
 static void Backend_MeasurementLog(const BackendMeasurementContext *measurement)
 {
     FlightLogEskf15MeasurementRecord record;
     SILVERSTAR_ASSERT_OBJECT(measurement, BackendMeasurementContext, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     SILVERSTAR_ASSERT(measurement->group < 5U, SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON)
+    { Backend_HorizonMeasurementLog(measurement); return; }
     record.sample_timestamp_us = measurement->sample_timestamp_us;
     record.receive_timestamp_us = measurement->receive_timestamp_us;
     record.measurement_timestamp_us = measurement->measurement_timestamp_us;
@@ -481,6 +547,132 @@ static SystemDeviceResult Backend_CurrentFaultStop(EstimatorOutputSnapshot *outp
     return SYSTEM_DEVICE_VERIFY_FAILED;
 }
 
+static void Backend_HorizonStatusLog(uint64_t evaluation_us, NavigationEskfHorizonResult result)
+{
+#if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
+    FlightLogFusionHorizonStatusRecord record = {0};
+    record.input_present_timestamp_us = s_horizon.present_us;
+    record.primary_timestamp_us = s_horizon.primary.timestamp_us;
+    record.output_state_timestamp_us = s_state.timestamp_us;
+    record.output_covariance_timestamp_us = s_state.timestamp_us;
+    record.operation_sequence = s_operation; record.epoch = s_state.generation;
+    record.source_id = s_state.source; record.calibration_generation = s_calibration_generation;
+    record.horizon_us = (uint32_t)s_horizon.horizon_us;
+    record.work_count = s_horizon.last_work; record.maximum_work = s_horizon.maximum_work;
+    record.late_count = s_horizon.late_count; record.capacity_count = s_horizon.capacity_count;
+    record.failure_operation_sequence = s_horizon.failure_operation;
+    record.failure_operation_valid = s_horizon.failure_operation_valid;
+    record.horizon_initialized = s_horizon.initialized;
+    record.body_count = s_horizon.body_count; record.event_count = s_horizon.event_count;
+    record.completion_count = s_horizon.completion_count;
+    record.algorithm_id = 2U; record.algorithm_revision = NAV_ESKF_REVISION;
+    record.numerical_revision = NAV_ESKF_NUMERICAL_REVISION_STABLE_RESET;
+    record.fusion_timing_mode = SYSTEM_FUSION_TIMING_HORIZON;
+    record.phase = (uint8_t)(s_horizon.faulted ? 2U : (s_horizon.warmup ? 0U : 1U));
+    record.execution_result = (uint8_t)Backend_HorizonExecutionGet(result);
+    Backend_LogResult(LoggerBus_FusionHorizonStatusPush(evaluation_us,&record));
+#else
+    (void)evaluation_us; (void)result;
+#endif
+}
+
+static void Backend_HorizonRequest(const NavigationEskfReplayEvent *event,
+    BackendMeasurementContext *record)
+{
+    NavigationEskfHorizonEvent queued = {0};
+    SystemNavigationReceiveEvidence evidence = {0};
+    SystemDeviceResult received;
+    record->operation_sequence = ++s_operation; record->epoch = s_state.generation;
+    record->source_id = event->source; record->calibration_generation = s_calibration_generation;
+    record->source_sequence = event->sequence; record->group = event->measurement.group;
+    record->physically_valid = event->measurement.physically_valid;
+    record->receive_timestamp_us = event->receive_us; record->measurement_timestamp_us = event->measurement_us;
+    record->evaluation_timestamp_us = Backend_EvaluationTimeGet();
+    record->update_result = 255U; record->nis = -1.0f; record->robust_scale = 1.0f;
+    memcpy(record->observation,event->measurement.observation,sizeof(record->observation));
+    memcpy(record->prepared_variance,event->measurement.variance,sizeof(record->prepared_variance));
+    if (record->execution_result == SYSTEM_FUSION_EXEC_COMPLETE)
+    {
+        evidence.receive_us = event->receive_us; evidence.evaluation_us = record->evaluation_timestamp_us;
+        evidence.sequence = event->sequence; evidence.source = (uint8_t)event->source;
+        evidence.variance_scale = record->quality_scale*record->consistency_scale;
+        evidence.physically_valid = event->measurement.physically_valid;
+        evidence.reason = evidence.physically_valid ? 0U : (uint8_t)NAV_ESKF_INVALID_INPUT;
+        received = SystemNavigationHealth_ReceiveOnly(event->measurement.group,&evidence);
+        if (received == SYSTEM_DEVICE_OK)
+        {
+            queued.event = *event; queued.sample_us = record->sample_timestamp_us;
+            queued.operation_sequence = record->operation_sequence; queued.timing_flags = record->timing_flags;
+            queued.quality_scale = record->quality_scale; queued.consistency_scale = record->consistency_scale;
+            memcpy(queued.base_variance,record->base_variance,sizeof(queued.base_variance));
+            record->execution_result = (uint8_t)Backend_HorizonExecutionGet(NavigationEskfHorizon_Insert(&s_horizon,&queued));
+        }
+        else
+        {
+            record->execution_result = SYSTEM_FUSION_EXEC_DISCONTINUITY;
+            if (received != SYSTEM_DEVICE_BAD_STATE)
+            { s_horizon.faulted = 1U; }
+        }
+    }
+#if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
+    Backend_MeasurementLog(record);
+#endif
+}
+
+static SystemDeviceResult Backend_HorizonCompletionPublish(const NavigationEskfHorizonEvent *completed,
+    EstimatorOutputSnapshot *output)
+{
+    BackendMeasurementContext record = {0};
+    SystemNavigationFusionEvidence evidence = {0};
+    const NavigationEskfReplayEvent *event = &completed->event;
+    const NavigationEskfOutcome *outcome = &completed->outcome;
+    record.sample_timestamp_us = completed->sample_us; record.receive_timestamp_us = event->receive_us;
+    record.measurement_timestamp_us = event->measurement_us; record.application_timestamp_us = event->measurement_us;
+    record.evaluation_timestamp_us = s_state.timestamp_us; record.operation_sequence = completed->operation_sequence;
+    record.epoch = s_state.generation; record.source_id = event->source;
+    record.calibration_generation = s_calibration_generation; record.source_sequence = event->sequence;
+    record.group = event->measurement.group; record.physically_valid = event->measurement.physically_valid;
+    record.phase = 1U; record.admitted = 1U; record.update_result = (uint8_t)outcome->result;
+    record.quality_scale = completed->quality_scale; record.consistency_scale = completed->consistency_scale;
+    record.nis = outcome->nis; record.robust_scale = outcome->r_scale;
+    record.timing_flags = completed->timing_flags | SYSTEM_FUSION_APPLICATION_EPOCH_VALID;
+    record.execution_result = SYSTEM_FUSION_EXEC_COMPLETE;
+    record.effective_update = (uint8_t)((outcome->gain_norm > 0.0f) &&
+        ((outcome->result == NAV_ESKF_OK) || (outcome->result == NAV_ESKF_SOFT_WEIGHTED)));
+    memcpy(record.observation,event->measurement.observation,sizeof(record.observation));
+    memcpy(record.base_variance,completed->base_variance,sizeof(record.base_variance));
+    memcpy(record.prepared_variance,event->measurement.variance,sizeof(record.prepared_variance));
+    memcpy(record.innovation,outcome->innovation,sizeof(record.innovation));
+    memcpy(record.effective_variance,outcome->effective_variance,sizeof(record.effective_variance));
+    evidence.receive_us = event->receive_us; evidence.measurement_us = event->measurement_us;
+    evidence.evaluation_us = s_state.timestamp_us; evidence.sequence = event->sequence;
+    evidence.source = (uint8_t)event->source; evidence.physically_valid = 1U; evidence.attempted = 1U;
+    evidence.effective_update = record.effective_update; evidence.nis = outcome->nis;
+    evidence.variance_scale = completed->quality_scale*completed->consistency_scale*outcome->r_scale;
+    evidence.soft_weighted = (uint8_t)(evidence.variance_scale > 1.0f); evidence.reason = record.update_result;
+    if (SystemNavigationHealth_FusionOnly(record.group,&evidence) != SYSTEM_DEVICE_OK)
+    { s_horizon.faulted = 1U; return SYSTEM_DEVICE_VERIFY_FAILED; }
+    Backend_OutcomeSnapshotWrite(&record,&evidence,output);
+#if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
+    Backend_MeasurementLog(&record);
+#endif
+    return SYSTEM_DEVICE_OK;
+}
+
+static SystemDeviceResult Backend_HorizonCompletionsDrain(EstimatorOutputSnapshot *output)
+{
+    for (uint16_t index = 0U; index < NAV_ESKF_HORIZON_EVENT_CAPACITY; index++)
+    {
+        NavigationEskfHorizonEvent completed;
+        NavigationEskfHorizonResult result = NavigationEskfHorizon_CompletionPop(&s_horizon,&completed);
+        if (result == NAV_ESKF_HORIZON_EMPTY) { return SYSTEM_DEVICE_OK; }
+        if ((result != NAV_ESKF_HORIZON_OK) ||
+            (Backend_HorizonCompletionPublish(&completed,output) != SYSTEM_DEVICE_OK))
+        { return SYSTEM_DEVICE_VERIFY_FAILED; }
+    }
+    return (s_horizon.completion_count == 0U) ? SYSTEM_DEVICE_OK : SYSTEM_DEVICE_VERIFY_FAILED;
+}
+
 static SystemFusionExecutionResult Backend_CurrentPredict(const NavigationEskfBodyInput *body)
 {
     if (s_current_faulted || !s_state.initialized) { return SYSTEM_FUSION_EXEC_NOT_READY; }
@@ -512,11 +704,13 @@ static SystemFusionExecutionResult Backend_CurrentPacketAdmit(SystemFusionReceip
     uint32_t sequence, uint64_t receive_us)
 {
     SystemFusionExecutionResult result;
-    if (s_current_faulted || !s_current_endpoint_valid) { return SYSTEM_FUSION_EXEC_NOT_READY; }
+    if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON)
+    { if (s_horizon.faulted || !s_horizon.body_seen) { return SYSTEM_FUSION_EXEC_NOT_READY; } }
+    else if (s_current_faulted || !s_current_endpoint_valid) { return SYSTEM_FUSION_EXEC_NOT_READY; }
     if (SystemCalibration_GenerationGet() != s_calibration_generation)
     { return SYSTEM_FUSION_EXEC_EPOCH_MISMATCH; }
     result = SystemFusionTiming_CurrentValidate(receive_us, receive_us,
-        s_state.timestamp_us, s_current_epoch_start_us);
+        Backend_EvaluationTimeGet(), s_current_epoch_start_us);
     if (result != SYSTEM_FUSION_EXEC_COMPLETE) { return result; }
     result = SystemFusionTiming_ReceiptCheck(receipt, sequence, 0x80U);
     if (result == SYSTEM_FUSION_EXEC_COMPLETE)
@@ -566,6 +760,8 @@ static void Backend_EventApply(NavigationEskfReplayEvent *event, BackendMeasurem
         event->measurement.lever_arm_b_m[1] = SYSTEM_ESKF_LEVER_ARM_BODY_Y_M;
         event->measurement.lever_arm_b_m[2] = SYSTEM_ESKF_LEVER_ARM_BODY_Z_M;
     }
+    if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON)
+    { Backend_HorizonRequest(event,record); return; }
     if (SYSTEM_FUSION_TIMING_MODE == 1U)
     {
         Backend_AngularRateGet(event->measurement_us, event->measurement.angular_rate_b_radps);
@@ -692,6 +888,21 @@ static void Backend_NavigationQualityLog(const SystemGnssSample *sample, uint64_
 #endif
 }
 
+/* Select the live producer independently of whether it has delivered a packet.
+ * Use this captured identity for the whole receive transaction. */
+static SystemDeviceResult Backend_HorizonGnssSourceSelect(uint8_t *source)
+{
+    SystemDeviceResult selected = SystemSourceSelector_GnssActiveInstanceGet(source);
+    for (uint8_t group = 0U; group < 4U; group++)
+    {
+        SystemDeviceResult health = (selected == SYSTEM_DEVICE_OK) ?
+            SystemNavigationHealth_SourceSelect(group,*source,Backend_EvaluationTimeGet()) :
+            SystemNavigationHealth_SourceUnavailable(group,Backend_EvaluationTimeGet());
+        if (health != SYSTEM_DEVICE_OK) { s_horizon.faulted = 1U; return SYSTEM_DEVICE_VERIFY_FAILED; }
+    }
+    return selected;
+}
+
 static void Backend_GnssUpdate(EstimatorOutputSnapshot *output)
 {
     SystemGnssSample sample;
@@ -700,14 +911,17 @@ static void Backend_GnssUpdate(EstimatorOutputSnapshot *output)
     SystemFusionExecutionResult packet_result = SYSTEM_FUSION_EXEC_COMPLETE;
     SILVERSTAR_ASSERT_OBJECT(output, EstimatorOutputSnapshot, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     SILVERSTAR_ASSERT(s_state.initialized != 0U, SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if ((SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON) &&
+        (Backend_HorizonGnssSourceSelect(&source) != SYSTEM_DEVICE_OK)) { return; }
     /* A mission without a preflight frame cannot adopt a later moving fix. */
     if (s_frame.valid == 0U) { return; }
-    if ((SystemSourceSelector_GnssActiveInstanceGet(&source) != SYSTEM_DEVICE_OK) ||
+    if (((SYSTEM_FUSION_TIMING_MODE != SYSTEM_FUSION_TIMING_HORIZON) &&
+         (SystemSourceSelector_GnssActiveInstanceGet(&source) != SYSTEM_DEVICE_OK)) ||
         (SystemGnss_LatestSampleGet(&sample) != SYSTEM_DEVICE_OK) ||
-        (sample.receive_timestamp_us > s_state.timestamp_us) ||
+        (sample.receive_timestamp_us > Backend_EvaluationTimeGet()) ||
         (s_gnss_seen && (source == s_gnss_source) &&
          (sample.sequence == s_gnss_sequence))) { return; }
-    if (SYSTEM_FUSION_TIMING_MODE == 0U)
+    if (SYSTEM_FUSION_TIMING_MODE != SYSTEM_FUSION_TIMING_LEGACY_REPLAY)
     {
         packet_result = (source < SYSTEM_FUSION_SOURCE_COUNT) ?
             Backend_CurrentPacketAdmit(&s_current_gnss[source], sample.sequence, sample.receive_timestamp_us) :
@@ -719,7 +933,7 @@ static void Backend_GnssUpdate(EstimatorOutputSnapshot *output)
         (void)NavigationWindow_Reset(&s_eskf_window);
     }
     s_gnss_seen = 1U; s_gnss_sequence = sample.sequence;
-    if (SystemGnssQuality_Evaluate(&sample, s_state.timestamp_us) != SYSTEM_DEVICE_OK)
+    if (SystemGnssQuality_Evaluate(&sample, Backend_EvaluationTimeGet()) != SYSTEM_DEVICE_OK)
     { sample.valid_group_mask = 0U; sample.physical_valid_group_mask = 0U; }
     output->last_gnss_timestamp_us = sample.receive_timestamp_us;
     output->last_gnss_sequence = sample.sequence;
@@ -738,7 +952,18 @@ static void Backend_GnssUpdate(EstimatorOutputSnapshot *output)
     consistency = (packet_result == SYSTEM_FUSION_EXEC_COMPLETE) ? Backend_ConsistencyGet(&sample, position) : 1.0f;
     for (group = 0U; group < 4U; group++)
     { Backend_GnssGroupApply(&sample, position, group, quality, consistency, packet_result, output); }
-    Backend_NavigationQualityLog(&sample, s_state.timestamp_us);
+    Backend_NavigationQualityLog(&sample, Backend_EvaluationTimeGet());
+}
+
+static uint8_t Backend_BarometerReceiptGet(EstimatorPressureSnapshot *sample)
+{
+    EstimatorBusResult result;
+    if (SYSTEM_FUSION_TIMING_MODE != SYSTEM_FUSION_TIMING_HORIZON)
+    { return EstimatorBus_PressureGetLatest(sample); }
+    result = EstimatorBus_PressureReceiptGetLatest(sample);
+    if (result == ESTIMATOR_BUS_RESULT_EMPTY) { return 0U; }
+    if (result != ESTIMATOR_BUS_RESULT_OK) { s_horizon.faulted = 1U; return 0U; }
+    return 1U;
 }
 
 static void Backend_BarometerUpdate(EstimatorOutputSnapshot *output)
@@ -746,9 +971,12 @@ static void Backend_BarometerUpdate(EstimatorOutputSnapshot *output)
     EstimatorPressureSnapshot sample;
     NavigationEskfReplayEvent event;
     BackendMeasurementContext record;
+    if ((SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON) &&
+        (SystemNavigationHealth_SourceSelect(4U,SYSTEM_FUSION_BAROMETER_SOURCE,Backend_EvaluationTimeGet()) != SYSTEM_DEVICE_OK))
+    { s_horizon.faulted = 1U; return; }
     if ((s_baro_origin_valid == 0U) ||
-        (EstimatorBus_PressureGetLatest(&sample) == 0U) ||
-        (sample.receive_timestamp_us > s_state.timestamp_us) ||
+        (Backend_BarometerReceiptGet(&sample) == 0U) ||
+        (sample.receive_timestamp_us > Backend_EvaluationTimeGet()) ||
         (s_baro_seen && (sample.sequence == s_baro_sequence))) { return; }
     SILVERSTAR_ASSERT(sample.valid <= 1U, SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     SILVERSTAR_ASSERT(sample.healthy <= 1U, SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
@@ -758,15 +986,15 @@ static void Backend_BarometerUpdate(EstimatorOutputSnapshot *output)
     output->baro_relative_altitude_m = sample.altitude_m - s_baro_origin;
     memset(&event, 0, sizeof(event)); memset(&record, 0, sizeof(record));
     event.receive_us = sample.receive_timestamp_us; event.sequence = sample.sequence;
-    event.source = (SYSTEM_FUSION_TIMING_MODE == 0U) ? SYSTEM_FUSION_BAROMETER_SOURCE : s_state.source;
+    event.source = (SYSTEM_FUSION_TIMING_MODE != SYSTEM_FUSION_TIMING_LEGACY_REPLAY) ? SYSTEM_FUSION_BAROMETER_SOURCE : s_state.source;
     event.measurement.group = 4U;
     event.measurement.physically_valid = (uint8_t)(sample.valid && sample.healthy &&
-        (s_state.timestamp_us - sample.receive_timestamp_us <= SYSTEM_ESTIMATOR_MEASUREMENT_MAX_AGE_US));
+        (Backend_EvaluationTimeGet() - sample.receive_timestamp_us <= SYSTEM_ESTIMATOR_MEASUREMENT_MAX_AGE_US));
     event.measurement.observation[0] = sample.altitude_m - s_baro_origin;
     event.measurement.variance[0] = fmaxf(sample.variance_m2,
         SYSTEM_ESKF_BARO_STD_M * SYSTEM_ESKF_BARO_STD_M);
     record.sample_timestamp_us = sample.timestamp_us;
-    if (SYSTEM_FUSION_TIMING_MODE == 0U)
+    if (SYSTEM_FUSION_TIMING_MODE != SYSTEM_FUSION_TIMING_LEGACY_REPLAY)
     {
         record.execution_result = (uint8_t)Backend_CurrentPacketAdmit(&s_current_baro,
             sample.sequence, sample.receive_timestamp_us);
@@ -781,11 +1009,64 @@ static void Backend_BarometerUpdate(EstimatorOutputSnapshot *output)
     Backend_EventApply(&event, &record, output);
 }
 
+static SystemDeviceResult Backend_HorizonCycle(const NavigationEskfBodyInput *body,
+    EstimatorOutputSnapshot *output, uint64_t previous_output_us)
+{
+    NavigationEskfHorizonResult result;
+    uint8_t source;
+    if ((SystemCalibration_GenerationGet() != s_calibration_generation) ||
+        (SystemSourceSelector_ImuActiveInstanceGet(&source) != SYSTEM_DEVICE_OK) || (source != s_state.source))
+    { s_horizon.faulted = 1U; result = NAV_ESKF_HORIZON_EPOCH_MISMATCH; }
+    else { result = NavigationEskfHorizon_BodyReceive(&s_horizon,body); }
+    if (result == NAV_ESKF_HORIZON_OK)
+    {
+        Backend_GnssUpdate(output);
+        if (!s_horizon.faulted) { Backend_BarometerUpdate(output); }
+        result = s_horizon.faulted ? NAV_ESKF_HORIZON_NOT_READY :
+            NavigationEskfHorizon_Advance(&s_horizon,&s_state,&s_work,&s_config);
+    }
+    if ((result != NAV_ESKF_HORIZON_OK) && (result != NAV_ESKF_HORIZON_WARMUP))
+    {
+        /* First-interval epoch setup is provisional until prediction commits.
+         * Restore its timestamp together with the unchanged nominal/full P. */
+        if (s_state.timestamp_us == body->start_us) { s_state.timestamp_us = previous_output_us; }
+        s_horizon.faulted = 1U;
+        if (result == NAV_ESKF_HORIZON_MODEL_MISMATCH) { SystemNavigationHealth_ModelMismatchRecord(); }
+        Backend_HorizonStatusLog(body->end_us,result);
+        return Backend_CurrentFaultStop(output);
+    }
+    memcpy(output->acceleration_enu_mps2,s_horizon.output_acceleration,sizeof(s_horizon.output_acceleration));
+    if (Backend_HorizonCompletionsDrain(output) != SYSTEM_DEVICE_OK)
+    {
+        s_horizon.faulted = 1U; Backend_HorizonStatusLog(body->end_us,NAV_ESKF_HORIZON_NUMERIC_ERROR);
+        return Backend_CurrentFaultStop(output);
+    }
+    if (SystemNavigationHealth_OverallGet(s_state.timestamp_us,
+        SYSTEM_FUSION_REQUIRED_HEALTH_MASK,s_imu_quality_flags) == SYSTEM_NAVIGATION_HEALTH_INVALID)
+    {
+        s_horizon.faulted = 1U; Backend_HorizonStatusLog(body->end_us,NAV_ESKF_HORIZON_NOT_READY);
+        return Backend_CurrentFaultStop(output);
+    }
+    output->predict_count++; output->update_sequence++;
+    if (SystemNavigationBackend_SnapshotGet(output) != SYSTEM_DEVICE_OK)
+    {
+        s_horizon.faulted = 1U; Backend_HorizonStatusLog(body->end_us,NAV_ESKF_HORIZON_NOT_READY);
+        return Backend_CurrentFaultStop(output);
+    }
+    Backend_HorizonStatusLog(body->end_us,result);
+#if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
+    Backend_StateLog(0U);
+#endif
+    return SYSTEM_DEVICE_OK;
+}
+
 SystemDeviceResult SystemNavigationBackend_SnapshotGet(EstimatorOutputSnapshot *output)
 {
     uint32_t row, column;
     if (output == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     if (!s_state.initialized) { return SYSTEM_DEVICE_NOT_READY; }
+    if ((SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON) && s_horizon.faulted)
+    { return SYSTEM_DEVICE_NOT_READY; }
     if (SYSTEM_FUSION_TIMING_MODE == 0U)
     {
         if (s_current_faulted != 0U) { return SYSTEM_DEVICE_NOT_READY; }
@@ -811,7 +1092,8 @@ SystemDeviceResult SystemNavigationBackend_SnapshotGet(EstimatorOutputSnapshot *
         for (column = 0U; column < 6U; column++)
         { output->covariance[row][column] = s_state.covariance[row][column]; }
     }
-    if (SystemNavigationHealth_DegradedGet(s_state.timestamp_us))
+    if (SystemNavigationHealth_DegradedGet(s_state.timestamp_us) ||
+        ((SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON) && s_horizon.warmup))
     { output->health_flags |= ESTIMATOR_HEALTH_FUSION_TIMEOUT; }
     else { output->health_flags &= ~ESTIMATOR_HEALTH_FUSION_TIMEOUT; }
     if (s_log_failures != 0U) { output->health_flags |= ESTIMATOR_HEALTH_LOG_EVENT_FAILED; }
@@ -829,8 +1111,19 @@ static SystemDeviceResult Backend_PredictionEpochStart(const NavigationEskfBodyI
         if (NavigationEskfReplay_Reset(&s_history, &s_state, s_body_history) != NAV_ESKF_REPLAY_OK)
         { return SYSTEM_DEVICE_INTERNAL_ERROR; }
     }
-    else { s_current_epoch_start_us = body->start_us; }
-    SystemNavigationHealth_EpochSet(body->start_us);
+    else
+    {
+        s_current_epoch_start_us = body->start_us;
+        if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON)
+        {
+            if (NavigationEskfHorizon_Reset(&s_horizon,&s_state,&s_work,&s_config,
+                (uint64_t)SYSTEM_FUSION_HORIZON_MS*1000ULL) != NAV_ESKF_HORIZON_OK)
+            { return SYSTEM_DEVICE_VERIFY_FAILED; }
+        }
+    }
+    if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON)
+    { SystemNavigationHealth_DelayedReset(body->start_us); }
+    else { SystemNavigationHealth_EpochSet(body->start_us); }
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
     Backend_StateLog(1U);
 #endif
@@ -858,36 +1151,15 @@ static SystemDeviceResult Backend_PredictionInputBuild(const SystemInertialIncre
     return Backend_PredictionEpochStart(body);
 }
 
-SystemDeviceResult SystemNavigationBackend_Predict(
-    const SystemInertialIncrement *input, EstimatorOutputSnapshot *output)
+static SystemDeviceResult Backend_PresentOrReplayCycle(const NavigationEskfBodyInput *body,
+    EstimatorOutputSnapshot *output, uint64_t previous_timestamp_us)
 {
-    NavigationEskfBodyInput body;
-    SystemDeviceResult prepared;
-    const uint64_t previous_timestamp_us = s_state.timestamp_us;
     float previous_velocity[3];
     uint8_t axis;
-    if ((input == NULL) || (output == NULL) || !isfinite(input->dt_s) ||
-        (input->dt_s <= 0.0f) || (input->dt_s > NAV_ESKF_MAX_DT_S))
-    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-    SILVERSTAR_ASSERT_OBJECT(input, SystemInertialIncrement, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
-    SILVERSTAR_ASSERT_OBJECT(output, EstimatorOutputSnapshot, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
-    if ((SYSTEM_FUSION_TIMING_MODE == 0U) && (s_current_faulted != 0U))
-    { return Backend_CurrentFaultStop(output); }
-    if (!s_active || !s_state.initialized) { return SYSTEM_DEVICE_NOT_READY; }
-    prepared = Backend_PredictionInputBuild(input, &body);
-    if (prepared != SYSTEM_DEVICE_OK) { return prepared; }
-    memcpy(previous_velocity, s_state.velocity, sizeof(previous_velocity));
-    output->measurement_attempt_mask = 0U;
-    output->position_update_result = SYSTEM_ESTIMATOR_MEAS_REJECTED_INVALID;
-    output->velocity_update_result = SYSTEM_ESTIMATOR_MEAS_REJECTED_INVALID;
-    output->baro_update_result = SYSTEM_ESTIMATOR_MEAS_REJECTED_INVALID;
-    SystemNavigationHealth_ImuQualityRecord(body.quality_flags);
-#if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
-    Backend_BodyLog(&body, input->sequence);
-#endif
+    memcpy(previous_velocity,s_state.velocity,sizeof(previous_velocity));
     if ((SYSTEM_FUSION_TIMING_MODE == 1U) ?
-        (NavigationEskfReplay_Predict(&s_history, &s_state, &s_work, &s_config, &body) != NAV_ESKF_REPLAY_OK) :
-        (Backend_CurrentPredict(&body) != SYSTEM_FUSION_EXEC_COMPLETE))
+        (NavigationEskfReplay_Predict(&s_history,&s_state,&s_work,&s_config,body) != NAV_ESKF_REPLAY_OK) :
+        (Backend_CurrentPredict(body) != SYSTEM_FUSION_EXEC_COMPLETE))
     {
         if (SYSTEM_FUSION_TIMING_MODE == 0U)
         {
@@ -899,7 +1171,7 @@ SystemDeviceResult SystemNavigationBackend_Predict(
         return SYSTEM_DEVICE_VERIFY_FAILED;
     }
     for (axis = 0U; axis < 3U; axis++)
-    { output->acceleration_enu_mps2[axis] = (s_state.velocity[axis] - previous_velocity[axis]) / body.dt_s; }
+    { output->acceleration_enu_mps2[axis] = (s_state.velocity[axis]-previous_velocity[axis])/body->dt_s; }
     Backend_GnssUpdate(output); Backend_BarometerUpdate(output);
     if ((SYSTEM_FUSION_TIMING_MODE == 0U) && (s_current_faulted != 0U))
     { return Backend_CurrentFaultStop(output); }
@@ -910,6 +1182,47 @@ SystemDeviceResult SystemNavigationBackend_Predict(
     Backend_StateLog(0U);
 #endif
     return SYSTEM_DEVICE_OK;
+}
+
+SystemDeviceResult SystemNavigationBackend_Predict(
+    const SystemInertialIncrement *input, EstimatorOutputSnapshot *output)
+{
+    NavigationEskfBodyInput body;
+    SystemDeviceResult prepared;
+    const uint64_t previous_timestamp_us = s_state.timestamp_us;
+    if ((input == NULL) || (output == NULL) || !isfinite(input->dt_s) ||
+        (input->dt_s <= 0.0f) || (input->dt_s > NAV_ESKF_MAX_DT_S))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    SILVERSTAR_ASSERT_OBJECT(input, SystemInertialIncrement, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    SILVERSTAR_ASSERT_OBJECT(output, EstimatorOutputSnapshot, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    if ((SYSTEM_FUSION_TIMING_MODE == 0U) && (s_current_faulted != 0U))
+    { return Backend_CurrentFaultStop(output); }
+    if ((SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON) && s_horizon.faulted)
+    { return Backend_CurrentFaultStop(output); }
+    if (!s_active || !s_state.initialized) { return SYSTEM_DEVICE_NOT_READY; }
+    prepared = Backend_PredictionInputBuild(input, &body);
+    if (prepared != SYSTEM_DEVICE_OK)
+    {
+        if ((SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON) &&
+            (prepared != SYSTEM_DEVICE_INVALID_ARGUMENT))
+        {
+            s_state.timestamp_us = previous_timestamp_us; s_horizon.faulted = 1U;
+            Backend_HorizonStatusLog(input->timestamp_us,NAV_ESKF_HORIZON_NUMERIC_ERROR);
+            return Backend_CurrentFaultStop(output);
+        }
+        return prepared;
+    }
+    output->measurement_attempt_mask = 0U;
+    output->position_update_result = SYSTEM_ESTIMATOR_MEAS_REJECTED_INVALID;
+    output->velocity_update_result = SYSTEM_ESTIMATOR_MEAS_REJECTED_INVALID;
+    output->baro_update_result = SYSTEM_ESTIMATOR_MEAS_REJECTED_INVALID;
+    SystemNavigationHealth_ImuQualityRecord(body.quality_flags);
+#if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
+    Backend_BodyLog(&body, input->sequence);
+#endif
+    if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON)
+    { return Backend_HorizonCycle(&body,output,previous_timestamp_us); }
+    return Backend_PresentOrReplayCycle(&body,output,previous_timestamp_us);
 }
 
 void SystemNavigationBackend_BodyInputFill(SystemInertialIncrement *input,

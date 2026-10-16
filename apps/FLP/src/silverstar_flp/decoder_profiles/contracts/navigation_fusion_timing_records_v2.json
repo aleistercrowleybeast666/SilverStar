@@ -1,0 +1,667 @@
+{
+  "schema_id": "silverstar.navigation-fusion-timing-records/2",
+  "revision": 1,
+  "status": "implementation_contract_not_hardware_qualification",
+  "endianness": "little",
+  "declaration_contract": "navigation_fusion_timing_v1.json",
+  "authority": "contracts owns the v2 wire extension; plugin catalogs and FLP validators must agree with this file",
+  "v1_reference": {
+    "commit": "5af1efa18c4770a4fc91e8b4e87e94a60728eb65",
+    "path": "apps/SCG/plugins/builtin/silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG/schema/sslog_schema.json",
+    "sha256": "1cac947cfcc5a44c11a459fe63b6bd45671240566293ea70cb0b23e7870d4da5",
+    "preservation": "Field order/types/counts and mode-1 prefix values are preserved; never rewrite old logs or decoders."
+  },
+  "modes": {
+    "0": "CURRENT",
+    "1": "LEGACY_REPLAY"
+  },
+  "current_max_source_age_us": 500000,
+  "current_max_receive_age_us": 500000,
+  "current_age_limit_inclusive": true,
+  "timing_flags": {
+    "SOURCE_RESOLVED": 1,
+    "APPLICATION_EPOCH_VALID": 2,
+    "TRUSTED_SOURCE": 4,
+    "DELAY_FALLBACK": 8,
+    "LEGACY_PRESENT_OVERRIDE": 16
+  },
+  "timing_flags_reserved_mask": 224,
+  "execution_results": {
+    "COMPLETE": 0,
+    "INVALID": 1,
+    "STALE": 2,
+    "DUPLICATE": 3,
+    "EPOCH_MISMATCH": 4,
+    "DISCONTINUITY": 5,
+    "NUMERIC_ERROR": 6,
+    "NOT_READY": 7,
+    "HISTORY_MISS": 8,
+    "CAPACITY": 9,
+    "WORK_LIMIT": 10
+  },
+  "current_execution_values": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "legacy_replay_result_current_sentinel": {
+    "name": "NOT_RUN",
+    "value": 255,
+    "meaning": "Only the old replay-result fields use this current-mode sentinel; never an execution result, acceptance or READY."
+  },
+  "timestamp_semantics": {
+    "source": "Resolved common-SystemTime measurement epoch; zero and SOURCE_RESOLVED clear if not resolved.",
+    "receive": "Original receive timestamp; never rewritten into a source timestamp.",
+    "application": "Epoch of a numerical attempt when established. APPLICATION_EPOCH_VALID clear requires zero. Clear can mean not attempted or evidence unavailable, never proves no attempt.",
+    "evaluation": "Estimator present epoch in the existing record field; output state and full covariance refer to estimator present.",
+    "current": "Numerical admission requires resolved source <= receive <= estimator present and both ages <=500000 us. These are admission conditions, not requirements for every diagnostic record: STALE/INVALID and other ordinary rejection records preserve their actual input timestamps. Valid application equals estimator present; no history replay.",
+    "legacy": "Preserve the original algorithm epoch. KF6 untrusted zero-delay overrides application to present, with separate resolved source=receive.",
+    "flags": "TRUSTED_SOURCE and DELAY_FALLBACK are mutually exclusive resolver-method evidence. LEGACY_PRESENT_OVERRIDE is only KF6 mode 1 with untrusted zero-delay input.",
+    "numeric_failure": "Legacy replay may fail during prediction without proving whether this observation was attempted; NUMERIC_ERROR plus application=0 is honest incomplete evidence."
+  },
+  "execution_semantics": {
+    "COMPLETE": "Scheduling/numerical attempt completed; consult original update/NIS result for acceptance. Does not imply successful fusion, logger delivery or READY.",
+    "NIS_rejection": "A completed NIS rejection can carry a valid application epoch; do not label it a numerical error.",
+    "reserved": "Unknown mode/result/flag values and nonzero timing_reserved are invalid for this exact revision."
+  },
+  "identity_semantics": {
+    "key": [
+      "source_namespace",
+      "source_id",
+      "mission_epoch",
+      "calibration_generation",
+      "source_sequence",
+      "group"
+    ],
+    "gnss": "source_id is the actual selected GNSS instance ordinal (zero is valid); source_sequence is the received GNSS packet sequence.",
+    "kf6_epoch": "Use the original replay_epoch, which is the estimator mission/replay epoch. replay_generation is never calibration_generation.",
+    "kf6_sequence": "Use the original sequence field, never receive/position/velocity operation_sequence or SSLOG header sequence.",
+    "eskf_sequence": "Use appended source_sequence, never operation_sequence or SSLOG header sequence.",
+    "barometer_current": "Canonical estimator barometer producer namespace, source_id=1. Sequence is the delivered producer sequence; cold failover can assign a logical sequence distinct from native physical samples.",
+    "barometer_legacy_kf6": "Appended source_id=1 denotes the canonical estimator barometer producer; it does not establish physical sensor identity.",
+    "barometer_legacy_eskf": "The preserved source_id prefix historically denotes the selected IMU source. It is not physical barometer identity and must not be reinterpreted.",
+    "physical_barometer_limit": "No independent physical-instance/switch audit is claimed. Native-record association requires additional unambiguous recorded evidence; timestamp or sequence equality alone is insufficient across instances.",
+    "generation": "Recorded estimator calibration generation, not a native sensor calibration claim.",
+    "source_unavailable": "Do not invent a physical identity. Unavailable source identity must prevent an exact-current replay claim."
+  },
+  "records": [
+    {
+      "name": "GNSS_MEASUREMENT",
+      "record_id": 20,
+      "record_version": 2,
+      "payload_size": 212,
+      "v1_payload_size": 164,
+      "v1_fields": [
+        {
+          "name": "sample_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 0
+        },
+        {
+          "name": "receive_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 8
+        },
+        {
+          "name": "sequence",
+          "type": "u32",
+          "count": 1,
+          "offset": 16
+        },
+        {
+          "name": "position_enu_m",
+          "type": "f32",
+          "count": 3,
+          "offset": 20
+        },
+        {
+          "name": "velocity_enu_mps",
+          "type": "f32",
+          "count": 3,
+          "offset": 32
+        },
+        {
+          "name": "position_variance_m2",
+          "type": "f32",
+          "count": 3,
+          "offset": 44
+        },
+        {
+          "name": "velocity_variance_m2ps2",
+          "type": "f32",
+          "count": 3,
+          "offset": 56
+        },
+        {
+          "name": "velocity_valid_mask",
+          "type": "u8",
+          "count": 1,
+          "offset": 68
+        },
+        {
+          "name": "position_usable",
+          "type": "u8",
+          "count": 1,
+          "offset": 69
+        },
+        {
+          "name": "fusion_allowed",
+          "type": "u8",
+          "count": 1,
+          "offset": 70
+        },
+        {
+          "name": "reserved",
+          "type": "u8",
+          "count": 1,
+          "offset": 71
+        },
+        {
+          "name": "position_measurement_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 72
+        },
+        {
+          "name": "velocity_measurement_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 80
+        },
+        {
+          "name": "estimator_present_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 88
+        },
+        {
+          "name": "receive_operation_sequence",
+          "type": "u32",
+          "count": 1,
+          "offset": 96
+        },
+        {
+          "name": "position_operation_sequence",
+          "type": "u32",
+          "count": 1,
+          "offset": 100
+        },
+        {
+          "name": "velocity_operation_sequence",
+          "type": "u32",
+          "count": 1,
+          "offset": 104
+        },
+        {
+          "name": "replay_epoch",
+          "type": "u32",
+          "count": 1,
+          "offset": 108
+        },
+        {
+          "name": "replay_generation",
+          "type": "u32",
+          "count": 1,
+          "offset": 112
+        },
+        {
+          "name": "valid_group_mask",
+          "type": "u8",
+          "count": 1,
+          "offset": 116
+        },
+        {
+          "name": "position_replay_result",
+          "type": "u8",
+          "count": 1,
+          "offset": 117
+        },
+        {
+          "name": "velocity_replay_result",
+          "type": "u8",
+          "count": 1,
+          "offset": 118
+        },
+        {
+          "name": "receive_result",
+          "type": "u8",
+          "count": 1,
+          "offset": 119
+        },
+        {
+          "name": "group_update_result",
+          "type": "u8",
+          "count": 4,
+          "offset": 120
+        },
+        {
+          "name": "group_nis",
+          "type": "f32",
+          "count": 4,
+          "offset": 124
+        },
+        {
+          "name": "position_innovation_m",
+          "type": "f32",
+          "count": 3,
+          "offset": 140
+        },
+        {
+          "name": "velocity_innovation_mps",
+          "type": "f32",
+          "count": 3,
+          "offset": 152
+        }
+      ],
+      "appended_fields": [
+        {
+          "name": "position_source_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 164
+        },
+        {
+          "name": "velocity_source_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 172
+        },
+        {
+          "name": "position_application_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 180
+        },
+        {
+          "name": "velocity_application_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 188
+        },
+        {
+          "name": "fusion_timing_mode",
+          "type": "u8",
+          "count": 1,
+          "offset": 196
+        },
+        {
+          "name": "position_timing_flags",
+          "type": "u8",
+          "count": 1,
+          "offset": 197
+        },
+        {
+          "name": "velocity_timing_flags",
+          "type": "u8",
+          "count": 1,
+          "offset": 198
+        },
+        {
+          "name": "position_execution_result",
+          "type": "u8",
+          "count": 1,
+          "offset": 199
+        },
+        {
+          "name": "velocity_execution_result",
+          "type": "u8",
+          "count": 1,
+          "offset": 200
+        },
+        {
+          "name": "timing_reserved",
+          "type": "u8",
+          "count": 3,
+          "offset": 201
+        },
+        {
+          "name": "source_id",
+          "type": "u32",
+          "count": 1,
+          "offset": 204
+        },
+        {
+          "name": "calibration_generation",
+          "type": "u32",
+          "count": 1,
+          "offset": 208
+        }
+      ]
+    },
+    {
+      "name": "BARO_MEASUREMENT",
+      "record_id": 21,
+      "record_version": 2,
+      "payload_size": 100,
+      "v1_payload_size": 72,
+      "v1_fields": [
+        {
+          "name": "sample_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 0
+        },
+        {
+          "name": "receive_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 8
+        },
+        {
+          "name": "sequence",
+          "type": "u32",
+          "count": 1,
+          "offset": 16
+        },
+        {
+          "name": "relative_altitude_m",
+          "type": "f32",
+          "count": 1,
+          "offset": 20
+        },
+        {
+          "name": "variance_m2",
+          "type": "f32",
+          "count": 1,
+          "offset": 24
+        },
+        {
+          "name": "valid_mask",
+          "type": "u32",
+          "count": 1,
+          "offset": 28
+        },
+        {
+          "name": "measurement_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 32
+        },
+        {
+          "name": "estimator_present_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 40
+        },
+        {
+          "name": "operation_sequence",
+          "type": "u32",
+          "count": 1,
+          "offset": 48
+        },
+        {
+          "name": "replay_epoch",
+          "type": "u32",
+          "count": 1,
+          "offset": 52
+        },
+        {
+          "name": "replay_generation",
+          "type": "u32",
+          "count": 1,
+          "offset": 56
+        },
+        {
+          "name": "update_result",
+          "type": "u8",
+          "count": 1,
+          "offset": 60
+        },
+        {
+          "name": "replay_result",
+          "type": "u8",
+          "count": 1,
+          "offset": 61
+        },
+        {
+          "name": "measurement_timestamp_trusted",
+          "type": "u8",
+          "count": 1,
+          "offset": 62
+        },
+        {
+          "name": "reserved",
+          "type": "u8",
+          "count": 1,
+          "offset": 63
+        },
+        {
+          "name": "innovation_m",
+          "type": "f32",
+          "count": 1,
+          "offset": 64
+        },
+        {
+          "name": "nis",
+          "type": "f32",
+          "count": 1,
+          "offset": 68
+        }
+      ],
+      "appended_fields": [
+        {
+          "name": "source_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 72
+        },
+        {
+          "name": "application_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 80
+        },
+        {
+          "name": "fusion_timing_mode",
+          "type": "u8",
+          "count": 1,
+          "offset": 88
+        },
+        {
+          "name": "timing_flags",
+          "type": "u8",
+          "count": 1,
+          "offset": 89
+        },
+        {
+          "name": "execution_result",
+          "type": "u8",
+          "count": 1,
+          "offset": 90
+        },
+        {
+          "name": "timing_reserved",
+          "type": "u8",
+          "count": 1,
+          "offset": 91
+        },
+        {
+          "name": "source_id",
+          "type": "u32",
+          "count": 1,
+          "offset": 92
+        },
+        {
+          "name": "calibration_generation",
+          "type": "u32",
+          "count": 1,
+          "offset": 96
+        }
+      ]
+    },
+    {
+      "name": "ESKF15_MEASUREMENT",
+      "record_id": 37,
+      "record_version": 2,
+      "payload_size": 116,
+      "v1_payload_size": 100,
+      "v1_fields": [
+        {
+          "name": "sample_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 0
+        },
+        {
+          "name": "receive_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 8
+        },
+        {
+          "name": "measurement_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 16
+        },
+        {
+          "name": "evaluation_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 24
+        },
+        {
+          "name": "operation_sequence",
+          "type": "u32",
+          "count": 1,
+          "offset": 32
+        },
+        {
+          "name": "epoch",
+          "type": "u32",
+          "count": 1,
+          "offset": 36
+        },
+        {
+          "name": "source_id",
+          "type": "u32",
+          "count": 1,
+          "offset": 40
+        },
+        {
+          "name": "calibration_generation",
+          "type": "u32",
+          "count": 1,
+          "offset": 44
+        },
+        {
+          "name": "group",
+          "type": "u8",
+          "count": 1,
+          "offset": 48
+        },
+        {
+          "name": "physically_valid",
+          "type": "u8",
+          "count": 1,
+          "offset": 49
+        },
+        {
+          "name": "admitted",
+          "type": "u8",
+          "count": 1,
+          "offset": 50
+        },
+        {
+          "name": "update_result",
+          "type": "u8",
+          "count": 1,
+          "offset": 51
+        },
+        {
+          "name": "observation",
+          "type": "f32",
+          "count": 2,
+          "offset": 52
+        },
+        {
+          "name": "innovation",
+          "type": "f32",
+          "count": 2,
+          "offset": 60
+        },
+        {
+          "name": "base_variance",
+          "type": "f32",
+          "count": 2,
+          "offset": 68
+        },
+        {
+          "name": "effective_variance",
+          "type": "f32",
+          "count": 2,
+          "offset": 76
+        },
+        {
+          "name": "nis",
+          "type": "f32",
+          "count": 1,
+          "offset": 84
+        },
+        {
+          "name": "quality_scale",
+          "type": "f32",
+          "count": 1,
+          "offset": 88
+        },
+        {
+          "name": "consistency_scale",
+          "type": "f32",
+          "count": 1,
+          "offset": 92
+        },
+        {
+          "name": "robust_scale",
+          "type": "f32",
+          "count": 1,
+          "offset": 96
+        }
+      ],
+      "appended_fields": [
+        {
+          "name": "application_timestamp_us",
+          "type": "u64",
+          "count": 1,
+          "offset": 100
+        },
+        {
+          "name": "fusion_timing_mode",
+          "type": "u8",
+          "count": 1,
+          "offset": 108
+        },
+        {
+          "name": "timing_flags",
+          "type": "u8",
+          "count": 1,
+          "offset": 109
+        },
+        {
+          "name": "execution_result",
+          "type": "u8",
+          "count": 1,
+          "offset": 110
+        },
+        {
+          "name": "timing_reserved",
+          "type": "u8",
+          "count": 1,
+          "offset": 111
+        },
+        {
+          "name": "source_sequence",
+          "type": "u32",
+          "count": 1,
+          "offset": 112
+        }
+      ]
+    }
+  ]
+}

@@ -2510,6 +2510,8 @@ def _LogSource_Render(model: ProjectModel) -> str:
         'FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE': ('alignment_evidence', False),
         'FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY': ('mission_snapshot_identity', False),
         'FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY': ('mag_calibration_identity', False),
+        'FLIGHT_LOG_RECORD_FUSION_HORIZON_MEASUREMENT': ('fusion_horizon_measurement', True),
+        'FLIGHT_LOG_RECORD_FUSION_HORIZON_STATUS': ('fusion_horizon_status', True),
         'FLIGHT_LOG_RECORD_SF6_STATE': ('sf6_state', True),
         'FLIGHT_LOG_RECORD_SF6_MEASUREMENT': ('sf6_measurement', True),
     }

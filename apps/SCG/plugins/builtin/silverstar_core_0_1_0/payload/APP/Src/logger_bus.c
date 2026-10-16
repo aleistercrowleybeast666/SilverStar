@@ -207,6 +207,8 @@ static size_t LoggerBus_PayloadSizeGet(FlightLogRecordType type)
         case FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE: return sizeof(((FlightLogRecord *)0)->payload.alignment_evidence);
         case FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY: return sizeof(((FlightLogRecord *)0)->payload.mission_snapshot_identity);
         case FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY: return sizeof(((FlightLogRecord *)0)->payload.mag_calibration_identity);
+        case FLIGHT_LOG_RECORD_FUSION_HORIZON_MEASUREMENT: return sizeof(((FlightLogRecord *)0)->payload.fusion_horizon_measurement);
+        case FLIGHT_LOG_RECORD_FUSION_HORIZON_STATUS: return sizeof(((FlightLogRecord *)0)->payload.fusion_horizon_status);
         case FLIGHT_LOG_RECORD_SF6_STATE: return sizeof(((FlightLogRecord *)0)->payload.sf6_state);
         case FLIGHT_LOG_RECORD_SF6_MEASUREMENT: return sizeof(((FlightLogRecord *)0)->payload.sf6_measurement);
         default: return 0U;
@@ -228,6 +230,8 @@ static uint8_t LoggerBus_EstimatorLaneGet(FlightLogRecordType type)
         type == FLIGHT_LOG_RECORD_KF6_FULL_P ||
         type == FLIGHT_LOG_RECORD_NAV_QUALITY ||
         type == FLIGHT_LOG_RECORD_SF6_MEASUREMENT ||
+        type == FLIGHT_LOG_RECORD_FUSION_HORIZON_MEASUREMENT ||
+        type == FLIGHT_LOG_RECORD_FUSION_HORIZON_STATUS ||
         type == FLIGHT_LOG_RECORD_SF6_STATE);
 }
 
@@ -992,6 +996,22 @@ LoggerBusResult LoggerBus_Eskf15BodyInputPush(
 {
     return LoggerBus_ConfiguredRecordPush(
         FLIGHT_LOG_RECORD_ESKF15_BODY_INPUT, timestamp_us, 0U,
+        record, sizeof(*record), 1U);
+}
+
+LoggerBusResult LoggerBus_FusionHorizonMeasurementPush(
+    uint64_t timestamp_us, const FlightLogFusionHorizonMeasurementRecord *record)
+{
+    return LoggerBus_ConfiguredRecordPush(
+        FLIGHT_LOG_RECORD_FUSION_HORIZON_MEASUREMENT, timestamp_us, 0U,
+        record, sizeof(*record), 1U);
+}
+
+LoggerBusResult LoggerBus_FusionHorizonStatusPush(
+    uint64_t timestamp_us, const FlightLogFusionHorizonStatusRecord *record)
+{
+    return LoggerBus_ConfiguredRecordPush(
+        FLIGHT_LOG_RECORD_FUSION_HORIZON_STATUS, timestamp_us, 0U,
         record, sizeof(*record), 1U);
 }
 

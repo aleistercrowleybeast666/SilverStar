@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+from copy import deepcopy
 import shutil
 import subprocess
 from pathlib import Path
@@ -48,11 +49,13 @@ def test_eskf15_on_cortex_m3_is_timing_unqualified(builtin_catalog) -> None:
     model = ReferenceProject_Create("M3Timing", catalog=builtin_catalog)
     model.mcu = "silverstar.mcu.stm32f103c8t6"
     model.strategies["estimator"] = "silverstar.algorithm.estimator.eskf15"
+    before = deepcopy(model.algorithm_parameters)
     # This isolates the qualified arithmetic/timing decision from PCB bindings.
     plan = InertialRatePlan_Resolve(model, builtin_catalog)
     assert plan.cpu_profile == "cortex_m3_softfp"
     assert plan.arithmetic_requirements == ("fp32",)
     assert any(issue.code == "TIMING_PROFILE_UNQUALIFIED" for issue in plan.issues)
+    assert model.algorithm_parameters == before
 
 
 def test_one_real_imu_interval_propagates_once(

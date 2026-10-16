@@ -1,15 +1,14 @@
 """Trusted timing validation against the repository's data-only wire contract."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import IntEnum
-import json
-from pathlib import Path
 
+from silverstar_flp.decoder_profiles.contract_data import Contract_Load
 from silverstar_flp.decoder_profiles.errors import DecoderProfileError
 
-CONTRACT = json.loads((Path(__file__).resolve().parents[5] /
-    "contracts/navigation_fusion_timing_records_v2.json").read_text(encoding="utf8"))
+CONTRACT = Contract_Load("navigation_fusion_timing_records_v2.json")
 RECORDS = {row["name"]: row for row in CONTRACT["records"]}
 FusionExecutionResult = IntEnum("FusionExecutionResult", CONTRACT["execution_results"])
 SOURCE_RESOLVED = CONTRACT["timing_flags"]["SOURCE_RESOLVED"]
@@ -55,7 +54,9 @@ def _Unsigned_Get(payload, key, bits=64):
 def FusionTimingLayout_Validate(layout):
     definition = RECORDS.get(layout.name)
     if definition is None or (layout.record_type, layout.record_version, layout.payload_size) != (
-        definition["record_id"], 2, definition["payload_size"]
+        definition["record_id"],
+        2,
+        definition["payload_size"],
     ):
         _Invalid("record_layout_identity_invalid")
     expected = definition["v1_fields"] + definition["appended_fields"]
@@ -63,9 +64,12 @@ def FusionTimingLayout_Validate(layout):
         _Invalid("record_layout_fields_invalid")
     offset = 0
     for field, row in zip(layout.fields, expected, strict=True):
-        if (field.name, field.data_type, field.count, offset) != (
-            row["name"], row["type"], row["count"], row["offset"]
-        ) or field.scale != 1 or field.offset != 0:
+        if (
+            (field.name, field.data_type, field.count, offset)
+            != (row["name"], row["type"], row["count"], row["offset"])
+            or field.scale != 1
+            or field.offset != 0
+        ):
             _Invalid("record_layout_field_invalid:" + row["name"])
         offset += field.byte_size
     if offset != definition["payload_size"]:
@@ -78,10 +82,29 @@ def FusionTimingCatalog_Validate(catalog, identity):
     for layout in catalog.layouts.values():
         if layout.name in RECORDS and layout.record_version == 2:
             FusionTimingLayout_Validate(layout)
-    if identity.version not in ("0.3.0", "0.2.0") or identity.unavailable_reason:
+    if identity.mode == 2:
+        from silverstar_flp.decoder_profiles.fusion_horizon_records import (
+            RECORDS as HORIZON_RECORDS,
+        )
+        from silverstar_flp.decoder_profiles.fusion_horizon_records import (
+            FusionHorizonLayout_Validate,
+        )
+
+        for row in HORIZON_RECORDS.values():
+            layout = catalog.layouts.get((int(row["id"], 0), row["version"]))
+            if layout is None:
+                _Invalid("horizon_record_layout_missing:" + row["name"])
+            FusionHorizonLayout_Validate(layout)
         return
-    required = ("ESKF15_MEASUREMENT",) if identity.component.endswith("eskf15") else (
-        "GNSS_MEASUREMENT", "BARO_MEASUREMENT")
+    from silverstar_flp.decoder_profiles.fusion_timing import FusionTimingVersionKnown_Is
+
+    if not FusionTimingVersionKnown_Is(identity) or identity.unavailable_reason:
+        return
+    required = (
+        ("ESKF15_MEASUREMENT",)
+        if identity.component.endswith("eskf15")
+        else ("GNSS_MEASUREMENT", "BARO_MEASUREMENT")
+    )
     for name in required:
         definition = RECORDS[name]
         layout = catalog.layouts.get((definition["record_id"], 2))
@@ -98,11 +121,17 @@ def _Operation_Get(record, group, mode):
     source_key = "measurement_timestamp_us" if eskf else prefix + "source_timestamp_us"
     source = _Unsigned_Get(p, source_key)
     receive = _Unsigned_Get(p, "receive_timestamp_us")
-    present = _Unsigned_Get(p, "evaluation_timestamp_us" if eskf else "estimator_present_timestamp_us")
+    present = _Unsigned_Get(
+        p, "evaluation_timestamp_us" if eskf else "estimator_present_timestamp_us"
+    )
     application = _Unsigned_Get(p, prefix + "application_timestamp_us")
     flags = _Unsigned_Get(p, prefix + "timing_flags", 8)
     execution = _Unsigned_Get(p, prefix + "execution_result", 8)
-    if flags & CONTRACT["timing_flags_reserved_mask"] or flags & TRUSTED_SOURCE and flags & DELAY_FALLBACK:
+    if (
+        flags & CONTRACT["timing_flags_reserved_mask"]
+        or flags & TRUSTED_SOURCE
+        and flags & DELAY_FALLBACK
+    ):
         _Invalid("record_flags_invalid")
     if execution not in CONTRACT["execution_results"].values() or (
         mode == 0 and execution not in CONTRACT["current_execution_values"]
@@ -114,16 +143,23 @@ def _Operation_Get(record, group, mode):
         _Invalid("record_source_evidence_invalid")
     if not flags & APPLICATION_EPOCH_VALID and application != 0:
         _Invalid("record_application_evidence_invalid")
-    if flags & APPLICATION_EPOCH_VALID and (application == 0 or (mode == 0 and application != present)):
+    if flags & APPLICATION_EPOCH_VALID and (
+        application == 0 or (mode == 0 and application != present)
+    ):
         _Invalid("record_application_evidence_invalid")
     if flags & LEGACY_PRESENT_OVERRIDE and (
-        mode != 1 or eskf or flags & TRUSTED_SOURCE or not flags & DELAY_FALLBACK
+        mode != 1
+        or eskf
+        or flags & TRUSTED_SOURCE
+        or not flags & DELAY_FALLBACK
         or (flags & APPLICATION_EPOCH_VALID and application != present)
         or (flags & SOURCE_RESOLVED and source != receive)
     ):
         _Invalid("record_legacy_override_invalid")
     if mode == 0 and execution == FusionExecutionResult.COMPLETE:
-        if flags & (SOURCE_RESOLVED | APPLICATION_EPOCH_VALID) != (SOURCE_RESOLVED | APPLICATION_EPOCH_VALID):
+        if flags & (SOURCE_RESOLVED | APPLICATION_EPOCH_VALID) != (
+            SOURCE_RESOLVED | APPLICATION_EPOCH_VALID
+        ):
             _Invalid("record_complete_evidence_missing")
         if not 0 < source <= receive <= present or (
             present - source > CONTRACT["current_max_source_age_us"]
@@ -136,20 +172,37 @@ def _Operation_Get(record, group, mode):
     baro = group == 4
     if baro and (mode == 0 or not eskf) and source_id != 1:
         _Invalid("record_barometer_namespace_invalid")
-    namespace = ("legacy_eskf_imu_alias" if eskf and mode == 1 else "estimator_barometer_producer") if baro else "gnss_instance"
-    identity = FusionSourceIdentity(namespace, source_id,
+    namespace = (
+        ("legacy_eskf_imu_alias" if eskf and mode == 1 else "estimator_barometer_producer")
+        if baro
+        else "gnss_instance"
+    )
+    identity = FusionSourceIdentity(
+        namespace,
+        source_id,
         _Unsigned_Get(p, "epoch" if eskf else "replay_epoch", 32),
         _Unsigned_Get(p, "calibration_generation", 32),
-        _Unsigned_Get(p, "source_sequence" if eskf else "sequence", 32), group)
-    return FusionTimingOperation(identity, mode, source if flags & SOURCE_RESOLVED else None,
-        receive, application if flags & APPLICATION_EPOCH_VALID else None,
-        present, FusionExecutionResult(execution), flags)
+        _Unsigned_Get(p, "source_sequence" if eskf else "sequence", 32),
+        group,
+    )
+    return FusionTimingOperation(
+        identity,
+        mode,
+        source if flags & SOURCE_RESOLVED else None,
+        receive,
+        application if flags & APPLICATION_EPOCH_VALID else None,
+        present,
+        FusionExecutionResult(execution),
+        flags,
+    )
 
 
 def FusionTimingOperations_Get(record, *, declared_mode):
     definition = RECORDS.get(record.record_name)
     if definition is None or (record.record_type, record.record_version, record.payload_length) != (
-        definition["record_id"], 2, definition["payload_size"]
+        definition["record_id"],
+        2,
+        definition["payload_size"],
     ):
         _Invalid("record_identity_invalid")
     mode = _Unsigned_Get(record.payload, "fusion_timing_mode", 8)
@@ -174,12 +227,17 @@ def FusionTimingOperations_Get(record, *, declared_mode):
 
 def FusionTimingRecords_Validate(dataset):
     from silverstar_flp.decoder_profiles.fusion_timing import FusionTiming_FromSemantics
+
     context = getattr(dataset, "semantic_context", None)
     identity = FusionTiming_FromSemantics(getattr(context, "raw_metadata", {}))
     for name in RECORDS:
         for record in dataset.Records_Get(name):
             if record.record_version == 2:
-                if identity is None or identity.mode is None or identity.evidence != "explicit_declaration":
+                if (
+                    identity is None
+                    or identity.mode is None
+                    or identity.evidence != "explicit_declaration"
+                ):
                     _Invalid("record_declaration_missing")
                 FusionTimingOperations_Get(record, declared_mode=identity.mode)
 
@@ -190,31 +248,42 @@ def FusionTimingCurrentPackets_Validate(dataset):
     The ESKF backend emits all four GNSS groups consecutively. These records
     prove the packet receipt boundary; record_sequence is never a producer ID.
     """
-    records = dataset.Records_Get('ESKF15_MEASUREMENT')
-    identity_fields = ('source_id', 'source_sequence', 'epoch', 'calibration_generation',
-                       'receive_timestamp_us', 'evaluation_timestamp_us')
+    records = dataset.Records_Get("ESKF15_MEASUREMENT")
+    identity_fields = (
+        "source_id",
+        "source_sequence",
+        "epoch",
+        "calibration_generation",
+        "receive_timestamp_us",
+        "evaluation_timestamp_us",
+    )
     previous = None
     for record in records:
         p = record.payload
-        epoch = (p['epoch'], p['calibration_generation'])
-        if previous is not None and epoch == previous[0] and (
-                (p['operation_sequence'] - previous[1]) & 0xffffffff) != 1:
-            _Invalid('current_packet_operation_discontinuity')
-        previous = (epoch, p['operation_sequence'])
+        epoch = (p["epoch"], p["calibration_generation"])
+        if (
+            previous is not None
+            and epoch == previous[0]
+            and ((p["operation_sequence"] - previous[1]) & 0xFFFFFFFF) != 1
+        ):
+            _Invalid("current_packet_operation_discontinuity")
+        previous = (epoch, p["operation_sequence"])
     index = 0
     while index < len(records):
         first = records[index].payload
-        if first['group'] == 4:
+        if first["group"] == 4:
             index += 1
             continue
-        packet = records[index:index + 4]
-        if len(packet) != 4 or [r.payload['group'] for r in packet] != [0, 1, 2, 3]:
-            _Invalid('current_packet_groups_incomplete_or_reordered')
+        packet = records[index : index + 4]
+        if len(packet) != 4 or [r.payload["group"] for r in packet] != [0, 1, 2, 3]:
+            _Invalid("current_packet_groups_incomplete_or_reordered")
         for offset, record in enumerate(packet):
             p = record.payload
-            if (any(p[key] != first[key] for key in identity_fields)
-                    or (p['operation_sequence'] - first['operation_sequence']) & 0xffffffff != offset):
-                _Invalid('current_packet_identity_inconsistent')
+            if (
+                any(p[key] != first[key] for key in identity_fields)
+                or (p["operation_sequence"] - first["operation_sequence"]) & 0xFFFFFFFF != offset
+            ):
+                _Invalid("current_packet_identity_inconsistent")
         index += 4
 
 
@@ -223,20 +292,27 @@ def CurrentAdmission_Get(source_us, receive_us, present_us, epoch_start_us=0):
         return FusionExecutionResult.INVALID
     if source_us < epoch_start_us or receive_us < epoch_start_us:
         return FusionExecutionResult.EPOCH_MISMATCH
-    if (present_us - source_us > CONTRACT["current_max_source_age_us"]
-            or present_us - receive_us > CONTRACT["current_max_receive_age_us"]):
+    if (
+        present_us - source_us > CONTRACT["current_max_source_age_us"]
+        or present_us - receive_us > CONTRACT["current_max_receive_age_us"]
+    ):
         return FusionExecutionResult.STALE
     return FusionExecutionResult.COMPLETE
 
 
 class FusionSequenceTracker:
     """Bounded producer watermarks, never retained observations or state history."""
+
     def __init__(self):
         self._watermarks = {}
 
     def Check(self, namespace, source, sequence, mask):
-        if (type(source) is not int or not 0 <= source <= (3 if namespace == 'gnss' else 1) or
-                type(sequence) is not int or not 0 <= sequence <= 0xFFFFFFFF):
+        if (
+            type(source) is not int
+            or not 0 <= source <= (3 if namespace == "gnss" else 1)
+            or type(sequence) is not int
+            or not 0 <= sequence <= 0xFFFFFFFF
+        ):
             return FusionExecutionResult.INVALID
         previous = self._watermarks.get((namespace, source))
         if previous is not None:

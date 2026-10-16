@@ -1,4 +1,8 @@
 {
+  "parameter.fusion_timing_mode": "Fusion timing",
+  "parameter.fusion_horizon_ms": "Primary lag (mode 2 only)",
+  "parameter.tooltip.fusion_horizon_ms": "Mode 2 lag in milliseconds. Recorded values come from firmware metadata. What-if can change the lag while retaining the original observations.",
+  "replay.parameter_not_recorded": "Not recorded",
   "replay.parameter_geometry": "GNSS lever arm",
   "replay.advanced_parameters": "Advanced parameters",
   "progress.stage_note": "Work stages completed; not an estimate of time remaining.",

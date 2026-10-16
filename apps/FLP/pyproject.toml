@@ -38,7 +38,7 @@ where = ["src"]
 version = {attr = "silverstar_flp.app.version.__version__"}
 
 [tool.setuptools.package-data]
-silverstar_flp = ["i18n/*.json", "plugins/algorithms/eskf15/*.json"]
+silverstar_flp = ["i18n/*.json", "plugins/algorithms/eskf15/*.json", "decoder_profiles/contracts/*.json"]
 
 [tool.pytest.ini_options]
 addopts = "-ra"

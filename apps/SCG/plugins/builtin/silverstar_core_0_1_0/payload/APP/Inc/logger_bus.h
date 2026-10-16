@@ -97,6 +97,10 @@ LoggerBusResult LoggerBus_NavigationQualityPush(
     uint64_t timestamp_us, const FlightLogNavigationQualityRecord *record);
 LoggerBusResult LoggerBus_Eskf15BodyInputPush(
     uint64_t timestamp_us, const FlightLogEskf15BodyInputRecord *record);
+LoggerBusResult LoggerBus_FusionHorizonMeasurementPush(
+    uint64_t timestamp_us, const FlightLogFusionHorizonMeasurementRecord *record);
+LoggerBusResult LoggerBus_FusionHorizonStatusPush(
+    uint64_t timestamp_us, const FlightLogFusionHorizonStatusRecord *record);
 LoggerBusResult LoggerBus_Sf6StatePush(
     uint64_t timestamp_us, const FlightLogSf6StateRecord *record);
 LoggerBusResult LoggerBus_Sf6MeasurementPush(

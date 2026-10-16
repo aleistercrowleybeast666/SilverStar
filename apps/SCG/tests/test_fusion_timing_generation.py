@@ -71,7 +71,7 @@ def test_actual_declaration_and_rate_plan_agree(builtin_catalog, owner, mode):
 
 
 @pytest.mark.parametrize("owner", OWNERS)
-@pytest.mark.parametrize("invalid", (-1, 2, True, 0.5, "0"))
+@pytest.mark.parametrize("invalid", (-1, 3, True, 0.5, "0"))
 def test_invalid_actual_never_emits_a_timing_claim(builtin_catalog, owner, invalid):
     model = _model(builtin_catalog, owner)
     model.algorithm_parameters[owner]["fusion_timing_mode"] = invalid

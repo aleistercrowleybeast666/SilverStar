@@ -8,6 +8,8 @@
 #define NAV_ESKF_AXES 3U
 #define NAV_ESKF_OBSERVATIONS 2U
 #define NAV_ESKF_REVISION 1U
+#define NAV_ESKF_NUMERICAL_REVISION_LEGACY 1U
+#define NAV_ESKF_NUMERICAL_REVISION_STABLE_RESET 2U
 #define NAV_ESKF_MAX_DT_S 0.02f
 #define NAV_ESKF_MAX_INJECTION_RAD 0.35f
 #define NAV_ESKF_MAX_GYRO_BIAS_RADPS 1.0f
@@ -120,6 +122,13 @@ NavigationEskfResult NavigationEskf_Predict(
     NavigationEskfState *state, NavigationEskfWorkspace *workspace,
     const NavigationEskfConfig *config, const NavigationEskfBodyInput *input);
 NavigationEskfResult NavigationEskf_Update(
+    NavigationEskfState *state, NavigationEskfWorkspace *workspace,
+    const NavigationEskfConfig *config, const NavigationEskfMeasurement *measurement,
+    NavigationEskfOutcome *outcome);
+/* Numerical revision 2 evaluates the same right reset Jacobian without small
+ * angle trigonometric subtraction. Revision 1 Update remains byte-compatible.
+ * A caller/recorded profile must declare this numerical revision explicitly. */
+NavigationEskfResult NavigationEskf_UpdateRevision2(
     NavigationEskfState *state, NavigationEskfWorkspace *workspace,
     const NavigationEskfConfig *config, const NavigationEskfMeasurement *measurement,
     NavigationEskfOutcome *outcome);

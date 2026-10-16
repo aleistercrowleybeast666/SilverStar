@@ -795,8 +795,82 @@ typedef struct
     float observation[2];
 } FlightLogSf6MeasurementRecord;
 
+typedef struct
+{
+    uint64_t sample_timestamp_us;
+    uint64_t receive_timestamp_us;
+    uint64_t measurement_timestamp_us;
+    uint64_t application_timestamp_us;
+    uint64_t evaluation_timestamp_us;
+    uint32_t operation_sequence;
+    uint32_t epoch;
+    uint32_t source_id;
+    uint32_t calibration_generation;
+    uint32_t source_sequence;
+    uint8_t algorithm_id;
+    uint8_t algorithm_revision;
+    uint8_t numerical_revision;
+    uint8_t phase;
+    uint8_t group;
+    uint8_t physically_valid;
+    uint8_t admitted;
+    uint8_t update_result;
+    uint8_t fusion_timing_mode;
+    uint8_t timing_flags;
+    uint8_t execution_result;
+    uint8_t effective_update;
+    float observation[2];
+    float innovation[2];
+    float prepared_variance[2];
+    float effective_variance[2];
+    float nis;
+    float quality_scale;
+    float consistency_scale;
+    float robust_scale;
+    uint64_t kf_availability_timestamp_us;
+    uint64_t kf_consistency_start_timestamp_us;
+    uint32_t kf_recovery_generation;
+    uint32_t kf_consistent_count;
+    uint8_t kf_outage;
+    uint8_t kf_loss_latched;
+    uint8_t kf_recovery_valid;
+    uint8_t kf_consistency_valid;
+} FlightLogFusionHorizonMeasurementRecord;
+
+typedef struct
+{
+    uint64_t input_present_timestamp_us;
+    uint64_t primary_timestamp_us;
+    uint64_t output_state_timestamp_us;
+    uint64_t output_covariance_timestamp_us;
+    uint32_t operation_sequence;
+    uint32_t epoch;
+    uint32_t source_id;
+    uint32_t calibration_generation;
+    uint32_t horizon_us;
+    uint32_t work_count;
+    uint32_t maximum_work;
+    uint32_t late_count;
+    uint32_t capacity_count;
+    uint32_t failure_operation_sequence;
+    uint16_t body_count;
+    uint16_t event_count;
+    uint16_t completion_count;
+    uint16_t reserved_count;
+    uint8_t algorithm_id;
+    uint8_t algorithm_revision;
+    uint8_t numerical_revision;
+    uint8_t fusion_timing_mode;
+    uint8_t phase;
+    uint8_t execution_result;
+    uint8_t failure_operation_valid;
+    uint8_t horizon_initialized;
+} FlightLogFusionHorizonStatusRecord;
+
 typedef union
 {
+    FlightLogFusionHorizonMeasurementRecord fusion_horizon_measurement;
+    FlightLogFusionHorizonStatusRecord fusion_horizon_status;
     FlightLogSf6StateRecord sf6_state;
     FlightLogSf6MeasurementRecord sf6_measurement;
     FlightLogNavigationQualityRecord navigation_quality;

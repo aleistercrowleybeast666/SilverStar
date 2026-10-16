@@ -15,6 +15,7 @@ static volatile uint16_t s_tail;
 static uint8_t s_initialized;
 static EstimatorPressureSnapshot s_pressure;
 static uint8_t s_pressure_valid;
+static uint8_t s_pressure_received;
 static EstimatorBusStats s_stats;
 
 static uint16_t EstimatorBus_Next(uint16_t index)
@@ -42,6 +43,7 @@ EstimatorBusResult EstimatorBus_Init(void)
     s_head = 0U;
     s_tail = 0U;
     s_pressure_valid = 0U;
+    s_pressure_received = 0U;
     s_initialized = 1U;
     return ESTIMATOR_BUS_RESULT_OK;
 }
@@ -126,6 +128,7 @@ EstimatorBusResult EstimatorBus_PressurePublish(
     }
     s_pressure = *snapshot;
     s_pressure_valid = snapshot->valid;
+    s_pressure_received = 1U;
     EstimatorBus_IrqUnlock(primask);
     return ESTIMATOR_BUS_RESULT_OK;
 }
@@ -144,6 +147,21 @@ uint8_t EstimatorBus_PressureGetLatest(EstimatorPressureSnapshot *snapshot)
     *snapshot = s_pressure;
     EstimatorBus_IrqUnlock(primask);
     return 1U;
+}
+
+EstimatorBusResult EstimatorBus_PressureReceiptGetLatest(
+    EstimatorPressureSnapshot *snapshot)
+{
+    uint32_t primask;
+    if (snapshot == NULL) { return ESTIMATOR_BUS_RESULT_BAD_PARAM; }
+    primask = EstimatorBus_IrqLock();
+    if (s_initialized == 0U)
+    { EstimatorBus_IrqUnlock(primask); return ESTIMATOR_BUS_RESULT_NOT_READY; }
+    if (s_pressure_received == 0U)
+    { EstimatorBus_IrqUnlock(primask); return ESTIMATOR_BUS_RESULT_EMPTY; }
+    *snapshot = s_pressure;
+    EstimatorBus_IrqUnlock(primask);
+    return ESTIMATOR_BUS_RESULT_OK;
 }
 
 void EstimatorBus_StatsGet(EstimatorBusStats *stats)

@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import json
 from dataclasses import asdict
-from pathlib import Path
 
 import numpy as np
 
@@ -19,6 +17,7 @@ from silverstar_flp.core.context import TaskContext
 from silverstar_flp.core.dataset import FlightDataset, TimeSeries
 from silverstar_flp.core.mission import MissionReplayBounds_Get
 from silverstar_flp.core.runtime import NumericalRuntime_Validate
+from silverstar_flp.decoder_profiles.contract_data import Contract_Load
 from silverstar_flp.plugins.algorithms.eskf15.filter import Eskf15Filter, EskfNoise, EskfState
 from silverstar_flp.plugins.algorithms.eskf15.inputs import BodySteps_Build
 from silverstar_flp.plugins.algorithms.eskf15.replay import DelayedReplay, Measurement
@@ -38,11 +37,7 @@ from silverstar_flp.plugins.api.algorithm import (
     StateGroupSpec,
 )
 
-CONTRACT = json.loads(
-    (Path(__file__).resolve().parents[7] / "contracts/navigation_v1.json").read_text(
-        encoding="utf8"
-    )
-)
+CONTRACT = Contract_Load('navigation_v1.json')
 ALGORITHM_ID = CONTRACT["eskf15"]["component_id"]
 GROUPS = ("position_en", "position_u", "velocity_en", "velocity_u", "baro")
 
@@ -91,9 +86,12 @@ def _Parameters_Build() -> tuple[ParameterSpec, ...]:
             required=item.get("required", True),
         )
         for index, (name, item) in enumerate(CONTRACT["eskf15"]["parameters"].items())
-    ) + (ParameterSpec("fusion_timing_mode", "int", 1, 0, 1, "1", required=False,
+    ) + (ParameterSpec("fusion_timing_mode", "int", 1, 0, 2, "1", required=False,
             precision=0, step=1, order=101, label_key="parameter.fusion_timing_mode",
-            group_key="parameter_group.process_model"),)
+            group_key="parameter_group.process_model"),
+         ParameterSpec("fusion_horizon_ms", "int", 300, 10, 550, "ms", required=False,
+            precision=0, step=10, order=102, label_key="parameter.fusion_horizon_ms",
+            group_key="parameter_group.process_model", tooltip_key="parameter.tooltip.fusion_horizon_ms"))
 
 
 def _Visualization_Build() -> EstimatorVisualizationSpec:
@@ -198,7 +196,7 @@ def Native_PhysicalMask(payload) -> int:
 class Eskf15AlgorithmPlugin(AlgorithmPlugin):
     metadata = AlgorithmMetadata(
         plugin_id=ALGORITHM_ID,
-        version="1.0.0",
+        version="1.1.0",
         display_name="ESKF_15",
         description="ENU 15-dimensional right-error inertial navigation with residual biases",
         required_records=("INITIAL_STATE", "IMU_CORRECTED"),
@@ -258,8 +256,13 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
         if super().ParameterSchemaCompatible_Is(identity):
             return True
         from dataclasses import replace
-        before_timing = replace(self.metadata, parameter_schema=tuple(
-            spec for spec in self.metadata.parameter_schema if spec.parameter_id != "fusion_timing_mode"))
+        previous = replace(self.metadata, parameter_schema=tuple(
+            replace(spec, maximum=1) if spec.parameter_id == 'fusion_timing_mode' else spec
+            for spec in self.metadata.parameter_schema if spec.parameter_id != 'fusion_horizon_ms'))
+        if identity == previous.ParameterSchemaIdentity_Get():
+            return True
+        before_timing = replace(previous, parameter_schema=tuple(
+            spec for spec in previous.parameter_schema if spec.parameter_id != "fusion_timing_mode"))
         if identity == before_timing.ParameterSchemaIdentity_Get():
             return True
         legacy = replace(before_timing, parameter_schema=tuple(
@@ -682,6 +685,12 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
                 parameters["accel_bias_rw"],
             ),
         )
+        if timing_mode == 2:
+            if not self.FirmwareMember_Is(dataset) or not exact_body:
+                raise ValueError('fusion_horizon_recorded_body_and_initial_state_required')
+            from silverstar_flp.plugins.algorithms.horizon_execution import EskfHorizon_Run
+            return EskfHorizon_Run(self, dataset, request, parameters, timing_audit, kernel, snapshot,
+                context, bounds, recorded_horizon_us=timing_audit['recorded_horizon_us'])
         from silverstar_flp.plugins.algorithms.eskf15.current_state import CurrentState
         executor = CurrentState if timing_mode == 0 else DelayedReplay
         replay = executor(

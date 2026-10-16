@@ -53,6 +53,10 @@ EstimatorBusResult EstimatorBus_PredictionPop(SystemInertialIncrement *input);
 EstimatorBusResult EstimatorBus_PressurePublish(
     const EstimatorPressureSnapshot *snapshot);
 uint8_t EstimatorBus_PressureGetLatest(EstimatorPressureSnapshot *snapshot);
+/* Receipt availability is independent of physical validity. Horizon consumers
+ * must observe a new invalid receipt before older queued work can complete. */
+EstimatorBusResult EstimatorBus_PressureReceiptGetLatest(
+    EstimatorPressureSnapshot *snapshot);
 void EstimatorBus_StatsGet(EstimatorBusStats *stats);
 
 #endif /* __ESTIMATOR_BUS_H */

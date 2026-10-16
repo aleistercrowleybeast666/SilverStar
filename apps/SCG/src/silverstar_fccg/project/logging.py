@@ -424,6 +424,16 @@ def LogAvailability_Get(
     model: ProjectModel,
     catalog: PluginCatalog,
 ) -> LogAvailability:
+    owner = model.strategies.get("estimator")
+    horizon = (owner in ("silverstar.algorithm.estimator.kf6", "silverstar.algorithm.estimator.eskf15")
+               and type(model.algorithm_parameters.get(owner, {}).get("fusion_timing_mode")) is int
+               and model.algorithm_parameters[owner]["fusion_timing_mode"] == 2)
+    if definition.record in ("FLIGHT_LOG_RECORD_FUSION_HORIZON_MEASUREMENT", "FLIGHT_LOG_RECORD_FUSION_HORIZON_STATUS"):
+        if not horizon:
+            return LogAvailability(False, "logging.unavailable.producer", ("fusion_timing_mode=2",))
+    elif horizon and definition.record in ("FLIGHT_LOG_RECORD_GNSS_MEASUREMENT", "FLIGHT_LOG_RECORD_BARO_MEASUREMENT",
+                                           "FLIGHT_LOG_RECORD_ESKF15_MEASUREMENT"):
+        return LogAvailability(False, "logging.unavailable.producer", ("fusion_timing_mode=0/1",))
     selected = set(model.ComponentIds_Get())
     capabilities = ProjectCapabilities_Get(model, catalog)
     recordable, disabled_recordable = ProjectRecordableOutputs_Get(model, catalog)

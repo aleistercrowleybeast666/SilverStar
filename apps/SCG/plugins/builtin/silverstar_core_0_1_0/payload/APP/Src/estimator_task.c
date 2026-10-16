@@ -16,6 +16,7 @@
 #include "ins_task.h"
 #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
 #include "navigation_kf_replay.h"
+#include "navigation_kf_horizon.h"
 #include "navigation_integrity.h"
 #endif
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
@@ -32,6 +33,7 @@
 #include "system_estimator_diagnostics.h"
 #include "system_estimator_profile.h"
 #include "system_gnss_if.h"
+#include "system_gnss_quality.h"
 #include "system_lifecycle.h"
 #include "system_navigation_profile.h"
 #include "system_navigation_health.h"
@@ -319,11 +321,14 @@ static PLATFORM_CPU_FAST_BSS EstimatorRuntime s_estimator;
 /* Single EstimatorTask owner. Event data uses main SRAM; CPU-only
  * IMU/checkpoint storage uses reviewed CCM capacity. Neither is DMA memory. */
 #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
-_Static_assert((SYSTEM_FUSION_TIMING_MODE == 0U) || (SYSTEM_FUSION_TIMING_MODE == 1U),
+_Static_assert((SYSTEM_FUSION_TIMING_MODE == 0U) || (SYSTEM_FUSION_TIMING_MODE == 1U) ||
+    (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON),
     "Unsupported fusion timing mode");
 /* Both implementations are compiled and checked. Constant mode selection plus
  * section garbage collection must exclude the unselected storage from the ELF. */
 static NavigationCurrentContext s_current_fusion;
+static NavigationKfHorizon s_horizon_fusion; /* CPU main SRAM, independently collectable. */
+static NavigationReplayDiagnostics s_horizon_diagnostics;
 static NavigationReplayContext s_replay;
 static PLATFORM_KF_REPLAY_BSS NavigationReplayStorage s_replay_storage;
 static SystemFusionExecutionResult s_fusion_execution;
@@ -339,21 +344,25 @@ static uint32_t s_replay_epoch;
 #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
 static NavigationReplayDiagnostics *Estimator_FusionDiagnosticsGet(void)
 {
+    if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON) { return &s_horizon_diagnostics; }
     return (SYSTEM_FUSION_TIMING_MODE == 0U) ? &s_current_fusion.diagnostics : &s_replay.diagnostics;
 }
 
 static uint64_t Estimator_FusionPresentGet(void)
 {
+    if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON) { return s_horizon_fusion.present_us; }
     return (SYSTEM_FUSION_TIMING_MODE == 0U) ? s_current_fusion.present_us : s_replay.present_us;
 }
 
 static uint32_t Estimator_FusionEpochGet(void)
 {
+    if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON) { return s_horizon_fusion.epoch; }
     return (SYSTEM_FUSION_TIMING_MODE == 0U) ? s_current_fusion.epoch : s_replay.epoch;
 }
 
 static uint8_t Estimator_FusionFaultGet(void)
 {
+    if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON) { return s_horizon_fusion.faulted; }
     return (SYSTEM_FUSION_TIMING_MODE == 0U) ? s_current_fusion.faulted : s_replay.faulted;
 }
 
@@ -392,7 +401,18 @@ static SystemFusionExecutionResult Estimator_LegacyExecutionGet(NavigationReplay
 
 static void Estimator_FusionReset(void)
 {
-    if (SYSTEM_FUSION_TIMING_MODE == 0U)
+    if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON)
+    {
+        uint8_t source;
+        memset(&s_horizon_fusion,0,sizeof(s_horizon_fusion));
+        memset(&s_horizon_diagnostics,0,sizeof(s_horizon_diagnostics));
+        s_horizon_fusion.epoch = ++s_replay_epoch;
+        s_horizon_fusion.generation = SystemCalibration_GenerationGet();
+        if (SystemSourceSelector_ImuActiveInstanceGet(&source) != SYSTEM_DEVICE_OK)
+        { s_horizon_fusion.faulted = 1U; }
+        else { s_horizon_fusion.source = source; }
+    }
+    else if (SYSTEM_FUSION_TIMING_MODE == 0U)
     {
         NavigationCurrentResult result = NavigationCurrent_Reset(&s_current_fusion, &s_estimator.kf,
             0U, ++s_replay_epoch, SystemCalibration_GenerationGet());
@@ -3045,6 +3065,8 @@ static void Estimator_FaultSnapshotPublish(void)
     s_snapshot = s_published_snapshot;
     s_snapshot.health_flags |= health;
     s_snapshot.initialized = 0U;
+    if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON)
+    { s_estimator.mission_running = 0U; s_snapshot.mission_running = 0U; }
     s_published_snapshot = s_snapshot;
     EstimatorTask_IrqUnlock(state);
 }
@@ -3357,6 +3379,450 @@ static void Estimator_PureInsPublish(uint64_t timestamp_us)
 #endif
 
 #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
+static SystemFusionExecutionResult Estimator_HorizonExecutionGet(NavigationKfHorizonResult result)
+{
+    switch (result)
+    {
+        case NAV_KF_HORIZON_OK: return SYSTEM_FUSION_EXEC_COMPLETE;
+        case NAV_KF_HORIZON_QUEUED: return SYSTEM_FUSION_EXEC_QUEUED;
+        case NAV_KF_HORIZON_WARMUP: return SYSTEM_FUSION_EXEC_WARMUP;
+        case NAV_KF_HORIZON_STALE: return SYSTEM_FUSION_EXEC_STALE;
+        case NAV_KF_HORIZON_LATE: return SYSTEM_FUSION_EXEC_LATE;
+        case NAV_KF_HORIZON_CAPACITY: return SYSTEM_FUSION_EXEC_CAPACITY;
+        case NAV_KF_HORIZON_DUPLICATE: return SYSTEM_FUSION_EXEC_DUPLICATE;
+        case NAV_KF_HORIZON_EPOCH_MISMATCH: return SYSTEM_FUSION_EXEC_EPOCH_MISMATCH;
+        case NAV_KF_HORIZON_DISCONTINUITY: return SYSTEM_FUSION_EXEC_DISCONTINUITY;
+        case NAV_KF_HORIZON_NUMERIC_ERROR: return SYSTEM_FUSION_EXEC_NUMERIC_ERROR;
+        case NAV_KF_HORIZON_MODEL_MISMATCH: return SYSTEM_FUSION_EXEC_MODEL_MISMATCH;
+        case NAV_KF_HORIZON_NOT_READY: return SYSTEM_FUSION_EXEC_NOT_READY;
+        case NAV_KF_HORIZON_BUSY: return SYSTEM_FUSION_EXEC_BUSY;
+        case NAV_KF_HORIZON_EMPTY:
+        case NAV_KF_HORIZON_INVALID:
+        default: return SYSTEM_FUSION_EXEC_INVALID;
+    }
+}
+
+static void Estimator_HorizonMeasurementLog(const NavigationKfHorizonEvent *event,
+    uint8_t phase, SystemFusionExecutionResult execution)
+{
+#if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
+    FlightLogFusionHorizonMeasurementRecord record = {0};
+    record.sample_timestamp_us = event->sample_us; record.receive_timestamp_us = event->receive_us;
+    record.measurement_timestamp_us = event->source_us;
+    record.application_timestamp_us = phase ? event->source_us : 0U;
+    record.evaluation_timestamp_us = s_horizon_fusion.present_us;
+    record.operation_sequence = event->operation_sequence; record.epoch = event->epoch;
+    record.source_id = event->source; record.calibration_generation = event->generation;
+    record.source_sequence = event->sequence; record.algorithm_id = 1U;
+    record.algorithm_revision = NAV_KF_ALGORITHM_REVISION; record.numerical_revision = NAV_KF_NUMERICAL_REVISION;
+    record.phase = phase; record.group = event->group; record.physically_valid = event->physically_valid;
+    record.admitted = phase; record.update_result = phase ? (uint8_t)event->result : 255U;
+    record.fusion_timing_mode = SYSTEM_FUSION_TIMING_HORIZON;
+    record.timing_flags = event->timing_flags | (phase ? SYSTEM_FUSION_APPLICATION_EPOCH_VALID : 0U);
+    record.execution_result = (uint8_t)execution; record.effective_update = phase ? event->effective_update : 0U;
+    memcpy(record.observation,event->observation,sizeof(record.observation));
+    memcpy(record.innovation,event->innovation,sizeof(record.innovation));
+    memcpy(record.prepared_variance,event->variance,sizeof(record.prepared_variance));
+    memcpy(record.effective_variance,event->effective_variance,sizeof(record.effective_variance));
+    record.nis = phase ? event->nis : -1.0f; record.quality_scale = event->quality_scale;
+    record.consistency_scale = event->consistency_scale; record.robust_scale = phase ? event->robust_scale : 1.0f;
+    record.kf_availability_timestamp_us = event->evidence.availability_timestamp_us;
+    record.kf_consistency_start_timestamp_us = event->evidence.consistency_start_us;
+    record.kf_recovery_generation = event->evidence.generation;
+    record.kf_consistent_count = event->evidence.consistent_count;
+    record.kf_outage = event->evidence.outage; record.kf_loss_latched = event->evidence.loss_latched;
+    record.kf_recovery_valid = event->evidence.recovery_valid; record.kf_consistency_valid = event->consistency_valid;
+    if (LoggerBus_FusionHorizonMeasurementPush(record.evaluation_timestamp_us,&record) != LOGGER_BUS_RESULT_OK)
+    {
+        if (s_integrity_log_failures < UINT32_MAX) { s_integrity_log_failures++; }
+        s_snapshot.health_flags |= ESTIMATOR_HEALTH_LOG_EVENT_FAILED;
+    }
+#else
+    (void)event; (void)phase; (void)execution;
+#endif
+}
+
+static void Estimator_HorizonStatusLog(uint64_t evaluation_us, NavigationKfHorizonResult result)
+{
+#if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
+    FlightLogFusionHorizonStatusRecord record = {0};
+    record.input_present_timestamp_us = s_horizon_fusion.present_us;
+    record.primary_timestamp_us = s_horizon_fusion.primary_us;
+    record.output_state_timestamp_us = s_published_snapshot.timestamp_us;
+    record.output_covariance_timestamp_us = s_published_snapshot.timestamp_us;
+    record.operation_sequence = s_estimator.operation_sequence; record.epoch = s_horizon_fusion.epoch;
+    record.source_id = s_horizon_fusion.source; record.calibration_generation = s_horizon_fusion.generation;
+    record.horizon_us = (uint32_t)s_horizon_fusion.horizon_us;
+    record.work_count = s_horizon_fusion.last_work; record.maximum_work = s_horizon_fusion.maximum_work;
+    record.late_count = s_horizon_fusion.late_count; record.capacity_count = s_horizon_fusion.capacity_count;
+    record.failure_operation_sequence = s_horizon_fusion.failure_operation;
+    record.failure_operation_valid = s_horizon_fusion.failure_operation_valid;
+    record.horizon_initialized = s_horizon_fusion.initialized;
+    record.body_count = s_horizon_fusion.body_count; record.event_count = s_horizon_fusion.event_count;
+    record.completion_count = s_horizon_fusion.completion_count;
+    record.algorithm_id = 1U; record.algorithm_revision = NAV_KF_ALGORITHM_REVISION;
+    record.numerical_revision = NAV_KF_NUMERICAL_REVISION; record.fusion_timing_mode = SYSTEM_FUSION_TIMING_HORIZON;
+    record.phase = (uint8_t)(s_horizon_fusion.faulted ? 2U : (s_horizon_fusion.warmup ? 0U : 1U));
+    record.execution_result = (uint8_t)Estimator_HorizonExecutionGet(result);
+    if (LoggerBus_FusionHorizonStatusPush(evaluation_us,&record) != LOGGER_BUS_RESULT_OK)
+    { s_snapshot.health_flags |= ESTIMATOR_HEALTH_LOG_EVENT_FAILED; }
+#else
+    (void)evaluation_us; (void)result;
+#endif
+}
+
+static NavigationReplayResult Estimator_HorizonBodyReceive(
+    const SystemInertialIncrement *prediction, const float delta_velocity[3])
+{
+    NavigationKfHorizonResult result;
+    uint8_t source;
+    if (!isfinite(prediction->dt_s) || (prediction->dt_s <= 0.0f) ||
+        (prediction->dt_s > SYSTEM_KF_PREDICTION_DT_MAX_S))
+    {
+        s_horizon_fusion.faulted = 1U; s_fusion_execution = SYSTEM_FUSION_EXEC_DISCONTINUITY;
+        SystemNavigationHealth_ImuQualityRecord(0x10U);
+        Estimator_HorizonStatusLog(prediction->timestamp_us,NAV_KF_HORIZON_DISCONTINUITY);
+        return NAV_REPLAY_DISCONTINUITY;
+    }
+    if ((s_horizon_fusion.epoch != s_replay_epoch) ||
+        (s_horizon_fusion.generation != SystemCalibration_GenerationGet()) ||
+        (SystemSourceSelector_ImuActiveInstanceGet(&source) != SYSTEM_DEVICE_OK) ||
+        (s_horizon_fusion.source != source))
+    { s_horizon_fusion.faulted = 1U; result = NAV_KF_HORIZON_EPOCH_MISMATCH; }
+    else if (s_horizon_fusion.faulted) { result = NAV_KF_HORIZON_NOT_READY; }
+    else
+    {
+        if (!s_horizon_fusion.initialized)
+        {
+            uint64_t duration = (uint64_t)llroundf(prediction->dt_s*1000000.0f);
+            if ((prediction->timestamp_us < duration) ||
+                (NavigationKfHorizon_Reset(&s_horizon_fusion,&s_estimator.kf,prediction->timestamp_us-duration,
+                    s_replay_epoch,source,SystemCalibration_GenerationGet(),
+                    (uint64_t)SYSTEM_FUSION_HORIZON_MS*1000ULL) != NAV_KF_HORIZON_OK))
+            { s_horizon_fusion.faulted = 1U; }
+            else { SystemNavigationHealth_DelayedReset(s_horizon_fusion.initial_us); }
+        }
+        result = s_horizon_fusion.faulted ? NAV_KF_HORIZON_NUMERIC_ERROR :
+            NavigationKfHorizon_BodyReceive(&s_horizon_fusion,prediction->timestamp_us,
+                delta_velocity,prediction->dt_s,source,SystemCalibration_GenerationGet());
+    }
+    s_fusion_execution = Estimator_HorizonExecutionGet(result);
+    if (result == NAV_KF_HORIZON_OK) { return NAV_REPLAY_OK; }
+    s_horizon_fusion.faulted = 1U; SystemNavigationHealth_ImuQualityRecord(0x10U);
+    Estimator_HorizonStatusLog(prediction->timestamp_us,result);
+    return NAV_REPLAY_NUMERIC_ERROR;
+}
+
+static SystemDeviceResult Estimator_HorizonSourcesSelect(uint8_t *source)
+{
+    SystemDeviceResult selected = SystemSourceSelector_GnssActiveInstanceGet(source);
+    s_estimator.gnss_diagnostics.supported = 1U;
+    if ((selected != SYSTEM_DEVICE_OK) || (*source != s_estimator.last_gnss_source))
+    {
+        s_estimator.gnss_diagnostics.gnss_ready = 0U;
+        for (uint8_t group = 0U; group < 4U; group++) { s_estimator.gnss_diagnostics.group[group].valid = 0U; }
+    }
+    for (uint8_t group = 0U; group < 4U; group++)
+    {
+        SystemDeviceResult health = (selected == SYSTEM_DEVICE_OK) ?
+            SystemNavigationHealth_SourceSelect(group,*source,s_horizon_fusion.present_us) :
+            SystemNavigationHealth_SourceUnavailable(group,s_horizon_fusion.present_us);
+        if (health != SYSTEM_DEVICE_OK) { s_horizon_fusion.faulted = 1U; return SYSTEM_DEVICE_VERIFY_FAILED; }
+    }
+    return selected;
+}
+
+static void Estimator_HorizonRequest(NavigationKfHorizonEvent *event,
+    NavigationKfHorizonResult prior_result)
+{
+    SystemNavigationReceiveEvidence evidence = {0};
+    NavigationKfHorizonResult result = prior_result;
+    event->operation_sequence = Estimator_OperationNext(); event->epoch = s_horizon_fusion.epoch;
+    event->generation = s_horizon_fusion.generation;
+    event->nis = -1.0f; event->robust_scale = 1.0f; event->effective_update = 0U;
+    memset(event->innovation,0,sizeof(event->innovation));
+    memset(event->effective_variance,0,sizeof(event->effective_variance));
+    if (result == NAV_KF_HORIZON_OK)
+    {
+        SystemDeviceResult received;
+        evidence.receive_us = event->receive_us; evidence.evaluation_us = s_horizon_fusion.present_us;
+        evidence.sequence = event->sequence; evidence.source = (uint8_t)event->source;
+        evidence.variance_scale = event->quality_scale*event->consistency_scale;
+        evidence.physically_valid = event->physically_valid;
+        evidence.reason = event->physically_valid ? 0U : (uint8_t)NAV_KF_UPDATE_REJECTED_INVALID;
+        received = SystemNavigationHealth_ReceiveOnly(event->group,&evidence);
+        if (received == SYSTEM_DEVICE_OK) { result = NavigationKfHorizon_Insert(&s_horizon_fusion,event); }
+        else
+        {
+            result = NAV_KF_HORIZON_DISCONTINUITY;
+            if (received != SYSTEM_DEVICE_BAD_STATE) { s_horizon_fusion.faulted = 1U; }
+        }
+    }
+    Estimator_HorizonMeasurementLog(event,0U,Estimator_HorizonExecutionGet(result));
+}
+
+static void Estimator_HorizonGnssValuesBuild(EstimatorGnssUpdateWork *work)
+{
+    float quality = NavigationQuality_SatelliteVarianceScale(work->sample.satellite_count,
+        (uint8_t)((work->sample.valid_fields & SYSTEM_GNSS_FIELD_SATELLITE_COUNT) != 0U));
+    if (Estimator_GnssPositionResolve(work) == 0U)
+    { work->sample.valid_group_mask &= (uint8_t)~3U; memset(work->position_enu_m,0,sizeof(work->position_enu_m)); }
+    for (uint32_t axis = 0U; axis < 3U; axis++)
+    {
+        uint8_t position_bit = (axis < 2U) ? 1U : 2U;
+        uint8_t velocity_bit = (axis < 2U) ? 4U : 8U;
+        float reported_position = (work->sample.valid_group_mask & position_bit) ?
+            ((axis < 2U) ? work->sample.horizontal_accuracy_m : work->sample.vertical_accuracy_m) : 0.0f;
+        float reported_velocity = (work->sample.valid_group_mask & velocity_bit) ?
+            sqrtf(fmaxf(work->sample.velocity_variance_m2ps2[axis],0.0f)) : 0.0f;
+        float position_std = SystemEstimatorProfile_GnssStdResolve((axis < 2U) ?
+            SYSTEM_ESTIMATOR_GNSS_STD_HORIZONTAL_POSITION : SYSTEM_ESTIMATOR_GNSS_STD_VERTICAL_POSITION,reported_position);
+        float velocity_std = SystemEstimatorProfile_GnssStdResolve((axis < 2U) ?
+            SYSTEM_ESTIMATOR_GNSS_STD_VELOCITY : SYSTEM_ESTIMATOR_GNSS_STD_VERTICAL_VELOCITY,reported_velocity);
+        float origin_std = s_estimator.gnss_origin_position_std_m[axis];
+        if (!isfinite(origin_std) || (origin_std < 0.0f)) { s_horizon_fusion.faulted = 1U; return; }
+        work->position_variance[axis] = (position_std*position_std+origin_std*origin_std)*quality;
+        work->velocity_variance[axis] = velocity_std*velocity_std*quality;
+        if (!isfinite(work->position_variance[axis]) || (work->position_variance[axis] <= 0.0f))
+        { work->sample.valid_group_mask &= (uint8_t)~position_bit; }
+        if (!isfinite(work->velocity_variance[axis]) || (work->velocity_variance[axis] <= 0.0f))
+        { work->sample.valid_group_mask &= (uint8_t)~velocity_bit; }
+        work->epoch.position_enu_m[axis] = work->position_enu_m[axis];
+        work->epoch.velocity_enu_mps[axis] = work->sample.velocity_enu_mps[axis];
+        work->epoch.position_std_m[axis] = sqrtf(fmaxf(work->position_variance[axis],0.0f));
+        work->epoch.velocity_std_mps[axis] = velocity_std;
+    }
+    work->epoch.timestamp_us = work->sample.receive_timestamp_us;
+    work->epoch.valid_group_mask = work->sample.valid_group_mask;
+    memcpy(s_snapshot.gnss_position_enu_m,work->position_enu_m,sizeof(work->position_enu_m));
+    memcpy(s_snapshot.gnss_velocity_enu_mps,work->sample.velocity_enu_mps,sizeof(work->sample.velocity_enu_mps));
+}
+
+static void Estimator_HorizonGnssGroupBuild(const EstimatorGnssUpdateWork *work,
+    const NavigationReplayEvent *received, uint8_t group, NavigationKfHorizonEvent *event)
+{
+    uint32_t start = (group & 1U) ? 2U : 0U, dimension = (group & 1U) ? 1U : 2U;
+    uint32_t delay = (group < 2U) ? SYSTEM_ESTIMATOR_GNSS_POSITION_MEASUREMENT_DELAY_MS :
+        SYSTEM_ESTIMATOR_GNSS_VELOCITY_MEASUREMENT_DELAY_MS;
+    memset(event,0,sizeof(*event));
+    event->source = received->source; event->sequence = work->sample.sequence;
+    event->receive_us = work->sample.receive_timestamp_us; event->sample_us = work->sample.sample_timestamp_us;
+    event->group = group; event->physically_valid = (uint8_t)((work->sample.valid_group_mask & (1U<<group)) != 0U);
+    event->quality_scale = NavigationQuality_SatelliteVarianceScale(work->sample.satellite_count,
+        (uint8_t)((work->sample.valid_fields & SYSTEM_GNSS_FIELD_SATELLITE_COUNT) != 0U));
+    event->consistency_scale = (group == 0U) ? work->integrity_decision.position_r_scale : 1.0f;
+    event->evidence = received->evidence[group];
+    event->consistency_valid = (uint8_t)((received->consistency_mask & (1U<<group)) != 0U);
+    if (SystemTime_MeasurementTimestampResolve(event->receive_us,event->sample_us,
+        work->sample.measurement_timestamp_trusted,delay,&event->source_us) != SYSTEM_MEASUREMENT_TIME_OK)
+    { event->physically_valid = 0U; }
+    else { event->timing_flags = SYSTEM_FUSION_SOURCE_RESOLVED | (work->sample.measurement_timestamp_trusted ?
+        SYSTEM_FUSION_TRUSTED_SOURCE : SYSTEM_FUSION_DELAY_FALLBACK); }
+    for (uint32_t axis = 0U; axis < 2U; axis++)
+    {
+        if (axis >= dimension) { break; }
+        float variance = (group < 2U) ? work->position_variance[start+axis] : work->velocity_variance[start+axis];
+        event->observation[axis] = (group < 2U) ? work->position_enu_m[start+axis] : work->sample.velocity_enu_mps[start+axis];
+        event->base_variance[axis] = variance/event->quality_scale;
+        event->variance[axis] = variance*event->consistency_scale;
+    }
+}
+
+static void Estimator_HorizonGnssRequests(void)
+{
+    EstimatorGnssUpdateWork work = {0};
+    NavigationReplayEvent received = {0};
+    NavigationKfHorizonResult result;
+    uint8_t source;
+    if (Estimator_HorizonSourcesSelect(&source) != SYSTEM_DEVICE_OK) { return; }
+    if (!s_estimator.gnss_fusion_enabled || !s_estimator.gnss_origin_valid ||
+        (SystemGnss_LatestSampleGet(&work.sample) != SYSTEM_DEVICE_OK) ||
+        (work.sample.receive_timestamp_us > s_horizon_fusion.present_us) ||
+        ((source == s_estimator.last_gnss_source) && (work.sample.sequence == s_estimator.last_gnss_sequence))) { return; }
+    if (source != s_estimator.last_gnss_source)
+    { (void)NavigationWindow_Reset(&s_integrity); s_native_week_us = 0U; s_native_previous_tow_ms = 0U; }
+    s_estimator.last_gnss_source = source; s_estimator.last_gnss_sequence = work.sample.sequence;
+    if (SystemGnssQuality_Evaluate(&work.sample,s_horizon_fusion.present_us) != SYSTEM_DEVICE_OK)
+    { work.sample.valid_group_mask = 0U; }
+    Estimator_HorizonGnssValuesBuild(&work);
+    if (s_horizon_fusion.faulted) { return; }
+    s_estimator.gnss_diagnostics.last_state_timestamp_us = s_horizon_fusion.present_us;
+    s_estimator.gnss_diagnostics.last_measurement_timestamp_us = work.sample.sample_timestamp_us;
+    s_estimator.gnss_diagnostics.gnss_ready = (uint8_t)(work.sample.online && (work.sample.valid_group_mask != 0U));
+    s_estimator.gnss_diagnostics.last_update_state = SYSTEM_ESTIMATOR_GNSS_UPDATE_WAIT_SAMPLE;
+    s_estimator.gnss_diagnostics.last_skip_reason = SYSTEM_ESTIMATOR_GNSS_SKIP_WAIT_STATE_CATCHUP;
+    s_snapshot.last_gnss_timestamp_us = work.sample.receive_timestamp_us;
+    s_snapshot.last_gnss_sequence = work.sample.sequence; s_snapshot.gnss_velocity_valid_mask = work.sample.velocity_valid_mask;
+    s_snapshot.last_gnss_age_us = Estimator_AgeToU32(s_horizon_fusion.present_us-work.sample.receive_timestamp_us);
+    s_snapshot.velocity_update_dimension = (work.sample.velocity_valid_mask == 7U) ? 3U :
+        (((work.sample.velocity_valid_mask & 3U) == 3U) ? 2U : 0U);
+    received.source = source; received.sequence = work.sample.sequence;
+    received.calibration_generation = s_horizon_fusion.generation;
+    result = NavigationKfHorizon_ReceiveTrack(&s_horizon_fusion,&work.epoch,&received);
+    work.integrity_decision.position_r_scale = 1.0f;
+    if (result == NAV_KF_HORIZON_OK) { Estimator_GnssIntegrityApply(&work,&received); }
+    for (uint8_t group = 0U; group < 4U; group++)
+    {
+        NavigationKfHorizonEvent event;
+        s_estimator.gnss_diagnostics.group[group].valid = (uint8_t)((work.sample.valid_group_mask & (1U<<group)) != 0U);
+        s_estimator.gnss_diagnostics.group[group].quality_reject_mask = work.sample.group_reject_mask[group];
+        Estimator_HorizonGnssGroupBuild(&work,&received,group,&event);
+        Estimator_HorizonRequest(&event,result);
+    }
+    Estimator_NavigationQualityLog(&work.sample,s_horizon_fusion.present_us);
+}
+
+static void Estimator_HorizonBarometerRequests(void)
+{
+    EstimatorPressureSnapshot pressure;
+    EstimatorBusResult receipt;
+    NavigationKfHorizonEvent event = {0};
+    const SystemEstimatorProfile *profile = SystemEstimatorProfile_Get();
+    if (SystemNavigationHealth_SourceSelect(4U,SYSTEM_FUSION_BAROMETER_SOURCE,s_horizon_fusion.present_us) != SYSTEM_DEVICE_OK)
+    { s_horizon_fusion.faulted = 1U; return; }
+    if (!s_estimator.baro_origin_valid || !s_estimator.baro_diagnostics.source_supported) { return; }
+    receipt = EstimatorBus_PressureReceiptGetLatest(&pressure);
+    if (receipt == ESTIMATOR_BUS_RESULT_EMPTY) { return; }
+    if (receipt != ESTIMATOR_BUS_RESULT_OK) { s_horizon_fusion.faulted = 1U; return; }
+    if ((pressure.receive_timestamp_us > s_horizon_fusion.present_us) ||
+        (pressure.sequence == s_estimator.last_baro_sequence)) { return; }
+    if ((profile == NULL) || !isfinite(s_estimator.frozen_baro_altitude_m) ||
+        (pressure.valid > 1U) || (pressure.healthy > 1U)) { s_horizon_fusion.faulted = 1U; return; }
+    s_estimator.last_baro_sequence = pressure.sequence;
+    event.source = SYSTEM_FUSION_BAROMETER_SOURCE; event.group = 4U;
+    event.sequence = pressure.sequence; event.receive_us = pressure.receive_timestamp_us; event.sample_us = pressure.timestamp_us;
+    event.quality_scale = 1.0f; event.consistency_scale = 1.0f;
+    event.observation[0] = pressure.altitude_m-s_estimator.frozen_baro_altitude_m;
+    event.variance[0] = profile->barometer_altitude_std_m*profile->barometer_altitude_std_m;
+    event.base_variance[0] = event.variance[0];
+    event.physically_valid = (uint8_t)(pressure.valid && pressure.healthy && isfinite(event.observation[0]) &&
+        isfinite(event.variance[0]) && (event.variance[0] > 0.0f) &&
+        (s_horizon_fusion.present_us-pressure.receive_timestamp_us <= SYSTEM_ESTIMATOR_MEASUREMENT_MAX_AGE_US));
+    if (SystemTime_MeasurementTimestampResolve(event.receive_us,event.sample_us,
+        pressure.measurement_timestamp_trusted,SYSTEM_ESTIMATOR_BARO_MEASUREMENT_DELAY_MS,&event.source_us) != SYSTEM_MEASUREMENT_TIME_OK)
+    { event.physically_valid = 0U; }
+    else { event.timing_flags = SYSTEM_FUSION_SOURCE_RESOLVED | (pressure.measurement_timestamp_trusted ?
+        SYSTEM_FUSION_TRUSTED_SOURCE : SYSTEM_FUSION_DELAY_FALLBACK); }
+    s_snapshot.last_baro_timestamp_us = pressure.receive_timestamp_us; s_snapshot.last_baro_sequence = pressure.sequence;
+    s_snapshot.baro_relative_altitude_m = event.observation[0];
+    Estimator_HorizonRequest(&event,NAV_KF_HORIZON_OK);
+}
+
+static void Estimator_HorizonGroupDiagnosticWrite(const NavigationKfHorizonEvent *event)
+{
+    SystemEstimatorGnssGroupDiagnostics *diagnostic = &s_estimator.gnss_diagnostics.group[event->group];
+    const NavigationKfGnssReacquireGroupState *recovery = &s_estimator.kf.gnss_reacquisition.group[event->group];
+    diagnostic->update_result = (uint8_t)Estimator_MeasurementResultConvert(event->result);
+    diagnostic->outage = recovery->outage; diagnostic->consistency_count = recovery->consistent_count;
+    diagnostic->recovery_active = recovery->active; diagnostic->inflation_attempt_count = recovery->inflation_attempt_count;
+    diagnostic->inflation_factor = recovery->last_inflation_factor;
+    diagnostic->reanchor_count = s_estimator.kf.gnss_reacquisition.reanchor_count[event->group];
+    diagnostic->reanchor_reason = (uint8_t)(diagnostic->reanchor_count != 0U);
+    s_estimator.gnss_diagnostics.last_state_timestamp_us = s_horizon_fusion.present_us;
+    s_estimator.gnss_diagnostics.last_update_state = event->effective_update ?
+        SYSTEM_ESTIMATOR_GNSS_UPDATE_ACCEPTED : SYSTEM_ESTIMATOR_GNSS_UPDATE_REJECTED;
+    s_estimator.gnss_diagnostics.last_skip_reason = SYSTEM_ESTIMATOR_GNSS_SKIP_NONE;
+    s_estimator.kf_diagnostics.last_update_timestamp_us = s_horizon_fusion.present_us;
+    s_estimator.kf_diagnostics.last_update_type = (event->group < 2U) ?
+        SYSTEM_KF_UPDATE_GNSS_POSITION : SYSTEM_KF_UPDATE_GNSS_VELOCITY;
+}
+
+static void Estimator_HorizonCompletionSnapshotWrite(const NavigationKfHorizonEvent *event)
+{
+    uint32_t start = (event->group & 1U) ? 2U : 0U, dimension = (event->group & 1U) ? 1U : 2U;
+    float scale = event->quality_scale*event->consistency_scale*event->robust_scale;
+    SystemEstimatorMeasurementResult result = Estimator_MeasurementResultConvert(event->result);
+    if (event->group < 4U)
+    {
+        Estimator_HorizonGroupDiagnosticWrite(event);
+        s_snapshot.measurement_attempt_mask |= (event->group < 2U) ? ESTIMATOR_ATTEMPT_GNSS_POSITION : ESTIMATOR_ATTEMPT_GNSS_VELOCITY;
+        for (uint32_t axis = 0U; axis < 2U; axis++)
+        {
+            if (axis >= dimension) { break; }
+            if (event->group < 2U)
+            { s_snapshot.position_innovation[start+axis] = event->innovation[axis]; s_snapshot.position_variance_r[start+axis] = event->effective_variance[axis]; }
+            else { s_snapshot.velocity_innovation[start+axis] = event->innovation[axis]; s_snapshot.velocity_variance_r[start+axis] = event->effective_variance[axis]; }
+        }
+        if (event->group < 2U)
+        {
+            s_snapshot.last_position_nis = event->nis; s_snapshot.position_r_scale = scale;
+            if ((event->group == 0U) || (result < s_snapshot.position_update_result)) { s_snapshot.position_update_result = result; }
+            if (event->effective_update) { s_snapshot.gnss_position_update_count++; } else { s_snapshot.position_reject_count++; }
+        }
+        else
+        {
+            s_snapshot.last_velocity_nis = event->nis; s_snapshot.velocity_r_scale = scale;
+            if ((event->group == 2U) || (result < s_snapshot.velocity_update_result)) { s_snapshot.velocity_update_result = result; }
+            if (event->effective_update) { s_snapshot.gnss_velocity_update_count++; } else { s_snapshot.velocity_reject_count++; }
+        }
+    }
+    else
+    {
+        s_snapshot.measurement_attempt_mask |= ESTIMATOR_ATTEMPT_BAROMETER;
+        s_snapshot.baro_update_result = result; s_snapshot.baro_innovation = event->innovation[0];
+        s_snapshot.baro_variance_r = event->effective_variance[0]; s_snapshot.baro_r_scale = scale;
+        s_snapshot.last_baro_nis = event->nis;
+        s_estimator.baro_diagnostics.last_update_timestamp_us = s_horizon_fusion.present_us;
+        s_estimator.baro_diagnostics.last_innovation = event->innovation[0];
+        s_estimator.baro_diagnostics.measurement_variance = event->effective_variance[0];
+        s_estimator.baro_diagnostics.last_nis = event->nis;
+        Estimator_BarometerResultProcess(s_horizon_fusion.present_us);
+    }
+}
+
+static uint8_t Estimator_HorizonCompletionPublish(const NavigationKfHorizonEvent *event)
+{
+    SystemNavigationFusionEvidence evidence = {0};
+    evidence.receive_us = event->receive_us; evidence.measurement_us = event->source_us;
+    evidence.evaluation_us = s_horizon_fusion.present_us; evidence.sequence = event->sequence;
+    evidence.source = (uint8_t)event->source; evidence.physically_valid = 1U; evidence.attempted = 1U;
+    evidence.effective_update = event->effective_update; evidence.nis = event->nis;
+    evidence.variance_scale = event->quality_scale*event->consistency_scale*event->robust_scale;
+    evidence.soft_weighted = (uint8_t)(evidence.variance_scale > 1.0f); evidence.reason = (uint8_t)event->result;
+    if (SystemNavigationHealth_FusionOnly(event->group,&evidence) != SYSTEM_DEVICE_OK) { return 0U; }
+    Estimator_HorizonCompletionSnapshotWrite(event);
+    Estimator_HorizonMeasurementLog(event,1U,SYSTEM_FUSION_EXEC_COMPLETE);
+#if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
+    if (event->group < 4U) { Estimator_GnssRecoveryLogPush(s_horizon_fusion.present_us,event->sequence); }
+#endif
+    return 1U;
+}
+
+static uint8_t Estimator_HorizonCycle(uint64_t evaluation_us)
+{
+    NavigationKfHorizonResult result;
+    Estimator_HorizonGnssRequests();
+    if (!s_horizon_fusion.faulted) { Estimator_HorizonBarometerRequests(); }
+    result = s_horizon_fusion.faulted ? NAV_KF_HORIZON_NOT_READY :
+        NavigationKfHorizon_Advance(&s_horizon_fusion,&s_estimator.kf);
+    if ((result == NAV_KF_HORIZON_OK) || (result == NAV_KF_HORIZON_WARMUP))
+    {
+        for (uint16_t index = 0U; index < NAV_KF_HORIZON_EVENT_CAPACITY; index++)
+        {
+            NavigationKfHorizonEvent completed;
+            NavigationKfHorizonResult popped = NavigationKfHorizon_CompletionPop(&s_horizon_fusion,&completed);
+            if (popped == NAV_KF_HORIZON_EMPTY) { break; }
+            if ((popped != NAV_KF_HORIZON_OK) || !Estimator_HorizonCompletionPublish(&completed))
+            { result = NAV_KF_HORIZON_NUMERIC_ERROR; break; }
+        }
+        if (s_horizon_fusion.faulted || (s_horizon_fusion.completion_count != 0U) ||
+            (SystemNavigationHealth_OverallGet(evaluation_us,SYSTEM_FUSION_REQUIRED_HEALTH_MASK,0U) == SYSTEM_NAVIGATION_HEALTH_INVALID))
+        { result = NAV_KF_HORIZON_NUMERIC_ERROR; }
+    }
+    s_fusion_execution = Estimator_HorizonExecutionGet(result);
+    if ((result != NAV_KF_HORIZON_OK) && (result != NAV_KF_HORIZON_WARMUP))
+    {
+        s_horizon_fusion.faulted = 1U; SystemNavigationHealth_ImuQualityRecord(0x10U);
+        Estimator_HorizonStatusLog(evaluation_us,result); Estimator_FaultSnapshotPublish();
+        return 0U;
+    }
+    s_horizon_diagnostics.last_steps = s_horizon_fusion.last_work;
+    s_horizon_diagnostics.max_steps = s_horizon_fusion.maximum_work;
+    s_horizon_diagnostics.overflow_count = s_horizon_fusion.capacity_count;
+    memcpy(s_snapshot.acceleration_enu_mps2,s_horizon_fusion.output_acceleration,sizeof(s_horizon_fusion.output_acceleration));
+    return 1U;
+}
+
 static void Estimator_AccelerationPublish(const float delta_velocity[3], float dt_s)
 {
     uint8_t axis;
@@ -3395,7 +3861,9 @@ static NavigationReplayResult Estimator_PredictionApply(
 {
     uint32_t operation_sequence = Estimator_OperationNext();
     NavigationReplayResult result;
-    if (SYSTEM_FUSION_TIMING_MODE == 0U)
+    if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON)
+    { result = Estimator_HorizonBodyReceive(prediction,delta_velocity); }
+    else if (SYSTEM_FUSION_TIMING_MODE == 0U)
     { result = Estimator_CurrentResultConvert(NavigationCurrent_Predict(
         &s_current_fusion, &s_estimator.kf, prediction->timestamp_us, delta_velocity, prediction->dt_s)); }
     else
@@ -3419,6 +3887,22 @@ static uint8_t Estimator_KfPredictionApply(
                              SILVERSTAR_ASSERT_MODULE_APP);
     SILVERSTAR_ASSERT(delta_velocity_enu_mps != NULL,
         SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON)
+    {
+        uint8_t valid = (uint8_t)(isfinite(prediction->dt_s) && (prediction->dt_s > 0.0f) &&
+            (prediction->dt_s <= SYSTEM_KF_PREDICTION_DT_MAX_S));
+        for (uint32_t axis = 0U; axis < 3U; axis++)
+        {
+            if (!isfinite(prediction->delta_theta_b_corrected[axis]) ||
+                !isfinite(prediction->delta_velocity_b_sculling_corrected[axis])) { valid = 0U; }
+        }
+        if (!valid)
+        {
+            s_horizon_fusion.faulted = 1U; SystemNavigationHealth_ImuQualityRecord(0x10U);
+            Estimator_HorizonStatusLog(prediction->timestamp_us,NAV_KF_HORIZON_DISCONTINUITY);
+            Estimator_FaultSnapshotPublish(); return 0U;
+        }
+    }
     memcpy(q_start, s_estimator.q_nb, sizeof(q_start));
     Ins_TransformDeltaVelocityToNavigation(
         q_start, prediction->delta_velocity_b_sculling_corrected,
@@ -3427,6 +3911,11 @@ static uint8_t Estimator_KfPredictionApply(
             q_start, prediction->delta_theta_b_corrected,
             s_estimator.q_nb) == 0U)
     {
+        if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON)
+        {
+            s_horizon_fusion.faulted = 1U; SystemNavigationHealth_ImuQualityRecord(0x10U);
+            Estimator_HorizonStatusLog(prediction->timestamp_us,NAV_KF_HORIZON_NUMERIC_ERROR);
+        }
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
         Estimator_PredictionLogPush(prediction, Estimator_OperationNext(), NAV_REPLAY_INVALID, 0U);
 #endif
@@ -3510,14 +3999,22 @@ static void Estimator_PredictionProcess(
     s_snapshot.position_r_scale = 1.0f;
     s_snapshot.velocity_r_scale = 1.0f;
     s_snapshot.baro_r_scale = 1.0f;
-    Estimator_GnssUpdate(prediction->timestamp_us);
-    if (Estimator_ReplayFaultStop() != 0U) { return; }
-    Estimator_BarometerUpdate(prediction->timestamp_us);
-    if (Estimator_ReplayFaultStop() != 0U) { return; }
-    if (SystemNavigationHealth_DegradedGet(prediction->timestamp_us) != 0U)
+    if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON)
+    { if (!Estimator_HorizonCycle(prediction->timestamp_us)) { return; } }
+    else
+    {
+        Estimator_GnssUpdate(prediction->timestamp_us);
+        if (Estimator_ReplayFaultStop() != 0U) { return; }
+        Estimator_BarometerUpdate(prediction->timestamp_us);
+        if (Estimator_ReplayFaultStop() != 0U) { return; }
+    }
+    if ((SystemNavigationHealth_DegradedGet(prediction->timestamp_us) != 0U) ||
+        ((SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON) && s_horizon_fusion.warmup))
     { s_snapshot.health_flags |= ESTIMATOR_HEALTH_FUSION_TIMEOUT; }
     else { s_snapshot.health_flags &= ~ESTIMATOR_HEALTH_FUSION_TIMEOUT; }
     Estimator_SnapshotPublish(prediction->timestamp_us);
+    if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON)
+    { Estimator_HorizonStatusLog(prediction->timestamp_us,s_horizon_fusion.warmup ? NAV_KF_HORIZON_WARMUP : NAV_KF_HORIZON_OK); }
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
     Estimator_LogPush(prediction->timestamp_us);
 #endif

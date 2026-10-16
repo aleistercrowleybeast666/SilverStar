@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import math
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from silverstar_fccg.plugins.catalog import PluginCatalog
 from silverstar_fccg.project.model import ProjectModel
@@ -58,9 +58,20 @@ def InertialRatePlan_Resolve(
     arithmetic: tuple[str, ...] = ()
     issues: list[InertialRateIssue] = []
     current = False
+    horizon = False
     cpu_profile = str(catalog.Component_Get(model.mcu).metadata.get("cpu_profile", ""))
     if estimator is not None:
-        values = model.algorithm_parameters.get(estimator_id, {})
+        from silverstar_fccg.project.algorithm_parameters import (
+            AlgorithmParameters_Reconcile, AlgorithmParameters_Resolve,
+        )
+        # Selection UI may ask for a timing plan before configuration reconcile.
+        # This parameter-only projection assigns a new dictionary; neither the
+        # user's model nor any recorded/generated actuals acquire defaults here.
+        parameter_model = replace(model)
+        AlgorithmParameters_Reconcile(parameter_model, catalog)
+        actual = next((row for row in AlgorithmParameters_Resolve(parameter_model, catalog)
+                       if row['component'] == estimator_id), None)
+        values = {p['id']: p['value'] for p in actual['parameters']} if actual else {}
         delay_ms = max(
             (int(value) for key, value in values.items()
              if key.endswith("_measurement_delay_ms")),
@@ -81,14 +92,20 @@ def InertialRatePlan_Resolve(
         no_replay = contract.get("mode") == "none"
         if estimator.metadata.get("fusion_timing_contract") is not None:
             mode = values.get("fusion_timing_mode")
-            if type(mode) is not int or mode not in (0, 1):
-                raise ValueError("Fusion timing mode must be integer 0 or 1")
+            if type(mode) is not int or mode not in (0, 1, 2):
+                raise ValueError("Fusion timing mode must be integer 0, 1 or 2")
             current = mode == 0
+            horizon = mode == 2
             if current:
                 window_ms = 0
                 history_capacity = 0
+            elif horizon:
+                from silverstar_fccg.project.fusion_horizon import FusionHorizonRatePlan_Build
+                plan = FusionHorizonRatePlan_Build(model, catalog, values, propagation_hz)
+                window_ms, history_capacity = plan.horizon_us // 1000, plan.body_capacity
+                issues.extend(InertialRateIssue(row.code, row.message) for row in plan.issues)
         if ((no_replay and (delay_ms != 0 or window_ms != 0 or history_capacity != 0))
-                or (not no_replay and not current and (window_ms < delay_ms or history_capacity <= 0))):
+                or (not no_replay and not current and not horizon and (window_ms < delay_ms or history_capacity <= 0))):
             issues.append(InertialRateIssue(
                 "REPLAY_CONTRACT_INVALID",
                 "Estimator history window or capacity cannot cover configured delay",
@@ -96,13 +113,13 @@ def InertialRatePlan_Resolve(
     required_history = math.ceil(window_ms * propagation_hz / 1000) + (
         1 if window_ms else 0
     )
-    if history_capacity and required_history > history_capacity:
+    if history_capacity and not horizon and required_history > history_capacity:
         issues.append(InertialRateIssue(
             "REPLAY_HISTORY_INSUFFICIENT",
             f"{required_history} inertial history slots are required at "
             f"{propagation_hz:g} Hz, but the estimator has {history_capacity}",
         ))
-    maximum_replay_steps = 0 if current else math.ceil(delay_ms * propagation_hz / 1000)
+    maximum_replay_steps = 0 if current or horizon else math.ceil(delay_ms * propagation_hz / 1000)
     return InertialRatePlan(
         raw_imu_odr_hz=odr_hz,
         aggregation=aggregation,

@@ -688,9 +688,43 @@ static void Eskf_ResetJacobianBuild(NavigationEskfWorkspace *work)
     Eskf_ResetCongruence(work, (const float (*)[NAV_ESKF_DIM])work->f);
 }
 
-NavigationEskfResult NavigationEskf_Update(NavigationEskfState *state,
+/* Analytic a=(1-cos(theta))/theta^2 and b=(theta-sin(theta))/theta^3.
+ * At the fixed 0.35 rad injection limit, the first omitted exact-series terms
+ * are below 5.8e-14 and 4.5e-15 respectively. Binary32 rounding remains and is
+ * tested independently. Revision 1 above intentionally retains its evaluator. */
+static void Eskf_ResetJacobianRevision2Build(NavigationEskfWorkspace *work)
+{
+    float skew[3][3], angle, angle2, a, b;
+    uint32_t i, j, k;
+    SILVERSTAR_ASSERT_OBJECT(work, NavigationEskfWorkspace, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    angle = Eskf_Norm(work->correction + 6, 3U);
+    SILVERSTAR_ASSERT(angle <= NAV_ESKF_MAX_INJECTION_RAD, SILVERSTAR_ASSERT_MODULE_ALGORITHM,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    angle2 = angle * angle;
+    a = 0.5f + angle2 * (-1.0f / 24.0f + angle2 * (1.0f / 720.0f +
+        angle2 * (-1.0f / 40320.0f + angle2 / 3628800.0f)));
+    b = 1.0f / 6.0f + angle2 * (-1.0f / 120.0f + angle2 * (1.0f / 5040.0f +
+        angle2 * (-1.0f / 362880.0f + angle2 / 39916800.0f)));
+    Eskf_Skew(work->correction + 6, skew);
+    memset(work->transition, 0, sizeof(work->transition));
+    for (i = 0U; i < NAV_ESKF_DIM; i++) { work->transition[i][i] = 1.0f; }
+    for (i = 0U; i < 3U; i++)
+    {
+        for (j = 0U; j < 3U; j++)
+        {
+            float square = 0.0f;
+            for (k = 0U; k < 3U; k++) { square += skew[i][k] * skew[k][j]; }
+            work->transition[6U+i][6U+j] += -a * skew[i][j] + b * square;
+        }
+    }
+    memcpy(work->f, work->candidate_p, sizeof(work->f));
+    Eskf_ResetCongruence(work, (const float (*)[NAV_ESKF_DIM])work->f);
+}
+
+static NavigationEskfResult Eskf_UpdateRun(NavigationEskfState *state,
     NavigationEskfWorkspace *work, const NavigationEskfConfig *config,
-    const NavigationEskfMeasurement *measurement, NavigationEskfOutcome *outcome)
+    const NavigationEskfMeasurement *measurement, NavigationEskfOutcome *outcome,
+    uint8_t numerical_revision)
 {
     NavigationEskfResult result;
     uint32_t i;
@@ -723,7 +757,8 @@ NavigationEskfResult NavigationEskf_Update(NavigationEskfState *state,
     if (!isfinite(outcome->gain_norm) || (outcome->gain_norm <= 0.0f))
     { outcome->result = NAV_ESKF_NUMERIC_ERROR; return outcome->result; }
     Eskf_JosephBuild(state, work, outcome);
-    Eskf_ResetJacobianBuild(work);
+    if (numerical_revision == NAV_ESKF_NUMERICAL_REVISION_STABLE_RESET) { Eskf_ResetJacobianRevision2Build(work); }
+    else { Eskf_ResetJacobianBuild(work); }
     /* Reset congruence has consumed the original P copy in F. */
     result = Eskf_CovarianceValidate((const float (*)[NAV_ESKF_DIM])work->candidate_p, work->f);
     if (result != NAV_ESKF_OK) { outcome->result = result; return result; }
@@ -733,4 +768,18 @@ NavigationEskfResult NavigationEskf_Update(NavigationEskfState *state,
     memcpy(state->covariance, work->candidate_p, sizeof(state->covariance));
     outcome->result = (outcome->r_scale > 1.0f) ? NAV_ESKF_SOFT_WEIGHTED : NAV_ESKF_OK;
     return outcome->result;
+}
+
+NavigationEskfResult NavigationEskf_Update(NavigationEskfState *state,
+    NavigationEskfWorkspace *work, const NavigationEskfConfig *config,
+    const NavigationEskfMeasurement *measurement, NavigationEskfOutcome *outcome)
+{
+    return Eskf_UpdateRun(state, work, config, measurement, outcome, NAV_ESKF_NUMERICAL_REVISION_LEGACY);
+}
+
+NavigationEskfResult NavigationEskf_UpdateRevision2(NavigationEskfState *state,
+    NavigationEskfWorkspace *work, const NavigationEskfConfig *config,
+    const NavigationEskfMeasurement *measurement, NavigationEskfOutcome *outcome)
+{
+    return Eskf_UpdateRun(state, work, config, measurement, outcome, NAV_ESKF_NUMERICAL_REVISION_STABLE_RESET);
 }

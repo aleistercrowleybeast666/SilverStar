@@ -10,6 +10,8 @@ from silverstar_fccg.project.algorithm_parameters import AlgorithmParameters_Res
 _OWNERS = ("silverstar.algorithm.estimator.kf6", "silverstar.algorithm.estimator.eskf15")
 _CAPABILITY = {"schema_id": "silverstar.navigation-fusion-timing/1",
                "revision": 1, "parameter": "fusion_timing_mode"}
+_HORIZON_CAPABILITY = {"schema_id": "silverstar.navigation.fusion_horizon",
+                       "revision": 1, "parameter": "fusion_horizon_ms", "mode": 2}
 
 
 def _Owner_Get(model, catalog):
@@ -43,20 +45,43 @@ def FusionTimingDeclaration_Get(model, catalog):
                   if row["component"] == owner)
     mode = next(row["value"] for row in actual["parameters"]
                 if row["id"] == "fusion_timing_mode")
-    if type(mode) is not int or mode not in (0, 1):
-        raise ValueError("Fusion timing actual must be integer 0 or 1")
+    if type(mode) is not int or mode not in (0, 1, 2):
+        raise ValueError("Fusion timing actual must be integer 0, 1 or 2")
     from silverstar_fccg.generator.render import ComponentProvenance_Get
     for component in _Components_Get(model, catalog):
         upstream = ComponentProvenance_Get(catalog, component)["files"]
         declared = model.component_provenance.get(component)
         if declared is not None and declared.get("files") != upstream:
             raise ValueError("Fusion timing payload identity NOT PROVEN: preserved provenance")
+    if mode == 2:
+        return _HorizonDeclaration_Get(model, catalog, owner, actual)
     return {"schema_id": _CAPABILITY["schema_id"], "revision": 1,
             "component": owner, "mode": mode,
             "source_time": "resolved_measurement_epoch",
             "application_time": "estimator_present" if mode == 0 else "legacy_algorithm_epoch",
             "evaluation_time": "estimator_present", "output_state_time": "estimator_present",
             "output_covariance_time": "estimator_present", "replays_history": mode == 1}
+
+
+def _HorizonDeclaration_Get(model, catalog, owner, actual):
+    if catalog.Component_Get(owner).metadata.get('fusion_horizon_contract') != _HORIZON_CAPABILITY:
+        raise ValueError('Delayed primary capability identity NOT PROVEN')
+    from silverstar_fccg.project.rate_plan import InertialRatePlan_Resolve
+    from silverstar_fccg.project.fusion_horizon import FusionHorizonRatePlan_Build
+    rate = InertialRatePlan_Resolve(model, catalog)
+    values = {row['id']: row['value'] for row in actual['parameters']}
+    plan = FusionHorizonRatePlan_Build(model, catalog, values, rate.effective_propagation_rate_hz)
+    if plan.issues:
+        raise ValueError('; '.join(issue.message for issue in plan.issues))
+    return {'schema_id': _HORIZON_CAPABILITY['schema_id'], 'revision': 1,
+        'component': owner, 'mode': 2, 'horizon_us': plan.horizon_us,
+        'numerical_revision': plan.numerical_revision,
+        'source_time': 'resolved_measurement_epoch', 'application_time': 'resolved_measurement_epoch',
+        'primary_time': 'max(initial_epoch,estimator_present-horizon_us)',
+        'evaluation_time': 'estimator_present', 'output_state_time': 'estimator_present',
+        'output_covariance_time': 'estimator_present', 'replays_history': False, 'output_feedback': False,
+        'body_capacity': plan.body_capacity, 'event_capacity': plan.event_capacity,
+        'maximum_work': plan.maximum_work}
 
 
 def FusionTimingIdentity_Validate(project_root: Path, previous: dict, model, catalog) -> None:

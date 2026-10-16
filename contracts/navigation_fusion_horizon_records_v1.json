@@ -1,0 +1,343 @@
+{
+  "schema_id": "silverstar.navigation.fusion_horizon_records",
+  "revision": 1,
+  "status": "wire_defined_backend_activation_pending",
+  "records": [
+    {
+      "id": "0x2D",
+      "enum": "FLIGHT_LOG_RECORD_FUSION_HORIZON_MEASUREMENT",
+      "name": "FUSION_HORIZON_MEASUREMENT",
+      "version": 1,
+      "payload_size": 148,
+      "size_macro": "FLIGHT_LOG_FUSION_HORIZON_MEASUREMENT_PAYLOAD_SIZE",
+      "c_type": "FlightLogFusionHorizonMeasurementRecord",
+      "member": "fusion_horizon_measurement",
+      "default_stream": {
+        "enabled": false,
+        "policy": "every",
+        "decimation": 1,
+        "period_us": 0
+      },
+      "fields": [
+        {
+          "name": "sample_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "receive_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "measurement_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "application_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "evaluation_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "operation_sequence",
+          "type": "u32"
+        },
+        {
+          "name": "epoch",
+          "type": "u32"
+        },
+        {
+          "name": "source_id",
+          "type": "u32"
+        },
+        {
+          "name": "calibration_generation",
+          "type": "u32"
+        },
+        {
+          "name": "source_sequence",
+          "type": "u32"
+        },
+        {
+          "name": "algorithm_id",
+          "type": "u8"
+        },
+        {
+          "name": "algorithm_revision",
+          "type": "u8"
+        },
+        {
+          "name": "numerical_revision",
+          "type": "u8"
+        },
+        {
+          "name": "phase",
+          "type": "u8"
+        },
+        {
+          "name": "group",
+          "type": "u8"
+        },
+        {
+          "name": "physically_valid",
+          "type": "u8"
+        },
+        {
+          "name": "admitted",
+          "type": "u8"
+        },
+        {
+          "name": "update_result",
+          "type": "u8"
+        },
+        {
+          "name": "fusion_timing_mode",
+          "type": "u8"
+        },
+        {
+          "name": "timing_flags",
+          "type": "u8"
+        },
+        {
+          "name": "execution_result",
+          "type": "u8"
+        },
+        {
+          "name": "effective_update",
+          "type": "u8"
+        },
+        {
+          "name": "observation",
+          "type": "f32",
+          "count": 2
+        },
+        {
+          "name": "innovation",
+          "type": "f32",
+          "count": 2
+        },
+        {
+          "name": "prepared_variance",
+          "type": "f32",
+          "count": 2
+        },
+        {
+          "name": "effective_variance",
+          "type": "f32",
+          "count": 2
+        },
+        {
+          "name": "nis",
+          "type": "f32"
+        },
+        {
+          "name": "quality_scale",
+          "type": "f32"
+        },
+        {
+          "name": "consistency_scale",
+          "type": "f32"
+        },
+        {
+          "name": "robust_scale",
+          "type": "f32"
+        },
+        {
+          "name": "kf_availability_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "kf_consistency_start_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "kf_recovery_generation",
+          "type": "u32"
+        },
+        {
+          "name": "kf_consistent_count",
+          "type": "u32"
+        },
+        {
+          "name": "kf_outage",
+          "type": "u8"
+        },
+        {
+          "name": "kf_loss_latched",
+          "type": "u8"
+        },
+        {
+          "name": "kf_recovery_valid",
+          "type": "u8"
+        },
+        {
+          "name": "kf_consistency_valid",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "id": "0x2E",
+      "enum": "FLIGHT_LOG_RECORD_FUSION_HORIZON_STATUS",
+      "name": "FUSION_HORIZON_STATUS",
+      "version": 1,
+      "payload_size": 88,
+      "size_macro": "FLIGHT_LOG_FUSION_HORIZON_STATUS_PAYLOAD_SIZE",
+      "c_type": "FlightLogFusionHorizonStatusRecord",
+      "member": "fusion_horizon_status",
+      "default_stream": {
+        "enabled": false,
+        "policy": "every",
+        "decimation": 1,
+        "period_us": 0
+      },
+      "fields": [
+        {
+          "name": "input_present_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "primary_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "output_state_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "output_covariance_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "operation_sequence",
+          "type": "u32"
+        },
+        {
+          "name": "epoch",
+          "type": "u32"
+        },
+        {
+          "name": "source_id",
+          "type": "u32"
+        },
+        {
+          "name": "calibration_generation",
+          "type": "u32"
+        },
+        {
+          "name": "horizon_us",
+          "type": "u32"
+        },
+        {
+          "name": "work_count",
+          "type": "u32"
+        },
+        {
+          "name": "maximum_work",
+          "type": "u32"
+        },
+        {
+          "name": "late_count",
+          "type": "u32"
+        },
+        {
+          "name": "capacity_count",
+          "type": "u32"
+        },
+        {
+          "name": "failure_operation_sequence",
+          "type": "u32"
+        },
+        {
+          "name": "body_count",
+          "type": "u16"
+        },
+        {
+          "name": "event_count",
+          "type": "u16"
+        },
+        {
+          "name": "completion_count",
+          "type": "u16"
+        },
+        {
+          "name": "reserved_count",
+          "type": "u16"
+        },
+        {
+          "name": "algorithm_id",
+          "type": "u8"
+        },
+        {
+          "name": "algorithm_revision",
+          "type": "u8"
+        },
+        {
+          "name": "numerical_revision",
+          "type": "u8"
+        },
+        {
+          "name": "fusion_timing_mode",
+          "type": "u8"
+        },
+        {
+          "name": "phase",
+          "type": "u8"
+        },
+        {
+          "name": "execution_result",
+          "type": "u8"
+        },
+        {
+          "name": "failure_operation_valid",
+          "type": "u8"
+        },
+        {
+          "name": "horizon_initialized",
+          "type": "u8"
+        }
+      ]
+    }
+  ],
+  "phases": {
+    "measurement": {
+      "request": 0,
+      "completion": 1
+    },
+    "status": {
+      "warmup": 0,
+      "active": 1,
+      "fault": 2
+    }
+  },
+  "request": "One immutable observation per group. Queued requests have admitted=0, effective_update=0, application_timestamp_us=0, update_result=255 and nis=-1; execution_result=11. Ordinary rejections retain their explicit execution result. No request counts as an attempted or effective fusion.",
+  "completion": "Same operation_sequence as its owned queued request. Application equals resolved source time; evaluation is the actual publication present. admitted denotes an attempted valid numerical update. effective_update denotes accepted/soft fusion with effective gain or the existing explicit KF reanchor, never covariance-only inflation or NIS rejection.",
+  "transaction_failure": "Emit fault status without successful completions. Output epochs retain the last committed output; failure_operation_valid explicitly distinguishes event failures including wrapped operation_sequence=0. input_present is the last accepted raw-input epoch; the record header retains the attempted cycle epoch. horizon_initialized=0 means primary/input epochs are unavailable (zero); output epochs still identify the last published state/P, including the preflight state before any horizon reset.",
+  "numerical_revisions": {
+    "kf6": 1,
+    "eskf15": 2
+  },
+  "timing_mode": 2,
+  "execution_results": {
+    "complete": 0,
+    "invalid": 1,
+    "stale": 2,
+    "duplicate": 3,
+    "epoch_mismatch": 4,
+    "discontinuity": 5,
+    "numeric_error": 6,
+    "not_ready": 7,
+    "history_miss": 8,
+    "capacity": 9,
+    "work_limit": 10,
+    "queued": 11,
+    "warmup": 12,
+    "late": 13,
+    "model_mismatch": 14,
+    "busy": 15
+  },
+  "frozen_predecessor": "contracts/navigation_fusion_timing_records_v2.json",
+  "prepared_variance": "Exact binary32 variance passed to the numerical update before NIS/robust weighting. Quality and consistency scales are already applied; never multiply them again for Recorded replay.",
+  "kf_receive_certificate": "Immutable once-per-physical-receipt NavigationReplayGroupEvidence plus consistency_valid. Copy to the delayed KF group at source-time application; do not reconstruct its counters from application order. All eight fields are zero for ESKF15 and barometer groups."
+}

@@ -6,7 +6,7 @@ from silverstar_flp.ui.widgets import StandardComboBox
 
 
 class FusionTimingEditor(StandardComboBox):
-    """Named values for the two implemented timing modes; no implicit coercion."""
+    """Named values for the three timing modes; preserve their integer identity."""
 
     committed = Signal(int)
     valueChanged = Signal(int)
@@ -15,6 +15,7 @@ class FusionTimingEditor(StandardComboBox):
         super().__init__(parent)
         self.addItem("", 0)
         self.addItem("", 1)
+        self.addItem("", 2)
         self.setCurrentIndex(1)
         self.Language_Set(language)
         self.currentIndexChanged.connect(self._Value_Change)
@@ -27,15 +28,14 @@ class FusionTimingEditor(StandardComboBox):
         self.committed.emit(self.value())
 
     def Language_Set(self, language: str) -> None:
-        labels = (("当前状态融合（不回放）", "延迟融合（历史回放）")
-                  if language == "zh_CN" else
-                  ("Current state (no replay)", "Delayed fusion (history replay)"))
+        labels = (('当前状态融合（无回放）', '延迟融合（历史回放）', '滞后主滤波 + 独立当前预测（实验）') if language == "zh_CN" else
+                  ('Current state (no replay)', 'Delayed fusion (history replay)', 'Delayed primary + independent present predictor (experimental)'))
         with QSignalBlocker(self):
             for index, label in enumerate(labels):
                 self.setItemText(index, label)
 
     def setValue(self, value: object) -> None:
-        if isinstance(value, bool) or value not in (0, 1):
+        if type(value) is not int or value not in (0, 1, 2):
             raise ValueError("fusion_timing_mode_invalid")
         self.setCurrentIndex(self.findData(int(value)))
 
@@ -45,7 +45,7 @@ class FusionTimingEditor(StandardComboBox):
 
     def value(self) -> int:
         value = self.currentData()
-        if type(value) is not int or value not in (0, 1):
+        if type(value) is not int or value not in (0, 1, 2):
             raise ValueError("fusion_timing_mode_invalid")
         return value
 

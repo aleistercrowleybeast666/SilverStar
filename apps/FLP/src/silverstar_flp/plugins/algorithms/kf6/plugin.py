@@ -927,16 +927,24 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
         required=False, precision=0, step=1, order=99 + index,
         label_key=f"parameter.nis_{kind}_enabled", group_key="parameter_group.consistency_gating")
         for index, kind in enumerate(("soft", "hard"))))
-    metadata = replace(metadata, parameter_schema=metadata.parameter_schema + (
-        ParameterSpec("fusion_timing_mode", "int", 1, 0, 1, "1", required=False,
+    metadata = replace(metadata, version="0.3.0-firmware-SILV0013", parameter_schema=metadata.parameter_schema + (
+        ParameterSpec("fusion_timing_mode", "int", 1, 0, 2, "1", required=False,
             precision=0, step=1, order=101, label_key="parameter.fusion_timing_mode",
-            group_key="parameter_group.process_model"),))
+            group_key="parameter_group.process_model"),
+        ParameterSpec("fusion_horizon_ms", "int", 300, 10, 550, "ms", required=False,
+            precision=0, step=10, order=102, label_key="parameter.fusion_horizon_ms",
+            group_key="parameter_group.process_model", tooltip_key="parameter.tooltip.fusion_horizon_ms"),))
 
     def ParameterSchemaCompatible_Is(self, identity: str) -> bool:
         if super().ParameterSchemaCompatible_Is(identity):
             return True
-        before_timing = replace(self.metadata, parameter_schema=tuple(
-            spec for spec in self.metadata.parameter_schema
+        previous = replace(self.metadata, parameter_schema=tuple(
+            replace(spec, maximum=1) if spec.parameter_id == 'fusion_timing_mode' else spec
+            for spec in self.metadata.parameter_schema if spec.parameter_id != 'fusion_horizon_ms'))
+        if identity == previous.ParameterSchemaIdentity_Get():
+            return True
+        before_timing = replace(previous, parameter_schema=tuple(
+            spec for spec in previous.parameter_schema
             if spec.parameter_id != "fusion_timing_mode"))
         if identity == before_timing.ParameterSchemaIdentity_Get():
             return True
@@ -1165,6 +1173,21 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
             nis_hard_enabled=bool(parameters.get("nis_hard_enabled", 1)),
         )
         q_nb = Quaternion_Normalize(np.asarray(initial.payload["q_nb"], dtype=np.float32))
+        if timing_mode == 2:
+            if (velocity_shift_ms is not None or analysis_legacy_reacquisition or analysis_frozen_initial
+                    or analysis_options is not None or algorithm_revision != 2):
+                raise ValueError('fusion_horizon_legacy_analysis_override_unavailable')
+            metadata = dataset.semantic_context.raw_metadata if dataset.semantic_context else {}
+            quality = metadata.get('metadata_declarations', {}).get('navigation_replay', {}).get('gnss_integrity_revision')
+            if type(quality) is not int or quality != 3:
+                raise ValueError('fusion_horizon_quality_revision3_required')
+            filter_instance.require_effective_gain = True
+            filter_instance.outage_required = True
+            from silverstar_flp.plugins.algorithms.horizon_execution import KfHorizon_Run
+            return KfHorizon_Run(self, dataset, request, parameters, timing_audit, filter_instance,
+                increments, task_context, mission_bounds,
+                recorded_horizon_us=timing_audit['recorded_horizon_us'],
+                diagnostics=source_diagnostics)
         schedule, schedule_inferred = self._MeasurementSchedule_Build(dataset, increments)
         filter_instance.outage_required = not analysis_legacy_reacquisition
         schedule = self._MeasurementParameters_Apply(
@@ -1412,7 +1435,9 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
         )
         if records is None:
             return {}
-        specs = {spec.parameter_id: spec for spec in self.metadata.parameter_schema}
+        tunables = {spec.parameter_id for spec in self.metadata.parameter_schema}
+        specs = {spec.parameter_id: spec for spec in (*self.metadata.parameter_schema,
+                                                     *self.metadata.firmware_only_parameter_schema)}
         values = {}
         for name, item in records.items():
             if name.startswith("gnss_integrity_"):
@@ -1423,7 +1448,8 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
             if item["unit"] != spec.unit or item["representation"] != spec.representation:
                 raise ValueError(f"parameter_contract_mismatch:{name}")
             spec.Value_Validate(item["value"])
-            values[name] = item["value"]
+            if name in tunables:
+                values[name] = item["value"]
         return values
 
     def ProcessModelRevision_Resolve(

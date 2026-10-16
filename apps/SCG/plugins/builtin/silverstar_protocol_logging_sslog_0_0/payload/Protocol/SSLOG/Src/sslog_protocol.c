@@ -146,6 +146,7 @@ FlightLogSerializeResult FlightLog_RecordSerialize(
     uint8_t *buffer, uint16_t buffer_capacity, uint16_t *serialized_size)
 {
     const SslogRecordMetadata *metadata;
+    uint16_t payload_size;
     uint16_t payload_written;
     uint16_t total_size;
     uint32_t crc;
@@ -161,8 +162,13 @@ FlightLogSerializeResult FlightLog_RecordSerialize(
     {
         return FLIGHT_LOG_SERIALIZE_RESULT_BAD_TYPE;
     }
+    payload_size = metadata->payload_size;
+    if ((payload_size == 0U) || (payload_size > SSLOG_MAX_PAYLOAD_SIZE))
+    {
+        return FLIGHT_LOG_SERIALIZE_RESULT_BAD_TYPE;
+    }
     total_size = (uint16_t)(FLIGHT_LOG_RECORD_HEADER_SIZE +
-                            metadata->payload_size +
+                            payload_size +
                             FLIGHT_LOG_RECORD_CRC_SIZE);
     if (buffer_capacity < total_size)
     {
@@ -173,20 +179,20 @@ FlightLogSerializeResult FlightLog_RecordSerialize(
     Sslog_U32Put(&buffer[0], SSLOG_RECORD_SYNC);
     buffer[4] = metadata->record_version;
     buffer[5] = (uint8_t)record->record_type;
-    Sslog_U16Put(&buffer[6], metadata->payload_size);
+    Sslog_U16Put(&buffer[6], payload_size);
     Sslog_U32Put(&buffer[8], record_sequence);
     Sslog_U64Put(&buffer[12], record->timestamp_us);
     Sslog_U32Put(&buffer[20], record->valid_flags);
     payload_written = SslogRecords_PayloadSerialize(
-        record, &buffer[FLIGHT_LOG_RECORD_HEADER_SIZE], metadata->payload_size);
-    if (payload_written != metadata->payload_size)
+        record, &buffer[FLIGHT_LOG_RECORD_HEADER_SIZE], payload_size);
+    if (payload_written != payload_size)
     {
         return FLIGHT_LOG_SERIALIZE_RESULT_BAD_TYPE;
     }
     crc = FlightLog_Crc32(
-        buffer, FLIGHT_LOG_RECORD_HEADER_SIZE + metadata->payload_size);
+        buffer, FLIGHT_LOG_RECORD_HEADER_SIZE + payload_size);
     Sslog_U32Put(&buffer[FLIGHT_LOG_RECORD_HEADER_SIZE +
-                        metadata->payload_size], crc);
+                        payload_size], crc);
     *serialized_size = total_size;
     return FLIGHT_LOG_SERIALIZE_RESULT_OK;
 }
@@ -220,7 +226,9 @@ static FlightLogDeserializeResult Sslog_RecordHeaderParse(
         return FLIGHT_LOG_DESERIALIZE_RESULT_BAD_VERSION;
     }
     context->payload_size = Sslog_U16Get(&buffer[6]);
-    if (context->payload_size != context->metadata->payload_size)
+    if ((context->payload_size == 0U) ||
+        (context->payload_size > SSLOG_MAX_PAYLOAD_SIZE) ||
+        (context->payload_size != context->metadata->payload_size))
     {
         return FLIGHT_LOG_DESERIALIZE_RESULT_BAD_SIZE;
     }

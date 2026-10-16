@@ -5,6 +5,7 @@
 
 /* Source-owned identity: original-increment equivalent white acceleration. */
 #define NAV_KF_ALGORITHM_REVISION 2U
+#define NAV_KF_NUMERICAL_REVISION 1U
 
 typedef enum
 {

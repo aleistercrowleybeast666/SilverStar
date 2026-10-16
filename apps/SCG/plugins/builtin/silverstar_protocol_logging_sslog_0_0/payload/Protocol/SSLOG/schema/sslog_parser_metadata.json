@@ -3360,6 +3360,302 @@
           "count": 2
         }
       ]
+    },
+    {
+      "id": "0x2D",
+      "enum": "FLIGHT_LOG_RECORD_FUSION_HORIZON_MEASUREMENT",
+      "name": "FUSION_HORIZON_MEASUREMENT",
+      "version": 1,
+      "payload_size": 148,
+      "size_macro": "FLIGHT_LOG_FUSION_HORIZON_MEASUREMENT_PAYLOAD_SIZE",
+      "c_type": "FlightLogFusionHorizonMeasurementRecord",
+      "member": "fusion_horizon_measurement",
+      "default_stream": {
+        "enabled": false,
+        "policy": "every",
+        "decimation": 1,
+        "period_us": 0
+      },
+      "fields": [
+        {
+          "name": "sample_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "receive_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "measurement_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "application_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "evaluation_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "operation_sequence",
+          "type": "u32"
+        },
+        {
+          "name": "epoch",
+          "type": "u32"
+        },
+        {
+          "name": "source_id",
+          "type": "u32"
+        },
+        {
+          "name": "calibration_generation",
+          "type": "u32"
+        },
+        {
+          "name": "source_sequence",
+          "type": "u32"
+        },
+        {
+          "name": "algorithm_id",
+          "type": "u8"
+        },
+        {
+          "name": "algorithm_revision",
+          "type": "u8"
+        },
+        {
+          "name": "numerical_revision",
+          "type": "u8"
+        },
+        {
+          "name": "phase",
+          "type": "u8"
+        },
+        {
+          "name": "group",
+          "type": "u8"
+        },
+        {
+          "name": "physically_valid",
+          "type": "u8"
+        },
+        {
+          "name": "admitted",
+          "type": "u8"
+        },
+        {
+          "name": "update_result",
+          "type": "u8"
+        },
+        {
+          "name": "fusion_timing_mode",
+          "type": "u8"
+        },
+        {
+          "name": "timing_flags",
+          "type": "u8"
+        },
+        {
+          "name": "execution_result",
+          "type": "u8"
+        },
+        {
+          "name": "effective_update",
+          "type": "u8"
+        },
+        {
+          "name": "observation",
+          "type": "f32",
+          "count": 2
+        },
+        {
+          "name": "innovation",
+          "type": "f32",
+          "count": 2
+        },
+        {
+          "name": "prepared_variance",
+          "type": "f32",
+          "count": 2
+        },
+        {
+          "name": "effective_variance",
+          "type": "f32",
+          "count": 2
+        },
+        {
+          "name": "nis",
+          "type": "f32"
+        },
+        {
+          "name": "quality_scale",
+          "type": "f32"
+        },
+        {
+          "name": "consistency_scale",
+          "type": "f32"
+        },
+        {
+          "name": "robust_scale",
+          "type": "f32"
+        },
+        {
+          "name": "kf_availability_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "kf_consistency_start_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "kf_recovery_generation",
+          "type": "u32"
+        },
+        {
+          "name": "kf_consistent_count",
+          "type": "u32"
+        },
+        {
+          "name": "kf_outage",
+          "type": "u8"
+        },
+        {
+          "name": "kf_loss_latched",
+          "type": "u8"
+        },
+        {
+          "name": "kf_recovery_valid",
+          "type": "u8"
+        },
+        {
+          "name": "kf_consistency_valid",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "id": "0x2E",
+      "enum": "FLIGHT_LOG_RECORD_FUSION_HORIZON_STATUS",
+      "name": "FUSION_HORIZON_STATUS",
+      "version": 1,
+      "payload_size": 88,
+      "size_macro": "FLIGHT_LOG_FUSION_HORIZON_STATUS_PAYLOAD_SIZE",
+      "c_type": "FlightLogFusionHorizonStatusRecord",
+      "member": "fusion_horizon_status",
+      "default_stream": {
+        "enabled": false,
+        "policy": "every",
+        "decimation": 1,
+        "period_us": 0
+      },
+      "fields": [
+        {
+          "name": "input_present_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "primary_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "output_state_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "output_covariance_timestamp_us",
+          "type": "u64"
+        },
+        {
+          "name": "operation_sequence",
+          "type": "u32"
+        },
+        {
+          "name": "epoch",
+          "type": "u32"
+        },
+        {
+          "name": "source_id",
+          "type": "u32"
+        },
+        {
+          "name": "calibration_generation",
+          "type": "u32"
+        },
+        {
+          "name": "horizon_us",
+          "type": "u32"
+        },
+        {
+          "name": "work_count",
+          "type": "u32"
+        },
+        {
+          "name": "maximum_work",
+          "type": "u32"
+        },
+        {
+          "name": "late_count",
+          "type": "u32"
+        },
+        {
+          "name": "capacity_count",
+          "type": "u32"
+        },
+        {
+          "name": "failure_operation_sequence",
+          "type": "u32"
+        },
+        {
+          "name": "body_count",
+          "type": "u16"
+        },
+        {
+          "name": "event_count",
+          "type": "u16"
+        },
+        {
+          "name": "completion_count",
+          "type": "u16"
+        },
+        {
+          "name": "reserved_count",
+          "type": "u16"
+        },
+        {
+          "name": "algorithm_id",
+          "type": "u8"
+        },
+        {
+          "name": "algorithm_revision",
+          "type": "u8"
+        },
+        {
+          "name": "numerical_revision",
+          "type": "u8"
+        },
+        {
+          "name": "fusion_timing_mode",
+          "type": "u8"
+        },
+        {
+          "name": "phase",
+          "type": "u8"
+        },
+        {
+          "name": "execution_result",
+          "type": "u8"
+        },
+        {
+          "name": "failure_operation_valid",
+          "type": "u8"
+        },
+        {
+          "name": "horizon_initialized",
+          "type": "u8"
+        }
+      ]
     }
   ],
   "fccg": {
@@ -4032,6 +4328,48 @@
         },
         "producer_components": [
           "silverstar.algorithm.estimator.sf6"
+        ]
+      },
+      "FLIGHT_LOG_RECORD_FUSION_HORIZON_MEASUREMENT": {
+        "level": "required",
+        "purpose": "flight",
+        "default_enabled": false,
+        "display_names": {
+          "en_US": "FUSION_HORIZON_MEASUREMENT",
+          "zh_CN": "FUSION_HORIZON_MEASUREMENT"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.estimator"
+          ]
+        },
+        "cadence": {
+          "kind": "measurement"
+        },
+        "producer_components": [
+          "silverstar.algorithm.estimator.kf6",
+          "silverstar.algorithm.estimator.eskf15"
+        ]
+      },
+      "FLIGHT_LOG_RECORD_FUSION_HORIZON_STATUS": {
+        "level": "required",
+        "purpose": "flight",
+        "default_enabled": false,
+        "display_names": {
+          "en_US": "FUSION_HORIZON_STATUS",
+          "zh_CN": "FUSION_HORIZON_STATUS"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.estimator"
+          ]
+        },
+        "cadence": {
+          "kind": "source"
+        },
+        "producer_components": [
+          "silverstar.algorithm.estimator.kf6",
+          "silverstar.algorithm.estimator.eskf15"
         ]
       }
     }
