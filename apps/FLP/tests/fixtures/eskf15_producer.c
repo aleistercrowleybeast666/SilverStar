@@ -127,6 +127,9 @@ static void Bootstrap_Write(FILE *file)
 int main(int argc, char **argv)
 {
     assert(argc==2 || argc==3);
+    /* This direct-kernel producer has no delayed queue. Its source, application
+     * and evaluation epochs coincide in either supported legacy/current mode. */
+    assert(SYSTEM_FUSION_TIMING_MODE==0 || SYSTEM_FUSION_TIMING_MODE==1);
     s_interleaved=(argc==3);
     FILE *file=fopen(argv[1],"wb"); assert(file!=NULL);
     const float nominal[16]={0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0};
@@ -165,6 +168,11 @@ int main(int argc, char **argv)
             m->sample_timestamp_us=m->receive_timestamp_us=m->measurement_timestamp_us=
                 m->evaluation_timestamp_us=s_state.timestamp_us;
             m->operation_sequence=step*5U+group; m->epoch=1U; m->calibration_generation=1U;
+            m->application_timestamp_us=s_state.timestamp_us;
+            m->fusion_timing_mode=SYSTEM_FUSION_TIMING_MODE;
+            m->timing_flags=7U; /* Resolved, applied, trusted MCU source epoch. */
+            m->execution_result=0U; /* Actual successful numerical call above. */
+            m->source_sequence=step/10U;
             m->group=group; m->physically_valid=m->admitted=1U; m->update_result=outcome.result;
             m->quality_scale=m->consistency_scale=m->robust_scale=1.0f; m->nis=outcome.nis;
             memcpy(m->base_variance,observation.variance,sizeof(m->base_variance));

@@ -90,6 +90,15 @@ def test_actual_c_producer_exact_decoder_and_15_state_replay(tmp_path, interleav
     assert not dataset.diagnostics.truncated_tail
     assert len(dataset.Records_Get("ESKF15_BODY_INPUT")) == 100
     assert len(dataset.Records_Get("ESKF15_MEASUREMENT")) == 50
+    from silverstar_flp.decoder_profiles.fusion_timing import FusionTiming_FromSemantics
+    timing = FusionTiming_FromSemantics(dataset.semantic_context.raw_metadata)
+    for measurement in dataset.Records_Get("ESKF15_MEASUREMENT"):
+        payload = measurement.payload
+        assert measurement.record_version == 2 and payload['fusion_timing_mode'] == timing.mode
+        assert payload['timing_flags'] == 7 and payload['execution_result'] == 0
+        assert (payload['measurement_timestamp_us'] == payload['application_timestamp_us']
+                == payload['evaluation_timestamp_us'] == measurement.timestamp_us)
+        assert 1 <= payload['source_sequence'] <= 10
     if interleaved:
         parts = dataset.Records_Get("ESKF15_FULL_P_PART")
         next_body = dataset.Records_Get("ESKF15_BODY_INPUT")[1]

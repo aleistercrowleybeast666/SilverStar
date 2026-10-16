@@ -1,5 +1,6 @@
 """Small recorded-operation counterexamples; no mission replay or hardware claim."""
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, fields, make_dataclass, replace
+import json
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -13,6 +14,26 @@ from silverstar_flp.plugins.algorithms.kf6.filter import Kf6Filter, Kf6GnssGroup
 from silverstar_flp.plugins.algorithms.kf6.fixed_lag import Faithful_Run, FixedLagReplay, ReplayEvent, ReplayResult
 from silverstar_flp.plugins.algorithms.kf6.measurement_time import MeasurementDelays_Apply
 from tests.test_audit_block_artifacts import _Fingerprint
+
+
+def _HistoricalControlState(state):
+    """Keep 45778d3's complete state shape and explicitly check later controls.
+
+    The historical implementation and all 35 shared fields were independently
+    compared bitwise (including snapshots/full P) before pinning this fixture.
+    No old expected hash or fingerprint encoding changes. Unknown added fields
+    must be reviewed instead of silently disappearing from this control.
+    """
+    shape = json.loads((Path(__file__).parent/'fixtures/kf6_filter_shape_45778d3.json').read_text('utf-8'))
+    assert shape['source_commit'] == '45778d3a4d8275918f81425e793d8b4b0c3d5d09'
+    original = shape['field_order']
+    current = {field.name for field in fields(state)}
+    assert current == set(original) | set(shape['subsequent_fields'])
+    if any(type(getattr(state, name)) is not bool or getattr(state, name) is not expected
+           for name, expected in shape['subsequent_fields'].items()):
+        raise ValueError('historical_control_requires_enabled_gates')
+    historical = make_dataclass(shape['class_name'], [(name, object) for name in original], frozen=True, slots=True)
+    return historical(**{name: getattr(state, name) for name in original})
 
 
 def _Configuration(revision=2):
@@ -227,9 +248,17 @@ def test_normal_recorded_combined_state_and_diagnostics_control(revision):
     assert len(snapshots) == 1 and not diagnostics['execution_mismatches']
     assert list(snapshots[-1].group_result) == [0]*4
     assert all(row['result'] == 0 for row in diagnostics['measurement_events'])
-    fingerprint = _Fingerprint((snapshots, state))
+    fingerprint = _Fingerprint((snapshots, _HistoricalControlState(state)))
     # Exact pre-fix 45778d3 fingerprints, recorded in the complete before log.
     expected = {1: 'c3e6d483291544d1a6402e9a31b8463dadf14635cfcb8d35734341a42f644ed8',
                 2: '47aebe3aa2d5337050078d3786ea66206e2576e5a7dbfc5655b9f3c6ae81af5c'}
     assert fingerprint == expected[revision]
     print('NORMAL_CONTROL', revision, fingerprint)
+
+
+@pytest.mark.parametrize('name', ['nis_soft_enabled', 'nis_hard_enabled'])
+def test_historical_shape_does_not_hide_disabled_new_gate_controls(name):
+    _, state, _ = _Faithful()
+    setattr(state, name, False)
+    with pytest.raises(ValueError, match='historical_control_requires_enabled_gates'):
+        _HistoricalControlState(state)

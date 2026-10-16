@@ -1,0 +1,104 @@
+diff --git a/apps/FLP/tests/fixtures/eskf15_producer.c b/apps/FLP/tests/fixtures/eskf15_producer.c
+index 5d01a965..366907cb 100644
+--- a/apps/FLP/tests/fixtures/eskf15_producer.c
++++ b/apps/FLP/tests/fixtures/eskf15_producer.c
+@@ -127,6 +127,9 @@ static void Bootstrap_Write(FILE *file)
+ int main(int argc, char **argv)
+ {
+     assert(argc==2 || argc==3);
++    /* This direct-kernel producer has no delayed queue. Its source, application
++     * and evaluation epochs coincide in either supported legacy/current mode. */
++    assert(SYSTEM_FUSION_TIMING_MODE==0 || SYSTEM_FUSION_TIMING_MODE==1);
+     s_interleaved=(argc==3);
+     FILE *file=fopen(argv[1],"wb"); assert(file!=NULL);
+     const float nominal[16]={0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0};
+@@ -165,6 +168,11 @@ int main(int argc, char **argv)
+             m->sample_timestamp_us=m->receive_timestamp_us=m->measurement_timestamp_us=
+                 m->evaluation_timestamp_us=s_state.timestamp_us;
+             m->operation_sequence=step*5U+group; m->epoch=1U; m->calibration_generation=1U;
++            m->application_timestamp_us=s_state.timestamp_us;
++            m->fusion_timing_mode=SYSTEM_FUSION_TIMING_MODE;
++            m->timing_flags=7U; /* Resolved, applied, trusted MCU source epoch. */
++            m->execution_result=0U; /* Actual successful numerical call above. */
++            m->source_sequence=step/10U;
+             m->group=group; m->physically_valid=m->admitted=1U; m->update_result=outcome.result;
+             m->quality_scale=m->consistency_scale=m->robust_scale=1.0f; m->nis=outcome.nis;
+             memcpy(m->base_variance,observation.variance,sizeof(m->base_variance));
+diff --git a/apps/FLP/tests/test_eskf15_golden.py b/apps/FLP/tests/test_eskf15_golden.py
+index 7c17bfd1..b904c067 100644
+--- a/apps/FLP/tests/test_eskf15_golden.py
++++ b/apps/FLP/tests/test_eskf15_golden.py
+@@ -90,6 +90,15 @@ def test_actual_c_producer_exact_decoder_and_15_state_replay(tmp_path, interleav
+     assert not dataset.diagnostics.truncated_tail
+     assert len(dataset.Records_Get("ESKF15_BODY_INPUT")) == 100
+     assert len(dataset.Records_Get("ESKF15_MEASUREMENT")) == 50
++    from silverstar_flp.decoder_profiles.fusion_timing import FusionTiming_FromSemantics
++    timing = FusionTiming_FromSemantics(dataset.semantic_context.raw_metadata)
++    for measurement in dataset.Records_Get("ESKF15_MEASUREMENT"):
++        payload = measurement.payload
++        assert measurement.record_version == 2 and payload['fusion_timing_mode'] == timing.mode
++        assert payload['timing_flags'] == 7 and payload['execution_result'] == 0
++        assert (payload['measurement_timestamp_us'] == payload['application_timestamp_us']
++                == payload['evaluation_timestamp_us'] == measurement.timestamp_us)
++        assert 1 <= payload['source_sequence'] <= 10
+     if interleaved:
+         parts = dataset.Records_Get("ESKF15_FULL_P_PART")
+         next_body = dataset.Records_Get("ESKF15_BODY_INPUT")[1]
+diff --git a/apps/FLP/tests/test_kf6_replay_failure_publication.py b/apps/FLP/tests/test_kf6_replay_failure_publication.py
+index d4d44358..ff63d71c 100644
+--- a/apps/FLP/tests/test_kf6_replay_failure_publication.py
++++ b/apps/FLP/tests/test_kf6_replay_failure_publication.py
+@@ -1,5 +1,6 @@
+ """Small recorded-operation counterexamples; no mission replay or hardware claim."""
+-from dataclasses import dataclass, replace
++from dataclasses import dataclass, fields, make_dataclass, replace
++import json
+ from pathlib import Path
+ from types import SimpleNamespace
+ 
+@@ -15,6 +16,26 @@ from silverstar_flp.plugins.algorithms.kf6.measurement_time import MeasurementDe
+ from tests.test_audit_block_artifacts import _Fingerprint
+ 
+ 
++def _HistoricalControlState(state):
++    """Keep 45778d3's complete state shape and explicitly check later controls.
++
++    The historical implementation and all 35 shared fields were independently
++    compared bitwise (including snapshots/full P) before pinning this fixture.
++    No old expected hash or fingerprint encoding changes. Unknown added fields
++    must be reviewed instead of silently disappearing from this control.
++    """
++    shape = json.loads((Path(__file__).parent/'fixtures/kf6_filter_shape_45778d3.json').read_text('utf-8'))
++    assert shape['source_commit'] == '45778d3a4d8275918f81425e793d8b4b0c3d5d09'
++    original = shape['field_order']
++    current = {field.name for field in fields(state)}
++    assert current == set(original) | set(shape['subsequent_fields'])
++    if any(type(getattr(state, name)) is not bool or getattr(state, name) is not expected
++           for name, expected in shape['subsequent_fields'].items()):
++        raise ValueError('historical_control_requires_enabled_gates')
++    historical = make_dataclass(shape['class_name'], [(name, object) for name in original], frozen=True, slots=True)
++    return historical(**{name: getattr(state, name) for name in original})
++
++
+ def _Configuration(revision=2):
+     return dict(process_accel_std_mps2=np.full(3, .2), p0_diagonal=np.ones(6),
+         initial_velocity_enu_mps=np.array([0., 0., 2.]),
+@@ -227,9 +248,17 @@ def test_normal_recorded_combined_state_and_diagnostics_control(revision):
+     assert len(snapshots) == 1 and not diagnostics['execution_mismatches']
+     assert list(snapshots[-1].group_result) == [0]*4
+     assert all(row['result'] == 0 for row in diagnostics['measurement_events'])
+-    fingerprint = _Fingerprint((snapshots, state))
++    fingerprint = _Fingerprint((snapshots, _HistoricalControlState(state)))
+     # Exact pre-fix 45778d3 fingerprints, recorded in the complete before log.
+     expected = {1: 'c3e6d483291544d1a6402e9a31b8463dadf14635cfcb8d35734341a42f644ed8',
+                 2: '47aebe3aa2d5337050078d3786ea66206e2576e5a7dbfc5655b9f3c6ae81af5c'}
+     assert fingerprint == expected[revision]
+     print('NORMAL_CONTROL', revision, fingerprint)
++
++
++@pytest.mark.parametrize('name', ['nis_soft_enabled', 'nis_hard_enabled'])
++def test_historical_shape_does_not_hide_disabled_new_gate_controls(name):
++    _, state, _ = _Faithful()
++    setattr(state, name, False)
++    with pytest.raises(ValueError, match='historical_control_requires_enabled_gates'):
++        _HistoricalControlState(state)
