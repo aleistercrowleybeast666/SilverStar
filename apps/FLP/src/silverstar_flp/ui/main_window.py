@@ -483,6 +483,10 @@ class MainWindow(QMainWindow):
             for source in self._channel_resolver.Sources_Get()
             if source.kind == AnalysisSourceKind.RECORDED
         ]
+        if not sources:
+            # Export can retain common raw records without a navigation solution.
+            sources.append((ReplayResultStore.RECORDED_SOURCE_ID,
+                            self._translator.Text_Get("status.recorded")))
         sources.extend((
             entry.source_id,
             self._translator.Text_Get(
@@ -1077,16 +1081,14 @@ class MainWindow(QMainWindow):
         source_id = (self._replay_store.ActiveSource_Get().source_id
                      if options.source_mode == "follow_ui" else options.source_id)
         source_id = source_id or self._replay_store.ActiveSource_Get().source_id
-        source = self._channel_resolver.Source_Get(source_id)
-        if not source.available:
-            self.export_dialog.Result_Error(f"export_source_unavailable:{source_id}")
-            return
-        source_id = source.source_id
         try:
-            export_store = self._replay_store.Snapshot_Create(source_id)
+            export_store = FlightExporter.SourceSnapshot_Create(
+                self._dataset, self._replay_store, source_id
+            )
         except ValueError as error:
             self.export_dialog.Result_Error(str(error))
             return
+        source_id = export_store.ActiveSource_Get().source_id
         options = replace(options, source_id=source_id)
         dataset = self._dataset
         exporter = FlightExporter(self._registry)

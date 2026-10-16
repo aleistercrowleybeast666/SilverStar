@@ -491,6 +491,22 @@ class FlightExporter:
     def __init__(self, registry: PluginRegistry | None = None) -> None:
         self._registry = registry or builtin_registry()
 
+    @staticmethod
+    def SourceSnapshot_Create(
+        dataset: FlightDataset, store: ReplayResultStore, source_id: str | None = None,
+    ) -> ReplayResultStore:
+        """Freeze one requested source; generic Recorded may export common raw data.
+
+        This does not make a navigation solution available. An unavailable named
+        solution or replay remains an error, with no replacement source.
+        """
+        source = ChannelResolver(
+            dataset, store, prime_trajectory_bounds=False
+        ).Source_Get(source_id)
+        if not source.available and source.source_id != store.RECORDED_SOURCE_ID:
+            raise ValueError(f"export_source_unavailable:{source.source_id}")
+        return store.Snapshot_Create(source.source_id)
+
     def export(
         self,
         dataset: FlightDataset,
@@ -511,23 +527,25 @@ class FlightExporter:
         output = Path(output_directory)
         if output.exists() and (not output.is_dir() or any(output.iterdir())):
             raise FileExistsError(f"export_directory_not_empty: {output}")
-        output.mkdir(parents=True, exist_ok=True)
         suffix = "_ZH" if language == ExportLanguage.ZH else "_EN"
         files: list[Path] = []
         generated: list[ExportGenerated] = []
         skipped: list[ExportSkipped] = []
         failures: list[ExportFailure] = []
         source_store = self._Store_Prepare(replay_store, algorithm_results or {})
-        resolved_source_id = requested.source_id or source_store.ActiveSource_Get().source_id
-        selected_source = ChannelResolver(dataset, source_store, prime_trajectory_bounds=False).Source_Get(resolved_source_id)
-        if not selected_source.available:
-            raise ValueError(f"export_source_unavailable:{resolved_source_id}")
-        store = source_store.Snapshot_Create(selected_source.source_id)
+        store = self.SourceSnapshot_Create(dataset, source_store, requested.source_id)
+        output.mkdir(parents=True, exist_ok=True)
         resolver = ChannelResolver(dataset, store)
+        shared_recorded_data_only = not resolver.Source_Get().available
         mission_bounds = resolver.MissionReplayBounds_Get()
         flight_bounds = FlightDisplayBounds_Get(dataset, mission_bounds)
         trajectory_bounds = resolver.TrajectoryBounds_Get()
         flight_position = resolver.Series_Get("navigation.position_enu")
+        navigation_position_available = bool(
+            flight_position is not None and flight_position.values.ndim == 2
+            and flight_position.values.shape[1] == 3
+            and np.any(flight_position.valid & np.isfinite(flight_position.values).all(axis=1))
+        )
         flight_trajectory_bounds = (
             TrajectoryBounds_Calculate(flight_position, flight_bounds)
             if flight_position is not None else trajectory_bounds
@@ -711,6 +729,16 @@ class FlightExporter:
             progress_code: str = "export.running",
         ) -> None:
             name = item_name(item_id, localized_name)
+            if (not navigation_position_available and (
+                item_id in ("trajectory_3d", "flight_replay_gif")
+                or item_id.startswith("horizontal_trajectory:")
+            )) or (shared_recorded_data_only and item_id in (
+                "standard_plot:Flight_Velocity_ENU", "standard_plot:Flight_Position_ENU",
+                "standard_plot:Flight_Attitude",
+            )):
+                skipped.append(ExportSkipped(item_id, name, "navigation_solution_unavailable"))
+                progress.Unit_Complete(progress_code)
+                return
             try:
                 task_context.Cancel_RaiseIfRequested()
                 path.parent.mkdir(parents=True, exist_ok=True)
@@ -1153,6 +1181,9 @@ class FlightExporter:
         horizontal_range: tuple[float, float],
     ) -> None:
         active = store.ActiveSource_Get()
+        source_available = ChannelResolver(
+            dataset, store, prime_trajectory_bounds=False
+        ).Source_Get().available
         source_hash = hashlib.sha256()
         with dataset.source_path.open("rb") as source:
             while chunk := source.read(1024 * 1024):
@@ -1375,6 +1406,10 @@ class FlightExporter:
             "active_analysis_source": active.source_id,
             "active_recorded_solution": active.recorded_solution_id,
             "active_source_kind": active.kind.value,
+            "active_source_available": source_available,
+            "shared_recorded_data_only": (
+                active.source_id == store.RECORDED_SOURCE_ID and not source_available
+            ),
             "generated": generated_payload,
             "skipped": skipped_payload,
             "failed": failure_payload,

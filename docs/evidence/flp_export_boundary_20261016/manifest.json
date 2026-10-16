@@ -1,0 +1,2330 @@
+{
+  "owner": "/root FLP export boundary",
+  "utc": "2026-10-16T11:24:23.161279+00:00",
+  "base_commit": "cd3fd0652a4162639a1ade55f5f1994f3b666544",
+  "status": "SCOPED_EXPORT_FIX_100_TESTS_PASSED",
+  "test_command": [
+    ".venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "-q",
+    "apps/FLP/tests/test_export_without_navigation.py",
+    "apps/FLP/tests/test_decoder_profiles.py",
+    "apps/FLP/tests/test_analysis_source.py",
+    "apps/FLP/tests/test_primary_source_policy.py",
+    "apps/FLP/tests/test_gnss_export_dependencies.py",
+    "apps/FLP/tests/test_export_theme.py",
+    "apps/FLP/tests/test_project_export.py",
+    "--basetemp=.work/dev013_flp_export01/final04"
+  ],
+  "exit_code": 0,
+  "before_result": "8 failed, 1 passed",
+  "before_sources_file": "execution/before_sources.json",
+  "source_sha256": {
+    "apps/FLP/src/silverstar_flp/export/service.py": "4d19b650bfe47559f4dbb23ca30b44cf3270d3cf69b26dacada5a466d59ee7c5",
+    "apps/FLP/src/silverstar_flp/ui/main_window.py": "5f0153cd52a2cc02c9a7ca3e1b9258f0fd2388822c3f593fb7b3d942da2771c4",
+    "apps/FLP/tests/test_export_without_navigation.py": "18f231bbb102408c1cef754e6ba3fc499c05ebda977a933761c70bd61e634a74",
+    "docs/public/FLP/EXPORT_WITHOUT_NAVIGATION_FIX_20261016.md": "34d1294066323a7af3828d905fc892e6cf2fb93d4aae61303327de3de35ec4f7"
+  },
+  "frozen_navigation_sha256": {
+    "apps/FLP/src/silverstar_flp/decoder_profiles/contract_data.py": "856052f85f4e56fb4bb7556ec70a81eee3e5f05fc282d0eb93237351e6e7402a",
+    "apps/FLP/src/silverstar_flp/decoder_profiles/contracts/navigation_gnss_reacquisition_v1.json": "5e974dd19bee8317b276a02a7f324e3675f05a50a6d34800a6224d28c7eb633b",
+    "apps/FLP/src/silverstar_flp/decoder_profiles/fusion_horizon_identity.py": "6a0edad340649e2de851a2d08d909ad06fe26334e77532104145da29f3f2065c",
+    "apps/FLP/src/silverstar_flp/decoder_profiles/fusion_timing.py": "79e3355df90d4ecd5f94cc45aaac0c911d43267866484e2647d7c391f0166b42",
+    "apps/FLP/src/silverstar_flp/decoder_profiles/gnss_reacquisition.py": "128943384e4047fd9820222181bf6877f7be362c7bdc04cf8886361b927f6d46",
+    "apps/FLP/src/silverstar_flp/plugins/algorithms/eskf15/plugin.py": "af40e528225197b9ec72a277628fff7e0badbf493108261f1eb4793e42544db3",
+    "apps/FLP/tests/test_eskf15_native_parity.py": "d941afa2c71c4ef4fd1539a88b970b0a343ccdf8012dd2723fb8cb4b6fd9cc52",
+    "apps/FLP/tests/test_fusion_current_native_parity.py": "ee96a7be2c4f16aada0dde5290955aa653cb8b5e4123eff351177ee7a3017c35",
+    "apps/FLP/tests/test_fusion_horizon_backend_wire.py": "888dbee78cb68f9f04e27894b6464e8b8ae4bcce22ca57538d7ac85dc4cf0f07",
+    "apps/FLP/tests/test_gnss_reacquisition_identity.py": "93624fff002efb1abf006892f7f3615c13cd6f1c5ecec317b0bbc9034d1b56ea",
+    "apps/FLP/tests/test_packaged_fusion_contracts.py": "789ca7d4fdae611e4124607595386191c1dfa06f38a8c7c4dd9f51b954d0145e",
+    "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Inc/navigation_eskf_horizon_recovery.h": "b9e3434426d83b350fc33850a9df3dc448481fe5f9dc685e6afbc8f91965d6a3",
+    "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Inc/navigation_eskf_reacquisition.h": "0b975a5271c5959e5d303ff94d476efed24b0919406846700442800ef5e1e2eb",
+    "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Inc/navigation_eskf_recovery.h": "8e4c149ec9b4cfbb7364aa6f6caa511ee7d4c7322bd9d157f15c6601ce540b91",
+    "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Inc/navigation_eskf_recovery_configuration.h": "1076878f44794711d35d6c73f24fd5124d117f1bd561f2429a2d40d50cf724dd",
+    "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Inc/navigation_eskf_recovery_qualifier.h": "2bb90fc47b9501487929b04aef97759fcfd01a4a60fc923b7ec2a27fe25dd6b9",
+    "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Inc/navigation_eskf_replay_recovery.h": "f9aa4e9e808c010e3e378ddcc77a1943b5a7881da3f07c15064cd50798725670",
+    "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c": "cca386b85386dde93c4d49191a19b342b181bee3181713dafbb4c173d6061e1f",
+    "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf_horizon.c": "f9704e8fcea139fdcc7497936b3eb0f6402a1d3cc12b9a1c9f8e706fb5a48281",
+    "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf_reacquisition.c": "bda87b6281d650f5ed976a73adc03359ff1fbc62344e4ad4308f38d277cb607b",
+    "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf_recovery.c": "6ba16a3ddcb6f275148ffbd5c2a0cb7b6424e97825f1ff58835fde03749a591d",
+    "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf_recovery_configuration.c": "f604411b2a67ad7fc7771c08c26c1c0858a465ea6cc39346fed64a827c96d962",
+    "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf_recovery_qualifier.c": "43ef2fb18668a55434c52bcc87d13351c0dd4c19cd9be4adebb89e84c4fe9239",
+    "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf_replay.c": "d7ee74847e5bd1bab6d59799218ed5c8862f2c9d8a13a82f374ae553810f6196",
+    "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/plugin.json": "dcf9f1695e95f2cac2c2786b31c61a7a2c8c0a5e2d3d7aa4fbd478a3f2d66796",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Inc/system_gnss_receipt.h": "3dcc39cda8ca83aedf5490379c62bf7afa8fb6a7b5d77e2e38fdedd806ea880d",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_gnss_receipt.c": "adeec7a2fcf955096ae1476c612321ce6d6d294f992e1bda0461b7238f47e220",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_source_selector.c": "9556ac6b93f8191c5d577d5dc42d5ee5f21bf833672b329baa2ac42bda307898",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/run_tests.ps1": "845dc984437a34a9819d6080d48432a326dcdc068fa8fbba7171ce33af00a8ad",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_eskf_horizon.c": "89d7a04a634366c9997394e106176a08564b514385d31e5c53ef39a18684cb0f",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_eskf_origin_receipt_fault.c": "3e90f86febf997d8c5fb64b3eb877f8dfde98789fa3c1df0f5e4ad5b0a329f47",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_logger.c": "cc13b2b8df68d322cdac9761c0308b96c06db7efa8c690fa1510e52230d2cd30",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_task_stacks.py": "2fd9a917a46ee1b2d98fb2b9b4a10edcfb2ff09bf975730ae002b6abbaa04e26",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/plugin.json": "51bb6a710035307ffea7cfeceaecd91d80eaa7a6c48e708bb6e0676a11b6b68b",
+    "apps/SCG/src/silverstar_fccg/generator/render.py": "91d2ac503cd0563315e50306555193aa8911dc2902895e5c4865fef0cf60066f",
+    "apps/SCG/src/silverstar_fccg/project/algorithm_parameters.py": "ffbf81b1e9a5e7a99f0c942ea2def1d2b3540951c30b0e5e22b052afee2fe64a",
+    "apps/SCG/src/silverstar_fccg/project/gnss_reacquisition.py": "0552dc2ba6c9dba715f7614bf0b2d408634091bae8d1e71aecaad85d81bbc464",
+    "apps/SCG/src/silverstar_fccg/project/validation.py": "917a12769c4c40b9fdfdc3cb02db13c769fb2785afbed4d45a8557f751231702",
+    "apps/SCG/tests/fixtures/eskf15_recovery.c": "a51d4689760fde0db86481df4cfde66ab23c2f3bde2f4dcd6cdf8ae61f041e62",
+    "apps/SCG/tests/fixtures/eskf15_recovery_horizon.c": "d2a7f975b6982b2fe4a6a1e0106c2aea3bac86ab27785be1db30197b90601b85",
+    "apps/SCG/tests/fixtures/eskf15_recovery_qualifier.c": "bee15fbe6fab2ec578e60e133ad50c042a7c41f99bdcfb0550bf283208294389",
+    "apps/SCG/tests/fixtures/eskf15_recovery_replay.c": "37699ae2d8d6d826647723bbb12570ac1217c673ecc9cdf77a7ee881a65c7b96",
+    "apps/SCG/tests/fixtures/gnss_receipt_publication.c": "6f14d69284c8040a2e87b2c4332e422df71bb8882615ffb9f450ac49207e30f1",
+    "apps/SCG/tests/fixtures/source_selector/project_device_build_capabilities.h": "1d8f725f511e94d95e89a08edbbbc47e4d6bad671a5749f78ae90b6834e106b4",
+    "apps/SCG/tests/fixtures/source_selector/project_device_instances.h": "9e5d47da6ea608a88ce57747fae5085bba67eeaea97c78859197cb704eb9a9bc",
+    "apps/SCG/tests/test_eskf15_horizon.py": "762f4f363818365dacc51ba4b3125d800b0b3121fa8ce3a884a3891e680a4a1e",
+    "apps/SCG/tests/test_eskf15_horizon_backend.py": "f19e9fe38ce87e1d62ddaa57c0e0573a2f4cc22c8bfb5439c9e6d1c30e22bc07",
+    "apps/SCG/tests/test_eskf15_recovery.py": "524fc142a3c6369d620bad775238de83743097f523b0e37bd58593abe805be53",
+    "apps/SCG/tests/test_eskf15_recovery_horizon.py": "908cb89669638ab65e90b89d1ca5cd267b487601537f249d84709bf0f4349c98",
+    "apps/SCG/tests/test_eskf15_recovery_qualifier.py": "f74a5f835dc20dc704665c66a70e2d09ec666c664e94ec4b81e9f85708eb772d",
+    "apps/SCG/tests/test_eskf15_recovery_replay.py": "cbbe36bb671486bcea7749c41dce82b193cf290d2fc28e31c7cbd94255f556b5",
+    "apps/SCG/tests/test_eskf_body_cadence.py": "0c97fe9a80fc0e80aae4b32a2cc64e7f71bc7a26ccc55a9c42e1125a576b531e",
+    "apps/SCG/tests/test_eskf_workspace_equivalence.py": "b24f2aa1d1f809c2fb59ea8dceae322176061048661d6b346e0d73dbdca9234e",
+    "apps/SCG/tests/test_gnss_reacquisition_config.py": "e9f5fc7668e914ee28099c419fb314a2e7c67807b5ef778949ed42f9e67c9e2d",
+    "apps/SCG/tests/test_gnss_reacquisition_configuration_c.py": "776302bda096a7a7c9fe5960982b0c628131f6c2d5454c475f3a70540d457592",
+    "apps/SCG/tests/test_gnss_receipt_publication.py": "04ae1a8a4124fa87cd03a1ed964fcc6a3aeafee035ade9d16d05419dd9f0f300",
+    "apps/SCG/tests/test_receipt_stack_binding.py": "b5c9c47cfda228ac1339208f807e3528644d8d05faff621c89d593763a4efb46",
+    "contracts/navigation_gnss_reacquisition_v1.json": "5e974dd19bee8317b276a02a7f324e3675f05a50a6d34800a6224d28c7eb633b",
+    "docs/public/SCG/NAVIGATION_DEFAULT_OFF_ACCEPTANCE_20261016.md": "817d07631925591634e17b258f1b2bc92a27dcda228beea5926e597b034330c7",
+    "docs/public/SCG/NAVIGATION_RECEIPT_DEFAULT_OFF_STACK_REVIEW_20261016.md": "6a9788fe65f7b0424315ed471e5069bb383555ecc8741866f97049b1ed019f7e"
+  },
+  "protected_inputs_sha256": {
+    "apps/SCG/plugins/builtin/silverstar_device_telemetry_sx1278/README.md": "71d9222fa8b72831e5e18b51293aee23b2da91f203576fcc26a09cc1d46e5f17",
+    "apps/SCG/plugins/builtin/silverstar_device_telemetry_sx1278/payload/Devices/Telemetry/SX1278/Adapter/Inc/sx1278_instance.h": "85b942a5768906678da37585e06149de9c7948c6c3902c69f79d14df1a11e59d",
+    "apps/SCG/plugins/builtin/silverstar_device_telemetry_sx1278/payload/Devices/Telemetry/SX1278/Adapter/Src/sx1278_telemetry_adapter.c": "90e644dcc2a0cec9d2c6a9fb88cbc05e7525dd105e3b7b16ad4f28ec071b06ce",
+    "apps/SCG/plugins/builtin/silverstar_device_telemetry_sx1278/payload/Devices/Telemetry/SX1278/Inc/sx1278_chip.h": "6ee0ca698b08c5a9fc56e9bfc5bb560d93d22bb7bed3c71d7246831d55e2ed4b",
+    "apps/SCG/plugins/builtin/silverstar_device_telemetry_sx1278/payload/Devices/Telemetry/SX1278/Inc/sx1278_device.h": "7576c930186fc8c2217fff81232154f1e327233972f53bacf76f7430812739df",
+    "apps/SCG/plugins/builtin/silverstar_device_telemetry_sx1278/payload/Devices/Telemetry/SX1278/Src/sx1278_chip.c": "4d6f78ac2393c653373b28326d1fb0367d378cb204382d9391f77ca4b0e65a9e",
+    "apps/SCG/plugins/builtin/silverstar_device_telemetry_sx1278/payload/Devices/Telemetry/SX1278/Src/sx1278_device.c": "eb538530fe72934a05cb0f07198d2194470a3868764bd3c83ec705586697acf2",
+    "apps/SCG/plugins/builtin/silverstar_device_telemetry_sx1278/payload/Ground/Radio/Src/ground_radio_sx1278.c": "01ca5e8c5651fe531783d55b1bbc5630fe71808d7d6166493fb348cab50ec5d2",
+    "apps/SCG/plugins/builtin/silverstar_device_telemetry_sx1278/plugin.json": "85275ab8bcc09d8914e6d8a6ff7dceb0395d64a122c23fb6af4e87260651d66c",
+    "apps/SCG/src/silverstar_fccg/project/sx1278.py": "10143b1461d6b430295453b325b5161c42ac21e06eb6a54bdae535a6e273db7f",
+    "apps/SCG/tests/fixtures/sx1278_host/arm_link.c": "abd075e3a6b8d1799c0797f1669d9f6c954bedb2f6e628168774c401c227dd69",
+    "apps/SCG/tests/fixtures/sx1278_host/host.c": "af4e561a86a6ae9232ba402fdf706ec6743e0984804173c8e867e8557c3b06a8",
+    "apps/SCG/tests/test_sx1278_experimental.py": "62473a43f36be8a0b25939fca9830029ab9fc31c471cb92115556fd3538b03ff",
+    "work_build_candidates_20261006.csv": "93358b701a5ed53096153ebf40241324e1701732b409dcc062911e4240dcdaa9",
+    "work_inventory_20261006.txt": "6a712e287c3d93cc887adffcaaeef1767371b5b1cf61ee06f539617d092939ca",
+    "work_subtree_classification_20261006.csv": "33437c9052486d3ae50377ceae5884044475f50246707fc7c9e67e489d7d8675"
+  },
+  "scope_audit": {
+    "all_other_AST_nodes_equal": {
+      "apps/FLP/src/silverstar_flp/export/service.py": true,
+      "apps/FLP/src/silverstar_flp/ui/main_window.py": true
+    },
+    "frozen_navigation_files_unchanged": 60
+  },
+  "entries": {
+    "current/apps/FLP/src/silverstar_flp/export/service.py": "4d19b650bfe47559f4dbb23ca30b44cf3270d3cf69b26dacada5a466d59ee7c5",
+    "current/apps/FLP/src/silverstar_flp/ui/main_window.py": "5f0153cd52a2cc02c9a7ca3e1b9258f0fd2388822c3f593fb7b3d942da2771c4",
+    "current/apps/FLP/tests/test_export_without_navigation.py": "18f231bbb102408c1cef754e6ba3fc499c05ebda977a933761c70bd61e634a74",
+    "current/docs/public/FLP/EXPORT_WITHOUT_NAVIGATION_FIX_20261016.md": "34d1294066323a7af3828d905fc892e6cf2fb93d4aae61303327de3de35ec4f7",
+    "execution/before_sources.json": "46af37ec0659cfa2b35284c6330ba2b0b3b9038c72f2c5a42a2d1a7902622f5b",
+    "execution/final03.json": "75b2e82b54c65a526d367bf209e0699764e8fe0cbc65f16b03f4c0106a8f686e",
+    "execution/final03.log": "71bf3c15ceb8d36d7005caabfd3466437503b589db4a2a17ec850400cda89227",
+    "execution/final03_runner_sources.zip": "0bff4805fb19d11ef41e99aaa522b2a23080869a8ac3be63fc32397c74f47e03",
+    "execution/final03_start.json": "b2cca1e28922271635bc11fdf669a5a4840fc43b4ea89834d6ecc7e7d421e87d",
+    "execution/final04.json": "8ba115f3fd1b780aec60978a82fd2aab729651a15cc0459ab8e4fa6b4e962b0a",
+    "execution/final04.log": "00396a374f38e36109f557d55ea0a370472ad45bc7615bd3e3e85ae450fc70af",
+    "execution/final04_runner_sources.zip": "0bff4805fb19d11ef41e99aaa522b2a23080869a8ac3be63fc32397c74f47e03",
+    "execution/final04_start.json": "6c671134f0b04d716fd1feb934e51378eed61b2d6ba7bf181b5fa73f7f35dab5",
+    "execution/INVENTORY.md": "efd018db7f767efa1596cd8a28b0b4413c397f06d2a0061161cd913511fcb5b6",
+    "execution/postfix01.json": "0180b5544591d2b22afbdf52a0c057b17cf0ec6998bcc6d17233f576d9ce11c3",
+    "execution/postfix01.log": "24ed64c3e167566bfac9676904b3da78aae35cb24e8939b9a8b8c685bdd453a7",
+    "execution/postfix01_runner_sources.zip": "0bff4805fb19d11ef41e99aaa522b2a23080869a8ac3be63fc32397c74f47e03",
+    "execution/postfix01_start.json": "c87cd146117176c2dece1a05fe42ae6a0849c76605c7337324eb904ec37e30d1",
+    "execution/postfix02.json": "4bc3e616523a8294ead1ecd6467572fa2f4d3e08ec7479a0c7d39adcda9ed96f",
+    "execution/postfix02.log": "fe7d2ebb364ba4330004eed7422079ee549ee82ef6d7ed6e0be562f5b1a87acc",
+    "execution/postfix02_runner_sources.zip": "0bff4805fb19d11ef41e99aaa522b2a23080869a8ac3be63fc32397c74f47e03",
+    "execution/postfix02_start.json": "07c6be6b7287cb79177e2eacd47d031cab4649f1e175616aa64ab29bc92e8764",
+    "execution/prefault01.json": "54bea90bfde981a5f8c75ecea75a9f5005798f1cfa5041ca35ef4a0fe2ca5da1",
+    "execution/prefault01.log": "1b36aeb2fe6469cf1ecdc2d6e4ee0de9e0f8d33d875b22558786ea81f2cff0f1",
+    "execution/prefault01_runner_sources.zip": "0bff4805fb19d11ef41e99aaa522b2a23080869a8ac3be63fc32397c74f47e03",
+    "execution/prefault01_start.json": "cbfd86e3a132fe4687a01a749da38180428ae0f5c03cada841857e7f6a81318e",
+    "execution/project_exports01.json": "68816c4e72f84bbe2f3bc0c79a0adca3d826a3cc99c14dd2a6ef54b213d2bbbc",
+    "execution/project_exports01.log": "89a628d07f8f6a25a0b70d5972280c15aee1247f7d9c95386f0f4dc414085546",
+    "execution/project_exports01_runner_sources.zip": "0bff4805fb19d11ef41e99aaa522b2a23080869a8ac3be63fc32397c74f47e03",
+    "execution/project_exports01_start.json": "76600cddd91c0b690552b8d87abbf6aede5c77d410d67a4064507e1cf33c57e0",
+    "execution/run.py": "b63f2941a52c8ec389438abcf32773c51506bad2af5d00c6451f227e479a4981",
+    "execution/scope_audit.json": "5efcbea57c1cc8da6bc59a1a6ea9a6ec66c0437f60004f824a2affdbf7a1db5e",
+    "execution/seal.py": "fc5902a2666d25adafdfb85452e3ec09ef7efce20b33a37797a8c834ae513d00",
+    "execution/seal01.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "execution/seal01_runner_sources.zip": "408322ad8a48d55eeea64b89e902f8a50bf2c015f89f2c59fe7216d855595c14",
+    "execution/seal01_start.json": "c0b0f6ebf0d8403c8472a9ddf0f7ffe4116fbd84770b4ae957781d6168c1c583",
+    "execution/whole_file_scope_final.json": "66996b432b05169c696d84de9c4ea544ef9e7b67f8141d8b480b5a8bdf0bbd33",
+    "outputs/final04/test_available_recorded_source0/available-export/Export_Manifest_ZH.json": "4cad89e85a5c8affc6fd1edbc12d0dd5205709d8fe54703dd5071f68b85359de",
+    "outputs/final04/test_available_recorded_source0/available.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/CSV_EN/alignment.result.q_nb_EN.csv": "eeb169d2164f9efe37acc037a847486021736efee147faf5cd10418e2bbbb040",
+    "outputs/final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Export_Manifest_EN.json": "e5c67f258bac3a0f4978274f76f6aca7e4201f67e1c67684528b9f4381f652ae",
+    "outputs/final04/test_bulk_export_keeps_selecte0/SYNTHETIC_pre_start_plot.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_calibration_missing_or_on0/cache/f5d1f0a0da457b2280bf054cb5fb733a/f90b9112ccf6d16dcfe0c1816ab3a09b.ssdecoder": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+    "outputs/final04/test_calibration_missing_or_on0/missing_calibration.ssdecoder": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+    "outputs/final04/test_calibration_missing_or_on0/missing_calibration.sslog": "3195a5f071bed7df683b6a9b8f4ce5500f6150dd3b1bcc2e528940baed527357",
+    "outputs/final04/test_calibration_missing_or_on1/cache/f5d1f0a0da457b2280bf054cb5fb733a/f90b9112ccf6d16dcfe0c1816ab3a09b.ssdecoder": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+    "outputs/final04/test_calibration_missing_or_on1/missing_calibration.ssdecoder": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+    "outputs/final04/test_calibration_missing_or_on1/missing_calibration.sslog": "455e1362fb564cdaa3f92fda7444b2ff72493839e3200517f5f7cad1f0fda5b0",
+    "outputs/final04/test_calibration_one_face_afte0/cache/bf95fe778b5530892d885bab45d2db59/e5c0060633db30f09d5e434b05fb9f01.ssdecoder": "e5c0060633db30f09d5e434b05fb9f0100ee7f51c4d2155765266fda9e505beb",
+    "outputs/final04/test_calibration_one_face_afte0/future.ssdecoder": "e5c0060633db30f09d5e434b05fb9f0100ee7f51c4d2155765266fda9e505beb",
+    "outputs/final04/test_calibration_one_face_afte0/future.sslog": "e3119ae6650373a52a7a19e4e1f81c2c54184deffea773acce68c6424e6874c9",
+    "outputs/final04/test_calibration_one_face_mask0/cache/68b7a3b8c52f9d5f1448215759145818/c827c299ff23a59525b5229612e9a83a.ssdecoder": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+    "outputs/final04/test_calibration_one_face_mask0/calibration.ssdecoder": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+    "outputs/final04/test_calibration_one_face_mask0/calibration.sslog": "d119f6809ab3b1236886e21fbf0650d64827447d73b21a37d0176eaf6be97e55",
+    "outputs/final04/test_calibration_one_face_mask1/cache/68b7a3b8c52f9d5f1448215759145818/c827c299ff23a59525b5229612e9a83a.ssdecoder": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+    "outputs/final04/test_calibration_one_face_mask1/calibration.ssdecoder": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+    "outputs/final04/test_calibration_one_face_mask1/calibration.sslog": "720129c753ffdcddf6d1c01bae42f20495a656639b55ad443f9b292000605afc",
+    "outputs/final04/test_calibration_one_face_mask2/cache/68b7a3b8c52f9d5f1448215759145818/c827c299ff23a59525b5229612e9a83a.ssdecoder": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+    "outputs/final04/test_calibration_one_face_mask2/calibration.ssdecoder": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+    "outputs/final04/test_calibration_one_face_mask2/calibration.sslog": "d5c0556d908ebf8195346d980c10009386d1e68e9d3888e1c44449bb7b1c7656",
+    "outputs/final04/test_calibration_one_face_mask3/cache/68b7a3b8c52f9d5f1448215759145818/c827c299ff23a59525b5229612e9a83a.ssdecoder": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+    "outputs/final04/test_calibration_one_face_mask3/calibration.ssdecoder": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+    "outputs/final04/test_calibration_one_face_mask3/calibration.sslog": "44cbd8376713a720b1de6b7a455b063bd3a83c0a69640bd1c4f79c44edda9a76",
+    "outputs/final04/test_calibration_one_face_mask4/cache/68b7a3b8c52f9d5f1448215759145818/c827c299ff23a59525b5229612e9a83a.ssdecoder": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+    "outputs/final04/test_calibration_one_face_mask4/calibration.ssdecoder": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+    "outputs/final04/test_calibration_one_face_mask4/calibration.sslog": "87aa9fef5d0b5352598938248fbbace6d7aa8d15d0b862d24ba399367145c36e",
+    "outputs/final04/test_calibration_one_face_mask5/cache/68b7a3b8c52f9d5f1448215759145818/c827c299ff23a59525b5229612e9a83a.ssdecoder": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+    "outputs/final04/test_calibration_one_face_mask5/calibration.ssdecoder": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+    "outputs/final04/test_calibration_one_face_mask5/calibration.sslog": "c4b5799c7499451e7481f1418bbab9fef1668a05b18903ac12aab44cde00c236",
+    "outputs/final04/test_calibration_one_face_mask6/cache/68b7a3b8c52f9d5f1448215759145818/c827c299ff23a59525b5229612e9a83a.ssdecoder": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+    "outputs/final04/test_calibration_one_face_mask6/calibration.ssdecoder": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+    "outputs/final04/test_calibration_one_face_mask6/calibration.sslog": "a9fb3da16a15cd72dcda4f741acb2946fc04edfcc7012535bf2c44f7dd5ea723",
+    "outputs/final04/test_calibration_one_face_mask7/cache/68b7a3b8c52f9d5f1448215759145818/c827c299ff23a59525b5229612e9a83a.ssdecoder": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+    "outputs/final04/test_calibration_one_face_mask7/calibration.ssdecoder": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+    "outputs/final04/test_calibration_one_face_mask7/calibration.sslog": "aabd6b77d07a74e13597be79652057035d61c5f5a63c5e47075120b24b3c3e66",
+    "outputs/final04/test_calibration_one_face_mask8/cache/68b7a3b8c52f9d5f1448215759145818/c827c299ff23a59525b5229612e9a83a.ssdecoder": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+    "outputs/final04/test_calibration_one_face_mask8/calibration.ssdecoder": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+    "outputs/final04/test_calibration_one_face_mask8/calibration.sslog": "f9a6ce62f8b4507bf88572d3008931d1652cc3e37e81b1e7b39b9915d7d8244d",
+    "outputs/final04/test_calibration_selects_lates0/cache/1cb616cb32185a3c62c315cb2c729c7e/1040d65bca4204dcc3ae9f21c4a6ff53.ssdecoder": "1040d65bca4204dcc3ae9f21c4a6ff53f45e789303393d5c9f3eb17214183b64",
+    "outputs/final04/test_calibration_selects_lates0/calibration_modes.ssdecoder": "1040d65bca4204dcc3ae9f21c4a6ff53f45e789303393d5c9f3eb17214183b64",
+    "outputs/final04/test_calibration_selects_lates0/calibration_modes.sslog": "8e38776673da5f05ab760a28852efee0e05c7c597006bee7b4d8ef8ce07a21c4",
+    "outputs/final04/test_catalog_payload_size_mism0/bad_size.ssdecoder": "9fb462db91220848c25e8fdeed6322496497489683e99380f82070d6d780b8ff",
+    "outputs/final04/test_catalog_payload_size_mism0/missing_plugin.ssdecoder": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+    "outputs/final04/test_cli_inspect_uses_exact_pa0/cli.ssdecoder": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+    "outputs/final04/test_cli_inspect_uses_exact_pa0/cli.sslog": "c584e884d840152e0a46da7615abc4a0c290a7dfdbc0312bd947a490bf125661",
+    "outputs/final04/test_cli_inspect_uses_exact_pa0/local-app-data/SilverStar/FLP/decoder_profiles/f5d1f0a0da457b2280bf054cb5fb733a/f90b9112ccf6d16dcfe0c1816ab3a09b.ssdecoder": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+    "outputs/final04/test_container_yields_record_a0/opaque.sslog": "a63ef78137abe32c7890e0a17a5e24d641fe8194f2399207ee779a53087543b3",
+    "outputs/final04/test_current_container_recover0/length.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_current_container_recover0/length.sslog": "0fdfa48996fb0d3f084880efea6b436464aec850dda2e0a92c78072a60cec0d3",
+    "outputs/final04/test_current_container_resync_0/resync.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_current_container_resync_0/resync.sslog": "c7127ac1d9e10adc31fe3855c11510e13bcd94b312de381467a3ad7c0d3652f5",
+    "outputs/final04/test_current_container_resync_1/bounded_resync.sslog": "edb3be77d1d6c81c9f4cec64ea981aa36b52fdaf2a278e03efeea10ea9b1a44b",
+    "outputs/final04/test_decoder_package_rejects_l0/catalog_hash_alias.ssdecoder": "e9fb74f20aa5505915e2cefd7e067ba1f803e69a97339f4dbabbc7f187c5aa01",
+    "outputs/final04/test_decoder_package_rejects_l0/container_top_level.ssdecoder": "ca7ef079321457a32d5459d910d8cd77acb75df9e459612e677772fb6d9ad27f",
+    "outputs/final04/test_decoder_package_rejects_l0/format_version.ssdecoder": "118734042ee54c42219e8330dee99bf2e670c719dde72068e1a02dd125b0142a",
+    "outputs/final04/test_decoder_package_rejects_l0/missing_executable_declaration.ssdecoder": "4a19f7c6a9ff5764cfe11600866850d6f3627f93bedb057b1bb32bfd4c2546ba",
+    "outputs/final04/test_decoder_package_rejects_l1/legacy_catalog.ssdecoder": "b0a2999eec7a678108373f600e3f1bfc10e2c1bede950e96f19d30f9bf40ae89",
+    "outputs/final04/test_decoder_package_rejects_l1/legacy_semantics.ssdecoder": "bd601fdf258c51e2d5be5dd3066e66a6011ba780305f37731be3254887b8612f",
+    "outputs/final04/test_decoder_package_rejects_l1/mapping_algorithms.ssdecoder": "30d8fd3c04df9fe25bc65bcbe66b28f80efa24b3cb05619d76533d4afdedeb08",
+    "outputs/final04/test_decoder_package_rejects_o0/obsolete.ssdecoder": "3d92fc9358360db090f18b9ade3e45bf62e14e912c9a0ff19789f4c0a7152ec6",
+    "outputs/final04/test_decoder_package_rejects_o0/unsigned.ssdecoder": "b918ed02e596a74334404e1c974b8ac1c9c8e08900bea4fb683962803d700776",
+    "outputs/final04/test_decoder_package_rejects_u0/zip_slip.ssdecoder": "ea8d9a7b4f42796a901405a1d6b1f632a0e82e11e48dca05a1161a6cf3e7e8ce",
+    "outputs/final04/test_decoder_package_rejects_u1/duplicate.ssdecoder": "a7fde24adef52246c9c466af4d0f1c9866149a47649a8a7f3a5d9572bc25841c",
+    "outputs/final04/test_decoder_package_rejects_u2/symlink.ssdecoder": "20dc350784ed6f6924094f3d191a8642a9b2ed75c85df9b9b7a1ec8ad7733f81",
+    "outputs/final04/test_decoder_package_rejects_u3/executable.ssdecoder": "f98950c71a4ba9b01422b693fbb996fd12d5d316bed2a42f2e672f5250221b6c",
+    "outputs/final04/test_decoder_package_rejects_u4/checksum.ssdecoder": "31e2a53c046968b609b0e3b0a454f9375f73c4d08f3617d78991f400f59514e3",
+    "outputs/final04/test_descriptor_hash_selects_e0/descriptor.sslog": "d620531b7cb643ab83eccbcf1d5c9e4c9aefa59cc9d6656143b049d2930ed61a",
+    "outputs/final04/test_descriptor_hash_selects_e0/exact.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_descriptor_hash_selects_e0/wrong.ssdecoder": "d631080cff4efe0af4684f1d629a1ec87b63d6e198e62fca666c3d75d59b4a51",
+    "outputs/final04/test_directory_scan_finds_log_0/Mission/Logs/Golden/mission.sslog": "7beb45c9972256eb96d23cbd68c972ddfb67ef404c5cb052deab8bebdceb0d65",
+    "outputs/final04/test_directory_scan_finds_log_0/Mission/Mission.ssdecoder": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+    "outputs/final04/test_empty_or_invalid_position0/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_empty_or_invalid_position0/invalid-position/Export_Manifest_ZH.json": "6bd5b388acb0be8c429660ddb01d81143ab2e23dc5ce8737777ce6944887a316",
+    "outputs/final04/test_empty_or_invalid_position0/raw.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_empty_or_invalid_position0/raw.sslog": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+    "outputs/final04/test_empty_or_invalid_position1/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_empty_or_invalid_position1/invalid-position/Export_Manifest_ZH.json": "be9cb658693bddfe3e77ac7b900607e20b611fe0d10b7c06454a8c1b18c424ed",
+    "outputs/final04/test_empty_or_invalid_position1/raw.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_empty_or_invalid_position1/raw.sslog": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+    "outputs/final04/test_exact_raw_log_allows_audi0/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_exact_raw_log_allows_audi0/export/Export_Manifest_ZH.json": "5f9b3de3eeb6fdd8b00474f884691e859ff56a90669eff75d1c44456f2fec70f",
+    "outputs/final04/test_exact_raw_log_allows_audi0/raw.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_exact_raw_log_allows_audi0/raw.sslog": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+    "outputs/final04/test_exact_raw_log_allows_audi1/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_exact_raw_log_allows_audi1/export/CSV_ZH/IMU_NATIVE_1_0.accel_b_mps2_ZH.csv": "1090ac5ecadf41852aede908275b03c9cbbaa49d1a882c3e7a073bcb780f547a",
+    "outputs/final04/test_exact_raw_log_allows_audi1/export/Export_Manifest_ZH.json": "4b90055f505412fb796eea059b003cb700b669cb454bc55ccf7d353dbaa1f34b",
+    "outputs/final04/test_exact_raw_log_allows_audi1/raw.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_exact_raw_log_allows_audi1/raw.sslog": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+    "outputs/final04/test_export_3d_uses_unique_col0/SYNTHETIC_export_3d_rules.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_export_keeps_independent_0/exported/CSV_EN/imu.corrected.accel_b_EN.csv": "27df59f357b7304dc817021f97972ac2bc79d95997a10654525e357bc6b3c38a",
+    "outputs/final04/test_export_keeps_independent_0/exported/CSV_EN/imu.corrected.gyro_b_EN.csv": "482df9948aaf9b4de0f56f6fc03d600f35788a6f2505f5c470c0c448e9004173",
+    "outputs/final04/test_export_keeps_independent_0/exported/CSV_EN/imu.corrected.temperature_EN.csv": "f3e075d044b8f6b061572818dd970f4a5e15780780baf1cba10b9914c70908f3",
+    "outputs/final04/test_export_keeps_independent_0/exported/CSV_EN/inertial.increment.delta_theta_b_EN.csv": "678dbecb0731fd4710fdc330dcdd7dd8bccc96cb11d1144f1f03d454262d7d66",
+    "outputs/final04/test_export_keeps_independent_0/exported/CSV_EN/inertial.increment.delta_velocity_b_EN.csv": "89ffc4325558c2a8b45f9964a3ad9f38e25d0b881c02b807dadc8ea64dfda26e",
+    "outputs/final04/test_export_keeps_independent_0/exported/CSV_EN/inertial.increment.dt_EN.csv": "3ae786faeb7d8eecf0aaa31745a9bb635c71595bad153c3c9551381fac679713",
+    "outputs/final04/test_export_keeps_independent_0/exported/CSV_EN/initial_state.attitude.q_nb_EN.csv": "15e83369a1129e17fd90aa0165d8d10b21f0691e5ea15dbd03dc2566d45fcfba",
+    "outputs/final04/test_export_keeps_independent_0/exported/CSV_EN/initial_state.kf6.p0_diagonal_EN.csv": "cdaab06c24ea62869bc1e97d94bda65e18777ab2abcbb4de3e365db9ea2ba459",
+    "outputs/final04/test_export_keeps_independent_0/exported/CSV_EN/initial_state.navigation.velocity_enu_EN.csv": "5fe03adc1bf110fc123e2f4dcef8fbbb03266bf0127639809050495a58732dad",
+    "outputs/final04/test_export_keeps_independent_0/exported/CSV_EN/pure_ins.recorded.attitude.q_nb_EN.csv": "530ed79ba11cf3b366402f03a7fc276587f0fb21470de067273b16fdd5cbf317",
+    "outputs/final04/test_export_keeps_independent_0/exported/CSV_EN/pure_ins.recorded.navigation.linear_accel_enu_EN.csv": "1598ff1cf003134f278053eff149461feca0119329757db985e259edf8e003e6",
+    "outputs/final04/test_export_keeps_independent_0/exported/CSV_EN/pure_ins.recorded.navigation.position_enu_EN.csv": "3fe8dffa176ec02261959c108df4e295768bf819c49e7deedf051354f274eaf4",
+    "outputs/final04/test_export_keeps_independent_0/exported/CSV_EN/pure_ins.recorded.navigation.velocity_enu_EN.csv": "163961dd920daf683a490b95f236de4fdc80aa001ab1f91ea04893c45c447898",
+    "outputs/final04/test_export_keeps_independent_0/exported/Events_EN.csv": "b0438b1dcfe8f320f65eee9c66a98f7dbc2fcd1149bfb52bceb456db7813d8d9",
+    "outputs/final04/test_export_keeps_independent_0/exported/Export_Manifest_EN.json": "04bc03140efe7cafc08f807744b5529afc311999a06b61794edb23fc46a79294",
+    "outputs/final04/test_export_keeps_independent_0/exported/Flight_Overview_EN.json": "2f8364680f2169f53dc333f2b8e534a74df2a354b4b42d298cd027ca056c376d",
+    "outputs/final04/test_export_keeps_independent_0/exported/Parser_Diagnostics_EN.json": "901d7cfac781af2c7f30e33a6a26f9749ab22705128bcf22333b7eb743c35602",
+    "outputs/final04/test_export_keeps_independent_0/SYNTHETIC_export_source.BIN": "5b65280977bf4f519271e5aab79dd3cd0043428928b1759790905c6e45d036d7",
+    "outputs/final04/test_export_records_individual0/partial_export/CSV_EN/pure_ins.recorded.navigation.position_enu_EN.csv": "3fe8dffa176ec02261959c108df4e295768bf819c49e7deedf051354f274eaf4",
+    "outputs/final04/test_export_records_individual0/partial_export/Export_Failures_EN.txt": "ac5e497db34328085ba45456d7b8cef1a77d940be72ee44487384946d40e7f5c",
+    "outputs/final04/test_export_records_individual0/partial_export/Export_Manifest_EN.json": "b8a69d2e2c76d48b2e1e827a290d1f777972c90b0221808ece87bd7a2d9225c6",
+    "outputs/final04/test_export_records_individual0/SYNTHETIC_partial_export.BIN": "5b65280977bf4f519271e5aab79dd3cd0043428928b1759790905c6e45d036d7",
+    "outputs/final04/test_export_snapshot_has_only_0/SYNTHETIC.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_export_theme_manifest_rec0/output/Export_Manifest_EN.json": "96bd9a5f8888bbe35c884714848c6ea75e083c96b73917496f051bf706db8827",
+    "outputs/final04/test_export_theme_manifest_rec1/output/Export_Manifest_EN.json": "c56a01e3123aad5527a36a69ae512faddcc9c9fcce0226030f7d9b3986720b41",
+    "outputs/final04/test_export_theme_manifest_rec2/output/Export_Manifest_EN.json": "447b4627b227198830fb142ff06c08843c9280d25c2fbe86ab4459e1d053f1f0",
+    "outputs/final04/test_export_theme_manifest_rec3/output/Export_Manifest_EN.json": "eb8997f26d4804e5de364d25a50e6e226daf5e26ab9e9c2ca199ef333c44370e",
+    "outputs/final04/test_fccg_record_views_bind_to0/fccg_views.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_fccg_record_views_bind_to0/fccg_views.sslog": "81e077f628fac4caa70890d88b35dad1a9f6d49f9ff9ab06baef73c7ef6ec582",
+    "outputs/final04/test_file_order_timestamps_may0/time_order.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_file_order_timestamps_may0/time_order.sslog": "eba072a359ca4231e61e336722285794211dfc99f46d60e9c144c752196b7442",
+    "outputs/final04/test_firmware_container_id_ali0/firmware_container_id.ssdecoder": "907928fabd37cd04f5798f573afae25e081cbcd232c89d840a449ae58d3675a0",
+    "outputs/final04/test_follow_ui_exports_standar0/analysis_export/Export_Manifest_ZH.json": "6fd7a3ef5da15af3ff40c744475acaa62ee6efe117db772eb8d1fcd7b2b4fea1",
+    "outputs/final04/test_follow_ui_exports_standar0/analysis_export/GIF/Flight_Replay_ZH.json": "19c78cb4503eaf395baf15cf3b1106b9ddf171389533bd6f6bb1730b364c326c",
+    "outputs/final04/test_follow_ui_exports_standar0/SYNTHETIC_export_analysis.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/CSV_EN/kf6.recorded.covariance.upper_triangle_EN.csv": "07b44c2524667c5b158cf2a37f75f22f0d3101bcf0155bb812f4f63f762e3abf",
+    "outputs/final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Export_Manifest_EN.json": "ac91b6eb88c20c33f1154d8eb98df961eb1a761befa7513e3101b8b2c05544fa",
+    "outputs/final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/KF6_Full_P_Keyframes_EN.txt": "34d2806a7e606e7e9d8b4b02c3f41f2ed7d85fd7251c0f4d8fada3e34014e94c",
+    "outputs/final04/test_full_p_keyframes_replace_0/SYNTHETIC_full_p_keyframes.BIN": "5234a413cf62f2132bb4bfa53d8391e6b0885e9a0763382fd14055c29721990b",
+    "outputs/final04/test_full_p_keyframes_use_anal0/full_p_without_landing_export/Export_Manifest_ZH.json": "4c207c74a65cc651b18f12e745e6b016a91b37ce3f89eaad2afd322ae74514bd",
+    "outputs/final04/test_full_p_keyframes_use_anal0/full_p_without_landing_export/KF6_Full_P_Keyframes_ZH.txt": "7d58a5dc304718c5cf13d0e208f7244e4653f0bc717e2bac0588f50da5f33522",
+    "outputs/final04/test_full_p_keyframes_use_anal0/SYNTHETIC_full_p_without_landing.BIN": "2d8ab0afc4927a76415c596b092a324b72d8f8a8772554b55014a68e3b570e85",
+    "outputs/final04/test_gnss_online_without_fix_a0/cache/ff9dc2fa23decf7effc2d8152a97d17b/f28634d18b9f30cb8defd182ecae7f7a.ssdecoder": "f28634d18b9f30cb8defd182ecae7f7aae624033d671a750493d45da322558a2",
+    "outputs/final04/test_gnss_online_without_fix_a0/gnss_no_fix.ssdecoder": "f28634d18b9f30cb8defd182ecae7f7aae624033d671a750493d45da322558a2",
+    "outputs/final04/test_gnss_online_without_fix_a0/gnss_no_fix.sslog": "f8fce0c0d1bdab6f389f677bb9e07251f7963e25e69896830986c38eae462535",
+    "outputs/final04/test_gui_and_backend_share_sou0/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_gui_and_backend_share_sou0/gui-export/Export_Manifest_ZH.json": "dc9b5e3f28ffbb9c126c04657d5883632baf61fcea837d33a36bbaa401b88616",
+    "outputs/final04/test_gui_and_backend_share_sou0/raw.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_gui_and_backend_share_sou0/raw.sslog": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+    "outputs/final04/test_gui_and_backend_share_sou1/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_gui_and_backend_share_sou1/raw.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_gui_and_backend_share_sou1/raw.sslog": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+    "outputs/final04/test_gui_offers_raw_recorded_c0/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_gui_offers_raw_recorded_c0/raw.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_gui_offers_raw_recorded_c0/raw.sslog": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+    "outputs/final04/test_light_replay_gif_keeps_mi0/light_replay_export/CSV_EN/inertial.increment.dt_EN.csv": "3ae786faeb7d8eecf0aaa31745a9bb635c71595bad153c3c9551381fac679713",
+    "outputs/final04/test_light_replay_gif_keeps_mi0/light_replay_export/Export_Manifest_EN.json": "d5961ebf63146f15a00158ffee8b80c07bf4678cd60bec1fa5b514c84ab3fb98",
+    "outputs/final04/test_light_replay_gif_keeps_mi0/light_replay_export/GIF/Flight_Replay_EN.json": "19c78cb4503eaf395baf15cf3b1106b9ddf171389533bd6f6bb1730b364c326c",
+    "outputs/final04/test_light_replay_gif_keeps_mi0/SYNTHETIC_light_replay.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_log_open_coordinator_buil0/audit-export/Export_Manifest_ZH.json": "84e16523ea01296b83acbb8db5b46e167483aef7155ed225ec31185f2adadabf",
+    "outputs/final04/test_log_open_coordinator_buil0/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_log_open_coordinator_buil0/coordinator.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_log_open_coordinator_buil0/coordinator.sslog": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+    "outputs/final04/test_log_open_coordinator_reje0/bad_none.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_log_open_coordinator_reje0/bad_none.sslog": "a22f60e5ca119fe41db2b2319a3e79d60045951b960217cb1369eac149c8f2f9",
+    "outputs/final04/test_log_open_coordinator_reje0/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_main_without_filter_metad0/SYNTHETIC.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_main_without_filter_metad1/SYNTHETIC.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_manifest_failure_still_wr0/failure_fallback_export/Export_Failures_EN.txt": "282ea8c14e6955d0a13a2fb29d32c1451e9098d2aeee9793aba44710c2ed6767",
+    "outputs/final04/test_manifest_failure_still_wr0/SYNTHETIC_failure_fallback.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_manual_import_cache_is_co0/cache/f5d1f0a0da457b2280bf054cb5fb733a/f90b9112ccf6d16dcfe0c1816ab3a09b.ssdecoder": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+    "outputs/final04/test_manual_import_cache_is_co0/source.ssdecoder": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+    "outputs/final04/test_missing_navigation_produc0/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_missing_navigation_produc0/missing-nav/Export_Manifest_ZH.json": "b19a4a840e83294f00bf309c87b4b9ffee0e7284d3d153f49e1cb7d138afa41c",
+    "outputs/final04/test_missing_navigation_produc0/raw.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_missing_navigation_produc0/raw.sslog": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+    "outputs/final04/test_mixed_recorded_snapshot_i0/SYNTHETIC.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_none_identity_is_legal_wi0/cache/6bfcf85bde7ab9c7ebf38771444a5c0e/61c049897e0d1942e82c6c18a78538d9.ssdecoder": "61c049897e0d1942e82c6c18a78538d98bd929181f769fa251d5544b4522cfb3",
+    "outputs/final04/test_none_identity_is_legal_wi0/none_with_six_face.ssdecoder": "61c049897e0d1942e82c6c18a78538d98bd929181f769fa251d5544b4522cfb3",
+    "outputs/final04/test_none_identity_is_legal_wi0/none_with_six_face.sslog": "7ef4f942b9e46bfafd7c46a1a1a3d350ff7484bf68b5801e012279cf29bf1c76",
+    "outputs/final04/test_only_complete_successful_0/SYNTHETIC_source_readiness.BIN": "5b65280977bf4f519271e5aab79dd3cd0043428928b1759790905c6e45d036d7",
+    "outputs/final04/test_ordinary_export_records_e0/ordinary/Export_Manifest_EN.json": "a024e541f4ba06cdd50c0487f46c73e36f18c0aa88799c98b1aa24d0620bafe5",
+    "outputs/final04/test_ordinary_export_records_e0/SYNTHETIC.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_ordinary_export_records_e1/ordinary/Export_Manifest_EN.json": "15b99ce80c04f65ed17fa049372634d80d44bd9ce7025b80c055a97c964c87f4",
+    "outputs/final04/test_ordinary_export_records_e1/SYNTHETIC.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_ordinary_export_records_e2/ordinary/Export_Manifest_EN.json": "729c542b997ccf940260c9724031332d71e978ebe8659764566ee712c2f5e5a5",
+    "outputs/final04/test_ordinary_export_records_e2/SYNTHETIC.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_ordinary_export_records_e3/ordinary/Export_Manifest_EN.json": "feb6a5474f45a72d869c0710599f5b56fdb2f04e10d733ce15dffa354a5fbaf3",
+    "outputs/final04/test_ordinary_export_records_e3/SYNTHETIC.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_ordinary_recomputed_expor0/ordinary/Export_Manifest_EN.json": "a928ac2560f37ce0689308fd22c6930289ab70130c7a251f95106753b060939b",
+    "outputs/final04/test_ordinary_recomputed_expor0/SYNTHETIC.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_ordinary_recomputed_expor1/ordinary/Export_Manifest_EN.json": "304b1c6d5322fda76c9b441062e9075a81d9d1369d761db92d5a452a01b3eb04",
+    "outputs/final04/test_ordinary_recomputed_expor1/SYNTHETIC.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_ordinary_vertical_missing0/ordinary/Export_Manifest_EN.json": "7a3b2b088abe07628f5de32269593af9314703a60fc3f9b1d2d40653de576144",
+    "outputs/final04/test_ordinary_vertical_missing0/SYNTHETIC.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_package_rejects_future_fl0/future.ssdecoder": "9495cd3e51acb637b7e1c3b0e7b41066e053f3fa87e1cadb24af6496d12e5dd8",
+    "outputs/final04/test_plot_metadata_has_languag0/SYNTHETIC_plot_metadata.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_project_contains_referenc0/SYNTHETIC_project_source.BIN": "5b65280977bf4f519271e5aab79dd3cd0043428928b1759790905c6e45d036d7",
+    "outputs/final04/test_project_open_rediscover_e0/empty-cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_project_open_rediscover_e0/flight.sslog": "c584e884d840152e0a46da7615abc4a0c290a7dfdbc0312bd947a490bf125661",
+    "outputs/final04/test_project_open_rediscover_e0/original-cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_project_open_rediscover_e0/relocated-task/renamed.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_project_open_rediscover_e0/source.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_project_references_prefer0/Decoder/Flight.ssdecoder": "3fd280851fc975e2600b5c0f8f4e618bdc898e0f82ff5e58242f69d7a8c3e2fe",
+    "outputs/final04/test_project_references_prefer0/Logs/SS0000.BIN": "5b65280977bf4f519271e5aab79dd3cd0043428928b1759790905c6e45d036d7",
+    "outputs/final04/test_project_save_as_keeps_log0/source/SYNTHETIC_save_as_source.BIN": "5b65280977bf4f519271e5aab79dd3cd0043428928b1759790905c6e45d036d7",
+    "outputs/final04/test_recomputed_and_what_if_re0/active_source_export/Export_Manifest_ZH.json": "ea3db7f89b85060c6c0b43eb52af4032f6da0f8940e80f55dc418bda5731e51e",
+    "outputs/final04/test_recomputed_and_what_if_re0/parameters/cache/7962ed937074961b1e5f8de39039f504/7a25e34c2ef4f4f4d34adac78edfc691.ssdecoder": "7a25e34c2ef4f4f4d34adac78edfc691a3474c6a719717f8f96e4187a7defeb4",
+    "outputs/final04/test_recomputed_and_what_if_re0/parameters/SYNTHETIC_actual.ssdecoder": "7a25e34c2ef4f4f4d34adac78edfc691a3474c6a719717f8f96e4187a7defeb4",
+    "outputs/final04/test_recomputed_and_what_if_re0/parameters/SYNTHETIC_actual.sslog": "384cb92e128eb0be728b8c777b964d3e548a68a145bb851ea64614a871da4ef0",
+    "outputs/final04/test_recomputed_and_what_if_re0/recorded_export/Export_Manifest_ZH.json": "b8e3c6ed33fa27a3f1b52391e28548726090d19d9e982d3525eb0e8731ff8fbc",
+    "outputs/final04/test_recomputed_and_what_if_re0/selected_recompute_export/Export_Manifest_ZH.json": "a4fca91965366208c8060335ef76ddc5e176f4a3de20751b699745b681c913f7",
+    "outputs/final04/test_recomputed_and_what_if_re0/SYNTHETIC_replay_store.BIN": "5b65280977bf4f519271e5aab79dd3cd0043428928b1759790905c6e45d036d7",
+    "outputs/final04/test_recorded_final_solution_m0/SYNTHETIC.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_recorded_navigation_resol0/SYNTHETIC_resolver_kf6.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_strict_package_drives_dua0/dual_imu.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_strict_package_drives_dua0/dual_imu.sslog": "81e077f628fac4caa70890d88b35dad1a9f6d49f9ff9ab06baef73c7ef6ec582",
+    "outputs/final04/test_switch_clears_every_prima0/SYNTHETIC.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_unavailable_explicit_sour0/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_unavailable_explicit_sour0/raw.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_unavailable_explicit_sour0/raw.sslog": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+    "outputs/final04/test_unavailable_explicit_sour1/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_unavailable_explicit_sour1/raw.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_unavailable_explicit_sour1/raw.sslog": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+    "outputs/final04/test_unavailable_explicit_sour2/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_unavailable_explicit_sour2/raw.ssdecoder": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+    "outputs/final04/test_unavailable_explicit_sour2/raw.sslog": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+    "outputs/final04/test_unknown_explicit_source_m0/SYNTHETIC.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+    "outputs/final04/test_unknown_type_and_version_0/unknown.ssdecoder": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+    "outputs/final04/test_unknown_type_and_version_0/unknown.sslog": "4d3a7d420ae25e8a58c910e9a41d1d1e29299b3f4539c748cc3dfbea4c7ac699",
+    "outputs/final04/test_valid_replay_missing_chan0/SYNTHETIC.BIN": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4"
+  },
+  "final_outputs": {
+    "final04/test_available_recorded_source0/available-export/Export_Manifest_ZH.json": {
+      "sha256": "4cad89e85a5c8affc6fd1edbc12d0dd5205709d8fe54703dd5071f68b85359de",
+      "bytes": 26341
+    },
+    "final04/test_available_recorded_source0/available.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/CSV_EN/alignment.result.q_nb_EN.csv": {
+      "sha256": "eeb169d2164f9efe37acc037a847486021736efee147faf5cd10418e2bbbb040",
+      "bytes": 188
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Export_Manifest_EN.json": {
+      "sha256": "e5c67f258bac3a0f4978274f76f6aca7e4201f67e1c67684528b9f4381f652ae",
+      "bytes": 17422
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/Attitude/Flight_Attitude_EN_000000.000-000000.160.png": {
+      "sha256": "783bca8822b910c80f31cb3fde95e32385efae234eda8a7afe3491731d30f7d4",
+      "bytes": 40808
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "38fd79d7e0b3990c1ce436a6aaad9f0089273f587389caaa93b383819f87bfcd",
+      "bytes": 54412
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "27950ed1620eda9866291bf24b546f83caa39f3817f2961b286770360f5b0c99",
+      "bytes": 55247
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "87efae3dd906c4722d26c980208f78947948324991cebae4bd2e9674733f88cb",
+      "bytes": 54934
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "aa17f5bcdf80ef78263be9401410cafd67440c3b9a061f386f6d7fd967da2d68",
+      "bytes": 56317
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "43570df9d52efed038721b7f0df0510f1ce304f14c4000f4572962bc274b4038",
+      "bytes": 56080
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/Covariance/KF6_Recorded_Position_Std_1Sigma_EN_000000.000-000000.160.png": {
+      "sha256": "b7716e3bc85891a2df703f34aba8f85f003799b21f2c897c8a70a1179ad070e3",
+      "bytes": 39293
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/Covariance/KF6_Recorded_Velocity_Std_1Sigma_EN_000000.000-000000.160.png": {
+      "sha256": "31be55ee0698a5b726c6c394a1fa044add416a9cc2dc8957ca47a8bb170b9db8",
+      "bytes": 40600
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/Estimation/KF6_Recorded_Measurement_Update_EN_000000.000-000000.160.png": {
+      "sha256": "771134f641b8132bc3fa28949f88d2c9cedfab79f7ab5fc98076e1fb53c0e272",
+      "bytes": 49795
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/IMU/Flight_Acceleration_XYZ_EN_000000.000-000000.160.png": {
+      "sha256": "2289bbfe7b505800e7ece0b52b3ab75f707748af821d2173dc5a5ff04d66903b",
+      "bytes": 36894
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/IMU/Flight_Angular_Rate_XYZ_EN_000000.000-000000.160.png": {
+      "sha256": "f309fa91fdc014148cf9887c184d1ef5948e754af914f42c5f1b21e0f5bd7364",
+      "bytes": 40546
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/Innovation/KF6_Recorded_Innovation_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "662477b5f7e2fb1b44be1784cfeb54bf625b630f3f9420f5bf59cbd4ebee091e",
+      "bytes": 43099
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "e86266658207b7db261d4a9726305e2f3d599354f45dee96cae6dcdb003517ab",
+      "bytes": 43557
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "fa611272f2c59374761f85839754fe4ab7ea47e375de8b3aee18b0ea97df7491",
+      "bytes": 43456
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "6ed3a3a7c20acee1b6a212a2ebe756d9ed2934277a7c1eb62fd49b17c7666994",
+      "bytes": 44812
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "8c6c90b7f51927738fac5bd8bbf8eadea10f9726b9ebb8c809f695eeda6e4bfd",
+      "bytes": 44128
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/NIS/KF6_Recorded_NIS_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "cd466e592559d1cda249d005db96d4164a5da37d746cd19356c880e04bd1da93",
+      "bytes": 45280
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "d9d00ed2d1bfc0bc3a7607e940f36f6c5db5a94f7bd0f45ae4e3959e002bbce0",
+      "bytes": 45377
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "a59ec2c276fc0e7f70f94194b414a421faf5cae8f6ef5c0c54a05487bae994c6",
+      "bytes": 45947
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "919a2e6a5a8a3c31d1e0f0cc259ea9d934fffd649a236679dd6e2b4862d80f35",
+      "bytes": 46437
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "58e3e80f2a29d19086db09c399d36e94893156ce6ed471ba94282ca49cb2f4cd",
+      "bytes": 46162
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/Position/Flight_Position_ENU_EN_000000.000-000000.160.png": {
+      "sha256": "bbb7f359262439704c047faf67b7eec75eae7c50b55ba5b6dacb0a484bc4f59d",
+      "bytes": 60485
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/Trajectory2D/Horizontal_Trajectory_000000.000-000000.160_EN.png": {
+      "sha256": "6ddae156c688d2ddfa62e5e82e8635696841866ff37402763a5bbde2eac761e1",
+      "bytes": 45796
+    },
+    "final04/test_bulk_export_keeps_selecte0/pre_start_plot_export/Plots_EN/Velocity/Flight_Velocity_ENU_EN_000000.000-000000.160.png": {
+      "sha256": "2f120c642cc0578acdba12f231ab4e31686af17afbe2e1a8ee87c0cbc50dbc09",
+      "bytes": 38622
+    },
+    "final04/test_bulk_export_keeps_selecte0/SYNTHETIC_pre_start_plot.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_calibration_missing_or_on0/cache/f5d1f0a0da457b2280bf054cb5fb733a/f90b9112ccf6d16dcfe0c1816ab3a09b.ssdecoder": {
+      "sha256": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+      "bytes": 2857
+    },
+    "final04/test_calibration_missing_or_on0/missing_calibration.ssdecoder": {
+      "sha256": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+      "bytes": 2857
+    },
+    "final04/test_calibration_missing_or_on0/missing_calibration.sslog": {
+      "sha256": "3195a5f071bed7df683b6a9b8f4ce5500f6150dd3b1bcc2e528940baed527357",
+      "bytes": 196
+    },
+    "final04/test_calibration_missing_or_on1/cache/f5d1f0a0da457b2280bf054cb5fb733a/f90b9112ccf6d16dcfe0c1816ab3a09b.ssdecoder": {
+      "sha256": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+      "bytes": 2857
+    },
+    "final04/test_calibration_missing_or_on1/missing_calibration.ssdecoder": {
+      "sha256": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+      "bytes": 2857
+    },
+    "final04/test_calibration_missing_or_on1/missing_calibration.sslog": {
+      "sha256": "455e1362fb564cdaa3f92fda7444b2ff72493839e3200517f5f7cad1f0fda5b0",
+      "bytes": 296
+    },
+    "final04/test_calibration_one_face_afte0/cache/bf95fe778b5530892d885bab45d2db59/e5c0060633db30f09d5e434b05fb9f01.ssdecoder": {
+      "sha256": "e5c0060633db30f09d5e434b05fb9f0100ee7f51c4d2155765266fda9e505beb",
+      "bytes": 2864
+    },
+    "final04/test_calibration_one_face_afte0/future.ssdecoder": {
+      "sha256": "e5c0060633db30f09d5e434b05fb9f0100ee7f51c4d2155765266fda9e505beb",
+      "bytes": 2864
+    },
+    "final04/test_calibration_one_face_afte0/future.sslog": {
+      "sha256": "e3119ae6650373a52a7a19e4e1f81c2c54184deffea773acce68c6424e6874c9",
+      "bytes": 296
+    },
+    "final04/test_calibration_one_face_mask0/cache/68b7a3b8c52f9d5f1448215759145818/c827c299ff23a59525b5229612e9a83a.ssdecoder": {
+      "sha256": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+      "bytes": 2965
+    },
+    "final04/test_calibration_one_face_mask0/calibration.ssdecoder": {
+      "sha256": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+      "bytes": 2965
+    },
+    "final04/test_calibration_one_face_mask0/calibration.sslog": {
+      "sha256": "d119f6809ab3b1236886e21fbf0650d64827447d73b21a37d0176eaf6be97e55",
+      "bytes": 348
+    },
+    "final04/test_calibration_one_face_mask1/cache/68b7a3b8c52f9d5f1448215759145818/c827c299ff23a59525b5229612e9a83a.ssdecoder": {
+      "sha256": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+      "bytes": 2965
+    },
+    "final04/test_calibration_one_face_mask1/calibration.ssdecoder": {
+      "sha256": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+      "bytes": 2965
+    },
+    "final04/test_calibration_one_face_mask1/calibration.sslog": {
+      "sha256": "720129c753ffdcddf6d1c01bae42f20495a656639b55ad443f9b292000605afc",
+      "bytes": 348
+    },
+    "final04/test_calibration_one_face_mask2/cache/68b7a3b8c52f9d5f1448215759145818/c827c299ff23a59525b5229612e9a83a.ssdecoder": {
+      "sha256": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+      "bytes": 2965
+    },
+    "final04/test_calibration_one_face_mask2/calibration.ssdecoder": {
+      "sha256": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+      "bytes": 2965
+    },
+    "final04/test_calibration_one_face_mask2/calibration.sslog": {
+      "sha256": "d5c0556d908ebf8195346d980c10009386d1e68e9d3888e1c44449bb7b1c7656",
+      "bytes": 348
+    },
+    "final04/test_calibration_one_face_mask3/cache/68b7a3b8c52f9d5f1448215759145818/c827c299ff23a59525b5229612e9a83a.ssdecoder": {
+      "sha256": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+      "bytes": 2965
+    },
+    "final04/test_calibration_one_face_mask3/calibration.ssdecoder": {
+      "sha256": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+      "bytes": 2965
+    },
+    "final04/test_calibration_one_face_mask3/calibration.sslog": {
+      "sha256": "44cbd8376713a720b1de6b7a455b063bd3a83c0a69640bd1c4f79c44edda9a76",
+      "bytes": 348
+    },
+    "final04/test_calibration_one_face_mask4/cache/68b7a3b8c52f9d5f1448215759145818/c827c299ff23a59525b5229612e9a83a.ssdecoder": {
+      "sha256": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+      "bytes": 2965
+    },
+    "final04/test_calibration_one_face_mask4/calibration.ssdecoder": {
+      "sha256": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+      "bytes": 2965
+    },
+    "final04/test_calibration_one_face_mask4/calibration.sslog": {
+      "sha256": "87aa9fef5d0b5352598938248fbbace6d7aa8d15d0b862d24ba399367145c36e",
+      "bytes": 348
+    },
+    "final04/test_calibration_one_face_mask5/cache/68b7a3b8c52f9d5f1448215759145818/c827c299ff23a59525b5229612e9a83a.ssdecoder": {
+      "sha256": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+      "bytes": 2965
+    },
+    "final04/test_calibration_one_face_mask5/calibration.ssdecoder": {
+      "sha256": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+      "bytes": 2965
+    },
+    "final04/test_calibration_one_face_mask5/calibration.sslog": {
+      "sha256": "c4b5799c7499451e7481f1418bbab9fef1668a05b18903ac12aab44cde00c236",
+      "bytes": 348
+    },
+    "final04/test_calibration_one_face_mask6/cache/68b7a3b8c52f9d5f1448215759145818/c827c299ff23a59525b5229612e9a83a.ssdecoder": {
+      "sha256": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+      "bytes": 2965
+    },
+    "final04/test_calibration_one_face_mask6/calibration.ssdecoder": {
+      "sha256": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+      "bytes": 2965
+    },
+    "final04/test_calibration_one_face_mask6/calibration.sslog": {
+      "sha256": "a9fb3da16a15cd72dcda4f741acb2946fc04edfcc7012535bf2c44f7dd5ea723",
+      "bytes": 348
+    },
+    "final04/test_calibration_one_face_mask7/cache/68b7a3b8c52f9d5f1448215759145818/c827c299ff23a59525b5229612e9a83a.ssdecoder": {
+      "sha256": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+      "bytes": 2965
+    },
+    "final04/test_calibration_one_face_mask7/calibration.ssdecoder": {
+      "sha256": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+      "bytes": 2965
+    },
+    "final04/test_calibration_one_face_mask7/calibration.sslog": {
+      "sha256": "aabd6b77d07a74e13597be79652057035d61c5f5a63c5e47075120b24b3c3e66",
+      "bytes": 348
+    },
+    "final04/test_calibration_one_face_mask8/cache/68b7a3b8c52f9d5f1448215759145818/c827c299ff23a59525b5229612e9a83a.ssdecoder": {
+      "sha256": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+      "bytes": 2965
+    },
+    "final04/test_calibration_one_face_mask8/calibration.ssdecoder": {
+      "sha256": "c827c299ff23a59525b5229612e9a83a452d29a5f5503cafc1a8cc8fddf934be",
+      "bytes": 2965
+    },
+    "final04/test_calibration_one_face_mask8/calibration.sslog": {
+      "sha256": "f9a6ce62f8b4507bf88572d3008931d1652cc3e37e81b1e7b39b9915d7d8244d",
+      "bytes": 348
+    },
+    "final04/test_calibration_selects_lates0/cache/1cb616cb32185a3c62c315cb2c729c7e/1040d65bca4204dcc3ae9f21c4a6ff53.ssdecoder": {
+      "sha256": "1040d65bca4204dcc3ae9f21c4a6ff53f45e789303393d5c9f3eb17214183b64",
+      "bytes": 2873
+    },
+    "final04/test_calibration_selects_lates0/calibration_modes.ssdecoder": {
+      "sha256": "1040d65bca4204dcc3ae9f21c4a6ff53f45e789303393d5c9f3eb17214183b64",
+      "bytes": 2873
+    },
+    "final04/test_calibration_selects_lates0/calibration_modes.sslog": {
+      "sha256": "8e38776673da5f05ab760a28852efee0e05c7c597006bee7b4d8ef8ce07a21c4",
+      "bytes": 496
+    },
+    "final04/test_catalog_payload_size_mism0/bad_size.ssdecoder": {
+      "sha256": "9fb462db91220848c25e8fdeed6322496497489683e99380f82070d6d780b8ff",
+      "bytes": 2857
+    },
+    "final04/test_catalog_payload_size_mism0/missing_plugin.ssdecoder": {
+      "sha256": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+      "bytes": 2857
+    },
+    "final04/test_cli_inspect_uses_exact_pa0/cli.ssdecoder": {
+      "sha256": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+      "bytes": 2857
+    },
+    "final04/test_cli_inspect_uses_exact_pa0/cli.sslog": {
+      "sha256": "c584e884d840152e0a46da7615abc4a0c290a7dfdbc0312bd947a490bf125661",
+      "bytes": 296
+    },
+    "final04/test_cli_inspect_uses_exact_pa0/local-app-data/SilverStar/FLP/decoder_profiles/f5d1f0a0da457b2280bf054cb5fb733a/f90b9112ccf6d16dcfe0c1816ab3a09b.ssdecoder": {
+      "sha256": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+      "bytes": 2857
+    },
+    "final04/test_container_yields_record_a0/opaque.sslog": {
+      "sha256": "a63ef78137abe32c7890e0a17a5e24d641fe8194f2399207ee779a53087543b3",
+      "bytes": 106
+    },
+    "final04/test_current_container_recover0/length.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_current_container_recover0/length.sslog": {
+      "sha256": "0fdfa48996fb0d3f084880efea6b436464aec850dda2e0a92c78072a60cec0d3",
+      "bytes": 220
+    },
+    "final04/test_current_container_resync_0/resync.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_current_container_resync_0/resync.sslog": {
+      "sha256": "c7127ac1d9e10adc31fe3855c11510e13bcd94b312de381467a3ad7c0d3652f5",
+      "bytes": 235
+    },
+    "final04/test_current_container_resync_1/bounded_resync.sslog": {
+      "sha256": "edb3be77d1d6c81c9f4cec64ea981aa36b52fdaf2a278e03efeea10ea9b1a44b",
+      "bytes": 208
+    },
+    "final04/test_decoder_package_rejects_l0/catalog_hash_alias.ssdecoder": {
+      "sha256": "e9fb74f20aa5505915e2cefd7e067ba1f803e69a97339f4dbabbc7f187c5aa01",
+      "bytes": 2861
+    },
+    "final04/test_decoder_package_rejects_l0/container_top_level.ssdecoder": {
+      "sha256": "ca7ef079321457a32d5459d910d8cd77acb75df9e459612e677772fb6d9ad27f",
+      "bytes": 2825
+    },
+    "final04/test_decoder_package_rejects_l0/format_version.ssdecoder": {
+      "sha256": "118734042ee54c42219e8330dee99bf2e670c719dde72068e1a02dd125b0142a",
+      "bytes": 2823
+    },
+    "final04/test_decoder_package_rejects_l0/missing_executable_declaration.ssdecoder": {
+      "sha256": "4a19f7c6a9ff5764cfe11600866850d6f3627f93bedb057b1bb32bfd4c2546ba",
+      "bytes": 2839
+    },
+    "final04/test_decoder_package_rejects_l1/legacy_catalog.ssdecoder": {
+      "sha256": "b0a2999eec7a678108373f600e3f1bfc10e2c1bede950e96f19d30f9bf40ae89",
+      "bytes": 2896
+    },
+    "final04/test_decoder_package_rejects_l1/legacy_semantics.ssdecoder": {
+      "sha256": "bd601fdf258c51e2d5be5dd3066e66a6011ba780305f37731be3254887b8612f",
+      "bytes": 2857
+    },
+    "final04/test_decoder_package_rejects_l1/mapping_algorithms.ssdecoder": {
+      "sha256": "30d8fd3c04df9fe25bc65bcbe66b28f80efa24b3cb05619d76533d4afdedeb08",
+      "bytes": 2853
+    },
+    "final04/test_decoder_package_rejects_o0/obsolete.ssdecoder": {
+      "sha256": "3d92fc9358360db090f18b9ade3e45bf62e14e912c9a0ff19789f4c0a7152ec6",
+      "bytes": 2854
+    },
+    "final04/test_decoder_package_rejects_o0/unsigned.ssdecoder": {
+      "sha256": "b918ed02e596a74334404e1c974b8ac1c9c8e08900bea4fb683962803d700776",
+      "bytes": 2510
+    },
+    "final04/test_decoder_package_rejects_u0/zip_slip.ssdecoder": {
+      "sha256": "ea8d9a7b4f42796a901405a1d6b1f632a0e82e11e48dca05a1161a6cf3e7e8ce",
+      "bytes": 2966
+    },
+    "final04/test_decoder_package_rejects_u1/duplicate.ssdecoder": {
+      "sha256": "a7fde24adef52246c9c466af4d0f1c9866149a47649a8a7f3a5d9572bc25841c",
+      "bytes": 3516
+    },
+    "final04/test_decoder_package_rejects_u2/symlink.ssdecoder": {
+      "sha256": "20dc350784ed6f6924094f3d191a8642a9b2ed75c85df9b9b7a1ec8ad7733f81",
+      "bytes": 2968
+    },
+    "final04/test_decoder_package_rejects_u3/executable.ssdecoder": {
+      "sha256": "f98950c71a4ba9b01422b693fbb996fd12d5d316bed2a42f2e672f5250221b6c",
+      "bytes": 2973
+    },
+    "final04/test_decoder_package_rejects_u4/checksum.ssdecoder": {
+      "sha256": "31e2a53c046968b609b0e3b0a454f9375f73c4d08f3617d78991f400f59514e3",
+      "bytes": 2859
+    },
+    "final04/test_descriptor_hash_selects_e0/descriptor.sslog": {
+      "sha256": "d620531b7cb643ab83eccbcf1d5c9e4c9aefa59cc9d6656143b049d2930ed61a",
+      "bytes": 212
+    },
+    "final04/test_descriptor_hash_selects_e0/exact.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_descriptor_hash_selects_e0/wrong.ssdecoder": {
+      "sha256": "d631080cff4efe0af4684f1d629a1ec87b63d6e198e62fca666c3d75d59b4a51",
+      "bytes": 2859
+    },
+    "final04/test_directory_scan_finds_log_0/Mission/Logs/Golden/mission.sslog": {
+      "sha256": "7beb45c9972256eb96d23cbd68c972ddfb67ef404c5cb052deab8bebdceb0d65",
+      "bytes": 64
+    },
+    "final04/test_directory_scan_finds_log_0/Mission/Mission.ssdecoder": {
+      "sha256": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+      "bytes": 2857
+    },
+    "final04/test_empty_or_invalid_position0/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_empty_or_invalid_position0/invalid-position/Export_Manifest_ZH.json": {
+      "sha256": "6bd5b388acb0be8c429660ddb01d81143ab2e23dc5ce8737777ce6944887a316",
+      "bytes": 8356
+    },
+    "final04/test_empty_or_invalid_position0/raw.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_empty_or_invalid_position0/raw.sslog": {
+      "sha256": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+      "bytes": 352
+    },
+    "final04/test_empty_or_invalid_position1/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_empty_or_invalid_position1/invalid-position/Export_Manifest_ZH.json": {
+      "sha256": "be9cb658693bddfe3e77ac7b900607e20b611fe0d10b7c06454a8c1b18c424ed",
+      "bytes": 8356
+    },
+    "final04/test_empty_or_invalid_position1/raw.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_empty_or_invalid_position1/raw.sslog": {
+      "sha256": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+      "bytes": 352
+    },
+    "final04/test_exact_raw_log_allows_audi0/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_exact_raw_log_allows_audi0/export/Export_Manifest_ZH.json": {
+      "sha256": "5f9b3de3eeb6fdd8b00474f884691e859ff56a90669eff75d1c44456f2fec70f",
+      "bytes": 7360
+    },
+    "final04/test_exact_raw_log_allows_audi0/raw.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_exact_raw_log_allows_audi0/raw.sslog": {
+      "sha256": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+      "bytes": 352
+    },
+    "final04/test_exact_raw_log_allows_audi1/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_exact_raw_log_allows_audi1/export/CSV_ZH/IMU_NATIVE_1_0.accel_b_mps2_ZH.csv": {
+      "sha256": "1090ac5ecadf41852aede908275b03c9cbbaa49d1a882c3e7a073bcb780f547a",
+      "bytes": 188
+    },
+    "final04/test_exact_raw_log_allows_audi1/export/Export_Manifest_ZH.json": {
+      "sha256": "4b90055f505412fb796eea059b003cb700b669cb454bc55ccf7d353dbaa1f34b",
+      "bytes": 7648
+    },
+    "final04/test_exact_raw_log_allows_audi1/raw.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_exact_raw_log_allows_audi1/raw.sslog": {
+      "sha256": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+      "bytes": 352
+    },
+    "final04/test_export_3d_uses_unique_col0/SYNTHETIC_export_3d_rules.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_export_keeps_independent_0/exported/CSV_EN/imu.corrected.accel_b_EN.csv": {
+      "sha256": "27df59f357b7304dc817021f97972ac2bc79d95997a10654525e357bc6b3c38a",
+      "bytes": 983
+    },
+    "final04/test_export_keeps_independent_0/exported/CSV_EN/imu.corrected.gyro_b_EN.csv": {
+      "sha256": "482df9948aaf9b4de0f56f6fc03d600f35788a6f2505f5c470c0c448e9004173",
+      "bytes": 744
+    },
+    "final04/test_export_keeps_independent_0/exported/CSV_EN/imu.corrected.temperature_EN.csv": {
+      "sha256": "f3e075d044b8f6b061572818dd970f4a5e15780780baf1cba10b9914c70908f3",
+      "bytes": 628
+    },
+    "final04/test_export_keeps_independent_0/exported/CSV_EN/inertial.increment.delta_theta_b_EN.csv": {
+      "sha256": "678dbecb0731fd4710fdc330dcdd7dd8bccc96cb11d1144f1f03d454262d7d66",
+      "bytes": 437
+    },
+    "final04/test_export_keeps_independent_0/exported/CSV_EN/inertial.increment.delta_velocity_b_EN.csv": {
+      "sha256": "89ffc4325558c2a8b45f9964a3ad9f38e25d0b881c02b807dadc8ea64dfda26e",
+      "bytes": 573
+    },
+    "final04/test_export_keeps_independent_0/exported/CSV_EN/inertial.increment.dt_EN.csv": {
+      "sha256": "3ae786faeb7d8eecf0aaa31745a9bb635c71595bad153c3c9551381fac679713",
+      "bytes": 495
+    },
+    "final04/test_export_keeps_independent_0/exported/CSV_EN/initial_state.attitude.q_nb_EN.csv": {
+      "sha256": "15e83369a1129e17fd90aa0165d8d10b21f0691e5ea15dbd03dc2566d45fcfba",
+      "bytes": 191
+    },
+    "final04/test_export_keeps_independent_0/exported/CSV_EN/initial_state.kf6.p0_diagonal_EN.csv": {
+      "sha256": "cdaab06c24ea62869bc1e97d94bda65e18777ab2abcbb4de3e365db9ea2ba459",
+      "bytes": 218
+    },
+    "final04/test_export_keeps_independent_0/exported/CSV_EN/initial_state.navigation.velocity_enu_EN.csv": {
+      "sha256": "5fe03adc1bf110fc123e2f4dcef8fbbb03266bf0127639809050495a58732dad",
+      "bytes": 195
+    },
+    "final04/test_export_keeps_independent_0/exported/CSV_EN/pure_ins.recorded.attitude.q_nb_EN.csv": {
+      "sha256": "530ed79ba11cf3b366402f03a7fc276587f0fb21470de067273b16fdd5cbf317",
+      "bytes": 463
+    },
+    "final04/test_export_keeps_independent_0/exported/CSV_EN/pure_ins.recorded.navigation.linear_accel_enu_EN.csv": {
+      "sha256": "1598ff1cf003134f278053eff149461feca0119329757db985e259edf8e003e6",
+      "bytes": 449
+    },
+    "final04/test_export_keeps_independent_0/exported/CSV_EN/pure_ins.recorded.navigation.position_enu_EN.csv": {
+      "sha256": "3fe8dffa176ec02261959c108df4e295768bf819c49e7deedf051354f274eaf4",
+      "bytes": 437
+    },
+    "final04/test_export_keeps_independent_0/exported/CSV_EN/pure_ins.recorded.navigation.velocity_enu_EN.csv": {
+      "sha256": "163961dd920daf683a490b95f236de4fdc80aa001ab1f91ea04893c45c447898",
+      "bytes": 439
+    },
+    "final04/test_export_keeps_independent_0/exported/Events_EN.csv": {
+      "sha256": "b0438b1dcfe8f320f65eee9c66a98f7dbc2fcd1149bfb52bceb456db7813d8d9",
+      "bytes": 94
+    },
+    "final04/test_export_keeps_independent_0/exported/Export_Manifest_EN.json": {
+      "sha256": "04bc03140efe7cafc08f807744b5529afc311999a06b61794edb23fc46a79294",
+      "bytes": 18628
+    },
+    "final04/test_export_keeps_independent_0/exported/Flight_Overview_EN.json": {
+      "sha256": "2f8364680f2169f53dc333f2b8e534a74df2a354b4b42d298cd027ca056c376d",
+      "bytes": 2968
+    },
+    "final04/test_export_keeps_independent_0/exported/Parser_Diagnostics_EN.json": {
+      "sha256": "901d7cfac781af2c7f30e33a6a26f9749ab22705128bcf22333b7eb743c35602",
+      "bytes": 723
+    },
+    "final04/test_export_keeps_independent_0/SYNTHETIC_export_source.BIN": {
+      "sha256": "5b65280977bf4f519271e5aab79dd3cd0043428928b1759790905c6e45d036d7",
+      "bytes": 3504
+    },
+    "final04/test_export_records_individual0/partial_export/CSV_EN/pure_ins.recorded.navigation.position_enu_EN.csv": {
+      "sha256": "3fe8dffa176ec02261959c108df4e295768bf819c49e7deedf051354f274eaf4",
+      "bytes": 437
+    },
+    "final04/test_export_records_individual0/partial_export/Export_Failures_EN.txt": {
+      "sha256": "ac5e497db34328085ba45456d7b8cef1a77d940be72ee44487384946d40e7f5c",
+      "bytes": 194
+    },
+    "final04/test_export_records_individual0/partial_export/Export_Manifest_EN.json": {
+      "sha256": "b8a69d2e2c76d48b2e1e827a290d1f777972c90b0221808ece87bd7a2d9225c6",
+      "bytes": 7362
+    },
+    "final04/test_export_records_individual0/SYNTHETIC_partial_export.BIN": {
+      "sha256": "5b65280977bf4f519271e5aab79dd3cd0043428928b1759790905c6e45d036d7",
+      "bytes": 3504
+    },
+    "final04/test_export_snapshot_has_only_0/SYNTHETIC.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_export_theme_manifest_rec0/output/Export_Manifest_EN.json": {
+      "sha256": "96bd9a5f8888bbe35c884714848c6ea75e083c96b73917496f051bf706db8827",
+      "bytes": 27042
+    },
+    "final04/test_export_theme_manifest_rec0/theme.bin": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_export_theme_manifest_rec1/output/Export_Manifest_EN.json": {
+      "sha256": "c56a01e3123aad5527a36a69ae512faddcc9c9fcce0226030f7d9b3986720b41",
+      "bytes": 27040
+    },
+    "final04/test_export_theme_manifest_rec1/theme.bin": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_export_theme_manifest_rec2/output/Export_Manifest_EN.json": {
+      "sha256": "447b4627b227198830fb142ff06c08843c9280d25c2fbe86ab4459e1d053f1f0",
+      "bytes": 27038
+    },
+    "final04/test_export_theme_manifest_rec2/theme.bin": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_export_theme_manifest_rec3/output/Export_Manifest_EN.json": {
+      "sha256": "eb8997f26d4804e5de364d25a50e6e226daf5e26ab9e9c2ca199ef333c44370e",
+      "bytes": 27035
+    },
+    "final04/test_export_theme_manifest_rec3/theme.bin": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_fccg_record_views_bind_to0/fccg_views.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_fccg_record_views_bind_to0/fccg_views.sslog": {
+      "sha256": "81e077f628fac4caa70890d88b35dad1a9f6d49f9ff9ab06baef73c7ef6ec582",
+      "bytes": 268
+    },
+    "final04/test_file_order_timestamps_may0/time_order.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_file_order_timestamps_may0/time_order.sslog": {
+      "sha256": "eba072a359ca4231e61e336722285794211dfc99f46d60e9c144c752196b7442",
+      "bytes": 268
+    },
+    "final04/test_firmware_container_id_ali0/firmware_container_id.ssdecoder": {
+      "sha256": "907928fabd37cd04f5798f573afae25e081cbcd232c89d840a449ae58d3675a0",
+      "bytes": 2871
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Export_Manifest_ZH.json": {
+      "sha256": "6fd7a3ef5da15af3ff40c744475acaa62ee6efe117db772eb8d1fcd7b2b4fea1",
+      "bytes": 39021
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/GIF/Flight_Replay_ZH.gif": {
+      "sha256": "c4ea5801a94ba2b20d3bce93e030c6f4b6a4f913d26e8464f7c36e4f21b12141",
+      "bytes": 669194
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/GIF/Flight_Replay_ZH.json": {
+      "sha256": "19c78cb4503eaf395baf15cf3b1106b9ddf171389533bd6f6bb1730b364c326c",
+      "bytes": 287
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/Attitude/Flight_Attitude_ZH_000000.000-000000.160.png": {
+      "sha256": "c204d108ac08f021409423509f962a0aa569ba9d61b2d08679f17b90fd9c4af7",
+      "bytes": 39135
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/Covariance/KF6_Recorded_Measurement_Std_Barometer_ZH_000000.000-000000.160.png": {
+      "sha256": "2ef9d2e660c64972928fdf28a6516a22f50b5ca974c385a60920223a90d98b86",
+      "bytes": 45062
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/Covariance/KF6_Recorded_Measurement_Std_GNSS_Position_EN_ZH_000000.000-000000.160.png": {
+      "sha256": "f7753c7e065fe3a6a52925afc1a7c20b3cc35b41f06b1ad7e0dbf986caf3ef13",
+      "bytes": 47001
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/Covariance/KF6_Recorded_Measurement_Std_GNSS_Position_U_ZH_000000.000-000000.160.png": {
+      "sha256": "0ce530945956deff53645091890f12f9a9f48083a55633cb372429bd15b79ae8",
+      "bytes": 46738
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/Covariance/KF6_Recorded_Measurement_Std_GNSS_Velocity_EN_ZH_000000.000-000000.160.png": {
+      "sha256": "9b3fcfabd50c24c1d5afdb4554de0b2ea0deed735e4b72d30df133916a6d3463",
+      "bytes": 48332
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/Covariance/KF6_Recorded_Measurement_Std_GNSS_Velocity_U_ZH_000000.000-000000.160.png": {
+      "sha256": "8d75ebfe569371e6ed8a5ea9116d4e06ff21856f9168c6b3faa1822701021dfa",
+      "bytes": 48118
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/Covariance/KF6_Recorded_Position_Std_1Sigma_ZH_000000.000-000000.160.png": {
+      "sha256": "0caa5b5f8ace14dba75d8f0deed06c43aee20b78be8019879a786aa137a40551",
+      "bytes": 34762
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/Covariance/KF6_Recorded_Velocity_Std_1Sigma_ZH_000000.000-000000.160.png": {
+      "sha256": "f7cf21fe1dd130a7b53a5545fb92941f2b25be04461bdf0636d15371b295b170",
+      "bytes": 36117
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/Estimation/KF6_Recorded_Measurement_Update_ZH_000000.000-000000.160.png": {
+      "sha256": "24ce505c4a7de3ec3c7a91cbbe833781fe03bee04ff4bd70ed41750e999eee62",
+      "bytes": 43030
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/IMU/Flight_Acceleration_XYZ_ZH_000000.000-000000.160.png": {
+      "sha256": "4d820e94d3c153f619fb894d56324bccc96a3c96f2127f51870649151e75f398",
+      "bytes": 35699
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/IMU/Flight_Angular_Rate_XYZ_ZH_000000.000-000000.160.png": {
+      "sha256": "6574cdba55228a2a26b7f328ddc77fc5522b9888d9af80a9b822769aa67d5186",
+      "bytes": 39256
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/Innovation/KF6_Recorded_Innovation_Barometer_ZH_000000.000-000000.160.png": {
+      "sha256": "a2bb915fd6a7c5763e8a7d764744e8e486f11bcf11b78338ce9db8b022af02ca",
+      "bytes": 38573
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/Innovation/KF6_Recorded_Innovation_GNSS_Position_EN_ZH_000000.000-000000.160.png": {
+      "sha256": "cafb8c6a8a0d2e81e37bafcaf01c69b946b62524f33fccf9d55735a974aeda17",
+      "bytes": 40645
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/Innovation/KF6_Recorded_Innovation_GNSS_Position_U_ZH_000000.000-000000.160.png": {
+      "sha256": "1a7db434e00062c4c994033d8dbe1d564788bd371d5dea57cc67ddc443b91ffd",
+      "bytes": 40469
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/Innovation/KF6_Recorded_Innovation_GNSS_Velocity_EN_ZH_000000.000-000000.160.png": {
+      "sha256": "07c238fdd742e354f5eb0d5134681ddae125706fc4c90781f0953ac9b2c20504",
+      "bytes": 42352
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/Innovation/KF6_Recorded_Innovation_GNSS_Velocity_U_ZH_000000.000-000000.160.png": {
+      "sha256": "4dab49a3831d253a3f3847a7e18e07be5a32bfa07993beaf97d55f621bbea2cf",
+      "bytes": 42142
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/NIS/KF6_Recorded_NIS_Barometer_ZH_000000.000-000000.160.png": {
+      "sha256": "acd45345f33a600b51a0d1f0b469b9a86a24477b2c76a6dc41f9dad3f40a92fd",
+      "bytes": 40548
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/NIS/KF6_Recorded_NIS_GNSS_Position_EN_ZH_000000.000-000000.160.png": {
+      "sha256": "aee691bc70b14984f9ab2f1b4e00547a998f4be1b73a13f711cc62426661731a",
+      "bytes": 42692
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/NIS/KF6_Recorded_NIS_GNSS_Position_U_ZH_000000.000-000000.160.png": {
+      "sha256": "907daf062f9d45e5535986c3f17cae8c3642d105dd60acb3e6c624f59eec22fc",
+      "bytes": 42415
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/NIS/KF6_Recorded_NIS_GNSS_Velocity_EN_ZH_000000.000-000000.160.png": {
+      "sha256": "51e3549688d80c3cf5662ab44bf12f6634f8910f01e08f6c390c24da64fd0827",
+      "bytes": 43791
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/NIS/KF6_Recorded_NIS_GNSS_Velocity_U_ZH_000000.000-000000.160.png": {
+      "sha256": "a0d4456ba36d5cd07ee582c618b1301cc823ca3f1a6dbe4dec67e4f37f7c22dd",
+      "bytes": 43495
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/Position/Flight_Position_ENU_ZH_000000.000-000000.160.png": {
+      "sha256": "4db311963563d45e33ea3b6e77ed50de299d4e8a25f1a5cc5bdc7afd3d775b12",
+      "bytes": 57200
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/Trajectory2D/Horizontal_Trajectory_000000.000-000000.160_ZH.png": {
+      "sha256": "209cb7142a03f7596df75438c509bed1dc08c21f1f24c738607e72b8f1562d09",
+      "bytes": 41322
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Plots_ZH/Velocity/Flight_Velocity_ENU_ZH_000000.000-000000.160.png": {
+      "sha256": "8a42790b768bfa753f376c14e6ddf62e6896244734a329a728636f84dd5399e7",
+      "bytes": 37623
+    },
+    "final04/test_follow_ui_exports_standar0/analysis_export/Trajectory3D/Trajectory_3D_ZH.png": {
+      "sha256": "2d68145cc05e5525a3ff8a05d4f2a1b7a7cb7ff2649706632750f5abdb9ff0b8",
+      "bytes": 213465
+    },
+    "final04/test_follow_ui_exports_standar0/SYNTHETIC_export_analysis.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/CSV_EN/kf6.recorded.covariance.upper_triangle_EN.csv": {
+      "sha256": "07b44c2524667c5b158cf2a37f75f22f0d3101bcf0155bb812f4f63f762e3abf",
+      "bytes": 1422
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Export_Manifest_EN.json": {
+      "sha256": "ac91b6eb88c20c33f1154d8eb98df961eb1a761befa7513e3101b8b2c05544fa",
+      "bytes": 17996
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/KF6_Full_P_Keyframes_EN.txt": {
+      "sha256": "34d2806a7e606e7e9d8b4b02c3f41f2ed7d85fd7251c0f4d8fada3e34014e94c",
+      "bytes": 3671
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/Attitude/Flight_Attitude_EN_000000.000-000000.160.png": {
+      "sha256": "783bca8822b910c80f31cb3fde95e32385efae234eda8a7afe3491731d30f7d4",
+      "bytes": 40808
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "38fd79d7e0b3990c1ce436a6aaad9f0089273f587389caaa93b383819f87bfcd",
+      "bytes": 54412
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "27950ed1620eda9866291bf24b546f83caa39f3817f2961b286770360f5b0c99",
+      "bytes": 55247
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "87efae3dd906c4722d26c980208f78947948324991cebae4bd2e9674733f88cb",
+      "bytes": 54934
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "aa17f5bcdf80ef78263be9401410cafd67440c3b9a061f386f6d7fd967da2d68",
+      "bytes": 56317
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "43570df9d52efed038721b7f0df0510f1ce304f14c4000f4572962bc274b4038",
+      "bytes": 56080
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/Covariance/KF6_Recorded_Position_Std_1Sigma_EN_000000.000-000000.160.png": {
+      "sha256": "b7716e3bc85891a2df703f34aba8f85f003799b21f2c897c8a70a1179ad070e3",
+      "bytes": 39293
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/Covariance/KF6_Recorded_Velocity_Std_1Sigma_EN_000000.000-000000.160.png": {
+      "sha256": "31be55ee0698a5b726c6c394a1fa044add416a9cc2dc8957ca47a8bb170b9db8",
+      "bytes": 40600
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/Estimation/KF6_Recorded_Measurement_Update_EN_000000.000-000000.160.png": {
+      "sha256": "771134f641b8132bc3fa28949f88d2c9cedfab79f7ab5fc98076e1fb53c0e272",
+      "bytes": 49795
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/IMU/Flight_Acceleration_XYZ_EN_000000.000-000000.160.png": {
+      "sha256": "2289bbfe7b505800e7ece0b52b3ab75f707748af821d2173dc5a5ff04d66903b",
+      "bytes": 36894
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/IMU/Flight_Angular_Rate_XYZ_EN_000000.000-000000.160.png": {
+      "sha256": "f309fa91fdc014148cf9887c184d1ef5948e754af914f42c5f1b21e0f5bd7364",
+      "bytes": 40546
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/Innovation/KF6_Recorded_Innovation_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "662477b5f7e2fb1b44be1784cfeb54bf625b630f3f9420f5bf59cbd4ebee091e",
+      "bytes": 43099
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "e86266658207b7db261d4a9726305e2f3d599354f45dee96cae6dcdb003517ab",
+      "bytes": 43557
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "fa611272f2c59374761f85839754fe4ab7ea47e375de8b3aee18b0ea97df7491",
+      "bytes": 43456
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "6ed3a3a7c20acee1b6a212a2ebe756d9ed2934277a7c1eb62fd49b17c7666994",
+      "bytes": 44812
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "8c6c90b7f51927738fac5bd8bbf8eadea10f9726b9ebb8c809f695eeda6e4bfd",
+      "bytes": 44128
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/NIS/KF6_Recorded_NIS_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "cd466e592559d1cda249d005db96d4164a5da37d746cd19356c880e04bd1da93",
+      "bytes": 45280
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "d9d00ed2d1bfc0bc3a7607e940f36f6c5db5a94f7bd0f45ae4e3959e002bbce0",
+      "bytes": 45377
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "a59ec2c276fc0e7f70f94194b414a421faf5cae8f6ef5c0c54a05487bae994c6",
+      "bytes": 45947
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "919a2e6a5a8a3c31d1e0f0cc259ea9d934fffd649a236679dd6e2b4862d80f35",
+      "bytes": 46437
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "58e3e80f2a29d19086db09c399d36e94893156ce6ed471ba94282ca49cb2f4cd",
+      "bytes": 46162
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/Position/Flight_Position_ENU_EN_000000.000-000000.160.png": {
+      "sha256": "bbb7f359262439704c047faf67b7eec75eae7c50b55ba5b6dacb0a484bc4f59d",
+      "bytes": 60485
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/Trajectory2D/Horizontal_Trajectory_000000.000-000000.160_EN.png": {
+      "sha256": "6ddae156c688d2ddfa62e5e82e8635696841866ff37402763a5bbde2eac761e1",
+      "bytes": 45796
+    },
+    "final04/test_full_p_keyframes_replace_0/full_p_keyframes_export/Plots_EN/Velocity/Flight_Velocity_ENU_EN_000000.000-000000.160.png": {
+      "sha256": "2f120c642cc0578acdba12f231ab4e31686af17afbe2e1a8ee87c0cbc50dbc09",
+      "bytes": 38622
+    },
+    "final04/test_full_p_keyframes_replace_0/SYNTHETIC_full_p_keyframes.BIN": {
+      "sha256": "5234a413cf62f2132bb4bfa53d8391e6b0885e9a0763382fd14055c29721990b",
+      "bytes": 7272
+    },
+    "final04/test_full_p_keyframes_use_anal0/full_p_without_landing_export/Export_Manifest_ZH.json": {
+      "sha256": "4c207c74a65cc651b18f12e745e6b016a91b37ce3f89eaad2afd322ae74514bd",
+      "bytes": 28407
+    },
+    "final04/test_full_p_keyframes_use_anal0/full_p_without_landing_export/KF6_Full_P_Keyframes_ZH.txt": {
+      "sha256": "7d58a5dc304718c5cf13d0e208f7244e4653f0bc717e2bac0588f50da5f33522",
+      "bytes": 3738
+    },
+    "final04/test_full_p_keyframes_use_anal0/SYNTHETIC_full_p_without_landing.BIN": {
+      "sha256": "2d8ab0afc4927a76415c596b092a324b72d8f8a8772554b55014a68e3b570e85",
+      "bytes": 7232
+    },
+    "final04/test_gnss_online_without_fix_a0/cache/ff9dc2fa23decf7effc2d8152a97d17b/f28634d18b9f30cb8defd182ecae7f7a.ssdecoder": {
+      "sha256": "f28634d18b9f30cb8defd182ecae7f7aae624033d671a750493d45da322558a2",
+      "bytes": 3006
+    },
+    "final04/test_gnss_online_without_fix_a0/gnss_no_fix.ssdecoder": {
+      "sha256": "f28634d18b9f30cb8defd182ecae7f7aae624033d671a750493d45da322558a2",
+      "bytes": 3006
+    },
+    "final04/test_gnss_online_without_fix_a0/gnss_no_fix.sslog": {
+      "sha256": "f8fce0c0d1bdab6f389f677bb9e07251f7963e25e69896830986c38eae462535",
+      "bytes": 348
+    },
+    "final04/test_gui_and_backend_share_sou0/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_gui_and_backend_share_sou0/gui-export/Export_Manifest_ZH.json": {
+      "sha256": "dc9b5e3f28ffbb9c126c04657d5883632baf61fcea837d33a36bbaa401b88616",
+      "bytes": 7349
+    },
+    "final04/test_gui_and_backend_share_sou0/raw.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_gui_and_backend_share_sou0/raw.sslog": {
+      "sha256": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+      "bytes": 352
+    },
+    "final04/test_gui_and_backend_share_sou1/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_gui_and_backend_share_sou1/raw.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_gui_and_backend_share_sou1/raw.sslog": {
+      "sha256": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+      "bytes": 352
+    },
+    "final04/test_gui_offers_raw_recorded_c0/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_gui_offers_raw_recorded_c0/raw.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_gui_offers_raw_recorded_c0/raw.sslog": {
+      "sha256": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+      "bytes": 352
+    },
+    "final04/test_light_replay_gif_keeps_mi0/light_replay_export/CSV_EN/inertial.increment.dt_EN.csv": {
+      "sha256": "3ae786faeb7d8eecf0aaa31745a9bb635c71595bad153c3c9551381fac679713",
+      "bytes": 495
+    },
+    "final04/test_light_replay_gif_keeps_mi0/light_replay_export/Export_Manifest_EN.json": {
+      "sha256": "d5961ebf63146f15a00158ffee8b80c07bf4678cd60bec1fa5b514c84ab3fb98",
+      "bytes": 6229
+    },
+    "final04/test_light_replay_gif_keeps_mi0/light_replay_export/GIF/Flight_Replay_EN.gif": {
+      "sha256": "d8ad3476675ab9398fda660fb7b42a30367e15f18a7475f1e1962fdb12b4cb02",
+      "bytes": 650252
+    },
+    "final04/test_light_replay_gif_keeps_mi0/light_replay_export/GIF/Flight_Replay_EN.json": {
+      "sha256": "19c78cb4503eaf395baf15cf3b1106b9ddf171389533bd6f6bb1730b364c326c",
+      "bytes": 287
+    },
+    "final04/test_light_replay_gif_keeps_mi0/SYNTHETIC_light_replay.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_log_open_coordinator_buil0/audit-export/Export_Manifest_ZH.json": {
+      "sha256": "84e16523ea01296b83acbb8db5b46e167483aef7155ed225ec31185f2adadabf",
+      "bytes": 7325
+    },
+    "final04/test_log_open_coordinator_buil0/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_log_open_coordinator_buil0/coordinator.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_log_open_coordinator_buil0/coordinator.sslog": {
+      "sha256": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+      "bytes": 352
+    },
+    "final04/test_log_open_coordinator_reje0/bad_none.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_log_open_coordinator_reje0/bad_none.sslog": {
+      "sha256": "a22f60e5ca119fe41db2b2319a3e79d60045951b960217cb1369eac149c8f2f9",
+      "bytes": 296
+    },
+    "final04/test_log_open_coordinator_reje0/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_main_without_filter_metad0/SYNTHETIC.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_main_without_filter_metad1/SYNTHETIC.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_manifest_failure_still_wr0/failure_fallback_export/Export_Failures_EN.txt": {
+      "sha256": "282ea8c14e6955d0a13a2fb29d32c1451e9098d2aeee9793aba44710c2ed6767",
+      "bytes": 262
+    },
+    "final04/test_manifest_failure_still_wr0/SYNTHETIC_failure_fallback.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_manual_import_cache_is_co0/cache/f5d1f0a0da457b2280bf054cb5fb733a/f90b9112ccf6d16dcfe0c1816ab3a09b.ssdecoder": {
+      "sha256": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+      "bytes": 2857
+    },
+    "final04/test_manual_import_cache_is_co0/source.ssdecoder": {
+      "sha256": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+      "bytes": 2857
+    },
+    "final04/test_missing_navigation_produc0/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_missing_navigation_produc0/missing-nav/Export_Manifest_ZH.json": {
+      "sha256": "b19a4a840e83294f00bf309c87b4b9ffee0e7284d3d153f49e1cb7d138afa41c",
+      "bytes": 9523
+    },
+    "final04/test_missing_navigation_produc0/raw.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_missing_navigation_produc0/raw.sslog": {
+      "sha256": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+      "bytes": 352
+    },
+    "final04/test_mixed_recorded_snapshot_i0/SYNTHETIC.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_none_identity_is_legal_wi0/cache/6bfcf85bde7ab9c7ebf38771444a5c0e/61c049897e0d1942e82c6c18a78538d9.ssdecoder": {
+      "sha256": "61c049897e0d1942e82c6c18a78538d98bd929181f769fa251d5544b4522cfb3",
+      "bytes": 2866
+    },
+    "final04/test_none_identity_is_legal_wi0/none_with_six_face.ssdecoder": {
+      "sha256": "61c049897e0d1942e82c6c18a78538d98bd929181f769fa251d5544b4522cfb3",
+      "bytes": 2866
+    },
+    "final04/test_none_identity_is_legal_wi0/none_with_six_face.sslog": {
+      "sha256": "7ef4f942b9e46bfafd7c46a1a1a3d350ff7484bf68b5801e012279cf29bf1c76",
+      "bytes": 396
+    },
+    "final04/test_only_complete_successful_0/SYNTHETIC_source_readiness.BIN": {
+      "sha256": "5b65280977bf4f519271e5aab79dd3cd0043428928b1759790905c6e45d036d7",
+      "bytes": 3504
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Export_Manifest_EN.json": {
+      "sha256": "a024e541f4ba06cdd50c0487f46c73e36f18c0aa88799c98b1aa24d0620bafe5",
+      "bytes": 38659
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/GNSSIntegrity/GNSS_Horizontal_Consistency_Error/GNSS_Horizontal_Consistency_Error_000000.000-000000.160_EN.png": {
+      "sha256": "e68cef759d4fc5a622ab758a53c9e0aa2c8e54dfcd93dee20f0098dc39d7af05",
+      "bytes": 91102
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/Attitude/Flight_Attitude_EN_000000.000-000000.160.png": {
+      "sha256": "783bca8822b910c80f31cb3fde95e32385efae234eda8a7afe3491731d30f7d4",
+      "bytes": 40808
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "38fd79d7e0b3990c1ce436a6aaad9f0089273f587389caaa93b383819f87bfcd",
+      "bytes": 54412
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "27950ed1620eda9866291bf24b546f83caa39f3817f2961b286770360f5b0c99",
+      "bytes": 55247
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "87efae3dd906c4722d26c980208f78947948324991cebae4bd2e9674733f88cb",
+      "bytes": 54934
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "aa17f5bcdf80ef78263be9401410cafd67440c3b9a061f386f6d7fd967da2d68",
+      "bytes": 56317
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "43570df9d52efed038721b7f0df0510f1ce304f14c4000f4572962bc274b4038",
+      "bytes": 56080
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/Covariance/KF6_Recorded_Position_Std_1Sigma_EN_000000.000-000000.160.png": {
+      "sha256": "b7716e3bc85891a2df703f34aba8f85f003799b21f2c897c8a70a1179ad070e3",
+      "bytes": 39293
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/Covariance/KF6_Recorded_Velocity_Std_1Sigma_EN_000000.000-000000.160.png": {
+      "sha256": "31be55ee0698a5b726c6c394a1fa044add416a9cc2dc8957ca47a8bb170b9db8",
+      "bytes": 40600
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/Estimation/KF6_Recorded_Measurement_Update_EN_000000.000-000000.160.png": {
+      "sha256": "771134f641b8132bc3fa28949f88d2c9cedfab79f7ab5fc98076e1fb53c0e272",
+      "bytes": 49795
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/IMU/Flight_Acceleration_XYZ_EN_000000.000-000000.160.png": {
+      "sha256": "2289bbfe7b505800e7ece0b52b3ab75f707748af821d2173dc5a5ff04d66903b",
+      "bytes": 36894
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/IMU/Flight_Angular_Rate_XYZ_EN_000000.000-000000.160.png": {
+      "sha256": "f309fa91fdc014148cf9887c184d1ef5948e754af914f42c5f1b21e0f5bd7364",
+      "bytes": 40546
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "662477b5f7e2fb1b44be1784cfeb54bf625b630f3f9420f5bf59cbd4ebee091e",
+      "bytes": 43099
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "e86266658207b7db261d4a9726305e2f3d599354f45dee96cae6dcdb003517ab",
+      "bytes": 43557
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "fa611272f2c59374761f85839754fe4ab7ea47e375de8b3aee18b0ea97df7491",
+      "bytes": 43456
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "6ed3a3a7c20acee1b6a212a2ebe756d9ed2934277a7c1eb62fd49b17c7666994",
+      "bytes": 44812
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "8c6c90b7f51927738fac5bd8bbf8eadea10f9726b9ebb8c809f695eeda6e4bfd",
+      "bytes": 44128
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "cd466e592559d1cda249d005db96d4164a5da37d746cd19356c880e04bd1da93",
+      "bytes": 45280
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "d9d00ed2d1bfc0bc3a7607e940f36f6c5db5a94f7bd0f45ae4e3959e002bbce0",
+      "bytes": 45377
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "a59ec2c276fc0e7f70f94194b414a421faf5cae8f6ef5c0c54a05487bae994c6",
+      "bytes": 45947
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "919a2e6a5a8a3c31d1e0f0cc259ea9d934fffd649a236679dd6e2b4862d80f35",
+      "bytes": 46437
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "58e3e80f2a29d19086db09c399d36e94893156ce6ed471ba94282ca49cb2f4cd",
+      "bytes": 46162
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/Position/Flight_Position_ENU_EN_000000.000-000000.160.png": {
+      "sha256": "bbb7f359262439704c047faf67b7eec75eae7c50b55ba5b6dacb0a484bc4f59d",
+      "bytes": 60485
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/Trajectory2D/Horizontal_Trajectory_000000.000-000000.160_EN.png": {
+      "sha256": "6ddae156c688d2ddfa62e5e82e8635696841866ff37402763a5bbde2eac761e1",
+      "bytes": 45796
+    },
+    "final04/test_ordinary_export_records_e0/ordinary/Plots_EN/Velocity/Flight_Velocity_ENU_EN_000000.000-000000.160.png": {
+      "sha256": "2f120c642cc0578acdba12f231ab4e31686af17afbe2e1a8ee87c0cbc50dbc09",
+      "bytes": 38622
+    },
+    "final04/test_ordinary_export_records_e0/SYNTHETIC.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Export_Manifest_EN.json": {
+      "sha256": "15b99ce80c04f65ed17fa049372634d80d44bd9ce7025b80c055a97c964c87f4",
+      "bytes": 38932
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/GNSSIntegrity/GNSS_Receiver_Information/GNSS_Receiver_Information_000000.000-000000.160_EN.png": {
+      "sha256": "3bdf6e9ac9e51e7c82115e6b083161c0ac69dbe751c07e8917aabca4a428ca5a",
+      "bytes": 56273
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/GNSSIntegrity/GNSS_Vertical_Consistency_Error/GNSS_Vertical_Consistency_Error_000000.000-000000.160_EN.png": {
+      "sha256": "f5a19e8fe78b935c8cce213bf7cda7765755bdc8d2942423bd5855a1b0fd452b",
+      "bytes": 61053
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/Attitude/Flight_Attitude_EN_000000.000-000000.160.png": {
+      "sha256": "783bca8822b910c80f31cb3fde95e32385efae234eda8a7afe3491731d30f7d4",
+      "bytes": 40808
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "38fd79d7e0b3990c1ce436a6aaad9f0089273f587389caaa93b383819f87bfcd",
+      "bytes": 54412
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "27950ed1620eda9866291bf24b546f83caa39f3817f2961b286770360f5b0c99",
+      "bytes": 55247
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "87efae3dd906c4722d26c980208f78947948324991cebae4bd2e9674733f88cb",
+      "bytes": 54934
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "aa17f5bcdf80ef78263be9401410cafd67440c3b9a061f386f6d7fd967da2d68",
+      "bytes": 56317
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "43570df9d52efed038721b7f0df0510f1ce304f14c4000f4572962bc274b4038",
+      "bytes": 56080
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/Covariance/KF6_Recorded_Position_Std_1Sigma_EN_000000.000-000000.160.png": {
+      "sha256": "b7716e3bc85891a2df703f34aba8f85f003799b21f2c897c8a70a1179ad070e3",
+      "bytes": 39293
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/Covariance/KF6_Recorded_Velocity_Std_1Sigma_EN_000000.000-000000.160.png": {
+      "sha256": "31be55ee0698a5b726c6c394a1fa044add416a9cc2dc8957ca47a8bb170b9db8",
+      "bytes": 40600
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/Estimation/KF6_Recorded_Measurement_Update_EN_000000.000-000000.160.png": {
+      "sha256": "771134f641b8132bc3fa28949f88d2c9cedfab79f7ab5fc98076e1fb53c0e272",
+      "bytes": 49795
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/IMU/Flight_Acceleration_XYZ_EN_000000.000-000000.160.png": {
+      "sha256": "2289bbfe7b505800e7ece0b52b3ab75f707748af821d2173dc5a5ff04d66903b",
+      "bytes": 36894
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/IMU/Flight_Angular_Rate_XYZ_EN_000000.000-000000.160.png": {
+      "sha256": "f309fa91fdc014148cf9887c184d1ef5948e754af914f42c5f1b21e0f5bd7364",
+      "bytes": 40546
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "662477b5f7e2fb1b44be1784cfeb54bf625b630f3f9420f5bf59cbd4ebee091e",
+      "bytes": 43099
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "e86266658207b7db261d4a9726305e2f3d599354f45dee96cae6dcdb003517ab",
+      "bytes": 43557
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "fa611272f2c59374761f85839754fe4ab7ea47e375de8b3aee18b0ea97df7491",
+      "bytes": 43456
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "6ed3a3a7c20acee1b6a212a2ebe756d9ed2934277a7c1eb62fd49b17c7666994",
+      "bytes": 44812
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "8c6c90b7f51927738fac5bd8bbf8eadea10f9726b9ebb8c809f695eeda6e4bfd",
+      "bytes": 44128
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "cd466e592559d1cda249d005db96d4164a5da37d746cd19356c880e04bd1da93",
+      "bytes": 45280
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "d9d00ed2d1bfc0bc3a7607e940f36f6c5db5a94f7bd0f45ae4e3959e002bbce0",
+      "bytes": 45377
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "a59ec2c276fc0e7f70f94194b414a421faf5cae8f6ef5c0c54a05487bae994c6",
+      "bytes": 45947
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "919a2e6a5a8a3c31d1e0f0cc259ea9d934fffd649a236679dd6e2b4862d80f35",
+      "bytes": 46437
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "58e3e80f2a29d19086db09c399d36e94893156ce6ed471ba94282ca49cb2f4cd",
+      "bytes": 46162
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/Position/Flight_Position_ENU_EN_000000.000-000000.160.png": {
+      "sha256": "bbb7f359262439704c047faf67b7eec75eae7c50b55ba5b6dacb0a484bc4f59d",
+      "bytes": 60485
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/Trajectory2D/Horizontal_Trajectory_000000.000-000000.160_EN.png": {
+      "sha256": "6ddae156c688d2ddfa62e5e82e8635696841866ff37402763a5bbde2eac761e1",
+      "bytes": 45796
+    },
+    "final04/test_ordinary_export_records_e1/ordinary/Plots_EN/Velocity/Flight_Velocity_ENU_EN_000000.000-000000.160.png": {
+      "sha256": "2f120c642cc0578acdba12f231ab4e31686af17afbe2e1a8ee87c0cbc50dbc09",
+      "bytes": 38622
+    },
+    "final04/test_ordinary_export_records_e1/SYNTHETIC.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Export_Manifest_EN.json": {
+      "sha256": "729c542b997ccf940260c9724031332d71e978ebe8659764566ee712c2f5e5a5",
+      "bytes": 38377
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/Attitude/Flight_Attitude_EN_000000.000-000000.160.png": {
+      "sha256": "783bca8822b910c80f31cb3fde95e32385efae234eda8a7afe3491731d30f7d4",
+      "bytes": 40808
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "38fd79d7e0b3990c1ce436a6aaad9f0089273f587389caaa93b383819f87bfcd",
+      "bytes": 54412
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "27950ed1620eda9866291bf24b546f83caa39f3817f2961b286770360f5b0c99",
+      "bytes": 55247
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "87efae3dd906c4722d26c980208f78947948324991cebae4bd2e9674733f88cb",
+      "bytes": 54934
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "aa17f5bcdf80ef78263be9401410cafd67440c3b9a061f386f6d7fd967da2d68",
+      "bytes": 56317
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "43570df9d52efed038721b7f0df0510f1ce304f14c4000f4572962bc274b4038",
+      "bytes": 56080
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/Covariance/KF6_Recorded_Position_Std_1Sigma_EN_000000.000-000000.160.png": {
+      "sha256": "b7716e3bc85891a2df703f34aba8f85f003799b21f2c897c8a70a1179ad070e3",
+      "bytes": 39293
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/Covariance/KF6_Recorded_Velocity_Std_1Sigma_EN_000000.000-000000.160.png": {
+      "sha256": "31be55ee0698a5b726c6c394a1fa044add416a9cc2dc8957ca47a8bb170b9db8",
+      "bytes": 40600
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/Estimation/KF6_Recorded_Measurement_Update_EN_000000.000-000000.160.png": {
+      "sha256": "771134f641b8132bc3fa28949f88d2c9cedfab79f7ab5fc98076e1fb53c0e272",
+      "bytes": 49795
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/IMU/Flight_Acceleration_XYZ_EN_000000.000-000000.160.png": {
+      "sha256": "2289bbfe7b505800e7ece0b52b3ab75f707748af821d2173dc5a5ff04d66903b",
+      "bytes": 36894
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/IMU/Flight_Angular_Rate_XYZ_EN_000000.000-000000.160.png": {
+      "sha256": "f309fa91fdc014148cf9887c184d1ef5948e754af914f42c5f1b21e0f5bd7364",
+      "bytes": 40546
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "662477b5f7e2fb1b44be1784cfeb54bf625b630f3f9420f5bf59cbd4ebee091e",
+      "bytes": 43099
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "e86266658207b7db261d4a9726305e2f3d599354f45dee96cae6dcdb003517ab",
+      "bytes": 43557
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "fa611272f2c59374761f85839754fe4ab7ea47e375de8b3aee18b0ea97df7491",
+      "bytes": 43456
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "6ed3a3a7c20acee1b6a212a2ebe756d9ed2934277a7c1eb62fd49b17c7666994",
+      "bytes": 44812
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "8c6c90b7f51927738fac5bd8bbf8eadea10f9726b9ebb8c809f695eeda6e4bfd",
+      "bytes": 44128
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "cd466e592559d1cda249d005db96d4164a5da37d746cd19356c880e04bd1da93",
+      "bytes": 45280
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "d9d00ed2d1bfc0bc3a7607e940f36f6c5db5a94f7bd0f45ae4e3959e002bbce0",
+      "bytes": 45377
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "a59ec2c276fc0e7f70f94194b414a421faf5cae8f6ef5c0c54a05487bae994c6",
+      "bytes": 45947
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "919a2e6a5a8a3c31d1e0f0cc259ea9d934fffd649a236679dd6e2b4862d80f35",
+      "bytes": 46437
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "58e3e80f2a29d19086db09c399d36e94893156ce6ed471ba94282ca49cb2f4cd",
+      "bytes": 46162
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/Position/Flight_Position_ENU_EN_000000.000-000000.160.png": {
+      "sha256": "bbb7f359262439704c047faf67b7eec75eae7c50b55ba5b6dacb0a484bc4f59d",
+      "bytes": 60485
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/Trajectory2D/Horizontal_Trajectory_000000.000-000000.160_EN.png": {
+      "sha256": "6ddae156c688d2ddfa62e5e82e8635696841866ff37402763a5bbde2eac761e1",
+      "bytes": 45796
+    },
+    "final04/test_ordinary_export_records_e2/ordinary/Plots_EN/Velocity/Flight_Velocity_ENU_EN_000000.000-000000.160.png": {
+      "sha256": "2f120c642cc0578acdba12f231ab4e31686af17afbe2e1a8ee87c0cbc50dbc09",
+      "bytes": 38622
+    },
+    "final04/test_ordinary_export_records_e2/SYNTHETIC.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Export_Manifest_EN.json": {
+      "sha256": "feb6a5474f45a72d869c0710599f5b56fdb2f04e10d733ce15dffa354a5fbaf3",
+      "bytes": 39211
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/GNSSIntegrity/GNSS_Horizontal_Consistency_Error/GNSS_Horizontal_Consistency_Error_000000.000-000000.160_EN.png": {
+      "sha256": "e68cef759d4fc5a622ab758a53c9e0aa2c8e54dfcd93dee20f0098dc39d7af05",
+      "bytes": 91102
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/GNSSIntegrity/GNSS_Receiver_Information/GNSS_Receiver_Information_000000.000-000000.160_EN.png": {
+      "sha256": "3bdf6e9ac9e51e7c82115e6b083161c0ac69dbe751c07e8917aabca4a428ca5a",
+      "bytes": 56273
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/GNSSIntegrity/GNSS_Vertical_Consistency_Error/GNSS_Vertical_Consistency_Error_000000.000-000000.160_EN.png": {
+      "sha256": "f5a19e8fe78b935c8cce213bf7cda7765755bdc8d2942423bd5855a1b0fd452b",
+      "bytes": 61053
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/Attitude/Flight_Attitude_EN_000000.000-000000.160.png": {
+      "sha256": "783bca8822b910c80f31cb3fde95e32385efae234eda8a7afe3491731d30f7d4",
+      "bytes": 40808
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "38fd79d7e0b3990c1ce436a6aaad9f0089273f587389caaa93b383819f87bfcd",
+      "bytes": 54412
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "27950ed1620eda9866291bf24b546f83caa39f3817f2961b286770360f5b0c99",
+      "bytes": 55247
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "87efae3dd906c4722d26c980208f78947948324991cebae4bd2e9674733f88cb",
+      "bytes": 54934
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "aa17f5bcdf80ef78263be9401410cafd67440c3b9a061f386f6d7fd967da2d68",
+      "bytes": 56317
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "43570df9d52efed038721b7f0df0510f1ce304f14c4000f4572962bc274b4038",
+      "bytes": 56080
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/Covariance/KF6_Recorded_Position_Std_1Sigma_EN_000000.000-000000.160.png": {
+      "sha256": "b7716e3bc85891a2df703f34aba8f85f003799b21f2c897c8a70a1179ad070e3",
+      "bytes": 39293
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/Covariance/KF6_Recorded_Velocity_Std_1Sigma_EN_000000.000-000000.160.png": {
+      "sha256": "31be55ee0698a5b726c6c394a1fa044add416a9cc2dc8957ca47a8bb170b9db8",
+      "bytes": 40600
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/Estimation/KF6_Recorded_Measurement_Update_EN_000000.000-000000.160.png": {
+      "sha256": "771134f641b8132bc3fa28949f88d2c9cedfab79f7ab5fc98076e1fb53c0e272",
+      "bytes": 49795
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/IMU/Flight_Acceleration_XYZ_EN_000000.000-000000.160.png": {
+      "sha256": "2289bbfe7b505800e7ece0b52b3ab75f707748af821d2173dc5a5ff04d66903b",
+      "bytes": 36894
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/IMU/Flight_Angular_Rate_XYZ_EN_000000.000-000000.160.png": {
+      "sha256": "f309fa91fdc014148cf9887c184d1ef5948e754af914f42c5f1b21e0f5bd7364",
+      "bytes": 40546
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "662477b5f7e2fb1b44be1784cfeb54bf625b630f3f9420f5bf59cbd4ebee091e",
+      "bytes": 43099
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "e86266658207b7db261d4a9726305e2f3d599354f45dee96cae6dcdb003517ab",
+      "bytes": 43557
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "fa611272f2c59374761f85839754fe4ab7ea47e375de8b3aee18b0ea97df7491",
+      "bytes": 43456
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "6ed3a3a7c20acee1b6a212a2ebe756d9ed2934277a7c1eb62fd49b17c7666994",
+      "bytes": 44812
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "8c6c90b7f51927738fac5bd8bbf8eadea10f9726b9ebb8c809f695eeda6e4bfd",
+      "bytes": 44128
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "cd466e592559d1cda249d005db96d4164a5da37d746cd19356c880e04bd1da93",
+      "bytes": 45280
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "d9d00ed2d1bfc0bc3a7607e940f36f6c5db5a94f7bd0f45ae4e3959e002bbce0",
+      "bytes": 45377
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "a59ec2c276fc0e7f70f94194b414a421faf5cae8f6ef5c0c54a05487bae994c6",
+      "bytes": 45947
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "919a2e6a5a8a3c31d1e0f0cc259ea9d934fffd649a236679dd6e2b4862d80f35",
+      "bytes": 46437
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "58e3e80f2a29d19086db09c399d36e94893156ce6ed471ba94282ca49cb2f4cd",
+      "bytes": 46162
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/Position/Flight_Position_ENU_EN_000000.000-000000.160.png": {
+      "sha256": "bbb7f359262439704c047faf67b7eec75eae7c50b55ba5b6dacb0a484bc4f59d",
+      "bytes": 60485
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/Trajectory2D/Horizontal_Trajectory_000000.000-000000.160_EN.png": {
+      "sha256": "6ddae156c688d2ddfa62e5e82e8635696841866ff37402763a5bbde2eac761e1",
+      "bytes": 45796
+    },
+    "final04/test_ordinary_export_records_e3/ordinary/Plots_EN/Velocity/Flight_Velocity_ENU_EN_000000.000-000000.160.png": {
+      "sha256": "2f120c642cc0578acdba12f231ab4e31686af17afbe2e1a8ee87c0cbc50dbc09",
+      "bytes": 38622
+    },
+    "final04/test_ordinary_export_records_e3/SYNTHETIC.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Export_Manifest_EN.json": {
+      "sha256": "a928ac2560f37ce0689308fd22c6930289ab70130c7a251f95106753b060939b",
+      "bytes": 44817
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/GNSSIntegrity/GNSS_Horizontal_Consistency_Error/GNSS_Horizontal_Consistency_Error_000000.000-000000.160_EN.png": {
+      "sha256": "0d877ac8c8154d7ecd8366203f725b6d7a814807920d2e8a449ac9bbd6d4bc64",
+      "bytes": 93268
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/Attitude/Flight_Attitude_EN_000000.000-000000.160.png": {
+      "sha256": "6ed5a861b03f2adf72cf9f0410ed392732e7738a72fff253ebd9ccb85cec8af8",
+      "bytes": 41994
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/Covariance/KF6_Recomputed_Measurement_Std_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "a8b2abe14fc5a8db53a7caabc3c4ad9429d75459678ae4889a6a46665a4ad591",
+      "bytes": 55946
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/Covariance/KF6_Recomputed_Measurement_Std_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "1f4bb32f046c9f71415c512509fb3ec71ce7d1de36d655c0d735a9fe1accba18",
+      "bytes": 56171
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/Covariance/KF6_Recomputed_Measurement_Std_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "ad6f31be35b9f98cdd64ee29a204b5e3776c0acd1cf1c0cc6fabad21436f263c",
+      "bytes": 56113
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/Covariance/KF6_Recomputed_Measurement_Std_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "419f37fd1c9fbd544623af5d4db486f258d61b14d5f633781e6b4217b88bfaa6",
+      "bytes": 57120
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/Covariance/KF6_Recomputed_Measurement_Std_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "cc70b79c29e163a59a7f12ebc65c1afbfe1daefde233d7ac1e4ab4bd7bec36a0",
+      "bytes": 57317
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/Covariance/KF6_Recomputed_Position_Std_1Sigma_EN_000000.000-000000.160.png": {
+      "sha256": "506b51c6ce136199a0d2272b864da7cb9ad6453e084f4ee2e30f0fb9de1b4e4d",
+      "bytes": 40305
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/Covariance/KF6_Recomputed_Velocity_Std_1Sigma_EN_000000.000-000000.160.png": {
+      "sha256": "29fede58de9cb3afd6f59ececcbadedc6d0aa0084dac17f4c339710a26d9d60d",
+      "bytes": 41800
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/Estimation/KF6_Recomputed_Measurement_Update_EN_000000.000-000000.160.png": {
+      "sha256": "b0a3966dbac703ff9a45d2d0d0aa33db1a354a49129a74ea1e23ca1731447c5e",
+      "bytes": 51188
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/IMU/Flight_Acceleration_XYZ_EN_000000.000-000000.160.png": {
+      "sha256": "2289bbfe7b505800e7ece0b52b3ab75f707748af821d2173dc5a5ff04d66903b",
+      "bytes": 36894
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/IMU/Flight_Angular_Rate_XYZ_EN_000000.000-000000.160.png": {
+      "sha256": "f309fa91fdc014148cf9887c184d1ef5948e754af914f42c5f1b21e0f5bd7364",
+      "bytes": 40546
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/Innovation/KF6_Recomputed_Innovation_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "c73a14a73d2dfe4e4d353ad0e4133cf7ab81df3fa594f8aae4d8ddeb1c78377d",
+      "bytes": 44410
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/Innovation/KF6_Recomputed_Innovation_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "62b4dccf0192845f7533dfa43eff2552ce630fc8b3fd23883c147305854e3530",
+      "bytes": 44986
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/Innovation/KF6_Recomputed_Innovation_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "6422ba4af3071349766678bed7417db02a701983a907209589981a3458dc56c2",
+      "bytes": 45120
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/Innovation/KF6_Recomputed_Innovation_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "7ad7e2042a8b204d0a759cf324a60b3fe621df7724947133ca4c9b448b8d0865",
+      "bytes": 45951
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/Innovation/KF6_Recomputed_Innovation_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "3075306819b5caa57a6cd738cc520e0e3c736c0ca7075d892d9c9602ca0b4f36",
+      "bytes": 45545
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/NIS/KF6_Recomputed_NIS_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "0c37b548475c70a4394e9dd7d38303de9758c9b1c6bf783d09c1cd85595005d0",
+      "bytes": 46819
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/NIS/KF6_Recomputed_NIS_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "6b6196bec270bd019ddbbb2be29cae46f379c77dafce6ed4d156e66cc2bb00c5",
+      "bytes": 46786
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/NIS/KF6_Recomputed_NIS_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "6e5606a0eebb313500335d5bd18445d46744d8deb0cece4f5be05a8235a6d302",
+      "bytes": 47373
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/NIS/KF6_Recomputed_NIS_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "70a0ae77a2831ca5628392c53f6afe4bcf3d00b11fe58aaeec31ee945b3d48e9",
+      "bytes": 47489
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/NIS/KF6_Recomputed_NIS_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "a131e34e32b50a5ac9a6c17ec11970054982cacd0b012738d93b8b9aa5087f4c",
+      "bytes": 47312
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/Position/Flight_Position_ENU_EN_000000.000-000000.160.png": {
+      "sha256": "5a7558bf190e2fa1d9bdbd0a26b20d62703e8aa708ac660d5dd8a07809e30d49",
+      "bytes": 61588
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/Trajectory2D/Horizontal_Trajectory_000000.000-000000.160_EN.png": {
+      "sha256": "6ddae156c688d2ddfa62e5e82e8635696841866ff37402763a5bbde2eac761e1",
+      "bytes": 45796
+    },
+    "final04/test_ordinary_recomputed_expor0/ordinary/Plots_EN/Velocity/Flight_Velocity_ENU_EN_000000.000-000000.160.png": {
+      "sha256": "a1cfd39f341de48f504a70a159636bd628f06687e8fcdc55eae9ce82302258ef",
+      "bytes": 39757
+    },
+    "final04/test_ordinary_recomputed_expor0/SYNTHETIC.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Export_Manifest_EN.json": {
+      "sha256": "304b1c6d5322fda76c9b441062e9075a81d9d1369d761db92d5a452a01b3eb04",
+      "bytes": 44531
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/Attitude/Flight_Attitude_EN_000000.000-000000.160.png": {
+      "sha256": "6ed5a861b03f2adf72cf9f0410ed392732e7738a72fff253ebd9ccb85cec8af8",
+      "bytes": 41994
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/Covariance/KF6_Recomputed_Measurement_Std_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "a8b2abe14fc5a8db53a7caabc3c4ad9429d75459678ae4889a6a46665a4ad591",
+      "bytes": 55946
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/Covariance/KF6_Recomputed_Measurement_Std_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "1f4bb32f046c9f71415c512509fb3ec71ce7d1de36d655c0d735a9fe1accba18",
+      "bytes": 56171
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/Covariance/KF6_Recomputed_Measurement_Std_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "ad6f31be35b9f98cdd64ee29a204b5e3776c0acd1cf1c0cc6fabad21436f263c",
+      "bytes": 56113
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/Covariance/KF6_Recomputed_Measurement_Std_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "419f37fd1c9fbd544623af5d4db486f258d61b14d5f633781e6b4217b88bfaa6",
+      "bytes": 57120
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/Covariance/KF6_Recomputed_Measurement_Std_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "cc70b79c29e163a59a7f12ebc65c1afbfe1daefde233d7ac1e4ab4bd7bec36a0",
+      "bytes": 57317
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/Covariance/KF6_Recomputed_Position_Std_1Sigma_EN_000000.000-000000.160.png": {
+      "sha256": "506b51c6ce136199a0d2272b864da7cb9ad6453e084f4ee2e30f0fb9de1b4e4d",
+      "bytes": 40305
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/Covariance/KF6_Recomputed_Velocity_Std_1Sigma_EN_000000.000-000000.160.png": {
+      "sha256": "29fede58de9cb3afd6f59ececcbadedc6d0aa0084dac17f4c339710a26d9d60d",
+      "bytes": 41800
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/Estimation/KF6_Recomputed_Measurement_Update_EN_000000.000-000000.160.png": {
+      "sha256": "b0a3966dbac703ff9a45d2d0d0aa33db1a354a49129a74ea1e23ca1731447c5e",
+      "bytes": 51188
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/IMU/Flight_Acceleration_XYZ_EN_000000.000-000000.160.png": {
+      "sha256": "2289bbfe7b505800e7ece0b52b3ab75f707748af821d2173dc5a5ff04d66903b",
+      "bytes": 36894
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/IMU/Flight_Angular_Rate_XYZ_EN_000000.000-000000.160.png": {
+      "sha256": "f309fa91fdc014148cf9887c184d1ef5948e754af914f42c5f1b21e0f5bd7364",
+      "bytes": 40546
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/Innovation/KF6_Recomputed_Innovation_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "c73a14a73d2dfe4e4d353ad0e4133cf7ab81df3fa594f8aae4d8ddeb1c78377d",
+      "bytes": 44410
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/Innovation/KF6_Recomputed_Innovation_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "62b4dccf0192845f7533dfa43eff2552ce630fc8b3fd23883c147305854e3530",
+      "bytes": 44986
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/Innovation/KF6_Recomputed_Innovation_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "6422ba4af3071349766678bed7417db02a701983a907209589981a3458dc56c2",
+      "bytes": 45120
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/Innovation/KF6_Recomputed_Innovation_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "7ad7e2042a8b204d0a759cf324a60b3fe621df7724947133ca4c9b448b8d0865",
+      "bytes": 45951
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/Innovation/KF6_Recomputed_Innovation_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "3075306819b5caa57a6cd738cc520e0e3c736c0ca7075d892d9c9602ca0b4f36",
+      "bytes": 45545
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/NIS/KF6_Recomputed_NIS_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "0c37b548475c70a4394e9dd7d38303de9758c9b1c6bf783d09c1cd85595005d0",
+      "bytes": 46819
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/NIS/KF6_Recomputed_NIS_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "6b6196bec270bd019ddbbb2be29cae46f379c77dafce6ed4d156e66cc2bb00c5",
+      "bytes": 46786
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/NIS/KF6_Recomputed_NIS_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "6e5606a0eebb313500335d5bd18445d46744d8deb0cece4f5be05a8235a6d302",
+      "bytes": 47373
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/NIS/KF6_Recomputed_NIS_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "70a0ae77a2831ca5628392c53f6afe4bcf3d00b11fe58aaeec31ee945b3d48e9",
+      "bytes": 47489
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/NIS/KF6_Recomputed_NIS_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "a131e34e32b50a5ac9a6c17ec11970054982cacd0b012738d93b8b9aa5087f4c",
+      "bytes": 47312
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/Position/Flight_Position_ENU_EN_000000.000-000000.160.png": {
+      "sha256": "5a7558bf190e2fa1d9bdbd0a26b20d62703e8aa708ac660d5dd8a07809e30d49",
+      "bytes": 61588
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/Trajectory2D/Horizontal_Trajectory_000000.000-000000.160_EN.png": {
+      "sha256": "6ddae156c688d2ddfa62e5e82e8635696841866ff37402763a5bbde2eac761e1",
+      "bytes": 45796
+    },
+    "final04/test_ordinary_recomputed_expor1/ordinary/Plots_EN/Velocity/Flight_Velocity_ENU_EN_000000.000-000000.160.png": {
+      "sha256": "a1cfd39f341de48f504a70a159636bd628f06687e8fcdc55eae9ce82302258ef",
+      "bytes": 39757
+    },
+    "final04/test_ordinary_recomputed_expor1/SYNTHETIC.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Export_Manifest_EN.json": {
+      "sha256": "7a3b2b088abe07628f5de32269593af9314703a60fc3f9b1d2d40653de576144",
+      "bytes": 38955
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/GNSSIntegrity/GNSS_Horizontal_Consistency_Error/GNSS_Horizontal_Consistency_Error_000000.000-000000.160_EN.png": {
+      "sha256": "e68cef759d4fc5a622ab758a53c9e0aa2c8e54dfcd93dee20f0098dc39d7af05",
+      "bytes": 91102
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/GNSSIntegrity/GNSS_Receiver_Information/GNSS_Receiver_Information_000000.000-000000.160_EN.png": {
+      "sha256": "3bdf6e9ac9e51e7c82115e6b083161c0ac69dbe751c07e8917aabca4a428ca5a",
+      "bytes": 56273
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/Attitude/Flight_Attitude_EN_000000.000-000000.160.png": {
+      "sha256": "783bca8822b910c80f31cb3fde95e32385efae234eda8a7afe3491731d30f7d4",
+      "bytes": 40808
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "38fd79d7e0b3990c1ce436a6aaad9f0089273f587389caaa93b383819f87bfcd",
+      "bytes": 54412
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "27950ed1620eda9866291bf24b546f83caa39f3817f2961b286770360f5b0c99",
+      "bytes": 55247
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "87efae3dd906c4722d26c980208f78947948324991cebae4bd2e9674733f88cb",
+      "bytes": 54934
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "aa17f5bcdf80ef78263be9401410cafd67440c3b9a061f386f6d7fd967da2d68",
+      "bytes": 56317
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/Covariance/KF6_Recorded_Measurement_Std_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "43570df9d52efed038721b7f0df0510f1ce304f14c4000f4572962bc274b4038",
+      "bytes": 56080
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/Covariance/KF6_Recorded_Position_Std_1Sigma_EN_000000.000-000000.160.png": {
+      "sha256": "b7716e3bc85891a2df703f34aba8f85f003799b21f2c897c8a70a1179ad070e3",
+      "bytes": 39293
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/Covariance/KF6_Recorded_Velocity_Std_1Sigma_EN_000000.000-000000.160.png": {
+      "sha256": "31be55ee0698a5b726c6c394a1fa044add416a9cc2dc8957ca47a8bb170b9db8",
+      "bytes": 40600
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/Estimation/KF6_Recorded_Measurement_Update_EN_000000.000-000000.160.png": {
+      "sha256": "771134f641b8132bc3fa28949f88d2c9cedfab79f7ab5fc98076e1fb53c0e272",
+      "bytes": 49795
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/IMU/Flight_Acceleration_XYZ_EN_000000.000-000000.160.png": {
+      "sha256": "2289bbfe7b505800e7ece0b52b3ab75f707748af821d2173dc5a5ff04d66903b",
+      "bytes": 36894
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/IMU/Flight_Angular_Rate_XYZ_EN_000000.000-000000.160.png": {
+      "sha256": "f309fa91fdc014148cf9887c184d1ef5948e754af914f42c5f1b21e0f5bd7364",
+      "bytes": 40546
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "662477b5f7e2fb1b44be1784cfeb54bf625b630f3f9420f5bf59cbd4ebee091e",
+      "bytes": 43099
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "e86266658207b7db261d4a9726305e2f3d599354f45dee96cae6dcdb003517ab",
+      "bytes": 43557
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "fa611272f2c59374761f85839754fe4ab7ea47e375de8b3aee18b0ea97df7491",
+      "bytes": 43456
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "6ed3a3a7c20acee1b6a212a2ebe756d9ed2934277a7c1eb62fd49b17c7666994",
+      "bytes": 44812
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/Innovation/KF6_Recorded_Innovation_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "8c6c90b7f51927738fac5bd8bbf8eadea10f9726b9ebb8c809f695eeda6e4bfd",
+      "bytes": 44128
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_Barometer_EN_000000.000-000000.160.png": {
+      "sha256": "cd466e592559d1cda249d005db96d4164a5da37d746cd19356c880e04bd1da93",
+      "bytes": 45280
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Position_EN_EN_000000.000-000000.160.png": {
+      "sha256": "d9d00ed2d1bfc0bc3a7607e940f36f6c5db5a94f7bd0f45ae4e3959e002bbce0",
+      "bytes": 45377
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Position_U_EN_000000.000-000000.160.png": {
+      "sha256": "a59ec2c276fc0e7f70f94194b414a421faf5cae8f6ef5c0c54a05487bae994c6",
+      "bytes": 45947
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Velocity_EN_EN_000000.000-000000.160.png": {
+      "sha256": "919a2e6a5a8a3c31d1e0f0cc259ea9d934fffd649a236679dd6e2b4862d80f35",
+      "bytes": 46437
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/NIS/KF6_Recorded_NIS_GNSS_Velocity_U_EN_000000.000-000000.160.png": {
+      "sha256": "58e3e80f2a29d19086db09c399d36e94893156ce6ed471ba94282ca49cb2f4cd",
+      "bytes": 46162
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/Position/Flight_Position_ENU_EN_000000.000-000000.160.png": {
+      "sha256": "bbb7f359262439704c047faf67b7eec75eae7c50b55ba5b6dacb0a484bc4f59d",
+      "bytes": 60485
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/Trajectory2D/Horizontal_Trajectory_000000.000-000000.160_EN.png": {
+      "sha256": "6ddae156c688d2ddfa62e5e82e8635696841866ff37402763a5bbde2eac761e1",
+      "bytes": 45796
+    },
+    "final04/test_ordinary_vertical_missing0/ordinary/Plots_EN/Velocity/Flight_Velocity_ENU_EN_000000.000-000000.160.png": {
+      "sha256": "2f120c642cc0578acdba12f231ab4e31686af17afbe2e1a8ee87c0cbc50dbc09",
+      "bytes": 38622
+    },
+    "final04/test_ordinary_vertical_missing0/SYNTHETIC.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_package_rejects_future_fl0/future.ssdecoder": {
+      "sha256": "9495cd3e51acb637b7e1c3b0e7b41066e053f3fa87e1cadb24af6496d12e5dd8",
+      "bytes": 2857
+    },
+    "final04/test_plot_metadata_has_languag0/SYNTHETIC_plot_metadata.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_project_contains_referenc0/flight.ssflp": {
+      "sha256": "62bf7f8c038842f2c5321b9981df8b479a7ecdf373eb2c220cc182f6e6a0b166",
+      "bytes": 1511
+    },
+    "final04/test_project_contains_referenc0/SYNTHETIC_project_source.BIN": {
+      "sha256": "5b65280977bf4f519271e5aab79dd3cd0043428928b1759790905c6e45d036d7",
+      "bytes": 3504
+    },
+    "final04/test_project_open_rediscover_e0/empty-cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_project_open_rediscover_e0/flight.sslog": {
+      "sha256": "c584e884d840152e0a46da7615abc4a0c290a7dfdbc0312bd947a490bf125661",
+      "bytes": 296
+    },
+    "final04/test_project_open_rediscover_e0/original-cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_project_open_rediscover_e0/relocated-task/renamed.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_project_open_rediscover_e0/source.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_project_references_prefer0/Decoder/Flight.ssdecoder": {
+      "sha256": "3fd280851fc975e2600b5c0f8f4e618bdc898e0f82ff5e58242f69d7a8c3e2fe",
+      "bytes": 17
+    },
+    "final04/test_project_references_prefer0/Flight.ssflp": {
+      "sha256": "5e564572aae723a429e077cb4e5c42f3e472dfd938c5783fef04fc26bcbd9778",
+      "bytes": 1488
+    },
+    "final04/test_project_references_prefer0/Logs/SS0000.BIN": {
+      "sha256": "5b65280977bf4f519271e5aab79dd3cd0043428928b1759790905c6e45d036d7",
+      "bytes": 3504
+    },
+    "final04/test_project_save_as_keeps_log0/copy/flight_copy.ssflp": {
+      "sha256": "fbcb7693601a052d5bd4ffe15108abad555b9056feb8cd2749242e68381a6c48",
+      "bytes": 1716
+    },
+    "final04/test_project_save_as_keeps_log0/source/flight.ssflp": {
+      "sha256": "87b1a816515f910a6fdf662df1eab359f735d08e302790c6c9c7859ce0915bfa",
+      "bytes": 1494
+    },
+    "final04/test_project_save_as_keeps_log0/source/SYNTHETIC_save_as_source.BIN": {
+      "sha256": "5b65280977bf4f519271e5aab79dd3cd0043428928b1759790905c6e45d036d7",
+      "bytes": 3504
+    },
+    "final04/test_recomputed_and_what_if_re0/active_source_export/Export_Manifest_ZH.json": {
+      "sha256": "ea3db7f89b85060c6c0b43eb52af4032f6da0f8940e80f55dc418bda5731e51e",
+      "bytes": 48330
+    },
+    "final04/test_recomputed_and_what_if_re0/parameters/cache/7962ed937074961b1e5f8de39039f504/7a25e34c2ef4f4f4d34adac78edfc691.ssdecoder": {
+      "sha256": "7a25e34c2ef4f4f4d34adac78edfc691a3474c6a719717f8f96e4187a7defeb4",
+      "bytes": 4844
+    },
+    "final04/test_recomputed_and_what_if_re0/parameters/SYNTHETIC_actual.ssdecoder": {
+      "sha256": "7a25e34c2ef4f4f4d34adac78edfc691a3474c6a719717f8f96e4187a7defeb4",
+      "bytes": 4844
+    },
+    "final04/test_recomputed_and_what_if_re0/parameters/SYNTHETIC_actual.sslog": {
+      "sha256": "384cb92e128eb0be728b8c777b964d3e548a68a145bb851ea64614a871da4ef0",
+      "bytes": 352
+    },
+    "final04/test_recomputed_and_what_if_re0/recorded_export/Export_Manifest_ZH.json": {
+      "sha256": "b8e3c6ed33fa27a3f1b52391e28548726090d19d9e982d3525eb0e8731ff8fbc",
+      "bytes": 42253
+    },
+    "final04/test_recomputed_and_what_if_re0/selected_recompute_export/Export_Manifest_ZH.json": {
+      "sha256": "a4fca91965366208c8060335ef76ddc5e176f4a3de20751b699745b681c913f7",
+      "bytes": 48457
+    },
+    "final04/test_recomputed_and_what_if_re0/SYNTHETIC_replay_store.BIN": {
+      "sha256": "5b65280977bf4f519271e5aab79dd3cd0043428928b1759790905c6e45d036d7",
+      "bytes": 3504
+    },
+    "final04/test_recorded_final_solution_m0/SYNTHETIC.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_recorded_navigation_resol0/SYNTHETIC_resolver_kf6.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_ssplugin_cannot_replace_b0/override.ssplugin": {
+      "sha256": "7369121e35aba5eb84bf1e1e429ad0cffc9a2431a0a2a964078f64eadc44c59b",
+      "bytes": 451
+    },
+    "final04/test_ssplugin_requires_explici0/installed/example_container_test-1.2.3-5b2cc048456843ea.ssplugin": {
+      "sha256": "5b2cc048456843eaa5e8d09f394ba559f9e5be64231f028cb83dddcfc9e322ca",
+      "bytes": 438
+    },
+    "final04/test_ssplugin_requires_explici0/test.ssplugin": {
+      "sha256": "5b2cc048456843eaa5e8d09f394ba559f9e5be64231f028cb83dddcfc9e322ca",
+      "bytes": 438
+    },
+    "final04/test_strict_package_drives_dua0/dual_imu.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_strict_package_drives_dua0/dual_imu.sslog": {
+      "sha256": "81e077f628fac4caa70890d88b35dad1a9f6d49f9ff9ab06baef73c7ef6ec582",
+      "bytes": 268
+    },
+    "final04/test_switch_clears_every_prima0/SYNTHETIC.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_unavailable_explicit_sour0/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_unavailable_explicit_sour0/raw.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_unavailable_explicit_sour0/raw.sslog": {
+      "sha256": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+      "bytes": 352
+    },
+    "final04/test_unavailable_explicit_sour1/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_unavailable_explicit_sour1/raw.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_unavailable_explicit_sour1/raw.sslog": {
+      "sha256": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+      "bytes": 352
+    },
+    "final04/test_unavailable_explicit_sour2/cache/f5d1f0a0da457b2280bf054cb5fb733a/ea932f27b907fba83ea11b75646c8f2b.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_unavailable_explicit_sour2/raw.ssdecoder": {
+      "sha256": "ea932f27b907fba83ea11b75646c8f2bcd7b22c2c18d00047edc1836d315e472",
+      "bytes": 2857
+    },
+    "final04/test_unavailable_explicit_sour2/raw.sslog": {
+      "sha256": "63d28c45414400d55aa381906ff1dc7aea18e0b39bd7ea5cb945143a77774ae6",
+      "bytes": 352
+    },
+    "final04/test_unknown_explicit_source_m0/SYNTHETIC.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    },
+    "final04/test_unknown_type_and_version_0/unknown.ssdecoder": {
+      "sha256": "f90b9112ccf6d16dcfe0c1816ab3a09bf351f0e1f897c79d7aac5eb6918153d9",
+      "bytes": 2857
+    },
+    "final04/test_unknown_type_and_version_0/unknown.sslog": {
+      "sha256": "4d3a7d420ae25e8a58c910e9a41d1d1e29299b3f4539c748cc3dfbea4c7ac699",
+      "bytes": 239
+    },
+    "final04/test_valid_replay_missing_chan0/SYNTHETIC.BIN": {
+      "sha256": "d18677458e4965b3eb4f55b2fc8b9b27e1f022377b9e46a1a44c468b9ccfded4",
+      "bytes": 6376
+    }
+  },
+  "archive_sha256": "01b70f2d1c44ab0a4fcb10ba7e9c9e0d5e18ea144fdf003ab37bb01515488209",
+  "limitations": [
+    "Not the full FLP suite or full manual GUI acceptance.",
+    "No navigation/firmware/decoder/math changes or hardware operations.",
+    "Active recovery remains blocked and incomplete; frozen prior evidence unchanged."
+  ]
+}
