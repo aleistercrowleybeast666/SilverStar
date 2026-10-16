@@ -87,7 +87,8 @@ def test_window_scroll_coverage_and_graphics_exclusions(application, tmp_path, m
                 assert not QScroller.hasScroller(widget), widget.objectName()
                 if isinstance(widget, QGraphicsView):
                     assert not QScroller.hasScroller(widget.viewport())
-                    assert not any(area.isAncestorOf(widget) for area in areas)
+                    assert widget in window.plot_widgets.values()
+                    assert [area for area in areas if area.isAncestorOf(widget)] == [window.flight_page]
         for widget in window.findChildren(QSlider):
             assert not any(area.isAncestorOf(widget) for area in areas)
         # pyqtgraph GLViewWidget is a QWidget, not a graphics/scroll view.
@@ -96,6 +97,106 @@ def test_window_scroll_coverage_and_graphics_exclusions(application, tmp_path, m
             if any(cls.__name__ == "GLViewWidget" for cls in type(widget).__mro__):
                 assert not QScroller.hasScroller(widget)
                 assert not any(area.isAncestorOf(widget) for area in areas)
+    finally:
+        window.close()
+        window.deleteLater()
+        application.processEvents()
+
+
+@pytest.mark.parametrize("name", ["catalog", "tree", "swd_diagnostics", "diagnostic_tree", "swd_target"])
+def test_maintenance_content_viewports_have_touch_gestures(application, tmp_path, name):
+    from PySide6.QtCore import QSettings
+    from services.i18n import I18n
+    from ui.maintenance_page import MaintenancePage
+
+    page = MaintenancePage(I18n(QSettings(str(tmp_path / "ui.ini"), QSettings.IniFormat)))
+    try:
+        widget = getattr(page, name)
+        if isinstance(widget, QComboBox):
+            widget = widget.view()
+        assert widget.verticalScrollMode() == QAbstractItemView.ScrollMode.ScrollPerPixel
+        assert QScroller.hasScroller(widget.viewport()), name
+        assert not QScroller.hasScroller(widget)
+    finally:
+        page.close()
+        page.deleteLater()
+        application.processEvents()
+
+
+def test_maintenance_catalog_finger_scroll_keeps_click_selection(application, tmp_path):
+    from PySide6.QtCore import QPoint, QSettings
+    from services.i18n import I18n
+    from ui.main_window import MainWindow
+
+    window = MainWindow(I18n(QSettings(str(tmp_path / "ui.ini"), QSettings.IniFormat)))
+    try:
+        window.render_timer.stop()
+        window.gl_view.hide()
+        window.resize(1280, 720)
+        catalog = window.maintenance_page.catalog
+        window.maintenance_page.show_catalog(range(1, 101))
+        window.pages.setCurrentWidget(window.maintenance_scroll)
+        window.show()
+        application.processEvents()
+        window.maintenance_scroll.ensureWidgetVisible(catalog, 0, 0)
+        application.processEvents()
+        assert QScroller.hasScroller(catalog.viewport())
+        assert catalog.verticalScrollBar().maximum() > 0
+        QTest.mouseClick(catalog.viewport(), Qt.LeftButton,
+                         pos=catalog.visualItemRect(catalog.item(2)).center())
+        assert catalog.currentRow() == 2
+        viewport = catalog.viewport()
+        start = viewport.height() - 20
+        device = QTest.createTouchDevice()
+        QTest.touchEvent(viewport, device).press(0, QPoint(60, start), viewport).commit()
+        QTest.qWait(50)
+        for delta in (20, 40, 60, 80):
+            QTest.touchEvent(viewport, device).move(0, QPoint(60, start - delta), viewport).commit()
+            QTest.qWait(50)
+        QTest.touchEvent(viewport, device).release(0, QPoint(60, start - 80), viewport).commit()
+        QTest.qWait(100)
+        assert catalog.verticalScrollBar().value() > 0
+        QScroller.scroller(viewport).stop()
+        catalog.scrollToBottom()
+        application.processEvents()
+        last = catalog.visualItemRect(catalog.item(99))
+        assert viewport.rect().contains(last)
+        QTest.mouseClick(viewport, Qt.LeftButton, pos=last.center())
+        assert catalog.currentRow() == 99
+        assert catalog.currentItem().text() == "Mission 000100 · flight.sslog · closed"
+    finally:
+        window.close()
+        window.deleteLater()
+        application.processEvents()
+
+
+def test_flight_plot_mouse_pan_survives_page_touch_scroll(application, tmp_path):
+    from PySide6.QtCore import QPoint, QSettings
+    from services.i18n import I18n
+    from ui.main_window import MainWindow
+
+    window = MainWindow(I18n(QSettings(str(tmp_path / "ui.ini"), QSettings.IniFormat)))
+    try:
+        window.render_timer.stop()
+        window.gl_view.hide()
+        window.resize(1280, 720)
+        window.pages.setCurrentWidget(window.flight_page)
+        window.show()
+        QTest.qWait(50)
+        plot = window.plot_widgets[("vel", 0)]
+        view = plot.getViewBox()
+        view.setRange(xRange=(0, 10), yRange=(0, 10), padding=0)
+        before = view.viewRange()
+        center = plot.mapFromScene(view.sceneBoundingRect().center())
+        assert QScroller.hasScroller(window.flight_page.viewport())
+        assert not QScroller.hasScroller(plot.viewport())
+        QTest.mousePress(plot.viewport(), Qt.LeftButton, pos=center)
+        QTest.mouseMove(plot.viewport(), center + QPoint(30, 20), delay=50)
+        QTest.mouseMove(plot.viewport(), center + QPoint(60, 40), delay=50)
+        QTest.mouseRelease(plot.viewport(), Qt.LeftButton, pos=center + QPoint(60, 40))
+        application.processEvents()
+        assert view.viewRange()[1] != before[1]
+        assert window.flight_page.verticalScrollBar().value() == 0
     finally:
         window.close()
         window.deleteLater()

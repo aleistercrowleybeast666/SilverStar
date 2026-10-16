@@ -104,10 +104,14 @@ class HeaderTitleLabel(QLabel):
         super().resizeEvent(event)
         self._Text_Refresh()
 
+    def showEvent(self, event) -> None:
+        super().showEvent(event)
+        self._Text_Refresh()
+
     def _Text_Refresh(self) -> None:
         visible = self.fontMetrics().elidedText(
             self._full_text, Qt.TextElideMode.ElideRight, self.contentsRect().width()
-        )
+        ) if self.isVisible() else self._full_text
         if visible != self.text():
             super().setText(visible)
 
@@ -2313,6 +2317,7 @@ class MainWindow(QMainWindow):
         self._apply_plot_theme()
         if self._state is not None:
             self.render_state()
+        self._ConnectionGroups_Reflow()
 
     def _rocket_face_colors(self) -> np.ndarray:
         return np.asarray(
@@ -2411,6 +2416,13 @@ class MainWindow(QMainWindow):
             if label.minimumHeight() != height:
                 label.setMinimumHeight(height)
         groups = (self.header_connection_group, self.debug_connection_group, self.probe_group)
+        # A translated/style-updated size hint can outgrow a cached grid cell.
+        # Honor both dimensions before arranging rows so text and combo boxes
+        # cannot be compressed into the preceding language's geometry.
+        for group in groups:
+            group.ensurePolished()
+            group.setMinimumSize(group.minimumSizeHint())
+            group.layout().activate()
         width = self.header_bar.contentsRect().width() - 28
         widths = [group.minimumSizeHint().width() for group in groups]
         gap = self.header_connection_layout.horizontalSpacing()
@@ -2419,6 +2431,7 @@ class MainWindow(QMainWindow):
         # mode. Reinsert those items so QGridLayout drops its old cached minima.
         signature = (mode, tuple((g.minimumSizeHint().width(), g.minimumSizeHint().height()) for g in groups))
         if getattr(self, '_connection_layout_signature', None) == signature:
+            self.header_bar.layout().activate()
             return
         self._connection_layout_signature = signature
         self._connection_layout_mode = mode
@@ -2435,6 +2448,7 @@ class MainWindow(QMainWindow):
         else:
             for row,group in enumerate(groups):
                 layout.addWidget(group, row, 0, 1, 3, Qt.AlignLeft)
+        self.header_bar.layout().activate()
 
     def set_debug_status(self, key, detail=''):
         self._debug_status_key, self._debug_status_detail = key, detail

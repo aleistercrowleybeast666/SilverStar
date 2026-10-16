@@ -3,9 +3,11 @@ from __future__ import annotations
 
 import time
 from services.legacy_firmware_status import LegacyFirmwareSnapshot
+from ui.touch_scroll import TouchScroll_Enable
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
+    QAbstractItemView,
     QDialog,
     QComboBox,
     QGridLayout,
@@ -132,6 +134,10 @@ class MaintenancePage(QWidget):
         layout.addWidget(self.note)
         self.catalog = QListWidget()
         self.catalog.setMaximumHeight(150)
+        for view in (self.tree, self.swd_diagnostics, self.diagnostic_tree,
+                     self.catalog, self.swd_target.view()):
+            view.setVerticalScrollMode(QAbstractItemView.ScrollMode.ScrollPerPixel)
+            TouchScroll_Enable(view)
         layout.addWidget(self.catalog)
         self.progress = QProgressBar()
         self.progress.setRange(0, 1000)

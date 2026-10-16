@@ -66,6 +66,13 @@ class TransferUiTests(unittest.TestCase):
             QTest.qWait(10)
         self.assertFalse(self.controller.file_transfer.busy)
 
+    def assert_background_queries_only(self, wire, before):
+        self.assertEqual(wire.commands[:len(before)], before)
+        # Cancelling a file action must not stop the independent read-only
+        # diagnostics poller, nor submit ENTER/LIST/META/READ/POLL file work.
+        added = wire.commands[len(before):]
+        self.assertTrue(all(command in {"LOGFILE STATUS", "SYSTEM DIAG"} for command in added), added)
+
     def test_copy_menu_runs_real_worker_and_keeps_source(self):
         with patch("ui.file_transfer.QFileDialog.getOpenFileNames", return_value=([str(self.source)], "")), \
              patch("ui.file_transfer.QFileDialog.getExistingDirectory", return_value=str(self.target)), \
@@ -168,10 +175,12 @@ class TransferUiTests(unittest.TestCase):
         self.assertEqual(restored.destination_path.text(), str(self.target.resolve()))
         restored.deleteLater()
         before = list(wire.commands)
-        with patch("ui.file_transfer.QFileDialog.getExistingDirectory", return_value="") as chooser:
+        with patch("ui.file_transfer.QFileDialog.getExistingDirectory", return_value="") as chooser, \
+             patch.object(self.controller.file_transfer.owner, "submit", wraps=self.controller.file_transfer.owner.submit) as submit:
             self.window.action_download_copy.trigger()
+            submit.assert_not_called()
         self.assertEqual(chooser.call_args.args[2], str(self.target.resolve()))
-        self.assertEqual(wire.commands, before)
+        self.assert_background_queries_only(wire, before)
         self.window.btn_debug_disconnect.click()
         self.wait_disconnected()
         self.assertTrue(wire.closed)
@@ -190,12 +199,15 @@ class TransferUiTests(unittest.TestCase):
         self.window.btn_debug_connect.click()
         self.wait_connected()
         before = list(wire.commands)
-        with patch("ui.file_transfer.QFileDialog.getExistingDirectory", return_value=""):
+        with patch("ui.file_transfer.QFileDialog.getExistingDirectory", return_value=""), \
+             patch.object(self.controller.file_transfer.owner, "submit", wraps=self.controller.file_transfer.owner.submit) as submit:
             self.window.action_download_copy.trigger()
-        QTest.qWait(30)
-        self.assertEqual(wire.commands, before)
+            QTest.qWait(30)
+            submit.assert_not_called()
+        self.assert_background_queries_only(wire, before)
         self.assertFalse(self.controller.file_transfer.busy)
         self.assertIsNone(self.settings.value(self.window.maintenance_page.TF_DIRECTORY_KEY))
+        self.assertEqual(list(self.target.iterdir()), [])
 
     def test_unwritable_directory_is_not_remembered_or_transferred(self):
         wire = MockTransport()
@@ -210,7 +222,7 @@ class TransferUiTests(unittest.TestCase):
             self.window.action_download_copy.trigger()
             self.wait_finished()
             self.wait_disconnected()
-        self.assertEqual(wire.commands, before)
+        self.assert_background_queries_only(wire, before)
         self.assertIsNone(self.settings.value(self.window.maintenance_page.TF_DIRECTORY_KEY))
         self.assertEqual(list(self.target.iterdir()), [])
 
@@ -570,10 +582,12 @@ class TransferUiTests(unittest.TestCase):
         before = list(wire.commands)
         self.controller.state.pending_command_name = "START_MISSION"
         with patch("ui.file_transfer.QFileDialog.getExistingDirectory", return_value=str(self.target)), \
-             patch("ui.file_transfer.QMessageBox.information"):
+             patch("ui.file_transfer.QMessageBox.information"), \
+             patch.object(self.controller.file_transfer.owner, "submit", wraps=self.controller.file_transfer.owner.submit) as submit:
             self.controller.file_transfer.choose_download()
             self.wait_finished()
-        self.assertEqual(wire.commands, before)
+            submit.assert_not_called()
+        self.assert_background_queries_only(wire, before)
         self.assertEqual(list(self.target.iterdir()), [])
         self.assertFalse(self.controller.file_transfer._available())
         self.assertFalse(self.controller.file_transfer._available(maintenance=True))

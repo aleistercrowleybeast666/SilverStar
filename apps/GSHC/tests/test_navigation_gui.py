@@ -75,7 +75,7 @@ def test_m0_live_gui_languages_themes_and_commands(tmp_path, language, theme):
     window.render_state()
     assert controller.state.sensor.velocity_mps is not None
     assert controller.state.sensor.position_m is not None
-    out = Path(__file__).resolve().parents[1] / ".work/m0-release-gui"
+    out = tmp_path / "gui"
     out.mkdir(parents=True, exist_ok=True)
     for name, page in (("preflight", window.preflight_page), ("flight", window.flight_page)):
         window.pages.setCurrentWidget(page)

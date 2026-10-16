@@ -237,15 +237,23 @@ def test_owned_pipe_child_is_closed_and_reaped(tmp_path):
     backend=OpenOcdMemAp(Event())
     # A Python echo process, not OpenOCD; it cannot communicate with a target.
     backend.process=subprocess.Popen([sys.executable,'-u','-c',
-        'import sys; sys.stdin.buffer.read(); sys.stdout.buffer.write(b"end"); sys.stdout.buffer.flush()'],
+        ('import sys; sys.stderr.write("SILVERSTAR_MEM_AP_INIT_COMPLETE\\n"); sys.stderr.flush(); '
+         'sys.stdin.buffer.read(); sys.stdout.buffer.write(b"end"); sys.stdout.buffer.flush()')],
         stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,bufsize=0)
     process=backend.process
     backend._threads=[Thread(target=backend._receive,daemon=True),Thread(target=backend._receive_log,daemon=True)]
     for thread in backend._threads:thread.start()
-    backend.close()
-    assert backend.process is None and process.poll()==0
-    assert not any(t.is_alive() for t in backend._threads)
-    assert process.stdin.closed and process.stdout.closed and process.stderr.closed
+    try:
+        # Test graceful shutdown of a ready service. Cold interpreter startup
+        # must not race the production 300 ms close/terminate deadline.
+        assert backend._startup.wait(5), 'Synthetic child did not reach the startup barrier'
+        backend.close()
+        assert backend.process is None and process.poll()==0
+        assert not any(t.is_alive() for t in backend._threads)
+        assert process.stdin.closed and process.stdout.closed and process.stderr.closed
+    finally:
+        if backend.process is not None:
+            backend.close()
 
 
 def test_owned_unresponsive_child_is_terminated_within_bound():

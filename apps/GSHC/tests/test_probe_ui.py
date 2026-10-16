@@ -153,9 +153,19 @@ def test_header_wraps_without_clipping_or_overlap(panel,language,width):
     manager=create(lambda _:parsed(nodes('A')))
     wait_for(lambda:manager.worker is None and bool(manager.selection.identity))
     window.i18n.set_language(language); window.retranslate_ui()
-    window.resize(width,800); QTest.qWait(30)
-    assert window.width()==width  # A former wide row must not pin minimum width.
+    window.resize(width,800)
     rect=lambda w: QRect(w.mapTo(window,QPoint()),w.size())
+    def layout_ready():
+        bar = rect(window.header_bar)
+        groups = (window.header_connection_group, window.debug_connection_group, window.probe_group)
+        return (window.width() == width and all(
+            bar.contains(rect(group)) and group.width() >= group.minimumSizeHint().width()
+            for group in groups) and all(rect(window.probe_group).contains(rect(control))
+                for control in (window.probe_title, window.probe_combo, window.btn_probe_refresh, window.probe_status)))
+    # Native Qt defers style/translation and resize layout requests. Keep the
+    # geometry contract, and wait for those requests within the existing bound.
+    wait_for(layout_ready)
+    assert window.width()==width  # A former wide row must not pin minimum width.
     bar=rect(window.header_bar)
     groups=[rect(w) for w in (window.header_connection_group,window.debug_connection_group,window.probe_group)]
     for widget,group in zip((window.header_connection_group,window.debug_connection_group,window.probe_group),groups):

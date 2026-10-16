@@ -38,11 +38,14 @@ def test_gshc_keeps_export_only_trajectory_and_six_live_plots(tmp_path):
     try:
         window.render_timer.stop()
         window.bind_runtime_model(FlightControllerState(), EventHistory())
-        assert window.pages.count() == 3
-        assert [window.pages.widget(index) for index in range(3)] == [
-            window.preflight_page, window.flight_page, window.post_process_page
+        assert [window.pages.widget(index) for index in range(window.pages.count())] == [
+            window.preflight_page, window.flight_page, window.post_process_page,
+            window.maintenance_scroll,
         ]
+        assert window.maintenance_scroll.widget() is window.maintenance_page
         assert not hasattr(window, "horizontal_trajectory_widget")
         assert len(window.plot_widgets) == 6
     finally:
         window.close()
+        window.deleteLater()
+        app.processEvents()
