@@ -13,6 +13,15 @@ ALGORITHMS = {
     "silverstar.algorithm.estimator.kf6": (1, 512),
     "silverstar.algorithm.estimator.eskf15": (2, 832),
 }
+ADDITIONAL_VERSIONS = {"silverstar.algorithm.estimator.eskf15": frozenset(("0.4.0",))}
+
+
+def FusionHorizonVersionKnown_Is(component, version):
+    return component in VERSIONS and (
+        version == VERSIONS[component] or version in ADDITIONAL_VERSIONS.get(component, ())
+    )
+
+
 CONSTANTS = {
     "schema_id": SCHEMA_ID,
     "revision": 1,
@@ -31,7 +40,7 @@ CONSTANTS = {
 
 
 def FusionHorizonDeclaration_Validate(declaration, component, version):
-    if component not in VERSIONS or version != VERSIONS[component]:
+    if not FusionHorizonVersionKnown_Is(component, version):
         raise DecoderProfileError("fusion_horizon_component_version_unsupported")
     fields = {*CONSTANTS, "component", "horizon_us", "numerical_revision", "maximum_work"}
     if not isinstance(declaration, Mapping) or set(declaration) != fields:

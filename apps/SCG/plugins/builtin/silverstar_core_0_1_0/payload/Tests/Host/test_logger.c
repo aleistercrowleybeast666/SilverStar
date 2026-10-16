@@ -101,9 +101,19 @@ static void Test_RecordMetadata(void)
     uint16_t index;
 
     TEST_CHECK(SslogRecords_RecordCountGet() == SSLOG_RECORD_COUNT);
-    /* The committed SF6 contract adds two records to the prior 38. Check
-     * their wire identity and metadata, rather than only changing a count. */
-    TEST_CHECK(SSLOG_RECORD_COUNT == (38U + 2U));
+    /* SF6 adds two records to the prior 38, and horizon adds two more.
+     * Check each added record's wire identity and metadata as well. */
+    TEST_CHECK(SSLOG_RECORD_COUNT == (38U + 2U + 2U));
+    TEST_CHECK(FLIGHT_LOG_RECORD_FUSION_HORIZON_MEASUREMENT == 0x2DU);
+    TEST_CHECK(FLIGHT_LOG_RECORD_FUSION_HORIZON_STATUS == 0x2EU);
+    metadata = SslogRecords_MetadataGet(FLIGHT_LOG_RECORD_FUSION_HORIZON_MEASUREMENT);
+    TEST_CHECK((metadata != NULL) && (metadata->record_version == 1U) &&
+               (metadata->payload_size == 148U) && (metadata->name != NULL) &&
+               (strcmp(metadata->name, "FUSION_HORIZON_MEASUREMENT") == 0));
+    metadata = SslogRecords_MetadataGet(FLIGHT_LOG_RECORD_FUSION_HORIZON_STATUS);
+    TEST_CHECK((metadata != NULL) && (metadata->record_version == 1U) &&
+               (metadata->payload_size == 88U) && (metadata->name != NULL) &&
+               (strcmp(metadata->name, "FUSION_HORIZON_STATUS") == 0));
     TEST_CHECK(FLIGHT_LOG_RECORD_SF6_STATE == 0x2BU);
     TEST_CHECK(FLIGHT_LOG_RECORD_SF6_MEASUREMENT == 0x2CU);
     metadata = SslogRecords_MetadataGet(FLIGHT_LOG_RECORD_SF6_STATE);

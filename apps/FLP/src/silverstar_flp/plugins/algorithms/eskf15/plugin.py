@@ -18,6 +18,9 @@ from silverstar_flp.core.dataset import FlightDataset, TimeSeries
 from silverstar_flp.core.mission import MissionReplayBounds_Get
 from silverstar_flp.core.runtime import NumericalRuntime_Validate
 from silverstar_flp.decoder_profiles.contract_data import Contract_Load
+from silverstar_flp.decoder_profiles.gnss_reacquisition import (
+    GnssReacquisitionFirmwareParameters_Build,
+)
 from silverstar_flp.plugins.algorithms.eskf15.filter import Eskf15Filter, EskfNoise, EskfState
 from silverstar_flp.plugins.algorithms.eskf15.inputs import BodySteps_Build
 from silverstar_flp.plugins.algorithms.eskf15.replay import DelayedReplay, Measurement
@@ -204,6 +207,7 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
         required_channels=(),
         optional_channels=(),
         parameter_schema=_Parameters_Build(),
+        firmware_only_parameter_schema=GnssReacquisitionFirmwareParameters_Build(),
         standard_outputs=("attitude.q_nb", "navigation.position_enu", "navigation.velocity_enu"),
         diagnostic_outputs=("eskf15.covariance.diagonal", "eskf15.gyro_bias", "eskf15.accel_bias"),
         estimator_visualization=_Visualization_Build(),
@@ -350,7 +354,10 @@ class Eskf15AlgorithmPlugin(AlgorithmPlugin):
                     )
                     if delay_key in request.parameters:
                         if getattr(record, "record_version", 1) == 2:
-                            from silverstar_flp.decoder_profiles.fusion_timing_records import TRUSTED_SOURCE, DELAY_FALLBACK
+                            from silverstar_flp.decoder_profiles.fusion_timing_records import (
+                                DELAY_FALLBACK,
+                                TRUSTED_SOURCE,
+                            )
                             if not int(p['timing_flags']) & (TRUSTED_SOURCE | DELAY_FALLBACK):
                                 raise ValueError('fusion_timing_what_if_timestamp_trust_evidence_missing')
                             trusted = bool(int(p['timing_flags']) & TRUSTED_SOURCE)

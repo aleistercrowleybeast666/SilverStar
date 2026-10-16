@@ -1,8 +1,68 @@
-#include "navigation_eskf_replay.h"
+#include "navigation_eskf_replay_recovery.h"
 #include "silverstar_assert.h"
 
 #include <stddef.h>
 #include <string.h>
+
+typedef struct
+{
+    const void *address;
+    size_t size;
+    uint8_t writable;
+} ReplayRegion;
+
+static uint8_t Replay_RegionsValid(const ReplayRegion *region, uint8_t count)
+{
+    if ((region == NULL) || (count > 10U)) { return 0U; }
+    for (uint8_t i = 0U; i < count; i++)
+    {
+        if (region[i].address == NULL) { return 0U; }
+        for (uint8_t j = 0U; j < i; j++)
+        {
+            uintptr_t a = (uintptr_t)region[i].address, b = (uintptr_t)region[j].address;
+            uint8_t overlap = (uint8_t)((a <= b) ?
+                (b - a < region[i].size) : (a - b < region[j].size));
+            if (overlap && (region[i].writable || region[j].writable)) { return 0U; }
+        }
+    }
+    return 1U;
+}
+
+static uint8_t Replay_RecoveryReady(const NavigationEskfReplayRecovery *recovery,
+    const NavigationEskfState *state)
+{
+    if (recovery == NULL) { return 1U; }
+    return (uint8_t)((state != NULL) && (recovery->initialized == 1U) &&
+        (recovery->anchor.mission == state->generation) &&
+        (recovery->current.mission == state->generation) &&
+        (recovery->anchor.calibration == recovery->current.calibration) &&
+        (NavigationEskfRecovery_PolicyValidate(&recovery->anchor, &recovery->config) == NAV_ESKF_RECOVERY_COMPLETE) &&
+        (NavigationEskfRecovery_PolicyValidate(&recovery->current, &recovery->config) == NAV_ESKF_RECOVERY_COMPLETE));
+}
+
+static NavigationEskfResult Replay_EventApply(NavigationEskfReplay *history,
+    NavigationEskfWorkspace *workspace, const NavigationEskfConfig *config,
+    uint16_t index, NavigationEskfOutcome *outcome,
+    NavigationEskfReplayRecovery *recovery, NavigationEskfRecoveryAction *action)
+{
+    const NavigationEskfReplayEvent *event = &history->event[index];
+    NavigationEskfRecoveryEvent received = {0};
+    NavigationEskfRecoveryOutput output;
+    NavigationEskfRecoveryResult result;
+    *action = NAV_ESKF_RECOVERY_ACTION_NONE;
+    if ((recovery == NULL) || (event->measurement.group >= NAV_ESKF_RECOVERY_GROUPS))
+    { return NavigationEskf_Update(&history->working, workspace, config, &event->measurement, outcome); }
+    received.receive_us = event->receive_us; received.sequence = event->sequence;
+    received.source = event->source; received.mission = event->generation;
+    received.calibration = recovery->anchor.calibration;
+    received.measurement = event->measurement; received.evidence = recovery->evidence[index];
+    result = NavigationEskfRecovery_UpdateCandidate(&history->working, &recovery->working,
+        workspace, &recovery->transaction, config, &recovery->config, &received, &output);
+    *outcome = output.filter; *action = output.action;
+    if ((result == NAV_ESKF_RECOVERY_COMPLETE) || (result == NAV_ESKF_RECOVERY_MODEL_MISMATCH) ||
+        (result == NAV_ESKF_RECOVERY_MEASUREMENT_INVALID)) { return output.filter.result; }
+    return NAV_ESKF_NUMERIC_ERROR;
+}
 
 NavigationEskfReplayResult NavigationEskfReplay_Reset(
     NavigationEskfReplay *history, const NavigationEskfState *state,
@@ -69,7 +129,8 @@ static NavigationEskfReplayResult Replay_PropagatePart(NavigationEskfState *stat
 static NavigationEskfReplayResult Replay_Run(NavigationEskfReplay *history,
     NavigationEskfWorkspace *workspace, const NavigationEskfConfig *config,
     uint16_t body_count, const NavigationEskfReplayEvent *target,
-    NavigationEskfOutcome *target_outcome)
+    NavigationEskfOutcome *target_outcome, NavigationEskfReplayRecovery *recovery,
+    NavigationEskfRecoveryAction *target_action)
 {
     SILVERSTAR_ASSERT_OBJECT(history, NavigationEskfReplay, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     SILVERSTAR_ASSERT_OBJECT(workspace, NavigationEskfWorkspace, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
@@ -77,6 +138,7 @@ static NavigationEskfReplayResult Replay_Run(NavigationEskfReplay *history,
     uint16_t body_index, event_index = 0U;
     uint32_t steps = 0U;
     history->working = history->anchor;
+    if (recovery != NULL) { recovery->working = recovery->anchor; }
     for (body_index = 0U; body_index < body_count; body_index++)
     {
         NavigationEskfBodyInput body;
@@ -90,6 +152,7 @@ static NavigationEskfReplayResult Replay_Run(NavigationEskfReplay *history,
         {
             NavigationEskfOutcome outcome;
             NavigationEskfResult result;
+            NavigationEskfRecoveryAction action;
             const NavigationEskfReplayEvent *event;
             if ((event_index >= history->event_count) ||
                 (history->event[event_index].measurement_us > body.end_us)) { break; }
@@ -97,12 +160,12 @@ static NavigationEskfReplayResult Replay_Run(NavigationEskfReplay *history,
             if (Replay_PropagatePart(&history->working, workspace, config,
                     &body, event->measurement_us) != NAV_ESKF_REPLAY_OK)
             { return NAV_ESKF_REPLAY_NUMERIC_ERROR; }
-            result = NavigationEskf_Update(&history->working, workspace, config,
-                &event->measurement, &outcome);
+            result = Replay_EventApply(history, workspace, config, event_index, &outcome, recovery, &action);
             if (result == NAV_ESKF_NUMERIC_ERROR) { return NAV_ESKF_REPLAY_NUMERIC_ERROR; }
             if ((target != NULL) && (event->sequence == target->sequence) &&
                 (event->source == target->source) &&
-                (event->measurement.group == target->measurement.group)) { *target_outcome = outcome; }
+                (event->measurement.group == target->measurement.group))
+            { *target_outcome = outcome; if (target_action != NULL) { *target_action = action; } }
             event_index++; steps += 2U;
         }
         if (Replay_PropagatePart(&history->working, workspace, config, &body, body.end_us) != NAV_ESKF_REPLAY_OK)
@@ -115,32 +178,38 @@ static NavigationEskfReplayResult Replay_Run(NavigationEskfReplay *history,
     return NAV_ESKF_REPLAY_OK;
 }
 
-static void Replay_PrefixCommit(NavigationEskfReplay *history, uint16_t body_count)
+static void Replay_PrefixCommit(NavigationEskfReplay *history, uint16_t body_count,
+    NavigationEskfReplayRecovery *recovery)
 {
     uint16_t consumed = 0U;
     SILVERSTAR_ASSERT_OBJECT(history, NavigationEskfReplay, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     SILVERSTAR_ASSERT((body_count > 0U) && (body_count <= history->body_count),
         SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     history->anchor = history->working;
+    if (recovery != NULL) { recovery->anchor = recovery->working; }
     for (uint16_t index = 0U; index < history->event_count; index++)
     { if (history->event[index].measurement_us <= history->anchor.timestamp_us) { consumed++; } }
     for (uint16_t index = consumed; index < history->event_count; index++)
-    { history->event[index - consumed] = history->event[index]; }
+    {
+        history->event[index - consumed] = history->event[index];
+        if (recovery != NULL) { recovery->evidence[index - consumed] = recovery->evidence[index]; }
+    }
     history->event_count = (uint16_t)(history->event_count - consumed);
     for (uint16_t index = body_count; index < history->body_count; index++)
     { history->body[index - body_count] = history->body[index]; }
     history->body_count = (uint16_t)(history->body_count - body_count);
 }
 
-NavigationEskfReplayResult NavigationEskfReplay_Predict(
+static NavigationEskfReplayResult Replay_Predict(
     NavigationEskfReplay *history, NavigationEskfState *state,
     NavigationEskfWorkspace *workspace, const NavigationEskfConfig *config,
-    const NavigationEskfBodyInput *input)
+    const NavigationEskfBodyInput *input, NavigationEskfReplayRecovery *recovery)
 {
     uint16_t trim_count = 0U;
     if ((history == NULL) || (history->body == NULL) || (state == NULL) || (workspace == NULL) || (input == NULL) ||
         (history->body_count > NAV_ESKF_HISTORY_CAPACITY) ||
-        (history->event_count > NAV_ESKF_EVENT_CAPACITY)) { return NAV_ESKF_REPLAY_INVALID; }
+        (history->event_count > NAV_ESKF_EVENT_CAPACITY) || !Replay_RecoveryReady(recovery, state))
+    { return NAV_ESKF_REPLAY_INVALID; }
     SILVERSTAR_ASSERT_OBJECT(history, NavigationEskfReplay, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     SILVERSTAR_ASSERT_OBJECT(state, NavigationEskfState, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
 
@@ -161,12 +230,12 @@ NavigationEskfReplayResult NavigationEskfReplay_Predict(
        commits live state only after all numerical/input checks succeed. */
     if (trim_count != 0U)
     {
-        NavigationEskfReplayResult planned = Replay_Run(history, workspace, config, trim_count, NULL, NULL);
+        NavigationEskfReplayResult planned = Replay_Run(history, workspace, config, trim_count, NULL, NULL, recovery, NULL);
         if (planned != NAV_ESKF_REPLAY_OK) { return planned; }
     }
     if (NavigationEskf_Predict(state, workspace, config, input) != NAV_ESKF_OK)
     { return NAV_ESKF_REPLAY_NUMERIC_ERROR; }
-    if (trim_count != 0U) { Replay_PrefixCommit(history, trim_count); }
+    if (trim_count != 0U) { Replay_PrefixCommit(history, trim_count, recovery); }
     history->body[history->body_count].end_us = input->end_us;
     history->body[history->body_count].dt_s = input->dt_s;
     history->body[history->body_count].quality_flags = input->quality_flags;
@@ -176,17 +245,20 @@ NavigationEskfReplayResult NavigationEskfReplay_Predict(
     return NAV_ESKF_REPLAY_OK;
 }
 
-NavigationEskfReplayResult NavigationEskfReplay_Insert(
+static NavigationEskfReplayResult Replay_Insert(
     NavigationEskfReplay *history, NavigationEskfState *state,
     NavigationEskfWorkspace *workspace, const NavigationEskfConfig *config,
-    const NavigationEskfReplayEvent *event, NavigationEskfOutcome *outcome)
+    const NavigationEskfReplayEvent *event, NavigationEskfOutcome *outcome,
+    NavigationEskfReplayRecovery *recovery, const NavigationEskfRecoveryEvidence *evidence,
+    NavigationEskfRecoveryAction *action)
 {
     uint16_t at;
     NavigationEskfReplayResult result;
     if ((history == NULL) || (history->body == NULL) || (state == NULL) || (workspace == NULL) || (event == NULL) || (outcome == NULL) ||
         (event->generation != state->generation) || (event->measurement.group >= 5U) ||
         (event->receive_us > state->timestamp_us) || (event->measurement_us > event->receive_us) ||
-        (history->body_count > NAV_ESKF_HISTORY_CAPACITY) || (history->event_count > NAV_ESKF_EVENT_CAPACITY))
+        (history->body_count > NAV_ESKF_HISTORY_CAPACITY) || (history->event_count > NAV_ESKF_EVENT_CAPACITY) ||
+        !Replay_RecoveryReady(recovery, state))
     { return NAV_ESKF_REPLAY_INVALID; }
     SILVERSTAR_ASSERT_OBJECT(history, NavigationEskfReplay, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     SILVERSTAR_ASSERT_OBJECT(state, NavigationEskfState, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
@@ -204,17 +276,89 @@ NavigationEskfReplayResult NavigationEskfReplay_Insert(
     for (uint16_t limit = 0U; limit < NAV_ESKF_EVENT_CAPACITY; limit++)
     {
         if ((at == 0U) || (Replay_EventBefore(event, &history->event[at - 1U]) == 0U)) { break; }
-        history->event[at] = history->event[at - 1U]; at--;
+        history->event[at] = history->event[at - 1U];
+        if (recovery != NULL) { recovery->evidence[at] = recovery->evidence[at - 1U]; }
+        at--;
     }
     history->event[at] = *event; history->event_count++;
-    result = Replay_Run(history, workspace, config, history->body_count, event, outcome);
+    if (recovery != NULL) { recovery->evidence[at] = *evidence; }
+    result = Replay_Run(history, workspace, config, history->body_count, event, outcome, recovery, action);
     if (result == NAV_ESKF_REPLAY_OK)
-    { *state = history->working; history->replay_count++; }
+    {
+        *state = history->working; history->replay_count++;
+        if (recovery != NULL) { recovery->current = recovery->working; }
+    }
     else
     {
         for (uint16_t index = at + 1U; index < history->event_count; index++)
-        { history->event[index - 1U] = history->event[index]; }
+        {
+            history->event[index - 1U] = history->event[index];
+            if (recovery != NULL) { recovery->evidence[index - 1U] = recovery->evidence[index]; }
+        }
         history->event_count--;
     }
     return result;
+}
+
+NavigationEskfReplayResult NavigationEskfReplay_Predict(
+    NavigationEskfReplay *history, NavigationEskfState *state,
+    NavigationEskfWorkspace *workspace, const NavigationEskfConfig *config,
+    const NavigationEskfBodyInput *input)
+{ return Replay_Predict(history, state, workspace, config, input, NULL); }
+
+NavigationEskfReplayResult NavigationEskfReplay_Insert(
+    NavigationEskfReplay *history, NavigationEskfState *state,
+    NavigationEskfWorkspace *workspace, const NavigationEskfConfig *config,
+    const NavigationEskfReplayEvent *event, NavigationEskfOutcome *outcome)
+{ return Replay_Insert(history, state, workspace, config, event, outcome, NULL, NULL, NULL); }
+
+NavigationEskfReplayResult NavigationEskfReplayRecovery_Reset(
+    NavigationEskfReplayRecovery *recovery, const NavigationEskfState *state,
+    const NavigationEskfRecoveryReplayState *policy, const NavigationEskfRecoveryConfig *config)
+{
+    const ReplayRegion region[4] = {{recovery, sizeof(*recovery), 1U},
+        {state, sizeof(*state), 0U}, {policy, sizeof(*policy), 0U}, {config, sizeof(*config), 0U}};
+    if (!Replay_RegionsValid(region, 4U)) { return NAV_ESKF_REPLAY_INVALID; }
+    if ((recovery == NULL) || (state == NULL) || (policy == NULL) ||
+        (policy->mission != state->generation) || (state->initialized != 1U) ||
+        (NavigationEskfRecovery_PolicyValidate(policy, config) != NAV_ESKF_RECOVERY_COMPLETE))
+    { return NAV_ESKF_REPLAY_INVALID; }
+    memset(recovery, 0, sizeof(*recovery)); recovery->config = *config;
+    recovery->anchor = *policy; recovery->current = *policy; recovery->working = *policy;
+    recovery->initialized = 1U;
+    return NAV_ESKF_REPLAY_OK;
+}
+
+NavigationEskfReplayResult NavigationEskfReplayRecovery_Predict(
+    NavigationEskfReplay *history, NavigationEskfState *state,
+    NavigationEskfWorkspace *workspace, const NavigationEskfConfig *config,
+    const NavigationEskfBodyInput *input, NavigationEskfReplayRecovery *recovery)
+{
+    if (history == NULL) { return NAV_ESKF_REPLAY_INVALID; }
+    const ReplayRegion region[7] = {{recovery, sizeof(*recovery), 1U},
+        {history, sizeof(*history), 1U}, {state, sizeof(*state), 1U},
+        {workspace, sizeof(*workspace), 1U}, {config, sizeof(*config), 0U},
+        {input, sizeof(*input), 0U},
+        {history->body, NAV_ESKF_HISTORY_CAPACITY * sizeof(*history->body), 1U}};
+    if (!Replay_RegionsValid(region, 7U)) { return NAV_ESKF_REPLAY_INVALID; }
+    return Replay_Predict(history, state, workspace, config, input, recovery);
+}
+
+NavigationEskfReplayResult NavigationEskfReplayRecovery_Insert(
+    NavigationEskfReplay *history, NavigationEskfState *state,
+    NavigationEskfWorkspace *workspace, const NavigationEskfConfig *config,
+    const NavigationEskfReplayEvent *event, NavigationEskfOutcome *outcome,
+    NavigationEskfReplayRecovery *recovery, const NavigationEskfRecoveryEvidence *evidence,
+    NavigationEskfRecoveryAction *action)
+{
+    if (history == NULL) { return NAV_ESKF_REPLAY_INVALID; }
+    const ReplayRegion region[10] = {{recovery, sizeof(*recovery), 1U},
+        {history, sizeof(*history), 1U}, {state, sizeof(*state), 1U},
+        {workspace, sizeof(*workspace), 1U}, {config, sizeof(*config), 0U},
+        {event, sizeof(*event), 0U}, {outcome, sizeof(*outcome), 1U},
+        {evidence, sizeof(*evidence), 0U}, {action, sizeof(*action), 1U},
+        {history->body, NAV_ESKF_HISTORY_CAPACITY * sizeof(*history->body), 1U}};
+    if (!Replay_RegionsValid(region, 10U)) { return NAV_ESKF_REPLAY_INVALID; }
+    *action = NAV_ESKF_RECOVERY_ACTION_NONE;
+    return Replay_Insert(history, state, workspace, config, event, outcome, recovery, evidence, action);
 }

@@ -10,11 +10,9 @@ from silverstar_flp.decoder_profiles.fusion_horizon_identity import (
     SCHEMA_ID as HORIZON_SCHEMA_ID,
 )
 from silverstar_flp.decoder_profiles.fusion_horizon_identity import (
-    VERSIONS as HORIZON_VERSIONS,
-)
-from silverstar_flp.decoder_profiles.fusion_horizon_identity import (
     FusionHorizonActual_Validate,
     FusionHorizonDeclaration_Validate,
+    FusionHorizonVersionKnown_Is,
 )
 
 SCHEMA_ID = "silverstar.navigation-fusion-timing/1"
@@ -75,7 +73,8 @@ def FusionTimingVersionKnown_Is(identity):
         identity
         and identity.component in TIMING_VERSIONS
         and identity.version
-        in (TIMING_VERSIONS.get(identity.component), HORIZON_VERSIONS.get(identity.component))
+        and (identity.version == TIMING_VERSIONS.get(identity.component) or
+             FusionHorizonVersionKnown_Is(identity.component, identity.version))
     )
 
 
@@ -150,8 +149,12 @@ def FusionTiming_FromSemantics(document: Mapping) -> FusionTimingIdentity | None
         return None
     component = owners[0]
     version = _Version_Get(document, component)
+    from silverstar_flp.decoder_profiles.gnss_reacquisition import GnssReacquisition_FromSemantics
+    GnssReacquisition_FromSemantics(document, component, version)
     legacy = version in LEGACY_VERSIONS[component]
-    current_contract = version in (TIMING_VERSIONS[component], HORIZON_VERSIONS[component])
+    current_contract = version == TIMING_VERSIONS[component] or FusionHorizonVersionKnown_Is(
+        component, version
+    )
     if not declared:
         if current_contract:
             raise DecoderProfileError("fusion_timing_declaration_missing")

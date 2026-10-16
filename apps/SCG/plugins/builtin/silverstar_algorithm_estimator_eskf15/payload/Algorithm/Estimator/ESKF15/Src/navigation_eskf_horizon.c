@@ -1,4 +1,4 @@
-#include "navigation_eskf_horizon.h"
+#include "navigation_eskf_horizon_recovery.h"
 #include <math.h>
 #include <stddef.h>
 #include <string.h>
@@ -203,8 +203,9 @@ static uint8_t Horizon_EventBefore(const NavigationEskfHorizonEvent *a,
          (a->event.measurement.group < b->event.measurement.group)));
 }
 
-NavigationEskfHorizonResult NavigationEskfHorizon_Insert(
-    NavigationEskfHorizon *horizon, const NavigationEskfHorizonEvent *received)
+static NavigationEskfHorizonResult Horizon_Insert(
+    NavigationEskfHorizon *horizon, const NavigationEskfHorizonEvent *received,
+    NavigationEskfHorizonRecovery *recovery, const NavigationEskfRecoveryEvidence *evidence)
 {
     NavigationEskfHorizonResult result = Horizon_Ready(horizon);
     NavigationEskfHorizonReceipt *receipt;
@@ -239,9 +240,17 @@ NavigationEskfHorizonResult NavigationEskfHorizon_Insert(
     for (uint16_t limit = 0U; limit < NAV_ESKF_HORIZON_EVENT_CAPACITY; limit++)
     {
         if ((slot == 0U) || !Horizon_EventBefore(received, &horizon->event[slot - 1U])) { break; }
-        horizon->event[slot] = horizon->event[slot - 1U]; slot--;
+        horizon->event[slot] = horizon->event[slot - 1U];
+        if (recovery != NULL)
+        {
+            recovery->evidence[slot] = recovery->evidence[slot - 1U];
+            recovery->action[slot] = recovery->action[slot - 1U];
+        }
+        slot--;
     }
     horizon->event[slot] = *received;
+    if (recovery != NULL)
+    { recovery->evidence[slot] = *evidence; recovery->action[slot] = NAV_ESKF_RECOVERY_ACTION_NONE; }
     memset(&horizon->event[slot].outcome, 0, sizeof(horizon->event[slot].outcome));
     horizon->event[slot].outcome.r_scale = 1.0f;
     horizon->event_count++;
@@ -338,8 +347,29 @@ static NavigationEskfHorizonResult Horizon_AngularRateGet(const NavigationEskfHo
     return NAV_ESKF_HORIZON_DISCONTINUITY;
 }
 
+static NavigationEskfResult Horizon_RecoveryApply(NavigationEskfHorizon *horizon,
+    NavigationEskfWorkspace *workspace, uint16_t index,
+    const NavigationEskfMeasurement *measurement, NavigationEskfHorizonRecovery *recovery)
+{
+    const NavigationEskfReplayEvent *event = &horizon->event[index].event;
+    NavigationEskfRecoveryEvent received = {0};
+    NavigationEskfRecoveryOutput output;
+    NavigationEskfRecoveryResult result;
+    received.receive_us = event->receive_us; received.sequence = event->sequence;
+    received.source = event->source; received.mission = event->generation;
+    received.calibration = recovery->primary.calibration;
+    received.measurement = *measurement; received.evidence = recovery->evidence[index];
+    result = NavigationEskfRecovery_UpdateCandidateRevision2(&horizon->candidate,
+        &recovery->candidate, workspace, &recovery->transaction, &horizon->config,
+        &recovery->config, &received, &output);
+    horizon->event[index].outcome = output.filter; recovery->action[index] = output.action;
+    if ((result == NAV_ESKF_RECOVERY_COMPLETE) || (result == NAV_ESKF_RECOVERY_MODEL_MISMATCH) ||
+        (result == NAV_ESKF_RECOVERY_MEASUREMENT_INVALID)) { return output.filter.result; }
+    return NAV_ESKF_NUMERIC_ERROR;
+}
+
 static NavigationEskfHorizonResult Horizon_MeasurementApply(NavigationEskfHorizon *horizon,
-    NavigationEskfWorkspace *workspace, uint16_t index)
+    NavigationEskfWorkspace *workspace, uint16_t index, NavigationEskfHorizonRecovery *recovery)
 {
     NavigationEskfMeasurement measurement = horizon->event[index].event.measurement;
     NavigationEskfResult result;
@@ -350,8 +380,10 @@ static NavigationEskfHorizonResult Horizon_MeasurementApply(NavigationEskfHorizo
     { return NAV_ESKF_HORIZON_DISCONTINUITY; }
     if (horizon->last_work >= NAV_ESKF_HORIZON_MAX_WORK) { return NAV_ESKF_HORIZON_CAPACITY; }
     horizon->last_work++;
-    result = NavigationEskf_UpdateRevision2(&horizon->candidate, workspace, &horizon->config,
-        &measurement, &horizon->event[index].outcome);
+    result = ((recovery != NULL) && (measurement.group < NAV_ESKF_RECOVERY_GROUPS)) ?
+        Horizon_RecoveryApply(horizon, workspace, index, &measurement, recovery) :
+        NavigationEskf_UpdateRevision2(&horizon->candidate, workspace, &horizon->config,
+            &measurement, &horizon->event[index].outcome);
     if (result == NAV_ESKF_NUMERIC_ERROR) { return NAV_ESKF_HORIZON_NUMERIC_ERROR; }
     if (result == NAV_ESKF_MODEL_MISMATCH) { return NAV_ESKF_HORIZON_MODEL_MISMATCH; }
     if (result == NAV_ESKF_INVALID_INPUT) { return NAV_ESKF_HORIZON_NUMERIC_ERROR; }
@@ -359,9 +391,11 @@ static NavigationEskfHorizonResult Horizon_MeasurementApply(NavigationEskfHorizo
 }
 
 static NavigationEskfHorizonResult Horizon_PrimaryBuild(NavigationEskfHorizon *horizon,
-    NavigationEskfWorkspace *workspace, uint64_t target, uint16_t *ready_count)
+    NavigationEskfWorkspace *workspace, uint64_t target, uint16_t *ready_count,
+    NavigationEskfHorizonRecovery *recovery)
 {
     horizon->candidate = horizon->primary; *ready_count = 0U;
+    if (recovery != NULL) { recovery->candidate = recovery->primary; }
     for (uint16_t index = 0U; index < NAV_ESKF_HORIZON_EVENT_CAPACITY; index++)
     {
         NavigationEskfHorizonResult result;
@@ -371,7 +405,7 @@ static NavigationEskfHorizonResult Horizon_PrimaryBuild(NavigationEskfHorizon *h
         result = Horizon_PropagateTo(horizon, &horizon->candidate, workspace,
             horizon->event[index].event.measurement_us);
         if (result != NAV_ESKF_HORIZON_OK) { return result; }
-        result = Horizon_MeasurementApply(horizon, workspace, index);
+        result = Horizon_MeasurementApply(horizon, workspace, index, recovery);
         if (result != NAV_ESKF_HORIZON_OK) { return result; }
         (*ready_count)++;
     }
@@ -427,9 +461,10 @@ static NavigationEskfHorizonResult Horizon_OutputAccelerationBuild(NavigationEsk
     return NAV_ESKF_HORIZON_OK;
 }
 
-NavigationEskfHorizonResult NavigationEskfHorizon_Advance(
+static NavigationEskfHorizonResult Horizon_Advance(
     NavigationEskfHorizon *horizon, NavigationEskfState *output,
-    NavigationEskfWorkspace *workspace, const NavigationEskfConfig *config)
+    NavigationEskfWorkspace *workspace, const NavigationEskfConfig *config,
+    NavigationEskfHorizonRecovery *recovery)
 {
     NavigationEskfHorizonResult result = Horizon_Ready(horizon);
     uint64_t target;
@@ -454,12 +489,13 @@ NavigationEskfHorizonResult NavigationEskfHorizon_Advance(
     horizon->failure_operation_valid = 0U;
     result = Horizon_OutputAccelerationBuild(horizon, workspace, acceleration);
     if (result != NAV_ESKF_HORIZON_OK) { return Horizon_Fault(horizon, result); }
-    result = Horizon_PrimaryBuild(horizon, workspace, target, &ready_count);
+    result = Horizon_PrimaryBuild(horizon, workspace, target, &ready_count, recovery);
     if (result != NAV_ESKF_HORIZON_OK) { return Horizon_Fault(horizon, result); }
     horizon->output_candidate = horizon->candidate;
     result = Horizon_PropagateTo(horizon, &horizon->output_candidate, workspace, horizon->present_us);
     if (result != NAV_ESKF_HORIZON_OK) { return Horizon_Fault(horizon, result); }
     horizon->primary = horizon->candidate; *output = horizon->output_candidate;
+    if (recovery != NULL) { recovery->primary = recovery->candidate; }
     memcpy(horizon->output_acceleration, acceleration, sizeof(acceleration));
     horizon->completion_count = ready_count; horizon->completion_read = 0U;
     horizon->warmup = (uint8_t)(horizon->present_us - horizon->initial_us < horizon->horizon_us);
@@ -468,8 +504,9 @@ NavigationEskfHorizonResult NavigationEskfHorizon_Advance(
     return horizon->warmup ? NAV_ESKF_HORIZON_WARMUP : NAV_ESKF_HORIZON_OK;
 }
 
-NavigationEskfHorizonResult NavigationEskfHorizon_CompletionPop(
-    NavigationEskfHorizon *horizon, NavigationEskfHorizonEvent *event)
+static NavigationEskfHorizonResult Horizon_CompletionPop(
+    NavigationEskfHorizon *horizon, NavigationEskfHorizonEvent *event,
+    NavigationEskfHorizonRecovery *recovery, NavigationEskfRecoveryAction *action)
 {
     NavigationEskfHorizonResult result = Horizon_Ready(horizon);
     uint16_t remaining;
@@ -478,6 +515,7 @@ NavigationEskfHorizonResult NavigationEskfHorizon_CompletionPop(
     { return NAV_ESKF_HORIZON_INVALID; }
     if (horizon->completion_count == 0U) { return NAV_ESKF_HORIZON_EMPTY; }
     *event = horizon->event[horizon->completion_read];
+    if (recovery != NULL) { *action = recovery->action[horizon->completion_read]; }
     horizon->completion_read++;
     if (horizon->completion_read != horizon->completion_count) { return NAV_ESKF_HORIZON_OK; }
     remaining = (uint16_t)(horizon->event_count - horizon->completion_count);
@@ -485,7 +523,91 @@ NavigationEskfHorizonResult NavigationEskfHorizon_CompletionPop(
     {
         if (index >= remaining) { break; }
         horizon->event[index] = horizon->event[index + horizon->completion_count];
+        if (recovery != NULL)
+        {
+            recovery->evidence[index] = recovery->evidence[index + horizon->completion_count];
+            recovery->action[index] = recovery->action[index + horizon->completion_count];
+        }
     }
     horizon->event_count = remaining; horizon->completion_count = 0U; horizon->completion_read = 0U;
     return NAV_ESKF_HORIZON_OK;
+}
+
+static uint8_t Horizon_RecoveryReady(const NavigationEskfHorizonRecovery *recovery,
+    const NavigationEskfHorizon *horizon)
+{
+    return (uint8_t)((recovery != NULL) && (horizon != NULL) &&
+        (recovery->initialized == 1U) && (recovery->primary.mission == horizon->primary.generation) &&
+        (recovery->primary.last_scale_receive_us <= horizon->present_us) &&
+        (NavigationEskfRecovery_PolicyValidate(&recovery->primary, &recovery->config) == NAV_ESKF_RECOVERY_COMPLETE));
+}
+
+NavigationEskfHorizonResult NavigationEskfHorizon_Insert(
+    NavigationEskfHorizon *horizon, const NavigationEskfHorizonEvent *event)
+{ return Horizon_Insert(horizon, event, NULL, NULL); }
+
+NavigationEskfHorizonResult NavigationEskfHorizon_Advance(
+    NavigationEskfHorizon *horizon, NavigationEskfState *output,
+    NavigationEskfWorkspace *workspace, const NavigationEskfConfig *config)
+{ return Horizon_Advance(horizon, output, workspace, config, NULL); }
+
+NavigationEskfHorizonResult NavigationEskfHorizon_CompletionPop(
+    NavigationEskfHorizon *horizon, NavigationEskfHorizonEvent *event)
+{ return Horizon_CompletionPop(horizon, event, NULL, NULL); }
+
+NavigationEskfHorizonResult NavigationEskfHorizonRecovery_Reset(
+    NavigationEskfHorizonRecovery *recovery, const NavigationEskfState *state,
+    const NavigationEskfRecoveryReplayState *policy, const NavigationEskfRecoveryConfig *config)
+{
+    if ((recovery == NULL) || (state == NULL) || (policy == NULL) || (config == NULL) ||
+        (policy->mission != state->generation) || (state->initialized != 1U) ||
+        Horizon_RangesOverlap(recovery, sizeof(*recovery), state, sizeof(*state)) ||
+        Horizon_RangesOverlap(recovery, sizeof(*recovery), policy, sizeof(*policy)) ||
+        Horizon_RangesOverlap(recovery, sizeof(*recovery), config, sizeof(*config)) ||
+        (NavigationEskfRecovery_PolicyValidate(policy, config) != NAV_ESKF_RECOVERY_COMPLETE))
+    { return NAV_ESKF_HORIZON_INVALID; }
+    memset(recovery, 0, sizeof(*recovery)); recovery->config = *config;
+    recovery->primary = *policy; recovery->candidate = *policy; recovery->initialized = 1U;
+    return NAV_ESKF_HORIZON_OK;
+}
+
+NavigationEskfHorizonResult NavigationEskfHorizonRecovery_Insert(
+    NavigationEskfHorizon *horizon, const NavigationEskfHorizonEvent *event,
+    NavigationEskfHorizonRecovery *recovery, const NavigationEskfRecoveryEvidence *evidence)
+{
+    if ((event == NULL) || (evidence == NULL) || !Horizon_RecoveryReady(recovery, horizon) ||
+        Horizon_RangesOverlap(recovery, sizeof(*recovery), horizon, sizeof(*horizon)) ||
+        Horizon_RangesOverlap(recovery, sizeof(*recovery), event, sizeof(*event)) ||
+        Horizon_RangesOverlap(recovery, sizeof(*recovery), evidence, sizeof(*evidence)) ||
+        Horizon_RangesOverlap(horizon, sizeof(*horizon), evidence, sizeof(*evidence)))
+    { return NAV_ESKF_HORIZON_INVALID; }
+    return Horizon_Insert(horizon, event, recovery, evidence);
+}
+
+NavigationEskfHorizonResult NavigationEskfHorizonRecovery_Advance(
+    NavigationEskfHorizon *horizon, NavigationEskfState *output,
+    NavigationEskfWorkspace *workspace, const NavigationEskfConfig *config,
+    NavigationEskfHorizonRecovery *recovery)
+{
+    if (!Horizon_RecoveryReady(recovery, horizon)) { return NAV_ESKF_HORIZON_INVALID; }
+    if (Horizon_RangesOverlap(recovery, sizeof(*recovery), horizon, sizeof(*horizon)) ||
+        Horizon_RangesOverlap(recovery, sizeof(*recovery), output, sizeof(*output)) ||
+        Horizon_RangesOverlap(recovery, sizeof(*recovery), workspace, sizeof(*workspace)) ||
+        Horizon_RangesOverlap(recovery, sizeof(*recovery), config, sizeof(*config)))
+    { return NAV_ESKF_HORIZON_INVALID; }
+    return Horizon_Advance(horizon, output, workspace, config, recovery);
+}
+
+NavigationEskfHorizonResult NavigationEskfHorizonRecovery_CompletionPop(
+    NavigationEskfHorizon *horizon, NavigationEskfHorizonEvent *event,
+    NavigationEskfHorizonRecovery *recovery, NavigationEskfRecoveryAction *action)
+{
+    if ((event == NULL) || (action == NULL) || !Horizon_RecoveryReady(recovery, horizon) ||
+        Horizon_RangesOverlap(recovery, sizeof(*recovery), horizon, sizeof(*horizon)) ||
+        Horizon_RangesOverlap(recovery, sizeof(*recovery), event, sizeof(*event)) ||
+        Horizon_RangesOverlap(recovery, sizeof(*recovery), action, sizeof(*action)) ||
+        Horizon_RangesOverlap(horizon, sizeof(*horizon), action, sizeof(*action)) ||
+        Horizon_RangesOverlap(event, sizeof(*event), action, sizeof(*action)))
+    { return NAV_ESKF_HORIZON_INVALID; }
+    return Horizon_CompletionPop(horizon, event, recovery, action);
 }

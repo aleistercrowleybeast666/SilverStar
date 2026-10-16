@@ -53,6 +53,7 @@ def test_actual_app_samples_produce_200hz_body(
         "System/Calibration/Src/system_calibration_correction.c", "Tests/Host/host_platform_mock.c",
         "Algorithm/Estimator/ESKF15/Src/navigation_eskf.c",
         "Algorithm/Estimator/ESKF15/Src/navigation_eskf_replay.c",
+        "Algorithm/Estimator/ESKF15/Src/navigation_eskf_recovery.c",
     )]
     executable = output / "body_cadence.exe"
     command += [str(workspace_root / "tests/fixtures/eskf_body_cadence.c"), "-lm", "-o", str(executable)]

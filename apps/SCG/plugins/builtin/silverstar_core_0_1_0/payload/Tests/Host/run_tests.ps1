@@ -833,6 +833,9 @@ $baroImuStillnessCapabilityArgs = @(
         '-DSYSTEM_SELECTED_IMU_GYRO_AVAILABLE=1U',
         '-DSYSTEM_SELECTED_IMU_SOFTWARE_ALIGNMENT_QUALIFIED=1U',
         '-DSYSTEM_USER_BAROMETER_ENABLE=1U',
+        # Synthetic landing provider has no recorded noise recommendation.
+        # Supply an explicit unit-test noise policy for both qualified cases.
+        '-DSYSTEM_ESTIMATOR_BAROMETER_ALTITUDE_STD_M_OVERRIDE=1.0f',
         '-DSYSTEM_SELECTED_BAROMETER_DIRECT_ALTITUDE_AVAILABLE=1U',
         '-DSYSTEM_SELECTED_BAROMETER_LANDING_WINDOW_QUALIFIED=1U'
 )
@@ -1261,6 +1264,9 @@ elseif ($preparationFusion -eq 'SYSTEM_FUSION_ESKF15') {
     $preparationSources += @(
         "$repoRoot\Algorithm\Estimator\ESKF15\Src\navigation_eskf.c",
         "$repoRoot\Algorithm\Estimator\ESKF15\Src\navigation_eskf_replay.c",
+        "$repoRoot\Algorithm\Estimator\ESKF15\Src\navigation_eskf_horizon.c",
+        "$repoRoot\Algorithm\Estimator\ESKF15\Src\navigation_eskf_recovery.c",
+        "$repoRoot\System\Src\system_gnss_receipt.c",
         "$repoRoot\Algorithm\Estimator\ESKF15\Src\navigation_eskf_backend.c",
         "$repoRoot\System\Calibration\Src\system_calibration.c"
     )
@@ -1367,6 +1373,9 @@ if ($preparationFusion -eq 'SYSTEM_FUSION_ESKF15') {
         "$repoRoot\Tests\Host\test_eskf_backend.c",
         "$repoRoot\Algorithm\Estimator\ESKF15\Src\navigation_eskf.c",
         "$repoRoot\Algorithm\Estimator\ESKF15\Src\navigation_eskf_replay.c",
+        "$repoRoot\Algorithm\Estimator\ESKF15\Src\navigation_eskf_horizon.c",
+        "$repoRoot\Algorithm\Estimator\ESKF15\Src\navigation_eskf_recovery.c",
+        "$repoRoot\System\Src\system_gnss_receipt.c",
         "$repoRoot\Algorithm\Estimator\ESKF15\Src\navigation_eskf_backend.c",
         "$repoRoot\Algorithm\Common\Src\geodesy_local.c",
         "$repoRoot\Algorithm\Common\Src\navigation_quality.c",

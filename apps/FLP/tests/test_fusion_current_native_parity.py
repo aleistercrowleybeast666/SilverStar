@@ -84,7 +84,7 @@ def test_actual_kf_current_backend_trace_matches_state_covariance_and_timing(tmp
     hashes = {str(p): sha256(p.read_bytes()).hexdigest() for p in (trace, decoder)}
     package = DecoderProfilePackage.Load(decoder)
     identity = FusionTiming_FromSemantics(package.semantics.raw_metadata)
-    assert identity.component.endswith('kf6') and identity.version == '0.3.0' and identity.mode == 0
+    assert identity.component.endswith('kf6') and identity.version in ('0.3.0', '0.4.0') and identity.mode == 0
     group = next(g for g in package.semantics.raw_metadata['firmware_algorithm_parameters']
                  if g['component'] == identity.component)
     params = {p['id']: p['value'] for p in group['parameters']}

@@ -17,6 +17,12 @@
 #include "system_power_if.h"
 #include "system_telemetry_transport_if.h"
 
+/* The cache-only CPU selector fixture implements the current recovery port. */
+SystemDeviceResult ProjectGnssInstance_RecoveryBusyGet(
+    uint8_t instance_id, uint8_t *busy);
+SystemDeviceResult ProjectImuInstance_RecoveryPreparedGet(
+    uint8_t instance_id, uint8_t *prepared);
+
 #define PROJECT_PHYSICAL_DEVICE_ID_NONE         0U
 #define PROJECT_PHYSICAL_DEVICE_ID_BMI088       1U
 #define PROJECT_PHYSICAL_DEVICE_ID_BMI323       2U

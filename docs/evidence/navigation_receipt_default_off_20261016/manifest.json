@@ -1,0 +1,21 @@
+{
+  "owner": "/root",
+  "review": "navigation_receipt_default_off_20261016_v20",
+  "base": "21562359c947f7509077297799507c327c275454",
+  "status": "RECORDED_EMITTED_GATES_AND_NEGATIVE_TESTS_PASSED_SCOPED_ONLY",
+  "checker_before_sha256": "6430f8ac5ef5b80da0e1856f48e81bc60af0b9bea00d9f800adf20b4a443bddd",
+  "checker_after_sha256": "2fd9a917a46ee1b2d98fb2b9b4a10edcfb2ff09bf975730ae002b6abbaa04e26",
+  "archive_sha256": "e2037546f63d54487838b4695a3a126918709c19986d87a4ed9101e796cd8e84",
+  "source_paths": 21,
+  "changed_dependency_graphs": 8,
+  "complete_compiled_tuples": 960,
+  "changed_registration_functions": [
+    "BindingSourceVersions_Get",
+    "BindingSources_Verify"
+  ],
+  "every_other_AST_node_equal": true,
+  "critical_contract_main_MSP_ISR_WCET_hardware": "NOT_PROVEN",
+  "validation_sha256": "a6355630e1dcff663131db523f686f24670113b1216a5d4f5f06867a9879a859",
+  "source_snapshot_sha256": "a69e9aeb9ce1f13ee545f9add73d2cc807861866e3161b0432033369a9f4be0b",
+  "validation_archive_sha256": "6102c5e2ff70f43ddfe2ea23bc0d088865eba29704e2563112bcd6c957fbe422"
+}

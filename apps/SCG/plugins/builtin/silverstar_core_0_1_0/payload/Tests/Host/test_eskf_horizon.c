@@ -44,6 +44,7 @@ SystemDeviceResult SystemSourceSelector_ImuActiveInstanceGet(uint8_t *instance)
 { *instance = s_test_imu_source; return SYSTEM_DEVICE_OK; }
 SystemDeviceResult SystemSourceSelector_GnssActiveInstanceGet(uint8_t *instance)
 {
+    if (s_test_source == UINT8_MAX-1U) { return SYSTEM_DEVICE_BAD_STATE; }
     if (s_test_source == UINT8_MAX) { return SYSTEM_DEVICE_NOT_READY; }
     *instance = s_test_source; return SYSTEM_DEVICE_OK;
 }
@@ -239,7 +240,8 @@ static void HorizonTest_Run(uint32_t scenario)
     if (scenario == 3U) { s_test_generation++; }
     if (scenario == 4U) { s_test_imu_source = 2U; }
     if (scenario == 5U) { s_horizon.body_count = NAV_ESKF_HORIZON_BODY_CAPACITY+1U; }
-    if (scenario >= 3U && scenario <= 5U)
+    if (scenario == 12U) { s_test_source = UINT8_MAX-1U; }
+    if ((scenario >= 3U && scenario <= 5U) || scenario == 12U)
     {
         before = s_state;
         TEST_CHECK(HorizonTest_Body(2U,&output) == SYSTEM_DEVICE_VERIFY_FAILED); HorizonTest_RecordsDrain();
@@ -284,7 +286,7 @@ int main(int argc, char **argv)
 {
     if (argc == 3) { s_test_wire = fopen(argv[2],"wb"); TEST_CHECK(s_test_wire != NULL); }
     if (argc >= 2) { HorizonTest_Run((uint32_t)strtoul(argv[1],NULL,10)); }
-    else { for (uint32_t scenario = 0U; scenario < 12U; scenario++) { HorizonTest_Run(scenario); } }
+    else { for (uint32_t scenario = 0U; scenario < 13U; scenario++) { HorizonTest_Run(scenario); } }
     if (s_test_wire != NULL) { TEST_CHECK(fclose(s_test_wire) == 0); }
     return Test_Finish("eskf_horizon_backend_actual");
 }

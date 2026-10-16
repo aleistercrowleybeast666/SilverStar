@@ -4,7 +4,7 @@
   "name": "ESKF15 Navigation Estimator",
   "type": "algorithm",
   "class": "estimator",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Right-local 15-state error Kalman navigation with calibrated body replay.",
   "requires": {
     "components": [
@@ -28,6 +28,10 @@
     "sources": [
       "Algorithm/Estimator/ESKF15/Src/navigation_eskf.c",
       "Algorithm/Estimator/ESKF15/Src/navigation_eskf_replay.c",
+      "Algorithm/Estimator/ESKF15/Src/navigation_eskf_recovery.c",
+      "Algorithm/Estimator/ESKF15/Src/navigation_eskf_recovery_qualifier.c",
+      "Algorithm/Estimator/ESKF15/Src/navigation_eskf_recovery_configuration.c",
+      "Algorithm/Estimator/ESKF15/Src/navigation_eskf_reacquisition.c",
       "Algorithm/Estimator/ESKF15/Src/navigation_eskf_backend.c",
       "Algorithm/Estimator/ESKF15/Src/navigation_eskf_horizon.c"
     ],
@@ -110,6 +114,11 @@
       "revision": 1,
       "parameter": "fusion_horizon_ms",
       "mode": 2
+    },
+    "gnss_reacquisition_contract": {
+      "schema_id": "silverstar.navigation.gnss_reacquisition",
+      "revision": 1,
+      "enabled_parameter": "gnss_recovery_enabled"
     }
   },
   "selection": {
@@ -996,6 +1005,673 @@
         "description": {
           "en_US": "Used only by timing mode 2. The primary runs behind input present; an independent complete state and covariance predictor supplies present output. Configured rates and fixed queue capacity must be reviewed.",
           "zh_CN": "仅用于时序模式 2。主滤波落后于当前输入，独立的完整状态与协方差预测器提供当前输出；需核对配置速率与固定队列容量。"
+        }
+      },
+      {
+        "id": "gnss_recovery_enabled",
+        "type": "integer",
+        "default": 0,
+        "legacy_default": 0,
+        "unit": "1",
+        "representation": "value",
+        "min": 0,
+        "max": 1,
+        "precision": 0,
+        "step": 1,
+        "group": "gnss_integrity",
+        "order": 300,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_ENABLED",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: enabled",
+          "zh_CN": "启用实验性 GNSS 重捕获（0/1）"
+        },
+        "description": {
+          "en_US": "Disabled by default. Enabling requires an explicit complete experimental policy; no hardware or flight qualification.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_loss_gap_ms",
+        "type": "integer",
+        "default": 0,
+        "legacy_default": 0,
+        "unit": "ms",
+        "representation": "value",
+        "min": 0,
+        "max": 2147483647,
+        "precision": 0,
+        "step": 1,
+        "group": "gnss_integrity",
+        "order": 301,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_LOSS_GAP_MS",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: loss gap ms",
+          "zh_CN": "物理观测中断判定时间"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_stable_span_ms",
+        "type": "integer",
+        "default": 0,
+        "legacy_default": 0,
+        "unit": "ms",
+        "representation": "value",
+        "min": 0,
+        "max": 2147483647,
+        "precision": 0,
+        "step": 1,
+        "group": "gnss_integrity",
+        "order": 302,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_STABLE_SPAN_MS",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: stable span ms",
+          "zh_CN": "重捕获稳定持续时间"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_maximum_interval_ms",
+        "type": "integer",
+        "default": 0,
+        "legacy_default": 0,
+        "unit": "ms",
+        "representation": "value",
+        "min": 0,
+        "max": 500,
+        "precision": 0,
+        "step": 1,
+        "group": "gnss_integrity",
+        "order": 303,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_MAXIMUM_INTERVAL_MS",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: maximum interval ms",
+          "zh_CN": "连续观测最大间隔"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_cooldown_ms",
+        "type": "integer",
+        "default": 0,
+        "legacy_default": 0,
+        "unit": "ms",
+        "representation": "value",
+        "min": 0,
+        "max": 2147483647,
+        "precision": 0,
+        "step": 1,
+        "group": "gnss_integrity",
+        "order": 304,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_COOLDOWN_MS",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: cooldown ms",
+          "zh_CN": "协方差恢复冷却时间"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_stable_count",
+        "type": "integer",
+        "default": 0,
+        "legacy_default": 0,
+        "unit": "count",
+        "representation": "value",
+        "min": 0,
+        "max": 255,
+        "precision": 0,
+        "step": 1,
+        "group": "gnss_integrity",
+        "order": 305,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_STABLE_COUNT",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: stable count",
+          "zh_CN": "稳定观测最小数量"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_reject_count",
+        "type": "integer",
+        "default": 0,
+        "legacy_default": 0,
+        "unit": "count",
+        "representation": "value",
+        "min": 0,
+        "max": 255,
+        "precision": 0,
+        "step": 1,
+        "group": "gnss_integrity",
+        "order": 306,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_REJECT_COUNT",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: reject count",
+          "zh_CN": "恢复前连续拒绝数量"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_confirmation_count",
+        "type": "integer",
+        "default": 0,
+        "legacy_default": 0,
+        "unit": "count",
+        "representation": "value",
+        "min": 0,
+        "max": 255,
+        "precision": 0,
+        "step": 1,
+        "group": "gnss_integrity",
+        "order": 307,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_CONFIRMATION_COUNT",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: confirmation count",
+          "zh_CN": "恢复后确认数量"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_maximum_attempts",
+        "type": "integer",
+        "default": 0,
+        "legacy_default": 0,
+        "unit": "count",
+        "representation": "value",
+        "min": 0,
+        "max": 255,
+        "precision": 0,
+        "step": 1,
+        "group": "gnss_integrity",
+        "order": 308,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_MAXIMUM_ATTEMPTS",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: maximum attempts",
+          "zh_CN": "每次中断最大恢复尝试数量"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_uniform_scale",
+        "type": "float",
+        "default": 0.0,
+        "legacy_default": 0.0,
+        "unit": "1",
+        "representation": "value",
+        "min": 0,
+        "max": 2,
+        "precision": 9,
+        "step": 0.001,
+        "group": "gnss_integrity",
+        "order": 309,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_UNIFORM_SCALE",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: uniform scale",
+          "zh_CN": "全协方差统一缩放因子 D"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_cap_position_e",
+        "type": "float",
+        "default": 0.0,
+        "legacy_default": 0.0,
+        "unit": "m^2",
+        "representation": "variance",
+        "min": 0,
+        "max": 3.402823466e+38,
+        "precision": 9,
+        "step": 0.001,
+        "group": "gnss_integrity",
+        "order": 310,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_CAP_POSITION_E",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: cap position e",
+          "zh_CN": "位置 E 方差上限"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_cap_position_n",
+        "type": "float",
+        "default": 0.0,
+        "legacy_default": 0.0,
+        "unit": "m^2",
+        "representation": "variance",
+        "min": 0,
+        "max": 3.402823466e+38,
+        "precision": 9,
+        "step": 0.001,
+        "group": "gnss_integrity",
+        "order": 311,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_CAP_POSITION_N",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: cap position n",
+          "zh_CN": "位置 N 方差上限"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_cap_position_u",
+        "type": "float",
+        "default": 0.0,
+        "legacy_default": 0.0,
+        "unit": "m^2",
+        "representation": "variance",
+        "min": 0,
+        "max": 3.402823466e+38,
+        "precision": 9,
+        "step": 0.001,
+        "group": "gnss_integrity",
+        "order": 312,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_CAP_POSITION_U",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: cap position u",
+          "zh_CN": "位置 U 方差上限"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_cap_velocity_e",
+        "type": "float",
+        "default": 0.0,
+        "legacy_default": 0.0,
+        "unit": "(m/s)^2",
+        "representation": "variance",
+        "min": 0,
+        "max": 3.402823466e+38,
+        "precision": 9,
+        "step": 0.001,
+        "group": "gnss_integrity",
+        "order": 313,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_CAP_VELOCITY_E",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: cap velocity e",
+          "zh_CN": "速度 E 方差上限"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_cap_velocity_n",
+        "type": "float",
+        "default": 0.0,
+        "legacy_default": 0.0,
+        "unit": "(m/s)^2",
+        "representation": "variance",
+        "min": 0,
+        "max": 3.402823466e+38,
+        "precision": 9,
+        "step": 0.001,
+        "group": "gnss_integrity",
+        "order": 314,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_CAP_VELOCITY_N",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: cap velocity n",
+          "zh_CN": "速度 N 方差上限"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_cap_velocity_u",
+        "type": "float",
+        "default": 0.0,
+        "legacy_default": 0.0,
+        "unit": "(m/s)^2",
+        "representation": "variance",
+        "min": 0,
+        "max": 3.402823466e+38,
+        "precision": 9,
+        "step": 0.001,
+        "group": "gnss_integrity",
+        "order": 315,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_CAP_VELOCITY_U",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: cap velocity u",
+          "zh_CN": "速度 U 方差上限"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_cap_theta_x",
+        "type": "float",
+        "default": 0.0,
+        "legacy_default": 0.0,
+        "unit": "rad^2",
+        "representation": "variance",
+        "min": 0,
+        "max": 3.402823466e+38,
+        "precision": 9,
+        "step": 0.001,
+        "group": "gnss_integrity",
+        "order": 316,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_CAP_THETA_X",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: cap theta x",
+          "zh_CN": "姿态误差 X 方差上限"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_cap_theta_y",
+        "type": "float",
+        "default": 0.0,
+        "legacy_default": 0.0,
+        "unit": "rad^2",
+        "representation": "variance",
+        "min": 0,
+        "max": 3.402823466e+38,
+        "precision": 9,
+        "step": 0.001,
+        "group": "gnss_integrity",
+        "order": 317,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_CAP_THETA_Y",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: cap theta y",
+          "zh_CN": "姿态误差 Y 方差上限"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_cap_theta_z",
+        "type": "float",
+        "default": 0.0,
+        "legacy_default": 0.0,
+        "unit": "rad^2",
+        "representation": "variance",
+        "min": 0,
+        "max": 3.402823466e+38,
+        "precision": 9,
+        "step": 0.001,
+        "group": "gnss_integrity",
+        "order": 318,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_CAP_THETA_Z",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: cap theta z",
+          "zh_CN": "姿态误差 Z 方差上限"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_cap_gyro_bias_x",
+        "type": "float",
+        "default": 0.0,
+        "legacy_default": 0.0,
+        "unit": "(rad/s)^2",
+        "representation": "variance",
+        "min": 0,
+        "max": 3.402823466e+38,
+        "precision": 9,
+        "step": 0.001,
+        "group": "gnss_integrity",
+        "order": 319,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_CAP_GYRO_BIAS_X",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: cap gyro bias x",
+          "zh_CN": "陀螺零偏 X 方差上限"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_cap_gyro_bias_y",
+        "type": "float",
+        "default": 0.0,
+        "legacy_default": 0.0,
+        "unit": "(rad/s)^2",
+        "representation": "variance",
+        "min": 0,
+        "max": 3.402823466e+38,
+        "precision": 9,
+        "step": 0.001,
+        "group": "gnss_integrity",
+        "order": 320,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_CAP_GYRO_BIAS_Y",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: cap gyro bias y",
+          "zh_CN": "陀螺零偏 Y 方差上限"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_cap_gyro_bias_z",
+        "type": "float",
+        "default": 0.0,
+        "legacy_default": 0.0,
+        "unit": "(rad/s)^2",
+        "representation": "variance",
+        "min": 0,
+        "max": 3.402823466e+38,
+        "precision": 9,
+        "step": 0.001,
+        "group": "gnss_integrity",
+        "order": 321,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_CAP_GYRO_BIAS_Z",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: cap gyro bias z",
+          "zh_CN": "陀螺零偏 Z 方差上限"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_cap_accel_bias_x",
+        "type": "float",
+        "default": 0.0,
+        "legacy_default": 0.0,
+        "unit": "(m/s^2)^2",
+        "representation": "variance",
+        "min": 0,
+        "max": 3.402823466e+38,
+        "precision": 9,
+        "step": 0.001,
+        "group": "gnss_integrity",
+        "order": 322,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_CAP_ACCEL_BIAS_X",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: cap accel bias x",
+          "zh_CN": "加计零偏 X 方差上限"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_cap_accel_bias_y",
+        "type": "float",
+        "default": 0.0,
+        "legacy_default": 0.0,
+        "unit": "(m/s^2)^2",
+        "representation": "variance",
+        "min": 0,
+        "max": 3.402823466e+38,
+        "precision": 9,
+        "step": 0.001,
+        "group": "gnss_integrity",
+        "order": 323,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_CAP_ACCEL_BIAS_Y",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: cap accel bias y",
+          "zh_CN": "加计零偏 Y 方差上限"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_cap_accel_bias_z",
+        "type": "float",
+        "default": 0.0,
+        "legacy_default": 0.0,
+        "unit": "(m/s^2)^2",
+        "representation": "variance",
+        "min": 0,
+        "max": 3.402823466e+38,
+        "precision": 9,
+        "step": 0.001,
+        "group": "gnss_integrity",
+        "order": 324,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_CAP_ACCEL_BIAS_Z",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: cap accel bias z",
+          "zh_CN": "加计零偏 Z 方差上限"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_clock_jitter_ms",
+        "type": "integer",
+        "default": 0,
+        "legacy_default": 0,
+        "unit": "ms",
+        "representation": "value",
+        "min": 0,
+        "max": 500,
+        "precision": 0,
+        "step": 1,
+        "group": "gnss_integrity",
+        "order": 325,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_CLOCK_JITTER_MS",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: clock jitter ms",
+          "zh_CN": "原生与 MCU 时间增量最大偏差"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_horizontal_acceleration_limit_mps2",
+        "type": "float",
+        "default": 0.0,
+        "legacy_default": 0.0,
+        "unit": "m/s^2",
+        "representation": "value",
+        "min": 0,
+        "max": 3.402823466e+38,
+        "precision": 9,
+        "step": 0.001,
+        "group": "gnss_integrity",
+        "order": 326,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_HORIZONTAL_ACCELERATION_LIMIT_MPS2",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: horizontal acceleration limit mps2",
+          "zh_CN": "水平加速度一致性界限"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_vertical_acceleration_limit_mps2",
+        "type": "float",
+        "default": 0.0,
+        "legacy_default": 0.0,
+        "unit": "m/s^2",
+        "representation": "value",
+        "min": 0,
+        "max": 3.402823466e+38,
+        "precision": 9,
+        "step": 0.001,
+        "group": "gnss_integrity",
+        "order": 327,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_VERTICAL_ACCELERATION_LIMIT_MPS2",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: vertical acceleration limit mps2",
+          "zh_CN": "垂直加速度一致性界限"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
+        }
+      },
+      {
+        "id": "gnss_recovery_closure_sigma",
+        "type": "float",
+        "default": 0.0,
+        "legacy_default": 0.0,
+        "unit": "1",
+        "representation": "value",
+        "min": 0,
+        "max": 3.402823466e+38,
+        "precision": 9,
+        "step": 0.001,
+        "group": "gnss_integrity",
+        "order": 328,
+        "generated_symbol": "SYSTEM_ESKF_GNSS_RECOVERY_CLOSURE_SIGMA",
+        "display_names": {
+          "en_US": "Experimental GNSS recovery: closure sigma",
+          "zh_CN": "位置速度闭合不确定度倍数"
+        },
+        "description": {
+          "en_US": "Zero is an unconfigured placeholder while recovery is disabled. Actual values must be explicitly reviewed before enabling. No approved flight default.",
+          "zh_CN": "默认关闭；零值为未配置占位，不是已批准的飞行参数。启用前必须填写完整、经过审查的实验配置；硬件与飞行验证未完成。"
         }
       }
     ]

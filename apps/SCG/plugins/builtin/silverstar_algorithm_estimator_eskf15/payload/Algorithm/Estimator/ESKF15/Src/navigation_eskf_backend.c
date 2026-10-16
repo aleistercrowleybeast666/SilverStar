@@ -10,6 +10,7 @@
 #include "system_time.h"
 #include "system_calibration.h"
 #include "system_gnss_quality.h"
+#include "system_gnss_receipt.h"
 #include "system_user_config.h"
 #include "system_fusion_timing.h"
 _Static_assert((SYSTEM_FUSION_TIMING_MODE == 0U) || (SYSTEM_FUSION_TIMING_MODE == 1U) ||
@@ -86,6 +87,7 @@ static uint8_t s_started;
 static uint8_t s_gnss_source;
 static uint32_t s_imu_quality_flags;
 static uint32_t s_calibration_generation;
+static uint8_t s_input_faulted;
 
 static uint64_t Backend_EvaluationTimeGet(void)
 {
@@ -194,6 +196,7 @@ void SystemNavigationBackend_Reset(void)
     s_baro_origin = 0.0f; s_baro_origin_valid = 0U;
     s_native_week_us = 0U; s_native_tow_ms = 0U; s_log_failures = 0U;
     s_imu_quality_flags = 0U;
+    s_input_faulted = 0U;
     if (SYSTEM_FUSION_TIMING_MODE != SYSTEM_FUSION_TIMING_LEGACY_REPLAY)
     {
         memset(s_current_gnss, 0, sizeof(s_current_gnss));
@@ -385,22 +388,21 @@ static void Backend_BodyLog(const NavigationEskfBodyInput *body, uint32_t sequen
 
 #endif
 
-static float Backend_ConsistencyGet(const SystemGnssSample *sample, const float position[3])
+static float Backend_ConsistencyGet(const SystemGnssReceiptSnapshot *receipt, const float position[3])
 {
     NavigationWindowSample window_sample;
-    SystemGnssTime native;
-    uint8_t source;
-    SILVERSTAR_ASSERT_OBJECT(sample, SystemGnssSample, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    SILVERSTAR_ASSERT_OBJECT(receipt, SystemGnssReceiptSnapshot, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     SILVERSTAR_ASSERT_OBJECT(position, float, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
-    if ((SystemGnss_TimeGet(&native) != SYSTEM_DEVICE_OK) ||
-        (native.sequence != sample->sequence) || (native.time_of_week_ms >= 604800000U) ||
-        (SystemSourceSelector_GnssActiveInstanceGet(&source) != SYSTEM_DEVICE_OK)) { return 1.0f; }
-    if ((native.time_of_week_ms < s_native_tow_ms) && ((s_native_tow_ms - native.time_of_week_ms) > 302400000U))
+    const SystemGnssSample *sample = &receipt->sample;
+    const SystemGnssTime *native = &receipt->native;
+    if ((receipt->native_result != SYSTEM_DEVICE_OK) ||
+        (native->sequence != sample->sequence) || (native->time_of_week_ms >= 604800000U)) { return 1.0f; }
+    if ((native->time_of_week_ms < s_native_tow_ms) && ((s_native_tow_ms - native->time_of_week_ms) > 302400000U))
     { s_native_week_us += 604800000000ULL; }
-    s_native_tow_ms = native.time_of_week_ms;
+    s_native_tow_ms = native->time_of_week_ms;
     memset(&window_sample, 0, sizeof(window_sample));
-    window_sample.epoch_us = s_native_week_us + (uint64_t)native.time_of_week_ms * 1000ULL;
-    window_sample.sequence = sample->sequence; window_sample.source = source;
+    window_sample.epoch_us = s_native_week_us + (uint64_t)native->time_of_week_ms * 1000ULL;
+    window_sample.sequence = sample->sequence; window_sample.source = receipt->source;
     window_sample.generation = s_state.generation;
     memcpy(window_sample.position_en, position, sizeof(window_sample.position_en));
     memcpy(window_sample.velocity_en, sample->velocity_enu_mps, sizeof(window_sample.velocity_en));
@@ -836,20 +838,20 @@ static void Backend_GnssGroupApply(const SystemGnssSample *sample, const float p
     Backend_EventApply(&event, &record, output);
 }
 
-static void Backend_NavigationQualityLog(const SystemGnssSample *sample, uint64_t evaluation_us)
+static void Backend_NavigationQualityLog(const SystemGnssReceiptSnapshot *receipt, uint64_t evaluation_us)
 {
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
     FlightLogNavigationQualityRecord record = {0};
     SystemNavigationGroupHealth health;
-    SystemGnssTime native;
-    uint8_t group, source = 0U;
-    SILVERSTAR_ASSERT_OBJECT(sample, SystemGnssSample, SILVERSTAR_ASSERT_MODULE_APP);
+    uint8_t group;
+    SILVERSTAR_ASSERT_OBJECT(receipt, SystemGnssReceiptSnapshot, SILVERSTAR_ASSERT_MODULE_APP);
     SILVERSTAR_ASSERT_OBJECT(&record, FlightLogNavigationQualityRecord, SILVERSTAR_ASSERT_MODULE_APP);
+    const SystemGnssSample *sample = &receipt->sample;
     record.receive_us = sample->receive_timestamp_us; record.evaluation_us = evaluation_us;
-    if ((SystemGnss_TimeGet(&native) == SYSTEM_DEVICE_OK) && (native.sequence == sample->sequence))
-    { record.native_epoch_us = s_native_week_us + (uint64_t)native.time_of_week_ms * 1000ULL; }
+    if ((receipt->native_result == SYSTEM_DEVICE_OK) && (receipt->native.sequence == sample->sequence))
+    { record.native_epoch_us = s_native_week_us + (uint64_t)receipt->native.time_of_week_ms * 1000ULL; }
     record.native_sequence = sample->sequence;
-    if (SystemSourceSelector_GnssActiveInstanceGet(&source) == SYSTEM_DEVICE_OK) { record.source_id = source; }
+    record.source_id = receipt->source;
     record.calibration_generation = s_calibration_generation;
     record.quality_revision = NAV_QUALITY_REVISION;
     record.physical_mask = sample->physical_valid_group_mask;
@@ -884,47 +886,64 @@ static void Backend_NavigationQualityLog(const SystemGnssSample *sample, uint64_
     if (LoggerBus_NavigationQualityPush(evaluation_us, &record) != LOGGER_BUS_RESULT_OK)
     { s_log_failures++; }
 #else
-    (void)sample; (void)evaluation_us;
+    (void)receipt; (void)evaluation_us;
 #endif
 }
 
 /* Select the live producer independently of whether it has delivered a packet.
  * Use this captured identity for the whole receive transaction. */
-static SystemDeviceResult Backend_HorizonGnssSourceSelect(uint8_t *source)
+static SystemDeviceResult Backend_HorizonGnssSourcePublish(SystemDeviceResult selected, uint8_t source)
 {
-    SystemDeviceResult selected = SystemSourceSelector_GnssActiveInstanceGet(source);
     for (uint8_t group = 0U; group < 4U; group++)
     {
         SystemDeviceResult health = (selected == SYSTEM_DEVICE_OK) ?
-            SystemNavigationHealth_SourceSelect(group,*source,Backend_EvaluationTimeGet()) :
+            SystemNavigationHealth_SourceSelect(group,source,Backend_EvaluationTimeGet()) :
             SystemNavigationHealth_SourceUnavailable(group,Backend_EvaluationTimeGet());
         if (health != SYSTEM_DEVICE_OK) { s_horizon.faulted = 1U; return SYSTEM_DEVICE_VERIFY_FAILED; }
     }
     return selected;
 }
 
+static SystemDeviceResult Backend_HorizonGnssSourceSelect(uint8_t *source)
+{
+    SystemDeviceResult selected = SystemSourceSelector_GnssActiveInstanceGet(source);
+    if (selected == SYSTEM_DEVICE_BAD_STATE)
+    { s_input_faulted = 1U; s_horizon.faulted = 1U; return SYSTEM_DEVICE_VERIFY_FAILED; }
+    return Backend_HorizonGnssSourcePublish(selected,*source);
+}
+
 static void Backend_GnssUpdate(EstimatorOutputSnapshot *output)
 {
-    SystemGnssSample sample;
+    SystemGnssReceiptSnapshot receipt;
+    SystemGnssSample *sample = &receipt.sample;
+    SystemDeviceResult snapshot_result;
     float position[3], quality, consistency;
-    uint8_t group, source;
+    uint8_t group, source = 0U;
     SystemFusionExecutionResult packet_result = SYSTEM_FUSION_EXEC_COMPLETE;
     SILVERSTAR_ASSERT_OBJECT(output, EstimatorOutputSnapshot, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     SILVERSTAR_ASSERT(s_state.initialized != 0U, SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if ((SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON) &&
         (Backend_HorizonGnssSourceSelect(&source) != SYSTEM_DEVICE_OK)) { return; }
-    /* A mission without a preflight frame cannot adopt a later moving fix. */
+    snapshot_result = SystemGnss_ReceiptSnapshotGet(&receipt);
+    if (snapshot_result == SYSTEM_DEVICE_BAD_STATE)
+    {
+        s_input_faulted = 1U;
+        if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON) { s_horizon.faulted = 1U; }
+    }
+    if (snapshot_result != SYSTEM_DEVICE_OK) { return; }
+    /* Missing preflight origin cannot conceal corrupt owned receipt state.
+     * A valid later moving fix still cannot establish a mission frame. */
     if (s_frame.valid == 0U) { return; }
-    if (((SYSTEM_FUSION_TIMING_MODE != SYSTEM_FUSION_TIMING_HORIZON) &&
-         (SystemSourceSelector_GnssActiveInstanceGet(&source) != SYSTEM_DEVICE_OK)) ||
-        (SystemGnss_LatestSampleGet(&sample) != SYSTEM_DEVICE_OK) ||
-        (sample.receive_timestamp_us > Backend_EvaluationTimeGet()) ||
+    if ((SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON) && (source != receipt.source) &&
+        (Backend_HorizonGnssSourcePublish(SYSTEM_DEVICE_OK,receipt.source) != SYSTEM_DEVICE_OK)) { return; }
+    source = receipt.source;
+    if ((sample->receive_timestamp_us > Backend_EvaluationTimeGet()) ||
         (s_gnss_seen && (source == s_gnss_source) &&
-         (sample.sequence == s_gnss_sequence))) { return; }
+         (sample->sequence == s_gnss_sequence))) { return; }
     if (SYSTEM_FUSION_TIMING_MODE != SYSTEM_FUSION_TIMING_LEGACY_REPLAY)
     {
         packet_result = (source < SYSTEM_FUSION_SOURCE_COUNT) ?
-            Backend_CurrentPacketAdmit(&s_current_gnss[source], sample.sequence, sample.receive_timestamp_us) :
+            Backend_CurrentPacketAdmit(&s_current_gnss[source], sample->sequence, sample->receive_timestamp_us) :
             SYSTEM_FUSION_EXEC_INVALID;
     }
     if (source != s_gnss_source)
@@ -932,27 +951,27 @@ static void Backend_GnssUpdate(EstimatorOutputSnapshot *output)
         s_gnss_source = source; s_native_week_us = 0U; s_native_tow_ms = 0U;
         (void)NavigationWindow_Reset(&s_eskf_window);
     }
-    s_gnss_seen = 1U; s_gnss_sequence = sample.sequence;
-    if (SystemGnssQuality_Evaluate(&sample, Backend_EvaluationTimeGet()) != SYSTEM_DEVICE_OK)
-    { sample.valid_group_mask = 0U; sample.physical_valid_group_mask = 0U; }
-    output->last_gnss_timestamp_us = sample.receive_timestamp_us;
-    output->last_gnss_sequence = sample.sequence;
-    output->gnss_velocity_valid_mask = sample.velocity_valid_mask;
-    output->velocity_update_dimension = (sample.velocity_valid_mask == 7U) ? 3U :
-        ((sample.velocity_valid_mask & 3U) == 3U) ? 2U : 0U;
-    memcpy(output->gnss_velocity_enu_mps, sample.velocity_enu_mps, sizeof(output->gnss_velocity_enu_mps));
+    s_gnss_seen = 1U; s_gnss_sequence = sample->sequence;
+    if (SystemGnssQuality_Evaluate(sample, Backend_EvaluationTimeGet()) != SYSTEM_DEVICE_OK)
+    { sample->valid_group_mask = 0U; sample->physical_valid_group_mask = 0U; }
+    output->last_gnss_timestamp_us = sample->receive_timestamp_us;
+    output->last_gnss_sequence = sample->sequence;
+    output->gnss_velocity_valid_mask = sample->velocity_valid_mask;
+    output->velocity_update_dimension = (sample->velocity_valid_mask == 7U) ? 3U :
+        ((sample->velocity_valid_mask & 3U) == 3U) ? 2U : 0U;
+    memcpy(output->gnss_velocity_enu_mps, sample->velocity_enu_mps, sizeof(output->gnss_velocity_enu_mps));
     if (GeoLocalFrame_ToEnu(&s_frame,
-        (sample.valid_group_mask & 1U) ? sample.latitude_e7 : s_frame.origin_lat_e7,
-        (sample.valid_group_mask & 1U) ? sample.longitude_e7 : s_frame.origin_lon_e7,
-        (sample.valid_group_mask & 2U) ? sample.ellipsoid_height_mm : s_frame.origin_height_mm, position) == 0U)
-    { memset(position, 0, sizeof(position)); sample.valid_group_mask &= (uint8_t)~3U; }
+        (sample->valid_group_mask & 1U) ? sample->latitude_e7 : s_frame.origin_lat_e7,
+        (sample->valid_group_mask & 1U) ? sample->longitude_e7 : s_frame.origin_lon_e7,
+        (sample->valid_group_mask & 2U) ? sample->ellipsoid_height_mm : s_frame.origin_height_mm, position) == 0U)
+    { memset(position, 0, sizeof(position)); sample->valid_group_mask &= (uint8_t)~3U; }
     memcpy(output->gnss_position_enu_m, position, sizeof(position));
-    quality = NavigationQuality_SatelliteVarianceScale(sample.satellite_count,
-        (uint8_t)((sample.valid_fields & SYSTEM_GNSS_FIELD_SATELLITE_COUNT) != 0U));
-    consistency = (packet_result == SYSTEM_FUSION_EXEC_COMPLETE) ? Backend_ConsistencyGet(&sample, position) : 1.0f;
+    quality = NavigationQuality_SatelliteVarianceScale(sample->satellite_count,
+        (uint8_t)((sample->valid_fields & SYSTEM_GNSS_FIELD_SATELLITE_COUNT) != 0U));
+    consistency = (packet_result == SYSTEM_FUSION_EXEC_COMPLETE) ? Backend_ConsistencyGet(&receipt, position) : 1.0f;
     for (group = 0U; group < 4U; group++)
-    { Backend_GnssGroupApply(&sample, position, group, quality, consistency, packet_result, output); }
-    Backend_NavigationQualityLog(&sample, Backend_EvaluationTimeGet());
+    { Backend_GnssGroupApply(sample, position, group, quality, consistency, packet_result, output); }
+    Backend_NavigationQualityLog(&receipt, Backend_EvaluationTimeGet());
 }
 
 static uint8_t Backend_BarometerReceiptGet(EstimatorPressureSnapshot *sample)
@@ -1065,6 +1084,7 @@ SystemDeviceResult SystemNavigationBackend_SnapshotGet(EstimatorOutputSnapshot *
     uint32_t row, column;
     if (output == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     if (!s_state.initialized) { return SYSTEM_DEVICE_NOT_READY; }
+    if (s_input_faulted) { return SYSTEM_DEVICE_NOT_READY; }
     if ((SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON) && s_horizon.faulted)
     { return SYSTEM_DEVICE_NOT_READY; }
     if (SYSTEM_FUSION_TIMING_MODE == 0U)
@@ -1172,7 +1192,9 @@ static SystemDeviceResult Backend_PresentOrReplayCycle(const NavigationEskfBodyI
     }
     for (axis = 0U; axis < 3U; axis++)
     { output->acceleration_enu_mps2[axis] = (s_state.velocity[axis]-previous_velocity[axis])/body->dt_s; }
-    Backend_GnssUpdate(output); Backend_BarometerUpdate(output);
+    Backend_GnssUpdate(output);
+    if (s_input_faulted) { return Backend_CurrentFaultStop(output); }
+    Backend_BarometerUpdate(output);
     if ((SYSTEM_FUSION_TIMING_MODE == 0U) && (s_current_faulted != 0U))
     { return Backend_CurrentFaultStop(output); }
     output->predict_count++; output->update_sequence++;
@@ -1195,6 +1217,7 @@ SystemDeviceResult SystemNavigationBackend_Predict(
     { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     SILVERSTAR_ASSERT_OBJECT(input, SystemInertialIncrement, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
     SILVERSTAR_ASSERT_OBJECT(output, EstimatorOutputSnapshot, SILVERSTAR_ASSERT_MODULE_ALGORITHM);
+    if (s_input_faulted) { return Backend_CurrentFaultStop(output); }
     if ((SYSTEM_FUSION_TIMING_MODE == 0U) && (s_current_faulted != 0U))
     { return Backend_CurrentFaultStop(output); }
     if ((SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON) && s_horizon.faulted)

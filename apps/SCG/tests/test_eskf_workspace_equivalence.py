@@ -34,6 +34,7 @@ def eskf_trace_executables(tmp_path_factory):
                 "-fno-fast-math", "-ffp-contract=off", "-I" + str(source / "Inc"),
                 "-I" + str(core / "Inc"), str(source / "Src/navigation_eskf.c"),
                 str(source / "Src/navigation_eskf_replay.c"), str(core / "Src/silverstar_assert.c"),
+                *([str(source / "Src/navigation_eskf_recovery.c")] if version == "after" else []),
                 str(app / "tests/fixtures/eskf_workspace_trace.c"), "-lm", "-o", str(exe)]
             result = subprocess.run(command, capture_output=True, text=True, timeout=60)
             commands.append({"command": command, "exit_code": result.returncode,

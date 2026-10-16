@@ -282,6 +282,8 @@ def GeneratedFiles_Render(
     model: ProjectModel, catalog: PluginCatalog, graph: SourceGraph
 ) -> dict[str, bytes]:
     catalog = catalog.ProjectView_Get(model)
+    from silverstar_fccg.project.gnss_reacquisition import GnssReacquisitionActivation_Validate
+    GnssReacquisitionActivation_Validate(model, catalog)
     logging_enabled = model.protocols.get("logging") is not None
     decoder_profile = (
         LogDecoderProfile_Render(model, catalog) if logging_enabled else None
@@ -1816,6 +1818,12 @@ def _LogMetadataDeclarations_Get(model: ProjectModel, catalog: PluginCatalog,
         if "fusion_timing" in declarations:
             raise ValueError("Fusion timing declaration must come from resolved actual values")
         declarations["fusion_timing"] = timing
+    from silverstar_fccg.project.gnss_reacquisition import GnssReacquisitionDeclaration_Get
+    recovery = GnssReacquisitionDeclaration_Get(model, catalog)
+    if recovery is not None:
+        if "gnss_reacquisition" in declarations:
+            raise ValueError("GNSS recovery declaration must come from resolved actual values")
+        declarations["gnss_reacquisition"] = recovery
     return declarations
 
 

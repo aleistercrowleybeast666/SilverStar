@@ -27,7 +27,7 @@ def test_both_actual_backends_wire_boundaries(tmp_path):
         pytest.skip('Explicit fresh SCG backend trace root required; no synthetic replacement')
     root = Path(supplied).resolve()
     paths = sorted(root.glob('*backend_horizon*/case*.frames'))
-    assert len(paths) == 48, 'Require both actual backends, O0/O2 and all twelve scenarios'
+    assert len(paths) == 50, 'Require both actual backends, O0/O2, twelve common and ESKF owned-state scenarios'
     layouts = {int(row['id'], 0): RecordLayout.FromDocument(row, 0) for row in RECORDS.values()}
     for layout in layouts.values():
         FusionHorizonLayout_Validate(layout)
@@ -49,7 +49,7 @@ def test_both_actual_backends_wire_boundaries(tmp_path):
         algorithm = 1 if path.parent.name.startswith('kf_') else 2
         evidence = FusionHorizonRecords_Validate(dataset, algorithm_id=algorithm, horizon_us=30000)
         scenario = int(path.stem.removeprefix('case'))
-        expected_fault = scenario in (3, 4, 5, 8)
+        expected_fault = scenario in (3, 4, 5, 8) or (algorithm == 2 and scenario == 12)
         assert ('fusion_horizon_fault_recorded' in evidence.replay_blockers) == expected_fault
         if not expected_fault:
             assert not evidence.replay_blockers

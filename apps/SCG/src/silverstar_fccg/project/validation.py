@@ -940,6 +940,8 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
     _ModeParameters_Validate(model, catalog, issues)
     try:
         AlgorithmParameters_Resolve(model, catalog)
+        from silverstar_fccg.project.gnss_reacquisition import GnssReacquisitionActivation_Validate
+        GnssReacquisitionActivation_Validate(model, catalog)
     except ValueError as error:
         issues.append(ValidationIssue("error", "algorithm_parameters", str(error)))
     _ProtocolProfiles_Validate(model, catalog, issues)

@@ -79,6 +79,7 @@ def HorizonLibrary_Compile(output, optimization):
     compiler = shutil.which('gcc')
     assert compiler, 'Actual GCC is required; no syntax-only or synthetic substitute'
     sources = [KERNEL / 'Src/navigation_eskf.c', KERNEL / 'Src/navigation_eskf_horizon.c',
+               KERNEL / 'Src/navigation_eskf_recovery.c',
                COMMON / 'Src/silverstar_assert.c', FIXTURE]
     library = output / 'horizon.dll'
     command = [compiler, '-std=c11', optimization, '-Wall', '-Wextra', '-Werror', '-Wpedantic',

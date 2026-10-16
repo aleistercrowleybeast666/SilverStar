@@ -481,13 +481,21 @@ SystemDeviceResult SystemSourceSelector_ImuActiveInstanceGet(
 SystemDeviceResult SystemSourceSelector_GnssActiveInstanceGet(
     uint8_t *instance_id)
 {
+    PlatformCriticalState critical;
+    SystemDeviceResult result = SYSTEM_DEVICE_OK;
     if (instance_id == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-    if (s_gnss.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE)
-    {
-        return SYSTEM_DEVICE_NOT_READY;
-    }
-    *instance_id = s_gnss.active;
-    return SYSTEM_DEVICE_OK;
+    critical = PlatformCritical_Enter();
+    if (s_gnss.count > PROJECT_GNSS_INSTANCE_COUNT_MAX)
+    { result = SYSTEM_DEVICE_BAD_STATE; }
+    else if (s_gnss.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE)
+    { result = SYSTEM_DEVICE_NOT_READY; }
+    else if ((s_gnss.active >= s_gnss.count) ||
+        (s_gnss.active_position >= s_gnss.count) ||
+        (s_gnss.order[s_gnss.active_position] != s_gnss.active))
+    { result = SYSTEM_DEVICE_BAD_STATE; }
+    if (result == SYSTEM_DEVICE_OK) { *instance_id = s_gnss.active; }
+    PlatformCritical_Exit(critical);
+    return result;
 }
 
 SystemDeviceResult SystemSourceSelector_TelemetryActiveInstanceGet(
@@ -868,6 +876,32 @@ SystemDeviceResult SystemImu_NoiseCharacteristicsGet(
     return ProjectImuInstance_NoiseCharacteristicsGet(s_imu.active, noise);
 }
 
+/* Runtime readers pair the selected route, freshness barrier and cached data.
+ * Publish the route and its barrier together; no device IO belongs here. */
+static void SystemSourceSelector_GnssSelectionPublish(
+    uint8_t candidate, uint8_t position, uint8_t refresh_barrier)
+{
+    PlatformCriticalState critical = PlatformCritical_Enter();
+    SILVERSTAR_ASSERT(s_gnss.count <= PROJECT_GNSS_INSTANCE_COUNT_MAX,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    SILVERSTAR_ASSERT((candidate < s_gnss.count) && (position < s_gnss.count),
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT(s_gnss.order[position] == candidate,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    s_gnss.active = candidate;
+    s_gnss.active_position = position;
+    if (refresh_barrier != 0U)
+    { s_gnss.active_after_us = SystemTime_GetMonotonicUs(); }
+    PlatformCritical_Exit(critical);
+}
+
+static void SystemSourceSelector_GnssBarrierPublish(uint64_t timestamp_us)
+{
+    PlatformCriticalState critical = PlatformCritical_Enter();
+    s_gnss.active_after_us = timestamp_us;
+    PlatformCritical_Exit(critical);
+}
+
 static void SystemSourceSelector_GnssSwitchEvaluate(void)
 {
     SystemDeviceHealth health;
@@ -915,9 +949,7 @@ static void SystemSourceSelector_GnssSwitchEvaluate(void)
         {
             uint8_t previous = s_gnss.active;
 
-            s_gnss.active = candidate;
-            s_gnss.active_position = position;
-            s_gnss.active_after_us = SystemTime_GetMonotonicUs();
+            SystemSourceSelector_GnssSelectionPublish(candidate, position, 1U);
             SystemSourceSelector_EventRecord(SYSTEM_DEVICE_CLASS_GNSS,
                 previous, candidate,
                 SYSTEM_SOURCE_CHANGE_REASON_GNSS_LIVENESS_TIMEOUT);
@@ -936,6 +968,10 @@ static void SystemSourceSelector_GnssRecoveryAttempt(
     uint8_t candidate, uint8_t position)
 {
     SystemDeviceResult result;
+    SILVERSTAR_ASSERT(s_gnss.count <= PROJECT_GNSS_INSTANCE_COUNT_MAX,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    SILVERSTAR_ASSERT((candidate < s_gnss.count) && (position < s_gnss.count),
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     if ((s_gnss.started[candidate] != 0U) ||
         (s_gnss.cleanup_pending[candidate] != 0U))
     {
@@ -967,14 +1003,13 @@ static void SystemSourceSelector_GnssRecoveryAttempt(
     }
     if (s_gnss.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE)
     {
-        s_gnss.active = candidate;
-        s_gnss.active_position = position;
+        SystemSourceSelector_GnssSelectionPublish(candidate, position, 1U);
         SystemSourceSelector_EventRecord(SYSTEM_DEVICE_CLASS_GNSS,
             SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE, candidate,
             SYSTEM_SOURCE_CHANGE_REASON_RECOVERY);
     }
-    if (candidate == s_gnss.active)
-    { s_gnss.active_after_us = SystemTime_GetMonotonicUs(); }
+    else if (candidate == s_gnss.active)
+    { SystemSourceSelector_GnssSelectionPublish(candidate, position, 1U); }
 }
 
 /* A cold backup is considered before restarting anything. Recovery visits at
@@ -1001,7 +1036,7 @@ static void SystemSourceSelector_GnssRecoveryProcess(void)
         return;
     }
     if (s_gnss.active != SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE)
-    { s_gnss.active_after_us = now_us; }
+    { SystemSourceSelector_GnssBarrierPublish(now_us); }
     for (step = 0U; step < PROJECT_GNSS_INSTANCE_COUNT_MAX; step++)
     {
         uint8_t position;
@@ -1082,8 +1117,7 @@ SystemDeviceResult SystemGnss_Init(void)
             success_count++;
             if (s_gnss.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE)
             {
-                s_gnss.active = instance_id;
-                s_gnss.active_position = position;
+                SystemSourceSelector_GnssSelectionPublish(instance_id, position, 0U);
             }
         }
         else if (first_failure == SYSTEM_DEVICE_NOT_PRESENT)
@@ -1161,8 +1195,8 @@ SystemDeviceResult SystemGnss_Start(void)
     {
         uint8_t previous = s_gnss.active;
 
-        s_gnss.active = s_gnss.order[selected_position];
-        s_gnss.active_position = selected_position;
+        SystemSourceSelector_GnssSelectionPublish(
+            s_gnss.order[selected_position], selected_position, 0U);
         if (previous != s_gnss.active)
         {
             SystemSourceSelector_EventRecord(SYSTEM_DEVICE_CLASS_GNSS,
@@ -1283,13 +1317,17 @@ SystemDeviceResult SystemGnss_IoDetailGet(SystemGnssIoDetail *detail)
 SystemDeviceResult SystemGnss_LatestSampleGet(SystemGnssSample *sample)
 {
     SystemDeviceResult result;
+    PlatformCriticalState critical;
+    uint8_t source;
     if (sample == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-    if (s_gnss.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE)
-    { return SYSTEM_DEVICE_NOT_READY; }
-    result = ProjectGnssInstance_LatestSampleGet(s_gnss.active, sample);
+    critical = PlatformCritical_Enter();
+    result = SystemSourceSelector_GnssActiveInstanceGet(&source);
+    if (result == SYSTEM_DEVICE_OK)
+    { result = ProjectGnssInstance_LatestSampleGet(source, sample); }
     if ((result == SYSTEM_DEVICE_OK) && (s_gnss.active_after_us != 0U) &&
         (sample->receive_timestamp_us <= s_gnss.active_after_us))
-    { return SYSTEM_DEVICE_NOT_READY; }
+    { result = SYSTEM_DEVICE_NOT_READY; }
+    PlatformCritical_Exit(critical);
     return result;
 }
 

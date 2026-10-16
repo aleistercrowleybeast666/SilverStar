@@ -57,24 +57,28 @@ def executable(request,project,tmp_path_factory):
         'APP/Src/logger_bus.c','APP/Src/estimator_bus.c','Common/Src/common_spsc_queue.c',
         'Common/Src/silverstar_assert.c','System/Src/system_log_policy.c','System/Src/system_profile.c',
         'System/Src/system_navigation_profile.c','System/Src/system_estimator_profile.c',
-        'System/Src/system_navigation_health.c','System/Src/system_gnss_quality.c','System/Src/system_time.c']]
+        'System/Src/system_navigation_health.c','System/Src/system_gnss_quality.c','System/Src/system_time.c',
+        'System/Src/system_gnss_receipt.c']]
     sources += [KERNEL/'Src/navigation_eskf.c',KERNEL/'Src/navigation_eskf_horizon.c',
+        KERNEL/'Src/navigation_eskf_recovery.c',
         COMMON/'Src/geodesy_local.c',COMMON/'Src/navigation_quality.c',PROTOCOL/'Src/sslog_records.c',
         PROTOCOL/'Src/sslog_protocol.c']
     sources += [project/'Generated/Src'/p for p in ['project_metadata.c','project_log_decoder_profile.c','project_log_config.c']]
     compiler = shutil.which('gcc');assert compiler, 'Actual GCC is required'
     target = output/'eskf_horizon_backend.exe'
     native = os.environ.get('SILVERSTAR_HORIZON_NATIVE_CONFIGURATION') == '1'
+    backend_source = Path(os.environ.get('SILVERSTAR_HORIZON_BACKEND_SOURCE',
+        str(KERNEL/'Src/navigation_eskf_backend.c'))).resolve()
     overrides = [] if native else ['-DSYSTEM_FUSION_TIMING_MODE=2U','-DSYSTEM_FUSION_HORIZON_MS=30U']
     command = [compiler,'-std=c11',request.param,'-Wall','-Wextra','-Werror','-Wpedantic',
         '-Wconversion','-Wsign-conversion','-Wshadow','-Wstrict-prototypes','-Wmissing-prototypes',
         '-fno-fast-math','-ffp-contract=off','-ffunction-sections','-fdata-sections','-Wl,--gc-sections',
         *overrides,
-        '-DESKF_HORIZON_BACKEND_SOURCE="'+(KERNEL/'Src/navigation_eskf_backend.c').as_posix()+'"',
+        '-DESKF_HORIZON_BACKEND_SOURCE="'+backend_source.as_posix()+'"',
         *definitions,'-include',str(project/'Generated/Inc/project_flight_config.h'),
         *['-I'+str(p) for p in includes],*map(str,sources),'-lm','-o',str(target)]
     run = subprocess.run(command,capture_output=True,text=True,timeout=180)
-    source_files = [*sources,KERNEL/'Src/navigation_eskf_backend.c',*KERNEL.glob('Inc/*.h')]
+    source_files = [*sources,backend_source,*KERNEL.glob('Inc/*.h')]
     receipt = dict(scope=('native generated configuration; CPU stress inputs at 5ms, not nominal-rate/board proof'
         if native else 'staged unit configuration; actual backend/health/LoggerBus/wire; not a generated mode2 gate'),
         native_configuration=native,
@@ -87,9 +91,9 @@ def executable(request,project,tmp_path_factory):
     return target
 
 
-@pytest.mark.parametrize('scenario',range(12),ids=['normal','source_switch','no_source','calibration_change',
+@pytest.mark.parametrize('scenario',range(13),ids=['normal','source_switch','no_source','calibration_change',
     'imu_source_change','stored_corruption','invalid_latest_receipt','late','initial_body_fault',
-    'barometer_only','barometer_invalid_latest_receipt','low_satellite_prepared_variance'])
+    'barometer_only','barometer_invalid_latest_receipt','low_satellite_prepared_variance','owned_source_corruption'])
 def test_actual_backend_lifecycle_queue_and_wire(executable,scenario):
     wire = executable.parent/f'case{scenario}.frames'
     command = [str(executable),str(scenario),str(wire)]
@@ -99,3 +103,29 @@ def test_actual_backend_lifecycle_queue_and_wire(executable,scenario):
     assert run.returncode == 0,run.stdout+run.stderr
     assert wire.stat().st_size > 0
     assert re.search(r'eskf_horizon_backend_actual: \d+ checks, 0 failures',run.stdout)
+
+
+@pytest.mark.parametrize('mode', (0, 1, 2))
+def test_owned_receipt_corruption_without_preflight_origin(executable, mode):
+    """Staged mode unit configuration; unchanged real backend fault expectations."""
+    receipt = json.loads((executable.parent/'compile.json').read_text(encoding='utf8'))
+    command = [arg for arg in receipt['command'] if not arg.startswith(
+        ('-DSYSTEM_FUSION_TIMING_MODE=', '-DSYSTEM_FUSION_HORIZON_MS='))]
+    command[1:1] = [f'-DSYSTEM_FUSION_TIMING_MODE={mode}U', '-DSYSTEM_FUSION_HORIZON_MS=30U']
+    previous = str(CORE/'Tests/Host/test_eskf_horizon.c')
+    fixture = CORE/'Tests/Host/test_eskf_origin_receipt_fault.c'
+    command[command.index(previous)] = str(fixture)
+    command.insert(command.index('-lm'), str(KERNEL/'Src/navigation_eskf_replay.c'))
+    target = executable.parent/f'origin_fault_{mode}.exe'
+    command[command.index('-o')+1] = str(target)
+    build = subprocess.run(command, capture_output=True, text=True, timeout=180)
+    evidence = dict(scope='CPU actual backend, staged unit mode; no firmware admission',
+        command=command, compile_exit=build.returncode, stdout=build.stdout, stderr=build.stderr,
+        fixture_sha256=hashlib.sha256(fixture.read_bytes()).hexdigest(),
+        backend_source_sha256=receipt['source_sha256'])
+    if build.returncode == 0:
+        run = subprocess.run([str(target)], capture_output=True, text=True, timeout=30)
+        evidence.update(run_exit=run.returncode, run_stdout=run.stdout, run_stderr=run.stderr)
+    (executable.parent/f'origin_fault_{mode}.json').write_text(json.dumps(evidence, indent=2), encoding='utf8')
+    assert build.returncode == 0, build.stdout+build.stderr
+    assert evidence['run_exit'] == 0, evidence.get('run_stdout', '')+evidence.get('run_stderr', '')

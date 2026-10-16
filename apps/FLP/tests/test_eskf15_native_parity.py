@@ -331,6 +331,7 @@ def native(tmp_path):
         str(common / "Src/silverstar_assert.c"),
         str(core / "Src/navigation_eskf.c"),
         str(core / "Src/navigation_eskf_replay.c"),
+        str(core / "Src/navigation_eskf_recovery.c"),
         str(quality / "Src/navigation_quality.c"),
         "-o",
         str(dll),

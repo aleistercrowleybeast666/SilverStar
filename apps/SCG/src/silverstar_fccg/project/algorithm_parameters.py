@@ -59,6 +59,9 @@ def AlgorithmParameters_Resolve(model: ProjectModel, catalog: PluginCatalog) -> 
         if set(values) != {p.parameter_id for p in definitions}:
             raise ValueError(f"{owner.component_id}: missing or unknown algorithm parameter")
         resolved = {p.parameter_id: p.Value_Resolve(values[p.parameter_id]) for p in definitions}
+        if "gnss_reacquisition_contract" in owner.metadata:
+            from silverstar_fccg.project.gnss_reacquisition import GnssReacquisitionMetadata_Validate
+            GnssReacquisitionMetadata_Validate(owner, resolved)
         parameters = []
         for parameter in definitions:
             if parameter.shared_key:
@@ -99,6 +102,11 @@ def AlgorithmParametersHeader_Render(model: ProjectModel, catalog: PluginCatalog
             # Existing override convention is retained for explicit Host fixtures.
             rows.extend((f"#ifndef {parameter.generated_symbol}",
                          f"#define {parameter.generated_symbol} {literal}", "#endif"))
+        if "gnss_reacquisition_contract" in owner.metadata:
+            from silverstar_fccg.project.gnss_reacquisition import GnssReacquisitionMetadata_Validate
+            config = GnssReacquisitionMetadata_Validate(owner, resolved[owner.component_id])
+            rows.extend(("#ifndef SYSTEM_ESKF_GNSS_RECOVERY_CONFIGURATION_ID",
+                         f"#define SYSTEM_ESKF_GNSS_RECOVERY_CONFIGURATION_ID 0x{config.identity:08X}UL", "#endif"))
     return "\n".join((*rows, "", "#endif /* __PROJECT_ALGORITHM_PARAMETERS_H */", ""))
 
 
