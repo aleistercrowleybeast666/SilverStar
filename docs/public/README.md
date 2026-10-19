@@ -8,8 +8,8 @@ For an English introduction, start with the [English README](../../README.en.md)
 
 | 入口 | 适用内容 |
 |---|---|
-| [v0.1.2 三工具图解](V0_1_2_WALKTHROUGH.md) | 正式版离线流程、真实项目和日志截图 |
-| [无需硬件体验](examples/README.md) | 三工具入口、真实历史台架日志、精确匹配解码包及截图来源 |
+| [v0.1.2 三工具图解](V0_1_2_WALKTHROUGH.md) | 三页 SCG、GSHC 真实三维模型、FLP 平面/立体/曲线 |
+| [无需硬件体验](examples/README.md) | 000062 主要案例、000028 独立参考、精确配对下载与校验 |
 | [SCG](SCG/README.md) | 配置、插件、SourceGraph、原生所有权、工程、生成/构建 |
 | [GSHC](GSHC/README.md) | AIR/GSP、地面状态、校准、实时显示与日志/图表导出 |
 | [FLP](FLP/README.md) | exact decoder、parser、重算/比较、数值工件、API与导出 |

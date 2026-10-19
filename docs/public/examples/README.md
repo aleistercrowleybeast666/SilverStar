@@ -1,96 +1,81 @@
-# 无需硬件体验与示例日志
+# 真实日志与无需硬件体验
 
-[返回首页](../../../README.md) · [English](#english)
+[中文首页](../../../README.md) · [English](#english) · [三工具图解](../V0_1_2_WALKTHROUGH.md)
 
-下载并完整解压 [v0.1.2 Windows 便携包](https://github.com/aleistercrowleybeast666/SilverStar/releases/tag/v0.1.2)。SCG 可浏览配置和生成入口，GSHC 可在未连接时浏览界面；FLP 可用下面的真实台架记录体验日志分析。
+使用 [v0.1.2 Windows 便携包](https://github.com/aleistercrowleybeast666/SilverStar/releases/tag/v0.1.2)，无需连接飞控即可体验日志打开、完整性检查、轨迹和曲线。以 FINAL 的 **000062** 为主要案例，TEST_5 的 **000028** 为独立历史参考。
 
-## 下载一组精确配对输入
+## 下载精确配对的输入
 
-以下文件已经保存在公开的 **v0.1.2 源码标签**中，链接固定到该标签；不需要下载整个仓库。它们不在 Windows 便携包内。记录来自 2026-10-08 的静态台架，解码包标识固件版本为 **0.1.1**，不是 v0.1.2 固件采集或火箭飞行数据。
+每个 ZIP 仅包含一份未修改的原始日志和它的 `.ssdecoder`，无需下载整个项目或仓库。样例不在程序便携包内。
 
-| 文件 | 大小 | 下载 |
-|---|---:|---|
-| 记录 `000044` · `flight.sslog` | 885023 字节 | [原始日志](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/static_log_file_20261008/inputs/missions/000044/flight.sslog) |
-| 记录 `000045` · `flight.sslog` | 878123 字节 | [原始日志](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/static_log_file_20261008/inputs/missions/000045/flight.sslog) |
-| 两份记录共用 · `KF6_Static_20261008_f045d8c.ssdecoder` | 144321 字节 | [精确匹配解码包](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/static_log_file_20261008/inputs/KF6_Static_20261008_f045d8c.ssdecoder) |
+| 案例 | 下载 | 解压内容 | v0.1.2 打开结果 |
+|---|---|---|---|
+| **FINAL / 000062** · 主要案例 | [FINAL_000062.zip](recordings/FINAL_000062.zip) · 3835025 字节 | `000062/flight.sslog`、`SS_0_5_TEST_FINAL.ssdecoder` | 精确匹配；103668 条记录；约 135.672 秒 |
+| **TEST_5 / 000028** · 独立参考 | [TEST_5_000028.zip](recordings/TEST_5_000028.zip) · 9820725 字节 | `000028/flight.sslog`、`SS_0_5_TEST_5.ssdecoder` | 精确匹配；265573 条记录；约 347.784 秒 |
 
-浏览器直接显示解码包文本时，使用“链接另存为”保留 `.ssdecoder` 后缀。两份日志原名相同，请分别存入 `000044/` 和 `000045/` 目录；先下载其中一份和解码包即可。
+两份解码器不能交换。`000062` 的文件头与解码包均标记 0.1.2。`000028` 的原始文件头标记 **0.1.0**，解码包的固件/SCG 字段标记 **0.1.1**；FLP 项目信息显示解码包的 0.1.1。保留这些历史标记，不将该记录描述为 v0.1.2 固件采集。精确匹配确认日志与生成配置身份，不补足历史可执行文件的溯源证据。
 
-1. 启动 `FLP.exe`，使用打开日志入口选择 `flight.sslog`，再选择上述 `.ssdecoder`。
-2. 确认日志及 Descriptor 身份匹配，查看完整性诊断。两份输入的精确匹配模式均为 `exact_generation_profile`。
-3. 先选择 **Recorded**，查看概览、传感器通道与任务记录；需要比较时，再按 [FLP 指南](../FLP/README.md)进行复算。
-4. 导出到新的可写目录，保留原日志和解码包。静态台架记录没有可供演示的真实飞行轨迹，缺失的定位信息应保持不可用。
+## 在 FLP 中体验
 
-Recorded 是实际记录值；Recomputed/Offline/What-if 是有各自参数和保真度边界的分析结果。缺包、身份不匹配或缺少输入时保留错误诊断，不使用替代解码器或默认值伪装为原始记录。
+1. 完整解压程序包和其中一组样例。运行 `FLP.exe`，打开该组的 `flight.sslog`，再选择同一 ZIP 中的 `.ssdecoder`。
+2. 确认精确匹配（`exact_generation_profile`），先选择 **Recorded**。在“概览”检查身份、任务摘要和记录完整性。
+3. 进入“飞行”，将时间窗口选为“全程”。“水平轨迹”显示 E/N 路径和相对高度；“三维回放”显示姿态与 ENU 轨迹；“速度”等页显示随时间变化的曲线。
+4. 使用时间范围、缩放和回放滑块查看局部数据。需要分析比较时，再按 [FLP 指南](../FLP/README.md)运行离线复算或 What-if，并区分各自数据源。
+5. 将 CSV、图表或回放等导出到新目录，保留原始日志及解码包。
+
+两组都是历史台架、手持与抛体流程中的记录，不是火箭飞行验证。Recorded 是实际记录值；离线复算和 What-if 是独立结果。页面中的开伞、着陆标记来自该记录的任务逻辑，不代表完成真实火箭开伞试验。
 
 ### 文件校验
 
-可用 PowerShell `Get-FileHash -Algorithm SHA256 <文件路径>` 核对：
+使用 PowerShell `Get-FileHash -Algorithm SHA256 <文件路径>`，对照 [SHA256SUMS.txt](recordings/SHA256SUMS.txt)。清单包括两个 ZIP 及其解压文件；[来源清单](recordings/manifest.json)保留文件大小、完整哈希、版本字段、生成配置身份与正式版打开结果。
 
 ```text
-000044/flight.sslog
-c5f123ccc6b0390b869412f6e0a09d834999f8be621b876f43298bb5028a1fb2
+FINAL_000062.zip
+954105bff516d2a9c558511800295fff4bbb0b08233bf4f675d2c25a84d088c0
 
-000045/flight.sslog
-b9b6244f0103b02d98e3389c10661043fe7f22aa84f701bd456ea255e425308f
-
-KF6_Static_20261008_f045d8c.ssdecoder
-46b449244dcfde73baa5faaa795ac496d34f097bd095824959f53210067fafe2
+TEST_5_000028.zip
+78b2364f85853be048021586e771cb6a01147ccd214df7e67e2876c3adbe1927
 ```
 
-[记录 44 历史解析结果](https://github.com/aleistercrowleybeast666/SilverStar/blob/v0.1.2/docs/evidence/static_log_file_20261008/results/m44/parse_summary.json)和[记录 45 历史解析结果](https://github.com/aleistercrowleybeast666/SilverStar/blob/v0.1.2/docs/evidence/static_log_file_20261008/results/m45/parse_summary.json)保存了当时的匹配模式、Descriptor 和诊断。这里复用已提交输入，不复制或修改原始记录。
+## 截图与其他输入
 
-## 截图来源
+[图解](../V0_1_2_WALKTHROUGH.md)使用正式 v0.1.2 程序文件与上述两组 Recorded 数据。SCG 展示设备、导航和工程生成页；GSHC 展示真实三维模型与独立 TEST_5 JSONL 会话的离线导出，模型保持未连接时的默认姿态。
 
-首页现使用正式 **v0.1.2** 分发程序文件的真实 Qt 离屏截图，采集于 2026-10-19。所用程序文件已与正式 ZIP 核对；没有使用 0.1.3 开发界面，也没有重绘或补造数据。具体步骤见[三工具图解](../V0_1_2_WALKTHROUGH.md)。
-
-| 图片 | 实际输入与页面 | 截图 |
-|---|---|---|
-| SCG 导航配置 | 已有 FINAL 项目，只读打开与查看 | [图片](../assets/v0.1.2/scg_final_navigation.png) |
-| GSHC 后期处理 | v0.1.2 标签中已公开的历史 TEST_5 JSONL 会话；离线导出完成 | [图片](../assets/v0.1.2/gshc_offline_session_export.png) |
-| FLP 概览 | FINAL 的 `000062` 日志及精确解码包，选择 Recorded | [图片](../assets/v0.1.2/flp_000062_recorded_overview.png) |
-| FLP 曲线 | 同一 Recorded 数据源，任务开始后前 30 秒 ENU 速度 | [图片](../assets/v0.1.2/flp_000062_recorded_flight.png) |
-
-截图中的 `000062` 与上方可下载的台架记录 `000044/000045` 是不同案例，不能交换解码包。更多硬件和算法范围见[支持矩阵](../SUPPORT_MATRIX.md)；日志/解码包身份见[精确匹配契约](../FLP/Decoder_Profile_Package.md)。
+较小的历史静态台架样例仍固定在 v0.1.2 标签：[000044](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/static_log_file_20261008/inputs/missions/000044/flight.sslog)、[000045](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/static_log_file_20261008/inputs/missions/000045/flight.sslog)及[二者共享的精确解码包](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/static_log_file_20261008/inputs/KF6_Static_20261008_f045d8c.ssdecoder)。它们与上述两个运动案例属于不同输入，解码器不能混用。
 
 ## English
 
-[English home](../../../README.en.md)
+[English home](../../../README.en.md) · [Illustrated walkthrough](../V0_1_2_WALKTHROUGH.md#english)
 
-Extract the complete [v0.1.2 Windows package](https://github.com/aleistercrowleybeast666/SilverStar/releases/tag/v0.1.2). Browse SCG configuration and generation entry points, or explore GSHC while disconnected. For FLP, use the real bench recordings below.
+Use the [v0.1.2 Windows package](https://github.com/aleistercrowleybeast666/SilverStar/releases/tag/v0.1.2) to explore log opening, integrity checks, trajectories, and curves without connecting a flight controller. FINAL **000062** is the main example; TEST_5 **000028** is an independent historical reference.
 
-### Download an exact input pair
+### Download an exact pair
 
-These files are already public in the **v0.1.2 source tag**. The links are pinned to that tag, so you do not need the entire repository. They are not included in the Windows portable archive. The recordings come from a static bench session on 2026-10-08; the decoder identifies firmware **0.1.1**. They are neither v0.1.2 firmware recordings nor rocket flight data.
+Each ZIP contains only one unchanged original log and its `.ssdecoder`; no complete project or repository is needed. Samples are separate from the application package.
 
-| File | Size | Download |
-|---|---:|---|
-| Record `000044` · `flight.sslog` | 885023 bytes | [Original log](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/static_log_file_20261008/inputs/missions/000044/flight.sslog) |
-| Record `000045` · `flight.sslog` | 878123 bytes | [Original log](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/static_log_file_20261008/inputs/missions/000045/flight.sslog) |
-| Shared decoder · `KF6_Static_20261008_f045d8c.ssdecoder` | 144321 bytes | [Exact decoder](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/static_log_file_20261008/inputs/KF6_Static_20261008_f045d8c.ssdecoder) |
+| Case | Download | Extracted files | v0.1.2 opening result |
+|---|---|---|---|
+| **FINAL / 000062** · main example | [FINAL_000062.zip](recordings/FINAL_000062.zip) · 3835025 bytes | `000062/flight.sslog`, `SS_0_5_TEST_FINAL.ssdecoder` | Exact match; 103668 records; about 135.672 s |
+| **TEST_5 / 000028** · independent reference | [TEST_5_000028.zip](recordings/TEST_5_000028.zip) · 9820725 bytes | `000028/flight.sslog`, `SS_0_5_TEST_5.ssdecoder` | Exact match; 265573 records; about 347.784 s |
 
-If the browser displays decoder text, use “Save link as” and retain the `.ssdecoder` extension. Both logs have the same original filename; save them in separate `000044/` and `000045/` folders. One log and the shared decoder are enough to start.
+Do not exchange their decoders. Both `000062`'s header and decoder identify 0.1.2. The original `000028` header identifies **0.1.0**, while its decoder's firmware/SCG fields identify **0.1.1**; FLP's project information displays the decoder's 0.1.1. These historical labels are preserved; this record is not described as captured by v0.1.2 firmware. An exact match confirms log/configuration identity without establishing missing historical executable provenance.
 
-1. Launch `FLP.exe`, open `flight.sslog`, and select the decoder above.
-2. Check Descriptor identity and integrity diagnostics. Both inputs match as `exact_generation_profile`.
-3. Select **Recorded** first to inspect the overview, sensor channels, and mission records. Follow the [FLP guide](../FLP/README.md) when you want to recompute and compare results.
-4. Export into a new writable folder and preserve the inputs. These static bench records do not contain a real flight trajectory to demonstrate; unavailable position information should remain unavailable.
+### Try FLP
 
-Recorded means actual recorded values. Recomputed/Offline/What-if are separate analysis results with their own parameters and fidelity boundaries. Missing decoders, identity mismatches, or missing inputs retain their diagnostics; substitute decoders and defaults must not masquerade as original recorded data.
+1. Extract the complete application package and one sample archive. Run `FLP.exe`, open that sample's `flight.sslog`, then select the `.ssdecoder` from the same ZIP.
+2. Confirm `exact_generation_profile` and select **Recorded** first. Check identity, mission summary, and integrity in Overview.
+3. Open Flight and choose the Full time window. Horizontal trajectory shows the E/N path and relative height; 3D replay combines attitude and the ENU path; Velocity and other tabs show time-series curves.
+4. Use the time range, zoom, and replay slider to inspect intervals. Follow the [FLP guide](../FLP/README.md) for offline recomputation or What-if comparisons, keeping their analysis sources distinct.
+5. Export CSV, charts, or replay results into a new folder and preserve the original inputs.
 
-### Verify the files
+Both cases are historical bench, handheld, and thrown-object records, not rocket flight validation. Recorded means actual recorded values; recomputation and What-if produce separate results. Deployment and landing markers come from each recording's mission logic and do not establish a real rocket deployment test.
 
-Use PowerShell `Get-FileHash -Algorithm SHA256 <path>` and compare with the three hashes in the [checksum section](#文件校验). The [historical record 44 report](https://github.com/aleistercrowleybeast666/SilverStar/blob/v0.1.2/docs/evidence/static_log_file_20261008/results/m44/parse_summary.json) and [record 45 report](https://github.com/aleistercrowleybeast666/SilverStar/blob/v0.1.2/docs/evidence/static_log_file_20261008/results/m45/parse_summary.json) preserve their original matching mode, Descriptor, and diagnostics. These links reuse committed inputs without copying or changing them.
+### Checksums
 
-### Screenshot provenance
+Use PowerShell `Get-FileHash -Algorithm SHA256 <path>` and compare with [SHA256SUMS.txt](recordings/SHA256SUMS.txt), which covers both ZIPs and their contents. The [provenance manifest](recordings/manifest.json) preserves sizes, full hashes, version fields, generation identity, and official-version opening results. Archive hashes also appear in the [checksum section](#文件校验).
 
-The home pages now use real Qt screenshots captured offscreen on 2026-10-19 from the official **v0.1.2** program files, verified against the published ZIP. They do not use 0.1.3 development interfaces, redrawn UI, or fabricated data. See the [illustrated walkthrough](../V0_1_2_WALKTHROUGH.md#english).
+### Screenshots and other inputs
 
-| Image | Actual input and view | Capture |
-|---|---|---|
-| SCG navigation | Existing FINAL project, opened for inspection | [Image](../assets/v0.1.2/scg_final_navigation.png) |
-| GSHC post-processing | Historical TEST_5 JSONL already public in the v0.1.2 tag; offline export completed | [Image](../assets/v0.1.2/gshc_offline_session_export.png) |
-| FLP Overview | FINAL record `000062` and its exact decoder, with Recorded selected | [Image](../assets/v0.1.2/flp_000062_recorded_overview.png) |
-| FLP chart | The same Recorded source, ENU velocity during the first 30 seconds after mission start | [Image](../assets/v0.1.2/flp_000062_recorded_flight.png) |
+The [walkthrough](../V0_1_2_WALKTHROUGH.md#english) uses official v0.1.2 program files and both Recorded datasets above. SCG shows devices, navigation, and project generation. GSHC shows its real 3D model and offline export of a separate historical TEST_5 JSONL session; the model remains in its default disconnected pose.
 
-Record `000062` in the screenshots is a different case from downloadable bench records `000044/000045`; their decoders must not be exchanged. See the [support matrix](../SUPPORT_MATRIX.md) for hardware and algorithm boundaries, and the [exact matching contract](../FLP/Decoder_Profile_Package.md) for log/decoder identity.
+Smaller historical static bench inputs remain pinned to v0.1.2: [000044](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/static_log_file_20261008/inputs/missions/000044/flight.sslog), [000045](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/static_log_file_20261008/inputs/missions/000045/flight.sslog), and [their shared exact decoder](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/static_log_file_20261008/inputs/KF6_Static_20261008_f045d8c.ssdecoder). They are separate inputs from the two motion examples above; their decoders must not be mixed.

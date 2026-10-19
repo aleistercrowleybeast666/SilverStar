@@ -1,78 +1,95 @@
-# v0.1.2 三工具图解
+# v0.1.2 三工具图解 / Illustrated walkthrough
 
-[中文首页](../../README.md) · [English](#english) · [下载 v0.1.2](https://github.com/aleistercrowleybeast666/SilverStar/releases/tag/v0.1.2)
+[中文首页](../../README.md) · [English home](../../README.en.md) · [English](#english) · [下载日志与解码器](examples/README.md)
 
-## 1. 从配置到日志分析
+先完整解压 [v0.1.2 Windows 便携包](https://github.com/aleistercrowleybeast666/SilverStar/releases/tag/v0.1.2)。三个程序共享 `_internal`，请保留目录结构。以下使用正式版的真实界面、已有 FINAL 配置与真实 Recorded 数据，无需连接设备。
 
-SCG 负责配置设备、导航与硬件，生成 Flight/Ground 工程及匹配解码包；GSHC 负责地面遥测和会话日志；FLP 用原始飞控日志与精确解码包进行离线分析。首次体验可完整解压 Windows 便携包，分别打开三个程序，无需另装 Python。
+## 1. SCG：选择设备与配置导航
 
-本页使用正式 **v0.1.2** 分发中的程序文件，截图于 2026-10-19 通过真实 Qt 控件**离屏捕获**。SCG/FLP 使用已有 FINAL 项目和记录 `000062`；GSHC 使用独立的历史 TEST_5 会话。没有连接设备，也没有将不同来源的数据拼成同一次采集。
+打开 SCG，在“飞控设备”选择功能档位、传感器、接口与安装方向；在“导航配置”按项目能力选择数据源，配置校准、初始对准与算法参数。示例打开已有 `SS_0_5_TEST_FINAL` 项目。
 
-## 2. SCG：打开项目，查看配置
+![SCG：设备、接口与功能档位](assets/v0.1.2/scg_final_devices.png)
 
-1. 在 SCG 打开已有项目的 `SilverStar.ssproject`。图中为 `SS_0_5_TEST_FINAL`。
-2. 查看飞控设备、导航配置、遥测和两侧硬件资源。配置值来自实际项目，图中显示其导航源、校准流程和初始对准设置。
-3. 需要生成时，选择独立的可写工程目录，按[构建指南](SCG/BUILD.md)准备工具链。本页只打开和浏览既有配置，没有重新生成或烧录该项目。
+![SCG：导航源、校准和初始对准](assets/v0.1.2/scg_final_navigation.png)
 
-![SCG v0.1.2 真实 Qt 离屏截图：已打开 FINAL 项目的导航配置](assets/v0.1.2/scg_final_navigation.png)
+## 2. SCG：核对硬件与生成入口
 
-## 3. GSHC：离线处理会话日志
+“飞控硬件”页显示板卡、MCU、CubeMX 来源和外设资源，以及“生成 / 更新飞控工程”入口。生成时选择自己的可写项目目录；编译与烧录需要另行配置工具链。本图只查看已有 FINAL 配置，没有重新生成或烧录。
 
-GSHC 的后期处理读取 **JSONL 会话日志**，与 FLP 使用的 `.sslog` 飞控日志分工不同。
+![SCG：硬件资源与代码生成入口](assets/v0.1.2/scg_final_generation.png)
 
-1. 可先下载已保存在 v0.1.2 源码标签中的[历史 TEST_5 会话 JSONL](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/test5_gshc_dap_20261008/test5/userdata/logs/fc_session_20261008_151914_726460_01.jsonl)。它包含实际保存的遥测记录，无需重新采集。
-2. 打开 GSHC 的“后期处理”，选择“选择日志并导出”，选定该文件。
-3. 本例选择摘要、处理后数据和会话信息，完成后查看输出目录。输出位置可自行选择，图中是独立的临时示例目录。
+## 3. GSHC：三维模型与历史会话导出
 
-![GSHC v0.1.2 真实 Qt 离屏截图：未连接地面站，历史 JSONL 处理完成](assets/v0.1.2/gshc_offline_session_export.png)
+GSHC 的预飞行页用于查看准备状态与任务操作，飞行页用于监测遥测。设备是否 READY 以实际回报为准，命令 ACK 不代替准备状态。
 
-此处没有使用“生成模拟日志”。在线遥测需要匹配的地面站；设备准备情况以实际状态为准，ACK 不等于 READY。
+无需硬件时，可在“后期处理”选择已有 JSONL，会话数据可导出为摘要、数据、图表和姿态动画。图中读取 v0.1.2 标签里已公开的历史 TEST_5 会话，完成摘要、处理后数据与会话清单导出。左侧模型是正式版真实 OpenGL 渲染，保持未连接时的默认姿态；没有把历史日志注入实时链路。
 
-## 4. FLP：精确打开，阅读 Recorded
+![GSHC：真实三维模型与已完成的离线导出](assets/v0.1.2/gshc_3d_offline_export.png)
 
-1. 打开原始 `.sslog` / `.BIN`，选择该次生成对应的 `.ssdecoder`。截图使用 FINAL 的 `000062/flight.sslog` 与 `SS_0_5_TEST_FINAL.ssdecoder`，经正常打开入口确认精确匹配。
-2. 先选择 **Recorded**，检查概览中的身份、完整性和任务摘要。本例正常读取 103668 条记录。
-3. 切换到“飞行”，按真实时间轴查看速度、位置和其他通道；用时间范围选择器定位关心的片段。第二张图显示任务开始后前 30 秒的 ENU 速度。
+## 4. FLP：主要案例 000062
 
-![FLP v0.1.2 真实 Qt 离屏截图：记录 000062 精确匹配后的 Recorded 概览](assets/v0.1.2/flp_000062_recorded_overview.png)
+从[样例页](examples/README.md)下载 `FINAL_000062.zip`，打开 `000062/flight.sslog` 并选择同包的 `SS_0_5_TEST_FINAL.ssdecoder`。正常打开入口确认精确匹配；概览显示 103668 条记录。先选择 **Recorded · KF6**，再进入“飞行”，将时间窗口设为“全程”（约 135.672 秒）。
 
-![FLP v0.1.2 真实 Qt 离屏截图：记录 000062 的 Recorded 速度曲线，前 30 秒](assets/v0.1.2/flp_000062_recorded_flight.png)
+**水平轨迹**显示 E/N 平面路径，颜色表示相对高度，符号标注任务事件。
 
-Recorded 是原日志记录值，本页没有运行离线复算。`000028` 是 TEST_5 的独立历史参考，应使用其自身解码包，不能与 FINAL 解码包互换。没有上述原始案例文件时，可用[公开台架样例 000044/000045](examples/README.md)体验同样的精确打开流程。源日志和解码包保持只读，导出写入新目录。
+![FLP：000062 Recorded 水平轨迹](assets/v0.1.2/flp_000062_recorded_plane.png)
 
-## 截图与步骤依据
+**三维回放**将姿态与 ENU 轨迹并列显示。拖动播放滑块，可查看记录时刻的姿态；图中位于显示范围末端，任务时间约 132.664 秒。应用按自身任务/着陆显示规则裁定轨迹终点。
 
-- 程序版本为 v0.1.2，所用 323 个 Python 程序文件与正式便携 ZIP 逐字节核对一致；没有从 0.1.3 开发界面取图。
-- 三款工具均独立离线运行，截图为实际 Qt 控件的离屏输出，采用无损 PNG 压缩；未重绘界面或补造数据。界面文字为简体中文。
-- SCG 成功载入 FINAL；GSHC 正常处理公开历史会话并完成所选三类导出；FLP 经 `LogOpenCoordinator` 得到 `exact_generation_profile`，选择 `recorded:kf6`。输入文件哈希在处理前后相同。
-- 图中的台架、手持与抛体记录保留其历史范围，不是新增火箭飞行验证。实时连接、控制、烧录和生成固件不在本页已执行步骤内。
+![FLP：000062 Recorded 三维姿态与 ENU 轨迹](assets/v0.1.2/flp_000062_recorded_3d.png)
+
+**速度曲线**显示 E/N/U 三轴分量。图中使用全程窗口，便于与轨迹和事件时间对应；缩放或切换时间窗口可查看局部变化。
+
+![FLP：000062 Recorded 全程速度](assets/v0.1.2/flp_000062_recorded_velocity.png)
+
+## 5. FLP：独立历史参考 000028
+
+另行打开 `TEST_5_000028.zip` 中的日志与 `SS_0_5_TEST_5.ssdecoder`，得到 265573 条记录，任务约 347.784 秒。不要使用 FINAL 解码器。原始头标记 0.1.0，而解码包的固件/SCG 字段标记 0.1.1，界面显示后者；[来源清单](examples/recordings/manifest.json)分别保留这些字段。
+
+![FLP：000028 的 Recorded 身份与完整性概览](assets/v0.1.2/flp_000028_recorded_overview.png)
+
+![FLP：000028 Recorded 全程 ENU 速度](assets/v0.1.2/flp_000028_recorded_velocity.png)
+
+两例图中均为原始 Recorded 值。离线复算、What-if 和主辅比较是独立分析入口；可按需导出 CSV、图表、三维轨迹 PNG、飞行回放 GIF 及概览/诊断/事件，详见 [FLP 指南](FLP/README.md)。
+
+## 截图与输入来源
+
+截图采集于 2026-10-19，所用 323 个 Python 程序文件与正式 v0.1.2 ZIP 逐字节一致。Windows Qt 后端在独立、不在桌面显示的窗口中调用正式版 OpenGL 渲染器，九张图均为实际控件截图、仅作无损 PNG 压缩，没有重绘或伪造数据。此前 Qt offscreen 后端不支持 OpenGL，故本页改用可创建有效上下文的 Windows 后端。
+
+SCG 只读取 FINAL 配置；GSHC 保持未连接、仅离线导出；FLP 通过正常日志/解码器入口精确打开两组原始输入，没有执行复算。原始文件哈希前后一致。历史台架、手持和抛体记录不构成火箭飞行验证；图中的任务事件不等于真实火箭开伞试验。
 
 ## English
 
-[English home](../../README.en.md)
+Extract the complete [v0.1.2 Windows package](https://github.com/aleistercrowleybeast666/SilverStar/releases/tag/v0.1.2), keeping its shared `_internal` directory. These actual release interfaces, existing FINAL configuration, and real Recorded inputs can be explored without a connected device. The screenshots above use Simplified Chinese.
 
-### 1. Configuration to log analysis
+### 1. SCG: devices and navigation
 
-SCG configures devices, navigation, and hardware, and generates Flight/Ground projects and matching decoders. GSHC handles ground telemetry and session logs. FLP analyzes original flight-controller logs with their exact decoders. Extract the complete v0.1.2 Windows package to try the three applications without installing Python separately.
+In Devices, choose the configuration tier, sensors, interfaces, and mounting directions. In Navigation, select sources according to project capabilities and configure calibration, initial alignment, and algorithm parameters. The first two images show the existing `SS_0_5_TEST_FINAL` project.
 
-These screenshots use program files from the official **v0.1.2** distribution, captured from real Qt widgets **offscreen** on 2026-10-19. SCG/FLP use the existing FINAL project and record `000062`; GSHC uses an independent historical TEST_5 session. No devices were connected, and these separate inputs are not presented as one acquisition session. The screenshots above use Simplified Chinese.
+### 2. SCG: hardware and generation
 
-### 2. SCG: open and inspect a project
+The third image shows the board, MCU, CubeMX provenance, peripheral resources, and Generate/Update Flight project entry point. Select your own writable project folder when generating; compilation and flashing need separately configured tools. The capture only inspects FINAL and performs neither generation nor flashing.
 
-Open `SilverStar.ssproject`; the example is `SS_0_5_TEST_FINAL`. Inspect devices, navigation, telemetry, and hardware resources. The screenshot shows the project's actual navigation sources, calibration workflow, and initial alignment settings. If you generate a project yourself, choose a separate writable output directory and follow the [build guide](SCG/BUILD.md). This walkthrough opens the existing configuration without regenerating or flashing it.
+### 3. GSHC: 3D model and historical session export
 
-### 3. GSHC: process an existing session offline
+Preflight displays readiness and mission operations; Flight monitors telemetry. READY follows actual device reports, and a command ACK does not replace readiness.
 
-GSHC post-processing reads **JSONL session logs**; FLP reads `.sslog` flight-controller logs. Download the [historical TEST_5 JSONL](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/test5_gshc_dap_20261008/test5/userdata/logs/fc_session_20261008_151914_726460_01.jsonl), already public in the v0.1.2 source tag. In Post-processing, select the log and export. This example exports the summary, processed data, and session information. Choose any writable output location; the screenshot shows an isolated temporary example folder.
+For hardware-free use, select an existing JSONL file in Post-processing and export summaries, data, charts, or attitude animations. The image shows successful summary, processed-data, and session-manifest export of a historical TEST_5 session already public in the v0.1.2 tag. The released OpenGL renderer draws the model on the left in its default disconnected pose. Historical log records were not injected into the live link.
 
-The existing log was processed successfully without generating simulated data. Live telemetry requires a matching ground station; readiness follows actual device state, and an ACK does not mean READY.
+### 4. FLP: main example 000062
 
-### 4. FLP: exact opening and Recorded data
+Download `FINAL_000062.zip` from the [sample page](examples/README.md#english), open `000062/flight.sslog`, and select the included `SS_0_5_TEST_FINAL.ssdecoder`. Normal opening confirms an exact match and 103668 records. Select **Recorded · KF6**, open Flight, and choose Full (about 135.672 seconds).
 
-Open an original `.sslog` / `.BIN` and select its exact `.ssdecoder`. The example pairs FINAL's `000062/flight.sslog` with `SS_0_5_TEST_FINAL.ssdecoder` through the normal opening path. Select **Recorded** first, check identity and integrity in Overview, then inspect channels on the Flight page using the real time axis. The example opens 103668 records; the chart above shows ENU velocity during the first 30 seconds after mission start.
+Horizontal trajectory shows the E/N path, relative height as color, and mission-event markers. 3D replay places attitude alongside the ENU path; drag the slider to inspect recorded poses. The image is at the displayed range's end, about 132.664 mission seconds, following the application's mission/landing display rules. The velocity chart shows E/N/U components across the full window; zoom or select a shorter range for local detail.
 
-Recorded means values actually recorded; this walkthrough does not run recomputation. Historical record `000028` belongs to TEST_5 and requires its own decoder, which must not be exchanged with FINAL's. Without those original case files, use the [public bench pairs 000044/000045](examples/README.md#english) to try the same exact-opening workflow. Preserve the inputs and export into a new folder.
+### 5. FLP: independent reference 000028
 
-### Capture and verification scope
+Open the separate log and `SS_0_5_TEST_5.ssdecoder` in `TEST_5_000028.zip`: 265573 records, about 347.784 seconds. Do not use FINAL's decoder. The original header identifies 0.1.0; the decoder's firmware/SCG fields identify 0.1.1, which the UI displays. The [provenance manifest](examples/recordings/manifest.json) preserves them separately. Its Overview and full-mission velocity images appear above.
 
-The 323 Python program files used match the official v0.1.2 ZIP byte for byte. All three applications ran independently offline; the images are losslessly compressed captures of their actual Qt widgets, with no redrawn UI or fabricated data. SCG loaded FINAL, GSHC completed its three selected export types, and FLP opened `000062` as `exact_generation_profile` with `recorded:kf6` selected. Input hashes were unchanged. These historical bench, handheld, and thrown-object recordings are not new rocket flight validation; live connections, control, flashing, and firmware generation were not performed.
+Both cases show original Recorded values. Offline recomputation, What-if, and primary/secondary comparison are separate analysis workflows. Export CSV, charts, 3D-trajectory PNGs, flight-replay GIFs, and overview/diagnostic/event information as needed; see the [FLP guide](FLP/README.md).
+
+### Capture and input provenance
+
+The screenshots were captured on 2026-10-19 from 323 Python program files that match the official v0.1.2 ZIP byte for byte. Windows Qt used the released OpenGL renderer in independent windows configured not to appear on the desktop. All nine images are actual widget captures, compressed losslessly without redrawing or fabricated data. The earlier Qt offscreen backend lacked OpenGL support; the current Windows backend creates valid contexts.
+
+SCG only reads FINAL; GSHC remains disconnected and exports offline; FLP opens both exact original pairs through its normal entry point without recomputation. Input hashes are unchanged. Historical bench, handheld, and thrown-object recordings are not rocket flight validation, and recorded mission markers do not establish real rocket deployment tests.

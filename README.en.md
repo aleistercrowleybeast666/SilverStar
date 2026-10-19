@@ -12,7 +12,7 @@ The portable package runs on **64-bit Windows 10/11** without a separate Python 
 
 1. **Explore configuration:** open SCG to browse devices, navigation, telemetry, and hardware settings. Generate projects into a writable folder outside the package. Building firmware also requires Arm GNU, Make, and the appropriate hardware resources.
 2. **Explore the ground station:** open GSHC while disconnected to browse the interface. Live data requires a matching ground station and communication link.
-3. **Open real recorded data:** download static bench record `000044` and its `.ssdecoder` from the [sample page](docs/public/examples/README.md#english). Open the log in FLP, select that decoder, and choose **Recorded** to inspect the original data, mission summary, and charts. Record `000045` provides a second example. No connected hardware is needed.
+3. **Open real recorded data:** download main example `000062` and its exact `.ssdecoder` from the [sample page](docs/public/examples/README.md#english). Open the log in FLP, select that decoder, and choose **Recorded** to inspect the original data, mission summary, and charts. Historical record `000028` provides an independent reference. No connected hardware is needed.
 
 GSHC defaults to `D:/SilverStar_GSHC_Data`. If that drive is unavailable, or you prefer another location, open PowerShell in the portable package folder:
 
@@ -36,35 +36,57 @@ File: `SilverStar_0_1_2_Windows_Portable.zip`, **220688183 bytes**. Its SHA-256 
 
 | Tool | What it does | Guide |
 |---|---|---|
-| **SCG** · System Configuration & Generation | Configure sensors, navigation, telemetry, and missions; check pins and peripheral resources; generate STM32 Flight/Ground projects and matching decoder packages | [SCG](docs/public/SCG/README.md) |
-| **GSHC** · Ground Station Host Computer | Receive AIR M0 telemetry; display readiness, attitude, trajectories, and mission events; record sessions and export charts and tables | [GSHC](docs/public/GSHC/README.md) |
-| **FLP** · Flight Log Processor | Open exact log/decoder pairs, inspect record integrity, trajectories, and filter data, and recompute, compare, and export analysis results | [FLP](docs/public/FLP/README.md) |
-
-SCG offers Full, Standard, Lightweight, and Minimal configuration tiers. Navigation components include Pure INS, SF6, KF6, and ESKF15. Devices and algorithms use declarative plugins. FCCG is SCG's former name; the `silverstar_fccg` package and older entry points remain compatible.
-
-These are **real Qt screenshots captured offscreen using the official v0.1.2 program files**, showing actual project and log opening results. See the [illustrated walkthrough](docs/public/V0_1_2_WALKTHROUGH.md#english) for steps and capture provenance.
+| **SCG** · System Configuration & Generation | Select sensors, navigation algorithms, telemetry links, and mission parameters; check pins and peripherals; generate STM32 Flight/Ground projects and matching decoders | [SCG](docs/public/SCG/README.md) |
+| **GSHC** · Ground Station Host Computer | Receive AIR M0 telemetry, display readiness, 3D attitude, trajectories, and mission events; record sessions and export data, charts, and attitude animations | [GSHC](docs/public/GSHC/README.md) |
+| **FLP** · Flight Log Processor | Open exact log/decoder pairs, check integrity, inspect trajectories, curves, and filter internals; recompute, compare, and export analysis results | [FLP](docs/public/FLP/README.md) |
 
 ### SCG: configuration to generated projects
 
-SCG opens FINAL and displays its actual navigation sources, calibration, and initial alignment settings. This walkthrough does not regenerate or flash the project.
+SCG offers Full, Standard, Lightweight, and Minimal configuration tiers. Configure devices and interfaces, mounting directions, calibration/initial alignment, navigation parameters, and telemetry tasks. Navigation components include Pure INS, SF6, KF6, and ESKF15. Devices and algorithms use declarative plugins. FCCG is SCG's former name; the `silverstar_fccg` package and older entry points remain compatible.
 
-![Real SCG v0.1.2 Qt offscreen capture: FINAL navigation configuration](docs/public/assets/v0.1.2/scg_final_navigation.png)
+**Devices and configuration tiers:** FINAL's actual configuration includes JY901, NEO-M9N, and their interface options.
 
-### GSHC: ground telemetry and status
+![SCG v0.1.2: devices, interfaces, and configuration tier](docs/public/assets/v0.1.2/scg_final_devices.png)
 
-Post-processing reads an existing JSONL session and completes export while the live connection remains disconnected. Readiness follows actual device reports: an ACK acknowledges a command and does not mean READY.
+**Navigation configuration:** select sources according to project capabilities and configure calibration, initial alignment, and fusion parameters.
 
-![Real GSHC v0.1.2 Qt offscreen capture: historical session processing completed](docs/public/assets/v0.1.2/gshc_offline_session_export.png)
+![SCG v0.1.2: navigation sources, calibration, and initial alignment](docs/public/assets/v0.1.2/scg_final_navigation.png)
 
-### FLP: recorded logs and offline analysis
+**Project generation:** identify the board and MCU, check CubeMX hardware resources, then generate/update the Flight project and matching decoder. The image shows the entry point and hardware information; no generation or flashing was performed.
 
-FLP opens FINAL record `000062` with its exact decoder and displays the **Recorded** summary and integrity information. The [walkthrough](docs/public/V0_1_2_WALKTHROUGH.md#english) also shows the actual velocity chart.
+![SCG v0.1.2: hardware resources and Generate/Update Flight project](docs/public/assets/v0.1.2/scg_final_generation.png)
 
-![Real FLP v0.1.2 Qt offscreen capture: Recorded overview for record 000062](docs/public/assets/v0.1.2/flp_000062_recorded_overview.png)
+### GSHC: telemetry, 3D attitude, and session export
+
+GSHC brings preflight preparation, flight monitoring, and post-processing into one interface: inspect readiness and mission events, view 3D attitude and navigation data, record JSONL sessions, and export summaries, data, charts, and attitude animations.
+
+The released application's real OpenGL renderer draws the 3D model below; the right panel shows completed offline export of a historical TEST_5 session. The application is disconnected and the model retains its default pose. The log has not been replayed as live telemetry.
+
+![GSHC v0.1.2: real 3D model and historical session export](docs/public/assets/v0.1.2/gshc_3d_offline_export.png)
+
+### FLP: trajectories, curves, and offline analysis
+
+FLP opens original logs with their exact `.ssdecoder` and displays **Recorded** integrity, mission events, position/velocity/acceleration/angular-rate/attitude channels, and filter internals. Switch between full-mission and local time windows; view attitude and the ENU path together in 3D replay. Offline recomputation, What-if, and primary/secondary comparisons use their own analysis sources.
+
+Exports can include an overview, diagnostics, events, CSV, chart/3D-trajectory PNGs, and flight-replay GIFs for further analysis and sharing. The images below all use original **Recorded · KF6**, without replacing recorded values with recomputation.
+
+**Horizontal trajectory · main example `000062`:** color indicates relative height; markers identify the start, deployment event, and end.
+
+![FLP v0.1.2: 000062 Recorded horizontal trajectory](docs/public/assets/v0.1.2/flp_000062_recorded_plane.png)
+
+**3D attitude and trajectory · `000062`:** inspect attitude, the ENU path, and event positions within the mission range.
+
+![FLP v0.1.2: 000062 Recorded 3D attitude and trajectory](docs/public/assets/v0.1.2/flp_000062_recorded_3d.png)
+
+**Velocity curves · independent reference `000028`:** E/N/U components across a mission of about 347.784 seconds. This case uses the TEST_5 decoder and is opened separately from FINAL.
+
+![FLP v0.1.2: 000028 Recorded full-mission ENU velocity](docs/public/assets/v0.1.2/flp_000028_recorded_velocity.png)
+
+The [illustrated walkthrough](docs/public/V0_1_2_WALKTHROUGH.md#english) includes operating steps, `000062`'s full-mission velocity chart, and the provenance of both recordings. The screenshots use official **v0.1.2** program files. These historical bench, handheld, and thrown-object records demonstrate the tools' workflow; they are not rocket flight validation.
 
 ## Samples and documentation
 
-The [hardware-free tour and sample downloads](docs/public/examples/README.md#english) link to two committed historical bench logs and their exact decoder, pinned to the v0.1.2 source tag. Download them separately; they are not included in the Windows portable archive. They were recorded with older firmware and are not v0.1.2 flight tests.
+The [hardware-free tour and sample downloads](docs/public/examples/README.md#english) provide FINAL's `000062` main example and TEST_5's `000028` independent reference. Each compact archive contains only the original log and its decoder, with checksums and version provenance. Download samples separately; they are not included in the Windows portable archive.
 
 FLP requires an original `.BIN` / `.sslog` and a `.ssdecoder` matching its Descriptor identity. Missing or mismatched packages produce an error. Recorded means values actually recorded; recomputation and What-if are separate analysis results. Preserve the original log and decoder, and export into a new directory.
 
@@ -83,7 +105,7 @@ Use the [v0.1.2 Release](https://github.com/aleistercrowleybeast666/SilverStar/r
 
 The configurations tested for v0.1.2 include an STM32F407 flight controller and an STM32F103 serial ground station, with bench, handheld, and thrown-object recordings. These do not establish rocket flight validation. Native USB CDC paths for F103/C071 remain experimental, with restricted normal generation and no completed verification on the corresponding USB hardware. Magnetometer workflows, IEKF, maintenance protocols, and other 0.1.3 work depend on their individual documentation and acceptance status. Android remains a development application with real USB/control gates; DeviceService is a mock-only prototype. Neither is included in the v0.1.2 desktop package.
 
-The [version and evidence notes](docs/public/shared/VERSIONS_AND_EVIDENCE.md) and [software verification guide](docs/public/SOFTWARE_VERIFICATION.md) describe the scope of individual checks. Software checks do not replace hardware verification. The project's Power of Ten checker is an F Prime-inspired adaptation; manual critical-contract review remains NOT PROVEN.
+See the [version and evidence notes](docs/public/shared/VERSIONS_AND_EVIDENCE.md) and [software verification guide](docs/public/SOFTWARE_VERIFICATION.md) for the scope of individual checks.
 
 ### Run from source
 
