@@ -42,25 +42,25 @@ $env:SILVERSTAR_GSHC_DATA_ROOT = Join-Path $env:LOCALAPPDATA 'SilverStar_GSHC_Da
 
 SCG 提供完整、标准、轻量和最简四种配置档位，导航组件包括 Pure INS、SF6、KF6 和 ESKF15。设备与算法采用声明式插件组织。FCCG 是 SCG 的历史名称，`silverstar_fccg` 包名和旧入口继续兼容。
 
-下面复用仓库中保存的**真实历史界面截图**：画面来自 v0.1.1 阶段，已收录于 v0.1.2 源码标签，未作为 v0.1.2 或 0.1.3 的新截图。各图日期、数据性质与来源见[素材说明](docs/public/examples/README.md#截图来源)。
+下面使用**正式 v0.1.2 程序文件的真实 Qt 离屏截图**，展示已有项目与日志的实际打开结果。完整步骤与截图依据见[三工具图解](docs/public/V0_1_2_WALKTHROUGH.md)。
 
 ### SCG：从配置到工程
 
-飞控硬件页展示板卡、CubeMX 导入与资源检查入口。截图日期：2026-10-01，示例配置工程。
+在 SCG 打开 FINAL 项目，查看实际的导航源、校准和初始对准配置；本次没有重新生成或烧录工程。
 
-![SCG v0.1.1 历史截图：飞控硬件配置与工程生成页面](docs/GSHC/gui_layout_20261001_v1/scg_native/zh_CN_flight_hardware.png)
+![SCG v0.1.2 真实 Qt 离屏截图：FINAL 项目的导航配置](docs/public/assets/v0.1.2/scg_final_navigation.png)
 
 ### GSHC：地面遥测与状态
 
-飞行页集中展示姿态、导航数据、任务状态与曲线。设备准备状态以实际回报为准，ACK 仅表示命令应答，不等于 READY。截图日期：2026-10-01，**未连接设备，数值由界面测试构造**。
+在“后期处理”中读取已有 JSONL 会话并完成导出，实时连接保持未连接。设备准备状态以实际回报为准，ACK 仅表示命令应答，不等于 READY。
 
-![GSHC v0.1.1 历史截图：使用模拟数值的离线飞行页面](docs/GSHC/gui_layout_20261001_v1/delivered_zh_CN_1536x816_scale1_flight.png)
+![GSHC v0.1.2 真实 Qt 离屏截图：历史会话的离线处理已完成](docs/public/assets/v0.1.2/gshc_offline_session_export.png)
 
 ### FLP：日志阅读与离线分析
 
-记录 `000044` 的任务摘要与完整性信息。截图日期：2026-10-08，**真实静态台架日志，画面选择的是离线复算源**；重新打开时可先选择 Recorded 查看原记录。
+精确打开 FINAL 的 `000062` 日志及匹配解码包，查看 **Recorded** 任务摘要与完整性信息；[图解](docs/public/V0_1_2_WALKTHROUGH.md)还展示了真实速度曲线。
 
-![FLP v0.1.1 历史截图：静态台架记录 000044 的离线复算概览](docs/evidence/static_log_file_20261008/results/p44/overview.png)
+![FLP v0.1.2 真实 Qt 离屏截图：记录 000062 的 Recorded 概览](docs/public/assets/v0.1.2/flp_000062_recorded_overview.png)
 
 ## 示例与文档
 

@@ -42,25 +42,25 @@ File: `SilverStar_0_1_2_Windows_Portable.zip`, **220688183 bytes**. Its SHA-256 
 
 SCG offers Full, Standard, Lightweight, and Minimal configuration tiers. Navigation components include Pure INS, SF6, KF6, and ESKF15. Devices and algorithms use declarative plugins. FCCG is SCG's former name; the `silverstar_fccg` package and older entry points remain compatible.
 
-These are **real historical application screenshots** from the v0.1.1 period, preserved in the v0.1.2 source tag. They are not fresh captures of v0.1.2 or 0.1.3. Dates, data provenance, and source links are listed on the [sample page](docs/public/examples/README.md#screenshot-provenance).
+These are **real Qt screenshots captured offscreen using the official v0.1.2 program files**, showing actual project and log opening results. See the [illustrated walkthrough](docs/public/V0_1_2_WALKTHROUGH.md#english) for steps and capture provenance.
 
 ### SCG: configuration to generated projects
 
-The Flight Hardware page exposes board selection, CubeMX import, and resource checks. Captured on 2026-10-01 using an example configuration project.
+SCG opens FINAL and displays its actual navigation sources, calibration, and initial alignment settings. This walkthrough does not regenerate or flash the project.
 
-![Historical SCG v0.1.1 screenshot: Flight Hardware configuration and project generation](docs/GSHC/gui_layout_20261001_v1/scg_native/zh_CN_flight_hardware.png)
+![Real SCG v0.1.2 Qt offscreen capture: FINAL navigation configuration](docs/public/assets/v0.1.2/scg_final_navigation.png)
 
 ### GSHC: ground telemetry and status
 
-The Flight page groups attitude, navigation values, mission status, and plots. Readiness follows actual device reports: an ACK acknowledges a command and does not mean READY. Captured on 2026-10-01, **disconnected, with values constructed by the UI test**.
+Post-processing reads an existing JSONL session and completes export while the live connection remains disconnected. Readiness follows actual device reports: an ACK acknowledges a command and does not mean READY.
 
-![Historical GSHC v0.1.1 screenshot: disconnected Flight page with simulated values](docs/GSHC/gui_layout_20261001_v1/delivered_zh_CN_1536x816_scale1_flight.png)
+![Real GSHC v0.1.2 Qt offscreen capture: historical session processing completed](docs/public/assets/v0.1.2/gshc_offline_session_export.png)
 
 ### FLP: recorded logs and offline analysis
 
-The summary and integrity view for record `000044`. Captured on 2026-10-08 using a **real static bench log, with an offline recomputed source selected**. When opening the log yourself, choose Recorded first to inspect the original data.
+FLP opens FINAL record `000062` with its exact decoder and displays the **Recorded** summary and integrity information. The [walkthrough](docs/public/V0_1_2_WALKTHROUGH.md#english) also shows the actual velocity chart.
 
-![Historical FLP v0.1.1 screenshot: offline recomputed overview for static bench record 000044](docs/evidence/static_log_file_20261008/results/p44/overview.png)
+![Real FLP v0.1.2 Qt offscreen capture: Recorded overview for record 000062](docs/public/assets/v0.1.2/flp_000062_recorded_overview.png)
 
 ## Samples and documentation
 

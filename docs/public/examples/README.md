@@ -42,15 +42,16 @@ KF6_Static_20261008_f045d8c.ssdecoder
 
 ## 截图来源
 
-首页复用下列历史 PNG，字节与 v0.1.2 源码标签一致。图中版本号均为 v0.1.1，不能当作发布包当前外观或新功能验收。
+首页现使用正式 **v0.1.2** 分发程序文件的真实 Qt 离屏截图，采集于 2026-10-19。所用程序文件已与正式 ZIP 核对；没有使用 0.1.3 开发界面，也没有重绘或补造数据。具体步骤见[三工具图解](../V0_1_2_WALKTHROUGH.md)。
 
-| 图片 | 日期与性质 | 固定来源 |
+| 图片 | 实际输入与页面 | 截图 |
 |---|---|---|
-| SCG 飞控硬件页 | 2026-10-01；示例配置工程界面 | [原图](https://github.com/aleistercrowleybeast666/SilverStar/blob/v0.1.2/docs/GSHC/gui_layout_20261001_v1/scg_native/zh_CN_flight_hardware.png) |
-| GSHC 飞行页 | 2026-10-01；未连接设备；数值由界面测试构造 | [原图](https://github.com/aleistercrowleybeast666/SilverStar/blob/v0.1.2/docs/GSHC/gui_layout_20261001_v1/delivered_zh_CN_1536x816_scale1_flight.png) · [测试脚本](https://github.com/aleistercrowleybeast666/SilverStar/blob/v0.1.2/docs/GSHC/gui_layout_20261001_v1/reproduction/gshc_layout_capture.py) |
-| FLP 概览 | 2026-10-08；真实静态台架记录 `000044`；选择离线复算源 | [原图](https://github.com/aleistercrowleybeast666/SilverStar/blob/v0.1.2/docs/evidence/static_log_file_20261008/results/p44/overview.png) |
+| SCG 导航配置 | 已有 FINAL 项目，只读打开与查看 | [图片](../assets/v0.1.2/scg_final_navigation.png) |
+| GSHC 后期处理 | v0.1.2 标签中已公开的历史 TEST_5 JSONL 会话；离线导出完成 | [图片](../assets/v0.1.2/gshc_offline_session_export.png) |
+| FLP 概览 | FINAL 的 `000062` 日志及精确解码包，选择 Recorded | [图片](../assets/v0.1.2/flp_000062_recorded_overview.png) |
+| FLP 曲线 | 同一 Recorded 数据源，任务开始后前 30 秒 ENU 速度 | [图片](../assets/v0.1.2/flp_000062_recorded_flight.png) |
 
-截图和示例均独立于 0.1.3 开发功能。更多硬件和算法范围见[支持矩阵](../SUPPORT_MATRIX.md)；日志/解码包身份见[精确匹配契约](../FLP/Decoder_Profile_Package.md)。
+截图中的 `000062` 与上方可下载的台架记录 `000044/000045` 是不同案例，不能交换解码包。更多硬件和算法范围见[支持矩阵](../SUPPORT_MATRIX.md)；日志/解码包身份见[精确匹配契约](../FLP/Decoder_Profile_Package.md)。
 
 ## English
 
@@ -83,12 +84,13 @@ Use PowerShell `Get-FileHash -Algorithm SHA256 <path>` and compare with the thre
 
 ### Screenshot provenance
 
-The home pages reuse historical PNGs whose bytes match the v0.1.2 source tag. All show v0.1.1; they are not current release captures or acceptance evidence for new features.
+The home pages now use real Qt screenshots captured offscreen on 2026-10-19 from the official **v0.1.2** program files, verified against the published ZIP. They do not use 0.1.3 development interfaces, redrawn UI, or fabricated data. See the [illustrated walkthrough](../V0_1_2_WALKTHROUGH.md#english).
 
-| Image | Date and data | Pinned source |
+| Image | Actual input and view | Capture |
 |---|---|---|
-| SCG Flight Hardware | 2026-10-01; an example configuration project | [Original](https://github.com/aleistercrowleybeast666/SilverStar/blob/v0.1.2/docs/GSHC/gui_layout_20261001_v1/scg_native/zh_CN_flight_hardware.png) |
-| GSHC Flight | 2026-10-01; disconnected; values constructed by a UI test | [Original](https://github.com/aleistercrowleybeast666/SilverStar/blob/v0.1.2/docs/GSHC/gui_layout_20261001_v1/delivered_zh_CN_1536x816_scale1_flight.png) · [Test script](https://github.com/aleistercrowleybeast666/SilverStar/blob/v0.1.2/docs/GSHC/gui_layout_20261001_v1/reproduction/gshc_layout_capture.py) |
-| FLP Overview | 2026-10-08; real static bench record `000044`; offline recomputed source selected | [Original](https://github.com/aleistercrowleybeast666/SilverStar/blob/v0.1.2/docs/evidence/static_log_file_20261008/results/p44/overview.png) |
+| SCG navigation | Existing FINAL project, opened for inspection | [Image](../assets/v0.1.2/scg_final_navigation.png) |
+| GSHC post-processing | Historical TEST_5 JSONL already public in the v0.1.2 tag; offline export completed | [Image](../assets/v0.1.2/gshc_offline_session_export.png) |
+| FLP Overview | FINAL record `000062` and its exact decoder, with Recorded selected | [Image](../assets/v0.1.2/flp_000062_recorded_overview.png) |
+| FLP chart | The same Recorded source, ENU velocity during the first 30 seconds after mission start | [Image](../assets/v0.1.2/flp_000062_recorded_flight.png) |
 
-The screenshots and samples are independent of 0.1.3 development features. See the [support matrix](../SUPPORT_MATRIX.md) for hardware and algorithm boundaries, and the [exact matching contract](../FLP/Decoder_Profile_Package.md) for log/decoder identity.
+Record `000062` in the screenshots is a different case from downloadable bench records `000044/000045`; their decoders must not be exchanged. See the [support matrix](../SUPPORT_MATRIX.md) for hardware and algorithm boundaries, and the [exact matching contract](../FLP/Decoder_Profile_Package.md) for log/decoder identity.
