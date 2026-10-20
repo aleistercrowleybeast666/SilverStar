@@ -18,13 +18,15 @@
 
 ![SCG：硬件资源与代码生成入口](assets/v0.1.2/scg_final_generation.png)
 
-## 3. GSHC：三维模型与历史会话导出
+## 3. GSHC：飞行页、三维姿态与导航曲线
 
 GSHC 的预飞行页用于查看准备状态与任务操作，飞行页用于监测遥测。设备是否 READY 以实际回报为准，命令 ACK 不代替准备状态。
 
-无需硬件时，可在“后期处理”选择已有 JSONL，会话数据可导出为摘要、数据、图表和姿态动画。图中读取 v0.1.2 标签里已公开的历史 TEST_5 会话，完成摘要、处理后数据与会话清单导出。左侧模型是正式版真实 OpenGL 渲染，保持未连接时的默认姿态；没有把历史日志注入实时链路。
+图中展示正式 v0.1.2 的“飞行”页。左侧三维姿态、当前导航数值与右侧六路 E/N/U 速度/位置曲线来自同一份 `000062` Recorded 数据，窗口约为任务 60–70 秒，当前帧约 69.96 秒；任务事件也按原记录显示。界面保持“未连接地面站”。
 
-![GSHC：真实三维模型与已完成的离线导出](assets/v0.1.2/gshc_3d_offline_export.png)
+离线演示用独立脚本将 FLP 精确解码的 Recorded 值提供给正式版显示模型。日常使用时，GSHC 飞行页从地面遥测接收数据，原始 `.sslog` 的打开与回放在 FLP 中完成；这张图不代表 GSHC 新增了原始日志回放入口。已有 JSONL 会话仍可在“后期处理”导出摘要、数据、图表与姿态动画。
+
+![GSHC 飞行页：000062 真实记录离线演示，三维姿态及六路导航曲线](assets/v0.1.2/gshc_flight_recorded_000062.png)
 
 ## 4. FLP：主要案例 000062
 
@@ -54,9 +56,9 @@ GSHC 的预飞行页用于查看准备状态与任务操作，飞行页用于监
 
 ## 截图与输入来源
 
-截图采集于 2026-10-19，所用 323 个 Python 程序文件与正式 v0.1.2 ZIP 逐字节一致。Windows Qt 后端在独立、不在桌面显示的窗口中调用正式版 OpenGL 渲染器，九张图均为实际控件截图、仅作无损 PNG 压缩，没有重绘或伪造数据。此前 Qt offscreen 后端不支持 OpenGL，故本页改用可创建有效上下文的 Windows 后端。
+SCG/FLP 截图采集于 2026-10-19，GSHC 飞行页更新于 2026-10-20。使用正式 v0.1.2 程序文件；本次另将 GSHC 的 35 个分发文件与发布 ZIP 逐字节核对一致。Windows Qt 后端在独立、不在桌面显示的窗口中调用正式版 OpenGL 渲染器；图片均为实际控件截图，仅作无损 PNG 压缩，没有重绘界面或编造导航值。
 
-SCG 只读取 FINAL 配置；GSHC 保持未连接、仅离线导出；FLP 通过正常日志/解码器入口精确打开两组原始输入，没有执行复算。原始文件哈希前后一致。历史台架、手持和抛体记录不构成火箭飞行验证；图中的任务事件不等于真实火箭开伞试验。
+SCG 只读取 FINAL 配置；GSHC 保持未连接，离线显示模型使用 `000062` 的记录值；FLP 通过正常日志/解码器入口精确打开原始输入，没有执行复算。本次六条曲线的 223 个显示样本逐点核对原始 Recorded 数组，原始文件哈希前后一致。历史台架、手持和抛体记录不构成火箭飞行验证；图中的任务事件不等于真实火箭开伞试验。
 
 ## English
 
@@ -70,11 +72,13 @@ In Devices, choose the configuration tier, sensors, interfaces, and mounting dir
 
 The third image shows the board, MCU, CubeMX provenance, peripheral resources, and Generate/Update Flight project entry point. Select your own writable project folder when generating; compilation and flashing need separately configured tools. The capture only inspects FINAL and performs neither generation nor flashing.
 
-### 3. GSHC: 3D model and historical session export
+### 3. GSHC: Flight page, 3D attitude, and navigation curves
 
 Preflight displays readiness and mission operations; Flight monitors telemetry. READY follows actual device reports, and a command ACK does not replace readiness.
 
-For hardware-free use, select an existing JSONL file in Post-processing and export summaries, data, charts, or attitude animations. The image shows successful summary, processed-data, and session-manifest export of a historical TEST_5 session already public in the v0.1.2 tag. The released OpenGL renderer draws the model on the left in its default disconnected pose. Historical log records were not injected into the live link.
+The image shows the official v0.1.2 Flight page. The 3D attitude, current navigation values, and six E/N/U velocity/position curves come from the same `000062` Recorded dataset. The window covers about 60–70 mission seconds, with the current frame at about 69.96 seconds; mission events also follow the original recording. The application remains disconnected.
+
+An independent offline demonstration script supplies FLP's exactly decoded Recorded values to the released display model. Normal GSHC Flight operation receives ground telemetry, while original `.sslog` opening and replay belong to FLP; this image does not establish a new GSHC raw-log replay entry point. Existing JSONL sessions can still be exported as summaries, data, charts, and attitude animations in Post-processing.
 
 ### 4. FLP: main example 000062
 
@@ -90,6 +94,6 @@ Both cases show original Recorded values. Offline recomputation, What-if, and pr
 
 ### Capture and input provenance
 
-The screenshots were captured on 2026-10-19 from 323 Python program files that match the official v0.1.2 ZIP byte for byte. Windows Qt used the released OpenGL renderer in independent windows configured not to appear on the desktop. All nine images are actual widget captures, compressed losslessly without redrawing or fabricated data. The earlier Qt offscreen backend lacked OpenGL support; the current Windows backend creates valid contexts.
+SCG/FLP images were captured on 2026-10-19; the GSHC Flight image was updated on 2026-10-20. All use official v0.1.2 program files; this update separately verified all 35 GSHC distribution files against the published ZIP byte for byte. Windows Qt used the released OpenGL renderer in independent windows configured not to appear on the desktop. These are actual widget captures, compressed losslessly without redrawing the interface or inventing navigation values.
 
-SCG only reads FINAL; GSHC remains disconnected and exports offline; FLP opens both exact original pairs through its normal entry point without recomputation. Input hashes are unchanged. Historical bench, handheld, and thrown-object recordings are not rocket flight validation, and recorded mission markers do not establish real rocket deployment tests.
+SCG only reads FINAL; GSHC remains disconnected and its offline display model uses `000062` recorded values; FLP opens the exact original inputs through its normal entry point without recomputation. Each of the 223 samples in the six curves was checked against the immutable Recorded arrays, and input hashes are unchanged. Historical bench, handheld, and thrown-object recordings are not rocket flight validation, and recorded mission markers do not establish real rocket deployment tests.

@@ -39,7 +39,7 @@ TEST_5_000028.zip
 
 ## 截图与其他输入
 
-[图解](../V0_1_2_WALKTHROUGH.md)使用正式 v0.1.2 程序文件与上述两组 Recorded 数据。SCG 展示设备、导航和工程生成页；GSHC 展示真实三维模型与独立 TEST_5 JSONL 会话的离线导出，模型保持未连接时的默认姿态。
+[图解](../V0_1_2_WALKTHROUGH.md)使用正式 v0.1.2 程序文件与上述两组 Recorded 数据。SCG 展示设备、导航和工程生成页；GSHC 的飞行页以 `000062` Recorded 值作离线显示演示，展示实际姿态和六路导航曲线，保持未连接。原始日志的打开与回放使用 FLP。
 
 较小的历史静态台架样例仍固定在 v0.1.2 标签：[000044](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/static_log_file_20261008/inputs/missions/000044/flight.sslog)、[000045](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/static_log_file_20261008/inputs/missions/000045/flight.sslog)及[二者共享的精确解码包](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/static_log_file_20261008/inputs/KF6_Static_20261008_f045d8c.ssdecoder)。它们与上述两个运动案例属于不同输入，解码器不能混用。
 
@@ -76,6 +76,6 @@ Use PowerShell `Get-FileHash -Algorithm SHA256 <path>` and compare with [SHA256S
 
 ### Screenshots and other inputs
 
-The [walkthrough](../V0_1_2_WALKTHROUGH.md#english) uses official v0.1.2 program files and both Recorded datasets above. SCG shows devices, navigation, and project generation. GSHC shows its real 3D model and offline export of a separate historical TEST_5 JSONL session; the model remains in its default disconnected pose.
+The [walkthrough](../V0_1_2_WALKTHROUGH.md#english) uses official v0.1.2 program files and both Recorded datasets above. SCG shows devices, navigation, and project generation. GSHC's Flight page uses `000062` Recorded values in an offline display demonstration, showing actual attitude and six navigation curves while disconnected. Original log opening and replay use FLP.
 
 Smaller historical static bench inputs remain pinned to v0.1.2: [000044](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/static_log_file_20261008/inputs/missions/000044/flight.sslog), [000045](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/static_log_file_20261008/inputs/missions/000045/flight.sslog), and [their shared exact decoder](https://raw.githubusercontent.com/aleistercrowleybeast666/SilverStar/v0.1.2/docs/evidence/static_log_file_20261008/inputs/KF6_Static_20261008_f045d8c.ssdecoder). They are separate inputs from the two motion examples above; their decoders must not be mixed.

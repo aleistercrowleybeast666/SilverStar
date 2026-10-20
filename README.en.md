@@ -56,13 +56,13 @@ SCG offers Full, Standard, Lightweight, and Minimal configuration tiers. Configu
 
 ![SCG v0.1.2: hardware resources and Generate/Update Flight project](docs/public/assets/v0.1.2/scg_final_generation.png)
 
-### GSHC: telemetry, 3D attitude, and session export
+### GSHC: flight monitoring, 3D attitude, and navigation curves
 
 GSHC brings preflight preparation, flight monitoring, and post-processing into one interface: inspect readiness and mission events, view 3D attitude and navigation data, record JSONL sessions, and export summaries, data, charts, and attitude animations.
 
-The released application's real OpenGL renderer draws the 3D model below; the right panel shows completed offline export of a historical TEST_5 session. The application is disconnected and the model retains its default pose. The log has not been replayed as live telemetry.
+The official v0.1.2 Flight page below shows 3D attitude alongside E/N/U velocity and position curves from `000062` Recorded data, covering about 60–70 seconds. This is an offline display demonstration with no connected device; normal live monitoring receives ground-station telemetry.
 
-![GSHC v0.1.2: real 3D model and historical session export](docs/public/assets/v0.1.2/gshc_3d_offline_export.png)
+![GSHC v0.1.2 Flight page: 000062 offline Recorded attitude and six navigation curves](docs/public/assets/v0.1.2/gshc_flight_recorded_000062.png)
 
 ### FLP: trajectories, curves, and offline analysis
 
