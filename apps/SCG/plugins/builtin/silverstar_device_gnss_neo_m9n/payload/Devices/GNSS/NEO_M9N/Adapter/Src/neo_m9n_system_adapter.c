@@ -431,7 +431,8 @@ static SystemDeviceResult NeoM9nGnssAdapter_GetSample(uint8_t instance, SystemGn
     sample->msl_height_mm = data.hMSL;
     sample->velocity_enu_mps[0] = (float)data.velE * 0.001f;
     sample->velocity_enu_mps[1] = (float)data.velN * 0.001f;
-    sample->velocity_enu_mps[2] = (float)(-data.velD) * 0.001f;
+    /* Convert before negation so INT32_MIN cannot overflow. */
+    sample->velocity_enu_mps[2] = -(float)data.velD * 0.001f;
     speed_std_mps = (float)data.sAcc * 0.001f;
     speed_variance = speed_std_mps * speed_std_mps;
     for (index = 0U; index < 3U; index++)

@@ -1,3 +1,4 @@
+#include <float.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -43,7 +44,8 @@ static void Test_U32Put(uint8_t *data, uint32_t value)
     data[3] = (uint8_t)(value >> 24U);
 }
 
-static void Test_NavPvtFrameBuild(uint8_t frame[TEST_NAV_PVT_FRAME_SIZE])
+static void Test_NavPvtFrameBuild(uint8_t frame[TEST_NAV_PVT_FRAME_SIZE],
+    int32_t vel_d_mmps)
 {
     uint8_t *payload = &frame[6];
     uint8_t checksum_a = 0U;
@@ -67,7 +69,7 @@ static void Test_NavPvtFrameBuild(uint8_t frame[TEST_NAV_PVT_FRAME_SIZE])
     Test_U32Put(&payload[44], 1500U);
     Test_U32Put(&payload[48], (uint32_t)2000L);
     Test_U32Put(&payload[52], (uint32_t)(int32_t)-3000L);
-    Test_U32Put(&payload[56], (uint32_t)400L);
+    Test_U32Put(&payload[56], (uint32_t)vel_d_mmps);
     Test_U32Put(&payload[68], 100U);
     for (index = 2U; index < (TEST_NAV_PVT_FRAME_SIZE - 2U); index++)
     {
@@ -87,7 +89,7 @@ static void Test_DeviceSampleConvertsToSystemInterface(void)
     HostPlatformMock_TimeSetUs(1000000ULL);
     TEST_CHECK(SystemGnss_Init() == SYSTEM_DEVICE_OK);
     TEST_CHECK(SystemGnss_Start() == SYSTEM_DEVICE_OK);
-    Test_NavPvtFrameBuild(frame);
+    Test_NavPvtFrameBuild(frame, 400);
     TEST_CHECK(HostPlatformMock_UartRxInject(
         TEST_GNSS_UART, frame, sizeof(frame)) == sizeof(frame));
     SystemGnss_Process();
@@ -102,6 +104,52 @@ static void Test_DeviceSampleConvertsToSystemInterface(void)
     TEST_CHECK_NEAR(sample.vertical_accuracy_m, 1.5f, 1.0e-6f);
     TEST_CHECK(sample.position_usable != 0U);
     TEST_CHECK(sample.velocity_valid_mask == 0x07U);
+    TEST_CHECK(SystemGnss_Stop() == SYSTEM_DEVICE_OK);
+}
+
+static void Test_VerticalVelocityHandlesSignedBoundaries(void)
+{
+    static const int32_t velocities_mmps[] = {
+        INT32_MIN, INT32_MIN + 1, -400, -1, 0, 1, 400,
+        INT32_MAX - 1, INT32_MAX};
+    uint8_t frame[TEST_NAV_PVT_FRAME_SIZE];
+    SystemGnssSample sample;
+    GnssNeoM9nData raw;
+    size_t index;
+
+    TEST_CHECK(SystemGnss_Start() == SYSTEM_DEVICE_OK);
+    for (index = 0U;
+         index < (sizeof(velocities_mmps) / sizeof(velocities_mmps[0]));
+         index++)
+    {
+        /* A double reference avoids negating the signed wire integer. */
+        const double expected_mps = -(double)velocities_mmps[index] / 1000.0;
+        const double tolerance_mps = fmax(1.0e-6,
+            fabs(expected_mps) * 2.0 * FLT_EPSILON);
+
+        HostPlatformMock_TimeAdvanceUs(40000ULL);
+        Test_NavPvtFrameBuild(frame, velocities_mmps[index]);
+        TEST_CHECK(HostPlatformMock_UartRxInject(
+            TEST_GNSS_UART, frame, sizeof(frame)) == sizeof(frame));
+        SystemGnss_Process();
+        TEST_CHECK(GnssNeoM9n_GetData(0U, &raw) != 0U);
+        TEST_CHECK(raw.velD == velocities_mmps[index]);
+        (void)printf("checking velD=%ld mm/s\n", (long)raw.velD);
+        (void)fflush(stdout);
+        TEST_CHECK(SystemGnss_LatestSampleGet(&sample) == SYSTEM_DEVICE_OK);
+        TEST_CHECK(isfinite(sample.velocity_enu_mps[2]));
+        TEST_CHECK(fabs((double)sample.velocity_enu_mps[2] - expected_mps) <=
+            tolerance_mps);
+        TEST_CHECK((sample.velocity_enu_mps[2] > 0.0f) ==
+            (velocities_mmps[index] < 0));
+        TEST_CHECK((sample.velocity_enu_mps[2] < 0.0f) ==
+            (velocities_mmps[index] > 0));
+        TEST_CHECK_NEAR(sample.velocity_enu_mps[0], -3.0f, 1.0e-6f);
+        TEST_CHECK_NEAR(sample.velocity_enu_mps[1], 2.0f, 1.0e-6f);
+        TEST_CHECK(sample.velocity_valid_mask == 0x07U);
+        (void)printf("velD=%ld mm/s -> U=%.9g m/s\n",
+            (long)raw.velD, (double)sample.velocity_enu_mps[2]);
+    }
     TEST_CHECK(SystemGnss_Stop() == SYSTEM_DEVICE_OK);
 }
 
@@ -135,7 +183,7 @@ static void Test_UnidentifiedRecoveryCannotSupplyNavigation(void)
     target.enabled_message_mask = SYSTEM_GNSS_MESSAGE_NAV_PVT;
     TEST_CHECK(NeoM9nGnssInstance_ConfigApply(0U, &target, &report) ==
         SYSTEM_DEVICE_CONFIG_DELEGATED);
-    Test_NavPvtFrameBuild(frame);
+    Test_NavPvtFrameBuild(frame, 400);
     for (cycle = 0U; cycle < 4500U; cycle++)
     {
         HostPlatformMock_TimeAdvanceUs(10000ULL);
@@ -206,6 +254,7 @@ int main(void)
     if (!Test_GeneratedResourcesBind())
     { return Test_Finish("neo_m9n_adapter"); }
     Test_DeviceSampleConvertsToSystemInterface();
+    Test_VerticalVelocityHandlesSignedBoundaries();
     Test_UnidentifiedRecoveryCannotSupplyNavigation();
     return Test_Finish("neo_m9n_adapter");
 }
