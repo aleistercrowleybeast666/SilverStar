@@ -52,6 +52,7 @@ class LogOpenRequest:
     source_mode: LogOpenSourceMode = LogOpenSourceMode.MANUAL
     project_path: Path | None = None
     dataset_cache_reference: dict | None = None
+    allow_unverified_decoder: bool = False
 
     def __post_init__(self) -> None:
         if isinstance(self.log_path, (list, tuple, set, frozenset)):
@@ -70,6 +71,12 @@ class LogOpenRequest:
             )
         if self.task_directory is not None:
             object.__setattr__(self, "task_directory", Path(self.task_directory))
+        if type(self.allow_unverified_decoder) is not bool:
+            raise ValueError("custom_decoder_opt_in_invalid")
+        if self.allow_unverified_decoder and (
+                self.decoder_package_path is None or self.auto_find or self.cache_reference is not None
+                or self.source_mode != LogOpenSourceMode.MANUAL):
+            raise ValueError("custom_decoder_requires_explicit_manual_pair")
         if self.auto_find and (
             self.decoder_package_path is not None
             or self.cache_reference is not None
@@ -101,8 +108,8 @@ class LogPairDiscovery:
 class LogOpenResult:
     dataset: FlightDataset
     package: DecoderProfilePackage
-    descriptor: DecoderProfileDescriptor
-    cache_reference: DecoderProfileCacheReference
+    descriptor: DecoderProfileDescriptor | None
+    cache_reference: DecoderProfileCacheReference | None
     source_package_path: Path
     parse_diagnostics: ParserDiagnostics
     data_quality: DataQualitySummary
@@ -245,6 +252,8 @@ class LogOpenCoordinator:
         task_context = context or TaskContext()
         log_path = self._LogPath_Validate(request.log_path)
         task_context.Progress_Report(0.02, "log_open.package")
+        if request.allow_unverified_decoder:
+            return self._OpenUserCustom(request, log_path, task_context)
         if request.auto_find:
             selected = request.task_directory or log_path.parent
             discovery = self.PairDiscovery_Run(
@@ -337,6 +346,28 @@ class LogOpenCoordinator:
             task_context,
             cache_request=request,
         )
+
+    def _OpenUserCustom(self, request, log_path, context):
+        """Explicit read-only view. No exact cache, semantic adapter, or replay admission."""
+        from silverstar_flp.core.artifacts import FileHash_Get
+        containers = self._ContainerPlugins_Get()
+        package_path = self._PackagePath_Validate(request.decoder_package_path)
+        package = DecoderProfilePackage.Load(package_path, limits=self.package_limits,
+                                             container_plugins=containers)
+        container = containers[package.required_container_plugin_id]
+        source_hash = FileHash_Get(log_path)
+        dataset = DecoderProfileParserPlugin(container, package,
+                      allow_unverified_identity=True).parse(log_path, context)
+        context.Cancel_RaiseIfRequested()
+        if FileHash_Get(log_path) != source_hash:
+            raise ValueError("log_source_changed_during_parse")
+        dataset = replace(dataset, metadata={**dataset.metadata,
+            "source_log_sha256": source_hash, "custom_decoder_unverified": True,
+            "replay_allowed": False, "custom_decoder_source_path": str(package_path)})
+        context.Progress_Report(1.0, "log_open.complete")
+        return LogOpenResult(dataset, package, None, None, package_path,
+                             dataset.diagnostics, dataset.data_quality,
+                             match_mode="user_custom_unverified")
 
     def _OpenWithSourcePackage(
         self,

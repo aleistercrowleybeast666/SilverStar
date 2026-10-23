@@ -26,8 +26,10 @@ class DecoderProfileParserPlugin(LogParserPlugin):
         self,
         container: LogContainerPlugin,
         package: DecoderProfilePackage,
+        *, allow_unverified_identity: bool = False,
     ) -> None:
         package.Container_Validate(container)
+        self.allow_unverified_identity = allow_unverified_identity
         self.container = container
         self.package = package
         self.metadata = LogParserMetadata(
@@ -169,18 +171,24 @@ class DecoderProfileParserPlugin(LogParserPlugin):
         except ContainerError as exc:
             raise ParserError(exc.code, exc.details) from exc
 
-        if descriptor_error is not None:
-            raise ParserError(
-                "decoder_profile_descriptor_invalid",
-                str(descriptor_error),
-            ) from descriptor_error
-        if descriptor is None:
-            raise ParserError("decoder_profile_descriptor_missing")
-        try:
-            descriptor.PackageExactMatch_Validate(self.package)
-        except DecoderProfileError as exc:
-            raise ParserError(exc.code, exc.details) from exc
-        match_mode = "exact_generation_profile"
+        if self.allow_unverified_identity:
+            match_mode = "user_custom_unverified"
+            partial = True
+            diagnostics.Diagnostic_Add("user_custom_decoder_unverified", DiagnosticSeverity.WARNING,
+                                       descriptor_error=str(descriptor_error or ""))
+        else:
+            if descriptor_error is not None:
+                raise ParserError(
+                    "decoder_profile_descriptor_invalid",
+                    str(descriptor_error),
+                ) from descriptor_error
+            if descriptor is None:
+                raise ParserError("decoder_profile_descriptor_missing")
+            try:
+                descriptor.PackageExactMatch_Validate(self.package)
+            except DecoderProfileError as exc:
+                raise ParserError(exc.code, exc.details) from exc
+            match_mode = "exact_generation_profile"
 
         parse_context.Progress_Report(0.99, "parser.dataset")
         dataset = builder.Build(

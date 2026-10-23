@@ -17,6 +17,8 @@ from silverstar_flp.decoder_profiles.errors import DecoderProfileError
 _CHANNEL_ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.:-]*$")
 _TEMPLATE_FIELD_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 _TEMPLATE_FORMAT_PATTERN = re.compile(r"^(?:0?[1-9][0-9]*)?[dDxX]?$")
+MAX_CHANNEL_ID_LENGTH = 1024
+MAX_TEMPLATE_FORMAT_WIDTH = 64
 
 
 def _RecordName_Normalize(name: str) -> str:
@@ -40,11 +42,15 @@ def _Integer_Parse(value: Any, *, default: int | None = None) -> int | None:
 
 def _TemplateFields_Get(template: str) -> frozenset[str]:
     fields: set[str] = set()
+    if len(template) > MAX_CHANNEL_ID_LENGTH:
+        raise DecoderProfileError("decoder_channel_template_too_long")
+    predicted = 0
     try:
         parsed = tuple(string.Formatter().parse(template))
     except ValueError as exc:
         raise DecoderProfileError("decoder_channel_template_invalid", template) from exc
-    for _, field_name, format_spec, conversion in parsed:
+    for literal, field_name, format_spec, conversion in parsed:
+        predicted += len(literal)
         if field_name:
             if (
                 not _TEMPLATE_FIELD_PATTERN.fullmatch(field_name)
@@ -52,8 +58,36 @@ def _TemplateFields_Get(template: str) -> frozenset[str]:
                 or not _TEMPLATE_FORMAT_PATTERN.fullmatch(format_spec)
             ):
                 raise DecoderProfileError("decoder_channel_template_invalid", template)
+            digits = format_spec.rstrip("dDxX")
+            if digits and (len(digits) > 3 or int(digits) > MAX_TEMPLATE_FORMAT_WIDTH):
+                raise DecoderProfileError("decoder_channel_template_width_exceeded")
+            predicted += max(1, int(digits) if digits else 0)
             fields.add(field_name)
+        elif field_name is not None:
+            raise DecoderProfileError("decoder_channel_template_invalid", template)
+        if predicted > MAX_CHANNEL_ID_LENGTH:
+            raise DecoderProfileError("decoder_channel_template_too_long")
     return frozenset(fields)
+
+
+def _ChannelId_Format(template, values):
+    """Bound expansion before format_map, including runtime record/string values."""
+    _TemplateFields_Get(template)
+    predicted = 0
+    for literal, name, spec, conversion in string.Formatter().parse(template):
+        predicted += len(literal)
+        if name is not None:
+            value = values[name]
+            if type(value) not in (int, float, str, bool):
+                raise DecoderProfileError("decoder_channel_template_value_invalid")
+            digits = spec.rstrip("dDxX")
+            predicted += max(len(str(value)), int(digits) if digits else 0)
+        if predicted > MAX_CHANNEL_ID_LENGTH:
+            raise DecoderProfileError("decoder_channel_id_too_long")
+    result = template.format_map(values)
+    if len(result) > MAX_CHANNEL_ID_LENGTH:
+        raise DecoderProfileError("decoder_channel_id_too_long")
+    return result
 
 
 def _MetadataCollection_Normalize(value: Any, error_code: str) -> tuple[Mapping[str, Any], ...]:
@@ -251,6 +285,7 @@ class SemanticChannel:
         canonical_id = document.get("canonical_id")
         if canonical_id is not None and (
             not isinstance(canonical_id, str)
+            or len(canonical_id) > MAX_CHANNEL_ID_LENGTH
             or not _CHANNEL_ID_PATTERN.fullmatch(canonical_id)
         ):
             raise DecoderProfileError("decoder_canonical_channel_id_invalid", record_name)
@@ -689,7 +724,7 @@ class ProjectSemantics:
                     f"{semantics.record_name}:{channel.value_field}",
                 )
             try:
-                channel_id = channel.id_template.format_map(context)
+                channel_id = _ChannelId_Format(channel.id_template, context)
             except (KeyError, ValueError) as exc:
                 raise DecoderProfileError(
                     "decoder_channel_template_failed",

@@ -33,6 +33,7 @@ from silverstar_flp.ui.widgets import StandardComboBox
 
 class ImportDialog(QDialog):
     importRequested = Signal(object, object)
+    customImportRequested = Signal(object, object)
     folderSearchRequested = Signal(object)
 
     def __init__(self, translator: Translator, parent: QWidget | None = None) -> None:
@@ -89,6 +90,9 @@ class ImportDialog(QDialog):
         self.folder_path_edit.textChanged.connect(self.candidate_combo.clear)
         form.addRow(self.candidate_label, self.candidate_combo)
         layout.addWidget(self.source_group)
+        self.custom_decoder_check = QCheckBox("用户自定义 / 未验证：手选解码器，允许与日志身份不匹配 / User custom, unverified")
+        self.custom_decoder_check.setToolTip("仍校验包结构、校验和、字段类型和边界；仅查看数据，不用于精确 Recorded 复算。")
+        layout.addWidget(self.custom_decoder_check)
 
         self.note_label = QLabel()
         self.note_label.setObjectName("muted")
@@ -114,6 +118,9 @@ class ImportDialog(QDialog):
 
     def _SourceType_Changed(self) -> None:
         manual = str(self.source_type_combo.currentData() or "manual") == "manual"
+        self.custom_decoder_check.setEnabled(manual)
+        if not manual:
+            self.custom_decoder_check.setChecked(False)
         for widget in (
             self.path_edit,
             self.browse_button,
@@ -240,7 +247,11 @@ class ImportDialog(QDialog):
             self.result_label.show()
             return
         self.result_label.hide()
-        self.importRequested.emit(Path(path_text), Path(decoder_text))
+        if self.custom_decoder_check.isChecked():
+            self.customImportRequested.emit(Path(path_text), Path(decoder_text))
+            self.custom_decoder_check.setChecked(False)
+        else:
+            self.importRequested.emit(Path(path_text), Path(decoder_text))
         self.accept()
 
     def Language_Apply(self, translator: Translator) -> None:

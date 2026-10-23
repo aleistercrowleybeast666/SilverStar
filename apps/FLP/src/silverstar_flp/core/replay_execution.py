@@ -5,6 +5,8 @@ from silverstar_flp.core.artifacts import EngineIdentity_Get
 
 
 def Replay_Execute(plugin, dataset, request, context=None):
+    if dataset.metadata.get("custom_decoder_unverified"):
+        raise ValueError("user_custom_decoder_replay_unverified")
     from silverstar_flp.core.semantic_context import _Immutable_Get, _JsonCompatible_Get
     input_identity = _Immutable_Get(_JsonCompatible_Get(dataset.metadata.get("parse_identity")))
     engine_identity = EngineIdentity_Get()

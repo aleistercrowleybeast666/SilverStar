@@ -30,6 +30,19 @@ from silverstar_flp.ui.touch_scroll import TouchScroll_Enable
 from silverstar_flp.ui.widgets import StandardComboBox
 
 
+def ExplorerChannels_Prepare(dataset, results=None):
+    """Pure raw view for unverified input, regardless of user-chosen channel names."""
+    if dataset.metadata.get("custom_decoder_unverified"):
+        return dict(dataset.series)
+    if isinstance(results, ReplayResultStore):
+        return ChannelResolver(dataset, results).ExplorerChannels_Get()
+    channels = dict(dataset.series)
+    for result_name, result in (results or {}).items():
+        for channel_id, series in result.channels.items():
+            channels[f"{result_name}.{channel_id}"] = series
+    return channels
+
+
 class DataExplorerPage(QWidget):
     def __init__(self, translator: Translator) -> None:
         super().__init__()
@@ -134,14 +147,9 @@ class DataExplorerPage(QWidget):
         dataset: FlightDataset,
         results: ReplayResultStore | Mapping[str, AlgorithmResult] | None = None,
     ) -> None:
+        channels = ExplorerChannels_Prepare(dataset, results)
         self._dataset = dataset
-        if isinstance(results, ReplayResultStore):
-            self._channels = ChannelResolver(dataset, results).ExplorerChannels_Get()
-        else:
-            self._channels = dict(dataset.series)
-            for result_name, result in (results or {}).items():
-                for channel_id, series in result.channels.items():
-                    self._channels[f"{result_name}.{channel_id}"] = series
+        self._channels = channels
         checked_before = {
             self.channel_list.item(index).data(Qt.ItemDataRole.UserRole)
             for index in range(self.channel_list.count())

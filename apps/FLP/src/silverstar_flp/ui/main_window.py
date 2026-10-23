@@ -263,6 +263,11 @@ class MainWindow(QMainWindow):
         content_layout = QVBoxLayout(content)
         self.time_range = TimeRangeBar(self._translator)
         self.time_range.rangeChanged.connect(self._TimeRange_Changed)
+        self.custom_decoder_banner = QLabel("用户自定义 / 未验证 / USER CUSTOM — UNVERIFIED. 仅查看；不是精确 Recorded 解码或复算。")
+        self.custom_decoder_banner.setWordWrap(True)
+        self.custom_decoder_banner.setObjectName("warningLabel")
+        self.custom_decoder_banner.hide()
+        content_layout.addWidget(self.custom_decoder_banner)
         content_layout.addWidget(self.time_range)
         self.pages = QStackedWidget()
         self.overview_page = OverviewPage(self._translator)
@@ -309,6 +314,7 @@ class MainWindow(QMainWindow):
         self.replay_page.resultRestoreRequested.connect(self._ReplayRun_Restore)
         self.import_dialog = ImportDialog(self._translator, self)
         self.import_dialog.importRequested.connect(self.LogPair_Open)
+        self.import_dialog.customImportRequested.connect(self._CustomLogPair_Open)
         self.import_dialog.folderSearchRequested.connect(self._FolderSearch_Start)
         self.import_dialog.rejected.connect(self._PendingProject_Cancel)
         self.import_dialog.rejected.connect(self._FolderSearch_Invalidate)
@@ -473,6 +479,9 @@ class MainWindow(QMainWindow):
         self.import_dialog.open()
 
     def _ExportDialog_Show(self) -> None:
+        if self._dataset is not None and (self._dataset.metadata.get("custom_decoder_unverified")
+                                          or self._channel_resolver is None):
+            return
         if self._dataset is None:
             return
         self.export_dialog.OutputDirectory_Set(self._ExportDirectory_Default())
@@ -561,6 +570,9 @@ class MainWindow(QMainWindow):
             self.import_dialog.Paths_Set(log_path=source_path)
             self.import_dialog.open()
 
+    def _CustomLogPair_Open(self, log_path, decoder_path):
+        self.Log_Open(log_path, decoder_path=decoder_path, allow_unverified_decoder=True)
+
     def LogPair_Open(self, log_path: Path, decoder_path: Path) -> None:
         self.Log_Open(
             log_path,
@@ -576,6 +588,7 @@ class MainWindow(QMainWindow):
         auto_find: bool = False,
         source_mode: LogOpenSourceMode = LogOpenSourceMode.MANUAL,
         project: ProjectDocument | None = None,
+        allow_unverified_decoder: bool = False,
     ) -> None:
         if self._active_worker is not None:
             self._Error_Show("another_background_task_is_running")
@@ -591,6 +604,7 @@ class MainWindow(QMainWindow):
             auto_find=auto_find,
             task_directory=source_path.parent if auto_find else None,
             source_mode=source_mode,
+            allow_unverified_decoder=allow_unverified_decoder,
         )
         self.status_label.setText(self._translator.Text_Get("status.loading"))
         worker = FunctionWorker(lambda context: self._LogOpen_Run(request, context))
@@ -784,6 +798,54 @@ class MainWindow(QMainWindow):
             exact_match_mode=result.match_mode,
         )
 
+    def _CustomView_Set(self, result):
+        # Stage all fallible data-dependent work before replacing the live view.
+        prepared = DataExplorerPage(self._translator)
+        try:
+            prepared.Dataset_Set(result.dataset)
+            project = ProjectDocument()
+            store = ReplayResultStore()
+            index = self.pages.indexOf(self.explorer_page)
+            if index != 4:
+                raise ValueError("custom_explorer_page_index_invalid")
+        except Exception:
+            prepared.deleteLater()
+            raise
+        previous = self.explorer_page
+        try:
+            self.pages.insertWidget(index, prepared)
+        except Exception:
+            self.pages.removeWidget(prepared)
+            prepared.deleteLater()
+            raise
+        self.custom_decoder_banner.show()
+        self.pages.removeWidget(previous)
+        self.explorer_page = prepared
+        self._page_widgets = tuple(prepared if page is previous else page for page in self._page_widgets)
+        self._pending_new_project_path = None
+        self._project = project
+        self._project_dirty = False
+        self._silverstar_project_root = None
+        self._log_open_result = result
+        self._dataset = result.dataset
+        self._channel_resolver = None
+        self._replay_store = store
+        self.time_range.hide()
+        for index in range(self.navigation_list.count()):
+            item = self.navigation_list.item(index)
+            item.setFlags(item.flags() | Qt.ItemFlag.ItemIsEnabled if index == 4
+                          else item.flags() & ~Qt.ItemFlag.ItemIsEnabled)
+        self.navigation_list.setCurrentRow(4)
+        self.pages.setCurrentIndex(4)
+        self._Project_SetDirty(False)
+        self._ProjectHeader_Refresh()
+        self.save_project_action.setEnabled(False)
+        self.save_project_as_action.setEnabled(False)
+        self.export_action.setEnabled(False)
+        self.status_label.setText("用户自定义 / 未验证 — " + str(result.source_package_path))
+        previous.deleteLater()
+        return True
+
     def _LogOpenResult_Set(
         self,
         result: LogOpenResult,
@@ -792,6 +854,8 @@ class MainWindow(QMainWindow):
         mark_dirty: bool = False,
         silverstar_root: Path | None = None,
     ) -> bool:
+        if result.match_mode == "user_custom_unverified":
+            return self._CustomView_Set(result)
         try:
             for configuration_name, configuration in project.replay_configurations.items():
                 plugin = self._registry.Algorithm_Get(configuration["algorithm_id"])
@@ -826,6 +890,13 @@ class MainWindow(QMainWindow):
                 self._Error_Show(str(exc))
                 return False
             self._pending_new_project_path = None
+        self.custom_decoder_banner.hide()
+        self.time_range.show()
+        for index in range(self.navigation_list.count()):
+            item = self.navigation_list.item(index)
+            item.setFlags(item.flags() | Qt.ItemFlag.ItemIsEnabled)
+        self.save_project_action.setEnabled(True)
+        self.save_project_as_action.setEnabled(True)
         self._project = project
         self._silverstar_project_root = silverstar_root or self._SilverStarRootForPair_Get(
             result.dataset.source_path, result.source_package_path)
@@ -1003,6 +1074,9 @@ class MainWindow(QMainWindow):
         self._Project_MarkDirty()
 
     def _Replay_Start(self, algorithm_id: str, request: ReplayRequest) -> None:
+        if self._dataset is not None and (self._dataset.metadata.get("custom_decoder_unverified")
+                                          or self._channel_resolver is None):
+            return
         if self._dataset is None:
             self.replay_page.Result_Error(self._translator.Text_Get("status.no_data"))
             return
@@ -1071,6 +1145,9 @@ class MainWindow(QMainWindow):
             )
 
     def _Export_Start(self, output_path: Path, options: Any) -> None:
+        if self._dataset is not None and (self._dataset.metadata.get("custom_decoder_unverified")
+                                          or self._channel_resolver is None):
+            return
         if self._dataset is None:
             self.export_dialog.Result_Error(self._translator.Text_Get("status.no_data"))
             return
@@ -1284,11 +1361,13 @@ class MainWindow(QMainWindow):
         self.progress_bar.setVisible(False)
         self.cancel_button.setVisible(False)
         self.import_action.setEnabled(True)
-        self.export_action.setEnabled(self._dataset is not None)
+        unverified = self._dataset is not None and self._dataset.metadata.get("custom_decoder_unverified", False)
+        self.export_action.setEnabled(self._dataset is not None and not unverified
+                                      and getattr(self, "_channel_resolver", None) is not None)
         self.open_project_action.setEnabled(True)
         self.open_silverstar_project_action.setEnabled(True)
-        self.save_project_action.setEnabled(True)
-        self.save_project_as_action.setEnabled(True)
+        self.save_project_action.setEnabled(not unverified)
+        self.save_project_as_action.setEnabled(not unverified)
         self.new_project_action.setEnabled(True)
         self.export_dialog.Task_Finish()
         self.replay_page.Task_Finish()
@@ -1407,6 +1486,9 @@ class MainWindow(QMainWindow):
         self._Error_Show(message)
 
     def _Project_Save(self) -> bool:
+        if self._dataset is not None and self._dataset.metadata.get("custom_decoder_unverified"):
+            self._Error_Show("用户自定义解码为未验证只读视图，请通过手选重新打开 / Unverified read-only view")
+            return False
         save_data = self._SaveOptions_Select()
         if save_data is None:
             return False
@@ -1420,6 +1502,9 @@ class MainWindow(QMainWindow):
         return False
 
     def _Project_SaveAs(self) -> bool:
+        if self._dataset is not None and self._dataset.metadata.get("custom_decoder_unverified"):
+            self._Error_Show("用户自定义解码为未验证只读视图，请通过手选重新打开 / Unverified read-only view")
+            return False
         save_data = self._SaveOptions_Select()
         if save_data is None:
             return False
@@ -1551,6 +1636,8 @@ class MainWindow(QMainWindow):
                                   path=project.project_path, size=f"{size / 1_000_000:.2f}"))
 
     def _Project_MarkDirty(self) -> None:
+        if self._dataset is not None and self._dataset.metadata.get("custom_decoder_unverified"):
+            return
         if not self._suspend_dirty and self._dataset is not None:
             self._project_edit_serial = getattr(self, "_project_edit_serial", 0) + 1
             self._Project_SetDirty(True)
