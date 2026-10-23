@@ -35,7 +35,7 @@ sslog = "silverstar_flp.cli:main"
 where = ["src"]
 
 [tool.setuptools.dynamic]
-version = {attr = "silverstar_flp.app.version.__version__"}
+version = {attr = "silverstar_flp.app.version.__package_version__"}
 
 [tool.setuptools.package-data]
 silverstar_flp = ["i18n/*.json", "plugins/algorithms/eskf15/*.json", "decoder_profiles/contracts/*.json"]

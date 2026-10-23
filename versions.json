@@ -1,0 +1,267 @@
+{
+  "schema": "silverstar.version-registry/1",
+  "product": {
+    "source_file": "VERSION",
+    "maturity": "development"
+  },
+  "identities": {
+    "suite": {
+      "version": "product",
+      "scope": "product"
+    },
+    "SCG": {
+      "version": "product",
+      "scope": "application"
+    },
+    "GSHC": {
+      "version": "product",
+      "scope": "application"
+    },
+    "FLP": {
+      "version": "product",
+      "scope": "application"
+    },
+    "firmware.new_project": {
+      "version": "product",
+      "scope": "requested firmware identity; existing projects retain their explicit request"
+    },
+    "SCG.project_formats": {
+      "scope": "independent data/wire contract",
+      "source": {
+        "path": "apps/SCG/schemas/project.schema.json",
+        "kind": "json",
+        "selector": [
+          "properties",
+          "format_version",
+          "enum"
+        ]
+      }
+    },
+    "decoder.package": {
+      "scope": "independent data contract",
+      "source": {
+        "path": "apps/SCG/src/silverstar_fccg/generator/log_decoder_profile.py",
+        "kind": "python_constant",
+        "name": "LOG_DECODER_PACKAGE_SCHEMA_VERSION"
+      }
+    },
+    "decoder.minimum_flp": {
+      "scope": "declared floor; exact record/algorithm contracts also required",
+      "source": {
+        "path": "apps/SCG/src/silverstar_fccg/generator/log_decoder_profile.py",
+        "kind": "python_constant",
+        "name": "LOG_DECODER_REQUIRED_FLP_VERSION"
+      }
+    },
+    "SSLOG.container": {
+      "scope": "independent data/wire contract",
+      "source": {
+        "path": "contracts/log_file_service_v1.json",
+        "kind": "json",
+        "selector": [
+          "versions",
+          "log_container"
+        ]
+      }
+    },
+    "SSLOG.catalog": {
+      "scope": "independent data/wire contract",
+      "source": {
+        "path": "apps/SCG/plugins/builtin/silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG/schema/sslog_schema.json",
+        "kind": "json",
+        "selector": [
+          "catalog_schema_id"
+        ]
+      }
+    },
+    "AIR": {
+      "scope": "independent data/wire contract",
+      "source": {
+        "path": "contracts/installation_calibration_v1.json",
+        "kind": "json",
+        "selector": [
+          "versions",
+          "air"
+        ]
+      },
+      "source_required": false,
+      "availability_note": "Development source may be absent from this checkout; no inferred compatibility value."
+    },
+    "GSP": {
+      "scope": "independent data/wire contract",
+      "source": {
+        "path": "contracts/gsp/wire.json",
+        "kind": "json",
+        "selector": [
+          "name"
+        ]
+      }
+    },
+    "maintenance": {
+      "scope": "independent data/wire contract",
+      "source": {
+        "path": "contracts/log_file_service_v1.json",
+        "kind": "json",
+        "selector": [
+          "versions",
+          "maintenance"
+        ]
+      }
+    },
+    "maintenance.compatible": {
+      "scope": "independent data/wire contract",
+      "source": {
+        "path": "contracts/log_file_service_v1.json",
+        "kind": "json",
+        "selector": [
+          "versions",
+          "compatible_maintenance"
+        ]
+      }
+    },
+    "LOGFILE": {
+      "scope": "independent data/wire contract",
+      "source": {
+        "path": "contracts/log_file_service_v1.json",
+        "kind": "json",
+        "selector": [
+          "protocol_version"
+        ]
+      }
+    },
+    "DIAG": {
+      "scope": "independent data/wire contract",
+      "source": {
+        "path": "contracts/maintenance_diagnostics_v1.json",
+        "kind": "json",
+        "selector": [
+          "schema_version"
+        ]
+      }
+    },
+    "installation": {
+      "scope": "independent data/wire contract",
+      "source": {
+        "path": "contracts/installation_calibration_v1.json",
+        "kind": "json",
+        "selector": [
+          "contract_version"
+        ]
+      },
+      "source_required": false,
+      "availability_note": "Development source may be absent from this checkout; no inferred compatibility value."
+    },
+    "FLP.project": {
+      "scope": "independent data contract",
+      "source": {
+        "path": "apps/FLP/src/silverstar_flp/core/project.py",
+        "kind": "python_constant",
+        "name": "PROJECT_VERSION"
+      }
+    },
+    "FLP.artifact": {
+      "scope": "independent data contract",
+      "source": {
+        "path": "apps/FLP/src/silverstar_flp/core/artifacts.py",
+        "kind": "python_constant",
+        "name": "ARTIFACT_VERSION"
+      }
+    },
+    "Descriptor.record": {
+      "scope": "independent data contract",
+      "source": {
+        "path": "apps/FLP/src/silverstar_flp/decoder_profiles/descriptor.py",
+        "kind": "python_constant",
+        "name": "DECODER_PROFILE_DESCRIPTOR_RECORD_VERSION"
+      }
+    },
+    "navigation.journal": {
+      "scope": "independent operation contract",
+      "source": {
+        "path": "apps/SCG/plugins/builtin/silverstar_algorithm_augmented_common/payload/Algorithm/Estimator/Augmented/Inc/navigation_journal.h",
+        "kind": "text_pattern",
+        "pattern": "^#define NAVIGATION_JOURNAL_REVISION ([0-9]+)U$"
+      },
+      "source_required": false,
+      "availability_note": "Development source may be absent from this checkout; no inferred compatibility value."
+    },
+    "Android.preview": {
+      "scope": "independent development preview; not desktop release",
+      "source": {
+        "path": "apps/GSHC_Android/app/build.gradle",
+        "kind": "text_pattern",
+        "pattern": "^\\s*versionName '([^']+)'$"
+      }
+    },
+    "DeviceService.mock": {
+      "scope": "independent mock prototype; no hardware acceptance",
+      "source": {
+        "path": "apps/DeviceService/device_service.py",
+        "kind": "text_pattern",
+        "pattern": "\"source_app\": \\{\"name\": \"SilverStar_DeviceService\", \"version\": \"([^\"]+)\"\\}"
+      }
+    },
+    "decoder.project_semantics": {
+      "scope": "independent semantic contract",
+      "source": {
+        "kind": "json",
+        "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/templates/generated/project_semantics.json",
+        "selector": [
+          "schema_id"
+        ]
+      }
+    },
+    "algorithm.parameter_schema": {
+      "scope": "independent parameter contract",
+      "source": {
+        "kind": "python_constant",
+        "path": "apps/FLP/src/silverstar_flp/decoder_profiles/algorithm_parameters.py",
+        "name": "PARAMETER_SCHEMA_ID"
+      }
+    }
+  },
+  "compatibility": [
+    {
+      "consumer": "FLP",
+      "requires": [
+        "decoder.package",
+        "SSLOG.container",
+        "SSLOG.catalog"
+      ],
+      "rule": "Exact Descriptor/generation-profile match; product version never authorizes fallback."
+    },
+    {
+      "consumer": "SCG existing project",
+      "requires": [
+        "SCG.project_formats"
+      ],
+      "rule": "Retain requested firmware identity and user-owned payload; report generator mismatch; no silent rebranding."
+    },
+    {
+      "consumer": "Flight and Ground",
+      "requires": [
+        "AIR",
+        "GSP"
+      ],
+      "rule": "Product alignment does not change wire/profile identities or qualify hardware."
+    },
+    {
+      "consumer": "maintenance clients",
+      "requires": [
+        "maintenance",
+        "LOGFILE",
+        "DIAG",
+        "installation"
+      ],
+      "rule": "Capabilities and the owning contract determine operations."
+    },
+    {
+      "consumer": "algorithm replay",
+      "requires": [
+        "decoder.package",
+        "navigation.journal"
+      ],
+      "rule": "Exact parameters, component manifests and operation contracts determine availability; version does not establish fidelity."
+    }
+  ]
+}

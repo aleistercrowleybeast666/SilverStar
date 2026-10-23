@@ -2,13 +2,16 @@ from __future__ import annotations
 
 import json
 import os
+import runpy
 import sys
 from pathlib import Path
 
 APP_NAME = "SilverStar_GSHC"
 APP_EN_NAME = "SilverStar_GSHC"
 APP_ORGANIZATION = "SilverStar"
-APP_VERSION = (Path(__file__).resolve().parents[2] / "VERSION").read_text(encoding="ascii").strip()
+_VERSION_ROOT = Path(sys._MEIPASS) if getattr(sys, "frozen", False) else Path(__file__).resolve().parents[2]
+_RELEASE = runpy.run_path(str(_VERSION_ROOT / "tools/silverstar_version.py"))["ReleaseIdentity_Load"](_VERSION_ROOT)
+APP_VERSION = _RELEASE.full
 APP_WINDOW_TITLE = "SilverStar GSHC"
 APP_ZH_DISPLAY_NAME = "SilverStar地面站上位机"
 APP_EN_DISPLAY_NAME = "SilverStar Ground Station Host Computer"

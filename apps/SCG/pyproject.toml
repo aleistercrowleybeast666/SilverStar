@@ -22,7 +22,7 @@ silverstar-fccg = "silverstar_fccg.app.application:main"
 where = ["src"]
 
 [tool.setuptools.dynamic]
-version = {attr = "silverstar_fccg.app.version.__version__"}
+version = {attr = "silverstar_fccg.app.version.__package_version__"}
 
 [tool.setuptools.package-data]
 silverstar_fccg = ["i18n/*.json", "ui/assets/*.svg", "hardware/usb_profiles/*.json"]

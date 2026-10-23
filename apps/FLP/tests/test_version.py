@@ -16,7 +16,7 @@ def test_version_has_one_runtime_authority_and_dynamic_packaging_metadata() -> N
     assert "version" not in payload["project"]
     assert "version" in payload["project"]["dynamic"]
     assert payload["tool"]["setuptools"]["dynamic"]["version"]["attr"] == (
-        "silverstar_flp.app.version.__version__"
+        "silverstar_flp.app.version.__package_version__"
     )
 
 

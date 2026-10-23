@@ -1,5 +1,6 @@
 # Three isolated analyses and executables; one shared dependency COLLECT.
 from pathlib import Path
+import runpy
 import json
 import os
 import subprocess
@@ -15,7 +16,7 @@ resource_prefixes = (
 )
 resource_files = [name for name in tracked if name and (
     name.startswith(resource_prefixes) or name in {
-        "VERSION", "apps/SCG/main.py", "apps/FLP/main.py", "apps/GSHC/main.py",
+        "VERSION", "versions.json", "tools/silverstar_version.py", "apps/SCG/main.py", "apps/FLP/main.py", "apps/GSHC/main.py",
         "apps/GSHC/app.py", "apps/GSHC/config.py",
     })]
 resource_files = [name for name in resource_files if name not in {"apps/SCG/tools/compare_reference_project.py", "apps/SCG/tools/nrf24_validate.py"}]
@@ -94,8 +95,8 @@ for app, package in [("SCG", "silverstar_fccg.app.application"), ("GSHC", "app")
             return stream.read(6)[4:] == b"\x4c\x01"
     a.binaries = [row for row in a.binaries if not incompatible_opengl(row)]
     pyz = PYZ(a.pure)
-    version_text = (repository / "VERSION").read_text(encoding="ascii").strip()
-    version = tuple(int(v) for v in version_text.split(".")) + (0,)
+    release = runpy.run_path(str(repository / "tools/silverstar_version.py"))["ReleaseIdentity_Load"](repository)
+    version_text, version = release.full, release.windows
     resource = VSVersionInfo(ffi=FixedFileInfo(filevers=version, prodvers=version,
         mask=0x3f, flags=0, OS=0x40004, fileType=1, subtype=0, date=(0,0)),
         kids=[StringFileInfo([StringTable("040904B0", [StringStruct("ProductName", "SilverStar"),
