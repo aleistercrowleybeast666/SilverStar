@@ -137,7 +137,7 @@ def SourcePackage_Export(
             content = source.read_bytes()
             source_bytes += len(content)
             info = zipfile.ZipInfo(
-                filename=f"SilverStar_FCCG/{relative.as_posix()}",
+                filename=f"SilverStar_SCG/{relative.as_posix()}",
                 date_time=(1980, 1, 1, 0, 0, 0),
             )
             info.compress_type = zipfile.ZIP_DEFLATED

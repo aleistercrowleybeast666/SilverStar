@@ -1,4 +1,4 @@
-"""Authoritative SilverStar platform and FCCG product identity."""
+"""Authoritative SilverStar platform and SCG product identity."""
 
 from pathlib import Path
 

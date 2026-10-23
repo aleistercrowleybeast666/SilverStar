@@ -1,4 +1,4 @@
-# FCCG User Guide
+# SCG User Guide
 
 ## 当前配置与版本
 
@@ -41,7 +41,7 @@ I2C外部上拉、PWM模式/极性、timebase、SDIO/FatFs等根据hardware snap
 Generate验证并增量物化源码、Generated glue、Make/EIDE/VS Code和项目描述符。它不自动执行完整构建/质量门。
 
 ## 7. Build/Validation
-使用EIDE/VS Code或FCCG高级操作执行支持的构建与验证。Stack Report通过生成工程的`mingw32-make CONFIG=Release stack-report`及Debug对应命令单独执行，详见[Build](BUILD.md)。
+使用EIDE/VS Code或SCG高级操作执行支持的构建与验证。Stack Report通过生成工程的`mingw32-make CONFIG=Release stack-report`及Debug对应命令单独执行，详见[Build](BUILD.md)。
 
 ## 8. `.ssdecoder`
 Logging启用时生成并可导出。它与对应日志精确匹配，供FLP后续解析；不要手工编辑包内容。

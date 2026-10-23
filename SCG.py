@@ -1,4 +1,4 @@
-"""Public SCG entry point; FCCG.py remains a compatible legacy launcher."""
+"""Public SilverStar SCG entry point."""
 from tools.launch import Application_Start
 
 if __name__ == "__main__":

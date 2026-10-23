@@ -3136,7 +3136,7 @@ class MainWindow(QMainWindow):
         selected, _filter = QFileDialog.getSaveFileName(
             self,
             self._translator.Text_Get("dialog.export_source_package"),
-            str(self._service.workspace_root / "SilverStar_FCCG-source.zip"),
+            str(self._service.workspace_root / "SilverStar_SCG-source.zip"),
             self._translator.Text_Get("filter.zip_archive"),
         )
         if not selected:

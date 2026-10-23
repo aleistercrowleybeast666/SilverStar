@@ -103,7 +103,7 @@ def test_bench_is_absent_from_default_graph_and_preserved_by_real_export(timing_
     SourcePackage_Export(fixture, destination)
     with zipfile.ZipFile(destination) as archive:
         for relative in BENCH_FILES:
-            name = "SilverStar_FCCG/plugins/builtin/silverstar_core_0_1_0/payload/" + relative
+            name = "SilverStar_SCG/plugins/builtin/silverstar_core_0_1_0/payload/" + relative
             assert archive.read(name) == (CORE / relative).read_bytes()
 
 

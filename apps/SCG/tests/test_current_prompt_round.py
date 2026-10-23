@@ -137,12 +137,12 @@ def test_source_package_is_deterministic_and_keeps_real_test_sources(
     assert first.destination.read_bytes() == second.destination.read_bytes()
     with zipfile.ZipFile(first.destination) as archive:
         names = set(archive.namelist())
-    assert "SilverStar_FCCG/tests/test_project_domain.py" in names
+    assert "SilverStar_SCG/tests/test_project_domain.py" in names
     assert (
-        "SilverStar_FCCG/plugins/builtin/silverstar_core_0_1_0/"
+        "SilverStar_SCG/plugins/builtin/silverstar_core_0_1_0/"
         "payload/Tests/Host/test_interfaces.c"
     ) in names
-    assert "SilverStar_FCCG/src/silverstar_fccg/build/runner.py" in names
+    assert "SilverStar_SCG/src/silverstar_fccg/build/runner.py" in names
     assert not any("/build/FCCG/" in name for name in names)
     assert not any(name.endswith((".o", ".d", ".lst", ".elf", ".bin", ".hex", ".map")) for name in names)
 
@@ -159,7 +159,7 @@ def test_source_package_omits_disposable_workspaces(tmp_path: Path) -> None:
     (nested_scratch / "generated.py").write_text("VALUE = 3\n", encoding="utf-8")
     result = SourcePackage_Export(root, tmp_path / "source.zip")
     with zipfile.ZipFile(result.destination) as archive:
-        assert archive.namelist() == ["SilverStar_FCCG/source.py"]
+        assert archive.namelist() == ["SilverStar_SCG/source.py"]
 
 
 def test_non_build_tasks_have_one_task_step_and_host_compiler_is_absolute(

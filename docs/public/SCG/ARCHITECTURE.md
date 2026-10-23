@@ -1,4 +1,4 @@
-# SilverStar_FCCG Architecture
+# SilverStar SCG Architecture
 
 Current application implementation: `apps/SCG`. The Python package and plugin IDs retain FCCG compatibility names. `docs/FCCG` and frozen evidence paths are historical namespaces; their recorded bytes and hashes are preserved.
 
@@ -12,7 +12,7 @@ Product version is 0.1.2. SCG accepts formats 14/15/16/17; feature tiers use 17.
 
 
 
-FCCG 是 SilverStar 平台的中央配置、组件装配、接口冻结与版本权威。插件是声明式数据和源文件payload，固件运行期不加载插件。
+SCG 是 SilverStar 平台的中央配置、组件装配、接口冻结与版本权威。插件是声明式数据和源文件payload，固件运行期不加载插件。
 
 ## 1. 应用层
 ```text
@@ -55,7 +55,7 @@ Physical Device Instance 与 plugin type 分离。一个物理设备可提供多
 Telemetry、Maintenance、Logging是三个独立nullable槽。物理Device存在与协议是否启用相互独立；移除唯一transport会清空依赖协议，恢复Device不会偷偷重启协议。
 
 ## 5. Generation ownership
-首次选择的组件payload复制进生成工程后归工程所有；普通Generate不覆盖。FCCG只管理`Generated/`、project descriptor、build/editor metadata、`.ssdecoder`等明确表面。SourceGraph是Make/EIDE/VS Code唯一构建真相。
+首次选择的组件payload复制进生成工程后归工程所有；普通Generate不覆盖。SCG只管理`Generated/`、project descriptor、build/editor metadata、`.ssdecoder`等明确表面。SourceGraph是Make/EIDE/VS Code唯一构建真相。
 
 ## 6. Safety
 路径、插件ZIP、输出目录、staging、atomic replace、dangerous change、Board resource closure、stack report、Power of Ten、static analysis均为显式门禁。当前软件验证不等于硬件/飞行认证。
