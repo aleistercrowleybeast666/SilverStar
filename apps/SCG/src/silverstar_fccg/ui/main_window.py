@@ -473,6 +473,9 @@ class MainWindow(QMainWindow):
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.default_root_action)
         self.file_menu.addAction(self.export_source_action)
+        self.attachments_action = QAction("打开附加资料目录 / Open Attachments", self)
+        self.attachments_action.triggered.connect(self._Attachments_Open)
+        self.file_menu.addAction(self.attachments_action)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.exit_action)
         self.plugin_menu = self.menuBar().addMenu("")
@@ -4001,6 +4004,19 @@ class MainWindow(QMainWindow):
             self._Error_Show(
                 self._translator.Text_Get("error.build_failed_summary"), result.output
             )
+
+    def _Attachments_Open(self) -> None:
+        from silverstar_fccg.project.folder_contract import AttachmentsDirectory_Ensure
+        if self._project_root is None:
+            self._Error_Show("请先打开或保存工程 / Open or save a project first")
+            return
+        try:
+            directory = AttachmentsDirectory_Ensure(self._project_root)
+        except (OSError, ValueError) as exc:
+            self._Error_Show(str(exc))
+            return
+        if not QDesktopServices.openUrl(QUrl.fromLocalFile(str(directory))):
+            self._Error_Show("无法打开附加资料目录 / Cannot open Attachments directory")
 
     def _FirmwareOutput_Open(self) -> None:
         directory, artifact_name = self._FirmwareArtifact_Get(self._model)

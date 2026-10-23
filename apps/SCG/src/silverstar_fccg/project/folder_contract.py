@@ -12,6 +12,7 @@ from silverstar_fccg.project.model import ProjectModel, ProjectModel_Load
 FLIGHT_DIRECTORY = "Flight_Controller"
 GROUND_DIRECTORY = "Ground_Station"
 LOG_DIRECTORY = "Log"
+ATTACHMENTS_DIRECTORY = "Attachments"
 PROJECT_FILENAME = "SilverStar.ssproject"
 
 
@@ -35,7 +36,7 @@ def ProjectRoot_Save(
         if current.identity.name != model.identity.name:
             raise ValueError("Project root belongs to another SilverStar project")
     directories = tuple(root / name for name in (
-        FLIGHT_DIRECTORY, GROUND_DIRECTORY, LOG_DIRECTORY,
+        FLIGHT_DIRECTORY, GROUND_DIRECTORY, LOG_DIRECTORY, ATTACHMENTS_DIRECTORY,
     ))
     # Check every child before creating anything, preserving same-named inputs.
     for directory in directories:
@@ -53,3 +54,16 @@ def ProjectRoot_Save(
         project_file, json.dumps(model.Dictionary_Get(), ensure_ascii=False, indent=2) + "\n"
     )
     return root
+
+
+def AttachmentsDirectory_Ensure(project_root: Path) -> Path:
+    """Only ensure a plain directory; never enumerate or open its contents."""
+    policy = WorkspacePolicy(project_root)
+    directory = policy.root / ATTACHMENTS_DIRECTORY
+    policy.Path_Resolve(directory)
+    if directory.is_symlink() or (hasattr(directory, "is_junction") and directory.is_junction()):
+        raise ValueError("Attachments directory must not be a link")
+    if directory.exists() and not directory.is_dir():
+        raise FileExistsError("Attachments name is occupied by a file")
+    policy.Directory_Ensure(directory)
+    return directory
