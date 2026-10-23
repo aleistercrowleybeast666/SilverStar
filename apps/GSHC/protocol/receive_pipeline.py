@@ -60,6 +60,7 @@ class ProtocolEvent:
     gyro_radps: tuple[float, float, float] | None = None
     capability_context: AirCapabilityMessage | None = None
     packet_stats: dict[str, int | float | bool] | None = None
+    recovery_session: int | None = None
 
 
 @dataclass(frozen=True)
@@ -76,7 +77,12 @@ class ReceivePipelineDiagnostics:
 class ReceivePipeline:
     """Pure protocol core used by the background worker and stress tests."""
 
-    def __init__(self) -> None:
+    def __init__(self, *, recovery_connection: int = 0) -> None:
+        if type(recovery_connection) is not int or recovery_connection < 0:
+            raise ValueError("recovery_connection_invalid")
+        self._recovery_connection = recovery_connection
+        self._recovery_epoch = 0
+        self._recovery_preflight_time = None
         self.gsp_parser = GspParser()
         self.gsp_parse_errors = 0
         self.air_frames = 0
@@ -170,6 +176,16 @@ class ReceivePipeline:
                         accel = None
                         gyro = None
 
+            # Capture identity while events still have receive order. UI coalescing
+            # may deliver an older position after BOOT; its identity must not change.
+            if isinstance(air_message, AirStatusMessage) and air_message.status_id == int(AirStatusId.BOOT):
+                self._recovery_epoch += 1
+                self._recovery_preflight_time = None
+            elif isinstance(air_message, AirPreflightStateMessage):
+                if self._recovery_preflight_time is not None and air_message.time_ms < self._recovery_preflight_time:
+                    self._recovery_epoch += 1
+                self._recovery_preflight_time = air_message.time_ms
+            recovery_session = (self._recovery_connection << 32) | self._recovery_epoch
             processed_ns = time.monotonic_ns()
             event = ProtocolEvent(
                 host_rx_monotonic_ns=rx_ns,
@@ -185,6 +201,7 @@ class ReceivePipeline:
                 gyro_radps=gyro,
                 capability_context=context,
                 packet_stats=packet_stats,
+                recovery_session=recovery_session,
             )
             events.append(event)
 

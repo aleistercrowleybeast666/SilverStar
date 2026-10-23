@@ -1085,7 +1085,9 @@ class Controller(QObject):
         self._last_boot_signature = None
         self._controller_time_ms = None
         self._controller_rollback_ms = None
+        recovery = self.state.recovery
         self.state = FlightControllerState(
+            recovery=recovery,
             session_generation=self._next_state_generation(),
             connected=connected,
             connection_text=connection_text,
@@ -1388,6 +1390,8 @@ class Controller(QObject):
     def on_protocol_batch(self, batch: ProtocolBatch) -> None:
         if batch.session_generation != self._connection_generation:
             return
+        if batch.recovery_session is not None:
+            self.state.recovery_current_session = batch.recovery_session
         for event in batch.events:
             if isinstance(event.parsed_gsp, GsToPcAirFrame):
                 self.state.rssi_dbm = event.rssi_dbm
@@ -1400,6 +1404,12 @@ class Controller(QObject):
                 self._handle_gsp_ack(event.parsed_gsp)
             if event.air_message is not None:
                 self._handle_air_message(event.air_message, event)
+        sample = batch.recovery_sample
+        if sample is not None:
+            self.state.recovery.Position_Observe(
+                sample.session, sample.time_ms, sample.enu_m, sample.received_ns,
+                source=sample.source, sequence=sample.sequence,
+            )
         self.state.touch()
 
     def _handle_gsp_ack(self, ack: GspAck) -> None:
@@ -2107,6 +2117,8 @@ class Controller(QObject):
         self._clear_capability_ack(reason)
         self.pending_air_cmds.clear()
         self.state = FlightControllerState(
+            recovery=previous.recovery,
+            recovery_current_session=previous.recovery_current_session,
             session_generation=previous.session_generation + 1,
             connected=previous.connected, connection_text=previous.connection_text,
             connection_message=previous.connection_message,
@@ -2337,6 +2349,12 @@ class Controller(QObject):
         if self.state.mission_presentation.phase is MissionPhase.PRE_START:
             self.state.mission_presentation.phase = MissionPhase.MISSION_ACTIVE
         self._handle_sensor_message(message, event, source="FLIGHT_STATE")
+        # The immutable receive-time identity is independent of GUI delivery order.
+        received_session = getattr(event, "recovery_session", None)
+        if received_session is not None:
+            self.state.recovery.Position_Observe(
+                received_session, message.time_ms, message.pos_m, event.host_rx_monotonic_ns,
+                source="AIR M0 FLIGHT_STATE (physical device identity unknown)", sequence=message.seq)
         if self.state.mission_first_time_ms is None:
             self.state.mission_first_time_ms = message.time_ms
         self.state.latest_flight_time_ms = message.time_ms

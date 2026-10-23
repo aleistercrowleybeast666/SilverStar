@@ -20,12 +20,15 @@ from protocol.receive_pipeline import (
     protocol_event_log_records,
 )
 from services.logger import AsyncJsonlLogger
+from services.recovery_position import RecoveryPosition, RecoverySample
 
 
 @dataclass(frozen=True)
 class ProtocolBatch:
     session_generation: int
     events: tuple[ProtocolEvent, ...]
+    recovery_session: int | None = None
+    recovery_sample: RecoverySample | None = None
 
 
 @dataclass(frozen=True)
@@ -84,7 +87,9 @@ class ProtocolWorker(QThread):
         self._ui_coalesced_events = 0
         self._accepting = True
         self._accept_lock = threading.Lock()
-        self._pipeline = ReceivePipeline()
+        self._pipeline = ReceivePipeline(recovery_connection=self.session_generation)
+        self._recovery_session = self.session_generation << 32
+        self._recovery_position = RecoveryPosition()
         self._serial_rx_bytes = 0
         self._serial_rx_chunks = 0
         self._last_rx_monotonic_ns: int | None = None
@@ -105,6 +110,8 @@ class ProtocolWorker(QThread):
         limit = max(1, int(max_events))
         selected: list[ProtocolEvent] = []
         with self._mailbox_lock:
+            recovery_session = self._recovery_session
+            recovery_sample = self._recovery_position.sample
             while self._mailbox and len(selected) < limit:
                 selected.append(self._mailbox.popleft())
 
@@ -121,7 +128,7 @@ class ProtocolWorker(QThread):
 
         if not selected:
             return None
-        return ProtocolBatch(self.session_generation, tuple(selected))
+        return ProtocolBatch(self.session_generation, tuple(selected), recovery_session, recovery_sample)
 
     @Slot(bytes)
     def enqueue_chunk(self, data: bytes) -> None:
@@ -209,6 +216,18 @@ class ProtocolWorker(QThread):
     def _publish_events(self, events: list[ProtocolEvent]) -> None:
         with self._mailbox_lock:
             for event in events:
+                received_session = event.recovery_session
+                if received_session is not None:
+                    self._recovery_session = max(self._recovery_session, received_session)
+                    if isinstance(event.air_message, AirFlightStateMessage):
+                        message = event.air_message
+                        # Preserve the last valid observation before lossy UI coalescing.
+                        self._recovery_position.Position_Observe(
+                            received_session, message.time_ms, message.pos_m,
+                            event.host_rx_monotonic_ns,
+                            source="AIR M0 telemetry / physical identity unknown",
+                            sequence=message.seq,
+                        )
                 if len(self._mailbox) < self.ui_mailbox_capacity:
                     self._mailbox.append(event)
                     continue

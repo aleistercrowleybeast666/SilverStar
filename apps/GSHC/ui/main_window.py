@@ -80,6 +80,7 @@ from ui.baud_combo import BaudComboBox
 from transport.serial_options import SerialBaud_Parse
 from ui.maintenance_page import MaintenancePage
 from ui.port_combo import PortComboBox
+from ui.recovery_panel import RecoveryPanel
 from ui.theme import ThemeColors, apply_application_theme, theme_colors
 from ui.touch_scroll import TouchScroll_Enable, TouchScroll_Wrap
 
@@ -2095,6 +2096,8 @@ class MainWindow(QMainWindow):
     def _build_post_process_page(self) -> QWidget:
         page = QWidget()
         root = QVBoxLayout(page)
+        self.recovery_panel = RecoveryPanel(page)
+        root.addWidget(self.recovery_panel)
         box = QGroupBox()
         self._bind_text(box, "group.post_process")
         layout = QVBoxLayout(box)
@@ -2695,6 +2698,7 @@ class MainWindow(QMainWindow):
         if state is None:
             return
         self.maintenance_page.render(state)
+        self.recovery_panel.Render(state)
         if (state.mission_started or state.start_transaction_pending()) and self.on_cancel_device_job is not None:
             self.on_cancel_device_job()
 

@@ -9,6 +9,7 @@ from typing import Iterable
 
 from config import MAX_LIVE_POINTS, PLOT_WINDOW_SECONDS, UI_EVENT_HISTORY_LIMIT
 from services.mission_trajectory import MissionTrajectoryHistory
+from services.recovery_position import RecoveryPosition
 from services.navigation_state import NavigationState
 from protocol.air import AirCapabilityMessage, AirSensorStatusMessage
 from protocol.common import (
@@ -456,6 +457,8 @@ class ReceiveHealth:
 @dataclass
 class FlightControllerState:
     session_generation: int = 0
+    recovery: RecoveryPosition = field(default_factory=RecoveryPosition)
+    recovery_current_session: int | None = None
     connected: bool = False
     connection_text: str = "未连接"
     connection_message: UiMessage = field(
