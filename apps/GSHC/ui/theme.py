@@ -112,6 +112,7 @@ def apply_application_theme(application: QApplication, theme: Theme) -> ThemeCol
     palette.setColor(QPalette.ColorRole.ToolTipBase, QColor(colors.panel))
     palette.setColor(QPalette.ColorRole.ToolTipText, QColor(colors.text))
     palette.setColor(QPalette.ColorRole.Text, QColor(colors.text))
+    palette.setColor(QPalette.ColorRole.PlaceholderText, QColor(colors.muted))
     palette.setColor(QPalette.ColorRole.Button, QColor(colors.button))
     palette.setColor(QPalette.ColorRole.ButtonText, QColor(colors.text))
     palette.setColor(QPalette.ColorRole.BrightText, QColor(colors.error))
@@ -120,7 +121,7 @@ def apply_application_theme(application: QApplication, theme: Theme) -> ThemeCol
         QPalette.ColorRole.HighlightedText,
         QColor(colors.highlighted_text),
     )
-    for group in (QPalette.ColorGroup.Disabled, QPalette.ColorGroup.Inactive):
+    for group in (QPalette.ColorGroup.Disabled,):
         palette.setColor(group, QPalette.ColorRole.Text, QColor(colors.disabled))
         palette.setColor(group, QPalette.ColorRole.ButtonText, QColor(colors.disabled))
         palette.setColor(group, QPalette.ColorRole.WindowText, QColor(colors.disabled))
@@ -246,7 +247,8 @@ def apply_application_theme(application: QApplication, theme: Theme) -> ThemeCol
             color: {colors.header_text};
             border: 1px solid {colors.header_control_border};
             border-radius: 3px;
-            padding: 5px 9px;
+            min-height: 30px;
+            padding: 1px 9px;
         }}
         QWidget#headerBar QPushButton:hover {{
             background-color: {colors.header_hover};
@@ -293,6 +295,9 @@ def apply_application_theme(application: QApplication, theme: Theme) -> ThemeCol
             min-height: 24px;
             min-width: 24px;
         }}
+        QMenu {{ background-color: {colors.panel}; color: {colors.text}; border: 1px solid {colors.border}; }}
+        QMenu::item:selected {{ background-color: {colors.highlight}; color: {colors.highlighted_text}; }}
+        QMenu::item:disabled {{ color: {colors.muted}; }}
         QToolTip {{
             background-color: {colors.panel};
             color: {colors.text};

@@ -3,6 +3,7 @@ from pathlib import Path
 import time
 from PySide6.QtWidgets import QCheckBox, QFileDialog, QGroupBox, QMessageBox, QPlainTextEdit, QPushButton, QVBoxLayout
 from services.recovery_position import Recovery_Export, Recovery_Text
+from ui.touch_scroll import TouchScroll_Enable
 
 
 class RecoveryPanel(QGroupBox):
@@ -15,6 +16,7 @@ class RecoveryPanel(QGroupBox):
         self.confirm.toggled.connect(self._Confirm)
         layout.addWidget(self.confirm)
         self.text = QPlainTextEdit()
+        TouchScroll_Enable(self.text)
         self.text.setReadOnly(True)
         self.text.setMinimumHeight(210)
         layout.addWidget(self.text)
