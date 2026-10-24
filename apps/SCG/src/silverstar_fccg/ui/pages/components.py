@@ -24,6 +24,7 @@ from PySide6.QtWidgets import (
 
 from silverstar_fccg.core.i18n import Translator
 from silverstar_fccg.ui.mission_profile_panel import MissionProfilePanel
+from silverstar_fccg.ui.mission_capsules import MissionCapsuleBoard
 from silverstar_fccg.core.view_models import (
     BoardCompatibilityView,
     CapabilityUsageView,
@@ -1544,8 +1545,9 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
         )
         self.root_layout.addWidget(self.estimator_strategy_group)
         self.mission_mode_layout = QVBoxLayout()
+        self.mode_capsule_boards = {}
         self.mission_mode_group = self.Group_Create(
-            "group.mission_modes", self.mission_mode_layout
+            "capsule.group", self.mission_mode_layout
         )
         self.root_layout.addWidget(self.mission_mode_group)
         self.mode_layout = QVBoxLayout()
@@ -1717,6 +1719,7 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
         self.strategy_combos.clear()
         self.mode_checks.clear()
         self.mode_parameter_spins.clear()
+        self.mode_capsule_boards.clear()
         strategy_slots: defaultdict[str, list[ComponentView]] = defaultdict(list)
         mode_owners: list[ComponentView] = []
         for component in self._components:
@@ -1795,6 +1798,20 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
             self.strategy_combos[slot] = combo
         for owner in sorted(mode_owners, key=lambda item: item.ui_order):
             slot = owner.selection_slot
+            if slot != 'calibration':
+                availability = {option: self._mode_availability.get((slot, option), SelectionAvailability(True))
+                                for option in owner.selection_options}
+                board = MissionCapsuleBoard(self._translator, owner, self._modes.get(slot, []),
+                    self._mode_parameters.get(slot, {}), availability, self._AvailabilityText_Get)
+                board.optionsChanged.connect(lambda selected, selected_slot=slot: self.modeChanged.emit(selected_slot, selected))
+                board.parameterChanged.connect(lambda option, parameter, value, selected_slot=slot:
+                    self.modeParameterChanged.emit(selected_slot, option, parameter, value))
+                self.mission_mode_layout.addWidget(board)
+                self.mode_capsule_boards[slot] = board
+                self.mode_checks[slot] = []
+                self.mode_parameter_spins.update({(slot, option, parameter): editor
+                    for (option, parameter), editor in board.parameter_editors.items()})
+                continue
             section = QWidget()
             section_layout = QVBoxLayout(section)
             section_layout.setContentsMargins(0, 0, 0, 0)

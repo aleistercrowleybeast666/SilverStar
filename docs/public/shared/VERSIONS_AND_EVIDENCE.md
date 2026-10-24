@@ -2,7 +2,24 @@
 
 ## 离线基线收口（2026-10-24，H7 硬件待就绪）
 
-基线提交为 `54baba43`。之后飞行配置首批增加三端快照检查和生成后调度检查，最终同一入口共 **744 passed，另 3 subtests passed**，9 组均退出 0，无 skip；证据在 `.work/ss013_20261024_final/summary.json`。源码哈希在最终运行期间未变化。功能范围见[飞行配置首批](MONOREPO_ARCHITECTURE.md)。下列 711 项是完成基线时的结果，保留其检查范围与硬件待测清单。
+基线提交为 `54baba43`。之后飞行配置快照基础保存为 `c5a73382`；当时同一入口共 **744 passed，另 3 subtests passed**，9 组均退出 0，无 skip；证据在 `.work/ss013_20261024_final/summary.json`。源码哈希在该次运行期间未变化。随后胶囊界面另做针对性回归，见下节；没有把多次选组结果拼成一次未执行的全量通过。功能范围见[飞行配置首批](MONOREPO_ARCHITECTURE.md)。下列 711 项是完成基线时的结果，保留其检查范围与硬件待测清单。
+
+### 胶囊界面增量检查（2026-10-24）
+
+`.work/caps013_20261024/summary.json` 记录 root 33、SCG 45、mission_scg 34 项均通过。随后补充胶囊编辑后的原生保存/重开和完整窗口中英文、浅深主题、960/1440 宽度检查，最新 `mission_scg` **34 passed**，证据在 `.work/caps013_20261024_final/summary.json`。该组含实际参数到 C 宏/精确 decoder、快照拒绝和故障保存、弹窗取消/精度、增删恢复、schema 扩展、不可用/必选约束，以及六个生成后的 Host 调度场景。
+
+旧 GUI 兼容检查的命令在 `apps/SCG` 下执行（临时目录必须在该应用的 WorkspacePolicy 范围内）：
+
+```powershell
+$env:QT_QPA_PLATFORM='offscreen'
+..\..\.venv\Scripts\python.exe -B -m pytest -q tests/test_configuration_reconcile.py::test_mode_clicks_are_deferred_and_reconcile_exactly_once tests/test_selection_restoration_20261005.py tests/test_gui_smoke.py::test_devices_page_is_physical_and_capabilities_are_on_flight_page tests/test_enter_commit_gui.py::test_mode_parameter_enter_commits_once_and_dropdown_stays_immediate -o addopts= -o cache_dir=.work/capsule013_recheck/cache --basetemp=.work/capsule013_recheck/tmp --junitxml=.work/capsule013_recheck/junit.xml
+```
+
+先创建本次专用的 `.work/capsule013_recheck` 父目录，采用新的目录名避免重用前次临时目录。兼容检查将旧复选框断言改为真实胶囊，同时保留延迟合并/恰好一次重建及 IMU 恢复/保存断言。初次发现两处测试在 BMI088 替换后忽略 UART/I2C 冲突，另一处写死旧维护协议 0.0 显示名及只有一个可选 profile；现在明确验证错误绑定仍拒绝生成，协议核对稳定 ID、实际 0.1 显示和声明的完整选项。未放宽资源解析或自动编造 I2C 硬件。修正后的同次兼容检查 **8 passed**、无 skip，证据在 `apps/SCG/.work/capsule013_20261024_compat/junit_final.xml` 与 `summary.json`；前几次失败 JUnit 保留，未当作通过报告。
+
+上述均为离线检查，不包含 H7 实板、触屏驱动、舵机或输出电气行为。胶囊当前只编辑既有三个触发条件；设备页实体卡片、独立舵机组件及按 ID 引用多个动作仍属后续设计。
+
+### 基线复现与范围
 
 在 `5794dab7` 之上，原 10 项失败已通过按权威合同校验和显式合成夹具身份修复。没有放宽生产解析器、猜测旧日志的算法版本或为新插件补造默认初始状态。可复现入口为仓库根目录：
 

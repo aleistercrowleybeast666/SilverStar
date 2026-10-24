@@ -36,6 +36,12 @@
 The five-page order is Devices → Flight Configuration → Algorithm Parameters → Hardware Connection → Code Generation & Build. Algorithm parameter widgets are generated from strict plugin declarations; use actual values/units, localized descriptions, basic/advanced CollapsibleSection and per-algorithm reset.
 
 
+## 任务规则胶囊
+
+飞行配置的非校准规则按 owner schema 生成胶囊：只显示已启用项，添加菜单屏蔽重复或不可用项；内联编辑常用参数，标题或 `…` 打开完整参数弹窗。弹窗使用独立草稿，应用后提交、取消不改工程；未编辑值不因显示精度被重写。移除规则保留参数以便恢复。按窗口宽度换行，不用胶囊顺序暗示运行顺序。新增选项必须主要由 schema 提供，不在窗口中硬编码业务参数。
+
+设备实体、输出能力和通道归飞控设备/硬件资源配置；规则和动作引用这些实体。阶段规则与连续估计/采样/记录分开。尚未实现的执行器类型不增加可点击占位项。
+
 ## Touch scrolling
 
 Ordinary scrolling content opts into the repository-local `TouchScroll_Enable` helper.

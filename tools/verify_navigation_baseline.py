@@ -25,7 +25,8 @@ GROUPS = {
     "host": ("apps/SCG", ["tests/test_navigation_delayed_health.py",
         "tests/test_navigation_integrity_host.py", "tests/test_navigation_augmented_host.py"]),
     "math": ("apps/SCG/experiments/navigation_0_1_3", []),
-    "mission_scg": ("apps/SCG", ["tests/test_mission_profile.py", "tests/test_flight_state_scheduler_generated_host.py"]),
+    "mission_scg": ("apps/SCG", ["tests/test_mission_profile.py", "tests/test_mission_capsules.py",
+        "tests/test_round4_navigation_ui.py", "tests/test_flight_state_scheduler_generated_host.py"]),
     "mission_flp": ("apps/FLP", ["tests/test_mission_profile.py"]),
     "mission_gshc": ("apps/GSHC", ["tests/test_mission_profile.py", "tests/test_navigation_gui.py"]),
 }
@@ -50,6 +51,12 @@ def Baseline_Main():
                 "tools/silverstar_mission_profile.py", "apps/SCG/src/silverstar_fccg/project/mission_profile.py",
                 "apps/SCG/src/silverstar_fccg/generator/render.py", "apps/GSHC/mission_profile.py",
                 "apps/SCG/src/silverstar_fccg/ui/mission_profile_panel.py",
+                "apps/SCG/src/silverstar_fccg/ui/mission_capsules.py",
+                "apps/SCG/src/silverstar_fccg/ui/pages/components.py",
+                "apps/SCG/src/silverstar_fccg/i18n/zh_CN.json",
+                "apps/SCG/src/silverstar_fccg/i18n/en_US.json",
+                "apps/SCG/tests/test_mission_capsules.py",
+                "apps/SCG/tests/test_round4_navigation_ui.py",
                 "apps/SCG/src/silverstar_fccg/ui/main_window.py", "apps/GSHC/ui/main_window.py",
                 "apps/FLP/src/silverstar_flp/decoder_profiles/mission_profile.py"]
     for folder in patterns:

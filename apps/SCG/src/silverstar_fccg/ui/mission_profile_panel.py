@@ -2,6 +2,7 @@
 from copy import deepcopy
 from PySide6.QtCore import Signal, Qt
 from PySide6.QtWidgets import QGroupBox, QLabel, QPushButton, QVBoxLayout
+from silverstar_fccg.ui.widgets import CollapsibleSection
 
 
 class MissionProfilePanel(QGroupBox):
@@ -20,7 +21,14 @@ class MissionProfilePanel(QGroupBox):
         for label in (self.lifecycle_label, self.continuous_label, self.rules_label, self.identity_label, self.scope_label):
             label.setWordWrap(True)
             label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
-            layout.addWidget(label)
+        layout.addWidget(self.lifecycle_label)
+        layout.addWidget(self.scope_label)
+        self.details = CollapsibleSection(expanded=False)
+        details_layout = QVBoxLayout(self.details.body)
+        details_layout.setContentsMargins(8, 0, 0, 0)
+        for label in (self.continuous_label, self.rules_label, self.identity_label):
+            details_layout.addWidget(label)
+        layout.addWidget(self.details)
         self.export_button = QPushButton()
         self.export_button.setObjectName('missionProfileExportButton')
         self.export_button.clicked.connect(lambda _checked=False: self.exportRequested.emit())
@@ -35,6 +43,7 @@ class MissionProfilePanel(QGroupBox):
         self._translator = translator
         text = translator.Text_Get
         self.setTitle(text('mission_profile.title'))
+        self.details.Title_Set(text('mission_profile.details'))
         self.export_button.setText(text('mission_profile.export'))
         self.export_button.setEnabled(self._profile is not None)
         self.scope_label.setText(text('mission_profile.scope'))

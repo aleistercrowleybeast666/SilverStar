@@ -280,7 +280,7 @@ def test_mode_clicks_are_deferred_and_reconcile_exactly_once(
     )
     try:
         for _cycle in range(2):
-            for slot in ("calibration", "deployment"):
+            for slot in ("calibration",):
                 options = tuple(
                     str(check.property("selectionOption"))
                     for check in window.flight_configuration_page.mode_checks[slot]
@@ -307,6 +307,26 @@ def test_mode_clicks_are_deferred_and_reconcile_exactly_once(
                     QCoreApplication.sendPostedEvents(
                         None, QEvent.Type.DeferredDelete
                     )
+            board = window.flight_configuration_page.mode_capsule_boards['deployment']
+            assert board.add_actions
+            for option in tuple(board.add_actions):
+                board = window.flight_configuration_page.mode_capsule_boards['deployment']
+                selected = option in board.cards
+                if not selected and not board.add_actions[option].isEnabled():
+                    continue
+                before = calls
+                if selected:
+                    board.Option_Remove(option)
+                else:
+                    board.add_actions[option].trigger()
+                assert calls == before
+                qapp.processEvents()
+                assert calls == before + 1
+                replacement = window.flight_configuration_page.mode_capsule_boards['deployment']
+                assert replacement is not board
+                assert shiboken6.isValid(replacement)
+                assert (option in replacement.cards) != selected
+                QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
         assert not window._mode_refresh_scheduled
         assert not window._pending_mode_changes
     finally:

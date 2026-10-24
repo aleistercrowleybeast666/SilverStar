@@ -484,13 +484,16 @@ def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
             "maintenance",
             "logging",
         }
-        assert window.flight_configuration_page.protocol_combos[
-            "maintenance"
-        ].currentText() == "串口维护协议 0.0"
-        assert all(
-            combo.count() == 2
-            for combo in window.flight_configuration_page.protocol_combos.values()
-        )
+        maintenance_combo = window.flight_configuration_page.protocol_combos['maintenance']
+        selected_maintenance = window._model.protocols['maintenance']
+        assert tuple(maintenance_combo.currentData()) == (selected_maintenance.component, selected_maintenance.profile)
+        assert maintenance_combo.currentText() == "串口维护协议 0.1"
+        for category, combo in window.flight_configuration_page.protocol_combos.items():
+            declared = window.flight_configuration_page._protocol_profiles[category]
+            assert combo.itemData(0) is None
+            choices = [tuple(combo.itemData(index)) for index in range(1, combo.count())]
+            assert len(choices) == len(set(choices))
+            assert set(choices) == {(profile.component_id, profile.profile_id) for profile in declared}
         source = (Path(__file__).resolve().parents[1] /
                   "src/silverstar_fccg/ui/pages/components.py").read_text(encoding="utf-8")
         assert "JY901B" not in source
@@ -579,10 +582,11 @@ def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
             for row in range(logging_table.rowCount())
         )
 
-        delay_spin = window.flight_configuration_page.mode_parameter_spins[
-            ("deployment", "Delay", "delay")
+        # Capsules only render enabled rules; use the active Tilt rule.
+        active_spin = window.flight_configuration_page.mode_parameter_spins[
+            ("deployment", "Tilt", "tilt_threshold")
         ]
-        assert delay_spin.buttonSymbols() == (
+        assert active_spin.buttonSymbols() == (
             QAbstractSpinBox.ButtonSymbols.PlusMinus
         )
         assert "spin_plus_light.svg" in qapp.styleSheet()

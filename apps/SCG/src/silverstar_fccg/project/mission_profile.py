@@ -14,11 +14,15 @@ MissionProfile_Write = _API["MissionProfile_Write"]
 MissionProfile_Require = _API["MissionProfile_Require"]
 
 
+class MissionProfileUnsupportedError(ValueError):
+    """An optional snapshot format cannot describe this otherwise valid recipe."""
+
+
 def MissionProfile_Build(model, catalog):
     contract = _API["CONTRACT"]
     catalog = catalog.ProjectView_Get(model)
     if "silverstar.flight_logic.cycle.reference" not in model.ComponentIds_Get():
-        raise ValueError("mission_profile_template_unsupported")
+        raise MissionProfileUnsupportedError("mission_profile_template_unsupported")
     def component(component_id):
         if component_id is None:
             return None
@@ -31,6 +35,8 @@ def MissionProfile_Build(model, catalog):
         selection = manifest.selection
         if selection is None or selection.slot == "calibration" or selection.kind.value != "mode":
             continue
+        if component(component_id) != contract['rule_owner']:
+            raise MissionProfileUnsupportedError('mission_profile_rule_unsupported:' + component_id + '@' + manifest.version)
         for option in selection.options:
             values = model.mode_parameters.get(selection.slot, {}).get(option, {})
             rules.append({"owner": component(component_id), "slot": selection.slot, "option": option,

@@ -24,11 +24,13 @@ def test_navigation_sections_are_single_level_and_draft_is_cancelable(qapp) -> N
         parameters = page.parameters_section
         headings = [label for label in page.findChildren(QLabel)
                     if label.property("navigationSectionKey")]
-        assert [label.property("navigationSectionKey") for label in headings] == ["navigation.resource_timing"]
-        assert parameters.toggle_button.text() == "Algorithm Parameters"
-        assert not parameters.Expanded_Is()
-        assert page.root_layout.indexOf(parameters) < page.root_layout.indexOf(headings[0].parentWidget())
-        assert not any(label.text() == parameters.toggle_button.text() for label in page.findChildren(QLabel))
+        assert [label.property("navigationSectionKey") for label in headings] == ["navigation.parameters", "navigation.resource_timing"]
+        assert headings[0].text() == "Algorithm Parameters"
+        # Current navigation sections are flat wrappers, avoiding a duplicate
+        # disclosure/frame around the editors that already own their sections.
+        assert not hasattr(parameters, 'toggle_button')
+        assert page.root_layout.indexOf(parameters) < page.root_layout.indexOf(headings[-1].parentWidget())
+        assert sum(label.text() == 'Algorithm Parameters' for label in page.findChildren(QLabel)) == 1
         original = AlignmentConfiguration(external_known_azimuth_deg=0.0)
         page.AlignmentConfiguration_Set(original, EXTERNAL,
             (DeviceInstance("imu0", "silverstar.device.imu.jy901b"),))
