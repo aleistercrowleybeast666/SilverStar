@@ -993,5 +993,8 @@
   "integrity.vertical_display_explanation": "Offline vertical consistency only; it never feeds KF6 gating. Gray lines mark local reference resets, not recorded GNSS outages or rejection.",
   "parameter.nis_soft_enabled": "Enable NIS soft gate",
   "parameter.nis_hard_enabled": "Enable NIS hard gate",
-  "parameter_group.nis": "NIS gates"
+  "parameter_group.nis": "NIS gates",
+  "mission_process.declared": "Declared phases: {stages} (desktop reference; no onboard phase records)",
+  "mission_process.trace_open": "Open offline mission trace",
+  "mission_process.reference_trace": "Desktop reference (not onboard Recorded data): {timeline}"
 }

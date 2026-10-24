@@ -93,10 +93,13 @@ def PhysicalCapabilities_Get(
 
 
 def _SelectedComponentIdsForStrategy_Get(
-    model: ProjectModel, slot: str, component_id: str
+    model: ProjectModel, slot: str, component_id: str, catalog: PluginCatalog
 ) -> tuple[str, ...]:
     candidate = deepcopy(model)
     candidate.strategies[slot] = component_id
+    # A strategy's non-selectable support package is a dependency, not another
+    # user choice. Evaluate that same closure before presenting availability.
+    _RequiredDependencies_Reconcile(candidate, catalog)
     return candidate.ComponentIds_Get()
 
 
@@ -207,7 +210,7 @@ def StrategyAvailabilities_Get(
     for slot in catalog.SelectionSlots_Get(SelectionKind.STRATEGY.value):
         for manifest in catalog.SelectionSlot_Get(slot):
             component_ids = _SelectedComponentIdsForStrategy_Get(
-                model, slot, manifest.component_id
+                model, slot, manifest.component_id, catalog
             )
             values[manifest.component_id] = _ManifestAvailability_Get(
                 manifest, component_ids, catalog

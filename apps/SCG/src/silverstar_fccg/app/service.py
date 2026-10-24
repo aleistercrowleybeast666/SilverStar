@@ -1318,6 +1318,7 @@ class FccgService:
                 profile=instance.profile,
                 installation_orientation=instance.installation_orientation,
                 mount_nose_axis=instance.mount_nose_axis,
+                mount_x_axis=instance.mount_x_axis,
                 position_body_m=(tuple(instance.position_body_m.Dictionary_Get().values())
                                  if instance.position_body_m is not None else None),
             )

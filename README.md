@@ -109,7 +109,20 @@ v0.1.2 的实测配置包括 STM32F407 飞控和 STM32F103 串口地面站，覆
 
 各项检查的适用范围见[版本与证据边界](docs/public/shared/VERSIONS_AND_EVIDENCE.md)和[软件验证说明](docs/public/SOFTWARE_VERIFICATION.md)。
 
-当前开发线已完成离线基线整理，并接入[飞行配置首批](docs/public/shared/MONOREPO_ARCHITECTURE.md)：SCG 导出版本化 `.ssmission`，GSHC 离线查看，FLP 从精确 decoder 读取配置声明。任务规则现可添加为胶囊，内联修改常用参数、弹窗配置详情；原有策略参数继续进入实际生成配置，生命周期仍采用固定模板。飞控设备页拥有实体与通道，飞行配置引用设备的后续方案也记录在该说明中。运行 `.\.venv\Scripts\python.exe -B tools/verify_navigation_baseline.py` 可复现当前选定检查；配置快照基础曾通过 744 项检查，后续胶囊检查单独记录于[版本与证据边界](docs/public/shared/VERSIONS_AND_EVIDENCE.md)。H7 整板、时序、资源和飞行验证待硬件就绪。
+当前开发线已完成离线基线整理。飞行配置现在可创建无控任务阶段模板、插入自定义阶段（例如预开伞等待）、调整顺序，并选择将 START 与起飞检测分开或显式合并。原生工程、`.ssmission` v2、GSHC 离线查看及 FLP 精确 decoder 声明已接通；共享参考解释器可输出摘要匹配的 `.ssmissiontrace`。**新阶段尚未绑定固件执行，带该流程的固件生成会明确拒绝**；原固件流程与已有参数保持原路径，不能把桌面参考记录当作板端 Recorded。[任务过程与后续接入](docs/public/shared/MONOREPO_ARCHITECTURE.md)
+
+机体系采用固定导航点 O、+z 朝鼻锥、+x 朝舱门径向基准、+y=z×x 的右手系。无下标 xyz（兼容旧 XYZ）均表示箭体系；设备原生轴使用 s_i 下标，导航系用 E/N/U。主 IMU 可以非零，安装分布图使用实际位置；原始 IMU 可以配置鼻锥轴及舱门轴。逐设备杆臂补偿尚未启用，旧安装基准保持原义。[坐标定义与公开参考](docs/public/algorithms/NAVIGATION_IMPLEMENTATION.md)
+
+ESKF20、InEKF15、InEKF20 已开放选择、生成及实验构建，不再以缺少已验证时序为由禁止构建；明确标记硬件/时序/飞行未经验证。初值、协方差、噪声与物理模型约束仍须配置，构建成功不代表运行初始化或飞行验收通过。
+
+合成案例（参考事件序列，不是飞行数据；输出路径须不存在）：
+
+```powershell
+New-Item -ItemType Directory -Path .work -Force | Out-Null
+.\.venv\Scripts\python.exe -B tools/replay_mission_process.py apps/SCG/examples/Uncontrolled_Desktop_Reference.ssmission apps/SCG/examples/Uncontrolled_Reference_Events.jsonl .work/uncontrolled_demo.ssmissiontrace
+```
+
+配套原生工程在 `apps/SCG/examples/Uncontrolled_Desktop_Reference.ssproject`。在 SCG 打开后先另存到自己的工程目录再编辑；当前每阶段一个进入条件，尚无组合条件或分支。GSHC 可打开快照及同摘要的参考 trace；FLP 从精确 decoder 读取配置后才接受匹配 trace。配置快照基础曾通过 744 项检查，后续增量检查及 H7 待测清单见[版本与证据边界](docs/public/shared/VERSIONS_AND_EVIDENCE.md)。
 
 ### 从源码运行
 

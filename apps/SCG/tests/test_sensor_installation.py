@@ -166,7 +166,7 @@ def test_every_backend_reports_unapplied_coordinates(builtin_catalog, estimator)
 
 def test_origin_required_for_generation_and_other_devices_cannot_claim_position(tmp_path, builtin_catalog):
     model = _Model_Get(builtin_catalog)
-    model.sensor_installation = SensorInstallationConfiguration()
+    model.sensor_installation = SensorInstallationConfiguration(schema_version=1)
     editing = SensorInstallationIssues_Get(model, builtin_catalog, editing=True)
     assert next(item for item in editing if item.code == "INSTALLATION_ORIGIN_UNDEFINED").level == "warning"
     assembler = ProjectAssembler(WorkspacePolicy(tmp_path), builtin_catalog)
@@ -231,7 +231,9 @@ def test_real_gui_entry_instance_switch_language_and_save_reopen(tmp_path, works
     font = Path("C:/Windows/Fonts/msyh.ttc")
     if not QFontDatabase.families() and font.is_file():
         assert QFontDatabase.addApplicationFont(str(font)) >= 0
-    window = MainWindow(SettingsStore(tmp_path / "settings/scg.ini"), service=FccgService(workspace_root))
+    service = FccgService(workspace_root)
+    service.policy = WorkspacePolicy(Path(__file__).resolve().parents[3])
+    window = MainWindow(SettingsStore(tmp_path / "settings/scg.ini"), service=service)
     window._MessageBox_Exec = lambda *args, **kwargs: QMessageBox.StandardButton.Discard
     window._model = window._service.ReferenceProject_Create("InstallationGui013")
     # The existing GUI open workflow enables the Ground target. Start with the
@@ -246,8 +248,7 @@ def test_real_gui_entry_instance_switch_language_and_save_reopen(tmp_path, works
         page = window.devices_page
         assert not page.position_editors["imu0"].recorded.isChecked()
         assert not page.position_editors["imu0"].coordinates["x"].isEnabled()
-        page.installation_origin.setText(ORIGIN)
-        QTest.keyClick(page.installation_origin, Qt.Key.Key_Return)
+        assert not hasattr(page, 'installation_origin')
         page.position_editors["imu0"].recorded.click()
         spin = page.position_editors["imu0"].coordinates["z"]
         spin.setFocus()
@@ -288,7 +289,8 @@ def test_real_gui_entry_instance_switch_language_and_save_reopen(tmp_path, works
         qapp.processEvents()
         assert window._model.Dictionary_Get() == saved
         assert page.position_editors["imu0"].coordinates["z"].value() == -0.125
-        assert page.installation_origin.text() == ORIGIN
+        assert not hasattr(page, 'installation_origin')
+        assert window._model.sensor_installation.Dictionary_Get()['origin_kind'] == 'fixed_navigation_reference_point'
         assert not list((tmp_path / "gui-project").rglob("*.bin"))
         assert not list((tmp_path / "gui-project").rglob("*.ssdecoder"))
         scroll = page.findChild(QScrollArea)

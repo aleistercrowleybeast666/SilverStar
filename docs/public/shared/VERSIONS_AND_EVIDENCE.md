@@ -1,10 +1,53 @@
 # 产品、格式与证据身份
 
+## 导航安装、实验估计器与任务阶段增量（2026-10-24）
+
+本批在 `2ecd7a96` 之上修正胶囊含义：胶囊编辑有序任务阶段，原开伞规则恢复普通参数编辑。新流程以原生工程格式 22、`.ssmission` v2 和共享桌面解释器保存、校验、参考执行；GSHC/FLP 可展示同摘要的参考记录。安装文本框已移除，新安装采用固定导航点；无下标 xyz（兼容 XYZ）为箭体系，设备原生轴带 s_i 下标，世界轴标 E/N/U。实际位置图、24 种正交右手安装映射、磁力计入口和三种实验估计器的选择/生成已接通。
+
+### 当前能力边界
+
+- 安装位置 `runtime_applied=false`，尚无逐设备杆臂补偿。旧安装基准不自动平移/旋转；用户显式确认采用导航点也不会改变原数字。主 IMU 不强制位于 O。
+- ESKF20/InEKF15/InEKF20 可选择、生成和实验构建；未验证时序降为警告，真实资源/参数/物理模型错误仍拒绝。新配置的软件验证标记默认 1，初始化确认仍为 0，旧显式值保留。数值内核未在本批改写；无 H7 整板 link、时序、电气或飞行验收。
+- 任务阶段每个只有一个进入条件，最多 32 个顺序阶段；组合条件、分支、并发和循环待实现。START 与物理起飞默认分开，可显式合并，已定制的 START 阶段不会被静默删除。
+- 解释器记录模拟动作请求，不产生硬件输出或确认开伞。trace 校验检查摘要、顺序、时间和进入/动作配对，不能证明输入条件、物理检测或板端执行。
+- **自定义流程尚未绑定固件 owner、AIR 新消息或 SSLOG 新记录**；带该流程的固件生成明确拒绝。GSHC 的离线导入不改变 READY/START 权限，FLP 不回填 Recorded、不修改源日志。真实运行过程仍须由固件事件与快照报告，接入设计见[架构](MONOREPO_ARCHITECTURE.md)。
+
+### 本批检查与复现
+
+环境沿用仓库 `.venv`、Qt offscreen 与 Host GCC；所有案例均为合成输入，无硬件操作。证据保存在忽略目录，源码、测试和合同提交到仓库。后文 711/744 等是对应历史批次的结果，不能视为本次全套回归。
+
+任务流程分组入口（仓库根目录，输出目录须不存在）：
+
+```powershell
+.\.venv\Scripts\python.exe -B tools/verify_navigation_baseline.py --group mission_scg --group mission_flp --group mission_gshc --output .work/mp013_recheck
+# 公开工程 Schema、版本与启动检查；独立的新输出目录
+.\.venv\Scripts\python.exe -B tools/verify_navigation_baseline.py --group root --group scg --output .work/mp013_schema_recheck
+```
+
+本次任务流程同一次分组运行 **61 passed**：SCG 50、FLP 5、GSHC 6，无失败/skip，证据 `.work/mp013_final2/summary.json`。包括真实 GUI 增删/排序/弹窗取消与保存、START 模式、生成拒绝、摘要匹配、数据缺口以及六个既有生成后 Host 调度场景。随后收尾发现公开项目 Schema 仍停在 21，补齐 22、安装 v2、任务阶段和安装轴定义；`schema_before.json` 保留新样例修复前被拒绝的结果。生产解析器额外补上非法安装轴类型的明确错误。
+
+其它已执行检查（每份报告保留其各自源码身份，不拼接成未执行的全量回归）：
+
+| 范围 | 结果 | 证据 |
+|---|---|---|
+| 最后 Schema/解析器增量：版本/桌面入口与 SCG | root 33、SCG 58，共 91 passed，无失败/skip | `.work/mp013_schema_final/summary.json` |
+| 安装保存/恢复、实际磁力计声明和生成 | 42 passed | `.work/mproc013_20261024/fix_junit.xml` |
+| 数学/源码隔离与新默认实验标记 | 12 passed | `.work/mproc013_20261024/isolation_junit.xml` |
+| 最新下标标注、24 种右手映射、实际 GUI 编辑和保存重开 | 6 passed | `.work/mproc013_20261024/final_subscript_junit.xml` |
+| JY901B 安装预设和新生成资源的严格 Host 编译/执行 | 7 passed | `apps/SCG/.work/mp013_compat/fix_junit.xml` |
+| GSHC 磁预览与已有校准几何 | 3 passed | `.work/mproc013_20261024/notation_fix_junit.xml` |
+
+前次较宽增量运行 `.work/mp013_final/summary.json` 为 root 33、SCG 45、mission_scg 47、mission_flp 5、mission_gshc 6 项通过，之后又调整了标注、边界和 trace 校验，故不将该报告称为最终源码的完整回归。Schema 与安装轴类型的最后增量另运行 `root`/`scg`，结果见 `.work/mp013_schema_final/summary.json`。
+
+初次增量运行的失败报告保留：安装 GUI 测试临时目录超出应用策略；磁声明的头文件单元夹具缺少维护通道；JY901B Host 链接夹具缺少 CubeMX UART handle；磁预览旧断言仍期待无下标轴名。修正测试作用域和真实 Host 资源夹具后重跑，未放宽生产资源/时序校验。UART handle 仅在 Host 夹具翻译单元中私有定义，不进入固件。
+
+九阶段合成输入实际通过 `tools/replay_mission_process.py`，最终源码重跑输出 `.work/mp013_schema_final/uncontrolled_demo.ssmissiontrace`：9 个阶段、complete=true、hardware_actions=0。浅/深主题的最终真实 Qt 截图为 `.work/mproc013_20261024/*_notation_final.png`；截图中的安装数字为独立 QA 合成数据，不写入正式样例。
+
 ## 离线基线收口（2026-10-24，H7 硬件待就绪）
 
 基线提交为 `54baba43`。之后飞行配置快照基础保存为 `c5a73382`；当时同一入口共 **744 passed，另 3 subtests passed**，9 组均退出 0，无 skip；证据在 `.work/ss013_20261024_final/summary.json`。源码哈希在该次运行期间未变化。随后胶囊界面另做针对性回归，见下节；没有把多次选组结果拼成一次未执行的全量通过。功能范围见[飞行配置首批](MONOREPO_ARCHITECTURE.md)。下列 711 项是完成基线时的结果，保留其检查范围与硬件待测清单。
 
-### 胶囊界面增量检查（2026-10-24）
+### 旧触发规则胶囊增量检查（2026-10-24，历史结果）
 
 `.work/caps013_20261024/summary.json` 记录 root 33、SCG 45、mission_scg 34 项均通过。随后补充胶囊编辑后的原生保存/重开和完整窗口中英文、浅深主题、960/1440 宽度检查，最新 `mission_scg` **34 passed**，证据在 `.work/caps013_20261024_final/summary.json`。该组含实际参数到 C 宏/精确 decoder、快照拒绝和故障保存、弹窗取消/精度、增删恢复、schema 扩展、不可用/必选约束，以及六个生成后的 Host 调度场景。
 
@@ -17,7 +60,7 @@ $env:QT_QPA_PLATFORM='offscreen'
 
 先创建本次专用的 `.work/capsule013_recheck` 父目录，采用新的目录名避免重用前次临时目录。兼容检查将旧复选框断言改为真实胶囊，同时保留延迟合并/恰好一次重建及 IMU 恢复/保存断言。初次发现两处测试在 BMI088 替换后忽略 UART/I2C 冲突，另一处写死旧维护协议 0.0 显示名及只有一个可选 profile；现在明确验证错误绑定仍拒绝生成，协议核对稳定 ID、实际 0.1 显示和声明的完整选项。未放宽资源解析或自动编造 I2C 硬件。修正后的同次兼容检查 **8 passed**、无 skip，证据在 `apps/SCG/.work/capsule013_20261024_compat/junit_final.xml` 与 `summary.json`；前几次失败 JUnit 保留，未当作通过报告。
 
-上述均为离线检查，不包含 H7 实板、触屏驱动、舵机或输出电气行为。胶囊当前只编辑既有三个触发条件；设备页实体卡片、独立舵机组件及按 ID 引用多个动作仍属后续设计。
+上述均为当时的离线检查，不包含 H7 实板、触屏驱动、舵机或输出电气行为。当时胶囊只编辑既有三个触发条件；该界面已由本页首节的阶段胶囊替代，旧检查数字不描述当前界面。独立舵机组件和板端阶段执行仍属后续工作。
 
 ### 基线复现与范围
 

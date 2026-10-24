@@ -25,7 +25,7 @@ GROUPS = {
     "host": ("apps/SCG", ["tests/test_navigation_delayed_health.py",
         "tests/test_navigation_integrity_host.py", "tests/test_navigation_augmented_host.py"]),
     "math": ("apps/SCG/experiments/navigation_0_1_3", []),
-    "mission_scg": ("apps/SCG", ["tests/test_mission_profile.py", "tests/test_mission_capsules.py",
+    "mission_scg": ("apps/SCG", ["tests/test_mission_profile.py", "tests/test_mission_phase_gui.py", "tests/test_mission_process.py", "tests/test_body_frame_and_layout.py", "tests/test_experimental_estimator_selection.py",
         "tests/test_round4_navigation_ui.py", "tests/test_flight_state_scheduler_generated_host.py"]),
     "mission_flp": ("apps/FLP", ["tests/test_mission_profile.py"]),
     "mission_gshc": ("apps/GSHC", ["tests/test_mission_profile.py", "tests/test_navigation_gui.py"]),
@@ -51,14 +51,25 @@ def Baseline_Main():
                 "tools/silverstar_mission_profile.py", "apps/SCG/src/silverstar_fccg/project/mission_profile.py",
                 "apps/SCG/src/silverstar_fccg/generator/render.py", "apps/GSHC/mission_profile.py",
                 "apps/SCG/src/silverstar_fccg/ui/mission_profile_panel.py",
-                "apps/SCG/src/silverstar_fccg/ui/mission_capsules.py",
+                "apps/SCG/src/silverstar_fccg/ui/mission_process_panel.py", "apps/SCG/src/silverstar_fccg/ui/sensor_layout_view.py", "tools/silverstar_mission_process.py",
+                "apps/SCG/src/silverstar_fccg/ui/sensor_installation_editor.py", "tools/replay_mission_process.py",
                 "apps/SCG/src/silverstar_fccg/ui/pages/components.py",
+                "apps/SCG/src/silverstar_fccg/project/model.py", "apps/SCG/src/silverstar_fccg/project/sensor_installation.py",
+                "apps/SCG/schemas/project.schema.json", "apps/SCG/tests/test_project_schema_current.py",
+                "apps/SCG/src/silverstar_fccg/project/configuration.py", "apps/SCG/src/silverstar_fccg/project/validation.py",
+                "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf20/plugin.json",
+                "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_inekf15/plugin.json",
+                "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_inekf20/plugin.json",
                 "apps/SCG/src/silverstar_fccg/i18n/zh_CN.json",
                 "apps/SCG/src/silverstar_fccg/i18n/en_US.json",
-                "apps/SCG/tests/test_mission_capsules.py",
+                "apps/SCG/tests/test_mission_phase_gui.py", "apps/SCG/tests/test_mission_process.py", "apps/SCG/tests/test_body_frame_and_layout.py", "apps/SCG/tests/test_experimental_estimator_selection.py",
                 "apps/SCG/tests/test_round4_navigation_ui.py",
                 "apps/SCG/src/silverstar_fccg/ui/main_window.py", "apps/GSHC/ui/main_window.py",
-                "apps/FLP/src/silverstar_flp/decoder_profiles/mission_profile.py"]
+                "apps/FLP/src/silverstar_flp/decoder_profiles/mission_profile.py",
+                "apps/FLP/src/silverstar_flp/ui/pages/overview.py",
+                "apps/GSHC/ui/magnetometer_preview.py", "apps/GSHC/processing/flight_plotter.py",
+                "apps/GSHC/services/i18n.py", "apps/GSHC/tests/test_axis_notation.py",
+                "apps/GSHC/tests/test_mission_profile.py", "apps/FLP/tests/test_mission_profile.py"]
     for folder in patterns:
         source = ROOT / folder
         for path in ([source] if source.is_file() else sorted(source.rglob("*"))):

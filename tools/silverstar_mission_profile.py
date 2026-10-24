@@ -8,10 +8,16 @@ import math
 import os
 from pathlib import Path
 import re
+import runpy
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT = json.loads((ROOT / "contracts/mission_profile_v1.json").read_text(encoding="utf-8"))
+_PROCESS = runpy.run_path(str(ROOT / 'tools/silverstar_mission_process.py'))
+MissionProcess_Default = _PROCESS['MissionProcess_Default']
+MissionProcess_Require = _PROCESS['MissionProcess_Require']
+MissionProcessRunner = _PROCESS['MissionProcessRunner']
+MissionTrace_Require = _PROCESS['MissionTrace_Require']
 
 
 class MissionProfileResult(str, Enum):
@@ -70,9 +76,32 @@ def _Component_Require(value):
 
 
 def MissionProfile_Require(value):
-    _Keys_Require(value, CONTRACT["fields"], "root")
-    if value["schema_id"] != CONTRACT["schema_id"] or type(value["schema_version"]) is not int or value["schema_version"] != 1:
+    if type(value) is not dict or type(value.get('schema_version')) is not int or value['schema_version'] not in (1, 2):
+        raise MissionProfileError('mission_profile_version')
+    version = value['schema_version']
+    _Keys_Require(value, [*CONTRACT['fields'], *(['process', 'devices'] if version == 2 else [])], 'root')
+    if value["schema_id"] != 'silverstar.mission-profile/' + str(version):
         raise MissionProfileError("mission_profile_version")
+    if version == 2:
+        devices = value['devices']
+        if type(devices) is not list or len(devices) > 128:
+            raise MissionProfileError('mission_profile_devices')
+        identities = set()
+        recovery_targets = set()
+        for device in devices:
+            _Keys_Require(device, ('instance_id', 'plugin_id', 'recovery_action'), 'device')
+            if type(device['instance_id']) is not str or not re.fullmatch(r'[a-z][a-z0-9_]{0,63}', device['instance_id']) or device['instance_id'] in identities:
+                raise MissionProfileError('mission_profile_device_id')
+            _Text_Require(device['plugin_id'])
+            if type(device['recovery_action']) is not bool:
+                raise MissionProfileError('mission_profile_device_capability')
+            identities.add(device['instance_id'])
+            if device['recovery_action']:
+                recovery_targets.add(device['instance_id'])
+        try:
+            MissionProcess_Require(value['process'], recovery_targets)
+        except (ValueError, TypeError) as error:
+            raise MissionProfileError(str(error)) from error
     if value["source"] != "scg_project" or value["frame"] != CONTRACT["frame"]:
         raise MissionProfileError("mission_profile_frame_or_source")
     if value["lifecycle"] != {"template_id": CONTRACT["lifecycle_template"], "states": CONTRACT["states"]}:
@@ -176,6 +205,39 @@ def _Profile_Decode(data):
 
 def MissionProfile_Read(path):
     return _Profile_Decode(_Bytes_Read(path))
+
+
+def MissionTrace_Read(path, profile):
+    validated = MissionProfile_Require(profile)
+    try:
+        value = json.loads(_Bytes_Read(path).decode('utf-8'), object_pairs_hook=_Pairs_Require)
+        return MissionTrace_Require(value, validated)
+    except (UnicodeError, json.JSONDecodeError, RecursionError) as error:
+        raise MissionProfileError('mission_trace_json') from error
+
+
+def MissionTrace_Write(path, trace, profile):
+    validated = MissionTrace_Require(trace, MissionProfile_Require(profile))
+    target = Path(path)
+    if target.suffix != '.ssmissiontrace' or target.exists():
+        raise MissionProfileError('mission_trace_new_path_required', MissionProfileResult.Conflict)
+    data = (json.dumps(validated, ensure_ascii=False, indent=2, allow_nan=False) + '\n').encode('utf-8')
+    if len(data) > CONTRACT['maximum_bytes']:
+        raise MissionProfileError('mission_trace_size')
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(dir=target.parent, prefix='.mission-trace-', delete=False) as stream:
+            temporary = Path(stream.name)
+            stream.write(data); stream.flush(); os.fsync(stream.fileno())
+        if target.exists():
+            raise MissionProfileError('mission_trace_path_changed', MissionProfileResult.Conflict)
+        os.replace(temporary, target)
+        return MissionProfileResult.Ok
+    except OSError as error:
+        raise MissionProfileError(str(error), MissionProfileResult.IoError) from error
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
 
 
 def MissionProfile_Write(path, value, replace_existing=False):

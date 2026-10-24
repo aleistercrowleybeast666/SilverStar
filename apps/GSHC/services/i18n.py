@@ -27,6 +27,9 @@ class EnumParam:
 
 
 ZH_CN: dict[str, str] = {
+    'mission_process.declared': '配置的任务阶段：{stages}（桌面参考，固件生效状态未核对）',
+    'mission_process.trace_open': '打开离线任务过程记录',
+    'mission_process.reference_trace': '桌面参考执行（不是板端 Recorded 数据，不改变实时状态）：{timeline}',
     "mission_profile.title": "SCG 任务配置（离线查看）",
     "mission_profile.open": "打开任务配置快照",
     "mission_profile.none": "未加载工程配置。实时飞行状态继续由设备遥测提供。",
@@ -344,6 +347,9 @@ ZH_CN: dict[str, str] = {
 
 EN_US: dict[str, str] = {
     "mission_profile.title": "SCG mission configuration (offline view)",
+    'mission_process.declared': 'Declared phases: {stages} (desktop reference; firmware application unverified)',
+    'mission_process.trace_open': 'Open offline mission trace',
+    'mission_process.reference_trace': 'Desktop reference (not onboard Recorded data; no live-state changes): {timeline}',
     "mission_profile.open": "Open mission configuration snapshot",
     "mission_profile.none": "No project configuration loaded. Live flight state comes from device telemetry.",
     "mission_profile.declared": "Project: {name}; SHA-256: {digest}\nDevice application is unverified. This file does not change live state, READY or command permissions.",

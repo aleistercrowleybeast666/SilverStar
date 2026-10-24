@@ -10,7 +10,7 @@ datas = [(str(shared / 'silverstar_diagnostics/stm32_targets.json'), 'silverstar
 repository = Path(SPECPATH).resolve().parents[1]
 datas += [(str(repository / name), str(Path(name).parent)) for name in ("VERSION", "versions.json", "tools/silverstar_version.py")]
 datas += [(str(repository / name), str(Path(name).parent)) for name in
-          ("tools/silverstar_mission_profile.py", "contracts/mission_profile_v1.json")]
+          ("tools/silverstar_mission_profile.py", "tools/silverstar_mission_process.py", "contracts/mission_profile_v1.json", "contracts/mission_profile_v2.json", "contracts/mission_process_v1.json", "contracts/body_frame_v1.json")]
 binaries = []
 hiddenimports = [
     "OpenGL.platform.win32",

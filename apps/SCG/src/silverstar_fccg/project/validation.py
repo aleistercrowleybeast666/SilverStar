@@ -56,12 +56,15 @@ def SensorInstallationIssues_Get(
 ) -> tuple[ValidationIssue, ...]:
     issues = []
     if model.strategies.get("estimator") in {"silverstar.algorithm.estimator.eskf20", "silverstar.algorithm.estimator.inekf15", "silverstar.algorithm.estimator.inekf20"}:
+        issues.append(ValidationIssue('warning', 'EXPERIMENTAL_ESTIMATOR_UNVERIFIED',
+            'Experimental estimator build is permitted; board timing/resources and flight behavior are unverified. '
+            'Explicit valid initialization, covariance and noise inputs are still required for runtime initialization.'))
         nonzero = [item.instance_id for item in model.device_instances if item.position_body_m is not None and catalog.Component_Get(item.plugin).component_class in ("imu", "gnss") and any(value != 0 for value in item.position_body_m.Dictionary_Get().values())]
         if nonzero:
             issues.append(ValidationIssue("error", "AUGMENTED_LEVER_ARM_UNSUPPORTED", "Augmented models require colocated IMU/GNSS origins; nonzero device_instances.position_body_m is unsupported: " + ", ".join(nonzero)))
     configured = model.sensor_installation
     if configured is not None:
-        if not configured.origin_description.strip():
+        if configured.Dictionary_Get()['schema'].endswith('/1') and not configured.origin_description.strip():
             issues.append(ValidationIssue(
                 "warning" if editing else "error", "INSTALLATION_ORIGIN_UNDEFINED",
                 "Define the fixed structural origin and physical body X/Y datums before generation; "
@@ -1187,9 +1190,7 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
                         (model.build.compact_mode and catalog.Component_Get(model.mcu).metadata.get("compile_only") is True)
                         or (model.strategies.get("estimator") in (
                             "silverstar.algorithm.estimator.eskf20", "silverstar.algorithm.estimator.inekf15",
-                            "silverstar.algorithm.estimator.inekf20") and
-                            type(model.algorithm_parameters.get(model.strategies.get("estimator"), {}).get("software_validation_build")) is int and
-                            model.algorithm_parameters.get(model.strategies.get("estimator"), {}).get("software_validation_build") == 1)))
+                            "silverstar.algorithm.estimator.inekf20"))))
                     else "error", issue.code, issue.message
                 )
                 for issue in rate_plan.issues

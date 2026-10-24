@@ -33,14 +33,16 @@
 
 ## Algorithm Parameters page
 
-The five-page order is Devices → Flight Configuration → Algorithm Parameters → Hardware Connection → Code Generation & Build. Algorithm parameter widgets are generated from strict plugin declarations; use actual values/units, localized descriptions, basic/advanced CollapsibleSection and per-algorithm reset.
+The seven-page order is Flight Devices → Flight Configuration → Navigation Configuration → Telemetry Configuration → Flight Hardware → Ground Station Hardware → Build & Validation. Algorithm parameter widgets are generated from strict plugin declarations; use actual values/units, localized descriptions, basic/advanced CollapsibleSection and per-algorithm reset.
 
 
-## 任务规则胶囊
+## 任务阶段胶囊
 
-飞行配置的非校准规则按 owner schema 生成胶囊：只显示已启用项，添加菜单屏蔽重复或不可用项；内联编辑常用参数，标题或 `…` 打开完整参数弹窗。弹窗使用独立草稿，应用后提交、取消不改工程；未编辑值不因显示精度被重写。移除规则保留参数以便恢复。按窗口宽度换行，不用胶囊顺序暗示运行顺序。新增选项必须主要由 schema 提供，不在窗口中硬编码业务参数。
+胶囊表示有序任务阶段，可选择插入位置并调整顺序；编号表达顺序，稳定 ID 不依赖位置或显示名。名称、数值条件阈值可内联编辑，详情弹窗编辑条件、持续确认和动作引用。应用提交、取消不改工程；未编辑数值不因显示精度被重写。模板提供 START/实际起飞分开或显式合并的选择，不把 START 隐式解释为物理起飞。
 
-设备实体、输出能力和通道归飞控设备/硬件资源配置；规则和动作引用这些实体。阶段规则与连续估计/采样/记录分开。尚未实现的执行器类型不增加可点击占位项。
+设备实体、输出能力和通道归设备/硬件配置；阶段引用稳定设备 ID。当前自定义阶段为桌面参考，不能用动画、参考 trace 或配置声明冒充真实板端过程。阶段规则与连续估计/采样/记录分开；页面重建在当前信号返回后执行。
+
+安装位置输入不再要求自然语言原点说明；固定导航点和轴定义通过明确的合同及图例表达。无下标 xyz（兼容旧 XYZ）均表示箭体系，设备原生轴使用 s_i 下标，导航系标 E/N/U。位置标题 r_i^b 的设备下标标识测点，三个输入分量仍为箭体系 x/y/z。轴标签与输入成组排布，三视图用同一米制比例；未知位置不按零位置绘制。原始 IMU 的两个安装轴必须互相垂直并构成右手旋转；旧映射和旧记录不因新界面自动改写。
 
 ## Touch scrolling
 

@@ -1,0 +1,9 @@
+{"time_us": 0, "valid": true, "events": ["ready"], "altitude_agl_m": null, "vertical_velocity_mps": null}
+{"time_us": 1000000, "valid": true, "events": ["start_accepted"], "altitude_agl_m": null, "vertical_velocity_mps": null}
+{"time_us": 2000000, "valid": true, "events": ["launch_detected"], "altitude_agl_m": null, "vertical_velocity_mps": null}
+{"time_us": 3000000, "valid": true, "events": ["burnout_detected"], "altitude_agl_m": null, "vertical_velocity_mps": null}
+{"time_us": 4000000, "valid": true, "events": ["apogee_confirmed"], "altitude_agl_m": null, "vertical_velocity_mps": null}
+{"time_us": 5000000, "valid": true, "events": [], "altitude_agl_m": null, "vertical_velocity_mps": null}
+{"time_us": 6000000, "valid": true, "events": ["deployment_confirmed"], "altitude_agl_m": null, "vertical_velocity_mps": null}
+{"time_us": 7000000, "valid": true, "events": ["landed_confirmed"], "altitude_agl_m": null, "vertical_velocity_mps": null}
+{"time_us": 8000000, "valid": true, "events": ["recovery_complete"], "altitude_agl_m": null, "vertical_velocity_mps": null}

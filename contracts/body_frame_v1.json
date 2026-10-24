@@ -1,0 +1,33 @@
+{
+  "schema_id": "silverstar.body-frame/1",
+  "schema_version": 1,
+  "handedness": "right",
+  "origin": "fixed_navigation_reference_point",
+  "origin_tracks_primary_imu": false,
+  "origin_tracks_center_of_mass": false,
+  "axes": {
+    "positive_z": "longitudinal_towards_nose",
+    "positive_x": "outward_radial_hatch_datum_projected_perpendicular_to_z",
+    "positive_y": "cross(positive_z, positive_x)",
+    "cross_product": "positive_x_cross_positive_y_equals_positive_z"
+  },
+  "position": "r_body = position_sensor - position_navigation_reference; expressed in body axes",
+  "position_unit": "m",
+  "navigation_frame": "ENU",
+  "quaternion": {
+    "order": "wxyz",
+    "algebra": "Hamilton",
+    "direction": "body_to_navigation"
+  },
+  "rotation_mapping": "v_body = R_body_sensor * v_sensor; R_transpose_R = I; det(R) = +1",
+  "angular_velocity": "omega_x, omega_y, omega_z are right-hand positive; axial rocket roll is about +Z",
+  "qualification": "project_convention; not a claim of NASA certification or active lever-arm compensation",
+  "notation": {
+    "body_axes": "unsubscripted x,y,z; legacy X,Y,Z denotes the same body axes",
+    "navigation_axes": "E,N,U; use n when a frame superscript is required",
+    "sensor_native_axes": "x_s_i,y_s_i,z_s_i in the distinct sensor-native frame s_i for instance i",
+    "installation_vector": "r_i^b: sensor point i relative to navigation O, expressed in common body axes; device subscript identifies the point, not a different axis triad",
+    "gnss_measurement": "p_gnss_i^n in ENU, or explicitly declared ECEF; never assume an invented GNSS body triad",
+    "serialized_compatibility": "position_body_m.x/y/z and existing ABI names remain stable; vector frames are explicit and never inferred from letter case"
+  }
+}

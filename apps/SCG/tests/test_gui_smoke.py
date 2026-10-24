@@ -401,6 +401,7 @@ def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
             "imu0",
             "gnss0",
             "barometer0",
+            "magnetometer0",
             "telemetry0",
         }
         telemetry_label = window.devices_page.telemetry_form.labelForField(
@@ -466,6 +467,7 @@ def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
             "imu",
             "gnss",
             "barometer",
+            "magnetometer",
             "telemetry",
         }
         assert all(

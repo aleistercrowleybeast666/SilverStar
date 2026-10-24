@@ -26,7 +26,7 @@ class MagProjectionSnapshot:
 class MagProjectionPreview(QWidget):
     """Coalesce display work at 10 Hz; retain the complete collection for fitting."""
     DISPLAY_LIMIT = 1024
-    PLANES = ((0, 1, 'XY'), (0, 2, 'XZ'), (1, 2, 'YZ'))
+    PLANES = ((0, 1, 'x_s y_s'), (0, 2, 'x_s z_s'), (1, 2, 'y_s z_s'))
 
     def __init__(self, i18n, parent=None):
         super().__init__(parent)
@@ -43,10 +43,10 @@ class MagProjectionPreview(QWidget):
         self.retranslate()
 
     def retranslate(self):
-        self.setAccessibleName('XY / XZ / YZ · µT')
+        self.setAccessibleName('x_s y_s / x_s z_s / y_s z_s · µT')
         self.setToolTip(Text(self.i18n,
-            '蓝：原始；绿：拟合校正（非设备回读）；虚线：参考场强。三图等比例，最多显示1024个抽样点；完整样本仍用于拟合。预览不代表校准通过。',
-            'Blue: raw; green: fit correction (not device readback); dashed: reference field. Equal scales; at most 1024 display samples. Fitting retains all samples. Preview is not calibration acceptance.'))
+            '传感器原生坐标 x_s/y_s/z_s。蓝：原始；绿：拟合校正（非设备回读，不表示已旋转到箭体系）；虚线：参考场强。三图等比例，最多显示1024个抽样点；完整样本仍用于拟合。预览不代表校准通过。',
+            'Sensor-native x_s/y_s/z_s. Blue: raw; green: fit correction (not device readback or a body-frame rotation); dashed: reference field. Equal scales; at most 1024 display samples. Fitting retains all samples. Preview is not calibration acceptance.'))
         self.update()
 
     def set_samples(self, points, fit, reference):

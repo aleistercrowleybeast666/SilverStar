@@ -33,8 +33,8 @@ def test_gui_imu_remove_restore_selects_legal_defaults_and_roundtrips(qtbot, tmp
     assert ModeOptionAvailabilities_Get(model, window._service.catalog)[('deployment', 'Tilt')].available
     for slot, selected in model.strategies.items():
         assert window.flight_configuration_page.strategy_combos[slot].currentData() == selected
-    capsules = window.flight_configuration_page.mode_capsule_boards['deployment']
-    assert set(capsules.cards) == set(model.modes['deployment'])
+    checks = window.flight_configuration_page.mode_checks['deployment']
+    assert {str(check.property('selectionOption')) for check in checks if check.isChecked()} == set(model.modes['deployment'])
     if replacement.endswith('jy901b'):
         combo = window.devices_page.orientation_combos['imu0']
         assert all('(' not in combo.itemText(i) and '\uff08' not in combo.itemText(i) for i in range(combo.count()))

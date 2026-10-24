@@ -14,6 +14,35 @@ ROOT = Path(__file__).resolve().parents[3]
 API = runpy.run_path(str(ROOT / 'tools/silverstar_mission_profile.py'))
 
 
+def test_exact_custom_phase_metadata_and_reference_trace_preserve_source(tmp_path,qapp,monkeypatch):
+    from silverstar_flp.decoder_profiles.mission_profile import MissionTrace_FromPath
+    profile=API['MissionProfile_Read'](ROOT/'contracts/mission_profile_v1.golden.json')
+    profile.update(schema_id='silverstar.mission-profile/2',schema_version=2,
+        process=API['MissionProcess_Default'](),devices=[])
+    profile['sha256']=API['MissionProfile_Digest'](profile)
+    opened=NavigationPair_Open(tmp_path/'process',flight_samples=7,mission_profile=profile)
+    original=opened.dataset.source_path.read_bytes()
+    runner=API['MissionProcessRunner'](profile['process'])
+    _,events=runner.Sample_Step(dict(time_us=100,valid=True,events=['ready'],altitude_agl_m=None,vertical_velocity_mps=None))
+    trace={'schema_id':'silverstar.mission-trace/1','profile_sha256':profile['sha256'],
+        'session_id':'synthetic','source':'desktop_reference','events':events}
+    path=tmp_path/'process.ssmissiontrace';API['MissionTrace_Write'](path,trace,profile)
+    assert MissionTrace_FromPath(opened.dataset,path)==trace
+    page=OverviewPage(Translator('en_US'))
+    try:
+        page.Dataset_Set(opened.dataset)
+        assert page.mission_trace_button.isEnabled()
+        monkeypatch.setattr('silverstar_flp.ui.pages.overview.QFileDialog.getOpenFileName',lambda *a,**k:(str(path),''))
+        page._MissionTrace_Open()
+        assert 'Desktop reference' in page.mission_trace_label.text()
+        page.Language_Apply(Translator('zh_CN'))
+        assert '桌面参考' in page.mission_trace_label.text()
+        assert 'Recorded' in page.mission_trace_label.text()  # Explicitly says it is NOT onboard Recorded.
+        assert opened.dataset.source_path.read_bytes()==original
+    finally:
+        page.close()
+
+
 def test_exact_decoder_profile_is_declared_configuration_and_legacy_stays_absent(tmp_path, qapp):
     profile = API['MissionProfile_Read'](ROOT / 'contracts/mission_profile_v1.golden.json')
     opened = NavigationPair_Open(tmp_path / 'profile', flight_samples=7, mission_profile=profile)

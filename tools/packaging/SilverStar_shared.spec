@@ -16,7 +16,7 @@ resource_prefixes = (
 )
 resource_files = [name for name in tracked if name and (
     name.startswith(resource_prefixes) or name in {
-        "VERSION", "versions.json", "tools/silverstar_version.py", "tools/silverstar_mission_profile.py", "contracts/mission_profile_v1.json", "apps/SCG/main.py", "apps/FLP/main.py", "apps/GSHC/main.py",
+        "VERSION", "versions.json", "tools/silverstar_version.py", "tools/silverstar_mission_profile.py", "tools/silverstar_mission_process.py", "contracts/mission_profile_v1.json", "contracts/mission_profile_v2.json", "contracts/mission_process_v1.json", "contracts/body_frame_v1.json", "apps/SCG/main.py", "apps/FLP/main.py", "apps/GSHC/main.py",
         "apps/GSHC/app.py", "apps/GSHC/config.py",
     })]
 resource_files = [name for name in resource_files if name not in {"apps/SCG/tools/compare_reference_project.py", "apps/SCG/tools/nrf24_validate.py"}]

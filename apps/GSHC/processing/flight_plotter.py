@@ -431,7 +431,7 @@ class FlightPlotter:
         )
         attitude.add_collection3d(rocket)
         attitude.set(xlim=(-2, 2), ylim=(-2, 2), zlim=(-0.5, 2.8),
-                     xlabel="X", ylabel="Y", zlabel="Z")
+                     xlabel="E", ylabel="N", zlabel="U")
         attitude.view_init(elev=18, azim=35)
         clock = attitude.text2D(
             0.50, 0.95, "", transform=attitude.transAxes,
@@ -594,9 +594,9 @@ class FlightPlotter:
         ax.set_xlim(-lim, lim)
         ax.set_ylim(-lim, lim)
         ax.set_zlim(-0.5, 2.8)
-        ax.set_xlabel("X")
-        ax.set_ylabel("Y")
-        ax.set_zlabel("Z")
+        ax.set_xlabel("E")
+        ax.set_ylabel("N")
+        ax.set_zlabel("U")
         ax.view_init(elev=18, azim=35)
 
     def _draw_motion(self, ax, data, t: float, pos: tuple[float, float, float], motion_limits) -> None:

@@ -16,7 +16,7 @@ resource = versioninfo.VSVersionInfo(ffi=versioninfo.FixedFileInfo(filevers=rele
 datas = collect_data_files("silverstar_flp") + collect_data_files("matplotlib")
 datas += [(str(repository / name), str(Path(name).parent)) for name in ("VERSION", "versions.json", "tools/silverstar_version.py")]
 datas += [(str(repository / name), str(Path(name).parent)) for name in
-          ("tools/silverstar_mission_profile.py", "contracts/mission_profile_v1.json")]
+          ("tools/silverstar_mission_profile.py", "tools/silverstar_mission_process.py", "contracts/mission_profile_v1.json", "contracts/mission_profile_v2.json", "contracts/mission_process_v1.json", "contracts/body_frame_v1.json")]
 hiddenimports = (
     collect_submodules("pyqtgraph.opengl")
     + collect_submodules("OpenGL")

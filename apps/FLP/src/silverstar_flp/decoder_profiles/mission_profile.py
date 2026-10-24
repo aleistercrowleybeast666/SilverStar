@@ -28,3 +28,10 @@ def MissionProfile_FromDataset(dataset):
     if not dataset.metadata.get('parse_identity') or not dataset.metadata.get('source_log_sha256'):
         raise ValueError('mission_profile_exact_open_required')
     return _API['MissionProfile_Require'](_Value_Thaw(declaration))
+
+
+def MissionTrace_FromPath(dataset, path):
+    profile = MissionProfile_FromDataset(dataset)
+    if profile is None or 'process' not in profile:
+        raise ValueError('mission_trace_exact_process_required')
+    return _API['MissionTrace_Read'](path, profile)

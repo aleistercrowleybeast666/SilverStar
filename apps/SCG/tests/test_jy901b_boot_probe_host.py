@@ -40,6 +40,14 @@ def _CompilerCommand(project):
 
 
 def _CompileAndRun(command, project, executable):
+    # The current generated maintenance binding references CubeMX huart3.
+    # Compile the real resource source inside a Host-only TU with a private,
+    # fully declared 8N1 handle; do not weaken production UART validation.
+    resource = str(project / 'Generated/Src/project_resources.c')
+    if resource in command:
+        fixture = Path(__file__).parent / 'fixtures/generated_maintenance_resources.c'
+        command = [str(fixture) if item == resource else item for item in command]
+        command += ['-I', str(project / 'Generated/Src')]
     result = subprocess.run(
         command + ["-o", str(executable)], cwd=project,
         capture_output=True, text=True, timeout=60,

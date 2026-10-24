@@ -5,7 +5,7 @@ from ui.connection_controls import HeaderStatus_Set, ConnectionActions_Render
 
 from dataclasses import dataclass
 from pathlib import Path
-from mission_profile import MissionProfile_Read
+from mission_profile import MissionProfile_Read, MissionTrace_Read
 from typing import Callable
 
 import numpy as np
@@ -2141,6 +2141,7 @@ class MainWindow(QMainWindow):
             self._mission_profile_error = str(error)
         else:
             self._declared_mission_profile = profile
+            self._declared_mission_trace = None
             self._mission_profile_error = ''
         self._MissionProfile_Render()
 
@@ -2150,9 +2151,32 @@ class MainWindow(QMainWindow):
         profile = self._declared_mission_profile
         text = self.i18n.tr('mission_profile.declared', name=profile['project']['name'],
             digest=profile['sha256']) if profile else self.i18n.tr('mission_profile.none')
+        if profile and 'process' in profile:
+            text += '\n' + self.i18n.tr('mission_process.declared', stages=' → '.join(stage['name'] for stage in profile['process']['stages']))
+            trace = getattr(self, '_declared_mission_trace', None)
+            if trace is not None and trace['profile_sha256'] == profile['sha256']:
+                names = {row['stage_id']: row['name'] for row in profile['process']['stages']}
+                timeline = ' → '.join(f"MCU {event['time_us']/1e6:g}s {names[event['stage_id']]}"
+                    for event in trace['events'] if event['kind'] == 'stage_entered')
+                text += '\n' + self.i18n.tr('mission_process.reference_trace', timeline=timeline)
         if self._mission_profile_error:
             text += '\n' + self.i18n.tr('mission_profile.invalid', error=self._mission_profile_error)
         self.lbl_mission_profile.setText(text)
+        if hasattr(self, 'btn_mission_trace'):
+            self.btn_mission_trace.setEnabled(bool(profile and 'process' in profile))
+
+    def _MissionTrace_Open(self):
+        path, _filter = QFileDialog.getOpenFileName(self, self.i18n.tr('mission_process.trace_open'), '', 'Mission trace (*.ssmissiontrace)')
+        if not path:
+            return
+        try:
+            trace = MissionTrace_Read(path, self._declared_mission_profile)
+            self._declared_mission_trace = trace
+            self._mission_profile_error = ''
+            self._MissionProfile_Render()
+        except (ValueError, TypeError) as error:
+            self._mission_profile_error = str(error)
+            self._MissionProfile_Render()
 
     def _build_post_process_page(self) -> QWidget:
         page = QWidget()
@@ -2173,6 +2197,11 @@ class MainWindow(QMainWindow):
         self._bind_text(self.btn_mission_profile, 'mission_profile.open')
         self.btn_mission_profile.clicked.connect(self._MissionProfile_Open)
         mission_layout.addWidget(self.btn_mission_profile)
+        self.btn_mission_trace = QPushButton()
+        self._bind_text(self.btn_mission_trace, 'mission_process.trace_open')
+        self.btn_mission_trace.setEnabled(False)
+        self.btn_mission_trace.clicked.connect(self._MissionTrace_Open)
+        mission_layout.addWidget(self.btn_mission_trace)
         root.addWidget(mission_box)
         box = QGroupBox()
         self._bind_text(box, "group.post_process")

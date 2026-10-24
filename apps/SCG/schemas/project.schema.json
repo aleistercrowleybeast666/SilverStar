@@ -25,8 +25,9 @@
       },
       "additionalProperties": false
     },
-    "format_version": {"enum": [14, 15, 16, 17, 18, 19, 20, 21]},
-    "sensor_installation": {"$ref": "#/$defs/sensorInstallation"},
+    "format_version": {"enum": [14, 15, 16, 17, 18, 19, 20, 21, 22]},
+    "sensor_installation": {"oneOf": [{"$ref": "#/$defs/sensorInstallation"}, {"$ref": "#/$defs/navigationInstallation"}]},
+    "mission_process": {"$ref": "#/$defs/missionProcess"},
     "native_usb": {"$ref": "#/$defs/nativeUsb"},
     "feature_tier_presets": {
       "type": "object", "additionalProperties": false,
@@ -347,6 +348,8 @@
   },
   "additionalProperties": false,
   "allOf": [
+    {"if": {"properties": {"format_version": {"maximum": 21}}},
+     "then": {"not": {"required": ["mission_process"]}, "properties": {"components": {"properties": {"devices": {"items": {"properties": {"mount_x_axis": {"const": ""}}}}}}}}},
     {"if": {"properties": {"format_version": {"maximum": 20}}},
      "then": {"properties": {"build": {"not": {"anyOf": [{"required": ["magnetometer_enabled"]}, {"required": ["maintenance_log_export_enabled"]}]}}}}},
     {"if": {"properties": {"build": {"required": ["feature_tier"], "properties": {"feature_tier": {"enum": ["compact", "minimal"]}}}}},
@@ -381,6 +384,60 @@
     }
   ],
   "$defs": {
+    "navigationInstallation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "frame", "unit", "origin_kind", "body_frame", "input_source"],
+      "properties": {
+        "schema": {"const": "silverstar.sensor-installation/2"},
+        "frame": {"const": "body"}, "unit": {"const": "m"},
+        "origin_kind": {"const": "fixed_navigation_reference_point"},
+        "body_frame": {"const": "silverstar.body-frame/1"},
+        "input_source": {"const": "measurement_or_cad"}
+      }
+    },
+    "missionProcess": {
+      "$comment": "Runtime validation additionally checks unique stage IDs and target capabilities; this schema does not confer firmware execution or flight qualification.",
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "execution", "start_policy", "maximum_gap_ms", "stages"],
+      "properties": {
+        "schema_version": {"const": 1, "type": "integer"},
+        "execution": {"const": "desktop_reference"},
+        "start_policy": {"enum": ["separate", "start_is_launch"]},
+        "maximum_gap_ms": {"type": "integer", "minimum": 1, "maximum": 60000},
+        "stages": {"type": "array", "minItems": 1, "maxItems": 32, "items": {"$ref": "#/$defs/missionStage"}}
+      },
+      "allOf": [{"if": {"properties": {"start_policy": {"const": "start_is_launch"}}},
+        "then": {"properties": {"stages": {"items": {
+          "not": {"properties": {"stage_id": {"const": "mission_start"}}},
+          "if": {"properties": {"stage_id": {"const": "ascent"}}},
+          "then": {"properties": {"hold_ms": {"const": 0}, "condition": {"const": {"signal": "event", "operator": "is", "value": "start_accepted", "unit": "event_id"}}}}
+        }}}}}]
+    },
+    "missionStage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["stage_id", "name", "condition", "hold_ms", "action"],
+      "properties": {
+        "stage_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,47}$"},
+        "name": {"type": "string", "minLength": 1, "maxLength": 128, "pattern": "\\S", "not": {"pattern": "[\u0000-\u001f]"}},
+        "condition": {"oneOf": [
+          {"type": "object", "additionalProperties": false, "required": ["signal", "operator", "value", "unit"],
+           "properties": {"signal": {"const": "event"}, "operator": {"const": "is"}, "unit": {"const": "event_id"},
+            "value": {"enum": ["ready", "start_accepted", "launch_detected", "burnout_detected", "apogee_confirmed", "deployment_confirmed", "landed_confirmed", "recovery_complete"]}}},
+          {"type": "object", "additionalProperties": false, "required": ["signal", "operator", "value", "unit"],
+           "properties": {"signal": {"const": "stage_elapsed_s"}, "operator": {"const": ">="}, "unit": {"const": "s"},
+            "value": {"type": "number", "minimum": 0, "maximum": 10000000}}},
+          {"type": "object", "additionalProperties": false, "required": ["signal", "operator", "value", "unit"],
+           "properties": {"signal": {"enum": ["altitude_agl_m", "vertical_velocity_mps"]}, "operator": {"enum": [">=", "<="]},
+            "unit": {"enum": ["m", "m/s"]}, "value": {"type": "number", "minimum": -10000000, "maximum": 10000000}},
+           "allOf": [{"if": {"properties": {"signal": {"const": "altitude_agl_m"}}}, "then": {"properties": {"unit": {"const": "m"}}}, "else": {"properties": {"unit": {"const": "m/s"}}}}]}
+        ]},
+        "hold_ms": {"type": "integer", "minimum": 0, "maximum": 3600000},
+        "action": {"type": "object", "additionalProperties": false, "required": ["kind", "target"],
+          "properties": {"kind": {"enum": ["none", "record_marker", "request_recovery"]}, "target": {"type": "string"}},
+          "allOf": [{"if": {"properties": {"kind": {"const": "request_recovery"}}}, "then": {"properties": {"target": {"pattern": "^[a-z][a-z0-9_]{0,63}$"}}}, "else": {"properties": {"target": {"const": ""}}}}]}
+      },
+      "allOf": [{"if": {"properties": {"condition": {"properties": {"signal": {"const": "event"}}}}}, "then": {"properties": {"hold_ms": {"const": 0}}}}]
+    },
     "sensorInstallation": {
       "type": "object", "additionalProperties": false,
       "required": ["schema", "frame", "unit", "origin_kind", "origin_description", "input_source"],
@@ -452,10 +509,15 @@
         "tx_power_dbm": {"type": ["integer", "null"]},
         "installation_orientation": {"enum": ["horizontal", "vertical"]},
         "mount_nose_axis": {"enum": ["z_positive", "z_negative", "x_positive", "x_negative", "y_positive", "y_negative"]},
+        "mount_x_axis": {"enum": ["", "z_positive", "z_negative", "x_positive", "x_negative", "y_positive", "y_negative"]},
         "position_body_m": {"$ref": "#/$defs/position"}
       },
       "additionalProperties": false,
       "allOf": [
+        {"if": {"required": ["mount_x_axis"]}, "then": {"properties": {"plugin": {"enum": ["silverstar.device.imu.bmi088", "silverstar.device.imu.bmi323", "silverstar.device.imu.icm42605", "silverstar.device.imu.icm42688p", "silverstar.device.imu.icm45686", "silverstar.device.imu.lsm6dsv320x", "silverstar.device.imu.lsm6dsv32x", "silverstar.device.imu.mpu6000", "silverstar.device.imu.mpu6050", "silverstar.device.imu.mpu6500", "silverstar.device.imu.mpu9250"]}}}},
+        {"if": {"required": ["mount_nose_axis"], "properties": {"mount_nose_axis": {"enum": ["x_positive", "x_negative"]}}}, "then": {"properties": {"mount_x_axis": {"not": {"enum": ["x_positive", "x_negative"]}}}}},
+        {"if": {"required": ["mount_nose_axis"], "properties": {"mount_nose_axis": {"enum": ["y_positive", "y_negative"]}}}, "then": {"properties": {"mount_x_axis": {"not": {"enum": ["y_positive", "y_negative"]}}}}},
+        {"if": {"anyOf": [{"not": {"required": ["mount_nose_axis"]}}, {"properties": {"mount_nose_axis": {"enum": ["z_positive", "z_negative"]}}}]}, "then": {"properties": {"mount_x_axis": {"not": {"enum": ["z_positive", "z_negative"]}}}}},
         {"if": {"required": ["installation_orientation"]}, "then": {"properties": {"plugin": {"const": "silverstar.device.imu.jy901b"}}}},
         {"if": {"required": ["mount_nose_axis"]}, "then": {"properties": {"plugin": {"enum": ["silverstar.device.imu.bmi088", "silverstar.device.imu.bmi323", "silverstar.device.imu.icm42605", "silverstar.device.imu.icm42688p", "silverstar.device.imu.icm45686", "silverstar.device.imu.lsm6dsv320x", "silverstar.device.imu.lsm6dsv32x", "silverstar.device.imu.mpu6000", "silverstar.device.imu.mpu6050", "silverstar.device.imu.mpu6500", "silverstar.device.imu.mpu9250"]}}}}
       ]

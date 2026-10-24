@@ -55,8 +55,8 @@
     "algorithm_revision": 1,
     "navigation_contract": "silverstar.navigation/1",
     "display_names": {
-      "en_US": "ESKF20",
-      "zh_CN": "ESKF20"
+      "zh_CN": "ESKF20（实验，未经飞行验证）",
+      "en_US": "ESKF20 (experimental, flight unverified)"
     },
     "software_validation_parameter": "software_validation_build",
     "algorithm_descriptors": [
@@ -88,7 +88,13 @@
       }
     },
     "uses_covariance_noise_parameters": false,
-    "magnetic_quality_contract": "silverstar.magnetic-quality/1"
+    "magnetic_quality_contract": "silverstar.magnetic-quality/1",
+    "experimental_build": {
+      "schema_version": 1,
+      "hardware_tested": false,
+      "flight_tested": false,
+      "timing_qualified": false
+    }
   },
   "selection": {
     "kind": "strategy",
@@ -107,7 +113,7 @@
       {
         "id": "software_validation_build",
         "type": "integer",
-        "default": 0,
+        "default": 1,
         "min": 0,
         "max": 1,
         "unit": "1",
@@ -117,12 +123,12 @@
         "group": "advanced",
         "generated_symbol": "SYSTEM_AUG_SOFTWARE_VALIDATION_BUILD",
         "display_names": {
-          "en_US": "software validation build",
-          "zh_CN": "software validation build"
+          "zh_CN": "实验固件构建标识",
+          "en_US": "Experimental firmware build identity"
         },
         "description": {
-          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
-          "zh_CN": "Explicit engineering input; no qualified flight default."
+          "zh_CN": "启用实验构建；不表示板级时序、资源、硬件或飞行测试通过。初始化、噪声与实际安装等参数仍须填写。",
+          "en_US": "Permits an experimental build; does not qualify target timing, resources, hardware or flight. Initialization, noise and actual installation parameters remain explicit."
         },
         "order": 0
       },

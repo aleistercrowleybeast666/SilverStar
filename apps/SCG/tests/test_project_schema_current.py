@@ -20,8 +20,10 @@ from silverstar_fccg.project.model import (
     PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION,
     PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION,
     PROJECT_NIS_INPUT_FORMAT_VERSION, PROJECT_NATIVE_USB_FORMAT_VERSION,
-    PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION, PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION, RAW_IMU_MOUNT_PLUGINS,
+    PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION, PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION,
+    PROJECT_MISSION_PROCESS_FORMAT_VERSION, RAW_IMU_MOUNT_PLUGINS, RAW_IMU_NOSE_AXIS_MAPS,
 )
+from silverstar_fccg.project.mission_process import MissionProcess_Default
 from silverstar_fccg.project.native_usb import NativeUsbReference
 from silverstar_fccg.project.reference import ReferenceProject_Create
 from silverstar_fccg.project.sensor_installation import SensorInstallationConfiguration, SensorPosition
@@ -70,6 +72,14 @@ def _Document_Get(version, catalog):
         preset = model.Dictionary_Get()
         preset["build"].pop("feature_tier")
         model.feature_tier_presets["full"] = preset
+    if version == 21:
+        model.build = replace(model.build, magnetometer_enabled=False)
+    if version == 22:
+        model.mission_process = MissionProcess_Default()
+        model.sensor_installation = SensorInstallationConfiguration(schema_version=2)
+        model.device_instances = [replace(item, plugin='silverstar.device.imu.bmi088',
+            mount_x_axis='y_positive', position_body_m=SensorPosition(0.02, -0.03, 0.1))
+            if item.instance_id == 'imu0' else item for item in model.device_instances]
     document = model.Dictionary_Get()
     assert document["format_version"] == version
     # The public schema describes JSON, including list-normalized inventory
@@ -84,7 +94,8 @@ def test_published_schema_tracks_supported_versions_and_shared_installation_cont
         PROJECT_NIS_INPUT_FORMAT_VERSION, PROJECT_NATIVE_USB_FORMAT_VERSION,
         PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION,
         PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION,
-    ] == list(range(14, 22))
+        PROJECT_MISSION_PROCESS_FORMAT_VERSION,
+    ] == list(range(14, 23))
     assert {"alignment", "flight_tx_power_dbm", "ground_target"} <= set(schema["required"])
     hardware = schema["properties"]["hardware"]
     assert set(hardware["required"]) <= set(hardware["properties"])
@@ -93,14 +104,62 @@ def test_published_schema_tracks_supported_versions_and_shared_installation_cont
     assert schema["$defs"]["position"] == contract["$defs"]["position"]
     assert schema["$defs"]["coordinate"] == contract["$defs"]["coordinate"]
     device = schema["$defs"]["deviceInstance"]
-    assert set(device["allOf"][1]["then"]["properties"]["plugin"]["enum"]) == RAW_IMU_MOUNT_PLUGINS
+    for field in ('mount_nose_axis', 'mount_x_axis'):
+        constraint = next(row for row in device['allOf'] if row['if'].get('required') == [field]
+                          and 'plugin' in row.get('then', {}).get('properties', {}))
+        assert set(constraint['then']['properties']['plugin']['enum']) == RAW_IMU_MOUNT_PLUGINS
 
 
-@pytest.mark.parametrize("version", range(14, 21))
+@pytest.mark.parametrize("version", range(14, 23))
 def test_real_serializer_outputs_pass_schema_and_parser(version, validator, builtin_catalog):
     document = _Document_Get(version, builtin_catalog)
     validator.validate(document)
     assert ProjectModel_Parse(deepcopy(document)).Dictionary_Get() == document
+
+
+def test_format22_example_and_all_explicit_right_hand_mounts(validator, builtin_catalog):
+    example = Path(__file__).resolve().parents[1] / 'examples/Uncontrolled_Desktop_Reference.ssproject'
+    validator.validate(json.loads(example.read_text(encoding='utf-8')))
+    document = _Document_Get(22, builtin_catalog)
+    device = next(item for item in document['components']['devices'] if item['instance_id'] == 'imu0')
+    for nose in RAW_IMU_NOSE_AXIS_MAPS:
+        for hatch in RAW_IMU_NOSE_AXIS_MAPS:
+            device.update(mount_nose_axis=nose, mount_x_axis=hatch)
+            if nose[0] == hatch[0]:
+                assert not validator.is_valid(document)
+                with pytest.raises(ProjectModelError): ProjectModel_Parse(deepcopy(document))
+            else:
+                validator.validate(document)
+                assert ProjectModel_Parse(deepcopy(document)).Dictionary_Get() == document
+
+
+@pytest.mark.parametrize('field', ['mission_process', 'mount_x_axis'])
+def test_format22_extensions_cannot_enter_format21(field, validator, builtin_catalog):
+    document = _Document_Get(22, builtin_catalog)
+    if field == 'mission_process':
+        for device in document['components']['devices']: device.pop('mount_x_axis', None)
+    else:
+        document.pop('mission_process')
+    document['format_version'] = 21
+    assert not validator.is_valid(document)
+    with pytest.raises(ProjectModelError, match='format_version 22'): ProjectModel_Parse(document)
+
+
+@pytest.mark.parametrize('mutation', ['unit', 'unknown', 'hold', 'execution', 'start_policy', 'installation', 'nose_type', 'hatch_type'])
+def test_new_phase_and_reference_contracts_reject_bad_input(mutation, validator, builtin_catalog):
+    document = _Document_Get(22, builtin_catalog)
+    process = document['mission_process']
+    if mutation == 'unit': process['stages'][0]['condition']['unit'] = 'm'
+    elif mutation == 'unknown': process['stages'][0]['script'] = 'anything'
+    elif mutation == 'hold': process['stages'][0]['hold_ms'] = 1
+    elif mutation == 'execution': process['execution'] = 'onboard_qualified'
+    elif mutation == 'start_policy': process['start_policy'] = 'start_is_launch'
+    elif mutation == 'installation': document['sensor_installation']['origin_description'] = 'obsolete field'
+    elif mutation in ('nose_type', 'hatch_type'):
+        device = next(item for item in document['components']['devices'] if item['instance_id'] == 'imu0')
+        device['mount_nose_axis' if mutation == 'nose_type' else 'mount_x_axis'] = ['z_positive']
+    assert not validator.is_valid(document)
+    with pytest.raises(ProjectModelError): ProjectModel_Parse(document)
 
 
 @pytest.mark.parametrize("version", range(14, 20))

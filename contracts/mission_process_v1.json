@@ -1,0 +1,19 @@
+{
+  "schema_id": "silverstar.mission-process/1",
+  "schema_version": 1,
+  "execution": "desktop_reference",
+  "maximum_stages": 32,
+  "maximum_trace_events": 10000,
+  "root_fields": ["schema_version", "execution", "start_policy", "maximum_gap_ms", "stages"],
+  "stage_fields": ["stage_id", "name", "condition", "hold_ms", "action"],
+  "condition_fields": ["signal", "operator", "value", "unit"],
+  "signal_units": {"event": "event_id", "stage_elapsed_s": "s", "altitude_agl_m": "m", "vertical_velocity_mps": "m/s"},
+  "start_policies": ["separate", "start_is_launch"],
+  "event_ids": ["ready", "start_accepted", "launch_detected", "burnout_detected", "apogee_confirmed", "deployment_confirmed", "landed_confirmed", "recovery_complete"],
+  "actions": ["none", "record_marker", "request_recovery"],
+  "transition_semantics": "ordered phases; each condition enters its phase from the preceding phase; at most one transition per strictly increasing sample time",
+  "hold_semantics": "numeric condition continuously true; invalid/missing data or excessive sample gap resets confirmation; event holds must be zero",
+  "action_semantics": "requests only, explicitly simulated; no hardware command is sent and no completion is inferred",
+  "time": "session MCU-monotonic microseconds; accepted START and physical launch are distinct events unless explicitly combined",
+  "trace": {"schema_id": "silverstar.mission-trace/1", "profile_identity": "canonical SHA-256 of complete .ssmission", "session_identity": "explicit session_id", "source": "desktop_reference", "ordering": "strictly increasing stage-entry times; each non-none action request immediately follows its entry at the same time; partial traces end between complete entry/action pairs", "validation_scope": "structural reference records; not proof of input conditions, physical detection or hardware execution"}
+}

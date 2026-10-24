@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     from silverstar_fccg.project.model import ProjectModel
 
 SENSOR_INSTALLATION_SCHEMA = "silverstar.sensor-installation/1"
+SENSOR_NAVIGATION_INSTALLATION_SCHEMA = "silverstar.sensor-installation/2"
 # Engineering input bound, shared by file validation and the numeric editor.
 SENSOR_POSITION_LIMIT_M = 1_000_000.0
 
@@ -27,8 +28,20 @@ class SensorPosition:
 @dataclass(frozen=True, slots=True)
 class SensorInstallationConfiguration:
     origin_description: str = ""
+    schema_version: int = 0
+
+    def __post_init__(self):
+        if type(self.schema_version) is not int or self.schema_version not in (0, 1, 2):
+            raise ValueError('Unsupported installation schema version')
+        if self.schema_version == 2 and self.origin_description:
+            raise ValueError('Navigation-point reference does not accept a legacy text datum')
 
     def Dictionary_Get(self) -> dict[str, Any]:
+        version = self.schema_version or (1 if self.origin_description else 2)
+        if version == 2:
+            return {'schema': SENSOR_NAVIGATION_INSTALLATION_SCHEMA, 'frame': 'body', 'unit': 'm',
+                    'origin_kind': 'fixed_navigation_reference_point',
+                    'body_frame': 'silverstar.body-frame/1', 'input_source': 'measurement_or_cad'}
         return {
             "schema": SENSOR_INSTALLATION_SCHEMA,
             "frame": "body",
@@ -51,7 +64,11 @@ def SensorPosition_Parse(value: Any) -> SensorPosition:
 
 
 def SensorInstallationConfiguration_Parse(value: Any) -> SensorInstallationConfiguration:
-    expected = SensorInstallationConfiguration().Dictionary_Get()
+    if isinstance(value, dict) and value.get('schema') == SENSOR_NAVIGATION_INSTALLATION_SCHEMA:
+        if value != SensorInstallationConfiguration(schema_version=2).Dictionary_Get():
+            raise ValueError('Unsupported navigation-point installation reference')
+        return SensorInstallationConfiguration(schema_version=2)
+    expected = SensorInstallationConfiguration(schema_version=1).Dictionary_Get()
     if not isinstance(value, dict) or set(value) != set(expected):
         raise ValueError("Invalid sensor_installation fields")
     if any(value[key] != expected[key] for key in expected if key != "origin_description"):
@@ -60,7 +77,7 @@ def SensorInstallationConfiguration_Parse(value: Any) -> SensorInstallationConfi
     if (not isinstance(description, str) or len(description) > 512 or
             any(ord(char) < 32 or ord(char) == 127 for char in description)):
         raise ValueError("origin_description must be text without control characters (max 512)")
-    return SensorInstallationConfiguration(description)
+    return SensorInstallationConfiguration(description, schema_version=1)
 
 
 def SensorInstallationSnapshot_Get(model: ProjectModel, catalog) -> dict[str, Any]:
@@ -70,7 +87,8 @@ def SensorInstallationSnapshot_Get(model: ProjectModel, catalog) -> dict[str, An
     configuration = model.sensor_installation
     if configuration is None:
         raise ValueError("sensor_installation is not configured")
-    if not configuration.origin_description.strip():
+    version = 2 if configuration.Dictionary_Get()['schema'] == SENSOR_NAVIGATION_INSTALLATION_SCHEMA else 1
+    if version == 1 and not configuration.origin_description.strip():
         raise ValueError("Define the fixed structural origin and body X/Y datums before generation")
     if any(item.position_body_m is not None and
            catalog.Component_Get(item.plugin).component_class not in ("imu", "gnss")
@@ -86,7 +104,9 @@ def SensorInstallationSnapshot_Get(model: ProjectModel, catalog) -> dict[str, An
     return {
         **configuration.Dictionary_Get(),
         "axes": {"handedness": "right", "positive_z": "nose",
-                 "transverse_axes": "existing body X/Y; identify physical datums in origin_description"},
+                 "transverse_axes": "existing body X/Y; identify physical datums in origin_description"} if version == 1 else
+                {'handedness': 'right', 'positive_z': 'nose', 'positive_x': 'hatch_radial_datum',
+                 'positive_y': 'cross(positive_z, positive_x)'},
         "runtime_applied": False,
         "compensation_status": "configuration_only_not_applied",
         "devices": [
@@ -105,13 +125,15 @@ def SensorInstallationSnapshot_Get(model: ProjectModel, catalog) -> dict[str, An
 
 
 def SensorInstallationHeader_Render(model: ProjectModel) -> str:
+    version = 2 if model.sensor_installation is not None and model.sensor_installation.Dictionary_Get()['schema'] == SENSOR_NAVIGATION_INSTALLATION_SCHEMA else 1
     lines = [
         "/* AUTO-GENERATED. Measured metadata only; no runtime compensation is enabled. */",
         "#ifndef __PROJECT_SENSOR_INSTALLATION_H",
         "#define __PROJECT_SENSOR_INSTALLATION_H",
-        "#define PROJECT_SENSOR_INSTALLATION_SCHEMA_VERSION 1U",
+        f"#define PROJECT_SENSOR_INSTALLATION_SCHEMA_VERSION {version}U",
         "#define PROJECT_SENSOR_INSTALLATION_RUNTIME_APPLIED 0U",
-        "/* Metres from a fixed structural origin; right-handed body axes, +Z nose. */",
+        "/* Metres from the fixed navigation point; +Z nose, +X hatch, +Y = Z cross X. */" if version == 2 else
+        "/* Legacy: metres from the declared fixed structural origin; body +Z nose. */",
     ]
     for instance in model.device_instances:
         position = instance.position_body_m

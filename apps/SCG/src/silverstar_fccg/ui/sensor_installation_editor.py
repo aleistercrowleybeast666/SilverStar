@@ -1,7 +1,8 @@
 """Explicit measured position entry, independent of sensor orientation and calibration."""
 
-from PySide6.QtCore import Signal
-from PySide6.QtWidgets import QHBoxLayout, QLabel, QWidget
+from html import escape
+from PySide6.QtCore import Signal, Qt
+from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QLabel, QWidget
 
 from silverstar_fccg.project.sensor_installation import SENSOR_POSITION_LIMIT_M
 from silverstar_fccg.ui.committed_spin import EnterCommittedDoubleSpinBox
@@ -19,12 +20,31 @@ class SensorPositionEditor(QWidget):
         self.recorded.setChecked(position is not None)
         self._position = position if position is not None else (0.0, 0.0, 0.0)
         self.setToolTip(translator.Text_Get("installation.position.note"))
-        layout = QHBoxLayout(self)
+        root = QVBoxLayout(self)
+        root.setContentsMargins(0, 0, 0, 0)
+        root.setSpacing(4)
+        heading = QHBoxLayout()
+        heading.addWidget(self.recorded)
+        self.vector_label = QLabel('<b>r</b><sup>b</sup><sub>' + escape(instance_id) + '</sub> (m)')
+        self.vector_label.setTextFormat(Qt.TextFormat.RichText)
+        self.vector_label.setToolTip(translator.Text_Get('installation.position.note'))
+        heading.addWidget(self.vector_label)
+        heading.addStretch(1)
+        root.addLayout(heading)
+        layout = QHBoxLayout()
+        root.addLayout(layout)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.addWidget(self.recorded)
+        layout.setSpacing(12)
         self.coordinates = {}
+        self.axis_labels = {}
         for index, axis in enumerate(("x", "y", "z")):
-            layout.addWidget(QLabel(axis.upper()))
+            pair = QWidget()
+            pair_layout = QHBoxLayout(pair)
+            pair_layout.setContentsMargins(0, 0, 0, 0)
+            pair_layout.setSpacing(6)
+            label = QLabel(axis)
+            pair_layout.addWidget(label)
+            self.axis_labels[axis] = label
             editor = EnterCommittedDoubleSpinBox()
             editor.setObjectName(f"sensorPosition_{instance_id}_{axis}")
             editor.setRange(-SENSOR_POSITION_LIMIT_M, SENSOR_POSITION_LIMIT_M)
@@ -35,8 +55,13 @@ class SensorPositionEditor(QWidget):
             editor.setEnabled(position is not None)
             editor.committed.connect(
                 lambda value, axis_index=index: self._Coordinate_Commit(axis_index, value))
-            layout.addWidget(editor)
+            editor.setMinimumWidth(112)
+            editor.setMaximumWidth(172)
+            label.setBuddy(editor)
+            pair_layout.addWidget(editor)
+            layout.addWidget(pair)
             self.coordinates[axis] = editor
+        layout.addStretch(1)
         self.recorded.toggled.connect(self._Recorded_Change)
 
     def _Coordinate_Commit(self, index: int, value: float) -> None:

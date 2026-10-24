@@ -94,7 +94,7 @@ def test_promoted_models_use_owned_sources_and_keep_validation_only_metadata(cat
     assert raw["metadata"]["qualified_timing_profiles"] == []
     assert raw["metadata"]["software_validation_parameter"] == "software_validation_build"
     parameters = {item["id"]: item for item in raw["algorithm_parameters"]["parameters"]}
-    assert parameters["software_validation_build"]["default"] == 0
+    assert parameters["software_validation_build"]["default"] == 1
     model = MetadataModel_Create(catalog)
     model.strategies["estimator"] = component_id
     model = ProjectConfiguration_Reconcile(model, catalog).model

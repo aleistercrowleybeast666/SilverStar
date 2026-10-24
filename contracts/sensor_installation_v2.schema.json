@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "silverstar.sensor-installation/2",
+  "title": "Fixed navigation-point installation metadata (runtime compensation not applied)",
+  "description": "Project format 20 extension. Fixed structural origin; right-handed existing body axes, +Z nose. The origin description identifies physical X/Y datums. Coordinates are measurement/CAD input, not static calibration output. Legacy ESKF15 global arm retains its original reference; no instance/origin inference. No runtime consumer in this revision.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "frame",
+    "unit",
+    "origin_kind",
+    "input_source",
+    "axes",
+    "runtime_applied",
+    "compensation_status",
+    "devices",
+    "legacy_eskf15",
+    "body_frame"
+  ],
+  "properties": {
+    "schema": {
+      "const": "silverstar.sensor-installation/2"
+    },
+    "frame": {
+      "const": "body"
+    },
+    "unit": {
+      "const": "m"
+    },
+    "origin_kind": {
+      "const": "fixed_navigation_reference_point"
+    },
+    "input_source": {
+      "const": "measurement_or_cad"
+    },
+    "axes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "handedness",
+        "positive_z",
+        "positive_x",
+        "positive_y"
+      ],
+      "properties": {
+        "handedness": {
+          "const": "right"
+        },
+        "positive_z": {
+          "const": "nose"
+        },
+        "positive_x": {
+          "const": "hatch_radial_datum"
+        },
+        "positive_y": {
+          "const": "cross(positive_z, positive_x)"
+        }
+      }
+    },
+    "runtime_applied": {
+      "const": false
+    },
+    "compensation_status": {
+      "const": "configuration_only_not_applied"
+    },
+    "devices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "instance_id",
+          "plugin",
+          "component_class",
+          "position_body_m"
+        ],
+        "properties": {
+          "instance_id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]{0,63}$"
+          },
+          "plugin": {
+            "type": "string",
+            "minLength": 1
+          },
+          "component_class": {
+            "enum": [
+              "imu",
+              "gnss"
+            ]
+          },
+          "position_body_m": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/position"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "legacy_eskf15": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_values",
+        "active_global_values_m",
+        "migration"
+      ],
+      "properties": {
+        "input_values": {
+          "$ref": "#/$defs/legacyArm"
+        },
+        "active_global_values_m": {
+          "$ref": "#/$defs/legacyArm"
+        },
+        "migration": {
+          "const": "preserved_without_origin_or_instance_inference"
+        }
+      }
+    },
+    "body_frame": {
+      "const": "silverstar.body-frame/1"
+    }
+  },
+  "$defs": {
+    "coordinate": {
+      "type": "number",
+      "minimum": -1000000,
+      "maximum": 1000000
+    },
+    "position": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "x",
+        "y",
+        "z"
+      ],
+      "properties": {
+        "x": {
+          "$ref": "#/$defs/coordinate"
+        },
+        "y": {
+          "$ref": "#/$defs/coordinate"
+        },
+        "z": {
+          "$ref": "#/$defs/coordinate"
+        }
+      }
+    },
+    "legacyArm": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "lever_arm_body_x_m": {
+          "type": "number"
+        },
+        "lever_arm_body_y_m": {
+          "type": "number"
+        },
+        "lever_arm_body_z_m": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

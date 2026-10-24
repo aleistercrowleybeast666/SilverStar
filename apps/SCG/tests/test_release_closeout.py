@@ -133,7 +133,7 @@ def test_fixed_pair_and_shared_hardware_layout_survive_rapid_switches(qapp,tmp_p
         editor._Draft_Cancel()
         qapp.processEvents()
     assert len(editor._rows)==2 and all(not row["kind"].isEnabled() for row in editor._rows)
-    assert "magnetometer0" not in window.devices_page.device_combos
+    assert "magnetometer0" in window.devices_page.device_combos
     assert window.air_link_page.isAncestorOf(window.ground_target_page.pc_interface)
     assert window.pages.count()==7
     assert type(window.ground_target_page).__bases__[0] is type(window.board_hardware_page)

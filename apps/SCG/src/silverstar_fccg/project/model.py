@@ -16,6 +16,7 @@ from silverstar_fccg.app.version import (
 from silverstar_fccg.core.errors import FccgError
 from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.project.native_usb import NativeUsbReference, NativeUsbReference_Parse
+from silverstar_fccg.project.mission_process import MissionProcess_Require
 from silverstar_fccg.project.sensor_installation import (
     SensorInstallationConfiguration, SensorInstallationConfiguration_Parse,
     SensorPosition, SensorPosition_Parse,
@@ -56,6 +57,7 @@ PROJECT_NIS_INPUT_FORMAT_VERSION = 18
 PROJECT_NATIVE_USB_FORMAT_VERSION = 19
 PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION = 20
 PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION = 21
+PROJECT_MISSION_PROCESS_FORMAT_VERSION = 22
 AlgorithmParameterInput = float | int | dict[str, Any]
 FEATURE_TIERS = ("full", "standard", "compact", "minimal")
 PROTOCOL_CATEGORIES = ("telemetry", "maintenance", "logging")
@@ -112,6 +114,26 @@ RAW_IMU_NOSE_AXIS_MAPS = {
 }
 
 
+def RawImuAxisMap_Get(nose_axis: str, x_axis: str = '') -> tuple[int, int, int]:
+    """Proper sensor-to-body rotation: rows are body X, Y, Z in sensor axes."""
+    if type(nose_axis) is not str or nose_axis not in RAW_IMU_NOSE_AXIS_MAPS:
+        raise ValueError('Invalid IMU nose axis')
+    if type(x_axis) is not str:
+        raise ValueError('IMU hatch axis must be a stable string ID')
+    if not x_axis:
+        return RAW_IMU_NOSE_AXIS_MAPS[nose_axis]
+    axes = {'x_positive': 1, 'x_negative': -1, 'y_positive': 2,
+            'y_negative': -2, 'z_positive': 3, 'z_negative': -3}
+    if type(x_axis) is not str or x_axis not in axes or abs(axes[nose_axis]) == abs(axes[x_axis]):
+        raise ValueError('IMU nose and hatch axes must be perpendicular')
+    z_index, x_index = axes[nose_axis], axes[x_axis]
+    z = [int(abs(z_index) == i + 1) * (1 if z_index > 0 else -1) for i in range(3)]
+    x = [int(abs(x_index) == i + 1) * (1 if x_index > 0 else -1) for i in range(3)]
+    y = (z[1]*x[2]-z[2]*x[1], z[2]*x[0]-z[0]*x[2], z[0]*x[1]-z[1]*x[0])
+    y_index = next((i + 1) * value for i, value in enumerate(y) if value)
+    return x_index, y_index, z_index
+
+
 class ProjectModelError(FccgError):
     pass
 
@@ -134,6 +156,7 @@ class DeviceInstance:
     installation_orientation: str = "vertical"
     mount_nose_axis: str = "z_positive"
     position_body_m: SensorPosition | None = None
+    mount_x_axis: str = ''
 
 
 @dataclass(frozen=True, slots=True)
@@ -363,6 +386,7 @@ class ProjectModel:
     feature_tier_presets: dict[str, dict[str, Any]] = field(default_factory=dict)
     native_usb: NativeUsbReference | None = None
     sensor_installation: SensorInstallationConfiguration | None = None
+    mission_process: dict | None = None
     format_version: int = PROJECT_FORMAT_VERSION
 
     def ComponentIds_Get(self) -> tuple[str, ...]:
@@ -412,7 +436,9 @@ class ProjectModel:
 
     def Dictionary_Get(self) -> dict[str, Any]:
         return {
-            "format_version": (PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION
+            "format_version": (PROJECT_MISSION_PROCESS_FORMAT_VERSION
+                if self.mission_process is not None or any(item.mount_x_axis for item in self.device_instances) or self.format_version == PROJECT_MISSION_PROCESS_FORMAT_VERSION
+                else PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION
                 if self.format_version == PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION or
                    (self.build.feature_tier in ("full", "standard") and
                     (not self.build.magnetometer_enabled or not self.build.maintenance_log_export_enabled))
@@ -450,6 +476,7 @@ class ProjectModel:
                            if instance.plugin == "silverstar.device.imu.jy901b" else {}),
                         **({"mount_nose_axis": instance.mount_nose_axis}
                            if instance.plugin in RAW_IMU_MOUNT_PLUGINS else {}),
+                        **({'mount_x_axis': instance.mount_x_axis} if instance.mount_x_axis else {}),
                         **({"position_body_m": instance.position_body_m.Dictionary_Get()}
                            if instance.position_body_m is not None else {}),
                     }
@@ -607,6 +634,7 @@ class ProjectModel:
             **({"native_usb": self.native_usb.Dictionary_Get()} if self.native_usb is not None else {}),
             **({"sensor_installation": self.sensor_installation.Dictionary_Get()}
                if self.sensor_installation is not None else {}),
+            **({'mission_process': MissionProcess_Require(self.mission_process)} if self.mission_process is not None else {}),
         }
 
 
@@ -1134,7 +1162,7 @@ def _DeviceInstances_Parse(value: Any) -> list[DeviceInstance]:
     for entry_value in value:
         entry = _Object_Require(entry_value, "device instance")
         base_fields = {"instance_id", "plugin", "interface", "profile"}
-        if not base_fields.issubset(entry) or set(entry) - (base_fields | {"module_variant", "tx_power_dbm", "installation_orientation", "mount_nose_axis", "position_body_m"}):
+        if not base_fields.issubset(entry) or set(entry) - (base_fields | {"module_variant", "tx_power_dbm", "installation_orientation", "mount_nose_axis", "mount_x_axis", "position_body_m"}):
             raise ProjectModelError(
                 "device instance must contain instance_id, plugin, interface and profile"
             )
@@ -1149,9 +1177,16 @@ def _DeviceInstances_Parse(value: Any) -> list[DeviceInstance]:
                 ("installation_orientation" in entry and plugin != "silverstar.device.imu.jy901b")):
             raise ProjectModelError("Invalid JY901B installation orientation")
         nose_axis = entry.get("mount_nose_axis", "z_positive")
-        if (nose_axis not in RAW_IMU_NOSE_AXIS_MAPS or
+        if (type(nose_axis) is not str or nose_axis not in RAW_IMU_NOSE_AXIS_MAPS or
                 ("mount_nose_axis" in entry and plugin not in RAW_IMU_MOUNT_PLUGINS)):
             raise ProjectModelError("Invalid raw IMU nose-axis mounting")
+        x_axis = entry.get('mount_x_axis', '')
+        try:
+            RawImuAxisMap_Get(nose_axis, x_axis)
+        except (ValueError, TypeError) as error:
+            raise ProjectModelError(str(error)) from error
+        if 'mount_x_axis' in entry and plugin not in RAW_IMU_MOUNT_PLUGINS:
+            raise ProjectModelError('Explicit hatch-axis mapping requires a raw IMU plugin')
         if (not isinstance(module, str) or (module and not SELECTION_OPTION_PATTERN.fullmatch(module))
                 or (power is not None and type(power) is not int)):
             raise ProjectModelError("Invalid radio module variant or TX power")
@@ -1167,7 +1202,7 @@ def _DeviceInstances_Parse(value: Any) -> list[DeviceInstance]:
             position = SensorPosition_Parse(entry["position_body_m"]) if "position_body_m" in entry else None
         except ValueError as error:
             raise ProjectModelError(f"{instance_id}: {error}") from error
-        instances.append(DeviceInstance(instance_id, plugin, interface, profile, module, power, orientation, nose_axis, position))
+        instances.append(DeviceInstance(instance_id, plugin, interface, profile, module, power, orientation, nose_axis, position, x_axis))
     return instances
 
 
@@ -1997,7 +2032,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
     }
     if "flight_tx_power_dbm" not in root:
         root["flight_tx_power_dbm"] = 12
-    if set(root) - {"feature_tier_presets", "native_usb", "sensor_installation"} != required_root:
+    if set(root) - {"feature_tier_presets", "native_usb", "sensor_installation", "mission_process"} != required_root:
         missing = required_root - set(root)
         unknown = set(root) - required_root
         details = [
@@ -2005,14 +2040,22 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
             *(f"unknown {name}" for name in sorted(unknown)),
         ]
         raise ProjectModelError("Project fields are invalid: " + ", ".join(details))
-    if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION, PROJECT_NIS_INPUT_FORMAT_VERSION, PROJECT_NATIVE_USB_FORMAT_VERSION, PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION, PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION):
+    if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION, PROJECT_NIS_INPUT_FORMAT_VERSION, PROJECT_NATIVE_USB_FORMAT_VERSION, PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION, PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION, PROJECT_MISSION_PROCESS_FORMAT_VERSION):
         raise ProjectModelError(
-            "Only project format_version 14 through 21 is supported"
+            "Only project format_version 14 through 22 is supported"
         )
     if (set(_Object_Require(root.get("build"), "build")) & {"magnetometer_enabled", "maintenance_log_export_enabled"}
             and root["format_version"] < PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION):
         raise ProjectModelError("Optional resource selections require project format_version 21")
     sensor_installation = None
+    mission_process = None
+    if 'mission_process' in root:
+        if root['format_version'] < PROJECT_MISSION_PROCESS_FORMAT_VERSION:
+            raise ProjectModelError('mission_process requires project format_version 22')
+        try:
+            mission_process = MissionProcess_Require(root['mission_process'])
+        except (ValueError, TypeError) as error:
+            raise ProjectModelError(str(error)) from error
     if "sensor_installation" in root:
         if root["format_version"] < PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION:
             raise ProjectModelError("sensor_installation requires project format_version 20")
@@ -2060,6 +2103,8 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
     ):
         raise ProjectModelError("Per-instance radio configuration requires project format 16")
     modes = _Modes_Parse(root.get("modes"))
+    if root['format_version'] < PROJECT_MISSION_PROCESS_FORMAT_VERSION and any(item.mount_x_axis for item in device_instances):
+        raise ProjectModelError('Explicit IMU hatch-axis mapping requires project format_version 22')
     algorithm_parameters = _AlgorithmParameters_Parse(root.get("algorithm_parameters"))
     if root["format_version"] < PROJECT_NIS_INPUT_FORMAT_VERSION and any(
             isinstance(v, dict) for params in algorithm_parameters.values() for v in params.values()):
@@ -2152,6 +2197,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         feature_tier_presets=deepcopy(feature_tier_presets),
         native_usb=native_usb,
         sensor_installation=sensor_installation,
+        mission_process=mission_process,
         format_version=root["format_version"],
     )
 

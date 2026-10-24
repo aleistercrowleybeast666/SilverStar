@@ -55,5 +55,11 @@ def MissionProfile_Build(model, catalog):
         "continuous": {**{key: component(model.strategies.get(key)) for key in ("ins", "estimator", "landing")},
                        "logging": [asdict(row) for row in model.logging_streams]},
         "qualification": deepcopy(contract["qualification"])}
+    if model.mission_process is not None:
+        profile.update(schema_id='silverstar.mission-profile/2', schema_version=2,
+            process=deepcopy(model.mission_process), devices=[{
+                'instance_id': item.instance_id, 'plugin_id': item.plugin,
+                'recovery_action': 'actuator.mission_action.parachute_deploy' in catalog.Component_Get(item.plugin).provides}
+                for item in model.device_instances])
     profile["sha256"] = _API["MissionProfile_Digest"](profile)
     return MissionProfile_Require(profile)

@@ -8,6 +8,8 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QHeaderView,
     QLabel,
+    QPushButton,
+    QFileDialog,
     QScrollArea,
     QTableWidget,
     QTableWidgetItem,
@@ -16,7 +18,7 @@ from PySide6.QtWidgets import (
 )
 
 from silverstar_flp.ui.algorithm_labels import AlgorithmName_Display
-from silverstar_flp.decoder_profiles.mission_profile import MissionProfile_FromDataset
+from silverstar_flp.decoder_profiles.mission_profile import MissionProfile_FromDataset, MissionTrace_FromPath
 
 from silverstar_flp.analysis.overview import (
     AlignmentOverview,
@@ -78,6 +80,14 @@ class OverviewPage(QWidget):
         self.mission_profile_label.setTextFormat(Qt.TextFormat.PlainText)
         self.mission_profile_label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         summary_layout.addWidget(self.mission_profile_label)
+        self.mission_trace_button = QPushButton(translator.Text_Get('mission_process.trace_open'))
+        self.mission_trace_button.setEnabled(False)
+        self.mission_trace_button.clicked.connect(self._MissionTrace_Open)
+        summary_layout.addWidget(self.mission_trace_button)
+        self.mission_trace_label = QLabel()
+        self.mission_trace_label.setWordWrap(True)
+        self.mission_trace_label.setTextFormat(Qt.TextFormat.PlainText)
+        summary_layout.addWidget(self.mission_trace_label)
         layout.addWidget(self.summary_group)
 
         metrics = QGridLayout()
@@ -193,15 +203,47 @@ class OverviewPage(QWidget):
         outer.addWidget(self.scroll_area)
         self.Language_Apply(translator)
 
+    def _MissionTrace_Open(self):
+        path, _filter = QFileDialog.getOpenFileName(self, self._translator.Text_Get('mission_process.trace_open'), '',
+                                                   'Mission trace (*.ssmissiontrace)')
+        if not path:
+            return
+        try:
+            trace = MissionTrace_FromPath(self._dataset, path)
+            self._mission_trace = trace
+            self._MissionTrace_Render()
+        except (ValueError, TypeError) as error:
+            self.mission_trace_label.setText(self._translator.Text_Get('mission_profile.invalid', error=str(error)))
+
+    def _MissionTrace_Render(self):
+        trace = getattr(self, '_mission_trace', None)
+        if trace is None:
+            self.mission_trace_label.clear()
+            return
+        profile = MissionProfile_FromDataset(self._dataset)
+        names = {row['stage_id']: row['name'] for row in profile['process']['stages']}
+        timeline = ' → '.join(f"MCU {event['time_us']/1e6:g}s {names[event['stage_id']]}" for event in trace['events']
+                              if event['kind'] == 'stage_entered')
+        self.mission_trace_label.setText(self._translator.Text_Get('mission_process.reference_trace', timeline=timeline))
+
     def Dataset_Set(self, dataset: FlightDataset) -> None:
+        if getattr(self, '_dataset', None) is not dataset:
+            self._mission_trace = None
         self._dataset = dataset
+        self.mission_trace_label.clear()
+        self.mission_trace_button.setText(self._translator.Text_Get('mission_process.trace_open'))
+        self.mission_trace_button.setEnabled(False)
         try:
             mission = MissionProfile_FromDataset(dataset)
             text = self._translator.Text_Get('mission_profile.declared', name=mission['project']['name'],
                 digest=mission['sha256']) if mission is not None else self._translator.Text_Get('mission_profile.none')
+            if mission is not None and 'process' in mission:
+                text += '\n' + self._translator.Text_Get('mission_process.declared', stages=' → '.join(row['name'] for row in mission['process']['stages']))
+                self.mission_trace_button.setEnabled(True)
         except ValueError as error:
             text = self._translator.Text_Get('mission_profile.invalid', error=str(error))
         self.mission_profile_label.setText(text)
+        self._MissionTrace_Render()
         summary = FlightSummary_Build(dataset)
         synthetic = (
             f" · {self._translator.Text_Get('status.synthetic')}" if summary.synthetic else ""

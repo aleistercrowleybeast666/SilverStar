@@ -50,6 +50,7 @@ from silverstar_fccg.project.model import (
     DeviceInstance,
     RAW_IMU_MOUNT_PLUGINS,
     RAW_IMU_NOSE_AXIS_MAPS,
+    RawImuAxisMap_Get,
     LogDecoderProfileReference,
     ProjectModel,
 )
@@ -876,6 +877,9 @@ def _TestBuildIdentity_Get(model: ProjectModel) -> dict[str, Any] | None:
 def _FlightConfigHeader_Render(
     model: ProjectModel, catalog: PluginCatalog
 ) -> str:
+    if model.mission_process is not None:
+        raise ValueError('mission_process_firmware_binding_unavailable: custom phases are desktop-reference only; '
+                         'firmware generation is refused rather than silently executing the legacy process')
     catalog = catalog.ProjectView_Get(model)
     magnetic_entries = _DeviceDescriptorEntries_Get(model, catalog)
     magnetic_rate, jy_magnetic_capture = _MagnetometerDescriptors_Validate(
@@ -1409,7 +1413,7 @@ def _InstanceResourcesSource_Render(
                 values.append(f".installation_orientation = {orientation}U")
                 values.append(f".module_variant = {variant}U")
             if manifest.component_id in RAW_IMU_MOUNT_PLUGINS:
-                axes = RAW_IMU_NOSE_AXIS_MAPS[instance.mount_nose_axis]
+                axes = RawImuAxisMap_Get(instance.mount_nose_axis, instance.mount_x_axis)
                 values.append(".axis_map = { " + ", ".join(map(str, axes)) + " }")
             rows.append("    { " + ", ".join(values) + " }")
         table_symbol = f"s_{binding.accessor.removesuffix('_Get')}"
@@ -1951,6 +1955,13 @@ def _LogMetadataDeclarations_Get(model: ProjectModel, catalog: PluginCatalog,
             if 'mission_profile_unavailable' in declarations:
                 raise ValueError('Mission profile status has duplicate ownership') from error
             declarations['mission_profile_unavailable'] = {'schema_version': 1, 'reason': str(error)}
+    selected_estimator = model.strategies.get('estimator')
+    if selected_estimator is not None:
+        experimental = catalog.Component_Get(selected_estimator).metadata.get('experimental_build')
+        if experimental is not None:
+            if 'experimental_estimator' in declarations:
+                raise ValueError('Experimental estimator identity has duplicate ownership')
+            declarations['experimental_estimator'] = {'plugin_id': selected_estimator, **experimental}
     return declarations
 
 

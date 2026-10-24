@@ -8,9 +8,11 @@
     "mission.profile": {
       "scope": "independent declarative configuration snapshot; no runtime authority",
       "source": {
-        "path": "contracts/mission_profile_v1.json",
+        "path": "contracts/mission_profile_v2.json",
         "kind": "json",
-        "selector": ["schema_version"]
+        "selector": [
+          "schema_version"
+        ]
       }
     },
     "suite": {
@@ -225,6 +227,36 @@
         "kind": "python_constant",
         "path": "apps/FLP/src/silverstar_flp/decoder_profiles/algorithm_parameters.py",
         "name": "PARAMETER_SCHEMA_ID"
+      }
+    },
+    "mission.profile.v1": {
+      "scope": "independent declarative configuration snapshot; no runtime authority",
+      "source": {
+        "path": "contracts/mission_profile_v1.json",
+        "kind": "json",
+        "selector": [
+          "schema_version"
+        ]
+      }
+    },
+    "mission.process": {
+      "scope": "bounded desktop-reference mission phase contract",
+      "source": {
+        "path": "contracts/mission_process_v1.json",
+        "kind": "json",
+        "selector": [
+          "schema_version"
+        ]
+      }
+    },
+    "body.frame": {
+      "scope": "right-handed body axes and fixed navigation reference point",
+      "source": {
+        "path": "contracts/body_frame_v1.json",
+        "kind": "json",
+        "selector": [
+          "schema_version"
+        ]
       }
     }
   },

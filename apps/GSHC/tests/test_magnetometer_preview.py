@@ -19,6 +19,7 @@ def test_projection_preview_uses_fit_coordinates_without_mutating_samples(qtbot,
     assert fit.status is MagCalibrationFitStatus.READY
     i18n = I18n(QSettings(str(tmp_path / 'settings.ini'), QSettings.IniFormat))
     preview = MagProjectionPreview(i18n)
+    assert 'x_s' in preview.accessibleName() and 'XY' not in preview.accessibleName()
     qtbot.addWidget(preview)
     preview.resize(720, 220)
     preview.show()
@@ -29,7 +30,7 @@ def test_projection_preview_uses_fit_coordinates_without_mutating_samples(qtbot,
     np.testing.assert_array_equal(raw, original)
     assert preview.snapshot.total == 512
     assert preview.snapshot.axis_limit > np.max(np.abs(raw))
-    assert 'XY' in preview.accessibleName() and 'XZ' in preview.accessibleName() and 'YZ' in preview.accessibleName()
+    assert all(plane in preview.accessibleName() for plane in ('x_s y_s','x_s z_s','y_s z_s'))
     assert '非设备回读' in preview.toolTip()
     assert not preview.grab().isNull()
     i18n.set_language(Language.EN_US)

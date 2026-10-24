@@ -162,3 +162,32 @@ Host 数学/短样例、当前 GUI 回归、历史 ARM 构建、真实板测分�
 ## 可读公式与维护源
 
 完整实现数学文档见[15页PDF](../math/navigation-models.pdf)与[模块化TeX入口](../math/README.md)，包含坐标/符号、四套算法、校准/对准、质量窗口与源码索引。数学说明和PDF编译不构成新固件或硬件验收。
+
+
+## 机体系与导航参考点（2026-10-24）
+
+统一的项目定义见 `contracts/body_frame_v1.json`。**无下标 x/y/z（兼容旧 X/Y/Z）均表示箭体系**，不再以大小写区分。导航系用 E/N/U；每个设备原生坐标系独立记为 s_i，轴记 x_{s_i}/y_{s_i}/z_{s_i}。安装向量 r_i^b（如 r_imu0^b、r_gnss0^b）的设备下标标识测点，其分量仍表达在共同箭体系。GNSS 测量另记 p_gnss0^n（ENU，或明确声明 ECEF），不虚构 GNSS 自有的箭体系三轴。已有 `position_body_m.x/y/z`、协议及 ABI 字段名保持兼容，按明确的 frame 声明解释，不靠字母大小写猜测。
+
+- O 是固定在箭体上的导航参考点，不强制位于主 IMU 或质心。换主 IMU、传感器故障切换和质量变化均不移动 O。
+- +Z 沿箭轴朝鼻锥；+X 是指定舱门/机械基准朝外的径向方向，投影到垂直于 Z 的平面；+Y = +Z × +X。因此 X × Y = Z，始终为右手系。
+- 位置输入 `r_body = p_sensor - p_O`，单位 m、表达在统一机体系中。主 IMU 可以非零，未录入位置与已测量零位置不同。
+- 原始 IMU 安装旋转为 `v_body = R_body_sensor v_sensor`。两个互相垂直的有向模块轴分别指定机体 +Z 和 +X；第三轴用叉积构造，检查 RᵀR=I、det(R)=+1。离散正交安装共 24 种。旧工程未填写第二轴时沿用原六向映射，不旋转历史数据。JY901B 外部姿态仍沿用其已支持的横/竖安装预设，不能当成完整 24 向外部四元数接口。
+- 世界系维持 ENU，Hamilton 四元数 `[w,x,y,z]` 表示 body→navigation。箭体轴向滚转是绕 +Z；不要把通用 ZYX 欧拉角里的 X-roll/Y-pitch/Z-yaw 字段名直接当成火箭物理轴名称。箭体系角速度优先明确写作 ω_X/ω_Y/ω_Z。
+
+安装位置 v2 明确使用固定导航点，不再要求自然语言输入框；安装分布图使用实际数值绘制等比例 xy/xz/yz 三视图。旧 v1 结构基准及原说明继续读写，只有用户显式确认旧点就是导航点且轴向一致时才采用新定义，不作自动平移或旋转。修改安装方向后必须按实际装配重新核对坐标变换、校准和初始对准；界面修改本身不产生这些物理验证证据。
+
+这些逐设备位置目前是配置/可视化数据，`runtime_applied=false`。尚不能宣称现有估计器已将主 IMU 处的运动补偿到 O；ESKF15 的独立旧全局 GNSS 杆臂参数仍保持原义。ESKF20/InEKF15/20 的同点模型约束也未因显示分布图而消失。
+
+### 公开参考与选择理由
+
+NASA NESC 的公开 6DOF check-case 资料采用 X 向前、Z 向下的常见航空/航天约定，这是该资料的具体定义，不能据此断言所有探空火箭必须用 X 朝鼻锥。[NASA NESC Coordinate Systems](https://nescacademy.nasa.gov/flightsim/2015/datum_coordinate_system)
+
+RocketPy 官方文档的机体系使用 Z 朝鼻锥；PSAS 的公开探空火箭工程也用 Z 为轴向滚转轴。这为保留 SilverStar 已有 +Z 轴向提供了工程参照，但其原点定义不直接移植：本项目 O 为导航参考点。[RocketPy](https://docs.rocketpy.org/en/latest/user/rocket/rocket_axes.html)、[PSAS](https://archive.psas.pdx.edu/CoordinateSystem/)
+
+ECSS-E-ST-10-09C（31 July 2008）强调统一描述原点、单位、轴方向，以及坐标变换的文字、图示和数学关系。这里采用这种明确声明和核验的方法；本项目不是 NASA/ECSS 合规或认证声明。[ECSS 官方文件](https://ecss.nl/wp-content/uploads/standards/ecss-e/ECSS-E-ST-10-09C31July2008.pdf)
+
+已查到秦永元《惯性导航》的出版社公开试读，但仅含前 30 页，未覆盖用户提及的火箭坐标附录；不能把本项目定义说成已经按该附录逐项核验。严恭敏/翁浚教材的具体附录也未取得可核对正文。[科学出版社试读](https://www.ecsponline.com/yz/B03984A7710E244C8B017468432480BC2000.pdf)
+
+### 实验估计器构建
+
+ESKF20、InEKF15、InEKF20 已允许在设备能力满足时选择并生成固件。可用性计算纳入非选择型公共依赖；新工程的 `software_validation_build` 默认 1，表示实验构建身份，不代表硬件或飞行测试通过。旧工程显式保存的值继续保留。算法显示名、验证警告及 decoder 元数据记录 hardware/flight/timing 均未验证；初值、协方差、噪声及实际同点条件仍须配置，错误输入不以“实验”名义跳过。数值内核及已有失败处理没有在本批改写。

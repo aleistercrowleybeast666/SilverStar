@@ -24,7 +24,7 @@ from PySide6.QtWidgets import (
 
 from silverstar_fccg.core.i18n import Translator
 from silverstar_fccg.ui.mission_profile_panel import MissionProfilePanel
-from silverstar_fccg.ui.mission_capsules import MissionCapsuleBoard
+from silverstar_fccg.ui.mission_process_panel import MissionProcessPanel
 from silverstar_fccg.core.view_models import (
     BoardCompatibilityView,
     CapabilityUsageView,
@@ -42,7 +42,7 @@ from silverstar_fccg.project.capabilities import (
     CapabilityKind_Get,
 )
 from silverstar_fccg.project.configuration import SelectionAvailability
-from silverstar_fccg.project.model import RAW_IMU_MOUNT_PLUGINS
+from silverstar_fccg.project.model import RAW_IMU_MOUNT_PLUGINS, RAW_IMU_NOSE_AXIS_MAPS
 from silverstar_fccg.project.feature_tiers import FeatureTier_DeviceClassLimitGet
 from silverstar_fccg.ui.committed_spin import (
     EnterCommittedDoubleSpinBox,
@@ -50,6 +50,7 @@ from silverstar_fccg.ui.committed_spin import (
 )
 from silverstar_fccg.ui.device_initialization import InitializationSection_Create
 from silverstar_fccg.ui.sensor_installation_editor import SensorPositionEditor
+from silverstar_fccg.ui.sensor_layout_view import SensorLayoutView
 from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
 from silverstar_fccg.ui.telemetry_card import (TelemetryDetails_Add,
     TelemetryName_Display, TelemetryRemoveButton_Add)
@@ -72,8 +73,9 @@ class DevicesPage(ScrollableLocalizedPage):
     variantChanged = Signal(str, str, str)
     installationOrientationChanged = Signal(str, str)
     mountNoseAxisChanged = Signal(str, str)
+    mountXAxisChanged = Signal(str, str)
+    installationReferenceAdoptRequested = Signal()
     sensorPositionChanged = Signal(str, object)
-    installationOriginChanged = Signal(str)
     instanceAddRequested = Signal(str)
     otherDeviceToggled = Signal(str, bool)
     installRequested = Signal()
@@ -117,19 +119,22 @@ class DevicesPage(ScrollableLocalizedPage):
         self.optional_resources_note.setWordWrap(True)
         self.Text_Register(self.optional_resources_note, "optional_resources.note")
         global_form.addRow(self.optional_resources_note)
-        self.installation_origin_label = QLabel()
-        self.Text_Register(self.installation_origin_label, "installation.origin")
-        self.installation_origin = QLineEdit()
-        self.installation_origin.setObjectName("sensorInstallationOrigin")
-        self.installation_origin.setMaxLength(512)
-        self.installation_origin.returnPressed.connect(
-            lambda: self.installationOriginChanged.emit(self.installation_origin.text()))
-        global_form.addRow(self.installation_origin_label, self.installation_origin)
         self.installation_note = QLabel()
         self.installation_note.setObjectName("sensorInstallationNote")
         self.installation_note.setWordWrap(True)
         self.Text_Register(self.installation_note, "installation.note")
         global_form.addRow(self.installation_note)
+        self.installation_legacy_note = QLabel()
+        self.installation_legacy_note.setWordWrap(True)
+        self.Text_Register(self.installation_legacy_note, 'installation.legacy.note')
+        global_form.addRow(self.installation_legacy_note)
+        self.installation_adopt_button = QPushButton()
+        self.Text_Register(self.installation_adopt_button, 'installation.legacy.adopt')
+        self.installation_adopt_button.clicked.connect(lambda _checked=False: self.installationReferenceAdoptRequested.emit())
+        global_form.addRow(self.installation_adopt_button)
+        self.InstallationReference_Set(None)
+        self.installation_map = SensorLayoutView(translator)
+        global_form.addRow(self.installation_map)
         self.root_layout.addWidget(self.Group_Create("group.global_configuration", global_form))
         self.instance_order_note = QLabel()
         self.instance_order_note.setObjectName("deviceInstanceOrderNote")
@@ -217,6 +222,7 @@ class DevicesPage(ScrollableLocalizedPage):
         self.variant_combos: dict[str, StandardComboBox] = {}
         self.orientation_combos: dict[str, StandardComboBox] = {}
         self.mount_combos: dict[str, StandardComboBox] = {}
+        self.mount_x_combos: dict[str, StandardComboBox] = {}
         self.position_editors: dict[str, SensorPositionEditor] = {}
         self.device_checks: dict[str, StandardCheckBox] = {}
         self.add_buttons: dict[str, QPushButton] = {}
@@ -250,8 +256,10 @@ class DevicesPage(ScrollableLocalizedPage):
                 checkbox.setChecked(getattr(build, name))
                 checkbox.setEnabled(build.feature_tier in ("full", "standard"))
 
-    def InstallationOrigin_Set(self, description: str) -> None:
-        self.installation_origin.setText(description)
+    def InstallationReference_Set(self, configuration):
+        legacy = configuration is not None and configuration.Dictionary_Get()['schema'].endswith('/1')
+        self.installation_legacy_note.setVisible(legacy)
+        self.installation_adopt_button.setVisible(legacy)
 
     @staticmethod
     def _Layout_Clear(layout: QLayout) -> None:
@@ -292,7 +300,9 @@ class DevicesPage(ScrollableLocalizedPage):
         self.variant_combos.clear()
         self.orientation_combos.clear()
         self.mount_combos.clear()
+        self.mount_x_combos.clear()
         self.position_editors.clear()
+        self.installation_map.Configuration_Set(self._instances)
         self.add_buttons.clear()
         self.remove_buttons.clear()
         components_by_class: defaultdict[str, list[ComponentView]] = defaultdict(list)
@@ -308,7 +318,6 @@ class DevicesPage(ScrollableLocalizedPage):
             if component.options.get("device_selection_style") == "instance"
             and not component.options.get("internal", False)
             and component.component_class != "console"
-            and component.component_class != "magnetometer"
         )
         instance_classes = sorted(
             {component.component_class for component in instance_components},
@@ -520,6 +529,21 @@ class DevicesPage(ScrollableLocalizedPage):
                         form.addRow(QLabel(self._translator.Text_Get(
                             "device.raw_imu.mount")), mount_combo)
                         self.mount_combos[instance_id] = mount_combo
+                        x_combo = StandardComboBox()
+                        x_combo.setObjectName('rawImuHatchAxis_' + instance_id)
+                        legacy_x = RAW_IMU_NOSE_AXIS_MAPS[instance.mount_nose_axis][0]
+                        legacy_name = ('+' if legacy_x > 0 else '−') + 'xyz'[abs(legacy_x) - 1] + '_s'
+                        x_combo.addItem(self._translator.Text_Get('device.raw_imu.hatch.legacy', axis=legacy_name), '')
+                        for axis in RAW_IMU_NOSE_AXIS_MAPS:
+                            sign = '+' if axis.endswith('positive') else '−'
+                            x_combo.addItem(sign + axis[0] + '_s', axis)
+                            x_combo.model().item(x_combo.count() - 1).setEnabled(axis[0] != instance.mount_nose_axis[0])
+                        x_combo.setCurrentIndex(max(0, x_combo.findData(instance.mount_x_axis)))
+                        x_combo.setToolTip(self._translator.Text_Get('device.raw_imu.hatch.note'))
+                        x_combo.currentIndexChanged.connect(lambda _index, selected=instance_id, editor=x_combo:
+                            self.mountXAxisChanged.emit(selected, str(editor.currentData())))
+                        form.addRow(self._translator.Text_Get('device.raw_imu.hatch'), x_combo)
+                        self.mount_x_combos[instance_id] = x_combo
                     if component_class in ("imu", "gnss"):
                         position_editor = SensorPositionEditor(
                             self._translator, instance_id, instance.position_body_m)
@@ -737,6 +761,7 @@ class DevicesPage(ScrollableLocalizedPage):
 
     def Language_Apply(self, translator: Translator) -> None:
         super().Language_Apply(translator)
+        self.installation_map.Language_Apply(translator)
         for index in range(self.feature_tier_combo.count()):
             tier = self.feature_tier_combo.itemData(index)
             self.feature_tier_combo.setItemText(index, translator.Text_Get("feature_tier." + tier))
@@ -1513,6 +1538,8 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
         )
         self.mission_profile_panel = MissionProfilePanel(translator)
         self.root_layout.addWidget(self.mission_profile_panel)
+        self.mission_process_panel = MissionProcessPanel(translator)
+        self.root_layout.addWidget(self.mission_process_panel)
         self.protocol_form = QFormLayout()
         self.protocol_group = self.Group_Create(
             "group.communication_protocols", self.protocol_form
@@ -1545,7 +1572,6 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
         )
         self.root_layout.addWidget(self.estimator_strategy_group)
         self.mission_mode_layout = QVBoxLayout()
-        self.mode_capsule_boards = {}
         self.mission_mode_group = self.Group_Create(
             "capsule.group", self.mission_mode_layout
         )
@@ -1719,7 +1745,6 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
         self.strategy_combos.clear()
         self.mode_checks.clear()
         self.mode_parameter_spins.clear()
-        self.mode_capsule_boards.clear()
         strategy_slots: defaultdict[str, list[ComponentView]] = defaultdict(list)
         mode_owners: list[ComponentView] = []
         for component in self._components:
@@ -1798,20 +1823,6 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
             self.strategy_combos[slot] = combo
         for owner in sorted(mode_owners, key=lambda item: item.ui_order):
             slot = owner.selection_slot
-            if slot != 'calibration':
-                availability = {option: self._mode_availability.get((slot, option), SelectionAvailability(True))
-                                for option in owner.selection_options}
-                board = MissionCapsuleBoard(self._translator, owner, self._modes.get(slot, []),
-                    self._mode_parameters.get(slot, {}), availability, self._AvailabilityText_Get)
-                board.optionsChanged.connect(lambda selected, selected_slot=slot: self.modeChanged.emit(selected_slot, selected))
-                board.parameterChanged.connect(lambda option, parameter, value, selected_slot=slot:
-                    self.modeParameterChanged.emit(selected_slot, option, parameter, value))
-                self.mission_mode_layout.addWidget(board)
-                self.mode_capsule_boards[slot] = board
-                self.mode_checks[slot] = []
-                self.mode_parameter_spins.update({(slot, option, parameter): editor
-                    for (option, parameter), editor in board.parameter_editors.items()})
-                continue
             section = QWidget()
             section_layout = QVBoxLayout(section)
             section_layout.setContentsMargins(0, 0, 0, 0)
@@ -2354,6 +2365,7 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
         super().Language_Apply(translator)
         self._LoggingHeaders_Apply()
         self.mission_profile_panel.Language_Apply(translator)
+        self.mission_process_panel.Language_Apply(translator)
         self._LoggingButtons_LayoutUpdate()
         self.logging_select_all_button.setToolTip(
             self._translator.Text_Get("action.logging_enable_all_tooltip")

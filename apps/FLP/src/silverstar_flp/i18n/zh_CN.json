@@ -993,5 +993,8 @@
   "integrity.vertical_display_explanation": "仅为离线垂直一致性诊断，不参与 KF6 门控。灰线表示本地参考重置，不代表机载 GNSS 断流或拒绝。",
   "parameter.nis_soft_enabled": "启用 NIS 软降权",
   "parameter.nis_hard_enabled": "启用 NIS 硬拒绝",
-  "parameter_group.nis": "NIS 门控"
+  "parameter_group.nis": "NIS 门控",
+  "mission_process.declared": "配置的任务阶段：{stages}（桌面参考，尚无板端阶段记录）",
+  "mission_process.trace_open": "打开离线任务过程记录",
+  "mission_process.reference_trace": "桌面参考执行（不是板端 Recorded 数据）：{timeline}"
 }

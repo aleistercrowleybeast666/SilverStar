@@ -1,0 +1,10 @@
+{
+  "schema_id": "silverstar.mission-profile/2",
+  "schema_version": 2,
+  "extends": "silverstar.mission-profile/1",
+  "additional_required_fields": ["process", "devices"],
+  "process_contract": "silverstar.mission-process/1",
+  "device_fields": ["instance_id", "plugin_id", "recovery_action"],
+  "qualification": "desktop_reference_only; firmware execution binding unavailable",
+  "compatibility": "Readers explicitly support v1 and v2; v1 files are never silently upgraded"
+}

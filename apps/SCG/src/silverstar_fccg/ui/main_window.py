@@ -518,8 +518,9 @@ class MainWindow(QMainWindow):
         self.devices_page.installationOrientationChanged.connect(
             self._Jy901bOrientation_Change)
         self.devices_page.mountNoseAxisChanged.connect(self._RawImuMount_Change)
+        self.devices_page.mountXAxisChanged.connect(self._RawImuXAxis_Change)
+        self.devices_page.installationReferenceAdoptRequested.connect(self._InstallationReference_Adopt)
         self.devices_page.sensorPositionChanged.connect(self._SensorPosition_Change)
-        self.devices_page.installationOriginChanged.connect(self._InstallationOrigin_Change)
         self.devices_page.instanceAddRequested.connect(self._DeviceInstance_Add)
         self.devices_page.otherDeviceToggled.connect(self._OtherDevice_Toggle)
         self.devices_page.installRequested.connect(self._PluginInstall_Dialog)
@@ -574,6 +575,7 @@ class MainWindow(QMainWindow):
         )
         self.flight_configuration_page.modeChanged.connect(self._Mode_Change)
         self.flight_configuration_page.mission_profile_panel.exportRequested.connect(self._MissionProfile_Export)
+        self.flight_configuration_page.mission_process_panel.processChanged.connect(self._MissionProcess_Queue)
         self.flight_configuration_page.modeParameterChanged.connect(
             self._ModeParameter_Change
         )
@@ -816,9 +818,7 @@ class MainWindow(QMainWindow):
             )
             self.devices_page.FeatureTier_Set(display.model.build.feature_tier)
             self.devices_page.OptionalResources_Set(display.model.build)
-            self.devices_page.InstallationOrigin_Set(
-                display.model.sensor_installation.origin_description
-                if display.model.sensor_installation is not None else "")
+            self.devices_page.InstallationReference_Set(display.model.sensor_installation)
             self.devices_page.FeatureTier_NoticeSet(self._translator.Text_Get(
                 "configuration.feature_tier_devices_review") if display.tier_device_conflicts else "")
             self.devices_page.Configuration_Set(
@@ -844,6 +844,9 @@ class MainWindow(QMainWindow):
             except ValueError:
                 mission_profile = None
             self.flight_configuration_page.mission_profile_panel.Profile_Set(mission_profile)
+            self.flight_configuration_page.mission_process_panel.Configuration_Set(display.model.mission_process,
+                [item.instance_id for item in display.model.device_instances if
+                 'actuator.mission_action.parachute_deploy' in self._service.catalog.Component_Get(item.plugin).provides])
             self.flight_configuration_page.Protocols_Set(
                 display.protocol_profiles,
                 display.selected_protocol_profiles,
@@ -1387,8 +1390,15 @@ class MainWindow(QMainWindow):
             return
 
         def change(candidate: ProjectModel) -> None:
+            from silverstar_fccg.project.model import RawImuAxisMap_Get
+            existing = candidate.DeviceInstance_Get(instance_id)
+            x_axis = existing.mount_x_axis if existing is not None else ''
+            try:
+                RawImuAxisMap_Get(nose_axis, x_axis)
+            except ValueError:
+                x_axis = ''  # The user changed the nose direction; show the legacy mapping explicitly.
             candidate.device_instances = [
-                replace(instance, mount_nose_axis=nose_axis)
+                replace(instance, mount_nose_axis=nose_axis, mount_x_axis=x_axis)
                 if instance.instance_id == instance_id and
                 instance.plugin in RAW_IMU_MOUNT_PLUGINS else instance
                 for instance in candidate.device_instances
@@ -1396,13 +1406,21 @@ class MainWindow(QMainWindow):
 
         self._ProjectConfiguration_Change(change)
 
-    def _InstallationOrigin_Change(self, description: str) -> None:
+    def _RawImuXAxis_Change(self, instance_id: str, x_axis: str) -> None:
+        def change(candidate):
+            from silverstar_fccg.project.model import RawImuAxisMap_Get
+            existing = candidate.DeviceInstance_Get(instance_id)
+            if existing is None or existing.plugin not in RAW_IMU_MOUNT_PLUGINS:
+                raise ValueError('Raw IMU instance is not configured')
+            RawImuAxisMap_Get(existing.mount_nose_axis, x_axis)
+            candidate.device_instances = [replace(item, mount_x_axis=x_axis)
+                if item.instance_id == instance_id else item for item in candidate.device_instances]
+        QTimer.singleShot(0, self, lambda: self._ProjectConfiguration_Change(change))
+
+    def _InstallationReference_Adopt(self):
         from silverstar_fccg.project.sensor_installation import SensorInstallationConfiguration
-        if self._displaying_model or (not description and self._model.sensor_installation is None):
-            return
-        def change(candidate: ProjectModel) -> None:
-            candidate.sensor_installation = SensorInstallationConfiguration(description)
-        self._ProjectConfiguration_Change(change)
+        QTimer.singleShot(0, self, lambda: self._ProjectConfiguration_Change(
+            lambda candidate: setattr(candidate, 'sensor_installation', SensorInstallationConfiguration(schema_version=2))))
 
     def _SensorPosition_Change(self, instance_id: str, position: tuple | None) -> None:
         from silverstar_fccg.project.sensor_installation import (
@@ -2445,6 +2463,12 @@ class MainWindow(QMainWindow):
                 }),
                 logging_availability_changed=True,
             )
+
+    def _MissionProcess_Queue(self, process):
+        from copy import deepcopy
+        snapshot = deepcopy(process)
+        QTimer.singleShot(0, self, lambda: self._ProjectConfiguration_Change(
+            lambda candidate: setattr(candidate, 'mission_process', snapshot)))
 
     def _Mode_Change(self, slot: str, values: object) -> None:
         self._pending_mode_changes[slot] = (

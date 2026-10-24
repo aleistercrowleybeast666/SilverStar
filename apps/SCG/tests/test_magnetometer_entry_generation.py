@@ -39,6 +39,11 @@ def _Model_Create(catalog, *, capture=False, devices=()):
 
 
 def _Compile_Run(model, catalog, tmp_path, rate, enabled, jy_capture, *, overrides=()):
+    # Isolate rate/descriptor header compilation from the maintenance UART.
+    # This fixture does not instantiate magnetic hardware; full validation of
+    # unassigned magnetic resources remains a separate negative check.
+    model = deepcopy(model)
+    model.protocols['maintenance'] = None
     tmp_path.mkdir(exist_ok=True)
     view = catalog.ProjectView_Get(model)
     generated = {
@@ -82,6 +87,16 @@ def test_default_has_no_mag_endpoint_and_preserves_200hz(builtin_catalog, tmp_pa
                 if item["class"] == MAG]
     result = _Compile_Run(model, builtin_catalog, tmp_path, 200, 0, 0)
     assert result.returncode == 0, result.stderr
+
+
+def test_missing_magnetic_resource_bindings_still_block_full_generation(builtin_catalog):
+    model = _Model_Create(builtin_catalog, devices=[DeviceInstance(
+        'mag0', 'silverstar.device.magnetometer.lis3mdl', 'i2c', 'uhp_20_hz_4g')])
+    result = Project_Validate(model, builtin_catalog)
+    assert not result.valid
+    assert any('mag0:data' in issue.message for issue in result.issues)
+    with pytest.raises(ValueError, match='Unassigned resource requirement: mag0:data'):
+        _FlightConfigHeader_Render(model, builtin_catalog)
 
 
 @pytest.mark.parametrize("chip,profile", [("lis3mdl", "uhp_20_hz_4g"),
