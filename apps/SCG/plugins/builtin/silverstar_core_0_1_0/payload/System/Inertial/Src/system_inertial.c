@@ -4,6 +4,8 @@
 #include <string.h>
 
 #include "system_imu_if.h"
+#include "system_installation_capture_if.h"
+#include "system_time.h"
 #include "silverstar_assert.h"
 #include "system_user_inertial_config.h"
 
@@ -99,6 +101,14 @@ SystemDeviceResult SystemInertial_NextGet(SystemInertialSample *sample)
     if (result != SYSTEM_DEVICE_OK)
     {
         return result;
+    }
+    /* Tap the sole native consumer before correction/virtual-IMU publication.
+     * No extra FIFO reader. The present interface proves neither measurement
+     * uncertainty nor native raw-frame definition; NULL explicitly refuses it. */
+    if (SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U)
+    {
+        SystemInstallationCapture_ImuObserve(&device_sample, NULL,
+            SystemTime_GetMonotonicUs());
     }
     SystemInertial_DeviceSampleCopy(&device_sample, sample);
     if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)

@@ -8,7 +8,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
-from silverstar_fccg.app.version import __version__
+from silverstar_fccg.app.version import __version__, FirmwareIdentity_Resolve, ProductVersion_Parse
 from silverstar_fccg.generator.hardware_preparation import (
     HardwarePreparationMetadata_Render,
     HardwareResourceBindingFingerprint_Get,
@@ -256,6 +256,10 @@ def _ProjectSemanticsWithoutLogging_Render(
         "mode_parameters": model.mode_parameters,
         "firmware_algorithm_parameters": AlgorithmParameters_Resolve(model, catalog),
         "available_records": [],
+        "optional_resources": {
+            "magnetometer_enabled": model.build.magnetometer_enabled,
+            "maintenance_log_export_enabled": model.build.maintenance_log_export_enabled,
+        },
         **({"logging_profile": model.build.logging_profile}
            if model.build.logging_profile != "all_streams" else {}),
         "logging_streams": [
@@ -289,6 +293,9 @@ def GeneratedFiles_Render(
         LogDecoderProfile_Render(model, catalog) if logging_enabled else None
     )
     files = {
+        ".fccg/version_identity.json": json.dumps(FirmwareIdentity_Resolve(
+            model.identity.firmware_version, test_identity=_TestBuildIdentity_Get(model)),
+            indent=2, ensure_ascii=True) + "\n",
         "Generated/project_sources.mk": graph.MakeFragment_Render(),
         "Generated/memory_audit.py": (Path(__file__).resolve().parents[1] / "project/build_audit.py").read_text(encoding="utf-8"),
         "Generated/module.mk": _GeneratedModule_Render(model),
@@ -326,6 +333,8 @@ def GeneratedFiles_Render(
             ProjectMissionParametersSource_Render(model, catalog)
         ),
     }
+    if "silverstar.installation.capture" in model.ComponentIds_Get():
+        files["Generated/Inc/project_installation_capture.h"] = _InstallationCaptureHeader_Render(model,catalog)
     if decoder_profile is not None:
         files.update(
             {
@@ -341,6 +350,16 @@ def GeneratedFiles_Render(
                 ),
             }
         )
+    if model.sensor_installation is not None:
+        from silverstar_fccg.project.sensor_installation import (
+            SensorInstallationHeader_Render, SensorInstallationSnapshot_Get,
+        )
+        files["Generated/project_sensor_installation.json"] = json.dumps(
+            SensorInstallationSnapshot_Get(model, catalog), ensure_ascii=False, indent=2,
+        ) + "\n"
+        files["Generated/Inc/project_sensor_installation.h"] = SensorInstallationHeader_Render(model)
+    from silverstar_fccg.generator.maintenance_uart import MaintenanceUart_ResourcesAugment
+    MaintenanceUart_ResourcesAugment(files, model, catalog)
     return {
         name: content if isinstance(content, bytes) else content.encode("utf-8")
         for name, content in files.items()
@@ -479,7 +498,15 @@ def MetadataFiles_Render(
             }
         )
     from silverstar_fccg.generator.swd_diagnostics import SwdDiagnostics_Render
-    files.update(SwdDiagnostics_Render(render_model, catalog))
+    files.update(SwdDiagnostics_Render(render_model, catalog, files['Makefile']))
+    from silverstar_fccg.generator.maintenance_uart import MaintenanceUart_Files
+    uart_files = MaintenanceUart_Files(render_model, catalog)
+    files.update(uart_files)
+    if uart_files:
+        files['Makefile'] = files['Makefile'].decode('utf-8') if isinstance(files['Makefile'], bytes) else files['Makefile']
+        files['Makefile'] += ('\n.PHONY: maintenance-uart-check\n'
+                             'maintenance-uart-check:\n\tpowershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_maintenance_uart.ps1\n'
+                             'all: maintenance-uart-check\n')
     return {
         name: content if isinstance(content, bytes) else content.encode("utf-8")
         for name, content in files.items()
@@ -676,6 +703,29 @@ def _DeviceRuntimeDefaults_Get(
     return sorted(result.items())
 
 
+def _InstallationCaptureHeader_Render(model: ProjectModel,catalog: PluginCatalog) -> str:
+    """Explicit optional base component, never a default navigation strategy."""
+    if (model.protocols.get("maintenance") is None or "stm32f4" not in model.mcu
+            or model.core!="silverstar.core.0_1_0"):
+        raise ValueError("Installation capture requires the F4 core and maintenance owner")
+    entries=_DeviceDescriptorEntries_Get(model,catalog)
+    lines=[AUTOGEN_C_COMMENT,"#ifndef __PROJECT_INSTALLATION_CAPTURE_H","#define __PROJECT_INSTALLATION_CAPTURE_H"]
+    values={"BOARD":model.board or "DECLARED_CUSTOM_BOARD"}
+    for role,kind in (("IMU","SYSTEM_DEVICE_CLASS_IMU"),("MAG","SYSTEM_DEVICE_CLASS_MAGNETOMETER")):
+        selected=[entry for entry in entries if entry.get('class')==kind]
+        if len(selected)!=1:raise ValueError("Installation capture requires exactly one IMU and one MAG endpoint")
+        manifest=catalog.Component_Get(str(selected[0]['_component_id']))
+        physical=manifest.physical_device
+        values[role+"_DRIVER"]=manifest.component_id
+        values[role+"_MODEL"]=physical.model if physical is not None else manifest.component_id
+    for key,value in values.items():
+        if not isinstance(value,str) or re.fullmatch(r'[A-Za-z0-9_.-]{1,128}',value) is None:
+            raise ValueError("Capture identity must be an immutable ASCII token")
+        lines.append(f'#define INSTALLATION_CAPTURE_{key} "{value}"')
+    lines.extend(["/* Unknown boot/native raw/time proof is not inferred from these labels. */","#endif",""])
+    return "\n".join(lines)
+
+
 def _DeviceBuildCapabilitiesHeader_Render(model: ProjectModel, catalog: PluginCatalog) -> str:
     """Render target facts from the physical provider selected for each class."""
     catalog = catalog.ProjectView_Get(model)
@@ -800,10 +850,42 @@ def _BuildModeDefinition_Render(build: BuildOptions) -> str:
     return f"#define SILVERSTAR_BUILD_COMPACT_ENABLED {value}"
 
 
+def _TestBuildIdentity_Get(model: ProjectModel) -> dict[str, Any] | None:
+    """Validate explicit test identity before emitting C or package data."""
+    value = model.reference_provenance.get("test_build")
+    if value is None:
+        return None
+    if not isinstance(value, dict) or set(value) != {"id", "build_number", "build_tag"}:
+        raise ValueError("Test identity requires id, build_number and build_tag")
+    if (not isinstance(value["id"], str) or
+            re.fullmatch(r"[A-Z][A-Z0-9_]{0,47}", value["id"]) is None or
+            type(value["build_number"]) is not int or not 1 <= value["build_number"] <= 255 or
+            not isinstance(value["build_tag"], str) or
+            re.fullmatch(r"[A-Z0-9]{8}", value["build_tag"]) is None):
+        raise ValueError("Invalid bounded test identity")
+    commit = model.reference_provenance.get("commit", "")
+    if not isinstance(commit, str) or re.fullmatch(r"[0-9a-f]{40}", commit) is None:
+        raise ValueError("Test identity requires an exact local source commit")
+    parts = ProductVersion_Parse(model.identity.firmware_version).numeric
+    if any(part > 255 for part in parts):
+        raise ValueError("Test firmware requires three bounded numeric version fields")
+    return {**value, "kind": "test", "firmware_version": model.identity.firmware_version,
+            "source_commit": commit, "version_parts": [int(part) for part in parts]}
+
+
 def _FlightConfigHeader_Render(
     model: ProjectModel, catalog: PluginCatalog
 ) -> str:
     catalog = catalog.ProjectView_Get(model)
+    magnetic_entries = _DeviceDescriptorEntries_Get(model, catalog)
+    magnetic_rate, jy_magnetic_capture = _MagnetometerDescriptors_Validate(
+        model, catalog, magnetic_entries)
+    magnetic_enabled = 1 if magnetic_rate else 0
+    magnetic_rate_guard = (
+        f'#if (SYSTEM_MAGNETOMETER_OUTPUT_RATE_HZ != {magnetic_rate}U)\n'
+        '#error "Rate override conflicts with explicit magnetic device configuration"\n'
+        '#endif\n' if magnetic_rate else ""
+    )
     definitions: list[tuple[str, str]] = [
         (
             "SILVERSTAR_PROTOCOL_TELEMETRY_ENABLED",
@@ -819,6 +901,11 @@ def _FlightConfigHeader_Render(
         ),
     ]
     definitions.extend(_DeviceRuntimeDefaults_Get(model, catalog))
+    from silverstar_fccg.generator.maintenance_uart import MaintenanceUart_Profile
+    uart_profile = MaintenanceUart_Profile(model, catalog)
+    uart_fields = (f' uart_baud={uart_profile["baudrate"]} uart_format=8N1 idle_timeout_ms=30000'
+                   if uart_profile is not None else '')
+    definitions.append(('SILVERSTAR_MAINTENANCE_UART_FIELDS', json.dumps(uart_fields)))
     if model.build.compact_mode:
         power_available = any(entry.get("class") == "SYSTEM_DEVICE_CLASS_POWER"
                               for entry in _DeviceDescriptorEntries_Get(model, catalog))
@@ -988,6 +1075,10 @@ def _FlightConfigHeader_Render(
             )
         for symbol in raw_symbols:
             feature_symbols[symbol] = True
+    # Only descriptors admitted by explicit device/profile selection may enable
+    # magnetic collection. The JY frame switch is global to that driver.
+    feature_symbols["SYSTEM_USER_MAGNETOMETER_ENABLE"] = bool(magnetic_enabled)
+    feature_symbols["JY901B_MAGNETOMETER_ADAPTER_ENABLE"] = jy_magnetic_capture
     definitions.extend(
         (symbol, "1U" if enabled else "0U")
         for symbol, enabled in sorted(feature_symbols.items())
@@ -1038,6 +1129,16 @@ def _FlightConfigHeader_Render(
                         ),
                     )
                 )
+    identity = FirmwareIdentity_Resolve(model.identity.firmware_version,
+        test_identity=_TestBuildIdentity_Get(model))
+    version_definitions = list(zip(("SILVERSTAR_VERSION_MAJOR", "SILVERSTAR_VERSION_MINOR",
+        "SILVERSTAR_VERSION_PATCH"), map(str, identity["numeric_version"])))
+    version_definitions.extend((("SILVERSTAR_VERSION_BUILD", str(identity["build_number"])),
+        ("SILVERSTAR_LOG_BUILD_TAG", json.dumps(identity["log_build_tag"])),
+        ("SILVERSTAR_BUILD_IDENTITY_FIELDS", json.dumps(identity["runtime_identity_fields"]))))
+    version_rows = "\n".join(
+        f'#ifdef {symbol}\n#error "Version identity is generated; remove external version overrides"\n#endif\n'
+        f'#define {symbol:<48} {value}' for symbol, value in version_definitions)
     rows = "\n".join(
         f"#ifndef {symbol}\n"
         f"#define {symbol:<48} {value}\n"
@@ -1045,7 +1146,7 @@ def _FlightConfigHeader_Render(
         for symbol, value in definitions
     )
     includes = '#include "project_algorithm_parameters.h"\n#include "project_device_build_capabilities.h"'
-    early_rows = ("#define SILVERSTAR_COMPACT_MODE 1\n#define AIR_LINK_HAL_BUFFER_SIZE 260\n\n" + rows + "\n\n" + includes) if model.build.compact_mode else includes
+    early_rows = version_rows + "\n\n" + (("#define SILVERSTAR_COMPACT_MODE 1\n#define AIR_LINK_HAL_BUFFER_SIZE 260\n\n" + rows + "\n\n" + includes) if model.build.compact_mode else includes)
     late_rows = "" if model.build.compact_mode else rows
     return f"""#ifndef __PROJECT_FLIGHT_CONFIG_H
 #define __PROJECT_FLIGHT_CONFIG_H
@@ -1056,8 +1157,16 @@ def _FlightConfigHeader_Render(
 
 {late_rows}
 
-#if (SYSTEM_USER_MAGNETOMETER_ENABLE != 0U)
-#error "Magnetometer selection is deferred in the first SCG release"
+#if (SYSTEM_USER_MAGNETOMETER_ENABLE != {magnetic_enabled}U)
+#error "Enable override conflicts with explicit magnetic device selection"
+#endif
+{magnetic_rate_guard}
+#if (JY901B_MAGNETOMETER_ADAPTER_ENABLE != {int(jy_magnetic_capture)}U)
+#error "JY frame override conflicts with explicit magnetic profile selection"
+#endif
+#if ((JY901B_MAGNETOMETER_ADAPTER_ENABLE != 0U) && \
+     (SYSTEM_MAGNETOMETER_OUTPUT_RATE_HZ != SYSTEM_IMU_OUTPUT_RATE_HZ))
+#error "JY rate override conflicts with explicit magnetic profile configuration"
 #endif
 
 #if ((SILVERSTAR_PROTOCOL_TELEMETRY_ENABLED != 0U) && \
@@ -1295,7 +1404,8 @@ def _InstanceResourcesSource_Render(
                 values.extend((".rx_en = (PlatformGpioId)PLATFORM_GPIO_COUNT", ".tx_en = (PlatformGpioId)PLATFORM_GPIO_COUNT"))
             if binding.accessor == "ProjectJy901bResources_Get":
                 orientation = {"horizontal": 0, "vertical": 1}[instance.installation_orientation]
-                variant = {"": 0, "jy901b": 0, "jy901s": 1}[instance.profile]
+                variant = {"": 0, "jy901b": 0, "jy901b_mag_capture": 0,
+                           "jy901s": 1, "jy901s_mag_capture": 1}[instance.profile]
                 values.append(f".installation_orientation = {orientation}U")
                 values.append(f".module_variant = {variant}U")
             if manifest.component_id in RAW_IMU_MOUNT_PLUGINS:
@@ -1387,7 +1497,9 @@ def _PlatformUartConfigDefines_Render(model: ProjectModel, catalog: PluginCatalo
     for index in range(6):
         enabled = index in slots
         # One-byte inactive sentinels keep ISO C arrays valid without reserving queues.
-        sizes = (128, 512 if index == 0 else 1024, 2048 if slots.get(index) else 192, 1024 if slots.get(index) else 192) if enabled else (1, 1, 1, 1)
+        # A Console frame can contain the 3071-byte legacy response (including
+        # CRLF). One-byte ring slack requires the next bounded power of two.
+        sizes = (128, 512 if index == 0 else 1024, 4096 if slots.get(index) else 192, 1024 if slots.get(index) else 192) if enabled else (1, 1, 1, 1)
         for kind, size in zip(("RX_DMA", "RX_RING", "TX_RING", "TX_PRIORITY"), sizes):
             lines.append(f"#define PROJECT_PLATFORM_UART_{index + 1}_{kind}_SIZE {size}U")
     return "\n".join(lines) + "\n"
@@ -1824,6 +1936,11 @@ def _LogMetadataDeclarations_Get(model: ProjectModel, catalog: PluginCatalog,
         if "gnss_reacquisition" in declarations:
             raise ValueError("GNSS recovery declaration must come from resolved actual values")
         declarations["gnss_reacquisition"] = recovery
+    test_identity = _TestBuildIdentity_Get(model)
+    if test_identity is not None:
+        if "software_test_build" in declarations:
+            raise ValueError("Test identity must have one source authority")
+        declarations["software_test_build"] = test_identity
     return declarations
 
 
@@ -2015,6 +2132,10 @@ def LogDecoderProfile_Render(
                 LogAvailability_Get(definition, model, catalog),
             )
         ],
+        "optional_resources": {
+            "magnetometer_enabled": model.build.magnetometer_enabled,
+            "maintenance_log_export_enabled": model.build.maintenance_log_export_enabled,
+        },
         **({"logging_profile": model.build.logging_profile}
            if model.build.logging_profile != "all_streams" else {}),
         "logging_streams": [
@@ -2520,6 +2641,7 @@ def _LogSource_Render(model: ProjectModel) -> str:
         'FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY': ('mag_calibration_identity', False),
         'FLIGHT_LOG_RECORD_FUSION_HORIZON_MEASUREMENT': ('fusion_horizon_measurement', True),
         'FLIGHT_LOG_RECORD_FUSION_HORIZON_STATUS': ('fusion_horizon_status', True),
+        'FLIGHT_LOG_RECORD_NAVIGATION_OPERATION_PART': ('navigation_operation_part', True),
         'FLIGHT_LOG_RECORD_SF6_STATE': ('sf6_state', True),
         'FLIGHT_LOG_RECORD_SF6_MEASUREMENT': ('sf6_measurement', True),
     }
@@ -2595,6 +2717,69 @@ def _DescriptorSymbol_Get(device_class: str, instance_id: int) -> str:
     return f"PROJECT_DESCRIPTOR_ID_{token}_{instance_id}"
 
 
+def _MagnetometerEntryEnabled_Get(manifest: PluginManifest) -> bool:
+    capture = manifest.metadata.get("magnetometer_capture_enabled", False)
+    if type(capture) is not bool:
+        raise ValueError("MAG capture selection must be boolean")
+    enabled = manifest.component_class == "magnetometer" or capture
+    if enabled and "magnetometer.field" not in manifest.provides:
+        raise ValueError("MAG endpoint requires a magnetic-field provider")
+    if capture and "magnetometer.physical_unit" not in manifest.provides:
+        raise ValueError("MAG composite capture requires declared physical units")
+    return enabled
+
+
+def _MagnetometerDescriptors_Validate(
+    model: ProjectModel, catalog: PluginCatalog, entries: list[dict[str, Any]]
+) -> tuple[int, bool]:
+    """The current startup interface has one shared MAG configuration rate."""
+    rates: set[int] = set()
+    magnetic_sources: set[str] = set()
+    for entry in entries:
+        if entry.get("class") != "SYSTEM_DEVICE_CLASS_MAGNETOMETER":
+            continue
+        source = str(entry["_source_instance_id"])
+        manifest = catalog.InstanceIdComponent_Get(source)
+        declarations = manifest.metadata.get("runtime_defaults", {})
+        if not isinstance(declarations, dict):
+            raise ValueError("MAG runtime defaults must be an object")
+        defaults = declarations.get("SYSTEM_DEVICE_CLASS_MAGNETOMETER", {})
+        if not isinstance(defaults, dict):
+            raise ValueError("MAG class defaults must be an object")
+        rate = defaults.get("SYSTEM_MAGNETOMETER_OUTPUT_RATE_HZ")
+        if type(rate) is not int or not 1 <= rate <= 65535:
+            raise ValueError("MAG provider must declare its fixed output rate")
+        if str(entry.get("rate")) not in (str(rate), f"{rate}U",
+                                             "SYSTEM_MAGNETOMETER_OUTPUT_RATE_HZ"):
+            raise ValueError("MAG descriptor and runtime output rate disagree")
+        rates.add(rate)
+        magnetic_sources.add(source)
+    if len(rates) > 1:
+        raise ValueError("MAG instances require one shared output rate; mixed rates are unsupported")
+    jy_instances = [instance for instance in model.device_instances
+                    if instance.plugin == "silverstar.device.imu.jy901b"]
+    jy_capture = [instance for instance in jy_instances if model.build.magnetometer_enabled and
+                  catalog.InstanceComponent_Get(instance).metadata.get(
+                      "magnetometer_capture_enabled", False) is True]
+    if jy_capture and len(jy_capture) != len(jy_instances):
+        raise ValueError("JY901B shared frame switch requires all JY instances to opt in explicitly")
+    if any(instance.instance_id not in magnetic_sources for instance in jy_capture):
+        raise ValueError("JY901B magnetic profile needs a declared MAG endpoint")
+    rate = next(iter(rates), 0)
+    if jy_capture:
+        imu_entries = [entry for entry in entries
+                       if entry.get("class") == "SYSTEM_DEVICE_CLASS_IMU"]
+        primary = next((entry for entry in imu_entries if
+                        "SYSTEM_DESCRIPTOR_FLAG_PRIMARY" in str(entry.get("flags", ""))),
+                       imu_entries[0] if imu_entries else None)
+        manifest = catalog.InstanceIdComponent_Get(str(primary["_source_instance_id"])) if primary else None
+        imu_rate = (manifest.metadata.get("runtime_defaults", {}).get(
+            "SYSTEM_DEVICE_CLASS_IMU", {}).get("SYSTEM_IMU_OUTPUT_RATE_HZ") if manifest else None)
+        if imu_rate != rate:
+            raise ValueError("MAG JY901B output rate must equal the configured primary IMU rate")
+    return rate, bool(jy_capture)
+
+
 def _DeviceDescriptorEntries_Get(
     model: ProjectModel, catalog: PluginCatalog
 ) -> list[dict[str, Any]]:
@@ -2641,9 +2826,8 @@ def _DeviceDescriptorEntries_Get(
                 entry = dict(raw_entry)
                 if not FeatureTier_DescriptorActive(model, catalog, source_instance_id, str(entry.get("class", ""))):
                     continue
-                # The first release retains implementations and schema, but
-                # exposes no magnetic endpoint, calibration or storage target.
-                if entry.get("class") == "SYSTEM_DEVICE_CLASS_MAGNETOMETER":
+                if (entry.get("class") == "SYSTEM_DEVICE_CLASS_MAGNETOMETER"
+                        and not _MagnetometerEntryEnabled_Get(instance_manifest)):
                     continue
                 entry["_component_id"] = component_id
                 entry["_source_instance_id"] = source_instance_id
@@ -2714,6 +2898,7 @@ def _DeviceDescriptorEntries_Get(
             if str(entry.get("_source_instance_id", "")) == primary_instance:
                 flag_tokens.append("SYSTEM_DESCRIPTOR_FLAG_PRIMARY")
             entry["flags"] = " | ".join(flag_tokens) if flag_tokens else "0U"
+    _MagnetometerDescriptors_Validate(model, catalog, entries)
     return entries
 
 
@@ -2926,6 +3111,15 @@ def _DeviceInstanceSwitches_Render(
                 f"Device plugin {manifest.component_id} direct binding headers "
                 "are invalid"
             )
+        if device_class == "SYSTEM_DEVICE_CLASS_MAGNETOMETER":
+            quality = manifest.metadata.get("magnetic_observation_quality")
+            if quality is not None:
+                if (not isinstance(quality, dict) or quality.get("schema") != "silverstar.jy-native-evidence/1"
+                        or manifest.component_id != "silverstar.device.imu.jy901b"
+                        or quality.get("native_time_trusted") is not False
+                        or quality.get("time_basis") != "software_decode_proxy_no_per_byte_receive_time"):
+                    raise ValueError("Unsupported native magnetic quality contract")
+                entry["_magnetic_quality_source"] = 1
         headers.update(raw_headers)
         endpoints[device_class].append((entry, binding))
     rendered = template
@@ -3036,9 +3230,17 @@ def _DeviceInstanceFunctionSwitch_Render(
             call_arguments = (
                 f"{source_index}U, {arguments}" if arguments else f"{source_index}U"
             )
-        cases.append(
-            f"        case {instance_id}U: return {symbol}({call_arguments});"
-        )
+        if label == "Magnetometer" and operation == "LatestSampleGet" and entry.get("_magnetic_quality_source") == 1:
+            cases.append(
+                f"        case {instance_id}U: {{\n"
+                f"            SystemDeviceResult result={symbol}({call_arguments});\n"
+                "            if(result==SYSTEM_DEVICE_OK) { sample->observation_quality_source=1U; }\n"
+                "            return result;\n        }"
+            )
+        else:
+            cases.append(
+                f"        case {instance_id}U: return {symbol}({call_arguments});"
+            )
     body = "\n" + "\n".join(cases)
     if cases:
         body += "\n"
@@ -3461,7 +3663,7 @@ clean-all:
 rebuild: clean all
 
 list-sources:
-\t@$(foreach source,$(C_SOURCES),echo $(source) & ) echo Assembly: $(ASM_SOURCES)
+\t@$(foreach source,$(C_SOURCES),$(info $(source)))$(info Assembly: $(ASM_SOURCES))
 
 list-build-config:
 \t@echo MEMORY_LAYOUT:$(MEMORY_LAYOUT)
@@ -3670,6 +3872,21 @@ def _EideTarget_Render(
         body, count = re.subn(pattern, replacement, body, count=1)
         if count != 1:
             raise ValueError(f"Reference EIDE target field changed: {pattern}")
+    # Native EIDE lifecycle hooks belong to generated editor metadata. Binding
+    # runs in the SCG host, without copying a Python runtime into the firmware.
+    from silverstar_diagnostics.eide import EideHooks_Create
+    for key, tasks in EideHooks_Create().items():
+        replacement = f"          {key}:\n" + "".join(
+            f"            - name: {json.dumps(task['name'])}\n"
+            f"              command: {json.dumps(task['command'], ensure_ascii=False)}\n"
+            "              abortAfterFailed: true\n" for task in tasks
+        )
+        body, count = re.subn(
+            rf"(?m)^          {key}: \[\]\n",
+            lambda _match: replacement, body, count=1,
+        )
+        if count != 1:
+            raise ValueError(f"Reference EIDE task list changed: {key}")
     return body.rstrip()
 
 

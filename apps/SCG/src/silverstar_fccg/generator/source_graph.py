@@ -452,6 +452,27 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
         )
         if source not in sources
     )
+    if model.core == "silverstar.core.0_1_0":
+        # Both implementations are declared payloads. Make and EIDE select the
+        # same one; disabled services carry no mailbox/cache/filesystem owner.
+        export_enabled = (model.build.maintenance_log_export_enabled and
+                          model.protocols.get("maintenance") is not None and
+                          model.protocols.get("logging") is not None)
+        variants = (
+            (export_enabled, ("System/Src/system_log_file.c",
+                "Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c"),
+                ("System/Src/system_log_file_disabled.c",)),
+            (model.build.magnetometer_enabled, (
+                "System/Calibration/Src/system_mag_calibration.c",
+                "Devices/Storage/SdSdioFatFs/Adapter/Src/mag_calibration_storage.c",
+                "Devices/IMU/JY901B/Adapter/Src/jy901b_magnetometer_adapter.c"), (
+                "System/Calibration/Src/system_mag_calibration_disabled.c",
+                "System/Src/system_mag_calibration_storage_disabled.c")),
+        )
+        for enabled, active, disabled in variants:
+            inactive = disabled if enabled else active
+            sources = [source for source in sources if source not in inactive]
+            exclude_sources.extend(inactive)
     generated_sources = [
         "Generated/Src/platform_resources.c",
         "Generated/Src/project_capability_routes.c",

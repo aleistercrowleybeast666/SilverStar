@@ -6,6 +6,7 @@ from pathlib import Path
 import re
 
 import pytest
+from jsonschema import Draft202012Validator
 from silverstar_fccg.project.model import GroundRadioConfiguration, ProjectModel_Parse, ProjectModelError
 from test_f103_ground_reference import _GroundF103Model_Get
 
@@ -34,8 +35,11 @@ def test_schema_and_parser_keep_format14_without_optional_fields(schema, documen
     condition = schema["allOf"][0]
     assert condition["if"]["properties"]["format_version"]["const"] == 15
     assert set(condition["then"]["properties"]["ground_target"]["required"]) == {"radio_instances", "active_radio_instance"}
-    assert condition["else"]["properties"]["ground_target"]["not"]["anyOf"] == [
+    prohibition = schema["allOf"][1]
+    assert prohibition["if"]["properties"]["format_version"]["const"] == 14
+    assert prohibition["then"]["properties"]["ground_target"]["not"]["anyOf"] == [
         {"required": ["radio_instances"]}, {"required": ["active_radio_instance"]}]
+    Draft202012Validator(schema).validate(document)
 
 
 @pytest.mark.parametrize("count", [1, 4])
@@ -54,6 +58,7 @@ def test_schema_and_parser_support_bounded_format15_radios(schema, document, cou
     item = schema["$defs"]["groundRadio"]
     assert set(item["required"]) == {"instance_id", "plugin", "module_variant", "tx_power_dbm"}
     assert item["additionalProperties"] is False
+    Draft202012Validator(schema).validate(data)
 
 
 @pytest.mark.parametrize("count", [0, 5])
@@ -63,6 +68,7 @@ def test_parser_rejects_radio_counts_outside_schema_bounds(schema, document, cou
     ground["radio_instances"] = [dict(instance_id=f"radio{i}", plugin=ground["radio_plugin"],
          module_variant=ground["module_variant"], tx_power_dbm=ground["tx_power_dbm"]) for i in range(count)]
     ground["active_radio_instance"] = "radio0"
+    assert not Draft202012Validator(schema).is_valid(document)
     with pytest.raises(ProjectModelError, match="1..4"):
         ProjectModel_Parse(document)
 
@@ -82,5 +88,6 @@ def test_schema_led_types_and_limits_match_parser(schema, document, key, bad):
     else:
         assert (field["type"], field["minimum"], field["maximum"]) == ("integer", 1, 200)
     document["ground_target"][key] = bad
+    assert not Draft202012Validator(schema).is_valid(document)
     with pytest.raises(ProjectModelError, match="ground_target"):
         ProjectModel_Parse(document)

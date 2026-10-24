@@ -1677,7 +1677,7 @@ static void Test_InitialMissingTfBootMode(void)
     TEST_CHECK(s_snapshot_create_count == 0U && s_final_status_count == 0U);
 }
 
-static void Test_NoLogRetainsConfiguredMagLoad(void)
+static void Test_NoLogServicesConfiguredMagLoad(void)
 {
     LoggerTaskDiagnostics diagnostics;
     Test_StateReset();
@@ -1691,7 +1691,8 @@ static void Test_NoLogRetainsConfiguredMagLoad(void)
     TEST_CHECK(diagnostics.boot_logging_disabled == 1U);
     TEST_CHECK(diagnostics.no_storage_warning_delivered == 0U);
     TEST_CHECK(diagnostics.open_attempt_count == 1U && diagnostics.io_fault == 0U);
-    TEST_CHECK(s_warning_count == 1U && s_mag_storage_service_count == 0U);
+    TEST_CHECK(s_warning_count == 1U && s_mag_storage_service_count == s_delay_limit);
+    TEST_CHECK(s_sink_write_count == 0U && s_snapshot_create_count == 0U);
     TEST_CHECK(s_mag_load_complete == 0U);
     TEST_CHECK(SystemLifecycleBackend_StorageReadyGet() == 0U);
 }
@@ -1719,7 +1720,7 @@ int main(void)
 {
     Test_InitialMissingTfBootMode();
     Test_NoLogRetainsRequiredGates();
-    Test_NoLogRetainsConfiguredMagLoad();
+    Test_NoLogServicesConfiguredMagLoad();
     Test_StateReset();
     s_startup_state = LOGGER_DISABLED_NO_STORAGE;
     s_calibration_ready = 0U;

@@ -2,11 +2,13 @@
   "contract": "silverstar.log-file-service",
   "protocol_version": 1,
   "transport": "maintenance-console-ascii",
-  "encoding": "ASCII lines terminated by CRLF; requests may use LF",
+  "encoding": "Legacy ASCII lines terminated by CRLF; requests may use LF. Explicitly negotiated BLOCK v1 POLL completions use zero-delimited COBS binary records, not ASCII lines.",
   "limits": {
     "request_bytes": 191,
     "response_bytes": 511,
     "chunk_bytes": 64,
+    "block_bytes": 512,
+    "block_wire_bytes": 565,
     "pending_requests": 1,
     "idle_timeout_ms": 30000,
     "file_id_min": 1,
@@ -14,7 +16,9 @@
   },
   "versions": {
     "maintenance": "0.1",
-    "compatible_maintenance": ["0.0"],
+    "compatible_maintenance": [
+      "0.0"
+    ],
     "log_container": "SSLOG 0.0",
     "decoder_package": "1.2",
     "independent_of_product_version": true
@@ -24,6 +28,7 @@
     "LIST": "LOGFILE LIST <cursor>",
     "META": "LOGFILE META <file_id>",
     "READ": "LOGFILE READ <file_id> <token> <offset>",
+    "BLOCK": "LOGFILE BLOCK <file_id> <token> <offset> <transfer_nonce_16_upper_hex> <block_sequence>",
     "DELETE": "LOGFILE DELETE <file_id> <token> CONFIRM",
     "CANCEL": "LOGFILE CANCEL",
     "POLL": "LOGFILE POLL <request_id>",
@@ -41,12 +46,13 @@
     "security": "Change detector only, not authentication or collision-resistant identity. Includes no invented boot/device identity."
   },
   "responses": {
-    "CAPS": "OK LOGFILE CAPS file_service_version=1 supported=1 max_chunk=64 delete_supported=0 telemetry_bulk=0 device_id=unknown boot_id=unknown status_version=1 maintenance_required=1 firmware=<product_version>",
+    "CAPS": "OK LOGFILE CAPS file_service_version=1 supported=1 max_chunk=64 delete_supported=0 telemetry_bulk=0 device_id=unknown boot_id=unknown status_version=1 maintenance_required=1 block_version=1 max_block=512 block_encoding=COBS block_window=1 firmware=<product_version>",
     "PENDING": "PENDING LOGFILE <OP> request_id=<request_id>",
     "LIST": "OK LOGFILE LIST request_id=<request_id> file_id=<file_id> size=<size_bytes> closed=1 next_cursor=<cursor> end=0",
     "LIST_END": "OK LOGFILE LIST request_id=<request_id> end=1 next_cursor=0",
     "META": "OK LOGFILE META request_id=<request_id> file_id=<file_id> token=<token> size=<size_bytes> crc32=<crc32> format=SSLOG format_version=0.0 closed=1",
     "READ": "OK LOGFILE READ request_id=<request_id> file_id=<file_id> token=<token> offset=<offset> length=<length> crc32=<chunk_crc32> data=<uppercase_hex_or_dash_for_empty>",
+    "BLOCK": "PENDING LOGFILE BLOCK request_id=<request_id>; POLL returns PENDING/error text or one binary block_v1 record",
     "DELETE": "OK LOGFILE DELETE request_id=<request_id> file_id=<file_id> deleted=1",
     "CANCEL": "OK LOGFILE CANCEL cancelled=1 cleanup_complete=0",
     "ERR": "ERR LOGFILE <OP> request_id=<request_id_or_zero> code=<error>",
@@ -68,14 +74,101 @@
   "semantics": {
     "submission": "CAPS/STATUS/ENTER/POLL/CANCEL are synchronous RAM operations. ENTER acknowledges an atomic boot-latched START exclusion, not writer cleanup. Valid LIST/META/READ submit one operation; LoggerTask alone advances it. Reserved DELETE is synchronously rejected as UNSUPPORTED. POLL returns PENDING until complete; completion is replayable until the next accepted request or CANCEL. Match operation/request_id/file_id/token/offset.",
     "list": "cursor=0 starts enumeration; next_cursor is opaque uint32. One entry per reply. Only fixed six-digit mission directories containing flight.sslog are exposed. closed means no active writer, not proof of successful recording/finalization.",
-    "storage_owner": "Only LoggerTask performs FatFs work. Hash input is at most 512 bytes and READ data at most 64 bytes per step; open/seek/close and directory work can involve multiple SD operations. These byte limits do not establish a time bound. No FatFs in SerialTask or ISR.",
+    "storage_owner": "Only LoggerTask performs FatFs work. Hash input is at most 512 bytes, legacy READ data at most 64 bytes and negotiated BLOCK data at most 512 bytes per step; open/seek/close and directory work can involve multiple SD operations. These byte limits do not establish a time bound. No FatFs in SerialTask or ISR.",
+    "block": "Opt in only after CAPS block_version=1/max_block=512/block_encoding=COBS/block_window=1 and local binary transport support. Missing extension uses legacy READ. Malformed/unknown extension is unsupported, never silently reinterpreted. BLOCK submits exactly one asynchronous request; no automatic stream or burst. Nonzero random host transfer nonce is new per attempt and is not device/boot identity. Sequence equals floor(offset/512); validate nonce/request_id/sequence/file_id/whole CRC/size/offset, exact length=min(512,size-offset), EOF and frame CRC before a single local write. Offset equal size yields zero data and EOF. Short storage reads fail STALE. Logger publishes a whole immutable framed completion; POLL replay performs no storage I/O. Fully delimited corrupt COBS/CRC frames may cause at most two same-request POLL retries with no deadline extension; valid stale request frames are bounded quarantined, other identity mismatch fails. Missing delimiter, timeout, cancellation in an incomplete exchange or reconnect invalidates the transfer; fresh CAPS/META and offset zero/new nonce are required. No partial continuation. GSHC enforces a 30-second absolute BLOCK transaction ceiling in addition to existing per-response/idle/total limits. CANCEL acceptance is not cleanup confirmation. Full-file CRC, fresh post-copy META, local readback and atomic publication remain mandatory.",
     "safety": "Explicit ENTER is required. In PREFLIGHT/READY/POSTFLIGHT it atomically reserves maintenance only when no START request/transaction or configuration action is active; every START entrance immediately rejects while reserved, never queues for later. LoggerTask waits for bootstrap/recovery to finish, stops producer admission, drains, flushes, closes its writer and writes final status before maintenance READY. Failures latch FAILED and never authorize reads. LIST/META/READ require READY, a healthy mounted store, no open writer and a non-flight lifecycle. Boot-time historical reads are supported after this quiescence. Maintenance remains latched after cancellation, disconnect and completion; physical reboot is required before flight preparation. No radio/AIR/GSP bulk binding, remote delete or automatic restart.",
     "read": "META must first compute full-file CRC32 and size in this service instance. READ requires matching cached file_id/token and unchanged length. Offset <= size; response up to 64 original bytes. Client validates each chunk CRC and final size/whole CRC, then atomically publishes. CRC32 is ISO-HDLC (zlib.crc32), empty CRC=00000000.",
     "resume": "With unknown device or boot identity, disconnect, cancellation, timeout and reboot invalidate all partial downloads and cached selection. Repeat CAPS+META and restart read-only download at offset zero; a matching CRC/size or prefix does not authorize continuation. Never mix responses from another request. No SSLOG bytes or Descriptor are rewritten.",
     "delete": "Reserved explicit command. Current implementation advertises delete_supported=0 and always returns UNSUPPORTED, because device_id/boot_id are unknown. No unlink is performed. A future identity-capable version requires an independent user confirmation and full identity/content validation; old confirmation never survives a reconnect.",
-    "timeout": "30 seconds without POLL cancels outstanding file work and invalidates cached metadata; POLL updates liveness. Existing diskio timeouts bound individual device transactions only; no whole FatFs/task WCET or total cancellation deadline is established. CANCEL cancelled=1 acknowledges acceptance, cleanup_complete=0 explicitly does not claim closure. STATUS cleanup_pending remains 1 until owner reset/close returns; close failure latches maintenance FAILED. Cancellation never releases maintenance or permits START.",
+    "timeout": "30 seconds without a new request/POLL cancels outstanding file work and invalidates cached metadata; New requests/POLL update liveness; BATCH remains bounded by the original request deadline. Existing diskio timeouts bound individual device transactions only; no whole FatFs/task WCET or total cancellation deadline is established. CANCEL cancelled=1 acknowledges acceptance, cleanup_complete=0 explicitly does not claim closure. STATUS cleanup_pending remains 1 until owner reset/close returns; close failure latches maintenance FAILED. Cancellation never releases maintenance or permits START.",
     "compatibility": "Older firmware lacking LOGFILE or status_version/maintenance_required reports unsupported for the relevant feature. GSHC disables device listing/download without explicit maintenance/START exclusion. AIR M0 and SSLOG0 bytes remain unchanged; exact .ssdecoder and embedded Descriptor remain required by FLP. Legacy flat directories are not enumerated.",
     "status": "status_version=1 is an additive capability. STATUS copies a LoggerTask-published RAM snapshot and current maintenance/cleanup state; it never probes media or touches FatFs. sequence is a wrapping sample counter, not a request or boot identity; age_ms is saturated elapsed time since that sample. The receiver adds host receive age and marks stale after 3 seconds, invalidates on disconnect/unsupported/error, and never presents unknown storage fields as zero. Missing snapshot returns NOT_READY. lifecycle is an observation, not authorization to START. maintenance: 0 OFF, 1 DRAINING, 2 READY, 3 FAILED. finalization: 0 IDLE, 1 ARMED, 2 DRAINING, 3 FINALIZED. firmware is product identity, independent of wire versions."
+  },
+  "block_v1": {
+    "capability_fields": {
+      "block_version": "1",
+      "max_block": "512",
+      "block_encoding": "COBS",
+      "block_window": "1"
+    },
+    "framing": "00 + standard COBS(raw) + 00; no CRLF, prompt or text prefix. Bounded text control replies coexist between whole frames; binary payload newlines are never line delimiters.",
+    "byte_order": "little-endian",
+    "header_bytes": 44,
+    "header_fields": [
+      {
+        "offset": 0,
+        "bytes": 4,
+        "name": "magic",
+        "value": "SLB1"
+      },
+      {
+        "offset": 4,
+        "bytes": 1,
+        "name": "version",
+        "value": 1
+      },
+      {
+        "offset": 5,
+        "bytes": 1,
+        "name": "kind",
+        "value": 1
+      },
+      {
+        "offset": 6,
+        "bytes": 2,
+        "name": "flags",
+        "value": "bit0 EOF; other bits zero"
+      },
+      {
+        "offset": 8,
+        "bytes": 8,
+        "name": "transfer_nonce"
+      },
+      {
+        "offset": 16,
+        "bytes": 4,
+        "name": "request_id"
+      },
+      {
+        "offset": 20,
+        "bytes": 4,
+        "name": "block_sequence"
+      },
+      {
+        "offset": 24,
+        "bytes": 4,
+        "name": "file_id"
+      },
+      {
+        "offset": 28,
+        "bytes": 4,
+        "name": "whole_file_crc32"
+      },
+      {
+        "offset": 32,
+        "bytes": 4,
+        "name": "size_bytes"
+      },
+      {
+        "offset": 36,
+        "bytes": 4,
+        "name": "offset_bytes"
+      },
+      {
+        "offset": 40,
+        "bytes": 2,
+        "name": "payload_length"
+      },
+      {
+        "offset": 42,
+        "bytes": 2,
+        "name": "reserved",
+        "value": 0
+      }
+    ],
+    "payload": "0..512 original recorded bytes immediately after header",
+    "crc": "4-byte little-endian CRC32 ISO-HDLC of the entire header and payload, appended after payload; maximum raw560/wire565 bytes",
+    "ownership": "LoggerTask reuses CPU-only scratch and publishes a complete raw record in the existing mailbox union under its lock. SerialTask copies raw bytes into the caller-owned Console response buffer, releases the lock and COBS-encodes in place with four bytes of input headroom. No encoding inside the critical section. The existing adapter queues all or rejects all; timeout is not success. No FatFs in serial/ISR, no new heap or direct DMA access to CCM."
   },
   "golden": {
     "file_bytes_hex": "313233343536373839",
@@ -84,5 +177,16 @@
     "token": "1-CBF43926-00000009",
     "read_request": "LOGFILE READ 1 1-CBF43926-00000009 0\r\n",
     "read_response": "OK LOGFILE READ request_id=3 file_id=1 token=1-CBF43926-00000009 offset=0 length=9 crc32=CBF43926 data=313233343536373839\r\n"
+  },
+  "batch_v1": {
+    "capability_fields": {
+      "batch_version": "1",
+      "batch_count": "4"
+    },
+    "request": "LOGFILE BATCH <file_id> <token> <offset> <transfer_nonce_16hex> <sequence>",
+    "reply": "One PENDING LOGFILE BATCH request_id=<id>, followed by min(4,ceil((size-offset)/512)) SLB1 records (one EOF record for offset==size). No per-record POLL. Same request ID and nonce; sequence/offset advance exactly512 except final payload. One ERR LOGFILE BATCH terminates a failed batch.",
+    "ownership": "LoggerTask owns all TF access, existing scratch and mailbox. SerialTask copies/encodes in the existing Console buffer; only successful all-or-none TX-ring admission advances the mailbox. Rejected admission retains the same record. At most one record is admitted per Console cycle and four per request. CANCEL revokes unsent records immediately; already queued bytes must be discarded by a cancelled host.",
+    "reliability": "Host buffers at most2048 payload bytes. Validate every record identity, extent, EOF, CRC; drain the exact bounded batch before up to two CRC-only whole-batch retries with a new request ID and unchanged nonce/token/offset. No write until all batch records verify. Truncated/missing/late frame, bad identity or contract, cancellation: fail and invalidate; no retry/resume. All attempts share30-second absolute deadline. Existing per-response/idle/total budgets, whole-file CRC/SHA/readback, fresh META and atomic publication remain.",
+    "compatibility": "Additive explicit CAPS extension. block_window remains1 for legacy BLOCK; READ/BLOCK retain existing behavior. Missing batch extension or absent local batch transport uses BLOCK; malformed/unknown batch extension fails closed. No automatic UART baud change; no source deletion."
   }
 }

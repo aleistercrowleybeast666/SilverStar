@@ -1,0 +1,1312 @@
+{
+  "schema": "silverstar.navigation.scg-field-contract/1",
+  "models": {
+    "eskf20": {
+      "component": "silverstar.algorithm.estimator.eskf20",
+      "manifest_sha256": "249b437b01a5887a71ff490e3a31bf041e788c385149ea44039135cefe6b7c20",
+      "dimension": 20,
+      "firmware_algorithm_id": 4,
+      "parameters": {
+        "software_validation_build": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "initialization_confirmed": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "gnss_imu_colocated_confirmed": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "gravity_mps2": {
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "position_nis_gate": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "velocity_nis_gate": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "gyro_density_x": {
+          "unit": "rad/s/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "gyro_density_y": {
+          "unit": "rad/s/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "gyro_density_z": {
+          "unit": "rad/s/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "accel_density_x": {
+          "unit": "m/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "accel_density_y": {
+          "unit": "m/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "accel_density_z": {
+          "unit": "m/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "gyro_bias_rw_density_x": {
+          "unit": "rad/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "gyro_bias_rw_density_y": {
+          "unit": "rad/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "gyro_bias_rw_density_z": {
+          "unit": "rad/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "accel_bias_rw_density_x": {
+          "unit": "m/s^3/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "accel_bias_rw_density_y": {
+          "unit": "m/s^3/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "accel_bias_rw_density_z": {
+          "unit": "m/s^3/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_gyro_bias_x": {
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "initial_gyro_bias_y": {
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "initial_gyro_bias_z": {
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "initial_accel_bias_x": {
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "initial_accel_bias_y": {
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "initial_accel_bias_z": {
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "initial_variance_0": {
+          "unit": "m^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_1": {
+          "unit": "m^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_2": {
+          "unit": "m^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_3": {
+          "unit": "m^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_4": {
+          "unit": "m^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_5": {
+          "unit": "m^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_6": {
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_7": {
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_8": {
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_9": {
+          "unit": "rad^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_10": {
+          "unit": "rad^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_11": {
+          "unit": "rad^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_12": {
+          "unit": "m^2/s^4",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_13": {
+          "unit": "m^2/s^4",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_14": {
+          "unit": "m^2/s^4",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_15": {
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_16": {
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_17": {
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_18": {
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_19": {
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "installation_q_0": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "installation_q_1": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "installation_q_2": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "installation_q_3": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "inclination_rad": {
+          "unit": "rad",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1.5707963267948966,
+          "maximum": 1.5707963267948966
+        },
+        "declination_rad": {
+          "unit": "rad",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "magnetic_reference_ut": {
+          "unit": "uT",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "magnetic_min_norm_ratio": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "magnetic_max_norm_ratio": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "magnetic_nis_gate": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "magnetic_instance": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "magnetic_noise_min_samples": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 16,
+          "maximum": 256,
+          "default": 190
+        },
+        "magnetic_noise_duration_us": {
+          "unit": "us",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 1000,
+          "maximum": 5000000,
+          "default": 900000
+        },
+        "magnetic_noise_maximum_gap_us": {
+          "unit": "us",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 1,
+          "maximum": 1000000,
+          "default": 50000
+        },
+        "magnetic_noise_maximum_sequence_step": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 1,
+          "maximum": 256,
+          "default": 16
+        },
+        "magnetic_noise_variance_floor_ut2": {
+          "unit": "uT^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 0.0001
+        },
+        "magnetic_noise_maximum_std_ut": {
+          "unit": "uT",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 1.0
+        },
+        "magnetic_noise_maximum_span_ut": {
+          "unit": "uT",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 2.0
+        },
+        "magnetic_stationary_gyro_max_radps": {
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 0.05
+        },
+        "magnetic_stationary_accel_tolerance_mps2": {
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 0.5
+        },
+        "magnetic_stationary_accel_span_mps2": {
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 0.2
+        },
+        "magnetic_time_delay_us": {
+          "unit": "us",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 1000000,
+          "default": 0
+        },
+        "magnetic_time_uncertainty_us": {
+          "unit": "us",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 1000000,
+          "default": 0
+        },
+        "magnetic_time_maximum_uncertainty_us": {
+          "unit": "us",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 1000000,
+          "default": 0
+        },
+        "magnetic_time_maximum_queue_bytes": {
+          "unit": "byte",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 4096,
+          "default": 64
+        },
+        "magnetic_time_bound_verified": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0
+        }
+      }
+    },
+    "inekf15": {
+      "component": "silverstar.algorithm.estimator.inekf15",
+      "manifest_sha256": "70697afe61b87f4b21a7a7801db0a79ff28ff480611ef43986c452ae6574b857",
+      "dimension": 15,
+      "firmware_algorithm_id": 5,
+      "parameters": {
+        "software_validation_build": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "initialization_confirmed": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "gnss_imu_colocated_confirmed": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "gravity_mps2": {
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "position_nis_gate": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "velocity_nis_gate": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "gyro_density_x": {
+          "unit": "rad/s/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "gyro_density_y": {
+          "unit": "rad/s/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "gyro_density_z": {
+          "unit": "rad/s/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "accel_density_x": {
+          "unit": "m/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "accel_density_y": {
+          "unit": "m/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "accel_density_z": {
+          "unit": "m/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "gyro_bias_rw_density_x": {
+          "unit": "rad/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "gyro_bias_rw_density_y": {
+          "unit": "rad/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "gyro_bias_rw_density_z": {
+          "unit": "rad/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "accel_bias_rw_density_x": {
+          "unit": "m/s^3/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "accel_bias_rw_density_y": {
+          "unit": "m/s^3/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "accel_bias_rw_density_z": {
+          "unit": "m/s^3/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_gyro_bias_x": {
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "initial_gyro_bias_y": {
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "initial_gyro_bias_z": {
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "initial_accel_bias_x": {
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "initial_accel_bias_y": {
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "initial_accel_bias_z": {
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "initial_variance_0": {
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_1": {
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_2": {
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_3": {
+          "unit": "m^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_4": {
+          "unit": "m^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_5": {
+          "unit": "m^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_6": {
+          "unit": "m^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_7": {
+          "unit": "m^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_8": {
+          "unit": "m^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_9": {
+          "unit": "rad^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_10": {
+          "unit": "rad^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_11": {
+          "unit": "rad^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_12": {
+          "unit": "m^2/s^4",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_13": {
+          "unit": "m^2/s^4",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_14": {
+          "unit": "m^2/s^4",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        }
+      }
+    },
+    "inekf20": {
+      "component": "silverstar.algorithm.estimator.inekf20",
+      "manifest_sha256": "c4233fec957502196ab0b871314923354d7813db068c8d3da3f586bc55c033d9",
+      "dimension": 20,
+      "firmware_algorithm_id": 6,
+      "parameters": {
+        "software_validation_build": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "initialization_confirmed": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "gnss_imu_colocated_confirmed": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "gravity_mps2": {
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "position_nis_gate": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "velocity_nis_gate": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "gyro_density_x": {
+          "unit": "rad/s/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "gyro_density_y": {
+          "unit": "rad/s/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "gyro_density_z": {
+          "unit": "rad/s/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "accel_density_x": {
+          "unit": "m/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "accel_density_y": {
+          "unit": "m/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "accel_density_z": {
+          "unit": "m/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "gyro_bias_rw_density_x": {
+          "unit": "rad/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "gyro_bias_rw_density_y": {
+          "unit": "rad/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "gyro_bias_rw_density_z": {
+          "unit": "rad/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "accel_bias_rw_density_x": {
+          "unit": "m/s^3/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "accel_bias_rw_density_y": {
+          "unit": "m/s^3/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "accel_bias_rw_density_z": {
+          "unit": "m/s^3/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_gyro_bias_x": {
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "initial_gyro_bias_y": {
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "initial_gyro_bias_z": {
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "initial_accel_bias_x": {
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "initial_accel_bias_y": {
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "initial_accel_bias_z": {
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "initial_variance_0": {
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_1": {
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_2": {
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_3": {
+          "unit": "m^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_4": {
+          "unit": "m^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_5": {
+          "unit": "m^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_6": {
+          "unit": "m^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_7": {
+          "unit": "m^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_8": {
+          "unit": "m^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_9": {
+          "unit": "rad^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_10": {
+          "unit": "rad^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_11": {
+          "unit": "rad^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_12": {
+          "unit": "m^2/s^4",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_13": {
+          "unit": "m^2/s^4",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_14": {
+          "unit": "m^2/s^4",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_15": {
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_16": {
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_17": {
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_18": {
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "initial_variance_19": {
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "installation_q_0": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "installation_q_1": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "installation_q_2": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "installation_q_3": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "inclination_rad": {
+          "unit": "rad",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1.5707963267948966,
+          "maximum": 1.5707963267948966
+        },
+        "declination_rad": {
+          "unit": "rad",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": -1000000.0,
+          "maximum": 1000000.0
+        },
+        "magnetic_reference_ut": {
+          "unit": "uT",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "magnetic_min_norm_ratio": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "magnetic_max_norm_ratio": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "magnetic_nis_gate": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 1000000000000.0
+        },
+        "magnetic_instance": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "magnetic_noise_min_samples": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 16,
+          "maximum": 256,
+          "default": 190
+        },
+        "magnetic_noise_duration_us": {
+          "unit": "us",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 1000,
+          "maximum": 5000000,
+          "default": 900000
+        },
+        "magnetic_noise_maximum_gap_us": {
+          "unit": "us",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 1,
+          "maximum": 1000000,
+          "default": 50000
+        },
+        "magnetic_noise_maximum_sequence_step": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 1,
+          "maximum": 256,
+          "default": 16
+        },
+        "magnetic_noise_variance_floor_ut2": {
+          "unit": "uT^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 0.0001
+        },
+        "magnetic_noise_maximum_std_ut": {
+          "unit": "uT",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 1.0
+        },
+        "magnetic_noise_maximum_span_ut": {
+          "unit": "uT",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 2.0
+        },
+        "magnetic_stationary_gyro_max_radps": {
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 0.05
+        },
+        "magnetic_stationary_accel_tolerance_mps2": {
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 0.5
+        },
+        "magnetic_stationary_accel_span_mps2": {
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 0.2
+        },
+        "magnetic_time_delay_us": {
+          "unit": "us",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 1000000,
+          "default": 0
+        },
+        "magnetic_time_uncertainty_us": {
+          "unit": "us",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 1000000,
+          "default": 0
+        },
+        "magnetic_time_maximum_uncertainty_us": {
+          "unit": "us",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 1000000,
+          "default": 0
+        },
+        "magnetic_time_maximum_queue_bytes": {
+          "unit": "byte",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 4096,
+          "default": 64
+        },
+        "magnetic_time_bound_verified": {
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0
+        }
+      }
+    }
+  }
+}

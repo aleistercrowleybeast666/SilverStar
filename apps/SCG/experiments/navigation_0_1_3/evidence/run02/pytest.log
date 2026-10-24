@@ -1,0 +1,87 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe
+rootdir: D:\python_software\SilverStar\apps\SCG\experiments\navigation_0_1_3
+configfile: pytest.ini
+collecting ... collected 51 items
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[0.0] PASSED [  1%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[1e-10] PASSED [  3%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[1e-05] PASSED [  5%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[0.3] PASSED [  7%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[2.0] PASSED [  9%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[3.141582653589793] PASSED [ 11%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_principal_log_rejects_pi_and_group_rejects_reflection PASSED [ 13%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_left_invariance_and_adjoint_conjugation PASSED [ 15%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_affine_vector_field_identity PASSED [ 17%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_nominal_flow_against_independent_ode_integration PASSED [ 19%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_discrete_error_finite_difference_and_large_error_log_linearity FAILED [ 21%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_observation_jacobian_independent_finite_difference[position] PASSED [ 23%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_observation_jacobian_independent_finite_difference[velocity] PASSED [ 25%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_body_noise_map_finite_difference PASSED [ 27%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_reset_jacobian_and_full_cross_covariance_finite_difference PASSED [ 29%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_discrete_noise_integral_against_quadrature_and_step_composition PASSED [ 31%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_world_frame_equivariance_of_prediction_and_update PASSED [ 33%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_analytic_turning_acceleration_and_synthetic_correction PASSED [ 35%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[angular_rate-value0] PASSED [ 37%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[angular_rate-value1] PASSED [ 39%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[specific_force-value2] PASSED [ 41%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[gravity-value3] PASSED [ 43%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[density-value4] PASSED [ 45%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[density-value5] PASSED [ 47%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[dt-0] PASSED [ 49%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[dt--0.01] PASSED [ 50%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[dt-0.02001] PASSED [ 52%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[dt-nan] PASSED [ 54%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[observation-value0] PASSED [ 56%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[observation-value1] PASSED [ 58%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[covariance_world-value2] PASSED [ 60%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[covariance_world-value3] PASSED [ 62%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[covariance_world-value4] PASSED [ 64%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[time_s--0.01] PASSED [ 66%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[time_s-0.01] PASSED [ 68%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[nis_threshold-0] PASSED [ 70%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[nis_threshold-inf] PASSED [ 72%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_gating_unsupported_and_numeric_failure_do_not_publish PASSED [ 74%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_invalid_initial_covariance_rejected[covariance0] PASSED [ 76%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_invalid_initial_covariance_rejected[covariance1] PASSED [ 78%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_invalid_initial_covariance_rejected[covariance2] PASSED [ 80%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_invalid_initial_covariance_rejected[covariance3] PASSED [ 82%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_state_copies_arrays_and_zero_noise_preserves_spd PASSED [ 84%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_experiment_is_outside_discovery_and_has_no_registration PASSED [ 86%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_manually_entered_id_is_rejected_by_catalog_validation_and_graph[silverstar.algorithm.estimator.inekf] PASSED [ 88%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_manually_entered_id_is_rejected_by_catalog_validation_and_graph[silverstar.algorithm.estimator.iekf] PASSED [ 90%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_manually_entered_id_is_rejected_by_catalog_validation_and_graph[silverstar.algorithm.estimator.eskf20] PASSED [ 92%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_existing_source_graphs_have_no_experimental_sources[None] PASSED [ 94%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_existing_source_graphs_have_no_experimental_sources[sf6] PASSED [ 96%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_existing_source_graphs_have_no_experimental_sources[kf6] PASSED [ 98%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_existing_source_graphs_have_no_experimental_sources[eskf15] PASSED [100%]
+
+================================== FAILURES ===================================
+_____ test_discrete_error_finite_difference_and_large_error_log_linearity _____
+
+    def test_discrete_error_finite_difference_and_large_error_log_linearity():
+        initial = State_Create().group
+        predict = lambda x: Navigation_PropagateGroup(x, W, A, G, .02)
+        predicted_true = predict(initial)
+        error = lambda xi: Lie_Log(Group_Inverse(predicted_true) @ predict(initial @ Lie_Exp(xi)))
+        transition = expm(Navigation_ErrorDynamics(W, A) * .02)
+>       assert_allclose(Difference_Columns(error, 9), transition, atol=1e-9, rtol=1e-8)
+E       AssertionError: 
+E       Not equal to tolerance rtol=1e-08, atol=1e-09
+E       
+E       Mismatched elements: 1 / 81 (1.23%)
+E       Mismatch at index:
+E        [6, 5]: 8.04774025198185e-05 (ACTUAL), 8.047844870232192e-05 (DESIRED)
+E       Max absolute difference among violations: 1.0461825e-09
+E       Max relative difference among violations: 1.29995362e-05
+E        ACTUAL: array([[ 9.999600e-01,  7.987845e-03,  4.023922e-03,  0.000000e+00,
+E                0.000000e+00,  0.000000e+00,  0.000000e+00,  0.000000e+00,
+E                0.000000e+00],...
+E        DESIRED: array([[ 9.999600e-01,  7.987845e-03,  4.023922e-03,  0.000000e+00,
+E                0.000000e+00,  0.000000e+00,  0.000000e+00,  0.000000e+00,
+E                0.000000e+00],...
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:102: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_discrete_error_finite_difference_and_large_error_log_linearity
+======================== 1 failed, 50 passed in 8.66s =========================

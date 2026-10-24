@@ -12,13 +12,15 @@
 typedef struct
 {
     uint32_t generation;
+    uint32_t crc;
     uint16_t length;
     uint8_t slot;
 } PersistentStorageObjectLatest;
 
-/* LoggerTask is the single FatFs owner. These buffers never enter DMA. */
+/* The selected Logger/Serial task is the sole FatFs owner. This scratch never
+ * enters DMA. Keep only slot metadata while choosing a generation; a read
+ * reloads and verifies the selected slot before publishing caller output. */
 static uint8_t s_record[PERSISTENT_STORAGE_RECORD_BYTES];
-static uint8_t s_latest_payload[PERSISTENT_STORAGE_OBJECT_MAX_BYTES];
 
 static uint32_t PersistentStorage_U32Read(const uint8_t *data)
 {
@@ -62,7 +64,7 @@ static uint8_t PersistentStorage_KeyValid(
     PersistentStorageObjectKind kind, uint8_t instance)
 {
     return (uint8_t)((kind >= PERSISTENT_STORAGE_OBJECT_MAG_CALIBRATION) &&
-        (kind <= PERSISTENT_STORAGE_OBJECT_MISSION_SNAPSHOT) &&
+        (kind <= PERSISTENT_STORAGE_OBJECT_INSTALLATION_CANDIDATE) &&
         (instance < 32U));
 }
 
@@ -90,6 +92,7 @@ static uint8_t PersistentStorage_RecordParse(
         (PersistentStorage_RecordCrcGet(record, payload_length) !=
             PersistentStorage_U32Read(&record[14]))) { return 0U; }
     latest->generation = generation;
+    latest->crc = PersistentStorage_U32Read(&record[14]);
     latest->length = payload_length;
     return 1U;
 }
@@ -114,6 +117,7 @@ static PersistentStorageResult PersistentStorage_LatestGet(
     PersistentStorageObjectLatest *latest)
 {
     PersistentStorageResult status = PERSISTENT_STORAGE_NOT_FOUND;
+    uint8_t invalid_record = 0U;
     uint8_t slot;
     SILVERSTAR_ASSERT_OBJECT(latest, PersistentStorageObjectLatest,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
@@ -122,7 +126,7 @@ static PersistentStorageResult PersistentStorage_LatestGet(
         SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
     for (slot = 0U; slot < 2U; slot++)
     {
-        PersistentStorageObjectLatest candidate = {0U, 0U, slot};
+        PersistentStorageObjectLatest candidate = {0U, 0U, 0U, slot};
         uint16_t record_length = 0U;
         SystemDeviceResult read_result = SystemStorage_ObjectSlotRead(
             (uint8_t)kind, instance, slot, s_record,
@@ -131,18 +135,17 @@ static PersistentStorageResult PersistentStorage_LatestGet(
         if (read_result != SYSTEM_DEVICE_OK)
         { return PersistentStorage_ResultMap(read_result); }
         if (PersistentStorage_RecordParse(kind, instance, s_record,
-                record_length, &candidate) == 0U) { continue; }
+                record_length, &candidate) == 0U)
+        { invalid_record = 1U; continue; }
         if ((status == PERSISTENT_STORAGE_NOT_FOUND) ||
             (candidate.generation > latest->generation))
         {
             *latest = candidate;
-            (void)memcpy(s_latest_payload,
-                &s_record[PERSISTENT_STORAGE_HEADER_BYTES],
-                candidate.length);
             status = PERSISTENT_STORAGE_OK;
         }
     }
-    return status;
+    return ((status == PERSISTENT_STORAGE_NOT_FOUND) && (invalid_record != 0U)) ?
+        PERSISTENT_STORAGE_VERIFY_FAILED : status;
 }
 
 PersistentStorageResult PersistentStorage_ObjectRead(
@@ -150,8 +153,11 @@ PersistentStorageResult PersistentStorage_ObjectRead(
     uint8_t *data, uint16_t capacity, uint16_t *length,
     uint32_t *generation)
 {
-    PersistentStorageObjectLatest latest = {0U, 0U, 0U};
+    PersistentStorageObjectLatest latest = {0U, 0U, 0U, 0U};
+    PersistentStorageObjectLatest verified = {0U, 0U, 0U, 0U};
     PersistentStorageResult result;
+    SystemDeviceResult device_result;
+    uint16_t record_length = 0U;
     if ((PersistentStorage_KeyValid(kind, instance) == 0U) ||
         (data == NULL) || (length == NULL) || (generation == NULL))
     { return PERSISTENT_STORAGE_INVALID_ARGUMENT; }
@@ -160,7 +166,20 @@ PersistentStorageResult PersistentStorage_ObjectRead(
     result = PersistentStorage_LatestGet(kind, instance, &latest);
     if (result != PERSISTENT_STORAGE_OK) { return result; }
     if (latest.length > capacity) { return PERSISTENT_STORAGE_TOO_LARGE; }
-    (void)memcpy(data, s_latest_payload, latest.length);
+    device_result = SystemStorage_ObjectSlotRead((uint8_t)kind, instance,
+        latest.slot, s_record, sizeof(s_record), &record_length);
+    if (device_result != SYSTEM_DEVICE_OK)
+    {
+        /* A previously verified slot disappearing is not an empty store. */
+        return (device_result == SYSTEM_DEVICE_NOT_PRESENT) ?
+            PERSISTENT_STORAGE_VERIFY_FAILED : PersistentStorage_ResultMap(device_result);
+    }
+    if ((PersistentStorage_RecordParse(kind, instance, s_record,
+            record_length, &verified) == 0U) ||
+        (verified.generation != latest.generation) ||
+        (verified.length != latest.length) || (verified.crc != latest.crc))
+    { return PERSISTENT_STORAGE_VERIFY_FAILED; }
+    (void)memcpy(data, &s_record[PERSISTENT_STORAGE_HEADER_BYTES], latest.length);
     *length = latest.length;
     *generation = latest.generation;
     return PERSISTENT_STORAGE_OK;
@@ -170,8 +189,8 @@ PersistentStorageResult PersistentStorage_ObjectWriteAtomic(
     PersistentStorageObjectKind kind, uint8_t instance,
     const uint8_t *data, uint16_t length, uint32_t *generation)
 {
-    PersistentStorageObjectLatest latest = {0U, 0U, 1U};
-    PersistentStorageObjectLatest verified = {0U, 0U, 0U};
+    PersistentStorageObjectLatest latest = {0U, 0U, 0U, 1U};
+    PersistentStorageObjectLatest verified = {0U, 0U, 0U, 0U};
     PersistentStorageResult result;
     SystemDeviceResult device_result;
     uint32_t next_generation;

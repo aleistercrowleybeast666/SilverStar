@@ -186,7 +186,8 @@
     "SF6_STATE": "source-driven",
     "SF6_MEASUREMENT": "measurement",
     "FUSION_HORIZON_MEASUREMENT": "measurement",
-    "FUSION_HORIZON_STATUS": "measurement"
+    "FUSION_HORIZON_STATUS": "measurement",
+    "NAVIGATION_OPERATION_PART": "source-driven"
   },
   "instance_routing_fields": [
     "source_descriptor_id",
@@ -3845,6 +3846,65 @@
         {
           "name": "horizon_initialized",
           "type": "u8"
+        }
+      ]
+    },
+    {
+      "id": "0x30",
+      "enum": "FLIGHT_LOG_RECORD_NAVIGATION_OPERATION_PART",
+      "name": "NAVIGATION_OPERATION_PART",
+      "version": 1,
+      "payload_size": 180,
+      "size_macro": "FLIGHT_LOG_NAVIGATION_OPERATION_PART_PAYLOAD_SIZE",
+      "c_type": "FlightLogNavigationOperationPartRecord",
+      "member": "navigation_operation_part",
+      "default_stream": {
+        "enabled": true,
+        "policy": "every",
+        "decimation": 1,
+        "period_us": 0
+      },
+      "fields": [
+        {
+          "name": "epoch",
+          "type": "u32"
+        },
+        {
+          "name": "operation",
+          "type": "u32"
+        },
+        {
+          "name": "transaction_crc32",
+          "type": "u32"
+        },
+        {
+          "name": "total_size",
+          "type": "u16"
+        },
+        {
+          "name": "part_index",
+          "type": "u8"
+        },
+        {
+          "name": "part_count",
+          "type": "u8"
+        },
+        {
+          "name": "kind",
+          "type": "u8"
+        },
+        {
+          "name": "algorithm_id",
+          "type": "u8"
+        },
+        {
+          "name": "revision",
+          "type": "u16"
+        },
+        {
+          "name": "data",
+          "type": "u8",
+          "count": 160
         }
       ]
     }

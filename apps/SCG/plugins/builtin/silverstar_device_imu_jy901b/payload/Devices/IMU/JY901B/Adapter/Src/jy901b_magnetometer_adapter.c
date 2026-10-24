@@ -5,14 +5,16 @@
 #include <string.h>
 
 #include "project_resources.h"
+#include "jy901b_config.h"
 #include "jy901b_instance.h"
 #include "jy901b_sensor_adapter.h"
 #include "jy901b_magnetometer_config.h"
 #include "silverstar_assert.h"
 #include "system_user_config.h"
 
-#define JY901B_MAG_MGAUSS_PER_LSB 0.0667f
 #define JY901B_MAG_UT_PER_LSB     0.00667f
+/* Manufacturer JY901S specification: 8.333 nT/LSB, nominal conversion only. */
+#define JY901S_MAG_UT_PER_LSB     0.008333f
 
 static SystemMagnetometerConfig
     s_effective_configs[PROJECT_JY901B_INSTANCE_COUNT];
@@ -61,7 +63,6 @@ static SystemDeviceResult Jy901bMagnetometerAdapter_GetInfo(uint8_t instance,
     info->driver_version = SILVERSTAR_PRODUCT_STRING;
     info->capability_mask = SYSTEM_MAG_CAP_RAW_OUTPUT |
                              SYSTEM_MAG_CAP_PHYSICAL_UNIT |
-                             SYSTEM_MAG_CAP_TEMPERATURE |
                              SYSTEM_MAG_CAP_CONFIG_OUTPUT_RATE;
     info->configuration_mask = SYSTEM_MAG_CFG_OUTPUT_RATE;
     return SYSTEM_DEVICE_OK;
@@ -74,7 +75,6 @@ static SystemDeviceResult Jy901bMagnetometerAdapter_GetCapabilities(uint8_t inst
     if (mask == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     *mask = SYSTEM_MAG_CAP_RAW_OUTPUT |
             SYSTEM_MAG_CAP_PHYSICAL_UNIT |
-            SYSTEM_MAG_CAP_TEMPERATURE |
             SYSTEM_MAG_CAP_CONFIG_OUTPUT_RATE;
     return SYSTEM_DEVICE_OK;
 }
@@ -82,31 +82,53 @@ static SystemDeviceResult Jy901bMagnetometerAdapter_GetCapabilities(uint8_t inst
 static SystemDeviceResult Jy901bMagnetometerAdapter_GetSample(uint8_t instance,
     SystemMagnetometerSample *sample)
 {
-    (void)instance;
     IMUData data;
+    ProjectJy901bResources resources;
     SystemDeviceResult result;
+    uint64_t now_us;
+    float scale_uT;
     uint8_t index;
 
     if (sample == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if (JY901B_MAGNETOMETER_ADAPTER_ENABLE == 0U)
+    { return SYSTEM_DEVICE_UNSUPPORTED; }
+    if (ProjectJy901bResources_Get(instance, &resources) != SYSTEM_DEVICE_OK)
+    { return SYSTEM_DEVICE_NOT_PRESENT; }
     SILVERSTAR_ASSERT_OBJECT(sample, SystemMagnetometerSample,
                              SILVERSTAR_ASSERT_MODULE_DEVICE);
     result = Jy901bAdapter_SharedSnapshotGet(instance, &data);
     if (result != SYSTEM_DEVICE_OK) { return result; }
     if ((data.ValidMask & (1U << 3)) == 0U) { return SYSTEM_DEVICE_NOT_READY; }
+    now_us = PlatformTime_Us();
+    if ((now_us < data.MagTimestampUs) ||
+        ((now_us - data.MagTimestampUs) > (uint64_t)IMU_ONLINE_TIMEOUT_MS * 1000ULL))
+    { return SYSTEM_DEVICE_TIMEOUT; }
+    scale_uT = (resources.module_variant == 1U) ?
+        JY901S_MAG_UT_PER_LSB : JY901B_MAG_UT_PER_LSB;
     (void)memset(sample, 0, sizeof(*sample));
+    /* Local receive/decode time proxy; 0x54 contains no measurement timestamp. */
     sample->sample_timestamp_us = data.MagTimestampUs;
     sample->receive_timestamp_us = data.MagTimestampUs;
     sample->sequence = data.MagFrameCount;
+    sample->observation_quality_source=1U;
+    sample->decode_timestamp_us=data.MagTimestampUs;sample->processing_timestamp_us=now_us;
+    sample->accel_decode_timestamp_us=data.AccTimestampUs;
+    sample->gyro_decode_timestamp_us=data.GyroTimestampUs;
+    sample->transport_epoch=data.MagTransportEpoch;
+    sample->decode_queue_bytes=data.MagDecodeQueueBytes;
+    sample->decode_span_us=data.MagDecodeSpanUs;
+    sample->transport_evidence_valid=data.MagTransportEvidenceValid;
+    sample->imu_evidence_valid=(uint32_t)((data.ValidMask&3U)==3U);
+    (void)memcpy(sample->accel_sensor_mps2,data.Acc,sizeof(sample->accel_sensor_mps2));
+    (void)memcpy(sample->gyro_sensor_radps,data.Gyro,sizeof(sample->gyro_sensor_radps));
     for (index = 0U; index < 3U; index++)
     {
         sample->raw[index] = data.MagRaw[index];
         sample->magnetic_field_b_uT[index] =
-            (float)data.MagRaw[index] * JY901B_MAG_UT_PER_LSB;
+            (float)data.MagRaw[index] * scale_uT;
     }
-    sample->temperature_c = data.TemperatureC;
     sample->valid_mask = SYSTEM_MAG_VALID_RAW |
-                         SYSTEM_MAG_VALID_PHYSICAL_UNIT |
-                         SYSTEM_MAG_VALID_TEMPERATURE;
+                         SYSTEM_MAG_VALID_PHYSICAL_UNIT;
     sample->calibration_valid =
         (uint8_t)(JY901B_MAGNETOMETER_CALIBRATION_VALID != 0U);
     if (sample->calibration_valid != 0U)

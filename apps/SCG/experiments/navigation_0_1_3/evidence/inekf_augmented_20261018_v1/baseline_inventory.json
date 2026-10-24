@@ -1,0 +1,92 @@
+{
+  "owner": "navigation_0_1_3 InEKF15/20 extension",
+  "purpose": "Baseline hashes and small editable-file snapshots; retain evidence, no cleanup",
+  "created_utc": "2026-10-18T01:29:21.023140+00:00",
+  "baseline_files": [
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/ESKF20_CANDIDATES.md",
+      "bytes": 3447,
+      "sha256": "0dc7c50e1e3a57a75bb7ac6727538ca48c597d2eb1ebb4afaf50261115719c65"
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/ESKF20_MODEL.md",
+      "bytes": 10091,
+      "sha256": "6c8c1abf9253c6e24357c52637fa0b71356a1a64de214a850ffe17f89de4b00b"
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/eskf20_reference.py",
+      "bytes": 13946,
+      "sha256": "ccdffa81db1db8d2a0dc4a383723ae6b5bf2f9dee5da004672f144b515dda990"
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/ESKF20_VALIDATION.md",
+      "bytes": 5769,
+      "sha256": "99bc7ce77ff673ea1745b95b1a34923c43d310eccf5cb8a1a0b2ff957e35d660"
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/final_inventory.json",
+      "bytes": 4085,
+      "sha256": "49a96dc921e914facf7015e8df9e45fe922f2a100806addd10922fe3513a852b"
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/final_inventory_eskf20.json",
+      "bytes": 6351,
+      "sha256": "9c3b1d37b87df807ca69bc9c90de6448cec013d8b8fc792cf00fef1af804e087"
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/INDEPENDENT_AUDIT_20261018.md",
+      "bytes": 10773,
+      "sha256": "228761b19d22f2581e4b763a9373da1a6e16deb146ce24658bfdd15e46c113aa"
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/inekf_reference.py",
+      "bytes": 8859,
+      "sha256": "2c2dcffa17dd50ac7d50d1f623e40b45d4098c39a51c3841a0aeed08e98b165f"
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/lie_group.py",
+      "bytes": 4974,
+      "sha256": "81b674b66fede30b6c5368515f8c0d806f66d8e6dcdfd496345e66f00283fab0"
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/pytest.ini",
+      "bytes": 105,
+      "sha256": "ffaf1c4cbfb24d0079aeca265c8a0bdcd8bf0da14c8dbc085fbcbc85c229613d"
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/README.md",
+      "bytes": 9692,
+      "sha256": "cc5273a3b1bae58f38805b08804dcde03801419693119aa361b61c146c984aa0"
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_eskf20.py",
+      "bytes": 20792,
+      "sha256": "d4ce4b41d2294a045cb3a9bbf43fe729313a0f7a7580d8e1f5fa637f4ad9c5f9"
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_independent_audit.py",
+      "bytes": 15697,
+      "sha256": "d7dd9ebbb49ff4dd3ad730190ce7957ae2e1e7ca94c790931e04245ce4ef0c34"
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_isolation.py",
+      "bytes": 3651,
+      "sha256": "ea72da3996a445cd77f0078af46698d0813ad1dedbf08ba903382c25f9d84e93"
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_mathematics.py",
+      "bytes": 14746,
+      "sha256": "a8bf46235fa6364a5ef2b123e9f88334ae93eb2c31ac5b649636a59f9cb437b2"
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/VALIDATION.md",
+      "bytes": 3991,
+      "sha256": "7ae651525fe87677bc06a7c54390e9be1e772837656772fdce6c26ba500a2929"
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/verify.py",
+      "bytes": 4542,
+      "sha256": "68a8c286f70cf00d0c490467ee63eec81d2803e0dc2f1f82b39a760533e7135e"
+    }
+  ]
+}

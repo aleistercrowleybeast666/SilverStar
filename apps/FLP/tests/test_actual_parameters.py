@@ -36,6 +36,8 @@ FIXTURES = Path(__file__).parent / "fixtures/parameter_contracts"
 
 def test_fccg_ids_units_representations_defaults_match_audited_contract():
     for plugin in builtin_registry().algorithms:
+        if not plugin.metadata.firmware_component_ids:
+            continue
         name = plugin.metadata.plugin_id.rsplit(".", 1)[-1]
         expected = json.loads((FIXTURES / f"{name}_fccg_1_2.json").read_text(encoding="utf8"))[
             "parameters"

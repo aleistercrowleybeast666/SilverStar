@@ -36,6 +36,10 @@ $multiInstanceFixtureInclude = `
     "-I$repoRoot\Tests\Host\Fixtures\MultiInstance\Inc"
 $multiInstanceResourceFixture = `
     "$repoRoot\Tests\Host\Fixtures\MultiInstance\multi_instance_resources.c"
+$maintenanceUartFixtureInclude = `
+    "-I$repoRoot\Tests\Host\Fixtures\MaintenanceUart"
+$maintenanceUartFixture = `
+    "$repoRoot\Tests\Host\Fixtures\MaintenanceUart\host_uart_state.c"
 $detailLogPath = Join-Path $outputDir 'host-tests-detail.log'
 if (Test-Path -LiteralPath $detailLogPath) {
     Remove-Item -LiteralPath $detailLogPath -Force
@@ -262,7 +266,8 @@ function Invoke-HostTest {
     param(
         [Parameter(Mandatory = $true)][string]$Name,
         [Parameter(Mandatory = $true)][string[]]$Sources,
-        [string[]]$ExtraCompilerArgs = @()
+        [string[]]$ExtraCompilerArgs = @(),
+        [string[]]$RunArguments = @('')
     )
 
     if ($script:collectHostJobs) {
@@ -271,6 +276,7 @@ function Invoke-HostTest {
             Name = $Name
             Sources = @($Sources)
             ExtraCompilerArgs = @($ExtraCompilerArgs)
+            RunArguments = @($RunArguments)
         })
         return
     }
@@ -299,8 +305,20 @@ function Invoke-HostTest {
         throw "Host test compile failed: $Name"
     }
     $compileResult.Output | Write-Output
-    $testOutput = @(& $executable)
-    $testExit = $LASTEXITCODE
+    $testOutput = @()
+    foreach ($argument in $RunArguments) {
+        # Independent fault scenarios start a fresh process, as their owning
+        # pytest harness does. A terminal corrupted state is not MCU recovery.
+        $arguments = @()
+        if ($argument -ne '') { $arguments = @($argument) }
+        $output = @(& $executable @arguments)
+        $testExit = $LASTEXITCODE
+        if ($testExit -ne 0) {
+            $output | Write-Output
+            throw "Host test failed: $Name argument=$argument"
+        }
+        $testOutput += $output
+    }
     $testOutput | Write-Output
     foreach ($line in $testOutput) {
         if ($line -match '^FCCG_HOST_NOT_APPLICABLE\|') {
@@ -310,9 +328,6 @@ function Invoke-HostTest {
             $script:hostCheckCount += [int]$Matches[1]
             $script:hostFailureCount += [int]$Matches[2]
         }
-    }
-    if ($testExit -ne 0) {
-        throw "Host test failed: $Name"
     }
     $script:hostExecutableCount++
     Write-FccgProgressDone -Task 'HOST_TEST' -Subject $Name
@@ -695,7 +710,7 @@ Invoke-ExpectedCompileSuccess -Name 'capability_selected_provider' `
     -Source $capabilitySource
 
 Invoke-ExpectedCompileSuccess -Name 'capability_jy901b_gravity_known_yaw' `
-    -ExtraCompilerArgs @('-DTEST_EXPECT_DEFAULT_JY901B_PROFILE=1',
+    -ExtraCompilerArgs @('-DTEST_EXPECT_JY901B_PROFILE=1',
         '-DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_GRAVITY_KNOWN_YAW') `
     -Source $capabilitySource
 Invoke-ExpectedCompileFailure -Name 'capability_missing_imu_noise' `
@@ -738,19 +753,16 @@ Invoke-ExpectedCompileSuccess -Name 'capability_noise_overrides' `
 Invoke-ExpectedCompileFailure -Name 'capability_jy901b_gravity_mag_rejected' `
     -ExtraCompilerArgs @(
         '-DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_GRAVITY_MAG_TRIAD',
-        '-DSYSTEM_USER_MAGNETOMETER_ENABLE=1U',
-        '-DJY901B_MAGNETOMETER_ADAPTER_ENABLE=1U'
+        '-include', "$repoRoot\Tests\Host\Fixtures\magnetic_provider_contract.h"
     ) -Source $capabilitySource
-# Declare the complete positive provider prerequisite and check the specific
-# existing generated release-policy rejection, independently of qualification.
-Invoke-ExpectedCompileFailure -Name 'capability_first_release_triad_deferred' `
+# Synthetic compile-only positive provider contract; this does not qualify the
+# selected physical JY sensor. Its real unqualified rejection is tested above.
+# The generator no longer emits the historical blanket first-release MAG ban.
+Invoke-ExpectedCompileSuccess -Name 'capability_jy901b_triad_qualified_fixture' `
     -ExtraCompilerArgs @(
         '-DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_GRAVITY_MAG_TRIAD',
-        '-DSYSTEM_USER_MAGNETOMETER_ENABLE=1U',
-        '-DJY901B_MAGNETOMETER_ADAPTER_ENABLE=1U',
-        '-DSYSTEM_SELECTED_MAGNETOMETER_RAW_OUTPUT_AVAILABLE=1U',
-        '-DSYSTEM_SELECTED_MAGNETOMETER_PHYSICAL_UNIT_AVAILABLE=1U',
-        '-DSYSTEM_SELECTED_MAGNETOMETER_ABSOLUTE_VECTOR_QUALIFIED=1U'
+        '-DTEST_MAGNETIC_PROVIDER_QUALIFIED=1',
+        '-include', "$repoRoot\Tests\Host\Fixtures\magnetic_provider_contract.h"
     ) -Source $capabilitySource
 Invoke-ExpectedCompileSuccess -Name 'capability_jy901b_hw_quat_6axis_preflight' `
     -ExtraCompilerArgs @(
@@ -918,16 +930,18 @@ Invoke-HostTest -Name 'air_kf' -Sources @(
     "$repoRoot\System\Src\system_estimator_profile.c"
 )
 
-Invoke-HostTest -Name 'jy901b_device' -Sources @(
+Invoke-HostTest -Name 'jy901b_device' -ExtraCompilerArgs @($maintenanceUartFixtureInclude) -Sources @(
     "$repoRoot\Tests\Host\test_jy901b_device.c",
     $hostPlatformMock,
     "$repoRoot\Generated\Src\project_resources.c",
+    $maintenanceUartFixture,
     "$repoRoot\Devices\IMU\JY901B\Src\jy901b_device.c"
 )
-Invoke-HostTest -Name 'jy901b_adapter' -Sources @(
+Invoke-HostTest -Name 'jy901b_adapter' -ExtraCompilerArgs @($maintenanceUartFixtureInclude) -Sources @(
     "$repoRoot\Tests\Host\test_jy901b_adapter.c",
     $hostPlatformMock,
     "$repoRoot\Generated\Src\project_resources.c",
+    $maintenanceUartFixture,
     "$repoRoot\Devices\IMU\JY901B\Src\jy901b_device.c",
     "$repoRoot\Devices\IMU\JY901B\Adapter\Src\jy901b_imu_adapter.c",
     "$repoRoot\Devices\IMU\JY901B\Adapter\Src\jy901b_startup.c",
@@ -935,26 +949,29 @@ Invoke-HostTest -Name 'jy901b_adapter' -Sources @(
     "$repoRoot\Devices\IMU\JY901B\Adapter\Src\jy901b_barometer_adapter.c",
     "$repoRoot\System\Src\system_device_startup.c"
 )
-Invoke-HostTest -Name 'neo_m9n_device' -Sources @(
+Invoke-HostTest -Name 'neo_m9n_device' -ExtraCompilerArgs @($maintenanceUartFixtureInclude) -Sources @(
     "$repoRoot\Tests\Host\test_neo_m9n_device.c",
     "$repoRoot\Generated\Src\project_resources.c",
+    $maintenanceUartFixture,
     "$repoRoot\Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c",
     "$repoRoot\Devices\GNSS\NEO_M9N\Adapter\Src\neo_m9n_startup.c",
     "$repoRoot\System\Src\system_device_startup.c"
 )
-Invoke-HostTest -Name 'neo_m9n_adapter' -Sources @(
+Invoke-HostTest -Name 'neo_m9n_adapter' -ExtraCompilerArgs @($maintenanceUartFixtureInclude) -Sources @(
     "$repoRoot\Tests\Host\test_neo_m9n_adapter.c",
     $hostPlatformMock,
     "$repoRoot\Generated\Src\project_resources.c",
+    $maintenanceUartFixture,
     "$repoRoot\Devices\GNSS\NEO_M9N\Src\neo_m9n_device.c",
     "$repoRoot\Devices\GNSS\NEO_M9N\Adapter\Src\neo_m9n_system_adapter.c",
     "$repoRoot\Devices\GNSS\NEO_M9N\Adapter\Src\neo_m9n_startup.c",
     "$repoRoot\System\Src\system_device_startup.c",
     "$repoRoot\System\Src\system_gnss_quality.c"
 )
-Invoke-HostTest -Name 'sx1281_device' -Sources @(
+Invoke-HostTest -Name 'sx1281_device' -ExtraCompilerArgs @($maintenanceUartFixtureInclude) -Sources @(
     "$repoRoot\Tests\Host\test_sx1281_device.c",
     "$repoRoot\Generated\Src\project_resources.c",
+    $maintenanceUartFixture,
     "$repoRoot\Devices\Telemetry\SX1281\Src\sx1281_device.c"
 )
 Invoke-HostTest -Name 'jy901b_multi_instance' `
@@ -1192,7 +1209,7 @@ Invoke-HostTest -Name 'health' -Sources @(
     "$repoRoot\System\Src\system_health.c",
     "$repoRoot\System\Src\system_navigation_profile.c"
 )
-Invoke-HostTest -Name 'console' -Sources @(
+$consoleSources = @(
     "$repoRoot\Tests\Host\test_console.c",
     $hostPlatformMock,
     "$repoRoot\Common\Src\common_format.c",
@@ -1204,6 +1221,32 @@ Invoke-HostTest -Name 'console' -Sources @(
     "$repoRoot\System\Src\system_estimator_diagnostics.c",
     "$repoRoot\System\Alignment\Src\system_alignment_source.c",
     "$repoRoot\Tests\Host\Fixtures\multi_instance_project_fixture.c"
+ )
+Invoke-HostTest -Name 'console' -Sources $consoleSources
+Invoke-HostTest -Name 'console_reply_limit' -ExtraCompilerArgs @(
+    '-DSYSTEM_CONSOLE_RESPONSE_CAPACITY=64U', '-flto', '-ffunction-sections',
+    '-fdata-sections', '-Wl,--gc-sections'
+) -Sources (@($consoleSources | Where-Object { $_ -notmatch 'test_console\.c$' }) + @(
+    "$repoRoot\Tests\Host\test_console_reply_limit.c"))
+Invoke-HostTest -Name 'logfile_reply_capacity' -ExtraCompilerArgs @(
+    "-I$repoRoot\System\Src", '-flto', '-ffunction-sections',
+    '-fdata-sections', '-Wl,--gc-sections'
+) -Sources @(
+    "$repoRoot\Tests\Host\test_logfile_reply_capacity.c",
+    "$repoRoot\Common\Src\common_format.c"
+)
+Invoke-HostTest -Name 'console_frames_actual' -ExtraCompilerArgs @(
+    "-I$repoRoot\Tests\Host\console_frames\Inc",
+    "-I$repoRoot\Platform\STM32F4\Src",
+    "-I$repoRoot\Devices\Console\UART\Inc",
+    '-flto', '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections'
+) -Sources @(
+    "$repoRoot\Tests\Host\console_frames\test_console_frames.c",
+    "$repoRoot\Common\Src\common_ringbuf.c",
+    "$repoRoot\Common\Src\common_format.c",
+    "$repoRoot\Common\Src\debug_log.c",
+    "$repoRoot\Devices\Console\UART\Src\console_uart_device.c",
+    "$repoRoot\Devices\Console\UART\Adapter\Src\uart_console_adapter.c"
 )
 Invoke-HostTest -Name 'telemetry' -Sources @(
     "$repoRoot\Tests\Host\test_telemetry.c",
@@ -1387,10 +1430,23 @@ if ($preparationFusion -eq 'SYSTEM_FUSION_ESKF15') {
     )
     Invoke-HostTest -Name 'eskf_backend_actual' -ExtraCompilerArgs @(
         '-flto', '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections',
+        # The existing record/health assertions describe replay completion at
+        # the current epoch. Horizon completion has its own actual-backend test.
+        '-DSYSTEM_FUSION_TIMING_MODE=1U',
         '-DSYSTEM_BUILD_ESTIMATOR_ENABLED=0U', '-DSYSTEM_BUILD_ESKF15_ENABLED=1U',
         '-DSYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_ESKF15',
         "-I$repoRoot\Algorithm\Estimator\ESKF15\Inc"
     ) -Sources $backendSources
+    Invoke-HostTest -Name 'eskf_horizon_actual' -RunArguments @(0..12 | ForEach-Object { [string]$_ }) -ExtraCompilerArgs @(
+        '-flto', '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections',
+        # Bounded CPU stress fixture, not the project's physical sample rate.
+        '-DSYSTEM_FUSION_TIMING_MODE=2U', '-DSYSTEM_FUSION_HORIZON_MS=30U',
+        '-DSYSTEM_BUILD_ESTIMATOR_ENABLED=0U', '-DSYSTEM_BUILD_ESKF15_ENABLED=1U',
+        '-DSYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_ESKF15',
+        "-I$repoRoot\Algorithm\Estimator\ESKF15\Inc"
+    ) -Sources (@($backendSources | Where-Object {
+        $_ -notmatch '(test_eskf_backend|navigation_eskf_backend|system_calibration)\.c$'
+    }) + @("$repoRoot\Tests\Host\test_eskf_horizon.c"))
     Invoke-HostTest -Name 'eskf_current' -ExtraCompilerArgs @(
         '-flto=1', '-flto-partition=one', '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections',
         '-DSYSTEM_FUSION_TIMING_MODE=0', '-DSYSTEM_ESKF_LEVER_ARM_BODY_X_M=1.25f',
@@ -1476,7 +1532,7 @@ foreach ($job in $plannedJobs) {
     switch ($job.Kind) {
         'HOST_TEST' {
             Invoke-HostTest -Name $job.Name -Sources $job.Sources `
-                -ExtraCompilerArgs $job.ExtraCompilerArgs
+                -ExtraCompilerArgs $job.ExtraCompilerArgs -RunArguments $job.RunArguments
         }
         'HOST_COMPILE_PASS' {
             Invoke-ExpectedCompileSuccess -Name $job.Name `

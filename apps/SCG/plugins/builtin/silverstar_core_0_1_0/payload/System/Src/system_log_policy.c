@@ -6,6 +6,7 @@
 #include "platform_critical.h"
 #include "project_log_config.h"
 #include "silverstar_assert.h"
+#include "system_installation_capture_if.h"
 
 typedef struct
 {
@@ -123,7 +124,7 @@ SystemDeviceResult SystemLogPolicy_StreamGet(
                           SYSTEM_DEVICE_INVALID_ARGUMENT;
 }
 
-SystemDeviceResult SystemLogPolicy_StreamConfigure(
+static SystemDeviceResult SystemLogPolicy_StreamConfigureOwned(
     const SystemLogStreamConfig *config)
 {
     PlatformCriticalState state;
@@ -166,6 +167,15 @@ SystemDeviceResult SystemLogPolicy_StreamConfigure(
     PlatformCritical_Exit(state);
     if (index < 0) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     return (frozen == 0U) ? SYSTEM_DEVICE_OK : SYSTEM_DEVICE_BAD_STATE;
+}
+
+SystemDeviceResult SystemLogPolicy_StreamConfigure(const SystemLogStreamConfig *config)
+{
+    SystemDeviceResult result=SystemInstallationCapture_OperationBegin(SystemInstallationOperation_Configuration,0U);
+    if(result!=SYSTEM_DEVICE_OK){return result;}
+    result=SystemLogPolicy_StreamConfigureOwned(config);
+    SystemInstallationCapture_OperationEnd(SystemInstallationOperation_Configuration);
+    return result;
 }
 
 uint8_t SystemLogPolicy_IsEnabled(FlightLogRecordType record_type)

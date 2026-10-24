@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QHeaderView,
     QLabel,
+    QLineEdit,
     QLayout,
     QPushButton,
     QTableWidgetItem,
@@ -46,6 +47,7 @@ from silverstar_fccg.ui.committed_spin import (
     EnterCommittedSpinBox,
 )
 from silverstar_fccg.ui.device_initialization import InitializationSection_Create
+from silverstar_fccg.ui.sensor_installation_editor import SensorPositionEditor
 from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
 from silverstar_fccg.ui.telemetry_card import (TelemetryDetails_Add,
     TelemetryName_Display, TelemetryRemoveButton_Add)
@@ -61,12 +63,15 @@ from silverstar_fccg.ui.widgets import (
 
 class DevicesPage(ScrollableLocalizedPage):
     featureTierChanged = Signal(str)
+    optionalResourceChanged = Signal(str, bool)
     instanceChanged = Signal(str, str)
     radioSelectionChanged = Signal(str, str, str)
     radioPowerChanged = Signal(str, int)
     variantChanged = Signal(str, str, str)
     installationOrientationChanged = Signal(str, str)
     mountNoseAxisChanged = Signal(str, str)
+    sensorPositionChanged = Signal(str, object)
+    installationOriginChanged = Signal(str)
     instanceAddRequested = Signal(str)
     otherDeviceToggled = Signal(str, bool)
     installRequested = Signal()
@@ -95,6 +100,34 @@ class DevicesPage(ScrollableLocalizedPage):
         self.feature_tier_notice = QLabel()
         self.feature_tier_notice.setWordWrap(True)
         global_form.addRow(self.feature_tier_notice)
+        self.magnetometer_enabled = StandardCheckBox()
+        self.magnetometer_enabled.setObjectName("magnetometerResourcesEnabled")
+        self.Text_Register(self.magnetometer_enabled, "optional_resources.magnetometer")
+        self.maintenance_log_export_enabled = StandardCheckBox()
+        self.maintenance_log_export_enabled.setObjectName("maintenanceLogExportEnabled")
+        self.Text_Register(self.maintenance_log_export_enabled, "optional_resources.export")
+        for name in ("magnetometer_enabled", "maintenance_log_export_enabled"):
+            checkbox = getattr(self, name)
+            checkbox.toggled.connect(lambda enabled, key=name:
+                self.optionalResourceChanged.emit(key, enabled))
+            global_form.addRow(checkbox)
+        self.optional_resources_note = QLabel()
+        self.optional_resources_note.setWordWrap(True)
+        self.Text_Register(self.optional_resources_note, "optional_resources.note")
+        global_form.addRow(self.optional_resources_note)
+        self.installation_origin_label = QLabel()
+        self.Text_Register(self.installation_origin_label, "installation.origin")
+        self.installation_origin = QLineEdit()
+        self.installation_origin.setObjectName("sensorInstallationOrigin")
+        self.installation_origin.setMaxLength(512)
+        self.installation_origin.returnPressed.connect(
+            lambda: self.installationOriginChanged.emit(self.installation_origin.text()))
+        global_form.addRow(self.installation_origin_label, self.installation_origin)
+        self.installation_note = QLabel()
+        self.installation_note.setObjectName("sensorInstallationNote")
+        self.installation_note.setWordWrap(True)
+        self.Text_Register(self.installation_note, "installation.note")
+        global_form.addRow(self.installation_note)
         self.root_layout.addWidget(self.Group_Create("group.global_configuration", global_form))
         self.instance_order_note = QLabel()
         self.instance_order_note.setObjectName("deviceInstanceOrderNote")
@@ -182,6 +215,7 @@ class DevicesPage(ScrollableLocalizedPage):
         self.variant_combos: dict[str, StandardComboBox] = {}
         self.orientation_combos: dict[str, StandardComboBox] = {}
         self.mount_combos: dict[str, StandardComboBox] = {}
+        self.position_editors: dict[str, SensorPositionEditor] = {}
         self.device_checks: dict[str, StandardCheckBox] = {}
         self.add_buttons: dict[str, QPushButton] = {}
         self.remove_buttons: dict[str, QPushButton] = {}
@@ -205,6 +239,17 @@ class DevicesPage(ScrollableLocalizedPage):
 
     def FeatureTier_NoticeSet(self, text: str) -> None:
         self.feature_tier_notice.setText(text)
+
+    def OptionalResources_Set(self, build) -> None:
+        self._magnetometer_enabled = build.magnetometer_enabled
+        for name in ("magnetometer_enabled", "maintenance_log_export_enabled"):
+            checkbox = getattr(self, name)
+            with QSignalBlocker(checkbox):
+                checkbox.setChecked(getattr(build, name))
+                checkbox.setEnabled(build.feature_tier in ("full", "standard"))
+
+    def InstallationOrigin_Set(self, description: str) -> None:
+        self.installation_origin.setText(description)
 
     @staticmethod
     def _Layout_Clear(layout: QLayout) -> None:
@@ -245,6 +290,7 @@ class DevicesPage(ScrollableLocalizedPage):
         self.variant_combos.clear()
         self.orientation_combos.clear()
         self.mount_combos.clear()
+        self.position_editors.clear()
         self.add_buttons.clear()
         self.remove_buttons.clear()
         components_by_class: defaultdict[str, list[ComponentView]] = defaultdict(list)
@@ -343,7 +389,8 @@ class DevicesPage(ScrollableLocalizedPage):
                         component.component_id, SelectionAvailability(True)
                     )
                     tier_limit = FeatureTier_DeviceClassLimitGet(getattr(self, "_feature_tier", "full"),
-                        component_class, category, component.class_max or component.project_max)
+                        component_class, category, component.class_max or component.project_max,
+                        getattr(self, "_magnetometer_enabled", True))
                     available = (plugin_available and availability.available and tier_limit > 0
                         and (instance is not None or len(selected_instances) < tier_limit))
                     detail = self._PhysicalDetails_Get(component)
@@ -471,6 +518,15 @@ class DevicesPage(ScrollableLocalizedPage):
                         form.addRow(QLabel(self._translator.Text_Get(
                             "device.raw_imu.mount")), mount_combo)
                         self.mount_combos[instance_id] = mount_combo
+                    if component_class in ("imu", "gnss"):
+                        position_editor = SensorPositionEditor(
+                            self._translator, instance_id, instance.position_body_m)
+                        position_editor.positionChanged.connect(
+                            lambda position, selected_instance=instance_id:
+                            self.sensorPositionChanged.emit(selected_instance, position))
+                        form.addRow(QLabel(self._translator.Text_Get(
+                            "installation.position")), position_editor)
+                        self.position_editors[instance_id] = position_editor
                     if component_class != "telemetry":
                         summary = QLabel(self._CapabilitySummary_Get(instance))
                         summary.setToolTip("\n".join(instance.provides))
@@ -509,7 +565,7 @@ class DevicesPage(ScrollableLocalizedPage):
                 default=1,
             )
             class_max = FeatureTier_DeviceClassLimitGet(getattr(self, "_feature_tier", "full"),
-                component_class, category, class_max)
+                component_class, category, class_max, getattr(self, "_magnetometer_enabled", True))
             if (
                 any(
                     selected_plugin_counts[item.component_id]
@@ -1677,7 +1733,10 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
                 sorted(candidates, key=lambda item: (
                     0 if item.component_id == "silverstar.algorithm.estimator.sf6" else
                     1 if item.component_id == "silverstar.algorithm.estimator.kf6" else
-                    2 if item.component_id == "silverstar.algorithm.estimator.eskf15" else 3,
+                    2 if item.component_id == "silverstar.algorithm.estimator.eskf15" else
+                    3 if item.component_id == "silverstar.algorithm.estimator.eskf20" else
+                    4 if item.component_id == "silverstar.algorithm.estimator.inekf15" else
+                    5 if item.component_id == "silverstar.algorithm.estimator.inekf20" else 6,
                     item.ui_order,
                 ))
                 if slot == "estimator" else sorted(candidates, key=lambda item: item.name)

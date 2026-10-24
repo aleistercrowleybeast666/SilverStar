@@ -1,0 +1,15 @@
+{
+  "result": "PASS",
+  "scope": "five independent targeted host mathematical checks",
+  "metrics": {
+    "physical_impulse_q_max_abs_error": 3.2268799596351953e-17,
+    "bias_random_walk_closed_form_max_abs_error": 1.3234889800848443e-23,
+    "independent_full_p_max_abs_error": 5.234597477699054e-13,
+    "imu_basis_reset_covariance_max_abs_error": 1.214306433183765e-17,
+    "inclination_cross_covariance_transaction": {
+      "outward": "rejected_correction",
+      "inward": "ok",
+      "inclination_delta": -0.0033333333333334103
+    }
+  }
+}

@@ -28,7 +28,7 @@ def checker():
     result = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(result)
     assert (
-        result.BINDING_REVIEW_REVISION == "navigation_receipt_default_off_20261016_v20"
+        result.BINDING_REVIEW_REVISION == "batch_uart_20261020_v27"
     )
     return result
 
@@ -123,6 +123,31 @@ def test_no_other_checker_AST_policy_changed_and_no_new_indirect_site_is_admitte
         "BINDING_DEPENDENCIES_RECEIPT_V20",
         "BINDING_COMPILED_INPUTS_RECEIPT_V20",
         "BINDING_REVIEW_REVISION",
+        # v21 adds only exact reviewed integration tuples; this test still
+        # requires every older policy/registration and callback rule unchanged.
+        "BINDING_SOURCE_TF_INTEGRATION_V21",
+        "BINDING_DEPENDENCIES_TF_INTEGRATION_V21",
+        "BINDING_COMPILED_INPUTS_TF_INTEGRATION_V21",
+        # v22 registers the reviewed installation snapshot and paired compiler
+        # inputs. The historical rules and every earlier entry still compare.
+        "BINDING_SOURCE_INSTALLATION_V22",
+        "BINDING_DEPENDENCIES_INSTALLATION_V22",
+        "BINDING_COMPILED_INPUTS_INSTALLATION_V22",
+        # v23 changes one reviewed coordinator source and its paired inputs.
+        "BINDING_SOURCE_INSTALLATION_LIFECYCLE_V23",
+        "BINDING_COMPILED_INPUTS_INSTALLATION_LIFECYCLE_V23",
+        # Later maintenance reviews register exact source/compiler tuples only.
+        # Existing constants and every other checker function still compare.
+        "BINDING_SOURCE_LOGFILE_TRANSFER_V24",
+        "BINDING_COMPILED_INPUTS_LOGFILE_TRANSFER_V24",
+        "BINDING_SOURCE_BLOCK_TRANSFER_V25",
+        "BINDING_COMPILED_INPUTS_BLOCK_TRANSFER_V25",
+        "BINDING_SOURCE_OPTIONAL_RESOURCES_V26",
+        "BINDING_DEPENDENCIES_OPTIONAL_RESOURCES_V26",
+        "BINDING_COMPILED_INPUTS_OPTIONAL_RESOURCES_V26",
+        "BINDING_SOURCE_BATCH_UART_V27",
+        "BINDING_DEPENDENCIES_BATCH_UART_V27",
+        "BINDING_COMPILED_INPUTS_BATCH_UART_V27",
     }
     functions = {"BindingSourceVersions_Get", "BindingSources_Verify"}
 

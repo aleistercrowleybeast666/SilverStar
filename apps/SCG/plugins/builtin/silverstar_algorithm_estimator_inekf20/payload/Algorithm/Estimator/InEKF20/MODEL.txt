@@ -1,0 +1,1 @@
+InEKF20; actual shared augmented kernel; selected by compile-time definition. No ESKF15 alias.

@@ -231,7 +231,6 @@ _STABLE_ALIAS_SPECS = (
     ),
     ("baro.native.pressure", "BARO_NATIVE", "pressure_pa", 3),
     ("baro.native.altitude", "BARO_NATIVE", "altitude_m", 3),
-    ("mag.native.field_b", "MAG_NATIVE", "magnetic_field_b_uT", 13),
     (
         "inertial.increment.delta_theta_b",
         "INERTIAL_INCREMENT",
@@ -284,6 +283,7 @@ _STABLE_ALIAS_SPECS = (
 _CANONICAL_FIELD_SPECS = {
     "gnss.velocity": ("GNSS_NATIVE", "velocity_enu_mps"),
     "barometer.altitude": ("BARO_NATIVE", "altitude_m"),
+    "magnetometer.field": ("MAG_NATIVE", "magnetic_field_b_uT"),
 }
 
 
@@ -526,6 +526,34 @@ def _DerivedSeries_Get(
     )
 
 
+def _MagNativeDescriptor_Get(package: DecoderProfilePackage) -> int | None:
+    """Use declared magnetic endpoints only; an unselected multi-source set has no alias."""
+    endpoints = {
+        descriptor_id
+        for descriptor_id, device in package.semantics.devices.items()
+        if device.capability_class in (
+            "SYSTEM_DEVICE_CLASS_MAGNETOMETER", "magnetometer",
+        )
+        and "magnetometer.field" in device.metadata.get("capabilities", ())
+        and device.physical_device_id is not None
+        and device.physical_device_id > 0
+    }
+    routes = [route for route in package.semantics.canonical_channels
+              if route.get("capability") == "magnetometer.field"]
+    if routes:
+        if len(routes) != 1:
+            raise DecoderProfileError("canonical_route_ambiguous", "magnetometer.field")
+        ids = routes[0].get("endpoint_descriptor_ids")
+        if (not isinstance(ids, list) or len(ids) != 1
+                or not isinstance(ids[0], int) or isinstance(ids[0], bool)
+                or ids[0] not in endpoints):
+            raise DecoderProfileError("canonical_route_invalid", "magnetometer.field")
+        return ids[0]
+    # Do not pick whichever sensor happened to emit records. The exact package
+    # must identify one source, or explicitly route one of several sources.
+    return next(iter(endpoints)) if len(endpoints) == 1 else None
+
+
 def _StableSeries_Adapt(
     dataset: FlightDataset,
     package: DecoderProfilePackage,
@@ -545,6 +573,16 @@ def _StableSeries_Adapt(
         raw_id, raw_series = selected
         series[stable_id] = raw_series
         aliases[stable_id] = raw_id
+
+    mag_descriptor = _MagNativeDescriptor_Get(package)
+    if mag_descriptor is not None:
+        selected = _Series_Select(lookup, "MAG_NATIVE", "magnetic_field_b_uT", mag_descriptor)
+        if selected is not None:
+            raw_id, raw_series = selected
+            # Preserve the existing field alias and the raw series metadata.
+            # Source routing does not establish calibration or a mounting transform.
+            series["mag.native.field_b"] = raw_series
+            aliases["mag.native.field_b"] = raw_id
 
     diagnostic_records = dataset.Records_Get("KF6_DIAGNOSTIC")
     derived_specs = (

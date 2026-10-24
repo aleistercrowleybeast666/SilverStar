@@ -226,6 +226,9 @@ typedef struct
     uint64_t AccTimestampUs;
     uint64_t GyroTimestampUs;
     uint64_t MagTimestampUs;
+    /* Decode-time transport envelope. No per-byte UART receive timestamp. */
+    uint32_t MagTransportEpoch,MagDecodeQueueBytes,MagDecodeSpanUs;
+    uint8_t MagTransportEvidenceValid;
     uint64_t PressureTimestampUs;
     uint64_t QuaternionTimestampUs;
 } IMUData;

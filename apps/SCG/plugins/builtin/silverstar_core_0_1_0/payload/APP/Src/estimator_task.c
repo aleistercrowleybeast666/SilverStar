@@ -43,7 +43,7 @@
 
 _Static_assert((SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED != 0U) ==
     ((SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15) ||
-     (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6)),
+     (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6) || ((SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF20) || (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_INEKF15) || (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_INEKF20))),
     "Selected navigation backend requires matching linkage capability");
 
 _Static_assert(SYSTEM_ESTIMATOR_MEAS_ACCEPTED == 0U, "SSLOG accepted result");
@@ -587,7 +587,7 @@ static uint8_t Estimator_GnssOriginWindowReady(uint64_t now_us)
 static uint8_t Estimator_NavigationBackendSelected(void)
 {
     return (uint8_t)((SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15) ||
-                     (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6));
+                     (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6) || ((SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF20) || (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_INEKF15) || (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_INEKF20)));
 }
 
 static void Estimator_StatusDiagnosticsPublish(
@@ -618,6 +618,12 @@ static void Estimator_StatusDiagnosticsPublish(
         SYSTEM_ESTIMATOR_ATTITUDE_SOURCE_SOFTWARE_INS : SYSTEM_ESTIMATOR_ATTITUDE_SOURCE_ESKF15;
     status.position_source = (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_SF6) ?
         SYSTEM_ESTIMATOR_POSITION_SOURCE_SF6 : SYSTEM_ESTIMATOR_POSITION_SOURCE_ESKF15;
+    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF20)
+    { status.mode=SYSTEM_ESTIMATOR_MODE_ESKF20; status.attitude_source=SYSTEM_ESTIMATOR_ATTITUDE_SOURCE_ESKF20; status.position_source=SYSTEM_ESTIMATOR_POSITION_SOURCE_ESKF20; }
+    else if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_INEKF15)
+    { status.mode=SYSTEM_ESTIMATOR_MODE_INEKF15; status.attitude_source=SYSTEM_ESTIMATOR_ATTITUDE_SOURCE_INEKF15; status.position_source=SYSTEM_ESTIMATOR_POSITION_SOURCE_INEKF15; }
+    else if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_INEKF20)
+    { status.mode=SYSTEM_ESTIMATOR_MODE_INEKF20; status.attitude_source=SYSTEM_ESTIMATOR_ATTITUDE_SOURCE_INEKF20; status.position_source=SYSTEM_ESTIMATOR_POSITION_SOURCE_INEKF20; }
     }
     status.initialized = s_estimator.initialized;
     status.started = s_estimator.mission_running;
@@ -3942,7 +3948,7 @@ static void Estimator_BackendPredictionProcess(const SystemInertialIncrement *pr
     { s_snapshot.health_flags |= ESTIMATOR_HEALTH_KF_NUMERIC_ERROR; }
     /* Current ESKF's terminal fault certificate clears both snapshot lifecycle
      * flags. Legacy ESKF never emits this cleared VERIFY_FAILED certificate. */
-    if ((SYSTEM_BUILD_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15) &&
+    if (((SYSTEM_BUILD_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15) || ((SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF20) || (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_INEKF15) || (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_INEKF20))) &&
         (result == SYSTEM_DEVICE_VERIFY_FAILED) && (s_snapshot.initialized == 0U) &&
         (s_snapshot.mission_running == 0U))
     {
@@ -4128,6 +4134,12 @@ void AppTask_Estimator(void *argument)
         SILVERSTAR_ASSERT(s_estimator.mission_running <= 1U, SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
         Estimator_OriginWindowCollect();
         Estimator_PredictionsProcessCycle();
+        if(SYSTEM_BUILD_AUGMENTED_ENABLED!=0U) {
+            SystemLifecycleState lifecycle=SystemLifecycle_GetState();
+            if(lifecycle>=SYSTEM_STATE_LANDED) {
+                SystemNavigationBackend_RecordedSeal((uint32_t)lifecycle);
+            }
+        }
         Estimator_HealthEventsPublish(SystemTime_GetMonotonicUs());
         EstimatorTask_TimingEnd(SystemTime_GetMonotonicUs());
         vTaskDelay(pdMS_TO_TICKS(1U));
@@ -4425,6 +4437,14 @@ static SystemDeviceResult Estimator_BackendInitialize(uint8_t activate)
     if ((backend_result == SYSTEM_DEVICE_OK) &&
         (SystemNavigationBackend_SnapshotGet(&s_snapshot) != SYSTEM_DEVICE_OK))
     { return SYSTEM_DEVICE_INTERNAL_ERROR; }
+    if ((SYSTEM_BUILD_AUGMENTED_ENABLED != 0U) && (backend_result == SYSTEM_DEVICE_OK))
+    {
+        /* Existing six-element log projection is world ENU, not full filter P. */
+        (void)memcpy(s_estimator.actual_p0_diagonal, s_snapshot.covariance_diagonal,
+                     sizeof(s_estimator.actual_p0_diagonal));
+        for (uint8_t axis = 0U; axis < 3U; axis++)
+        { s_estimator.initial_velocity_std_mps[axis] = sqrtf(s_snapshot.covariance_diagonal[axis + 3U]); }
+    }
     EstimatorTask_SnapshotCommit();
     return backend_result;
 }
@@ -4660,7 +4680,7 @@ uint8_t Estimator_GetInitialStateSnapshot(
     (void)memcpy(snapshot->gnss_origin_position_std_m,
                  s_estimator.gnss_origin_position_std_m,
                  sizeof(snapshot->gnss_origin_position_std_m));
-    if (Estimator_Kf6Selected() != 0U)
+    if ((Estimator_Kf6Selected() != 0U) || (SYSTEM_BUILD_AUGMENTED_ENABLED != 0U))
     {
         (void)memcpy(snapshot->initial_velocity_enu_mps,
                      s_estimator.frozen_gnss.velocity_enu_mps,
@@ -4683,7 +4703,7 @@ uint8_t Estimator_GetInitialStateSnapshot(
     snapshot->barometer_sample_count = s_estimator.baro_origin_sample_count;
     snapshot->gnss_origin_valid = s_estimator.gnss_origin_valid;
     snapshot->barometer_origin_valid = s_estimator.baro_origin_valid;
-    snapshot->velocity_valid_mask = (Estimator_Kf6Selected() != 0U) ?
+    snapshot->velocity_valid_mask = ((Estimator_Kf6Selected() != 0U) || (SYSTEM_BUILD_AUGMENTED_ENABLED != 0U)) ?
         s_estimator.frozen_gnss.velocity_valid_mask : 0U;
     snapshot->valid = s_estimator.initialized;
     EstimatorTask_IrqUnlock(primask);

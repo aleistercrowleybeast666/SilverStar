@@ -11,6 +11,7 @@
 #include "system_lifecycle.h"
 #include "system_user_config.h"
 #include "system_user_startup_config.h"
+#include "system_installation_capture_if.h"
 
 typedef enum
 {
@@ -37,6 +38,15 @@ static volatile uint8_t s_latest_sample_valid;
 static volatile uint8_t s_action_active;
 static uint32_t s_epoch_revision;
 static uint8_t s_configuration_action;
+
+static void SystemCalibration_CaptureReleaseIfTerminal(void)
+{
+    if((SYSTEM_INSTALLATION_CAPTURE_ENABLED!=0U)&&(s_action_active==0U)&&
+        ((s_status.state==SYSTEM_CALIBRATION_STATE_READY)||
+         (s_status.state==SYSTEM_CALIBRATION_STATE_IDLE)||
+         (s_status.state==SYSTEM_CALIBRATION_STATE_FAILED)))
+    {SystemInstallationCapture_OperationEnd(SystemInstallationOperation_Calibration);}
+}
 
 static PlatformCriticalState SystemCalibration_IrqLock(void)
 {
@@ -72,20 +82,48 @@ static uint8_t SystemCalibration_ActionBegin(void)
     return result;
 }
 
-/* Acquire the module action and lifecycle reservation without a scheduling
- * gap. Ordinary configurations retain the original module-only ownership. */
-static SystemDeviceResult SystemCalibration_ConfigurationActionBegin(void)
+/* Keep CAL action ownership while ALIGN quiesces. A later competing claimant
+ * makes admission Busy; no calibration payload has been published then. */
+static SystemDeviceResult SystemCalibration_CaptureBegin(uint8_t allow_alignment_yield,
+    uint8_t *alignment_yielded)
+{
+    SystemDeviceResult result=SystemInstallationCapture_OperationBegin(SystemInstallationOperation_Calibration,1U);
+    if(result==SYSTEM_DEVICE_BUSY&&allow_alignment_yield!=0U){
+        result=SystemAlignment_CalibrationYield();
+        if(result==SYSTEM_DEVICE_OK){
+            *alignment_yielded=1U;
+            result=SystemInstallationCapture_OperationBegin(SystemInstallationOperation_Calibration,1U);
+        }
+    }
+    return result;
+}
+
+static SystemDeviceResult SystemCalibration_ConfigurationActionBegin(uint8_t allow_alignment_yield,
+    uint8_t *alignment_yielded)
 {
     uint32_t lock;
-    SystemDeviceResult result;
-    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED == 0U)
+    SystemDeviceResult result;uint8_t yielded=0U;
+    if(alignment_yielded!=NULL){*alignment_yielded=0U;}
+    if ((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED == 0U)&&
+        (SYSTEM_INSTALLATION_CAPTURE_ENABLED==0U))
     { return SystemCalibration_ActionBegin() ? SYSTEM_DEVICE_OK : SYSTEM_DEVICE_BUSY; }
     lock = SystemCalibration_IrqLock();
     if (SystemCalibration_ActionBegin() == 0U)
     { SystemCalibration_IrqUnlock(lock); return SYSTEM_DEVICE_BUSY; }
-    result = SystemLifecycle_ConfigurationBegin(SYSTEM_CONFIGURATION_ACTION_CALIBRATION);
-    if (result == SYSTEM_DEVICE_OK) { s_configuration_action = 1U; }
-    else { s_action_active = 0U; }
+    if(SYSTEM_INSTALLATION_CAPTURE_ENABLED!=0U){
+        /* The CAL action stays owned, but backend cancellation must not run
+         * inside the IRQ lock. Its ALIGN lease remains held until quiescent. */
+        SystemCalibration_IrqUnlock(lock);
+        result=SystemCalibration_CaptureBegin(allow_alignment_yield,&yielded);
+        lock=SystemCalibration_IrqLock();
+    }else{result=SYSTEM_DEVICE_OK;}
+    if(result==SYSTEM_DEVICE_OK)
+    {result = SystemLifecycle_ConfigurationBegin(SYSTEM_CONFIGURATION_ACTION_CALIBRATION);}
+    if (result == SYSTEM_DEVICE_OK) {
+        s_configuration_action = 1U;
+        if(alignment_yielded!=NULL){*alignment_yielded=yielded;}
+    }
+    else { s_action_active = 0U;SystemCalibration_CaptureReleaseIfTerminal(); }
     SystemCalibration_IrqUnlock(lock);
     return result;
 }
@@ -94,13 +132,15 @@ static void SystemCalibration_ActionEnd(void)
 {
     uint32_t primask = SystemCalibration_IrqLock();
 
-    if ((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U) &&
+    if (((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)||
+         (SYSTEM_INSTALLATION_CAPTURE_ENABLED!=0U)) &&
         (s_configuration_action != 0U))
     {
         SystemLifecycle_ConfigurationEnd(SYSTEM_CONFIGURATION_ACTION_CALIBRATION);
         s_configuration_action = 0U;
     }
     s_action_active = 0U;
+    SystemCalibration_CaptureReleaseIfTerminal();
     SystemCalibration_IrqUnlock(primask);
 }
 
@@ -486,6 +526,12 @@ static void SystemCalibration_SixFaceCorrectionApply(void)
 
 void SystemCalibration_Process(void)
 {
+    if(SYSTEM_INSTALLATION_CAPTURE_ENABLED!=0U)
+    {
+        uint32_t release_lock=SystemCalibration_IrqLock();
+        SystemCalibration_CaptureReleaseIfTerminal();
+        SystemCalibration_IrqUnlock(release_lock);
+    }
     if ((s_compute_pending == 0U) ||
         (SystemCalibration_ActionBegin() == 0U))
     {
@@ -801,7 +847,7 @@ static void SystemCalibration_CollectionBegin(SystemCalibrationMode mode)
 SystemDeviceResult SystemCalibration_Start(SystemCalibrationMode mode)
 {
     SystemDeviceResult action_result;
-    SystemDeviceResult invalidate_result;
+    SystemDeviceResult invalidate_result;uint8_t alignment_yielded=0U;
     SystemDeviceResult selector_result;
     uint32_t primask;
 
@@ -813,20 +859,22 @@ SystemDeviceResult SystemCalibration_Start(SystemCalibrationMode mode)
         SILVERSTAR_ASSERT_MODULE_SYSTEM);
     selector_result = SystemCalibration_ModeValidate(mode);
     if (selector_result != SYSTEM_DEVICE_OK) { return selector_result; }
-    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED == 0U)
+    if ((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED == 0U)&&
+        (SYSTEM_INSTALLATION_CAPTURE_ENABLED==0U))
     {
         selector_result = SystemSourceSelector_ImuSelectAndLock();
         if (selector_result != SYSTEM_DEVICE_OK) { return selector_result; }
     }
-    action_result = SystemCalibration_ConfigurationActionBegin();
+    action_result = SystemCalibration_ConfigurationActionBegin(1U,&alignment_yielded);
     if (action_result != SYSTEM_DEVICE_OK) { return action_result; }
-    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    if ((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)||
+        (SYSTEM_INSTALLATION_CAPTURE_ENABLED!=0U))
     {
         selector_result = SystemSourceSelector_ImuSelectAndLock();
         if (selector_result != SYSTEM_DEVICE_OK)
         { SystemCalibration_ActionEnd(); return selector_result; }
     }
-    invalidate_result = SystemAlignment_CalibrationInvalidate();
+    invalidate_result = (alignment_yielded!=0U)?SYSTEM_DEVICE_OK:SystemAlignment_CalibrationInvalidate();
     if (invalidate_result != SYSTEM_DEVICE_OK)
     {
         SystemCalibration_ActionEnd();
@@ -868,7 +916,7 @@ SystemDeviceResult SystemCalibration_FaceCollect(SystemCalibrationFace face)
     {
         return SYSTEM_DEVICE_INVALID_ARGUMENT;
     }
-    action_result = SystemCalibration_ConfigurationActionBegin();
+    action_result = SystemCalibration_ConfigurationActionBegin(0U,NULL);
     if (action_result != SYSTEM_DEVICE_OK) { return action_result; }
     if ((s_status.mode != SYSTEM_CALIBRATION_MODE_SIX_FACE) ||
         ((s_status.state != SYSTEM_CALIBRATION_STATE_WAIT_FACE) &&
@@ -914,7 +962,7 @@ SystemDeviceResult SystemCalibration_Stop(void)
     {
         return SYSTEM_DEVICE_BAD_STATE;
     }
-    action_result = SystemCalibration_ConfigurationActionBegin();
+    action_result = SystemCalibration_ConfigurationActionBegin(0U,NULL);
     if (action_result != SYSTEM_DEVICE_OK) { return action_result; }
     if (s_status.ready == 0U)
     {
@@ -929,14 +977,21 @@ SystemDeviceResult SystemCalibration_Stop(void)
                 SYSTEM_CALIBRATION_STATE_WAIT_FACE :
                 SYSTEM_CALIBRATION_STATE_IDLE);
     }
-    SystemCalibration_ActionEnd();
+    if(SYSTEM_INSTALLATION_CAPTURE_ENABLED!=0U)
+    {
+        uint32_t release_lock=SystemCalibration_IrqLock();
+        SystemCalibration_ActionEnd();
+        SystemInstallationCapture_OperationEnd(SystemInstallationOperation_Calibration);
+        SystemCalibration_IrqUnlock(release_lock);
+    }
+    else{SystemCalibration_ActionEnd();}
     return SYSTEM_DEVICE_OK;
 }
 
 SystemDeviceResult SystemCalibration_Reset(void)
 {
     SystemDeviceResult action_result;
-    SystemDeviceResult invalidate_result;
+    SystemDeviceResult invalidate_result;uint8_t alignment_yielded=0U;
     uint32_t primask;
 
     SILVERSTAR_ASSERT_OBJECT(&s_status, SystemCalibrationStatus,
@@ -945,9 +1000,9 @@ SystemDeviceResult SystemCalibration_Reset(void)
     {
         return SYSTEM_DEVICE_BAD_STATE;
     }
-    action_result = SystemCalibration_ConfigurationActionBegin();
+    action_result = SystemCalibration_ConfigurationActionBegin(1U,&alignment_yielded);
     if (action_result != SYSTEM_DEVICE_OK) { return action_result; }
-    invalidate_result = SystemAlignment_CalibrationInvalidate();
+    invalidate_result = (alignment_yielded!=0U)?SYSTEM_DEVICE_OK:SystemAlignment_CalibrationInvalidate();
     if (invalidate_result != SYSTEM_DEVICE_OK)
     {
         SystemCalibration_ActionEnd();

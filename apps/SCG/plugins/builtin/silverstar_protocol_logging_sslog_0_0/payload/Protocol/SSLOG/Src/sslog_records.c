@@ -12,6 +12,7 @@
 
 static const SslogRecordMetadata s_sslog_metadata[] =
 {
+    { FLIGHT_LOG_RECORD_NAVIGATION_OPERATION_PART, 1U, FLIGHT_LOG_NAVIGATION_OPERATION_PART_PAYLOAD_SIZE, "NAVIGATION_OPERATION_PART" },
     { FLIGHT_LOG_RECORD_FUSION_HORIZON_MEASUREMENT, 1U, FLIGHT_LOG_FUSION_HORIZON_MEASUREMENT_PAYLOAD_SIZE, "FUSION_HORIZON_MEASUREMENT" },
     { FLIGHT_LOG_RECORD_FUSION_HORIZON_STATUS, 1U, FLIGHT_LOG_FUSION_HORIZON_STATUS_PAYLOAD_SIZE, "FUSION_HORIZON_STATUS" },
     { FLIGHT_LOG_RECORD_SF6_STATE, 1U, FLIGHT_LOG_SF6_STATE_PAYLOAD_SIZE, "SF6_STATE" },
@@ -3443,6 +3444,42 @@ static uint16_t SslogRecords_PayloadSerializeLow(
     }
 }
 
+static uint16_t SslogRecords_NavigationOperationSerialize(const FlightLogNavigationOperationPartRecord *record,
+    uint8_t *buffer,uint16_t capacity)
+{
+    if(capacity<180U) { return 0U; }
+    SslogWriteCursor writer={buffer,capacity,0U};
+    SslogRecords_WriterU32Put(&writer,record->epoch);
+    SslogRecords_WriterU32Put(&writer,record->operation);
+    SslogRecords_WriterU32Put(&writer,record->transaction_crc32);
+    SslogRecords_WriterU16Put(&writer,record->total_size);
+    SslogRecords_WriterU8Put(&writer,record->part_index);
+    SslogRecords_WriterU8Put(&writer,record->part_count);
+    SslogRecords_WriterU8Put(&writer,record->kind);
+    SslogRecords_WriterU8Put(&writer,record->algorithm_id);
+    SslogRecords_WriterU16Put(&writer,record->revision);
+    for(uint32_t i=0U;i<160U;i++) { SslogRecords_WriterU8Put(&writer,record->data[i]); }
+    return writer.offset;
+}
+
+static uint16_t SslogRecords_NavigationOperationDeserialize(FlightLogNavigationOperationPartRecord *record,
+    const uint8_t *buffer,uint16_t size)
+{
+    if(size<180U) { return 0U; }
+    SslogReadCursor reader={buffer,size,0U};
+    record->epoch=SslogRecords_ReaderU32Get(&reader);
+    record->operation=SslogRecords_ReaderU32Get(&reader);
+    record->transaction_crc32=SslogRecords_ReaderU32Get(&reader);
+    record->total_size=SslogRecords_ReaderU16Get(&reader);
+    record->part_index=SslogRecords_ReaderU8Get(&reader);
+    record->part_count=SslogRecords_ReaderU8Get(&reader);
+    record->kind=SslogRecords_ReaderU8Get(&reader);
+    record->algorithm_id=SslogRecords_ReaderU8Get(&reader);
+    record->revision=SslogRecords_ReaderU16Get(&reader);
+    for(uint32_t i=0U;i<160U;i++) { record->data[i]=SslogRecords_ReaderU8Get(&reader); }
+    return reader.offset;
+}
+
 static uint16_t SslogRecords_PayloadNavigationSerialize(
     const FlightLogRecord *record,
     uint8_t *buffer, uint16_t payload_size)
@@ -3456,6 +3493,8 @@ static uint16_t SslogRecords_PayloadNavigationSerialize(
             &record->payload.fusion_horizon_measurement, buffer, payload_size);
         case FLIGHT_LOG_RECORD_FUSION_HORIZON_STATUS: return SslogRecords_FusionHorizonStatusSerialize(
             &record->payload.fusion_horizon_status, buffer, payload_size);
+        case FLIGHT_LOG_RECORD_NAVIGATION_OPERATION_PART: return SslogRecords_NavigationOperationSerialize(
+            &record->payload.navigation_operation_part,buffer,payload_size);
         case FLIGHT_LOG_RECORD_SF6_STATE: return SslogRecords_Sf6StateSerialize(
             &record->payload.sf6_state, buffer, payload_size);
         case FLIGHT_LOG_RECORD_SF6_MEASUREMENT: return SslogRecords_Sf6MeasurementSerialize(
@@ -3620,6 +3659,8 @@ static uint16_t SslogRecords_PayloadNavigationDeserialize(
             &record->payload.fusion_horizon_measurement, buffer, payload_size);
         case FLIGHT_LOG_RECORD_FUSION_HORIZON_STATUS: return SslogRecords_FusionHorizonStatusDeserialize(
             &record->payload.fusion_horizon_status, buffer, payload_size);
+        case FLIGHT_LOG_RECORD_NAVIGATION_OPERATION_PART: return SslogRecords_NavigationOperationDeserialize(
+            &record->payload.navigation_operation_part,buffer,payload_size);
         case FLIGHT_LOG_RECORD_SF6_STATE: return SslogRecords_Sf6StateDeserialize(
             &record->payload.sf6_state, buffer, payload_size);
         case FLIGHT_LOG_RECORD_SF6_MEASUREMENT: return SslogRecords_Sf6MeasurementDeserialize(

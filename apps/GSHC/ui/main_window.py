@@ -1,4 +1,7 @@
 from __future__ import annotations
+from PySide6.QtGui import QAction
+from ui.diagnostic_labels import Text
+from ui.connection_controls import HeaderStatus_Set, ConnectionActions_Render
 
 from dataclasses import dataclass
 from pathlib import Path
@@ -28,7 +31,7 @@ from protocol.common import (
     enum_name,
 )
 from PySide6.QtCore import QEvent, QSize, Qt, QTimer
-from PySide6.QtGui import QAction, QColor, QFont, QTextCursor, QVector3D
+from PySide6.QtGui import QColor, QFont, QTextCursor, QVector3D
 from PySide6.QtWidgets import (
     QApplication,
     QCheckBox,
@@ -86,35 +89,15 @@ from ui.touch_scroll import TouchScroll_Enable, TouchScroll_Wrap
 
 
 class HeaderTitleLabel(QLabel):
-    """Keep the full brand in a tooltip when the connection row narrows."""
+    """Keep the full brand visible on the dedicated title row."""
 
     def __init__(self) -> None:
         super().__init__()
-        self._full_text = ""
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
 
     def setText(self, text: str) -> None:
-        self._full_text = text
+        super().setText(text)
         self.setToolTip(text)
-        self._Text_Refresh()
-
-    def minimumSizeHint(self) -> QSize:
-        return QSize(0, super().minimumSizeHint().height())
-
-    def resizeEvent(self, event) -> None:
-        super().resizeEvent(event)
-        self._Text_Refresh()
-
-    def showEvent(self, event) -> None:
-        super().showEvent(event)
-        self._Text_Refresh()
-
-    def _Text_Refresh(self) -> None:
-        visible = self.fontMetrics().elidedText(
-            self._full_text, Qt.TextElideMode.ElideRight, self.contentsRect().width()
-        ) if self.isVisible() else self._full_text
-        if visible != self.text():
-            super().setText(visible)
 
 
 class FlightPageContent(QWidget):
@@ -1324,10 +1307,14 @@ class MainWindow(QMainWindow):
         self.on_refresh_ports: Callable[[], None] | None = None
         self.on_connect_clicked: Callable[[], None] | None = None
         self.on_disconnect_clicked: Callable[[], None] | None = None
+        self.connection_owner_status: Callable[[], bool] | None = None
+        self.maintenance_owner_status: Callable[[], bool] | None = None
         self.on_send_ping: Callable[[], None] | None = None
         self.on_send_lock: Callable[[], None] | None = None
         self.on_send_unlock: Callable[[], None] | None = None
         self.on_send_start: Callable[[], None] | None = None
+        self.on_mag_calibration: Callable[[], None] | None = None
+        self.on_mag_retranslate: Callable[[], None] | None = None
         self.on_cal_start: Callable[[int], None] | None = None
         self.on_cal_face: Callable[[int], None] | None = None
         self.on_cal_stop: Callable[[], None] | None = None
@@ -1442,6 +1429,7 @@ class MainWindow(QMainWindow):
             else:
                 widget.setText(text)  # type: ignore[attr-defined]
         self._render_data_task_status()
+        self.btn_cut_device.setToolTip(self.i18n.tr('transfer.cut_sources'))
         self.pages.setTabText(self.pages.indexOf(self.preflight_page), self.i18n.tr("page.preflight"))
         self.pages.setTabText(self.pages.indexOf(self.flight_page), self.i18n.tr("page.flight"))
         self.pages.setTabText(
@@ -1449,11 +1437,15 @@ class MainWindow(QMainWindow):
         )
         self.pages.setTabText(self.pages.indexOf(self.maintenance_scroll), self.i18n.tr("page.maintenance"))
         self.maintenance_page.retranslate()
+        self.btn_mag_calibration.setText(Text(self.i18n, '磁力计校准', 'Magnetometer calibration'))
+        if self.on_mag_retranslate is not None:
+            self.on_mag_retranslate()
         self._DebugStatus_Render()
         if self.on_probe_render is not None:
             self.on_probe_render()
         if self.on_swd_render is not None:
             self.on_swd_render()
+        self._ConnectionLabels_Retranslate()
         self._ConnectionGroups_Reflow()
         language_index = self.language_combo.findData(self.i18n.language.value)
         if language_index >= 0 and language_index != self.language_combo.currentIndex():
@@ -1499,10 +1491,12 @@ class MainWindow(QMainWindow):
         root.addWidget(self._build_top_bar())
 
         splitter = QSplitter(Qt.Horizontal)
+        self.content_splitter = splitter
         splitter.setChildrenCollapsible(False)
         root.addWidget(splitter, 1)
 
         left = QWidget()
+        self.attitude_panel = left
         left_layout = QVBoxLayout(left)
         left_layout.setContentsMargins(0, 0, 0, 0)
         self.gl_view = AttitudeGLViewWidget()
@@ -1536,12 +1530,24 @@ class MainWindow(QMainWindow):
         self.flight_page = self._build_flight_page()
         self.post_process_page = self._build_post_process_page()
         self.maintenance_page = MaintenancePage(self.i18n, self)
+        for button in (self.maintenance_page.btn_swd_attach,self.maintenance_page.btn_swd_detach):
+            self.probe_group.layout().insertWidget(self.probe_group.layout().count()-1,button)
+            button.show()
+        ConnectionActions_Render(self.maintenance_page.btn_swd_attach,self.maintenance_page.btn_swd_detach,
+            self.i18n,owned=False)
+        self.header_swd_status=QLabel()
+        self.header_swd_status.setTextFormat(Qt.PlainText)
+        self.header_swd_status.setWordWrap(False)
+        self.header_swd_status.setMaximumWidth(88)
+        self._bind_text(self.header_swd_status,'swd.detached')
+        self.probe_group.layout().addWidget(self.header_swd_status)
         self.maintenance_page.tools.addWidget(self.btn_export_device)
+        self.maintenance_page.tools.addWidget(self.btn_cut_device)
         self.maintenance_page.tools.addWidget(self.btn_download_device)
-        self.btn_refresh_device_logs = QPushButton()
+        self.btn_refresh_device_logs = QPushButton(self.maintenance_page)
         self._bind_text(self.btn_refresh_device_logs, "maintenance.refresh_logs")
         self.btn_refresh_device_logs.clicked.connect(lambda: self.on_refresh_device_logs and self.on_refresh_device_logs())
-        self.maintenance_page.tools.addWidget(self.btn_refresh_device_logs)
+        self.btn_refresh_device_logs.hide()
         self.pages.addTab(self.preflight_page, "")
         self.pages.addTab(self.flight_page, "")
         self.pages.addTab(self.post_process_page, "")
@@ -1585,13 +1591,22 @@ class MainWindow(QMainWindow):
         self._connection_reflow_timer.setSingleShot(True)
         self._connection_reflow_timer.timeout.connect(self._ConnectionGroups_Reflow)
         bar.installEventFilter(self)
-        root_layout = QVBoxLayout(bar)
+        root_layout = QGridLayout(bar)
+        self.header_root_layout = root_layout
         root_layout.setContentsMargins(10, 5, 10, 5)
         root_layout.setSpacing(3)
-        connection_layout = QGridLayout()
+        self.header_connection_widget = QWidget()
+        connection_layout = QGridLayout(self.header_connection_widget)
+        connection_layout.setContentsMargins(0,0,0,0)
         connection_layout.setHorizontalSpacing(6)
         connection_layout.setVerticalSpacing(3)
-        identity_layout = QHBoxLayout()
+        self.header_identity_widget = QWidget()
+        identity_layout = QHBoxLayout(self.header_identity_widget)
+        identity_layout.setContentsMargins(0,0,0,0)
+        self.header_preferences_widget = QWidget()
+        preferences_layout = QHBoxLayout(self.header_preferences_widget)
+        preferences_layout.setContentsMargins(0,0,0,0)
+        preferences_layout.setSpacing(4)
         identity_layout.setSpacing(4)
         self.header_connection_layout = connection_layout
         self.header_identity_layout = identity_layout
@@ -1613,8 +1628,9 @@ class MainWindow(QMainWindow):
         self.conn_label = QLabel()
         self._connection_status_text = ""
         self._configure_dynamic_label(self.conn_label, 110, show_tooltip=True)
-        self.conn_label.setWordWrap(True)
-        self.conn_label.setMaximumWidth(140)
+        self.conn_label.setWordWrap(False)
+        self.conn_label.setMinimumWidth(0)
+        self.conn_label.setMaximumWidth(88)
         self.conn_label.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
 
         connection_group = QWidget()
@@ -1629,7 +1645,7 @@ class MainWindow(QMainWindow):
         port_layout = QHBoxLayout(port_group)
         port_layout.setContentsMargins(0, 0, 0, 0)
         port_layout.setSpacing(4)
-        port_layout.addWidget(self.btn_refresh)
+        connection_layout.addWidget(self.btn_refresh,0,0,Qt.AlignLeft)
         port_layout.addWidget(self.lbl_port_name)
         port_layout.addWidget(self.port_combo)
         controls_layout.addWidget(port_group)
@@ -1648,12 +1664,13 @@ class MainWindow(QMainWindow):
         for button in (self.btn_refresh, self.btn_connect, self.btn_disconnect):
             button.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Fixed)
         connection_group.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
-        connection_layout.addWidget(connection_group, 0, 0, Qt.AlignLeft)
+        connection_layout.addWidget(connection_group, 0, 1, Qt.AlignLeft)
         self.debug_connection_group = QWidget()
         debug_layout = QHBoxLayout(self.debug_connection_group)
         debug_layout.setContentsMargins(0, 0, 0, 0)
         debug_layout.setSpacing(4)
         debug_title = QLabel()
+        self.debug_title = debug_title
         self._bind_text(debug_title, "maintenance.port_title")
         self.debug_port_combo = PortComboBox()
         self.debug_port_combo.setEditable(True)
@@ -1669,16 +1686,16 @@ class MainWindow(QMainWindow):
         self.debug_status.setTextFormat(Qt.PlainText)
         self._debug_status_key = "maintenance.disconnected"
         self._debug_status_detail = ""
-        self.debug_status.setWordWrap(True)
-        self.debug_status.setMinimumWidth(56)
-        self.debug_status.setMaximumWidth(170)
+        self.debug_status.setWordWrap(False)
+        self.debug_status.setMinimumWidth(0)
+        self.debug_status.setMaximumWidth(88)
         for widget in (debug_title, self.debug_port_combo, self.lbl_debug_baud_name, self.debug_baud_combo,
                        self.btn_debug_connect, self.btn_debug_disconnect, self.debug_status):
             debug_layout.addWidget(widget)
         for button in (self.btn_debug_connect, self.btn_debug_disconnect):
             button.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Fixed)
         self.debug_connection_group.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
-        connection_layout.addWidget(self.debug_connection_group, 0, 1, Qt.AlignLeft)
+        connection_layout.addWidget(self.debug_connection_group, 0, 2, Qt.AlignLeft)
         self.btn_debug_connect.clicked.connect(lambda: self.on_debug_connect and self.on_debug_connect())
         self.btn_debug_disconnect.clicked.connect(lambda: self.on_debug_disconnect and self.on_debug_disconnect())
 
@@ -1690,10 +1707,10 @@ class MainWindow(QMainWindow):
         self.probe_title = QLabel()
         self._bind_text(self.probe_title, 'probe.title')
         self.probe_combo = QComboBox()
-        self.probe_combo.setMinimumWidth(160)
-        self.probe_combo.setMaximumWidth(200)
+        self.probe_combo.setMinimumWidth(105)
+        self.probe_combo.setMaximumWidth(145)
         self.probe_combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon)
-        self.probe_combo.setMinimumContentsLength(16)
+        self.probe_combo.setMinimumContentsLength(10)
         self.probe_combo.setEnabled(False)
         self.btn_probe_refresh = QPushButton()
         self._bind_text(self.btn_probe_refresh, 'probe.retry')
@@ -1706,10 +1723,11 @@ class MainWindow(QMainWindow):
         self.probe_status.setMaximumWidth(170)
         self._bind_text(self.probe_status, 'probe.not_scanned')
         probe_layout.addWidget(self.probe_status)
+        self.probe_status.hide()
         self.on_probe_render = None
         self.on_swd_render = None
-        connection_layout.addWidget(self.probe_group, 0, 2, Qt.AlignLeft)
-        connection_layout.setColumnStretch(3, 1)
+        connection_layout.addWidget(self.probe_group, 0, 3, Qt.AlignLeft)
+        connection_layout.setColumnStretch(4, 1)
 
         self.header_version = QLabel()
         self.header_version.setObjectName("headerVersion")
@@ -1736,12 +1754,24 @@ class MainWindow(QMainWindow):
         self.theme_combo.addItem("", Theme.LIGHT.value)
         self.theme_combo.addItem("", Theme.DARK.value)
         self.theme_combo.setMinimumWidth(70)
-        identity_layout.addWidget(self.lbl_theme)
-        identity_layout.addWidget(self.theme_combo)
-        identity_layout.addWidget(self.lbl_language)
-        identity_layout.addWidget(self.language_combo)
-        root_layout.addLayout(identity_layout)
-        root_layout.addLayout(connection_layout)
+        preferences_layout.addWidget(self.lbl_theme)
+        preferences_layout.addWidget(self.theme_combo)
+        preferences_layout.addWidget(self.lbl_language)
+        preferences_layout.addWidget(self.language_combo)
+        root_layout.addWidget(self.header_identity_widget,0,0)
+        root_layout.addWidget(self.header_preferences_widget,0,1,Qt.AlignRight)
+        root_layout.addWidget(self.header_connection_widget,1,0,1,2)
+        root_layout.setColumnStretch(0,1)
+        for combo in (self.port_combo,self.debug_port_combo):
+            combo.setMinimumWidth(72)
+            combo.setMaximumWidth(105)
+            combo.setMinimumContentsLength(6)
+        for combo in (self.baud_combo,self.debug_baud_combo):
+            combo.setMinimumWidth(64)
+            combo.setMaximumWidth(80)
+        self.lbl_baud_name.hide()
+        self.lbl_debug_baud_name.hide()
+        self._ConnectionLabels_Retranslate()
 
         self.btn_refresh.clicked.connect(lambda: self.on_refresh_ports and self.on_refresh_ports())
         self.btn_connect.clicked.connect(lambda: self.on_connect_clicked and self.on_connect_clicked())
@@ -1841,6 +1871,11 @@ class MainWindow(QMainWindow):
         self.btn_cal_reset.setStyleSheet(self._cmd_button_style)
         self.btn_cal_reset.clicked.connect(lambda: self.on_cal_reset and self.on_cal_reset())
         actions.addWidget(self.btn_cal_reset)
+        self.btn_mag_calibration = QPushButton()
+        self.btn_mag_calibration.setMinimumHeight(34)
+        self.btn_mag_calibration.setText(Text(self.i18n, '磁力计校准', 'Magnetometer calibration'))
+        self.btn_mag_calibration.clicked.connect(lambda: self.on_mag_calibration and self.on_mag_calibration())
+        actions.addWidget(self.btn_mag_calibration)
         layout.addLayout(actions)
         self.btn_calibration.clicked.connect(self._show_calibration_dialog)
         return box
@@ -2105,27 +2140,22 @@ class MainWindow(QMainWindow):
         self.btn_generate_sim = QPushButton()
         self.btn_process_data = QPushButton()
         self.btn_export_device = QPushButton()
-        export_menu = QMenu(self.btn_export_device)
-        self.action_export_copy = export_menu.addAction("")
-        self.action_export_cut = QAction(self)
-        self.action_export_cut.setEnabled(False)
-        self.btn_export_device.setMenu(export_menu)
+        self.btn_cut_device = QPushButton()
         self.btn_download_device = QPushButton()
-        download_menu = QMenu(self.btn_download_device)
-        self.action_download_copy = download_menu.addAction("")
-        self.action_download_delete = download_menu.addAction("")
-        self.action_download_delete.setEnabled(False)
-        self.btn_download_device.setMenu(download_menu)
-        self._bind_text(self.btn_download_device, "transfer.download")
-        self._bind_text(self.action_download_copy, "transfer.download_copy")
-        self._bind_text(self.action_download_delete, "transfer.download_delete")
-        self.action_download_copy.triggered.connect(lambda: self.on_download_device and self.on_download_device(False))
-        self.action_download_delete.triggered.connect(lambda: self.on_download_device and self.on_download_device(True))
+        # Local cut is explicit and separate from the read-only TF service.
         self._bind_text(self.btn_export_device, "transfer.export")
-        self._bind_text(self.action_export_copy, "transfer.copy")
-        self._bind_text(self.action_export_cut, "transfer.cut")
+        self._bind_text(self.btn_cut_device, "transfer.cut_local")
+        self._bind_text(self.btn_download_device, "transfer.download")
+        self.action_export_copy = QAction(self)
+        self.action_export_cut = QAction(self)
+        self.action_download_copy = QAction(self)
+        self._bind_text(self.action_export_copy,"transfer.copy")
+        self._bind_text(self.action_export_cut,"transfer.cut")
+        self._bind_text(self.action_download_copy,"transfer.download_copy")
+        self.btn_export_device.clicked.connect(lambda: self.on_export_device and self.on_export_device(False))
+        self.btn_download_device.clicked.connect(lambda: self.on_download_device and self.on_download_device(False))
         self.action_export_copy.triggered.connect(lambda: self.on_export_device and self.on_export_device(False))
-        self.action_export_cut.triggered.connect(lambda: self.on_export_device and self.on_export_device(True))
+        self.action_download_copy.triggered.connect(lambda: self.on_download_device and self.on_download_device(False))
         self.btn_select_data_root = QPushButton()
         self.btn_open_log_dir = QPushButton()
         self.btn_open_data_dir = QPushButton()
@@ -2413,55 +2443,71 @@ class MainWindow(QMainWindow):
         return super().eventFilter(watched, event)
 
     def _ConnectionGroups_Reflow(self):
-        # QLabel's wrapped size hint can retain the previous text's height.
-        # Reserve the height needed at the actual width after state changes.
-        for label in (self.debug_status, self.probe_status):
-            height = max(0, label.heightForWidth(max(1, label.width())))
-            if label.minimumHeight() != height:
-                label.setMinimumHeight(height)
-        groups = (self.header_connection_group, self.debug_connection_group, self.probe_group)
-        # A translated/style-updated size hint can outgrow a cached grid cell.
-        # Honor both dimensions before arranging rows so text and combo boxes
-        # cannot be compressed into the preceding language's geometry.
+        groups=(self.header_connection_group,self.debug_connection_group,self.probe_group)
         for group in groups:
             group.ensurePolished()
-            group.setMinimumSize(group.minimumSizeHint())
             group.layout().activate()
-        width = self.header_bar.contentsRect().width() - 28
-        widths = [group.minimumSizeHint().width() for group in groups]
-        gap = self.header_connection_layout.horizontalSpacing()
-        mode = 0 if sum(widths) + gap * 2 <= width else (1 if sum(widths[:2]) + gap <= width else 2)
-        # Translated text/style can change child hints without changing the row
-        # mode. Reinsert those items so QGridLayout drops its old cached minima.
-        signature = (mode, tuple((g.minimumSizeHint().width(), g.minimumSizeHint().height()) for g in groups))
-        if getattr(self, '_connection_layout_signature', None) == signature:
+        width=max(1,self.header_bar.contentsRect().width()-20)
+        # Recompute from each layout, rather than carrying a prior wide-window
+        # minimum forward. Explicit current minima prevent Qt compressing an
+        # editable combo into its neighbor before the deferred reflow runs.
+        widths=[group.layout().minimumSize().width() for group in groups]
+        gap=self.header_connection_layout.horizontalSpacing()
+        refresh=self.btn_refresh.minimumSizeHint().width()
+        needed=sum(widths)+refresh+gap*3
+        mode=0 if needed<=width else (1 if sum(widths[:2])+refresh+gap*2<=width else 2)
+        signature=(mode,tuple(widths),refresh)
+        if getattr(self,'_connection_layout_signature',None)==signature:
             self.header_bar.layout().activate()
             return
-        self._connection_layout_signature = signature
-        self._connection_layout_mode = mode
-        layout = self.header_connection_layout
-        for group in groups:
-            layout.removeWidget(group)
-        if mode == 0:
-            for column,group in enumerate(groups):
-                layout.addWidget(group, 0, column, Qt.AlignLeft)
-        elif mode == 1:
-            layout.addWidget(groups[0], 0, 0, Qt.AlignLeft)
-            layout.addWidget(groups[1], 0, 1, 1, 2, Qt.AlignLeft)
-            layout.addWidget(groups[2], 1, 0, 1, 3, Qt.AlignLeft)
+        self._connection_layout_signature=signature
+        self._connection_layout_mode=mode
+        for group,minimum in zip(groups,widths):group.setMinimumWidth(minimum)
+        layout=self.header_connection_layout
+        for group in groups:layout.removeWidget(group)
+        if mode==0:
+            for column,group in enumerate(groups,1):layout.addWidget(group,0,column,Qt.AlignLeft)
+        elif mode==1:
+            layout.addWidget(groups[0],0,1,Qt.AlignLeft)
+            layout.addWidget(groups[1],0,2,Qt.AlignLeft)
+            layout.addWidget(groups[2],1,1,1,2,Qt.AlignLeft)
         else:
-            for row,group in enumerate(groups):
-                layout.addWidget(group, row, 0, 1, 3, Qt.AlignLeft)
+            for row,group in enumerate(groups):layout.addWidget(group,row,1,1,3,Qt.AlignLeft)
         self.header_bar.layout().activate()
+        self.header_connection_layout.activate()
+        for group in groups:group.layout().activate()
+
+    def _ConnectionLabels_Retranslate(self):
+        self.lbl_port_name.setText(Text(self.i18n,'地面站串口','Ground station'))
+        self.debug_title.setText(Text(self.i18n,'维护串口','Maintenance'))
+        self.probe_title.setText(Text(self.i18n,'SWD探针','SWD probe'))
+        self.btn_refresh.setText(Text(self.i18n,'刷新串口','Refresh ports'))
+        self.btn_probe_refresh.setText(Text(self.i18n,'重新检测','Redetect'))
+        self.header_credit.setToolTip(self.i18n.tr('app.credit'))
+        for combo in (self.baud_combo,self.debug_baud_combo):
+            combo.setToolTip(self.i18n.tr('field.baudrate'))
+        self._ConnectionStatus_Display()
 
     def set_debug_status(self, key, detail=''):
         self._debug_status_key, self._debug_status_detail = key, detail
         self._DebugStatus_Render()
 
     def _DebugStatus_Render(self):
-        import html
-        self.debug_status.setText(self.i18n.tr(self._debug_status_key))
-        self.debug_status.setToolTip('<qt>' + html.escape(self._debug_status_detail).replace('\n', '<br>') + '</qt>')
+        owned = self.maintenance_owner_status() if self.maintenance_owner_status else self._debug_connected
+        opening = self._debug_status_key == 'maintenance.connecting'
+        closing = self._debug_status_key == 'maintenance.stopping'
+        caption = ('释放中','Releasing') if closing else (('连接中','Connecting') if opening else
+            (('已连接','Connected') if self._debug_connected else ('未连接','Disconnected')))
+        if self._debug_connected and not closing:
+            caption = {'maintenance.serial_open':('端口已开','Port open'),
+                       'maintenance.firmware_reply':('已响应','Responded'),
+                       'maintenance.status_unavailable':('待响应','No reply')}.get(self._debug_status_key,caption)
+        if 'Close failed:' in self._debug_status_detail:caption=('释放失败','Close failed')
+        HeaderStatus_Set(self.debug_status,Text(self.i18n,*caption),
+            self.i18n.tr(self._debug_status_key)+'\n'+self._debug_status_detail)
+        ConnectionActions_Render(self.btn_debug_connect,self.btn_debug_disconnect,self.i18n,
+            owned=owned,cancelling=opening,retry='Close failed:' in self._debug_status_detail)
+        self.btn_debug_disconnect.setEnabled(bool(owned and not closing))
         self._ConnectionGroups_Reflow()
 
     def set_probe_status(self, status, detail=''):
@@ -2471,9 +2517,7 @@ class MainWindow(QMainWindow):
         tooltip = '<qt>' + html.escape(explanation).replace('\n', '<br>') + '</qt>'
         self.probe_status.setToolTip(tooltip)
         self.probe_combo.setToolTip(tooltip)
-        self.maintenance_page.swd_status.setTextFormat(Qt.PlainText)
-        self.maintenance_page.swd_status.setText(status + '\n' + self.i18n.tr('probe.boundary'))
-        self.maintenance_page.swd_status.setToolTip(tooltip)
+        # Inventory owns the host probe controls; target status belongs to SWD.
         self._ConnectionGroups_Reflow()
 
     def _PlotMinimum_Update(self) -> None:
@@ -2487,26 +2531,17 @@ class MainWindow(QMainWindow):
                 plot.setMinimumSize(width, height)
 
     def _ConnectionStatus_Display(self) -> None:
-        text = self._connection_status_text
-        if len(text) <= 24:
-            self.conn_label.setMinimumWidth(max(110, self.conn_label.fontMetrics().horizontalAdvance(text) + 10))
-            self.conn_label.setMaximumWidth(max(200, self.conn_label.minimumWidth()))
-        width = max(1, self.conn_label.contentsRect().width())
-        metrics = self.conn_label.fontMetrics()
-        if metrics.horizontalAdvance(text) <= width:
-            displayed = text
-        else:
-            lines: list[str] = []
-            line = ""
-            for character in text:
-                if line and metrics.horizontalAdvance(line + character) > width:
-                    lines.append(line)
-                    line = ""
-                line += character
-            lines.append(line)
-            displayed = "\n".join(lines)
-        self._set_dynamic_label_text(self.conn_label, displayed)
-        self.conn_label.setToolTip(text)
+        connected=bool(self._state and self._state.connected)
+        key=self._state.connection_message.key if self._state else ''
+        opening=key=='connection.connecting'
+        owned=self.connection_owner_status() if self.connection_owner_status else connected or opening
+        retry=owned and not connected and not opening
+        caption=(('连接中','Connecting') if opening else (('已连接','Connected') if connected else
+                 (('关闭未完成','Close pending') if retry else ('未连接','Disconnected'))))
+        if key=='connection.error' and not retry:caption=('连接失败','Failed')
+        HeaderStatus_Set(self.conn_label,Text(self.i18n,*caption),self._connection_status_text)
+        ConnectionActions_Render(self.btn_connect,self.btn_disconnect,self.i18n,
+            owned=owned,cancelling=opening,retry=retry)
 
     def begin_data_migration(
         self,
@@ -2550,6 +2585,7 @@ class MainWindow(QMainWindow):
 
     def set_data_tools_busy(self, busy: bool) -> None:
         self._data_tools_busy = bool(busy)
+        self.maintenance_page.FileJob_SetBusy(busy)
         self._render_data_tool_buttons()
 
     @staticmethod
@@ -2673,6 +2709,9 @@ class MainWindow(QMainWindow):
         self.btn_process_data.setEnabled(high_load_enabled)
         file_tools_enabled = high_load_enabled and not bool(self._state and self._state.start_transaction_pending())
         self.btn_export_device.setEnabled(file_tools_enabled and not bool(self._state and self._state.connected))
+        self.btn_cut_device.setEnabled(False)
+        self.btn_cut_device.hide()
+        self.action_export_cut.setEnabled(False)
         self.btn_download_device.setEnabled(file_tools_enabled and self._debug_connected and self._debug_service_supported)
         self.btn_refresh_device_logs.setEnabled(file_tools_enabled and self._debug_connected and self._debug_service_supported)
         self.btn_cancel_sim.setEnabled(
@@ -3057,6 +3096,7 @@ class MainWindow(QMainWindow):
         self.btn_cal_reset.setEnabled(
             state.preflight_command_entry_allowed() and not state.pending_command_name
         )
+        self.btn_mag_calibration.setEnabled(not state.mission_started and not state.start_transaction_pending())
         self.btn_align_start.setEnabled(preflight_allowed and state.calibration.ready)
         self.btn_align_stop.setEnabled(preflight_allowed)
         self.btn_align_reset.setEnabled(preflight_allowed)

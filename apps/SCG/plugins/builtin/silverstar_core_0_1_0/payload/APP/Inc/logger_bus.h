@@ -95,6 +95,8 @@ LoggerBusResult LoggerBus_Kf6DiagnosticPush(
     const FlightLogKf6DiagnosticRecord *record);
 LoggerBusResult LoggerBus_NavigationQualityPush(
     uint64_t timestamp_us, const FlightLogNavigationQualityRecord *record);
+LoggerBusResult LoggerBus_NavigationOperationPush(uint64_t timestamp_us,
+    const FlightLogNavigationOperationPartRecord *record);
 LoggerBusResult LoggerBus_Eskf15BodyInputPush(
     uint64_t timestamp_us, const FlightLogEskf15BodyInputRecord *record);
 LoggerBusResult LoggerBus_FusionHorizonMeasurementPush(
@@ -166,6 +168,10 @@ LoggerBusResult LoggerBus_MagCalibrationIdentityPush(
 LoggerBusResult LoggerBus_FinalizationArm(uint64_t landing_timestamp_us);
 /* LoggerTask only, after lifecycle maintenance reservation. Closes producer
  * admission once bootstrap/request publication has completed; never reopens. */
+/* LoggerTask only: caller has opened the header and admitted the decoder and
+ * initial configuration. BOOTSTRAP may close without a valid mission snapshot.
+ * An owned request must finish before admission closes under the queue lock;
+ * queued records still drain normally. This does not publish StreamingReady. */
 LoggerBusResult LoggerBus_MaintenanceDrainBegin(void);
 LoggerBusFinalizationState LoggerBus_FinalizationProcess(uint64_t now_us);
 void LoggerBus_FinalizationComplete(void);

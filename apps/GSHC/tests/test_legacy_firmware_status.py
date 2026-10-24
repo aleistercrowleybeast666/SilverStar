@@ -80,10 +80,15 @@ class LegacyStatusTests(unittest.TestCase):
     def test_transport_matches_legacy_command_not_late_caps_or_other_status(self):
         class Serial:
             def __init__(self, **kwargs):
+                self.data = []
+            def write(self, payload):
+                if payload == b'SYSTEM INFO\r\n':
+                    self.data = [b'OK SYSTEM INFO project=SilverStar version=0.0.12\r\n']
+                    return len(payload)
                 self.data = [b'OK LOGFILE CAPS supported=0\r\n', b'> SYSTEM STATUS\r\n',
                     b'OK LOG STATUS mounted=1\r\n', b'> OK SYSTEM STATUS state=2 ready=0 ',
                     b'block=0x00000004 warn=0x00000008 attitude=VALID\r\n']
-            def write(self, payload): return len(payload)
+                return len(payload)
             def read(self, count): return self.data.pop(0) if self.data else b''
         wire = FileServiceSerialTransport('MOCK', 230400, serial_factory=Serial)
         self.assertEqual(wire.exchange('SYSTEM STATUS', 1, Event()), RESPONSES['SYSTEM STATUS'])

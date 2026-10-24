@@ -33,6 +33,7 @@ from silverstar_flp.core.i18n import Translator
 from silverstar_flp.core.nis_probability import RecordedNisDf_Get
 from silverstar_flp.ui.nis_editor import GateEnableEditor, NisProbabilityEditor
 from silverstar_flp.ui.fusion_timing_editor import FusionTimingEditor
+from silverstar_flp.ui.text_parameter_editor import TextParameterEditor
 
 from silverstar_flp.plugins.api.algorithm import (
     AlgorithmResult,
@@ -354,7 +355,7 @@ class ReplayPage(QWidget):
         self._offline_parameter_values = {
             key: value
             for key, value in plugin.OfflineParameters_Get().items()
-            if isinstance(value, (int, float)) and not isinstance(value, bool)
+            if isinstance(value, (int, float, str)) and not isinstance(value, bool)
         }
         recorded_available = (
             self._dataset is not None
@@ -370,9 +371,11 @@ class ReplayPage(QWidget):
         self.mode_combo.setCurrentIndex(max(self.mode_combo.findData(mode), 0))
         self.mode_combo.blockSignals(False)
         for parameter in plugin.metadata.parameter_schema:
-            if parameter.kind not in ("float", "int"):
+            if parameter.kind not in ("float", "int", "str"):
                 continue
-            if parameter.parameter_id == "fusion_timing_mode":
+            if parameter.kind == "str":
+                editor = TextParameterEditor(self.parameters_group)
+            elif parameter.parameter_id == "fusion_timing_mode":
                 editor = FusionTimingEditor(self._translator.language, self.parameters_group)
             elif parameter.nis_df:
                 editor = NisProbabilityEditor(parameter.nis_df, parameter.minimum, parameter.maximum,
@@ -516,12 +519,14 @@ class ReplayPage(QWidget):
 
     def _ParametersDirty_Refresh(self, *_args: object) -> None:
         self._parameters_dirty = any(
-            (isinstance(editor, NisProbabilityEditor) and not editor.InputValid_Is()) or not math.isclose(
+            (editor.value() != self._parameter_baseline_values.get(parameter_id, editor.value())
+             if isinstance(editor, TextParameterEditor) else
+             (isinstance(editor, NisProbabilityEditor) and not editor.InputValid_Is()) or not math.isclose(
                 editor.value(),
                 self._parameter_baseline_values.get(parameter_id, editor.value()),
                 rel_tol=1.0e-9,
                 abs_tol=5.0e-7,
-            )
+            ))
             for parameter_id, editor in self._parameter_widgets.items()
         )
         what_if = self.mode_combo.currentData() == ReplayMode.WHAT_IF
@@ -644,7 +649,9 @@ class ReplayPage(QWidget):
                 declared = declaration.get("metadata_declarations", {}).get("nis_gating", {})
                 known_df = RecordedNisDf_Get(declared, name) == editor.df
                 editor.NumericDisplay_Set(mode == ReplayMode.RECORDED_CONFIGURATION and not known_df)
-            editor.setReadOnly(mode != ReplayMode.WHAT_IF or name not in runtime)
+            editor.setReadOnly((mode == ReplayMode.RECORDED_CONFIGURATION
+                                if isinstance(editor, TextParameterEditor) else mode != ReplayMode.WHAT_IF)
+                               or name not in runtime)
             self._ParameterTooltip_Apply(runtime.get(name, self._parameter_specs[name]))
             if name not in runtime:
                 note = self._translator.Text_Get("replay.parameter_retired")
@@ -673,6 +680,9 @@ class ReplayPage(QWidget):
                     continue
                 values[name] = editor.value()
                 continue
+            if isinstance(editor, TextParameterEditor):
+                values[name] = editor.value()
+                continue
             actual = editor.property("actualValue")
             if actual is not None and editor.value() == round(actual, editor.decimals()):
                 values[name] = actual
@@ -688,7 +698,8 @@ class ReplayPage(QWidget):
         mode = ReplayMode(self.mode_combo.currentData())
         values = (
             self._ActualValues_Get()
-            if mode == ReplayMode.WHAT_IF
+            if mode == ReplayMode.WHAT_IF or any(isinstance(editor, TextParameterEditor)
+                for editor in self._parameter_widgets.values())
             else dict(self._parameter_baseline_values)
         )
         request = self._Request_Get()
@@ -824,7 +835,8 @@ class ReplayPage(QWidget):
         mode = self.mode_combo.currentData()
         parameters = (
             self._ActualValues_Get()
-            if mode == ReplayMode.WHAT_IF
+            if mode == ReplayMode.WHAT_IF or (mode == ReplayMode.OFFLINE and any(
+                isinstance(editor, TextParameterEditor) for editor in self._parameter_widgets.values()))
             else (dict(self._offline_parameter_values) if mode == ReplayMode.OFFLINE else {})
         )
         request = ReplayRequest(

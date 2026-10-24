@@ -1049,6 +1049,9 @@ class Controller(QObject):
         self.window.on_refresh_ports = self.refresh_ports
         self.window.on_connect_clicked = self.connect
         self.window.on_disconnect_clicked = self.disconnect
+        self.window.connection_owner_status = lambda: (
+            self.worker is not None or self.protocol_worker is not None or
+            (self.logger.session_active and self.state.connection_message.key == 'connection.error'))
         self.window.on_send_ping = self.send_ping
         self.window.on_send_lock = self.send_lock
         self.window.on_send_unlock = self.send_unlock

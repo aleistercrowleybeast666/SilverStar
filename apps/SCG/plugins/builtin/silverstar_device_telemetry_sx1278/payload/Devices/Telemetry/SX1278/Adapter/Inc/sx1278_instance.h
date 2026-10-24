@@ -1,0 +1,31 @@
+#ifndef __SX1278_INSTANCE_H
+#define __SX1278_INSTANCE_H
+#include "system_telemetry_transport_if.h"
+
+const char *Sx1278TelemetryInstance_NameGet(uint8_t instance);
+SystemDeviceResult Sx1278TelemetryInstance_Init(uint8_t instance);
+SystemDeviceResult Sx1278TelemetryInstance_Start(uint8_t instance);
+SystemDeviceResult Sx1278TelemetryInstance_Stop(uint8_t instance);
+SystemDeviceResult Sx1278TelemetryInstance_Send(
+    uint8_t instance, const uint8_t *data, uint16_t length);
+SystemDeviceResult Sx1278TelemetryInstance_SendControl(uint8_t instance,
+    const uint8_t *data, uint16_t length, uint32_t *transaction_id);
+SystemDeviceResult Sx1278TelemetryInstance_TxResultGet(uint8_t instance,
+    uint32_t transaction_id, uint32_t *age_ms);
+SystemDeviceResult Sx1278TelemetryInstance_Receive(
+    uint8_t instance, uint8_t *data, uint16_t capacity, uint16_t *length);
+SystemDeviceResult Sx1278TelemetryInstance_Process(uint8_t instance);
+SystemDeviceResult Sx1278TelemetryInstance_InfoGet(
+    uint8_t instance, SystemDeviceInfo *info);
+SystemDeviceResult Sx1278TelemetryInstance_CapabilitiesGet(
+    uint8_t instance, uint32_t *mask);
+SystemDeviceResult Sx1278TelemetryInstance_HealthGet(
+    uint8_t instance, SystemTelemetryHealth *health);
+SystemDeviceResult Sx1278TelemetryInstance_IoDiagnosticsGet(
+    uint8_t instance, SystemDeviceIoDiagnostics *diagnostics);
+SystemDeviceResult Sx1278TelemetryInstance_SelfTestRun(
+    uint8_t instance, SystemDeviceSelfTestResult *result);
+SystemDeviceResult Sx1278TelemetryInstance_MtuGet(
+    uint8_t instance, uint16_t *mtu);
+
+#endif /* __SX1278_INSTANCE_H */

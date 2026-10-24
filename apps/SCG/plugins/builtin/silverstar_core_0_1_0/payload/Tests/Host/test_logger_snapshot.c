@@ -187,6 +187,8 @@ static void Test_Start(void)
     /* A repeated accepted token must not dereference modified caller payload. */
     TEST_CHECK(LoggerBus_StartRecordsPush(999U, &input, &generation) == LOGGER_BUS_RESULT_OK);
     TEST_CHECK(LoggerBus_SystemConfigPush(987U) == LOGGER_BUS_RESULT_BUSY);
+    TEST_CHECK(LoggerBus_MaintenanceDrainBegin() == LOGGER_BUS_RESULT_BUSY);
+    TEST_CHECK(LoggerBus_FinalizationStateGet() == LOGGER_BUS_FINALIZATION_IDLE);
     for (unsigned i = 0U; i < 128U; ++i)
     {
         if (LoggerBus_NextPop(&record) != LOGGER_BUS_RESULT_OK) { break; }
@@ -203,6 +205,7 @@ static void Test_Start(void)
     TEST_CHECK(initial == 1U && identity == 1U && mag == 1U && event == 1U);
     TEST_CHECK(LoggerBus_StartBarrierGet() == generation);
     TEST_CHECK(LoggerBus_Count() == 1U && LoggerBus_StartAcknowledgedGet() == 0U);
+    TEST_CHECK(LoggerBus_MaintenanceDrainBegin() == LOGGER_BUS_RESULT_BUSY);
     /* Continuous ordinary traffic cannot prevent the mandatory sync barrier. */
     TEST_CHECK(LoggerBus_EventPush(222U, FLIGHT_LOG_EVENT_MISSION_START, 0U, 0U) == LOGGER_BUS_RESULT_OK);
     unsigned before = s_sync_count;

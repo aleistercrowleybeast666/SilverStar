@@ -172,3 +172,8 @@ checkout is the deliverable, not a rebuilt frozen executable. For offline review
 the evidence screenshots show both old FINAL-compatible fields and a simulated
 0.1 catalog, including a previously unknown entry/state. They are clearly mock
 QA, not evidence of a physical target connection or a flashed firmware update.
+
+
+## 2026-10-17 本地维护源码合入
+
+完整命令、字段、状态机、整行背压和软件/硬件证据边界见 [维护协议 0.1 完整实现说明](../../../apps/SCG/plugins/builtin/silverstar_protocol_maintenance_serial_0_0/docs/MAINTENANCE_PROTOCOL_0_1.md)。普通源码入口为仓库根的 `python apps/GSHC/main.py`。本次未发布、未再次连接硬件；原 R04 实板结论只覆盖原精确镜像，不能移用于含当前导航/USB 源码的新生成固件。

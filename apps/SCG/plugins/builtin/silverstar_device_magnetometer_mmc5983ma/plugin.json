@@ -71,8 +71,7 @@
     },
     "recordable_outputs": {
       "magnetometer.field": {
-        "enabled": false,
-        "reason_code": "logging.unavailable.magnetometer_output_disabled"
+        "enabled": true
       }
     },
     "unqualified_capabilities": {

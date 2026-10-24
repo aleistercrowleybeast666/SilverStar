@@ -103,6 +103,7 @@ class DeviceInstanceView:
     profile: str = ""
     installation_orientation: str = "vertical"
     mount_nose_axis: str = "z_positive"
+    position_body_m: tuple[float, float, float] | None = None
 
 
 @dataclass(frozen=True, slots=True)

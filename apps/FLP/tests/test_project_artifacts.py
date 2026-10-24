@@ -55,7 +55,10 @@ def test_four_completed_algorithms_and_two_distinct_runs_roundtrip(tmp_path, mon
     opened = NavigationPair_Open(tmp_path / 'pair', flight_samples=41)
     store = ReplayResultStore()
     registry = builtin_registry()
-    for plugin in registry.algorithms:
+    legacy_ids = ("silverstar.algorithm.pure_ins", "silverstar.algorithm.sf6",
+                  "silverstar.algorithm.kf6", "silverstar.algorithm.estimator.eskf15")
+    for algorithm_id in legacy_ids:
+        plugin = registry.Algorithm_Get(algorithm_id)
         request = ReplayRequest(mode=ReplayMode.WHAT_IF,
                                 process_model_revision=2 if plugin.metadata.plugin_id.endswith('kf6') else None)
         result = Replay_Execute(plugin, opened.dataset, request)

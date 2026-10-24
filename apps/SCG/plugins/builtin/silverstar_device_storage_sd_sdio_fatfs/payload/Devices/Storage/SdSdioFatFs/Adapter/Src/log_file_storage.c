@@ -20,6 +20,8 @@ static PLATFORM_CPU_FAST_BSS uint8_t s_failed;
 static PLATFORM_CPU_FAST_BSS uint8_t s_directory_open;
 static PLATFORM_CPU_FAST_BSS uint32_t s_cursor;
 static PLATFORM_CPU_FAST_BSS uint32_t s_reader_size;
+static PLATFORM_CPU_FAST_BSS uint32_t s_reader_file_id;
+static PLATFORM_CPU_FAST_BSS uint8_t s_reader_sequential;
 
 static SystemLogFileResult LogFileStorage_ResultMap(FRESULT result)
 {
@@ -65,13 +67,18 @@ SystemLogFileResult SystemLogFileStorage_Reset(void)
     FRESULT directory_result = FR_OK;
     if (s_reader_open != 0U) { reader_result = f_close(&s_reader); }
     if (s_directory_open != 0U) { directory_result = f_closedir(&s_directory); }
-    s_reader_open = 0U;
-    s_directory_open = 0U;
+    /* A failed close is uncertain ownership, never a released handle. */
+    if (reader_result == FR_OK)
+    {
+        s_reader_open = 0U; s_reader_sequential = 0U;
+        s_reader_size = 0U; s_reader_file_id = 0U;
+    }
+    if (directory_result == FR_OK) { s_directory_open = 0U; }
     s_cursor = 0U;
-    s_reader_size = 0U;
     if ((reader_result != FR_OK) || (directory_result != FR_OK)) { s_failed = 1U; }
     if (reader_result != FR_OK) { return LogFileStorage_ResultMap(reader_result); }
-    return LogFileStorage_ResultMap(directory_result);
+    if (directory_result != FR_OK) { return LogFileStorage_ResultMap(directory_result); }
+    return (s_failed != 0U) ? SystemLogFileResult_IoError : SystemLogFileResult_Ok;
 }
 
 static uint32_t LogFileStorage_IdParse(const char *name)
@@ -159,6 +166,8 @@ SystemLogFileResult SystemLogFileStorage_HashBegin(uint32_t file_id, uint32_t *s
     result = f_open(&s_reader, path, FA_READ);
     if (result != FR_OK) { return LogFileStorage_ResultMap(result); }
     s_reader_open = 1U;
+    s_reader_sequential = 0U;
+    s_reader_file_id = file_id;
     s_reader_size = (uint32_t)f_size(&s_reader);
     *size = s_reader_size;
     return SystemLogFileResult_Ok;
@@ -172,6 +181,7 @@ SystemLogFileResult SystemLogFileStorage_HashRead(
     if ((data == NULL) || (length == NULL)) { return SystemLogFileResult_BadArgument; }
     *length = 0U;
     if (s_reader_open == 0U) { return SystemLogFileResult_NotReady; }
+    if (s_reader_sequential != 0U) { return SystemLogFileResult_Busy; }
     if ((uint32_t)f_size(&s_reader) != s_reader_size) { return SystemLogFileResult_Stale; }
     result = f_read(&s_reader, data, SYSTEM_LOG_FILE_HASH_QUANTUM, &count);
     if (result != FR_OK) { return LogFileStorage_ResultMap(result); }
@@ -181,34 +191,80 @@ SystemLogFileResult SystemLogFileStorage_HashRead(
     return SystemLogFileResult_Ok;
 }
 
-SystemLogFileResult SystemLogFileStorage_Read(
-    uint32_t file_id, uint32_t size, uint32_t offset,
-    uint8_t data[SYSTEM_LOG_FILE_CHUNK_SIZE], uint16_t *length)
+static SystemLogFileResult LogFileStorage_ReadUnchanged(uint32_t file_id, uint32_t size)
+{
+    char path[LOG_FILE_PATH_SIZE];
+    FILINFO info = {0};
+    FRESULT result;
+    LogFileStorage_PathBuild(file_id, path);
+    result = f_stat(path, &info);
+    if (result != FR_OK) { return LogFileStorage_ResultMap(result); }
+    if (((info.fattrib & AM_DIR) != 0U) || ((uint32_t)info.fsize != size) ||
+        ((uint32_t)f_size(&s_reader) != size)) { return SystemLogFileResult_Stale; }
+    return SystemLogFileResult_Ok;
+}
+
+static SystemLogFileResult LogFileStorage_ReadOpen(uint32_t file_id, uint32_t size)
 {
     uint32_t actual_size = 0U;
+    SystemLogFileResult result;
+    if (s_reader_open != 0U)
+    {
+        if (s_reader_sequential == 0U) { return SystemLogFileResult_Busy; }
+        if ((s_reader_file_id != file_id) || (s_reader_size != size))
+        { return SystemLogFileResult_Stale; }
+        /* Preserve the old reopen-per-chunk fresh-size check. */
+        return LogFileStorage_ReadUnchanged(file_id, size);
+    }
+    result = SystemLogFileStorage_HashBegin(file_id, &actual_size);
+    if (result != SystemLogFileResult_Ok) { return result; }
+    s_reader_sequential = 1U;
+    return (actual_size == size) ? SystemLogFileResult_Ok : SystemLogFileResult_Stale;
+}
+
+static SystemLogFileResult LogFileStorage_ReadBounded(
+    uint32_t file_id, uint32_t size, uint32_t offset,
+    uint8_t *data, uint16_t capacity, uint16_t *length)
+{
     UINT count = 0U;
     UINT expected;
     FRESULT io_result;
     SystemLogFileResult result;
-    SystemLogFileResult close_result;
-    if ((data == NULL) || (length == NULL) || (offset > size))
+    if ((data == NULL) || (length == NULL) || (offset > size) ||
+        (capacity == 0U) || (capacity > SYSTEM_LOG_FILE_BLOCK_SIZE) ||
+        (file_id == 0U) || (file_id > SYSTEM_LOG_FILE_ID_MAX))
     { return SystemLogFileResult_BadArgument; }
     *length = 0U;
-    result = SystemLogFileStorage_HashBegin(file_id, &actual_size);
+    SILVERSTAR_ASSERT((s_reader_open <= 1U) && (s_reader_sequential <= 1U) &&
+        ((s_reader_sequential == 0U) || ((s_reader_open != 0U) && (s_reader_file_id != 0U))),
+        SILVERSTAR_ASSERT_MODULE_BOARD, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    result = SystemLogFileStorage_Check(file_id, 0U);
     if (result != SystemLogFileResult_Ok) { return result; }
-    if (actual_size != size)
-    {
-        close_result = SystemLogFileStorage_Reset();
-        return (close_result == SystemLogFileResult_Ok) ? SystemLogFileResult_Stale : close_result;
-    }
-    expected = (size - offset > SYSTEM_LOG_FILE_CHUNK_SIZE) ?
-        SYSTEM_LOG_FILE_CHUNK_SIZE : (UINT)(size - offset);
-    io_result = f_lseek(&s_reader, offset);
+    result = LogFileStorage_ReadOpen(file_id, size);
+    if (result != SystemLogFileResult_Ok) { return result; }
+    expected = (size - offset > capacity) ? capacity : (UINT)(size - offset);
+    io_result = FR_OK;
+    if ((uint32_t)f_tell(&s_reader) != offset) { io_result = f_lseek(&s_reader, offset); }
     if (io_result == FR_OK) { io_result = f_read(&s_reader, data, expected, &count); }
-    close_result = SystemLogFileStorage_Reset();
     if (io_result != FR_OK) { return LogFileStorage_ResultMap(io_result); }
-    if (close_result != SystemLogFileResult_Ok) { return close_result; }
     if (count != expected) { return SystemLogFileResult_Stale; }
+    /* Logger's service owner resets on META, CANCEL, idle/lifecycle or errors. */
     *length = (uint16_t)count;
     return SystemLogFileResult_Ok;
+}
+
+SystemLogFileResult SystemLogFileStorage_Read(
+    uint32_t file_id, uint32_t size, uint32_t offset,
+    uint8_t data[SYSTEM_LOG_FILE_CHUNK_SIZE], uint16_t *length)
+{
+    return LogFileStorage_ReadBounded(file_id, size, offset, data,
+        SYSTEM_LOG_FILE_CHUNK_SIZE, length);
+}
+
+SystemLogFileResult SystemLogFileStorage_BlockRead(
+    uint32_t file_id, uint32_t size, uint32_t offset,
+    uint8_t data[SYSTEM_LOG_FILE_BLOCK_SIZE], uint16_t *length)
+{
+    return LogFileStorage_ReadBounded(file_id, size, offset, data,
+        SYSTEM_LOG_FILE_BLOCK_SIZE, length);
 }

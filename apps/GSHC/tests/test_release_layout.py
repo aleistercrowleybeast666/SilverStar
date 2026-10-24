@@ -20,6 +20,27 @@ def rect(widget, window):
     return QRect(widget.mapTo(window, QPoint()), widget.size())
 
 
+def Header_AssertContained(window):
+    groups=(window.btn_refresh,window.header_connection_group,window.debug_connection_group,window.probe_group)
+    bounds=[rect(widget,window) for widget in groups]
+    assert all(window.rect().contains(bound) for bound in bounds)
+    assert all(not bounds[i].intersects(bounds[j]) for i in range(len(bounds)) for j in range(i))
+    root=[rect(widget,window) for widget in (window.header_identity_widget,window.header_connection_widget,window.header_preferences_widget)]
+    assert all(not root[i].intersects(root[j]) for i in range(len(root)) for j in range(i))
+    assert window.lbl_baud_name.isHidden() and window.lbl_debug_baud_name.isHidden()
+    assert window.baud_combo.toolTip()==window.i18n.tr('field.baudrate')
+    assert window.debug_baud_combo.toolTip()==window.i18n.tr('field.baudrate')
+    for widget in (window.header_title,window.header_version,window.header_credit,
+                   window.theme_combo,window.language_combo,window.lbl_port_name,window.port_combo,
+                   window.baud_combo,window.btn_connect,window.btn_disconnect,window.conn_label,
+                   window.debug_port_combo,window.debug_baud_combo,window.btn_debug_connect,
+                   window.btn_debug_disconnect,window.probe_combo,window.btn_probe_refresh):
+        if widget.isVisible():assert window.rect().contains(rect(widget,window)),widget.objectName()
+    assert rect(window.lbl_port_name,window).right()<rect(window.port_combo,window).left()
+    assert rect(window.port_combo,window).right()<rect(window.baud_combo,window).left()
+    assert window.btn_connect.isVisible()!=window.btn_disconnect.isVisible()
+
+
 @pytest.fixture
 def application():
     app = QApplication.instance() or QApplication([])
@@ -63,7 +84,7 @@ def test_four_pages_serial_row_and_flight_grid(application, tmp_path, size, lang
         assert window.header_title.width() > 0
         assert window.header_title.toolTip() == i18n.tr("app.brand")
         assert window.header_version.text() == f"SilverStar GSHC v{APP_VERSION}"
-        assert rect(window.header_title, window).bottom() < rect(window.port_combo, window).top()
+        Header_AssertContained(window)
         assert rect(window.header_title, window).right() < rect(window.header_version, window).left()
         assert rect(window.header_version, window).right() < rect(window.header_credit, window).left()
         assert rect(window.lbl_theme, window).right() < rect(window.theme_combo, window).left()
@@ -71,11 +92,9 @@ def test_four_pages_serial_row_and_flight_grid(application, tmp_path, size, lang
         assert rect(window.lbl_language, window).right() < rect(window.language_combo, window).left()
         assert rect(window.btn_refresh, window).right() < rect(window.lbl_port_name, window).left()
         assert rect(window.lbl_port_name, window).right() < rect(window.port_combo, window).left()
-        assert rect(window.port_combo, window).right() < rect(window.lbl_baud_name, window).left()
-        assert rect(window.lbl_baud_name, window).right() < rect(window.baud_combo, window).left()
+        Header_AssertContained(window)
         assert rect(window.baud_combo, window).right() < rect(window.btn_connect, window).left()
-        assert rect(window.btn_connect, window).right() < rect(window.btn_disconnect, window).left()
-        assert rect(window.btn_disconnect, window).right() < rect(window.conn_label, window).left()
+        assert rect(window.btn_connect, window).right() < rect(window.conn_label, window).left()
         assert window.current_port() == "COM100"
         assert window.baud_combo.isEditable()
         assert window.current_baudrate() == 230400
@@ -89,12 +108,13 @@ def test_four_pages_serial_row_and_flight_grid(application, tmp_path, size, lang
         )]
         assert summary[0].top() == summary[1].top() == summary[2].top()
         assert summary[0].right() < summary[1].left() < summary[2].left()
-        viewport = rect(window.preflight_page.viewport(), window)
         for widget in (window.lbl_pf_system_ready, window.lbl_pf_accel,
                        window.btn_start):
             window.preflight_page.ensureWidgetVisible(widget, 0, 0)
             app.processEvents()
-            assert viewport.contains(rect(widget, window))
+            # Deferred header reflow can move the viewport while events drain.
+            # Require full visibility inside its current bounds after scrolling.
+            assert rect(window.preflight_page.viewport(), window).contains(rect(widget, window))
 
         window.pages.setCurrentWidget(window.post_process_page)
         app.processEvents()
@@ -102,11 +122,14 @@ def test_four_pages_serial_row_and_flight_grid(application, tmp_path, size, lang
         assert window.post_process_page.isAncestorOf(window.btn_select_data_root)
 
         window.pages.setCurrentWidget(window.maintenance_scroll)
+        window.maintenance_page.sections.setCurrentWidget(window.maintenance_page.tf_section)
         app.processEvents()
+        assert window.maintenance_page.sections.count()==2
+        assert window.maintenance_page.catalog.isHidden()
         for widget in (window.btn_export_device, window.btn_download_device,
-                       window.btn_refresh_device_logs, window.maintenance_page.catalog):
+                       window.maintenance_page.destination_path,window.maintenance_page.btn_destination):
             assert window.maintenance_page.isAncestorOf(widget)
-            window.maintenance_scroll.ensureWidgetVisible(widget, 0, 0)
+            window.maintenance_page.tf_section.ensureWidgetVisible(widget, 0, 0)
             app.processEvents()
             assert rect(window.maintenance_scroll.viewport(), window).contains(rect(widget, window))
 
@@ -157,14 +180,7 @@ def test_small_window_scrolls_to_flight_plots_and_post_process_actions(applicati
         QTest.qWait(50)
         assert window.size().width() == 1024
         assert window.size().height() == 600
-        for widget in (window.header_title, window.header_version, window.header_credit,
-                       window.theme_combo, window.language_combo, window.lbl_port_name,
-                       window.port_combo, window.btn_refresh, window.lbl_baud_name,
-                       window.baud_combo, window.btn_connect, window.btn_disconnect,
-                       window.conn_label):
-            assert window.rect().contains(rect(widget, window))
-        assert rect(window.lbl_port_name, window).right() < rect(window.port_combo, window).left()
-        assert rect(window.lbl_baud_name, window).right() < rect(window.baud_combo, window).left()
+        Header_AssertContained(window)
         window.pages.setCurrentWidget(window.flight_page)
         QTest.qWait(50)
         assert window.flight_page.verticalScrollBar().maximum() > 0
@@ -201,7 +217,9 @@ def test_header_language_theme_cycle_keeps_button_text_visible(application, tmp_
                 window.theme_combo.setCurrentIndex(window.theme_combo.findData(theme.value))
                 QTest.qWait(150)
                 for button in (window.btn_refresh, window.btn_connect, window.btn_disconnect,
-                               window.btn_debug_connect, window.btn_debug_disconnect, window.btn_probe_refresh):
+                               window.btn_debug_connect, window.btn_debug_disconnect, window.btn_probe_refresh,
+                               window.maintenance_page.btn_swd_attach,window.maintenance_page.btn_swd_detach):
+                    if not button.isVisible():continue
                     option = QStyleOptionButton()
                     option.initFrom(button)
                     option.text = button.text()
@@ -209,7 +227,9 @@ def test_header_language_theme_cycle_keeps_button_text_visible(application, tmp_
                     assert contents.width() >= button.fontMetrics().horizontalAdvance(button.text()), button.text()
                 for label in (window.lbl_port_name, window.lbl_baud_name,
                               window.lbl_debug_baud_name, window.probe_title):
+                    if not label.isVisible():continue
                     assert label.width() >= label.fontMetrics().horizontalAdvance(label.text()), label.text()
+                Header_AssertContained(window)
     finally:
         window.close()
         window.deleteLater()

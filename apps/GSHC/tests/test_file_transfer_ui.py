@@ -17,7 +17,7 @@ from PySide6.QtWidgets import QApplication, QMessageBox
 from services.device_export import DeviceExport, ExportCancelled
 from services.i18n import I18n, Language
 from test_file_service_client import MockTransport
-from ui.file_transfer import DownloadWorker, ExportWorker, normalize_port
+from ui.file_transfer import DownloadWorker, ExportWorker, MaintenanceOwner, normalize_port
 from ui.main_window import MainWindow
 from ui.maintenance_page import MaintenancePage
 from transport.probe_inventory import ProbeInventory, ProbeInventoryResult
@@ -66,6 +66,21 @@ class TransferUiTests(unittest.TestCase):
             QTest.qWait(10)
         self.assertFalse(self.controller.file_transfer.busy)
 
+    def confirm_list_dialog(self):
+        dialog=self.controller.file_transfer.export_dialog
+        with patch('ui.log_export_dialog.QMessageBox.question',return_value=QMessageBox.Yes):
+            dialog.refresh.click()
+
+    def confirm_copy_dialog(self):
+        dialog=self.controller.file_transfer.export_dialog
+        if dialog.files.topLevelItemCount()==0:
+            self.confirm_list_dialog()
+            self.wait_finished()
+        if not dialog.selected_ids():dialog.all.setChecked(True)
+        dialog.path.setText(str(self.target))
+        with patch('ui.log_export_dialog.QMessageBox.question',return_value=QMessageBox.Yes):
+            dialog.start.click()
+
     def assert_background_queries_only(self, wire, before):
         self.assertEqual(wire.commands[:len(before)], before)
         # Cancelling a file action must not stop the independent read-only
@@ -75,7 +90,7 @@ class TransferUiTests(unittest.TestCase):
 
     def test_copy_menu_runs_real_worker_and_keeps_source(self):
         with patch("ui.file_transfer.QFileDialog.getOpenFileNames", return_value=([str(self.source)], "")), \
-             patch("ui.file_transfer.QFileDialog.getExistingDirectory", return_value=str(self.target)), \
+             patch("ui.file_transfer.DeviceExportDestination_Choose", return_value=("directory", str(self.target))), \
              patch("ui.file_transfer.QMessageBox.information"), patch("ui.file_transfer.QMessageBox.warning") as warning:
             self.window.action_export_copy.trigger()
             self.assertTrue(self.controller.file_transfer.busy)
@@ -86,24 +101,118 @@ class TransferUiTests(unittest.TestCase):
         self.assertEqual(len(list(self.target.glob("*/manifest.json"))), 1)
         self.assertTrue(self.window.btn_process_data.isEnabled())
 
-    def test_legacy_cut_action_is_disabled_and_absent_from_menu(self):
-        self.assertFalse(self.window.action_export_cut.isEnabled())
-        self.assertNotIn(self.window.action_export_cut, self.window.btn_export_device.menu().actions())
-        with patch("ui.file_transfer.QFileDialog.getOpenFileNames") as chooser:
-            self.window.action_export_cut.trigger()
-            chooser.assert_not_called()
+    def test_cut_entry_remains_disabled_across_busy_and_language_changes(self):
+        for busy in (False, True, False):
+            self.window.set_data_tools_busy(busy)
+            for language in (Language.ZH_CN, Language.EN_US):
+                self.window.i18n.set_language(language)
+                self.window.retranslate_ui()
+                self.assertFalse(self.window.btn_cut_device.isEnabled())
+                self.assertTrue(self.window.btn_cut_device.isHidden())
+                self.assertFalse(self.window.action_export_cut.isEnabled())
         self.assertTrue(self.source.exists())
 
-
-    def test_legacy_cut_request_is_rejected_before_file_selection(self):
-        with patch("ui.file_transfer.QFileDialog.getOpenFileNames") as chooser, \
-             patch("ui.file_transfer.QMessageBox.warning") as warning:
+    def test_legacy_cut_request_rejected_before_dialog_or_worker(self):
+        original = self.source.read_bytes()
+        with patch('ui.file_transfer.QFileDialog.getOpenFileNames') as choose, \
+             patch('ui.file_transfer.QMessageBox.warning') as warning:
             self.controller.file_transfer.choose_export(True)
-            chooser.assert_not_called()
-            warning.assert_called_once()
+        choose.assert_not_called()
+        self.assertIn(self.window.i18n.tr('transfer.copy_only'), self.window.maintenance_page.status.text())
+        self.assertTrue(self.controller.file_transfer._error_notice.isVisible())
+        self.controller.file_transfer._error_notice.close()
+        self.assertFalse(self.controller.file_transfer.busy)
+        self.assertEqual(self.source.read_bytes(), original)
+        self.assertEqual(list(self.target.iterdir()), [])
+
+    def test_disabled_cut_actions_do_not_start_or_delete(self):
+        with patch('ui.file_transfer.QFileDialog.getOpenFileNames') as choose:
+            self.window.btn_cut_device.click()
+            self.window.action_export_cut.trigger()
+        choose.assert_not_called()
+        self.assertFalse(self.controller.file_transfer.busy)
         self.assertTrue(self.source.exists())
         self.assertEqual(list(self.target.iterdir()), [])
 
+    def test_merged_export_phone_target_runs_copy_and_readback_without_deleting_source(self):
+        import shutil
+        from services.windows_mtp import WindowsMtp, MtpReply, MtpOperationResult
+        from test_windows_mtp import DESTINATION
+        calls = []
+        def bridge(request, cancel):
+            calls.append(request['operation'])
+            if request['operation'] == 'choose':
+                return MtpReply(MtpOperationResult.Selected, destination=DESTINATION)
+            for row in request['files']:
+                shutil.copyfile(Path(request['package']) / row['name'], Path(request['readback']) / row['name'])
+            return MtpReply(MtpOperationResult.Verified)
+        self.controller.file_transfer.mtp_backend_factory = lambda: WindowsMtp(bridge)
+        with patch('ui.file_transfer.QFileDialog.getOpenFileNames', return_value=([str(self.source)], '')), \
+             patch('ui.file_transfer.DeviceExportDestination_Choose', return_value=('mtp', '')) as choose, \
+             patch('ui.file_transfer.QMessageBox.information'):
+            self.window.btn_export_device.click()
+            self.wait_finished()
+        self.assertEqual(choose.call_args.args[1], [str(self.source)])
+        self.assertEqual(calls, ['choose', 'copy'])
+        self.assertTrue(self.source.exists())
+        self.assertIn('verified', self.window.maintenance_page.status.text().lower())
+
+    def test_mtp_cancelled_chooser_never_copies_or_deletes(self):
+        from services.windows_mtp import WindowsMtp, MtpReply, MtpOperationResult
+        calls = []
+        def bridge(request, cancel):
+            calls.append(request['operation'])
+            return MtpReply(MtpOperationResult.Cancelled, 'No MTP destination selected')
+        self.controller.file_transfer.mtp_backend_factory = lambda: WindowsMtp(bridge)
+        with patch('ui.file_transfer.QFileDialog.getOpenFileNames', return_value=([str(self.source)], '')), \
+             patch('ui.file_transfer.DeviceExportDestination_Choose', return_value=('mtp', '')):
+            self.window.btn_export_device.click()
+            self.wait_finished()
+        self.assertEqual(calls, ['choose'])
+        self.assertTrue(self.source.exists())
+
+    def test_merged_export_cancel_target_starts_no_copy_or_transport(self):
+        original = self.source.read_bytes()
+        with patch('ui.file_transfer.QFileDialog.getOpenFileNames', return_value=([str(self.source)], '')), \
+             patch('ui.file_transfer.DeviceExportDestination_Choose', return_value=None), \
+             patch.object(self.controller.file_transfer, '_start') as start, \
+             patch.object(self.controller.file_transfer, 'transport_factory') as transport:
+            self.window.btn_export_device.click()
+        start.assert_not_called()
+        transport.assert_not_called()
+        self.assertEqual(self.source.read_bytes(), original)
+        self.assertEqual(list(self.target.iterdir()), [])
+
+    def test_startup_timeout_keeps_actual_phase_and_releases_transport(self):
+        wire = MockTransport()
+        wire.requires_reconnect = True
+        owner = MaintenanceOwner('MOCK', 921600, transport_factory=lambda *_: wire)
+        errors, connections = [], []
+        owner.failed.connect(errors.append)
+        owner.connection_changed.connect(lambda connected, detail: connections.append((connected, detail)))
+        message = 'Maintenance synchronization probe did not finish/quiet; no service request sent'
+        with patch('ui.file_transfer.FileServiceClient.negotiate', side_effect=TimeoutError(message)), \
+             patch.object(wire, 'close', wraps=wire.close) as close:
+            owner.run()
+        close.assert_called_once()
+        self.assertEqual(errors, [message + '; reconnect required'])
+        self.assertFalse(connections[-1][0])
+        self.assertFalse(wire.commands)
+        self.assertIsNone(owner.unreleased_transport)
+
+    def test_pending_start_during_destination_choice_blocks_both_targets(self):
+        for kind in ('directory', 'mtp'):
+            self.controller.state.pending_command_name = ''
+            def choose(*_):
+                self.controller.state.pending_command_name = 'START_MISSION'
+                return kind, str(self.target)
+            with patch('ui.file_transfer.QFileDialog.getOpenFileNames', return_value=([str(self.source)], '')), \
+                 patch('ui.file_transfer.DeviceExportDestination_Choose', side_effect=choose), \
+                 patch.object(self.controller.file_transfer, '_start') as start:
+                self.controller.file_transfer.choose_export(False)
+            start.assert_not_called()
+        self.assertTrue(self.source.exists())
+        self.assertEqual(list(self.target.iterdir()), [])
 
     def test_close_cancels_and_retains_running_thread_until_finished(self):
         class SlowExport(DeviceExport):
@@ -141,6 +250,7 @@ class TransferUiTests(unittest.TestCase):
         with patch("ui.file_transfer.QFileDialog.getExistingDirectory", return_value=str(self.target)), \
              patch("ui.file_transfer.QMessageBox.information"), patch("ui.file_transfer.QMessageBox.warning") as warning:
             self.window.action_download_copy.trigger()
+            self.confirm_copy_dialog()
             self.wait_finished()
         warning.assert_not_called()
         self.assertFalse(wire.closed)
@@ -161,7 +271,7 @@ class TransferUiTests(unittest.TestCase):
              patch.object(self.controller.file_transfer.owner, "submit", wraps=self.controller.file_transfer.owner.submit) as submit:
             self.window.action_download_copy.trigger()
             submit.assert_not_called()
-        self.assertEqual(chooser.call_args.args[2], str(self.target.resolve()))
+        self.assertEqual(self.controller.file_transfer.export_dialog.path.text(), str(self.target.resolve()))
         self.assert_background_queries_only(wire, before)
         self.window.btn_debug_disconnect.click()
         self.wait_disconnected()
@@ -173,6 +283,34 @@ class TransferUiTests(unittest.TestCase):
             QTest.qWait(10)
         self.assertTrue(self.window._debug_connected)
         self.assertTrue(self.window._debug_service_supported)
+
+    def test_selected_log_button_copies_only_the_chosen_closed_log(self):
+        import json
+
+        from test_maintenance_api import MultiWire
+        wire=MultiWire()
+        self.controller.file_transfer.transport_factory=lambda *_:wire
+        self.window.debug_port_combo.setCurrentText('COM_MOCK')
+        self.window.btn_debug_connect.click()
+        self.wait_connected()
+        self.controller.file_transfer.refresh_device_logs()
+        self.confirm_list_dialog()
+        self.wait_finished()
+        page=self.window.maintenance_page
+        self.assertEqual(page.catalog.count(),2)
+        page.catalog.setCurrentRow(1)
+        self.assertTrue(page.btn_selected_download.isEnabled())
+        with patch('ui.file_transfer.QFileDialog.getExistingDirectory',return_value=str(self.target)), \
+             patch('ui.file_transfer.QMessageBox.information'),patch('ui.file_transfer.QMessageBox.warning') as warning:
+            page.btn_selected_download.click()
+            self.confirm_copy_dialog()
+            self.assertFalse(page.btn_selected_download.isEnabled())
+            self.wait_finished()
+        warning.assert_not_called()
+        manifest=json.loads(next(self.target.glob('*/manifest.json')).read_text())
+        self.assertEqual([entry['file_id'] for entry in manifest['files']],[2])
+        self.assertFalse(any(command.startswith('LOGFILE READ 1 ') for command in wire.commands))
+        self.assertEqual(wire.logs[2],bytes(range(200)))
 
     def test_directory_selection_cancel_sends_no_file_request_or_settings_write(self):
         wire = MockTransport()
@@ -201,7 +339,7 @@ class TransferUiTests(unittest.TestCase):
         with patch("ui.file_transfer.QFileDialog.getExistingDirectory", return_value=str(self.target)), \
              patch("ui.file_transfer.validate_download_directory", side_effect=PermissionError("mock revoked permission")), \
              patch("ui.file_transfer.QMessageBox.warning"):
-            self.window.action_download_copy.trigger()
+            self.controller.file_transfer._submit_download(self.target,file_ids=(1,))
             self.wait_finished()
             self.wait_disconnected()
         self.assert_background_queries_only(wire, before)
@@ -219,7 +357,7 @@ class TransferUiTests(unittest.TestCase):
         self.assertEqual(normalize_port("\\\\.\\com007"), "COM7")
         self.controller.worker = SimpleNamespace(_config=SimpleNamespace(port="COM7"))
         self.window.debug_port_combo.setCurrentText("\\\\.\\com007")
-        with patch("ui.file_transfer.QMessageBox.warning") as warning:
+        with patch.object(self.controller.file_transfer,"_ErrorNotice_Show") as warning:
             self.window.btn_debug_connect.click()
         warning.assert_called_once()
         self.assertIsNone(self.controller.file_transfer.owner)
@@ -245,25 +383,36 @@ class TransferUiTests(unittest.TestCase):
 
     def test_fourth_page_single_entry_and_unavailable_diagnostics(self):
         self.assertEqual(self.window.pages.count(), 4)
-        self.assertEqual(self.window.btn_export_device.parent(), self.window.maintenance_page)
+        self.assertTrue(self.window.maintenance_page.isAncestorOf(self.window.btn_export_device))
         page = self.window.maintenance_page
         page.render(self.controller.state)
         self.assertIn(self.window.i18n.tr("maintenance.unavailable"), page.labels["system"][1].text())
-        page.btn_details.click()
-        self.assertTrue(page.details.isVisible())
-        self.assertEqual(page.tree.topLevelItemCount(), 5)
+        page.btn_serial_details.click()
+        self.assertTrue(page.serial_details_dialog.isVisible())
+        page.sections.setCurrentIndex(0)
+        self.assertTrue(page.btn_details.isHidden())
+        self.assertTrue(page.runtime_section.isAncestorOf(page.tree))
+        self.assertEqual(page.summary.title(), '遥测状态')
+        self.assertEqual(page.tree.topLevelItemCount(), 4)
         self.controller.state.handshake.last_preflight_status_rx_monotonic_ns = time.monotonic_ns() - 10_000_000_000
         self.controller.state.receive_health.last_rx_monotonic_ns = time.monotonic_ns()
         self.controller.state.connected = True
+        page._telemetry_render_ns = 0
         page.render(self.controller.state)
         self.assertIn(self.window.i18n.tr("maintenance.stale"), page.labels["system"][1].text())
-        self.assertIn(self.window.i18n.tr("maintenance.source"), page.source.text())
-        self.assertEqual(page.detail_source.text(), page.source.text())
+        self.assertTrue(page.source.isHidden())
+        self.assertTrue(page.detail_source.isHidden())
         self.controller.state.sensor.host_rx_monotonic_ns = time.monotonic_ns()
+        page._telemetry_render_ns = 0
         page.render(self.controller.state)
         sensors = page.tree.topLevelItem(1)
-        self.assertEqual(sensors.child(2).text(2), self.window.i18n.tr("maintenance.time_unknown"))
-        page.details.close()
+        self.assertIn(self.window.i18n.tr('maintenance.received'), sensors.child(2).text(2))
+        self.assertEqual(sensors.child(2).text(1), str(self.controller.state.sensor.gyro_radps))
+        self.assertTrue(page.labels['sensors'][1].isEnabled())
+        self.controller.state.connected = False
+        page.render(self.controller.state)
+        self.assertFalse(page.labels['sensors'][1].isEnabled())
+        page.serial_details_dialog.close()
 
     def test_shared_refresh_preserves_independent_serial_roles(self):
         self.window.set_ports(["COM7", "COM9"])
@@ -277,9 +426,25 @@ class TransferUiTests(unittest.TestCase):
         self.assertEqual(self.window.port_combo.count(), 3)
         self.assertEqual(self.window.debug_port_combo.count(), 3)
         layout = self.window.btn_refresh.parentWidget().layout()
-        self.assertLess(layout.indexOf(self.window.btn_refresh), layout.indexOf(self.window.lbl_port_name))
-        self.assertIn(self.window.i18n.tr("probe.boundary"), self.window.maintenance_page.swd_status.text())
+        self.assertLess(layout.indexOf(self.window.btn_refresh), layout.indexOf(self.window.header_connection_group))
+        self.assertIn(self.window.i18n.tr("probe.boundary"), self.window.probe_status.toolTip())
+        self.assertEqual(self.window.maintenance_page.swd_status.text(), self.window.i18n.tr("swd.detached"))
         self.assertIsNone(self.controller.file_transfer.owner)
+
+    def test_probe_inventory_render_preserves_target_status_in_both_orders(self):
+        page = self.window.maintenance_page
+        manager = self.controller.swd
+        manager.render()
+        target_text = page.swd_status.text()
+        target_tooltip = page.swd_status.toolTip()
+        for status in ("probe.busy", "probe.empty", "probe.failed"):
+            with self.subTest(status=status):
+                self.window.set_probe_status(self.window.i18n.tr(status), "synthetic inventory")
+                self.assertEqual(page.swd_status.text(), target_text)
+                self.assertEqual(page.swd_status.toolTip(), target_tooltip)
+                self.assertIn(self.window.i18n.tr("probe.boundary"), self.window.probe_status.toolTip())
+                manager.render()
+                self.assertEqual(page.swd_status.text(), target_text)
 
     def test_localized_header_separates_open_port_from_firmware_response(self):
         from threading import Event
@@ -292,18 +457,22 @@ class TransferUiTests(unittest.TestCase):
         manager.owner=owner
         try:
             manager._connection_changed(True,'Port open: COM9@230400')
-            self.assertEqual(window.debug_status.text(),'串口已打开；等待固件')
+            self.assertEqual(window.debug_status.text(),'端口已开')
+            self.assertIn('串口已打开；等待固件',window.debug_status.toolTip())
             manager._service_status(False,'LOGFILE unsupported')
             self.assertTrue(window._debug_connected)
-            self.assertEqual(window.debug_status.text(),'串口已打开；等待固件')
+            self.assertEqual(window.debug_status.text(),'端口已开')
             with patch.object(window.maintenance_page,'set_firmware_status'):
                 manager._firmware_status(object(),'valid parsed legacy response')
-                self.assertEqual(window.debug_status.text(),'串口已打开；固件有响应')
+                self.assertEqual(window.debug_status.text(),'已响应')
+                self.assertIn('串口已打开；固件有响应',window.debug_status.toolTip())
                 manager._firmware_status(None,'response timeout')
             self.assertTrue(window._debug_connected)
-            self.assertEqual(window.debug_status.text(),'串口已打开；状态不可用')
+            self.assertEqual(window.debug_status.text(),'待响应')
+            self.assertIn('response timeout',window.debug_status.toolTip())
             window.i18n.set_language(Language.EN_US); window.retranslate_ui()
-            self.assertEqual(window.debug_status.text(),'Port open; status unavailable')
+            self.assertEqual(window.debug_status.text(),'No reply')
+            self.assertIn('Port open; status unavailable',window.debug_status.toolTip())
             manager._connection_changed(False,'Disconnected / status invalidated')
             window.i18n.set_language(Language.ZH_CN); window.retranslate_ui()
             self.assertEqual(window.debug_status.text(),'未连接')
@@ -354,6 +523,7 @@ class TransferUiTests(unittest.TestCase):
             QTest.qWait(50)
             self.assertTrue(self.window.grab().save(str(folder / 'windows_runtime_01_en.png')))
         self.window.btn_refresh_device_logs.click()
+        self.confirm_list_dialog()
         deadline = time.monotonic() + 2
         while page.diagnostic_entries and time.monotonic() < deadline:
             QTest.qWait(10)
@@ -389,7 +559,7 @@ class TransferUiTests(unittest.TestCase):
         for value in ("0", "-1", "2147483648", "115200.0", "１２３"):
             with self.subTest(value=value):
                 self.window.debug_baud_combo.setEditText(value)
-                with patch("ui.file_transfer.QMessageBox.warning") as warning, \
+                with patch.object(self.controller.file_transfer,"_ErrorNotice_Show") as warning, \
                      patch.object(self.controller.file_transfer, "transport_factory") as factory:
                     self.window.btn_debug_connect.click()
                 warning.assert_called_once()
@@ -474,6 +644,7 @@ class TransferUiTests(unittest.TestCase):
         self.window.btn_debug_connect.click()
         self.wait_connected()
         self.window.btn_refresh_device_logs.click()
+        self.confirm_list_dialog()
         QTest.qWait(50)
         self.assertTrue(self.controller.file_transfer.job_busy)
         with patch("ui.file_transfer.QMessageBox.warning"):
@@ -497,22 +668,18 @@ class TransferUiTests(unittest.TestCase):
             folder = Path(evidence)
             folder.mkdir(parents=True, exist_ok=True)
             self.assertTrue(self.window.grab().save(str(folder / "windows_transfer_zh.png")))
-            menu = self.window.btn_export_device.menu()
-            menu.popup(self.window.btn_export_device.mapToGlobal(self.window.btn_export_device.rect().bottomLeft()))
-            QTest.qWait(30)
-            self.assertTrue(menu.grab().save(str(folder / "windows_export_menu.png")))
-            menu.close()
+            self.assertIsNone(self.window.btn_export_device.menu())
+            self.assertTrue(self.window.btn_cut_device.isHidden())
+            self.assertFalse(self.window.action_export_cut.isEnabled())
         self.window.i18n.set_language(Language.EN_US)
         self.window.retranslate_ui()
         self.assertIn("Export", self.window.btn_export_device.text())
         QTest.qWait(40)
         if evidence:
             self.assertTrue(self.window.grab().save(str(folder / "windows_transfer_en.png")))
-            menu = self.window.btn_download_device.menu()
-            menu.popup(self.window.btn_download_device.mapToGlobal(self.window.btn_download_device.rect().bottomLeft()))
-            QTest.qWait(30)
-            self.assertTrue(menu.grab().save(str(folder / "windows_download_menu.png")))
-            menu.close()
+            self.assertIsNone(self.window.btn_download_device.menu())
+            self.assertFalse(self.window.action_export_cut.isEnabled())
+            self.assertTrue(self.window.btn_download_device.grab().save(str(folder / "windows_readonly_tf_entry.png")))
 
     def test_large_progress_and_transport_close_failure_are_reported(self):
         wire = MockTransport()
@@ -591,6 +758,7 @@ class TransferUiTests(unittest.TestCase):
         self.window.btn_debug_connect.click()
         self.wait_connected()
         self.window.btn_refresh_device_logs.click()
+        self.confirm_list_dialog()
         QTest.qWait(30)
         self.assertTrue(self.controller.file_transfer.job_busy)
         self.controller.state.pending_command_name = "START_MISSION"

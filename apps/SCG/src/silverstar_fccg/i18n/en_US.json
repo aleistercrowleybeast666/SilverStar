@@ -952,6 +952,11 @@
   "ground.radio_up": "Move up",
   "ground.radio_down": "Move down",
   "ground.radio_runtime_pending": "Multiple instances are saved as configuration. Ground generation requires the integrated radio runtime.",
+  "installation.origin": "Fixed origin / body X,Y datums",
+  "installation.note": "Enter the fixed structural origin and physical +X/+Y datums, then press Enter. Right-handed existing body axes; +Z points to the nose (not ENU). Changing the primary IMU does not move the origin. XYZ are measured/CAD inputs; static calibration does not determine them. Configuration only: positions are not applied by ESKF15/KF6/SF6/INS. ESKF15 keeps its separate legacy global GNSS arm unchanged.",
+  "installation.position": "Installation XYZ (m)",
+  "installation.position.recorded": "Measured / CAD entered",
+  "installation.position.note": "IMU measurement point / GNSS antenna reference point relative to the fixed structural origin, in body axes. Unchecked means unknown, not zero. Check explicitly to record the displayed values; press Enter to commit each coordinate (6 decimals, +/-1000000 m). Translation is separate from mounting orientation and sensor intrinsic calibration. No runtime compensation is enabled.",
   "device.raw_imu.mount": "Raw IMU nose direction",
   "device.raw_imu.mount.note": "Choose the sensor axis pointing toward the rocket nose. Firmware rotates acceleration and angular rate into the body frame (+Z forward) before calibration. Default +Z preserves the legacy mapping. Verify on hardware.",
   "device.raw_imu.mount.x_positive": "+X toward nose",
@@ -1005,5 +1010,9 @@
   "quality.target.completed": "Automatic check completed; manual/hardware proof follows gate reports",
   "quality.target.failed": "Check failed; see detailed log",
   "quality.target.cancelled": "Cancelled / check not completed",
-  "quality.target.generated_input": "Generated files only: {path}; generate UI draft changes first."
+  "quality.target.generated_input": "Generated files only: {path}; generate UI draft changes first.",
+  "optional_resources.magnetometer": "Magnetometer sampling and calibration resources",
+  "optional_resources.export": "Maintenance TF log export",
+  "optional_resources.note": "Full/Standard only. MAG requires an explicitly supported physical-unit endpoint; magnetic fusion remains subject to release policy. Export requires maintenance and TF logging; disabling export retains ordinary TF recording. Compact/Minimal disable both.",
+  "logging.optional_resources.disabled": "Magnetometer resources are disabled; the recorded choice is retained."
 }

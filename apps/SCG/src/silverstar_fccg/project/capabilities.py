@@ -122,6 +122,7 @@ def _Requirements_Get(
         capability
         for instance in model.device_instances
         for capability in catalog.InstanceComponent_Get(instance).provides
+        if model.build.magnetometer_enabled or not capability.startswith("magnetometer.")
     }
     requirements: list[CapabilityUse] = []
     for manifest in non_device_manifests:
@@ -170,6 +171,8 @@ def _Providers_Get(
         manifest = catalog.InstanceComponent_Get(instance)
         provider = CapabilityProvider(instance.instance_id, instance.plugin)
         for capability in manifest.provides:
+            if model is not None and capability.startswith("magnetometer.") and not model.build.magnetometer_enabled:
+                continue
             if model is not None and capability.startswith("barometer."):
                 from silverstar_fccg.project.feature_tiers import FeatureTier_DescriptorActive
                 if not FeatureTier_DescriptorActive(model, catalog, instance.instance_id, "SYSTEM_DEVICE_CLASS_BAROMETER"):

@@ -233,6 +233,9 @@ SystemAlignment_PreflightQuaternionGet(
 SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemAlignment_Reset(void);
 SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult
 SystemAlignment_CalibrationInvalidate(void);
+/* CAL Start/Reset may quiesce an existing ALIGN lease before claiming CAL.
+ * The ALIGN action/lease checks and safe reset run in the owning module. */
+SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemAlignment_CalibrationYield(void);
 SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemAlignment_PrepareMission(void);
 SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemAlignment_OriginsFreeze(void);
 void SystemAlignment_MissionPreparationAbort(void);

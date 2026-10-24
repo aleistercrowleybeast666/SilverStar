@@ -1,0 +1,41 @@
+--- before/verify.py
++++ after/verify.py
+@@ -46,7 +46,8 @@
+     output.mkdir(parents=True, exist_ok=False)
+     command = [sys.executable, "-B", "-m", "pytest", "-c", str(HERE / "pytest.ini"),
+                "-v", str(HERE / "test_mathematics.py"), str(HERE / "test_isolation.py"),
+-               str(HERE / "test_eskf20.py"), str(HERE / "test_independent_audit.py")]
++               str(HERE / "test_eskf20.py"), str(HERE / "test_independent_audit.py"),
++               str(HERE / "test_inekf15.py"), str(HERE / "test_inekf20.py"), "-raP"]
+     environment = dict(os.environ, PYTHONDONTWRITEBYTECODE="1", PYTEST_DISABLE_PLUGIN_AUTOLOAD="1",
+                        OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1", PYTHONIOENCODING="utf-8")
+     before = Snapshot_Get()
+--- before/test_isolation.py
++++ after/test_isolation.py
+@@ -13,6 +13,10 @@
+ SCG = HERE.parents[1]
+ FORBIDDEN_IDS = ("silverstar.algorithm.estimator.inekf",
+                  "silverstar.algorithm.estimator.iekf",
++                 "silverstar.algorithm.estimator.inekf15",
++                 "silverstar.algorithm.estimator.inekf20",
++                 "silverstar.algorithm.estimator.iekf15",
++                 "silverstar.algorithm.estimator.iekf20",
+                  "silverstar.algorithm.estimator.eskf20")
+ 
+ 
+--- before/README.md
++++ after/README.md
+@@ -11,6 +11,13 @@
+ to describe only the nine-error-state InEKF. Both remain isolated and unavailable
+ to production selection/generation. The runner now verifies both models and their
+ shared catalog isolation; historical run03 covered InEKF only.
++
++The 2026-10-18 extension adds [InEKF15 and InEKF20](INEKF_AUGMENTED_MODEL.md)
++after the [independent audit](INDEPENDENT_AUDIT_20261018.md). These are imperfect,
++bias-augmented invariant references; their complete systems do not inherit the
++bias-free model's strict group-affine/log-linear claim. The audited nine-state
++and ESKF20 implementations/tests remain intact. Their stage results, full
++cross-covariance checks and limitations are in INEKF_AUGMENTED_VALIDATION.md.
+ 
+ The 2026-10-18 independent audit adds boundary and symmetry checks and fixes
+ exact-pole magnetic sensitivity and malformed-input transactions. See

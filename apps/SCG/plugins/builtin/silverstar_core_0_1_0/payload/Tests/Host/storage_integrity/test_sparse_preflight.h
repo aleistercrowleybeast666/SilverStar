@@ -23,6 +23,17 @@ uint8_t ProjectGnssInstance_CountGet(void) { return 1U; }
 uint8_t ProjectBarometerInstance_CountGet(void) { return 1U; }
 uint8_t ProjectMagnetometerInstance_CountGet(void)
 { return s_mag_calibration_test_enabled; }
+SystemDeviceResult ProjectMagnetometerInstance_CapabilitiesGet(
+    uint8_t instance_id, uint32_t *mask)
+{
+    if (mask == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if ((instance_id != 0U) || (s_mag_calibration_test_enabled == 0U))
+    { return SYSTEM_DEVICE_NOT_PRESENT; }
+    /* The persistent-object case supplies physical vectors for host-fitted
+     * correction, independently of a chip-internal calibration command. */
+    *mask = SYSTEM_MAG_CAP_RAW_OUTPUT | SYSTEM_MAG_CAP_PHYSICAL_UNIT;
+    return SYSTEM_DEVICE_OK;
+}
 uint8_t ProjectAttitudeInstance_CountGet(void) { return 1U; }
 uint8_t ProjectPowerInstance_CountGet(void) { return 1U; }
 
@@ -30,7 +41,9 @@ SystemDeviceResult ProjectDeviceInstance_DescriptorGet(
     SystemDeviceClass device_class, uint8_t instance_id,
     SystemDeviceDescriptor *descriptor)
 {
-    if ((descriptor == NULL) || (instance_id >= 1U))
+    if ((descriptor == NULL) || (instance_id >= 1U) ||
+        ((device_class == SYSTEM_DEVICE_CLASS_MAGNETOMETER) &&
+         (s_mag_calibration_test_enabled == 0U)))
     { return SYSTEM_DEVICE_NOT_PRESENT; }
     (void)memset(descriptor, 0, sizeof(*descriptor));
     descriptor->descriptor_id = (uint16_t)(
@@ -38,7 +51,10 @@ SystemDeviceResult ProjectDeviceInstance_DescriptorGet(
     descriptor->physical_device_id = (uint16_t)(
         0x20U + ((uint16_t)device_class * 2U) + instance_id);
     if (device_class == SYSTEM_DEVICE_CLASS_MAGNETOMETER)
-    { descriptor->physical_device_id = 11U; }
+    {
+        descriptor->physical_device_id = 11U;
+        descriptor->flags = SYSTEM_DESCRIPTOR_FLAG_ENABLED;
+    }
     descriptor->device_class = device_class;
     descriptor->instance_id = instance_id;
     return SYSTEM_DEVICE_OK;
@@ -83,7 +99,8 @@ SystemDeviceResult ProjectBarometerInstance_HealthGet(
 SystemDeviceResult ProjectMagnetometerInstance_LatestSampleGet(
     uint8_t instance_id, SystemMagnetometerSample *sample)
 {
-    if ((sample == NULL) || (instance_id >= 1U))
+    if ((sample == NULL) || (instance_id >= 1U) ||
+        (s_mag_calibration_test_enabled == 0U))
     { return SYSTEM_DEVICE_NOT_PRESENT; }
     *sample = s_magnetometer[instance_id];
     return SYSTEM_DEVICE_OK;

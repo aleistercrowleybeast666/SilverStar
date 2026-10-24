@@ -69,7 +69,11 @@ def test_every_sensor_and_radio_switch_normalizes_roundtrip(
     assert model.device_instances == before
     assert loaded.device_instances == before
     assert reconciled.model.DeviceInstance_Get('review1') is None
-    assert (reconciled.model.DeviceInstance_Get('review0') is not None) == (tier != 'minimal' or component_class != 'gnss')
+    allowed = component_class != 'magnetometer' and (tier != 'minimal' or component_class != 'gnss')
+    assert (reconciled.model.DeviceInstance_Get('review0') is not None) == allowed
+    if component_class == 'magnetometer':
+        assert not reconciled.model.build.magnetometer_enabled
+        assert not reconciled.model.build.maintenance_log_export_enabled
     assert not any('at most one' in error for error in CompactErrors_Get(reconciled.model, builtin_catalog))
 
 

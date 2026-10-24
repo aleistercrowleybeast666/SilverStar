@@ -607,9 +607,39 @@ static uint32_t s_eskf_quality_flags;
 
 /* Integrate the actual adjacent sample segments onto two equal physical halves.
  * This preserves nonuniform timestamp spacing without duplicating coning. */
+static float InsTask_AugmentedHalfMean(float first, float middle, float last,
+    uint64_t middle_us, uint64_t end_us, uint8_t half)
+{
+    /* Twice-relative microseconds represent an exact half even for odd durations.
+     * The producer checks the 20 ms domain before this bounded internal helper. */
+    const double values[3] = {(double)first, (double)middle, (double)last};
+    SILVERSTAR_ASSERT((middle_us > 0U) && (end_us > middle_us) && (end_us <= 20000U),
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT(half < 2U, SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    const uint64_t times[3] = {0U, middle_us * 2U, end_us * 2U};
+    const uint64_t begin = (half == 0U) ? 0U : end_us;
+    const uint64_t end = (half == 0U) ? end_us : end_us * 2U;
+    double integral = 0.0;
+    for (uint8_t segment = 0U; segment < 2U; segment++)
+    {
+        uint64_t left = (begin > times[segment]) ? begin : times[segment];
+        uint64_t right = (end < times[segment + 1U]) ? end : times[segment + 1U];
+        if (right > left)
+        {
+            double span = (double)(times[segment + 1U] - times[segment]);
+            double fraction = ((double)(left - times[segment]) + (double)(right - times[segment])) / span;
+            double mean = values[segment] + 0.5 * fraction * (values[segment + 1U] - values[segment]);
+            integral += mean * (double)(right - left);
+        }
+    }
+    return (float)(integral / (double)(end - begin));
+}
+
 static float InsTask_HalfMean(float first, float middle, float last,
     uint64_t middle_us, uint64_t end_us, uint8_t half)
 {
+    if (SYSTEM_BUILD_AUGMENTED_ENABLED != 0U)
+    { return InsTask_AugmentedHalfMean(first, middle, last, middle_us, end_us, half); }
     const float values[3] = {first, middle, last};
     const uint64_t times[3] = {0U, middle_us, end_us};
     uint64_t begin = (half == 0U) ? 0U : end_us / 2U;
@@ -673,6 +703,8 @@ static void InsTask_BodyPairBuildTwo(
     { s_eskf_quality_flags |= SYSTEM_IMU_QUALITY_TIME_DISCONTINUITY; return; }
     middle_us = middle->timestamp_us - first->timestamp_us;
     end_us = last->timestamp_us - first->timestamp_us;
+    if ((SYSTEM_BUILD_AUGMENTED_ENABLED != 0U) && (end_us > 20000U))
+    { s_eskf_quality_flags |= SYSTEM_IMU_QUALITY_TIME_DISCONTINUITY; return; }
     for (uint8_t half = 0U; half < 2U; half++)
     {
         for (uint8_t axis = 0U; axis < 3U; axis++)
@@ -716,9 +748,11 @@ static void InsTask_InertialOutputsPublish(
         SILVERSTAR_ASSERT_MODULE_APP);
     SILVERSTAR_ASSERT_OBJECT(state, InsState, SILVERSTAR_ASSERT_MODULE_APP);
     increment.timestamp_us = state->timestamp_us;
+    if (SYSTEM_BUILD_AUGMENTED_ENABLED != 0U)
+    { SystemNavigationBackend_IntervalStartSet(&increment, state->interval_start_timestamp_us); }
     increment.sequence = ++s_increment_sequence;
     increment.dt_s = state->dt_s;
-    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15)
+    if ((SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15) || ((SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF20) || (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_INEKF15) || (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_INEKF20)))
     {
         SystemNavigationBackend_BodyInputFill(&increment, &s_eskf_gyro_pair[0][0],
             &s_eskf_accel_pair[0][0], s_eskf_quality_flags);
@@ -834,7 +868,7 @@ static void InsTask_Propagate(const InsImuSample *imu_sample)
     { InsTask_InputReject(imu_sample, INS_HEALTH_INVALID_SAMPLE); return; }
     if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
     {
-        if ((SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15) &&
+        if (((SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15) || ((SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF20) || (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_INEKF15) || (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_INEKF20))) &&
             (s_navigation_input.inertial.sample_count ==
              SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT))
         {

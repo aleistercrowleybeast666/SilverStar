@@ -110,23 +110,27 @@ def test_missing_dependency_and_precancel_never_spawn():
     ids=['empty','missing','failed','invalid_json','exit_error','oversized'])
 def test_helper_outcomes_and_fixed_readonly_command(stdout, code, expected):
     process = MagicMock(returncode=code)
-    process.communicate.return_value = stdout, b''
     process.poll.return_value = code
+    def spawn_helper(*args, **kwargs):
+        kwargs['stdout'].write(stdout)
+        kwargs['stderr'].write(b'')
+        return process
     with patch.object(inventory.sys,'platform','win32'), patch.object(inventory.shutil,'which',return_value='powershell.exe'), \
-         patch.object(inventory.subprocess,'Popen',return_value=process) as spawn:
+         patch.object(inventory.subprocess,'Popen',side_effect=spawn_helper) as spawn:
         assert inventory.ProbeInventory_Read(Event()).result == expected
     assert spawn.call_args.args[0][1:4] == ['-NoProfile','-NonInteractive','-ExecutionPolicy']
     assert 'GetDeviceProperties' in inventory._PNP_SCRIPT
     assert 'Present = TRUE' in inventory._PNP_SCRIPT
     assert all(word not in inventory._PNP_SCRIPT for word in ['-MethodName Reset','-MethodName Disable','-MethodName Enable'])
     process.kill.assert_not_called()
+    process.communicate.assert_not_called()
 
 
 @pytest.mark.parametrize('cancelled', [False, True])
 def test_timeout_or_cancel_only_terminates_owned_helper(cancelled):
     event = Event()
     process = MagicMock()
-    process.poll.return_value = 0
+    process.poll.return_value = None
     def spawn(*args, **kwargs):
         if cancelled: event.set()
         return process
@@ -135,4 +139,52 @@ def test_timeout_or_cancel_only_terminates_owned_helper(cancelled):
         result = inventory.ProbeInventory_Read(event,timeout=0)
     assert result.result == (Result.Cancelled if cancelled else Result.Failed)
     process.kill.assert_called_once()
-    process.communicate.assert_called_once()
+    process.wait.assert_called_once_with(timeout=1.0)
+    process.communicate.assert_not_called()
+
+
+def test_unreaped_helper_blocks_another_spawn_until_confirmed_exit(monkeypatch):
+    process = MagicMock()
+    process.poll.return_value = None
+    process.wait.side_effect = inventory.subprocess.TimeoutExpired('owned-helper', 1.0)
+    monkeypatch.setattr(inventory, '_Inventory_PendingProcess', None)
+    monkeypatch.setattr(inventory.sys, 'platform', 'win32')
+    monkeypatch.setattr(inventory.shutil, 'which', lambda _: 'powershell.exe')
+    with patch.object(inventory.subprocess, 'Popen', return_value=process) as spawn:
+        assert inventory.ProbeInventory_Read(Event(), timeout=0).result == Result.Failed
+        assert inventory._Inventory_PendingProcess is process
+        assert inventory.ProbeInventory_Read(Event(), timeout=0).result == Result.Failed
+        assert spawn.call_count == 1
+        assert process.wait.call_count == 1
+        process.poll.return_value = 0
+        inventory.ProbeInventory_Read(Event(), timeout=0)
+        assert spawn.call_count == 2
+        assert inventory._Inventory_PendingProcess is None
+    process.communicate.assert_not_called()
+
+
+@pytest.mark.parametrize('timeout', [float('nan'), float('inf'), -1, None])
+def test_invalid_timeout_cannot_create_an_unbounded_helper(timeout):
+    with patch.object(inventory.sys,'platform','win32'), patch.object(inventory.shutil,'which',return_value='powershell.exe'), \
+         patch.object(inventory.subprocess, 'Popen') as spawn:
+        assert inventory.ProbeInventory_Read(Event(), timeout=timeout).result == Result.Failed
+        spawn.assert_not_called()
+
+
+def test_real_sleeping_helper_times_out_without_hardware(monkeypatch):
+    import sys
+    import time
+    original_spawn = inventory.subprocess.Popen
+    helpers = []
+    def spawn_sleep(*args, **kwargs):
+        process = original_spawn([sys.executable, '-B', '-c', 'import time; time.sleep(60)'], **kwargs)
+        helpers.append(process)
+        return process
+    monkeypatch.setattr(inventory.sys, 'platform', 'win32')
+    monkeypatch.setattr(inventory.shutil, 'which', lambda _: 'powershell.exe')
+    monkeypatch.setattr(inventory.subprocess, 'Popen', spawn_sleep)
+    started = time.monotonic()
+    reply = inventory.ProbeInventory_Read(Event(), timeout=0.1)
+    assert reply.result == Result.Failed and 'timed out' in reply.detail
+    assert time.monotonic() - started < 2.0
+    assert len(helpers) == 1 and helpers[0].poll() is not None

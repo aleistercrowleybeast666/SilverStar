@@ -20,6 +20,7 @@
 #include "system_mission_snapshot_if.h"
 #include "system_mag_calibration_storage_if.h"
 #include "system_mag_calibration.h"
+#include "system_installation_store_if.h"
 #include "system_profile.h"
 #include "system_startup.h"
 #include "system_time.h"
@@ -712,11 +713,6 @@ static void LoggerTask_DisabledProcess(LoggerBusFinalizationState finalization)
         SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     SILVERSTAR_ASSERT(LoggerBus_Count() == 0U,
         SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
-    /* The zero-instance load completes without I/O. Configured magnetometers
-     * retain their real persistent-load/calibration gates. Never save to TF. */
-    if ((ProjectMagnetometerInstance_CountGet() == 0U) &&
-        (SystemMagCalibrationStorage_LoadCompleteGet() == 0U))
-    { SystemMagCalibrationStorage_Service(); }
     if (finalization == LOGGER_BUS_FINALIZATION_DRAINING)
     {
         LoggerBus_FinalizationComplete();
@@ -745,6 +741,22 @@ static uint8_t LoggerTask_SessionUnavailableProcess(
     return (uint8_t)(s_logger.session_active == 0U);
 }
 
+static uint8_t LoggerTask_MaintenanceBootstrapPending(void)
+{
+    const SystemStartupReport *report;
+    if (s_logger.session_active == 0U) { return 1U; }
+    SILVERSTAR_ASSERT(s_logger.header_written == 1U,
+        SILVERSTAR_ASSERT_MODULE_APP, SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
+    if ((s_logger.decoder_profile_queued == 0U) ||
+        (s_logger.bootstrap_config_queued == 0U)) { return 1U; }
+    report = SystemStartup_GetReport();
+    /* Preserve a completed startup report when available. An incomplete report
+     * and unavailable calibration/IMU do not manufacture a mission snapshot
+     * and must not prevent an otherwise safe diagnostic-log close. */
+    return (uint8_t)((report != NULL) && (report->completed != 0U) &&
+        (s_logger.startup_report_written == 0U));
+}
+
 static void LoggerTask_MaintenanceProcess(void)
 {
     LoggerBusResult result;
@@ -763,9 +775,11 @@ static void LoggerTask_MaintenanceProcess(void)
         SystemLifecycle_MaintenanceComplete(1U);
         return;
     }
-    /* Bootstrap includes initial mount/recovery/manifest/descriptor writes.
-     * Its completion and an idle owned request precede producer admission close.
-     * The normal LoggerTask drain, flush, close and final-status path then runs. */
+    /* Header, decoder and initial configuration precede admission close. A
+     * flight-ready mission snapshot is separate from this diagnostic log.
+     * The bus still waits for the owned request; finalization drains all queued
+     * records and requires successful flush/close/final-status before READY. */
+    if (LoggerTask_MaintenanceBootstrapPending() != 0U) { return; }
     result = LoggerBus_MaintenanceDrainBegin();
     if (result == LOGGER_BUS_RESULT_BAD_STATE)
     { SystemLifecycle_MaintenanceComplete(0U); }
@@ -824,6 +838,17 @@ static void LoggerTask_RecordsDrain(uint64_t now_us)
     }
 }
 
+static void LoggerTask_UnavailableWait(void)
+{
+    TickType_t delay = pdMS_TO_TICKS(10U);
+    if ((SystemLifecycle_MaintenanceGet() == SystemMaintenanceState_Ready) &&
+        (SystemLogFile_IsActive() != 0U))
+    { delay = pdMS_TO_TICKS(1U); }
+    /* Always block for at least one tick; do not spin at low tick rates. */
+    if (delay == (TickType_t)0U) { delay = (TickType_t)1U; }
+    vTaskDelay(delay);
+}
+
 void AppTask_Logger(void *argument)
 {
     LoggerBusFinalizationState finalization_state;
@@ -845,11 +870,15 @@ void AppTask_Logger(void *argument)
         LoggerTask_MaintenanceProcess();
         LoggerTask_StatusPublish(now_us);
         SystemLogFile_Process((uint8_t)(SystemLifecycle_MaintenanceGet() == SystemMaintenanceState_Ready));
+        /* Keep maintenance TF persistence alive with logging disabled or a
+         * finalized session. All filesystem operations retain this one owner. */
+        SystemMagCalibrationStorage_Service();
+        SystemInstallationStore_Service();
         finalization_state = LoggerBus_FinalizationProcess(now_us);
         if (SystemLifecycle_MaintenanceGet() == SystemMaintenanceState_Failed)
         { vTaskDelay(pdMS_TO_TICKS(10U)); continue; }
         if (LoggerTask_SessionUnavailableProcess(now_us, finalization_state) != 0U)
-        { vTaskDelay(pdMS_TO_TICKS(10U)); continue; }
+        { LoggerTask_UnavailableWait(); continue; }
 
         /* The callee's record scratch expires before snapshot/finalization I/O. */
         LoggerTask_RecordsDrain(now_us);
@@ -862,7 +891,6 @@ void AppTask_Logger(void *argument)
             continue;
         }
         LoggerTask_PeriodicFlushTry(now_us);
-        SystemMagCalibrationStorage_Service();
         if (LoggerBus_StartupStateGet() == LOGGER_STREAMING_READY)
         { (void)LoggerTask_SnapshotMaintain(); }
         LoggerTask_BootstrapProcess(now_us);

@@ -31,8 +31,11 @@ static void UartConsoleAdapter_HealthRefresh(void)
     health.received_byte_count = diagnostics.rx_bytes;
     health.transmitted_byte_count = diagnostics.tx_bytes;
     health.receive_overrun_count = diagnostics.rx_discarded_bytes;
-    health.transmit_error_count = diagnostics.tx_discarded_bytes +
-                                  diagnostics.transport_error_count;
+    health.transmit_error_count =
+        (diagnostics.tx_discarded_bytes >
+         (UINT32_MAX - diagnostics.transport_error_count)) ?
+        UINT32_MAX : diagnostics.tx_discarded_bytes +
+                     diagnostics.transport_error_count;
     health.online = (uint8_t)((s_started != 0U) &&
                               (diagnostics.rx_active != 0U));
     health.healthy = (uint8_t)((health.online != 0U) &&

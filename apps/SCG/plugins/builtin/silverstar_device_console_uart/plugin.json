@@ -21,8 +21,9 @@
         "constraints": {
           "uart": {
             "baud": {
-              "exact": 230400,
-              "configurable": false
+              "minimum": 1200,
+              "maximum": 2000000,
+              "configurable": true
             },
             "word_length": 8,
             "parity": "none",

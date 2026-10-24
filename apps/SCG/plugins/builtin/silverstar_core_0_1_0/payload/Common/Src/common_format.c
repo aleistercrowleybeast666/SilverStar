@@ -431,7 +431,9 @@ static size_t CommonFormat_FloatCreate(char *text,
                                        char conversion)
 {
     const bool uppercase = ((conversion == 'F') || (conversion == 'G'));
-    const bool negative = signbit(value) != 0;
+    /* GCC is the declared host/ARM toolchain. Its type-correct builtin avoids
+     * MinGW's float-only signbit macro conversion and preserves negative zero. */
+    const bool negative = __builtin_signbit(value) != 0;
     size_t length = 0U;
 
     SILVERSTAR_ASSERT_OBJECT(text, char, SILVERSTAR_ASSERT_MODULE_COMMON);

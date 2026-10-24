@@ -1,0 +1,42 @@
+{
+  "owner": "navigation_0_1_3 independent mathematical audit",
+  "purpose": "small pre-fix source snapshots for auditable independent counterexamples; retained evidence, no cleanup",
+  "files": [
+    {
+      "original": "apps/SCG/experiments/navigation_0_1_3/lie_group.py",
+      "retained_path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/baseline/lie_group.py",
+      "sha256": "183232182a6983d80f940ba37fd0e001faf915cb486696d9ebd244f6d6f96024",
+      "bytes": 4215
+    },
+    {
+      "original": "apps/SCG/experiments/navigation_0_1_3/inekf_reference.py",
+      "retained_path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/baseline/inekf_reference.py",
+      "sha256": "09545a184f5026e0d7bfbc7599bec1426c5f1db97eec074bde4f64a568d7eb57",
+      "bytes": 8643
+    },
+    {
+      "original": "apps/SCG/experiments/navigation_0_1_3/eskf20_reference.py",
+      "retained_path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/baseline/eskf20_reference.py",
+      "sha256": "cd2f08506036303ebf8ae8757419a347e591831c741001633364cd626fa363a5",
+      "bytes": 13311
+    },
+    {
+      "original": "apps/SCG/experiments/navigation_0_1_3/verify.py",
+      "retained_path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/baseline/verify.py",
+      "sha256": "9b268c649f13a718c455d7ced1a84185f0a9e908d8ec3b7ab37c315f82698b9c",
+      "bytes": 4361
+    },
+    {
+      "original": "apps/SCG/experiments/navigation_0_1_3/README.md",
+      "retained_path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/baseline/README.md",
+      "sha256": "16f79621839db32cf294194fb684e9c87bb2a3a5025efc089abd00476938a69c",
+      "bytes": 8629
+    },
+    {
+      "original": "apps/SCG/experiments/navigation_0_1_3/ESKF20_MODEL.md",
+      "retained_path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/baseline/ESKF20_MODEL.md",
+      "sha256": "2f2e409c2d22b2caab3bc358f56897455cdf7528ec1c7369651124b8f5706333",
+      "bytes": 9047
+    }
+  ]
+}

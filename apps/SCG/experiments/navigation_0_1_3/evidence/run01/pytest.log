@@ -1,0 +1,1387 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe
+rootdir: D:\python_software\SilverStar\apps\SCG\experiments\navigation_0_1_3
+configfile: pytest.ini
+collecting ... collected 51 items
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[0.0] FAILED [  1%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[1e-10] FAILED [  3%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[1e-05] FAILED [  5%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[0.3] FAILED [  7%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[2.0] FAILED [  9%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[3.141582653589793] FAILED [ 11%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_principal_log_rejects_pi_and_group_rejects_reflection PASSED [ 13%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_left_invariance_and_adjoint_conjugation FAILED [ 15%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_affine_vector_field_identity FAILED [ 17%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_nominal_flow_against_independent_ode_integration FAILED [ 19%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_discrete_error_finite_difference_and_large_error_log_linearity FAILED [ 21%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_observation_jacobian_independent_finite_difference[position] FAILED [ 23%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_observation_jacobian_independent_finite_difference[velocity] FAILED [ 25%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_body_noise_map_finite_difference FAILED [ 27%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_reset_jacobian_and_full_cross_covariance_finite_difference FAILED [ 29%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_discrete_noise_integral_against_quadrature_and_step_composition PASSED [ 31%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_world_frame_equivariance_of_prediction_and_update FAILED [ 33%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_analytic_turning_acceleration_and_synthetic_correction PASSED [ 35%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[angular_rate-value0] FAILED [ 37%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[angular_rate-value1] FAILED [ 39%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[specific_force-value2] FAILED [ 41%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[gravity-value3] FAILED [ 43%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[density-value4] FAILED [ 45%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[density-value5] FAILED [ 47%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[dt-0] FAILED [ 49%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[dt--0.01] FAILED [ 50%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[dt-0.02001] FAILED [ 52%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[dt-nan] FAILED [ 54%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[observation-value0] FAILED [ 56%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[observation-value1] FAILED [ 58%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[covariance_world-value2] FAILED [ 60%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[covariance_world-value3] FAILED [ 62%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[covariance_world-value4] FAILED [ 64%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[time_s--0.01] FAILED [ 66%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[time_s-0.01] FAILED [ 68%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[nis_threshold-0] FAILED [ 70%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[nis_threshold-inf] FAILED [ 72%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_gating_unsupported_and_numeric_failure_do_not_publish FAILED [ 74%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_invalid_initial_covariance_rejected[covariance0] PASSED [ 76%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_invalid_initial_covariance_rejected[covariance1] PASSED [ 78%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_invalid_initial_covariance_rejected[covariance2] PASSED [ 80%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_invalid_initial_covariance_rejected[covariance3] PASSED [ 82%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_state_copies_arrays_and_zero_noise_preserves_spd PASSED [ 84%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_experiment_is_outside_discovery_and_has_no_registration PASSED [ 86%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_manually_entered_id_is_rejected_by_catalog_validation_and_graph[silverstar.algorithm.estimator.inekf] PASSED [ 88%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_manually_entered_id_is_rejected_by_catalog_validation_and_graph[silverstar.algorithm.estimator.iekf] PASSED [ 90%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_manually_entered_id_is_rejected_by_catalog_validation_and_graph[silverstar.algorithm.estimator.eskf20] PASSED [ 92%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_existing_source_graphs_have_no_experimental_sources[None] PASSED [ 94%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_existing_source_graphs_have_no_experimental_sources[sf6] PASSED [ 96%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_existing_source_graphs_have_no_experimental_sources[kf6] PASSED [ 98%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_existing_source_graphs_have_no_experimental_sources[eskf15] PASSED [100%]
+
+================================== FAILURES ===================================
+____ test_group_maps_against_rodrigues_series_and_general_matrix_log[0.0] _____
+
+angle = 0.0
+
+    @pytest.mark.parametrize("angle", [0., 1e-10, 1e-5, .3, 2., np.pi - 1e-5])
+    def test_group_maps_against_rodrigues_series_and_general_matrix_log(angle):
+        phi = np.array([1., 2., -1.]) * angle / np.sqrt(6)
+        vector = np.r_[phi, [.3, -2, 1], [4, .2, -.6]]
+>       group = Lie_Exp(vector)
+                ^^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 1.00000000e+00,  0.00000000e+00,  0.00000000e+00,
+         3.00000000e-01,  4.00000000e+00],
+       [ 0.00000...5.67508544e-18],
+       [ 0.00000000e+00,  0.00000000e+00,  0.00000000e+00,
+         0.00000000e+00,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+___ test_group_maps_against_rodrigues_series_and_general_matrix_log[1e-10] ____
+
+angle = 1e-10
+
+    @pytest.mark.parametrize("angle", [0., 1e-10, 1e-5, .3, 2., np.pi - 1e-5])
+    def test_group_maps_against_rodrigues_series_and_general_matrix_log(angle):
+        phi = np.array([1., 2., -1.]) * angle / np.sqrt(6)
+        vector = np.r_[phi, [.3, -2, 1], [4, .2, -.6]]
+>       group = Lie_Exp(vector)
+                ^^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 1.00000000e+00,  4.08248290e-11,  8.16496581e-11,
+         3.00000000e-01,  4.00000000e+00],
+       [-4.08248...3.19505028e-17],
+       [-4.05967134e-28, -3.76930748e-27, -6.19006046e-27,
+        -2.53714551e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+___ test_group_maps_against_rodrigues_series_and_general_matrix_log[1e-05] ____
+
+angle = 1e-05
+
+    @pytest.mark.parametrize("angle", [0., 1e-10, 1e-5, .3, 2., np.pi - 1e-5])
+    def test_group_maps_against_rodrigues_series_and_general_matrix_log(angle):
+        phi = np.array([1., 2., -1.]) * angle / np.sqrt(6)
+        vector = np.r_[phi, [.3, -2, 1], [4, .2, -.6]]
+>       group = Lie_Exp(vector)
+                ^^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 1.00000000e+00,  4.08249957e-06,  8.16495748e-06,
+         3.00000000e-01,  3.99999796e+00],
+       [-4.08246...7.97314340e-18],
+       [ 8.21612996e-23,  2.08938586e-22, -3.24581379e-22,
+         5.34158234e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+____ test_group_maps_against_rodrigues_series_and_general_matrix_log[0.3] _____
+
+angle = 0.3
+
+    @pytest.mark.parametrize("angle", [0., 1e-10, 1e-5, .3, 2., np.pi - 1e-5])
+    def test_group_maps_against_rodrigues_series_and_general_matrix_log(angle):
+        phi = np.array([1., 2., -1.]) * angle / np.sqrt(6)
+        vector = np.r_[phi, [.3, -2, 1], [4, .2, -.6]]
+>       group = Lie_Exp(vector)
+                ^^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.62780408e-01,  1.35533456e-01,  2.33847320e-01,
+         2.83822968e-01,  3.89193395e+00],
+       [-1.05757...0.00000000e+00],
+       [ 2.78377631e-18, -1.35115567e-17, -1.96049606e-17,
+        -1.32964000e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+____ test_group_maps_against_rodrigues_series_and_general_matrix_log[2.0] _____
+
+angle = 2.0
+
+    @pytest.mark.parametrize("angle", [0., 1e-10, 1e-5, .3, 2., np.pi - 1e-5])
+    def test_group_maps_against_rodrigues_series_and_general_matrix_log(angle):
+        phi = np.array([1., 2., -1.]) * angle / np.sqrt(6)
+        vector = np.r_[phi, [.3, -2, 1], [4, .2, -.6]]
+>       group = Lie_Exp(vector)
+                ^^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[-1.80122364e-01,  8.43268066e-01,  5.06413767e-01,
+        -2.90797227e-01,  1.98398450e+00],
+       [ 1.00829...0.00000000e+00],
+       [-1.80187633e-18, -5.77177898e-18,  2.83654314e-17,
+         5.78747604e-18,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+_ test_group_maps_against_rodrigues_series_and_general_matrix_log[3.141582653589793] _
+
+angle = 3.141582653589793
+
+    @pytest.mark.parametrize("angle", [0., 1e-10, 1e-5, .3, 2., np.pi - 1e-5])
+    def test_group_maps_against_rodrigues_series_and_general_matrix_log(angle):
+        phi = np.array([1., 2., -1.]) * angle / np.sqrt(6)
+        vector = np.r_[phi, [.3, -2, 1], [4, .2, -.6]]
+>       group = Lie_Exp(vector)
+                ^^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[-6.66666667e-01,  6.66670749e-01, -3.33325168e-01,
+        -7.83329885e-01,  5.73443652e-01],
+       [ 6.66662...9.50368441e-17],
+       [-2.75375034e-17,  4.14624999e-17, -1.04847719e-16,
+         4.11103268e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+________________ test_left_invariance_and_adjoint_conjugation _________________
+
+    def test_left_invariance_and_adjoint_conjugation():
+>       state = State_Create().group
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+___________________ test_group_affine_vector_field_identity ___________________
+
+    def test_group_affine_vector_field_identity():
+>       first, second = State_Create().group, Lie_Exp(np.arange(9) / 17)
+                        ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+____________ test_nominal_flow_against_independent_ode_integration ____________
+
+    def test_nominal_flow_against_independent_ode_integration():
+>       initial = State_Create().group
+                  ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+_____ test_discrete_error_finite_difference_and_large_error_log_linearity _____
+
+    def test_discrete_error_finite_difference_and_large_error_log_linearity():
+>       initial = State_Create().group
+                  ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+______ test_observation_jacobian_independent_finite_difference[position] ______
+
+kind = 'position'
+
+    @pytest.mark.parametrize("kind", ["position", "velocity"])
+    def test_observation_jacobian_independent_finite_difference(kind):
+>       truth = State_Create().group
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+______ test_observation_jacobian_independent_finite_difference[velocity] ______
+
+kind = 'velocity'
+
+    @pytest.mark.parametrize("kind", ["position", "velocity"])
+    def test_observation_jacobian_independent_finite_difference(kind):
+>       truth = State_Create().group
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+____________________ test_body_noise_map_finite_difference ____________________
+
+    def test_body_noise_map_finite_difference():
+>       truth = State_Create().group
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+_______ test_reset_jacobian_and_full_cross_covariance_finite_difference _______
+
+    def test_reset_jacobian_and_full_cross_covariance_finite_difference():
+        delta = np.array([.2, -.15, .08, .3, -.5, .1, 2., -.4, .2])
+        reset_map = lambda e: Lie_Log(Lie_Exp(delta + e) @ Lie_Exp(-delta))
+>       numerical = Difference_Columns(reset_map, 9)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:30: in Difference_Columns
+    return np.column_stack([(function(e) - function(-e)) / (2 * step) for e in basis])
+                             ^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:134: in <lambda>
+    reset_map = lambda e: Lie_Log(Lie_Exp(delta + e) @ Lie_Exp(-delta))
+                                  ^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.85632777e-01, -9.39986343e-02, -1.40329203e-01,
+         3.13745528e-01,  1.99391870e+00],
+       [ 6.41703...0.00000000e+00],
+       [-6.53245843e-19, -5.74192603e-18, -8.63505290e-18,
+         5.78655372e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+___________ test_world_frame_equivariance_of_prediction_and_update ____________
+
+    def test_world_frame_equivariance_of_prediction_and_update():
+>       initial = State_Create()
+                  ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:159: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+_______ test_predict_invalid_inputs_preserve_state[angular_rate-value0] _______
+
+field = 'angular_rate', value = [nan, 0, 0]
+
+    @pytest.mark.parametrize("field,value", [
+        ("angular_rate", [np.nan, 0, 0]), ("angular_rate", [0, 0]),
+        ("specific_force", [0, 0, np.inf]), ("gravity", [0, 0, complex(1, 2)]),
+        ("density", [-1]*6), ("density", [np.inf]*6),
+        ("dt", 0), ("dt", -.01), ("dt", .02001), ("dt", np.nan)])
+    def test_predict_invalid_inputs_preserve_state(field, value):
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+_______ test_predict_invalid_inputs_preserve_state[angular_rate-value1] _______
+
+field = 'angular_rate', value = [0, 0]
+
+    @pytest.mark.parametrize("field,value", [
+        ("angular_rate", [np.nan, 0, 0]), ("angular_rate", [0, 0]),
+        ("specific_force", [0, 0, np.inf]), ("gravity", [0, 0, complex(1, 2)]),
+        ("density", [-1]*6), ("density", [np.inf]*6),
+        ("dt", 0), ("dt", -.01), ("dt", .02001), ("dt", np.nan)])
+    def test_predict_invalid_inputs_preserve_state(field, value):
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+______ test_predict_invalid_inputs_preserve_state[specific_force-value2] ______
+
+field = 'specific_force', value = [0, 0, inf]
+
+    @pytest.mark.parametrize("field,value", [
+        ("angular_rate", [np.nan, 0, 0]), ("angular_rate", [0, 0]),
+        ("specific_force", [0, 0, np.inf]), ("gravity", [0, 0, complex(1, 2)]),
+        ("density", [-1]*6), ("density", [np.inf]*6),
+        ("dt", 0), ("dt", -.01), ("dt", .02001), ("dt", np.nan)])
+    def test_predict_invalid_inputs_preserve_state(field, value):
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+_________ test_predict_invalid_inputs_preserve_state[gravity-value3] __________
+
+field = 'gravity', value = [0, 0, (1+2j)]
+
+    @pytest.mark.parametrize("field,value", [
+        ("angular_rate", [np.nan, 0, 0]), ("angular_rate", [0, 0]),
+        ("specific_force", [0, 0, np.inf]), ("gravity", [0, 0, complex(1, 2)]),
+        ("density", [-1]*6), ("density", [np.inf]*6),
+        ("dt", 0), ("dt", -.01), ("dt", .02001), ("dt", np.nan)])
+    def test_predict_invalid_inputs_preserve_state(field, value):
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+_________ test_predict_invalid_inputs_preserve_state[density-value4] __________
+
+field = 'density', value = [-1, -1, -1, -1, -1, -1]
+
+    @pytest.mark.parametrize("field,value", [
+        ("angular_rate", [np.nan, 0, 0]), ("angular_rate", [0, 0]),
+        ("specific_force", [0, 0, np.inf]), ("gravity", [0, 0, complex(1, 2)]),
+        ("density", [-1]*6), ("density", [np.inf]*6),
+        ("dt", 0), ("dt", -.01), ("dt", .02001), ("dt", np.nan)])
+    def test_predict_invalid_inputs_preserve_state(field, value):
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+_________ test_predict_invalid_inputs_preserve_state[density-value5] __________
+
+field = 'density', value = [inf, inf, inf, inf, inf, inf]
+
+    @pytest.mark.parametrize("field,value", [
+        ("angular_rate", [np.nan, 0, 0]), ("angular_rate", [0, 0]),
+        ("specific_force", [0, 0, np.inf]), ("gravity", [0, 0, complex(1, 2)]),
+        ("density", [-1]*6), ("density", [np.inf]*6),
+        ("dt", 0), ("dt", -.01), ("dt", .02001), ("dt", np.nan)])
+    def test_predict_invalid_inputs_preserve_state(field, value):
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+______________ test_predict_invalid_inputs_preserve_state[dt-0] _______________
+
+field = 'dt', value = 0
+
+    @pytest.mark.parametrize("field,value", [
+        ("angular_rate", [np.nan, 0, 0]), ("angular_rate", [0, 0]),
+        ("specific_force", [0, 0, np.inf]), ("gravity", [0, 0, complex(1, 2)]),
+        ("density", [-1]*6), ("density", [np.inf]*6),
+        ("dt", 0), ("dt", -.01), ("dt", .02001), ("dt", np.nan)])
+    def test_predict_invalid_inputs_preserve_state(field, value):
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+____________ test_predict_invalid_inputs_preserve_state[dt--0.01] _____________
+
+field = 'dt', value = -0.01
+
+    @pytest.mark.parametrize("field,value", [
+        ("angular_rate", [np.nan, 0, 0]), ("angular_rate", [0, 0]),
+        ("specific_force", [0, 0, np.inf]), ("gravity", [0, 0, complex(1, 2)]),
+        ("density", [-1]*6), ("density", [np.inf]*6),
+        ("dt", 0), ("dt", -.01), ("dt", .02001), ("dt", np.nan)])
+    def test_predict_invalid_inputs_preserve_state(field, value):
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+___________ test_predict_invalid_inputs_preserve_state[dt-0.02001] ____________
+
+field = 'dt', value = 0.02001
+
+    @pytest.mark.parametrize("field,value", [
+        ("angular_rate", [np.nan, 0, 0]), ("angular_rate", [0, 0]),
+        ("specific_force", [0, 0, np.inf]), ("gravity", [0, 0, complex(1, 2)]),
+        ("density", [-1]*6), ("density", [np.inf]*6),
+        ("dt", 0), ("dt", -.01), ("dt", .02001), ("dt", np.nan)])
+    def test_predict_invalid_inputs_preserve_state(field, value):
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+_____________ test_predict_invalid_inputs_preserve_state[dt-nan] ______________
+
+field = 'dt', value = nan
+
+    @pytest.mark.parametrize("field,value", [
+        ("angular_rate", [np.nan, 0, 0]), ("angular_rate", [0, 0]),
+        ("specific_force", [0, 0, np.inf]), ("gravity", [0, 0, complex(1, 2)]),
+        ("density", [-1]*6), ("density", [np.inf]*6),
+        ("dt", 0), ("dt", -.01), ("dt", .02001), ("dt", np.nan)])
+    def test_predict_invalid_inputs_preserve_state(field, value):
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:213: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+________ test_update_invalid_inputs_preserve_state[observation-value0] ________
+
+field = 'observation', value = [nan, 0, 0]
+
+    @pytest.mark.parametrize("field,value", [
+        ("observation", [np.nan, 0, 0]), ("observation", [1, 2]),
+        ("covariance_world", np.zeros((3, 3))), ("covariance_world", -np.eye(3)),
+        ("covariance_world", [[1, .1, 0], [0, 1, 0], [0, 0, 1]]),
+        ("time_s", -.01), ("time_s", .01), ("nis_threshold", 0),
+        ("nis_threshold", np.inf)])
+    def test_update_invalid_inputs_preserve_state(field, value):
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:229: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+________ test_update_invalid_inputs_preserve_state[observation-value1] ________
+
+field = 'observation', value = [1, 2]
+
+    @pytest.mark.parametrize("field,value", [
+        ("observation", [np.nan, 0, 0]), ("observation", [1, 2]),
+        ("covariance_world", np.zeros((3, 3))), ("covariance_world", -np.eye(3)),
+        ("covariance_world", [[1, .1, 0], [0, 1, 0], [0, 0, 1]]),
+        ("time_s", -.01), ("time_s", .01), ("nis_threshold", 0),
+        ("nis_threshold", np.inf)])
+    def test_update_invalid_inputs_preserve_state(field, value):
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:229: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+_____ test_update_invalid_inputs_preserve_state[covariance_world-value2] ______
+
+field = 'covariance_world'
+value = array([[0., 0., 0.],
+       [0., 0., 0.],
+       [0., 0., 0.]])
+
+    @pytest.mark.parametrize("field,value", [
+        ("observation", [np.nan, 0, 0]), ("observation", [1, 2]),
+        ("covariance_world", np.zeros((3, 3))), ("covariance_world", -np.eye(3)),
+        ("covariance_world", [[1, .1, 0], [0, 1, 0], [0, 0, 1]]),
+        ("time_s", -.01), ("time_s", .01), ("nis_threshold", 0),
+        ("nis_threshold", np.inf)])
+    def test_update_invalid_inputs_preserve_state(field, value):
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:229: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+_____ test_update_invalid_inputs_preserve_state[covariance_world-value3] ______
+
+field = 'covariance_world'
+value = array([[-1., -0., -0.],
+       [-0., -1., -0.],
+       [-0., -0., -1.]])
+
+    @pytest.mark.parametrize("field,value", [
+        ("observation", [np.nan, 0, 0]), ("observation", [1, 2]),
+        ("covariance_world", np.zeros((3, 3))), ("covariance_world", -np.eye(3)),
+        ("covariance_world", [[1, .1, 0], [0, 1, 0], [0, 0, 1]]),
+        ("time_s", -.01), ("time_s", .01), ("nis_threshold", 0),
+        ("nis_threshold", np.inf)])
+    def test_update_invalid_inputs_preserve_state(field, value):
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:229: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+_____ test_update_invalid_inputs_preserve_state[covariance_world-value4] ______
+
+field = 'covariance_world', value = [[1, 0.1, 0], [0, 1, 0], [0, 0, 1]]
+
+    @pytest.mark.parametrize("field,value", [
+        ("observation", [np.nan, 0, 0]), ("observation", [1, 2]),
+        ("covariance_world", np.zeros((3, 3))), ("covariance_world", -np.eye(3)),
+        ("covariance_world", [[1, .1, 0], [0, 1, 0], [0, 0, 1]]),
+        ("time_s", -.01), ("time_s", .01), ("nis_threshold", 0),
+        ("nis_threshold", np.inf)])
+    def test_update_invalid_inputs_preserve_state(field, value):
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:229: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+___________ test_update_invalid_inputs_preserve_state[time_s--0.01] ___________
+
+field = 'time_s', value = -0.01
+
+    @pytest.mark.parametrize("field,value", [
+        ("observation", [np.nan, 0, 0]), ("observation", [1, 2]),
+        ("covariance_world", np.zeros((3, 3))), ("covariance_world", -np.eye(3)),
+        ("covariance_world", [[1, .1, 0], [0, 1, 0], [0, 0, 1]]),
+        ("time_s", -.01), ("time_s", .01), ("nis_threshold", 0),
+        ("nis_threshold", np.inf)])
+    def test_update_invalid_inputs_preserve_state(field, value):
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:229: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+___________ test_update_invalid_inputs_preserve_state[time_s-0.01] ____________
+
+field = 'time_s', value = 0.01
+
+    @pytest.mark.parametrize("field,value", [
+        ("observation", [np.nan, 0, 0]), ("observation", [1, 2]),
+        ("covariance_world", np.zeros((3, 3))), ("covariance_world", -np.eye(3)),
+        ("covariance_world", [[1, .1, 0], [0, 1, 0], [0, 0, 1]]),
+        ("time_s", -.01), ("time_s", .01), ("nis_threshold", 0),
+        ("nis_threshold", np.inf)])
+    def test_update_invalid_inputs_preserve_state(field, value):
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:229: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+_________ test_update_invalid_inputs_preserve_state[nis_threshold-0] __________
+
+field = 'nis_threshold', value = 0
+
+    @pytest.mark.parametrize("field,value", [
+        ("observation", [np.nan, 0, 0]), ("observation", [1, 2]),
+        ("covariance_world", np.zeros((3, 3))), ("covariance_world", -np.eye(3)),
+        ("covariance_world", [[1, .1, 0], [0, 1, 0], [0, 0, 1]]),
+        ("time_s", -.01), ("time_s", .01), ("nis_threshold", 0),
+        ("nis_threshold", np.inf)])
+    def test_update_invalid_inputs_preserve_state(field, value):
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:229: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+________ test_update_invalid_inputs_preserve_state[nis_threshold-inf] _________
+
+field = 'nis_threshold', value = inf
+
+    @pytest.mark.parametrize("field,value", [
+        ("observation", [np.nan, 0, 0]), ("observation", [1, 2]),
+        ("covariance_world", np.zeros((3, 3))), ("covariance_world", -np.eye(3)),
+        ("covariance_world", [[1, .1, 0], [0, 1, 0], [0, 0, 1]]),
+        ("time_s", -.01), ("time_s", .01), ("nis_threshold", 0),
+        ("nis_threshold", np.inf)])
+    def test_update_invalid_inputs_preserve_state(field, value):
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:229: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+_________ test_gating_unsupported_and_numeric_failure_do_not_publish __________
+
+    def test_gating_unsupported_and_numeric_failure_do_not_publish():
+>       state = State_Create()
+                ^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:238: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py:24: in State_Create
+    return NavigationState(Lie_Exp(np.array([.3, -.2, .1, 1, 2, -.5, 5, -2, 3.])),
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:56: in Lie_Exp
+    return Group_Validate(expm(Lie_Hat(value)))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = array([[ 9.75290309e-01, -1.27334575e-01, -1.80540077e-01,
+         9.19962400e-01,  4.79570232e+00],
+       [ 6.80313...7.74451444e-17],
+       [-2.63141766e-18, -1.25586438e-17, -1.00138042e-17,
+        -1.77693645e-17,  1.00000000e+00]])
+
+    def Group_Validate(value):
+        group = Array_Validate(value, (5, 5))
+        rotation = group[:3, :3]
+        if (not np.array_equal(group[3:], np.eye(5)[3:]) or
+                not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+                not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+>           raise ValueError("not_se23")
+E           ValueError: not_se23
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:34: ValueError
+=========================== short test summary info ===========================
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[0.0]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[1e-10]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[1e-05]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[0.3]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[2.0]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[3.141582653589793]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_left_invariance_and_adjoint_conjugation
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_affine_vector_field_identity
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_nominal_flow_against_independent_ode_integration
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_discrete_error_finite_difference_and_large_error_log_linearity
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_observation_jacobian_independent_finite_difference[position]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_observation_jacobian_independent_finite_difference[velocity]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_body_noise_map_finite_difference
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_reset_jacobian_and_full_cross_covariance_finite_difference
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_world_frame_equivariance_of_prediction_and_update
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[angular_rate-value0]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[angular_rate-value1]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[specific_force-value2]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[gravity-value3]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[density-value4]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[density-value5]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[dt-0]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[dt--0.01]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[dt-0.02001]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[dt-nan]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[observation-value0]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[observation-value1]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[covariance_world-value2]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[covariance_world-value3]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[covariance_world-value4]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[time_s--0.01]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[time_s-0.01]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[nis_threshold-0]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[nis_threshold-inf]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_gating_unsupported_and_numeric_failure_do_not_publish
+======================= 35 failed, 16 passed in 11.95s ========================

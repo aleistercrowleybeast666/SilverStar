@@ -1,0 +1,84 @@
+{
+  "owner": "navigation_0_1_3 independent augmented-model audit",
+  "purpose": "retained independent mathematical review and fresh unchanged full-suite execution",
+  "findings": "No substantive implementation defect found; no existing source/test/document edits",
+  "focused_result": "five targeted checks PASS",
+  "full_result": "250 passed, zero failed/skipped; 13.77 s",
+  "existing_inputs_unchanged": true,
+  "python_sources_match_incoming_250_pass_revision": true,
+  "historical_artifact_hashes_verified": [
+    "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_final/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_final/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_post01/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_post01/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_pre/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_pre/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_pre02/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_pre02/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/eskf20_run01/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/eskf20_run01/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/eskf20_run02/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/eskf20_run02/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/inekf15_20261018_run01/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/inekf15_20261018_run01/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/inekf20_20261018_run01/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/inekf20_20261018_run01/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/run01/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/run01/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/run02/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/run02/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/run03/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/run03/run.json"
+  ],
+  "retained_evidence": [
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/augmented_audit_20261018_full/inventory.json",
+      "sha256": "a76e4c3adcf2ec3d3c781debecb44bdc9f7415e63a55f3ecfe9fba86294ff0d0",
+      "bytes": 685
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/augmented_audit_20261018_full/pytest.log",
+      "sha256": "72b27de55be6269ed7b51a926f4c190d1a7ed2bab443aaa747a10c7e4a19d139",
+      "bytes": 37357
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/augmented_audit_20261018_full/run.json",
+      "sha256": "f6853dca6dbefb18db89c05f77351cf46b6d998880fc779bfb11db9a661bdf24",
+      "bytes": 82046
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/augmented_audit_20261018_v1/check_independent.py",
+      "sha256": "dc174ab932a4993a3091778ade66e6114f4d6c5747de088cda88122667eefa7a",
+      "bytes": 10249
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/augmented_audit_20261018_v1/finalize_inventory.py",
+      "sha256": "cee791dc2b61d01004c1378b1905b88335b5dcdb6e60305e7ddae1ba5954e664",
+      "bytes": 3000
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/augmented_audit_20261018_v1/independent.log",
+      "sha256": "6d2c190cd02a7a67edafe4ea227ca5a2e1761777598161c01292edf3d7cbd015",
+      "bytes": 563
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/augmented_audit_20261018_v1/independent_run.json",
+      "sha256": "28d31d52f3fa1adeb8c6ebe355b52a98d893c46bd63a271922bd93b737d9964d",
+      "bytes": 8035
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/augmented_audit_20261018_v1/REVIEW.md",
+      "sha256": "37d717499340b1875a7885604ee14b2513aedf064e1f0a7cc1bb959ff6744311",
+      "bytes": 8642
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/augmented_audit_20261018_v1/run_audit.py",
+      "sha256": "ab6b83a4bc9c0d29017d95a80a8771be03a06c89ba8a1c30492ff9311281e201",
+      "bytes": 2238
+    }
+  ],
+  "new_evidence_bytes_excluding_this_inventory": 152815,
+  "report_timing": "REVIEW.md and this final inventory were written after both checks; executed hashes verified",
+  "cleanup": "None. Retained evidence; no deletion authorization.",
+  "self_hash": "omitted to avoid self-reference"
+}

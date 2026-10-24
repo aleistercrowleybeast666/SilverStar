@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="510" viewBox="0 0 1200 510" role="img" aria-labelledby="title desc">
+<title id="title">SilverStar v0.1.2: SCG, GSHC and FLP</title>
+<desc id="desc">Workflow illustration, not an application screenshot. SCG configures and generates projects, GSHC monitors AIR M0 telemetry, and FLP opens recorded logs with their exact decoder. Hardware is required for real acquisition.</desc>
+<rect width="1200" height="510" rx="20" fill="#f3f6fb"/>
+<g font-family="Segoe UI,Arial,sans-serif">
+<text x="40" y="58" fill="#162840" font-size="30" font-weight="700">SilverStar</text>
+<text x="242" y="58" fill="#47617c" font-size="19">Configure. Monitor. Understand the record.</text>
+<text x="40" y="91" fill="#53647b" font-size="15">v0.1.2 desktop tools · Workflow illustration · Not an application screenshot</text>
+<rect x="40" y="122" width="356" height="270" rx="14" fill="white" stroke="#d5dfeb"/>
+<rect x="422" y="122" width="356" height="270" rx="14" fill="white" stroke="#d5dfeb"/>
+<rect x="804" y="122" width="356" height="270" rx="14" fill="white" stroke="#d5dfeb"/>
+<g font-size="14" font-weight="600">
+<text x="64" y="153" fill="#235dad">01 / CONFIGURE</text>
+<text x="446" y="153" fill="#087d79">02 / MONITOR</text>
+<text x="828" y="153" fill="#7751a6">03 / ANALYZE</text>
+</g>
+<g fill="#162840" font-size="30" font-weight="700"><text x="64" y="196">SCG</text><text x="446" y="196">GSHC</text><text x="828" y="196">FLP</text></g>
+<g fill="#354c66" font-size="17">
+<text x="64" y="234">Devices, navigation and resources</text><text x="64" y="264">Flight / Ground project generation</text><text x="64" y="294">Matching .ssdecoder package</text>
+<text x="446" y="234">AIR M0 telemetry and device status</text><text x="446" y="264">Session recording and charts</text><text x="446" y="294">Commands gated by device readiness</text>
+<text x="828" y="234">Recorded log + exact .ssdecoder</text><text x="828" y="264">Recorded / Recomputed / What-if</text><text x="828" y="294">Trajectories, charts and data exports</text>
+</g>
+<g fill="#edf3fc"><rect x="64" y="329" width="308" height="41" rx="7"/><rect x="446" y="329" width="308" height="41" rx="7"/><rect x="828" y="329" width="308" height="41" rx="7"/></g>
+<g fill="#344e70" font-size="15"><text x="78" y="355">Offline tour: inspect configuration</text><text x="460" y="355">Offline tour: disconnected interface</text><text x="842" y="355">Offline tour: explore entry points</text></g>
+<text x="40" y="438" fill="#162840" font-size="17" font-weight="600">Real acquisition requires hardware. FLP requires an exact log / decoder pair.</text>
+<text x="40" y="469" fill="#53647b" font-size="15">Illustrated roles do not establish hardware readiness, navigation accuracy or flight qualification.</text>
+</g></svg>

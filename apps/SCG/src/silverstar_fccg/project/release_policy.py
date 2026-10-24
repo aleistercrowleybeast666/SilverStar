@@ -13,8 +13,8 @@ from silverstar_fccg.project.model import ProjectModel, LogDecoderProfileReferen
 
 def ReleaseCompatibilityIssues_Get(model: ProjectModel) -> tuple[str, ...]:
     issues = []
-    if any(".magnetometer." in item.plugin for item in model.device_instances):
-        issues.append("Magnetometer devices are deferred until December. Remove the device explicitly in a copy of the project; the original configuration is preserved.")
+    # Explicit magnetic Devices may collect/calibrate data. Magnetic alignment
+    # and legacy source overrides retain their separate acceptance boundaries.
     if any(key.startswith("magnetometer.") for key in model.capability_source_overrides):
         issues.append("Legacy magnetic source selection is retained. Explicitly remove it before first-release generation.")
     if any(item.kind == "magnetic_field" for item in model.alignment.constraints):

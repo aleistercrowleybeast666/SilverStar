@@ -208,7 +208,7 @@ const SystemNavigationProfile *SystemNavigationProfile_Get(void)
     return &s_navigation;
 }
 
-static void Test_DefaultBuildSnapshotOmitsMagnetometer(void)
+static void Test_DescriptorSnapshotOmitsAbsentMagnetometer(void)
 {
     SystemSensorStatus status;
     uint8_t index;
@@ -219,7 +219,9 @@ static void Test_DefaultBuildSnapshotOmitsMagnetometer(void)
     s_calibration_ready = 1U;
 
     SystemSensorStatus_Reset();
-    TEST_CHECK(SYSTEM_USER_MAGNETOMETER_ENABLE == 0U);
+    /* This fixture supplies six descriptors without MAG. Global build support
+     * for magnetic capture must not invent a descriptor in the snapshot. */
+    TEST_CHECK(SystemDescriptor_DeviceCountGet() == 6U);
     TEST_CHECK(SystemSensorStatus_CountGet() == 6U);
     for (index = 0U; index < SystemSensorStatus_CountGet(); index++)
     {
@@ -335,7 +337,7 @@ static void Test_InvalidArguments(void)
 
 int main(void)
 {
-    Test_DefaultBuildSnapshotOmitsMagnetometer();
+    Test_DescriptorSnapshotOmitsAbsentMagnetometer();
     Test_BuildTimeDescriptorsAndSnapshot();
     Test_DescriptorPhysicalIdentity();
     Test_InvalidArguments();

@@ -132,15 +132,15 @@ def test_long_connection_status_reflows_without_changing_port(tmp_path):
         window.conn_label.setFont(QFont("Segoe UI", 16))
         window.show()
         application.processEvents()
+        selected = window.current_port()
         status = "COM" + "1234567890" * 18 + "@230400"
         window.set_connection_status(status)
         application.processEvents()
-        assert window.conn_label.toolTip() == status
-        assert "".join(window.conn_label.text().splitlines()) == status
-        assert "\n" in window.conn_label.text()
-        assert all(window.conn_label.fontMetrics().horizontalAdvance(line)
-                   <= window.conn_label.width()
-                   for line in window.conn_label.text().splitlines())
+        assert status in window.conn_label.toolTip()
+        assert window.current_port()==selected
+        assert '\n' not in window.conn_label.text()
+        assert window.conn_label.maximumWidth()<=88
+        assert window.conn_label.fontMetrics().horizontalAdvance(window.conn_label.text())<=window.conn_label.width()
     finally:
         window.render_timer.stop()
         window.close()

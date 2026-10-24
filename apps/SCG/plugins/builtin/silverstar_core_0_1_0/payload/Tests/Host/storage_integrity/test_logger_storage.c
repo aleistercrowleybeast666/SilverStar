@@ -39,9 +39,18 @@
 static SystemMaintenanceState s_fixture_maintenance;
 SystemMaintenanceState SystemLifecycle_MaintenanceGet(void) { return s_fixture_maintenance; }
 SystemDeviceResult SystemLifecycle_MaintenanceRequest(void)
-{ s_fixture_maintenance = SystemMaintenanceState_Draining; return SYSTEM_DEVICE_OK; }
+{
+    /* Match the real lifecycle's idempotent reservation; its exclusion and
+     * repeated-request behavior are also tested by test_lifecycle.c. */
+    if (s_fixture_maintenance == SystemMaintenanceState_Off)
+    { s_fixture_maintenance = SystemMaintenanceState_Draining; }
+    return SYSTEM_DEVICE_OK;
+}
 void SystemLifecycle_MaintenanceComplete(uint8_t successful)
-{ s_fixture_maintenance = successful ? SystemMaintenanceState_Ready : SystemMaintenanceState_Failed; }
+{
+    s_fixture_maintenance = (successful && s_fixture_maintenance != SystemMaintenanceState_Failed) ?
+        SystemMaintenanceState_Ready : SystemMaintenanceState_Failed;
+}
 
 FATFS SDFatFS;
 char SDPath[4];
@@ -49,6 +58,10 @@ static jmp_buf s_exit;
 static uint8_t s_boot_mode_test;
 static uint8_t s_maintenance_test;
 static uint32_t s_maintenance_steps;
+static uint8_t s_bootstrap_maintenance_case;
+static uint8_t s_fixture_calibration_ready = 1U;
+static uint8_t s_fixture_imu_unavailable;
+static void Fixture_BootstrapMaintenanceDelay(void);
 static uint32_t s_completed_before_fault;
 static uint64_t s_completed_time_before_fault;
 static uint32_t s_boot_delay_count;
@@ -60,6 +73,9 @@ uint16_t DebugLog_Write(const uint8_t *data, uint16_t length)
     return length;
 }
 static uint8_t s_running;
+static uint8_t s_mag_service_test;
+static uint8_t s_mag_service_queued;
+static uint32_t s_mag_service_steps;
 static uint8_t s_in_producer;
 static uint8_t s_overflow_test;
 static uint8_t s_startup_overflow_test;
@@ -102,7 +118,7 @@ uint64_t SystemTime_GetMonotonicUs(void) { s_clock_us += 20ULL; return PlatformT
 #endif
 const SystemStartupReport *SystemStartup_GetReport(void) { return &s_startup; }
 
-uint8_t SystemCalibration_IsReady(void) { return 1U; }
+uint8_t SystemCalibration_IsReady(void) { return s_fixture_calibration_ready; }
 uint32_t SystemCalibration_GenerationGet(void) { return 1U; }
 SystemDeviceResult SystemFlightRecovery_FinalStatusGet(
     SystemFlightRecoveryFinalStatus *status)
@@ -123,6 +139,7 @@ void SystemHealth_GetSnapshot(SystemHealthSnapshot *snapshot)
 SystemDeviceResult SystemSourceSelector_ImuActiveInstanceGet(uint8_t *instance)
 {
     if (instance == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if (s_fixture_imu_unavailable) { return SYSTEM_DEVICE_NOT_READY; }
     *instance = 0U;
     return SYSTEM_DEVICE_OK;
 }
@@ -328,10 +345,34 @@ static void Fixture_Produce(void)
     s_in_producer = 0U;
 }
 
+static void Fixture_MagMaintenanceDelay(void)
+{
+    static const char valid_hex[] =
+        "01010B00000000004041000000C1000040400000803F000000000000000000000000"
+        "0000803F0000000000000000000000000000803F00004842CDCC4C3ECDCC4C3F"
+        "9A99993F4B4B4B4B4B4B4B4B58024754EB56";
+    SystemMagCalibrationStatus status;
+    if (++s_mag_service_steps > 64U) { s_failures++; longjmp(s_exit, 2); }
+    if (SystemMagCalibrationStorage_LoadCompleteGet() == 0U) { return; }
+    if (s_mag_service_queued == 0U)
+    {
+        if ((SystemMagCalibration_PacketApply(0U, valid_hex) != SystemMagCalibrationResult_Ok) ||
+            (SystemMagCalibration_SaveRequest(0U) != SystemMagCalibrationResult_Ok))
+        { s_failures++; longjmp(s_exit, 2); }
+        s_mag_service_queued = 1U;
+        return;
+    }
+    if ((SystemMagCalibration_StatusGet(0U, &status) == SystemMagCalibrationResult_Ok) &&
+        (status.saved != 0U) && (status.save_pending == 0U)) { longjmp(s_exit, 1); }
+}
+
 void vTaskDelay(TickType_t ticks)
 {
     if (s_running && s_first_delay_ticks == 0U) { s_first_delay_ticks = ticks; }
     Fixture_BaseDelay(ticks);
+    if (s_mag_service_test != 0U) { Fixture_MagMaintenanceDelay(); return; }
+    if (s_bootstrap_maintenance_case != 0U)
+    { Fixture_BootstrapMaintenanceDelay(); return; }
     if (s_maintenance_test != 0U)
     {
         char reply[512];
@@ -571,8 +612,10 @@ static int Test_MagCalibrationPersistent(void)
         "01012A00000000004041000000C1000040400000803F000000000000000000000000"
         "0000803F0000000000000000000000000000803F00004842CDCC4C3ECDCC4C3F"
         "9A99993F4B4B4B4B4B4B4B4B580211E8A9C5";
-    uint8_t readback[SYSTEM_MAG_CAL_PACKET_BYTES];
-    uint8_t tombstone[SYSTEM_MAG_CAL_PACKET_BYTES] = {0U};
+    uint8_t readback[SYSTEM_MAG_CAL_RECORD_BYTES];
+    uint8_t tombstone[SYSTEM_MAG_CAL_RECORD_BYTES];
+    uint8_t instance;
+    uint32_t request;
     uint16_t length = 0U;
     uint32_t generation = 0U;
     SystemMagCalibrationStatus status;
@@ -606,16 +649,49 @@ static int Test_MagCalibrationPersistent(void)
     SystemMagCalibration_Init();
     CHECK(SystemMagCalibration_PacketApply(0U, wrong_device_hex) ==
         SystemMagCalibrationResult_WrongDevice);
-    CHECK(SystemMagCalibration_StoredLoad(0U, readback, generation) ==
+    CHECK(SystemMagCalibration_RecordLoad(0U, readback, sizeof(readback), generation) ==
         SystemMagCalibrationResult_Ok);
     CHECK(SystemMagCalibration_StatusGet(0U, &status) ==
         SystemMagCalibrationResult_Ok && status.saved == 1U);
+    CHECK(SystemMagCalibration_ClearRequest(0U) == SystemMagCalibrationResult_Ok);
+    CHECK(SystemMagCalibration_PendingRecordGet(&instance, tombstone, &request) == SystemMagCalibrationResult_Ok);
     SystemMagCalibration_Init();
-    CHECK(SystemMagCalibration_StoredLoad(0U, tombstone, generation + 1U) ==
+    CHECK(SystemMagCalibration_RecordLoad(0U, tombstone, sizeof(tombstone), generation + 1U) ==
         SystemMagCalibrationResult_Ok);
     CHECK(SystemMagCalibration_StatusGet(0U, &status) ==
         SystemMagCalibrationResult_Ok && status.active == 0U &&
         status.saved == 0U && status.generation == generation + 1U);
+    return 1;
+}
+
+static int Test_MagMaintenance(const char *mode)
+{
+    LoggerTaskDiagnostics task;
+    SystemMagCalibrationStatus status;
+    FILINFO info = {0};
+    s_mag_service_test = 1U;
+    s_mag_calibration_test_enabled = 1U;
+    CHECK(SystemStorage_Init() == SYSTEM_DEVICE_OK);
+    CHECK(LoggerBus_Init() == LOGGER_BUS_RESULT_OK);
+    SystemMagCalibration_Init();
+    if (strcmp(mode, "mag-disabled") == 0)
+    { CHECK(LoggerBus_DisableForBootNoStorage() == LOGGER_BUS_RESULT_OK); }
+    else
+    {
+        CHECK(LoggerBus_FinalizationArm(0ULL) == LOGGER_BUS_RESULT_OK);
+        CHECK(LoggerBus_FinalizationProcess(UINT64_MAX) == LOGGER_BUS_FINALIZATION_DRAINING);
+        LoggerBus_FinalizationComplete();
+    }
+    if (setjmp(s_exit) == 0) { AppTask_Logger(NULL); }
+    CHECK(s_failures == 0U);
+    CHECK(SystemMagCalibration_StatusGet(0U, &status) == SystemMagCalibrationResult_Ok);
+    CHECK(status.active == 1U && status.saved == 1U && status.save_pending == 0U && status.generation == 1U);
+    CHECK(LoggerTask_DiagnosticsGet(&task) == SYSTEM_DEVICE_OK);
+    CHECK(task.session_count == 0U && task.open_attempt_count == 0U && task.write_count == 0U);
+    CHECK(f_stat("0:/system/calibration/mag00.0", &info) == FR_OK);
+    CHECK(f_stat("0:/missions", &info) != FR_OK);
+    printf("MAG_MAINTENANCE mode=%s generation=%lu no_log_session=1 steps=%lu\n",
+        mode, (unsigned long)status.generation, (unsigned long)s_mag_service_steps);
     return 1;
 }
 
@@ -903,6 +979,8 @@ static int Test_Maintenance(const char *mode)
     return 1;
 }
 
+#include "test_maintenance_bootstrap.h"
+
 int main(int argc, char **argv)
 {
     if (argc != 2 && argc != 3 && argc != 4) { return 2; }
@@ -933,6 +1011,10 @@ int main(int argc, char **argv)
     if (f_mkfs(SDPath, FM_FAT | FM_SFD, 512U, s_work, sizeof(s_work)) != FR_OK) { return 4; }
 #endif
     if (f_mount(&s_fs, SDPath, 1U) != FR_OK) { return 5; }
+    if (argc == 3 && (strcmp(argv[2], "mag-disabled") == 0 || strcmp(argv[2], "mag-finalized") == 0))
+    { return Test_MagMaintenance(argv[2]) ? 0 : 1; }
+    if (argc == 3 && Fixture_BootstrapMaintenanceCase(argv[2]) != 0U)
+    { return Test_BootstrapMaintenance(argv[1], argv[2]) ? 0 : 1; }
     if (argc == 3 && (strcmp(argv[2], "maintenance") == 0 ||
         strcmp(argv[2], "maintenance-fault") == 0 || strcmp(argv[2], "maintenance-write-fault") == 0))
     { return Test_Maintenance(argv[2]) ? 0 : 1; }

@@ -16,3 +16,6 @@ SystemLogFileResult SystemLogFileStorage_HashRead(
 SystemLogFileResult SystemLogFileStorage_Read(uint32_t id, uint32_t size, uint32_t offset,
     uint8_t data[SYSTEM_LOG_FILE_CHUNK_SIZE], uint16_t *length)
 { (void)id; (void)size; (void)offset; (void)data; (void)length; return SystemLogFileResult_NotReady; }
+SystemLogFileResult SystemLogFileStorage_BlockRead(uint32_t id, uint32_t size, uint32_t offset,
+    uint8_t data[SYSTEM_LOG_FILE_BLOCK_SIZE], uint16_t *length)
+{ (void)id; (void)size; (void)offset; (void)data; (void)length; return SystemLogFileResult_NotReady; }

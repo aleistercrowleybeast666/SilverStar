@@ -1,0 +1,17 @@
+{
+  "owner": "navigation_0_1_3 InEKF and ESKF20 experiments",
+  "purpose": "retained host mathematical/isolation evidence",
+  "retained_evidence": [
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_post01/pytest.log",
+      "sha256": "0bf73b941f50af8c50a72ed881cb4e864c8a046d1b55da5fb76df68379e26b70",
+      "bytes": 20847
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_post01/run.json",
+      "sha256": "e3bce4ee8f6f69527bae21cfe2e16ff41bebdf8f12bd27f09f2ef2f1509942bd",
+      "bytes": 79920
+    }
+  ],
+  "inventory_self_hash": "omitted to avoid recursive self-reference"
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.installation.capture",
+  "name": "Installation capture (experimental, default off)",
+  "type": "algorithm",
+  "class": "installation_capture",
+  "version": "0.1.3",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "provides": [
+    "installation.capture.experimental"
+  ],
+  "build": {
+    "sources": [
+      "Modules/InstallationCapture/Src/installation_capture.c",
+      "Modules/InstallationCapture/Src/installation_lease.c",
+      "Modules/InstallationCapture/Src/installation_store.c",
+      "Modules/InstallationCapture/Src/capture_port.c",
+      "Modules/InstallationCapture/Src/capture_info.c",
+      "Modules/InstallationCapture/Src/capture_primitives.c",
+      "ThirdParty/InstallationCapture/ryu/d2s.c",
+      "Modules/InstallationCapture/Src/system_installation_capture.c"
+    ],
+    "include_dirs": [
+      "Modules/InstallationCapture/Inc",
+      "ThirdParty/InstallationCapture"
+    ],
+    "defines": [
+      "SYSTEM_INSTALLATION_CAPTURE_ENABLED=1"
+    ]
+  },
+  "payload": {
+    "roots": [
+      "Modules/InstallationCapture",
+      "ThirdParty/InstallationCapture"
+    ]
+  },
+  "metadata": {
+    "experimental": true,
+    "default_enabled": false,
+    "hardware_qualification": "NOT PROVEN",
+    "source_origins": {
+      "default": "installation_capture_0_1_3"
+    }
+  }
+}

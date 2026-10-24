@@ -1,0 +1,702 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe
+rootdir: D:\python_software\SilverStar\apps\SCG\experiments\navigation_0_1_3
+configfile: pytest.ini
+collecting ... collected 152 items
+
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[0.0] PASSED [  0%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[1e-10] PASSED [  1%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[1e-05] PASSED [  1%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[0.3] PASSED [  2%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[2.0] PASSED [  3%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_maps_against_rodrigues_series_and_general_matrix_log[3.141582653589793] PASSED [  3%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_principal_log_rejects_pi_and_group_rejects_reflection PASSED [  4%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_left_invariance_and_adjoint_conjugation PASSED [  5%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_group_affine_vector_field_identity PASSED [  5%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_nominal_flow_against_independent_ode_integration PASSED [  6%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_discrete_error_finite_difference_and_large_error_log_linearity PASSED [  7%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_observation_jacobian_independent_finite_difference[position] PASSED [  7%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_observation_jacobian_independent_finite_difference[velocity] PASSED [  8%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_body_noise_map_finite_difference PASSED [  9%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_reset_jacobian_and_full_cross_covariance_finite_difference PASSED [  9%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_discrete_noise_integral_against_quadrature_and_step_composition PASSED [ 10%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_world_frame_equivariance_of_prediction_and_update PASSED [ 11%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_analytic_turning_acceleration_and_synthetic_correction PASSED [ 11%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[angular_rate-value0] PASSED [ 12%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[angular_rate-value1] PASSED [ 13%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[specific_force-value2] PASSED [ 13%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[gravity-value3] PASSED [ 14%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[density-value4] PASSED [ 15%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[density-value5] PASSED [ 15%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[dt-0] PASSED [ 16%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[dt--0.01] PASSED [ 17%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[dt-0.02001] PASSED [ 17%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_predict_invalid_inputs_preserve_state[dt-nan] PASSED [ 18%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[observation-value0] PASSED [ 19%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[observation-value1] PASSED [ 19%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[covariance_world-value2] PASSED [ 20%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[covariance_world-value3] PASSED [ 21%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[covariance_world-value4] PASSED [ 21%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[time_s--0.01] PASSED [ 22%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[time_s-0.01] PASSED [ 23%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[nis_threshold-0] PASSED [ 23%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_update_invalid_inputs_preserve_state[nis_threshold-inf] PASSED [ 24%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_gating_unsupported_and_numeric_failure_do_not_publish PASSED [ 25%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_invalid_initial_covariance_rejected[covariance0] PASSED [ 25%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_invalid_initial_covariance_rejected[covariance1] PASSED [ 26%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_invalid_initial_covariance_rejected[covariance2] PASSED [ 26%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_invalid_initial_covariance_rejected[covariance3] PASSED [ 27%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_state_copies_arrays_and_zero_noise_preserves_spd PASSED [ 28%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_invalid_state_identity_and_time_rejected[group-value0] PASSED [ 28%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_invalid_state_identity_and_time_rejected[time_s-nan] PASSED [ 29%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_invalid_state_identity_and_time_rejected[time_s--1.0] PASSED [ 30%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_invalid_state_identity_and_time_rejected[time_s-inf] PASSED [ 30%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_malformed_group_and_corrupted_covariance_rejected_without_repair PASSED [ 31%]
+apps\SCG\experiments\navigation_0_1_3\test_mathematics.py::test_nonadvancing_time_and_overflowing_update_are_rejected PASSED [ 32%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_experiment_is_outside_discovery_and_has_no_registration PASSED [ 32%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_manually_entered_id_is_rejected_by_catalog_validation_and_graph[silverstar.algorithm.estimator.inekf] PASSED [ 33%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_manually_entered_id_is_rejected_by_catalog_validation_and_graph[silverstar.algorithm.estimator.iekf] PASSED [ 34%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_manually_entered_id_is_rejected_by_catalog_validation_and_graph[silverstar.algorithm.estimator.eskf20] PASSED [ 34%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_existing_source_graphs_have_no_experimental_sources[None] PASSED [ 35%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_existing_source_graphs_have_no_experimental_sources[sf6] PASSED [ 36%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_existing_source_graphs_have_no_experimental_sources[kf6] PASSED [ 36%]
+apps\SCG\experiments\navigation_0_1_3\test_isolation.py::test_existing_source_graphs_have_no_experimental_sources[eskf15] PASSED [ 37%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_magnetic_all_twenty_columns_finite_difference[installation0--1.4] PASSED [ 38%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_magnetic_all_twenty_columns_finite_difference[installation0--0.7] PASSED [ 38%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_magnetic_all_twenty_columns_finite_difference[installation0-0.0] PASSED [ 39%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_magnetic_all_twenty_columns_finite_difference[installation0-0.72] PASSED [ 40%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_magnetic_all_twenty_columns_finite_difference[installation0-1.4] PASSED [ 40%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_magnetic_all_twenty_columns_finite_difference[installation1--1.4] PASSED [ 41%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_magnetic_all_twenty_columns_finite_difference[installation1--0.7] PASSED [ 42%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_magnetic_all_twenty_columns_finite_difference[installation1-0.0] PASSED [ 42%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_magnetic_all_twenty_columns_finite_difference[installation1-0.72] PASSED [ 43%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_magnetic_all_twenty_columns_finite_difference[installation1-1.4] PASSED [ 44%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_exact_declination_derivative_is_half_unit_axis_at_sixty_degrees PASSED [ 44%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_poles_lose_declination_sensitivity_without_numeric_repair[-1.5707963267948966] PASSED [ 45%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_poles_lose_declination_sensitivity_without_numeric_repair[-1.5707962267948965] PASSED [ 46%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_poles_lose_declination_sensitivity_without_numeric_repair[1.5707962267948965] PASSED [ 46%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_poles_lose_declination_sensitivity_without_numeric_repair[1.5707963267948966] PASSED [ 47%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_attitude_installation_gauge_and_static_rank_do_not_prove_identifiability PASSED [ 48%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_injection_and_full_reset_covariance_finite_difference[0.0] PASSED [ 48%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_injection_and_full_reset_covariance_finite_difference[0.1] PASSED [ 49%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_injection_and_full_reset_covariance_finite_difference[1.0] PASSED [ 50%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_continuous_f_finite_difference_from_physical_error_rates PASSED [ 50%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_discrete_transition_finite_difference_and_independent_nominal_flow PASSED [ 51%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_noise_mapping_finite_difference_and_density_squared_once PASSED [ 51%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_first_fifteen_error_coordinates_match_existing_pure_math_reference PASSED [ 52%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_static_noise_integral_independent_quadrature PASSED [ 53%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_prediction_semigroup_preserves_full_cross_covariance_and_constants PASSED [ 53%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_magnetic_update_matches_independent_full_joseph_and_reset PASSED [ 54%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_nonzero_installation_synthetic_sequence_spd_with_missing_magnetics PASSED [ 55%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_magnetic_boundary_is_transactional[change0] PASSED [ 55%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_magnetic_boundary_is_transactional[change1] PASSED [ 56%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_magnetic_boundary_is_transactional[change2] PASSED [ 57%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_magnetic_boundary_is_transactional[change3] PASSED [ 57%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_magnetic_boundary_is_transactional[change4] PASSED [ 58%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_magnetic_boundary_is_transactional[change5] PASSED [ 59%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_magnetic_boundary_is_transactional[change6] PASSED [ 59%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_magnetic_boundary_is_transactional[change7] PASSED [ 60%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_magnetic_boundary_is_transactional[change8] PASSED [ 61%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_magnetic_boundary_is_transactional[change9] PASSED [ 61%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_magnetic_boundary_is_transactional[change10] PASSED [ 62%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_magnetic_boundary_is_transactional[change11] PASSED [ 63%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_gate_is_transactional[0.0] PASSED [ 63%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_gate_is_transactional[-1.0] PASSED [ 64%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_gate_is_transactional[nan] PASSED [ 65%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_gate_is_transactional[inf] PASSED [ 65%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_nis_rejection_and_overflow_are_transactional PASSED [ 66%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_large_correction_rejected_without_partial_injection PASSED [ 67%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_prediction_time_transaction[0.0] PASSED [ 67%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_prediction_time_transaction[-0.01] PASSED [ 68%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_prediction_time_transaction[0.02001] PASSED [ 69%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_prediction_time_transaction[nan] PASSED [ 69%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_prediction_time_transaction[inf] PASSED [ 70%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_prediction_noise_transaction[density0] PASSED [ 71%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_prediction_noise_transaction[density1] PASSED [ 71%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_prediction_noise_transaction[density2] PASSED [ 72%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_predict_numeric_overflow_transaction PASSED [ 73%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_initial_state_rejected[change0] PASSED [ 73%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_initial_state_rejected[change1] PASSED [ 74%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_initial_state_rejected[change2] PASSED [ 75%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_initial_state_rejected[change3] PASSED [ 75%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_invalid_initial_state_rejected[change4] PASSED [ 76%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_arrays_are_copied_read_only_and_input_measurement_unchanged PASSED [ 76%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_synthetic_vector_boundary_transaction[height-0.0] PASSED [ 77%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_synthetic_vector_boundary_transaction[position-0.1] PASSED [ 78%]
+apps\SCG\experiments\navigation_0_1_3\test_eskf20.py::test_synthetic_vector_boundary_transaction[velocity--1.0] PASSED [ 78%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_exact_pole_does_not_invent_declination_information[-1.5707963267948966] FAILED [ 79%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_exact_pole_does_not_invent_declination_information[1.5707963267948966] FAILED [ 80%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_near_pole_is_not_clipped_to_zero[1e-07] PASSED [ 80%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_near_pole_is_not_clipped_to_zero[1e-10] PASSED [ 81%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_oversized_integer_is_rejected_without_escaping_transaction[inekf_predict] FAILED [ 82%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_oversized_integer_is_rejected_without_escaping_transaction[inekf_update] FAILED [ 82%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_oversized_integer_is_rejected_without_escaping_transaction[eskf_predict] FAILED [ 83%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_oversized_integer_is_rejected_without_escaping_transaction[eskf_vector] FAILED [ 84%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_oversized_integer_is_rejected_without_escaping_transaction[eskf_magnetic] FAILED [ 84%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_state_scalars_reject_non_real_scalar_values[0.6-time_s] FAILED [ 85%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_state_scalars_reject_non_real_scalar_values[0.6-inclination] FAILED [ 86%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_state_scalars_reject_non_real_scalar_values[0.6-declination] FAILED [ 86%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_state_scalars_reject_non_real_scalar_values[value1-time_s] PASSED [ 87%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_state_scalars_reject_non_real_scalar_values[value1-inclination] PASSED [ 88%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_state_scalars_reject_non_real_scalar_values[value1-declination] PASSED [ 88%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_state_scalars_reject_non_real_scalar_values[(0.6+0j)-time_s] PASSED [ 89%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_state_scalars_reject_non_real_scalar_values[(0.6+0j)-inclination] PASSED [ 90%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_state_scalars_reject_non_real_scalar_values[(0.6+0j)-declination] PASSED [ 90%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_inekf_time_requires_a_real_scalar[value0] FAILED [ 91%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_inekf_time_requires_a_real_scalar[value1] PASSED [ 92%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_inekf_time_requires_a_real_scalar[0] FAILED [ 92%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_inekf_time_requires_a_real_scalar[0j] FAILED [ 93%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_scalar_state_values_are_copied_and_canonical FAILED [ 94%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_eskf_observation_timestamp_requires_scalar_real_value[value0] FAILED [ 94%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_eskf_observation_timestamp_requires_scalar_real_value[0j] FAILED [ 95%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_array_observation_kind_does_not_escape_inekf_transaction FAILED [ 96%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_vector_time_step_is_not_a_scalar[inekf] FAILED [ 96%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_vector_time_step_is_not_a_scalar[eskf] FAILED [ 97%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_magnetometer_axis_relabeling_commutes_with_update FAILED [ 98%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_static_yaw_declination_gauge_survives_dynamics FAILED [ 98%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_inekf_reset_with_general_matrix_exp_log_oracle PASSED [ 99%]
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_rotating_process_covariance_from_independent_physical_impulses PASSED [100%]
+
+================================== FAILURES ===================================
+_ test_exact_pole_does_not_invent_declination_information[-1.5707963267948966] _
+
+inclination = -1.5707963267948966
+
+    @pytest.mark.parametrize("inclination", [-np.pi / 2, np.pi / 2])
+    def test_exact_pole_does_not_invent_declination_information(inclination):
+        # Stress the declared finite/SPD domain, not a realistic sensor prior.
+        # The exact geometric identity h(+-pi/2,D)=(0,0,-+1) is independent of D.
+        state = replace(State_Create(), inclination=inclination,
+                        covariance=np.diag([1e-6] * 19 + [1e28]))
+        step = eskf.Eskf20_UpdateMagnetic(state, MagneticSample_Create(state))
+        assert step.result is eskf.NavigationEskf20Result.OK
+>       assert step.state.covariance[19, 19] == state.covariance[19, 19]
+E       assert np.float64(2.28490266497077e+27) == np.float64(1e+28)
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:44: AssertionError
+_ test_exact_pole_does_not_invent_declination_information[1.5707963267948966] _
+
+inclination = 1.5707963267948966
+
+    @pytest.mark.parametrize("inclination", [-np.pi / 2, np.pi / 2])
+    def test_exact_pole_does_not_invent_declination_information(inclination):
+        # Stress the declared finite/SPD domain, not a realistic sensor prior.
+        # The exact geometric identity h(+-pi/2,D)=(0,0,-+1) is independent of D.
+        state = replace(State_Create(), inclination=inclination,
+                        covariance=np.diag([1e-6] * 19 + [1e28]))
+        step = eskf.Eskf20_UpdateMagnetic(state, MagneticSample_Create(state))
+        assert step.result is eskf.NavigationEskf20Result.OK
+>       assert step.state.covariance[19, 19] == state.covariance[19, 19]
+E       assert np.float64(2.28490266497077e+27) == np.float64(1e+28)
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:44: AssertionError
+_ test_oversized_integer_is_rejected_without_escaping_transaction[inekf_predict] _
+
+api = 'inekf_predict'
+
+    @pytest.mark.parametrize("api", ["inekf_predict", "inekf_update", "eskf_predict",
+                                      "eskf_vector", "eskf_magnetic"])
+    def test_oversized_integer_is_rejected_without_escaping_transaction(api):
+        # A finite Python integer need not be representable as a finite float64.
+        huge_vector = [10 ** 1000, 0, 0]
+        if api.startswith("inekf"):
+            state = inekf.NavigationState(np.eye(5), np.eye(9))
+            before = state.group.tobytes(), state.covariance.tobytes()
+            if api == "inekf_predict":
+>               step = inekf.NavigationInEkf_Predict(state, huge_vector, np.zeros(3),
+                    .01, np.zeros(6), np.zeros(3))
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\inekf_reference.py:111: in NavigationInEkf_Predict
+    omega = Array_Validate(angular_rate, (3,))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = [100000000000000000...0000000000000000000, 0, 0], shape = (3,)
+
+    def Array_Validate(value, shape):
+        raw = np.asarray(value)
+        if np.iscomplexobj(raw):
+            raise ValueError("complex_input")
+>       array = np.array(raw, dtype=np.float64, copy=True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OverflowError: int too large to convert to float
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:17: OverflowError
+_ test_oversized_integer_is_rejected_without_escaping_transaction[inekf_update] _
+
+api = 'inekf_update'
+
+    @pytest.mark.parametrize("api", ["inekf_predict", "inekf_update", "eskf_predict",
+                                      "eskf_vector", "eskf_magnetic"])
+    def test_oversized_integer_is_rejected_without_escaping_transaction(api):
+        # A finite Python integer need not be representable as a finite float64.
+        huge_vector = [10 ** 1000, 0, 0]
+        if api.startswith("inekf"):
+            state = inekf.NavigationState(np.eye(5), np.eye(9))
+            before = state.group.tobytes(), state.covariance.tobytes()
+            if api == "inekf_predict":
+                step = inekf.NavigationInEkf_Predict(state, huge_vector, np.zeros(3),
+                    .01, np.zeros(6), np.zeros(3))
+            else:
+>               step = inekf.NavigationInEkf_Update(state, huge_vector, np.eye(3), "position", 0.)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:72: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\inekf_reference.py:157: in NavigationInEkf_Update
+    observation = Array_Validate(observation, (3,))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = [100000000000000000...0000000000000000000, 0, 0], shape = (3,)
+
+    def Array_Validate(value, shape):
+        raw = np.asarray(value)
+        if np.iscomplexobj(raw):
+            raise ValueError("complex_input")
+>       array = np.array(raw, dtype=np.float64, copy=True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OverflowError: int too large to convert to float
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:17: OverflowError
+_ test_oversized_integer_is_rejected_without_escaping_transaction[eskf_predict] _
+
+api = 'eskf_predict'
+
+    @pytest.mark.parametrize("api", ["inekf_predict", "inekf_update", "eskf_predict",
+                                      "eskf_vector", "eskf_magnetic"])
+    def test_oversized_integer_is_rejected_without_escaping_transaction(api):
+        # A finite Python integer need not be representable as a finite float64.
+        huge_vector = [10 ** 1000, 0, 0]
+        if api.startswith("inekf"):
+            state = inekf.NavigationState(np.eye(5), np.eye(9))
+            before = state.group.tobytes(), state.covariance.tobytes()
+            if api == "inekf_predict":
+                step = inekf.NavigationInEkf_Predict(state, huge_vector, np.zeros(3),
+                    .01, np.zeros(6), np.zeros(3))
+            else:
+                step = inekf.NavigationInEkf_Update(state, huge_vector, np.eye(3), "position", 0.)
+            assert step.result is inekf.NavigationInEkfResult.INVALID_INPUT
+            assert before == (state.group.tobytes(), state.covariance.tobytes())
+        else:
+            state = State_Create()
+            before = state.position.tobytes(), state.covariance.tobytes()
+            if api == "eskf_predict":
+>               step = eskf.Eskf20_Predict(state, huge_vector, np.zeros(3),
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:79: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\eskf20_reference.py:186: in Eskf20_Predict
+    omega_m = Array_Validate(angular_rate_measured, (3,))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = [100000000000000000...0000000000000000000, 0, 0], shape = (3,)
+
+    def Array_Validate(value, shape):
+        raw = np.asarray(value)
+        if np.iscomplexobj(raw):
+            raise ValueError("complex_input")
+>       array = np.array(raw, dtype=np.float64, copy=True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OverflowError: int too large to convert to float
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:17: OverflowError
+_ test_oversized_integer_is_rejected_without_escaping_transaction[eskf_vector] _
+
+api = 'eskf_vector'
+
+    @pytest.mark.parametrize("api", ["inekf_predict", "inekf_update", "eskf_predict",
+                                      "eskf_vector", "eskf_magnetic"])
+    def test_oversized_integer_is_rejected_without_escaping_transaction(api):
+        # A finite Python integer need not be representable as a finite float64.
+        huge_vector = [10 ** 1000, 0, 0]
+        if api.startswith("inekf"):
+            state = inekf.NavigationState(np.eye(5), np.eye(9))
+            before = state.group.tobytes(), state.covariance.tobytes()
+            if api == "inekf_predict":
+                step = inekf.NavigationInEkf_Predict(state, huge_vector, np.zeros(3),
+                    .01, np.zeros(6), np.zeros(3))
+            else:
+                step = inekf.NavigationInEkf_Update(state, huge_vector, np.eye(3), "position", 0.)
+            assert step.result is inekf.NavigationInEkfResult.INVALID_INPUT
+            assert before == (state.group.tobytes(), state.covariance.tobytes())
+        else:
+            state = State_Create()
+            before = state.position.tobytes(), state.covariance.tobytes()
+            if api == "eskf_predict":
+                step = eskf.Eskf20_Predict(state, huge_vector, np.zeros(3),
+                    np.zeros(3), np.zeros(12), .01)
+            elif api == "eskf_vector":
+>               step = eskf.Eskf20_UpdateVector(state, huge_vector, np.eye(3), "position", 0.)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:82: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\eskf20_reference.py:274: in Eskf20_UpdateVector
+    measured = Array_Validate(measured, (3,))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = [100000000000000000...0000000000000000000, 0, 0], shape = (3,)
+
+    def Array_Validate(value, shape):
+        raw = np.asarray(value)
+        if np.iscomplexobj(raw):
+            raise ValueError("complex_input")
+>       array = np.array(raw, dtype=np.float64, copy=True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OverflowError: int too large to convert to float
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:17: OverflowError
+_ test_oversized_integer_is_rejected_without_escaping_transaction[eskf_magnetic] _
+
+api = 'eskf_magnetic'
+
+    @pytest.mark.parametrize("api", ["inekf_predict", "inekf_update", "eskf_predict",
+                                      "eskf_vector", "eskf_magnetic"])
+    def test_oversized_integer_is_rejected_without_escaping_transaction(api):
+        # A finite Python integer need not be representable as a finite float64.
+        huge_vector = [10 ** 1000, 0, 0]
+        if api.startswith("inekf"):
+            state = inekf.NavigationState(np.eye(5), np.eye(9))
+            before = state.group.tobytes(), state.covariance.tobytes()
+            if api == "inekf_predict":
+                step = inekf.NavigationInEkf_Predict(state, huge_vector, np.zeros(3),
+                    .01, np.zeros(6), np.zeros(3))
+            else:
+                step = inekf.NavigationInEkf_Update(state, huge_vector, np.eye(3), "position", 0.)
+            assert step.result is inekf.NavigationInEkfResult.INVALID_INPUT
+            assert before == (state.group.tobytes(), state.covariance.tobytes())
+        else:
+            state = State_Create()
+            before = state.position.tobytes(), state.covariance.tobytes()
+            if api == "eskf_predict":
+                step = eskf.Eskf20_Predict(state, huge_vector, np.zeros(3),
+                    np.zeros(3), np.zeros(12), .01)
+            elif api == "eskf_vector":
+                step = eskf.Eskf20_UpdateVector(state, huge_vector, np.eye(3), "position", 0.)
+            else:
+>               step = eskf.Eskf20_UpdateMagnetic(state,
+                    replace(MagneticSample_Create(state), corrected_sensor_uT=huge_vector))
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\experiments\navigation_0_1_3\eskf20_reference.py:247: in Eskf20_UpdateMagnetic
+    measured = Array_Validate(sample.corrected_sensor_uT, (3,))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = [100000000000000000...0000000000000000000, 0, 0], shape = (3,)
+
+    def Array_Validate(value, shape):
+        raw = np.asarray(value)
+        if np.iscomplexobj(raw):
+            raise ValueError("complex_input")
+>       array = np.array(raw, dtype=np.float64, copy=True)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       OverflowError: int too large to convert to float
+
+apps\SCG\experiments\navigation_0_1_3\lie_group.py:17: OverflowError
+________ test_state_scalars_reject_non_real_scalar_values[0.6-time_s] _________
+
+field = 'time_s', value = '0.6'
+
+    @pytest.mark.parametrize("field", ["time_s", "inclination", "declination"])
+    @pytest.mark.parametrize("value", ["0.6", np.array([.6]), .6 + 0j])
+    def test_state_scalars_reject_non_real_scalar_values(field, value):
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:94: Failed
+______ test_state_scalars_reject_non_real_scalar_values[0.6-inclination] ______
+
+field = 'inclination', value = '0.6'
+
+    @pytest.mark.parametrize("field", ["time_s", "inclination", "declination"])
+    @pytest.mark.parametrize("value", ["0.6", np.array([.6]), .6 + 0j])
+    def test_state_scalars_reject_non_real_scalar_values(field, value):
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:94: Failed
+______ test_state_scalars_reject_non_real_scalar_values[0.6-declination] ______
+
+field = 'declination', value = '0.6'
+
+    @pytest.mark.parametrize("field", ["time_s", "inclination", "declination"])
+    @pytest.mark.parametrize("value", ["0.6", np.array([.6]), .6 + 0j])
+    def test_state_scalars_reject_non_real_scalar_values(field, value):
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:94: Failed
+_______________ test_inekf_time_requires_a_real_scalar[value0] ________________
+
+value = array([0.])
+
+    @pytest.mark.parametrize("value", [np.array([0.]), np.array([]), "0", 0j])
+    def test_inekf_time_requires_a_real_scalar(value):
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:100: Failed
+__________________ test_inekf_time_requires_a_real_scalar[0] __________________
+
+value = '0'
+
+    @pytest.mark.parametrize("value", [np.array([0.]), np.array([]), "0", 0j])
+    def test_inekf_time_requires_a_real_scalar(value):
+        with pytest.raises(ValueError):
+>           inekf.NavigationState(np.eye(5), np.eye(9), value)
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+<string>:6: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = NavigationState(group=array([[1., 0., 0., 0., 0.],
+       [0., 1., 0., 0., 0.],
+       [0., 0., 1., 0., 0.],
+       [0...., 1., 0., 0.],
+       [0., 0., 0., 0., 0., 0., 0., 1., 0.],
+       [0., 0., 0., 0., 0., 0., 0., 0., 1.]]), time_s='0')
+
+    def __post_init__(self):
+        group = Group_Validate(self.group)
+        covariance = Covariance_Validate(self.covariance, 9)
+>       if not np.isfinite(self.time_s) or self.time_s < 0:
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: ufunc 'isfinite' not supported for the input types, and the inputs could not be safely coerced to any supported types according to the casting rule ''safe''
+
+apps\SCG\experiments\navigation_0_1_3\inekf_reference.py:35: TypeError
+_________________ test_inekf_time_requires_a_real_scalar[0j] __________________
+
+value = 0j
+
+    @pytest.mark.parametrize("value", [np.array([0.]), np.array([]), "0", 0j])
+    def test_inekf_time_requires_a_real_scalar(value):
+        with pytest.raises(ValueError):
+>           inekf.NavigationState(np.eye(5), np.eye(9), value)
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+<string>:6: in __init__
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = NavigationState(group=array([[1., 0., 0., 0., 0.],
+       [0., 1., 0., 0., 0.],
+       [0., 0., 1., 0., 0.],
+       [0...0., 1., 0., 0.],
+       [0., 0., 0., 0., 0., 0., 0., 1., 0.],
+       [0., 0., 0., 0., 0., 0., 0., 0., 1.]]), time_s=0j)
+
+    def __post_init__(self):
+        group = Group_Validate(self.group)
+        covariance = Covariance_Validate(self.covariance, 9)
+>       if not np.isfinite(self.time_s) or self.time_s < 0:
+                                           ^^^^^^^^^^^^^^^
+E       TypeError: '<' not supported between instances of 'complex' and 'int'
+
+apps\SCG\experiments\navigation_0_1_3\inekf_reference.py:35: TypeError
+______________ test_scalar_state_values_are_copied_and_canonical ______________
+
+    def test_scalar_state_values_are_copied_and_canonical():
+        time, inclination, declination = np.array(0.), np.array(.6), np.array(-.2)
+        first = inekf.NavigationState(np.eye(5), np.eye(9), time)
+        second = replace(State_Create(), time_s=time, inclination=inclination, declination=declination)
+        time[()], inclination[()], declination[()] = 2., .7, .3
+>       assert type(first.time_s) is type(second.time_s) is float
+E       AssertionError: assert <class 'numpy.ndarray'> is float
+E        +  where <class 'numpy.ndarray'> = type(array(2.))
+E        +    where array(2.) = Eskf20State(position=array([ 0.3, -0.6,  0.1]), velocity=array([ 0.4,  0.2, -0.3]), rotation=array([[ 0.67121217, -0.72380745, -0.1599281 ],\n       [ 0.56535421,  0.63940893, -0.52108621],\n       [ 0.47942554,  0.25934338,  0.83838664]]), gyro_bias=array([ 0.01, -0.02,  0.03]), accel_bias=array([ 0.02,  0.04, -0.03]), installation=array([[ 0.9027011 ,  0.3816559 ,  0.19866933],\n       [-0.31794932,  0.90278624, -0.28962948],\n       [-0.28989474,  0.19828207,  0.93629336]]), inclination=array(0.7), declination=array(0.3), covariance=array([[ 4.32407506e-03,  2.96935828e-04, -8.53061924e-04,\n        -5.29516985e-04, -5.17502267e-04,  7.67881552e-05,\n        -8.86296109e-05, -5.38373402e-04, -2.04081531e-04,\n         2.16462366e-04, -7.52504333e-04, -4.85839239e-04,\n         3.93900345e-04,  9.03327674e-04, -5.96837134e-04,\n         5.79644160e-04,  2.39527710e-04, -8.84899264e-04,\n        -5.50704874e-04,  2.22028154e-04],\n       [ 2.96935828e-04,  5.44014511e-03,  4.17172636e-04,\n        -4.39990676e-04,  6.78004638e-04,  1.44323581e-03,\n         3.89963161e-04, -4.28177794e-04, -8.00450573e-04,\n         3.80106040e-04,  8.84251214e-04,  7.72265924e-04,\n        -7.39684922e-04,  9...84899264e-04,  2.45406925e-04,  3.66295980e-04,\n         3.63314792e-04,  1.19065981e-04,  2.70786204e-04,\n        -1.93035466e-04,  7.07462881e-04, -2.94465304e-04,\n         7.14067493e-05,  2.61144352e-04,  4.02365214e-04,\n        -4.74403626e-04, -2.87032326e-04, -2.32750291e-04,\n        -2.30359826e-04,  5.60158225e-04,  3.69184367e-03,\n        -1.81163048e-04, -1.04606837e-04],\n       [-5.50704874e-04,  1.09184991e-04,  3.59142843e-04,\n        -3.78595346e-04, -3.78066728e-04,  3.64720004e-04,\n         1.96174398e-04, -6.39434942e-04,  5.21016926e-04,\n        -3.57474795e-04,  5.53713003e-04, -2.93822525e-04,\n        -5.55004381e-04, -5.56259787e-04,  4.90827743e-04,\n         1.17619087e-04,  4.55974087e-04, -1.81163048e-04,\n         5.12122077e-03,  1.67245309e-04],\n       [ 2.22028154e-04,  4.72344518e-04,  3.28354114e-04,\n         4.05770321e-04,  2.23884107e-05,  2.25101451e-04,\n        -1.40461648e-05, -5.71689174e-05,  4.45358240e-04,\n        -4.71151869e-04, -1.00154368e-04, -4.98073165e-04,\n        -5.88257176e-05, -4.83001950e-04, -1.69704131e-04,\n        -6.09202004e-05,  5.32170260e-05, -1.04606837e-04,\n         1.67245309e-04,  3.49742220e-03]]), time_s=array(2.)).time_s
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:109: AssertionError
+_____ test_eskf_observation_timestamp_requires_scalar_real_value[value0] ______
+
+value = array([0.])
+
+    @pytest.mark.parametrize("value", [np.array([0.]), 0j])
+    def test_eskf_observation_timestamp_requires_scalar_real_value(value):
+        state = State_Create()
+        for step in (eskf.Eskf20_UpdateVector(state, state.position, np.eye(3), "position", value),
+                     eskf.Eskf20_UpdateMagnetic(state,
+                        replace(MagneticSample_Create(state), time_s=value))):
+>           assert step.result is eskf.NavigationEskf20Result.INVALID_INPUT
+E           AssertionError: assert <NavigationEskf20Result.OK: 'ok'> is <NavigationEskf20Result.INVALID_INPUT: 'invalid_input'>
+E            +  where <NavigationEskf20Result.OK: 'ok'> = Eskf20Step(result=<NavigationEskf20Result.OK: 'ok'>, state=Eskf20State(position=array([ 0.3, -0.6,  0.1]), velocity=array([ 0.4,  0.2, -0.3]), rotation=array([[ 0.67121217, -0.72380745, -0.1599281 ],\n       [ 0.56535421,  0.63940893, -0.52108621],\n       [ 0.47942554,  0.25934338,  0.83838664]]), gyro_bias=array([ 0.01, -0.02,  0.03]), accel_bias=array([ 0.02,  0.04, -0.03]), installation=array([[ 0.9027011 ,  0.3816559 ,  0.19866933],\n       [-0.31794932,  0.90278624, -0.28962948],\n       [-0.28989474,  0.19828207,  0.93629336]]), inclination=np.float64(0.6), declination=np.float64(-0.2), covariance=array([[ 4.30465265e-03,  2.94408756e-04, -8.45598464e-04,\n        -5.27199493e-04, -5.14465019e-04,  7.61359758e-05,\n        -8.82617625e-05, -5.35543769e-04, -2.02625537e-04,\n         2.15753006e-04, -7.49780309e-04, -4.83980947e-04,\n         3.91600428e-04,  8.98547245e-04, -5.94025059e-04,\n         5.76969111e-04,  2.38224960e-04, -8.80852591e-04,\n        -5.48062735e-04,  2.21210994e-04],\n       [ 2.94408756e-04,  5.41045165e-03,  4.13253806e-04,\n        -4.37409549e-04,  6.73995481e-04,  1.43535418e-03,\n         3.87829951e-04, -4.25891330e-04, -7.96226749e-04,\n         3.77822...   3.62995138e-04,  1.18010444e-04,  2.70456998e-04,\n        -1.93252268e-04,  7.06927133e-04, -2.94596660e-04,\n         7.13607761e-05,  2.60375242e-04,  4.01751141e-04,\n        -4.73522393e-04, -2.86192856e-04, -2.33403178e-04,\n        -2.29712904e-04,  5.60331154e-04,  3.69087103e-03,\n        -1.81805441e-04, -1.04646045e-04],\n       [-5.48062735e-04,  1.08607966e-04,  3.56977609e-04,\n        -3.78799169e-04, -3.78850028e-04,  3.64561746e-04,\n         1.96040774e-04, -6.39846481e-04,  5.20847703e-04,\n        -3.57538588e-04,  5.53312162e-04, -2.94170257e-04,\n        -5.54361113e-04, -5.55601650e-04,  4.90383859e-04,\n         1.18049735e-04,  4.56122753e-04, -1.81805441e-04,\n         5.12077888e-03,  1.67198479e-04],\n       [ 2.21210994e-04,  4.69587860e-04,  3.26834057e-04,\n         4.06129410e-04,  2.17944408e-05,  2.24366825e-04,\n        -1.42487717e-05, -5.69979741e-05,  4.45647144e-04,\n        -4.71507474e-04, -1.00304611e-04, -4.98326129e-04,\n        -5.82477609e-05, -4.83391773e-04, -1.69701653e-04,\n        -6.08861468e-05,  5.30253233e-05, -1.04646045e-04,\n         1.67198479e-04,  3.49704396e-03]]), time_s=0.0), nis=0.0, magnetic_rank=None, declination_sensitivity=None).result
+E            +  and   <NavigationEskf20Result.INVALID_INPUT: 'invalid_input'> = <enum 'NavigationEskf20Result'>.INVALID_INPUT
+E            +    where <enum 'NavigationEskf20Result'> = eskf.NavigationEskf20Result
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:121: AssertionError
+_______ test_eskf_observation_timestamp_requires_scalar_real_value[0j] ________
+
+value = 0j
+
+    @pytest.mark.parametrize("value", [np.array([0.]), 0j])
+    def test_eskf_observation_timestamp_requires_scalar_real_value(value):
+        state = State_Create()
+        for step in (eskf.Eskf20_UpdateVector(state, state.position, np.eye(3), "position", value),
+                     eskf.Eskf20_UpdateMagnetic(state,
+                        replace(MagneticSample_Create(state), time_s=value))):
+>           assert step.result is eskf.NavigationEskf20Result.INVALID_INPUT
+E           AssertionError: assert <NavigationEskf20Result.OK: 'ok'> is <NavigationEskf20Result.INVALID_INPUT: 'invalid_input'>
+E            +  where <NavigationEskf20Result.OK: 'ok'> = Eskf20Step(result=<NavigationEskf20Result.OK: 'ok'>, state=Eskf20State(position=array([ 0.3, -0.6,  0.1]), velocity=array([ 0.4,  0.2, -0.3]), rotation=array([[ 0.67121217, -0.72380745, -0.1599281 ],\n       [ 0.56535421,  0.63940893, -0.52108621],\n       [ 0.47942554,  0.25934338,  0.83838664]]), gyro_bias=array([ 0.01, -0.02,  0.03]), accel_bias=array([ 0.02,  0.04, -0.03]), installation=array([[ 0.9027011 ,  0.3816559 ,  0.19866933],\n       [-0.31794932,  0.90278624, -0.28962948],\n       [-0.28989474,  0.19828207,  0.93629336]]), inclination=np.float64(0.6), declination=np.float64(-0.2), covariance=array([[ 4.30465265e-03,  2.94408756e-04, -8.45598464e-04,\n        -5.27199493e-04, -5.14465019e-04,  7.61359758e-05,\n        -8.82617625e-05, -5.35543769e-04, -2.02625537e-04,\n         2.15753006e-04, -7.49780309e-04, -4.83980947e-04,\n         3.91600428e-04,  8.98547245e-04, -5.94025059e-04,\n         5.76969111e-04,  2.38224960e-04, -8.80852591e-04,\n        -5.48062735e-04,  2.21210994e-04],\n       [ 2.94408756e-04,  5.41045165e-03,  4.13253806e-04,\n        -4.37409549e-04,  6.73995481e-04,  1.43535418e-03,\n         3.87829951e-04, -4.25891330e-04, -7.96226749e-04,\n         3.77822...   3.62995138e-04,  1.18010444e-04,  2.70456998e-04,\n        -1.93252268e-04,  7.06927133e-04, -2.94596660e-04,\n         7.13607761e-05,  2.60375242e-04,  4.01751141e-04,\n        -4.73522393e-04, -2.86192856e-04, -2.33403178e-04,\n        -2.29712904e-04,  5.60331154e-04,  3.69087103e-03,\n        -1.81805441e-04, -1.04646045e-04],\n       [-5.48062735e-04,  1.08607966e-04,  3.56977609e-04,\n        -3.78799169e-04, -3.78850028e-04,  3.64561746e-04,\n         1.96040774e-04, -6.39846481e-04,  5.20847703e-04,\n        -3.57538588e-04,  5.53312162e-04, -2.94170257e-04,\n        -5.54361113e-04, -5.55601650e-04,  4.90383859e-04,\n         1.18049735e-04,  4.56122753e-04, -1.81805441e-04,\n         5.12077888e-03,  1.67198479e-04],\n       [ 2.21210994e-04,  4.69587860e-04,  3.26834057e-04,\n         4.06129410e-04,  2.17944408e-05,  2.24366825e-04,\n        -1.42487717e-05, -5.69979741e-05,  4.45647144e-04,\n        -4.71507474e-04, -1.00304611e-04, -4.98326129e-04,\n        -5.82477609e-05, -4.83391773e-04, -1.69701653e-04,\n        -6.08861468e-05,  5.30253233e-05, -1.04646045e-04,\n         1.67198479e-04,  3.49704396e-03]]), time_s=0.0), nis=0.0, magnetic_rank=None, declination_sensitivity=None).result
+E            +  and   <NavigationEskf20Result.INVALID_INPUT: 'invalid_input'> = <enum 'NavigationEskf20Result'>.INVALID_INPUT
+E            +    where <enum 'NavigationEskf20Result'> = eskf.NavigationEskf20Result
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:121: AssertionError
+________ test_array_observation_kind_does_not_escape_inekf_transaction ________
+
+    def test_array_observation_kind_does_not_escape_inekf_transaction():
+        state = inekf.NavigationState(np.eye(5), np.eye(9))
+>       step = inekf.NavigationInEkf_Update(state, np.zeros(3), np.eye(3),
+                                          np.array(["position", "velocity"]), 0.)
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+state = NavigationState(group=array([[1., 0., 0., 0., 0.],
+       [0., 1., 0., 0., 0.],
+       [0., 0., 1., 0., 0.],
+       [0...., 1., 0., 0.],
+       [0., 0., 0., 0., 0., 0., 0., 1., 0.],
+       [0., 0., 0., 0., 0., 0., 0., 0., 1.]]), time_s=0.0)
+observation = array([0., 0., 0.])
+covariance_world = array([[1., 0., 0.],
+       [0., 1., 0.],
+       [0., 0., 1.]])
+kind = array(['position', 'velocity'], dtype='<U8'), time_s = 0.0
+nis_threshold = None
+
+    def NavigationInEkf_Update(state, observation, covariance_world, kind, time_s,
+                              nis_threshold=None):
+        """Co-timed 3D world position/velocity, zero lever arm, explicit optional gate."""
+>       if kind not in ("position", "velocity"):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+
+apps\SCG\experiments\navigation_0_1_3\inekf_reference.py:153: ValueError
+________________ test_vector_time_step_is_not_a_scalar[inekf] _________________
+
+api = 'inekf'
+
+    @pytest.mark.parametrize("api", ["inekf", "eskf"])
+    def test_vector_time_step_is_not_a_scalar(api):
+        if api == "inekf":
+            state = inekf.NavigationState(np.eye(5), np.eye(9))
+            step = inekf.NavigationInEkf_Predict(state, np.zeros(3), np.zeros(3),
+                np.array([.01]), np.zeros(6), np.zeros(3))
+>           assert step.result is inekf.NavigationInEkfResult.INVALID_INPUT
+E           AssertionError: assert <NavigationInEkfResult.OK: 'ok'> is <NavigationInEkfResult.INVALID_INPUT: 'invalid_input'>
+E            +  where <NavigationInEkfResult.OK: 'ok'> = NavigationStep(result=<NavigationInEkfResult.OK: 'ok'>, state=NavigationState(group=array([[1., 0., 0., 0., 0.],\n       [0., 1., 0., 0., 0.],\n       [0., 0., 1., 0., 0.],\n       [0., 0., 0., 1., 0.],\n       [0., 0., 0., 0., 1.]]), covariance=array([[1.    , 0.    , 0.    , 0.    , 0.    , 0.    , 0.    , 0.    ,\n        0.    ],\n       [0.    , 1.    , 0.    , 0.    , 0.    , 0.    , 0.    , 0.    ,\n        0.    ],\n       [0.    , 0.    , 1.    , 0.    , 0.    , 0.    , 0.    , 0.    ,\n        0.    ],\n       [0.    , 0.    , 0.    , 1.    , 0.    , 0.    , 0.01  , 0.    ,\n        0.    ],\n       [0.    , 0.    , 0.    , 0.    , 1.    , 0.    , 0.    , 0.01  ,\n        0.    ],\n       [0.    , 0.    , 0.    , 0.    , 0.    , 1.    , 0.    , 0.    ,\n        0.01  ],\n       [0.    , 0.    , 0.    , 0.01  , 0.    , 0.    , 1.0001, 0.    ,\n        0.    ],\n       [0.    , 0.    , 0.    , 0.    , 0.01  , 0.    , 0.    , 1.0001,\n        0.    ],\n       [0.    , 0.    , 0.    , 0.    , 0.    , 0.01  , 0.    , 0.    ,\n        1.0001]]), time_s=array([0.01])), nis=None).result
+E            +  and   <NavigationInEkfResult.INVALID_INPUT: 'invalid_input'> = <enum 'NavigationInEkfResult'>.INVALID_INPUT
+E            +    where <enum 'NavigationInEkfResult'> = inekf.NavigationInEkfResult
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:139: AssertionError
+_________________ test_vector_time_step_is_not_a_scalar[eskf] _________________
+
+api = 'eskf'
+
+    @pytest.mark.parametrize("api", ["inekf", "eskf"])
+    def test_vector_time_step_is_not_a_scalar(api):
+        if api == "inekf":
+            state = inekf.NavigationState(np.eye(5), np.eye(9))
+            step = inekf.NavigationInEkf_Predict(state, np.zeros(3), np.zeros(3),
+                np.array([.01]), np.zeros(6), np.zeros(3))
+            assert step.result is inekf.NavigationInEkfResult.INVALID_INPUT
+        else:
+            state = State_Create()
+            step = eskf.Eskf20_Predict(state, np.zeros(3), np.zeros(3), np.zeros(3),
+                np.zeros(12), np.array([.01]))
+>           assert step.result is eskf.NavigationEskf20Result.INVALID_INPUT
+E           AssertionError: assert <NavigationEskf20Result.NUMERIC_ERROR: 'numeric_error'> is <NavigationEskf20Result.INVALID_INPUT: 'invalid_input'>
+E            +  where <NavigationEskf20Result.NUMERIC_ERROR: 'numeric_error'> = Eskf20Step(result=<NavigationEskf20Result.NUMERIC_ERROR: 'numeric_error'>, state=Eskf20State(position=array([ 0.3, -0.6,  0.1]), velocity=array([ 0.4,  0.2, -0.3]), rotation=array([[ 0.67121217, -0.72380745, -0.1599281 ],\n       [ 0.56535421,  0.63940893, -0.52108621],\n       [ 0.47942554,  0.25934338,  0.83838664]]), gyro_bias=array([ 0.01, -0.02,  0.03]), accel_bias=array([ 0.02,  0.04, -0.03]), installation=array([[ 0.9027011 ,  0.3816559 ,  0.19866933],\n       [-0.31794932,  0.90278624, -0.28962948],\n       [-0.28989474,  0.19828207,  0.93629336]]), inclination=0.6, declination=-0.2, covariance=array([[ 4.32407506e-03,  2.96935828e-04, -8.53061924e-04,\n        -5.29516985e-04, -5.17502267e-04,  7.67881552e-05,\n        -8.86296109e-05, -5.38373402e-04, -2.04081531e-04,\n         2.16462366e-04, -7.52504333e-04, -4.85839239e-04,\n         3.93900345e-04,  9.03327674e-04, -5.96837134e-04,\n         5.79644160e-04,  2.39527710e-04, -8.84899264e-04,\n        -5.50704874e-04,  2.22028154e-04],\n       [ 2.96935828e-04,  5.44014511e-03,  4.17172636e-04,\n        -4.39990676e-04,  6.78004638e-04,  1.44323581e-03,\n         3.89963161e-04, -4.28177794e-04, -8.00450573e-04,\n         3.8010604...  3.63314792e-04,  1.19065981e-04,  2.70786204e-04,\n        -1.93035466e-04,  7.07462881e-04, -2.94465304e-04,\n         7.14067493e-05,  2.61144352e-04,  4.02365214e-04,\n        -4.74403626e-04, -2.87032326e-04, -2.32750291e-04,\n        -2.30359826e-04,  5.60158225e-04,  3.69184367e-03,\n        -1.81163048e-04, -1.04606837e-04],\n       [-5.50704874e-04,  1.09184991e-04,  3.59142843e-04,\n        -3.78595346e-04, -3.78066728e-04,  3.64720004e-04,\n         1.96174398e-04, -6.39434942e-04,  5.21016926e-04,\n        -3.57474795e-04,  5.53713003e-04, -2.93822525e-04,\n        -5.55004381e-04, -5.56259787e-04,  4.90827743e-04,\n         1.17619087e-04,  4.55974087e-04, -1.81163048e-04,\n         5.12122077e-03,  1.67245309e-04],\n       [ 2.22028154e-04,  4.72344518e-04,  3.28354114e-04,\n         4.05770321e-04,  2.23884107e-05,  2.25101451e-04,\n        -1.40461648e-05, -5.71689174e-05,  4.45358240e-04,\n        -4.71151869e-04, -1.00154368e-04, -4.98073165e-04,\n        -5.88257176e-05, -4.83001950e-04, -1.69704131e-04,\n        -6.09202004e-05,  5.32170260e-05, -1.04606837e-04,\n         1.67245309e-04,  3.49742220e-03]]), time_s=0.0), nis=None, magnetic_rank=None, declination_sensitivity=None).result
+E            +  and   <NavigationEskf20Result.INVALID_INPUT: 'invalid_input'> = <enum 'NavigationEskf20Result'>.INVALID_INPUT
+E            +    where <enum 'NavigationEskf20Result'> = eskf.NavigationEskf20Result
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:144: AssertionError
+___________ test_magnetometer_axis_relabeling_commutes_with_update ____________
+
+    def test_magnetometer_axis_relabeling_commutes_with_update():
+        state = State_Create()
+        sample = MagneticSample_Create(state)
+        sample = replace(sample, corrected_sensor_uT=sample.corrected_sensor_uT + [.03, -.02, .01])
+        axes = Rotation.from_euler("xyz", [.8, -.5, .6]).as_matrix()
+        relabeled = replace(state, installation=state.installation @ axes)
+        relabeled_sample = replace(sample, corrected_sensor_uT=axes.T @ sample.corrected_sensor_uT,
+            covariance_sensor_uT2=axes.T @ sample.covariance_sensor_uT2 @ axes)
+        first = eskf.Eskf20_UpdateMagnetic(state, sample)
+        second = eskf.Eskf20_UpdateMagnetic(relabeled, relabeled_sample)
+        assert first.result is second.result is eskf.NavigationEskf20Result.OK
+        assert_allclose(first.state.rotation, second.state.rotation, atol=5e-15, rtol=0.)
+        assert_allclose(first.state.installation @ axes, second.state.installation, atol=5e-15, rtol=0.)
+        assert_allclose(first.state.covariance, second.state.covariance, atol=5e-17, rtol=1e-10)
+>       assert first.nis == pytest.approx(second.nis, abs=1e-14)
+E       assert 0.0035919514924264745 == 0.00359195149...3503 �� 1.0e-14
+E         
+E         comparison failed
+E         Obtained: 0.0035919514924264745
+E         Expected: 0.0035919514924433503 �� 1.0e-14
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:162: AssertionError
+_____________ test_static_yaw_declination_gauge_survives_dynamics _____________
+
+    def test_static_yaw_declination_gauge_survives_dynamics():
+        state = replace(State_Create(), position=np.zeros(3), velocity=np.zeros(3))
+        axis = np.array([0., 0., 1.])
+        yaw = .4
+        changed = replace(state, rotation=Rotation.from_rotvec(axis * yaw).as_matrix() @ state.rotation,
+                          declination=state.declination - yaw)
+        assert_allclose(MagneticSample_Create(state).corrected_sensor_uT,
+                        MagneticSample_Create(changed).corrected_sensor_uT, atol=2e-14, rtol=0.)
+        tangent = np.zeros(20)
+        tangent[6:9], tangent[19] = state.rotation.T @ axis, 1.
+        force = state.rotation.T @ np.array([0., 0., 9.81])
+        transition, _ = eskf.Covariance_Discretize(state.rotation, np.zeros(3), force, np.zeros(12), .02)
+        for count in range(6):
+            propagated = np.linalg.matrix_power(transition, count) @ tangent
+>           assert_allclose(eskf.Magnetic_Jacobian(state) @ propagated, 0., atol=4e-16)
+E           AssertionError: 
+E           Not equal to tolerance rtol=1e-07, atol=4e-16
+E           
+E           Mismatched elements: 1 / 3 (33.3%)
+E           Mismatch at index:
+E            [0]: -6.661338147750939e-16 (ACTUAL), 0.0 (DESIRED)
+E           Max absolute difference among violations: 6.66133815e-16
+E           Max relative difference among violations: inf
+E            ACTUAL: array([-6.661338e-16, -1.249001e-16, -1.387779e-17])
+E            DESIRED: array(0.)
+
+apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py:179: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_exact_pole_does_not_invent_declination_information[-1.5707963267948966]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_exact_pole_does_not_invent_declination_information[1.5707963267948966]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_oversized_integer_is_rejected_without_escaping_transaction[inekf_predict]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_oversized_integer_is_rejected_without_escaping_transaction[inekf_update]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_oversized_integer_is_rejected_without_escaping_transaction[eskf_predict]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_oversized_integer_is_rejected_without_escaping_transaction[eskf_vector]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_oversized_integer_is_rejected_without_escaping_transaction[eskf_magnetic]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_state_scalars_reject_non_real_scalar_values[0.6-time_s]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_state_scalars_reject_non_real_scalar_values[0.6-inclination]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_state_scalars_reject_non_real_scalar_values[0.6-declination]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_inekf_time_requires_a_real_scalar[value0]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_inekf_time_requires_a_real_scalar[0]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_inekf_time_requires_a_real_scalar[0j]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_scalar_state_values_are_copied_and_canonical
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_eskf_observation_timestamp_requires_scalar_real_value[value0]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_eskf_observation_timestamp_requires_scalar_real_value[0j]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_array_observation_kind_does_not_escape_inekf_transaction
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_vector_time_step_is_not_a_scalar[inekf]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_vector_time_step_is_not_a_scalar[eskf]
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_magnetometer_axis_relabeling_commutes_with_update
+FAILED apps\SCG\experiments\navigation_0_1_3\test_independent_audit.py::test_static_yaw_declination_gauge_survives_dynamics
+======================= 21 failed, 131 passed in 8.09s ========================

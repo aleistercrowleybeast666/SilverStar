@@ -3,6 +3,7 @@
 Recipe provenance b66f142; independent USB safety review has no passed outcome.
 """
 from __future__ import annotations
+from silverstar_fccg.app.version import FirmwareIdentity_Resolve
 from silverstar_fccg.generator.multi_target import (
     AirLinkHeader_Render,
     DeviceInstance,
@@ -261,6 +262,7 @@ def C071Recipe_Render(
             catalog.Component_Get(ground.board).ManifestSha256_Get()
         )
     metadata = {
+        "version_identity": FirmwareIdentity_Resolve(model.identity.firmware_version),
         "silverstar_version": __version__,
         "firmware_version": model.identity.firmware_version,
         "target_role": "ground_station",

@@ -10,6 +10,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "numpy>=2.0,!=2.4.0",
+    "scipy>=1.16.3",
     "PySide6>=6.8",
     "pyqtgraph>=0.13.7",
     "PyOpenGL>=3.1.7",
@@ -38,7 +39,7 @@ where = ["src"]
 version = {attr = "silverstar_flp.app.version.__package_version__"}
 
 [tool.setuptools.package-data]
-silverstar_flp = ["i18n/*.json", "plugins/algorithms/eskf15/*.json", "decoder_profiles/contracts/*.json"]
+silverstar_flp = ["i18n/*.json", "plugins/algorithms/eskf15/*.json", "plugins/algorithms/navigation_reference_v1/*.json", "decoder_profiles/contracts/*.json"]
 
 [tool.pytest.ini_options]
 addopts = "-ra"

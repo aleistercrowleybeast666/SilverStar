@@ -517,6 +517,8 @@ class MainWindow(QMainWindow):
         self.devices_page.installationOrientationChanged.connect(
             self._Jy901bOrientation_Change)
         self.devices_page.mountNoseAxisChanged.connect(self._RawImuMount_Change)
+        self.devices_page.sensorPositionChanged.connect(self._SensorPosition_Change)
+        self.devices_page.installationOriginChanged.connect(self._InstallationOrigin_Change)
         self.devices_page.instanceAddRequested.connect(self._DeviceInstance_Add)
         self.devices_page.otherDeviceToggled.connect(self._OtherDevice_Toggle)
         self.devices_page.installRequested.connect(self._PluginInstall_Dialog)
@@ -590,6 +592,7 @@ class MainWindow(QMainWindow):
         self.build_page.memoryLayoutChanged.connect(self._MemoryLayout_Change)
         self.build_page.native_usb.actionRequested.connect(self._NativeUsb_Request)
         self.devices_page.featureTierChanged.connect(self._FeatureTier_Change)
+        self.devices_page.optionalResourceChanged.connect(self._OptionalResource_Change)
         self.plugin_manager_dialog.panel.installRequested.connect(
             self._PluginInstall_Dialog
         )
@@ -810,6 +813,10 @@ class MainWindow(QMainWindow):
                           "sensor_recommendations", [])),
             )
             self.devices_page.FeatureTier_Set(display.model.build.feature_tier)
+            self.devices_page.OptionalResources_Set(display.model.build)
+            self.devices_page.InstallationOrigin_Set(
+                display.model.sensor_installation.origin_description
+                if display.model.sensor_installation is not None else "")
             self.devices_page.FeatureTier_NoticeSet(self._translator.Text_Get(
                 "configuration.feature_tier_devices_review") if display.tier_device_conflicts else "")
             self.devices_page.Configuration_Set(
@@ -870,6 +877,7 @@ class MainWindow(QMainWindow):
             )
             self.build_page.MemoryLayout_Set(display.model.build.memory_layout)
             self.devices_page.FeatureTier_Set(display.model.build.feature_tier)
+            self.devices_page.OptionalResources_Set(display.model.build)
             if not self._alignment_commit_in_progress:
                 self.algorithm_parameters_page.AlignmentConfiguration_Set(
                     display.model.alignment,
@@ -1123,6 +1131,13 @@ class MainWindow(QMainWindow):
             model.build = replace(model.build, memory_layout=layout)
         self._ProjectConfiguration_Change(mutate)
 
+    def _OptionalResource_Change(self, name: str, enabled: bool) -> None:
+        if name not in ("magnetometer_enabled", "maintenance_log_export_enabled"):
+            return
+        def mutate(model: ProjectModel) -> None:
+            model.build = replace(model.build, **{name: enabled})
+        self._ProjectConfiguration_Change(mutate)
+
     def _FeatureTier_Change(self, tier: str) -> None:
         notes = []
         def mutate(model: ProjectModel) -> None:
@@ -1272,6 +1287,12 @@ class MainWindow(QMainWindow):
             existing = candidate.DeviceInstance_Get(instance_id)
             if component_id:
                 replacement = DeviceInstance(instance_id, component_id)
+                if (existing is not None and
+                        self._service.Plugin_Get(existing.plugin).component_class ==
+                        self._service.Plugin_Get(component_id).component_class):
+                    # Model/interface replacement at the same physical instance
+                    # does not silently discard its measured structural position.
+                    replacement = replace(replacement, position_body_m=existing.position_body_m)
                 if existing is None:
                     candidate.device_instances.append(replacement)
                 else:
@@ -1345,6 +1366,33 @@ class MainWindow(QMainWindow):
 
         self._ProjectConfiguration_Change(change)
 
+    def _InstallationOrigin_Change(self, description: str) -> None:
+        from silverstar_fccg.project.sensor_installation import SensorInstallationConfiguration
+        if self._displaying_model or (not description and self._model.sensor_installation is None):
+            return
+        def change(candidate: ProjectModel) -> None:
+            candidate.sensor_installation = SensorInstallationConfiguration(description)
+        self._ProjectConfiguration_Change(change)
+
+    def _SensorPosition_Change(self, instance_id: str, position: tuple | None) -> None:
+        from silverstar_fccg.project.sensor_installation import (
+            SensorInstallationConfiguration, SensorPosition,
+        )
+        if self._displaying_model:
+            return
+        def change(candidate: ProjectModel) -> None:
+            existing = candidate.DeviceInstance_Get(instance_id)
+            if (existing is None or self._service.Plugin_Get(existing.plugin).component_class
+                    not in ("imu", "gnss")):
+                raise ValueError("Installation position requires an IMU/GNSS instance")
+            candidate.sensor_installation = (candidate.sensor_installation or
+                                              SensorInstallationConfiguration())
+            candidate.device_instances = [
+                replace(item, position_body_m=SensorPosition(*position) if position is not None else None)
+                if item.instance_id == instance_id else item for item in candidate.device_instances
+            ]
+        self._ProjectConfiguration_Change(change)
+
     def _FlightRadioSelection_Change(self, identity: str, plugin: str, module: str) -> None:
         if not plugin or plugin not in {RADIO_PLUGIN, "silverstar.device.telemetry.nrf24l01p"}:
             self._DeviceInstance_Change(identity, plugin)
@@ -1408,7 +1456,8 @@ class MainWindow(QMainWindow):
         )
         from silverstar_fccg.project.feature_tiers import FeatureTier_DeviceClassLimitGet
         class_max = FeatureTier_DeviceClassLimitGet(self._model.build.feature_tier, component_class,
-            str(candidates[0].options.get("device_category", "")), class_max)
+            str(candidates[0].options.get("device_category", "")), class_max,
+            self._model.build.magnetometer_enabled)
         if len(selected) >= class_max:
             return
         plugin_counts: dict[str, int] = {}

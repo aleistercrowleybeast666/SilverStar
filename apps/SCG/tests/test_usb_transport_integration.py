@@ -5,6 +5,7 @@ HAL are host models; this does not establish physical endpoint cancellation.
 """
 from pathlib import Path
 import os
+import re
 import subprocess
 import pytest
 
@@ -25,6 +26,8 @@ def integrated(request):
     if not reference:
         pytest.skip("complete native CubeMX references not configured")
     root = Path(reference) / ("cube-" + request.param + "-usb")
+    if request.param == 'f407' and os.environ.get('SILVERSTAR_USB_NATIVE_F407_REFERENCE'):
+        root = Path(os.environ['SILVERSTAR_USB_NATIVE_F407_REFERENCE'])
     native = _Project_Read(root)
     plan = UsbTransport_Plan(root)
     assert not plan.reasons, plan.reasons
@@ -40,6 +43,25 @@ def test_edited_hook_never_receives_automatic_patches(integrated):
     changed[owner] = (source[:opening+1] + '\n/* user owned callback logic */\n' + source[opening+1:]).encode()
     with pytest.raises(ValueError, match="UNREVIEWED_LIFECYCLE_SOURCE"):
         UsbIntegrationProfile_Get(changed)
+
+
+def test_edited_hal_interface_requires_component_review(integrated):
+    part, _root, native, _plan, _rendered = integrated
+    changed = dict(native)
+    name = 'stm32f4xx_hal_pcd.h' if part == 'f407' else 'stm32f1xx_hal_pcd.h'
+    owner = next(path for path in changed if Path(path).name == name)
+    changed[owner] += b'\n/* interface revision requires new review */\n'
+    with pytest.raises(ValueError, match='UNREVIEWED_LIFECYCLE_SOURCE'):
+        UsbIntegrationProfile_Get(changed)
+
+
+def test_unimplemented_controller_is_never_selected_from_class_abi(integrated, monkeypatch):
+    import silverstar_fccg.generator.usb_cdc_integration as generator
+    _part, _root, native, plan, _rendered = integrated
+    profile = {**UsbIntegrationProfile_Get(native), 'controller_contract': 'unreviewed-drd'}
+    monkeypatch.setattr(generator, 'UsbIntegrationProfile_Get', lambda files: profile)
+    with pytest.raises(ValueError, match='UNREVIEWED_CONTROLLER_ADAPTER'):
+        generator.UsbCdcIntegration_Render(native, plan.owners)
 
 
 def test_component_profile_preserves_unrelated_project_and_clock_text(integrated):
@@ -63,6 +85,38 @@ def test_integrated_export_preserves_every_inspected_input(integrated, tmp_path)
     UsbTransport_Export(root, tmp_path / "kit", integrate=True)
     assert _Project_Read(root) == native
     assert (tmp_path / "kit/lifecycle-integration.json").is_file()
+
+
+@pytest.mark.parametrize('capacity', [63, 64])
+def test_native_rx_storage_must_fit_the_packet_before_arming(integrated, tmp_path, capacity):
+    _part, _root, _native, _plan, rendered = integrated
+    source = next(body.decode() for name, body in rendered.items() if name.endswith('/usbd_cdc_if.c'))
+    (tmp_path / 'usb_cdc_transport.h').write_bytes(UsbCdcTransport_Render()['Inc/usb_cdc_transport.h'])
+    program = '''#include <stdint.h>
+#include "usb_cdc_transport.h"
+#define USBD_OK 0U
+#define USBD_FAIL 2U
+typedef struct { uint8_t state; } USBD_HandleTypeDef;
+static USBD_HandleTypeDef hUsbDeviceFS;
+static uint8_t UserRxBufferFS[@CAPACITY@], UserTxBufferFS[1];
+uint8_t USBD_CDC_SetTxBuffer(USBD_HandleTypeDef *dev,uint8_t *data,uint32_t length)
+{ (void)dev;(void)data;(void)length;return USBD_OK; }
+uint8_t USBD_CDC_SetRxBuffer(USBD_HandleTypeDef *dev,uint8_t *data)
+{ (void)dev;(void)data;return USBD_OK; }
+'''.replace('@CAPACITY@', str(capacity)) + _Function_Get(source, 'CDC_Init_FS') + '''
+int main(void) { return CDC_Init_FS(); }
+'''
+    path = tmp_path / 'storage.c'
+    path.write_text(program, encoding='utf8')
+    result = subprocess.run(['gcc','-std=c11','-Wall','-Wextra','-Werror','-fanalyzer',
+        '-I'+str(tmp_path),str(path),'-o',str(path.with_suffix('.exe'))], capture_output=True, text=True, timeout=60)
+    (tmp_path / 'compile.log').write_text(result.stdout + result.stderr, encoding='utf8')
+    if capacity < 64:
+        assert result.returncode != 0, 'Native RX storage smaller than the armed packet was accepted'
+        assert 'native CDC RX buffer' in result.stderr
+    else:
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert subprocess.run([str(path.with_suffix('.exe'))], timeout=15).returncode == 0
 
 
 HEADER = r'''
@@ -190,11 +244,19 @@ int main(int argc,char **argv)
  global_regs.DIEPTXF[0]=(64U<<16)|192U;global_regs.DIEPTXF[1]=(16U<<16)|256U;
  if(strcmp(scenario,"init-arm-fail")==0) { fail_prepare=1U; }
  if(strcmp(scenario,"init-open-fail")==0) { fail_open=1U; }
+ if(strcmp(scenario,"config-geometry")==0) { global_regs.BTABLE=64U;global_regs.GRXFSIZ=0U; }
+ if(strcmp(scenario,"config-class-contract")==0) { cls.Init=NULL; }
+ /* The native EP0 SetConfig path marks CONFIGURED before calling the class. */
+ hUsbDeviceFS.dev_state=USBD_STATE_CONFIGURED;
  uint8_t configured=USBD_SetClassConfig(&hUsbDeviceFS,1U);
  uint8_t out[512],data[256];memset(data,0x39,sizeof(data));memset(UserRxBufferFS,0x72,sizeof(UserRxBufferFS));
  uint32_t session;uint16_t length;
+ if(strcmp(scenario,"config-geometry")==0 || strcmp(scenario,"config-class-contract")==0)
+ { assert(configured!=USBD_OK && prepared==0U && hUsbDeviceFS.dev_state==USBD_STATE_DEFAULT);
+   assert(UsbCdc_Read(out,sizeof(out),&length,&session)==USB_CDC_OFFLINE);return 0; }
  if(fail_prepare || fail_open)
- { assert(configured!=USBD_OK);assert(UsbCdc_Read(out,sizeof(out),&length,&session)==USB_CDC_OFFLINE);return 0; }
+ { assert(configured!=USBD_OK && hUsbDeviceFS.dev_state==USBD_STATE_DEFAULT);
+   assert(UsbCdc_Read(out,sizeof(out),&length,&session)==USB_CDC_OFFLINE);return 0; }
  assert(configured==USBD_OK && prepared==1U);hUsbDeviceFS.dev_state=USBD_STATE_CONFIGURED;
  session=UsbCdc_SessionGet();
  if(strcmp(scenario,"bad-class-contract")==0)
@@ -204,6 +266,8 @@ int main(int argc,char **argv)
  { if(strcmp(scenario,"callback-index")==0) { HAL_PCD_DataOutStageCallback(&@PCD@,255U);assert(staged==0U); }
    if(strcmp(scenario,"callback-owner")==0) { PCD_HandleTypeDef wrong={0};HAL_PCD_DataInStageCallback(&wrong,1U);assert(staged==0U); }
    if(strcmp(scenario,"callback-error")==0) { stage_result=USBD_FAIL;HAL_PCD_DataOutStageCallback(&@PCD@,1U);assert(staged==1U); }
+   if(strcmp(scenario,"callback-null-class")==0) { hUsbDeviceFS.@CLASS@=NULL;HAL_PCD_DataOutStageCallback(&@PCD@,0U);assert(staged==0U); }
+   if(strcmp(scenario,"callback-class-index")==0) { hUsbDeviceFS.classId=1U;HAL_PCD_DataInStageCallback(&@PCD@,0U);assert(staged==0U); }
    assert(UsbCdc_Read(out,sizeof(out),&length,&session)==USB_CDC_OFFLINE);return 0; }
  if(strcmp(scenario,"rx-length")==0)
  { uint32_t huge=65536U;assert(CDC_Receive_FS(UserRxBufferFS,&huge)!=USBD_OK);assert(UsbCdc_Read(out,sizeof(out),&length,&session)==USB_CDC_OFFLINE);return 0; }
@@ -322,13 +386,16 @@ USBD_StatusTypeDef USBD_LL_DataOutStage(USBD_HandleTypeDef *p,uint8_t ep,uint8_t
 @pytest.mark.parametrize('scenario', ['normal','init-arm-fail','init-open-fail','rx-length','tx-fail',
     'abort-fail','close-fail','flush-fail','suspend','disconnect',
     'retire-in-active','retire-out-active','retire-out-pending','bad-class-contract',
-    'callback-index','callback-owner','callback-error','rearm-failure','zlp-failure','retire-out-pending-retry'])
+    'callback-index','callback-owner','callback-error','rearm-failure','zlp-failure','retire-out-pending-retry','config-geometry','config-class-contract',
+    'callback-null-class','callback-class-index'])
 def test_generated_callbacks_and_transport_lifecycle(host_program, scenario):
     indexed, path = host_program
     if scenario == 'flush-fail' and not indexed:
         pytest.skip('PMA profile has no FIFO flush operation; its abort/close paths are tested separately')
     if scenario.startswith('retire-out-pending') and not indexed:
         pytest.skip('PMA has no global RX FIFO; endpoint disable and CTR checks are covered separately')
+    if scenario == 'callback-class-index' and not indexed:
+        pytest.skip('Legacy class handle has no indexed class slot; null class boundary is exercised')
     result = subprocess.run([str(path/'test.exe'),scenario], capture_output=True, text=True, timeout=15)
     (path/(scenario+'.log')).write_text(result.stdout+result.stderr, encoding='utf8')
     assert result.returncode == 0, result.stdout+result.stderr
@@ -384,6 +451,8 @@ def native_init_program(integrated, tmp_path_factory):
     (path / 'usb_cdc_transport.h').write_bytes(UsbCdcTransport_Render()['Inc/usb_cdc_transport.h'])
     source = next(body.decode() for name, body in rendered.items() if name.endswith('/usbd_conf.c'))
     body = _Function_Get(source, 'USBD_LL_Init')
+    configuration_calls = len(re.findall(r'\bHAL_PCDEx_(?:SetRxFiFo|SetTxFiFo|PMAConfig)\s*\(', body))
+    has_notification_fifo = bool(re.search(r'HAL_PCDEx_SetTxFiFo\s*\([^,]+,\s*2U?\s*,', body))
     if 'UsbCdcNative_MemoryInit' in source:
         body = _Function_Get(source, 'UsbCdcNative_MemoryInit') + '\n' + body
     retire_source = rendered['Src/usb_cdc_retire.c'].decode()
@@ -401,7 +470,9 @@ uint8_t HAL_PCDEx_SetTxFiFo(PCD_HandleTypeDef *p,uint8_t n,uint16_t size)
     regs.DIEPTXF[n-1U]=((uint32_t)size<<16)|offset;if(bad_readback) { regs.DIEPTXF[n-1U]=0U; } }
   return 0U; }
 '''
-        check = 'assert(calls==3U && UsbCdcRetire_ConfigurationCheck(&hUsbDeviceFS)!=USB_CDC_OK);'
+        check = ('assert(calls==4U && UsbCdcRetire_ConfigurationCheck(&hUsbDeviceFS)==USB_CDC_OK);'
+            if has_notification_fifo else
+            'assert(calls==3U && UsbCdcRetire_ConfigurationCheck(&hUsbDeviceFS)!=USB_CDC_OK);')
         valid = 'regs.DIEPTXF[0]=(64U<<16)|192U;regs.DIEPTXF[1]=(16U<<16)|256U;'
     else:
         setters = r'''
@@ -420,9 +491,13 @@ int main(int argc,char **argv)
  if(strcmp(argv[1],"readback")==0) { bad_readback=1U; }
  if(strncmp(argv[1],"call-",5)==0) { fail_call=(unsigned)strtoul(argv[1]+5,NULL,10); }
  uint8_t result=USBD_LL_Init(&hUsbDeviceFS);
+ if(result!=USBD_OK) { assert(fail_call && calls==fail_call);return 0; }
  assert(result==USBD_OK);
  if(strcmp(argv[1],"valid-layout")==0) { @VALID@ assert(UsbCdcRetire_ConfigurationCheck(&hUsbDeviceFS)==USB_CDC_OK);return 0; }
  if(strcmp(argv[1],"overlap")==0) { @VALID@ @OVERLAP@ assert(UsbCdcRetire_ConfigurationCheck(&hUsbDeviceFS)!=USB_CDC_OK);return 0; }
+ if(strcmp(argv[1],"table-base")==0) { regs.BTABLE=64U;assert(UsbCdcRetire_ConfigurationCheck(&hUsbDeviceFS)!=USB_CDC_OK && link_down>0U);return 0; }
+ if(strcmp(argv[1],"missing-notify")==0) { @MISSING@ assert(UsbCdcRetire_ConfigurationCheck(&hUsbDeviceFS)!=USB_CDC_OK && link_down>0U);return 0; }
+ if(strcmp(argv[1],"capacity")==0) { @CAPACITY@ assert(UsbCdcRetire_ConfigurationCheck(&hUsbDeviceFS)!=USB_CDC_OK && link_down>0U);return 0; }
  if(fail_call||bad_readback) { assert(UsbCdcRetire_ConfigurationCheck(&hUsbDeviceFS)!=USB_CDC_OK && link_down>0U); }
  else { assert(result==USBD_OK);@CHECK@ }
  return 0;
@@ -430,6 +505,8 @@ int main(int argc,char **argv)
 '''
     harness = harness.replace('@VALID@', valid).replace('@OVERLAP@',
         'regs.DIEPTXF[1]=(16U<<16)|192U;' if indexed else '@PCD@.IN_ep[2].pmaadress=0xC0U;')
+    harness = harness.replace('@MISSING@', 'regs.DIEPTXF[1]=0U;' if indexed else '@PCD@.IN_ep[2].pmaadress=0U;')
+    harness = harness.replace('@CAPACITY@', 'regs.DIEPTXF[1]=(32U<<16)|319U;' if indexed else '@PCD@.IN_ep[2].pmaadress=512U;')
     program = (INIT_HEADER.replace('@SETTERS@', setters) + body + harness.replace('@CHECK@', check)).replace(
         '@PCD@', 'hpcd_USB_OTG_FS' if indexed else 'hpcd_USB_FS')
     (path / 'test.c').write_text(program, encoding='utf8')
@@ -438,14 +515,17 @@ int main(int argc,char **argv)
     result = subprocess.run(command, capture_output=True, text=True, timeout=60)
     (path/'compile.log').write_text(result.stdout+result.stderr, encoding='utf8')
     assert result.returncode == 0, result.stdout+result.stderr
-    return indexed, path
+    return indexed, path, configuration_calls
 
 
-@pytest.mark.parametrize('scenario', ['normal','valid-layout','overlap','pcd-failure','readback','call-1','call-2','call-3','call-4','call-5'])
+@pytest.mark.parametrize('scenario', ['normal','valid-layout','overlap','pcd-failure','readback','call-1','call-2','call-3','call-4','call-5',
+    'table-base','missing-notify','capacity'])
 def test_native_initialization_configuration_failures(native_init_program, scenario):
-    indexed, path = native_init_program
-    if indexed and scenario in {'call-4','call-5'}:
-        pytest.skip('Original CubeMX OTG FS layout has three calls; missing TX2 is rejected at configuration boundary')
+    indexed, path, configuration_calls = native_init_program
+    if scenario.startswith('call-') and int(scenario.split('-')[1]) > configuration_calls:
+        pytest.skip('Native configuration has no setter at this call position; all actual setters are exercised')
+    if indexed and scenario == 'table-base':
+        pytest.skip('OTG FIFO controller has no PMA buffer table; its FIFO bounds are exercised separately')
     result = subprocess.run([str(path/'test.exe'),scenario], capture_output=True, text=True, timeout=15)
     (path/(scenario+'.log')).write_text(result.stdout+result.stderr, encoding='utf8')
     assert result.returncode == 0, result.stdout+result.stderr

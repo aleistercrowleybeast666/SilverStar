@@ -112,8 +112,9 @@ int main(void)
     TEST_CHECK((system->enabled_capabilities & SYSTEM_CAPABILITY_IMU) != 0U);
     TEST_CHECK(((system->enabled_capabilities & SYSTEM_CAPABILITY_GNSS) != 0U) ==
                (SYSTEM_USER_GNSS_ENABLE != 0U));
-    TEST_CHECK((system->enabled_capabilities &
-                SYSTEM_CAPABILITY_MAGNETOMETER) == 0U);
+    TEST_CHECK(((system->enabled_capabilities &
+                 SYSTEM_CAPABILITY_MAGNETOMETER) != 0U) ==
+               (SYSTEM_USER_MAGNETOMETER_ENABLE != 0U));
 
     TEST_CHECK(FloatClose(estimator->p0_diagonal[0],
                           SYSTEM_ESTIMATOR_P0_POSITION_E_VARIANCE_M2));

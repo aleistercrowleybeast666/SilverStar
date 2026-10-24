@@ -169,6 +169,7 @@ static size_t LoggerBus_PayloadSizeGet(FlightLogRecordType type)
 {
     switch (type)
     {
+        case FLIGHT_LOG_RECORD_NAVIGATION_OPERATION_PART: return sizeof(((FlightLogRecord *)0)->payload.navigation_operation_part);
         case FLIGHT_LOG_RECORD_EVENT: return sizeof(((FlightLogRecord *)0)->payload.event);
         case FLIGHT_LOG_RECORD_STATS: return sizeof(((FlightLogRecord *)0)->payload.stats);
         case FLIGHT_LOG_RECORD_ESTIMATOR: return sizeof(((FlightLogRecord *)0)->payload.estimator);
@@ -217,7 +218,7 @@ static size_t LoggerBus_PayloadSizeGet(FlightLogRecordType type)
 
 static uint8_t LoggerBus_EstimatorLaneGet(FlightLogRecordType type)
 {
-    return (uint8_t)(type == FLIGHT_LOG_RECORD_BARO_MEASUREMENT ||
+    return (uint8_t)(type == FLIGHT_LOG_RECORD_NAVIGATION_OPERATION_PART || type == FLIGHT_LOG_RECORD_BARO_MEASUREMENT ||
         type == FLIGHT_LOG_RECORD_ESKF15_BODY_INPUT ||
         type == FLIGHT_LOG_RECORD_ESKF15_INITIAL_P_PART ||
         type == FLIGHT_LOG_RECORD_ESKF15_INITIAL_STATE ||
@@ -266,7 +267,7 @@ static LoggerBusResult LoggerBus_RecordPush(
 
 static uint8_t LoggerBus_BootstrapAllows(FlightLogRecordType type)
 {
-    return (uint8_t)((type == FLIGHT_LOG_RECORD_EVENT) ||
+    return (uint8_t)((type == FLIGHT_LOG_RECORD_NAVIGATION_OPERATION_PART) || (type == FLIGHT_LOG_RECORD_EVENT) ||
         (type == FLIGHT_LOG_RECORD_STATS) ||
         (type == FLIGHT_LOG_RECORD_SYSTEM_CONFIG) ||
         (type == FLIGHT_LOG_RECORD_DEVICE_DESCRIPTOR) ||
@@ -991,6 +992,13 @@ LoggerBusResult LoggerBus_NavigationQualityPush(
         record, sizeof(*record), 1U);
 }
 
+LoggerBusResult LoggerBus_NavigationOperationPush(uint64_t timestamp_us,
+    const FlightLogNavigationOperationPartRecord *record)
+{
+    return LoggerBus_ConfiguredRecordPush(FLIGHT_LOG_RECORD_NAVIGATION_OPERATION_PART,
+        timestamp_us,0U,record,sizeof(*record),1U);
+}
+
 LoggerBusResult LoggerBus_Eskf15BodyInputPush(
     uint64_t timestamp_us, const FlightLogEskf15BodyInputRecord *record)
 {
@@ -1274,7 +1282,8 @@ LoggerBusResult LoggerBus_MaintenanceDrainBegin(void)
     { result = LOGGER_BUS_RESULT_BAD_STATE; }
     else if (s_finalization_state == LOGGER_BUS_FINALIZATION_FINALIZED)
     { result = LOGGER_BUS_RESULT_OK; }
-    else if ((s_diagnostics.startup_state == LOGGER_STREAMING_READY) &&
+    else if (((s_diagnostics.startup_state == LOGGER_BOOTSTRAP) ||
+              (s_diagnostics.startup_state == LOGGER_STREAMING_READY)) &&
         (s_request.phase == LOGGER_REQUEST_IDLE) &&
         (s_finalization_state == LOGGER_BUS_FINALIZATION_IDLE))
     {

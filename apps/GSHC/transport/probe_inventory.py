@@ -5,10 +5,13 @@ import base64
 from dataclasses import dataclass
 from enum import Enum
 import json
+import math
 import re
 import shutil
 import subprocess
 import sys
+import tempfile
+from threading import Lock
 import time
 
 
@@ -142,41 +145,76 @@ def ProbeInventory_Parse(document) -> ProbeInventory:
     return ProbeInventory(ProbeInventoryResult.Ready if probes else ProbeInventoryResult.Empty, probes)
 
 
+_Inventory_Lock = Lock()
+_Inventory_PendingProcess = None
+
+
+def _ProbeHelper_Stop(process):
+    """Only reap our helper, with a finite cleanup budget and no pipe drain."""
+    try:
+        if process.poll() is not None:
+            return True
+        process.kill()
+        process.wait(timeout=1.0)
+        return True
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+
+
+def _ProbeInventory_Query(cancel, executable, timeout):
+    global _Inventory_PendingProcess
+    if _Inventory_PendingProcess is not None:
+        if _Inventory_PendingProcess.poll() is None:
+            return ProbeInventory(ProbeInventoryResult.Failed, detail='Previous host inventory helper is still exiting; retry later')
+        _Inventory_PendingProcess = None
+    command = [executable,'-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-EncodedCommand',
+        base64.b64encode(_PNP_SCRIPT.encode('utf-16le')).decode('ascii')]
+    deadline = time.monotonic() + timeout
+    # Files avoid communicate()'s pipe-reader threads and unbounded drain after
+    # kill. Read only after exit and cap the bytes admitted to the JSON parser.
+    with tempfile.TemporaryFile() as output, tempfile.TemporaryFile() as errors:
+        process = subprocess.Popen(command, stdout=output, stderr=errors,
+            creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
+        try:
+            while True:
+                if cancel.is_set():
+                    return ProbeInventory(ProbeInventoryResult.Cancelled)
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    return ProbeInventory(ProbeInventoryResult.Failed, detail='Host enumeration timed out; retry is available')
+                if process.poll() is not None:
+                    break
+                cancel.wait(min(0.1, remaining))
+            output.seek(0); errors.seek(0)
+            stdout, stderr = output.read(1024*1024+1), errors.read(300)
+            if cancel.is_set():
+                return ProbeInventory(ProbeInventoryResult.Cancelled)
+            if process.returncode or len(stdout) > 1024*1024:
+                return ProbeInventory(ProbeInventoryResult.Failed, detail='Host enumeration failed: '+stderr.decode('utf-8',errors='replace'))
+            return ProbeInventory_Parse(json.loads(stdout.decode('utf-8-sig')))
+        finally:
+            if not _ProbeHelper_Stop(process):
+                # Do not accumulate helpers if the OS has not confirmed exit.
+                _Inventory_PendingProcess = process
+
+
 def ProbeInventory_Read(cancel, *, timeout=20.0) -> ProbeInventory:
     if cancel.is_set():
         return ProbeInventory(ProbeInventoryResult.Cancelled)
     executable = (shutil.which('pwsh.exe') or shutil.which('powershell.exe')) if sys.platform == 'win32' else None
     if not executable:
         return ProbeInventory(ProbeInventoryResult.MissingDependency, detail='Windows PowerShell/CIM is required; no driver or package was installed')
-    command = [executable,'-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-EncodedCommand',
-        base64.b64encode(_PNP_SCRIPT.encode('utf-16le')).decode('ascii')]
-    process = None
+    if not _Inventory_Lock.acquire(blocking=False):
+        return ProbeInventory(ProbeInventoryResult.Failed, detail='Host inventory is already running')
     try:
-        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-            creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
-        deadline = time.monotonic() + timeout
-        while True:
-            if cancel.is_set() or time.monotonic() >= deadline:
-                process.kill()  # Only this worker's own host inventory helper.
-                process.communicate()
-                return ProbeInventory(ProbeInventoryResult.Cancelled if cancel.is_set() else ProbeInventoryResult.Failed,
-                    detail='Host enumeration timed out; retry is available')
-            try:
-                stdout, stderr = process.communicate(timeout=0.1)
-                break
-            except subprocess.TimeoutExpired:
-                continue
-        if cancel.is_set():
-            return ProbeInventory(ProbeInventoryResult.Cancelled)
-        if process.returncode or len(stdout) > 1024*1024:
-            return ProbeInventory(ProbeInventoryResult.Failed, detail='Host enumeration failed: '+stderr.decode('utf-8',errors='replace')[:300])
-        return ProbeInventory_Parse(json.loads(stdout.decode('utf-8-sig')))
-    except (OSError, ValueError) as exc:
+        timeout = float(timeout)
+        if not math.isfinite(timeout) or timeout < 0:
+            raise ValueError('Host enumeration requires a finite nonnegative timeout')
+        return _ProbeInventory_Query(cancel, executable, timeout)
+    except (OSError, TypeError, ValueError) as exc:
         return ProbeInventory(ProbeInventoryResult.Failed, detail=str(exc)[:300])
     finally:
-        if process is not None and process.poll() is None:
-            process.kill()
-            process.communicate()
+        _Inventory_Lock.release()
 
 
 class ProbeSelection:

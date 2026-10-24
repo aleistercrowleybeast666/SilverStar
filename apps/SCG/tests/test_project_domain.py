@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from dataclasses import replace
 from pathlib import Path
 
@@ -125,7 +126,18 @@ def test_dependency_and_resource_conflicts_are_reported(builtin_catalog) -> None
 
 def test_source_graph_is_complete_and_has_one_truth(builtin_catalog) -> None:
     graph = SourceGraph_Resolve(ReferenceProject_Create(), builtin_catalog)
-    assert len(graph.sources) == 152
+    # Preserve the original 152-source expectation as a named baseline, then
+    # account for six Src -> Adapter/Src moves and seven existing contributions.
+    # Exact set equality catches missing/extra files even when their counts match.
+    baseline = json.loads((Path(__file__).parent / "fixtures/reference_source_graph_0_1_3.json").read_text(encoding="utf-8"))
+    historical = set(baseline["historical_sources"])
+    relocations = baseline["relocations"]
+    additions = set(baseline["additions"])
+    assert len(historical) == 152 and len(relocations) == 6 and len(additions) == 7
+    assert set(relocations) <= historical
+    expected = (historical - set(relocations)) | set(relocations.values()) | additions
+    assert set(graph.sources) == expected
+    assert len(graph.sources) == len(expected) == 159
     assert "System/Src/system_device_startup.c" in graph.sources
     assert "Algorithm/Common/Src/navigation_quality.c" in graph.sources
     assert "System/Src/system_navigation_health.c" in graph.sources

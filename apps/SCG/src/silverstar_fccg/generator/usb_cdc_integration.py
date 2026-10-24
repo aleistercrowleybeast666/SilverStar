@@ -1,7 +1,7 @@
 """Opt-in source-bound classic CDC integration; never edits the native input.
 
 Bulk derivatives reuse the existing checked vendor transformations, then bind
-the independent transport. EP0 policy is unchanged and remains NOT PROVEN.
+the independent transport. Complete EP0 behavior remains NOT PROVEN.
 """
 from __future__ import annotations
 
@@ -68,7 +68,7 @@ def UsbIntegrationProfile_Get(files: dict[str, bytes]) -> dict:
                         raise ValueError('existing application TX writer ' + path)
         except (ValueError, UnicodeError) as error:
             raise ValueError('UNREVIEWED_LIFECYCLE_SOURCE: ' + str(error)) from error
-        return {key: profile[key] for key in ('name', 'indexed', 'pcd')} | {
+        return {key: profile[key] for key in ('name', 'indexed', 'pcd', 'controller_contract')} | {
             'fingerprint': fingerprint, 'binding': 'REVIEWED_COMPONENTS_AND_HOOK_REGIONS',
             'configuration_authority': 'CUBEMX_USER_INPUT', 'compiled_and_hardware_acceptance': 'NOT_PROVEN'}
     raise ValueError("UNREVIEWED_LIFECYCLE_SOURCE: unknown middleware/HAL component; generic kit and adaptation audit remain available")
@@ -78,6 +78,14 @@ def _Bulk_Derive(original: bytes, indexed: bool) -> str:
     if indexed:
         from silverstar_fccg.generator.native_usb_indexed import NativeUsbIndexedData_Derive
         source = NativeUsbIndexedData_Derive(original).decode()
+        # The borrowed guard is redundant with capability admission, the
+        # retained one-slot static assertion and the pinned header's incompatible
+        # composite API. Keep those real constraints and the native conditionals.
+        guard = ('#ifdef USE_USBD_COMPOSITE\n'
+            '#error "Private indexed CDC profile requires a single non-composite class"\n#endif\n')
+        if source.count(guard) != 1:
+            raise ValueError('Unreviewed indexed compile-time guard owner')
+        source = source.replace(guard, '', 1)
     else:
         from silverstar_fccg.generator.native_usb_data import NativeUsbData_Derive
         source = NativeUsbData_Derive(original).decode()
@@ -116,10 +124,12 @@ def _Core_Derive(original: bytes, indexed: bool) -> str:
     source = _Replace(source, 'USBD_SetClassConfig', '''USBD_StatusTypeDef USBD_SetClassConfig(USBD_HandleTypeDef *pdev, uint8_t cfgidx)
 {
   if ((pdev != &hUsbDeviceFS) || @GUARD@(@CLASS@ == NULL) ||
-      (@CLASS@->Init == NULL)) { UsbCdc_LinkDown(); return USBD_FAIL; }
-  if (UsbCdcRetire_ConfigurationCheck(pdev) != USB_CDC_OK) { return USBD_FAIL; }
+      (@CLASS@->Init == NULL))
+  { hUsbDeviceFS.dev_state = USBD_STATE_DEFAULT; UsbCdc_LinkDown(); return USBD_FAIL; }
+  if (UsbCdcRetire_ConfigurationCheck(pdev) != USB_CDC_OK)
+  { pdev->dev_state = USBD_STATE_DEFAULT; return USBD_FAIL; }
   if (@CLASS@->Init(pdev, cfgidx) != USBD_OK)
-  { UsbCdc_LinkDown(); return USBD_FAIL; }
+  { pdev->dev_state = USBD_STATE_DEFAULT; UsbCdc_LinkDown(); return USBD_FAIL; }
   /* Init has opened the endpoints and checked the initial receive arm. */
   if (UsbCdc_Configure() != USB_CDC_OK)
   { pdev->dev_state = USBD_STATE_DEFAULT; UsbCdc_LinkDown(); return USBD_FAIL; }
@@ -164,6 +174,8 @@ def _Interface_Derive(original: bytes) -> str:
     source = source.replace('#include "usbd_cdc_if.h"', '#include "usbd_cdc_if.h"\n#include "usb_cdc_transport.h"\n#include <stddef.h>')
     source = _Replace(source, 'CDC_Init_FS', '''static int8_t CDC_Init_FS(void)
 {
+  _Static_assert(sizeof(UserRxBufferFS) >= USB_CDC_PACKET_SIZE,
+      "native CDC RX buffer must fit the armed packet");
   if (USBD_CDC_SetTxBuffer(&hUsbDeviceFS, UserTxBufferFS, 0U) != USBD_OK)
   { return (int8_t)USBD_FAIL; }
   if (USBD_CDC_SetRxBuffer(&hUsbDeviceFS, UserRxBufferFS) != USBD_OK)
@@ -197,6 +209,8 @@ def _Ll_Derive(original: bytes, indexed: bool, pcd: str) -> str:
     # Keep native clock/PMA/FIFO setup; do not import the older private F407
     # derivative's changed FIFO layout into a generic transport kit.
     source = original.decode('utf-8-sig')
+    class_guard = ('(hUsbDeviceFS.classId != 0U) || (hUsbDeviceFS.pClass[0] == NULL)'
+        if indexed else 'hUsbDeviceFS.pClass == NULL')
     source = source.replace('#include "usbd_cdc.h"', '#include "usbd_cdc.h"\n#include "usb_cdc_transport.h"\n#include "usb_cdc_retire.h"')
     source = _Replace(source, 'USBD_LL_CloseEP', '''USBD_StatusTypeDef USBD_LL_CloseEP(USBD_HandleTypeDef *pdev, uint8_t ep_addr)
 {
@@ -209,9 +223,12 @@ def _Ll_Derive(original: bytes, indexed: bool, pcd: str) -> str:
             raise ValueError('Unreviewed native data callback: ' + direction)
         new = ('''  if ((hpcd != &@PCD@) || (hpcd->pData != &hUsbDeviceFS) || (epnum > @MAX@U))
   { hUsbDeviceFS.dev_state = USBD_STATE_DEFAULT; UsbCdc_LinkDown(); return; }
+  if (@CLASS_GUARD@)
+  { hUsbDeviceFS.dev_state = USBD_STATE_DEFAULT; UsbCdc_LinkDown(); return; }
   if (USBD_LL_@DIR@Stage(&hUsbDeviceFS, epnum, hpcd->@ARRAY@_ep[epnum].xfer_buff) != USBD_OK)
   { hUsbDeviceFS.dev_state = USBD_STATE_DEFAULT; UsbCdc_LinkDown(); }'''.replace('@PCD@', pcd)
-            .replace('@MAX@', str(maximum)).replace('@DIR@', direction).replace('@ARRAY@', array))
+            .replace('@MAX@', str(maximum)).replace('@DIR@', direction).replace('@ARRAY@', array)
+            .replace('@CLASS_GUARD@', class_guard))
         source = source.replace(old, new, 1)
     source = source.replace('#include "usb_cdc_retire.h"', '#include "usb_cdc_retire.h"\n'
         'extern USBD_HandleTypeDef hUsbDeviceFS;\n'
@@ -293,6 +310,9 @@ UsbCdcResult UsbCdcRetire_Endpoint(USBD_HandleTypeDef *device, uint8_t address)
 def UsbCdcIntegration_Render(files: dict[str, bytes], owners: dict[str, str]) -> dict[str, bytes]:
     profile = UsbIntegrationProfile_Get(files)
     indexed = profile['indexed']
+    expected_controller = 'otg-fs-f4-cpu-v1' if indexed else 'pma-f1-single-v1'
+    if profile.get('controller_contract') != expected_controller:
+        raise ValueError('UNREVIEWED_CONTROLLER_ADAPTER: memory and cancellation implementation required')
     pcd = profile['pcd']
     derived = {
         'usbd_cdc.c': _Bulk_Derive(files[owners['usbd_cdc.c']], indexed),
@@ -374,7 +394,8 @@ def UsbCdcIntegration_Render(files: dict[str, bytes], owners: dict[str, str]) ->
     const uint32_t size[5] = {64U, 64U, 64U, 64U, 8U};
     uint32_t i;
     uint32_t j;
-    if ((@PCD@.OUT_ep[0].doublebuffer != 0U) || (@PCD@.IN_ep[0].doublebuffer != 0U) ||
+    if ((@PCD@.Instance->BTABLE != 0U) ||
+        (@PCD@.OUT_ep[0].doublebuffer != 0U) || (@PCD@.IN_ep[0].doublebuffer != 0U) ||
         (@PCD@.IN_ep[1].doublebuffer != 0U) || (@PCD@.OUT_ep[1].doublebuffer != 0U) ||
         (@PCD@.IN_ep[2].doublebuffer != 0U)) { return USB_CDC_FAULT; }
     /* Reviewed F1 single-buffer PMA: 512 bytes, three 8-byte table entries.

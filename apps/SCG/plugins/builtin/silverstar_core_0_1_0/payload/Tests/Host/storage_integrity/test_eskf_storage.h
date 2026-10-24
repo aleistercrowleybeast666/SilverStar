@@ -23,7 +23,19 @@ static void Fixture_EskfCovariance(uint32_t frame, uint64_t now, uint8_t phase)
 
 static void Fixture_EskfMeasurement(uint32_t frame, uint64_t now, uint8_t group)
 {
+#if SYSTEM_FUSION_TIMING_MODE == 2U
+    /* Horizon profiles disable the legacy measurement stream. Exercise the
+     * selected wire record at the same rate through the actual logger. */
+    FlightLogFusionHorizonMeasurementRecord measurement = {0};
+    measurement.prepared_variance[0] = 1.0f;
+    measurement.prepared_variance[1] = 1.0f;
+    measurement.fusion_timing_mode = 2U;
+    measurement.algorithm_id = 2U;
+#else
     FlightLogEskf15MeasurementRecord measurement = {0};
+    measurement.base_variance[0] = 1.0f;
+    measurement.base_variance[1] = 1.0f;
+#endif
     measurement.sample_timestamp_us = now - 40000ULL;
     measurement.receive_timestamp_us = now;
     measurement.measurement_timestamp_us = now - 40000ULL;
@@ -34,15 +46,17 @@ static void Fixture_EskfMeasurement(uint32_t frame, uint64_t now, uint8_t group)
     measurement.group = group;
     measurement.physically_valid = 1U;
     measurement.admitted = 1U;
-    measurement.base_variance[0] = 1.0f;
-    measurement.base_variance[1] = 1.0f;
     measurement.effective_variance[0] = 1.0f;
     measurement.effective_variance[1] = 1.0f;
     measurement.quality_scale = 1.0f;
     measurement.consistency_scale = 1.0f;
     measurement.robust_scale = 1.0f;
     s_eskf_measurement_attempts++;
+#if SYSTEM_FUSION_TIMING_MODE == 2U
+    Fixture_ResultCheck(LoggerBus_FusionHorizonMeasurementPush(now, &measurement));
+#else
     Fixture_ResultCheck(LoggerBus_Eskf15MeasurementPush(now, &measurement));
+#endif
 }
 
 static void Fixture_EskfFrame(uint32_t frame, uint64_t now)

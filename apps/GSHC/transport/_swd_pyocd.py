@@ -12,7 +12,7 @@ from threading import Lock, Thread
 import time
 from types import SimpleNamespace
 
-from transport.swd_session import SwdError, SwdResult, _ValidateProbe
+from transport.swd_session import SwdError, SwdResult, _ValidateProbe, Target_FamilyIdGet
 
 
 _LibraryOwner = Lock()  # pyOCD Session.get_current() is process-global.
@@ -251,12 +251,16 @@ class PyOcdMemAp:
 
     def _ReadAllowed(self, address, length):
         profile = self._target_profile
-        allowed = ((address in (0xE000ED00, 0xE000EDF0) and length == 4) or
+        if type(address) is not int or type(length) is not int or not 1 <= length <= 1024:
+            return False
+        identity = length==4 and (address in (0xE000ED00,0xE000EDF0) or
+            address==0xE0042000 and (profile is None or Target_FamilyIdGet(profile) is not None))
+        allowed = (identity or
                    (profile is not None and (profile.Contains(address,length,'ram') or profile.Contains(address,length,'flash'))) or
                    (profile is None and ((address == 0xE0042000 and length == 4) or
                     0x20000000 <= address < address + length <= 0x20020000 or
                     0x10000000 <= address < address + length <= 0x10010000))) if type(address) is int and type(length) is int else False
-        return type(length) is int and 1 <= length <= 1024 and allowed
+        return allowed
 
     def read(self, address, length):
         if self._ap is None:

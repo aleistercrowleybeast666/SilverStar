@@ -6,6 +6,7 @@ No project flag, part string or textual match can grant those authorities.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from copy import deepcopy
 from enum import Enum
 import hashlib
 import json
@@ -16,7 +17,7 @@ import re
 from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.generator.usb_cdc_transport import UsbCdcTransport_Render
 from silverstar_fccg.hardware.cubemx import CubeMxImportError
-from silverstar_fccg.hardware.usb_transport_capabilities import UsbCapabilities_Inspect
+from silverstar_fccg.hardware.usb_transport_capabilities import UsbCapabilities_Inspect, UsbNativeConfiguration_Describe
 
 
 class UsbTransportPlanResult(str, Enum):
@@ -162,18 +163,19 @@ def UsbTransport_Plan(input_path: str | Path) -> UsbTransportPlan:
     reasons.extend(capability_reasons)
     capabilities["layers"] = {
         "stack": stack, "class_abi": ("indexed" if indexed else "legacy") if stack == "ST_USB_DEVICE_CDC" else "NOT_CLASSIC",
-        "link": "FS_SINGLE_CDC" if stack == "ST_USB_DEVICE_CDC" else "UNRESOLVED",
-        "scheduler": "UNRESOLVED_USBX_EXECUTION" if usbx else "MAIN_PLUS_USB_IRQ_ONLY", "buffer_owner": "CPU_STATIC_COPY",
+        "link": "FS_SINGLE_CDC" if stack == "ST_USB_DEVICE_CDC" and
+            "HIGH_SPEED_OR_ALTERNATE_STACK_UNSUPPORTED" not in reasons else "UNSUPPORTED_OR_UNRESOLVED",
+        "scheduler": "UNSUPPORTED_OR_UNRESOLVED" if usbx or
+            "COMPOSITE_OR_RTOS_OWNER_UNSUPPORTED" in reasons else "MAIN_PLUS_USB_IRQ_ONLY",
+        "buffer_owner": "CPU_STATIC_COPY_ADAPTER" if stack == "ST_USB_DEVICE_CDC" and
+            "DMA_OR_DATA_CACHE_UNSUPPORTED" not in reasons else "UNSUPPORTED_OR_UNRESOLVED",
         "unsupported": ["USBX_STANDALONE_ADAPTER", "USBX_THREADX_ADAPTER", "HS",
                         "DMA", "DATA_CACHE", "COMPOSITE", "CLASSIC_RTOS"],
         "native_configuration_owner": "CUBEMX_INPUT",
+        "adapter_eligibility": "BLOCKED" if reasons else "SOURCE_REVIEW_ONLY",
     }
-    conf = code.get(owners.get("usbd_conf.c", ""), "")
-    capabilities["configuration_findings"] = []
-    if ("HAL_PCDEx_SetTxFiFo" in conf and not
-            re.search(r"HAL_PCDEx_SetTxFiFo\s*\([^,]+,\s*2[Uu]?\s*,", conf)):
-        capabilities["configuration_findings"].append(
-            "NATIVE_TX_FIFO_EP2_NOT_EXPLICIT: inspect CDC notification endpoint allocation; runtime configuration guard must pass")
+    capabilities["native_configuration"] = UsbNativeConfiguration_Describe(files, owners)
+    capabilities["configuration_findings"] = capabilities["native_configuration"]["findings"]
     if not reasons:
         from silverstar_fccg.generator.usb_cdc_integration import UsbIntegrationProfile_Get
         try:
@@ -194,18 +196,27 @@ def UsbAdaptation_Describe(plan: UsbTransportPlan, *, integrated: bool = False) 
     This does not create a second contracts/ authority or authorize arbitrary
     patch instructions. Source replacement remains generator-owned and bounded.
     """
+    classic = plan.stack == "ST_USB_DEVICE_CDC"
+    from silverstar_fccg.hardware.usb_transport_profiles import CONTROLLER_CONTRACTS
+    controller = plan.capabilities['automatic_integration'].get('profile', {}).get('controller_contract')
     return {
         "format": "silverstar.usb.adaptation", "version": 1,
         "readiness": "BLOCKED" if plan.reasons else "EXPERIMENTAL_UNVERIFIED",
         "native_sources_sha256": plan.files_sha256, "native_owners": plan.owners,
         "capability_layers": plan.capabilities["layers"],
         "native_build_inventory": plan.capabilities.get("build", {}),
+        "native_configuration": plan.capabilities["native_configuration"],
+        "controller_contract": deepcopy(CONTROLLER_CONTRACTS.get(controller)),
         "native_authority": ["clock", "pins", "PCD initialization", "USB initialization",
                              "PMA/FIFO layout", "startup", "linker", "IRQ wiring"],
-        "bindings": {"device": "hUsbDeviceFS", "initialize": "MX_USB_DEVICE_Init",
-                     "receive": "CDC_Receive_FS", "transmit": "CDC_Transmit_FS",
-                     "class_data": "pClassDataCmsit[0]" if plan.indexed else "pClassData"},
+        "bindings": {"status": "PROPOSED_CLASSIC_FS" if classic else "UNBOUND_UNSUPPORTED_STACK",
+                     "device": "hUsbDeviceFS" if classic else None,
+                     "initialize": "MX_USB_DEVICE_Init" if classic else None,
+                     "receive": "CDC_Receive_FS" if classic else None,
+                     "transmit": "CDC_Transmit_FS" if classic else None,
+                     "class_data": ("pClassDataCmsit[0]" if plan.indexed else "pClassData") if classic else None},
         "transport": {"rx_capacity": 512, "tx_capacity": 256, "packet_size": 64,
+                      "applicability": "PROPOSED_CLASSIC_FS_ADAPTER_ONLY",
                       "queue_success_is_delivery_ack": False},
         "lifecycle_hooks": {name: "GENERATED_NOT_ACCEPTED" if integrated else "UNBOUND_REQUIRES_REVIEW"
             for name in ("configure_after_native_success", "receive_copy_and_deferred_rearm", "single_main_service",

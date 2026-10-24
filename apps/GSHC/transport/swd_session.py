@@ -92,6 +92,12 @@ def _ValidateProbe(probe):
     return ProbeKind_Get(probe)
 
 
+def Target_FamilyIdGet(profile):
+    """Only the already reviewed F405/407/415/417 identity-register family."""
+    return 0x413 if profile is not None and profile.name.startswith(
+        ('STM32F405','STM32F407','STM32F415','STM32F417')) else None
+
+
 class SwdSession:
     """Single owner, no pending queue; concurrent calls return Busy.
 
@@ -279,7 +285,7 @@ class SwdSession:
             idcode = 0
         elif cpuid & 0xFF00FFF0 != 0x4100C240:
             raise SwdError(SwdResult.TargetMismatch, 'Target is not an Arm Cortex-M4')
-        else:
+        if self._profile is None or Target_FamilyIdGet(self._profile) is not None:
             idcode = int.from_bytes(self._read(0xE0042000, 4), 'little')
             if idcode & 0xFFF != 0x413:
                 raise SwdError(SwdResult.TargetMismatch, 'Device ID is not STM32F405/407/415/417 (0x413); select an installed target')
@@ -295,7 +301,8 @@ class SwdSession:
                                idcode & 0xFFF, idcode >> 16, state, dhcsr, received,
                                datetime.now(timezone.utc).isoformat(), (received-started)/1e6,
                                symbols='matched' if self._firmware_status == 'matched' else 'unmatched',
-                               target_evidence='selected_part_core_verified' if self._profile else 'device_family_id',
+                                target_evidence=('selected_part_core_and_family_verified' if idcode else 'selected_part_core_verified')
+                                                if self._profile else 'device_family_id',
                                firmware_status=self._firmware_status)
         return SwdReply(SwdResult.Ok, snapshot=snapshot)
 

@@ -21,11 +21,21 @@
 /* -------------------------------------------------------------------------- */
 /* Release and profile                                                        */
 /* -------------------------------------------------------------------------- */
+#ifndef SILVERSTAR_VERSION_MAJOR
 #define SILVERSTAR_VERSION_MAJOR     0
+#endif
+#ifndef SILVERSTAR_VERSION_MINOR
 #define SILVERSTAR_VERSION_MINOR     1
+#endif
+#ifndef SILVERSTAR_VERSION_PATCH
 #define SILVERSTAR_VERSION_PATCH     2
+#endif
+#ifndef SILVERSTAR_VERSION_BUILD
 #define SILVERSTAR_VERSION_BUILD     0
+#endif
+#ifndef SILVERSTAR_LOG_BUILD_TAG
 #define SILVERSTAR_LOG_BUILD_TAG     "SILV0102"
+#endif
 #define SYSTEM_PROFILE_ID            0x0000000CUL
 #define SYSTEM_PROFILE_OUTPUT_CHANNEL_COUNT 2U
 
@@ -66,6 +76,9 @@
 #ifndef SYSTEM_BUILD_ESTIMATOR_ENABLED
 #define SYSTEM_BUILD_ESTIMATOR_ENABLED 1U
 #endif
+#ifndef SYSTEM_BUILD_AUGMENTED_ENABLED
+#define SYSTEM_BUILD_AUGMENTED_ENABLED 0U
+#endif
 #ifndef SYSTEM_BUILD_ESKF15_ENABLED
 #define SYSTEM_BUILD_ESKF15_ENABLED 0U
 #endif
@@ -105,7 +118,9 @@
 #define SYSTEM_GNSS_MAX_VERTICAL_ACCURACY_M            10.0f
 #define SYSTEM_GNSS_MAX_SPEED_ACCURACY_MPS              2.0f
 #define SYSTEM_GNSS_MAX_SAMPLE_AGE_MS                  500U
+#ifndef SYSTEM_MAGNETOMETER_OUTPUT_RATE_HZ
 #define SYSTEM_MAGNETOMETER_OUTPUT_RATE_HZ             200U
+#endif
 #ifndef SYSTEM_BAROMETER_OUTPUT_RATE_HZ
 #define SYSTEM_BAROMETER_OUTPUT_RATE_HZ                200U
 #endif

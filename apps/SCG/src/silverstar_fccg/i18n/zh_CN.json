@@ -952,6 +952,11 @@
   "ground.radio_up": "上移",
   "ground.radio_down": "下移",
   "ground.radio_runtime_pending": "多实例可以保存为配置；地面站生成需要已整合的无线运行时。",
+  "installation.origin": "固定原点及机体 X/Y 基准",
+  "installation.note": "输入固定机体结构原点及 +X/+Y 的物理基准，按 Enter 提交。沿用右手机体系，+Z 指向头部（不是 ENU）。切换主 IMU 不移动原点。XYZ 来自测量/CAD，静态标定不会求得位置。本批仅配置，ESKF15/KF6/SF6/INS 尚不使用这些位置补偿；ESKF15 独立旧全局 GNSS 杆臂保持不变。",
+  "installation.position": "安装 XYZ（m）",
+  "installation.position.recorded": "已测量 / CAD 录入",
+  "installation.position.note": "以固定结构原点为基准、用机体系表示的 IMU 测量点 / GNSS 天线参考点。未勾选表示未知，不代表零；勾选即明确记录显示值。各坐标按 Enter 提交（6 位小数，±1000000 m）。位置、安装朝向和传感器内参独立；当前不启用运行时补偿。",
   "device.raw_imu.mount": "原始 IMU 朝箭头部轴向",
   "device.raw_imu.mount.note": "选择传感器指向箭体头部的轴。固件在校准前将加速度和角速度一起旋转到机体系（+Z 向前）。默认 +Z 保持旧映射；需在实机核对。",
   "device.raw_imu.mount.x_positive": "+X 指向头部",
@@ -1005,5 +1010,9 @@
   "quality.target.completed": "自动检测完成；人工及硬件证明以各门报告为准",
   "quality.target.failed": "检测失败；请查看详细日志",
   "quality.target.cancelled": "已取消 / 本次未完成检测",
-  "quality.target.generated_input": "仅检测生成文件：{path}；界面草稿配置须先生成。"
+  "quality.target.generated_input": "仅检测生成文件：{path}；界面草稿配置须先生成。",
+  "optional_resources.magnetometer": "磁力计采样与校准资源",
+  "optional_resources.export": "维护口 TF 日志导出",
+  "optional_resources.note": "仅完整/标准配置可用。磁力计须有明确支持物理单位的端点，磁融合仍受发布策略约束。导出依赖维护协议及 TF 记录；关闭导出保留普通 TF 记录。轻量/最简禁用两项。",
+  "logging.optional_resources.disabled": "磁力计资源已关闭；保留原记录选择。"
 }

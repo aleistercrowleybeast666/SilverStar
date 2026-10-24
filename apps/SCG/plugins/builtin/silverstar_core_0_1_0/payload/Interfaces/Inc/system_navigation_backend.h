@@ -9,7 +9,8 @@
 /* Enum constants are C expressions, not preprocessor macros. The selected
  * plugin declares linkage capability; validate it against the typed build ID. */
 #if (defined(SYSTEM_BUILD_ESKF15_ENABLED) && (SYSTEM_BUILD_ESKF15_ENABLED != 0U)) || \
-    (defined(SYSTEM_BUILD_SF6_ENABLED) && (SYSTEM_BUILD_SF6_ENABLED != 0U))
+    (defined(SYSTEM_BUILD_SF6_ENABLED) && (SYSTEM_BUILD_SF6_ENABLED != 0U)) || \
+    (defined(SYSTEM_BUILD_AUGMENTED_ENABLED) && (SYSTEM_BUILD_AUGMENTED_ENABLED != 0U))
 #define SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED 1U
 #else
 #define SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED 0U
@@ -30,6 +31,11 @@ SystemDeviceResult SystemNavigationBackend_Predict(
     const SystemInertialIncrement *input, EstimatorOutputSnapshot *output);
 SystemDeviceResult SystemNavigationBackend_SnapshotGet(EstimatorOutputSnapshot *output);
 void SystemNavigationBackend_Reset(void);
+/* Augmented single-owner journal closure; no change to navigation/lifecycle. */
+void SystemNavigationBackend_RecordedSeal(uint32_t reason);
+/* Augmented capability only. Old builds eliminate the constant-false caller. */
+void SystemNavigationBackend_IntervalStartSet(SystemInertialIncrement *input, uint64_t start_us);
+
 void SystemNavigationBackend_BodyInputFill(SystemInertialIncrement *input,
     const float *gyro_pair, const float *accel_pair, uint32_t quality_flags);
 

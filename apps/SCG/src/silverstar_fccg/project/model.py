@@ -16,6 +16,10 @@ from silverstar_fccg.app.version import (
 from silverstar_fccg.core.errors import FccgError
 from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.project.native_usb import NativeUsbReference, NativeUsbReference_Parse
+from silverstar_fccg.project.sensor_installation import (
+    SensorInstallationConfiguration, SensorInstallationConfiguration_Parse,
+    SensorPosition, SensorPosition_Parse,
+)
 from silverstar_fccg.project.alignment import (
     AlignmentConfiguration,
     AlignmentConfiguration_Parse,
@@ -50,6 +54,8 @@ PROJECT_RADIO_VARIANTS_FORMAT_VERSION = 16
 PROJECT_FEATURE_TIERS_FORMAT_VERSION = 17
 PROJECT_NIS_INPUT_FORMAT_VERSION = 18
 PROJECT_NATIVE_USB_FORMAT_VERSION = 19
+PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION = 20
+PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION = 21
 AlgorithmParameterInput = float | int | dict[str, Any]
 FEATURE_TIERS = ("full", "standard", "compact", "minimal")
 PROTOCOL_CATEGORIES = ("telemetry", "maintenance", "logging")
@@ -127,6 +133,7 @@ class DeviceInstance:
     tx_power_dbm: int | None = None
     installation_orientation: str = "vertical"
     mount_nose_axis: str = "z_positive"
+    position_body_m: SensorPosition | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -142,6 +149,8 @@ class BuildOptions:
     compact_mode: bool = False
     logging_profile: str = "all_streams"
     feature_tier: str = ""
+    magnetometer_enabled: bool = True
+    maintenance_log_export_enabled: bool = True
 
     def __post_init__(self) -> None:
         # Legacy flags are constructor/migration inputs only. Once resolved,
@@ -152,6 +161,13 @@ class BuildOptions:
         )
         if tier not in FEATURE_TIERS:
             raise ProjectModelError("build.feature_tier is invalid")
+        for name in ("magnetometer_enabled", "maintenance_log_export_enabled"):
+            if type(getattr(self, name)) is not bool:
+                raise ProjectModelError(f"build.{name} must be a boolean")
+            # Preset changes through dataclasses.replace carry previous values.
+            # Bounded tiers always disable these optional resources.
+            if tier in ("compact", "minimal"):
+                object.__setattr__(self, name, False)
         object.__setattr__(self, "feature_tier", tier)
         object.__setattr__(self, "compact_mode", tier in ("compact", "minimal"))
         object.__setattr__(self, "logging_profile", "sf6_minimal" if tier == "minimal" else "all_streams")
@@ -346,6 +362,7 @@ class ProjectModel:
     reference_provenance: dict[str, Any] = field(default_factory=dict)
     feature_tier_presets: dict[str, dict[str, Any]] = field(default_factory=dict)
     native_usb: NativeUsbReference | None = None
+    sensor_installation: SensorInstallationConfiguration | None = None
     format_version: int = PROJECT_FORMAT_VERSION
 
     def ComponentIds_Get(self) -> tuple[str, ...]:
@@ -395,7 +412,13 @@ class ProjectModel:
 
     def Dictionary_Get(self) -> dict[str, Any]:
         return {
-            "format_version": (PROJECT_NATIVE_USB_FORMAT_VERSION
+            "format_version": (PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION
+                if self.format_version == PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION or
+                   (self.build.feature_tier in ("full", "standard") and
+                    (not self.build.magnetometer_enabled or not self.build.maintenance_log_export_enabled))
+                else PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION
+                if self.sensor_installation is not None or self.format_version == PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION
+                else PROJECT_NATIVE_USB_FORMAT_VERSION
                 if self.native_usb is not None or self.format_version == PROJECT_NATIVE_USB_FORMAT_VERSION
                 else PROJECT_NIS_INPUT_FORMAT_VERSION
                 if any(isinstance(v, dict) for params in self.algorithm_parameters.values() for v in params.values()) or self.format_version == PROJECT_NIS_INPUT_FORMAT_VERSION
@@ -427,6 +450,8 @@ class ProjectModel:
                            if instance.plugin == "silverstar.device.imu.jy901b" else {}),
                         **({"mount_nose_axis": instance.mount_nose_axis}
                            if instance.plugin in RAW_IMU_MOUNT_PLUGINS else {}),
+                        **({"position_body_m": instance.position_body_m.Dictionary_Get()}
+                           if instance.position_body_m is not None else {}),
                     }
                     for instance in self.device_instances
                 ],
@@ -568,6 +593,9 @@ class ProjectModel:
                 "eide_mode": self.build.eide_mode,
                 "tool_paths": dict(sorted(self.build.tool_paths.items())),
                 "memory_layout": self.build.memory_layout,
+                **{name: getattr(self.build, name)
+                   for name in ("magnetometer_enabled", "maintenance_log_export_enabled")
+                   if getattr(self.build, name) != (self.build.feature_tier in ("full", "standard"))},
                 **({"feature_tier": self.build.feature_tier} if self.build.feature_tier != "full" else {}),
                 **({"logging_profile": self.build.logging_profile}
                    if self.build.logging_profile != "all_streams" else {}),
@@ -577,6 +605,8 @@ class ProjectModel:
             "reference_provenance": self.reference_provenance,
             **({"feature_tier_presets": deepcopy(self.feature_tier_presets)} if self.feature_tier_presets else {}),
             **({"native_usb": self.native_usb.Dictionary_Get()} if self.native_usb is not None else {}),
+            **({"sensor_installation": self.sensor_installation.Dictionary_Get()}
+               if self.sensor_installation is not None else {}),
         }
 
 
@@ -602,6 +632,9 @@ def _Build_Dictionary(build: BuildOptions) -> dict[str, Any]:
     if build.logging_profile == "all_streams":
         result.pop("logging_profile")
     result.pop("compact_mode")
+    for name in ("magnetometer_enabled", "maintenance_log_export_enabled"):
+        if getattr(build, name) == (build.feature_tier in ("full", "standard")):
+            result.pop(name)
     if build.feature_tier == "full":
         result.pop("feature_tier")
     return result
@@ -1101,7 +1134,7 @@ def _DeviceInstances_Parse(value: Any) -> list[DeviceInstance]:
     for entry_value in value:
         entry = _Object_Require(entry_value, "device instance")
         base_fields = {"instance_id", "plugin", "interface", "profile"}
-        if not base_fields.issubset(entry) or set(entry) - (base_fields | {"module_variant", "tx_power_dbm", "installation_orientation", "mount_nose_axis"}):
+        if not base_fields.issubset(entry) or set(entry) - (base_fields | {"module_variant", "tx_power_dbm", "installation_orientation", "mount_nose_axis", "position_body_m"}):
             raise ProjectModelError(
                 "device instance must contain instance_id, plugin, interface and profile"
             )
@@ -1130,7 +1163,11 @@ def _DeviceInstances_Parse(value: Any) -> list[DeviceInstance]:
         if instance_id in instance_ids:
             raise ProjectModelError(f"Duplicate device instance id: {instance_id}")
         instance_ids.add(instance_id)
-        instances.append(DeviceInstance(instance_id, plugin, interface, profile, module, power, orientation, nose_axis))
+        try:
+            position = SensorPosition_Parse(entry["position_body_m"]) if "position_body_m" in entry else None
+        except ValueError as error:
+            raise ProjectModelError(f"{instance_id}: {error}") from error
+        instances.append(DeviceInstance(instance_id, plugin, interface, profile, module, power, orientation, nose_axis, position))
     return instances
 
 
@@ -1630,7 +1667,8 @@ def _Build_Parse(value: Any) -> BuildOptions:
         "eide_mode",
         "tool_paths",
     }
-    if set(data) - {"memory_layout", "compact_mode", "logging_profile", "feature_tier"} != expected:
+    if set(data) - {"memory_layout", "compact_mode", "logging_profile", "feature_tier",
+                    "magnetometer_enabled", "maintenance_log_export_enabled"} != expected:
         raise ProjectModelError("build has missing or unknown fields")
     logging_profile = data.get("logging_profile", "all_streams")
     if logging_profile not in ("all_streams", "sf6_minimal"):
@@ -1649,6 +1687,16 @@ def _Build_Parse(value: Any) -> BuildOptions:
         expected_logging = "sf6_minimal" if feature_tier == "minimal" else "all_streams"
         if logging_profile != expected_logging:
             raise ProjectModelError("logging_profile contradicts feature_tier")
+    resolved_tier = feature_tier or ("minimal" if compact_mode and logging_profile == "sf6_minimal"
+                                     else "compact" if compact_mode else "full")
+    optional_resources = {}
+    for name in ("magnetometer_enabled", "maintenance_log_export_enabled"):
+        value = data.get(name, resolved_tier in ("full", "standard"))
+        if type(value) is not bool:
+            raise ProjectModelError(f"build.{name} must be a boolean")
+        if value and resolved_tier in ("compact", "minimal"):
+            raise ProjectModelError(f"build.{name} is prohibited by the feature tier")
+        optional_resources[name] = value
     memory_layout = data.get("memory_layout", "legacy")
     if memory_layout not in ("legacy", "eskf_window_sram", "auto"):
         raise ProjectModelError("build.memory_layout is invalid")
@@ -1698,6 +1746,7 @@ def _Build_Parse(value: Any) -> BuildOptions:
         compact_mode=compact_mode,
         logging_profile=logging_profile,
         feature_tier=feature_tier,
+        **optional_resources,
     )
 
 
@@ -1948,7 +1997,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
     }
     if "flight_tx_power_dbm" not in root:
         root["flight_tx_power_dbm"] = 12
-    if set(root) - {"feature_tier_presets", "native_usb"} != required_root:
+    if set(root) - {"feature_tier_presets", "native_usb", "sensor_installation"} != required_root:
         missing = required_root - set(root)
         unknown = set(root) - required_root
         details = [
@@ -1956,10 +2005,21 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
             *(f"unknown {name}" for name in sorted(unknown)),
         ]
         raise ProjectModelError("Project fields are invalid: " + ", ".join(details))
-    if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION, PROJECT_NIS_INPUT_FORMAT_VERSION, PROJECT_NATIVE_USB_FORMAT_VERSION):
+    if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION, PROJECT_NIS_INPUT_FORMAT_VERSION, PROJECT_NATIVE_USB_FORMAT_VERSION, PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION, PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION):
         raise ProjectModelError(
-            "Only project format_version 14 through 19 is supported"
+            "Only project format_version 14 through 21 is supported"
         )
+    if (set(_Object_Require(root.get("build"), "build")) & {"magnetometer_enabled", "maintenance_log_export_enabled"}
+            and root["format_version"] < PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION):
+        raise ProjectModelError("Optional resource selections require project format_version 21")
+    sensor_installation = None
+    if "sensor_installation" in root:
+        if root["format_version"] < PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION:
+            raise ProjectModelError("sensor_installation requires project format_version 20")
+        try:
+            sensor_installation = SensorInstallationConfiguration_Parse(root["sensor_installation"])
+        except ValueError as error:
+            raise ProjectModelError(str(error)) from error
     native_usb = None
     if "native_usb" in root:
         if root["format_version"] < PROJECT_NATIVE_USB_FORMAT_VERSION:
@@ -1993,6 +2053,8 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         strategies,
         environment,
     ) = _Components_Parse(root.get("components"))
+    if any(item.position_body_m is not None for item in device_instances) and sensor_installation is None:
+        raise ProjectModelError("Per-instance position_body_m requires sensor_installation in format 20")
     if root["format_version"] < PROJECT_RADIO_VARIANTS_FORMAT_VERSION and any(
         item.module_variant or item.tx_power_dbm is not None for item in device_instances
     ):
@@ -2089,6 +2151,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         reference_provenance=dict(reference_provenance),
         feature_tier_presets=deepcopy(feature_tier_presets),
         native_usb=native_usb,
+        sensor_installation=sensor_installation,
         format_version=root["format_version"],
     )
 

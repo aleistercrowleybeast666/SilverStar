@@ -111,12 +111,12 @@ def test_gui_information_error_and_export_cancel_unicode_failure_stale(qapp,tmp_
     window.close()
 
 
-def test_legacy_magnetic_configuration_remains_intact_and_blocks_generation(workspace_root):
+def test_optional_magnetic_capture_preserves_configuration_and_alignment_gate(workspace_root):
     service=FccgService(workspace_root)
     model=service.ReferenceProject_Create("Legacy")
     model.device_instances.append(DeviceInstance("mag0","silverstar.device.magnetometer.lis3mdl"))
     before=model.Dictionary_Get()
-    assert ReleaseCompatibilityIssues_Get(model)
+    assert not ReleaseCompatibilityIssues_Get(model)
     assert model.Dictionary_Get()==before
     model.device_instances.pop()
     model.alignment=type(model.alignment)(constraints=(AlignmentConstraint("gravity"),AlignmentConstraint("magnetic_field")))

@@ -78,7 +78,11 @@ def test_failed_attach_never_displays_connected(swd_panel,result):
     assert manager.attach()
     wait_for(lambda:manager.worker is None)
     assert manager.status=='swd.'+result.value and manager.snapshot is None
-    assert 'injected refusal' in window.maintenance_page.swd_target_status.text()
+    page=window.maintenance_page
+    assert 'injected refusal' in page.swd_details_text.toPlainText()
+    assert not page.btn_swd_variables.isEnabled() and not page.swd_watch.isEnabled()
+    page.btn_swd_details.click()
+    assert page.swd_details.isVisible()
     assert not probes.target_active and window.maintenance_page.btn_swd_attach.isEnabled()
 
 

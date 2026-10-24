@@ -13,6 +13,7 @@
 #include "system_hardware_quaternion_if.h"
 #include "system_imu_if.h"
 #include "system_lifecycle.h"
+#include "system_installation_capture_if.h"
 #include "system_magnetometer_if.h"
 #include "system_source_selector.h"
 #include "system_startup.h"
@@ -580,6 +581,10 @@ static SystemDeviceResult SystemAlignment_ActionBegin(uint8_t configuration)
     uint32_t primask;
 
     primask = SystemAlignment_IrqLock();
+    /* Mode 3 is an explicit CAL handoff, not a new top-level operation.
+     * Check while the ALIGN action lock excludes release/restart by its owner. */
+    if(configuration==3U&&SystemInstallationCapture_OperationHeld(SystemInstallationOperation_Alignment)==0U)
+    {SystemAlignment_IrqUnlock(primask);return SYSTEM_DEVICE_BUSY;}
     if (s_initialized == 0U)
     {
         SystemAlignment_IrqUnlock(primask);
@@ -590,13 +595,22 @@ static SystemDeviceResult SystemAlignment_ActionBegin(uint8_t configuration)
         SystemAlignment_IrqUnlock(primask);
         return SYSTEM_DEVICE_BUSY;
     }
-    if ((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U) &&
+    if(configuration==1U)
+    {
+        SystemDeviceResult result=SystemInstallationCapture_OperationBegin(SystemInstallationOperation_Alignment,1U);
+        if(result!=SYSTEM_DEVICE_OK){SystemAlignment_IrqUnlock(primask);return result;}
+    }
+    if (((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)||
+         (SYSTEM_INSTALLATION_CAPTURE_ENABLED!=0U)) &&
         (configuration != 0U))
     {
         SystemDeviceResult result = SystemLifecycle_ConfigurationBegin(
             SYSTEM_CONFIGURATION_ACTION_ALIGNMENT);
         if (result != SYSTEM_DEVICE_OK)
-        { SystemAlignment_IrqUnlock(primask); return result; }
+        {
+            if(s_collecting==0U){SystemInstallationCapture_OperationEnd(SystemInstallationOperation_Alignment);}
+            SystemAlignment_IrqUnlock(primask); return result;
+        }
         s_configuration_action = 1U;
     }
     s_action_active = 1U;
@@ -608,13 +622,15 @@ static void SystemAlignment_ActionEnd(void)
 {
     uint32_t primask = SystemAlignment_IrqLock();
 
-    if ((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U) &&
+    if (((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)||
+         (SYSTEM_INSTALLATION_CAPTURE_ENABLED!=0U)) &&
         (s_configuration_action != 0U))
     {
         SystemLifecycle_ConfigurationEnd(SYSTEM_CONFIGURATION_ACTION_ALIGNMENT);
         s_configuration_action = 0U;
     }
     s_action_active = 0U;
+    if(s_collecting==0U){SystemInstallationCapture_OperationEnd(SystemInstallationOperation_Alignment);}
     SystemAlignment_IrqUnlock(primask);
 }
 
@@ -698,6 +714,7 @@ static SystemDeviceResult SystemAlignment_CalibrationUnavailableReset(void)
         SystemImuEpoch_AlignmentInvalidate();
         SystemLifecycle_ConfigurationEnd(SYSTEM_CONFIGURATION_ACTION_ALIGNMENT);
     }
+    SystemInstallationCapture_OperationEnd(SystemInstallationOperation_Alignment);
     SystemAlignment_IrqUnlock(primask);
     return SYSTEM_DEVICE_OK;
 }
@@ -1049,7 +1066,8 @@ SystemDeviceResult SystemAlignment_PreflightQuaternionGet(
 static SystemDeviceResult SystemAlignment_StartAdmission(void)
 {
     SystemDeviceResult result;
-    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    if ((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)||
+        (SYSTEM_INSTALLATION_CAPTURE_ENABLED!=0U))
     {
         uint32_t lock;
         result = SystemAlignment_ActionBegin(1U);
@@ -1063,18 +1081,21 @@ static SystemDeviceResult SystemAlignment_StartAdmission(void)
     }
     if (s_status.config_result != SYSTEM_ALIGNMENT_CONFIG_OK)
     {
-        if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+        if ((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)||
+            (SYSTEM_INSTALLATION_CAPTURE_ENABLED!=0U))
         { SystemAlignment_ActionEnd(); }
         return SYSTEM_DEVICE_UNSUPPORTED;
     }
     result = SystemSourceSelector_ImuSelectAndLock();
     if (result != SYSTEM_DEVICE_OK)
     {
-        if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+        if ((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)||
+            (SYSTEM_INSTALLATION_CAPTURE_ENABLED!=0U))
         { SystemAlignment_ActionEnd(); }
         return result;
     }
-    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED == 0U)
+    if ((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED == 0U)&&
+        (SYSTEM_INSTALLATION_CAPTURE_ENABLED==0U))
     { return SystemAlignment_ActionBegin(1U); }
     return SYSTEM_DEVICE_OK;
 }
@@ -1213,7 +1234,7 @@ SystemDeviceResult SystemAlignment_Reset(void)
     return result;
 }
 
-SystemDeviceResult SystemAlignment_CalibrationInvalidate(void)
+static SystemDeviceResult SystemAlignment_CalibrationInvalidateRun(uint8_t configuration)
 {
     SystemDeviceResult result = SYSTEM_DEVICE_OK;
     uint32_t primask;
@@ -1224,7 +1245,9 @@ SystemDeviceResult SystemAlignment_CalibrationInvalidate(void)
     {
         return SYSTEM_DEVICE_BAD_STATE;
     }
-    result = SystemAlignment_ActionBegin(1U);
+    /* Safe invalidation belongs to the caller's calibration transaction. It
+     * must not request a second exclusive top-level operation. */
+    result = SystemAlignment_ActionBegin(configuration);
     if (result != SYSTEM_DEVICE_OK) { return result; }
     primask = SystemAlignment_IrqLock();
     if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
@@ -1247,6 +1270,12 @@ SystemDeviceResult SystemAlignment_CalibrationInvalidate(void)
     SystemAlignment_PreflightStateRestore();
     return result;
 }
+
+SystemDeviceResult SystemAlignment_CalibrationInvalidate(void)
+{return SystemAlignment_CalibrationInvalidateRun(2U);}
+
+SystemDeviceResult SystemAlignment_CalibrationYield(void)
+{return SystemAlignment_CalibrationInvalidateRun(3U);}
 
 SystemDeviceResult SystemAlignment_PrepareMission(void)
 {

@@ -11,4 +11,9 @@
     SILVERSTAR_STRINGIFY(SILVERSTAR_VERSION_PATCH)
 #define SILVERSTAR_PRODUCT_STRING "SilverStar " SILVERSTAR_VERSION_STRING
 
+/* Generated test identities are data, never a command or control gate. */
+#ifndef SILVERSTAR_BUILD_IDENTITY_FIELDS
+#define SILVERSTAR_BUILD_IDENTITY_FIELDS ""
+#endif
+
 #endif /* __SYSTEM_VERSION_H */

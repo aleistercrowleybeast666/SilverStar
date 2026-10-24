@@ -8,6 +8,9 @@
 #include <stdarg.h>
 #include <string.h>
 
+_Static_assert(SYSTEM_DEBUG_LOG_LINE_SIZE >= 3U,
+               "Debug lines require space for CRLF and a terminator");
+
 void DebugLog_Init(void)
 {
 }
@@ -37,6 +40,8 @@ void DebugLog_Print(const char *fmt, ...)
 #if (SILVERSTAR_PROTOCOL_MAINTENANCE_ENABLED != 0U)
     char buf[SYSTEM_DEBUG_LOG_LINE_SIZE];
     int len = 0;
+    int body_length;
+    size_t maximum = sizeof(buf) - 1U;
     va_list ap;
 
     if ((SYSTEM_DEBUG_LOG_ENABLE == 0U) || (fmt == NULL))
@@ -50,19 +55,18 @@ void DebugLog_Print(const char *fmt, ...)
     {
         return;
     }
+    if ((size_t)len >= sizeof(buf)) { len = (int)(sizeof(buf) - 1U); }
 
     va_start(ap, fmt);
-    len += CommonFormat_VPrint(&buf[len], sizeof(buf) - (size_t)len, fmt, ap);
+    body_length = CommonFormat_VPrint(&buf[len],
+                                      sizeof(buf) - (size_t)len, fmt, ap);
     va_end(ap);
-
-    if (len < 0)
+    if (body_length < 0) { return; }
+    len += body_length;
+    if (SYSTEM_DEBUG_LOG_AUTO_CRLF != 0U) { maximum -= 2U; }
+    if ((size_t)len > maximum)
     {
-        return;
-    }
-
-    if ((size_t)len >= sizeof(buf))
-    {
-        len = (int)(sizeof(buf) - 1U);
+        len = (int)maximum;
         buf[len] = '\0';
     }
 
@@ -76,6 +80,8 @@ void DebugLog_Print(const char *fmt, ...)
             buf[len] = '\0';
         }
     }
+    /* Best-effort diagnostics: the Console admits a complete frame or records
+     * a capacity rejection; a failed log never publishes a partial prefix. */
     (void)DebugLog_Write((const uint8_t *)buf, (uint16_t)len);
 #else
     (void)fmt;

@@ -1,0 +1,83 @@
+{
+  "application_version": "0.1.2",
+  "cases": [
+    {
+      "project": "SS_0_5_TEST_FINAL",
+      "record": "000062",
+      "bytes": 3835025,
+      "sha256": "954105bff516d2a9c558511800295fff4bbb0b08233bf4f675d2c25a84d088c0",
+      "members": [
+        {
+          "member": "000062/flight.sslog",
+          "bytes": 9519499,
+          "sha256": "7ba89a60127a027adc28623cfb4b5e4898c72b99fd0374d58d59154633c89218"
+        },
+        {
+          "member": "SS_0_5_TEST_FINAL.ssdecoder",
+          "bytes": 145026,
+          "sha256": "47394c9d1b27f76e074ce43b324dd218e3448c6a5465628fdce2c744e3afe0e5"
+        }
+      ],
+      "header_firmware_version_bytes": [
+        0,
+        1,
+        2,
+        0
+      ],
+      "decoder_manifest": {
+        "firmware_version": "0.1.2",
+        "fccg_version": "0.1.2",
+        "firmware_commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+        "generation_profile_sha256": "5d5eff02397a107e5beab2b22e22ffa632de8e690008f2cecb8c906364bbf2d8",
+        "project_generation_fingerprint": "9f87f174"
+      },
+      "archive": "FINAL_000062.zip",
+      "match_mode": "exact_generation_profile",
+      "record_count": 103668,
+      "mission_duration_seconds": 135.67225299999998,
+      "analysis_source": {
+        "id": "recorded:kf6",
+        "kind": "recorded"
+      }
+    },
+    {
+      "project": "SS_0_5_TEST_5",
+      "record": "000028",
+      "bytes": 9820725,
+      "sha256": "78b2364f85853be048021586e771cb6a01147ccd214df7e67e2876c3adbe1927",
+      "members": [
+        {
+          "member": "000028/flight.sslog",
+          "bytes": 24421431,
+          "sha256": "ea145d3529bc030fdd82883638935ca245da2c56e8bc2cc3be532b572b9e9e93"
+        },
+        {
+          "member": "SS_0_5_TEST_5.ssdecoder",
+          "bytes": 143495,
+          "sha256": "e162b78bb07ae2a436a04f185da86653db838a89d8488959dcf531bc1f24caaf"
+        }
+      ],
+      "header_firmware_version_bytes": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "decoder_manifest": {
+        "firmware_version": "0.1.1",
+        "fccg_version": "0.1.1",
+        "firmware_commit": "cc0b377ded690556d037a412a55f87fe334c42d0",
+        "generation_profile_sha256": "426125c57f11fc4f55becdba1f0e24c95bea221f96dcdac2ae5f7f8d5aec9375",
+        "project_generation_fingerprint": "0b0f4f83"
+      },
+      "archive": "TEST_5_000028.zip",
+      "match_mode": "exact_generation_profile",
+      "record_count": 265573,
+      "mission_duration_seconds": 347.783713,
+      "analysis_source": {
+        "id": "recorded:kf6",
+        "kind": "recorded"
+      }
+    }
+  ]
+}

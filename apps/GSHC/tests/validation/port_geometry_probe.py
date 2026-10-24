@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from PySide6.QtCore import QSettings, Qt, QRect
+from PySide6.QtCore import QSettings, Qt, QRect, QPoint
 from PySide6.QtGui import QFont, QFontDatabase
 from PySide6.QtWidgets import QApplication, QStyle, QStyleOptionComboBox
 from services.i18n import I18n
@@ -64,6 +64,9 @@ def Probe_Run(output: Path, width: int, height: int, baseline: bool = False) -> 
             assert field.width() >= required, (port, field.width(), required)
         if not baseline:
             assert combo.minimumWidth() > 0
+            window.pages.setCurrentWidget(window.maintenance_scroll)
+            window.maintenance_page.sections.setCurrentWidget(window.maintenance_page.serial_section)
+            app.processEvents()
             for debug_combo in (window.debug_port_combo, window.debug_baud_combo):
                 debug_option = QStyleOptionComboBox()
                 debug_combo.initStyleOption(debug_option)
@@ -71,7 +74,13 @@ def Probe_Run(output: Path, width: int, height: int, baseline: bool = False) -> 
                     debug_option, QStyle.SubControl.SC_ComboBoxEditField, debug_combo)
                 assert debug_field.width() >= debug_combo.fontMetrics().horizontalAdvance(debug_combo.currentText())
             assert window.debug_port_combo.toolTip() == port
-            assert not window.header_connection_group.geometry().intersects(window.debug_connection_group.geometry())
+            rect = lambda widget: QRect(widget.mapTo(window,QPoint()),widget.size())
+            assert window.header_bar.isAncestorOf(window.header_connection_group)
+            assert window.header_bar.isAncestorOf(window.debug_connection_group)
+            assert window.header_bar.isAncestorOf(window.probe_group)
+            assert window.probe_group.isAncestorOf(window.maintenance_page.btn_swd_attach)
+            assert window.probe_group.isAncestorOf(window.maintenance_page.btn_swd_detach)
+            assert not rect(window.header_connection_group).intersects(rect(window.debug_connection_group))
         combo.showPopup()
         app.processEvents()
         popup = combo.view().viewport().width()
@@ -88,15 +97,19 @@ def Probe_Run(output: Path, width: int, height: int, baseline: bool = False) -> 
         if indent < 0:
             indent = label.fontMetrics().horizontalAdvance("x") // 2 if label.frameWidth() else 0
         available.adjust(indent, 0, 0, 0)
+        displayed = status if baseline else label.text()
         bounds = label.fontMetrics().boundingRect(QRect(0, 0, available.width(), 10000),
-                    int(label.alignment()) | (int(Qt.TextFlag.TextWordWrap) if label.wordWrap() else 0), status)
+                    int(label.alignment()) | (int(Qt.TextFlag.TextWordWrap) if label.wordWrap() else 0), displayed)
         if not baseline:
             assert bounds.width() <= available.width(), (status, bounds, available)
             assert bounds.height() <= available.height(), (status, bounds, available)
-        assert label.text() == status
+        if baseline:assert label.text() == status
+        else:
+            assert status in label.toolTip()
+            assert not label.wordWrap() and label.maximumWidth()<=88
         rows.append(dict(port=port, required=required, edit=field.width(), popup=popup,
                          status_width=available.width(), status_height=available.height(),
-                         text_width=bounds.width(), text_height=bounds.height()))
+                         displayed=displayed,full_status_tooltip=label.toolTip(),text_width=bounds.width(), text_height=bounds.height()))
     window.grab().save(str(output / "window.png"))
     (output / "geometry.json").write_text(json.dumps(dict(scale=window.devicePixelRatioF(),
         requested=[width,height], actual=[window.width(),window.height()], rows=rows), indent=2))

@@ -17,6 +17,37 @@ ROOT = Path(__file__).resolve().parents[1]
 COMMON = ROOT / "plugins/builtin/silverstar_core_0_1_0/payload/Common/Inc"
 
 
+def test_gate_attribution_does_not_hide_a_new_identical_conditional(tmp_path):
+    import importlib.util
+    import json
+
+    spec = importlib.util.spec_from_file_location('usb_validation_attribution',
+        ROOT / 'tools/validation/usb_transport_validate.py')
+    validation = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(validation)
+    old, new = tmp_path / 'old', tmp_path / 'new'
+    relative = 'Generated/UsbVendorReview/fixture.c'
+    source_old = 'int a;\n#ifdef FEATURE\n#endif\nint b;\n#ifdef FEATURE\n#endif\n'
+    source_new = '#ifdef FEATURE\n#error AddedGuard\n#endif\nint a;\n#ifdef FEATURE\n#endif\nint b;\n'
+    for root, baseline, source, lines in [(old, True, source_old, [2, 5]),
+                                         (new, False, source_new, [1, 5])]:
+        (root / 'native/f407/Generated/UsbVendorReview').mkdir(parents=True)
+        (root / 'native/f407' / relative).write_text(source)
+        (root / 'summary.json').write_text(json.dumps({'baseline': baseline,
+            'receipts': [{'part': 'f407', 'warning_logs': []}]}))
+        (root / 'native/f407/Generated/usb_transport_source_graph.json').write_text(
+            json.dumps({'input_hashes': {'fixture.c': 'same_native_input'}}))
+        (root / 'f407-power10.log').write_text('Power of Ten check FAILED (1 failures).\n'
+            '- first-party C conditional compilation violation:\n' + ''.join(
+                f'  {relative.replace("/", chr(92))}:{line}: #ifdef FEATURE\n' for line in lines))
+    validation.UsbEvidence_Compare(old, new)
+    row = json.loads((new / 'baseline-attribution.json').read_text())['rows'][0]
+    assert row['power10_new_or_changed_items'] == []  # Text multiplicity cancels.
+    assert row['unmapped_failure_locations'][0]['line'] == 1
+    assert row['unmapped_failure_locations'][0]['classification'] == 'ADDED_OR_MOVED_REQUIRES_REVIEW'
+    assert row['acceptance'].startswith('FAIL')
+
+
 def _Compile_Run(tmp_path, harness, *, indexed=False):
     for path, body in UsbCdcTransport_Render(indexed=indexed).items():
         destination = tmp_path / path

@@ -24,7 +24,13 @@ from tests.test_decoder_profiles import (
 def FirmwareSets_Build(overrides=None):
     groups = []
     for plugin in builtin_registry().algorithms:
+        if not plugin.metadata.firmware_component_ids:
+            continue
         name = plugin.metadata.plugin_id.rsplit(".", 1)[-1]
+        # These frozen packages describe the four legacy firmware parameter
+        # contracts. Augmented journal fixtures are generated separately.
+        if name in {"eskf20","inekf15","inekf20"}:
+            continue
         fixture_name = "sf6_revision1" if name == "sf6" else name
         contract = json.loads(
             (

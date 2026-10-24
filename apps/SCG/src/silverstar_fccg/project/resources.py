@@ -525,6 +525,10 @@ def _RequirementConstraintsErrors_Get(
         if isinstance(baud, dict):
             if "exact" in baud and actual_baud != baud["exact"]:
                 mismatch("uart.baud.exact", baud["exact"], actual_baud)
+            if "minimum" in baud and (type(actual_baud) is not int or actual_baud < baud["minimum"]):
+                mismatch("uart.baud.minimum", baud["minimum"], actual_baud)
+            if "maximum" in baud and (type(actual_baud) is not int or actual_baud > baud["maximum"]):
+                mismatch("uart.baud.maximum", baud["maximum"], actual_baud)
             allowed = baud.get("allowed_values")
             if isinstance(allowed, list) and actual_baud not in allowed:
                 mismatch("uart.baud.allowed_values", allowed, actual_baud)

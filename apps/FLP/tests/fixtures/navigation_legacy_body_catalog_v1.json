@@ -1,0 +1,178 @@
+{
+  "source": "apps/SCG/plugins/builtin/silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG/schema/sslog_schema.json",
+  "source_sha256": "8ee92bf5d878b4258514a078249878ee8db45ff90c4b9117b24aa217ebef990e",
+  "purpose": "Unmodified legacy record definitions for synthetic exact LogOpen rejection/acceptance tests",
+  "records": [
+    {
+      "id": "0x23",
+      "enum": "FLIGHT_LOG_RECORD_ESKF15_INITIAL_STATE",
+      "name": "ESKF15_INITIAL_STATE",
+      "version": 1,
+      "payload_size": 144,
+      "size_macro": "FLIGHT_LOG_ESKF15_INITIAL_STATE_PAYLOAD_SIZE",
+      "c_type": "FlightLogEskf15StateRecord",
+      "member": "eskf15_initial_state",
+      "default_stream": {
+        "enabled": true,
+        "policy": "one_shot",
+        "decimation": 1,
+        "period_us": 0
+      },
+      "fields": [
+        {
+          "name": "snapshot_id",
+          "type": "u32",
+          "unit": "1",
+          "quantity": "dimensionless"
+        },
+        {
+          "name": "epoch",
+          "type": "u32",
+          "unit": "1",
+          "quantity": "dimensionless"
+        },
+        {
+          "name": "source_id",
+          "type": "u32",
+          "unit": "1",
+          "quantity": "dimensionless"
+        },
+        {
+          "name": "calibration_generation",
+          "type": "u32",
+          "unit": "1",
+          "quantity": "dimensionless"
+        },
+        {
+          "name": "algorithm_id",
+          "type": "u8",
+          "unit": "1",
+          "quantity": "dimensionless"
+        },
+        {
+          "name": "algorithm_revision",
+          "type": "u8",
+          "unit": "1",
+          "quantity": "dimensionless"
+        },
+        {
+          "name": "quality_revision",
+          "type": "u8",
+          "unit": "1",
+          "quantity": "dimensionless"
+        },
+        {
+          "name": "health",
+          "type": "u8",
+          "unit": "1",
+          "quantity": "dimensionless"
+        },
+        {
+          "name": "position_enu_m",
+          "type": "f32",
+          "unit": "m",
+          "quantity": "position",
+          "count": 3
+        },
+        {
+          "name": "velocity_enu_mps",
+          "type": "f32",
+          "unit": "m/s",
+          "quantity": "velocity",
+          "count": 3
+        },
+        {
+          "name": "q_nb",
+          "type": "f32",
+          "unit": "1",
+          "quantity": "quaternion",
+          "count": 4
+        },
+        {
+          "name": "gyro_bias_radps",
+          "type": "f32",
+          "unit": "rad/s",
+          "quantity": "bias",
+          "count": 3
+        },
+        {
+          "name": "accel_bias_mps2",
+          "type": "f32",
+          "unit": "m/s^2",
+          "quantity": "bias",
+          "count": 3
+        },
+        {
+          "name": "p_diagonal",
+          "type": "f32",
+          "unit": "mixed",
+          "quantity": "covariance",
+          "count": 15
+        }
+      ]
+    },
+    {
+      "id": "0x26",
+      "enum": "FLIGHT_LOG_RECORD_ESKF15_BODY_INPUT",
+      "name": "ESKF15_BODY_INPUT",
+      "version": 1,
+      "payload_size": 84,
+      "size_macro": "FLIGHT_LOG_ESKF15_BODY_INPUT_PAYLOAD_SIZE",
+      "c_type": "FlightLogEskf15BodyInputRecord",
+      "member": "eskf15_body_input",
+      "fields": [
+        {
+          "name": "interval_start_timestamp_us",
+          "type": "u64",
+          "unit": "us",
+          "quantity": "timestamp"
+        },
+        {
+          "name": "interval_end_timestamp_us",
+          "type": "u64",
+          "unit": "us",
+          "quantity": "timestamp"
+        },
+        {
+          "name": "sequence",
+          "type": "u32"
+        },
+        {
+          "name": "source_id",
+          "type": "u32"
+        },
+        {
+          "name": "calibration_generation",
+          "type": "u32"
+        },
+        {
+          "name": "quality_flags",
+          "type": "u32"
+        },
+        {
+          "name": "dt_s",
+          "type": "f32",
+          "unit": "s"
+        },
+        {
+          "name": "body_gyro_radps",
+          "type": "f32",
+          "count": 6,
+          "unit": "rad/s"
+        },
+        {
+          "name": "body_accel_mps2",
+          "type": "f32",
+          "count": 6,
+          "unit": "m/s^2"
+        }
+      ],
+      "default_stream": {
+        "enabled": true,
+        "policy": "every",
+        "decimation": 1,
+        "period_us": 0
+      }
+    }
+  ]
+}

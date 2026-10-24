@@ -1,0 +1,17 @@
+{
+  "owner": "navigation_0_1_3 InEKF and ESKF20 experiments",
+  "purpose": "retained host mathematical/isolation evidence",
+  "retained_evidence": [
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_run01/pytest.log",
+      "sha256": "cab64f71858e1579f87e06aeb4e7629676fbf65dcf02d1ed155eb57f39d042ca",
+      "bytes": 44901
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_run01/run.json",
+      "sha256": "6884dbc9be35ddf0b9b15dd172b8bd9241ec3c53da2a75f3bdb39b327d501b4d",
+      "bytes": 82931
+    }
+  ],
+  "inventory_self_hash": "omitted to avoid recursive self-reference"
+}

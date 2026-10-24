@@ -440,8 +440,10 @@ SystemDeviceResult SystemMagnetometer_InfoGet(SystemDeviceInfo *info)
 SystemDeviceResult SystemMagnetometer_CapabilitiesGet(uint32_t *mask)
 {
     if (mask == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-    *mask = 0U;
-    return SYSTEM_DEVICE_UNSUPPORTED;
+    if (ProjectMagnetometerInstance_CountGet() == 0U)
+    { return SYSTEM_DEVICE_NOT_PRESENT; }
+    *mask = SYSTEM_MAG_CAP_RAW_OUTPUT | SYSTEM_MAG_CAP_PHYSICAL_UNIT;
+    return SYSTEM_DEVICE_OK;
 }
 SystemDeviceResult SystemMagnetometer_HealthGet(SystemDeviceHealth *health)
 {
@@ -1599,7 +1601,20 @@ static void Test_MagCalibrationObject(void)
     uint8_t packet[SYSTEM_MAG_CAL_PACKET_BYTES];
     uint8_t instance_id = UINT8_MAX;
     uint32_t request_id = 0U;
+    uint32_t capability_mask = 0xCAFEBABEUL;
+    TestFixture_MagEnabledSet(0U);
+    TEST_CHECK(ProjectMagnetometerInstance_CapabilitiesGet(0U,
+        &capability_mask) == SYSTEM_DEVICE_NOT_PRESENT);
+    TEST_CHECK(capability_mask == 0xCAFEBABEUL);
     TestFixture_MagEnabledSet(1U);
+    TEST_CHECK(ProjectMagnetometerInstance_CapabilitiesGet(0U, NULL) ==
+        SYSTEM_DEVICE_INVALID_ARGUMENT);
+    TEST_CHECK(ProjectMagnetometerInstance_CapabilitiesGet(1U,
+        &capability_mask) == SYSTEM_DEVICE_NOT_PRESENT);
+    TEST_CHECK(ProjectMagnetometerInstance_CapabilitiesGet(0U,
+        &capability_mask) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(capability_mask ==
+        (SYSTEM_MAG_CAP_RAW_OUTPUT | SYSTEM_MAG_CAP_PHYSICAL_UNIT));
     SystemMagCalibration_Init();
     Test_Execute("MAG 0 CAL APPLY " TEST_MAG_PACKET_WRONG_DEVICE,
         SYSTEM_CONSOLE_EXECUTE_FAILED, "WRONG_DEVICE");

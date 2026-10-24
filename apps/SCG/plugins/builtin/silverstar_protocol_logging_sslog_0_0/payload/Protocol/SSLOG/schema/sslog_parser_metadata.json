@@ -3656,6 +3656,65 @@
           "type": "u8"
         }
       ]
+    },
+    {
+      "id": "0x30",
+      "enum": "FLIGHT_LOG_RECORD_NAVIGATION_OPERATION_PART",
+      "name": "NAVIGATION_OPERATION_PART",
+      "version": 1,
+      "payload_size": 180,
+      "size_macro": "FLIGHT_LOG_NAVIGATION_OPERATION_PART_PAYLOAD_SIZE",
+      "c_type": "FlightLogNavigationOperationPartRecord",
+      "member": "navigation_operation_part",
+      "default_stream": {
+        "enabled": true,
+        "policy": "every",
+        "decimation": 1,
+        "period_us": 0
+      },
+      "fields": [
+        {
+          "name": "epoch",
+          "type": "u32"
+        },
+        {
+          "name": "operation",
+          "type": "u32"
+        },
+        {
+          "name": "transaction_crc32",
+          "type": "u32"
+        },
+        {
+          "name": "total_size",
+          "type": "u16"
+        },
+        {
+          "name": "part_index",
+          "type": "u8"
+        },
+        {
+          "name": "part_count",
+          "type": "u8"
+        },
+        {
+          "name": "kind",
+          "type": "u8"
+        },
+        {
+          "name": "algorithm_id",
+          "type": "u8"
+        },
+        {
+          "name": "revision",
+          "type": "u16"
+        },
+        {
+          "name": "data",
+          "type": "u8",
+          "count": 160
+        }
+      ]
     }
   ],
   "fccg": {
@@ -4370,6 +4429,28 @@
         "producer_components": [
           "silverstar.algorithm.estimator.kf6",
           "silverstar.algorithm.estimator.eskf15"
+        ]
+      },
+      "FLIGHT_LOG_RECORD_NAVIGATION_OPERATION_PART": {
+        "level": "required",
+        "purpose": "flight",
+        "default_enabled": true,
+        "display_names": {
+          "en_US": "Navigation operation journal",
+          "zh_CN": "Navigation operation journal"
+        },
+        "requires": {
+          "capabilities": [
+            "algorithm.estimator"
+          ]
+        },
+        "cadence": {
+          "kind": "source"
+        },
+        "producer_components": [
+          "silverstar.algorithm.estimator.eskf20",
+          "silverstar.algorithm.estimator.inekf15",
+          "silverstar.algorithm.estimator.inekf20"
         ]
       }
     }

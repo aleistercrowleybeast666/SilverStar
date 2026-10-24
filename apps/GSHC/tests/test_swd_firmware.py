@@ -233,22 +233,27 @@ def test_cli_offline_inspect_never_enumerates(arm_elf,capsys):
     inventory.assert_not_called()
 
 
-def test_gui_import_match_read_detach_and_reimport(arm_elf,swd_panel):
+def test_gui_import_match_read_detach_and_reimport(arm_elf,swd_panel,tmp_path):
     window,probes,create=swd_panel
     def factory(**kwargs):
         backend=ImageMemory(kwargs['firmware'])
         return SwdSession(**kwargs,_backend_factory=lambda _:backend)
     manager=create(factory)
     page=window.maintenance_page
-    page.swd_target.setCurrentText('STM32F407VETx')
-    assert manager.import_files([arm_elf])
+    descriptor=tmp_path/'fixture.ssdiag'
+    descriptor.write_text(json.dumps(load(arm_elf).descriptor),encoding='utf-8')
+    assert manager.import_files([descriptor,arm_elf])
     assert not manager.import_files([arm_elf]) and not manager.attach()
     wait_for(lambda:manager.import_worker is None)
     assert manager.firmware is not None
     assert manager.attach()
-    assert not manager.import_files([arm_elf])
     wait_for(lambda:bool(manager.rows))
     assert manager.snapshot.symbols=='matched' and page.swd_diagnostics.topLevelItemCount()==4
+    assert page.btn_swd_variables.isEnabled()
+    assert manager.import_files([arm_elf])  # Validated exact-hash provenance permits reimport.
+    assert manager.snapshot is None and not page.btn_swd_variables.isEnabled()
+    wait_for(lambda:manager.import_worker is None and bool(manager.rows))
+    assert manager.snapshot.symbols=='matched'
     manager.detach();wait_for(lambda:manager.worker is None)
     assert not manager.rows and not page.swd_diagnostics.isVisible()
     assert manager.import_files([arm_elf.with_suffix('.missing')])
@@ -259,10 +264,10 @@ def test_gui_import_match_read_detach_and_reimport(arm_elf,swd_panel):
 def test_gui_cancel_import_and_close_wait_for_worker(arm_elf,swd_panel,monkeypatch):
     from transport.swd_firmware import FirmwareReply
     entered=Event()
-    def slow(paths,*,target,cancel):
+    def slow(paths,*,target_cache,cancel):
         entered.set();cancel.wait(2)
         return FirmwareReply(DiagnosticResult.Cancelled,'cancelled')
-    monkeypatch.setattr('ui.swd_connection.Firmware_Import',slow)
+    monkeypatch.setattr('ui.swd_connection.Firmware_ImportAuto',slow)
     window,probes,create=swd_panel
     manager=create(Mock())
     assert manager.import_files([arm_elf])
@@ -331,8 +336,8 @@ def test_old_import_and_swd_signals_cannot_modify_new_job(swd_panel):
     from ui.swd_connection import FirmwareWorker, SwdWorker
     window,probes,create = swd_panel
     manager = create(Mock())
-    old_import = FirmwareWorker([],None,manager)
-    current_import = FirmwareWorker([],None,manager)
+    old_import = FirmwareWorker([],{},manager)
+    current_import = FirmwareWorker([],{},manager)
     old_import.update.connect(manager._imported)
     old_import.finished.connect(manager._import_finished)
     manager.import_worker = current_import

@@ -90,6 +90,7 @@ class UiWorkflowTests(unittest.TestCase):
         self.window.data_directory_dialog.close()
         self.window.data_migration_progress_dialog.close()
         self.window.close()
+        self.window.deleteLater()
         self.temporary_directory.cleanup()
 
     def test_release_pages_are_manually_selectable(self) -> None:
@@ -126,26 +127,23 @@ class UiWorkflowTests(unittest.TestCase):
             header_layout.indexOf(self.window.header_version),
             header_layout.indexOf(self.window.header_credit),
         )
+        preferences_layout=self.window.header_preferences_widget.layout()
+        self.assertTrue(self.window.header_identity_widget.isAncestorOf(self.window.header_credit))
+        self.assertTrue(self.window.header_preferences_widget.isAncestorOf(self.window.lbl_language))
         self.assertLess(
-            header_layout.indexOf(self.window.header_credit),
-            header_layout.indexOf(self.window.lbl_language),
+            preferences_layout.indexOf(self.window.theme_combo),
+            preferences_layout.indexOf(self.window.lbl_language),
         )
         self.assertLess(
-            header_layout.indexOf(self.window.theme_combo),
-            header_layout.indexOf(self.window.lbl_language),
+            preferences_layout.indexOf(self.window.lbl_theme),
+            preferences_layout.indexOf(self.window.theme_combo),
         )
         self.assertLess(
-            header_layout.indexOf(self.window.lbl_theme),
-            header_layout.indexOf(self.window.theme_combo),
+            preferences_layout.indexOf(self.window.lbl_language),
+            preferences_layout.indexOf(self.window.language_combo),
         )
-        self.assertLess(
-            header_layout.indexOf(self.window.lbl_language),
-            header_layout.indexOf(self.window.language_combo),
-        )
-        self.assertLess(
-            header_layout.indexOf(self.window.header_title),
-            header_layout.indexOf(self.window.lbl_theme),
-        )
+        self.assertTrue(self.window.header_identity_widget.isAncestorOf(self.window.header_title))
+        self.assertTrue(self.window.header_preferences_widget.isAncestorOf(self.window.lbl_theme))
 
         english_index = self.window.language_combo.findData(Language.EN_US.value)
         self.window.language_combo.setCurrentIndex(english_index)

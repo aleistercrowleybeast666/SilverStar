@@ -154,10 +154,14 @@ typedef struct
     float dt_s;
     float delta_theta_b_corrected[3];
     float delta_velocity_b_sculling_corrected[3];
-#if defined(SYSTEM_BUILD_ESKF15_ENABLED) && (SYSTEM_BUILD_ESKF15_ENABLED != 0U)
+#if (defined(SYSTEM_BUILD_ESKF15_ENABLED) && (SYSTEM_BUILD_ESKF15_ENABLED != 0U)) || \
+    (defined(SYSTEM_BUILD_AUGMENTED_ENABLED) && (SYSTEM_BUILD_AUGMENTED_ENABLED != 0U))
     float body_gyro_radps[2][3];
     float body_accel_mps2[2][3];
     uint32_t quality_flags;
+#endif
+#if defined(SYSTEM_BUILD_AUGMENTED_ENABLED) && (SYSTEM_BUILD_AUGMENTED_ENABLED != 0U)
+    uint64_t interval_start_timestamp_us; /* authoritative integer acquisition boundary */
 #endif
 } SystemInertialIncrement;
 

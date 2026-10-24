@@ -30,6 +30,9 @@ def FeatureTier_LogRecordAlgorithmOwned(record: str) -> bool:
 
 
 def FeatureTier_LogRecordReasonGet(model: ProjectModel, record: str) -> str:
+    if not model.build.magnetometer_enabled and record in (
+            "FLIGHT_LOG_RECORD_MAG_NATIVE", "FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY"):
+        return "logging.optional_resources.disabled"
     if (record in _LOG_ALGORITHM_OWNERS and
             model.strategies.get("estimator") != _LOG_ALGORITHM_OWNERS[record]):
         return "logging.algorithm.disabled"
@@ -56,7 +59,9 @@ def FeatureTier_StrategyAllowed(model: ProjectModel, component_id: str | None) -
 
 
 def FeatureTier_DeviceClassLimitGet(tier: str, component_class: str, category: str,
-                                   ordinary_limit: int) -> int:
+                                   ordinary_limit: int, magnetometer_enabled: bool = True) -> int:
+    if component_class == "magnetometer" and (not magnetometer_enabled or tier in ("compact", "minimal")):
+        return 0
     if tier == "minimal" and component_class == "gnss":
         return 0
     if tier in ("compact", "minimal") and (
@@ -80,6 +85,8 @@ def FeatureTier_BarometerOwnerGet(model: ProjectModel, catalog) -> str:
 
 
 def FeatureTier_DescriptorActive(model: ProjectModel, catalog, instance_id: str, device_class: str) -> bool:
+    if device_class == "SYSTEM_DEVICE_CLASS_MAGNETOMETER" and not model.build.magnetometer_enabled:
+        return False
     if device_class != _BAROMETER:
         return True
     owner = FeatureTier_BarometerOwnerGet(model, catalog)
@@ -93,6 +100,10 @@ def FeatureTier_DescriptorActive(model: ProjectModel, catalog, instance_id: str,
 
 def FeatureTier_ErrorsGet(model: ProjectModel, catalog) -> tuple[str, ...]:
     errors = []
+    if not model.build.magnetometer_enabled and any(
+            catalog.InstanceComponent_Get(instance).component_class == "magnetometer"
+            for instance in model.device_instances):
+        errors.append("Magnetometer resources are disabled; remove dedicated magnetometer devices explicitly")
     if not FeatureTier_StrategyAllowed(model, model.strategies.get("estimator")):
         errors.append("Selected estimator is prohibited by the feature tier; retained parameters need explicit review")
     if model.build.feature_tier == "minimal":
@@ -157,13 +168,16 @@ def FeatureTier_Apply(model: ProjectModel, tier: str, catalog) -> tuple[str, ...
     snapshot.pop("feature_tier_presets", None)
     model.feature_tier_presets[previous] = snapshot
     notes = []
+    optional = {name: tier in ("full", "standard") for name in
+                ("magnetometer_enabled", "maintenance_log_export_enabled")}
     if tier in model.feature_tier_presets:
         restored = ProjectModel_Parse(deepcopy(model.feature_tier_presets[tier]))
         for field in ("strategies", "algorithm_parameters", "modes", "mode_parameters",
                       "alignment", "protocols", "logging_streams"):
             setattr(model, field, deepcopy(getattr(restored, field)))
+        optional = {name: getattr(restored.build, name) for name in optional}
         notes.append("restored")
-    model.build = replace(model.build, feature_tier=tier)
+    model.build = replace(model.build, feature_tier=tier, **optional)
     notes.extend(_FeatureTier_DevicesNormalize(model, catalog))
     selected = model.strategies.get("estimator")
     if not FeatureTier_StrategyAllowed(model, selected):

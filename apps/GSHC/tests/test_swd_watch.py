@@ -228,17 +228,25 @@ def test_catalog_without_dwarf_and_cli_offline(watch_elf,tmp_path,capsys):
     assert not load_watch(target).watches
 
 
-def test_gui_add_read_remove_pause_disconnect(watch_elf,swd_panel):
+def test_gui_add_read_remove_pause_disconnect(watch_elf,swd_panel,tmp_path):
     window,probes,create=swd_panel
+    window.pages.setCurrentWidget(window.maintenance_scroll)
     backends=[]
     def factory(**kwargs):
         backend=ImageMemory(kwargs['firmware']);backends.append(backend)
         return SwdSession(**kwargs,_backend_factory=lambda _:backend)
     manager=create(factory)
-    window.maintenance_page.swd_target.setCurrentText('STM32F407VETx')
-    assert manager.import_files([watch_elf])
+    descriptor=tmp_path/'watch.ssdiag'
+    descriptor.write_text(json.dumps(load_watch(watch_elf).descriptor),encoding='utf-8')
+    assert manager.import_files([descriptor,watch_elf])
     wait_for(lambda:manager.import_worker is None)
     panel=window.maintenance_page.swd_watch
+    assert not panel.isEnabled() and not window.maintenance_page.btn_swd_variables.isEnabled()
+    assert manager.attach()
+    wait_for(lambda:manager.snapshot is not None and manager.snapshot.symbols=='matched')
+    assert window.maintenance_page.btn_swd_variables.isVisible()
+    window.maintenance_page.btn_swd_variables.click()
+    assert window.maintenance_page.watch_dialog.isVisible()
     from PySide6.QtWidgets import QScroller
     assert all(QScroller.hasScroller(view.viewport()) for view in
                (panel.table,panel.catalog.view(),panel.interval.view()))
@@ -246,9 +254,17 @@ def test_gui_add_read_remove_pause_disconnect(watch_elf,swd_panel):
     assert panel.catalog.count()==1 and panel.add.isEnabled()
     panel.add.click()
     assert panel.selected==['watch.c::global_scalar'] and not panel.add.isEnabled()
-    assert manager.attach()
-    wait_for(lambda:bool(manager.watch_rows))
+    try:
+        wait_for(lambda:bool(manager.watch_rows))
+    except AssertionError:
+        raise AssertionError((manager.status,manager.detail,manager._watch_revision,
+            manager.worker._get_selection() if manager.worker else None,
+            window.maintenance_page.watch_dialog.isVisible())) from None
     assert panel.table.topLevelItemCount()==1
+    window.maintenance_page.watch_dialog.hide()
+    assert manager.worker._get_selection()[0]==() and not manager.watch_rows and not panel.rows
+    window.maintenance_page.watch_dialog.show()
+    wait_for(lambda:bool(manager.watch_rows))
     panel.pause.setChecked(True)
     assert not panel.rows
     panel.table.topLevelItem(0).setSelected(True)

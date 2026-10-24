@@ -670,6 +670,10 @@ if (Test-Path -LiteralPath (Join-Path $repoRoot 'Generated\memory_audit.py') -Pa
     # omit it; the auto Make dependency requires it when auto is selected.
     $expectedGeneratedFiles = @($expectedGeneratedFiles + 'Generated\memory_audit.py' | Sort-Object)
 }
+if (@($projectConfiguration.components.base) -contains 'silverstar.installation.capture') {
+    # Optional source-graph-owned endpoint labels; no runtime algorithm logic.
+    $expectedGeneratedFiles = @($expectedGeneratedFiles + 'Generated\Inc\project_installation_capture.h' | Sort-Object)
+}
 if (-not $loggingEnabled) {
     $disabledGeneratedFiles = @(
         'Generated\Inc\project_log_config.h', 'Generated\Inc\project_log_decoder_profile.h',
@@ -851,9 +855,31 @@ Assert-FileContainsPattern -RelativePath $iocPath `
 Assert-FileContainsPattern -RelativePath $iocPath `
     -Pattern 'USART2\.BaudRate=921600' `
     -Message 'CubeMX GNSS UART baudrate changed from 921600.'
+$maintenanceBaud = 230400
+$maintenanceProfilePath = Join-Path $repoRoot 'Tools/maintenance_uart.json'
+if (Test-Path -LiteralPath $maintenanceProfilePath -PathType Leaf) {
+    try {
+        $maintenanceProfile = Get-Content -Raw -Encoding UTF8 -LiteralPath $maintenanceProfilePath | ConvertFrom-Json
+        $validMaintenanceProfile = (($maintenanceProfile.baudrate -is [int]) -or
+            ($maintenanceProfile.baudrate -is [long])) -and
+            ($maintenanceProfile.baudrate -ge 1200) -and ($maintenanceProfile.baudrate -le 2000000) -and
+            ($maintenanceProfile.handle -ceq 'huart3') -and ($maintenanceProfile.peripheral -ceq 'USART3')
+        Assert-ArchitectureCondition -Condition $validMaintenanceProfile `
+            -Message 'Maintenance UART declaration does not preserve the SS0.5 USART3 binding and bounded rate.'
+        if ($validMaintenanceProfile) {
+            $maintenanceBaud = $maintenanceProfile.baudrate
+            # The emitted checker compares the actual C initialization, IOC rate,
+            # 8N1 fields and clock divisor. It reads sources without rewriting them.
+            & (Join-Path $repoRoot 'Tools/check_maintenance_uart.ps1') | Out-Null
+        }
+    } catch {
+        Assert-ArchitectureCondition -Condition $false `
+            -Message ('Maintenance UART actual-source validation failed: ' + $_.Exception.Message)
+    }
+}
 Assert-FileContainsPattern -RelativePath $iocPath `
-    -Pattern 'USART3\.BaudRate=230400' `
-    -Message 'CubeMX console UART baudrate changed from 230400.'
+    -Pattern ('(?m)^USART3\.BaudRate=' + [regex]::Escape([string]$maintenanceBaud) + '\r?$') `
+    -Message 'CubeMX console UART baudrate differs from its declared configuration.'
 Assert-FileContainsPattern -RelativePath $iocPath `
     -Pattern 'Dma\.USART1_RX\.0\.Mode=DMA_CIRCULAR' `
     -Message 'CubeMX IMU RX DMA is no longer circular.'
@@ -1550,7 +1576,8 @@ try {
         '0x2B|FLIGHT_LOG_RECORD_SF6_STATE|SF6_STATE|1|72|FLIGHT_LOG_SF6_STATE_PAYLOAD_SIZE|FlightLogSf6StateRecord|sf6_state|snapshot_id,u32,1;algorithm_id,u8,1;algorithm_revision,u8,1;health,u8,1;reserved,u8,1;position_enu_m,f32,3;velocity_enu_mps,f32,3;q_nb,f32,4;gain,f32,6',
         '0x2C|FLIGHT_LOG_RECORD_SF6_MEASUREMENT|SF6_MEASUREMENT|1|56|FLIGHT_LOG_SF6_MEASUREMENT_PAYLOAD_SIZE|FlightLogSf6MeasurementRecord|sf6_measurement|sample_timestamp_us,u64,1;receive_timestamp_us,u64,1;measurement_timestamp_us,u64,1;evaluation_timestamp_us,u64,1;boundary_timestamp_us,u64,1;sequence,u32,1;group,u8,1;physically_valid,u8,1;result,u8,1;effective_update,u8,1;observation,f32,2',
         '0x2D|FLIGHT_LOG_RECORD_FUSION_HORIZON_MEASUREMENT|FUSION_HORIZON_MEASUREMENT|1|148|FLIGHT_LOG_FUSION_HORIZON_MEASUREMENT_PAYLOAD_SIZE|FlightLogFusionHorizonMeasurementRecord|fusion_horizon_measurement|sample_timestamp_us,u64,1;receive_timestamp_us,u64,1;measurement_timestamp_us,u64,1;application_timestamp_us,u64,1;evaluation_timestamp_us,u64,1;operation_sequence,u32,1;epoch,u32,1;source_id,u32,1;calibration_generation,u32,1;source_sequence,u32,1;algorithm_id,u8,1;algorithm_revision,u8,1;numerical_revision,u8,1;phase,u8,1;group,u8,1;physically_valid,u8,1;admitted,u8,1;update_result,u8,1;fusion_timing_mode,u8,1;timing_flags,u8,1;execution_result,u8,1;effective_update,u8,1;observation,f32,2;innovation,f32,2;prepared_variance,f32,2;effective_variance,f32,2;nis,f32,1;quality_scale,f32,1;consistency_scale,f32,1;robust_scale,f32,1;kf_availability_timestamp_us,u64,1;kf_consistency_start_timestamp_us,u64,1;kf_recovery_generation,u32,1;kf_consistent_count,u32,1;kf_outage,u8,1;kf_loss_latched,u8,1;kf_recovery_valid,u8,1;kf_consistency_valid,u8,1',
-        '0x2E|FLIGHT_LOG_RECORD_FUSION_HORIZON_STATUS|FUSION_HORIZON_STATUS|1|88|FLIGHT_LOG_FUSION_HORIZON_STATUS_PAYLOAD_SIZE|FlightLogFusionHorizonStatusRecord|fusion_horizon_status|input_present_timestamp_us,u64,1;primary_timestamp_us,u64,1;output_state_timestamp_us,u64,1;output_covariance_timestamp_us,u64,1;operation_sequence,u32,1;epoch,u32,1;source_id,u32,1;calibration_generation,u32,1;horizon_us,u32,1;work_count,u32,1;maximum_work,u32,1;late_count,u32,1;capacity_count,u32,1;failure_operation_sequence,u32,1;body_count,u16,1;event_count,u16,1;completion_count,u16,1;reserved_count,u16,1;algorithm_id,u8,1;algorithm_revision,u8,1;numerical_revision,u8,1;fusion_timing_mode,u8,1;phase,u8,1;execution_result,u8,1;failure_operation_valid,u8,1;horizon_initialized,u8,1'
+        '0x2E|FLIGHT_LOG_RECORD_FUSION_HORIZON_STATUS|FUSION_HORIZON_STATUS|1|88|FLIGHT_LOG_FUSION_HORIZON_STATUS_PAYLOAD_SIZE|FlightLogFusionHorizonStatusRecord|fusion_horizon_status|input_present_timestamp_us,u64,1;primary_timestamp_us,u64,1;output_state_timestamp_us,u64,1;output_covariance_timestamp_us,u64,1;operation_sequence,u32,1;epoch,u32,1;source_id,u32,1;calibration_generation,u32,1;horizon_us,u32,1;work_count,u32,1;maximum_work,u32,1;late_count,u32,1;capacity_count,u32,1;failure_operation_sequence,u32,1;body_count,u16,1;event_count,u16,1;completion_count,u16,1;reserved_count,u16,1;algorithm_id,u8,1;algorithm_revision,u8,1;numerical_revision,u8,1;fusion_timing_mode,u8,1;phase,u8,1;execution_result,u8,1;failure_operation_valid,u8,1;horizon_initialized,u8,1',
+        '0x30|FLIGHT_LOG_RECORD_NAVIGATION_OPERATION_PART|NAVIGATION_OPERATION_PART|1|180|FLIGHT_LOG_NAVIGATION_OPERATION_PART_PAYLOAD_SIZE|FlightLogNavigationOperationPartRecord|navigation_operation_part|epoch,u32,1;operation,u32,1;transaction_crc32,u32,1;total_size,u16,1;part_index,u8,1;part_count,u8,1;kind,u8,1;algorithm_id,u8,1;revision,u16,1;data,u8,160'
     )
     Assert-ArchitectureCondition -Condition ($sslogRecords.Count -eq $sslogWireIdentities.Count) `
         -Message 'SSLOG Record Catalog must contain exactly the reviewed wire codecs.'

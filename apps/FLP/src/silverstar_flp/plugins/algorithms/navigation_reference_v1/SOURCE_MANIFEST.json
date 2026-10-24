@@ -1,0 +1,32 @@
+{
+  "lie_group.py": {
+    "source": "apps\\SCG\\experiments\\navigation_0_1_3\\lie_group.py",
+    "source_sha256": "81b674b66fede30b6c5368515f8c0d806f66d8e6dcdfd496345e66f00283fab0",
+    "changes": "relative imports only; historical docstrings preserved"
+  },
+  "eskf20_reference.py": {
+    "source": "apps\\SCG\\experiments\\navigation_0_1_3\\eskf20_reference.py",
+    "source_sha256": "dc69abfb49d7293c9aa571d0cba6b9119518bc9c29e188cf2ea2d7bf52808d2c",
+    "changes": "relative imports only; historical docstrings preserved"
+  },
+  "inekf15_reference.py": {
+    "source": "apps\\SCG\\experiments\\navigation_0_1_3\\inekf15_reference.py",
+    "source_sha256": "baab83dd7391953a75a1552c0bc17d3d1b85da3bf4f00ec4bdbcee6a81e794ad",
+    "changes": "relative imports only; historical docstrings preserved"
+  },
+  "inekf20_reference.py": {
+    "source": "apps\\SCG\\experiments\\navigation_0_1_3\\inekf20_reference.py",
+    "source_sha256": "3449f47862c0c93cfdc6d17a7565b883299434835a53a2ed6bef329d4abd8e78",
+    "changes": "relative imports only; historical docstrings preserved"
+  },
+  "navigation_flow.py": {
+    "source": "apps\\SCG\\experiments\\navigation_0_1_3\\inekf_reference.py",
+    "source_sha256": "2c2dcffa17dd50ac7d50d1f623e40b45d4098c39a51c3841a0aeed08e98b165f",
+    "changes": "Only Navigation_ErrorDynamics and Navigation_PropagateGroup copied verbatim; no nine-state filter API"
+  },
+  "input_reference.py": {
+    "source": "navigation_input_boundary_v2/input_reference.py",
+    "source_sha256": "2d2b97f6efaea9942519cd904fed28c5edf043a9fde886491caf2f7adaef36ba",
+    "changes": "relative imports; optional absent GNSS/magnetic bindings; explicit magnetic missing-binding rejection"
+  }
+}

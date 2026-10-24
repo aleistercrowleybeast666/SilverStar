@@ -6,6 +6,8 @@ All outputs go to one NEW task directory. No cleanup of existing data occurs.
 from __future__ import annotations
 
 import argparse
+from collections import Counter
+import difflib
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -22,16 +24,17 @@ SCG = REPO / "apps/SCG"
 sys.path.insert(0, str(SCG / "src"))
 
 
-def Integrated_Validate(reference, output, run, *, baseline=False):
+def Integrated_Validate(reference, output, run, *, baseline=False, f407_reference=None):
     """Build the delivered replacements, without executing native build scripts.
 
-    Exact input fingerprints bind the two reviewed compiler configurations.
+    Reviewed controller/ABI bindings constrain the two compiler configurations.
     This is a USB integration graph, not normal Ground admission/architecture.
     """
     from silverstar_fccg.app.usb_transport import UsbTransport_Export, UsbTransport_Plan, _Project_Read
     from silverstar_fccg.generator.multi_target import _Makefile_Render
     from silverstar_fccg.hardware.native_machine_contract import (
         NativeArmAttributes_Validate, NativeIndependentVectors_Validate)
+    from silverstar_fccg.hardware.usb_transport_profiles import CONTROLLER_CONTRACTS
 
     strict = ["-Wall", "-Wextra", "-Wpedantic", "-Werror", "-Wconversion", "-Wsign-conversion",
         "-Wshadow", "-Wundef", "-Wformat=2", "-Wdouble-promotion", "-Wcast-align", "-Wcast-qual",
@@ -50,6 +53,8 @@ def Integrated_Validate(reference, output, run, *, baseline=False):
     receipts = []
     for part, core, fpu, slots in profiles:
         native = reference / ("cube-" + part + "-usb")
+        if part == "f407" and f407_reference is not None:
+            native = f407_reference
         root = output / "native" / part
         if baseline:
             plan = UsbTransport_Plan(native)
@@ -61,6 +66,10 @@ def Integrated_Validate(reference, output, run, *, baseline=False):
             plan = UsbTransport_Export(native, root, integrate=True)
             manifest = json.loads((root / "lifecycle-integration.json").read_text())
         build = plan.capabilities["build"]
+        contract = CONTROLLER_CONTRACTS[manifest['profile']['controller_contract']]
+        if contract['compiler'] != {'core': core, 'fpu': fpu,
+                'float_abi': 'hard' if fpu else 'soft', 'independent_irq_slots': slots}:
+            raise ValueError('Controller contract differs from independent compiler/IRQ validation binding')
         flags = ["-mcpu=" + core, "-mthumb", "-mfloat-abi=" + ("hard" if fpu else "soft")]
         if fpu:
             flags += ["-mfpu=" + fpu]
@@ -95,6 +104,7 @@ def Integrated_Validate(reference, output, run, *, baseline=False):
             "linker": str(native / build["linker_script"][0]), "required_symbols": symbols_required,
             "independent_irq_slots": slots, "input_hashes": plan.files_sha256,
             "profile": manifest["profile"], "critical_contracts": "NOT_PROVEN"}
+        graph['controller_contract'] = contract
         (root / "Generated").mkdir(exist_ok=True)
         (root / "Generated/usb_transport_source_graph.json").write_text(json.dumps(graph, indent=2))
         if len(set(entry["input"] for entry in sources)) != len(sources):
@@ -107,7 +117,10 @@ def Integrated_Validate(reference, output, run, *, baseline=False):
                 assert all(entry["compiled"] != str(native / old) for entry in sources)
         receipt = {"graph_sha256": hashlib.sha256((root / "Generated/usb_transport_source_graph.json").read_bytes()).hexdigest(),
                    "part": part, "builds": [], "critical_contracts": "NOT_PROVEN",
-                   "stack_wcet_hardware": "NOT_PROVEN", "warning_logs": [], "linked_library_files": {}}
+                   "stack_wcet_hardware": "NOT_PROVEN", "warning_logs": [], "linked_library_files": {},
+                   "native_root": str(native), "native_configuration": plan.capabilities["native_configuration"],
+                   "configuration_findings": plan.capabilities["configuration_findings"]}
+        receipt['controller_contract'] = contract
         sdk_facts = {}
         for library in ("libc_nano.a", "libm.a", "libnosys.a", "libgcc.a"):
             path = Path(run(part + "-locate-" + library, ["arm-none-eabi-gcc", *flags,
@@ -227,6 +240,34 @@ def Integrated_Validate(reference, output, run, *, baseline=False):
     return all(not row["warning_logs"] and row["power10"] == "PASS_TEXT_ONLY" for row in receipts)
 
 
+def _Power10_SourceProvenance(baseline: Path, current: Path, part: str, text: str) -> list[dict]:
+    """Locate added/moved failing source lines; text matching is not ownership."""
+    tail = text.split('Power of Ten check FAILED', 1)[-1]
+    rows = []
+    cache = {}
+    for filename, number in re.findall(r'(?m)^\s*(?:-\s*)?([^\r\n:]+\.c):(\d+):', tail):
+        relative = Path(filename.strip().replace('\\', '/'))
+        if relative.is_absolute() or '..' in relative.parts:
+            raise ValueError('Unsafe reported checker source path')
+        old, new = baseline/'native'/part/relative, current/'native'/part/relative
+        line = int(number)
+        if relative not in cache:
+            if old.is_file() and new.is_file():
+                a, b = old.read_text().splitlines(), new.read_text().splitlines()
+                mapping = {j+offset+1: i+offset+1
+                    for tag, i, end_i, j, end_j in difflib.SequenceMatcher(None, a, b, autojunk=False).get_opcodes()
+                    if tag == 'equal' for offset in range(end_i-i)}
+                cache[relative] = (mapping, b)
+            else:
+                cache[relative] = ({}, new.read_text().splitlines() if new.is_file() else [])
+        mapping, source = cache[relative]
+        rows.append({'source': str(relative), 'line': line, 'baseline_line': mapping.get(line),
+            'text': source[line-1] if 0 < line <= len(source) else None,
+            'classification': 'VERBATIM_BASELINE_LINE' if line in mapping else 'ADDED_OR_MOVED_REQUIRES_REVIEW',
+            'semantic_contracts': 'NOT_PROVEN_BY_LINE_MAPPING'})
+    return rows
+
+
 def UsbEvidence_Compare(baseline: Path, current: Path):
     """Attribute unchanged diagnostics; never convert the failed gate to PASS."""
     previous = json.loads((baseline / 'summary.json').read_text())
@@ -235,6 +276,10 @@ def UsbEvidence_Compare(baseline: Path, current: Path):
         raise ValueError('comparison requires an unchanged native baseline and an integrated run')
     rows = []
     def failures(text):
+        if 'Power of Ten check FAILED' not in text:
+            if 'Power of Ten project text checks passed' in text:
+                return []
+            raise ValueError('Gate output has no recognized completion status')
         tail = text.split('Power of Ten check FAILED', 1)[1]
         lines = [line.strip() for line in tail.splitlines()[1:] if line.strip()]
         return [re.sub(r'has \d+ non-comment code lines', 'has LENGTH non-comment code lines',
@@ -251,13 +296,26 @@ def UsbEvidence_Compare(baseline: Path, current: Path):
             identical = prior.is_file() and prior.read_bytes() == (current/label).read_bytes()
             warning_rows.append({'log': label, 'unchanged_native_baseline_identical': identical,
                 'classification': 'EXISTING_VENDOR_DIAGNOSTIC' if identical else 'NEW_OR_CHANGED_REQUIRES_REVIEW'})
-        old_failures = failures((baseline/(part+'-power10.log')).read_text())
-        new_failures = failures((current/(part+'-power10.log')).read_text())
+        old_text = (baseline/(part+'-power10.log')).read_text()
+        new_text = (current/(part+'-power10.log')).read_text()
+        old_failures = failures(old_text)
+        new_failures = failures(new_text)
+        def lengths(text):
+            return {name: int(count) for name, count in re.findall(
+                r'function (\w+) has (\d+) non-comment code lines', text)}
+        old_lengths, new_lengths = lengths(old_text), lengths(new_text)
+        old_count, new_count = Counter(old_failures), Counter(new_failures)
+        provenance = _Power10_SourceProvenance(baseline, current, part, new_text)
         rows.append({'part': part, 'input_revision_identical': True, 'analyzer': warning_rows,
-            'power10_existing_items': [v for v in new_failures if v in old_failures],
-            'power10_new_or_changed_items': [v for v in new_failures if v not in old_failures],
-            'power10_baseline_only_items': [v for v in old_failures if v not in new_failures],
-            'qualification': 'Full vendor derivatives are scanned conservatively; inherited vendor violations are not newly authorized exceptions. Actual line counts remain in raw logs.',
+            'power10_existing_items': list((new_count & old_count).elements()),
+            'power10_new_or_changed_items': list((new_count - old_count).elements()),
+            'power10_baseline_only_items': list((old_count - new_count).elements()),
+            'source_line_provenance': provenance,
+            'unmapped_failure_locations': [row for row in provenance if row['classification'] != 'VERBATIM_BASELINE_LINE'],
+            'overlong_function_line_changes': [{'function': name, 'baseline_lines': old_lengths[name],
+                'current_lines': count, 'acceptance': 'FAIL_REMAINS_NO_EXCEPTION_GRANTED'}
+                for name, count in new_lengths.items() if name in old_lengths and count != old_lengths[name]],
+            'qualification': 'Text multiplicity is not source ownership: removed old and added new identical directives can cancel. Inspect source_line_provenance/unmapped locations and modified function bodies. Equal lines do not prove semantics; no baseline exception is granted.',
             'acceptance': 'FAIL / CRITICAL_CONTRACTS_NOT_PROVEN'})
     (current/'baseline-attribution.json').write_text(json.dumps({'baseline': str(baseline), 'rows': rows}, indent=2))
 
@@ -267,6 +325,8 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--reference", type=Path, required=True)
     parser.add_argument("--config", type=Path)
+    parser.add_argument("--f407-reference", type=Path,
+                        help="Separate complete native F407 input; never modifies the original reference or configuration")
     parser.add_argument("--integrated", action="store_true", help="Validate the two source-bound callback integrations")
     parser.add_argument("--baseline", action="store_true", help="Compile/analyze unchanged native inputs and scan the matching original vendor files")
     parser.add_argument("--baseline-evidence", type=Path, help="Attribute diagnostics against a previously executed unchanged native baseline")
@@ -275,6 +335,8 @@ def main():
     args = parser.parse_args()
     if args.integrated and args.baseline:
         parser.error("choose --integrated or --baseline")
+    if args.f407_reference is not None and not (args.integrated or args.baseline or args.host_only):
+        parser.error("--f407-reference requires --integrated, --baseline or --host-only")
     if not args.integrated and not args.baseline and not args.host_only and args.config is None:
         parser.error("--config is required for the historical native Ground ABI workflow")
     output = args.output.resolve()
@@ -284,6 +346,12 @@ def main():
         SILVERSTAR_NATIVE_CDC_REFERENCE_ROOT=str(args.reference.resolve()),
         SILVERSTAR_NATIVE_BACKEND_ARM="1",
         SILVERSTAR_NATIVE_BACKEND_BUILD_INDEX=str(output / "native-index.jsonl"))
+    temporary = output / "tmp"
+    temporary.mkdir()
+    env.update(TEMP=str(temporary), TMP=str(temporary))
+    env.pop("SILVERSTAR_USB_NATIVE_F407_REFERENCE", None)
+    if args.f407_reference is not None:
+        env["SILVERSTAR_USB_NATIVE_F407_REFERENCE"] = str(args.f407_reference.resolve())
     if args.config is not None:
         env["SILVERSTAR_NATIVE_BACKEND_CONFIG"] = str(args.config.resolve())
     for name in ("CPATH", "C_INCLUDE_PATH", "CPLUS_INCLUDE_PATH", "OBJC_INCLUDE_PATH", "DEPENDENCIES_OUTPUT",
@@ -321,8 +389,9 @@ def main():
     snapshot = {"source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPO, text=True).strip(),
         "source_files": {str(p.relative_to(REPO)): {"sha256": hashlib.sha256(p.read_bytes()).hexdigest(),
             "source": p.read_text(encoding="utf8")} for p in sources},
-        "environment": {k: env[k] for k in env if k.startswith("SILVERSTAR_NATIVE_")},
+        "environment": {k: env[k] for k in env if k.startswith(("SILVERSTAR_NATIVE_", "SILVERSTAR_USB_"))},
         "limits": "Integrated native callbacks; complete critical contracts and physical cancellation NOT PROVEN." if args.integrated else
+                  "Unchanged selected native input; no transport hooks added. Hardware, full critical contracts and stack NOT PROVEN." if args.baseline else
                   "Kit ABI link only; native callbacks still belong to existing private Ground candidate. "
                   "New kit has no automatically installed hooks. Hardware, full critical contracts and stack NOT PROVEN."}
     (output / "source-snapshot.json").write_text(json.dumps(snapshot, indent=2), encoding="utf8")
@@ -337,7 +406,8 @@ def main():
         print("Host/export checks complete; no target build requested in this run", flush=True)
         return
     if args.integrated or args.baseline:
-        clean = Integrated_Validate(args.reference.resolve(), output, run, baseline=args.baseline)
+        clean = Integrated_Validate(args.reference.resolve(), output, run, baseline=args.baseline,
+            f407_reference=args.f407_reference.resolve() if args.f407_reference is not None else None)
         if args.baseline_evidence is not None:
             UsbEvidence_Compare(args.baseline_evidence.resolve(), output)
         inventory = {p.relative_to(output).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()

@@ -57,7 +57,7 @@ def test_single_probe_auto_select_has_no_connection_side_effect(panel):
         wait_for(lambda: manager.worker is None and manager.selection.identity!='')
         assert window.probe_combo.currentData().endswith('\\A')
         assert window.probe_status.text()==window.i18n.tr('probe.selected')
-        assert window.i18n.tr('probe.boundary') in window.maintenance_page.swd_status.text()
+        assert window.i18n.tr('probe.boundary') in window.probe_status.toolTip()
         assert window.port_combo.currentText()=='COM100' and window.debug_port_combo.currentText()=='COM9'
         serial_open.assert_not_called()
 
@@ -146,45 +146,76 @@ def test_repeated_refresh_and_close_during_late_completion(panel):
     assert not manager.refresh()
 
 
+def test_startup_once_page_changes_no_polling_and_manual_refresh(panel):
+    window, create = panel
+    calls = []
+    manager = create(lambda _: calls.append(1) or parsed(nodes('A')+nodes('B')))
+    wait_for(lambda: manager.worker is None and len(manager.selection.probes) == 2)
+    chosen = manager.selection.probes[1].identity
+    window.probe_combo.setCurrentIndex(window.probe_combo.findData(chosen))
+    for width in (1024, 1280, 1600):
+        window.resize(width, 800)
+        for index in (3, 0, 1, 2, 3):
+            window.pages.setCurrentIndex(index)
+            window.retranslate_ui()
+            QTest.qWait(10)
+    # Cross the old 10-second periodic refresh boundary without mocking timers.
+    QTest.qWait(10200)
+    assert len(calls) == 1
+    assert manager.selection.identity == chosen
+    window.btn_probe_refresh.click()
+    for _ in range(20):
+        window.btn_probe_refresh.click()
+    wait_for(lambda: manager.worker is None)
+    assert len(calls) == 2 and manager.selection.identity == chosen
+    manager._completed(manager._generation-1, parsed(nodes('OLD')))
+    assert manager.selection.identity == chosen
+    assert len(manager.selection.probes) == 2
+
+
+def test_explicit_refresh_before_startup_does_not_schedule_a_second_scan(panel):
+    _, create = panel
+    calls = []
+    manager = create(lambda _: calls.append(1) or parsed(nodes('A')))
+    assert manager.refresh()
+    wait_for(lambda: manager.worker is None and bool(manager.selection.identity))
+    QTest.qWait(50)
+    assert len(calls) == 1
+
+
+def test_close_before_startup_never_enumerates(panel):
+    _, create = panel
+    calls = []
+    manager = create(lambda _: calls.append(1) or parsed(nodes('A')))
+    assert manager.request_close()
+    QTest.qWait(50)
+    assert calls == [] and manager.selection.identity == ''
+
+
 @pytest.mark.parametrize('language',['zh_CN','en_US'])
 @pytest.mark.parametrize('width',[1024,1280,1920])
-def test_header_wraps_without_clipping_or_overlap(panel,language,width):
+def test_connection_groups_fit_their_own_pages(panel,language,width):
     window,create=panel
     manager=create(lambda _:parsed(nodes('A')))
     wait_for(lambda:manager.worker is None and bool(manager.selection.identity))
-    window.i18n.set_language(language); window.retranslate_ui()
-    window.resize(width,800)
-    rect=lambda w: QRect(w.mapTo(window,QPoint()),w.size())
-    def layout_ready():
-        bar = rect(window.header_bar)
-        groups = (window.header_connection_group, window.debug_connection_group, window.probe_group)
-        return (window.width() == width and all(
-            bar.contains(rect(group)) and group.width() >= group.minimumSizeHint().width()
-            for group in groups) and all(rect(window.probe_group).contains(rect(control))
-                for control in (window.probe_title, window.probe_combo, window.btn_probe_refresh, window.probe_status)))
-    # Native Qt defers style/translation and resize layout requests. Keep the
-    # geometry contract, and wait for those requests within the existing bound.
-    wait_for(layout_ready)
-    assert window.width()==width  # A former wide row must not pin minimum width.
-    bar=rect(window.header_bar)
-    groups=[rect(w) for w in (window.header_connection_group,window.debug_connection_group,window.probe_group)]
-    for widget,group in zip((window.header_connection_group,window.debug_connection_group,window.probe_group),groups):
-        assert bar.contains(group)
-        assert group.width()>=widget.minimumSizeHint().width()
-    for i,one in enumerate(groups):
-        for two in groups[i+1:]: assert not one.intersects(two)
-    assert groups[0].left()-bar.left()<=16
-    assert rect(window.probe_status).left()>rect(window.btn_probe_refresh).right()
-    assert abs(rect(window.probe_combo).center().y()-rect(window.btn_probe_refresh).center().y())<=1
-    assert abs(rect(window.probe_status).center().y()-rect(window.btn_probe_refresh).center().y())<=1
-    controls=(window.port_combo,window.debug_port_combo,window.probe_combo)
-    for i,one in enumerate(groups):
-        for j,two in enumerate(groups[i+1:],i+1):
-            if one.top()==two.top():
-                assert abs(rect(controls[i]).center().y()-rect(controls[j]).center().y())<=1
-    if language=='zh_CN':
-        assert window.btn_probe_refresh.text()=='重新检测'
-        assert window.debug_status.text()=='未连接'
-    for control in (window.probe_title,window.probe_combo,window.btn_probe_refresh,window.probe_status):
-        assert groups[2].contains(rect(control))
+    window.i18n.set_language(language);window.retranslate_ui();window.resize(width,800)
+    window.pages.setCurrentIndex(3)
+    page=window.maintenance_page
+    rect=lambda w:QRect(w.mapTo(window,QPoint()),w.size())
+    for group,section,controls in (
+            (window.probe_group,page.runtime_scroll,(window.probe_title,window.probe_combo,window.btn_probe_refresh,page.btn_swd_attach,page.btn_swd_detach,window.probe_status,window.header_swd_status)),
+            (window.debug_connection_group,page.serial_section,(window.debug_port_combo,window.debug_baud_combo,window.btn_debug_connect,window.btn_debug_disconnect,window.debug_status))):
+        page.sections.setCurrentWidget(section)
+        # Long discovery text and the inactive connection action are now kept
+        # in details/tooltips; geometry covers controls actually on the header.
+        controls=tuple(control for control in controls if control.isVisible())
+        assert controls
+        wait_for(lambda:window.width()==width and all(rect(group).contains(rect(control)) for control in controls))
+        assert window.header_bar.isAncestorOf(group)
+        assert not page.isAncestorOf(group)
+        for index,one in enumerate(controls):
+            for two in controls[index+1:]:assert not rect(one).intersects(rect(two))
+    assert rect(window.header_bar).contains(rect(window.header_connection_group))
+    assert window.probe_status.isHidden() and window.probe_combo.toolTip()
     assert window.probe_combo.currentData().endswith('\\A')
+    if language=='zh_CN':assert window.btn_probe_refresh.text()=='重新检测'

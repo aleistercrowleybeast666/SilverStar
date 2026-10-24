@@ -51,6 +51,55 @@ class ProjectValidationResult:
         return not any(issue.level == "error" for issue in self.issues)
 
 
+def SensorInstallationIssues_Get(
+    model: ProjectModel, catalog: PluginCatalog, *, editing: bool = False,
+) -> tuple[ValidationIssue, ...]:
+    issues = []
+    if model.strategies.get("estimator") in {"silverstar.algorithm.estimator.eskf20", "silverstar.algorithm.estimator.inekf15", "silverstar.algorithm.estimator.inekf20"}:
+        nonzero = [item.instance_id for item in model.device_instances if item.position_body_m is not None and catalog.Component_Get(item.plugin).component_class in ("imu", "gnss") and any(value != 0 for value in item.position_body_m.Dictionary_Get().values())]
+        if nonzero:
+            issues.append(ValidationIssue("error", "AUGMENTED_LEVER_ARM_UNSUPPORTED", "Augmented models require colocated IMU/GNSS origins; nonzero device_instances.position_body_m is unsupported: " + ", ".join(nonzero)))
+    configured = model.sensor_installation
+    if configured is not None:
+        if not configured.origin_description.strip():
+            issues.append(ValidationIssue(
+                "warning" if editing else "error", "INSTALLATION_ORIGIN_UNDEFINED",
+                "Define the fixed structural origin and physical body X/Y datums before generation; "
+                "changing the primary IMU never moves this origin.",
+            ))
+        for instance in model.device_instances:
+            if (instance.position_body_m is not None and
+                    catalog.Component_Get(instance.plugin).component_class not in ("imu", "gnss")):
+                issues.append(ValidationIssue(
+                    "error", "INSTALLATION_DEVICE_UNSUPPORTED",
+                    f"{instance.instance_id}: installation position is supported only for IMU/GNSS instances.",
+                ))
+        issues.append(ValidationIssue(
+            "warning", "INSTALLATION_CONFIGURATION_ONLY",
+            "IMU/GNSS installation XYZ are measured/CAD configuration only, not applied by runtime. "
+            "ESKF15 still uses its independent legacy global GNSS lever_arm_body_*_m; "
+            "per-instance GNSS arms and multi-IMU dynamic compensation are unavailable. "
+            "KF6/SF6/Pure INS do not compensate installation positions. Static calibration does not solve XYZ.",
+        ))
+        nonzero = [item.instance_id for item in model.device_instances
+                   if item.position_body_m is not None and any(
+                       coordinate != 0 for coordinate in item.position_body_m.Dictionary_Get().values())]
+        if nonzero:
+            issues.append(ValidationIssue(
+                "warning", "INSTALLATION_NONZERO_UNCOMPENSATED",
+                "Nonzero measured positions are NOT compensated: " + ", ".join(nonzero) +
+                ". Successful configuration validation/generation does not prove compensation is active.",
+            ))
+    if model.strategies.get("estimator") == "silverstar.algorithm.estimator.eskf15":
+        issues.append(ValidationIssue(
+            "warning", "INSTALLATION_LEGACY_GLOBAL_ARM",
+            "ESKF15 lever_arm_body_x/y/z_m retains the legacy global navigation-point-to-GNSS "
+            "meaning for all GNSS sources; no structural origin or per-instance arm is inferred. "
+            "Review the original physical reference, especially before GNSS failover or IMU changes.",
+        ))
+    return tuple(issues)
+
+
 def AlignmentConfigurationIssues_Get(
     model: ProjectModel, catalog: PluginCatalog,
 ) -> tuple[ValidationIssue, ...]:
@@ -754,6 +803,7 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
         return ProjectValidationResult(
             (ValidationIssue("error", "device_variant", str(error)),)
         )
+    issues.extend(SensorInstallationIssues_Get(model, catalog))
     issues.extend(ValidationIssue("error", "COMPACT_LOG_PROFILE", message)
                   for message in CompactLogProfileErrors_Get(model, catalog))
     from silverstar_fccg.project.compact import CompactErrors_Get
@@ -1133,9 +1183,13 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
         else:
             issues.extend(
                 ValidationIssue(
-                    "warning" if (issue.code == "TIMING_PROFILE_UNQUALIFIED"
-                                  and model.build.compact_mode
-                                  and catalog.Component_Get(model.mcu).metadata.get("compile_only") is True)
+                    "warning" if (issue.code == "TIMING_PROFILE_UNQUALIFIED" and (
+                        (model.build.compact_mode and catalog.Component_Get(model.mcu).metadata.get("compile_only") is True)
+                        or (model.strategies.get("estimator") in (
+                            "silverstar.algorithm.estimator.eskf20", "silverstar.algorithm.estimator.inekf15",
+                            "silverstar.algorithm.estimator.inekf20") and
+                            type(model.algorithm_parameters.get(model.strategies.get("estimator"), {}).get("software_validation_build")) is int and
+                            model.algorithm_parameters.get(model.strategies.get("estimator"), {}).get("software_validation_build") == 1)))
                     else "error", issue.code, issue.message
                 )
                 for issue in rate_plan.issues
@@ -1166,6 +1220,7 @@ def Project_EditValidate(
             (ValidationIssue("error", "device_variant", str(error)),)
         )
 
+    issues.extend(SensorInstallationIssues_Get(model, catalog, editing=True))
     issues.extend(ValidationIssue("error", "COMPACT_LOG_PROFILE", message)
                   for message in CompactLogProfileErrors_Get(model, catalog))
     from silverstar_fccg.project.compact import CompactErrors_Get

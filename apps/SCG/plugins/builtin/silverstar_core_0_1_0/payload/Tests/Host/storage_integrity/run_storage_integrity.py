@@ -28,9 +28,19 @@ def StorageContract_DefinitionsGet(graph: str) -> dict[str, str]:
     return definitions
 
 
-def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False) -> Path:
+MAINTENANCE_BOOTSTRAP_MODES = (
+    "maintenance-bootstrap", "maintenance-calibration-failed",
+    "maintenance-sensor-unready", "maintenance-early-bootstrap",
+    "maintenance-repeat-enter", "maintenance-write-timeout",
+    "maintenance-close-fault", "maintenance-final-status-fault",
+    "mag-disabled", "mag-finalized")
+
+
+def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False,
+                         maintenance_only: bool = False, output_root: Path | None = None,
+                         maintenance_mode: str | None = None) -> Path:
     fixture = Path(__file__).resolve().parent
-    output = project / "build/FCCG/Host/Tests/StorageIntegrity"
+    output = output_root.resolve() if output_root is not None else project / "build/FCCG/Host/Tests/StorageIntegrity"
     output.mkdir(parents=True, exist_ok=True)
     fatfs = project / "Middlewares/Third_Party/FatFs/src"
     graph = (project / "Generated/project_sources.mk").read_text(encoding="utf-8")
@@ -64,27 +74,31 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
     if f1_diskio.is_file():
         flags += ["-DSILVERSTAR_HOST_FATFS_R011=1", "-D__IO=volatile",
                   "-D__weak=__attribute__((weak))", "-include", "stdint.h"]
-    command = list(flags)
-    command += ["-I" + str(path) for path in includes]
-    command += [str(path) for path in sources] + ["-lm", "-o", str(binary)]
     environment = dict(os.environ, TEMP=str(output), TMP=str(output))
-    print("FCCG_PROGRESS|STORAGE_INTEGRITY|PLAN|4", flush=True)
-    print("FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|1|4|compile", flush=True)
-    subprocess.run(command, check=True, cwd=project, env=environment)
-    print("FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|1|4|compile", flush=True)
-    print("FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|2|4|byte-integrity", flush=True)
-    log = output / "mixed.sslog"
-    subprocess.run([str(binary), str(log)], check=True, cwd=project, env=environment)
-    auditor = project / "Tools/sslog_audit.py"
-    catalog = project / "Protocol/SSLOG/schema/sslog_schema.json"
-    subprocess.run([sys.executable, str(auditor), str(log), "--catalog", str(catalog)],
-                   check=True, cwd=project, env=environment)
-    for mode in ("timeout-write", "timeout-read", "wrong-write", "wrong-read",
-                 "start-write", "start-read", "sync-timeout"):
-        subprocess.run([str(binary), str(log), mode], check=True, cwd=project, env=environment)
-    subprocess.run([str(binary), "--target-bench"], check=True, cwd=project, env=environment)
-    print("FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|2|4|byte-integrity", flush=True)
-    print("FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|3|4|logger-compile", flush=True)
+    if not maintenance_only:
+        command = list(flags)
+        command += ["-I" + str(path) for path in includes]
+        command += [str(path) for path in sources] + ["-lm", "-o", str(binary)]
+        environment = dict(os.environ, TEMP=str(output), TMP=str(output))
+        print("FCCG_PROGRESS|STORAGE_INTEGRITY|PLAN|4", flush=True)
+        print("FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|1|4|compile", flush=True)
+        subprocess.run(command, check=True, cwd=project, env=environment)
+        print("FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|1|4|compile", flush=True)
+        print("FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|2|4|byte-integrity", flush=True)
+        log = output / "mixed.sslog"
+        subprocess.run([str(binary), str(log)], check=True, cwd=project, env=environment)
+        auditor = project / "Tools/sslog_audit.py"
+        catalog = project / "Protocol/SSLOG/schema/sslog_schema.json"
+        subprocess.run([sys.executable, str(auditor), str(log), "--catalog", str(catalog)],
+                       check=True, cwd=project, env=environment)
+        for mode in ("timeout-write", "timeout-read", "wrong-write", "wrong-read",
+                     "start-write", "start-read", "sync-timeout"):
+            subprocess.run([str(binary), str(log), mode], check=True, cwd=project, env=environment)
+        subprocess.run([str(binary), "--target-bench"], check=True, cwd=project, env=environment)
+        print("FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|2|4|byte-integrity", flush=True)
+        print("FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|3|4|logger-compile", flush=True)
+    else:
+        print("FCCG_HOST_SCOPE|maintenance-only|real logger/FatFs; other storage phases not requested", flush=True)
     logger_sources = [fixture / "test_logger_storage.c"] + sources[1:]
     logger_sources += [project / relative for relative in (
         "APP/Src/device_native_log.c", "APP/Src/imu_sample_bus.c",
@@ -126,7 +140,7 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
     logger_includes.append(project / "Devices/Storage/SdSdioFatFs/Adapter/Inc")
     logger_includes.append(project / "Devices/Storage/SdSdioFatFs/Inc")
     writer = output / "logger_storage.exe"
-    command = flags + ["-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections",
+    command = flags + ["-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-Wl,--wrap=f_close",
                        "-include", str(project / "Generated/Inc/project_flight_config.h")]
     if sf6_compact:
         command += ["-DSILVERSTAR_TEST_SF6_COMPACT=1",
@@ -149,8 +163,21 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
     command += ["-I" + str(path) for path in logger_includes]
     command += [str(path) for path in logger_sources] + ["-lm", "-o", str(writer)]
     writer_command = list(command)
+    print("FCCG_HOST_COMMAND|" + json.dumps(command), flush=True)
     subprocess.run(command, check=True, cwd=project, env=environment)
     print("FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|3|4|logger-compile", flush=True)
+    if maintenance_only:
+        modes = (maintenance_mode,) if maintenance_mode is not None else MAINTENANCE_BOOTSTRAP_MODES
+        for mode in modes:
+            target_log = output / (mode + '.sslog')
+            subprocess.run([str(writer), str(target_log), mode], check=True, cwd=project, env=environment)
+            if target_log.is_file():
+                decoders = list(project.glob("*.ssdecoder"))
+                if len(decoders) != 1:
+                    raise ValueError("exact generated decoder required for closed diagnostic log")
+                subprocess.run([sys.executable, str(project / "Tools/sslog_audit.py"), str(target_log),
+                                "--decoder", str(decoders[0])], check=True, cwd=project, env=environment)
+        return output
     print("FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|4|4|logger-integrity", flush=True)
     subprocess.run([str(writer), str(output / "persistent-objects.sslog"),
                     "persistent-objects"], check=True, cwd=project,
@@ -161,9 +188,14 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
                        check=True, cwd=project, env=environment)
     decoders = list(project.glob("*.ssdecoder"))
     if not sf6_compact:
-        for mode in ("maintenance", "maintenance-fault", "maintenance-write-fault"):
-            subprocess.run([str(writer), str(output / (mode + '.unused')), mode],
-                           check=True, cwd=project, env=environment)
+        for mode in ("maintenance", "maintenance-fault", "maintenance-write-fault") + MAINTENANCE_BOOTSTRAP_MODES:
+            target_log = output / (mode + '.unused')
+            subprocess.run([str(writer), str(target_log), mode], check=True, cwd=project, env=environment)
+            if mode in MAINTENANCE_BOOTSTRAP_MODES and target_log.is_file():
+                if len(decoders) != 1:
+                    raise ValueError("exact generated decoder required for closed diagnostic log")
+                subprocess.run([sys.executable, str(auditor), str(target_log),
+                                "--decoder", str(decoders[0])], check=True, cwd=project, env=environment)
     if len(decoders) != 1:
         raise ValueError("exactly one generated decoder is required for writer acceptance")
     modes = (("startup-burst", "startup-burst-overload") if sf6_compact else
@@ -181,12 +213,15 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
         audited.check_returncode()
         if eskf_values == ["1U"] and mode == "startup-burst":
             counts = json.loads(audited.stdout)["record_counts"]
-            expected = {"ESKF15_BODY_INPUT": 19400, "ESKF15_MEASUREMENT": 38800,
+            project_data = json.loads((project / "SilverStar.ssproject").read_text(encoding="utf-8"))
+            timing = project_data["algorithm_parameters"]["silverstar.algorithm.estimator.eskf15"]["fusion_timing_mode"]
+            measurement = ("FUSION_HORIZON_MEASUREMENT" if timing == 2 else "ESKF15_MEASUREMENT")
+            unexpected = ("ESKF15_MEASUREMENT" if timing == 2 else "FUSION_HORIZON_MEASUREMENT")
+            expected = {"ESKF15_BODY_INPUT": 19400, measurement: 38800, unexpected: 0,
                         "ESKF15_INITIAL_STATE": 1, "ESKF15_INITIAL_P_PART": 4}
             for name, count in expected.items():
                 if counts.get(name, 0) != count:
                     raise ValueError(f"ESKF storage load omitted {name}: {counts.get(name, 0)} != {count}")
-            project_data = json.loads((project / "SilverStar.ssproject").read_text(encoding="utf-8"))
             streams = project_data["logging"]["streams"]
             full_p = next(stream for stream in streams if stream["record"] == "FLIGHT_LOG_RECORD_ESKF15_FULL_P_PART")
             if full_p["enabled"] and (counts.get("ESKF15_FULL_P_PART", 0) == 0 or counts["ESKF15_FULL_P_PART"] % 4):
@@ -216,5 +251,12 @@ if __name__ == "__main__":
     parser.add_argument("--compiler", default="gcc")
     parser.add_argument("--sf6-compact", action="store_true",
                         help="Separate 200 Hz IMU/20 Hz barometer/actual SF6 profile stress; does not run all-stream stress")
+    parser.add_argument("--maintenance-only", action="store_true",
+                        help="Run only real logger/FatFs maintenance regressions; no other phase claimed")
+    parser.add_argument("--maintenance-mode", choices=MAINTENANCE_BOOTSTRAP_MODES)
+    parser.add_argument("--output", type=Path, help="Explicit test-output directory for a frozen baseline")
     args = parser.parse_args()
-    StorageIntegrity_Run(args.project.resolve(), args.compiler, args.sf6_compact)
+    if args.maintenance_mode and not args.maintenance_only:
+        parser.error("--maintenance-mode requires --maintenance-only")
+    StorageIntegrity_Run(args.project.resolve(), args.compiler, args.sf6_compact,
+                         args.maintenance_only, args.output, args.maintenance_mode)

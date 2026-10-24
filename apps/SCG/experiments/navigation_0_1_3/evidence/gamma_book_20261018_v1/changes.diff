@@ -1,0 +1,163 @@
+--- before/ESKF20_CANDIDATES.md
++++ after/ESKF20_CANDIDATES.md
+@@ -3,6 +3,10 @@
+ The isolated implementation is `eskf20_reference.py`, with the complete frozen
+ contract and source qualifications in [ESKF20_MODEL.md](ESKF20_MODEL.md).
+ No plugin, public ID assignment or production state/P layout is created.
++The [book-gamma definition audit](GAMMA_BOOK_AUDIT_20261018.md) distinguishes the
++book's small total installation misalignment from the filter's residual around
++its nominal matrix. IMU-to-vehicle orientation remains the user's mechanical
++installation convention; it is not another online state.
+ The authoritative existing 15 error coordinates remain `[dp₃,dv₃,dtheta₃,dbg₃,dba₃]`.
+ The nominal quaternion's fourth element is not another error degree of freedom.
+ 
+--- before/ESKF20_MODEL.md
++++ after/ESKF20_MODEL.md
+@@ -44,7 +44,7 @@
+ | 6:9 dtheta | R_true = R_nom Exp(dtheta), IMU local | rad | R *= Exp(dtheta_hat) |
+ | 9:12 dbg | bg_true = bg_nom + dbg, IMU | rad/s | bg += dbg_hat |
+ | 12:15 dba | ba_true = ba_nom + dba, IMU | m/s² | ba += dba_hat |
+-| 15:18 gamma | A_true = Exp(-gamma) A_nom, IMU components | rad | A = Exp(-gamma_hat) A |
++| 15:18 delta_gamma_b | A_true = Exp(-delta_gamma_b) A_nom, residual in IMU components | rad | A = Exp(-delta_gamma_hat) A |
+ | 18 dI | I_nom - I_true, downward positive inclination | rad | I -= dI_hat |
+ | 19 dD | D_nom - D_true, east-of-north positive declination | rad | D -= dD_hat |
+ 
+@@ -53,6 +53,30 @@
+ to vehicle. All 400 covariance entries are retained. Initial state, full SPD P,
+ noise densities, gravity, installation, magnetic angles and reference strength
+ are mandatory caller inputs; no production defaults or inferred priors exist.
++
++### Mapping to the book's gamma
++
++The book's gamma is the small magnetometer-to-IMU installation misalignment,
++defined by the **component map** `B_inst=C_b^bm ≈ I+[gamma_book]x`; its reverse
++is `A=C_bm^b ≈ I-[gamma_book]x` (first-edition revised final, printed p. 218,
++section 7.5.2, equation 7.5.10). It does not describe IMU-to-vehicle alignment.
++
++The code's error-coordinate label `gamma_b` denotes the local **residual**
++`delta_gamma_b=Log(B_nom^T B_true)`, where `B_nom=A_nom^T`. Thus
++`B_true=B_nom Exp(delta_gamma_b)` and `A_true=Exp(-delta_gamma_b) A_nom`.
++At identity nominal installation, delta_gamma_b agrees with gamma_book to first
++order, with the same sign. If both total installations are small,
++`gamma_book_true ≈ gamma_book_nom + delta_gamma_b`; at finite nonzero nominal
++installation, simple subtraction of total rotation vectors is not this residual.
++No unexplained global sign flip or finite Euler sequence is implied.
++
++A_nom is the total nominal sensor-to-IMU component map, including a known fixed
++installation once and its accumulated estimated correction. Input remains in
++the original magnetic sensor frame. Do not premultiply the input by that fixed
++installation and then apply the same factor through A_nom again. IMU-to-vehicle
++orientation remains the user's mechanical installation/alignment convention;
++there is no additional online state. See [the definition audit](GAMMA_BOOK_AUDIT_20261018.md)
++for finite-map examples, independent tests and source qualifications.
+ 
+ ## Dynamics and reset
+ 
+@@ -79,10 +103,12 @@
+ two-sample coning/sculling and second-order covariance approximation.
+ 
+ Posterior P uses Joseph form before full reset `Pnew=J Preset J^T`.
+-The dtheta and gamma reset blocks are both `Jr(delta)=integral_0^1 Exp(-s[delta]x)ds`;
++The dtheta and delta_gamma_b reset blocks are both `Jr(delta)=integral_0^1 Exp(-s[delta]x)ds`;
+ other blocks are identity. They come from different equations:
+ `theta_new=Log(Exp(-delta_theta)Exp(theta))` and
+-`gamma_new=-Log(Exp(-gamma)Exp(delta_gamma))`.
++`delta_gamma_new=Log(Exp(-delta_gamma_hat)Exp(delta_gamma_b))`.
++The latter is the same principal-chart expression as the previously documented
++`-Log(Exp(-delta_gamma_b)Exp(delta_gamma_hat))`; no reset formula was changed.
+ Finite differences check each complete 20x20 map and dense cross covariance.
+ 
+ ## Magnetic observation and exact derivatives
+@@ -98,7 +124,7 @@
+ Residual: `z=R_nom A_nom m - h(I_nom,D_nom)`; `z≈H error + noise_n`.
+ The only nonzero H blocks are:
+ 
+-- `H_theta=[h]x R`, `H_gamma=-[h]x R`;
++- `H_theta=[h]x R`, `H_delta_gamma=-[h]x R`;
+ - `H_I=-h_I`, where `h_I=[-sinD sinI,-cosD sinI,-cosI]`;
+ - `H_D=-h_D`, where `h_D=[cosD cosI,-sinD cosI,0]`.
+ 
+@@ -126,7 +152,7 @@
+ No current calibration flow is modified; a future distinct measurement contract
+ requires separate design and evidence with its owner.
+ 
+-One magnetic vector has instantaneous rank two. H_theta and H_gamma have a
++One magnetic vector has instantaneous rank two. H_theta and H_delta_gamma have a
+ shared null direction; a repeated static vector does not identify individual
+ attitude, installation or field angles. At inclination ±pi/2, D has zero
+ sensitivity; near the poles it becomes poorly conditioned. Runtime diagnostics
+--- before/INEKF_AUGMENTED_MODEL.md
++++ after/INEKF_AUGMENTED_MODEL.md
+@@ -92,17 +92,27 @@
+ 
+ ## Twenty-dimensional magnetic extension
+ 
+-Append `[gamma_b3,dI,dD]`, giving the full order
+-`[phi,nu,rho,zeta_g,zeta_a,gamma_b,dI,dD]`. A maps magnetometer sensor frame bm
++Append `[delta_gamma_b3,dI,dD]`, giving the full order
++`[phi,nu,rho,zeta_g,zeta_a,delta_gamma_b,dI,dD]`. A maps magnetometer sensor frame bm
+ into IMU frame b. The physical model and signs match the independently audited
+ [ESKF20 contract](ESKF20_MODEL.md):
+ 
+ ```
+-A_true = Exp(-gamma_b) A_hat
++A_true = Exp(-delta_gamma_b) A_hat
+ dI = I_hat-I_true       (inclination positive downward)
+ dD = D_hat-D_true       (declination positive east of north)
+ h_n = [sin(D)cos(I), cos(D)cos(I), -sin(I)]
+ ```
++
++The code's `gamma_b` error label is this residual delta_gamma_b, not an absolute
++installation Euler tuple. For the book's component map `B_inst=C_b^bm=A^T`,
++`B_true=B_hat Exp(delta_gamma_b)` and `delta_gamma_b=Log(B_hat^T B_true)`.
++At identity nominal installation it has the same first-order sign as the book's
++gamma in `C_b^bm ≈ I+[gamma]x`. A nonzero known nominal rotation is already
++included in A_hat and must not be applied to the input again. The total/residual
++mapping and fixed-installation examples are detailed in
++[GAMMA_BOOK_AUDIT_20261018.md](GAMMA_BOOK_AUDIT_20261018.md). IMU-to-vehicle
++alignment remains mechanical; neither model adds an online state for it.
+ 
+ The extra five nominal/error quantities are constant during prediction and have
+ zero driving noise. `F20=diag(F15,0_5)`, `Phi20=diag(Phi15,I5)`,
+@@ -124,7 +134,7 @@
+ 
+ ```
+ H_phi   = -[h]x R_hat
+-H_gamma = -[h]x R_hat
++H_delta_gamma = -[h]x R_hat
+ H_I     = -[-sinD sinI, -cosD sinI, -cosI]
+ H_D     = -[ cosD cosI, -sinD cosI, 0]
+ ```
+@@ -136,9 +146,9 @@
+ poles have cos(I)=0 and exactly zero D sensitivity; nearby inclinations retain
+ their small physical sensitivity. I=60 degrees still gives `||h_D||=0.5`.
+ 
+-Apply the same group/bias injection, then `A<-Exp(-delta_gamma)A`,
++Apply the same group/bias injection, then `A<-Exp(-delta_gamma_hat)A`,
+ `I<-I-delta_I`, `D<-D-delta_D`. The reset is
+-`diag(J_left_SE23(delta_xi),I6,J_right_SO3(delta_gamma),I2)`; the entire
++`diag(J_left_SE23(delta_xi),I6,J_right_SO3(delta_gamma_hat),I2)`; the entire
+ 400-entry covariance is transformed, including every mixed block.
+ World magnetic noise is rotated by `R_hat A_hat`. Position/velocity updates use
+ the same invariant residual as stage 15 and may update the added parameters
+@@ -148,7 +158,7 @@
+ 
+ The first-order transform into the project's ESKF error coordinates is
+ `dp_n=-R rho`, `dv_n=-R nu`, `dtheta_b=-phi`,
+-`dbg_true-hat=-zeta_g`, `dba_true-hat=-zeta_a`, with gamma/dI/dD unchanged.
++`dbg_true-hat=-zeta_g`, `dba_true-hat=-zeta_a`, with delta_gamma_b/dI/dD unchanged.
+ Covariance comparisons use `P_ESKF=T P_InEKF T^T`, including all mixed terms.
+ The conventional reference's accel/gyro density ordering is explicitly permuted.
+ Matched propagation and H agree in those common coordinates. Finite corrections
+--- before/verify.py
++++ after/verify.py
+@@ -47,7 +47,8 @@
+     command = [sys.executable, "-B", "-m", "pytest", "-c", str(HERE / "pytest.ini"),
+                "-v", str(HERE / "test_mathematics.py"), str(HERE / "test_isolation.py"),
+                str(HERE / "test_eskf20.py"), str(HERE / "test_independent_audit.py"),
+-               str(HERE / "test_inekf15.py"), str(HERE / "test_inekf20.py"), "-raP"]
++               str(HERE / "test_inekf15.py"), str(HERE / "test_inekf20.py"),
++               str(HERE / "test_gamma_book.py"), "-raP"]
+     environment = dict(os.environ, PYTHONDONTWRITEBYTECODE="1", PYTEST_DISABLE_PLUGIN_AUTOLOAD="1",
+                        OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1", PYTHONIOENCODING="utf-8")
+     before = Snapshot_Get()

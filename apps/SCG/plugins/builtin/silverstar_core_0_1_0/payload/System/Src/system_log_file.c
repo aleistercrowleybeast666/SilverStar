@@ -10,11 +10,16 @@
 #include "silverstar_assert.h"
 #include "system_time.h"
 #include "system_user_config.h"
+#include "system_installation_capture_if.h"
 
 #define LOG_FILE_IDLE_TIMEOUT_US 30000000ULL
+#define LOG_FILE_META_QUANTA 8U
+#define LOG_FILE_SERVICE_BUDGET_US 2000ULL
 #define LOG_FILE_REQUEST_SIZE 192U
-#define LOG_FILE_TOKEN_COUNT 5U
+#define LOG_FILE_TOKEN_COUNT 7U
 #define LOG_FILE_FORMAT_SIZE 256U
+#define LOG_FILE_BLOCK_HEADER_SIZE 44U
+#define LOG_FILE_BLOCK_RAW_SIZE 560U
 
 typedef struct
 {
@@ -29,7 +34,7 @@ typedef enum
 } LogFileState;
 typedef enum
 {
-    LOG_FILE_LIST = 0, LOG_FILE_META, LOG_FILE_READ, LOG_FILE_DELETE
+    LOG_FILE_LIST = 0, LOG_FILE_META, LOG_FILE_READ, LOG_FILE_BLOCK, LOG_FILE_BATCH, LOG_FILE_DELETE
 } LogFileOperation;
 typedef struct
 {
@@ -39,6 +44,9 @@ typedef struct
     uint32_t crc;
     uint32_t size;
     uint32_t offset;
+    uint32_t transfer_low;
+    uint32_t transfer_high;
+    uint32_t block_sequence;
 } LogFileRequest;
 typedef struct
 {
@@ -47,7 +55,16 @@ typedef struct
     uint64_t last_poll_us;
     uint32_t sequence;
     uint8_t cancelled;
-    char response[LOG_FILE_FORMAT_SIZE];
+    uint8_t lease_owned;
+    uint8_t cleanup_failed;
+    uint8_t batch_left;
+    uint8_t batch_claimed;
+    union
+    {
+        char text[LOG_FILE_FORMAT_SIZE];
+        uint8_t block[LOG_FILE_BLOCK_RAW_SIZE];
+    } response;
+    uint16_t block_length;
 } LogFileMailbox;
 typedef struct
 {
@@ -65,6 +82,7 @@ typedef union
 {
     uint8_t data[SYSTEM_LOG_FILE_HASH_QUANTUM];
     char result[LOG_FILE_FORMAT_SIZE];
+    uint8_t block[LOG_FILE_BLOCK_RAW_SIZE];
 } LogFileScratch;
 
 /* The selected storage adapters copy through their private DMA bounce sector.
@@ -77,6 +95,11 @@ static PLATFORM_CPU_FAST_BSS LogFileWorker s_worker;
  * 255 bytes plus NUL (uint32 IDs/offset, six-digit file ID, 64-byte hex data). */
 static PLATFORM_CPU_FAST_BSS LogFileScratch s_scratch;
 static PLATFORM_CPU_FAST_BSS SystemLogFileSnapshot s_snapshot;
+/* LoggerTask reuses scratch, then publishes a raw block into the mailbox union.
+ * SerialTask copies it under the lock, then encodes only in its caller-owned
+ * Console buffer. No extra raw+wire buffers or interrupt-disabled encoding. */
+/* SerialTask-only one-call selector. A stale/cancelled mailbox is rechecked. */
+static uint32_t s_binary_request;
 
 void SystemLogFile_StatusPublish(const SystemLogFileSnapshot *snapshot)
 {
@@ -106,6 +129,8 @@ static const char *LogFile_OperationText(LogFileOperation operation)
         case LOG_FILE_LIST: return "LIST";
         case LOG_FILE_META: return "META";
         case LOG_FILE_READ: return "READ";
+        case LOG_FILE_BLOCK: return "BLOCK";
+        case LOG_FILE_BATCH: return "BATCH";
         case LOG_FILE_DELETE: return "DELETE";
         default: return "UNKNOWN";
     }
@@ -205,6 +230,29 @@ static const char *LogFile_TokenGet(const LogFileTokens *tokens, uint8_t index)
     return &tokens->text[tokens->offsets[index]];
 }
 
+static uint8_t LogFile_BlockRequestParse(const LogFileTokens *tokens,
+    uint8_t count, LogFileRequest *request)
+{
+    const char *transfer;
+    if ((count != 7U) || (strcmp(LogFile_TokenGet(tokens, 1U), "BLOCK") != 0 &&
+                          strcmp(LogFile_TokenGet(tokens, 1U), "BATCH") != 0))
+    { return 0U; }
+    transfer = LogFile_TokenGet(tokens, 5U);
+    if ((strlen(transfer) != 16U) ||
+        (LogFile_HexParse(transfer, &request->transfer_high) == 0U) ||
+        (LogFile_HexParse(&transfer[8], &request->transfer_low) == 0U) ||
+        ((request->transfer_low == 0U) && (request->transfer_high == 0U)) ||
+        (LogFile_NumberParse(LogFile_TokenGet(tokens, 4U), &request->offset) == 0U) ||
+        (LogFile_NumberParse(LogFile_TokenGet(tokens, 6U), &request->block_sequence) == 0U))
+    { return 0U; }
+    if ((request->offset > request->size) ||
+        (request->block_sequence != request->offset / SYSTEM_LOG_FILE_BLOCK_SIZE))
+    { return 0U; }
+    request->operation = (strcmp(LogFile_TokenGet(tokens, 1U), "BATCH") == 0) ?
+        LOG_FILE_BATCH : LOG_FILE_BLOCK;
+    return 1U;
+}
+
 static uint8_t LogFile_RequestParse(const LogFileTokens *tokens,
     uint8_t count, LogFileRequest *request)
 {
@@ -216,8 +264,10 @@ static uint8_t LogFile_RequestParse(const LogFileTokens *tokens,
     { return 0U; }
     if ((strcmp(LogFile_TokenGet(tokens, 1U), "META") == 0) && (count == 3U))
     { request->operation = LOG_FILE_META; return 1U; }
-    if ((count != 5U) || (LogFile_TokenParse(LogFile_TokenGet(tokens, 3U), request) == 0U))
+    if (((count != 5U) && (count != 7U)) ||
+        (LogFile_TokenParse(LogFile_TokenGet(tokens, 3U), request) == 0U))
     { return 0U; }
+    if (count == 7U) { return LogFile_BlockRequestParse(tokens, count, request); }
     if ((strcmp(LogFile_TokenGet(tokens, 1U), "READ") == 0) &&
         (LogFile_NumberParse(LogFile_TokenGet(tokens, 4U), &request->offset) != 0U))
     { request->operation = LOG_FILE_READ; return 1U; }
@@ -234,11 +284,30 @@ static void LogFile_ErrorWrite(char *response, uint16_t capacity,
         (unsigned long)id, LogFile_ResultText(result));
 }
 
+/* Caller holds the mailbox critical section for this bounded snapshot. */
+static uint8_t LogFile_ResponseCopyLocked(char *response, uint16_t capacity)
+{
+    uint16_t length;
+
+    if ((response == NULL) || (capacity == 0U)) { return 0U; }
+    for (length = 0U; length < sizeof(s_mailbox.response.text); length++)
+    {
+        if (s_mailbox.response.text[length] == '\0') { break; }
+    }
+    SILVERSTAR_ASSERT(length < sizeof(s_mailbox.response.text),
+                      SILVERSTAR_ASSERT_MODULE_SYSTEM,
+                      SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+    if (length >= capacity) { return 0U; }
+    (void)memcpy(response, s_mailbox.response.text, (size_t)length + 1U);
+    return 1U;
+}
+
 static void LogFile_Poll(uint32_t id, char *response, uint16_t capacity)
 {
     LogFileOperation operation;
     LogFileState mailbox_state;
     uint8_t stale;
+    uint8_t copied = 1U;
     uint64_t now_us = SystemTime_GetMonotonicUs();
     PlatformCriticalState state = PlatformCritical_Enter();
     operation = s_mailbox.request.operation;
@@ -247,12 +316,24 @@ static void LogFile_Poll(uint32_t id, char *response, uint16_t capacity)
     if (stale == 0U)
     {
         s_mailbox.last_poll_us = now_us;
-        if (mailbox_state == LOG_FILE_DONE)
-        { (void)memcpy(response, s_mailbox.response, sizeof(s_mailbox.response)); }
+        /* Accepted cancellation revokes success immediately; only LoggerTask
+         * may replace the old completion after closing the storage handle. */
+        if (s_mailbox.cancelled != 0U) { mailbox_state = LOG_FILE_PENDING; }
+        if ((mailbox_state == LOG_FILE_DONE) && (operation != LOG_FILE_BATCH))
+        {
+            if ((operation == LOG_FILE_BLOCK) && (s_mailbox.block_length != 0U) &&
+                (s_mailbox.cancelled == 0U))
+            { s_binary_request = id; response[0] = '\0'; }
+            else { copied = LogFile_ResponseCopyLocked(response, capacity); }
+        }
     }
     PlatformCritical_Exit(state);
-    if (stale != 0U)
+    if (operation == LOG_FILE_BATCH)
+    { LogFile_ErrorWrite(response, capacity, "BATCH", id, SystemLogFileResult_BadArgument); }
+    else if (stale != 0U)
     { LogFile_ErrorWrite(response, capacity, "POLL", id, SystemLogFileResult_Stale); }
+    else if (copied == 0U)
+    { LogFile_ErrorWrite(response, capacity, "POLL", id, SystemLogFileResult_BadArgument); }
     else if (mailbox_state != LOG_FILE_DONE)
     { (void)CommonFormat_Print(response, capacity,
         "PENDING LOGFILE %s request_id=%lu", LogFile_OperationText(operation), (unsigned long)id); }
@@ -263,17 +344,26 @@ static void LogFile_Submit(LogFileRequest *request, char *response, uint16_t cap
     SystemLogFileResult result = SystemLogFileResult_Ok;
     uint64_t now_us = SystemTime_GetMonotonicUs();
     PlatformCriticalState state = PlatformCritical_Enter();
-    if ((s_mailbox.state == LOG_FILE_PENDING) || (s_mailbox.cancelled != 0U))
+    if ((s_mailbox.state == LOG_FILE_PENDING) || (s_mailbox.cancelled != 0U) ||
+        (s_mailbox.batch_left != 0U))
     { result = SystemLogFileResult_Busy; }
+    else if(s_mailbox.cleanup_failed!=0U)
+    {result=SystemLogFileResult_NotReady;}
     else if (s_mailbox.sequence == UINT32_MAX)
     { result = SystemLogFileResult_NotReady; }
+    else if(SystemInstallationCapture_OperationBegin(SystemInstallationOperation_LogFile,s_mailbox.lease_owned)!=SYSTEM_DEVICE_OK)
+    {result=SystemLogFileResult_Busy;}
     else
     {
         s_mailbox.sequence++;
+        s_mailbox.lease_owned=1U;
         request->id = s_mailbox.sequence;
         s_mailbox.request = *request;
         s_mailbox.last_poll_us = now_us;
         s_mailbox.state = LOG_FILE_PENDING;
+        s_mailbox.block_length = 0U;
+        s_mailbox.batch_left = (request->operation == LOG_FILE_BATCH) ? SYSTEM_LOG_FILE_BATCH_COUNT : 0U;
+        s_mailbox.batch_claimed = 0U;
     }
     PlatformCritical_Exit(state);
     if (result != SystemLogFileResult_Ok)
@@ -293,6 +383,8 @@ static void LogFile_Control(const LogFileTokens *tokens, uint8_t count,
     {
         PlatformCriticalState state = PlatformCritical_Enter();
         s_mailbox.cancelled = 1U;
+        s_mailbox.batch_left = 0U;
+        s_mailbox.batch_claimed = 0U;
         PlatformCritical_Exit(state);
         (void)CommonFormat_Print(response, capacity, "OK LOGFILE CANCEL cancelled=1 cleanup_complete=0");
     }
@@ -316,7 +408,7 @@ static void LogFile_StatusWrite(char *response, uint16_t capacity)
     uint64_t age_ms;
     PlatformCriticalState lock = PlatformCritical_Enter();
     snapshot = s_snapshot;
-    cleanup = s_mailbox.cancelled;
+    cleanup = (uint8_t)((s_mailbox.cancelled!=0U)||(s_mailbox.cleanup_failed!=0U));
     PlatformCritical_Exit(lock);
     if (snapshot.valid == 0U)
     { LogFile_ErrorWrite(response, capacity, "STATUS", 0U, SystemLogFileResult_NotReady); return; }
@@ -349,6 +441,7 @@ SystemConsoleExecuteResult SystemLogFile_ExecuteLine(
     LogFileTokens tokens = {0};
     uint16_t length;
     uint8_t count;
+    s_binary_request = 0U;
     if ((response == NULL) || (capacity == 0U))
     { return SYSTEM_CONSOLE_EXECUTE_BAD_ARGUMENT; }
     response[0] = '\0';
@@ -364,7 +457,7 @@ SystemConsoleExecuteResult SystemLogFile_ExecuteLine(
     { LogFile_ErrorWrite(response, capacity, "PARSE", 0U, SystemLogFileResult_BadArgument); }
     else if ((count == 2U) && (strcmp(LogFile_TokenGet(&tokens, 1U), "CAPS") == 0))
     { (void)CommonFormat_Print(response, capacity,
-        "OK LOGFILE CAPS file_service_version=1 supported=%u max_chunk=64 delete_supported=0 telemetry_bulk=0 device_id=unknown boot_id=unknown status_version=1 maintenance_required=1 firmware=" SILVERSTAR_VERSION_STRING,
+        "OK LOGFILE CAPS file_service_version=1 supported=%u max_chunk=64 delete_supported=0 telemetry_bulk=0 device_id=unknown boot_id=unknown status_version=1 maintenance_required=1 block_version=1 max_block=512 block_encoding=COBS block_window=1 batch_version=1 batch_count=4 firmware=" SILVERSTAR_VERSION_STRING SILVERSTAR_BUILD_IDENTITY_FIELDS SILVERSTAR_MAINTENANCE_UART_FIELDS,
         (unsigned int)(SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)); }
     else if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED == 0U)
     { LogFile_ErrorWrite(response, capacity, "PARSE", 0U, SystemLogFileResult_Unsupported); }
@@ -376,19 +469,216 @@ SystemConsoleExecuteResult SystemLogFile_ExecuteLine(
     return SYSTEM_CONSOLE_EXECUTE_OK;
 }
 
+static const uint32_t s_crc_nibble[16] = {
+    0x00000000U, 0x1DB71064U, 0x3B6E20C8U, 0x26D930ACU,
+    0x76DC4190U, 0x6B6B51F4U, 0x4DB26158U, 0x5005713CU,
+    0xEDB88320U, 0xF00F9344U, 0xD6D6A3E8U, 0xCB61B38CU,
+    0x9B64C2B0U, 0x86D3D2D4U, 0xA00AE278U, 0xBDBDF21CU
+};
+
 static uint32_t LogFile_CrcUpdate(uint32_t crc, const uint8_t *data, uint16_t length)
 {
     uint16_t index;
-    uint8_t bit;
     SILVERSTAR_ASSERT(length <= SYSTEM_LOG_FILE_HASH_QUANTUM,
         SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
     for (index = 0U; index < length; index++)
     {
         crc ^= data[index];
-        for (bit = 0U; bit < 8U; bit++)
-        { crc = (crc >> 1U) ^ ((crc & 1U) ? 0xEDB88320UL : 0UL); }
+        crc = (crc >> 4U) ^ s_crc_nibble[crc & 0x0FU];
+        crc = (crc >> 4U) ^ s_crc_nibble[crc & 0x0FU];
     }
     return crc;
+}
+
+static void LogFile_BlockPut32(uint16_t offset, uint32_t value)
+{
+    uint8_t index;
+    SILVERSTAR_ASSERT(offset <= LOG_FILE_BLOCK_RAW_SIZE - 4U,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    for (index = 0U; index < 4U; index++)
+    { s_scratch.block[offset + index] = (uint8_t)(value >> (index * 8U)); }
+}
+
+static void LogFile_BlockHeaderWrite(const LogFileRequest *request, uint16_t length)
+{
+    SILVERSTAR_ASSERT((request->offset <= request->size) &&
+        (length <= request->size - request->offset) && (length <= SYSTEM_LOG_FILE_BLOCK_SIZE),
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+    (void)memset(s_scratch.block, 0, LOG_FILE_BLOCK_HEADER_SIZE);
+    (void)memcpy(s_scratch.block, "SLB1", 4U);
+    s_scratch.block[4] = 1U; s_scratch.block[5] = 1U;
+    s_scratch.block[6] = (uint8_t)(length == request->size - request->offset);
+    LogFile_BlockPut32(8U, request->transfer_low);
+    LogFile_BlockPut32(12U, request->transfer_high);
+    LogFile_BlockPut32(16U, request->id);
+    LogFile_BlockPut32(20U, request->block_sequence);
+    LogFile_BlockPut32(24U, request->file_id);
+    LogFile_BlockPut32(28U, request->crc);
+    LogFile_BlockPut32(32U, request->size);
+    LogFile_BlockPut32(36U, request->offset);
+    s_scratch.block[40] = (uint8_t)length;
+    s_scratch.block[41] = (uint8_t)(length >> 8U);
+}
+
+static uint16_t LogFile_BlockEncode(uint8_t *data, uint16_t length)
+{
+    uint16_t index;
+    uint16_t code_at = 1U;
+    uint16_t written = 2U;
+    uint8_t code = 1U;
+    SILVERSTAR_ASSERT((length >= LOG_FILE_BLOCK_HEADER_SIZE + 4U) &&
+        (length <= LOG_FILE_BLOCK_RAW_SIZE), SILVERSTAR_ASSERT_MODULE_SYSTEM,
+        SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+    data[0] = 0U;
+    for (index = 0U; index < LOG_FILE_BLOCK_RAW_SIZE; index++)
+    {
+        if (index >= length) { break; }
+        uint8_t value;
+        SILVERSTAR_ASSERT((code_at < written) && (written <= index + 4U) &&
+            (written < SYSTEM_LOG_FILE_BLOCK_WIRE_SIZE - 1U),
+            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+        /* Raw input starts four bytes ahead; max two extra run codes for560
+         * bytes. Read before writing so forward encoding cannot eat input. */
+        value = data[index + 4U];
+        if (value == 0U)
+        { data[code_at] = code; code_at = written++; code = 1U; }
+        else
+        {
+            data[written++] = value; code++;
+            if (code == 255U)
+            { data[code_at] = code; code_at = written++; code = 1U; }
+        }
+    }
+    SILVERSTAR_ASSERT((code_at < written) && (written < SYSTEM_LOG_FILE_BLOCK_WIRE_SIZE),
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    data[code_at] = code;
+    data[written++] = 0U;
+    return written;
+}
+
+SystemLogFileResult SystemLogFile_BinaryResponseGet(
+    uint8_t *data, uint16_t capacity, uint16_t *length)
+{
+    SystemLogFileResult result = SystemLogFileResult_NotReady;
+    uint16_t raw_length = 0U;
+    PlatformCriticalState state;
+    if ((data == NULL) || (length == NULL)) { return SystemLogFileResult_BadArgument; }
+    *length = 0U;
+    state = PlatformCritical_Enter();
+    if (s_binary_request != 0U)
+    {
+        result = SystemLogFileResult_Stale;
+        if ((s_mailbox.state == LOG_FILE_DONE) && (s_mailbox.cancelled == 0U) &&
+            (s_mailbox.request.id == s_binary_request) &&
+            (s_mailbox.request.operation == LOG_FILE_BLOCK) && (s_mailbox.block_length != 0U))
+        {
+            raw_length = s_mailbox.block_length;
+            SILVERSTAR_ASSERT((raw_length >= LOG_FILE_BLOCK_HEADER_SIZE + 4U) &&
+                (raw_length <= LOG_FILE_BLOCK_RAW_SIZE), SILVERSTAR_ASSERT_MODULE_SYSTEM,
+                SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+            result = SystemLogFileResult_BadArgument;
+            if (capacity >= SYSTEM_LOG_FILE_BLOCK_WIRE_SIZE)
+            {
+                (void)memcpy(&data[4], s_mailbox.response.block, raw_length);
+                result = SystemLogFileResult_Ok;
+            }
+        }
+        s_binary_request = 0U;
+    }
+    PlatformCritical_Exit(state);
+    if (result == SystemLogFileResult_Ok) { *length = LogFile_BlockEncode(data, raw_length); }
+    return result;
+}
+
+/* SerialTask reserves one ready record, then reports whole-frame TX admission.
+ * LoggerTask cannot reuse the mailbox until admission succeeds. No TF here. */
+SystemLogFileResult SystemLogFile_BatchResponseGet(
+    uint8_t *data, uint16_t capacity, uint16_t *length)
+{
+    uint16_t raw_length = 0U;
+    PlatformCriticalState state;
+    if ((data == NULL) || (length == NULL)) { return SystemLogFileResult_BadArgument; }
+    *length = 0U;
+    if (capacity < SYSTEM_LOG_FILE_BLOCK_WIRE_SIZE) { return SystemLogFileResult_BadArgument; }
+    state = PlatformCritical_Enter();
+    SILVERSTAR_ASSERT(s_mailbox.batch_left <= SYSTEM_LOG_FILE_BATCH_COUNT,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if ((s_mailbox.request.operation != LOG_FILE_BATCH) || (s_mailbox.batch_left == 0U) ||
+        (s_mailbox.state != LOG_FILE_DONE) || (s_mailbox.cancelled != 0U) ||
+        (s_mailbox.batch_claimed != 0U))
+    { PlatformCritical_Exit(state); return SystemLogFileResult_NotReady; }
+    raw_length = s_mailbox.block_length;
+    SILVERSTAR_ASSERT((raw_length == 0U) || ((raw_length >= LOG_FILE_BLOCK_HEADER_SIZE + 4U) &&
+        (raw_length <= LOG_FILE_BLOCK_RAW_SIZE)), SILVERSTAR_ASSERT_MODULE_SYSTEM,
+        SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+    if (raw_length != 0U) { (void)memcpy(&data[4], s_mailbox.response.block, raw_length); }
+    else if (LogFile_ResponseCopyLocked((char *)data, capacity) == 0U)
+    { PlatformCritical_Exit(state); return SystemLogFileResult_BadArgument; }
+    s_mailbox.batch_claimed = 1U;
+    PlatformCritical_Exit(state);
+    if (raw_length != 0U) { *length = LogFile_BlockEncode(data, raw_length); }
+    else
+    {
+        uint16_t text_length = (uint16_t)strlen((const char *)data);
+        data[text_length++] = '\r'; data[text_length++] = '\n'; *length = text_length;
+    }
+    return SystemLogFileResult_Ok;
+}
+
+void SystemLogFile_BatchResponseSent(uint8_t accepted)
+{
+    uint16_t payload;
+    PlatformCriticalState state = PlatformCritical_Enter();
+    SILVERSTAR_ASSERT((accepted <= 1U) && (s_mailbox.batch_left <= SYSTEM_LOG_FILE_BATCH_COUNT),
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if ((s_mailbox.batch_claimed != 0U) && (s_mailbox.batch_left != 0U) &&
+        (s_mailbox.cancelled == 0U) && (accepted != 0U))
+    {
+        if (s_mailbox.block_length == 0U) { s_mailbox.batch_left = 0U; }
+        else
+        {
+            payload = (uint16_t)(s_mailbox.block_length - LOG_FILE_BLOCK_HEADER_SIZE - 4U);
+            SILVERSTAR_ASSERT((s_mailbox.request.offset <= s_mailbox.request.size) &&
+                (payload <= SYSTEM_LOG_FILE_BLOCK_SIZE) &&
+                (payload <= s_mailbox.request.size - s_mailbox.request.offset),
+                SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+            s_mailbox.batch_left--;
+            s_mailbox.request.offset += payload;
+            if (s_mailbox.request.offset == s_mailbox.request.size) { s_mailbox.batch_left = 0U; }
+            if (s_mailbox.batch_left != 0U)
+            {
+                s_mailbox.request.block_sequence++;
+                s_mailbox.block_length = 0U;
+                s_mailbox.state = LOG_FILE_PENDING;
+            }
+        }
+    }
+    s_mailbox.batch_claimed = 0U;
+    PlatformCritical_Exit(state);
+}
+
+static SystemLogFileResult LogFile_BlockRead(const LogFileRequest *request)
+{
+    uint16_t length = 0U;
+    uint16_t expected;
+    uint32_t crc;
+    SystemLogFileResult result;
+    if ((s_worker.cached == 0U) || (request->file_id != s_worker.file_id) ||
+        (request->size != s_worker.size) || (request->crc != s_worker.crc))
+    { return SystemLogFileResult_Stale; }
+    if (request->offset > request->size) { return SystemLogFileResult_BadArgument; }
+    expected = (request->size - request->offset > SYSTEM_LOG_FILE_BLOCK_SIZE) ?
+        SYSTEM_LOG_FILE_BLOCK_SIZE : (uint16_t)(request->size - request->offset);
+    result = SystemLogFileStorage_BlockRead(request->file_id, request->size,
+        request->offset, &s_scratch.block[LOG_FILE_BLOCK_HEADER_SIZE], &length);
+    if (result != SystemLogFileResult_Ok) { return result; }
+    SILVERSTAR_ASSERT(length == expected, SILVERSTAR_ASSERT_MODULE_SYSTEM,
+        SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+    LogFile_BlockHeaderWrite(request, length);
+    crc = LogFile_CrcUpdate(UINT32_MAX, s_scratch.block, LOG_FILE_BLOCK_HEADER_SIZE);
+    crc = ~LogFile_CrcUpdate(crc, &s_scratch.block[LOG_FILE_BLOCK_HEADER_SIZE], length);
+    LogFile_BlockPut32((uint16_t)(LOG_FILE_BLOCK_HEADER_SIZE + length), crc);
+    return SystemLogFileResult_Ok;
 }
 
 static void LogFile_MetadataWrite(const LogFileRequest *request)
@@ -497,6 +787,8 @@ static SystemLogFileResult LogFile_Work(const LogFileRequest *request)
     if (result != SystemLogFileResult_Ok) { return result; }
     if (request->operation == LOG_FILE_LIST) { return LogFile_List(request); }
     if (request->operation == LOG_FILE_READ) { return LogFile_Read(request); }
+    if ((request->operation == LOG_FILE_BLOCK) || (request->operation == LOG_FILE_BATCH))
+    { return LogFile_BlockRead(request); }
     return LogFile_HashProcess(request);
 }
 
@@ -517,10 +809,21 @@ static void LogFile_Abort(const LogFileRequest *request, SystemLogFileResult res
     state = PlatformCritical_Enter();
     SILVERSTAR_ASSERT(s_mailbox.request.id == request->id,
         SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
-    (void)memcpy(s_mailbox.response, s_scratch.result, sizeof(s_mailbox.response));
+    (void)memcpy(s_mailbox.response.text, s_scratch.result, sizeof(s_mailbox.response.text));
+    s_mailbox.block_length = 0U;
+    s_mailbox.batch_claimed = 0U;
     s_mailbox.state = (request->id == 0U) ? LOG_FILE_IDLE : LOG_FILE_DONE;
     s_mailbox.last_poll_us = SystemTime_GetMonotonicUs();
     s_mailbox.cancelled = 0U;
+    /* Reset/close and cache revocation completed before releasing TF use.
+     * An uncertain close keeps the reservation until reboot. */
+    if((SYSTEM_INSTALLATION_CAPTURE_ENABLED!=0U)&&(closed!=SystemLogFileResult_Ok))
+    {s_mailbox.cleanup_failed=1U;}
+    if(closed==SystemLogFileResult_Ok&&s_mailbox.cleanup_failed==0U&&s_mailbox.lease_owned!=0U)
+    {
+        SystemInstallationCapture_OperationEnd(SystemInstallationOperation_LogFile);
+        s_mailbox.lease_owned=0U;
+    }
     PlatformCritical_Exit(state);
 }
 
@@ -533,7 +836,17 @@ static void LogFile_Complete(const LogFileRequest *request, SystemLogFileResult 
     if (s_mailbox.cancelled != 0U) { result = SystemLogFileResult_Cancelled; }
     if (result == SystemLogFileResult_Ok)
     {
-        (void)memcpy(s_mailbox.response, s_scratch.result, sizeof(s_mailbox.response));
+        if ((request->operation != LOG_FILE_BLOCK) && (request->operation != LOG_FILE_BATCH))
+        { (void)memcpy(s_mailbox.response.text, s_scratch.result, sizeof(s_mailbox.response.text)); }
+        else
+        {
+            uint16_t length = (uint16_t)((uint16_t)s_scratch.block[40] |
+                (uint16_t)((uint16_t)s_scratch.block[41] << 8U));
+            SILVERSTAR_ASSERT(length <= SYSTEM_LOG_FILE_BLOCK_SIZE, SILVERSTAR_ASSERT_MODULE_SYSTEM,
+                SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+            s_mailbox.block_length = (uint16_t)(LOG_FILE_BLOCK_HEADER_SIZE + length + 4U);
+            (void)memcpy(s_mailbox.response.block, s_scratch.block, s_mailbox.block_length);
+        }
         s_mailbox.state = LOG_FILE_DONE;
         PlatformCritical_Exit(state);
         return;
@@ -544,7 +857,7 @@ static void LogFile_Complete(const LogFileRequest *request, SystemLogFileResult 
     LogFile_Abort(request, result);
 }
 
-void SystemLogFile_Process(uint8_t session_finalized)
+static uint8_t LogFile_ProcessQuantum(uint8_t session_finalized)
 {
     LogFileRequest request;
     SystemLogFileResult result;
@@ -565,15 +878,45 @@ void SystemLogFile_Process(uint8_t session_finalized)
     {
         LogFile_Abort(&request, (cancelled != 0U) ?
             SystemLogFileResult_Cancelled : SystemLogFileResult_Timeout);
-        return;
+        return 0U;
     }
-    if (mailbox_state != LOG_FILE_PENDING) { return; }
-    SILVERSTAR_ASSERT((request.id != 0U) && (request.operation <= LOG_FILE_READ),
+    if (mailbox_state != LOG_FILE_PENDING) { return 0U; }
+    SILVERSTAR_ASSERT((request.id != 0U) && (request.operation <= LOG_FILE_BATCH),
         SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     SILVERSTAR_ASSERT(session_finalized <= 1U,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT((s_worker.hashing <= 1U) && (s_worker.cached <= 1U) &&
+        !((s_worker.hashing != 0U) && (s_worker.cached != 0U)),
         SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if (s_worker.request_id != request.id)
     { s_worker.request_id = request.id; s_worker.cursor = request.file_id; }
     result = (session_finalized != 0U) ? LogFile_Work(&request) : SystemLogFileResult_Locked;
-    if (result != SystemLogFileResult_Pending) { LogFile_Complete(&request, result); }
+    if (result != SystemLogFileResult_Pending)
+    { LogFile_Complete(&request, result); return 0U; }
+    return (uint8_t)(request.operation == LOG_FILE_META);
+}
+
+void SystemLogFile_Process(uint8_t session_finalized)
+{
+    uint8_t quantum;
+    uint64_t started_us = SystemTime_GetMonotonicUs();
+    for (quantum = 0U; quantum < LOG_FILE_META_QUANTA; quantum++)
+    {
+        if ((quantum != 0U) &&
+            (SystemTime_GetMonotonicUs() - started_us >= LOG_FILE_SERVICE_BUDGET_US))
+        { return; }
+        /* Re-snapshot cancel, timeout, lifecycle and lease before each quantum. */
+        if (LogFile_ProcessQuantum(session_finalized) == 0U) { return; }
+    }
+}
+
+uint8_t SystemLogFile_IsActive(void)
+{
+    uint8_t pending;
+    PlatformCriticalState state = PlatformCritical_Enter();
+    pending = (uint8_t)((s_mailbox.state == LOG_FILE_PENDING) ||
+        (s_mailbox.cancelled != 0U));
+    PlatformCritical_Exit(state);
+    /* The worker state is private to this LoggerTask caller. */
+    return (uint8_t)((pending != 0U) || (s_worker.hashing != 0U) || (s_worker.cached != 0U));
 }

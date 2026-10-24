@@ -18,6 +18,7 @@
 #include "system_output_if.h"
 #include "system_profile.h"
 #include "system_time.h"
+#include "system_installation_capture_if.h"
 
 static volatile SystemLifecycleState s_lifecycle_state;
 static volatile uint32_t s_fault_reason_mask;
@@ -46,7 +47,8 @@ static void SystemLifecycle_IrqUnlock(uint32_t primask)
 
 static uint8_t SystemLifecycle_ConfigurationBusy(void)
 {
-    return (uint8_t)((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U) &&
+    return (uint8_t)(((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)||
+        (SYSTEM_INSTALLATION_CAPTURE_ENABLED!=0U)) &&
         (s_configuration_actions != 0U));
 }
 
@@ -246,7 +248,8 @@ void SystemLifecycle_Init(void)
     s_start_request_pending = 0U;
     s_start_transaction_active = 0U;
     s_maintenance = SystemMaintenanceState_Off;
-    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    if ((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)||
+        (SYSTEM_INSTALLATION_CAPTURE_ENABLED!=0U))
     { s_configuration_actions = 0U; }
     s_start_diagnostic_sequence = 0U;
     (void)memset(s_start_diagnostics, 0, sizeof(s_start_diagnostics));
@@ -271,7 +274,10 @@ SystemDeviceResult SystemLifecycle_MaintenanceRequest(void)
         (s_configuration_actions != 0U))
     { result = SYSTEM_DEVICE_BUSY; }
     else if (s_maintenance == SystemMaintenanceState_Off)
-    { s_maintenance = SystemMaintenanceState_Draining; }
+    {
+        result=SystemInstallationCapture_OperationBegin(SystemInstallationOperation_LogFile,0U);
+        if(result==SYSTEM_DEVICE_OK){s_maintenance = SystemMaintenanceState_Draining;}
+    }
     SystemLifecycle_IrqUnlock(lock);
     return result;
 }
@@ -284,6 +290,7 @@ SystemMaintenanceState SystemLifecycle_MaintenanceGet(void)
 void SystemLifecycle_MaintenanceComplete(uint8_t successful)
 {
     uint32_t lock = SystemLifecycle_IrqLock();
+    uint8_t owned=(uint8_t)(s_maintenance==SystemMaintenanceState_Draining);
     SILVERSTAR_ASSERT(successful <= 1U,
         SILVERSTAR_ASSERT_MODULE_FLIGHT_LOGIC, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     SILVERSTAR_ASSERT(s_maintenance != SystemMaintenanceState_Off,
@@ -293,6 +300,7 @@ void SystemLifecycle_MaintenanceComplete(uint8_t successful)
         (s_lifecycle_state != SYSTEM_STATE_FAULT) && (successful != 0U))
     { s_maintenance = SystemMaintenanceState_Ready; }
     else { s_maintenance = SystemMaintenanceState_Failed; }
+    if(owned!=0U){SystemInstallationCapture_OperationEnd(SystemInstallationOperation_LogFile);}
     SystemLifecycle_IrqUnlock(lock);
 }
 
@@ -368,10 +376,14 @@ SystemDeviceResult SystemLifecycle_EnterPostflight(void)
 
 void SystemLifecycle_EnterFault(uint32_t reason_mask)
 {
+    uint32_t lock=SystemLifecycle_IrqLock();
     s_fault_reason_mask |= reason_mask;
     s_lifecycle_state = SYSTEM_STATE_FAULT;
+    if(s_maintenance==SystemMaintenanceState_Draining)
+    {SystemInstallationCapture_OperationEnd(SystemInstallationOperation_LogFile);}
     if (s_maintenance != SystemMaintenanceState_Off)
     { s_maintenance = SystemMaintenanceState_Failed; }
+    SystemLifecycle_IrqUnlock(lock);
     (void)SystemOutput_SafeSet();
     if (SystemTime_IsMissionStarted() != 0U)
     {
@@ -535,6 +547,8 @@ SystemLifecycleStartResult SystemLifecycle_StartTransaction(void)
         SystemLifecycle_IrqUnlock(primask);
         return SYSTEM_LIFECYCLE_START_BUSY;
     }
+    if(SystemInstallationCapture_OperationBegin(SystemInstallationOperation_Start,0U)!=SYSTEM_DEVICE_OK)
+    {SystemLifecycle_IrqUnlock(primask);return SYSTEM_LIFECYCLE_START_BUSY;}
     s_start_transaction_active = 1U;
     SystemLifecycle_IrqUnlock(primask);
 
@@ -546,6 +560,7 @@ SystemLifecycleStartResult SystemLifecycle_StartTransaction(void)
     primask = SystemLifecycle_IrqLock();
     SystemLifecycle_DiagnosticStore(&response);
     s_start_transaction_active = 0U;
+    SystemInstallationCapture_OperationEnd(SystemInstallationOperation_Start);
     SystemLifecycle_IrqUnlock(primask);
     return response.result;
 }
@@ -584,6 +599,11 @@ SystemDeviceResult SystemLifecycle_SubmitStart(
         SystemLifecycle_DiagnosticStore(&response);
         SystemLifecycle_IrqUnlock(primask);
         return SYSTEM_DEVICE_BUSY;
+    }
+    if(SystemInstallationCapture_OperationBegin(SystemInstallationOperation_Start,0U)!=SYSTEM_DEVICE_OK)
+    {
+        SystemLifecycle_DiagnosticStore(&response);
+        SystemLifecycle_IrqUnlock(primask);return SYSTEM_DEVICE_BUSY;
     }
     s_request_queue[s_request_head] = *request;
     s_request_head = next_head;
@@ -662,6 +682,7 @@ void SystemLifecycle_Process(void)
     }
     s_start_transaction_active = 0U;
     s_start_request_pending = 0U;
+    SystemInstallationCapture_OperationEnd(SystemInstallationOperation_Start);
     SystemLifecycle_IrqUnlock(primask);
 }
 
@@ -735,6 +756,7 @@ const char *SystemLifecycle_StartReasonText(SystemLifecycleStartReason reason)
 uint8_t SystemLifecycle_IsConfigurationLocked(void)
 {
     return (uint8_t)((s_maintenance != SystemMaintenanceState_Off) ||
+                     (SystemInstallationCapture_CommandBlocked()!=0U) ||
                      (s_lifecycle_state == SYSTEM_STATE_FLIGHT) ||
                      (s_lifecycle_state == SYSTEM_STATE_RECOVERY));
 }

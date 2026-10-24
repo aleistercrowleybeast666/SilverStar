@@ -273,8 +273,13 @@ class FileServiceTests(unittest.TestCase):
     def test_serial_adapter_is_bounded_and_checks_write(self):
         class FakeSerial:
             def __init__(self, **_):
+                self.data = []
+            def write(self, data):
+                if data == b"SYSTEM INFO\r\n":
+                    self.data = [b"OK SYSTEM INFO project=SilverStar version=0.0.12\r\n"]
+                    return len(data)
                 self.data = [b"> LOGFILE CAPS\r\n", b"OK LOGFILE CAPS supported=1\r\n"]
-            def write(self, data): return len(data)
+                return len(data)
             def read(self, count): return self.data.pop(0) if self.data else b""
             def close(self): pass
         transport = FileServiceSerialTransport("MOCK", 115200, serial_factory=FakeSerial)

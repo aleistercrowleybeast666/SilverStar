@@ -5,11 +5,12 @@ from transport.probe_inventory import ProbeInventory, ProbeInventoryResult, Prob
 
 
 class ProbeInventoryWorker(QThread):
-    completed = Signal(object)
+    completed = Signal(int, object)
 
-    def __init__(self, enumerator, parent=None):
+    def __init__(self, enumerator, generation, parent=None):
         super().__init__(parent)
         self.enumerator = enumerator
+        self.generation = generation
         self.cancel = Event()
 
     def run(self):
@@ -17,7 +18,7 @@ class ProbeInventoryWorker(QThread):
             result = self.enumerator(self.cancel)
         except Exception as exc:
             result = ProbeInventory(ProbeInventoryResult.Failed, detail=str(exc)[:300])
-        self.completed.emit(result)
+        self.completed.emit(self.generation, result)
 
 
 class ProbeSelectionManager(QObject):
@@ -31,29 +32,32 @@ class ProbeSelectionManager(QObject):
         self.closing = False
         self.status = 'probe.not_scanned'
         self.detail = ''
-        self.timer = QTimer(self)
-        self.timer.setInterval(10000)
-        self.timer.timeout.connect(self.refresh)
+        self._generation = 0
         self.window.btn_probe_refresh.clicked.connect(self.refresh)
         self.window.probe_combo.currentIndexChanged.connect(self._selected)
         self.window.on_probe_render = self.render
         self.render()
-        QTimer.singleShot(0, self.refresh)
+        QTimer.singleShot(0, self._startup_refresh)
+
+    def _startup_refresh(self):
+        # An explicit refresh before the event loop also satisfies startup.
+        if self._generation == 0:
+            self.refresh()
 
     def refresh(self):
         if self.closing or self.worker is not None or self.target_active:
             return False
-        self.timer.stop()
+        self._generation += 1
         self.status = 'probe.busy'
         self.render()
-        self.worker = ProbeInventoryWorker(self.enumerator, self)
+        self.worker = ProbeInventoryWorker(self.enumerator, self._generation, self)
         self.worker.completed.connect(self._completed)
         self.worker.finished.connect(self._finished)
         self.worker.start()
         return True
 
-    def _completed(self, inventory):
-        if self.closing:
+    def _completed(self, generation, inventory):
+        if self.closing or generation != self._generation:
             return
         lost = self.selection.apply(inventory)
         self.detail = inventory.detail
@@ -64,8 +68,6 @@ class ProbeSelectionManager(QObject):
         else:
             self.status = 'probe.' + inventory.result.value
         self.render()
-        if inventory.result in (ProbeInventoryResult.Ready, ProbeInventoryResult.Empty):
-            self.timer.start()
 
     def _finished(self):
         worker, self.worker = self.worker, None
@@ -107,7 +109,7 @@ class ProbeSelectionManager(QObject):
 
     def request_close(self):
         self.closing = True
-        self.timer.stop()
+        self._generation += 1  # Invalidate any queued success before cancelling.
         self.selection = ProbeSelection()
         self.status, self.detail = 'probe.cancelled', ''
         self.render()

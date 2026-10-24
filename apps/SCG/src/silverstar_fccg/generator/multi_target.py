@@ -7,7 +7,7 @@ from dataclasses import dataclass, replace
 from enum import StrEnum
 from pathlib import Path
 
-from silverstar_fccg.app.version import __version__
+from silverstar_fccg.app.version import __version__, FirmwareIdentity_Resolve
 from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.generator.assembler import GenerationProgressCallback, ProjectAssembler
 from silverstar_fccg.generator.ground_environment import GroundEnvironmentFiles_Render
@@ -523,6 +523,7 @@ def GroundFiles_Render(
             catalog.Component_Get(ground.board).ManifestSha256_Get()
         )
     metadata = {
+        "version_identity": FirmwareIdentity_Resolve(model.identity.firmware_version),
         "silverstar_version": __version__,
         "firmware_version": model.identity.firmware_version,
         "target_role": "ground_station",
@@ -546,6 +547,8 @@ def GroundFiles_Render(
     files["Generated/ground_target_metadata.json"] = (
         json.dumps(metadata, indent=2, ensure_ascii=False) + "\n"
     ).encode("utf-8")
+    from silverstar_fccg.generator.swd_diagnostics import SwdDiagnostics_Render
+    files.update(SwdDiagnostics_Render(ground_model,catalog,files['Makefile'],role='ground'))
     return files
 
 
@@ -600,7 +603,10 @@ def TargetGeneration_Apply(
                     raise ValueError(f"Ground output is not a file: {destination}")
                 current_hash = hashlib.sha256(destination.read_bytes()).hexdigest()
                 if relative != ".eide/eide.yml" and current_hash != hashlib.sha256(content).hexdigest() and current_hash != ground_previous_hashes.get(relative):
-                    raise ValueError(f"Ground output has local changes: {destination}")
+                    from silverstar_diagnostics.project_descriptor import ProjectDescriptor_GeneratedMatch
+                    build_owned=(relative=='Ground.ssdiag' and relative in ground_previous_hashes and
+                                 ProjectDescriptor_GeneratedMatch(json.loads(destination.read_text(encoding='utf-8')),json.loads(content)))
+                    if not build_owned:raise ValueError(f"Ground output has local changes: {destination}")
         for relative, expected_hash in ground_previous_hashes.items():
             if relative in ground_files:
                 continue

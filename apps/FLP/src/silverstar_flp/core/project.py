@@ -227,6 +227,7 @@ def ReplayConfiguration_Validate(configuration: Any) -> None:
     if configuration["provenance"] not in (
         "Firmware build configuration from .ssdecoder",
         "Algorithm Plugin actual defaults",
+        "Explicit offline navigation configuration",
     ):
         raise ValueError("project_parameter_provenance_invalid")
     if not isinstance(configuration["actual_values"], dict):

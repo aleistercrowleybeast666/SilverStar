@@ -49,7 +49,11 @@ def test_explicit_switch_bounds_each_sensor_class_in_list_order(builtin_catalog,
     model.device_instances += [first, DeviceInstance('later', plugin)]
     FeatureTier_Apply(model, tier, builtin_catalog)
     assert model.DeviceInstance_Get('later') is None
-    assert model.DeviceInstance_Get('first') == (None if tier == 'minimal' and kind == 'gnss' else first)
+    prohibited = kind == 'magnetometer' or (tier == 'minimal' and kind == 'gnss')
+    assert model.DeviceInstance_Get('first') == (None if prohibited else first)
+    if kind == 'magnetometer':
+        assert not model.build.magnetometer_enabled
+        assert not model.build.maintenance_log_export_enabled
 
 
 def test_switch_does_not_hide_unrelated_invalid_source_binding(builtin_catalog):

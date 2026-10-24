@@ -3,7 +3,12 @@
 
 #include <stdint.h>
 
-/* Called only by LoggerTask after the storage session is mounted. */
+/* Sole filesystem owner calls once per iteration: LoggerTask with logging,
+ * otherwise the maintenance SerialTask. These owners are compile-time exclusive.
+ * Service runs independently of
+ * ordinary log session admission/finalization. Bounded to one endpoint load or
+ * one pending save; mounts TF without opening a log or creating a mission.
+ * An unavailable card completes the attempt with an explicit load/save fault. */
 void SystemMagCalibrationStorage_Service(void);
 uint8_t SystemMagCalibrationStorage_LoadCompleteGet(void);
 

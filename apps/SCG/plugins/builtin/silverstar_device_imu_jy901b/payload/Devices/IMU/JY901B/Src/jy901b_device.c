@@ -6,6 +6,7 @@
 
 #include "project_resources.h"
 #include "jy901b_config.h"
+#include "jy901b_magnetometer_config.h"
 #include "platform_critical.h"
 #include "platform_time.h"
 #include "platform_uart.h"
@@ -39,6 +40,12 @@ typedef struct
     uint32_t parser_resync_count;
     uint32_t process_limit_count;
     uint32_t port_discontinuity_sequence;
+    uint32_t mag_transport_epoch,mag_last_checksum,mag_last_discontinuity,mag_last_resync;
+    uint32_t mag_poll_queue_bytes,frame_queue_max;
+    uint32_t mag_last_discarded_bytes,mag_last_transport_errors,mag_last_restart_count;
+    uint64_t frame_started_us;
+    uint8_t frame_transport_valid;
+    uint8_t mag_poll_transport_valid;
     uint8_t register_read_active;
     uint8_t register_read_index;
     uint8_t register_read_frame[IMU_FRAME_LEN];
@@ -198,6 +205,29 @@ static void IMU_UpdateAttitudeMatrix(uint8_t instance)
     s_imu.AttitudeMatrix[2][2] = 1.0f - 2.0f * (q1 * q1 + q2 * q2);
 }
 
+/* MAG-specific evidence has its own bounded responsibility; the generic
+ * frame publisher continues to own frame counts and common IMU publication. */
+static void IMU_MagneticEvidenceStamp(uint8_t instance,uint64_t timestamp_us)
+{
+    if(s_contexts[instance].mag_last_checksum!=s_checksumErrorCount ||
+       s_contexts[instance].mag_last_discontinuity!=s_portDiscontinuitySequence ||
+       s_contexts[instance].mag_last_resync!=s_parserResyncCount) {
+        s_contexts[instance].mag_transport_epoch++;
+        s_contexts[instance].mag_last_checksum=s_checksumErrorCount;
+        s_contexts[instance].mag_last_discontinuity=s_portDiscontinuitySequence;
+        s_contexts[instance].mag_last_resync=s_parserResyncCount;
+    }
+    s_imu.MagTransportEpoch=s_contexts[instance].mag_transport_epoch;
+    s_imu.MagDecodeQueueBytes=s_contexts[instance].frame_queue_max;
+    s_imu.MagTransportEvidenceValid=s_contexts[instance].frame_transport_valid;
+    if(timestamp_us<s_contexts[instance].frame_started_us) {
+        s_imu.MagDecodeSpanUs=UINT32_MAX;s_imu.MagTransportEvidenceValid=0U;
+    } else {
+        uint64_t span=timestamp_us-s_contexts[instance].frame_started_us;
+        s_imu.MagDecodeSpanUs=span>UINT32_MAX?UINT32_MAX:(uint32_t)span;
+    }
+}
+
 static void IMU_OnFrameDecoded(uint8_t instance, IMUFrameType frame_type)
 {
     uint64_t timestamp_us = PlatformTime_Us();
@@ -225,6 +255,7 @@ static void IMU_OnFrameDecoded(uint8_t instance, IMUFrameType frame_type)
             break;
 
         case IMUFrameMag:
+            IMU_MagneticEvidenceStamp(instance,timestamp_us);
             s_imu.ValidMask |= (1U << 3);
             s_imu.MagFrameCount++;
             s_imu.MagTimestampUs = timestamp_us;
@@ -308,13 +339,16 @@ static void IMU_EulerFrameDecode(uint8_t instance, const uint8_t *data)
 
 static void IMU_MagnetometerFrameDecode(uint8_t instance, const uint8_t *data)
 {
+    if (JY901B_MAGNETOMETER_ADAPTER_ENABLE == 0U)
+    { return; }
     s_imu.MagRaw[0] = IMU_S16FromLE(&data[0]);
     s_imu.MagRaw[1] = IMU_S16FromLE(&data[2]);
     s_imu.MagRaw[2] = IMU_S16FromLE(&data[4]);
     s_imu.Mag[0] = (float)s_imu.MagRaw[0];
     s_imu.Mag[1] = (float)s_imu.MagRaw[1];
     s_imu.Mag[2] = (float)s_imu.MagRaw[2];
-    s_imu.TemperatureC = (float)IMU_S16FromLE(&data[6]) / 100.0f;
+    /* The standard SDK publishes only HX/HY/HZ from 0x54. Its trailing word
+     * is not a verified temperature field for both supported module variants. */
     IMU_OnFrameDecoded(instance, IMUFrameMag);
 }
 
@@ -389,11 +423,18 @@ static void IMU_ParseByte(uint8_t instance, uint8_t byte)
     {
         if (byte == IMU_FRAME_HEADER)
         {
+            s_contexts[instance].frame_queue_max=s_contexts[instance].mag_poll_queue_bytes;
+            s_contexts[instance].frame_transport_valid=s_contexts[instance].mag_poll_transport_valid;
+            s_contexts[instance].frame_started_us=PlatformTime_Us();
             s_frameBuf[s_frameIndex++] = byte;
         }
         return;
     }
 
+    if(s_contexts[instance].mag_poll_queue_bytes>s_contexts[instance].frame_queue_max) {
+        s_contexts[instance].frame_queue_max=s_contexts[instance].mag_poll_queue_bytes;
+    }
+    s_contexts[instance].frame_transport_valid&=s_contexts[instance].mag_poll_transport_valid;
     s_frameBuf[s_frameIndex++] = byte;
 
     if (s_frameIndex >= IMU_FRAME_LEN)
@@ -1151,6 +1192,10 @@ void IMU_StreamReset(uint8_t instance)
     IMU_ParserReset(instance);
     s_validFrameCount = 0U;
     s_checksumErrorCount = 0U;
+    s_contexts[instance].mag_transport_epoch++;
+    s_contexts[instance].mag_last_checksum=0U;s_contexts[instance].mag_last_discontinuity=0U;
+    s_contexts[instance].mag_last_resync=0U;s_contexts[instance].mag_poll_queue_bytes=UINT32_MAX;
+    s_contexts[instance].mag_poll_transport_valid=0U;
     s_parserResyncCount = 0U;
     s_portDiscontinuitySequence = 0U;
     s_sample_fifo_head = 0U;
@@ -1300,6 +1345,35 @@ IMUState IMU_Init(uint8_t instance)
     //仅修改波特率时打开该注释，单片机波特率需要同步修改
 }
 
+/* Observe losses/restarts even when they remove whole valid frames and thus
+ * cannot be detected by the 0x54 checksum or local decoded-frame counter. */
+static void IMU_MagneticTransportObserve(uint8_t instance,const PlatformUartDiagnostics *diagnostics)
+{
+    if(diagnostics==NULL) { s_contexts[instance].mag_poll_transport_valid=0U;return; }
+    if(s_contexts[instance].mag_last_discarded_bytes!=diagnostics->rx_discarded_bytes ||
+       s_contexts[instance].mag_last_transport_errors!=diagnostics->transport_error_count ||
+       s_contexts[instance].mag_last_restart_count!=diagnostics->rx_restart_count) {
+        s_contexts[instance].mag_transport_epoch++;
+        s_contexts[instance].mag_last_discarded_bytes=diagnostics->rx_discarded_bytes;
+        s_contexts[instance].mag_last_transport_errors=diagnostics->transport_error_count;
+        s_contexts[instance].mag_last_restart_count=diagnostics->rx_restart_count;
+    }
+}
+
+/* Valid only during this bounded Poll read. Config/register paths do not
+ * inherit a stale timestamp/queue qualification from an earlier Poll. */
+static void IMU_MagneticChunkBegin(uint8_t instance,uint8_t rx_active)
+{
+    uint16_t queue_before;
+    if(PlatformUart_RxCountGet(Jy901bResource_UartGet(instance),&queue_before)==PLATFORM_OK) {
+        s_contexts[instance].mag_poll_queue_bytes=queue_before;
+        s_contexts[instance].mag_poll_transport_valid=(uint8_t)(rx_active==1U);
+    } else {
+        s_contexts[instance].mag_poll_queue_bytes=UINT32_MAX;
+        s_contexts[instance].mag_poll_transport_valid=0U;
+    }
+}
+
 void IMU_Poll(uint8_t instance)
 {
     uint8_t tempBuf[IMU_TEMP_BUF_LEN];
@@ -1309,6 +1383,8 @@ void IMU_Poll(uint8_t instance)
     uint32_t now;
     uint32_t chunk;
 
+    if(instance>=PROJECT_JY901B_INSTANCE_COUNT) { return; }
+    s_contexts[instance].mag_poll_transport_valid=0U;
     SILVERSTAR_ASSERT_OBJECT(&s_imu, IMUData,
         SILVERSTAR_ASSERT_MODULE_DEVICE);
     if ((s_contexts[instance].register_read_active != 0U) ||
@@ -1319,6 +1395,7 @@ void IMU_Poll(uint8_t instance)
     {
         return;
     }
+    IMU_MagneticTransportObserve(instance,&port_diagnostics);
     if (port_diagnostics.rx_discontinuity_count !=
         s_portDiscontinuitySequence)
     {
@@ -1331,10 +1408,11 @@ void IMU_Poll(uint8_t instance)
     readLen = 0U;
     for (chunk = 0U; chunk < IMU_MAX_READ_CHUNKS_PER_PROCESS; chunk++)
     {
+        IMU_MagneticChunkBegin(instance,port_diagnostics.rx_active);
         if (PlatformUart_Read(Jy901bResource_UartGet(instance), tempBuf, sizeof(tempBuf),
                               &readLen) != PLATFORM_OK)
         {
-            return;
+            s_contexts[instance].mag_poll_transport_valid=0U;return;
         }
         for (i = 0U; (i < readLen) && (i < IMU_TEMP_BUF_LEN); i++)
         {
@@ -1347,6 +1425,7 @@ void IMU_Poll(uint8_t instance)
         s_processLimitCount++;
     }
 
+    s_contexts[instance].mag_poll_transport_valid=0U;
     /* Decoding may publish a timestamp newer than the poll entry tick. */
     now = PlatformTime_Ms();
     if ((s_imu.ValidMask == 0U) ||

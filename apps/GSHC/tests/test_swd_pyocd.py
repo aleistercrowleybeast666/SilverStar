@@ -151,16 +151,19 @@ def test_official_target_profiles_share_actual_pyocd_read_only_path(synthetic,pa
     synthetic.api.Link=Link
     backend=PyOcdMemAp(Event())
     session=SwdSession(target=part,_backend_factory=lambda _:backend)
-    reply=session.Swd_Attach(PROBE)
-    assert reply.result==R.Ok and reply.snapshot.cpuid==cpuid
-    assert reply.snapshot.target_evidence=='selected_part_core_verified'
-    assert reply.snapshot.device_id==0  # No guessed family-specific MMIO read.
-    link=backend._link
-    tick(session)
-    assert session.Swd_ReadMemory(0x20000000,4).result==R.Ok
-    assert session.Swd_ReadMemory(0x40000000,4).result==R.InvalidRequest
-    assert session.Swd_ReadMemory(0x08000000,4).result==R.InvalidRequest
-    assert session.Swd_Detach().result==R.Ok
+    try:
+        reply=session.Swd_Attach(PROBE)
+        assert reply.result==R.Ok and reply.snapshot.cpuid==cpuid
+        evidence='selected_part_core_and_family_verified' if part=='STM32F407VET6' else 'selected_part_core_verified'
+        assert reply.snapshot.target_evidence==evidence
+        assert reply.snapshot.device_id==(0x413 if part=='STM32F407VET6' else 0)
+        link=backend._link
+        tick(session)
+        assert session.Swd_ReadMemory(0x20000000,4).result==R.Ok
+        assert session.Swd_ReadMemory(0x40000000,4).result==R.InvalidRequest
+        assert session.Swd_ReadMemory(0x08000000,4).result==R.InvalidRequest
+    finally:
+        assert session.Swd_Detach().result==R.Ok
     assert link.controls[-1]==('disconnect',)
     assert all(raw<4 or ((raw & 3)*4 | select & 0xF0) in (0,4) for raw,select,_ in link.writes)
 

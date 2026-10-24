@@ -85,19 +85,25 @@ ZH_CN: dict[str, str] = {
     "maintenance.connect_first": "请先在顶部连接飞控调试口",
     "maintenance.start_blocked": "请先完成或取消维护文件操作，再开始任务",
     "transfer.title": "日志文件传输",
-    "transfer.download": "飞控维护日志服务（UART / USB）",
+    "transfer.download": "从飞控TF取日志…",
     "transfer.download_copy": "进入维护并下载日志（需重启恢复）",
-    "transfer.download_delete": "设备删除暂不可用（v1 无可靠设备身份）",
+    "transfer.download_delete": "TF 文件服务只读，不提供设备删除",
     "transfer.port": "输入独立维护 UART / USB 串口，例如 COM7。此功能不使用遥测链路。",
     "transfer.baud": "维护串口波特率",
     "transfer.file_id": "设备日志 Mission ID",
-    "transfer.confirm_delete": "确认永久删除飞控日志 {file_id}，{size} 字节？\n标识：{token}\n下载成功不会自动执行删除。",
-    "transfer.export": "导出给其他连接的设备",
+    "transfer.confirm_delete": "TF 文件服务只读，不提供设备删除。",
+    "transfer.export": "导出本机记录…",
     "transfer.copy": "复制导出（保留源文件）",
     "transfer.cut": "剪切导出（校验后确认删除源文件）",
+    "transfer.cut_local": "剪切本机记录…",
+    "transfer.cut_sources": "选择单个已关闭的受管 fc_session_*.jsonl；TF 日志不适用剪切",
+    "transfer.mtp": "复制到手机（MTP）…",
+    "transfer.mtp_destination": "选择已解锁手机的 MTP 文件夹（仅复制并回读校验，不删源）",
+    "transfer.mtp_failed": "手机复制尚未验证完成，源文件已保留。\n{detail}",
+    "transfer.copy_only": "设备导出仅复制，请手动清理源文件。",
     "transfer.busy": "请先断开连接并等待当前数据任务结束。活动会话及任务运行期间不能传输日志。",
     "transfer.sources": "选择已关闭的日志文件",
-    "transfer.destination": "选择系统目录或已挂载设备目录（MTP 手机不支持剪切）",
+    "transfer.destination": "选择本地或已挂载的文件系统目录；手机 MTP 请使用“复制到手机”入口",
     "transfer.working": "正在复制并回读校验…",
     "transfer.cancel": "取消（保留源文件）",
     "transfer.confirm_cut": "目标已完成逐文件 SHA-256 回读校验：\n{output}\n\n确认删除本次选择的受管日志源文件？删除前还会再次校验源和目标。",
@@ -390,19 +396,25 @@ EN_US: dict[str, str] = {
     "maintenance.connect_first": "Connect the FC debug port in the top bar first",
     "maintenance.start_blocked": "Finish or cancel the maintenance file operation before starting the mission",
     "transfer.title": "Log file transfer",
-    "transfer.download": "FC maintenance log service (UART / USB)",
+    "transfer.download": "Retrieve FC TF logs…",
     "transfer.download_copy": "Enter maintenance and download logs (reboot to recover)",
-    "transfer.download_delete": "Device deletion unavailable (v1 has no stable identity)",
+    "transfer.download_delete": "TF file service is read-only; device deletion is unavailable",
     "transfer.port": "Enter an exclusive maintenance UART / USB port, e.g. COM7. Telemetry is not used.",
     "transfer.baud": "Maintenance baud rate",
     "transfer.file_id": "Device log mission ID",
-    "transfer.confirm_delete": "Permanently delete device log {file_id}, {size} bytes?\nIdentity: {token}\nA successful download never deletes its source automatically.",
-    "transfer.export": "Export to another connected device",
+    "transfer.confirm_delete": "TF file service is read-only; device deletion is unavailable.",
+    "transfer.export": "Export local recordings…",
     "transfer.copy": "Copy export (keep sources)",
     "transfer.cut": "Cut export (confirm deletion after verification)",
+    "transfer.cut_local": "Cut local recording…",
+    "transfer.cut_sources": "Select one closed managed fc_session_*.jsonl; TF logs cannot be cut",
+    "transfer.mtp": "Copy to phone (MTP)…",
+    "transfer.mtp_destination": "Select an unlocked phone's MTP folder (copy and readback only; keep sources)",
+    "transfer.mtp_failed": "Phone copy is not verified; source files retained.\n{detail}",
+    "transfer.copy_only": "Device exports are copy-only; clean source files manually.",
     "transfer.busy": "Disconnect and finish current data tasks first. Active sessions and missions cannot transfer logs.",
     "transfer.sources": "Select closed log files",
-    "transfer.destination": "Select a filesystem or mounted device directory (MTP phones cannot be cut)",
+    "transfer.destination": "Select a local or mounted filesystem directory; use Copy to phone for MTP",
     "transfer.working": "Copying and verifying destination readback…",
     "transfer.cancel": "Cancel (keep sources)",
     "transfer.confirm_cut": "Each destination file passed SHA-256 readback:\n{output}\n\nDelete the selected managed source logs? Source and destination will be verified again before deletion.",
@@ -1386,10 +1398,68 @@ class I18n:
 ZH_CN['swd.stlink_experimental'] = 'ST-Link：实验支持，未有实物验收；只连接空闲且兼容的接口，已有调试状态不会被改变。'
 EN_US['swd.stlink_experimental'] = 'ST-Link: experimental, no hardware validation; requires an idle compatible interface. Existing debug state is preserved.'
 
+ZH_CN.update({
+    'watch.open':'查看变量…','watch.window':'ELF 变量关注（只读）',
+    'watch.search_label':'变量搜索','watch.catalog_label':'候选变量','watch.interval_label':'采样周期',
+    'maintenance.runtime_tab':'运行状态','maintenance.tf_tab':'TF 日志',
+    'maintenance.serial_details':'维护串口 / AIR 诊断详情…','maintenance.diagnostic_count':'运行诊断 {count} 项',
+    'maintenance.details':'AIR 遥测诊断详情（只读）',
+    'swd.details':'SWD 详情…','swd.import_hint':'可先连接目标；导入 ELF 时请带对应诊断描述（.ssdiag）。',
+    'swd.reimporting':'正在导入；安全释放旧连接后按新文件重建只读会话。',
+    'swd.import_required':'需要对应诊断描述（.ssdiag）；未猜测 MCU 型号。详情…',
+    'swd.import_failed':'固件导入失败；未读取变量。请查看详情。',
+    'swd.ok':'正在核对固件加载内容…','swd.target_current':'当前识别','swd.target_previous':'上次识别（当前连接无效）',
+    'swd.project_target':'工程声明','swd.target_no_descriptor':'尚无诊断描述','swd.target_unknown':'目标尚未识别；工程型号由可靠导入信息确认。',
+    'swd.identity_limit':'器件族 / 内核核对不等于完整订货型号识别。匹配前不读取诊断或变量；维护串口独立。',
+    'swd.sample_time_unknown':'MCU 采样年龄未知','swd.card_unknown':'UNKNOWN / 无有效读数',
+    'swd.card_missing':'该组符号或布局不可用；见 SWD 详情。','swd.card_not_read':'等待已匹配固件的有效观测。',
+    'card.ready':'就绪标志','card.block':'阻塞码','card.warn':'告警码','card.attitude':'姿态状态码',
+    'card.duration':'耗时 µs','card.predictions':'本次预测','card.caps':'追赶限幅次数',
+    'card.ins':'惯导有效','card.alignment':'对准标志','card.mission':'任务标志','card.sequence':'序列',
+    'card.writes':'完成写次数','card.writer':'写端打开','card.log_fault':'日志故障','card.finalization':'终结状态码','card.storage':'存储健康标志',
+})
+EN_US.update({
+    'watch.open':'View variables…','watch.window':'ELF variable watch (read only)',
+    'watch.search_label':'Variable search','watch.catalog_label':'Candidates','watch.interval_label':'Interval',
+    'maintenance.runtime_tab':'Runtime status','maintenance.tf_tab':'TF logs',
+    'maintenance.serial_details':'Maintenance / AIR diagnostics…','maintenance.diagnostic_count':'{count} runtime entries',
+    'maintenance.details':'AIR diagnostic details (read only)',
+    'swd.details':'SWD details…','swd.import_hint':'Attach first if needed; import the matching .ssdiag with an ELF.',
+    'swd.reimporting':'Importing; release the old owner safely, then rebuild the read-only connection.',
+    'swd.import_required':'Matching .ssdiag required; no MCU part was guessed. See details.',
+    'swd.import_failed':'Firmware import failed; variables were not read. See details.',
+    'swd.ok':'Verifying firmware load contents…','swd.target_current':'Observed target','swd.target_previous':'Previous observation (not a live connection)',
+    'swd.project_target':'Project declaration','swd.target_no_descriptor':'No descriptor yet','swd.target_unknown':'Target not identified; reliable import metadata supplies the project part.',
+    'swd.identity_limit':'Core/family verification does not identify the complete ordering code. Diagnostics/watches require firmware matching; maintenance serial is independent.',
+    'swd.sample_time_unknown':'MCU sample age unknown','swd.card_unknown':'UNKNOWN / no valid reading',
+    'swd.card_missing':'Group symbols/layout unavailable; see SWD details.','swd.card_not_read':'Waiting for an observation from matched firmware.',
+    'card.ready':'Ready flag','card.block':'Blocking mask','card.warn':'Warning mask','card.attitude':'Attitude code',
+    'card.duration':'Duration µs','card.predictions':'Last predictions','card.caps':'Catch-up caps',
+    'card.ins':'INS valid','card.alignment':'Alignment flag','card.mission':'Mission flag','card.sequence':'Sequence',
+    'card.writes':'Completed writes','card.writer':'Writer open','card.log_fault':'Log fault','card.finalization':'Finalization code','card.storage':'Storage health flag',
+})
+
+
+ZH_CN.update({
+    'swd.import_timeout': '固件诊断导入超时，已请求取消',
+    'swd.import_timeout_detail': '导入超过时间限制，正在取消。旧匹配已清除；完成取消后可重新导入。',
+    'swd.cancel_pending': 'SWD 操作尚未退出，重连已阻止',
+    'swd.cancel_pending_detail': '取消等待已超时，后台操作或资源释放仍在进行。界面可继续使用；请等待退出，释放失败时可重试断开。',
+})
+EN_US.update({
+    'swd.import_timeout': 'Firmware diagnostic import timed out; cancellation requested',
+    'swd.import_timeout_detail': 'Import exceeded its time limit and is being cancelled. The previous match was cleared; reimport after cancellation completes.',
+    'swd.cancel_pending': 'SWD operation has not exited; reconnect blocked',
+    'swd.cancel_pending_detail': 'Cancellation wait timed out; the background operation or release is still pending. The UI remains available. Wait for exit; retry detach if release fails.',
+})
+
 
 def translation_keys_match() -> bool:
     return set(ZH_CN) == set(EN_US)
 
+
+ZH_CN['maintenance.selected_copy'] = '进入维护并复制所选日志…（重启后恢复任务）'
+EN_US['maintenance.selected_copy'] = 'Enter maintenance and copy selected log… (reboot to recover)'
 
 __all__ = [
     "EN_US",

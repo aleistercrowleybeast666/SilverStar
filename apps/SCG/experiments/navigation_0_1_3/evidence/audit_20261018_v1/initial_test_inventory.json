@@ -1,0 +1,16 @@
+{
+  "owner": "navigation_0_1_3 independent mathematical audit",
+  "purpose": "retain initial 21-failure test/runner snapshot including two overly tight new roundoff checks",
+  "files": [
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/baseline/initial_test_independent_audit.py",
+      "sha256": "89dad3c1ab0c6819367808564d643871214dfac4db434c2f6afd2dd51695c5dc",
+      "bytes": 12194
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/baseline/initial_verify.py",
+      "sha256": "d6e8bd18140c374d78684065c3146ff4f66d171057dc64da1e9d980257d1a150",
+      "bytes": 4402
+    }
+  ]
+}

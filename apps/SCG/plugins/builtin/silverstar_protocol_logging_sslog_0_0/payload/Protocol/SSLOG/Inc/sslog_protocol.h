@@ -867,10 +867,20 @@ typedef struct
     uint8_t horizon_initialized;
 } FlightLogFusionHorizonStatusRecord;
 
+typedef struct
+{
+    uint32_t epoch,operation,transaction_crc32;
+    uint16_t total_size;
+    uint8_t part_index,part_count,kind,algorithm_id;
+    uint16_t revision;
+    uint8_t data[160];
+} FlightLogNavigationOperationPartRecord;
+
 typedef union
 {
     FlightLogFusionHorizonMeasurementRecord fusion_horizon_measurement;
     FlightLogFusionHorizonStatusRecord fusion_horizon_status;
+    FlightLogNavigationOperationPartRecord navigation_operation_part;
     FlightLogSf6StateRecord sf6_state;
     FlightLogSf6MeasurementRecord sf6_measurement;
     FlightLogNavigationQualityRecord navigation_quality;

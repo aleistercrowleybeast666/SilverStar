@@ -10,6 +10,7 @@ typedef struct {char fname[13]; BYTE fattrib; uint32_t fsize;} FILINFO;
 #define FA_READ 1U
 #define AM_DIR 16U
 #define f_size(file) ((file)->size)
+#define f_tell(file) ((file)->offset)
 FRESULT f_open(FIL *file, const char *path, BYTE mode);
 FRESULT f_close(FIL *file);
 FRESULT f_read(FIL *file, void *data, UINT capacity, UINT *count);

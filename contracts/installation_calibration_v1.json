@@ -1,0 +1,149 @@
+{
+  "contract": "silverstar.installation-calibration",
+  "contract_version": 1,
+  "status": "software-integrated-target-not-implemented",
+  "versions": {"maintenance": "0.1", "air": "M0", "sslog": "0.0", "sample_format": 1},
+  "limits": {
+    "request_bytes": 191, "request_tokens": 5, "response_bytes": 511,
+    "chunk_bytes": 48, "pending_requests": 1, "records": 4096,
+    "source_records": 8192, "assembly_slots": 4, "event_lines_per_exchange": 128,
+    "worker_jobs": 1, "worker_results": 1, "worker_progress": 32,
+    "face_transactions": 64, "evaluations": 32,
+    "source_queue": 8, "source_timeout_us": 250000, "face_timeout_us": 10000000,
+    "idle_timeout_us": 30000000, "cleanup_timeout_us": 500000,
+    "request_retries": 2, "request_timeout_s": 5, "poll_ms": 50, "job_timeout_s": 120
+  },
+  "capability_required": {
+    "maintenance": "0.1", "supported": "1", "install_contract": "1",
+    "face_auto": "1", "check_only": "1", "sample_format": "1", "max_request": "191", "max_line": "511"
+  },
+  "capability_numeric": {"train_pairs": [3, 64], "holdout_pairs": [3, 64], "pair_capacity": [6, 4096]},
+  "unsupported": [
+    "ERR INSTALL CAPS code=BAD_MODULE reason=UNKNOWN",
+    "ERR INSTALL CAPS code=UNSUPPORTED reason=CAPABILITY"
+  ],
+  "commands": {
+    "CAPS": "INSTALL CAPS",
+    "INFO": "INSTALL INFO <imu>:<mag> <cursor>",
+    "BEGIN": "INSTALL BEGIN <sid> <rid> <binding>",
+    "FACE": "INSTALL FACE <sid> <rid> <mode>:<stage>:<face>:<attempt>",
+    "POLL": "INSTALL POLL <sid> <rid>",
+    "CANCEL": "INSTALL DO <sid> <rid> CANCEL",
+    "STATUS": "INSTALL STATUS <sid> STATE:0"
+  },
+  "identity": {
+    "sid": "nonzero 128-bit lowercase hex",
+    "rid": "nonzero monotonic uint32; never wrap; retry identical bytes only",
+    "binding": "B- followed by 30 lowercase hex; full SHA256 in INFO",
+    "frozen_fields": ["board", "physical", "descriptor", "instance", "driver", "model", "configuration", "raw_frame", "boot", "epoch", "axis_mapping_applied", "units", "correction_layer", "intrinsic_id", "intrinsic_generation", "clock", "clock_provenance"]
+  },
+  "info_snapshot": {
+    "maximum_bytes": 8192,
+    "maximum_depth": 16,
+    "maximum_nodes": 1024,
+    "maximum_string": 128,
+    "page_bytes": 48,
+    "reply_fields": ["binding", "cursor", "next", "end", "length", "sha256", "data"],
+    "canonical_binding_fields": ["boot", "sources", "accel", "mag", "convention", "base_generation", "configuration_u32", "capture_policy", "face_plan", "capture_provenance"],
+      "optional_binding_fields": ["runtime_imu"],
+    "digest": "SHA256 of sorted-key ASCII JSON with compact separators and no NaN; full binding_digest and B- prefix must match",
+    "scope": "device declarations, not independently verified hardware identity or axis calibration",
+    "canonical_input": "exact top-level fields, no duplicate keys, bounded ASCII JSON; byte-identical sorted-key compact serialization; all mutable declarations included in full binding digest"
+  },
+  "capture_provenance": {
+    "required_fields": ["sources", "selection", "native_health_timeout_us", "selected_interval_max_us"],
+    "source_fields": ["identity_scope", "hardware_identity", "hardware_identity_provenance", "sample_time_basis", "sample_time_provenance", "measurement_uncertainty_bound_us", "epoch_provenance", "native_sequence_provenance"],
+    "identity_scope": ["DECLARED_ENDPOINT", "CHIP_UNIQUE", "SYNTHETIC_ENDPOINT"],
+    "hardware_identity_unknown": "null with provenance UNKNOWN; board/driver/model/configuration/instance and MCU UID do not prove a unique sensor chip",
+    "sample_time_basis": ["SENSOR_MEASUREMENT", "TARGET_RECEIVE_DECODE_PROXY", "SYNTHETIC_MEASUREMENT", "UNKNOWN"],
+    "measurement_time_unknown": "null measurement_uncertainty_bound_us; sample format 1 UINT32_MAX uncertainty is reserved unknown and cannot qualify; receive/decode proxies never qualify as sensor-synchronized measurements",
+    "jy901b_current": "0x54 has no sensor measurement timestamp; sample/receive fields are local receive/decode proxies; sensor delay, uncertainty, epoch and native-gap qualification NOT PROVEN; remain unsupported",
+    "selection": {"kind": "FIXED_NATIVE_SEQUENCE_STRIDE", "phase": "per-source integer in [0,stride)", "nominal_output_millihz": "explicit candidate output rate, not qualification or native IMU reconfiguration", "native_rate_unchanged": true, "value_dependent": false},
+    "native_health": "checked at every producer frame independently of selected output; missing native frames fail even when the selected sequence stride appears correct",
+    "five_hz": "candidate only; fixed native sequence/phase selection, never select by acceleration/magnetic values, stationarity score or transport availability; health and selected cadence have distinct deadlines",
+    "static_gate": "complete fixed selected windows are retained; static/quality rejection applies to the whole declared window, never selectively replaces bad values",
+    "qualification_scope": "host verifies bounded, consistent declarations; provider implementation and physical time bounds still require separate evidence; synthetic data require explicit offline authorization"
+  },
+  "session_lease": {
+    "scope": "host acquire before CAPS/INFO through reader cleanup; target BEGIN through producer/consumer cleanup",
+    "blocked_entrants": ["INSTALL", "LOGFILE", "MAG_WRITE", "CAL", "ALIGN", "START", "CONFIG", "CONSOLE", "IDLE_STATUS", "DIAGNOSTIC"],
+    "rule": "atomically reject a new session while any entrant owns resources; all entrypoints and the sole reader must consult the same gate; no preemption or borrowing existing buffers",
+    "recovery": "internal safety recovery remains authoritative and revokes INSTALL; source/configuration/boot change invalidates the frozen binding",
+    "cancel_linearization": "stop producer publication first, retain consumer-owned slots until acknowledged, never reuse a slot or declare cleanup while reader/consumer ownership remains",
+    "release": "host local release and target cleanup confirmation are distinct; uncertain target outcome remains UNKNOWN, and local resource release failure must prevent a second owner",
+    "registration": "reference models and injected offline providers only; current MaintenanceOwner/target entrypoints have no integrated INSTALL session gate"
+  },
+  "cancellation_bound": {
+    "goal_us": 500000,
+    "scope": "GSHC cancellation request through confirmed target cleanup and host-reader quiescence; target receipt-to-logical-cleanup and ACK delivery are explicit subspans, never substitutes for the whole goal",
+    "terms": ["host active request interruption", "RX delivery/parse", "scheduler/ISR delay", "producer stop", "consumer handshake", "normal FIFO drain", "priority traffic", "HAL/DMA fault completion", "ACK transmit", "host reader drain"],
+    "unknown_term": "NOT PROVEN, never zero; finite loop counts, FIFO byte times and host runtime do not establish STM32 WCET",
+    "existing_host": "active Request deadline up to 5 s; Cleanup deadline 1 s / at most 8 exchanges; neither establishes a 500 ms end-to-end bound",
+    "transport": "normal FIFO preserves line order; no priority insertion into a sample line without complete-frame arbitration proof"
+  },
+  "streaming_resource_profile": {
+    "status": "isolated-layout-only-not-a-firmware-capability",
+    "actual_ccm_bytes": 1960, "cap_ccm_bytes": 2048, "additional_main_sram_bytes": 0,
+    "remaining_ccm_after_actual": 672, "physical_pair_slots": 2, "pending_per_source": 1,
+    "caps_pair_capacity": "logical per-FACE record budget checked against negotiated TRAIN+HOLDOUT and host record limits; never a declaration that the MCU buffers all pairs",
+    "no_existing_buffer_change": true,
+    "integration_gate": "no target integration if complete INFO/owner/time/stack/WCET implementation cannot be proved within the unchanged allocation and current safety contracts"
+  },
+  "face_response": {
+    "matching": ["operation=FACE", "sid", "rid", "binding"],
+    "accepted_is_not_complete": true,
+    "terminal_success": {"status": "OK", "state": "COMPLETE", "train_count": "exact negotiated count (zero for CHECK_ONLY)", "holdout_count": "exact negotiated count"},
+    "host_success": "terminal success plus all complete CRC-checked pairs, exact TRAIN/HOLDOUT order, disjoint source samples and matching immutable metadata; otherwise UNKNOWN/FAILED",
+    "cancel": "stop new samples; PENDING cleanup_complete=0 until owner cleanup; host release is distinct from target cleanup confirmation"
+  },
+  "face_plan": {
+    "default": "one-transaction-train-then-holdout-per-face",
+    "faces": ["XP", "XN", "YP", "YN", "ZP", "ZN"],
+    "stages": ["SIX_FACE", "SUPPLEMENT"],
+    "modes": ["FIT_CHECK", "CHECK_ONLY"],
+    "roles": ["TRAIN", "HOLDOUT"],
+    "counts_source": "explicit current CAPS train_pairs and holdout_pairs; not hardware-qualified defaults",
+    "window_id": "rid as 8 uppercase hex followed by T or V",
+    "pose_id": "P followed by rid as 8 uppercase hex",
+    "source_continuity": "same binding, pose, attempt and face; forward source sequence/time across role boundary",
+    "interaction": "user places one face still once; target automatically captures TRAIN then HOLDOUT and completes; no second start command",
+    "revalidation": "after adaptation, freeze fitting data and use CHECK_ONLY single transactions for missing fresh holdout faces; these transactions add no TRAIN data and cannot refit the candidate",
+    "nonoverlap": "disjoint original source samples and pair IDs; boundaries recorded; adjacent samples are not asserted statistically independent"
+  },
+  "sample": {
+    "prefix": "EVENT INSTALL IMU|MAG",
+    "fields": ["sid", "pair", "ctx", "data", "crc32"],
+    "payload_struct_le": "<IIQQQIB6dd6i16s16sBBBH",
+    "payload_bytes": 154,
+    "payload_fields": ["source_sequence_u32", "source_epoch_u32", "sample_us_u64", "target_receive_us_u64", "reserved_host_clock_zero_u64", "uncertainty_us_u32", "validity_flags_u8", "physical_values_6xf64", "temperature_c_f64", "raw_counts_6xi32", "window_ascii16", "pose_ascii16", "stage_u8", "face_u8", "split_u8", "attempt_u16"],
+    "units": {"IMU": ["m/s2", "rad/s"], "MAG": ["uT"]},
+    "stage_codes": ["MAG_ROTATE", "SIX_FACE", "SUPPLEMENT"],
+    "face_codes": ["XP", "XN", "YP", "YN", "ZP", "ZN", "NA"],
+    "split_codes": ["TRAIN", "HOLDOUT"],
+    "flags": {"GAP": 1, "SATURATED": 2, "INVALID": 4, "TEMPERATURE_VALID": 8, "COUNTS_VALID": 16},
+    "absent": "zero padding is canonical; no fabricated values count as valid",
+    "clock": "only declared common target boot clock used for pairing; target emits zero in reserved host-clock slot; GSHC independently stamps actual per-part PC receive time for diagnostics",
+    "assembly": "CRC and binding checked per part; bounded slots and timeout; no latest-value substitution"
+  },
+  "fit_and_validation": {
+    "training_only": true,
+    "imu_intrinsic_fit": "six-face TRAIN records only: acceleration diagonal bias/scale and static gyro bias; recompute AM candidates from original physical measurements with the new candidate intrinsic, never stack an old correction",
+    "holdout_model_selection": false,
+    "normal_validation_faces": ["XP", "XN", "YP", "YN", "ZP", "ZN"],
+    "after_validation_driven_adaptation": "retire every previously observed HOLDOUT window as adaptation history, never TRAIN; any added TRAIN invalidates candidate and requires fresh validation captured after final new TRAIN",
+    "fresh_validation_gate": "fresh HOLDOUT coverage of all six faces under software conservative policy; missing evidence remains NEED_FRESH_VALIDATION, not success",
+    "statistical_independence_claim": false,
+    "global_uniqueness": "NOT_PROVEN",
+    "hardware_thresholds": "NOT_PROVEN",
+    "gyro_scale": "NOT_ESTIMATED_STATIC_SIX_FACE",
+    "mag_to_gyro": "only R_GA * R_AM with explicitly supplied R_GA provenance"
+  },
+  "safety": {
+    "apply_supported": false, "save_supported": false, "upload_supported": false,
+    "never_send": ["APPLY", "SAVE", "UPLOAD", "PUT", "SYSTEM START", "CAL START", "ALIGN START", "LOGFILE ENTER"],
+    "legacy_fallback": "disable new flow on explicit unsupported or missing automatic-face capability; never substitute legacy control commands",
+    "disconnect": "UNKNOWN; no automatic business replay; release owner after bounded cleanup attempt, retain raw samples and unconfirmed outcome"
+  },
+  "ssic": {"schema": 1, "existing_kind_1": "unchanged", "installation_kinds_2_to_8": "review-pending; isolated draft only; not advertised as target support"},
+  "firmware": {"implemented": false, "required_interface": "single FACE transaction with automatic role transition, immutable source snapshot and bounded sample drain; see GSHC installation integration note"}
+}

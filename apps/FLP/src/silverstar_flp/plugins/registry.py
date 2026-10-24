@@ -61,6 +61,10 @@ def builtin_registry() -> PluginRegistry:
     from silverstar_flp.plugins.algorithms.sf6.plugin import Sf6AlgorithmPlugin
     from silverstar_flp.plugins.log_containers.sslog0.plugin import Sslog0ContainerPlugin
 
+    from silverstar_flp.plugins.algorithms.navigation_reference_v1.plugin import (
+        Eskf20AlgorithmPlugin, InEkf15AlgorithmPlugin, InEkf20AlgorithmPlugin,
+    )
+
     registry = PluginRegistry()
     sslog0_container = Sslog0ContainerPlugin()
     registry.LogContainer_Register(sslog0_container)
@@ -68,4 +72,7 @@ def builtin_registry() -> PluginRegistry:
     registry.Algorithm_Register(Sf6AlgorithmPlugin())
     registry.Algorithm_Register(Kf6AlgorithmPlugin())
     registry.Algorithm_Register(Eskf15AlgorithmPlugin())
+    registry.Algorithm_Register(Eskf20AlgorithmPlugin())
+    registry.Algorithm_Register(InEkf15AlgorithmPlugin())
+    registry.Algorithm_Register(InEkf20AlgorithmPlugin())
     return registry

@@ -1,0 +1,1649 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.algorithm.estimator.eskf20",
+  "name": "ESKF20 Navigation Estimator",
+  "type": "algorithm",
+  "class": "estimator",
+  "version": "0.3.0",
+  "description": "ESKF20 bounded double co-timed navigation; explicit priors; software validation only, timing unqualified.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.algorithm.augmented.common",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "algorithm.estimator"
+  ],
+  "build": {
+    "sources": [],
+    "asm_sources": [],
+    "include_dirs": [],
+    "defines": [
+      "SYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_ESKF20",
+      "SYSTEM_BUILD_ESTIMATOR_ENABLED=0U",
+      "SYSTEM_BUILD_AUGMENTED_ENABLED=1U",
+      "SYSTEM_BUILD_AUGMENTED_MODEL=1U"
+    ]
+  },
+  "payload": {
+    "roots": [
+      "Algorithm/Estimator/ESKF20"
+    ]
+  },
+  "metadata": {
+    "measurement_any_of": [
+      "gnss.position",
+      "gnss.velocity"
+    ],
+    "arithmetic_requirements": [
+      "fp64"
+    ],
+    "qualified_timing_profiles": [],
+    "source_origins": {
+      "default": "silverstar_augmented_navigation"
+    },
+    "algorithm_revision": 1,
+    "navigation_contract": "silverstar.navigation/1",
+    "display_names": {
+      "en_US": "ESKF20",
+      "zh_CN": "ESKF20"
+    },
+    "software_validation_parameter": "software_validation_build",
+    "algorithm_descriptors": [
+      {
+        "order": 4,
+        "class": "SYSTEM_ALGORITHM_CLASS_FUSION",
+        "algorithm": "SYSTEM_FUSION_ALGORITHM",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
+        "name_hash": "0x1dff3888UL"
+      }
+    ],
+    "replay_contract": {
+      "mode": "none",
+      "window_ms": 0,
+      "history_capacity": 0,
+      "event_capacity": 0
+    },
+    "navigation_semantics": {
+      "eskf20": {
+        "algorithm_id": 4,
+        "name": "ESKF20",
+        "revision": 1,
+        "error_dimension": 20,
+        "invariant": false,
+        "timing": "strict_co_timed_only",
+        "missing_magnetic": "no_dimension_switch",
+        "timing_qualified": false,
+        "arithmetic": "fp64"
+      }
+    },
+    "uses_covariance_noise_parameters": false,
+    "magnetic_quality_contract": "silverstar.magnetic-quality/1"
+  },
+  "selection": {
+    "kind": "strategy",
+    "slot": "estimator",
+    "required": false,
+    "allow_none": true,
+    "ui_order": 34,
+    "none_defines": [
+      "SYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_NONE",
+      "SYSTEM_BUILD_ESTIMATOR_ENABLED=0U"
+    ]
+  },
+  "algorithm_parameters": {
+    "schema_id": "silverstar.algorithm-parameters/1.0",
+    "parameters": [
+      {
+        "id": "software_validation_build",
+        "type": "integer",
+        "default": 0,
+        "min": 0,
+        "max": 1,
+        "unit": "1",
+        "representation": "value",
+        "precision": 0,
+        "step": 1,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_SOFTWARE_VALIDATION_BUILD",
+        "display_names": {
+          "en_US": "software validation build",
+          "zh_CN": "software validation build"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 0
+      },
+      {
+        "id": "initialization_confirmed",
+        "type": "integer",
+        "default": 0,
+        "min": 0,
+        "max": 1,
+        "unit": "1",
+        "representation": "value",
+        "precision": 0,
+        "step": 1,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIALIZATION_CONFIRMED",
+        "display_names": {
+          "en_US": "initialization confirmed",
+          "zh_CN": "initialization confirmed"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 1
+      },
+      {
+        "id": "gnss_imu_colocated_confirmed",
+        "type": "integer",
+        "default": 0,
+        "min": 0,
+        "max": 1,
+        "unit": "1",
+        "representation": "value",
+        "precision": 0,
+        "step": 1,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_GNSS_IMU_COLOCATED_CONFIRMED",
+        "display_names": {
+          "en_US": "GNSS antenna and IMU origins colocated confirmed",
+          "zh_CN": "GNSS天线与IMU原点重合已确认"
+        },
+        "description": {
+          "en_US": "Explicit zero lever arm confirmation. Nonzero installation positions are unsupported and rejected.",
+          "zh_CN": "Explicit zero lever arm confirmation. Nonzero installation positions are unsupported and rejected."
+        },
+        "order": 2
+      },
+      {
+        "id": "gravity_mps2",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 20,
+        "unit": "m/s^2",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_GRAVITY_MPS2",
+        "display_names": {
+          "en_US": "gravity mps2",
+          "zh_CN": "gravity mps2"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 2
+      },
+      {
+        "id": "position_nis_gate",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "1",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_POSITION_NIS_GATE",
+        "display_names": {
+          "en_US": "position nis gate",
+          "zh_CN": "position nis gate"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 3
+      },
+      {
+        "id": "velocity_nis_gate",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "1",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_VELOCITY_NIS_GATE",
+        "display_names": {
+          "en_US": "velocity nis gate",
+          "zh_CN": "velocity nis gate"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 4
+      },
+      {
+        "id": "gyro_density_x",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "rad/s/sqrt(Hz)",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_GYRO_DENSITY_X",
+        "display_names": {
+          "en_US": "gyro density x",
+          "zh_CN": "gyro density x"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 5
+      },
+      {
+        "id": "gyro_density_y",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "rad/s/sqrt(Hz)",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_GYRO_DENSITY_Y",
+        "display_names": {
+          "en_US": "gyro density y",
+          "zh_CN": "gyro density y"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 6
+      },
+      {
+        "id": "gyro_density_z",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "rad/s/sqrt(Hz)",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_GYRO_DENSITY_Z",
+        "display_names": {
+          "en_US": "gyro density z",
+          "zh_CN": "gyro density z"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 7
+      },
+      {
+        "id": "accel_density_x",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "m/s^2/sqrt(Hz)",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_ACCEL_DENSITY_X",
+        "display_names": {
+          "en_US": "accel density x",
+          "zh_CN": "accel density x"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 8
+      },
+      {
+        "id": "accel_density_y",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "m/s^2/sqrt(Hz)",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_ACCEL_DENSITY_Y",
+        "display_names": {
+          "en_US": "accel density y",
+          "zh_CN": "accel density y"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 9
+      },
+      {
+        "id": "accel_density_z",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "m/s^2/sqrt(Hz)",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_ACCEL_DENSITY_Z",
+        "display_names": {
+          "en_US": "accel density z",
+          "zh_CN": "accel density z"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 10
+      },
+      {
+        "id": "gyro_bias_rw_density_x",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "rad/s^2/sqrt(Hz)",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_GYRO_BIAS_RW_DENSITY_X",
+        "display_names": {
+          "en_US": "gyro bias rw density x",
+          "zh_CN": "gyro bias rw density x"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 11
+      },
+      {
+        "id": "gyro_bias_rw_density_y",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "rad/s^2/sqrt(Hz)",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_GYRO_BIAS_RW_DENSITY_Y",
+        "display_names": {
+          "en_US": "gyro bias rw density y",
+          "zh_CN": "gyro bias rw density y"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 12
+      },
+      {
+        "id": "gyro_bias_rw_density_z",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "rad/s^2/sqrt(Hz)",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_GYRO_BIAS_RW_DENSITY_Z",
+        "display_names": {
+          "en_US": "gyro bias rw density z",
+          "zh_CN": "gyro bias rw density z"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 13
+      },
+      {
+        "id": "accel_bias_rw_density_x",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "m/s^3/sqrt(Hz)",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_ACCEL_BIAS_RW_DENSITY_X",
+        "display_names": {
+          "en_US": "accel bias rw density x",
+          "zh_CN": "accel bias rw density x"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 14
+      },
+      {
+        "id": "accel_bias_rw_density_y",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "m/s^3/sqrt(Hz)",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_ACCEL_BIAS_RW_DENSITY_Y",
+        "display_names": {
+          "en_US": "accel bias rw density y",
+          "zh_CN": "accel bias rw density y"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 15
+      },
+      {
+        "id": "accel_bias_rw_density_z",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "m/s^3/sqrt(Hz)",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_ACCEL_BIAS_RW_DENSITY_Z",
+        "display_names": {
+          "en_US": "accel bias rw density z",
+          "zh_CN": "accel bias rw density z"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 16
+      },
+      {
+        "id": "initial_gyro_bias_x",
+        "type": "float",
+        "default": 0.0,
+        "min": -1000000.0,
+        "max": 1000000.0,
+        "unit": "rad/s",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_GYRO_BIAS_X",
+        "display_names": {
+          "en_US": "initial gyro bias x",
+          "zh_CN": "initial gyro bias x"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 17
+      },
+      {
+        "id": "initial_gyro_bias_y",
+        "type": "float",
+        "default": 0.0,
+        "min": -1000000.0,
+        "max": 1000000.0,
+        "unit": "rad/s",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_GYRO_BIAS_Y",
+        "display_names": {
+          "en_US": "initial gyro bias y",
+          "zh_CN": "initial gyro bias y"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 18
+      },
+      {
+        "id": "initial_gyro_bias_z",
+        "type": "float",
+        "default": 0.0,
+        "min": -1000000.0,
+        "max": 1000000.0,
+        "unit": "rad/s",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_GYRO_BIAS_Z",
+        "display_names": {
+          "en_US": "initial gyro bias z",
+          "zh_CN": "initial gyro bias z"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 19
+      },
+      {
+        "id": "initial_accel_bias_x",
+        "type": "float",
+        "default": 0.0,
+        "min": -1000000.0,
+        "max": 1000000.0,
+        "unit": "m/s^2",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_ACCEL_BIAS_X",
+        "display_names": {
+          "en_US": "initial accel bias x",
+          "zh_CN": "initial accel bias x"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 20
+      },
+      {
+        "id": "initial_accel_bias_y",
+        "type": "float",
+        "default": 0.0,
+        "min": -1000000.0,
+        "max": 1000000.0,
+        "unit": "m/s^2",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_ACCEL_BIAS_Y",
+        "display_names": {
+          "en_US": "initial accel bias y",
+          "zh_CN": "initial accel bias y"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 21
+      },
+      {
+        "id": "initial_accel_bias_z",
+        "type": "float",
+        "default": 0.0,
+        "min": -1000000.0,
+        "max": 1000000.0,
+        "unit": "m/s^2",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_ACCEL_BIAS_Z",
+        "display_names": {
+          "en_US": "initial accel bias z",
+          "zh_CN": "initial accel bias z"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 22
+      },
+      {
+        "id": "initial_variance_0",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "m^2",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_0",
+        "display_names": {
+          "en_US": "Initial position_x variance",
+          "zh_CN": "Initial position_x variance"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 23
+      },
+      {
+        "id": "initial_variance_1",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "m^2",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_1",
+        "display_names": {
+          "en_US": "Initial position_y variance",
+          "zh_CN": "Initial position_y variance"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 24
+      },
+      {
+        "id": "initial_variance_2",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "m^2",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_2",
+        "display_names": {
+          "en_US": "Initial position_z variance",
+          "zh_CN": "Initial position_z variance"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 25
+      },
+      {
+        "id": "initial_variance_3",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "m^2/s^2",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_3",
+        "display_names": {
+          "en_US": "Initial velocity_x variance",
+          "zh_CN": "Initial velocity_x variance"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 26
+      },
+      {
+        "id": "initial_variance_4",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "m^2/s^2",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_4",
+        "display_names": {
+          "en_US": "Initial velocity_y variance",
+          "zh_CN": "Initial velocity_y variance"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 27
+      },
+      {
+        "id": "initial_variance_5",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "m^2/s^2",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_5",
+        "display_names": {
+          "en_US": "Initial velocity_z variance",
+          "zh_CN": "Initial velocity_z variance"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 28
+      },
+      {
+        "id": "initial_variance_6",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "rad^2",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_6",
+        "display_names": {
+          "en_US": "Initial attitude_x variance",
+          "zh_CN": "Initial attitude_x variance"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 29
+      },
+      {
+        "id": "initial_variance_7",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "rad^2",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_7",
+        "display_names": {
+          "en_US": "Initial attitude_y variance",
+          "zh_CN": "Initial attitude_y variance"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 30
+      },
+      {
+        "id": "initial_variance_8",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "rad^2",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_8",
+        "display_names": {
+          "en_US": "Initial attitude_z variance",
+          "zh_CN": "Initial attitude_z variance"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 31
+      },
+      {
+        "id": "initial_variance_9",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "rad^2/s^2",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_9",
+        "display_names": {
+          "en_US": "Initial gyro_bias_x variance",
+          "zh_CN": "Initial gyro_bias_x variance"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 32
+      },
+      {
+        "id": "initial_variance_10",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "rad^2/s^2",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_10",
+        "display_names": {
+          "en_US": "Initial gyro_bias_y variance",
+          "zh_CN": "Initial gyro_bias_y variance"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 33
+      },
+      {
+        "id": "initial_variance_11",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "rad^2/s^2",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_11",
+        "display_names": {
+          "en_US": "Initial gyro_bias_z variance",
+          "zh_CN": "Initial gyro_bias_z variance"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 34
+      },
+      {
+        "id": "initial_variance_12",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "m^2/s^4",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_12",
+        "display_names": {
+          "en_US": "Initial accel_bias_x variance",
+          "zh_CN": "Initial accel_bias_x variance"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 35
+      },
+      {
+        "id": "initial_variance_13",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "m^2/s^4",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_13",
+        "display_names": {
+          "en_US": "Initial accel_bias_y variance",
+          "zh_CN": "Initial accel_bias_y variance"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 36
+      },
+      {
+        "id": "initial_variance_14",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "m^2/s^4",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_14",
+        "display_names": {
+          "en_US": "Initial accel_bias_z variance",
+          "zh_CN": "Initial accel_bias_z variance"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 37
+      },
+      {
+        "id": "initial_variance_15",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "rad^2",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_15",
+        "display_names": {
+          "en_US": "initial variance 15",
+          "zh_CN": "initial variance 15"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 38
+      },
+      {
+        "id": "initial_variance_16",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "rad^2",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_16",
+        "display_names": {
+          "en_US": "initial variance 16",
+          "zh_CN": "initial variance 16"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 39
+      },
+      {
+        "id": "initial_variance_17",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "rad^2",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_17",
+        "display_names": {
+          "en_US": "initial variance 17",
+          "zh_CN": "initial variance 17"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 40
+      },
+      {
+        "id": "initial_variance_18",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "rad^2",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_18",
+        "display_names": {
+          "en_US": "initial variance 18",
+          "zh_CN": "initial variance 18"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 41
+      },
+      {
+        "id": "initial_variance_19",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "rad^2",
+        "representation": "variance",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INITIAL_VARIANCE_19",
+        "display_names": {
+          "en_US": "initial variance 19",
+          "zh_CN": "initial variance 19"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 42
+      },
+      {
+        "id": "installation_q_0",
+        "type": "float",
+        "default": 0.0,
+        "min": -1,
+        "max": 1,
+        "unit": "1",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INSTALLATION_Q_0",
+        "display_names": {
+          "en_US": "installation q 0",
+          "zh_CN": "installation q 0"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 43
+      },
+      {
+        "id": "installation_q_1",
+        "type": "float",
+        "default": 0.0,
+        "min": -1,
+        "max": 1,
+        "unit": "1",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INSTALLATION_Q_1",
+        "display_names": {
+          "en_US": "installation q 1",
+          "zh_CN": "installation q 1"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 44
+      },
+      {
+        "id": "installation_q_2",
+        "type": "float",
+        "default": 0.0,
+        "min": -1,
+        "max": 1,
+        "unit": "1",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INSTALLATION_Q_2",
+        "display_names": {
+          "en_US": "installation q 2",
+          "zh_CN": "installation q 2"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 45
+      },
+      {
+        "id": "installation_q_3",
+        "type": "float",
+        "default": 0.0,
+        "min": -1,
+        "max": 1,
+        "unit": "1",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INSTALLATION_Q_3",
+        "display_names": {
+          "en_US": "installation q 3",
+          "zh_CN": "installation q 3"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 46
+      },
+      {
+        "id": "inclination_rad",
+        "type": "float",
+        "default": 0.0,
+        "min": -1.5707963267948966,
+        "max": 1.5707963267948966,
+        "unit": "rad",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_INCLINATION_RAD",
+        "display_names": {
+          "en_US": "inclination rad",
+          "zh_CN": "inclination rad"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 47
+      },
+      {
+        "id": "declination_rad",
+        "type": "float",
+        "default": 0.0,
+        "min": -1000000.0,
+        "max": 1000000.0,
+        "unit": "rad",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_DECLINATION_RAD",
+        "display_names": {
+          "en_US": "declination rad",
+          "zh_CN": "declination rad"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 48
+      },
+      {
+        "id": "magnetic_reference_ut",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "uT",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_REFERENCE_UT",
+        "display_names": {
+          "en_US": "magnetic reference ut",
+          "zh_CN": "magnetic reference ut"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 49
+      },
+      {
+        "id": "magnetic_min_norm_ratio",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "1",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_MIN_NORM_RATIO",
+        "display_names": {
+          "en_US": "magnetic min norm ratio",
+          "zh_CN": "magnetic min norm ratio"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 50
+      },
+      {
+        "id": "magnetic_max_norm_ratio",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "1",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_MAX_NORM_RATIO",
+        "display_names": {
+          "en_US": "magnetic max norm ratio",
+          "zh_CN": "magnetic max norm ratio"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 51
+      },
+      {
+        "id": "magnetic_nis_gate",
+        "type": "float",
+        "default": 0.0,
+        "min": 0,
+        "max": 1000000000000.0,
+        "unit": "1",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_NIS_GATE",
+        "display_names": {
+          "en_US": "magnetic nis gate",
+          "zh_CN": "magnetic nis gate"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 52
+      },
+      {
+        "id": "magnetic_instance",
+        "type": "integer",
+        "default": 0,
+        "min": 0,
+        "max": 255,
+        "unit": "1",
+        "representation": "value",
+        "precision": 0,
+        "step": 1,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_INSTANCE",
+        "display_names": {
+          "en_US": "magnetic instance",
+          "zh_CN": "magnetic instance"
+        },
+        "description": {
+          "en_US": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default.",
+          "zh_CN": "Explicit engineering input; no qualified flight default."
+        },
+        "order": 53
+      },
+      {
+        "id": "magnetic_noise_min_samples",
+        "type": "integer",
+        "default": 190,
+        "min": 16,
+        "max": 256,
+        "unit": "1",
+        "representation": "value",
+        "precision": 0,
+        "step": 1,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_NOISE_MIN_SAMPLES",
+        "display_names": {
+          "en_US": "magnetic_noise_min_samples",
+          "zh_CN": "magnetic_noise_min_samples"
+        },
+        "description": {
+          "en_US": "Engineering stationary-window gate or measured total decode-latency policy. Unverified/zero timing bound never admits JY time. Not a flight calibration.",
+          "zh_CN": "Engineering collection gate or measured delay bound; no qualified flight default."
+        },
+        "order": 55
+      },
+      {
+        "id": "magnetic_noise_duration_us",
+        "type": "integer",
+        "default": 900000,
+        "min": 1000,
+        "max": 5000000,
+        "unit": "us",
+        "representation": "value",
+        "precision": 0,
+        "step": 1,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_NOISE_DURATION_US",
+        "display_names": {
+          "en_US": "magnetic_noise_duration_us",
+          "zh_CN": "magnetic_noise_duration_us"
+        },
+        "description": {
+          "en_US": "Engineering stationary-window gate or measured total decode-latency policy. Unverified/zero timing bound never admits JY time. Not a flight calibration.",
+          "zh_CN": "Engineering collection gate or measured delay bound; no qualified flight default."
+        },
+        "order": 56
+      },
+      {
+        "id": "magnetic_noise_maximum_gap_us",
+        "type": "integer",
+        "default": 50000,
+        "min": 1,
+        "max": 1000000,
+        "unit": "us",
+        "representation": "value",
+        "precision": 0,
+        "step": 1,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_NOISE_MAXIMUM_GAP_US",
+        "display_names": {
+          "en_US": "magnetic_noise_maximum_gap_us",
+          "zh_CN": "magnetic_noise_maximum_gap_us"
+        },
+        "description": {
+          "en_US": "Engineering stationary-window gate or measured total decode-latency policy. Unverified/zero timing bound never admits JY time. Not a flight calibration.",
+          "zh_CN": "Engineering collection gate or measured delay bound; no qualified flight default."
+        },
+        "order": 57
+      },
+      {
+        "id": "magnetic_noise_maximum_sequence_step",
+        "type": "integer",
+        "default": 16,
+        "min": 1,
+        "max": 256,
+        "unit": "1",
+        "representation": "value",
+        "precision": 0,
+        "step": 1,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_NOISE_MAXIMUM_SEQUENCE_STEP",
+        "display_names": {
+          "en_US": "magnetic_noise_maximum_sequence_step",
+          "zh_CN": "magnetic_noise_maximum_sequence_step"
+        },
+        "description": {
+          "en_US": "Engineering stationary-window gate or measured total decode-latency policy. Unverified/zero timing bound never admits JY time. Not a flight calibration.",
+          "zh_CN": "Engineering collection gate or measured delay bound; no qualified flight default."
+        },
+        "order": 58
+      },
+      {
+        "id": "magnetic_noise_variance_floor_ut2",
+        "type": "float",
+        "default": 0.0001,
+        "min": 0,
+        "max": 100,
+        "unit": "uT^2",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_NOISE_VARIANCE_FLOOR_UT2",
+        "display_names": {
+          "en_US": "magnetic_noise_variance_floor_ut2",
+          "zh_CN": "magnetic_noise_variance_floor_ut2"
+        },
+        "description": {
+          "en_US": "Engineering stationary-window gate or measured total decode-latency policy. Unverified/zero timing bound never admits JY time. Not a flight calibration.",
+          "zh_CN": "Engineering collection gate or measured delay bound; no qualified flight default."
+        },
+        "order": 59
+      },
+      {
+        "id": "magnetic_noise_maximum_std_ut",
+        "type": "float",
+        "default": 1.0,
+        "min": 0,
+        "max": 100,
+        "unit": "uT",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_NOISE_MAXIMUM_STD_UT",
+        "display_names": {
+          "en_US": "magnetic_noise_maximum_std_ut",
+          "zh_CN": "magnetic_noise_maximum_std_ut"
+        },
+        "description": {
+          "en_US": "Engineering stationary-window gate or measured total decode-latency policy. Unverified/zero timing bound never admits JY time. Not a flight calibration.",
+          "zh_CN": "Engineering collection gate or measured delay bound; no qualified flight default."
+        },
+        "order": 60
+      },
+      {
+        "id": "magnetic_noise_maximum_span_ut",
+        "type": "float",
+        "default": 2.0,
+        "min": 0,
+        "max": 100,
+        "unit": "uT",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_NOISE_MAXIMUM_SPAN_UT",
+        "display_names": {
+          "en_US": "magnetic_noise_maximum_span_ut",
+          "zh_CN": "magnetic_noise_maximum_span_ut"
+        },
+        "description": {
+          "en_US": "Engineering stationary-window gate or measured total decode-latency policy. Unverified/zero timing bound never admits JY time. Not a flight calibration.",
+          "zh_CN": "Engineering collection gate or measured delay bound; no qualified flight default."
+        },
+        "order": 61
+      },
+      {
+        "id": "magnetic_stationary_gyro_max_radps",
+        "type": "float",
+        "default": 0.05,
+        "min": 0,
+        "max": 10,
+        "unit": "rad/s",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_STATIONARY_GYRO_MAX_RADPS",
+        "display_names": {
+          "en_US": "magnetic_stationary_gyro_max_radps",
+          "zh_CN": "magnetic_stationary_gyro_max_radps"
+        },
+        "description": {
+          "en_US": "Engineering stationary-window gate or measured total decode-latency policy. Unverified/zero timing bound never admits JY time. Not a flight calibration.",
+          "zh_CN": "Engineering collection gate or measured delay bound; no qualified flight default."
+        },
+        "order": 62
+      },
+      {
+        "id": "magnetic_stationary_accel_tolerance_mps2",
+        "type": "float",
+        "default": 0.5,
+        "min": 0,
+        "max": 10,
+        "unit": "m/s^2",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_STATIONARY_ACCEL_TOLERANCE_MPS2",
+        "display_names": {
+          "en_US": "magnetic_stationary_accel_tolerance_mps2",
+          "zh_CN": "magnetic_stationary_accel_tolerance_mps2"
+        },
+        "description": {
+          "en_US": "Engineering stationary-window gate or measured total decode-latency policy. Unverified/zero timing bound never admits JY time. Not a flight calibration.",
+          "zh_CN": "Engineering collection gate or measured delay bound; no qualified flight default."
+        },
+        "order": 63
+      },
+      {
+        "id": "magnetic_stationary_accel_span_mps2",
+        "type": "float",
+        "default": 0.2,
+        "min": 0,
+        "max": 10,
+        "unit": "m/s^2",
+        "representation": "value",
+        "precision": 9,
+        "step": 0.001,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_STATIONARY_ACCEL_SPAN_MPS2",
+        "display_names": {
+          "en_US": "magnetic_stationary_accel_span_mps2",
+          "zh_CN": "magnetic_stationary_accel_span_mps2"
+        },
+        "description": {
+          "en_US": "Engineering stationary-window gate or measured total decode-latency policy. Unverified/zero timing bound never admits JY time. Not a flight calibration.",
+          "zh_CN": "Engineering collection gate or measured delay bound; no qualified flight default."
+        },
+        "order": 64
+      },
+      {
+        "id": "magnetic_time_delay_us",
+        "type": "integer",
+        "default": 0,
+        "min": 0,
+        "max": 1000000,
+        "unit": "us",
+        "representation": "value",
+        "precision": 0,
+        "step": 1,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_TIME_DELAY_US",
+        "display_names": {
+          "en_US": "magnetic_time_delay_us",
+          "zh_CN": "magnetic_time_delay_us"
+        },
+        "description": {
+          "en_US": "Engineering stationary-window gate or measured total decode-latency policy. Unverified/zero timing bound never admits JY time. Not a flight calibration.",
+          "zh_CN": "Engineering collection gate or measured delay bound; no qualified flight default."
+        },
+        "order": 65
+      },
+      {
+        "id": "magnetic_time_uncertainty_us",
+        "type": "integer",
+        "default": 0,
+        "min": 0,
+        "max": 1000000,
+        "unit": "us",
+        "representation": "value",
+        "precision": 0,
+        "step": 1,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_TIME_UNCERTAINTY_US",
+        "display_names": {
+          "en_US": "magnetic_time_uncertainty_us",
+          "zh_CN": "magnetic_time_uncertainty_us"
+        },
+        "description": {
+          "en_US": "Engineering stationary-window gate or measured total decode-latency policy. Unverified/zero timing bound never admits JY time. Not a flight calibration.",
+          "zh_CN": "Engineering collection gate or measured delay bound; no qualified flight default."
+        },
+        "order": 66
+      },
+      {
+        "id": "magnetic_time_maximum_uncertainty_us",
+        "type": "integer",
+        "default": 0,
+        "min": 0,
+        "max": 1000000,
+        "unit": "us",
+        "representation": "value",
+        "precision": 0,
+        "step": 1,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_TIME_MAXIMUM_UNCERTAINTY_US",
+        "display_names": {
+          "en_US": "magnetic_time_maximum_uncertainty_us",
+          "zh_CN": "magnetic_time_maximum_uncertainty_us"
+        },
+        "description": {
+          "en_US": "Engineering stationary-window gate or measured total decode-latency policy. Unverified/zero timing bound never admits JY time. Not a flight calibration.",
+          "zh_CN": "Engineering collection gate or measured delay bound; no qualified flight default."
+        },
+        "order": 67
+      },
+      {
+        "id": "magnetic_time_maximum_queue_bytes",
+        "type": "integer",
+        "default": 64,
+        "min": 0,
+        "max": 4096,
+        "unit": "byte",
+        "representation": "value",
+        "precision": 0,
+        "step": 1,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_TIME_MAXIMUM_QUEUE_BYTES",
+        "display_names": {
+          "en_US": "magnetic_time_maximum_queue_bytes",
+          "zh_CN": "magnetic_time_maximum_queue_bytes"
+        },
+        "description": {
+          "en_US": "Engineering stationary-window gate or measured total decode-latency policy. Unverified/zero timing bound never admits JY time. Not a flight calibration.",
+          "zh_CN": "Engineering collection gate or measured delay bound; no qualified flight default."
+        },
+        "order": 68
+      },
+      {
+        "id": "magnetic_time_bound_verified",
+        "type": "integer",
+        "default": 0,
+        "min": 0,
+        "max": 1,
+        "unit": "1",
+        "representation": "value",
+        "precision": 0,
+        "step": 1,
+        "group": "advanced",
+        "generated_symbol": "SYSTEM_AUG_MAGNETIC_TIME_BOUND_VERIFIED",
+        "display_names": {
+          "en_US": "magnetic_time_bound_verified",
+          "zh_CN": "magnetic_time_bound_verified"
+        },
+        "description": {
+          "en_US": "Engineering stationary-window gate or measured total decode-latency policy. Unverified/zero timing bound never admits JY time. Not a flight calibration.",
+          "zh_CN": "Engineering collection gate or measured delay bound; no qualified flight default."
+        },
+        "order": 69
+      }
+    ]
+  }
+}

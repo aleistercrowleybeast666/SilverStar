@@ -242,6 +242,7 @@ class BuildRunner:
             return self._GroundQuality_Run(model, root, action, token, line_callback, progress_callback)
         command = self.Command_Get(model, action)
         environment = self._Environment_Get(model, action)
+        diagnostic_error = self._Diagnostics_Begin(root) if action == BuildAction.BUILD else None
         plan = self.Plan_Get(model, root, action, token)
         if progress_callback is not None:
             progress_callback(
@@ -376,8 +377,11 @@ class BuildRunner:
             output_line,
         )
         diagnostic_status, diagnostic_detail = 'not_requested', ''
-        if return_code == 0 and action == BuildAction.BUILD and target_kind == 'flight':
-            diagnostic_status, diagnostic_detail = self._Diagnostics_Bind(model, root, token)
+        if action == BuildAction.BUILD:
+            diagnostic_status, diagnostic_detail = 'unbound', 'Build failed or cancelled; no new diagnostic binding'
+        if return_code == 0 and action == BuildAction.BUILD:
+            diagnostic_status, diagnostic_detail = (('unavailable', diagnostic_error) if diagnostic_error
+                else self._Diagnostics_Bind(model, root, token, lines))
             diagnostic_line = f'DIAGNOSTICS|{diagnostic_status}|{diagnostic_detail}\n'
             lines.append(diagnostic_line)
             if line_callback: line_callback(diagnostic_line.rstrip())
@@ -405,9 +409,44 @@ class BuildRunner:
             diagnostic_detail,
         )
 
-    def _Diagnostics_Bind(self, model, root, token):
+    @staticmethod
+    def _Diagnostics_Begin(root):
+        """Invalidate prior publication before attempting a normal host build."""
+        from silverstar_diagnostics.contract import Json_Read
+        from silverstar_diagnostics.project_descriptor import FORMAT, ProjectDescriptor_Begin
+        try:
+            for path in (root/'Flight.ssdiag', root/'Ground.ssdiag'):
+                if path.is_file() and Json_Read(path).get('format') == FORMAT:
+                    ProjectDescriptor_Begin(path)
+        except Exception as exc:
+            return str(exc)[:400]
+        return None
+
+    def _Diagnostics_Bind(self, model, root, token, lines):
         """Host operation after successful build; never part of firmware manifests."""
         from silverstar_diagnostics.bind import Binding_Write
+        from silverstar_diagnostics.project_descriptor import (FORMAT, ProjectDescriptor_Bind,
+            ProjectDescriptor_Path, ProjectDescriptor_Relative, ProjectBindingResult)
+        import json
+        try:
+            entries=[p for p in (root/'Flight.ssdiag',root/'Ground.ssdiag')
+                     if p.is_file() and json.loads(p.read_text(encoding='utf-8')).get('format')==FORMAT]
+        except (ValueError,OSError,AttributeError) as exc:return 'unavailable',str(exc)[:400]
+        if len(entries)>1:return 'unavailable','Ambiguous Flight/Ground project diagnostics in one root'
+        if entries:
+            path=entries[0]
+            try:
+                outputs={match.group(1).strip() for line in lines
+                    if (match := re.fullmatch(r'\s*"?FCCG_BUILD_ARTIFACT\|ELF\|([^"\r\n]+)"?\s*', line))}
+                if len(outputs) != 1:
+                    return 'unbound', 'Successful build did not report one exact ELF output; regenerate build metadata'
+                relative=ProjectDescriptor_Relative(outputs.pop())
+                elf=ProjectDescriptor_Path(path,relative)
+                class Cancel:
+                    def is_set(self): return token is not None and token.cancelled
+                state,detail=ProjectDescriptor_Bind(path,elf,Cancel())
+                return ('bound' if state == ProjectBindingResult.Ready else 'unavailable'),str(path)+'; '+detail
+            except Exception as exc:return 'unavailable',str(exc)[:400]
         schema = root / f'{model.identity.name}.ssdiag'
         directory = root / 'build/FCCG' / model.build.target_profile / 'Release'
         if model.build.memory_layout != 'legacy': directory /= model.build.memory_layout
@@ -439,6 +478,7 @@ class BuildRunner:
         command = self.Command_Get(model, BuildAction.BUILD)
         environment = self._Environment_Get(model, BuildAction.BUILD)
         environment.update(LC_ALL="C", LANG="C")
+        diagnostic_error = self._Diagnostics_Begin(root)
         dry_code, dry_lines = self._Process_Run((command[0], "-n", *command[1:]), root, environment, token)
         plan = TargetProgressPlan.FromLines_Get(dry_lines)
         tracker = TargetProgressTracker(plan, progress_callback, line_callback)
@@ -457,7 +497,8 @@ class BuildRunner:
         code, lines = self._Process_Run(actual, root, environment, token, tracker.Line_Report)
         diagnostic_status, diagnostic_detail = 'not_requested', ''
         if code == 0:
-            diagnostic_status, diagnostic_detail = self._Diagnostics_Bind(model, root, token)
+            diagnostic_status, diagnostic_detail = (('unavailable', diagnostic_error) if diagnostic_error
+                else self._Diagnostics_Bind(model, root, token, lines))
             diagnostic_line = f'DIAGNOSTICS|{diagnostic_status}|{diagnostic_detail}\n'
             lines.append(diagnostic_line)
             if line_callback: line_callback(diagnostic_line.rstrip())

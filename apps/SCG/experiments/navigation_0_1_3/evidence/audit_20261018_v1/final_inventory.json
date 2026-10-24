@@ -1,0 +1,196 @@
+{
+  "owner": "navigation_0_1_3 independent mathematical audit",
+  "purpose": "retained pre-fix counterexamples, source snapshots, patches and final host validation",
+  "source_commit": "7896c1d09a7f9138c41cdac35beef38347d94b78",
+  "scope": "offline synthetic mathematics and existing metadata isolation",
+  "final_run": "evidence/audit_20261018_final/run.json",
+  "final_pytest_result": "163 passed, zero failed/skipped",
+  "code_matches_final_executed_hashes": true,
+  "existing_120_tests_and_configuration_unchanged": true,
+  "historical_artifact_hashes_verified": [
+    "apps/SCG/experiments/navigation_0_1_3/evidence/run01/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/run01/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/run02/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/run02/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/run03/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/run03/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/eskf20_run01/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/eskf20_run01/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/eskf20_run02/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/eskf20_run02/run.json"
+  ],
+  "baseline_hashes_verified": true,
+  "final_sources": [
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/lie_group.py",
+      "sha256": "81b674b66fede30b6c5368515f8c0d806f66d8e6dcdfd496345e66f00283fab0",
+      "bytes": 4974
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/inekf_reference.py",
+      "sha256": "2c2dcffa17dd50ac7d50d1f623e40b45d4098c39a51c3841a0aeed08e98b165f",
+      "bytes": 8859
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/eskf20_reference.py",
+      "sha256": "ccdffa81db1db8d2a0dc4a383723ae6b5bf2f9dee5da004672f144b515dda990",
+      "bytes": 13946
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/verify.py",
+      "sha256": "68a8c286f70cf00d0c490467ee63eec81d2803e0dc2f1f82b39a760533e7135e",
+      "bytes": 4542
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/README.md",
+      "sha256": "cc5273a3b1bae58f38805b08804dcde03801419693119aa361b61c146c984aa0",
+      "bytes": 9692
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/ESKF20_MODEL.md",
+      "sha256": "6c8c1abf9253c6e24357c52637fa0b71356a1a64de214a850ffe17f89de4b00b",
+      "bytes": 10091
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_independent_audit.py",
+      "sha256": "d7dd9ebbb49ff4dd3ad730190ce7957ae2e1e7ca94c790931e04245ce4ef0c34",
+      "bytes": 15697
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/INDEPENDENT_AUDIT_20261018.md",
+      "sha256": "228761b19d22f2581e4b763a9373da1a6e16deb146ce24658bfdd15e46c113aa",
+      "bytes": 10773
+    }
+  ],
+  "retained_evidence": [
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_final/inventory.json",
+      "sha256": "1fce8b9aa15ddedd1285421b395f3f24c8a0754e36b9df1fd2eb7a6481a0af0f",
+      "bytes": 667
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_final/pytest.log",
+      "sha256": "8ec1b03bcba5785df854552887f6bf5e86fa131bde5232ede50867227b02793d",
+      "bytes": 22404
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_final/run.json",
+      "sha256": "848df22a86528287f317923c2bbfbd1cebc78382fd0068d6d774f56fb171c58f",
+      "bytes": 79920
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_post01/inventory.json",
+      "sha256": "6ab929ca4a27cafd511177763320be5059aa576dfe1b32aecbfb1ce5b1ce1878",
+      "bytes": 669
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_post01/pytest.log",
+      "sha256": "0bf73b941f50af8c50a72ed881cb4e864c8a046d1b55da5fb76df68379e26b70",
+      "bytes": 20847
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_post01/run.json",
+      "sha256": "e3bce4ee8f6f69527bae21cfe2e16ff41bebdf8f12bd27f09f2ef2f1509942bd",
+      "bytes": 79920
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_pre/inventory.json",
+      "sha256": "488b632fd2f28db4154ad7247c1aa0ae4fcb5a38b11621fd20089bca9ebb3920",
+      "bytes": 663
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_pre/pytest.log",
+      "sha256": "5d47a2a108fb0fe2f3c88047283618b2e6d20427dc3a8212ecc84ec9bc6a0bfc",
+      "bytes": 62378
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_pre/run.json",
+      "sha256": "961b57ec7982e3661b762da04f6577eb5d902c077b401449508708b61dd76ab3",
+      "bytes": 79886
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_pre02/inventory.json",
+      "sha256": "c7d7ae0172a9166838f339d146e92fe661177a43d59f597db8d2200401dc735b",
+      "bytes": 667
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_pre02/pytest.log",
+      "sha256": "16d39a43d32ff921c2cca397588abcef6c81a0f3eb6e3715f7b32651cee2664a",
+      "bytes": 45297
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_pre02/run.json",
+      "sha256": "78328e13570609922def505a2dc3f590dc3d04535848eb48170b3fb4ec5ac1bc",
+      "bytes": 79920
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/audit_changes.patch",
+      "sha256": "98bba8239fce2b26998b1baa12e7dc5abc19cd5d562b5408bbe1445be79c88ca",
+      "bytes": 34875
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/baseline/ESKF20_MODEL.md",
+      "sha256": "2f2e409c2d22b2caab3bc358f56897455cdf7528ec1c7369651124b8f5706333",
+      "bytes": 9047
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/baseline/eskf20_reference.py",
+      "sha256": "cd2f08506036303ebf8ae8757419a347e591831c741001633364cd626fa363a5",
+      "bytes": 13311
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/baseline/inekf_reference.py",
+      "sha256": "09545a184f5026e0d7bfbc7599bec1426c5f1db97eec074bde4f64a568d7eb57",
+      "bytes": 8643
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/baseline/initial_test_independent_audit.py",
+      "sha256": "89dad3c1ab0c6819367808564d643871214dfac4db434c2f6afd2dd51695c5dc",
+      "bytes": 12194
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/baseline/initial_verify.py",
+      "sha256": "d6e8bd18140c374d78684065c3146ff4f66d171057dc64da1e9d980257d1a150",
+      "bytes": 4402
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/baseline/lie_group.py",
+      "sha256": "183232182a6983d80f940ba37fd0e001faf915cb486696d9ebd244f6d6f96024",
+      "bytes": 4215
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/baseline/lie_group_post01.py",
+      "sha256": "1f26c5a22263c3fb5614b35de2423a52164dad3abdad18bd4fb486ee067bf81f",
+      "bytes": 4720
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/baseline/README.md",
+      "sha256": "16f79621839db32cf294194fb684e9c87bb2a3a5025efc089abd00476938a69c",
+      "bytes": 8629
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/baseline/verify.py",
+      "sha256": "9b268c649f13a718c455d7ced1a84185f0a9e908d8ec3b7ab37c315f82698b9c",
+      "bytes": 4361
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/finalize_inventory.py",
+      "sha256": "648c47ae4b623ad4039236ee3a656a05661ad9f0c60842c0a1d6bb90341b7489",
+      "bytes": 4235
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/initial_test_inventory.json",
+      "sha256": "5ac7e1bea7424f8d646924e237201425f55cb8e1ecfd118e8fa961435325196e",
+      "bytes": 677
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_v1/inventory_initial.json",
+      "sha256": "16f99ef128e441ecc6af9bdaf95a47d2f67b331ad45cf3da3adf7d94bff6b708",
+      "bytes": 2077
+    }
+  ],
+  "audit_evidence_bytes_excluding_this_inventory": 584624,
+  "report_timing": "Audit report, patch and final inventory written after final tests; code/test hashes verified unchanged.",
+  "cleanup": "None; all listed files are retained evidence or source. No deletion authorization.",
+  "self_hash": "omitted to avoid recursive self-reference"
+}

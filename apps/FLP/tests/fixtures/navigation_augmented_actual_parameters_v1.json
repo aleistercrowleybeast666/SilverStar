@@ -1,0 +1,1232 @@
+{
+  "provenance": "synthetic explicit values resolved by SCG AlgorithmParameterDefinition.Value_Resolve",
+  "initial_navigation": {
+    "q_nb_wxyz": [
+      0.9238795325112867,
+      0,
+      0,
+      0.3826834323650898
+    ],
+    "origin_velocity_enu_mps": [
+      1.25,
+      -2.5,
+      0.125
+    ],
+    "provenance": "user_configuration"
+  },
+  "models": {
+    "eskf20": {
+      "component": "silverstar.algorithm.estimator.eskf20",
+      "manifest_sha256": "ec8a2f6f8edba5e14694f94ab8be637ca73554e42b2106fadd01571934f97385",
+      "schema_id": "silverstar.algorithm-parameters/1.0",
+      "parameters": [
+        {
+          "id": "software_validation_build",
+          "value": 1,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initialization_confirmed",
+          "value": 1,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gnss_imu_colocated_confirmed",
+          "value": 1,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "description": "Explicit zero lever arm confirmation. Nonzero installation positions are unsupported and rejected."
+        },
+        {
+          "id": "gravity_mps2",
+          "value": 9.779999732971191,
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "position_nis_gate",
+          "value": 11.300000190734863,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "velocity_nis_gate",
+          "value": 12.399999618530273,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gyro_density_x",
+          "value": 0.0010000000474974513,
+          "unit": "rad/s/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gyro_density_y",
+          "value": 0.0020000000949949026,
+          "unit": "rad/s/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gyro_density_z",
+          "value": 0.003000000026077032,
+          "unit": "rad/s/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "accel_density_x",
+          "value": 0.10000000149011612,
+          "unit": "m/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "accel_density_y",
+          "value": 0.20000000298023224,
+          "unit": "m/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "accel_density_z",
+          "value": 0.30000001192092896,
+          "unit": "m/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gyro_bias_rw_density_x",
+          "value": 9.999999747378752e-06,
+          "unit": "rad/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gyro_bias_rw_density_y",
+          "value": 1.9999999494757503e-05,
+          "unit": "rad/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gyro_bias_rw_density_z",
+          "value": 2.9999999242136255e-05,
+          "unit": "rad/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "accel_bias_rw_density_x",
+          "value": 9.999999747378752e-05,
+          "unit": "m/s^3/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "accel_bias_rw_density_y",
+          "value": 0.00019999999494757503,
+          "unit": "m/s^3/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "accel_bias_rw_density_z",
+          "value": 0.0003000000142492354,
+          "unit": "m/s^3/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_gyro_bias_x",
+          "value": 0.009999999776482582,
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_gyro_bias_y",
+          "value": -0.019999999552965164,
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_gyro_bias_z",
+          "value": 0.029999999329447746,
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_accel_bias_x",
+          "value": 0.10000000149011612,
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_accel_bias_y",
+          "value": -0.20000000298023224,
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_accel_bias_z",
+          "value": 0.30000001192092896,
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_0",
+          "value": 0.25,
+          "unit": "m^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_1",
+          "value": 0.28125,
+          "unit": "m^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_2",
+          "value": 0.3125,
+          "unit": "m^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_3",
+          "value": 0.34375,
+          "unit": "m^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_4",
+          "value": 0.375,
+          "unit": "m^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_5",
+          "value": 0.40625,
+          "unit": "m^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_6",
+          "value": 0.4375,
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_7",
+          "value": 0.46875,
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_8",
+          "value": 0.5,
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_9",
+          "value": 0.53125,
+          "unit": "rad^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_10",
+          "value": 0.5625,
+          "unit": "rad^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_11",
+          "value": 0.59375,
+          "unit": "rad^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_12",
+          "value": 0.625,
+          "unit": "m^2/s^4",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_13",
+          "value": 0.65625,
+          "unit": "m^2/s^4",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_14",
+          "value": 0.6875,
+          "unit": "m^2/s^4",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_15",
+          "value": 0.71875,
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_16",
+          "value": 0.75,
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_17",
+          "value": 0.78125,
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_18",
+          "value": 0.8125,
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_19",
+          "value": 0.84375,
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "installation_q_0",
+          "value": 0.7071067690849304,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "installation_q_1",
+          "value": 0.0,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "installation_q_2",
+          "value": 0.7071067690849304,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "installation_q_3",
+          "value": 0.0,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "inclination_rad",
+          "value": 0.3499999940395355,
+          "unit": "rad",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "declination_rad",
+          "value": -0.44999998807907104,
+          "unit": "rad",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "magnetic_reference_ut",
+          "value": 48.0,
+          "unit": "uT",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "magnetic_min_norm_ratio",
+          "value": 0.5,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "magnetic_max_norm_ratio",
+          "value": 1.5,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "magnetic_nis_gate",
+          "value": 13.0,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "magnetic_instance",
+          "value": 7,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        }
+      ]
+    },
+    "inekf15": {
+      "component": "silverstar.algorithm.estimator.inekf15",
+      "manifest_sha256": "74e9acad86d140ff4274a25b5d88212955fd60872820f2646fb3f5e085f3e1a4",
+      "schema_id": "silverstar.algorithm-parameters/1.0",
+      "parameters": [
+        {
+          "id": "software_validation_build",
+          "value": 1,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initialization_confirmed",
+          "value": 1,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gnss_imu_colocated_confirmed",
+          "value": 1,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "description": "Explicit zero lever arm confirmation. Nonzero installation positions are unsupported and rejected."
+        },
+        {
+          "id": "gravity_mps2",
+          "value": 9.779999732971191,
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "position_nis_gate",
+          "value": 11.300000190734863,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "velocity_nis_gate",
+          "value": 12.399999618530273,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gyro_density_x",
+          "value": 0.0010000000474974513,
+          "unit": "rad/s/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gyro_density_y",
+          "value": 0.0020000000949949026,
+          "unit": "rad/s/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gyro_density_z",
+          "value": 0.003000000026077032,
+          "unit": "rad/s/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "accel_density_x",
+          "value": 0.10000000149011612,
+          "unit": "m/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "accel_density_y",
+          "value": 0.20000000298023224,
+          "unit": "m/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "accel_density_z",
+          "value": 0.30000001192092896,
+          "unit": "m/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gyro_bias_rw_density_x",
+          "value": 9.999999747378752e-06,
+          "unit": "rad/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gyro_bias_rw_density_y",
+          "value": 1.9999999494757503e-05,
+          "unit": "rad/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gyro_bias_rw_density_z",
+          "value": 2.9999999242136255e-05,
+          "unit": "rad/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "accel_bias_rw_density_x",
+          "value": 9.999999747378752e-05,
+          "unit": "m/s^3/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "accel_bias_rw_density_y",
+          "value": 0.00019999999494757503,
+          "unit": "m/s^3/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "accel_bias_rw_density_z",
+          "value": 0.0003000000142492354,
+          "unit": "m/s^3/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_gyro_bias_x",
+          "value": 0.009999999776482582,
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_gyro_bias_y",
+          "value": -0.019999999552965164,
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_gyro_bias_z",
+          "value": 0.029999999329447746,
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_accel_bias_x",
+          "value": 0.10000000149011612,
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_accel_bias_y",
+          "value": -0.20000000298023224,
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_accel_bias_z",
+          "value": 0.30000001192092896,
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_0",
+          "value": 0.25,
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_1",
+          "value": 0.28125,
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_2",
+          "value": 0.3125,
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_3",
+          "value": 0.34375,
+          "unit": "m^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_4",
+          "value": 0.375,
+          "unit": "m^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_5",
+          "value": 0.40625,
+          "unit": "m^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_6",
+          "value": 0.4375,
+          "unit": "m^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_7",
+          "value": 0.46875,
+          "unit": "m^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_8",
+          "value": 0.5,
+          "unit": "m^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_9",
+          "value": 0.53125,
+          "unit": "rad^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_10",
+          "value": 0.5625,
+          "unit": "rad^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_11",
+          "value": 0.59375,
+          "unit": "rad^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_12",
+          "value": 0.625,
+          "unit": "m^2/s^4",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_13",
+          "value": 0.65625,
+          "unit": "m^2/s^4",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_14",
+          "value": 0.6875,
+          "unit": "m^2/s^4",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        }
+      ]
+    },
+    "inekf20": {
+      "component": "silverstar.algorithm.estimator.inekf20",
+      "manifest_sha256": "7b7529d79d02b3efab8810e2f29931bbf55b32290fbead0303b7aa41c69f5830",
+      "schema_id": "silverstar.algorithm-parameters/1.0",
+      "parameters": [
+        {
+          "id": "software_validation_build",
+          "value": 1,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initialization_confirmed",
+          "value": 1,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gnss_imu_colocated_confirmed",
+          "value": 1,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "description": "Explicit zero lever arm confirmation. Nonzero installation positions are unsupported and rejected."
+        },
+        {
+          "id": "gravity_mps2",
+          "value": 9.779999732971191,
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "position_nis_gate",
+          "value": 11.300000190734863,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "velocity_nis_gate",
+          "value": 12.399999618530273,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gyro_density_x",
+          "value": 0.0010000000474974513,
+          "unit": "rad/s/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gyro_density_y",
+          "value": 0.0020000000949949026,
+          "unit": "rad/s/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gyro_density_z",
+          "value": 0.003000000026077032,
+          "unit": "rad/s/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "accel_density_x",
+          "value": 0.10000000149011612,
+          "unit": "m/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "accel_density_y",
+          "value": 0.20000000298023224,
+          "unit": "m/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "accel_density_z",
+          "value": 0.30000001192092896,
+          "unit": "m/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gyro_bias_rw_density_x",
+          "value": 9.999999747378752e-06,
+          "unit": "rad/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gyro_bias_rw_density_y",
+          "value": 1.9999999494757503e-05,
+          "unit": "rad/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "gyro_bias_rw_density_z",
+          "value": 2.9999999242136255e-05,
+          "unit": "rad/s^2/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "accel_bias_rw_density_x",
+          "value": 9.999999747378752e-05,
+          "unit": "m/s^3/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "accel_bias_rw_density_y",
+          "value": 0.00019999999494757503,
+          "unit": "m/s^3/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "accel_bias_rw_density_z",
+          "value": 0.0003000000142492354,
+          "unit": "m/s^3/sqrt(Hz)",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_gyro_bias_x",
+          "value": 0.009999999776482582,
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_gyro_bias_y",
+          "value": -0.019999999552965164,
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_gyro_bias_z",
+          "value": 0.029999999329447746,
+          "unit": "rad/s",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_accel_bias_x",
+          "value": 0.10000000149011612,
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_accel_bias_y",
+          "value": -0.20000000298023224,
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_accel_bias_z",
+          "value": 0.30000001192092896,
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_0",
+          "value": 0.25,
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_1",
+          "value": 0.28125,
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_2",
+          "value": 0.3125,
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_3",
+          "value": 0.34375,
+          "unit": "m^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_4",
+          "value": 0.375,
+          "unit": "m^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_5",
+          "value": 0.40625,
+          "unit": "m^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_6",
+          "value": 0.4375,
+          "unit": "m^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_7",
+          "value": 0.46875,
+          "unit": "m^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_8",
+          "value": 0.5,
+          "unit": "m^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_9",
+          "value": 0.53125,
+          "unit": "rad^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_10",
+          "value": 0.5625,
+          "unit": "rad^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_11",
+          "value": 0.59375,
+          "unit": "rad^2/s^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_12",
+          "value": 0.625,
+          "unit": "m^2/s^4",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_13",
+          "value": 0.65625,
+          "unit": "m^2/s^4",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_14",
+          "value": 0.6875,
+          "unit": "m^2/s^4",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_15",
+          "value": 0.71875,
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_16",
+          "value": 0.75,
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_17",
+          "value": 0.78125,
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_18",
+          "value": 0.8125,
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "initial_variance_19",
+          "value": 0.84375,
+          "unit": "rad^2",
+          "representation": "variance",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "installation_q_0",
+          "value": 0.7071067690849304,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "installation_q_1",
+          "value": 0.0,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "installation_q_2",
+          "value": 0.7071067690849304,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "installation_q_3",
+          "value": 0.0,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "inclination_rad",
+          "value": 0.3499999940395355,
+          "unit": "rad",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "declination_rad",
+          "value": -0.44999998807907104,
+          "unit": "rad",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "magnetic_reference_ut",
+          "value": 48.0,
+          "unit": "uT",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "magnetic_min_norm_ratio",
+          "value": 0.5,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "magnetic_max_norm_ratio",
+          "value": 1.5,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "magnetic_nis_gate",
+          "value": 13.0,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        },
+        {
+          "id": "magnetic_instance",
+          "value": 7,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32",
+          "description": "Explicit engineering input; zero is unconfigured for required positive values. No qualified flight default."
+        }
+      ]
+    }
+  }
+}

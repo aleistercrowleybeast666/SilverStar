@@ -176,9 +176,9 @@ def test_product_patch_binding_accepts_only_authorized_complete_header(tmp_path,
     payload = Path(__file__).resolve().parents[1] / 'plugins/builtin/silverstar_core_0_1_0/payload'
     relative = 'System/User/system_user_config.h'
     text = (payload / relative).read_text(encoding='utf-8')
-    # The current timing header is a separately reviewed complete v18 input.
+    # The current integration header is a separately reviewed complete v21 input.
     # Both original forbidden mutations below remain rejected.
-    assert stacks.BindingSourceHash_Get(text) == '8a853b969d5ac53177ac19dc99779c49702bcbbbc0cb76114b089ef7578a355e'
+    assert stacks.BindingSourceHash_Get(text) == 'd54d5b90cf5249e959272dec7ad79238bd5b161a8e8315c5377f837d7f4b945b'
     target = tmp_path / relative
     target.parent.mkdir(parents=True)
     target.write_text(text, encoding='utf-8')
@@ -323,3 +323,42 @@ def test_integration_identity_binding_accepts_exact_sources_and_rejects_changes(
     target.write_text(changed, encoding='utf8')
     with pytest.raises(ValueError, match='Changed or unknown complete callback binding source'):
         stacks.BindingSources_Verify(tmp_path, [relative], tmp_path / 'build')
+
+
+@pytest.mark.parametrize("new_record", ["source", "included_input"])
+@pytest.mark.parametrize("revision", [24, 25, 26])
+def test_logfile_review_rejects_mixing_individually_known_compiler_inputs(tmp_path, monkeypatch, new_record, revision):
+    """New complete identities must still require their exact reviewed pairing."""
+    import hashlib
+    source = "binding.c"
+    header = "binding.h"
+    source_text = '#include "binding.h"\nint Binding_ValueGet(void) { return BINDING_VALUE; }\n'
+    first = "#define BINDING_VALUE 1\n"
+    second = "#define BINDING_VALUE 2\n"
+    source_hash = stacks.BindingSourceHash_Get(source_text)
+    first_hash = stacks.BindingSourceHash_Get(first)
+    second_hash = stacks.BindingSourceHash_Get(second)
+    reviewed_sources = (stacks.BINDING_SOURCE_LOGFILE_TRANSFER_V24 if revision == 24
+                        else stacks.BINDING_SOURCE_BLOCK_TRANSFER_V25 if revision == 25
+                        else stacks.BINDING_SOURCE_OPTIONAL_RESOURCES_V26)
+    reviewed_pairs = (stacks.BINDING_COMPILED_INPUTS_LOGFILE_TRANSFER_V24 if revision == 24
+                      else stacks.BINDING_COMPILED_INPUTS_BLOCK_TRANSFER_V25 if revision == 25
+                      else stacks.BINDING_COMPILED_INPUTS_OPTIONAL_RESOURCES_V26)
+    source_table = reviewed_sources if new_record == "source" else stacks.BINDING_SOURCE_V2
+    input_table = reviewed_sources if new_record == "included_input" else stacks.BINDING_SOURCE_V2
+    monkeypatch.setitem(source_table, source, [source_hash])
+    monkeypatch.setitem(input_table, header, [first_hash, second_hash])
+    dependencies = [source, header]
+    monkeypatch.setitem(stacks.BINDING_DEPENDENCIES_V2, source, [hashlib.sha256("\n".join(dependencies).encode()).hexdigest()])
+    closure = stacks.BindingClosureHash_Get(source, source_hash, [[source, source_hash], [header, first_hash]])
+    monkeypatch.setitem(reviewed_pairs, source, [closure])
+    (tmp_path / source).write_text(source_text, encoding="utf8")
+    (tmp_path / header).write_text(first, encoding="utf8")
+    build = tmp_path / "build"
+    build.mkdir()
+    (build / "binding.d").write_text("binding.o: " + " ".join(dependencies) + "\n", encoding="utf8")
+    assert len(stacks.BindingSources_Verify(tmp_path, [source], build)) == 1
+    (tmp_path / header).write_text(second, encoding="utf8")
+    assert stacks.BindingHeader_Verify(tmp_path, header) == second_hash
+    with pytest.raises(ValueError, match="Changed paired source/compiler input closure"):
+        stacks.BindingSources_Verify(tmp_path, [source], build)

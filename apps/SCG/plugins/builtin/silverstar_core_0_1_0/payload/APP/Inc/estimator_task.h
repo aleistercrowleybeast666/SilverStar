@@ -7,6 +7,10 @@
 #include "system_estimator_diagnostics.h"
 #include "system_alignment.h"
 
+/* New flags append without reinterpreting existing bits. */
+#define ESTIMATOR_HEALTH_MAGNETIC_UNAVAILABLE (1U << 9)
+#define ESTIMATOR_HEALTH_TIMING_UNQUALIFIED (1U << 10)
+
 #define ESTIMATOR_HEALTH_NONE                       0U
 #define ESTIMATOR_HEALTH_PREDICTION_QUEUE_OVERFLOW (1U << 0)
 #define ESTIMATOR_HEALTH_GNSS_ORIGIN_UNAVAILABLE   (1U << 1)

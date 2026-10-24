@@ -1030,14 +1030,16 @@ def _BusConstraints_Validate(
         if not isinstance(baud, dict) or set(baud) - {
             "exact",
             "allowed_values",
+            "minimum",
+            "maximum",
             "configurable",
         }:
             raise PluginManifestError(
                 f"Resource UART baud constraint for {name} is invalid"
             )
-        if "exact" not in baud and "allowed_values" not in baud:
+        if "exact" not in baud and "allowed_values" not in baud and not {"minimum", "maximum"} <= set(baud):
             raise PluginManifestError(
-                f"Resource UART baud constraint for {name} needs exact or allowed_values"
+                f"Resource UART baud constraint for {name} needs exact, allowed_values or minimum/maximum"
             )
         if "exact" in baud:
             _PositiveInteger_Validate(baud["exact"], f"UART baud.exact for {name}")
@@ -1045,6 +1047,13 @@ def _BusConstraints_Validate(
             _PositiveIntegerList_Validate(
                 baud["allowed_values"], f"UART baud.allowed_values for {name}"
             )
+        if "minimum" in baud or "maximum" in baud:
+            if not {"minimum", "maximum"} <= set(baud):
+                raise PluginManifestError(f"UART baud range for {name} requires both bounds")
+            for bound in ("minimum", "maximum"):
+                _PositiveInteger_Validate(baud[bound], f"UART baud.{bound} for {name}")
+            if baud["minimum"] > baud["maximum"]:
+                raise PluginManifestError(f"UART baud range for {name} is reversed")
         if "configurable" in baud and not isinstance(baud["configurable"], bool):
             raise PluginManifestError(
                 f"UART baud.configurable for {name} must be a boolean"

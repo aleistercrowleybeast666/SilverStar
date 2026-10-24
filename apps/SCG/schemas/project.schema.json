@@ -17,7 +17,7 @@
           "type": "object",
           "patternProperties": {
             "^[a-z][a-z0-9_]*$": {
-              "type": "number"
+              "oneOf": [{"type": "number"}, {"$ref": "#/$defs/nisProbabilityInput"}]
             }
           },
           "additionalProperties": false
@@ -25,7 +25,18 @@
       },
       "additionalProperties": false
     },
-    "format_version": {"enum": [14, 15]},
+    "format_version": {"enum": [14, 15, 16, 17, 18, 19, 20, 21]},
+    "sensor_installation": {"$ref": "#/$defs/sensorInstallation"},
+    "native_usb": {"$ref": "#/$defs/nativeUsb"},
+    "feature_tier_presets": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "full": {"allOf": [{"$ref": "#"}, {"$ref": "#/$defs/nonrecursivePreset"}, {"properties": {"build": {"properties": {"feature_tier": {"const": "full"}}}}}]},
+        "standard": {"allOf": [{"$ref": "#"}, {"$ref": "#/$defs/nonrecursivePreset"}, {"properties": {"build": {"required": ["feature_tier"], "properties": {"feature_tier": {"const": "standard"}}}}}]},
+        "compact": {"allOf": [{"$ref": "#"}, {"$ref": "#/$defs/nonrecursivePreset"}, {"properties": {"build": {"required": ["feature_tier"], "properties": {"feature_tier": {"const": "compact"}}}}}]},
+        "minimal": {"allOf": [{"$ref": "#"}, {"$ref": "#/$defs/nonrecursivePreset"}, {"properties": {"build": {"required": ["feature_tier"], "properties": {"feature_tier": {"const": "minimal"}}}}}]}
+      }
+    },
     "flight_tx_power_dbm": {"type": "integer"},
     "alignment": {
       "type": "object",
@@ -310,6 +321,9 @@
           "make_command": {"type": "string", "minLength": 1},
           "memory_layout": {"enum": ["legacy", "eskf_window_sram", "auto"], "default": "legacy"},
           "compact_mode": {"type": "boolean", "default": false},
+          "feature_tier": {"enum": ["full", "standard", "compact", "minimal"]},
+          "magnetometer_enabled": {"type": "boolean"},
+          "maintenance_log_export_enabled": {"type": "boolean"},
           "logging_profile": {"enum": ["all_streams", "sf6_minimal"], "default": "all_streams"},
         "toolchain_prefix": {"type": "string", "pattern": "^[A-Za-z0-9_.+-]+$"},
         "gcc_path": {"type": "string"},
@@ -332,14 +346,86 @@
     "reference_provenance": {"type": "object"}
   },
   "additionalProperties": false,
-  "allOf": [{
-    "if": {"properties": {"format_version": {"const": 15}}},
-    "then": {"properties": {"ground_target": {"required": ["radio_instances", "active_radio_instance"]}}},
-    "else": {"properties": {"ground_target": {"not": {"anyOf": [
-      {"required": ["radio_instances"]}, {"required": ["active_radio_instance"]}
-    ]}}}}
-  }],
+  "allOf": [
+    {"if": {"properties": {"format_version": {"maximum": 20}}},
+     "then": {"properties": {"build": {"not": {"anyOf": [{"required": ["magnetometer_enabled"]}, {"required": ["maintenance_log_export_enabled"]}]}}}}},
+    {"if": {"properties": {"build": {"required": ["feature_tier"], "properties": {"feature_tier": {"enum": ["compact", "minimal"]}}}}},
+     "then": {"properties": {"build": {"properties": {"magnetometer_enabled": {"const": false}, "maintenance_log_export_enabled": {"const": false}}}}}},
+    {
+      "if": {"properties": {"format_version": {"const": 15}}},
+      "then": {"properties": {"ground_target": {"required": ["radio_instances", "active_radio_instance"]}}}
+    },
+    {
+      "if": {"properties": {"format_version": {"const": 14}}},
+      "then": {"properties": {"ground_target": {"not": {"anyOf": [
+        {"required": ["radio_instances"]}, {"required": ["active_radio_instance"]}
+      ]}}}}
+    },
+    {"properties": {"ground_target": {"dependentRequired": {"radio_instances": ["active_radio_instance"], "active_radio_instance": ["radio_instances"]}}}},
+    {
+      "if": {"properties": {"format_version": {"maximum": 15}}},
+      "then": {"properties": {"components": {"properties": {"devices": {"items": {"properties": {"module_variant": {"const": ""}, "tx_power_dbm": {"type": "null"}}}}}}}}
+    },
+    {
+      "if": {"properties": {"format_version": {"maximum": 17}}},
+      "then": {"properties": {"algorithm_parameters": {"additionalProperties": {"additionalProperties": {"type": "number"}}}}}
+    },
+    {"if": {"properties": {"format_version": {"maximum": 18}}}, "then": {"not": {"required": ["native_usb"]}}},
+    {
+      "if": {"properties": {"format_version": {"maximum": 19}}},
+      "then": {"not": {"required": ["sensor_installation"]}, "properties": {"components": {"properties": {"devices": {"items": {"not": {"required": ["position_body_m"]}}}}}}}
+    },
+    {
+      "if": {"properties": {"components": {"properties": {"devices": {"contains": {"required": ["position_body_m"]}}}}}},
+      "then": {"required": ["sensor_installation"]}
+    }
+  ],
   "$defs": {
+    "sensorInstallation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema", "frame", "unit", "origin_kind", "origin_description", "input_source"],
+      "properties": {
+        "schema": {"const": "silverstar.sensor-installation/1"},
+        "frame": {"const": "body"}, "unit": {"const": "m"},
+        "origin_kind": {"const": "fixed_body_structure"},
+        "origin_description": {"type": "string", "maxLength": 512, "not": {"pattern": "[\\u0000-\\u001f\\u007f]"}},
+        "input_source": {"const": "measurement_or_cad"}
+      }
+    },
+    "coordinate": {"type": "number", "minimum": -1000000, "maximum": 1000000},
+    "position": {
+      "type": "object", "additionalProperties": false, "required": ["x", "y", "z"],
+      "properties": {"x": {"$ref": "#/$defs/coordinate"}, "y": {"$ref": "#/$defs/coordinate"}, "z": {"$ref": "#/$defs/coordinate"}}
+    },
+    "nisProbabilityInput": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_id", "unit", "degrees_of_freedom", "probability"],
+      "properties": {
+        "schema_id": {"const": "silverstar.nis-cdf-input/1.0"}, "unit": {"const": "fraction"},
+        "degrees_of_freedom": {"type": "integer", "minimum": 1, "maximum": 256},
+        "probability": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1}
+      }
+    },
+    "nonrecursivePreset": {"not": {"required": ["feature_tier_presets"]}},
+    "nativeUsb": {
+      "type": "object", "additionalProperties": false,
+      "required": ["native_root", "source_sha256", "output_root", "kit_sha256", "graph_sha256", "receipt_file", "receipt_sha256", "version"],
+      "properties": {
+        "version": {"type": "integer", "const": 1},
+        "native_root": {"$ref": "#/$defs/absoluteNativePath"},
+        "output_root": {"oneOf": [{"const": ""}, {"$ref": "#/$defs/absoluteNativePath"}]},
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "kit_sha256": {"oneOf": [{"const": ""}, {"$ref": "#/$defs/sha256"}]},
+        "graph_sha256": {"oneOf": [{"const": ""}, {"$ref": "#/$defs/sha256"}]},
+        "receipt_file": {"type": "string", "pattern": "^(?:(?:compile|analysis)-[0-9a-f]{32}/validation-receipt\\.json)?$"},
+        "receipt_sha256": {"oneOf": [{"const": ""}, {"$ref": "#/$defs/sha256"}]}
+      },
+      "allOf": [
+        {"if": {"properties": {"output_root": {"const": ""}}}, "then": {"properties": {"kit_sha256": {"const": ""}, "graph_sha256": {"const": ""}, "receipt_sha256": {"const": ""}}}, "else": {"properties": {"kit_sha256": {"$ref": "#/$defs/sha256"}, "graph_sha256": {"$ref": "#/$defs/sha256"}}}},
+        {"if": {"properties": {"receipt_file": {"const": ""}}}, "then": {"properties": {"receipt_sha256": {"const": ""}}}, "else": {"properties": {"receipt_sha256": {"$ref": "#/$defs/sha256"}}}}
+      ]
+    },
+    "absoluteNativePath": {"type": "string", "minLength": 1, "maxLength": 4096, "pattern": "^(?:[A-Za-z]:[\\\\/]|/|\\\\\\\\[^\\\\/]+[\\\\/][^\\\\/]+)", "not": {"pattern": "[\\u0000\\r\\n]"}},
     "groundRadio": {
       "type": "object",
       "required": ["instance_id", "plugin", "module_variant", "tx_power_dbm"],
@@ -361,9 +447,18 @@
         "instance_id": {"$ref": "#/$defs/instanceId"},
         "plugin": {"$ref": "#/$defs/componentId"},
         "interface": {"type": "string", "pattern": "^(?:[A-Za-z0-9][A-Za-z0-9_.-]*)?$"},
-        "profile": {"type": "string", "pattern": "^(?:[A-Za-z0-9][A-Za-z0-9_.-]*)?$"}
+        "profile": {"type": "string", "pattern": "^(?:[A-Za-z0-9][A-Za-z0-9_.-]*)?$"},
+        "module_variant": {"type": "string", "pattern": "^(?:[A-Za-z0-9][A-Za-z0-9_.-]*)?$"},
+        "tx_power_dbm": {"type": ["integer", "null"]},
+        "installation_orientation": {"enum": ["horizontal", "vertical"]},
+        "mount_nose_axis": {"enum": ["z_positive", "z_negative", "x_positive", "x_negative", "y_positive", "y_negative"]},
+        "position_body_m": {"$ref": "#/$defs/position"}
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "allOf": [
+        {"if": {"required": ["installation_orientation"]}, "then": {"properties": {"plugin": {"const": "silverstar.device.imu.jy901b"}}}},
+        {"if": {"required": ["mount_nose_axis"]}, "then": {"properties": {"plugin": {"enum": ["silverstar.device.imu.bmi088", "silverstar.device.imu.bmi323", "silverstar.device.imu.icm42605", "silverstar.device.imu.icm42688p", "silverstar.device.imu.icm45686", "silverstar.device.imu.lsm6dsv320x", "silverstar.device.imu.lsm6dsv32x", "silverstar.device.imu.mpu6000", "silverstar.device.imu.mpu6050", "silverstar.device.imu.mpu6500", "silverstar.device.imu.mpu9250"]}}}}
+      ]
     },
     "protocolSelection": {
       "type": "object",

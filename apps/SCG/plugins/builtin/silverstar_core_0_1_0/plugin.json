@@ -56,12 +56,15 @@
       "System/Calibration/Src/system_calibration.c",
       "System/Calibration/Src/system_calibration_correction.c",
       "System/Calibration/Src/system_mag_calibration.c",
+      "System/Calibration/Src/system_mag_calibration_disabled.c",
+      "System/Src/system_mag_calibration_storage_disabled.c",
       "System/Indicator/Src/system_indicator.c",
       "System/Inertial/Src/system_inertial.c",
       "System/User/system_user_inertial_config.c",
       "System/Src/system_source_selector.c",
       "System/Src/system_navigation_health.c",
-      "System/Src/system_log_file.c"
+      "System/Src/system_log_file.c",
+      "System/Src/system_log_file_disabled.c"
     ],
     "asm_sources": [],
     "include_dirs": [

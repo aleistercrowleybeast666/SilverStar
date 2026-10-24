@@ -103,7 +103,7 @@ def test_window_scroll_coverage_and_graphics_exclusions(application, tmp_path, m
         application.processEvents()
 
 
-@pytest.mark.parametrize("name", ["catalog", "tree", "swd_diagnostics", "diagnostic_tree", "swd_target"])
+@pytest.mark.parametrize("name", ["catalog", "tree", "swd_diagnostics", "diagnostic_tree"])
 def test_maintenance_content_viewports_have_touch_gestures(application, tmp_path, name):
     from PySide6.QtCore import QSettings
     from services.i18n import I18n
@@ -126,25 +126,22 @@ def test_maintenance_content_viewports_have_touch_gestures(application, tmp_path
 def test_maintenance_catalog_finger_scroll_keeps_click_selection(application, tmp_path):
     from PySide6.QtCore import QPoint, QSettings
     from services.i18n import I18n
-    from ui.main_window import MainWindow
+    from ui.log_export_dialog import LogExportDialog
 
-    window = MainWindow(I18n(QSettings(str(tmp_path / "ui.ini"), QSettings.IniFormat)))
+    window = LogExportDialog(I18n(QSettings(str(tmp_path / "ui.ini"), QSettings.IniFormat)))
     try:
-        window.render_timer.stop()
-        window.gl_view.hide()
-        window.resize(1280, 720)
-        catalog = window.maintenance_page.catalog
-        window.maintenance_page.show_catalog(range(1, 101))
-        window.pages.setCurrentWidget(window.maintenance_scroll)
+        window.resize(760,600)
+        window.set_connection(True,True)
+        window.set_catalog([{'id':row,'size':row*1024} for row in range(1,101)])
+        catalog = window.files
         window.show()
         application.processEvents()
-        window.maintenance_scroll.ensureWidgetVisible(catalog, 0, 0)
-        application.processEvents()
+        assert catalog.verticalScrollMode()==QAbstractItemView.ScrollPerPixel
         assert QScroller.hasScroller(catalog.viewport())
         assert catalog.verticalScrollBar().maximum() > 0
         QTest.mouseClick(catalog.viewport(), Qt.LeftButton,
-                         pos=catalog.visualItemRect(catalog.item(2)).center())
-        assert catalog.currentRow() == 2
+                         pos=catalog.visualItemRect(catalog.topLevelItem(2)).center())
+        assert catalog.currentItem().data(0,Qt.UserRole)==3
         viewport = catalog.viewport()
         start = viewport.height() - 20
         device = QTest.createTouchDevice()
@@ -159,11 +156,15 @@ def test_maintenance_catalog_finger_scroll_keeps_click_selection(application, tm
         QScroller.scroller(viewport).stop()
         catalog.scrollToBottom()
         application.processEvents()
-        last = catalog.visualItemRect(catalog.item(99))
+        last = catalog.visualItemRect(catalog.topLevelItem(99))
         assert viewport.rect().contains(last)
         QTest.mouseClick(viewport, Qt.LeftButton, pos=last.center())
-        assert catalog.currentRow() == 99
-        assert catalog.currentItem().text() == "Mission 000100 · flight.sslog · closed"
+        assert catalog.currentItem().data(0,Qt.UserRole)==100
+        assert catalog.currentItem().text(0)=='Mission 000100'
+        # Click the first-column check indicator; the previous row-center click
+        # can focus the Result column, where Space has no checkbox to toggle.
+        QTest.mouseClick(viewport,Qt.LeftButton,pos=QPoint(last.left()+8,last.center().y()))
+        assert 100 in window.selected_ids()
     finally:
         window.close()
         window.deleteLater()

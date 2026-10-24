@@ -1,0 +1,60 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.algorithm.augmented.common",
+  "name": "Augmented navigation bounded kernel and backend",
+  "type": "algorithm",
+  "class": "common",
+  "version": "0.3.0",
+  "description": "Shared actual ESKF20 and invariant EKF15/20 double software-validation backend; no target timing qualification.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.algorithm.common",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "algorithm.augmented.common"
+  ],
+  "build": {
+    "sources": [
+      "Algorithm/Estimator/Augmented/Src/navigation_bounded.c",
+      "Algorithm/Estimator/Augmented/Src/navigation_input.c",
+      "Algorithm/Estimator/Augmented/Src/navigation_session.c",
+      "Algorithm/Estimator/Augmented/Src/navigation_augmented_backend.c",
+      "Algorithm/Estimator/Augmented/Src/navigation_replay.c",
+      "Algorithm/Estimator/Augmented/Src/navigation_journal.c",
+      "Algorithm/Estimator/Augmented/Src/navigation_mag_quality.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "Algorithm/Estimator/Augmented/Inc"
+    ],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "Algorithm/Estimator/Augmented"
+    ]
+  },
+  "metadata": {
+    "source_origins": {
+      "default": "silverstar_augmented_navigation"
+    },
+    "arithmetic": "fp64; H743 target; floating-point environment unqualified",
+    "timing_qualified": false,
+    "operation_journal_contract": {
+      "schema": "silverstar.navigation-operation-journal/1",
+      "revision": 1,
+      "source": "contracts/navigation_operation_journal_v1.json"
+    }
+  }
+}

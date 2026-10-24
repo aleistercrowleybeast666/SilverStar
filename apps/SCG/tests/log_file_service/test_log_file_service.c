@@ -26,6 +26,17 @@ static uint8_t s_submit_busy;
 static uint8_t s_size_change;
 static uint8_t s_cancel_on_close;
 static uint8_t s_cancel_at_enter;
+static uint8_t s_pattern_enabled;
+static uint8_t s_short_read;
+static uint8_t s_seek_error;
+static uint32_t s_open_count;
+static uint32_t s_close_count;
+static uint32_t s_seek_count;
+static uint32_t s_read_count;
+static uint32_t s_live_handles;
+static uint32_t s_io_cost_us;
+static uint32_t s_serial_queries;
+static uint8_t s_query_in_read;
 static char s_reply[512];
 
 static void Execute(const char *text)
@@ -83,37 +94,46 @@ void SilverStarAssert_Check(uint8_t condition, SilverStarAssertModuleId module,
 void SilverStarAssert_ObjectCheck(const volatile void *object, uint32_t alignment,
     SilverStarAssertModuleId module, const char *file, uint32_t line)
 { (void)module; (void)file; (void)line; assert(object != NULL && (uintptr_t)object % alignment == 0U); }
-static void Io(void) { assert(s_critical_depth == 0U); s_io_count++; }
+static void Io(void) { assert(s_critical_depth == 0U); s_io_count++; s_now += s_io_cost_us; }
 FRESULT f_open(FIL *file, const char *path, BYTE mode)
 {
     Io(); assert(mode == FA_READ);
     if ((strcmp(path, "0:/missions/000001/flight.sslog") != 0) &&
         !((s_pattern_size != 0U) && (strcmp(path, "0:/missions/999999/flight.sslog") == 0))) { return FR_NO_FILE; }
-    file->offset = 0U; file->size = s_pattern_size ? s_pattern_size : (s_size_change ? 10U : 9U); file->id = 1U; return FR_OK;
+    s_open_count++; s_live_handles++;
+    file->offset = 0U; file->size = (s_pattern_size || s_pattern_enabled) ? s_pattern_size : (s_size_change ? 10U : 9U); file->id = 1U; return FR_OK;
 }
 FRESULT f_close(FIL *file)
 {
-    (void)file; Io();
+    (void)file; Io(); s_close_count++;
     if (s_submit_in_close) { s_submit_in_close = 0U; Execute("LOGFILE META 1"); s_submit_busy = (strstr(s_reply, "code=BUSY") != NULL); }
     if (s_cancel_on_close) { s_cancel_on_close = 0U; s_cancel_at_enter = 1U; }
-    return s_close_error ? FR_DISK_ERR : FR_OK;
+    if (s_close_error) { return FR_DISK_ERR; }
+    assert(s_live_handles != 0U); s_live_handles--; return FR_OK;
 }
 FRESULT f_read(FIL *file, void *data, UINT capacity, UINT *count)
 {
     static const char bytes[] = "123456789X";
-    Io();
+    Io(); s_read_count++;
+    if (s_query_in_read)
+    {
+        uint32_t before = s_io_count;
+        Execute("LOGFILE CAPS"); assert(strstr(s_reply, "OK LOGFILE CAPS"));
+        assert(before == s_io_count); s_serial_queries++;
+    }
     if (s_cancel_in_read) { s_cancel_in_read = 0U; Execute("LOGFILE CANCEL"); }
     if (s_read_error) { *count = 0U; return FR_DISK_ERR; }
     *count = file->size - file->offset;
     if (*count > capacity) { *count = capacity; }
-    if (s_pattern_size != 0U)
+    if (s_short_read && *count != 0U) { (*count)--; }
+    if ((s_pattern_size != 0U) || s_pattern_enabled)
     { for (UINT i = 0U; i < *count; i++) { ((unsigned char *)data)[i] = (unsigned char)(file->offset + i); } }
     else { memcpy(data, bytes + file->offset, *count); }
     file->offset += *count; return FR_OK;
 }
-FRESULT f_lseek(FIL *file, uint32_t offset) { Io(); file->offset = offset; return FR_OK; }
+FRESULT f_lseek(FIL *file, uint32_t offset) { Io(); s_seek_count++; if (s_seek_error) { return FR_DISK_ERR; } file->offset = offset; return FR_OK; }
 FRESULT f_stat(const char *path, FILINFO *info)
-{ Io(); if (strcmp(path, "0:/missions/000001/flight.sslog") != 0) { return FR_NO_FILE; } info->fattrib = 0U; info->fsize = 9U; return FR_OK; }
+{ Io(); if ((strcmp(path, "0:/missions/000001/flight.sslog") != 0) && (strcmp(path, "0:/missions/999999/flight.sslog") != 0)) { return FR_NO_FILE; } info->fattrib = 0U; info->fsize = s_size_change ? 10U : (s_pattern_size || s_pattern_enabled) ? s_pattern_size : 9U; return FR_OK; }
 FRESULT f_opendir(DIR *directory, const char *path)
 { Io(); assert(strcmp(path, "0:/missions") == 0); directory->index = 0U; return FR_OK; }
 FRESULT f_readdir(DIR *directory, FILINFO *info)
@@ -145,8 +165,10 @@ static void Normal(void)
     s_current = 1U; id = Submit("LOGFILE META 1"); Finish(id); assert(strstr(s_reply, "OK LOGFILE META")); s_current = 2U;
     Execute("LOGFILE CANCEL"); SystemLogFile_Process(1U);
     id = Submit("LOGFILE READ 1 1-CBF43926-00000009 0"); Finish(id); assert(strstr(s_reply, "code=STALE"));
-    id = Submit("LOGFILE META 1"); SystemLogFile_Process(1U); s_cancel_in_read = 1U; SystemLogFile_Process(1U); SystemLogFile_Process(1U); Poll(id); assert(strstr(s_reply, "code=CANCELLED"));
-    id = Submit("LOGFILE META 1"); SystemLogFile_Process(1U); s_now += 30000001ULL; s_submit_in_close = 1U; SystemLogFile_Process(1U); Poll(id); assert(strstr(s_reply, "code=TIMEOUT")); assert(s_submit_busy);
+    /* Inject during real I/O: a small hash can now finish in one service call. */
+    id = Submit("LOGFILE META 1"); s_cancel_in_read = 1U; SystemLogFile_Process(1U); SystemLogFile_Process(1U); Poll(id); assert(strstr(s_reply, "code=CANCELLED"));
+    id = Submit("LOGFILE META 1"); s_io_cost_us = 2000U; SystemLogFile_Process(1U); s_io_cost_us = 0U;
+    s_now += 30000001ULL; s_submit_in_close = 1U; SystemLogFile_Process(1U); Poll(id); assert(strstr(s_reply, "code=TIMEOUT")); assert(s_submit_busy);
     id = Submit("LOGFILE READ 1 1-CBF43926-00000009 0"); Finish(id); assert(strstr(s_reply, "code=STALE"));
     id = Submit("LOGFILE META 1"); s_cancel_on_close = 1U; Finish(id); assert(strstr(s_reply, "code=CANCELLED"));
     id = Submit("LOGFILE READ 1 1-CBF43926-00000009 0"); Finish(id); assert(strstr(s_reply, "code=STALE"));

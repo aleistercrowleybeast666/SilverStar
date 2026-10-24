@@ -1,0 +1,686 @@
+--- before/lie_group.py
++++ after/lie_group.py
+@@ -11,13 +11,25 @@
+ 
+ 
+ def Array_Validate(value, shape):
+-    raw = np.asarray(value)
+-    if np.iscomplexobj(raw):
+-        raise ValueError("complex_input")
+-    array = np.array(raw, dtype=np.float64, copy=True)
++    try:
++        raw = np.asarray(value)
++        if np.iscomplexobj(raw):
++            raise ValueError("complex_input")
++        with np.errstate(over="raise", invalid="raise"):
++            array = np.array(raw, dtype=np.float64, copy=True)
++    except (TypeError, OverflowError, FloatingPointError) as error:
++        raise ValueError("not_representable_float64") from error
+     if array.shape != shape or not np.isfinite(array).all():
+         raise ValueError("shape_or_nonfinite")
+     return array
++
++
++def Scalar_Validate(value):
++    """A finite real numeric scalar, copied into an immutable Python float."""
++    raw = np.asarray(value)
++    if raw.shape != () or raw.dtype.kind not in "iuf":
++        raise ValueError("not_real_numeric_scalar")
++    return float(Array_Validate(raw, ()))
+ 
+ 
+ def Vector_Skew(value):
+@@ -29,6 +41,7 @@
+     group = Array_Validate(value, (5, 5))
+     rotation = group[:3, :3]
+     if (not np.array_equal(group[3:], np.eye(5)[3:]) or
++            np.max(np.abs(rotation)) > 1. + 1e-10 or
+             not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-10, rtol=0) or
+             not np.isclose(np.linalg.det(rotation), 1., atol=1e-10, rtol=0)):
+         raise ValueError("not_se23")
+@@ -113,7 +126,12 @@
+ 
+ def Covariance_Validate(value, size):
+     covariance = Array_Validate(value, (size, size))
+-    if not np.allclose(covariance, covariance.T, atol=0, rtol=1e-12):
++    try:
++        with np.errstate(over="raise", invalid="raise"):
++            symmetric = np.allclose(covariance, covariance.T, atol=0, rtol=1e-12)
++    except FloatingPointError as error:
++        raise ValueError("asymmetric_covariance") from error
++    if not symmetric:
+         raise ValueError("asymmetric_covariance")
+     # Average floating-point roundoff only; no eigenvalue clipping or jitter.
+     covariance = 0.5 * covariance + 0.5 * covariance.T
+--- before/inekf_reference.py
++++ after/inekf_reference.py
+@@ -12,7 +12,7 @@
+ from scipy.linalg import expm
+ 
+ from lie_group import (Array_Validate, Covariance_Validate, Group_Validate,
+-                       Lie_Exp, Lie_LeftJacobian, Vector_Skew)
++                       Lie_Exp, Lie_LeftJacobian, Scalar_Validate, Vector_Skew)
+ 
+ 
+ class NavigationInEkfResult(Enum):
+@@ -32,12 +32,14 @@
+     def __post_init__(self):
+         group = Group_Validate(self.group)
+         covariance = Covariance_Validate(self.covariance, 9)
+-        if not np.isfinite(self.time_s) or self.time_s < 0:
++        time_s = Scalar_Validate(self.time_s)
++        if time_s < 0:
+             raise ValueError("invalid_time")
+         group.setflags(write=False)
+         covariance.setflags(write=False)
+         object.__setattr__(self, "group", group)
+         object.__setattr__(self, "covariance", covariance)
++        object.__setattr__(self, "time_s", time_s)
+ 
+ 
+ @dataclass(frozen=True)
+@@ -72,7 +74,8 @@
+     group = Group_Validate(group)
+     acceleration = Array_Validate(specific_force, (3,))
+     gravity = Array_Validate(gravity, (3,))
+-    if not np.isfinite(dt) or not 0 < dt <= 0.02:
++    dt = Scalar_Validate(dt)
++    if not 0 < dt <= 0.02:
+         raise ValueError("dt_outside_reference_domain")
+     block = np.zeros((9, 9))
+     block[:3, :3] = Vector_Skew(angular_rate)
+@@ -92,7 +95,8 @@
+     """Held A, body gyro/accel amplitude densities; exact linear SDE integral."""
+     matrix = Array_Validate(matrix, (9, 9))
+     density = Array_Validate(density, (6,))
+-    if np.any(density < 0) or not np.isfinite(dt) or not 0 < dt <= 0.02:
++    dt = Scalar_Validate(dt)
++    if np.any(density < 0) or not 0 < dt <= 0.02:
+         raise ValueError("invalid_noise_or_dt")
+     continuous = np.diag(np.r_[density * density, np.zeros(3)])
+     block = np.zeros((18, 18))
+@@ -112,8 +116,9 @@
+         acceleration = Array_Validate(specific_force, (3,))
+         gravity = Array_Validate(gravity, (3,))
+         density = Array_Validate(density, (6,))
+-        if (not np.isfinite(dt) or not 0 < dt <= 0.02 or np.any(density < 0) or
+-                not np.isfinite(state.time_s + dt) or state.time_s + dt <= state.time_s):
++        dt = Scalar_Validate(dt)
++        if (not 0 < dt <= 0.02 or np.any(density < 0) or
++                not np.isfinite(checked.time_s + dt) or checked.time_s + dt <= checked.time_s):
+             raise ValueError("invalid_noise_or_time")
+     except (ValueError, TypeError, AttributeError):
+         return NavigationStep(NavigationInEkfResult.INVALID_INPUT, state)
+@@ -131,7 +136,7 @@
+ 
+ 
+ def Navigation_ObservationMatrix(kind):
+-    if kind not in ("position", "velocity"):
++    if not isinstance(kind, str) or kind not in ("position", "velocity"):
+         raise ValueError("unsupported_observation")
+     matrix = np.zeros((3, 9))
+     start = 6 if kind == "position" else 3
+@@ -150,16 +155,19 @@
+ def NavigationInEkf_Update(state, observation, covariance_world, kind, time_s,
+                           nis_threshold=None):
+     """Co-timed 3D world position/velocity, zero lever arm, explicit optional gate."""
+-    if kind not in ("position", "velocity"):
++    if not isinstance(kind, str) or kind not in ("position", "velocity"):
+         return NavigationStep(NavigationInEkfResult.UNSUPPORTED_OBSERVATION, state)
+     try:
+         checked = NavigationState(state.group, state.covariance, state.time_s)
+         observation = Array_Validate(observation, (3,))
+         covariance_world = Covariance_Validate(covariance_world, 3)
+-        if not np.isfinite(time_s) or time_s != checked.time_s:
++        time_s = Scalar_Validate(time_s)
++        if time_s != checked.time_s:
+             raise ValueError("measurement_not_at_state_time")
+-        if nis_threshold is not None and (not np.isfinite(nis_threshold) or nis_threshold <= 0):
+-            raise ValueError("invalid_gate")
++        if nis_threshold is not None:
++            nis_threshold = Scalar_Validate(nis_threshold)
++            if nis_threshold <= 0:
++                raise ValueError("invalid_gate")
+     except (ValueError, TypeError, AttributeError):
+         return NavigationStep(NavigationInEkfResult.INVALID_INPUT, state)
+     try:
+--- before/eskf20_reference.py
++++ after/eskf20_reference.py
+@@ -10,7 +10,7 @@
+ 
+ from inekf_reference import Navigation_PropagateGroup
+ from lie_group import (Array_Validate, Covariance_Validate, Group_Validate,
+-                       Matrix_IntegralExp, Vector_Skew)
++                       Matrix_IntegralExp, Scalar_Validate, Vector_Skew)
+ 
+ 
+ class NavigationEskf20Result(Enum):
+@@ -50,9 +50,9 @@
+             array = Rotation_Validate(getattr(self, name))
+             array.setflags(write=False)
+             object.__setattr__(self, name, array)
+-        angles_time = Array_Validate(
+-            [self.inclination, self.declination, self.time_s], (3,))
+-        if abs(angles_time[0]) > np.pi / 2 or angles_time[2] < 0:
++        for name in ("inclination", "declination", "time_s"):
++            object.__setattr__(self, name, Scalar_Validate(getattr(self, name)))
++        if abs(self.inclination) > np.pi / 2 or self.time_s < 0:
+             raise ValueError("inclination_or_time_domain")
+         covariance = Covariance_Validate(self.covariance, 20)
+         covariance.setflags(write=False)
+@@ -79,11 +79,16 @@
+ 
+ 
+ def Magnetic_Field(inclination, declination):
+-    angles = Array_Validate([inclination, declination], (2,))
+-    if abs(angles[0]) > np.pi / 2:
++    inclination, declination = Scalar_Validate(inclination), Scalar_Validate(declination)
++    if abs(inclination) > np.pi / 2:
+         raise ValueError("inclination_domain")
+     si, ci, sd, cd = (np.sin(inclination), np.cos(inclination),
+                       np.sin(declination), np.cos(declination))
++    # The chart endpoints denote exact poles: D cannot affect the field there.
++    # cos(pi/2)'s ~6e-17 residue can invent information when multiplied by P_D.
++    # Do not snap nearby inclinations; their small D sensitivity is physical.
++    if abs(inclination) == np.pi / 2:
++        si, ci = np.sign(inclination), 0.
+     field = np.array([sd * ci, cd * ci, -si])
+     derivative_i = np.array([-sd * si, -cd * si, -ci])
+     derivative_d = np.array([cd * ci, -sd * ci, 0.])
+@@ -148,7 +153,8 @@
+     omega = Array_Validate(angular_rate, (3,))
+     force = Array_Validate(specific_force, (3,))
+     density = Array_Validate(density, (12,))
+-    if np.any(density < 0) or not np.isfinite(dt) or not 0 < dt <= .02:
++    dt = Scalar_Validate(dt)
++    if np.any(density < 0) or not 0 < dt <= .02:
+         raise ValueError("noise_or_dt_domain")
+     spectral = np.diag(density * density)
+ 
+@@ -171,6 +177,7 @@
+ 
+ 
+ def Nominal_Propagate(state, angular_rate_measured, specific_force_measured, gravity, dt):
++    dt = Scalar_Validate(dt)
+     group = np.eye(5)
+     group[:3, :3], group[:3, 3], group[:3, 4] = state.rotation, state.velocity, state.position
+     result = Navigation_PropagateGroup(group,
+@@ -187,8 +194,9 @@
+         force_m = Array_Validate(specific_force_measured, (3,))
+         gravity = Array_Validate(gravity, (3,))
+         density = Array_Validate(density, (12,))
+-        if (np.any(density < 0) or not np.isfinite(dt) or not 0 < dt <= .02 or
+-                not np.isfinite(state.time_s + dt) or state.time_s + dt <= state.time_s):
++        dt = Scalar_Validate(dt)
++        if (np.any(density < 0) or not 0 < dt <= .02 or
++                not np.isfinite(checked.time_s + dt) or checked.time_s + dt <= checked.time_s):
+             raise ValueError("noise_or_time_domain")
+     except (ValueError, TypeError, AttributeError):
+         return Eskf20Step(NavigationEskf20Result.INVALID_INPUT, state)
+@@ -230,8 +238,11 @@
+ 
+ 
+ def Gate_Validate(gate):
+-    if gate is not None and (not np.isfinite(gate) or gate <= 0):
+-        raise ValueError("invalid_nis_gate")
++    if gate is not None:
++        gate = Scalar_Validate(gate)
++        if gate <= 0:
++            raise ValueError("invalid_nis_gate")
++    return gate
+ 
+ 
+ def Eskf20_UpdateMagnetic(state, sample, gate=None):
+@@ -239,20 +250,21 @@
+         return Eskf20Step(NavigationEskf20Result.NO_OBSERVATION, state)
+     try:
+         checked = replace(state)
+-        if (sample.frame != "magnetometer_sensor" or
+-                sample.calibration != "hard_soft_iron_only" or
+-                sample.time_s != state.time_s or
+-                not np.isfinite(sample.reference_strength_uT) or sample.reference_strength_uT <= 0):
++        time_s = Scalar_Validate(sample.time_s)
++        strength = Scalar_Validate(sample.reference_strength_uT)
++        if (not isinstance(sample.frame, str) or sample.frame != "magnetometer_sensor" or
++                not isinstance(sample.calibration, str) or sample.calibration != "hard_soft_iron_only" or
++                time_s != checked.time_s or strength <= 0):
+             raise ValueError("magnetic_boundary")
+         measured = Array_Validate(sample.corrected_sensor_uT, (3,))
+         covariance = Covariance_Validate(sample.covariance_sensor_uT2, 3)
+-        Gate_Validate(gate)
++        gate = Gate_Validate(gate)
+     except (ValueError, TypeError, AttributeError):
+         return Eskf20Step(NavigationEskf20Result.INVALID_INPUT, state)
+     try:
+         with np.errstate(over="raise", invalid="raise", divide="raise"):
+-            measured = measured / sample.reference_strength_uT
+-            covariance = covariance / sample.reference_strength_uT / sample.reference_strength_uT
++            measured = measured / strength
++            covariance = covariance / strength / strength
+             transform = checked.rotation @ checked.installation
+             field, _, derivative_d = Magnetic_Field(checked.inclination, checked.declination)
+             residual = transform @ measured - field
+@@ -273,9 +285,11 @@
+         checked = replace(state)
+         measured = Array_Validate(measured, (3,))
+         covariance = Covariance_Validate(covariance, 3)
+-        if kind not in ("position", "velocity") or time_s != state.time_s:
++        time_s = Scalar_Validate(time_s)
++        if (not isinstance(kind, str) or kind not in ("position", "velocity") or
++                time_s != checked.time_s):
+             raise ValueError("observation_boundary")
+-        Gate_Validate(gate)
++        gate = Gate_Validate(gate)
+     except (ValueError, TypeError, AttributeError):
+         return Eskf20Step(NavigationEskf20Result.INVALID_INPUT, state)
+     try:
+--- before/verify.py
++++ after/verify.py
+@@ -46,9 +46,9 @@
+     output.mkdir(parents=True, exist_ok=False)
+     command = [sys.executable, "-B", "-m", "pytest", "-c", str(HERE / "pytest.ini"),
+                "-v", str(HERE / "test_mathematics.py"), str(HERE / "test_isolation.py"),
+-               str(HERE / "test_eskf20.py")]
++               str(HERE / "test_eskf20.py"), str(HERE / "test_independent_audit.py")]
+     environment = dict(os.environ, PYTHONDONTWRITEBYTECODE="1", PYTEST_DISABLE_PLUGIN_AUTOLOAD="1",
+-                       OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1")
++                       OPENBLAS_NUM_THREADS="1", OMP_NUM_THREADS="1", PYTHONIOENCODING="utf-8")
+     before = Snapshot_Get()
+     started = datetime.now(timezone.utc).isoformat()
+     clock = time.monotonic()
+@@ -62,7 +62,8 @@
+                   exit_code=run.returncode, python=sys.version, executable=sys.executable,
+                   versions={p: importlib.metadata.version(p) for p in ("numpy", "scipy", "pytest")},
+                   environment_overrides={k: environment[k] for k in ("PYTHONDONTWRITEBYTECODE",
+-                      "PYTEST_DISABLE_PLUGIN_AUTOLOAD", "OPENBLAS_NUM_THREADS", "OMP_NUM_THREADS")},
++                      "PYTEST_DISABLE_PLUGIN_AUTOLOAD", "OPENBLAS_NUM_THREADS", "OMP_NUM_THREADS",
++                      "PYTHONIOENCODING")},
+                   source_commit=Git_Read("rev-parse", "HEAD"),
+                   dirty_status=Git_Read("status", "--short", "--untracked-files=no"),
+                   source_sha256_before=before, source_sha256_after=after,
+@@ -83,4 +84,5 @@
+ 
+ 
+ if __name__ == "__main__":
++    sys.stdout.reconfigure(encoding="utf-8", errors="backslashreplace")
+     raise SystemExit(Verification_Run())
+--- before/README.md
++++ after/README.md
+@@ -11,6 +11,11 @@
+ to describe only the nine-error-state InEKF. Both remain isolated and unavailable
+ to production selection/generation. The runner now verifies both models and their
+ shared catalog isolation; historical run03 covered InEKF only.
++
++The 2026-10-18 independent audit adds boundary and symmetry checks and fixes
++exact-pole magnetic sensitivity and malformed-input transactions. See
++[INDEPENDENT_AUDIT_20261018.md](INDEPENDENT_AUDIT_20261018.md) for findings,
++failed runs, the final executed scope, and retained source/evidence inventories.
+ 
+ ## Primary sources checked on 2026-10-17
+ 
+@@ -108,6 +113,11 @@
+   unsupported observation. Failed steps retain the original state object; arrays
+   are copied and read-only on construction. Constructors/helpers raise ValueError
+   for malformed mathematical objects. No READY/success placeholder exists.
++- Times, time steps, gates and magnetic angles/strengths require finite real
++  numeric scalars. Zero-dimensional numeric NumPy arrays are copied to Python
++  floats; vectors (including length one), complex values, strings and booleans
++  are rejected. Float64 conversion overflow is an invalid input, and validation
++  of corrupt rotation/covariance data cannot escape as a floating-point warning.
+ - Optional NIS gate is explicitly supplied by the caller; None disables it for
+   the synthetic experiment. It is not the production admission/quality policy.
+ - Online biases, lever arms, magnetic/barometric observation models, time offset,
+@@ -132,6 +142,11 @@
+ models have all devices removed; these are not complete flight build validations.
+ They cover the existing None/SF6/KF6/ESKF15 graph choices and reject manually
+ entered ESKF20/InEKF/IEKF IDs. No paused GNSS/M9N test or adapter is executed.
++`test_independent_audit.py` adds physical noise-impulse quadrature for rotating
++ESKF20 covariance, general matrix exp/log InEKF reset, sensor-axis relabeling,
++the static yaw/declination gauge, exact/near poles and malformed scalar/overflow
++transactions. Its scope remains local synthetic mathematics, not global
++observability or a statistical consistency proof.
+ 
+ Run from the repository root with existing dependencies:
+ 
+--- before/ESKF20_MODEL.md
++++ after/ESKF20_MODEL.md
+@@ -4,6 +4,9 @@
+ implementation, tests and retained evidence. No plugin registration, firmware,
+ production interface, log/decoder, calibration or alignment implementation is
+ changed. ESKF20 remains unselectable and ungeneratable through the current catalog.
++The [2026-10-18 independent audit](INDEPENDENT_AUDIT_20261018.md) records later
++boundary fixes and added mathematical counterexamples without changing these
++error-coordinate conventions or adding a production entry point.
+ 
+ ## Authority and provenance
+ 
+@@ -132,6 +135,12 @@
+ unwrapped finite angle; wrapping would introduce an unnecessary reset seam.
+ Parameter convergence or declining covariance does not prove identifiability.
+ No trajectory-wide observability, consistency, accuracy or flight claim is made.
++At the two exact chart endpoints, the field is evaluated with sin(I)=+/-1 and
++cos(I)=0 exactly, including its angle derivatives. A library cos(pi/2) roundoff
++residue must not create false D information through a large prior covariance.
++No tolerance band snaps nearby I values to a pole. The polar chart is still
++degenerate; this correction does not make D observable or remove the existing
++out-of-chart correction rejection.
+ 
+ ## Failures and experimental acceptance
+ 
+@@ -144,6 +153,11 @@
+ prediction continues with no artificial magnetic observations. No jitter, PSD
+ clipping or silent coordinate repair is used. A rejection returns the exact
+ original state object, including when nominal computation preceded a later fault.
++Scalar angles, times, time steps, field strength and gates must be finite real
++numeric scalars. Accepted zero-dimensional NumPy values are copied to immutable
++Python floats; strings, booleans, complex numbers and non-scalar arrays reject.
++Unrepresentable vector values and overflow during stored-state validation also
++reject before any numerical update, including with warnings treated as errors.
+ 
+ This host model is not Power-of-Ten acceptance, C analysis, ARM linking, stack
+ proof or hardware qualification. Production registration remains forbidden until
+--- before/test_independent_audit.py
++++ after/test_independent_audit.py
+@@ -0,0 +1,302 @@
++"""Independent boundary/gauge/impulse checks; no adapter, hardware or data input."""
++from dataclasses import replace
++
++import numpy as np
++import pytest
++from numpy.testing import assert_allclose
++from scipy.linalg import expm, logm
++from scipy.spatial.transform import Rotation
++
++import eskf20_reference as eskf
++import inekf_reference as inekf
++import lie_group as lie
++
++
++def State_Create():
++    rng = np.random.default_rng(20261018)
++    factor = rng.normal(size=(20, 20)) * .01
++    return eskf.Eskf20State(np.array([.3, -.6, .1]), np.array([.4, .2, -.3]),
++        Rotation.from_euler("xyz", [.3, -.5, .7]).as_matrix(),
++        np.array([.01, -.02, .03]), np.array([.02, .04, -.03]),
++        Rotation.from_euler("zyx", [-.4, .2, .3]).as_matrix(),
++        .6, -.2, factor @ factor.T + np.eye(20) * .002)
++
++
++def MagneticSample_Create(state):
++    # Construct north/east/down geometry with rotations, not Magnetic_Field.
++    field = Rotation.from_euler("z", -state.declination).apply(
++        Rotation.from_euler("x", -state.inclination).apply([0., 1., 0.]))
++    if abs(state.inclination) == np.pi / 2:
++        field = np.array([0., 0., -np.sign(state.inclination)])
++    return eskf.MagneticSample(48. * state.installation.T @ state.rotation.T @ field,
++        np.diag([.02, .04, .03]), 48., state.time_s,
++        "magnetometer_sensor", "hard_soft_iron_only")
++
++
++@pytest.mark.parametrize("inclination", [-np.pi / 2, np.pi / 2])
++def test_exact_pole_does_not_invent_declination_information(inclination):
++    # Stress the declared finite/SPD domain, not a realistic sensor prior.
++    # The exact geometric identity h(+-pi/2,D)=(0,0,-+1) is independent of D.
++    state = replace(State_Create(), inclination=inclination,
++                    covariance=np.diag([1e-6] * 19 + [1e28]))
++    step = eskf.Eskf20_UpdateMagnetic(state, MagneticSample_Create(state))
++    assert step.result is eskf.NavigationEskf20Result.OK
++    assert step.state.covariance[19, 19] == state.covariance[19, 19]
++    assert step.declination_sensitivity == 0.
++    field, derivative_i, derivative_d = eskf.Magnetic_Field(inclination, -.2)
++    assert_allclose(field, [0., 0., -np.sign(inclination)], atol=0., rtol=0.)
++    assert_allclose(derivative_d, 0., atol=0., rtol=0.)
++    assert np.linalg.norm(derivative_i) == pytest.approx(1.)
++
++
++@pytest.mark.parametrize("distance", [1e-7, 1e-10])
++def test_near_pole_is_not_clipped_to_zero(distance):
++    # Compare against sin(distance), not cos(pi/2-distance) from the implementation.
++    _, _, derivative_d = eskf.Magnetic_Field(np.pi / 2 - distance, .9)
++    assert np.linalg.norm(derivative_d) == pytest.approx(np.sin(distance), abs=2e-16)
++    assert np.linalg.norm(derivative_d) > 0.
++
++
++@pytest.mark.parametrize("api", ["inekf_predict", "inekf_update", "eskf_predict",
++                                  "eskf_vector", "eskf_magnetic"])
++def test_oversized_integer_is_rejected_without_escaping_transaction(api):
++    # A finite Python integer need not be representable as a finite float64.
++    huge_vector = [10 ** 1000, 0, 0]
++    if api.startswith("inekf"):
++        state = inekf.NavigationState(np.eye(5), np.eye(9))
++        before = state.group.tobytes(), state.covariance.tobytes()
++        if api == "inekf_predict":
++            step = inekf.NavigationInEkf_Predict(state, huge_vector, np.zeros(3),
++                .01, np.zeros(6), np.zeros(3))
++        else:
++            step = inekf.NavigationInEkf_Update(state, huge_vector, np.eye(3), "position", 0.)
++        assert step.result is inekf.NavigationInEkfResult.INVALID_INPUT
++        assert before == (state.group.tobytes(), state.covariance.tobytes())
++    else:
++        state = State_Create()
++        before = state.position.tobytes(), state.covariance.tobytes()
++        if api == "eskf_predict":
++            step = eskf.Eskf20_Predict(state, huge_vector, np.zeros(3),
++                np.zeros(3), np.zeros(12), .01)
++        elif api == "eskf_vector":
++            step = eskf.Eskf20_UpdateVector(state, huge_vector, np.eye(3), "position", 0.)
++        else:
++            step = eskf.Eskf20_UpdateMagnetic(state,
++                replace(MagneticSample_Create(state), corrected_sensor_uT=huge_vector))
++        assert step.result is eskf.NavigationEskf20Result.INVALID_INPUT
++        assert before == (state.position.tobytes(), state.covariance.tobytes())
++    assert step.state is state
++
++
++@pytest.mark.parametrize("field", ["time_s", "inclination", "declination"])
++@pytest.mark.parametrize("value", ["0.6", np.array([.6]), .6 + 0j])
++def test_state_scalars_reject_non_real_scalar_values(field, value):
++    with pytest.raises(ValueError):
++        replace(State_Create(), **{field: value})
++
++
++@pytest.mark.parametrize("value", [np.array([0.]), np.array([]), "0", 0j])
++def test_inekf_time_requires_a_real_scalar(value):
++    with pytest.raises(ValueError):
++        inekf.NavigationState(np.eye(5), np.eye(9), value)
++
++
++def test_scalar_state_values_are_copied_and_canonical():
++    time, inclination, declination = np.array(0.), np.array(.6), np.array(-.2)
++    first = inekf.NavigationState(np.eye(5), np.eye(9), time)
++    second = replace(State_Create(), time_s=time, inclination=inclination, declination=declination)
++    time[()], inclination[()], declination[()] = 2., .7, .3
++    assert type(first.time_s) is type(second.time_s) is float
++    assert type(second.inclination) is type(second.declination) is float
++    assert first.time_s == second.time_s == 0.
++    assert second.inclination == .6 and second.declination == -.2
++
++
++@pytest.mark.parametrize("value", [np.array([0.]), 0j])
++def test_eskf_observation_timestamp_requires_scalar_real_value(value):
++    state = State_Create()
++    for step in (eskf.Eskf20_UpdateVector(state, state.position, np.eye(3), "position", value),
++                 eskf.Eskf20_UpdateMagnetic(state,
++                    replace(MagneticSample_Create(state), time_s=value))):
++        assert step.result is eskf.NavigationEskf20Result.INVALID_INPUT
++        assert step.state is state
++
++
++def test_array_observation_kind_does_not_escape_inekf_transaction():
++    state = inekf.NavigationState(np.eye(5), np.eye(9))
++    step = inekf.NavigationInEkf_Update(state, np.zeros(3), np.eye(3),
++                                      np.array(["position", "velocity"]), 0.)
++    assert step.result is inekf.NavigationInEkfResult.UNSUPPORTED_OBSERVATION
++    assert step.state is state
++
++
++@pytest.mark.parametrize("api", ["inekf", "eskf"])
++def test_vector_time_step_is_not_a_scalar(api):
++    if api == "inekf":
++        state = inekf.NavigationState(np.eye(5), np.eye(9))
++        step = inekf.NavigationInEkf_Predict(state, np.zeros(3), np.zeros(3),
++            np.array([.01]), np.zeros(6), np.zeros(3))
++        assert step.result is inekf.NavigationInEkfResult.INVALID_INPUT
++    else:
++        state = State_Create()
++        step = eskf.Eskf20_Predict(state, np.zeros(3), np.zeros(3), np.zeros(3),
++            np.zeros(12), np.array([.01]))
++        assert step.result is eskf.NavigationEskf20Result.INVALID_INPUT
++    assert step.state is state
++
++
++@pytest.mark.parametrize("api", ["inekf", "eskf"])
++@pytest.mark.parametrize("field", ["rotation", "covariance"])
++def test_overflow_while_validating_corrupt_state_is_transactional(api, field):
++    state = inekf.NavigationState(np.eye(5), np.eye(9)) if api == "inekf" else State_Create()
++    array = (state.covariance if field == "covariance" else
++             state.group if api == "inekf" else state.rotation)
++    array.setflags(write=True)
++    if field == "rotation":
++        array[0, 0] = 1e308
++    else:
++        array[0, 1], array[1, 0] = 1e308, -1e308
++    array.setflags(write=False)
++    before = array.tobytes()
++    if api == "inekf":
++        step = inekf.NavigationInEkf_Predict(state, np.zeros(3), np.zeros(3),
++            .01, np.zeros(6), np.zeros(3))
++        assert step.result is inekf.NavigationInEkfResult.INVALID_INPUT
++    else:
++        step = eskf.Eskf20_Predict(state, np.zeros(3), np.zeros(3), np.zeros(3),
++            np.zeros(12), .01)
++        assert step.result is eskf.NavigationEskf20Result.INVALID_INPUT
++    assert step.state is state and array.tobytes() == before
++
++
++@pytest.mark.parametrize("value", [np.array([48.]), np.complex128(48.), "48"])
++def test_magnetic_strength_requires_real_scalar(value):
++    state = State_Create()
++    step = eskf.Eskf20_UpdateMagnetic(state,
++        replace(MagneticSample_Create(state), reference_strength_uT=value))
++    assert step.result is eskf.NavigationEskf20Result.INVALID_INPUT
++    assert step.state is state
++
++
++@pytest.mark.parametrize("value", [np.array([20.]), np.complex128(20.), "20"])
++def test_all_update_gates_require_real_scalars(value):
++    state = State_Create()
++    for step in (eskf.Eskf20_UpdateMagnetic(state, MagneticSample_Create(state), value),
++                 eskf.Eskf20_UpdateVector(state, state.position, np.eye(3), "position", 0., value)):
++        assert step.result is eskf.NavigationEskf20Result.INVALID_INPUT and step.state is state
++    initial = inekf.NavigationState(np.eye(5), np.eye(9))
++    step = inekf.NavigationInEkf_Update(initial, np.zeros(3), np.eye(3), "position", 0., value)
++    assert step.result is inekf.NavigationInEkfResult.INVALID_INPUT and step.state is initial
++
++
++def test_zero_dimensional_numeric_observations_remain_supported():
++    state = State_Create()
++    sample = replace(MagneticSample_Create(state), time_s=np.array(0.), reference_strength_uT=np.array(48.))
++    step = eskf.Eskf20_UpdateMagnetic(state, sample, np.array(20.))
++    assert step.result is eskf.NavigationEskf20Result.OK
++    first = inekf.NavigationState(np.eye(5), np.eye(9))
++    step = inekf.NavigationInEkf_Predict(first, np.zeros(3), np.zeros(3),
++        np.array(.01), np.zeros(6), np.zeros(3))
++    assert step.result is inekf.NavigationInEkfResult.OK and type(step.state.time_s) is float
++
++
++def test_magnetometer_axis_relabeling_commutes_with_update():
++    state = State_Create()
++    sample = MagneticSample_Create(state)
++    sample = replace(sample, corrected_sensor_uT=sample.corrected_sensor_uT + [.03, -.02, .01])
++    axes = Rotation.from_euler("xyz", [.8, -.5, .6]).as_matrix()
++    relabeled = replace(state, installation=state.installation @ axes)
++    relabeled_sample = replace(sample, corrected_sensor_uT=axes.T @ sample.corrected_sensor_uT,
++        covariance_sensor_uT2=axes.T @ sample.covariance_sensor_uT2 @ axes)
++    first = eskf.Eskf20_UpdateMagnetic(state, sample)
++    second = eskf.Eskf20_UpdateMagnetic(relabeled, relabeled_sample)
++    assert first.result is second.result is eskf.NavigationEskf20Result.OK
++    assert_allclose(first.state.rotation, second.state.rotation, atol=5e-15, rtol=0.)
++    assert_allclose(first.state.installation @ axes, second.state.installation, atol=5e-15, rtol=0.)
++    assert_allclose(first.state.covariance, second.state.covariance, atol=5e-17, rtol=1e-10)
++    # Residual subtraction near zero amplifies coordinate roundoff in NIS.
++    # Bound that amplification with ||S^-1|| <= 1/lambda_min(measurement noise).
++    transform = state.rotation @ state.installation
++    noise = transform @ sample.covariance_sensor_uT2 @ transform.T / 48. ** 2
++    minimum = np.linalg.eigvalsh(noise)[0]
++    residual_roundoff = 32 * np.finfo(float).eps
++    nis_roundoff = (2 * np.sqrt(max(first.nis, second.nis) / minimum) * residual_roundoff
++                   + residual_roundoff ** 2 / minimum)
++    assert first.nis == pytest.approx(second.nis, abs=nis_roundoff)
++
++
++def test_static_yaw_declination_gauge_survives_dynamics():
++    state = replace(State_Create(), position=np.zeros(3), velocity=np.zeros(3))
++    axis = np.array([0., 0., 1.])
++    yaw = .4
++    changed = replace(state, rotation=Rotation.from_rotvec(axis * yaw).as_matrix() @ state.rotation,
++                      declination=state.declination - yaw)
++    assert_allclose(MagneticSample_Create(state).corrected_sensor_uT,
++                    MagneticSample_Create(changed).corrected_sensor_uT, atol=2e-14, rtol=0.)
++    tangent = np.zeros(20)
++    tangent[6:9], tangent[19] = state.rotation.T @ axis, 1.
++    force = state.rotation.T @ np.array([0., 0., 9.81])
++    transition, _ = eskf.Covariance_Discretize(state.rotation, np.zeros(3), force, np.zeros(12), .02)
++    for count in range(6):
++        propagated = np.linalg.matrix_power(transition, count) @ tangent
++        # Products of three 3D rotations and repeated transition powers do not
++        # preserve algebraic zeros to less than two machine epsilons.
++        roundoff = 32 * np.finfo(float).eps
++        assert_allclose(eskf.Magnetic_Jacobian(state) @ propagated, 0., atol=roundoff)
++        assert_allclose(propagated[:6], 0., atol=roundoff)
++
++
++def test_inekf_reset_with_general_matrix_exp_log_oracle():
++    delta = np.array([.25, -.18, .11, .6, -.2, .3, 1.2, -.7, .2])
++    def Hat(value):
++        x, y, z = value[:3]
++        matrix = np.zeros((5, 5))
++        matrix[:3, :3] = [[0., -z, y], [z, 0., -x], [-y, x, 0.]]
++        matrix[:3, 3], matrix[:3, 4] = value[3:6], value[6:9]
++        return matrix
++    def Reset(error):
++        matrix = logm(expm(Hat(delta + error)) @ expm(-Hat(delta))).real
++        return np.r_[matrix[2, 1], matrix[0, 2], matrix[1, 0], matrix[:3, 3], matrix[:3, 4]]
++    step = 1e-5
++    numeric = np.column_stack([(Reset(column) - Reset(-column)) / (2 * step)
++                               for column in np.eye(9) * step])
++    assert_allclose(lie.Lie_LeftJacobian(delta), numeric, atol=9e-11, rtol=1e-8)
++
++
++def test_rotating_process_covariance_from_independent_physical_impulses():
++    # Quadrature of physical noise impulses, never using F, G or the reference
++    # retraction/propagator to construct the expected covariance.
++    state = State_Create()
++    omega_m, force_m = np.array([1.2, -.8, 2.1]), np.array([1.3, -.6, 9.4])
++    gravity, duration = np.array([0., 0., -9.81]), .017
++    nodes, weights = np.polynomial.legendre.leggauss(10)
++    def Flow(position, velocity, rotation, gyro_bias, accel_bias, dt):
++        omega, force = omega_m - gyro_bias, force_m - accel_bias
++        times = (nodes + 1.) * dt / 2
++        accelerations = np.array([rotation @ Rotation.from_rotvec(omega * t).apply(force)
++                                  + gravity for t in times])
++        final_velocity = velocity + dt / 2 * (weights @ accelerations)
++        final_position = position + velocity * dt + dt / 2 * ((weights * (dt - times)) @ accelerations)
++        return final_position, final_velocity, rotation @ Rotation.from_rotvec(omega * dt).as_matrix()
++    base = (state.position, state.velocity, state.rotation, state.gyro_bias, state.accel_bias)
++    end = Flow(*base, duration)
++    density = np.linspace(.003, .04, 12)
++    expected = np.zeros((20, 20))
++    epsilon = 3e-5
++    for node, weight in zip(nodes, weights):
++        time = (node + 1.) * duration / 2
++        position, velocity, rotation = Flow(*base, time)
++        def Impulse(column, sign):
++            noise = np.eye(12)[column] * (sign * epsilon)
++            bg, ba = state.gyro_bias + noise[6:9], state.accel_bias + noise[9:12]
++            actual = Flow(position, velocity + rotation @ noise[:3],
++                rotation @ Rotation.from_rotvec(-noise[3:6]).as_matrix(), bg, ba, duration - time)
++            return np.r_[actual[0] - end[0], actual[1] - end[1],
++                Rotation.from_matrix(end[2].T @ actual[2]).as_rotvec(),
++                noise[6:12], np.zeros(5)]
++        columns = np.column_stack([(Impulse(j, 1) - Impulse(j, -1)) / (2 * epsilon)
++                                    for j in range(12)])
++        expected += weight * duration / 2 * (columns * density ** 2) @ columns.T
++    _, actual = eskf.Covariance_Discretize(state.rotation, omega_m - state.gyro_bias,
++        force_m - state.accel_bias, density, duration)
++    assert_allclose(actual, expected, atol=5e-15, rtol=2e-7)

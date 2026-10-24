@@ -1,6 +1,6 @@
 """Conservative, nonexecuting inventory for the experimental USB transport.
 
-This checks a literal CubeMX Make inventory, not arbitrary build semantics.
+This checks declared Make/JSON inventory, not arbitrary build semantics.
 Unresolved configuration is rejected, never interpreted as a disabled feature.
 """
 from __future__ import annotations
@@ -13,6 +13,60 @@ import re
 def UsbCode_Read(body: bytes) -> str:
     text = body.decode("utf-8-sig", errors="strict")
     return re.sub(r"/\*.*?\*/|//[^\r\n]*", "", text, flags=re.S)
+
+
+def _Literal_Get(value: str) -> int | None:
+    """Read one unsigned integer literal; never evaluate C or build expressions."""
+    value = value.strip()
+    if not re.fullmatch(r"(?:0[xX][0-9A-Fa-f]+|0|[1-9][0-9]*)[UuLl]*", value):
+        return None
+    return int(value.rstrip("UuLl"), 16 if value.lower().startswith("0x") else 10)
+
+
+def UsbNativeConfiguration_Describe(files: dict[str, bytes], owners: dict[str, str]) -> dict:
+    """Describe native declarations, without pretending to execute initialization.
+
+    Calls may be conditional or unreachable. Literal geometry is review input;
+    only the generated controller guard checks effective register state.
+    """
+    try:
+        source = UsbCode_Read(files.get(owners.get("usbd_conf.c", ""), b""))
+    except UnicodeError:
+        return {"scope": "SOURCE_DECLARATIONS_ONLY", "memory_mechanism": "UNRESOLVED",
+            "findings": ["NATIVE_CONFIGURATION_ENCODING_UNSUPPORTED"], "effective_geometry": "NOT_PROVEN"}
+    instances = sorted(set(re.findall(r"\b(\w+)\.Instance\s*=\s*(\w+)\s*;", source)))
+    calls = []
+    for match in re.finditer(r"\b(HAL_PCDEx_SetRxFiFo|HAL_PCDEx_SetTxFiFo)\s*\(([^;]*?)\)", source):
+        arguments = [value.strip() for value in match[2].split(",")]
+        expected = 2 if match[1].endswith("SetRxFiFo") else 3
+        if len(arguments) != expected:
+            calls.append({"operation": match[1], "arguments": match[2], "literal_words": None})
+            continue
+        calls.append({"operation": match[1], "pcd": arguments[0],
+            "endpoint": None if expected == 2 else _Literal_Get(arguments[1]),
+            "literal_words": _Literal_Get(arguments[-1])})
+    findings = []
+    total = None
+    if calls:
+        tx = [row for row in calls if row["operation"].endswith("SetTxFiFo")]
+        rx = [row for row in calls if row["operation"].endswith("SetRxFiFo")]
+        if not any(row.get("endpoint") == 2 for row in tx):
+            findings.append("NATIVE_TX_FIFO_EP2_NOT_EXPLICIT: CDC notification allocation requires review")
+        if (len(rx) != 1 or len(tx) != 3 or sorted(row.get("endpoint", -1) if row.get("endpoint") is not None else -1 for row in tx) != [0, 1, 2]
+                or any(row.get("literal_words") is None for row in calls)
+                or len({row.get("pcd") for row in calls}) != 1):
+            findings.append("NATIVE_FIFO_DECLARATION_INCOMPLETE_OR_NONLITERAL")
+        else:
+            total = sum(row["literal_words"] for row in calls)
+            if rx[0]["literal_words"] < 64 or any(row["literal_words"] < 16 for row in tx):
+                findings.append("NATIVE_FIFO_DECLARATION_BELOW_ADAPTER_MINIMUM")
+    mechanism = ("MIXED_REQUIRES_REVIEW" if calls and "HAL_PCDEx_PMAConfig" in source else
+                 "OTG_FIFO" if calls else "PMA" if "HAL_PCDEx_PMAConfig" in source else "UNRESOLVED")
+    return {"scope": "SOURCE_DECLARATIONS_ONLY", "owner": owners.get("usbd_conf.c"),
+        "pcd_instances": [{"pcd": pcd, "instance": instance} for pcd, instance in instances],
+        "memory_mechanism": mechanism, "fifo_calls": calls, "declared_fifo_words": total,
+        "findings": findings, "effective_geometry": "NOT_PROVEN_REQUIRES_RUNTIME_GUARD",
+        "clock_phy_irq": "NATIVE_OWNER_AND_BOARD_EVIDENCE_REQUIRED"}
 
 
 def _InventoryInputs_Inspect(files: dict[str, bytes], build: dict) -> list[str]:
@@ -40,7 +94,9 @@ def _Manifest_Inspect(files: dict[str, bytes]) -> tuple[dict, list[str]]:
     try:
         data = json.loads(files["scg-usb-build.json"].decode("utf-8-sig"))
         fields = {"format", "version", "sources", "asm_sources", "include_dirs", "defines", "cpu", "linker_script"}
-        if (set(data) != fields or data["format"] != "silverstar.usb.native-build" or data["version"] != 1):
+        if (not isinstance(data, dict) or set(data) != fields or
+                data["format"] != "silverstar.usb.native-build" or
+                type(data["version"]) is not int or data["version"] != 1):
             raise ValueError("unrecognized fields/version")
         for key in ("sources", "asm_sources", "include_dirs", "defines"):
             if not isinstance(data[key], list) or not data[key] or not all(isinstance(v, str) for v in data[key]):

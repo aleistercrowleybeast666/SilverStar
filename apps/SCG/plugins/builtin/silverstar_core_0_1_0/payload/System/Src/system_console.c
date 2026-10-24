@@ -1,4 +1,5 @@
 #include "system_version.h"
+#include "system_installation_capture_if.h"
 #include "system_console.h"
 #include "system_log_file.h"
 
@@ -69,6 +70,9 @@ typedef enum
     SYSTEM_CONSOLE_SENSOR_INVALID,
     SYSTEM_CONSOLE_SENSOR_FAILED
 } SystemConsoleSensorStatus;
+
+_Static_assert(SYSTEM_CONSOLE_RESPONSE_CAPACITY >= 3U,
+               "Console responses require CRLF and a terminator");
 
 static char s_line[SYSTEM_CONSOLE_LINE_CAPACITY];
 static uint16_t s_line_length;
@@ -1750,7 +1754,7 @@ static SystemConsoleExecuteResult SystemConsole_SystemInfoExecute(
             SYSTEM_CONSOLE_EXECUTE_BAD_ARGUMENT);
     }
     (void)CommonFormat_Print(response, capacity,
-        "OK SYSTEM INFO project=SilverStar version=" SILVERSTAR_VERSION_STRING " profile=0x%08lX",
+        "OK SYSTEM INFO project=SilverStar version=" SILVERSTAR_VERSION_STRING " profile=0x%08lX" SILVERSTAR_BUILD_IDENTITY_FIELDS,
         (unsigned long)SystemProfile_Get()->profile_id);
     return SYSTEM_CONSOLE_EXECUTE_OK;
 }
@@ -1959,7 +1963,7 @@ static SystemConsoleExecuteResult SystemConsole_DiagnosticsExecute(
     if (cursor == NULL)
     {
         (void)CommonFormat_Print(response, capacity,
-            "OK SYSTEM DIAG version=1 maintenance=0.1 compatible=0.0 file_service_version=1 entries=7 max_entries=16 max_line=511 polling_ms=1000 firmware=" SILVERSTAR_VERSION_STRING);
+            "OK SYSTEM DIAG version=1 maintenance=0.1 compatible=0.0 file_service_version=1 entries=7 max_entries=16 max_line=511 polling_ms=1000 firmware=" SILVERSTAR_VERSION_STRING SILVERSTAR_BUILD_IDENTITY_FIELDS);
         return SYSTEM_CONSOLE_EXECUTE_OK;
     }
     if ((cursor[0] < '0') || (cursor[0] > '7') || (cursor[1] != '\0'))
@@ -3264,21 +3268,47 @@ static SystemConsoleExecuteResult SystemConsole_EstimatorBarometerExecute(
 static const char *SystemConsole_EstimatorModeText(
     SystemEstimatorMode mode)
 {
-    return (mode == SYSTEM_ESTIMATOR_MODE_KF6) ? "KF6" : "PURE_INS";
+    switch (mode)
+    {
+        case SYSTEM_ESTIMATOR_MODE_PURE_INS: return "PURE_INS";
+        case SYSTEM_ESTIMATOR_MODE_KF6: return "KF6";
+        case SYSTEM_ESTIMATOR_MODE_ESKF15: return "ESKF15";
+        case SYSTEM_ESTIMATOR_MODE_SF6: return "SF6";
+        case SYSTEM_ESTIMATOR_MODE_ESKF20: return "ESKF20";
+        case SYSTEM_ESTIMATOR_MODE_INEKF15: return "INEKF15";
+        case SYSTEM_ESTIMATOR_MODE_INEKF20: return "INEKF20";
+        default: return "UNKNOWN";
+    }
 }
 
 static const char *SystemConsole_EstimatorAttitudeSourceText(
     SystemEstimatorAttitudeSource source)
 {
-    (void)source;
-    return "SOFTWARE_INS";
+    switch (source)
+    {
+        case SYSTEM_ESTIMATOR_ATTITUDE_SOURCE_SOFTWARE_INS: return "SOFTWARE_INS";
+        case SYSTEM_ESTIMATOR_ATTITUDE_SOURCE_ESKF15: return "ESKF15";
+        case SYSTEM_ESTIMATOR_ATTITUDE_SOURCE_ESKF20: return "ESKF20";
+        case SYSTEM_ESTIMATOR_ATTITUDE_SOURCE_INEKF15: return "INEKF15";
+        case SYSTEM_ESTIMATOR_ATTITUDE_SOURCE_INEKF20: return "INEKF20";
+        default: return "UNKNOWN";
+    }
 }
 
 static const char *SystemConsole_EstimatorPositionSourceText(
     SystemEstimatorPositionSource source)
 {
-    return (source == SYSTEM_ESTIMATOR_POSITION_SOURCE_KF6) ?
-        "KF6" : "PURE_INS";
+    switch (source)
+    {
+        case SYSTEM_ESTIMATOR_POSITION_SOURCE_PURE_INS: return "PURE_INS";
+        case SYSTEM_ESTIMATOR_POSITION_SOURCE_KF6: return "KF6";
+        case SYSTEM_ESTIMATOR_POSITION_SOURCE_ESKF15: return "ESKF15";
+        case SYSTEM_ESTIMATOR_POSITION_SOURCE_SF6: return "SF6";
+        case SYSTEM_ESTIMATOR_POSITION_SOURCE_ESKF20: return "ESKF20";
+        case SYSTEM_ESTIMATOR_POSITION_SOURCE_INEKF15: return "INEKF15";
+        case SYSTEM_ESTIMATOR_POSITION_SOURCE_INEKF20: return "INEKF20";
+        default: return "UNKNOWN";
+    }
 }
 
 static SystemConsoleExecuteResult SystemConsole_EstimatorStatusExecute(
@@ -3759,17 +3789,25 @@ static SystemConsoleExecuteResult SystemConsole_SampleExecute(
                                         SYSTEM_CONSOLE_EXECUTE_FAILED);
 }
 
-static uint8_t SystemConsole_AsyncWrite(const char *text)
+static uint8_t SystemConsole_AsyncWrite(void)
 {
-    uint16_t length;
+    uint16_t length = SystemConsole_TextLengthGet(
+        s_async_event, sizeof(s_async_event));
 
-    if (text == NULL)
-    {
-        return 0U;
-    }
-    length = SystemConsole_TextLengthGet(text, sizeof(s_async_event));
+    SILVERSTAR_ASSERT(length < sizeof(s_async_event),
+                      SILVERSTAR_ASSERT_MODULE_SYSTEM,
+                      SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
     if (length == 0U) { return 0U; }
-    return (uint8_t)(SystemConsoleDevice_Write((const uint8_t *)text,
+    if ((length < 2U) || (s_async_event[length - 2U] != '\r') ||
+        (s_async_event[length - 1U] != '\n'))
+    {
+        if (length > (sizeof(s_async_event) - 3U))
+        { length = (uint16_t)(sizeof(s_async_event) - 3U); }
+        s_async_event[length++] = '\r';
+        s_async_event[length++] = '\n';
+        s_async_event[length] = '\0';
+    }
+    return (uint8_t)(SystemConsoleDevice_Write((const uint8_t *)s_async_event,
                                                 length) == SYSTEM_DEVICE_OK);
 }
 
@@ -3811,7 +3849,7 @@ static uint8_t SystemConsole_MagStreamAsyncProcess(void)
         (double)sample.magnetic_field_b_uT[0],
         (double)sample.magnetic_field_b_uT[1],
         (double)sample.magnetic_field_b_uT[2]);
-    return SystemConsole_AsyncWrite(s_async_event);
+    return SystemConsole_AsyncWrite();
 }
 
 static void SystemConsole_MagStreamReset(void)
@@ -3831,7 +3869,7 @@ static uint8_t SystemConsole_CalibrationDiagnosticAsyncWrite(
         "EVENT CAL DIAG face=%s reason=%s\r\n",
         SystemCalibration_FaceText(status->diagnostic_face),
         SystemCalibration_WaitReasonText(status->diagnostic_reason));
-    if (SystemConsole_AsyncWrite(s_async_event) == 0U) { return 0U; }
+    if (SystemConsole_AsyncWrite() == 0U) { return 0U; }
     s_console_calibration_diagnostic_sequence = status->diagnostic_sequence;
     return 1U;
 }
@@ -3862,7 +3900,7 @@ static uint8_t SystemConsole_CalibrationFaceAsyncWrite(
             SystemCalibration_WaitReasonText(status->wait_reason),
             (unsigned int)status->completed_face_mask);
     }
-    if (SystemConsole_AsyncWrite(s_async_event) == 0U) { return 0U; }
+    if (SystemConsole_AsyncWrite() == 0U) { return 0U; }
     s_console_calibration_face_event_sequence = status->face_event_sequence;
     return 1U;
 }
@@ -3882,7 +3920,7 @@ static uint8_t SystemConsole_CalibrationCompletionAsyncWrite(
         (unsigned long)status->samples,
         (unsigned int)status->completed_face_mask,
         SystemCalibration_WaitReasonText(status->wait_reason));
-    if (SystemConsole_AsyncWrite(s_async_event) == 0U) { return 0U; }
+    if (SystemConsole_AsyncWrite() == 0U) { return 0U; }
     s_console_calibration_completion_sequence = status->start_sequence;
     return 1U;
 }
@@ -3933,7 +3971,7 @@ static uint8_t SystemConsole_AlignmentCompletionAsyncWrite(
     SystemConsole_AlignmentSourcesAppend(&detail, s_async_event,
                                          sizeof(s_async_event), "");
     SystemConsole_TextAppend(s_async_event, sizeof(s_async_event), "\r\n");
-    if (SystemConsole_AsyncWrite(s_async_event) == 0U)
+    if (SystemConsole_AsyncWrite() == 0U)
     {
         return 0U;
     }
@@ -3958,7 +3996,7 @@ static uint8_t SystemConsole_AlignmentAsyncProcess(void)
             "EVENT ALIGN STALE reason=%s ready_mask=0x%08lX\r\n",
             SystemAlignment_StaleReasonText(summary.stale_reason),
             (unsigned long)summary.ready_mask);
-        if (SystemConsole_AsyncWrite(s_async_event) != 0U)
+        if (SystemConsole_AsyncWrite() != 0U)
         {
             s_console_alignment_state = summary.state;
             return 1U;
@@ -3986,7 +4024,7 @@ static uint8_t SystemConsole_FlightActionFailureAsyncWrite(
         SystemFlightRecovery_ActionText(status->last_action),
         SystemConsole_DeviceErrorText(status->last_action_result),
         (unsigned long)status->last_action_mission_time_ms);
-    if (SystemConsole_AsyncWrite(s_async_event) == 0U) { return 0U; }
+    if (SystemConsole_AsyncWrite() == 0U) { return 0U; }
     s_console_flight_action_sequence = status->action_event_sequence;
     return 1U;
 }
@@ -4003,7 +4041,7 @@ static uint8_t SystemConsole_FlightDeployAsyncWrite(
         (double)status->deploy_tilt_angle_deg,
         (double)status->deploy_vertical_velocity_mps,
         (unsigned long)status->deploy_delay_ms);
-    if (SystemConsole_AsyncWrite(s_async_event) == 0U) { return 0U; }
+    if (SystemConsole_AsyncWrite() == 0U) { return 0U; }
     s_console_deploy_event_sequence = status->deploy_event_sequence;
     return 1U;
 }
@@ -4019,7 +4057,7 @@ static uint8_t SystemConsole_FlightImpactAsyncWrite(
         (double)status->impact_metric_mps2,
         (double)status->impact_peak_mps2,
         SystemFlightRecovery_LandingStateText(status->landing_state));
-    if (SystemConsole_AsyncWrite(s_async_event) == 0U) { return 0U; }
+    if (SystemConsole_AsyncWrite() == 0U) { return 0U; }
     s_console_impact_event_sequence = status->impact_event_sequence;
     return 1U;
 }
@@ -4032,7 +4070,7 @@ static uint8_t SystemConsole_FlightLandingAsyncWrite(
     (void)CommonFormat_Print(s_async_event, sizeof(s_async_event),
         "EVENT FLIGHT LANDING time_ms=%lu\r\n",
         (unsigned long)status->landing_event_mission_time_ms);
-    if (SystemConsole_AsyncWrite(s_async_event) == 0U) { return 0U; }
+    if (SystemConsole_AsyncWrite() == 0U) { return 0U; }
     s_console_landing_event_sequence = status->landing_event_sequence;
     return 1U;
 }
@@ -4058,6 +4096,19 @@ static uint8_t SystemConsole_FlightRecoveryAsyncProcess(void)
     if (status.landing_event_sequence != s_console_landing_event_sequence)
     { return SystemConsole_FlightLandingAsyncWrite(&status); }
     return 0U;
+}
+
+static uint8_t SystemConsole_FileBatchProcess(void)
+{
+    uint16_t length = 0U;
+    SystemLogFileResult result = SystemLogFile_BatchResponseGet(
+        (uint8_t *)s_response, sizeof(s_response), &length);
+    if (result != SystemLogFileResult_Ok) { return 0U; }
+    SILVERSTAR_ASSERT((length != 0U) && (length <= sizeof(s_response)),
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+    SystemLogFile_BatchResponseSent((uint8_t)(SystemConsoleDevice_Write(
+        (const uint8_t *)s_response, length) == SYSTEM_DEVICE_OK));
+    return 1U;
 }
 
 static void SystemConsole_AsyncEventProcess(void)
@@ -4716,6 +4767,21 @@ SystemConsoleExecuteResult SystemConsole_ExecuteLine(const char *line,
     SystemConsoleCommand parsed;
     SystemConsoleExecuteResult result;
 
+    if ((SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U) &&
+        (line != NULL) && (strncmp(line, "INSTALL ", 8U) == 0))
+    {
+        SystemInstallationCapture_ExecuteLine(line, response, capacity,
+            SystemTime_GetMonotonicUs());
+        return SYSTEM_CONSOLE_EXECUTE_OK;
+    }
+    if ((SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U) &&
+        (SystemInstallationCapture_CommandBlocked() != 0U))
+    {
+        (void)CommonFormat_Print(response, capacity,
+            "ERR SYSTEM INSTALL code=BUSY reason=INSTALLATION_OWNER");
+        return SYSTEM_CONSOLE_EXECUTE_OK;
+    }
+
     if ((line != NULL) && (strncmp(line, "LOGFILE ", 8U) == 0))
     { return SystemLogFile_ExecuteLine(line, response, capacity); }
     result = SystemConsole_CommandParse(line, &parsed, response, capacity);
@@ -4771,17 +4837,39 @@ static void SystemConsole_ResponseWrite(void)
     uint16_t response_length = SystemConsole_TextLengthGet(
         s_response, sizeof(s_response));
 
+    SILVERSTAR_ASSERT(response_length < sizeof(s_response),
+                      SILVERSTAR_ASSERT_MODULE_SYSTEM,
+                      SILVERSTAR_ASSERT_REASON_LENGTH_RANGE);
+    /* A full queue rejects the complete response and records Console health.
+     * The request owner must observe a fresh reply; a timeout is not success. */
     (void)SystemConsoleDevice_Write(
         (const uint8_t *)s_response, response_length);
 }
 
 static void SystemConsole_CompletedLineProcess(void)
 {
+    uint16_t binary_length = 0U;
+    SystemLogFileResult binary;
     if (s_line_length == 0U) { return; }
     s_line[s_line_length] = '\0';
-    (void)SystemConsole_ExecuteLine(s_line, s_response, sizeof(s_response));
-    SystemConsole_TextAppend(s_response, sizeof(s_response), "\r\n");
-    SystemConsole_ResponseWrite();
+    /* Keep CRLF capacity even when a legal legacy response is truncated. */
+    (void)SystemConsole_ExecuteLine(s_line, s_response, sizeof(s_response) - 2U);
+    binary = SystemLogFile_BinaryResponseGet((uint8_t *)s_response,
+        sizeof(s_response), &binary_length);
+    if (binary == SystemLogFileResult_Ok)
+    {
+        /* The adapter records complete-frame rejection. The host may POLL the
+         * same immutable completion again; a queue failure is never success. */
+        (void)SystemConsoleDevice_Write((const uint8_t *)s_response, binary_length);
+    }
+    else
+    {
+        if (binary != SystemLogFileResult_NotReady)
+        { (void)CommonFormat_Print(s_response, sizeof(s_response),
+            "ERR LOGFILE POLL request_id=0 code=STALE"); }
+        SystemConsole_TextAppend(s_response, sizeof(s_response), "\r\n");
+        SystemConsole_ResponseWrite();
+    }
     s_line_length = 0U;
 }
 
@@ -4828,9 +4916,12 @@ void SystemConsole_Process(void)
     uint16_t length;
     uint8_t read_index;
 
+    if (SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U)
+    { SystemInstallationCapture_Process(SystemTime_GetMonotonicUs()); }
+
     SILVERSTAR_ASSERT_OBJECT(&s_line[0], char,
         SILVERSTAR_ASSERT_MODULE_SYSTEM);
-    SystemConsole_AsyncEventProcess();
+    if (SystemConsole_FileBatchProcess() == 0U) { SystemConsole_AsyncEventProcess(); }
     SystemConsole_DiscontinuityProcess();
     for (read_index = 0U;
          read_index < SYSTEM_CONSOLE_MAX_READ_CHUNKS_PER_CYCLE;

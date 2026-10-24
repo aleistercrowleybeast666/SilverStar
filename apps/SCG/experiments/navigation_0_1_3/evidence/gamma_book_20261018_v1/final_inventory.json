@@ -1,0 +1,352 @@
+{
+  "owner": "navigation_0_1_3 book-gamma definition audit",
+  "purpose": "Final identity of the isolated gamma audit, exact edits, executed source and retained evidence; no cleanup authority",
+  "created_utc": "2026-10-18T12:30:53.406128+00:00",
+  "baseline_inventory": {
+    "path": "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_v1/baseline_inventory.json",
+    "sha256": "24cf9f14a5b30ab78e151debd9eee4ad3018982c827a1b2f66a081546fe3c1ca",
+    "bytes": 4760
+  },
+  "baseline_files_checked": 23,
+  "baseline_changed": [
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/ESKF20_CANDIDATES.md",
+      "before_sha256": "0dc7c50e1e3a57a75bb7ac6727538ca48c597d2eb1ebb4afaf50261115719c65",
+      "after_sha256": "4b8fbca03b8e35db911af5c81351ae25eb22022a3ca0d5f42458dca97937683e"
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/ESKF20_MODEL.md",
+      "before_sha256": "6c8c1abf9253c6e24357c52637fa0b71356a1a64de214a850ffe17f89de4b00b",
+      "after_sha256": "1c0ae13e2ccd33ef1fd2e67ebce46136317cd8aa174b5b21e36dabb17ba08691"
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/INEKF_AUGMENTED_MODEL.md",
+      "before_sha256": "bf93f12f23951d745b51656880d4c22004a29c47ea5be65d48e5751e75dee1fd",
+      "after_sha256": "0f680de5e3a42e62d8f6801f1d54d3800698cf96abb3191979518cdbe99d0927"
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/verify.py",
+      "before_sha256": "61b7fe9d29a6aa716169de0595ef67c58c36ace000db5bb84f155ee7075b1b04",
+      "after_sha256": "038d3e59a62351193fd87570f517ad01b85b1745d88274e1f78f0bba403e6c67"
+    }
+  ],
+  "baseline_preserved": [
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/eskf20_reference.py",
+      "sha256": "ccdffa81db1db8d2a0dc4a383723ae6b5bf2f9dee5da004672f144b515dda990",
+      "bytes": 13946
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/ESKF20_VALIDATION.md",
+      "sha256": "99bc7ce77ff673ea1745b95b1a34923c43d310eccf5cb8a1a0b2ff957e35d660",
+      "bytes": 5769
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/final_inventory.json",
+      "sha256": "49a96dc921e914facf7015e8df9e45fe922f2a100806addd10922fe3513a852b",
+      "bytes": 4085
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/final_inventory_eskf20.json",
+      "sha256": "9c3b1d37b87df807ca69bc9c90de6448cec013d8b8fc792cf00fef1af804e087",
+      "bytes": 6351
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/INDEPENDENT_AUDIT_20261018.md",
+      "sha256": "228761b19d22f2581e4b763a9373da1a6e16deb146ce24658bfdd15e46c113aa",
+      "bytes": 10773
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/inekf15_reference.py",
+      "sha256": "baab83dd7391953a75a1552c0bc17d3d1b85da3bf4f00ec4bdbcee6a81e794ad",
+      "bytes": 9024
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/inekf20_reference.py",
+      "sha256": "3449f47862c0c93cfdc6d17a7565b883299434835a53a2ed6bef329d4abd8e78",
+      "bytes": 9178
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/INEKF_AUGMENTED_VALIDATION.md",
+      "sha256": "ba5a315db3226f88aa118c0582720868acf9647e93885bee179a6e1783495676",
+      "bytes": 9296
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/inekf_reference.py",
+      "sha256": "2c2dcffa17dd50ac7d50d1f623e40b45d4098c39a51c3841a0aeed08e98b165f",
+      "bytes": 8859
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/lie_group.py",
+      "sha256": "81b674b66fede30b6c5368515f8c0d806f66d8e6dcdfd496345e66f00283fab0",
+      "bytes": 4974
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/pytest.ini",
+      "sha256": "ffaf1c4cbfb24d0079aeca265c8a0bdcd8bf0da14c8dbc085fbcbc85c229613d",
+      "bytes": 105
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/README.md",
+      "sha256": "0f9a4f7e154c9fb391dd4483c9f8c217cc01a6c271d5b288a3475f2c3c1f2ded",
+      "bytes": 10164
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_eskf20.py",
+      "sha256": "d4ce4b41d2294a045cb3a9bbf43fe729313a0f7a7580d8e1f5fa637f4ad9c5f9",
+      "bytes": 20792
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_independent_audit.py",
+      "sha256": "d7dd9ebbb49ff4dd3ad730190ce7957ae2e1e7ca94c790931e04245ce4ef0c34",
+      "bytes": 15697
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_inekf15.py",
+      "sha256": "de439e8b5a959a9e954dc56d4f850a8da5032fe6cd526e013bd8526085535ea8",
+      "bytes": 17486
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_inekf20.py",
+      "sha256": "d6023d7f27bafe754be4c3fb858bcde532b6790f3fa0657e6c06769e950c732c",
+      "bytes": 18079
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_isolation.py",
+      "sha256": "38a953b64e0e0d90450cf63fef83c330ddc9ad8f49eb6599a1a33a5aaed758b5",
+      "bytes": 3885
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_mathematics.py",
+      "sha256": "a8bf46235fa6364a5ef2b123e9f88334ae93eb2c31ac5b649636a59f9cb437b2",
+      "bytes": 14746
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/VALIDATION.md",
+      "sha256": "7ae651525fe87677bc06a7c54390e9be1e772837656772fdce6c26ba500a2929",
+      "bytes": 3991
+    }
+  ],
+  "snapshots_verified": [
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_v1/source_before/ESKF20_CANDIDATES.md",
+      "sha256": "0dc7c50e1e3a57a75bb7ac6727538ca48c597d2eb1ebb4afaf50261115719c65",
+      "bytes": 3447
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_v1/source_before/ESKF20_MODEL.md",
+      "sha256": "6c8c1abf9253c6e24357c52637fa0b71356a1a64de214a850ffe17f89de4b00b",
+      "bytes": 10091
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_v1/source_before/INEKF_AUGMENTED_MODEL.md",
+      "sha256": "bf93f12f23951d745b51656880d4c22004a29c47ea5be65d48e5751e75dee1fd",
+      "bytes": 11406
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_v1/source_before/verify.py",
+      "sha256": "61b7fe9d29a6aa716169de0595ef67c58c36ace000db5bb84f155ee7075b1b04",
+      "bytes": 4627
+    }
+  ],
+  "new_deliverables": [
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_gamma_book.py",
+      "sha256": "c6f04998281c43a7f67f948d488f44b1644f5af1af0b270317b9a0f89ee1f63d",
+      "bytes": 11635
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/GAMMA_BOOK_AUDIT_20261018.md",
+      "sha256": "30af225097f91772c133df6b880a29d6723582c91cd5b9993f5e36a88fe882c3",
+      "bytes": 10841
+    }
+  ],
+  "diff": {
+    "path": "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_v1/changes.diff",
+    "sha256": "cf69b614bec68b2b81634fb1df9eae26c6a220002182cb10707aa6f7c8b270c0",
+    "bytes": 8864
+  },
+  "executed_files_matching_current": [
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/eskf20_reference.py",
+      "sha256": "ccdffa81db1db8d2a0dc4a383723ae6b5bf2f9dee5da004672f144b515dda990",
+      "bytes": 13946
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/inekf15_reference.py",
+      "sha256": "baab83dd7391953a75a1552c0bc17d3d1b85da3bf4f00ec4bdbcee6a81e794ad",
+      "bytes": 9024
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/inekf20_reference.py",
+      "sha256": "3449f47862c0c93cfdc6d17a7565b883299434835a53a2ed6bef329d4abd8e78",
+      "bytes": 9178
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/inekf_reference.py",
+      "sha256": "2c2dcffa17dd50ac7d50d1f623e40b45d4098c39a51c3841a0aeed08e98b165f",
+      "bytes": 8859
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/lie_group.py",
+      "sha256": "81b674b66fede30b6c5368515f8c0d806f66d8e6dcdfd496345e66f00283fab0",
+      "bytes": 4974
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/pytest.ini",
+      "sha256": "ffaf1c4cbfb24d0079aeca265c8a0bdcd8bf0da14c8dbc085fbcbc85c229613d",
+      "bytes": 105
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_eskf20.py",
+      "sha256": "d4ce4b41d2294a045cb3a9bbf43fe729313a0f7a7580d8e1f5fa637f4ad9c5f9",
+      "bytes": 20792
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_gamma_book.py",
+      "sha256": "c6f04998281c43a7f67f948d488f44b1644f5af1af0b270317b9a0f89ee1f63d",
+      "bytes": 11635
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_independent_audit.py",
+      "sha256": "d7dd9ebbb49ff4dd3ad730190ce7957ae2e1e7ca94c790931e04245ce4ef0c34",
+      "bytes": 15697
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_inekf15.py",
+      "sha256": "de439e8b5a959a9e954dc56d4f850a8da5032fe6cd526e013bd8526085535ea8",
+      "bytes": 17486
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_inekf20.py",
+      "sha256": "d6023d7f27bafe754be4c3fb858bcde532b6790f3fa0657e6c06769e950c732c",
+      "bytes": 18079
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_isolation.py",
+      "sha256": "38a953b64e0e0d90450cf63fef83c330ddc9ad8f49eb6599a1a33a5aaed758b5",
+      "bytes": 3885
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_mathematics.py",
+      "sha256": "a8bf46235fa6364a5ef2b123e9f88334ae93eb2c31ac5b649636a59f9cb437b2",
+      "bytes": 14746
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/verify.py",
+      "sha256": "038d3e59a62351193fd87570f517ad01b85b1745d88274e1f78f0bba403e6c67",
+      "bytes": 4676
+    }
+  ],
+  "run": {
+    "path": "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_run01",
+    "started_utc": "2026-10-18T12:26:46.349790+00:00",
+    "source_commit": "7896c1d09a7f9138c41cdac35beef38347d94b78",
+    "workspace_dirty": true,
+    "exit_code": 0,
+    "passed": 299,
+    "failed": 0,
+    "skipped": 0,
+    "existing_cases": 250,
+    "new_cases": 49,
+    "changed_during_run": [],
+    "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+    "versions": {
+      "numpy": "2.4.0",
+      "scipy": "1.16.3",
+      "pytest": "9.1.1"
+    }
+  },
+  "retained_log_and_run_hashes_verified": [
+    "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_final/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_final/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_post01/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_post01/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_pre/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_pre/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_pre02/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/audit_20261018_pre02/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/augmented_audit_20261018_full/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/augmented_audit_20261018_full/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/eskf20_run01/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/eskf20_run01/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/eskf20_run02/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/eskf20_run02/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_run01/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_run01/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/inekf15_20261018_run01/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/inekf15_20261018_run01/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/inekf20_20261018_run01/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/inekf20_20261018_run01/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/run01/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/run01/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/run02/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/run02/run.json",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/run03/pytest.log",
+    "apps/SCG/experiments/navigation_0_1_3/evidence/run03/run.json"
+  ],
+  "current_task_files_excluding_this_inventory": [
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_run01/inventory.json",
+      "sha256": "f79a5a7617cafdb976bfde8c2ab19dd074c57ed2ee0cfc398265178c05b5b602",
+      "bytes": 677
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_run01/pytest.log",
+      "sha256": "cab64f71858e1579f87e06aeb4e7629676fbf65dcf02d1ed155eb57f39d042ca",
+      "bytes": 44901
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_run01/run.json",
+      "sha256": "6884dbc9be35ddf0b9b15dd172b8bd9241ec3c53da2a75f3bdb39b327d501b4d",
+      "bytes": 82931
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_v1/baseline_inventory.json",
+      "sha256": "24cf9f14a5b30ab78e151debd9eee4ad3018982c827a1b2f66a081546fe3c1ca",
+      "bytes": 4760
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_v1/changes.diff",
+      "sha256": "cf69b614bec68b2b81634fb1df9eae26c6a220002182cb10707aa6f7c8b270c0",
+      "bytes": 8864
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_v1/source_before/ESKF20_CANDIDATES.md",
+      "sha256": "0dc7c50e1e3a57a75bb7ac6727538ca48c597d2eb1ebb4afaf50261115719c65",
+      "bytes": 3447
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_v1/source_before/ESKF20_MODEL.md",
+      "sha256": "6c8c1abf9253c6e24357c52637fa0b71356a1a64de214a850ffe17f89de4b00b",
+      "bytes": 10091
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_v1/source_before/INEKF_AUGMENTED_MODEL.md",
+      "sha256": "bf93f12f23951d745b51656880d4c22004a29c47ea5be65d48e5751e75dee1fd",
+      "bytes": 11406
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/evidence/gamma_book_20261018_v1/source_before/verify.py",
+      "sha256": "61b7fe9d29a6aa716169de0595ef67c58c36ace000db5bb84f155ee7075b1b04",
+      "bytes": 4627
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/GAMMA_BOOK_AUDIT_20261018.md",
+      "sha256": "30af225097f91772c133df6b880a29d6723582c91cd5b9993f5e36a88fe882c3",
+      "bytes": 10841
+    },
+    {
+      "path": "apps/SCG/experiments/navigation_0_1_3/test_gamma_book.py",
+      "sha256": "c6f04998281c43a7f67f948d488f44b1644f5af1af0b270317b9a0f89ee1f63d",
+      "bytes": 11635
+    }
+  ],
+  "current_task_bytes_excluding_this_inventory": 194180,
+  "report_completed_after_test_execution": true,
+  "findings": "Documentation ambiguity corrected; no arithmetic, injection, reset or H sign defect found in examined scope; no estimator implementation changed.",
+  "source_provenance": "Book first-edition revised-final and dataset-page transcription verified by parent; this worker direct URL reads timed out. No independent PDF inspection claimed.",
+  "scope": "Host mathematical experiment only; no production integration, M9N/GNSS regression, hardware, firmware qualification, downloads, push or cleanup.",
+  "remaining_execution_blockers": [],
+  "inventory_self_hash": "omitted to avoid recursive self-reference"
+}

@@ -15,6 +15,7 @@
 #include "system_imu_if.h"
 #include "system_magnetometer_if.h"
 #include "system_mag_calibration.h"
+#include "system_installation_capture_if.h"
 #include "system_telemetry_transport_if.h"
 #include "system_time.h"
 
@@ -2471,6 +2472,13 @@ SystemDeviceResult SystemMagnetometer_LatestSampleGet(
     sample->physical_device_id = descriptor.physical_device_id;
     sample->descriptor_id = descriptor.descriptor_id;
     sample->instance_id = active;
+    /* LatestSampleGet does not prove every-native-frame delivery. Preserve the
+     * uncorrected observation and explicitly refuse qualification with NULL. */
+    if (SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U)
+    {
+        SystemInstallationCapture_MagObserve(sample, NULL,
+            SystemTime_GetMonotonicUs());
+    }
     {
         SystemMagCalibrationResult calibration_result =
             SystemMagCalibration_SampleApply(active, sample);

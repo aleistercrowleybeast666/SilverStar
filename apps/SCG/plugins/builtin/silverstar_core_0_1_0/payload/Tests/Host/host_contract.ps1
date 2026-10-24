@@ -45,7 +45,6 @@ $script:hostExpectedDiagnostics = @{
     capability_missing_gnss_noise = 'Selected GNSS needs estimator floor recommendations or all floor overrides'
     capability_missing_baro_noise = 'Selected Barometer needs an estimator noise recommendation or override'
     capability_jy901b_gravity_mag_rejected = 'TRIAD requires an enabled, absolute-vector-qualified magnetometer'
-    capability_first_release_triad_deferred = 'Magnetometer selection is deferred in the first SCG release'
     capability_hw_quat_6axis_preflight_unqualified = 'HW 6-axis alignment requires a qualified preflight source'
     capability_hw_quat_9axis_preflight_unqualified = 'HW 9-axis alignment requires a qualified preflight source'
     capability_impact_unqualified = 'Impact landing requires stillness- and impact-qualified IMU data'
@@ -114,8 +113,7 @@ function HostContract_JobPrepare {
     else { $required += $Job.Source }
     # Brand-specific rows retain their real declared headers and remain in the
     # inventory. Missing selected payload is an error; unselected is inapplicable.
-    if ($Job.Name -like 'capability_jy901b*' -or
-        $Job.Name -eq 'capability_first_release_triad_deferred') {
+    if ($Job.Name -like 'capability_jy901b*') {
         $required += @(
             "$repoRoot\Devices\IMU\JY901B\Inc\jy901b_imu_build_capabilities.h",
             "$repoRoot\Devices\IMU\JY901B\Adapter\Inc\jy901b_magnetometer_build_capabilities.h",

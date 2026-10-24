@@ -79,7 +79,9 @@ def test_compact_keeps_gnss_maintenance_and_reviewed_log_geometry(builtin_catalo
     assert 'SYSTEM_LOG_RECORD_SLOT_SIZE' not in header
     assert 'SYSTEM_LOG_ESTIMATOR_SLOT_SIZE' not in header
     assert 'SYSTEM_LOG_AGGREGATION_BUFFER_SIZE' not in header
-    assert len(model.logging_streams) == 40
+    assert len(model.logging_streams) == 42
+    assert {'FLIGHT_LOG_RECORD_MAG_NATIVE', 'FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY'} <= {
+        stream.record for stream in model.logging_streams}
     descriptors = _DeviceDescriptorEntries_Get(model, builtin_catalog)
     algorithm_count = sum(len(builtin_catalog.Component_Get(component).metadata.get(
         'algorithm_descriptors', [])) for component in model.ComponentIds_Get())
@@ -130,7 +132,9 @@ def test_minimal_owned_snapshot_keeps_all_descriptors_with_small_queues(builtin_
     assert re.search(r'SYSTEM_LOG_ESTIMATOR_QUEUE_DEPTH\s+16U', header)
     snapshot = int(re.search(r'PROJECT_SYSTEM_CONFIG_SNAPSHOT_SLOTS\s+(\d+)U', header)[1])
     assert snapshot > 24
-    assert len(model.logging_streams) == 40
+    assert len(model.logging_streams) == 42
+    assert {'FLIGHT_LOG_RECORD_MAG_NATIVE', 'FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY'} <= {
+        stream.record for stream in model.logging_streams}
     assert re.search(r'SYSTEM_IMU_SAMPLE_BUS_DEPTH\s+16U', header)
     assert re.search(r'ESTIMATOR_BUS_DEPTH\s+16U', header)
     FeatureTier_Apply(model, 'full', builtin_catalog)

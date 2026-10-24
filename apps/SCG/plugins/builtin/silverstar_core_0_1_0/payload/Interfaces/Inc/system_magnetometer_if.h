@@ -32,6 +32,18 @@ typedef struct
     uint16_t physical_device_id;
     uint16_t descriptor_id;
     uint8_t instance_id;
+    /* Native physical sensor-axis uT^2 covariance, used only before correction.
+     * Trust=1 requires sample time resolved to the active IMU's SystemTime
+     * monotonic microsecond domain. Receive/decode proxy time leaves trust=0. */
+    float covariance_sensor_uT2[9];
+    uint8_t covariance_valid;
+    uint8_t measurement_timestamp_trusted;
+    /* Native evidence only. Source1 is JY decode proxy, NOT hardware receive or
+     * sample time. Augmented EstimatorTask owns any statistical estimate. */
+    uint32_t observation_quality_source;
+    uint64_t decode_timestamp_us,processing_timestamp_us,accel_decode_timestamp_us,gyro_decode_timestamp_us;
+    uint32_t transport_epoch,decode_queue_bytes,decode_span_us,transport_evidence_valid,imu_evidence_valid;
+    float accel_sensor_mps2[3],gyro_sensor_radps[3];
 } SystemMagnetometerSample;
 
 typedef struct

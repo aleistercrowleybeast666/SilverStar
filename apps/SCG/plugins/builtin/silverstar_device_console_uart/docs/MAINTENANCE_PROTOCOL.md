@@ -249,3 +249,78 @@ EVENT ALIGN STALE reason=MOTION ready_mask=0x00000005
 | `SYSTEM START RESULT EXTRA` | `BAD_FORMAT/TOKEN_COUNT` |
 
 Console RX发生断流时，未以CR/LF结束的半行必须丢弃，断流后的完整命令独立解析。
+
+
+## Isolated R04 Console frame repair (2026-10-17)
+
+Console writes now admit the entire byte span or reject it without publishing a
+prefix. Capacity rejection is an ordinary failure and adds the rejected length
+to a saturating Console diagnostic counter; it is not a terminal assertion.
+`ConsoleUart_DiagnosticsGet().tx_discarded_bytes` includes these rejected frame
+bytes. Console health adds transport errors with saturation as well.
+
+The generated normal Console TX ring has 4096 bytes (4095 usable), sufficient for
+one existing maximum 3071-byte legacy response including CRLF. This is a static
+capacity contract; full bursts can still reject complete frames. There is no
+wait/spin/backpressure loop in the writer and no dynamic allocation. Other UART
+queues keep their existing sizes; the physical Console DMA chunk remains128.
+
+Debug lines and Console asynchronous lines retain CRLF even after truncation.
+Command response formatting reserves two bytes before appending CRLF. These
+changes preserve existing wire versions, parameter/error validation and client
+response-length limits. Missing or rejected output never establishes READY.
+
+This repair does not establish the physical cause of the retained bridge/host
+56-byte middle loss. The separate GSHC synchronization probe is non-authoritative
+and records its quarantined bytes before fresh strict identity negotiation.
+
+
+## Negotiated LOGFILE block extension (2026-10-20, maintenance 0.1 development)
+
+The machine authority is [log_file_service_v1.json](../../../../../../contracts/log_file_service_v1.json).
+This additive extension retains maintenance0.0 commands, maintenance0.1 text controls,
+legacy LOGFILE v1 `max_chunk=64`/READ, AIR M0 and SSLOG bytes. It is independent of
+product version and is not a release or hardware qualification statement.
+
+CAPS adds `block_version=1 max_block=512 block_encoding=COBS block_window=1`.
+GSHC opts in only when every field and its local binary transport are supported.
+An older peer without the extension, or a line-only local transport, uses the
+existing64-byte READ path. Malformed/unknown extension fields fail closed.
+
+`LOGFILE BLOCK <file_id> <token> <offset> <nonce16hex> <sequence>` submits one
+operation and receives `PENDING LOGFILE BLOCK request_id=<id>`. Only LoggerTask
+reads TF. `LOGFILE POLL <id>` returns PENDING/error text or exactly one binary
+record: zero byte, COBS(raw), zero byte, with no CRLF or prompt. There is no
+automatic stream/burst. The binary payload is never passed to the511-byte text
+line parser. The existing Console queue accepts the complete record or rejects
+it; rejection is not a successful transfer.
+
+The raw header is44 little-endian bytes: SLB1 magic, version1, kind1, uint16 flags
+(bit0 EOF), uint64 host nonce, uint32 request ID, sequence, file ID, whole-file
+CRC, size and offset, uint16 payload length and zero reserved uint16. Append
+0..512 original bytes, then little-endian CRC32 ISO-HDLC covering header and
+payload. Maximum raw560/wire565 bytes. Sequence equals floor(offset/512).
+Length must equal min(512,size-offset), EOF must agree, and offset==size gives
+an empty EOF block. A short underlying read fails STALE. Nonce is nonzero and
+new per attempt; it is not a stable device/boot identity or authentication.
+
+Validate the entire header, exact length, nonce, request ID, sequence, file ID,
+token CRC/size, offset, EOF and frame CRC before one local write. A complete
+delimited corrupt frame permits at most two POLL retries of the same immutable
+completion, without new storage I/O or deadline extension. Bounded stale
+request frames are quarantined. Other identity failures stop the operation.
+An incomplete frame/timeout requires reconnect, new CAPS/META/nonce and restart
+at offset zero; partial continuation remains forbidden. A BLOCK transaction
+has a30-second host absolute ceiling plus existing per-response, idle and total
+budgets. A local cancellation is not remote cleanup confirmation: CANCEL ACK
+still says cleanup_complete=0, and fresh owner STATUS must show cleanup_pending=0.
+Maintenance remains latched and never authorizes START or calibration.
+
+The final full CRC, unchanged fresh post-copy META, local readback/SHA and atomic
+local publication remain required. No recorded bytes, Descriptor or decoder
+package are rewritten. No delete/format/upload command is added. Static block
+scratch/mailbox storage is reused in CPU-only CCM. SerialTask copies to its
+existing Console buffer and COBS-encodes there after releasing the lock, with
+four bytes of input headroom. No extra raw+wire pair,512-byte task-local buffer,
+heap or UART queue increase is introduced. Actual ARM map/stack and controlled target measurements
+are required; host framing efficiency alone is not a throughput or stack proof.
