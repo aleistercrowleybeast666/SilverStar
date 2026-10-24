@@ -2,6 +2,14 @@
  * and unrelated flight subsystems are supplied by existing host fixtures. */
 #include <stdio.h>
 #include <string.h>
+#include "stm32f4xx_hal.h"
+/* Test-owned CubeMX handle. Keep it private in this amalgamated Host TU. */
+static UART_HandleTypeDef huart3 = {
+    .Init = {.BaudRate=230400U, .WordLength=UART_WORDLENGTH_8B,
+        .StopBits=UART_STOPBITS_1, .Parity=UART_PARITY_NONE,
+        .Mode=UART_MODE_TX_RX, .HwFlowCtl=UART_HWCONTROL_NONE},
+    .Instance=USART3
+};
 #define main Test_TelemetryPreviousMain
 #define SystemTelemetry_SendControl Test_PreviousSystemSendControl
 #define SystemTelemetry_TxResultGet Test_PreviousSystemTxResultGet
@@ -218,6 +226,8 @@ static void Flight_OutsideMission(void)
         TEST_CHECK(s_next_stream_us == 0ULL);
     }
 }
+
+#include "project_resources.c"
 
 int main(int argc, char **argv)
 {

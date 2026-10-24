@@ -23,6 +23,7 @@ from PySide6.QtWidgets import (
 )
 
 from silverstar_fccg.core.i18n import Translator
+from silverstar_fccg.ui.mission_profile_panel import MissionProfilePanel
 from silverstar_fccg.core.view_models import (
     BoardCompatibilityView,
     CapabilityUsageView,
@@ -1509,6 +1510,8 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
         super().__init__(
             translator, "page.flight_configuration", "page.flight_configuration.description"
         )
+        self.mission_profile_panel = MissionProfilePanel(translator)
+        self.root_layout.addWidget(self.mission_profile_panel)
         self.protocol_form = QFormLayout()
         self.protocol_group = self.Group_Create(
             "group.communication_protocols", self.protocol_form
@@ -2333,6 +2336,7 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
     def Language_Apply(self, translator: Translator) -> None:
         super().Language_Apply(translator)
         self._LoggingHeaders_Apply()
+        self.mission_profile_panel.Language_Apply(translator)
         self._LoggingButtons_LayoutUpdate()
         self.logging_select_all_button.setToolTip(
             self._translator.Text_Get("action.logging_enable_all_tooltip")

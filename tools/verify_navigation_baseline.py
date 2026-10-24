@@ -25,6 +25,9 @@ GROUPS = {
     "host": ("apps/SCG", ["tests/test_navigation_delayed_health.py",
         "tests/test_navigation_integrity_host.py", "tests/test_navigation_augmented_host.py"]),
     "math": ("apps/SCG/experiments/navigation_0_1_3", []),
+    "mission_scg": ("apps/SCG", ["tests/test_mission_profile.py", "tests/test_flight_state_scheduler_generated_host.py"]),
+    "mission_flp": ("apps/FLP", ["tests/test_mission_profile.py"]),
+    "mission_gshc": ("apps/GSHC", ["tests/test_mission_profile.py", "tests/test_navigation_gui.py"]),
 }
 
 
@@ -43,9 +46,15 @@ def Baseline_Main():
               "status": subprocess.check_output(["git", "status", "--short"], cwd=ROOT, text=True),
               "python": sys.version, "groups": [], "sources": {}}
     patterns = ["apps/SCG/plugins/builtin/silverstar_algorithm_augmented_common",
-                "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1", "contracts"]
+                "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1", "contracts",
+                "tools/silverstar_mission_profile.py", "apps/SCG/src/silverstar_fccg/project/mission_profile.py",
+                "apps/SCG/src/silverstar_fccg/generator/render.py", "apps/GSHC/mission_profile.py",
+                "apps/SCG/src/silverstar_fccg/ui/mission_profile_panel.py",
+                "apps/SCG/src/silverstar_fccg/ui/main_window.py", "apps/GSHC/ui/main_window.py",
+                "apps/FLP/src/silverstar_flp/decoder_profiles/mission_profile.py"]
     for folder in patterns:
-        for path in sorted((ROOT / folder).rglob("*")):
+        source = ROOT / folder
+        for path in ([source] if source.is_file() else sorted(source.rglob("*"))):
             if path.is_file() and path.suffix in (".c", ".h", ".py", ".json"):
                 report["sources"][path.relative_to(ROOT).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
     failed = False

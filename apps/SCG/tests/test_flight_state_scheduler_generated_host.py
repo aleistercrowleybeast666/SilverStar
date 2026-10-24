@@ -26,7 +26,7 @@ def flight_scheduler_executable(tmp_path_factory):
     executable = tmp_path_factory.mktemp("flight-scheduler-build") / "scheduler.exe"
     includes = [p for p in project.rglob("Inc") if "build" not in p.parts]
     includes += [project / p for p in ["System/User", "Tests/Host",
-        "Devices/Telemetry/SX1281/Src", "Modules/Src", "Middlewares/Third_Party/SX1280lib"]]
+        "Devices/Telemetry/SX1281/Src", "Modules/Src", "Middlewares/Third_Party/SX1280lib", "Generated/Src"]]
     command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-pedantic",
         "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections",
         "-DSILVERSTAR_AIR_LINK_ENABLED=1",
@@ -36,7 +36,7 @@ def flight_scheduler_executable(tmp_path_factory):
     command += [str(root / "tests/fixtures/flight_state_scheduler_host.c")]
     command += [str(project / p) for p in [
         "Devices/Telemetry/SX1281/Adapter/Src/sx1281_telemetry_adapter.c",
-        "Generated/Src/project_resources.c", "Protocol/Src/air_protocol.c",
+        "Protocol/Src/air_protocol.c",
         "Common/Src/silverstar_assert.c", "System/Calibration/Src/system_calibration_correction.c"]]
     command += ["-lm", "-o", str(executable)]
     result = subprocess.run(command, cwd=project, capture_output=True, text=True,

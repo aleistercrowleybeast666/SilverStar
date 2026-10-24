@@ -27,6 +27,11 @@ class EnumParam:
 
 
 ZH_CN: dict[str, str] = {
+    "mission_profile.title": "SCG 任务配置（离线查看）",
+    "mission_profile.open": "打开任务配置快照",
+    "mission_profile.none": "未加载工程配置。实时飞行状态继续由设备遥测提供。",
+    "mission_profile.declared": "工程：{name}；SHA-256：{digest}\n设备生效状态未核对；该文件不改变实时状态、READY 或命令权限。",
+    "mission_profile.invalid": "配置被拒绝，保留已有内容：{error}",
     "watch.search": "搜索 ELF 变量或成员",
     "watch.summary.task.preparation": "准备状态（不代表START授权）",
     "watch.summary.thread.estimator": "估计器进度",
@@ -338,6 +343,11 @@ ZH_CN: dict[str, str] = {
 
 
 EN_US: dict[str, str] = {
+    "mission_profile.title": "SCG mission configuration (offline view)",
+    "mission_profile.open": "Open mission configuration snapshot",
+    "mission_profile.none": "No project configuration loaded. Live flight state comes from device telemetry.",
+    "mission_profile.declared": "Project: {name}; SHA-256: {digest}\nDevice application is unverified. This file does not change live state, READY or command permissions.",
+    "mission_profile.invalid": "Configuration refused; previous content retained: {error}",
     "watch.search": "Search ELF variables or members",
     "watch.summary.task.preparation": "Preparation (not START authorization)",
     "watch.summary.thread.estimator": "Estimator progress",

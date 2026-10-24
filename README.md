@@ -109,6 +109,8 @@ v0.1.2 的实测配置包括 STM32F407 飞控和 STM32F103 串口地面站，覆
 
 各项检查的适用范围见[版本与证据边界](docs/public/shared/VERSIONS_AND_EVIDENCE.md)和[软件验证说明](docs/public/SOFTWARE_VERIFICATION.md)。
 
+当前开发线已完成离线基线整理，并接入[飞行配置首批](docs/public/shared/MONOREPO_ARCHITECTURE.md)：SCG 导出版本化 `.ssmission`，GSHC 离线查看，FLP 从精确 decoder 读取配置声明。原有策略参数继续进入实际生成配置；生命周期仍采用固定模板。运行 `.\.venv\Scripts\python.exe -B tools/verify_navigation_baseline.py` 可复现选定的 744 项检查；H7 整板、时序、资源和飞行验证待硬件就绪，清单见版本与证据边界。
+
 ### 从源码运行
 
 稳定源码请从 v0.1.2 标签下载；开发检出使用其自身版本和文档。要求 Python 3.11+，在仓库根目录运行：

@@ -1941,6 +1941,11 @@ def _LogMetadataDeclarations_Get(model: ProjectModel, catalog: PluginCatalog,
         if "software_test_build" in declarations:
             raise ValueError("Test identity must have one source authority")
         declarations["software_test_build"] = test_identity
+    from silverstar_fccg.project.mission_profile import MissionProfile_Build
+    if "mission_profile" in declarations:
+        raise ValueError("Mission profile must come from current resolved project configuration")
+    if "silverstar.flight_logic.cycle.reference" in model.ComponentIds_Get():
+        declarations["mission_profile"] = MissionProfile_Build(model, catalog)
     return declarations
 
 

@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (
 )
 
 from silverstar_flp.ui.algorithm_labels import AlgorithmName_Display
+from silverstar_flp.decoder_profiles.mission_profile import MissionProfile_FromDataset
 
 from silverstar_flp.analysis.overview import (
     AlignmentOverview,
@@ -72,6 +73,11 @@ class OverviewPage(QWidget):
         self.file_label.setWordWrap(True)
         self.file_label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         summary_layout.addWidget(self.file_label)
+        self.mission_profile_label = QLabel(translator.Text_Get('mission_profile.none'))
+        self.mission_profile_label.setWordWrap(True)
+        self.mission_profile_label.setTextFormat(Qt.TextFormat.PlainText)
+        self.mission_profile_label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        summary_layout.addWidget(self.mission_profile_label)
         layout.addWidget(self.summary_group)
 
         metrics = QGridLayout()
@@ -189,6 +195,13 @@ class OverviewPage(QWidget):
 
     def Dataset_Set(self, dataset: FlightDataset) -> None:
         self._dataset = dataset
+        try:
+            mission = MissionProfile_FromDataset(dataset)
+            text = self._translator.Text_Get('mission_profile.declared', name=mission['project']['name'],
+                digest=mission['sha256']) if mission is not None else self._translator.Text_Get('mission_profile.none')
+        except ValueError as error:
+            text = self._translator.Text_Get('mission_profile.invalid', error=str(error))
+        self.mission_profile_label.setText(text)
         summary = FlightSummary_Build(dataset)
         synthetic = (
             f" · {self._translator.Text_Get('status.synthetic')}" if summary.synthetic else ""

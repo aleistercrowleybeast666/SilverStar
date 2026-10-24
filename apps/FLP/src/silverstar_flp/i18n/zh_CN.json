@@ -1,4 +1,7 @@
 {
+  "mission_profile.none": "该日志的精确 decoder 未声明任务配置快照。",
+  "mission_profile.declared": "SCG 工程配置：{name}；SHA-256：{digest}\n这是工程声明；实际状态转换与执行结果以日志记录为准，设备生效状态未核对。",
+  "mission_profile.invalid": "任务配置被拒绝：{error}。原始日志仍按其精确 decoder 阅读。",
   "parameter.fusion_timing_mode": "融合时序",
   "parameter.fusion_horizon_ms": "主滤波滞后（仅模式 2）",
   "parameter.tooltip.fusion_horizon_ms": "模式 2 的滞后量，单位毫秒。记录值来自固件元数据；What-if 可在保留原始观测的基础上改变滞后量。",

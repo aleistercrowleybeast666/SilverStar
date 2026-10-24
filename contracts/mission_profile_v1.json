@@ -1,0 +1,31 @@
+{
+  "schema_id": "silverstar.mission-profile/1",
+  "schema_version": 1,
+  "description": "Declarative SCG project configuration snapshot. No scripts, device commands or runtime authorization.",
+  "fields": ["schema_id", "schema_version", "source", "project", "frame", "lifecycle", "rules", "continuous", "qualification", "sha256"],
+  "frame": {"world": "ENU", "clock": "MCU_monotonic_us", "mission_origin": "accepted_START"},
+  "lifecycle_template": "silverstar.lifecycle.reference/1",
+  "states": [
+    {"state_id": 0, "type_id": "BOOT"},
+    {"state_id": 1, "type_id": "SELF_TEST"},
+    {"state_id": 2, "type_id": "PREFLIGHT"},
+    {"state_id": 3, "type_id": "READY"},
+    {"state_id": 4, "type_id": "FLIGHT"},
+    {"state_id": 5, "type_id": "RECOVERY"},
+    {"state_id": 6, "type_id": "LANDED"},
+    {"state_id": 7, "type_id": "POSTFLIGHT"},
+    {"state_id": 8, "type_id": "FAULT"}
+  ],
+  "qualification": {"firmware_binding": "unverified", "hardware_tested": false},
+  "logging_policies": ["EVERY", "DECIMATION", "PERIODIC", "EVENT", "ONE_SHOT"],
+  "rule_owner": {"plugin_id": "silverstar.flight_logic.deployment.multi_trigger", "version": "0.1.0"},
+  "rule_parameters": {
+    "ApogeeVerticalVelocity": {"id": "vertical_velocity_threshold", "type": "float", "unit": "m/s", "minimum": -100.0, "maximum": -0.01, "generated_symbol": "SYSTEM_FLIGHT_APOGEE_VZ_THRESHOLD_MPS", "generated_scale": 1.0},
+    "Tilt": {"id": "tilt_threshold", "type": "float", "unit": "°", "minimum": 0.01, "maximum": 180.0, "generated_symbol": "SYSTEM_FLIGHT_TILT_THRESHOLD_DEG", "generated_scale": 1.0},
+    "Delay": {"id": "delay", "type": "float", "unit": "s", "minimum": 0.0, "maximum": 4294967.0, "generated_symbol": "SYSTEM_FLIGHT_DEPLOY_DELAY_MS", "generated_scale": 1000.0}
+  },
+  "maximum_bytes": 1048576,
+  "maximum_rules": 64,
+  "maximum_parameters_per_rule": 64,
+  "maximum_log_streams": 256
+}

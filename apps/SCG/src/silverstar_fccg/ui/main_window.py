@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from silverstar_fccg.project.mission_profile import MissionProfile_Build, MissionProfile_Write
 from silverstar_fccg.app.usb_ground_flow import (
     UsbGroundBound_Is, UsbGroundFlow_Import, UsbGroundFlow_Run,
     UsbGroundOutput_Get, UsbGroundQuality_Run, UsbGroundRefresh_Inspect, RELEASE_NOTICE, RELEASE_STATUS,
@@ -572,6 +573,7 @@ class MainWindow(QMainWindow):
             self._Strategy_Change
         )
         self.flight_configuration_page.modeChanged.connect(self._Mode_Change)
+        self.flight_configuration_page.mission_profile_panel.exportRequested.connect(self._MissionProfile_Export)
         self.flight_configuration_page.modeParameterChanged.connect(
             self._ModeParameter_Change
         )
@@ -837,6 +839,11 @@ class MainWindow(QMainWindow):
                 strategy_availability=display.strategy_availability,
                 mode_availability=display.mode_availability,
             )
+            try:
+                mission_profile = MissionProfile_Build(display.model, self._service.catalog)
+            except ValueError:
+                mission_profile = None
+            self.flight_configuration_page.mission_profile_panel.Profile_Set(mission_profile)
             self.flight_configuration_page.Protocols_Set(
                 display.protocol_profiles,
                 display.selected_protocol_profiles,
@@ -1123,6 +1130,29 @@ class MainWindow(QMainWindow):
 
     def _ProjectModel_Sync(self) -> None:
         self._LoggingState_Apply(self._model)
+
+    def _MissionProfile_Export(self) -> None:
+        if self._pending_logging_streams is not None:
+            self._LoggingChanges_Apply()
+        if self._pending_mode_changes or self._pending_mode_parameter_changes:
+            self._ModeChanges_Apply()
+        self._ProjectModel_Sync()
+        selected, _filter = QFileDialog.getSaveFileName(self,
+            self._translator.Text_Get('mission_profile.export'),
+            str(Path.home() / 'Documents' / (self._model.identity.name + '.ssmission')),
+            self._translator.Text_Get('mission_profile.filter'))
+        if not selected:
+            return
+        target = Path(selected)
+        if not target.suffix:
+            target = target.with_suffix('.ssmission')
+        try:
+            profile = MissionProfile_Build(self._model, self._service.catalog)
+            MissionProfile_Write(target, profile, replace_existing=target.exists())
+            self.flight_configuration_page.mission_profile_panel.Profile_Set(profile)
+            self.statusBar().showMessage(self._translator.Text_Get('mission_profile.saved', path=str(target)), 8000)
+        except (ValueError, OSError) as error:
+            self._Error_Show(error)
 
     def _MemoryLayout_Change(self, layout: str) -> None:
         if layout not in ("auto", "eskf_window_sram"):

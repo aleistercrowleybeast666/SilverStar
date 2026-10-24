@@ -5,6 +5,14 @@
     "maturity": "development"
   },
   "identities": {
+    "mission.profile": {
+      "scope": "independent declarative configuration snapshot; no runtime authority",
+      "source": {
+        "path": "contracts/mission_profile_v1.json",
+        "kind": "json",
+        "selector": ["schema_version"]
+      }
+    },
     "suite": {
       "version": "product",
       "scope": "product"

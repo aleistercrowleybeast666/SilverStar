@@ -1,0 +1,424 @@
+{
+  "schema_id": "silverstar.mission-profile/1",
+  "schema_version": 1,
+  "source": "scg_project",
+  "project": {
+    "name": "SS_RadioHandshake_1",
+    "firmware_version": "0.1.3",
+    "generator_version": "0.1.3",
+    "mcu": "silverstar.mcu.stm32f407vet6",
+    "board": "silverstar.board.silverstar_0_5"
+  },
+  "frame": {
+    "world": "ENU",
+    "clock": "MCU_monotonic_us",
+    "mission_origin": "accepted_START"
+  },
+  "lifecycle": {
+    "template_id": "silverstar.lifecycle.reference/1",
+    "states": [
+      {
+        "state_id": 0,
+        "type_id": "BOOT"
+      },
+      {
+        "state_id": 1,
+        "type_id": "SELF_TEST"
+      },
+      {
+        "state_id": 2,
+        "type_id": "PREFLIGHT"
+      },
+      {
+        "state_id": 3,
+        "type_id": "READY"
+      },
+      {
+        "state_id": 4,
+        "type_id": "FLIGHT"
+      },
+      {
+        "state_id": 5,
+        "type_id": "RECOVERY"
+      },
+      {
+        "state_id": 6,
+        "type_id": "LANDED"
+      },
+      {
+        "state_id": 7,
+        "type_id": "POSTFLIGHT"
+      },
+      {
+        "state_id": 8,
+        "type_id": "FAULT"
+      }
+    ]
+  },
+  "rules": [
+    {
+      "owner": {
+        "plugin_id": "silverstar.flight_logic.deployment.multi_trigger",
+        "version": "0.1.0"
+      },
+      "slot": "deployment",
+      "option": "ApogeeVerticalVelocity",
+      "enabled": false,
+      "parameters": [
+        {
+          "id": "vertical_velocity_threshold",
+          "type": "float",
+          "value": -2.0,
+          "unit": "m/s",
+          "minimum": -100.0,
+          "maximum": -0.01,
+          "generated_symbol": "SYSTEM_FLIGHT_APOGEE_VZ_THRESHOLD_MPS",
+          "generated_scale": 1.0
+        }
+      ]
+    },
+    {
+      "owner": {
+        "plugin_id": "silverstar.flight_logic.deployment.multi_trigger",
+        "version": "0.1.0"
+      },
+      "slot": "deployment",
+      "option": "Tilt",
+      "enabled": false,
+      "parameters": [
+        {
+          "id": "tilt_threshold",
+          "type": "float",
+          "value": 90.0,
+          "unit": "°",
+          "minimum": 0.01,
+          "maximum": 180.0,
+          "generated_symbol": "SYSTEM_FLIGHT_TILT_THRESHOLD_DEG",
+          "generated_scale": 1.0
+        }
+      ]
+    },
+    {
+      "owner": {
+        "plugin_id": "silverstar.flight_logic.deployment.multi_trigger",
+        "version": "0.1.0"
+      },
+      "slot": "deployment",
+      "option": "Delay",
+      "enabled": true,
+      "parameters": [
+        {
+          "id": "delay",
+          "type": "float",
+          "value": 10.0,
+          "unit": "s",
+          "minimum": 0.0,
+          "maximum": 4294967.0,
+          "generated_symbol": "SYSTEM_FLIGHT_DEPLOY_DELAY_MS",
+          "generated_scale": 1000.0
+        }
+      ]
+    }
+  ],
+  "continuous": {
+    "ins": {
+      "plugin_id": "silverstar.algorithm.ins.coning2_sculling2",
+      "version": "0.1.0"
+    },
+    "estimator": {
+      "plugin_id": "silverstar.algorithm.estimator.kf6",
+      "version": "0.4.0"
+    },
+    "landing": {
+      "plugin_id": "silverstar.flight_logic.landing.baro_imu_window_strategy",
+      "version": "0.1.0"
+    },
+    "logging": [
+      {
+        "record": "FLIGHT_LOG_RECORD_EVENT",
+        "enabled": true,
+        "policy": "EVENT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_STATS",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 1000000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESTIMATOR",
+        "enabled": false,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 40000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_SYSTEM_CONFIG",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_PURE_INS",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 40000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_KF6_DIAGNOSTIC",
+        "enabled": false,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 40000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_KF6_FULL_P",
+        "enabled": false,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 200000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_POWER",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 100000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_HEALTH",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 1000000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_TELEMETRY_DIAG",
+        "enabled": true,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 1000000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_INITIAL_STATE",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_GNSS_NATIVE",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_BARO_NATIVE",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_MAG_NATIVE",
+        "enabled": false,
+        "policy": "DECIMATION",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_INERTIAL_INCREMENT",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_GNSS_MEASUREMENT",
+        "enabled": false,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_BARO_MEASUREMENT",
+        "enabled": false,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_IMU_CORRECTED",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_CALIBRATION_RESULT",
+        "enabled": true,
+        "policy": "EVENT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ALIGNMENT_RESULT",
+        "enabled": true,
+        "policy": "EVENT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_MISSION_CONFIG",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_DEVICE_DESCRIPTOR",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ALGORITHM_DESCRIPTOR",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_LOG_STREAM_DESCRIPTOR",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_DECODER_PROFILE_DESCRIPTOR",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESTIMATOR_STEP",
+        "enabled": false,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_GNSS_RECOVERY",
+        "enabled": false,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_LANDING_DIAGNOSTIC",
+        "enabled": true,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESKF15_STATE",
+        "enabled": false,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 40000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESKF15_FULL_P_PART",
+        "enabled": false,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 40000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESKF15_INITIAL_STATE",
+        "enabled": false,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESKF15_INITIAL_P_PART",
+        "enabled": false,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESKF15_MEASUREMENT",
+        "enabled": false,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ESKF15_BODY_INPUT",
+        "enabled": false,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_NAV_QUALITY",
+        "enabled": false,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_ALIGNMENT_EVIDENCE",
+        "enabled": true,
+        "policy": "EVENT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_MISSION_SNAPSHOT_IDENTITY",
+        "enabled": true,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_MAG_CALIBRATION_IDENTITY",
+        "enabled": false,
+        "policy": "ONE_SHOT",
+        "decimation": 1,
+        "period_us": 0
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_SF6_STATE",
+        "enabled": false,
+        "policy": "PERIODIC",
+        "decimation": 1,
+        "period_us": 100000
+      },
+      {
+        "record": "FLIGHT_LOG_RECORD_SF6_MEASUREMENT",
+        "enabled": false,
+        "policy": "EVERY",
+        "decimation": 1,
+        "period_us": 0
+      }
+    ]
+  },
+  "qualification": {
+    "firmware_binding": "unverified",
+    "hardware_tested": false
+  },
+  "sha256": "8cf03f3f2f8b784588ac4dca51cc89f971725e5a1e9485962ce84b1d2416a69e"
+}

@@ -107,6 +107,8 @@ The [version registry](versions.json) references the root `VERSION` as the sole 
 
 The configurations tested for v0.1.2 include an STM32F407 flight controller and an STM32F103 serial ground station, with bench, handheld, and thrown-object recordings. These do not establish rocket flight validation. Native USB CDC paths for F103/C071 remain experimental, with restricted normal generation and no completed verification on the corresponding USB hardware. Magnetometer workflows, InEKF, maintenance protocols, and other 0.1.3 work depend on their individual documentation and acceptance status. Android remains a development application with real USB/control gates; DeviceService is a mock-only prototype. Neither is included in the v0.1.2 desktop package.
 
+The development line now has a reproducible offline baseline and the [first mission-configuration increment](docs/public/shared/MONOREPO_ARCHITECTURE.md): SCG exports versioned `.ssmission` snapshots, GSHC reads them offline, and FLP reads the declaration from the exact decoder. Existing rule parameters still reach generated configuration; the lifecycle template remains fixed. Run `.\.venv\Scripts\python.exe -B tools/verify_navigation_baseline.py` for the selected 744 checks. H7 board integration, timing, resources and flight tests remain pending; see the recorded acceptance checklist.
+
 See the [version and evidence notes](docs/public/shared/VERSIONS_AND_EVIDENCE.md) and [software verification guide](docs/public/SOFTWARE_VERIFICATION.md) for the scope of individual checks.
 
 ### Run from source

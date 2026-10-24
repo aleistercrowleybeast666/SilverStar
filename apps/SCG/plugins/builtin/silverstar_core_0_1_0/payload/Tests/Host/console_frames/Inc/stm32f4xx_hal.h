@@ -4,9 +4,19 @@
 typedef enum { HAL_OK, HAL_ERROR, HAL_BUSY, HAL_TIMEOUT } HAL_StatusTypeDef;
 typedef enum { HAL_UART_RXEVENT_IDLE, HAL_UART_RXEVENT_TC } HAL_UART_RxEventTypeTypeDef;
 typedef struct { uint32_t unused; } DMA_HandleTypeDef;
-typedef struct { uint32_t BaudRate; } UART_InitTypeDef;
+/* Host declaration only. Generated resource validation reads the full 8N1
+ * contract; these fields are not an emulation of a UART peripheral. */
+typedef struct {
+    uint32_t BaudRate, WordLength, StopBits, Parity, Mode, HwFlowCtl;
+} UART_InitTypeDef;
 typedef struct { UART_InitTypeDef Init; DMA_HandleTypeDef *hdmarx; DMA_HandleTypeDef *hdmatx;
-    uint32_t ErrorCode; } UART_HandleTypeDef;
+    uint32_t ErrorCode; void *Instance; } UART_HandleTypeDef;
+#define USART3 ((void *)(uintptr_t)0x40004800U)
+#define UART_WORDLENGTH_8B 0U
+#define UART_PARITY_NONE 0U
+#define UART_STOPBITS_1 0U
+#define UART_MODE_TX_RX 12U
+#define UART_HWCONTROL_NONE 0U
 #define DMA_IT_HT 1U
 #define HAL_UART_ERROR_ORE 1U
 #define HAL_UART_ERROR_FE 2U

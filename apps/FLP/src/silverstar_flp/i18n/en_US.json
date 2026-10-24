@@ -1,4 +1,7 @@
 {
+  "mission_profile.none": "The exact decoder does not declare a mission configuration snapshot.",
+  "mission_profile.declared": "SCG project configuration: {name}; SHA-256: {digest}\nProject declaration; actual transitions and execution results come from log records. Device application is unverified.",
+  "mission_profile.invalid": "Mission configuration refused: {error}. Raw log reading continues with its exact decoder.",
   "parameter.fusion_timing_mode": "Fusion timing",
   "parameter.fusion_horizon_ms": "Primary lag (mode 2 only)",
   "parameter.tooltip.fusion_horizon_ms": "Mode 2 lag in milliseconds. Recorded values come from firmware metadata. What-if can change the lag while retaining the original observations.",

@@ -23,7 +23,7 @@ from tests.test_decoder_profiles import (
 
 def NavigationPair_Open(
     directory: Path, overrides=None, *, preflight_us=0, flight_samples=1001, omit_imu=False,
-    journal_rows=None, augmented_parameters=None, kf6_revision=1
+    journal_rows=None, augmented_parameters=None, kf6_revision=1, mission_profile=None
 ):
     directory.mkdir(parents=True, exist_ok=True)
     fixtures = Path(__file__).parent / "fixtures/parameter_contracts"
@@ -41,6 +41,8 @@ def NavigationPair_Open(
         SyntheticKf6Identity_Set(semantics)
     elif kf6_revision is not None:
         raise ValueError('synthetic_kf6_revision_unsupported')
+    if mission_profile is not None:
+        semantics.setdefault('metadata_declarations', {})['mission_profile'] = mission_profile
     if journal_rows is not None:
         repository = Path(__file__).resolve().parents[3]
         schema = json.loads((repository / 'apps/SCG/plugins/builtin/silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG/schema/sslog_schema.json').read_text(encoding='utf-8'))

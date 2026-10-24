@@ -5,6 +5,7 @@ from ui.connection_controls import HeaderStatus_Set, ConnectionActions_Render
 
 from dataclasses import dataclass
 from pathlib import Path
+from mission_profile import MissionProfile_Read
 from typing import Callable
 
 import numpy as np
@@ -1428,6 +1429,7 @@ class MainWindow(QMainWindow):
                 widget.setTitle(text)
             else:
                 widget.setText(text)  # type: ignore[attr-defined]
+        self._MissionProfile_Render()
         self._render_data_task_status()
         self.btn_cut_device.setToolTip(self.i18n.tr('transfer.cut_sources'))
         self.pages.setTabText(self.pages.indexOf(self.preflight_page), self.i18n.tr("page.preflight"))
@@ -2128,11 +2130,50 @@ class MainWindow(QMainWindow):
         self.plot_layout.setVerticalSpacing(4)
         return box
 
+    def _MissionProfile_Open(self) -> None:
+        selected, _filter = QFileDialog.getOpenFileName(self, self.i18n.tr('mission_profile.open'),
+            str(Path.home() / 'Documents'), 'SilverStar (*.ssmission)')
+        if not selected:
+            return
+        try:
+            profile = MissionProfile_Read(selected)
+        except ValueError as error:
+            self._mission_profile_error = str(error)
+        else:
+            self._declared_mission_profile = profile
+            self._mission_profile_error = ''
+        self._MissionProfile_Render()
+
+    def _MissionProfile_Render(self) -> None:
+        if not hasattr(self, 'lbl_mission_profile'):
+            return
+        profile = self._declared_mission_profile
+        text = self.i18n.tr('mission_profile.declared', name=profile['project']['name'],
+            digest=profile['sha256']) if profile else self.i18n.tr('mission_profile.none')
+        if self._mission_profile_error:
+            text += '\n' + self.i18n.tr('mission_profile.invalid', error=self._mission_profile_error)
+        self.lbl_mission_profile.setText(text)
+
     def _build_post_process_page(self) -> QWidget:
         page = QWidget()
         root = QVBoxLayout(page)
         self.recovery_panel = RecoveryPanel(page)
         root.addWidget(self.recovery_panel)
+        self._declared_mission_profile = None
+        self._mission_profile_error = ''
+        mission_box = QGroupBox()
+        self._bind_text(mission_box, 'mission_profile.title')
+        mission_layout = QVBoxLayout(mission_box)
+        self.lbl_mission_profile = QLabel()
+        self.lbl_mission_profile.setWordWrap(True)
+        self.lbl_mission_profile.setTextFormat(Qt.TextFormat.PlainText)
+        self.lbl_mission_profile.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        mission_layout.addWidget(self.lbl_mission_profile)
+        self.btn_mission_profile = QPushButton()
+        self._bind_text(self.btn_mission_profile, 'mission_profile.open')
+        self.btn_mission_profile.clicked.connect(self._MissionProfile_Open)
+        mission_layout.addWidget(self.btn_mission_profile)
+        root.addWidget(mission_box)
         box = QGroupBox()
         self._bind_text(box, "group.post_process")
         layout = QVBoxLayout(box)
