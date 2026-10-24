@@ -35,9 +35,8 @@ def _Text_Require(value, maximum=128):
 def MissionProcess_Default():
     definitions = [('ready', '就绪', 'ready'), ('mission_start', '任务开始', 'start_accepted'),
         ('ascent', '动力上升', 'launch_detected'), ('coast', '无动力滑行', 'burnout_detected'),
-        ('predeploy', '预开伞', 'apogee_confirmed'), ('deploy', '开伞请求', None),
-        ('descent', '下降', 'deployment_confirmed'), ('landed', '已落地', 'landed_confirmed'),
-        ('recovery', '地面找回', 'recovery_complete')]
+        ('deploy', '开伞请求', 'apogee_confirmed'),
+        ('descent', '下降', 'deployment_confirmed'), ('landed', '已落地', 'landed_confirmed')]
     return {'schema_version': 1, 'execution': 'desktop_reference', 'start_policy': 'separate', 'maximum_gap_ms': 1000, 'stages': [
         {'stage_id': identity, 'name': name,
          'condition': {'signal': 'event' if event else 'stage_elapsed_s',

@@ -4,6 +4,7 @@ from pathlib import Path
 from PySide6.QtCore import QCoreApplication, QEvent, QTimer, Qt
 from PySide6.QtTest import QTest
 from PySide6.QtTest import QSignalSpy
+from PySide6.QtWidgets import QComboBox, QGroupBox
 import pytest
 
 from silverstar_fccg.app.service import FccgService
@@ -53,31 +54,31 @@ def test_real_project_phase_capsules_insert_dialog_start_policy_and_reopen(tmp_p
     try:
         panel = window.flight_configuration_page.mission_process_panel
         panel.create_button.click(); _Events_Flush(qapp)
-        assert len(window._model.mission_process['stages']) == 9
+        assert len(window._model.mission_process['stages']) == 7
         panel.insert_before.setCurrentIndex(panel.insert_before.findData('deploy'))
         panel.add_button.click(); _Events_Flush(qapp)
         rows = window._model.mission_process['stages']
-        assert len(rows) == 10 and rows[6]['stage_id'] == 'deploy'
-        identity = rows[5]['stage_id']
+        assert len(rows) == 8 and rows[5]['stage_id'] == 'deploy'
+        identity = rows[4]['stage_id']
         numeric = panel.value_editors[identity]
         numeric.lineEdit().setText('1.25 s')
         QTest.keyClick(numeric, Qt.Key.Key_Return); _Events_Flush(qapp)
-        assert window._model.mission_process['stages'][5]['condition']['value'] == 1.25
+        assert window._model.mission_process['stages'][4]['condition']['value'] == 1.25
         def Dialog_Cancel():
             dialog = qapp.activeModalWidget()
             assert isinstance(dialog, MissionStageDialog)
             dialog.name_edit.setText('discarded'); dialog.reject()
         QTimer.singleShot(0, Dialog_Cancel)
-        panel.Dialog_Open(5); _Events_Flush(qapp)
-        assert window._model.mission_process['stages'][5]['name'] != 'discarded'
+        panel.Dialog_Open(identity); _Events_Flush(qapp)
+        assert window._model.mission_process['stages'][4]['name'] != 'discarded'
         def Dialog_Apply():
             dialog = qapp.activeModalWidget()
             dialog.name_edit.setText('Pre-deployment confirmation')
             dialog.number.setValue(2.5); dialog.accept()
         QTimer.singleShot(0, Dialog_Apply)
-        panel.Dialog_Open(5); _Events_Flush(qapp)
-        assert window._model.mission_process['stages'][5]['condition']['value'] == 2.5
-        assert window._model.mission_process['stages'][5]['stage_id'] == identity
+        panel.Dialog_Open(identity); _Events_Flush(qapp)
+        assert window._model.mission_process['stages'][4]['condition']['value'] == 2.5
+        assert window._model.mission_process['stages'][4]['stage_id'] == identity
         panel.start_policy.setCurrentIndex(panel.start_policy.findData('start_is_launch')); _Events_Flush(qapp)
         rows = window._model.mission_process['stages']
         assert not any(row['stage_id'] == 'mission_start' for row in rows)
@@ -92,6 +93,10 @@ def test_real_project_phase_capsules_insert_dialog_start_policy_and_reopen(tmp_p
         window._model = reopened; window._Project_Refresh(); window.show()
         for language in ('zh_CN', 'en_US'):
             window.Language_Apply(language)
+            _Events_Flush(qapp)
+            ins_id = window._model.strategies['ins']
+            heading = window.algorithm_parameters_page.findChild(QGroupBox, 'algorithmParameters_' + ins_id)
+            assert heading.title() == ('惯导算法' if language == 'zh_CN' else 'Inertial navigation algorithm')
             for theme in ('light', 'dark'):
                 window.Theme_Apply(theme)
                 for width in (960, 1440):
@@ -102,6 +107,39 @@ def test_real_project_phase_capsules_insert_dialog_start_policy_and_reopen(tmp_p
         assert not errors
     finally:
         window.close(); _Events_Flush(qapp)
+
+
+def test_stage_dropdowns_open_below_and_scroll_only_over_ten(qapp):
+    from silverstar_fccg.core.i18n import Translator
+    from silverstar_fccg.project.mission_process import MissionProcess_Default
+    from silverstar_fccg.ui.mission_process_panel import MissionStageDialog, MissionProcessPanel
+    from silverstar_fccg.ui.widgets import StandardComboBox
+    process = MissionProcess_Default()
+    targets = [f'pyro{index}' for index in range(12)]
+    dialog = MissionStageDialog(Translator('zh_CN'), process, 4, targets)
+    panel = MissionProcessPanel(Translator('zh_CN'))
+    panel.Configuration_Set(process)
+    try:
+        assert all(isinstance(combo, StandardComboBox) for combo in dialog.findChildren(QComboBox))
+        assert all(isinstance(combo, StandardComboBox) for combo in panel.findChildren(QComboBox))
+        dialog.move(10,10); dialog.show(); _Events_Flush(qapp)
+        combo = dialog.event_combo
+        combo.showPopup(); _Events_Flush(qapp)
+        assert combo.view().window().geometry().top() >= combo.mapToGlobal(combo.rect().bottomLeft()).y()
+        assert combo.view().verticalScrollBarPolicy() == Qt.ScrollBarPolicy.ScrollBarAlwaysOff
+        combo.hidePopup()
+        dialog.action.setCurrentIndex(dialog.action.findData('request_recovery'))
+        dialog.target.showPopup(); _Events_Flush(qapp)
+        assert dialog.target.maxVisibleItems() == 10
+        assert dialog.target.view().verticalScrollBarPolicy() == Qt.ScrollBarPolicy.ScrollBarAsNeeded
+        assert dialog.target.view().verticalScrollBar().maximum() > 0
+        QTest.keyClick(dialog.target.view(), Qt.Key.Key_End)
+        QTest.keyClick(dialog.target.view(), Qt.Key.Key_Return)
+        assert dialog.target.currentData() == 'pyro11'
+        dialog.accept()
+        assert dialog.Process_Get()['stages'][4]['action'] == {'kind':'request_recovery','target':'pyro11'}
+    finally:
+        dialog.close(); panel.close(); _Events_Flush(qapp)
 
 
 def test_unknown_rule_owner_does_not_block_legacy_generation(builtin_catalog):

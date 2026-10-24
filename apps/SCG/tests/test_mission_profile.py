@@ -126,7 +126,9 @@ def test_gui_edit_export_cancel_language_theme_and_resize(tmp_path, qapp, builti
                 panel.Language_Apply(Translator(language))
                 panel.resize(760, 420); qapp.processEvents()
                 assert panel.export_button.isEnabled()
-                assert panel.title() and 'mission_profile.' not in panel.lifecycle_label.text()
+                assert not panel.details.Expanded_Is()
+                assert 'GSHC' in panel.export_button.text()
+                assert 'mission_profile.' not in panel.lifecycle_label.text()
     finally:
         window._project_dirty = False
         window.close(); qapp.processEvents()

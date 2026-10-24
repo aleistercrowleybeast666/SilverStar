@@ -109,7 +109,7 @@ v0.1.2 的实测配置包括 STM32F407 飞控和 STM32F103 串口地面站，覆
 
 各项检查的适用范围见[版本与证据边界](docs/public/shared/VERSIONS_AND_EVIDENCE.md)和[软件验证说明](docs/public/SOFTWARE_VERIFICATION.md)。
 
-当前开发线已完成离线基线整理。飞行配置现在可创建无控任务阶段模板、插入自定义阶段（例如预开伞等待）、调整顺序，并选择将 START 与起飞检测分开或显式合并。原生工程、`.ssmission` v2、GSHC 离线查看及 FLP 精确 decoder 声明已接通；共享参考解释器可输出摘要匹配的 `.ssmissiontrace`。**新阶段尚未绑定固件执行，带该流程的固件生成会明确拒绝**；原固件流程与已有参数保持原路径，不能把桌面参考记录当作板端 Recorded。[任务过程与后续接入](docs/public/shared/MONOREPO_ARCHITECTURE.md)
+当前开发线已完成离线基线整理。飞行配置现在可创建默认七阶段的无控任务模板（就绪、任务开始、动力上升、滑行、开伞请求、下降、落地），按需插入自定义阶段、调整顺序，并选择将 START 与起飞检测分开或显式合并。原生工程、`.ssmission` v2、GSHC 离线查看及 FLP 精确 decoder 声明已接通；共享参考解释器可输出摘要匹配的 `.ssmissiontrace`。**新阶段尚未绑定固件执行，带该流程的固件生成会明确拒绝**；原固件流程与已有参数保持原路径，不能把桌面参考记录当作板端 Recorded。[任务过程与后续接入](docs/public/shared/MONOREPO_ARCHITECTURE.md)
 
 机体系采用固定导航点 O、+z 朝鼻锥、+x 朝舱门径向基准、+y=z×x 的右手系。无下标 xyz（兼容旧 XYZ）均表示箭体系；设备原生轴使用 s_i 下标，导航系用 E/N/U。主 IMU 可以非零，安装分布图使用实际位置；原始 IMU 可以配置鼻锥轴及舱门轴。逐设备杆臂补偿尚未启用，旧安装基准保持原义。[坐标定义与公开参考](docs/public/algorithms/NAVIGATION_IMPLEMENTATION.md)
 

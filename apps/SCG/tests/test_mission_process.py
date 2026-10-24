@@ -38,11 +38,13 @@ def test_uncontrolled_reference_has_separate_start_predeployment_and_no_hardware
     legacy = model.Dictionary_Get()
     assert legacy['format_version'] == 14
     model.mission_process = MissionProcess_Default()
-    model.mission_process['stages'][5]['action'] = {'kind':'request_recovery','target':'parachute_pyro0'}
+    deploy = next(row for row in model.mission_process['stages'] if row['stage_id']=='deploy')
+    deploy['action'] = {'kind':'request_recovery','target':'parachute_pyro0'}
+    deploy['condition'] = {'signal':'stage_elapsed_s','operator':'>=','value':0.5,'unit':'s'}
     custom = {'stage_id':'prepare_recovery', 'name':'预开伞等待', 'condition':
-        {'signal':'stage_elapsed_s','operator':'>=','value':0.5,'unit':'s'}, 'hold_ms':0,
+        {'signal':'event','operator':'is','value':'apogee_confirmed','unit':'event_id'}, 'hold_ms':0,
         'action':{'kind':'none','target':''}}
-    model.mission_process['stages'].insert(5,custom)
+    model.mission_process['stages'].insert(4,custom)
     data = model.Dictionary_Get()
     assert data['format_version'] == 22
     restored = ProjectModel_Parse(deepcopy(data))
@@ -62,8 +64,9 @@ def test_uncontrolled_reference_has_separate_start_predeployment_and_no_hardware
     runner = MissionProcessRunner(model.mission_process); events=[]
     for sample in samples:
         _result, records=runner.Sample_Step(sample);events.extend(records)
-    assert runner.index == 9
-    assert [r['time_us'] for r in events if r['stage_id']=='prepare_recovery']==[4600000]
+    assert runner.index == 7
+    assert [r['time_us'] for r in events if r['stage_id']=='prepare_recovery']==[4000000]
+    assert [r['time_us'] for r in events if r['stage_id']=='deploy' and r['kind']=='stage_entered']==[4600000]
     assert len([r for r in events if r['stage_id']=='deploy' and r['kind']=='simulated_action_request'])==1
     assert all(r['kind'] in ('stage_entered','simulated_action_request') for r in events)
     assert runner.Sample_Step(_Sample(8000000))[1]==[]
@@ -93,6 +96,29 @@ def test_uncontrolled_reference_has_separate_start_predeployment_and_no_hardware
     assert result.returncode==0,result.stderr
     assert json.loads(result.stdout)['hardware_actions']==0
     assert API['MissionTrace_Read'](tmp_path/'cli.ssmissiontrace',profile)['events']==events
+
+
+def test_default_ends_at_landing_and_deployment_waits_for_apogee(builtin_catalog):
+    process = MissionProcess_Default()
+    assert [row['stage_id'] for row in process['stages']] == [
+        'ready','mission_start','ascent','coast','deploy','descent','landed']
+    runner = MissionProcessRunner(process)
+    for index, event in enumerate(('ready','start_accepted','launch_detected','burnout_detected')):
+        runner.Sample_Step(_Sample(index*1000000,event))
+    assert runner.Sample_Step(_Sample(4000000))[1] == []
+    assert runner.index == 3
+    _, records = runner.Sample_Step(_Sample(5000000,'apogee_confirmed'))
+    assert records[0]['stage_id'] == 'deploy'
+    # Saved custom phases remain explicit user data, even if absent from defaults.
+    model = ReferenceProject_Create(catalog=builtin_catalog)
+    old = deepcopy(process)
+    pre = deepcopy(old['stages'][4]); pre.update(stage_id='predeploy', name='User pre-deployment')
+    old['stages'].insert(4, pre)
+    recovery = deepcopy(old['stages'][-1]); recovery.update(stage_id='recovery', name='User recovery')
+    recovery['condition']['value'] = 'recovery_complete'
+    old['stages'].append(recovery)
+    model.mission_process = old
+    assert ProjectModel_Parse(model.Dictionary_Get()).mission_process == old
 
 
 def test_missing_data_gap_and_bad_time_do_not_advance_confirmation_or_state():

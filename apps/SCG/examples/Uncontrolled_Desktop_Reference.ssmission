@@ -508,28 +508,13 @@
         }
       },
       {
-        "stage_id": "predeploy",
-        "name": "预开伞",
+        "stage_id": "deploy",
+        "name": "开伞请求",
         "condition": {
           "signal": "event",
           "operator": "is",
           "value": "apogee_confirmed",
           "unit": "event_id"
-        },
-        "hold_ms": 0,
-        "action": {
-          "kind": "record_marker",
-          "target": ""
-        }
-      },
-      {
-        "stage_id": "deploy",
-        "name": "开伞请求",
-        "condition": {
-          "signal": "stage_elapsed_s",
-          "operator": ">=",
-          "value": 0.0,
-          "unit": "s"
         },
         "hold_ms": 0,
         "action": {
@@ -559,21 +544,6 @@
           "signal": "event",
           "operator": "is",
           "value": "landed_confirmed",
-          "unit": "event_id"
-        },
-        "hold_ms": 0,
-        "action": {
-          "kind": "record_marker",
-          "target": ""
-        }
-      },
-      {
-        "stage_id": "recovery",
-        "name": "地面找回",
-        "condition": {
-          "signal": "event",
-          "operator": "is",
-          "value": "recovery_complete",
           "unit": "event_id"
         },
         "hold_ms": 0,
@@ -631,5 +601,5 @@
       "recovery_action": false
     }
   ],
-  "sha256": "824a63fc424498b205ab5f3765a4e4632168188fae2a018128810112d463a06a"
+  "sha256": "66fd94840148ee3b5eff1c5bd4203d1d6088eb09f48899ae5aab338382c5ab7e"
 }

@@ -3,13 +3,14 @@ from copy import deepcopy
 from uuid import uuid4
 
 from PySide6.QtCore import Qt, Signal, QSignalBlocker
-from PySide6.QtWidgets import (QComboBox, QDialog, QDialogButtonBox, QDoubleSpinBox,
+from PySide6.QtWidgets import (QDialog, QDialogButtonBox, QDoubleSpinBox,
     QFormLayout, QFrame, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QPushButton,
     QSpinBox, QToolButton, QVBoxLayout, QWidget)
 
 from silverstar_fccg.project.mission_process import (
     ACTIONS, EVENTS, SIGNALS, MissionProcess_Default, MissionProcess_Require)
 from silverstar_fccg.ui.committed_spin import EnterCommittedDoubleSpinBox
+from silverstar_fccg.ui.widgets import StandardComboBox
 
 
 class MissionStageDialog(QDialog):
@@ -32,12 +33,12 @@ class MissionStageDialog(QDialog):
         identity.setTextFormat(Qt.TextFormat.PlainText)
         form.addRow(text('process.identity'), identity)
         form.addRow(text('process.name'), self.name_edit)
-        self.signal_combo = QComboBox()
+        self.signal_combo = StandardComboBox()
         for signal in SIGNALS:
             self.signal_combo.addItem(text('process.signal.' + signal), signal)
         self.signal_combo.setCurrentIndex(self.signal_combo.findData(stage['condition']['signal']))
         form.addRow(text('process.condition'), self.signal_combo)
-        self.operator = QComboBox()
+        self.operator = StandardComboBox()
         self.operator.addItems(('>=', '<='))
         self.operator.setCurrentText(stage['condition']['operator'])
         form.addRow(text('process.operator'), self.operator)
@@ -47,7 +48,7 @@ class MissionStageDialog(QDialog):
         self.number.setValue(stage['condition']['value'] if stage['condition']['signal'] != 'event' else 0)
         self.number.valueChanged.connect(lambda _value: setattr(self, '_numeric_edited', True))
         form.addRow(text('process.threshold'), self.number)
-        self.event_combo = QComboBox()
+        self.event_combo = StandardComboBox()
         for event in EVENTS:
             self.event_combo.addItem(text('process.event.' + event), event)
         self.event_combo.setCurrentIndex(max(0, self.event_combo.findData(stage['condition']['value'])))
@@ -57,12 +58,12 @@ class MissionStageDialog(QDialog):
         self.hold.setSuffix(' ms')
         self.hold.setValue(stage['hold_ms'])
         form.addRow(text('process.hold'), self.hold)
-        self.action = QComboBox()
+        self.action = StandardComboBox()
         for action in ACTIONS:
             self.action.addItem(text('process.action.' + action), action)
         self.action.setCurrentIndex(self.action.findData(stage['action']['kind']))
         form.addRow(text('process.action'), self.action)
-        self.target = QComboBox()
+        self.target = StandardComboBox()
         self.target.addItem('—', '')
         for target in targets:
             self.target.addItem(target, target)
@@ -148,7 +149,7 @@ class MissionProcessPanel(QGroupBox):
         self.create_button = QPushButton()
         self.create_button.clicked.connect(self.Template_Create)
         toolbar.addWidget(self.create_button)
-        self.insert_before = QComboBox()
+        self.insert_before = StandardComboBox()
         toolbar.addWidget(self.insert_before, 1)
         self.add_button = QPushButton()
         self.add_button.clicked.connect(self.Stage_Add)
@@ -157,7 +158,7 @@ class MissionProcessPanel(QGroupBox):
         self.clear_button.clicked.connect(lambda: self._Process_Emit(None))
         toolbar.addWidget(self.clear_button)
         self.root.addLayout(toolbar)
-        self.start_policy = QComboBox()
+        self.start_policy = StandardComboBox()
         self.start_policy.currentIndexChanged.connect(self.StartPolicy_Change)
         self.root.addWidget(self.start_policy)
         self.container = QWidget()
@@ -248,7 +249,8 @@ class MissionProcessPanel(QGroupBox):
     def Template_Create(self):
         process = MissionProcess_Default()
         if self._targets:
-            process['stages'][5]['action'] = {'kind': 'request_recovery', 'target': self._targets[0]}
+            deploy = next(stage for stage in process['stages'] if stage['stage_id'] == 'deploy')
+            deploy['action'] = {'kind': 'request_recovery', 'target': self._targets[0]}
         self._Process_Emit(process)
 
     def StartPolicy_Change(self):

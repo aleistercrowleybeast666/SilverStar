@@ -158,7 +158,11 @@ class NavigationConfigurationPage(ScrollableLocalizedPage):
             common_layout.addWidget(reset)
             layout.addWidget(common)
         for owner in owners:
-            group = QGroupBox(owner.DisplayName_Get(language))
+            is_ins = owner.selection is not None and owner.selection.slot == 'ins'
+            group = QGroupBox(self._translator.Text_Get('algorithm_parameters.ins_title')
+                              if is_ins else owner.DisplayName_Get(language))
+            group.setObjectName('algorithmParameters_' + owner.component_id)
+            group.setToolTip(owner.DisplayName_Get(language))
             group_layout = QVBoxLayout(group)
             for level in ("basic", "advanced", "gnss_integrity"):
                 parameters = [p for p in owner.algorithm_parameters if not p.shared_key and

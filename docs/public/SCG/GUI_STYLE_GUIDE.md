@@ -15,6 +15,7 @@
 ## 3. 交互
 - 危险操作需要明确确认；普通信息使用非模态状态。
 - ComboBox、CheckBox、Table、Dialog 的浅/深色都必须可读。
+- 阶段详情和任务工具条统一使用 StandardComboBox；最多显示十项，超过十项使用垂直滚动条，弹出位置遵循普通下拉行为。
 - 页面重建时阻塞信号，避免在控件自身 signal stack 中销毁父控件。
 - 进度必须反映真实已完成工作；失败/取消不能强行显示 100%。
 
@@ -35,6 +36,8 @@
 
 The seven-page order is Flight Devices → Flight Configuration → Navigation Configuration → Telemetry Configuration → Flight Hardware → Ground Station Hardware → Build & Validation. Algorithm parameter widgets are generated from strict plugin declarations; use actual values/units, localized descriptions, basic/advanced CollapsibleSection and per-algorithm reset.
 
+惯导参数组标题固定为“惯导算法”；具体算法名称在选择器和工具提示中保留，插件 ID 与参数不因标题改动而变化。任务快照使用紧凑的 GSHC 导出入口及默认折叠的只读摘要，不作为独立的任务配置区。
+
 
 ## 任务阶段胶囊
 
@@ -43,6 +46,8 @@ The seven-page order is Flight Devices → Flight Configuration → Navigation C
 设备实体、输出能力和通道归设备/硬件配置；阶段引用稳定设备 ID。当前自定义阶段为桌面参考，不能用动画、参考 trace 或配置声明冒充真实板端过程。阶段规则与连续估计/采样/记录分开；页面重建在当前信号返回后执行。
 
 安装位置输入不再要求自然语言原点说明；固定导航点和轴定义通过明确的合同及图例表达。无下标 xyz（兼容旧 XYZ）均表示箭体系，设备原生轴使用 s_i 下标，导航系标 E/N/U。位置标题 r_i^b 的设备下标标识测点，三个输入分量仍为箭体系 x/y/z。轴标签与输入成组排布，三视图用同一米制比例；未知位置不按零位置绘制。原始 IMU 的两个安装轴必须互相垂直并构成右手旋转；旧映射和旧记录不因新界面自动改写。
+
+分布图按真实字体测量标题、页脚和设备标签；同投影点的文字避让 O、轴标和相邻标签，必要时以引线关联，测量点本身不移动。密集或过长的标签保留完整坐标悬停提示；字体/窗口变化时更新几何约束，绘制过程不更改布局。
 
 ## Touch scrolling
 

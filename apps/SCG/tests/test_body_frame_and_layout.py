@@ -6,7 +6,7 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 from PySide6.QtCore import QRectF
-from PySide6.QtGui import QFontDatabase
+from PySide6.QtGui import QFont, QFontDatabase
 
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.core.i18n import Translator
@@ -111,6 +111,29 @@ def test_real_geometry_edit_navigation_point_not_primary_and_hatch_mapping(tmp_p
         assert not errors
     finally:
         window.close(); qapp.processEvents()
+
+
+@pytest.mark.parametrize('font_size,width', [(9, 720), (14, 720), (9, 1280), (14, 1280)])
+def test_collocated_labels_fit_actual_font_and_do_not_move_measurements(qapp, font_size, width):
+    for font in ('msyh.ttc', 'segoeui.ttf'):
+        font_path = Path('C:/Windows/Fonts') / font
+        if font_path.is_file(): QFontDatabase.addApplicationFont(str(font_path))
+    view = SensorLayoutView(Translator('zh_CN'))
+    view.setFont(QFont('Microsoft YaHei', font_size))
+    instances = [SimpleNamespace(instance_id=name, component_class=kind, position_body_m=position)
+        for name, kind, position in [('imu0', 'imu', (0,0,0)), ('gnss0', 'gnss', (0,0.1,0))]]
+    view.Configuration_Set(instances)
+    try:
+        view.resize(width, 320); view.show(); qapp.processEvents(); view.grab()
+        assert len(view._label_boxes) == 6
+        for panel in range(3):
+            labels = [rect for index, _identity, rect in view._label_boxes if index == panel]
+            assert len(labels) == 2 and not labels[0].intersects(labels[1])
+            assert all(view._plot_boxes[panel].contains(rect) for rect in labels)
+        assert view.positions == {'imu0':(0,0,0), 'gnss0':(0,0.1,0)}
+        assert all(rect.height() >= view.fontMetrics().height() for _panel, _identity, rect in view._label_boxes)
+    finally:
+        view.close()
 
 
 def test_explicit_hatch_axis_enters_real_generated_resource_initializer(builtin_catalog):

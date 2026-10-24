@@ -1,11 +1,11 @@
-"""Read-only flow summary; existing strategy/mode controls own all edits."""
+"""Compact offline export entry; expandable details never imply live state."""
 from copy import deepcopy
 from PySide6.QtCore import Signal, Qt
-from PySide6.QtWidgets import QGroupBox, QLabel, QPushButton, QVBoxLayout
+from PySide6.QtWidgets import QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QWidget
 from silverstar_fccg.ui.widgets import CollapsibleSection
 
 
-class MissionProfilePanel(QGroupBox):
+class MissionProfilePanel(QWidget):
     exportRequested = Signal()
 
     def __init__(self, translator):
@@ -13,6 +13,16 @@ class MissionProfilePanel(QGroupBox):
         self._translator = translator
         self._profile = None
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        toolbar = QHBoxLayout()
+        self.export_button = QPushButton()
+        self.export_button.setObjectName('missionProfileExportButton')
+        self.export_button.clicked.connect(lambda _checked=False: self.exportRequested.emit())
+        toolbar.addWidget(self.export_button)
+        self.availability_label = QLabel()
+        self.availability_label.setWordWrap(True)
+        toolbar.addWidget(self.availability_label, 1)
+        layout.addLayout(toolbar)
         self.lifecycle_label = QLabel()
         self.continuous_label = QLabel()
         self.rules_label = QLabel()
@@ -20,19 +30,14 @@ class MissionProfilePanel(QGroupBox):
         self.scope_label = QLabel()
         for label in (self.lifecycle_label, self.continuous_label, self.rules_label, self.identity_label, self.scope_label):
             label.setWordWrap(True)
+            label.setTextFormat(Qt.TextFormat.PlainText)
             label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
-        layout.addWidget(self.lifecycle_label)
-        layout.addWidget(self.scope_label)
         self.details = CollapsibleSection(expanded=False)
         details_layout = QVBoxLayout(self.details.body)
         details_layout.setContentsMargins(8, 0, 0, 0)
-        for label in (self.continuous_label, self.rules_label, self.identity_label):
+        for label in (self.scope_label, self.lifecycle_label, self.continuous_label, self.rules_label, self.identity_label):
             details_layout.addWidget(label)
         layout.addWidget(self.details)
-        self.export_button = QPushButton()
-        self.export_button.setObjectName('missionProfileExportButton')
-        self.export_button.clicked.connect(lambda _checked=False: self.exportRequested.emit())
-        layout.addWidget(self.export_button)
         self.Language_Apply(translator)
 
     def Profile_Set(self, profile):
@@ -42,11 +47,12 @@ class MissionProfilePanel(QGroupBox):
     def Language_Apply(self, translator):
         self._translator = translator
         text = translator.Text_Get
-        self.setTitle(text('mission_profile.title'))
         self.details.Title_Set(text('mission_profile.details'))
         self.export_button.setText(text('mission_profile.export'))
         self.export_button.setEnabled(self._profile is not None)
         self.scope_label.setText(text('mission_profile.scope'))
+        self.availability_label.setText(text('mission_profile.available') if self._profile is not None
+                                        else text('mission_profile.unavailable'))
         if self._profile is None:
             self.lifecycle_label.setText(text('mission_profile.unavailable'))
             self.continuous_label.clear(); self.rules_label.clear(); self.identity_label.clear()
