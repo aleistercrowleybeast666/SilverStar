@@ -71,31 +71,50 @@ def Contract_Get():
     return Json_Read(path)
 
 
-def Schema_Create(target):
+def Schema_Create(target, *, image_file=None):
     Require(isinstance(target, str) and re.fullmatch(r'[A-Za-z0-9_+-]{1,64}', target), 'Invalid target name')
-    return dict(format='SilverStar.ssdiag', version=1, target=target,
+    value = dict(format='SilverStar.ssdiag', version=1, target=target,
                 diagnostics='silverstar.swd-diagnostics/1',
                 entries=[item['id'] for item in Contract_Get()['entries']], binding=None)
+    if image_file is not None:
+        Require(type(image_file) is str and re.fullmatch(r'[A-Za-z0-9_.-]{1,128}\.hex', image_file)
+                and '..' not in image_file, 'HEX must be a safe sibling basename')
+        from .image import IMAGE_MODE
+        value.update(version=2, image={'mode':IMAGE_MODE, 'file':image_file})
+    return value
 
 
 def Schema_Validate(value):
-    Require(type(value) is dict and set(value) == {'format','version','target','diagnostics','entries','binding'},
+    Require(type(value) is dict, 'Invalid descriptor')
+    version = value.get('version')
+    Require(type(version) is int and version in (1,2), 'Unsupported descriptor version', DiagnosticResult.Unsupported)
+    keys = {'format','version','target','diagnostics','entries','binding'} | ({'image'} if version == 2 else set())
+    Require(set(value) == keys,
             'Unknown or missing descriptor fields')
-    Require(value['format'] == 'SilverStar.ssdiag' and type(value['version']) is int and value['version'] == 1,
+    Require(value['format'] == 'SilverStar.ssdiag',
             'Unsupported descriptor format/version', DiagnosticResult.Unsupported)
-    expected = Schema_Create(value['target'])
+    if version == 2:
+        image = value['image']
+        Require(type(image) is dict and set(image) == {'mode','file'}, 'Invalid image description')
+        expected = Schema_Create(value['target'], image_file=image['file'])
+        Require(image == expected['image'], 'Unsupported image identity', DiagnosticResult.Unsupported)
+    else:
+        expected = Schema_Create(value['target'])
     Require(value['diagnostics'] == expected['diagnostics'], 'Unsupported diagnostic contract', DiagnosticResult.Unsupported)
     entries = value['entries']
     Require(type(entries) is list and 1 <= len(entries) <= 16 and all(type(x) is str for x in entries), 'Invalid entries')
     Require(len(entries) == len(set(entries)) and set(entries) <= set(expected['entries']), 'Unknown/duplicate diagnostic IDs')
     binding = value['binding']
     if binding is not None:
-        Require(type(binding) is dict and set(binding) == {'elf','sha256','segments','fields'}, 'Invalid binding fields')
+        Require(type(binding) is dict and set(binding) == {'elf','sha256','segments','fields'} | ({'image'} if version == 2 else set()), 'Invalid binding fields')
         Require(type(binding['elf']) is str and re.fullmatch(r'[A-Za-z0-9_.-]{1,128}\.elf', binding['elf']) and
                 '..' not in binding['elf'] and ':' not in binding['elf'], 'ELF must be a safe sibling basename')
         Require(type(binding['sha256']) is str and re.fullmatch('[0-9a-f]{64}', binding['sha256']), 'Invalid ELF hash')
         Require(type(binding['segments']) is list and 1 <= len(binding['segments']) <= 32, 'Invalid segment manifest')
         Require(type(binding['fields']) is list and len(binding['fields']) <= 16, 'Invalid resolved fields')
+        if version == 2:
+            Require(type(binding['image']) is dict, 'Invalid bound image manifest')
+    Require(len(json.dumps(value,ensure_ascii=False).encode('utf-8')) <= 65536, 'Descriptor exceeds size limit')
     return value
 
 

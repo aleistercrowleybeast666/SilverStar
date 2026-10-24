@@ -61,6 +61,7 @@ def _Location(reader, die, symbol):
     allocated = [s for s in reader.sections if s['sh_flags'] & 2 and s['sh_flags'] & 1 and
                  s['sh_addr'] <= address < address + size <= s['sh_addr'] + s['sh_size']]
     Require(len(allocated) == 1, 'Object is not in one allocated writable section', R.Unsupported)
+    reader.Object_Validate(address,size,symbol)
     return dtype, address, size
 
 

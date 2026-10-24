@@ -9,7 +9,8 @@ from pathlib import Path
 def Application_Main() -> int:
     project_root = Path(__file__).resolve().parent
     venv_python = project_root / ".venv" / "Scripts" / "python.exe"
-    if venv_python.exists() and Path(sys.executable).resolve() != venv_python.resolve():
+    if (not getattr(sys, "frozen", False) and venv_python.exists()
+            and Path(sys.executable).resolve() != venv_python.resolve()):
         environment = os.environ.copy()
         environment["SILVERSTAR_FCCG_VENV_REEXEC"] = "1"
         return subprocess.call(
@@ -20,6 +21,10 @@ def Application_Main() -> int:
     source_root = project_root / "src"
     if str(source_root) not in sys.path:
         sys.path.insert(0, str(source_root))
+    if sys.argv[1:2] == ["--diagnostics-eide"]:
+        from silverstar_diagnostics.eide import main
+        return int(main(sys.argv[2:]))
+
     from silverstar_fccg.app.application import main
 
     return int(main(sys.argv[1:]))

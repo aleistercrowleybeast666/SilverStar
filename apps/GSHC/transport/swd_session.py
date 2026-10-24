@@ -137,6 +137,9 @@ class SwdSession:
                 # A local repeated request must not release the current owner.
                 return SwdReply(SwdResult.Busy, 'Detach the current target before attaching')
             _ValidateProbe(probe)
+            if (self._firmware and getattr(self._firmware,'image_identity',None) is not None
+                    and self._firmware.provenance != 'build_bound'):
+                return SwdReply(SwdResult.InvalidRequest, 'Image identity v2 requires a bound descriptor before attachment')
             if self._target_name is not None:
                 from transport.swd_firmware import Target_Get
                 self._profile = Target_Get(self._target_name)
@@ -323,15 +326,18 @@ class SwdSession:
                     if actual != expected:
                         first = next(i for i, pair in enumerate(zip(expected, actual)) if pair[0] != pair[1])
                         self._firmware_status = 'mismatch'
+                        identity = 'bound image' if getattr(self._firmware,'image_identity',None) else 'ELF'
                         return SwdReply(SwdResult.FirmwareMismatch,
-                            f'Flash LMA differs at 0x{address+offset+first:08X}: ELF {expected[first]:02X}, target {actual[first]:02X}; '
+                            f'Flash LMA differs at 0x{address+offset+first:08X}: {identity} {expected[first]:02X}, target {actual[first]:02X}; '
                             f'read block [0x{address+offset:08X},0x{address+offset+len(expected):08X}); '
                             f'{compared} prior bytes matched of {total}; scan stopped, diagnostic reads disabled',
                             address=address+offset+first)
                     compared += len(expected)
             self._firmware_status = 'matched'
             coverage = ', '.join(f'[0x{a:08X},0x{a+n:08X})' for a,n in ranges)
-            return SwdReply(SwdResult.Ok, f'Complete ELF load contents matched ({compared}/{total} bytes); '
+            identity = ('Bound ELF/HEX image including checked erased alignment gaps' if getattr(self._firmware,'image_identity',None)
+                        else 'Complete ELF load contents')
+            return SwdReply(SwdResult.Ok, f'{identity} matched ({compared}/{total} bytes); '
                             f'flash LMA ranges {coverage}; live non-atomic observation')
         return self._run(operation)
 

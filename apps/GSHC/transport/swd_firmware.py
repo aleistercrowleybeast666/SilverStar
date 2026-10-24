@@ -19,10 +19,14 @@ class FirmwareReply:
     result: DiagnosticResult
     detail: str = ''
     firmware: object = None
+    project_metadata: object = None
+    elf_selection_required: bool = False
 
 
 def Firmware_Import(paths, *, target=None, cancel=None):
     """Select one .ssdiag (safe sibling ELF), one ELF, or an explicit pair."""
+    metadata=None
+    selection_required=False
     try:
         Require(type(paths) in (list,tuple) and 1 <= len(paths) <= 2, 'Select one descriptor/ELF or a descriptor + ELF pair')
         selected = [Path(p).absolute() for p in paths]
@@ -30,7 +34,20 @@ def Firmware_Import(paths, *, target=None, cancel=None):
         descriptors = [p for p in selected if p.suffix.lower()=='.ssdiag']
         elfs = [p for p in selected if p.suffix.lower()=='.elf']
         Require(len(descriptors) <= 1 and len(elfs) <= 1, 'Duplicate input type')
-        descriptor = Schema_Validate(Json_Read(descriptors[0])) if descriptors else None
+        raw=Json_Read(descriptors[0]) if descriptors else None
+        from silverstar_diagnostics.project_descriptor import FORMAT, ProjectDescriptor_Resolve
+        if raw is not None and raw.get('format')==FORMAT:
+            from silverstar_diagnostics.project_descriptor import ProjectDescriptor_Validate,ProjectDescriptor_Path
+            ProjectDescriptor_Validate(raw)
+            metadata={key:raw[key] for key in ('project','project_file','maintenance') if key in raw}
+            outputs=list(raw['builds'].values())
+            selection_required=(raw['state']=='ready' and (len(outputs)>1 or
+                len(outputs)==1 and not ProjectDescriptor_Path(descriptors[0],outputs[0]['elf']).is_file()))
+            firmware=ProjectDescriptor_Resolve(descriptors[0],elfs[0] if elfs else None,cancel)
+            available=sum(not entry.unavailable for entry in firmware.entries)
+            return FirmwareReply(DiagnosticResult.Ok,
+                f'{firmware.target.name}; project ssdiag; ELF {firmware.sha256[:12]}; fields={available}/{len(firmware.entries)}; live flash verification required',firmware,metadata,False)
+        descriptor = Schema_Validate(raw) if raw is not None else None
         if not elfs:
             Require(descriptor['binding'] is not None, 'Unbound schema requires an explicitly selected ELF')
             elf = descriptors[0].parent / descriptor['binding']['elf']
@@ -42,6 +59,6 @@ def Firmware_Import(paths, *, target=None, cancel=None):
         return FirmwareReply(DiagnosticResult.Ok,
             f'{firmware.target.name}; ELF {firmware.sha256[:12]}; DWARF={firmware.dwarf}; fields={available}/{len(firmware.entries)}; each connection requires live flash verification',firmware)
     except DiagnosticError as exc:
-        return FirmwareReply(exc.result,str(exc)[:600])
+        return FirmwareReply(exc.result,str(exc)[:600],None,metadata,selection_required)
     except Exception as exc:
         return FirmwareReply(DiagnosticResult.InvalidFile,str(exc)[:600])

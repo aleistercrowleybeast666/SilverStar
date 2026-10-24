@@ -1,0 +1,33 @@
+{
+  "contract": "silverstar.swd-project-descriptor",
+  "version": 1,
+  "format": "SilverStar.project.ssdiag",
+  "roles": {
+    "flight": "Flight.ssdiag",
+    "ground": "Ground.ssdiag"
+  },
+  "states": [
+    "pending_build",
+    "ready",
+    "unavailable"
+  ],
+  "limits": {
+    "bytes": 65536,
+    "builds": 8,
+    "relative_path": 512
+  },
+  "optional_fields": [
+    "project_file",
+    "maintenance"
+  ],
+  "semantics": {
+    "schema": "The unbound base schema remains SilverStar.ssdiag/1. Build entries may contain validated v1 ELF bindings or v2 strict ELF+HEX image bindings with the same target, diagnostic IDs and contract.",
+    "pending": "No ELF hash or binding may be fabricated before a successful link and offline binding.",
+    "path": "Automatic ELF paths are project-root-relative POSIX paths; traversal, drives, symlink escapes and missing files fail closed.",
+    "selection": "Multiple bound outputs require an explicitly selected ELF; never select the newest or first Debug/Release output.",
+    "identity": "Every embedded binding is checked against the actual ELF. A v2 entry also requires its explicitly named safe sibling HEX and the complete image contract, including erased alignment gaps. Live target flash verification remains mandatory before symbol reads.",
+    "maintenance": "Optional expected protocol component/package/profile declaration, or null when disabled; absent means undeclared. Runtime capabilities remain authoritative. Descriptor version is not a maintenance protocol version.",
+    "project_file": "Optional associated SilverStar.ssproject filename in the same root; data association only, never an instruction to load or execute code.",
+    "maintenance_uart": "Optional maintenance.uart declares CubeMX-derived8N1 parameters: baudrate, data_bits, parity, stop_bits, v1 block_size512, block_deadline_ms30000, idle_timeout_ms30000 and minimum_wire_ms=ceil(8210000/baudrate). Legacy declarations remain valid; expected values do not prove bridge support or live identity. Actual generated UART/IOC must match at build; CAPS and selected rate must agree before transfer."
+  }
+}

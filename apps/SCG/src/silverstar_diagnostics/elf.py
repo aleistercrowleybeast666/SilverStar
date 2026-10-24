@@ -39,6 +39,7 @@ class Firmware:
     dwarf: bool
     provenance: str
     watches: tuple = ()
+    image_identity: object = None
 
 
 class ElfReader:
@@ -82,6 +83,8 @@ class ElfReader:
                     if attr.tag == 'TAG_CPU_ARCH': arch.append(attr.value)
         expected_arch = {'Cortex-M0':12,'Cortex-M0+':12,'Cortex-M3':10,'Cortex-M4':13}[target.core]
         Require(arch == [expected_arch], 'ELF CPU architecture disagrees with selected target', R.Mismatch)
+        self.symbol_sections = {}
+        self.image_ram_sections = None
         self.symbols = self._Symbols()
         self.variables = {}
         self.dwarf = self.elf.has_dwarf_info(strict=True)
@@ -118,7 +121,20 @@ class ElfReader:
             if symbol['st_info']['type'] == 'STT_FILE': filename = symbol.name.replace('\\','/').split('/')[-1]
             if symbol['st_info']['type'] == 'STT_OBJECT' and isinstance(symbol['st_shndx'], int):
                 result.setdefault((filename, symbol.name), []).append((symbol['st_value'],symbol['st_size']))
+                self.symbol_sections.setdefault((filename,symbol.name), []).append(
+                    (symbol['st_value'],symbol['st_size'],symbol['st_shndx']))
         return result
+
+    def Object_Validate(self, address, size, symbol, filename=None):
+        if self.image_ram_sections is None:
+            return
+        matches = [item for (source,name),items in self.symbol_sections.items()
+                   if name == symbol and (filename is None or source == filename)
+                   for item in items if item[:2] == (address,size)]
+        Require(len(matches) == 1, 'No unique same-ELF object section', R.Unsupported)
+        owners = [index for lo,hi,index in self.image_ram_sections if lo <= address < address+size <= hi]
+        Require(owners == [matches[0][2]] and bool(self.sections[owners[0]]['sh_flags'] & 1),
+                'Object does not belong to its validated writable RAM section', R.Unsupported)
 
     def Segments(self):
         result = []
@@ -156,6 +172,7 @@ class ElfReader:
         Require(len(symbols) == 1, 'Missing or ambiguous symtab object', R.Unsupported)
         address, size = symbols[0]
         Require(self.target.Contains(address,size,'ram'), 'Object outside trusted RAM', R.Unsupported)
+        self.Object_Validate(address,size,spec['symbol'],filename)
         candidates = []
         for die in self.variables.get(spec['symbol'], []):
             self.Check()
@@ -225,11 +242,18 @@ def Firmware_Load(elf_path, descriptor=None, *, target=None, cancel=None, includ
         Require(Target_Get(target).name == profile.name, 'Selected target disagrees with descriptor', R.Mismatch)
     try:
         reader = ElfReader(elf_path,profile,cancel)
-        segments = reader.Segments()
+        image_identity = None
+        if value['version'] == 2:
+            from .image import Image_Build
+            segments,image_identity,reader.image_ram_sections = Image_Build(reader,elf_path,value['image'])
+        else:
+            segments = reader.Segments()
         entries = tuple(reader.Entry(spec) for spec in Contract_Get()['entries'] if spec['id'] in value['entries'])
         binding = dict(elf=Path(elf_path).name,sha256=Sha256(reader.data),
                        segments=[dict(address=a,size=len(data),sha256=Sha256(data)) for a,data in segments],
                        fields=[asdict(entry) for entry in entries])
+        if image_identity is not None:
+            binding['image'] = image_identity
         # JSON normalization changes immutable tuples into arrays for exact comparison.
         import json
         binding = json.loads(json.dumps(binding))
@@ -241,7 +265,7 @@ def Firmware_Load(elf_path, descriptor=None, *, target=None, cancel=None, includ
         from .watch import Catalog_Build
         watches = Catalog_Build(reader) if include_watch else ()
         return Firmware(profile,binding['sha256'],segments,entries,resolved,reader.dwarf,
-                        'build_bound' if value['binding'] else 'manual_elf_unbound', watches)
+                        'build_bound' if value['binding'] else 'manual_elf_unbound', watches, image_identity)
     except DiagnosticError: raise
     except Exception as exc:
         raise DiagnosticError(R.InvalidFile, f'ELF parsing failed: {str(exc)[:180]}') from exc
