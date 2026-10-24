@@ -28,7 +28,7 @@ from protocol.common import (
     enum_name,
 )
 from PySide6.QtCore import QEvent, QSize, Qt, QTimer
-from PySide6.QtGui import QColor, QFont, QTextCursor, QVector3D
+from PySide6.QtGui import QAction, QColor, QFont, QTextCursor, QVector3D
 from PySide6.QtWidgets import (
     QApplication,
     QCheckBox,
@@ -2107,7 +2107,8 @@ class MainWindow(QMainWindow):
         self.btn_export_device = QPushButton()
         export_menu = QMenu(self.btn_export_device)
         self.action_export_copy = export_menu.addAction("")
-        self.action_export_cut = export_menu.addAction("")
+        self.action_export_cut = QAction(self)
+        self.action_export_cut.setEnabled(False)
         self.btn_export_device.setMenu(export_menu)
         self.btn_download_device = QPushButton()
         download_menu = QMenu(self.btn_download_device)

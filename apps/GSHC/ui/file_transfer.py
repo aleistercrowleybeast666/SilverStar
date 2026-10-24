@@ -316,16 +316,9 @@ class ExportWorker(QThread):
     def run(self) -> None:
         try:
             output = self.exporter.copy(cut=self.cut, progress=self.progress.emit)
-            if self.cut:
-                self.confirm_cut.emit(str(output))
-                # Cancellation and shutdown wake this wait, without a GUI join.
-                while not self.decision.wait(0.1):
-                    self.exporter._check()
-                self.exporter._check()
-                self.exporter.delete_verified_sources(confirmed=self.approved)
             self.completed.emit(str(output))
         except ExportCancelled:
-            self.failed.emit("Cancelled; any completed destination files remain. Source files retained unless a confirmed cut had already begun.")
+            self.failed.emit("Cancelled; any completed destination files remain. Source files retained.")
         except Exception as exc:
             _logger.exception("Device export failed")
             self.failed.emit(str(exc))
@@ -457,6 +450,9 @@ class FileTransferManager(QObject):
             self.owner.request_cancel()
 
     def choose_export(self, cut: bool) -> None:
+        if cut:
+            self._failed("Device exports are copy-only; clean source files manually")
+            return
         c = self.controller
         if not self._available():
             QMessageBox.information(c.window, self._tr("transfer.title"), self._tr("transfer.busy"))

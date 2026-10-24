@@ -6,6 +6,7 @@ import zlib
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from threading import Event
+from unittest.mock import patch
 
 from services.device_export import DeviceExport, ExportCancelled
 from services.logger import AsyncJsonlLogger
@@ -40,59 +41,66 @@ class DeviceExportTests(unittest.TestCase):
         schema = Path(__file__).resolve().parents[3] / "contracts/session_export_v1.schema.json"
         jsonschema.validate(manifest, json.loads(schema.read_text(encoding="utf-8")))
 
-    def test_cut_requires_confirmation_and_rechecks_target(self):
-        job = self.exporter()
-        output = job.copy(cut=True)
-        job.delete_verified_sources(confirmed=False)
-        self.assertTrue(self.source.exists())
-        (output / self.source.name).write_bytes(b"corrupt")
-        with self.assertRaises(OSError):
-            job.delete_verified_sources(confirmed=True)
-        self.assertTrue(self.source.exists())
+    def test_cut_rejected_before_creating_destination(self):
+        original = self.source.read_bytes()
+        with self.assertRaisesRegex(ValueError, 'copy-only'):
+            self.exporter().copy(cut=True)
+        self.assertEqual(self.source.read_bytes(), original)
+        self.assertEqual(list(self.target.iterdir()), [])
 
     def test_copy_cannot_be_reinterpreted_as_cut(self):
         job = self.exporter()
-        job.copy(cut=False)
-        with self.assertRaises(ValueError):
-            job.delete_verified_sources(confirmed=True)
-        self.assertTrue(self.source.exists())
+        output = job.copy()
+        for confirmed in (False, True):
+            if confirmed:
+                with self.assertRaisesRegex(ValueError, 'copy-only'):
+                    job.delete_verified_sources(confirmed=confirmed)
+            else:
+                job.delete_verified_sources(confirmed=confirmed)
+        self.assertEqual(self.source.read_bytes(), (output / self.source.name).read_bytes())
 
-    def test_cut_manifest_corruption_preserves_source(self):
+    def test_copy_target_readback_failure_preserves_source(self):
         job = self.exporter()
-        output = job.copy(cut=True)
-        (output / "manifest.json").write_bytes(b"{}")
-        with self.assertRaises(OSError):
-            job.delete_verified_sources(confirmed=True)
-        self.assertTrue(self.source.exists())
+        original = self.source.read_bytes()
+        with patch.object(job, '_hash', return_value='incorrect digest'):
+            with self.assertRaisesRegex(OSError, 'readback failed'):
+                job.copy()
+        self.assertFalse(job.ready)
+        self.assertFalse((job.output / 'manifest.json').exists())
+        self.assertEqual(self.source.read_bytes(), original)
 
-    def test_cut_changed_or_active_source_is_preserved(self):
-        active = [False]
-        job = self.exporter(is_active=lambda _: active[0])
-        job.copy(cut=True)
-        active[0] = True
-        with self.assertRaises(ValueError):
-            job.delete_verified_sources(confirmed=True)
-        active[0] = False
-        self.source.write_bytes(b"changed")
-        with self.assertRaises(OSError):
-            job.delete_verified_sources(confirmed=True)
-        self.assertTrue(self.source.exists())
+    def test_source_change_during_copy_is_rejected(self):
+        job = self.exporter()
+        def change(progress):
+            if progress.stage == 'verifying':
+                self.source.write_bytes(b'new recording bytes')
+        with self.assertRaisesRegex(OSError, 'Source changed'):
+            job.copy(byte_progress=change)
+        self.assertFalse(job.ready)
+        self.assertEqual(self.source.read_bytes(), b'new recording bytes')
 
-    def test_cancel_before_delete_preserves_source(self):
+    def test_cancel_during_copy_preserves_source_and_does_not_publish_manifest(self):
         cancel = Event()
         job = self.exporter(cancel=cancel)
-        job.copy(cut=True)
-        cancel.set()
+        original = self.source.read_bytes()
+        def stop(progress):
+            if progress.stage == 'receiving' and progress.received:
+                cancel.set()
         with self.assertRaises(ExportCancelled):
-            job.delete_verified_sources(confirmed=True)
-        self.assertTrue(self.source.exists())
+            job.copy(byte_progress=stop)
+        self.assertFalse(job.ready)
+        self.assertFalse((job.output / 'manifest.json').exists())
+        self.assertEqual(self.source.read_bytes(), original)
 
-    def test_successful_cut_deletes_only_verified_temporary_source(self):
+    def test_delete_rejected_even_when_completed_copy_is_tampered(self):
         job = self.exporter()
-        output = job.copy(cut=True)
-        job.delete_verified_sources(confirmed=True)
-        self.assertFalse(self.source.exists())
-        self.assertTrue((output / self.source.name).is_file())
+        original = self.source.read_bytes()
+        output = job.copy()
+        (output / 'manifest.json').write_bytes(b'{}')
+        (output / self.source.name).write_bytes(b'corrupt')
+        with self.assertRaisesRegex(ValueError, 'copy-only'):
+            job.delete_verified_sources(confirmed=True)
+        self.assertEqual(self.source.read_bytes(), original)
 
     def test_external_cut_and_active_copy_are_rejected(self):
         external = self.target / "fc_session_external.jsonl"

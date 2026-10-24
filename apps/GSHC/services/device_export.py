@@ -69,7 +69,6 @@ class DeviceExport:
         self.files: list[ExportFile] = []
         self.manifest_sha256: str | None = None
         self.ready = False
-        self.cut_requested = False
 
     def _check(self, path: Path | None = None) -> None:
         if self.cancel.is_set():
@@ -86,36 +85,39 @@ class DeviceExport:
         return digest.hexdigest()
 
     def copy(self, *, cut: bool = False,
-             progress: Callable[[int, int, str], None] = lambda *_: None) -> Path:
+             progress: Callable[[int, int, str], None] = lambda *_: None, byte_progress=None) -> Path:
+        if cut:
+            raise ValueError('Device exports are copy-only; clean source files manually')
+        from services.transfer_progress import TransferProgress
+        notify = byte_progress or (lambda _:None)
         self._check()
         if not self.sources or len(self.sources) > 1024:
             raise ValueError("Select between 1 and 1024 files")
-        if cut and len(self.sources) != 1:
-            raise ValueError("Cut exports one closed managed session at a time; use copy for a batch")
-        self.cut_requested = cut
         destination = _regular_path(self.destination, directory=True)
-        root = _regular_path(self.managed_root, directory=True)
         paths = [_regular_path(Path(path)) for path in self.sources]
         if len(set(paths)) != len(paths) or len({p.name.casefold() for p in paths}) != len(paths):
             raise ValueError("Duplicate source paths or filenames")
         for source in paths:
             self._check(source)
-            if cut and (source.parent != root or not source.name.startswith("fc_session_")
-                        or source.suffix != ".jsonl"):
-                raise ValueError("Cut supports only closed managed fc_session JSONL logs")
         self.output = destination / ("SilverStar_export_" + time.strftime("%Y%m%d_%H%M%S_") + uuid4().hex[:12])
         self.output.mkdir(exist_ok=False)
+        total = sum(path.stat().st_size for path in paths)
+        received = 0
         for index, source in enumerate(paths):
             self._check(source)
             before = _identity(source)
             filename = source.name if re.fullmatch(r"[A-Za-z0-9_.-]{1,200}", source.name) and source.name != "manifest.json" else f"file_{index:04d}.bin"
             target = self.output / filename
             digest = hashlib.sha256()
+            notify(TransferProgress(received,total,'receiving',index+1,len(paths),source.name))
             with source.open("rb") as src, target.open("xb") as dst:
                 while data := src.read(self.CHUNK_BYTES):
                     self._check(source)
-                    dst.write(data)
+                    if dst.write(data)!=len(data):raise OSError('Incomplete destination write')
                     digest.update(data)
+                    received += len(data)
+                    notify(TransferProgress(received,total,'receiving',index+1,len(paths),source.name))
+                notify(TransferProgress(received,total,'verifying',index+1,len(paths),source.name))
                 dst.flush()
                 os.fsync(dst.fileno())
             self._check(source)
@@ -131,7 +133,7 @@ class DeviceExport:
                         for f in self.files]}
         encoded = json.dumps(manifest, ensure_ascii=False, indent=2).encode("utf-8")
         with (self.output / "manifest.json").open("xb") as fp:
-            fp.write(encoded)
+            if fp.write(encoded)!=len(encoded):raise OSError('Incomplete manifest write')
             fp.flush()
             os.fsync(fp.fileno())
         self._check()
@@ -139,6 +141,7 @@ class DeviceExport:
         if self._hash(self.output / "manifest.json") != self.manifest_sha256:
             raise OSError("Manifest readback failed")
         self.ready = True
+        notify(TransferProgress(received,total,'verified',len(paths),len(paths),'manifest'))
         return self.output
 
     @staticmethod
@@ -164,40 +167,10 @@ class DeviceExport:
         return {"role": "attachment", "format": "opaque", "format_version": "unknown"}
 
     def delete_verified_sources(self, *, confirmed: bool) -> DeviceExportResult:
-        """Call only after a GUI confirmation of this exact completed copy."""
+        """Compatibility operation: source deletion is no longer provided."""
         if not confirmed:
             return DeviceExportResult.COPIED
-        if not self.cut_requested or len(self.sources) != 1:
-            raise ValueError("Deletion requires a single-session cut export")
-        if not self.ready or not self.files or len(self.files) != len(self.sources):
-            raise ValueError("Export is incomplete")
-        root = _regular_path(self.managed_root, directory=True)
-        for item in self.files:
-            self._verify_for_delete(item, root)
-        # Preflight all files before deleting any; every destructive step repeats
-        # the check. A later disk failure can leave a partially completed cut;
-        # its verified destination remains intact and remaining sources survive.
-        for item in self.files:
-            self._verify_for_delete(item, root)
-            self._check(item.source)
-            item.source.unlink()
-        return DeviceExportResult.CUT
-
-    def _verify_for_delete(self, item: ExportFile, root: Path) -> None:
-        self._check(item.source)
-        if self.output is None:
-            raise ValueError("Export is incomplete")
-        if {path.name for path in self.output.iterdir()} != {"manifest.json", *(f.target.name for f in self.files)}:
-            raise OSError("Deletion refused: undeclared export contents")
-        _regular_path(self.output / "manifest.json")
-        if self._hash(self.output / "manifest.json") != self.manifest_sha256:
-            raise OSError("Deletion refused: export manifest changed")
-        source = _regular_path(item.source)
-        _regular_path(item.target)
-        if (source.parent != root or not source.name.startswith("fc_session_")
-                or source.suffix != ".jsonl" or _identity(source) != item.identity
-                or self._hash(source) != item.sha256 or self._hash(item.target) != item.sha256):
-            raise OSError(f"Deletion refused: source/destination identity changed: {source}")
+        raise ValueError('Device exports are copy-only; clean source files manually')
 
 
 __all__ = ["DeviceExport", "DeviceExportResult", "ExportCancelled"]

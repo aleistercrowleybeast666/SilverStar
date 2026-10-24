@@ -86,42 +86,24 @@ class TransferUiTests(unittest.TestCase):
         self.assertEqual(len(list(self.target.glob("*/manifest.json"))), 1)
         self.assertTrue(self.window.btn_process_data.isEnabled())
 
-    def test_cut_requires_gui_confirmation_of_completed_copy(self):
-        confirmations = []
-        timer = QTimer()
-        timer.setInterval(20)
-        def approve():
-            dialog = self.application.activeModalWidget()
-            if not isinstance(dialog, QMessageBox):
-                return
-            self.assertTrue(self.source.exists())
-            self.assertEqual(len(list(self.target.glob("*/manifest.json"))), 1)
-            confirmations.append(dialog.text())
-            evidence = os.environ.get("GSHC_TRANSFER_QA_DIR")
-            if evidence:
-                Path(evidence).mkdir(parents=True, exist_ok=True)
-                dialog.grab().save(str(Path(evidence) / "windows_cut_confirmation.png"))
-            dialog.button(QMessageBox.StandardButton.Yes).click()
-            timer.stop()
-        timer.timeout.connect(approve)
-        with patch("ui.file_transfer.QFileDialog.getOpenFileNames", return_value=([str(self.source)], "")), \
-             patch("ui.file_transfer.QFileDialog.getExistingDirectory", return_value=str(self.target)), \
-             patch("ui.file_transfer.QMessageBox.information"), patch("ui.file_transfer.QMessageBox.warning") as warning:
-            timer.start()
+    def test_legacy_cut_action_is_disabled_and_absent_from_menu(self):
+        self.assertFalse(self.window.action_export_cut.isEnabled())
+        self.assertNotIn(self.window.action_export_cut, self.window.btn_export_device.menu().actions())
+        with patch("ui.file_transfer.QFileDialog.getOpenFileNames") as chooser:
             self.window.action_export_cut.trigger()
-            self.wait_finished()
-        warning.assert_not_called()
-        self.assertEqual(len(confirmations), 1)
-        self.assertFalse(self.source.exists())
-
-    def test_declined_cut_leaves_source(self):
-        with patch("ui.file_transfer.QFileDialog.getOpenFileNames", return_value=([str(self.source)], "")), \
-             patch("ui.file_transfer.QFileDialog.getExistingDirectory", return_value=str(self.target)), \
-             patch("ui.file_transfer.QMessageBox.question", return_value=QMessageBox.StandardButton.No), \
-             patch("ui.file_transfer.QMessageBox.information"):
-            self.window.action_export_cut.trigger()
-            self.wait_finished()
+            chooser.assert_not_called()
         self.assertTrue(self.source.exists())
+
+
+    def test_legacy_cut_request_is_rejected_before_file_selection(self):
+        with patch("ui.file_transfer.QFileDialog.getOpenFileNames") as chooser, \
+             patch("ui.file_transfer.QMessageBox.warning") as warning:
+            self.controller.file_transfer.choose_export(True)
+            chooser.assert_not_called()
+            warning.assert_called_once()
+        self.assertTrue(self.source.exists())
+        self.assertEqual(list(self.target.iterdir()), [])
+
 
     def test_close_cancels_and_retains_running_thread_until_finished(self):
         class SlowExport(DeviceExport):
