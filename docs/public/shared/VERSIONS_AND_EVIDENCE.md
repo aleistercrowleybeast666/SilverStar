@@ -1,5 +1,77 @@
 # 产品、格式与证据身份
 
+## 当前开发基线核对（2026-10-24）
+
+当前产品仍为 **0.1.3 development**，已发布版仍为 v0.1.2；以下结论不构成飞行资格。原工作区的 567 个源码、测试、合同、文档及正式样例文件已保存为本地提交 `1b3704f3`，父提交 `4c1b382b`。原始内容先冻结，再单独整理测试和文档；没有推送、操作硬件、修改控制算法或实现下面的任务周期草案。三个根目录 `work_*_20261006` 清单保留未提交，不当作产品源码。
+
+**当前问题主要是实现、文档和验证证据不同步，不能概括成“算法未写”，也不能概括成“全部完成，只差上箭”。** 本轮没有发现所运行 Python 数学检查失败，但没有据此推断所有 C 集成正确。
+
+| 内容 | 当前源码事实 | 尚不能宣称的能力 |
+|---|---|---|
+| PureINS / SF6 / KF6 / ESKF15 | 已有 C 后端、SCG 配置和 FLP 回放；KF6 有恢复/完整性检查，ESKF15 有独立参数与质量合同 | 全部板卡、全部配置均通过；台架/手持记录不能替代真实飞行验证 |
+| ESKF20 / InEKF15 / InEKF20 数学 | Python 参考和实际有界 double C 内核均存在；InEKF 是 invariant，不是 iterated；三插件通过共同 owner 选择不同模型 | 新模型完整包线的精度、收敛性或目标板实时性 |
+| 新模型固件接入 | 实际 backend、IMU 输入、SCG manifests 已接入；无合格 timing profile，默认软件验证开关关闭 | 选择成功或编译成功即有生产/飞行资格 |
+| 延迟处理与操作日志 | 当前 owner 新增 `navigation_replay.c`、`navigation_journal.c`，backend 实际调用；存在固定容量历史和操作记录 | 不能继续说“尚未实现”；但本轮未复验这些新增 C 路径的完整延迟/容量/故障组合和目标端预算 |
+| 磁观测 | 当前已有 `navigation_mag_quality.c`、质量/校准/时序输入及 backend 接入 | 配置 delay/uncertainty 或设置 verified 位本身不能产生传感器时延测量证据；真实生产链仍需验收 |
+| FLP 新模型 | 三插件注册，已有严格操作日志读取与 Recorded-configuration 分支，以及离线显式配置路径 | 仅完整且匹配的 sealed journal 才能进入该路径；重算结果仍标 Derived/APPROXIMATE、firmware equivalence NOT_PROVEN，不能冒充板端原记录 |
+
+源码定位：SCG 的 `silverstar_algorithm_augmented_common/payload/Algorithm/Estimator/Augmented`；FLP 的 `plugins/algorithms/navigation_reference_v1`。旧 README 中“新插件无 firmware IDs”“仅 co-timed”“没有 Recorded 路径”等描述已落后于当前源码，相关入口已补充状态说明。旧数学说明仍适用于其所描述的原型，不作为当前集成验收结论。
+
+### 本轮运行结果与复现
+
+环境：Windows；仓库 `.venv`，Python 3.14.0、NumPy 2.4.1、SciPy 1.16.3、PySide6 6.10.1、pytest 9.1.1；Host GCC 为 `D:\msys64\ucrt64\bin\gcc.exe`。GUI 检查使用 Qt offscreen，不连接设备。
+
+| 检查范围 | 最终选定检查结果 | 范围说明 |
+|---|---|---|
+| `apps/SCG/experiments/navigation_0_1_3/test_*.py` 顶层文件 | 319 passed | 更新了过期的插件隔离断言；保留实验目录隔离，并增加共同 owner/默认验证限制检查 |
+| SCG `test_navigation_v1`、`test_project_schema_current`、`test_product_patch_identity`、`test_firmware_identity_gate` | 44 passed / 1 failed | 旧官方项目迁移期望随当前产品版本；剩余参数合同测试见下 |
+| 根 integration 的 product version、desktop inventory、monorepo baseline 三模块 | 32 passed / 1 failed | 独立插件版本不再假定全为 0.1.0；修复 Windows 启动测试只终止 launcher、遗留 FLP 子进程的问题；三个启动器 offscreen 检查通过 |
+| FLP navigation plugins/body inputs/firmware configuration、magnetometer decoder routes、actual parameters、project artifacts，以及一个精确打开节点 | 164 passed / 8 failed | 具体失败分类见下；不能称 FLP 全量回归通过 |
+| GSHC navigation readiness、START ACK state | 62 passed，另 3 subtests passed | ACK 与导航可用状态区分检查 |
+| SCG navigation delayed health、KF6 integrity Host C | 47 passed | 实际编译执行选定健康状态/KF6检查；不等于新三模型 C 全量回归 |
+
+总计选定检查 **668 passed / 10 failed**，另有 3 个通过的 subtests；没有将初次失败或中间调试尝试重复计入。原始命令、JUnit、stdout 和日志哈希位于本机 `.work/dev013_baseline_20261024_01/`，最终组为 `math_final`、`scg_final`、`root_final`、`flp`、`gshc`、`host`。它们是本次本地输出，不是仓库内永久测试依赖。
+
+复现方式：使用同一环境，在对应应用目录运行表中的 pytest 模块，覆盖各应用默认临时目录；例如从根目录执行：
+
+```powershell
+$repo = (Get-Location).Path
+$python = Join-Path $repo '.venv/Scripts/python.exe'
+$env:QT_QPA_PLATFORM = 'offscreen'
+$env:PYTHONDONTWRITEBYTECODE = '1'
+$env:SILVERSTAR_GSHC_DATA_ROOT = Join-Path $repo '.work/baseline-recheck/gshc'
+& $python -B -m pytest -q tests/integration/test_product_version_metadata.py tests/integration/test_desktop_version_inventory.py tests/integration/test_monorepo_baseline.py -o addopts= -o cache_dir=.work/baseline-recheck/cache --basetemp=.work/baseline-recheck/tmp
+Push-Location apps/SCG/experiments/navigation_0_1_3
+$mathTests = Get-ChildItem -File test_*.py | ForEach-Object Name
+& $python -B -m pytest -q @mathTests -o addopts= -o "cache_dir=$repo/.work/baseline-recheck/math-cache" "--basetemp=$repo/.work/baseline-recheck/math-tmp"
+Pop-Location
+```
+
+剩余 10 个失败应单独收口，不能降低生产校验来“修绿”：
+
+- 根测试仍禁止任何应用内 `navigation_v1.json`，而 FLP 已有受信任打包快照，本轮确认与 canonical 字节一致。应改为验证快照来源/一致性，保留对额外副本的拒绝。
+- SCG 的参数测试仍把插件的完整参数列表直接等同旧导航基础合同（并固定数量 35）；当前还包含时序、horizon、恢复等扩展，且基础合同有消费者元数据。需要按各自权威合同核验扩展集合，而非删除参数或仅取交集。
+- FLP 一项测试未纳入 `fusion_horizon_ms`；六项旧用例因未提供所需 KF6 algorithm revision 被拒绝；一项工程回开测试遍历所有插件却没给新插件必须的 `configuration_json`。应补正确的版本化夹具和新模型显式配置/拒绝案例，再核实真实工作流；不能用默认值绕过版本或初始状态要求。
+
+### 历史证据与当前提交的边界
+
+已读取本机 `C:\Users\chdxm\Documents\Codex\2026-10-22\task-9\silverstar_nav_boundary_v2` 的 `VERIFICATION_INDEX.json` 和 `FINAL_SOURCE_IDENTITY.json`。记录包括 C O0/O2 各 41 组、session 36 项、独立 Schur/Pdot 和实际生产者检查、参考 F407 编译/link/analyzer 等；这些是**历史记录，本轮未重跑该整套流程**。
+
+历史清单 67 个文件均存在，但 **19 个当前 SHA-256 已不同，且不能仅由 CRLF→LF 解释**，涉及后端、session、输入头文件、estimator task、插件和 FLP 适配。因此不能把旧记录作为当前整个集成的通过证明；新增 replay/journal/magnetic quality 文件也不能被旧清单自动覆盖。外部验证目录不随 Git 克隆，需把可重跑的最小 harness、夹具及输入身份归入仓库测试，再对当前 commit 运行，避免只留机器绝对路径。
+
+核对使用的历史文件 SHA-256：index `bb9c8424c3a6774df88556ed45916d3006cc9d850e732d83b6dd40999f9f6587`；source identity `2c74ca04d8dceff2521852e8fcc1a4629d109bdfb6c8cd327c97331ac45614a4`。它们只定位当时证据，不是当前源码摘要。
+
+历史记录把 ESKF15 及以上的目标设为 H743，并明确 H7 工作暂停。F407 的资源/栈失败只属于那个参考配置，不能直接推成 H743 失败；反过来也不能推成 H743 已通过。本轮没有解除暂停、生成或运行 H743，也没有飞行实测。
+
+### 推荐次序
+
+1. **先完成估计链路的验收收口，不继续堆新算法。** 冻结一个主验收模型、板卡/传感器/输入配置；先解决上述测试/夹具分歧，再复验当前 C kernel→session→backend→生产者→日志→FLP 全链。现有 15 维路径与 20 维磁扩展分开验收；不把所有算法、所有板卡一次性列为完成条件。
+2. 补时间与坐标、校准与源身份、缺测/重获、延迟/队列容量、完整协方差及故障不污染状态的证据；对新的 journal 做真实解析与重放一致性检查。随后按获准目标完成时序/栈/RAM、台架、留出数据和飞行验证，阈值先冻结，结果再评价。
+3. **第二、第三步先做接口设计，不先重写状态机。** [任务周期草案](MONOREPO_ARCHITECTURE.md#任务周期与三端配置草案2026-10-24尚未实现) 将生命周期、物理阶段、事件、阶段任务和连续估计/调度分开；SCG 声明配置，固件发布实际状态，GSHC 展示，FLP 按精确日志重放。估计验收过程中可并行准备日志和只读展示所需合同。
+4. 在估计状态及健康输出可靠之后，再引入控制算法。TreeDiagram 以后先承担可重复输入/故障场景与模型对照，不能替代实测或作为当前飞行资格证明；Underline/移动端的通信、回收定位和只读展示可独立推进，不必等待主动控制。
+
+下方 2026-10-19 规划保留原日期和当时判断；其中“当前只有原型”和“先修普通生成版本身份”已经被后续源码进展部分取代。普通生成的版本入口现在已存在，见 [版本管理](VERSION_MANAGEMENT.md)；历史候选 ELF 不因此被修复。
+
 ## 十二月版本规划（2026-10-19，尚未执行）
 
 用户已同意下一次正式更新目标命名 **SilverStar v0.2.0**，定位为面向 MEMS IMU 与低成本模块的可追溯导航、标定、记录和诊断工具链；本期不加入姿态/轨迹/推力等新闭环控制。**ESKF20与InEKF均为这次十二月发布必须加入的目标，发布前安排上箭测试**，不是可有可无的实验保留。产品目标是少量组合实测可靠、跨平台配置方便，不以算法原型数量计完成度。现有正式版仍为 v0.1.2；根 `VERSION` 当前为 0.1.3 开发身份。本轮仅更新本规划，**不改 VERSION、tag、源码、协议或已有工程**。

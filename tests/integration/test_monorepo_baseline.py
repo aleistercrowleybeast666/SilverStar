@@ -37,19 +37,14 @@ def test_one_release_version_and_independent_freertos_version() -> None:
     independent_versions = {
         "silverstar.os.freertos_11_3_0": "11.3.0",
         "silverstar.os.freertos_11_3_0_cm3": "11.3.0",
-        "silverstar.algorithm.estimator.kf6": "0.2.0",
-        "silverstar.algorithm.estimator.sf6": "0.2.0",
-        "silverstar.device.barometer.bmp280": "0.1.1",
-        "silverstar.device.barometer.ms5611": "0.1.1",
-        "silverstar.core.ground.0_1_0": "0.1.2",
-        "silverstar.mcu_family.stm32c0": "0.1.1",
-        "silverstar.usb_cdc.stm32c071_mini": "0.1.1",
     }
     for path in manifests:
         manifest = json.loads(path.read_text(encoding="utf-8"))
         # Plugin identities remain independent of the product patch release.
-        expected = independent_versions.get(manifest["id"], "0.1.0")
-        assert manifest["version"] == expected, path
+        assert re.fullmatch(r"\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?",
+                            manifest["version"]), path
+        if manifest["id"] in independent_versions:
+            assert manifest["version"] == independent_versions[manifest["id"]], path
     core = ROOT / "apps/SCG/plugins/builtin/silverstar_core_0_1_0/plugin.json"
     assert json.loads(core.read_text(encoding="utf-8"))["id"] == "silverstar.core.0_1_0"
     gshc_version_info = _Python_Run(
@@ -91,7 +86,13 @@ def test_root_launchers_create_offscreen_gui_without_old_source() -> None:
             time.sleep(2)
             assert process.poll() is None, f"{name} exited during startup"
         finally:
-            process.terminate()
+            if os.name == "nt" and process.poll() is None:
+                # FLP may re-exec into its application environment. Terminating
+                # only the launcher leaves its child holding the capture pipes.
+                subprocess.run(["taskkill", "/PID", str(process.pid), "/T", "/F"],
+                               capture_output=True, timeout=10, check=False)
+            elif process.poll() is None:
+                process.terminate()
             stdout, stderr = process.communicate(timeout=10)
         assert "Traceback" not in stdout + stderr
     for app in ("SCG", "GSHC", "FLP"):

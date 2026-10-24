@@ -1,5 +1,6 @@
 """Read-only SCG metadata boundaries; never compile or execute device payloads."""
 from copy import deepcopy
+import json
 from pathlib import Path
 
 import pytest
@@ -7,17 +8,16 @@ import pytest
 from silverstar_fccg.plugins.catalog import PluginCatalog, PluginCatalogError
 from silverstar_fccg.project.reference import ReferenceProject_Create
 from silverstar_fccg.project.validation import Project_Validate
+from silverstar_fccg.project.configuration import ProjectConfiguration_Reconcile
 from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
 
 HERE = Path(__file__).resolve().parent
 SCG = HERE.parents[1]
 FORBIDDEN_IDS = ("silverstar.algorithm.estimator.inekf",
                  "silverstar.algorithm.estimator.iekf",
-                 "silverstar.algorithm.estimator.inekf15",
-                 "silverstar.algorithm.estimator.inekf20",
                  "silverstar.algorithm.estimator.iekf15",
-                 "silverstar.algorithm.estimator.iekf20",
-                 "silverstar.algorithm.estimator.eskf20")
+                 "silverstar.algorithm.estimator.iekf20")
+PROMOTED_MODELS = ("eskf20", "inekf15", "inekf20")
 
 
 @pytest.fixture(scope="module")
@@ -84,3 +84,21 @@ def test_existing_source_graphs_have_no_experimental_sources(catalog, estimator)
         assert "inekf" not in path.casefold() and "eskf20" not in path.casefold()
     if estimator:
         assert any(f"Estimator/{estimator.upper()}/" in source for source in graph.sources)
+
+
+@pytest.mark.parametrize("model_id", PROMOTED_MODELS)
+def test_promoted_models_use_owned_sources_and_keep_validation_only_metadata(catalog, model_id):
+    component_id = "silverstar.algorithm.estimator." + model_id
+    manifest = catalog.Component_Get(component_id)
+    raw = json.loads(manifest.manifest_path.read_text(encoding="utf-8"))
+    assert raw["metadata"]["qualified_timing_profiles"] == []
+    assert raw["metadata"]["software_validation_parameter"] == "software_validation_build"
+    parameters = {item["id"]: item for item in raw["algorithm_parameters"]["parameters"]}
+    assert parameters["software_validation_build"]["default"] == 0
+    model = MetadataModel_Create(catalog)
+    model.strategies["estimator"] = component_id
+    model = ProjectConfiguration_Reconcile(model, catalog).model
+    graph = SourceGraph_Resolve(model, catalog)
+    assert any("Estimator/Augmented/Src/navigation_augmented_backend.c" in path
+               for path in graph.sources)
+    assert not any("experiments" in path.casefold() for path in graph.sources)

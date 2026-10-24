@@ -53,6 +53,12 @@ This follows [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html) and the distinc
 | Firmware text identity | Full requested version and development/test status; bounded text, never silent truncation |
 | SSLOG short build tag | Existing `SILV0103` style where representable; otherwise a deterministic eight-character tag. It is a short correlation field, not complete provenance |
 
+The loader has an explicit exception for exact historical official project
+identities: matching `0.1.0` / `0.1.1` version-and-target pairs migrate in memory
+to the current product identity. Opening does not rewrite the input file.
+This is distinct from preserving arbitrary existing firmware requests; see
+`_ProductPatchIdentity_Migrate` and `test_product_patch_identity.py` in SCG.
+
 Legacy two-part firmware requests retain their original spelling in the project
 and declaration, with patch zero in numeric compatibility fields. The product
 `VERSION` itself always requires three-part SemVer. Explicit test builds retain

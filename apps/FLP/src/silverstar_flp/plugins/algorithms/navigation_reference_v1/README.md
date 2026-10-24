@@ -1,5 +1,27 @@
 # Navigation host reference v1
 
+## Current integration status, 2026-10-24
+
+The following older co-timed/offline descriptions document the original host
+reference. Current `plugin.py` declares the three firmware component IDs and
+has a Recorded-configuration branch gated by `RecordedJournal_Read`; it does
+not admit an arbitrary old log. `recorded_journal.py` and `buffered_replay.py`
+implement sealed operation-journal input and buffered execution. The SCG owner
+also contains bounded replay, journal and magnetic-quality implementations.
+Thus the old statements below about empty firmware IDs, no Recorded path and
+no buffered replay are no longer descriptions of all current entry points.
+
+Recorded-configuration results remain derived/recomputed, APPROXIMATE, with
+`firmware_equivalence=NOT_PROVEN` and no target golden qualification. Explicit
+offline configuration still requires declared priors and input provenance.
+Current-source end-to-end journal, delay and magnetic-producer qualification
+must be established separately from the historical mathematical checks. See
+the repository's `docs/public/shared/VERSIONS_AND_EVIDENCE.md` for the current
+baseline checks and remaining integration failures. No hardware qualification
+is implied by registering a plugin or parsing its configuration.
+
+## Original host-reference scope
+
 This package provides actual ESKF20, InEKF15 and InEKF20 float64 host replay
 implementations. InEKF means **invariant**, not iterated. InEKF15 has no magnetic
 state or magnetic prerequisite. No InEKF9 filter is registered. Existing INS,

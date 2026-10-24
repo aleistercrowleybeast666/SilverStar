@@ -1,5 +1,13 @@
 # Independent release prerequisite: C runtime and project version identity
 
+2026-10-24 status clarification: the OPEN statement below describes the retained
+2026-10-18 candidate. Current normal generation calls `FirmwareIdentity_Resolve`
+and emits version overrides before includes, with conflicting external overrides
+rejected. See [current version management](../public/shared/VERSION_MANAGEMENT.md).
+This source implementation does not retroactively repair the historical ELF,
+prove every release gate, or constitute hardware acceptance. Preserve the
+candidate identity and evidence below unchanged.
+
 Status: OPEN, not implemented in the TF/UART diagnostic batch of 2026-10-18.
 Owner: release/build identity workflow; separate from TF persistence and UART
 recovery. No version strings, generated candidate files or flash contents were

@@ -1,5 +1,16 @@
 # Invariant EKF mathematical reference, 0.1.3 experiment
 
+2026-10-24 clarification: this directory remains outside plugin discovery. The
+original nine-state reference below is still host-only. Separate bounded C
+ESKF20/InEKF15/InEKF20 implementations are now registered through the
+`silverstar_algorithm_augmented_common` owner and three model manifests, for
+explicit software-validation builds only. The former blanket statement that
+all three model IDs are unknown is obsolete. `test_isolation.py` now verifies
+the unregistered aliases and the promoted source ownership separately. See
+[bounded C scope](bounded_c_v1/README.txt) and the
+[current baseline assessment](../../../../docs/public/shared/VERSIONS_AND_EVIDENCE.md).
+The following original prototype-stage description is retained as history.
+
 Status: **HOST REFERENCE ONLY; NOT SELECTABLE; NOT GENERATABLE**.
 Revision 1 implements a bias-free, nine-dimensional left-invariant error filter
 on SE₂(3). It is not an ESKF15 rename, an iterated EKF, an ESKF20, or a firmware
