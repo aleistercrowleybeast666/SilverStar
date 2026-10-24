@@ -36,6 +36,8 @@ FIXTURES = Path(__file__).parent / "fixtures/parameter_contracts"
 
 def test_fccg_ids_units_representations_defaults_match_audited_contract():
     for plugin in builtin_registry().algorithms:
+        if plugin.metadata.plugin_id.rsplit(".", 1)[-1] in {"eskf20", "inekf15", "inekf20"}:
+            continue  # Their actual schema/conversion has its own fixture tests.
         if not plugin.metadata.firmware_component_ids:
             continue
         name = plugin.metadata.plugin_id.rsplit(".", 1)[-1]
@@ -43,12 +45,13 @@ def test_fccg_ids_units_representations_defaults_match_audited_contract():
             "parameters"
         ]
         actual = {p.parameter_id: p for p in plugin.metadata.parameter_schema}
-        extension = {"nis_soft_enabled", "nis_hard_enabled", "fusion_timing_mode"} if name in {"kf6", "eskf15"} else set()
+        extension = {"nis_soft_enabled", "nis_hard_enabled", "fusion_timing_mode", "fusion_horizon_ms"} if name in {"kf6", "eskf15"} else set()
         assert set(actual) == {p["id"] for p in expected} | extension
         for parameter_id in extension:
             spec = actual[parameter_id]
-            assert (spec.kind, spec.default, spec.minimum, spec.maximum, spec.unit, spec.required) == (
-                "int", 1, 0, 1, "1", False)
+            expected_extension = ("int", 300, 10, 550, "ms", False) if parameter_id == "fusion_horizon_ms" else (
+                "int", 1, 0, 2 if parameter_id == "fusion_timing_mode" else 1, "1", False)
+            assert (spec.kind, spec.default, spec.minimum, spec.maximum, spec.unit, spec.required) == expected_extension
         for item in expected:
             spec = actual[item["id"]]
             assert (spec.default, spec.unit, spec.representation, spec.minimum, spec.maximum) == (

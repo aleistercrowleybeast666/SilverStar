@@ -176,7 +176,7 @@ def test_replay_page_restores_hidden_revision_without_a_new_selector(tmp_path):
     from silverstar_flp.ui.pages.replay import ReplayPage
     from tests.synthetic_parameter_navigation import NavigationPair_Open
     application = QApplication.instance() or QApplication([])
-    dataset = NavigationPair_Open(tmp_path / "page", flight_samples=3).dataset
+    dataset = NavigationPair_Open(tmp_path / "page", flight_samples=3, kf6_revision=None).dataset
     plugin = Kf6AlgorithmPlugin()
     page = ReplayPage(Translator("en_US"), builtin_registry())
     page.Dataset_Set(dataset)

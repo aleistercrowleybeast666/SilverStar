@@ -5,6 +5,7 @@ import hashlib
 import pytest
 import os
 import re
+import runpy
 import subprocess
 import sys
 import time
@@ -58,12 +59,13 @@ def test_one_release_version_and_independent_freertos_version() -> None:
 def test_one_navigation_contract_for_all_consumers() -> None:
     canonical = ROOT / "contracts/navigation_v1.json"
     assert canonical.is_file()
-    assert list(ROOT.glob("apps/**/navigation_v1.json")) == []
+    packaged = ROOT / "apps/FLP/src/silverstar_flp/decoder_profiles/contracts/navigation_v1.json"
+    assert list(ROOT.glob("apps/**/navigation_v1.json")) == [packaged]
+    assert packaged.read_bytes() == canonical.read_bytes()
     assert list(ROOT.glob("docs/**/navigation_v1.json")) == []
     contract = json.loads(canonical.read_text(encoding="utf-8"))
-    manifest = json.loads((ROOT / "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/plugin.json").read_text(encoding="utf-8"))
-    parameters = {item["id"]: {key: item[key] for key in ("type", "default", "unit", "representation", "min", "max")} for item in manifest["algorithm_parameters"]["parameters"]}
-    assert parameters == contract["eskf15"]["parameters"]
+    check = runpy.run_path(str(ROOT / "tests/navigation_contract_support.py"))
+    check["NavigationParameters_Assert"](ROOT)
     flp_value = _Python_Run(
         "from silverstar_flp.plugins.algorithms.eskf15.plugin import CONTRACT; print(CONTRACT['eskf15']['component_id'])",
         ROOT / "apps/FLP/src",
@@ -77,7 +79,7 @@ def test_root_launchers_create_offscreen_gui_without_old_source() -> None:
     for name in ("SCG", "GSHC", "FLP"):
         env = os.environ.copy()
         env["QT_QPA_PLATFORM"] = "offscreen"
-        env["SILVERSTAR_GSHC_DATA_ROOT"] = str(ROOT / ".work/gshc-test-data")
+        env.setdefault("SILVERSTAR_GSHC_DATA_ROOT", str(ROOT / ".work/gshc-test-data"))
         process = subprocess.Popen(
             [sys.executable, str(ROOT / f"{name}.py")], cwd=ROOT, env=env,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,

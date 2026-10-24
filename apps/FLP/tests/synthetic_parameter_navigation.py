@@ -12,7 +12,7 @@ from silverstar_flp.plugins.algorithms.pure_ins.mechanization import (
     InertialIncrement_BuildFromCorrectedImu,
 )
 from silverstar_flp.plugins.registry import builtin_registry
-from tests.parameter_fixtures import FirmwareSets_Build
+from tests.parameter_fixtures import FirmwareSets_Build, SyntheticKf6Identity_Set
 from tests.sslog_synthetic import START_TIMESTAMP_US, SyntheticSslogBuilder
 from tests.test_decoder_profiles import (
     _DescriptorPayload_Build,
@@ -22,7 +22,8 @@ from tests.test_decoder_profiles import (
 
 
 def NavigationPair_Open(
-    directory: Path, overrides=None, *, preflight_us=0, flight_samples=1001, omit_imu=False
+    directory: Path, overrides=None, *, preflight_us=0, flight_samples=1001, omit_imu=False,
+    journal_rows=None, augmented_parameters=None, kf6_revision=1
 ):
     directory.mkdir(parents=True, exist_ok=True)
     fixtures = Path(__file__).parent / "fixtures/parameter_contracts"
@@ -36,6 +37,18 @@ def NavigationPair_Open(
         group for group in FirmwareSets_Build(overrides)
         if group["component"] in semantics["algorithms"]
     ]
+    if kf6_revision == 1 and type(kf6_revision) is int:
+        SyntheticKf6Identity_Set(semantics)
+    elif kf6_revision is not None:
+        raise ValueError('synthetic_kf6_revision_unsupported')
+    if journal_rows is not None:
+        repository = Path(__file__).resolve().parents[3]
+        schema = json.loads((repository / 'apps/SCG/plugins/builtin/silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG/schema/sslog_schema.json').read_text(encoding='utf-8'))
+        operation = next(row for row in schema['records'] if row['name'] == 'NAVIGATION_OPERATION_PART')
+        catalog['records'].append(operation)
+        assert augmented_parameters is not None
+        semantics['firmware_algorithm_parameters'].append(augmented_parameters)
+        semantics['algorithms'].append(augmented_parameters['component'])
     files, hashes = _PackageFiles_Build(catalog_document=catalog, semantics_document=semantics)
     package, _ = _Package_Write(directory / "SYNTHETIC_navigation.ssdecoder", files=files)
     records = {r["name"]: r for r in catalog["records"]}
@@ -198,6 +211,9 @@ def NavigationPair_Open(
                 },
                 4,
             )
+    if journal_rows is not None:
+        for row in journal_rows:
+            add('NAVIGATION_OPERATION_PART', row['timestamp_us'], row['record'])
     log = builder.File_Write(directory / "SYNTHETIC_navigation.BIN")
     return LogOpenCoordinator(
         builtin_registry(), cache=DecoderProfileCache(directory / "cache")

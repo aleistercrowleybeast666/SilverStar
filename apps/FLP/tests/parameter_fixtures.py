@@ -74,6 +74,7 @@ def ParameterPackage_Open(tmp_path, groups=None):
     semantics = _SemanticsDocument_Build()
     semantics["firmware_algorithm_parameters"] = FirmwareSets_Build() if groups is None else groups
     semantics["algorithms"] = [g["component"] for g in semantics["firmware_algorithm_parameters"]]
+    SyntheticKf6Identity_Set(semantics)
     files, hashes = _PackageFiles_Build(semantics_document=semantics)
     package, _ = _Package_Write(tmp_path / "SYNTHETIC_actual.ssdecoder", files=files)
     builder = SyntheticSslogBuilder()
@@ -91,6 +92,22 @@ def ParameterPackage_Open(tmp_path, groups=None):
     return LogOpenCoordinator(
         builtin_registry(), cache=DecoderProfileCache(tmp_path / "cache")
     ).Open(LogOpenRequest(log_path=log, decoder_package_path=package))
+
+
+def SyntheticKf6Identity_Set(semantics):
+    """New synthetic package explicitly uses the revision-1 mathematical model.
+
+    Do not edit frozen JSON/NPZ fixtures or teach production to infer a revision
+    from membership. The exact newly built package records this assumption.
+    """
+    component = "silverstar.algorithm.estimator.kf6"
+    if component not in semantics.get("algorithms", ()):
+        return
+    locks = semantics.setdefault("component_locks", [])
+    locks[:] = [row for row in locks if row["component"] != component]
+    locks.append({"component": component, "version": "0.1.0"})
+    semantics.setdefault("metadata_declarations", {})["kf6"] = {
+        "revision": 1, "process_noise_model": "legacy_fragment_constant_acceleration"}
 
 
 def SyntheticParameters_Attach(dataset, tmp_path, overrides=None):

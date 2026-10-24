@@ -177,11 +177,18 @@ def test_gui_reopen_restores_every_run_and_two_sources_without_replay(qtbot, tmp
     opened = NavigationPair_Open(tmp_path / 'pair', flight_samples=41)
     registry = builtin_registry()
     first = MainWindow(registry); qtbot.addWidget(first)
+    # Assertion failures must not block pytest-qt teardown on a save dialog.
+    first._ProjectChanges_Confirm = lambda: True
     errors = []; monkeypatch.setattr(first, '_Error_Show', errors.append)
     first._LogOpenResult_Set(opened, ProjectDocument())
     for plugin in registry.algorithms:
-        request = ReplayRequest(mode=ReplayMode.WHAT_IF,
-            process_model_revision=2 if plugin.metadata.plugin_id.endswith('kf6') else None)
+        model = plugin.metadata.plugin_id.rsplit('.', 1)[-1]
+        if model in {'eskf20', 'inekf15', 'inekf20'}:
+            from tests.test_navigation_plugins import config, request as ExplicitRequest_Create
+            request = ExplicitRequest_Create(config(model))
+        else:
+            request = ReplayRequest(mode=ReplayMode.WHAT_IF,
+                process_model_revision=2 if plugin.metadata.plugin_id.endswith('kf6') else None)
         first._replay_store.Result_Add(Replay_Execute(plugin, opened.dataset, request),
                                       algorithm_name=plugin.metadata.display_name)
     entries = first._replay_store.Entries_Get()
@@ -194,6 +201,7 @@ def test_gui_reopen_restores_every_run_and_two_sources_without_replay(qtbot, tmp
     for cls in {type(plugin) for plugin in registry.algorithms}:
         monkeypatch.setattr(cls, 'run', lambda *args: pytest.fail('GUI reopen must not replay'))
     second = MainWindow(registry); qtbot.addWidget(second)
+    second._ProjectChanges_Confirm = lambda: True
     monkeypatch.setattr(second, '_Error_Show', errors.append)
     second._Project_Open(path)
     qtbot.waitUntil(lambda: second._active_worker is None, timeout=15000)

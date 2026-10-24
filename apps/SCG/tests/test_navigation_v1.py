@@ -1,4 +1,5 @@
 import json
+import runpy
 import zipfile
 from copy import deepcopy
 from io import BytesIO
@@ -19,11 +20,9 @@ ESKF = "silverstar.algorithm.estimator.eskf15"
 
 def test_eskf_actual_parameters_match_shared_contract():
     contract = json.loads((ROOT.parents[1] / "contracts/navigation_v1.json").read_text(encoding="utf-8"))
-    plugin = json.loads((ROOT / "plugins/builtin/silverstar_algorithm_estimator_eskf15/plugin.json").read_text(encoding="utf-8"))
-    actual = {item["id"]: {key: item[key] for key in ("type", "default", "unit", "representation", "min", "max")}
-              for item in plugin["algorithm_parameters"]["parameters"]}
-    assert actual == contract["eskf15"]["parameters"]
-    assert len(actual) == 35
+    repository = ROOT.parents[1]
+    check = runpy.run_path(str(repository / "tests/navigation_contract_support.py"))
+    plugin = check["NavigationParameters_Assert"](repository)
     assert plugin["metadata"]["algorithm_revision"] == contract["eskf15"]["revision"]
     assert plugin["metadata"]["gnss_integrity_revision"] == contract["quality_policy_revision"] == 3
 
