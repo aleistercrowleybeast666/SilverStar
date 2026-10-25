@@ -4,7 +4,7 @@ from pathlib import Path
 from PySide6.QtCore import QCoreApplication, QEvent, QTimer, Qt
 from PySide6.QtTest import QTest
 from PySide6.QtTest import QSignalSpy
-from PySide6.QtWidgets import QComboBox, QGroupBox
+from PySide6.QtWidgets import QComboBox, QGroupBox, QMessageBox
 import pytest
 
 from silverstar_fccg.app.service import FccgService
@@ -53,6 +53,7 @@ def test_real_project_phase_capsules_insert_dialog_start_policy_and_reopen(tmp_p
     errors = []; monkeypatch.setattr(window, '_Error_Show', errors.append)
     try:
         panel = window.flight_configuration_page.mission_process_panel
+        monkeypatch.setattr('silverstar_fccg.ui.mission_process_panel.QMessageBox.question',lambda *a,**k:QMessageBox.StandardButton.Apply)
         panel.create_button.click(); _Events_Flush(qapp)
         assert len(window._model.mission_process['stages']) == 7
         panel.insert_before.setCurrentIndex(panel.insert_before.findData('deploy'))
@@ -60,25 +61,18 @@ def test_real_project_phase_capsules_insert_dialog_start_policy_and_reopen(tmp_p
         rows = window._model.mission_process['stages']
         assert len(rows) == 8 and rows[5]['stage_id'] == 'deploy'
         identity = rows[4]['stage_id']
-        numeric = panel.value_editors[identity]
-        numeric.lineEdit().setText('1.25 s')
-        QTest.keyClick(numeric, Qt.Key.Key_Return); _Events_Flush(qapp)
-        assert window._model.mission_process['stages'][4]['condition']['value'] == 1.25
-        def Dialog_Cancel():
-            dialog = qapp.activeModalWidget()
-            assert isinstance(dialog, MissionStageDialog)
-            dialog.name_edit.setText('discarded'); dialog.reject()
-        QTimer.singleShot(0, Dialog_Cancel)
-        panel.Dialog_Open(identity); _Events_Flush(qapp)
-        assert window._model.mission_process['stages'][4]['name'] != 'discarded'
-        def Dialog_Apply():
-            dialog = qapp.activeModalWidget()
-            dialog.name_edit.setText('Pre-deployment confirmation')
-            dialog.number.setValue(2.5); dialog.accept()
-        QTimer.singleShot(0, Dialog_Apply)
-        panel.Dialog_Open(identity); _Events_Flush(qapp)
-        assert window._model.mission_process['stages'][4]['condition']['value'] == 2.5
-        assert window._model.mission_process['stages'][4]['stage_id'] == identity
+        panel.Stage_Select(identity); _Events_Flush(qapp)
+        editor=panel.condition_editor
+        editor.number.setValue(1.25);editor.accept();_Events_Flush(qapp)
+        assert window._model.mission_process['stages'][4]['condition']['value']==1.25
+        panel.condition_editor.name_edit.setText('discarded')
+        panel.condition_editor._Discard_Click();_Events_Flush(qapp)
+        assert window._model.mission_process['stages'][4]['name']!='discarded'
+        panel.condition_editor.name_edit.setText('Pre-deployment confirmation')
+        panel.condition_editor.number.setValue(2.5)
+        panel.condition_editor.accept();_Events_Flush(qapp)
+        assert window._model.mission_process['stages'][4]['condition']['value']==2.5
+        assert window._model.mission_process['stages'][4]['stage_id']==identity
         panel.start_policy.setCurrentIndex(panel.start_policy.findData('start_is_launch')); _Events_Flush(qapp)
         rows = window._model.mission_process['stages']
         assert not any(row['stage_id'] == 'mission_start' for row in rows)
@@ -95,7 +89,7 @@ def test_real_project_phase_capsules_insert_dialog_start_policy_and_reopen(tmp_p
             window.Language_Apply(language)
             _Events_Flush(qapp)
             ins_id = window._model.strategies['ins']
-            heading = window.algorithm_parameters_page.findChild(QGroupBox, 'algorithmParameters_' + ins_id)
+            heading = window.algorithm_parameters_page._content.findChild(QGroupBox, 'algorithmParameters_' + ins_id)
             assert heading.title() == ('惯导算法' if language == 'zh_CN' else 'Inertial navigation algorithm')
             for theme in ('light', 'dark'):
                 window.Theme_Apply(theme)

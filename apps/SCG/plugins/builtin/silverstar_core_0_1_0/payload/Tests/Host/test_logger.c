@@ -101,9 +101,17 @@ static void Test_RecordMetadata(void)
     uint16_t index;
 
     TEST_CHECK(SslogRecords_RecordCountGet() == SSLOG_RECORD_COUNT);
-    /* SF6 adds two records to the prior 38, and horizon adds two more.
+    /* SF6 adds two records to the prior 38, horizon adds two more,
+     * and the navigation operation journal adds one record.
      * Check each added record's wire identity and metadata as well. */
-    TEST_CHECK(SSLOG_RECORD_COUNT == (38U + 2U + 2U));
+    TEST_CHECK(SSLOG_RECORD_COUNT == (38U + 2U + 2U + 1U));
+    TEST_CHECK(FLIGHT_LOG_RECORD_NAVIGATION_OPERATION_PART == 0x30U);
+    metadata = SslogRecords_MetadataGet(FLIGHT_LOG_RECORD_NAVIGATION_OPERATION_PART);
+    TEST_CHECK((metadata != NULL) &&
+               (metadata->record_type == FLIGHT_LOG_RECORD_NAVIGATION_OPERATION_PART) &&
+               (metadata->record_version == 1U) &&
+               (metadata->payload_size == 180U) && (metadata->name != NULL) &&
+               (strcmp(metadata->name, "NAVIGATION_OPERATION_PART") == 0));
     TEST_CHECK(FLIGHT_LOG_RECORD_FUSION_HORIZON_MEASUREMENT == 0x2DU);
     TEST_CHECK(FLIGHT_LOG_RECORD_FUSION_HORIZON_STATUS == 0x2EU);
     metadata = SslogRecords_MetadataGet(FLIGHT_LOG_RECORD_FUSION_HORIZON_MEASUREMENT);

@@ -84,12 +84,16 @@ def test_real_geometry_edit_navigation_point_not_primary_and_hatch_mapping(tmp_p
         coordinates = [item.position_body_m for item in window._model.device_instances]
         window._model.sensor_installation = SensorInstallationConfiguration('legacy CAD datum')
         window._Project_Refresh()
-        assert window.devices_page.installation_adopt_button.isVisibleTo(window.devices_page)
+        window.show()
+        window.hardware_workspace.Reveal(window.devices_page.installation_adopt_button)
+        qapp.processEvents()
+        assert window.devices_page.installation_adopt_button.isVisibleTo(window.hardware_workspace)
         window.devices_page.installation_adopt_button.click(); qapp.processEvents()
         assert window._model.sensor_installation.Dictionary_Get()['schema'].endswith('/2')
         assert [item.position_body_m for item in window._model.device_instances] == coordinates
         window.resize(1440, 960); window.show(); qapp.processEvents()
         editor = window.devices_page.position_editors['imu0']
+        window.hardware_workspace.Reveal(editor); qapp.processEvents()
         assert '<sub>imu0</sub>' in editor.vector_label.text() and '<sup>b</sup>' in editor.vector_label.text()
         for axis, spin in editor.coordinates.items():
             label = editor.axis_labels[axis]

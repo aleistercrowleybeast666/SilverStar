@@ -2,6 +2,7 @@ from copy import deepcopy
 import json
 from pathlib import Path
 import runpy
+import pytest
 
 from PySide6.QtCore import QSettings, Qt
 from PySide6.QtWidgets import QApplication
@@ -14,11 +15,19 @@ from test_start_ack_state import make_controller
 ROOT = Path(__file__).resolve().parents[3]
 
 
-def test_custom_phase_snapshot_and_trace_are_offline_and_never_authorize_live_state(tmp_path, monkeypatch):
+@pytest.mark.parametrize('schema_version', [2, 3])
+def test_custom_phase_snapshot_and_trace_are_offline_and_never_authorize_live_state(tmp_path, monkeypatch, schema_version):
     api=runpy.run_path(str(ROOT/'tools/silverstar_mission_profile.py'))
     profile=api['MissionProfile_Read'](ROOT/'contracts/mission_profile_v1.golden.json')
     profile.update(schema_id='silverstar.mission-profile/2',schema_version=2,
         process=api['MissionProcess_Default'](),devices=[])
+    if schema_version == 3:
+        adapter = next(row for row in json.loads((ROOT/'contracts/mission_functions_v1.json').read_text(encoding='utf-8'))['adapters'] if row['category']=='recording')
+        function = {key: adapter[key] for key in ('instance_id','plugin_id','category','output')}
+        function.update(execution='continuous', start={'kind':adapter['start'],'stage_id':''},
+            stop={'kind':adapter['stop'],'stage_id':''}, depends_on=[], input_bindings={})
+        profile.update(schema_id='silverstar.mission-profile/3', schema_version=3,
+            functions={'schema_version':1,'functions':[function]})
     profile['sha256']=api['MissionProfile_Digest'](profile)
     api['MissionProfile_Write'](tmp_path/'process.ssmission',profile)
     runner=api['MissionProcessRunner'](profile['process']);events=[]
@@ -37,6 +46,7 @@ def test_custom_phase_snapshot_and_trace_are_offline_and_never_authorize_live_st
     try:
         monkeypatch.setattr('ui.main_window.QFileDialog.getOpenFileName',lambda *a,**k:(str(tmp_path/'process.ssmission'),''))
         window._MissionProfile_Open()
+        assert window._declared_mission_profile == profile
         assert window.btn_mission_trace.isEnabled()
         monkeypatch.setattr('ui.main_window.QFileDialog.getOpenFileName',lambda *a,**k:(str(tmp_path/'process.ssmissiontrace'),''))
         window._MissionTrace_Open()

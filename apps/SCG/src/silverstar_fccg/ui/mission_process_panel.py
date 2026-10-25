@@ -1,20 +1,25 @@
 """Mission phase capsules; values are declarative desktop-reference data."""
 from copy import deepcopy
+import json
 from uuid import uuid4
 
-from PySide6.QtCore import Qt, Signal, QSignalBlocker
+from PySide6.QtCore import Qt, Signal, QSignalBlocker, QTimer
 from PySide6.QtWidgets import (QDialog, QDialogButtonBox, QDoubleSpinBox,
     QFormLayout, QFrame, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QPushButton,
-    QSpinBox, QToolButton, QVBoxLayout, QWidget)
+    QSpinBox, QToolButton, QVBoxLayout, QWidget, QBoxLayout, QMessageBox, QScrollArea)
 
 from silverstar_fccg.project.mission_process import (
     ACTIONS, EVENTS, SIGNALS, MissionProcess_Default, MissionProcess_Require)
 from silverstar_fccg.ui.committed_spin import EnterCommittedDoubleSpinBox
-from silverstar_fccg.ui.widgets import StandardComboBox
+from silverstar_fccg.ui.touch_scroll import TouchScroll_Enable
+from silverstar_fccg.ui.widgets import StandardComboBox, CollapsibleSection
 
 
-class MissionStageDialog(QDialog):
-    def __init__(self, translator, process, index, targets, parent=None):
+class MissionStageEditor(QWidget):
+    processApplied = Signal(object)
+    discarded = Signal()
+
+    def __init__(self, translator, process, index, targets, parent=None, *, split_actions=False):
         super().__init__(parent)
         self._translator = translator
         self._process = deepcopy(process)
@@ -27,6 +32,11 @@ class MissionStageDialog(QDialog):
         self.resize(600, 420)
         root = QVBoxLayout(self)
         form = QFormLayout()
+        form.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
+        self.form = form
+        self.actions_widget = QWidget()
+        action_form = QFormLayout(self.actions_widget)
+        action_form.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
         self.name_edit = QLineEdit(stage['name'])
         self.name_edit.setMaxLength(128)
         identity = QLabel(stage['stage_id'])
@@ -62,7 +72,7 @@ class MissionStageDialog(QDialog):
         for action in ACTIONS:
             self.action.addItem(text('process.action.' + action), action)
         self.action.setCurrentIndex(self.action.findData(stage['action']['kind']))
-        form.addRow(text('process.action'), self.action)
+        action_form.addRow(text('process.action'), self.action)
         self.target = StandardComboBox()
         self.target.addItem('—', '')
         for target in targets:
@@ -72,8 +82,9 @@ class MissionStageDialog(QDialog):
             self.target.addItem(text('process.target_missing', target=original), original)
         self.target.setCurrentIndex(max(0, self.target.findData(original)))
         self._targets = set(targets)
-        form.addRow(text('process.target'), self.target)
+        action_form.addRow(text('process.target'), self.target)
         root.addLayout(form)
+        if not split_actions: root.addWidget(self.actions_widget)
         note = QLabel(text('process.reference_note'))
         note.setWordWrap(True)
         root.addWidget(note)
@@ -84,11 +95,20 @@ class MissionStageDialog(QDialog):
         buttons.button(QDialogButtonBox.StandardButton.Ok).setText(text('capsule.apply'))
         buttons.button(QDialogButtonBox.StandardButton.Cancel).setText(text('capsule.cancel'))
         buttons.accepted.connect(self.accept)
-        buttons.rejected.connect(self.reject)
+        buttons.rejected.connect(self._Discard_Click)
         root.addWidget(buttons)
         self.signal_combo.currentIndexChanged.connect(self._Fields_Refresh)
         self.action.currentIndexChanged.connect(self._Fields_Refresh)
         self._Fields_Refresh()
+        self._dirty = False
+        for widget in (self.name_edit,self.signal_combo,self.operator,self.event_combo,self.action,self.target,self.number,self.hold):
+            signal = widget.textEdited if isinstance(widget,QLineEdit) else widget.currentIndexChanged if hasattr(widget,'currentIndexChanged') else widget.valueChanged
+            signal.connect(lambda *_args:setattr(self,'_dirty',True))
+        for widget in (self.number,self.hold):widget.lineEdit().textEdited.connect(lambda *_args:setattr(self,'_dirty',True))
+
+    def _Discard_Click(self):
+        self._dirty=False
+        self.discarded.emit()
 
     def _Fields_Refresh(self):
         signal = self.signal_combo.currentData()
@@ -97,10 +117,12 @@ class MissionStageDialog(QDialog):
         self.number.setEnabled(not event)
         self.operator.setEnabled(not event and signal != 'stage_elapsed_s')
         self.hold.setEnabled(not event)
+        for widget,visible in ((self.operator,not event and signal!='stage_elapsed_s'),(self.number,not event),(self.event_combo,event),(self.hold,not event)):
+            self.form.setRowVisible(widget,visible)
         self.number.setSuffix(' ' + SIGNALS[signal] if not event else '')
         self.target.setEnabled(self.action.currentData() == 'request_recovery')
 
-    def accept(self):
+    def Process_Collect(self):
         if (self.number.isEnabled() and not self.number.lineEdit().hasAcceptableInput()) or (self.hold.isEnabled() and not self.hold.lineEdit().hasAcceptableInput()):
             self.error.setText(self._translator.Text_Get('capsule.invalid'))
             return
@@ -110,7 +132,8 @@ class MissionStageDialog(QDialog):
         same_signal = original['condition']['signal'] == signal
         self.number.interpretText(); self.hold.interpretText()
         number = original['condition']['value'] if same_signal and not self._numeric_edited else self.number.value()
-        stage.update(name=self.name_edit.text().strip(), condition={
+        name=self.name_edit.text()
+        stage.update(name=original['name'] if name==original['name'] else name.strip(), condition={
             'signal': signal, 'operator': 'is' if signal == 'event' else '>=' if signal == 'stage_elapsed_s' else self.operator.currentText(),
             'value': self.event_combo.currentData() if signal == 'event' else number,
             'unit': SIGNALS[signal]}, hold_ms=0 if signal == 'event' else self.hold.value(),
@@ -118,18 +141,44 @@ class MissionStageDialog(QDialog):
         candidate = deepcopy(self._process)
         candidate['stages'][self._index] = stage
         try:
-            self._result = MissionProcess_Require(candidate, self._targets)
+            result = MissionProcess_Require(candidate, self._targets)
         except (ValueError, TypeError) as error:
             self.error.setText(str(error))
             return
-        super().accept()
+        return result
+
+    def accept(self):
+        result=self.Process_Collect()
+        if result is None:return
+        self._result=result;self._dirty=False
+        self.processApplied.emit(deepcopy(result))
 
     def Process_Get(self):
         return deepcopy(self._result)
 
 
+class MissionStageDialog(QDialog):
+    """Compatibility dialog; normal editing uses the same inline editor."""
+    def __init__(self, translator, process, index, targets, parent=None):
+        super().__init__(parent)
+        self.editor = MissionStageEditor(translator, process, index, targets, self)
+        self.setWindowTitle(translator.Text_Get('process.detail'))
+        layout = QVBoxLayout(self); layout.addWidget(self.editor)
+        for name in ('name_edit','signal_combo','operator','number','event_combo','hold','action','target','error'):
+            setattr(self, name, getattr(self.editor, name))
+        self.editor.processApplied.connect(lambda _value: super(MissionStageDialog,self).accept())
+        self.editor.discarded.connect(self.reject)
+
+    def accept(self):
+        self.editor.accept()
+
+    def Process_Get(self):
+        return self.editor.Process_Get()
+
+
 class MissionProcessPanel(QGroupBox):
     processChanged = Signal(object)
+    selectionChanged = Signal(str)
 
     def __init__(self, translator, parent=None):
         super().__init__(parent)
@@ -137,6 +186,10 @@ class MissionProcessPanel(QGroupBox):
         self._process = None
         self._targets = ()
         self.cards = {}
+        self.selected_stage_id = "ready"
+        self._derived = True
+        self.condition_editor = None
+        self._condition_expanded = {}
         self.value_editors = {}
         self.root = QVBoxLayout(self)
         self.note = QLabel()
@@ -145,7 +198,8 @@ class MissionProcessPanel(QGroupBox):
         self.error = QLabel()
         self.error.setWordWrap(True)
         self.root.addWidget(self.error)
-        toolbar = QHBoxLayout()
+        toolbar = QBoxLayout(QBoxLayout.Direction.LeftToRight)
+        self.toolbar = toolbar
         self.create_button = QPushButton()
         self.create_button.clicked.connect(self.Template_Create)
         toolbar.addWidget(self.create_button)
@@ -164,12 +218,34 @@ class MissionProcessPanel(QGroupBox):
         self.container = QWidget()
         self.stages_layout = QVBoxLayout(self.container)
         self.stages_layout.setContentsMargins(0, 0, 0, 0)
-        self.root.addWidget(self.container)
+        self.columns = QBoxLayout(QBoxLayout.Direction.LeftToRight)
+        self.selector_scroll=QScrollArea();self.selector_scroll.setWidgetResizable(True)
+        TouchScroll_Enable(self.selector_scroll);self.selector_scroll.setWidget(self.container)
+        self.selector_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.columns.addWidget(self.selector_scroll,1)
+        self.detail_widget = QWidget()
+        self.detail_layout = QVBoxLayout(self.detail_widget)
+        self.detail_layout.setContentsMargins(0,0,0,0)
+        self.detail_groups = {}
+        self.detail_bodies = {}
+        for key in ('condition','estimation','control','records'):
+            group = QGroupBox()
+            body = QVBoxLayout(group)
+            self.detail_layout.addWidget(group)
+            self.detail_groups[key] = group
+            self.detail_bodies[key] = body
+        self.detail_scroll=QScrollArea();self.detail_scroll.setWidgetResizable(True)
+        TouchScroll_Enable(self.detail_scroll);self.detail_scroll.setWidget(self.detail_widget)
+        self.detail_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.columns.addWidget(self.detail_scroll,2)
+        self.root.addLayout(self.columns)
         self.Language_Apply(translator)
 
     def Language_Apply(self, translator):
         self._translator = translator
         self.setTitle(translator.Text_Get('process.title'))
+        for key, group in self.detail_groups.items():
+            group.setTitle(translator.Text_Get('workflow.group.' + key))
         self.note.setText(translator.Text_Get('process.reference_note'))
         self.create_button.setText(translator.Text_Get('process.create'))
         self.add_button.setText(translator.Text_Get('process.add'))
@@ -181,77 +257,116 @@ class MissionProcessPanel(QGroupBox):
         self.Configuration_Set(self._process, self._targets)
 
     def Configuration_Set(self, process, targets=()):
-        self._process = deepcopy(process)
+        selector_position=self.selector_scroll.verticalScrollBar().value()
+        self._derived = process is None
+        self._process = deepcopy(process if process is not None else MissionProcess_Default())
         self._targets = tuple(targets)
         while self.stages_layout.count():
             widget = self.stages_layout.takeAt(0).widget()
-            widget.hide(); widget.deleteLater()
-        self.cards.clear()
-        self.value_editors.clear()
-        self.insert_before.clear()
-        self.create_button.setVisible(process is None)
-        for widget in (self.add_button, self.insert_before, self.clear_button):
-            widget.setVisible(process is not None)
-        self.start_policy.setVisible(process is not None)
-        if process is None:
-            return
+            if widget:widget.hide(); widget.deleteLater()
+        self.cards.clear(); self.value_editors.clear(); self.insert_before.clear()
+        self.create_button.setVisible(True)
+        self.note.setText(self._translator.Text_Get('workflow.derived' if self._derived else 'process.reference_note'))
+        for widget in (self.add_button, self.insert_before, self.clear_button, self.start_policy):
+            widget.setVisible(not self._derived)
         with QSignalBlocker(self.start_policy):
-            self.start_policy.setCurrentIndex(self.start_policy.findData(process['start_policy']))
-        self.add_button.setEnabled(len(process['stages']) < 32)
-        for index, stage in enumerate(process['stages']):
-            self.insert_before.addItem(self._translator.Text_Get('process.before', name=stage['name']), stage['stage_id'])
-            card = QFrame()
-            card.setObjectName('missionPhaseCapsule')
-            card.setStyleSheet('QFrame#missionPhaseCapsule { border: 1px solid palette(mid); border-radius: 18px; background: palette(base); }')
-            row = QHBoxLayout(card)
-            row.setContentsMargins(14, 10, 14, 10)
-            row.addWidget(QLabel(str(index + 1)))
-            name = QLineEdit(stage['name'])
-            name.setMaxLength(128)
-            name.setMaximumWidth(180)
-            name.returnPressed.connect(lambda selected=stage['stage_id'], editor=name: self.Stage_Rename(selected, editor.text()))
-            row.addWidget(name)
+            self.start_policy.setCurrentIndex(self.start_policy.findData(self._process['start_policy']))
+        self.add_button.setEnabled(len(self._process['stages']) < 32)
+        for index, stage in enumerate(self._process['stages']):
+            identity = stage['stage_id']
+            self.insert_before.addItem(self._translator.Text_Get('process.before',name=stage['name']),identity)
+            card = QFrame(); card.setObjectName('missionPhaseCapsule')
+            card.setStyleSheet('QFrame#missionPhaseCapsule {border:1px solid palette(mid);border-radius:14px;background:palette(base);}')
+            row = QVBoxLayout(card)
+            choose = QPushButton(f"{index+1}  {stage['name']}")
+            choose.setCheckable(True); choose.setChecked(identity == self.selected_stage_id)
+            choose.clicked.connect(lambda _checked=False, selected=identity: self.Stage_Select(selected))
+            row.addWidget(choose)
             condition = stage['condition']
-            value = self._translator.Text_Get('process.event.' + condition['value']) if condition['signal'] == 'event' else str(condition['value']) + ' ' + condition['unit']
-            description = QLabel(self._translator.Text_Get('process.signal.' + condition['signal']) +
-                ' ' + ('=' if condition['signal'] == 'event' else condition['operator']) +
-                (' ' + value if condition['signal'] == 'event' else ''))
-            description.setWordWrap(True)
-            description.setTextFormat(Qt.TextFormat.PlainText)
-            row.addWidget(description, 1 if condition['signal'] == 'event' else 0)
-            if condition['signal'] != 'event':
-                editor = EnterCommittedDoubleSpinBox()
-                editor.setDecimals(6)
-                editor.setRange(0 if condition['signal'] == 'stage_elapsed_s' else -1e7, 1e7)
-                editor.setSuffix(' ' + condition['unit'])
-                editor.setMaximumWidth(140)
-                editor.CommittedValue_Set(condition['value'])
-                editor.committed.connect(lambda new_value, identity=stage['stage_id']: self.Stage_ValueSet(identity, new_value))
-                row.addWidget(editor)
-                self.value_editors[stage['stage_id']] = editor
-                row.addStretch(1)
-            for label, enabled, callback in (
-                ('↑', index > 0, lambda _checked=False, selected=stage['stage_id']: self.Stage_Move(selected, -1)),
-                ('↓', index + 1 < len(process['stages']), lambda _checked=False, selected=stage['stage_id']: self.Stage_Move(selected, 1)),
-                ('…', True, lambda _checked=False, selected=stage['stage_id']: self.Dialog_Open(selected)),
-                ('×', len(process['stages']) > 1, lambda _checked=False, selected=stage['stage_id']: self.Stage_Remove(selected))):
-                button = QToolButton()
-                button.setText(label)
-                button.setEnabled(enabled)
-                button.clicked.connect(callback)
-                button.setAccessibleName(self._translator.Text_Get('process.detail') if label == '…' else label)
-                row.addWidget(button)
-            self.stages_layout.addWidget(card)
-            self.cards[stage['stage_id']] = card
-        self.insert_before.addItem(self._translator.Text_Get('process.at_end'), '')
-        self.insert_before.setCurrentIndex(max(0, self.insert_before.findData('deploy')))
+            value = self._translator.Text_Get('process.event.' + condition['value']) if condition['signal']=='event' else str(condition['value'])+' '+condition['unit']
+            summary = QLabel(value); summary.setWordWrap(True);summary.setTextFormat(Qt.TextFormat.PlainText)
+            row.addWidget(summary)
+            features = QLabel(); features.setWordWrap(True);features.setObjectName('phaseFunctions_'+identity)
+            features.setTextFormat(Qt.TextFormat.PlainText);row.addWidget(features)
+            if not self._derived:
+                actions = QHBoxLayout()
+                for label, enabled, callback in (
+                    ('↑',index>0,lambda _c=False, selected=identity:self.Stage_Move(selected,-1)),
+                    ('↓',index+1<len(self._process['stages']),lambda _c=False, selected=identity:self.Stage_Move(selected,1)),
+                    ('×',len(self._process['stages'])>1,lambda _c=False, selected=identity:self.Stage_Remove(selected))):
+                    button=QToolButton();button.setText(label);button.setEnabled(enabled);button.clicked.connect(callback);actions.addWidget(button)
+                row.addLayout(actions)
+            self.stages_layout.addWidget(card);self.cards[identity]=card
+        self.stages_layout.addStretch(1)
+        self.insert_before.addItem(self._translator.Text_Get('process.at_end'),'')
+        self.insert_before.setCurrentIndex(max(0,self.insert_before.findData('deploy')))
+        if self.selected_stage_id not in self.cards:
+            self.selected_stage_id = self._process['stages'][0]['stage_id']
+        self.Stage_Select(self.selected_stage_id,commit_pending=False)
+        QTimer.singleShot(0,self,lambda:self.selector_scroll.verticalScrollBar().setValue(selector_position))
+
+    def Stage_Select(self, identity, *, commit_pending=True):
+        index=self._StageIndex_Get(identity)
+        if index is None: return
+        old_selected=self.selected_stage_id
+        detail_position=self.detail_scroll.verticalScrollBar().value()
+        if commit_pending and self.condition_editor is not None and self.condition_editor._dirty:
+            pending=self.condition_editor.Process_Collect()
+            if pending is None:return
+            self._process=pending;self.processChanged.emit(deepcopy(pending))
+        self.selected_stage_id=self._process['stages'][index]['stage_id']
+        body=self.detail_bodies['condition']
+        while body.count():
+            widget=body.takeAt(0).widget()
+            if widget:widget.hide();widget.deleteLater()
+        if self.condition_editor is not None:
+            self.detail_bodies['control'].removeWidget(self.condition_editor.actions_widget)
+            self.condition_editor.actions_widget.hide();self.condition_editor.actions_widget.deleteLater()
+        self.condition_editor=MissionStageEditor(self._translator,self._process,index,self._targets,split_actions=True)
+        self.condition_editor.setEnabled(not self._derived)
+        self.condition_editor.actions_widget.setEnabled(not self._derived)
+        self.detail_bodies['control'].insertWidget(0,self.condition_editor.actions_widget)
+        self.condition_editor.processApplied.connect(self._Process_Emit)
+        self.condition_editor.discarded.connect(lambda:QTimer.singleShot(0,self,lambda:self.Stage_Select(self.selected_stage_id)))
+        row=self._process['stages'][index]
+        condition=row['condition']
+        value=self._translator.Text_Get('process.event.'+condition['value']) if condition['signal']=='event' else str(condition['value'])+' '+condition['unit']
+        summary=QLabel(row['name']+' · '+value);summary.setWordWrap(True);body.addWidget(summary)
+        details=CollapsibleSection(self._translator.Text_Get('workflow.condition_details'),
+            expanded=self._condition_expanded.get(self.selected_stage_id,False))
+        details.ExpandedChanged.connect(lambda expanded,key=self.selected_stage_id:self._condition_expanded.__setitem__(key,expanded))
+        QVBoxLayout(details.body).addWidget(self.condition_editor);body.addWidget(details)
+        for selected,card in self.cards.items():
+            button=card.findChild(QPushButton)
+            with QSignalBlocker(button):button.setChecked(selected==self.selected_stage_id)
+        self.selectionChanged.emit(self.selected_stage_id)
+        QTimer.singleShot(0,self,lambda:self.detail_scroll.verticalScrollBar().setValue(detail_position if old_selected==self.selected_stage_id else 0))
+
+    def resizeEvent(self,event):
+        super().resizeEvent(event)
+        narrow=self.width()<800
+        self.toolbar.setDirection(QBoxLayout.Direction.TopToBottom if narrow else QBoxLayout.Direction.LeftToRight)
+        self.columns.setDirection(QBoxLayout.Direction.TopToBottom if narrow else QBoxLayout.Direction.LeftToRight)
+        height=max(430,min(700,self.window().height()-340))
+        self.selector_scroll.setFixedHeight(210 if narrow else height)
+        self.detail_scroll.setFixedHeight(height)
 
     def Template_Create(self):
         process = MissionProcess_Default()
         if self._targets:
             deploy = next(stage for stage in process['stages'] if stage['stage_id'] == 'deploy')
             deploy['action'] = {'kind': 'request_recovery', 'target': self._targets[0]}
-        self._Process_Emit(process)
+        old = ' / '.join(stage['name'] for stage in self._process['stages'])
+        new = ' / '.join(stage['name'] for stage in process['stages'])
+        old_rows={row['stage_id']:row for row in self._process['stages']}
+        new_rows={row['stage_id']:row for row in process['stages']}
+        changes='\n'.join(identity+': '+json.dumps(old_rows.get(identity),ensure_ascii=False)+' → '+
+            json.dumps(new_rows.get(identity),ensure_ascii=False) for identity in sorted(set(old_rows)|set(new_rows))
+            if old_rows.get(identity)!=new_rows.get(identity))
+        answer = QMessageBox.question(self,self._translator.Text_Get('workflow.template_preview'),
+            self._translator.Text_Get('workflow.template_changes',old=old,new=new)+'\n\n'+changes,
+            QMessageBox.StandardButton.Apply | QMessageBox.StandardButton.Cancel,QMessageBox.StandardButton.Cancel)
+        if answer == QMessageBox.StandardButton.Apply:self._Process_Emit(process)
 
     def StartPolicy_Change(self):
         if self._process is None:
@@ -323,17 +438,14 @@ class MissionProcessPanel(QGroupBox):
         if self._process is None or len(self._process['stages']) <= 1:
             return
         candidate = deepcopy(self._process)
-        candidate['stages'].pop(index)
+        removed=candidate['stages'].pop(index)
+        affected=getattr(self,'boundary_references',{}).get(removed['stage_id'],[])
         self._Process_Emit(candidate)
+        if affected:self.error.setText(self._translator.Text_Get('workflow.deleted_boundary',names=', '.join(affected)))
 
-    def Dialog_Open(self, index):
-        index = self._StageIndex_Get(index)
-        if index is None:
-            return
-        dialog = MissionStageDialog(self._translator, self._process, index, self._targets, self)
-        if dialog.exec() == QDialog.DialogCode.Accepted:
-            self._Process_Emit(dialog.Process_Get())
-        dialog.deleteLater()
+    def Dialog_Open(self,index):
+        selected=self._StageIndex_Get(index)
+        if selected is not None:self.Stage_Select(self._process['stages'][selected]['stage_id'])
 
     def _StageIndex_Get(self, identity):
         if self._process is None:
@@ -343,6 +455,15 @@ class MissionProcessPanel(QGroupBox):
         return next((index for index, stage in enumerate(self._process['stages']) if stage['stage_id'] == identity), None)
 
     def _Process_Emit(self, candidate):
+        if candidate is not None and self.condition_editor is not None and self.condition_editor._dirty:
+            pending=self.condition_editor.Process_Collect()
+            if pending is None:return
+            old={row['stage_id']:row for row in self._process['stages']}
+            edited=next((row for row in pending['stages'] if row['stage_id']==self.selected_stage_id),None)
+            selected=next((row for row in candidate['stages'] if row['stage_id']==self.selected_stage_id),None)
+            if edited is not None and selected is not None:
+                for key in ('name','condition','hold_ms','action'):
+                    if selected[key]==old[self.selected_stage_id][key]:selected[key]=deepcopy(edited[key])
         try:
             validated = MissionProcess_Require(candidate, self._targets) if candidate is not None else None
         except (ValueError, TypeError) as error:

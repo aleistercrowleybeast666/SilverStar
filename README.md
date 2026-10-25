@@ -109,7 +109,11 @@ v0.1.2 的实测配置包括 STM32F407 飞控和 STM32F103 串口地面站，覆
 
 各项检查的适用范围见[版本与证据边界](docs/public/shared/VERSIONS_AND_EVIDENCE.md)和[软件验证说明](docs/public/SOFTWARE_VERIFICATION.md)。
 
-当前开发线已完成离线基线整理。飞行配置现在可创建默认七阶段的无控任务模板（就绪、任务开始、动力上升、滑行、开伞请求、下降、落地），按需插入自定义阶段、调整顺序，并选择将 START 与起飞检测分开或显式合并。原生工程、`.ssmission` v2、GSHC 离线查看及 FLP 精确 decoder 声明已接通；共享参考解释器可输出摘要匹配的 `.ssmissiontrace`。**新阶段尚未绑定固件执行，带该流程的固件生成会明确拒绝**；原固件流程与已有参数保持原路径，不能把桌面参考记录当作板端 Recorded。[任务过程与后续接入](docs/public/shared/MONOREPO_ARCHITECTURE.md)
+当前 SCG 开发界面只有三个工作区：**硬件与通信、飞行流程、检查与生成**。两端板卡和完整 CubeMX 目录导入在第一页；第二页按阶段胶囊选择，同页配置进入条件、状态估计、控制与动作、记录与遥测。持续功能使用共用实例及唯一参数源，参数可通过严格校验的 `.ssparams` 导入/导出。标准工程仅派生胶囊视图，不增加 `mission_process`，保留原生成资格；已有生命周期配置仍由原固件消费者执行。
+
+自定义流程可预览模板、添加、重排及编辑阶段，默认七阶段不含预开伞和找回。显式功能绑定使用原生格式 23 和 `.ssmission` v3，v1/v2 保持可读。**任意阶段调度仍是桌面参考编排，缺少固件消费者的绑定会在生成前明确拒绝**；日志/遥测继续使用原生命周期，自定义阶段范围不伪装成已执行。GSHC 离线读取声明，FLP 通过精确 decoder 读取配置；参考 trace 不充当板端 Recorded。[实际范围与后续接入](docs/public/shared/MONOREPO_ARCHITECTURE.md)
+
+最短可复现流程：打开 `apps/SCG/examples/Standard_Generation.ssproject` 并另存到工作目录，在第一页核对硬件，在第二页展开功能参数修改，在第三页选择“仅生成飞控”并构建。其 KF6 参数档为同目录的 `Standard_Generation_KF6.ssparams`；`Uncontrolled_Desktop_Reference.ssproject` 则专用于自定义流程参考，不能生成板端阶段调度。定向回归可运行 `python -B tools/verify_navigation_baseline.py --group capsule_scg`，实际 ARM 构建与检查范围见[证据说明](docs/public/shared/VERSIONS_AND_EVIDENCE.md)。
 
 机体系采用固定导航点 O、+z 朝鼻锥、+x 朝舱门径向基准、+y=z×x 的右手系。无下标 xyz（兼容旧 XYZ）均表示箭体系；设备原生轴使用 s_i 下标，导航系用 E/N/U。主 IMU 可以非零，安装分布图使用实际位置；原始 IMU 可以配置鼻锥轴及舱门轴。逐设备杆臂补偿尚未启用，旧安装基准保持原义。[坐标定义与公开参考](docs/public/algorithms/NAVIGATION_IMPLEMENTATION.md)
 

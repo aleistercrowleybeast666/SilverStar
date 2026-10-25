@@ -1,0 +1,291 @@
+{
+  "schema_id": "silverstar.function-parameters/1",
+  "schema_version": 1,
+  "plugin_id": "silverstar.algorithm.estimator.kf6",
+  "plugin_version": "0.4.0",
+  "manifest_sha256": "10829c028153c3c0d8b418fec9f69f2604bb29208bcb9876845719666d70792a",
+  "parameter_schema": "silverstar.algorithm-parameters/1.0",
+  "value_source": "project_actual_input",
+  "parameters": [
+    {
+      "id": "gravity_mps2",
+      "value": 9.78,
+      "unit": "m/s^2",
+      "representation": "value",
+      "storage_type": "float32"
+    },
+    {
+      "id": "p0_position_e",
+      "value": 4.0,
+      "unit": "m^2",
+      "representation": "covariance_diagonal",
+      "storage_type": "float32"
+    },
+    {
+      "id": "p0_position_n",
+      "value": 4.0,
+      "unit": "m^2",
+      "representation": "covariance_diagonal",
+      "storage_type": "float32"
+    },
+    {
+      "id": "p0_position_u",
+      "value": 9.0,
+      "unit": "m^2",
+      "representation": "covariance_diagonal",
+      "storage_type": "float32"
+    },
+    {
+      "id": "p0_velocity_e",
+      "value": 0.25,
+      "unit": "m^2/s^2",
+      "representation": "covariance_diagonal",
+      "storage_type": "float32"
+    },
+    {
+      "id": "p0_velocity_n",
+      "value": 0.25,
+      "unit": "m^2/s^2",
+      "representation": "covariance_diagonal",
+      "storage_type": "float32"
+    },
+    {
+      "id": "p0_velocity_u",
+      "value": 0.25,
+      "unit": "m^2/s^2",
+      "representation": "covariance_diagonal",
+      "storage_type": "float32"
+    },
+    {
+      "id": "process_accel_std_e",
+      "value": 1.5,
+      "unit": "m/s^2",
+      "representation": "sigma",
+      "storage_type": "float32"
+    },
+    {
+      "id": "process_accel_std_n",
+      "value": 1.5,
+      "unit": "m/s^2",
+      "representation": "sigma",
+      "storage_type": "float32"
+    },
+    {
+      "id": "process_accel_std_u",
+      "value": 2.0,
+      "unit": "m/s^2",
+      "representation": "sigma",
+      "storage_type": "float32"
+    },
+    {
+      "id": "gnss_position_std_horizontal",
+      "value": 1.5,
+      "unit": "m",
+      "representation": "sigma",
+      "storage_type": "float32"
+    },
+    {
+      "id": "gnss_position_std_vertical",
+      "value": 2.5,
+      "unit": "m",
+      "representation": "sigma",
+      "storage_type": "float32"
+    },
+    {
+      "id": "gnss_velocity_std",
+      "value": 0.15,
+      "unit": "m/s",
+      "representation": "sigma",
+      "storage_type": "float32"
+    },
+    {
+      "id": "baro_std_m",
+      "value": 2.5,
+      "unit": "m",
+      "representation": "sigma",
+      "storage_type": "float32"
+    },
+    {
+      "id": "nis_1d_soft",
+      "value": 6.635,
+      "unit": "1",
+      "representation": "value",
+      "storage_type": "float32"
+    },
+    {
+      "id": "nis_1d_hard",
+      "value": 10.828,
+      "unit": "1",
+      "representation": "value",
+      "storage_type": "float32"
+    },
+    {
+      "id": "nis_2d_soft",
+      "value": 9.21,
+      "unit": "1",
+      "representation": "value",
+      "storage_type": "float32"
+    },
+    {
+      "id": "nis_2d_hard",
+      "value": 13.816,
+      "unit": "1",
+      "representation": "value",
+      "storage_type": "float32"
+    },
+    {
+      "id": "nis_3d_soft",
+      "value": 11.345,
+      "unit": "1",
+      "representation": "value",
+      "storage_type": "float32"
+    },
+    {
+      "id": "nis_3d_hard",
+      "value": 16.266,
+      "unit": "1",
+      "representation": "value",
+      "storage_type": "float32"
+    },
+    {
+      "id": "nis_max_r_scale",
+      "value": 10.0,
+      "unit": "1",
+      "representation": "value",
+      "storage_type": "float32"
+    },
+    {
+      "id": "gnss_velocity_vertical_scale",
+      "value": 1.75,
+      "unit": "1",
+      "representation": "value",
+      "storage_type": "float32"
+    },
+    {
+      "id": "gnss_reacquire_outage_ms",
+      "value": 300,
+      "unit": "ms",
+      "representation": "value",
+      "storage_type": "int32"
+    },
+    {
+      "id": "gnss_position_measurement_delay_ms",
+      "value": 0,
+      "unit": "ms",
+      "representation": "value",
+      "storage_type": "int32"
+    },
+    {
+      "id": "gnss_velocity_measurement_delay_ms",
+      "value": 270,
+      "unit": "ms",
+      "representation": "value",
+      "storage_type": "int32"
+    },
+    {
+      "id": "baro_measurement_delay_ms",
+      "value": 0,
+      "unit": "ms",
+      "representation": "value",
+      "storage_type": "int32"
+    },
+    {
+      "id": "gnss_integrity_enable",
+      "value": 1,
+      "unit": "1",
+      "representation": "value",
+      "storage_type": "int32"
+    },
+    {
+      "id": "gnss_integrity_max_gap_ms",
+      "value": 120,
+      "unit": "ms",
+      "representation": "value",
+      "storage_type": "int32"
+    },
+    {
+      "id": "gnss_integrity_error_threshold_m",
+      "value": 10.0,
+      "unit": "m",
+      "representation": "value",
+      "storage_type": "float32"
+    },
+    {
+      "id": "gnss_integrity_recovery_threshold_m",
+      "value": 4.0,
+      "unit": "m",
+      "representation": "value",
+      "storage_type": "float32"
+    },
+    {
+      "id": "gnss_integrity_suspect_duration_ms",
+      "value": 2000,
+      "unit": "ms",
+      "representation": "value",
+      "storage_type": "int32"
+    },
+    {
+      "id": "gnss_integrity_reject_duration_ms",
+      "value": 5000,
+      "unit": "ms",
+      "representation": "value",
+      "storage_type": "int32"
+    },
+    {
+      "id": "gnss_integrity_recovery_duration_ms",
+      "value": 8000,
+      "unit": "ms",
+      "representation": "value",
+      "storage_type": "int32"
+    },
+    {
+      "id": "gnss_integrity_position_r_scale",
+      "value": 4.0,
+      "unit": "1",
+      "representation": "value",
+      "storage_type": "float32"
+    },
+    {
+      "id": "gnss_integrity_hacc_max_m",
+      "value": 6.0,
+      "unit": "m",
+      "representation": "value",
+      "storage_type": "float32"
+    },
+    {
+      "id": "gnss_integrity_sacc_max_mps",
+      "value": 1.2,
+      "unit": "m/s",
+      "representation": "value",
+      "storage_type": "float32"
+    },
+    {
+      "id": "nis_soft_enabled",
+      "value": 1,
+      "unit": "1",
+      "representation": "value",
+      "storage_type": "int32"
+    },
+    {
+      "id": "nis_hard_enabled",
+      "value": 1,
+      "unit": "1",
+      "representation": "value",
+      "storage_type": "int32"
+    },
+    {
+      "id": "fusion_timing_mode",
+      "value": 1,
+      "unit": "1",
+      "representation": "value",
+      "storage_type": "int32"
+    },
+    {
+      "id": "fusion_horizon_ms",
+      "value": 300,
+      "unit": "ms",
+      "representation": "value",
+      "storage_type": "int32"
+    }
+  ]
+}

@@ -29,6 +29,11 @@ GROUPS = {
         "tests/test_round4_navigation_ui.py", "tests/test_flight_state_scheduler_generated_host.py"]),
     "mission_flp": ("apps/FLP", ["tests/test_mission_profile.py"]),
     "mission_gshc": ("apps/GSHC", ["tests/test_mission_profile.py", "tests/test_navigation_gui.py"]),
+    "capsule_scg": ("apps/SCG", ["tests/test_mission_functions.py",
+        "tests/test_hardware_workspace.py", "tests/test_three_workspace_workflow.py",
+        "tests/test_mission_phase_gui.py", "tests/test_round4_navigation_ui.py",
+        "tests/test_body_frame_and_layout.py", "tests/test_build_progress.py",
+        "tests/test_gui_smoke.py::test_main_window_shell_navigation_theme_and_language"]),
 }
 
 
@@ -46,7 +51,18 @@ def Baseline_Main():
               "head": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
               "status": subprocess.check_output(["git", "status", "--short"], cwd=ROOT, text=True),
               "python": sys.version, "groups": [], "sources": {}}
-    patterns = ["apps/SCG/plugins/builtin/silverstar_algorithm_augmented_common",
+    patterns = ["apps/SCG/src/silverstar_fccg/project/mission_functions.py",
+                "apps/SCG/src/silverstar_fccg/project/function_parameters.py",
+                "apps/SCG/src/silverstar_fccg/ui/function_bindings.py",
+                "apps/SCG/src/silverstar_fccg/ui/pages/flight_workflow.py",
+                "apps/SCG/src/silverstar_fccg/ui/pages/hardware_workspace.py",
+                "apps/SCG/src/silverstar_fccg/ui/pages/build.py",
+                "apps/SCG/src/silverstar_fccg/ui/pages/algorithm_parameters.py",
+                "apps/SCG/tests/test_mission_functions.py",
+                "apps/SCG/tests/test_hardware_workspace.py",
+                "apps/SCG/tests/test_three_workspace_workflow.py",
+                "tools/silverstar_mission_functions.py",
+                "apps/SCG/plugins/builtin/silverstar_algorithm_augmented_common",
                 "apps/FLP/src/silverstar_flp/plugins/algorithms/navigation_reference_v1", "contracts",
                 "tools/silverstar_mission_profile.py", "apps/SCG/src/silverstar_fccg/project/mission_profile.py",
                 "apps/SCG/src/silverstar_fccg/generator/render.py", "apps/GSHC/mission_profile.py",

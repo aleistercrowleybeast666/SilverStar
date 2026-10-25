@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from silverstar_fccg.project.mission_profile import MissionProfile_Build, MissionProfile_Write
 from silverstar_fccg.app.usb_ground_flow import (
     UsbGroundBound_Is, UsbGroundFlow_Import, UsbGroundFlow_Run,
@@ -20,6 +21,7 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
+from shiboken6 import isValid
 from PySide6.QtCore import QSignalBlocker, Qt, QThreadPool, QTimer, QUrl
 from PySide6.QtGui import (
     QAction,
@@ -42,6 +44,7 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QMessageBox,
     QProgressBar,
+    QSizePolicy,
     QPushButton,
     QPlainTextEdit,
     QStackedWidget,
@@ -155,6 +158,8 @@ from silverstar_fccg.ui.pages import (
     PluginManagerDialog,
 )
 from silverstar_fccg.ui.pages.algorithm_parameters import NavigationConfigurationPage
+from silverstar_fccg.ui.pages.hardware_workspace import HardwareWorkspacePage
+from silverstar_fccg.ui.pages.flight_workflow import FlightWorkflowPage
 from silverstar_fccg.ui.pages.build import DefaultTools_Get
 from silverstar_fccg.ui.pages.targets import AirLinkPage, GroundTargetPage, GroundIssues_PresentationGet
 from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
@@ -200,15 +205,7 @@ class _WorkspaceLaunchResult:
 
 
 class MainWindow(QMainWindow):
-    PAGE_CODES = (
-        "page.devices",
-        "page.flight_configuration",
-        "page.navigation_configuration",
-        "page.telemetry_configuration",
-        "page.board_hardware",
-        "page.ground",
-        "page.build",
-    )
+    PAGE_CODES = ("workspace.hardware.title", "workspace.workflow.title", "page.build")
 
     def __init__(
         self,
@@ -269,6 +266,10 @@ class MainWindow(QMainWindow):
         self._strategy_refresh_scheduled = False
         self._alignment_commit_in_progress = False
         self._close_after_worker = False
+        self._pending_mission_process = None
+        self._mission_process_pending = False
+        self._pending_functions = None
+        self._last_workspace_index = 0
         self._pending_logging_streams: tuple[LoggingStreamView, ...] | None = None
         self._logging_refresh_scheduled = False
         self._validation_focus_widget: QWidget | None = None
@@ -279,7 +280,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(PRODUCT_NAME)
         self.setAcceptDrops(True)
         self.resize(1460, 900)
-        self.setMinimumSize(1000, 700)
+        self.setMinimumSize(900, 700)
         self._Ui_Build()
         self._Menu_Build()
         self._Signals_Connect()
@@ -299,8 +300,12 @@ class MainWindow(QMainWindow):
         header = QFrame()
         header.setObjectName("headerBar")
         header.setMinimumHeight(58)
-        header_layout = QHBoxLayout(header)
-        header_layout.setContentsMargins(14, 6, 14, 6)
+        self._header_layout = QVBoxLayout(header)
+        self._header_layout.setContentsMargins(14, 6, 14, 6)
+        self._header_layout.setSpacing(3)
+        header_layout = QHBoxLayout()
+        self._header_main_layout = header_layout
+        self._header_layout.addLayout(header_layout)
         self.title_label = QLabel()
         self.title_label.setObjectName("headerTitle")
         self.title_label.setWordWrap(False)
@@ -313,6 +318,8 @@ class MainWindow(QMainWindow):
         self.current_project_label.setObjectName("headerControlLabel")
         self.current_project_value = QLabel()
         self.current_project_value.setObjectName("headerProjectValue")
+        self.current_project_value.setMinimumWidth(0)
+        self.current_project_value.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
         self.language_label = QLabel()
         self.language_label.setObjectName("headerControlLabel")
         self.language_combo = HeaderComboBox("headerLanguageCombo")
@@ -326,12 +333,17 @@ class MainWindow(QMainWindow):
         header_layout.addWidget(self.credit_label)
         header_layout.addSpacing(16)
         header_layout.addWidget(self.current_project_label)
-        header_layout.addWidget(self.current_project_value)
-        header_layout.addStretch(1)
-        header_layout.addWidget(self.language_label)
-        header_layout.addWidget(self.language_combo)
-        header_layout.addWidget(self.theme_label)
-        header_layout.addWidget(self.theme_combo)
+        header_layout.addWidget(self.current_project_value, 1)
+        self._header_controls = QWidget()
+        controls_layout = QHBoxLayout(self._header_controls)
+        controls_layout.setContentsMargins(0, 0, 0, 0)
+        controls_layout.addStretch(1)
+        controls_layout.addWidget(self.language_label)
+        controls_layout.addWidget(self.language_combo)
+        controls_layout.addWidget(self.theme_label)
+        controls_layout.addWidget(self.theme_combo)
+        header_layout.addWidget(self._header_controls)
+        self._header_compact = False
         root_layout.addWidget(header)
 
         body = QWidget()
@@ -373,57 +385,14 @@ class MainWindow(QMainWindow):
         self.board_hardware_page = BoardHardwarePage(self._translator)
         self.air_link_page = AirLinkPage(self._translator)
         self.ground_target_page = GroundTargetPage(self._translator)
-        self.air_link_page.air_link_group.body.layout().addRow(self.devices_page.radio_power_editor)
-        self.air_link_page.air_link_group.body.layout().addRow(
-            self.ground_target_page.radio_instances_editor.power_editor)
         self.ground_configuration_page = self.air_link_page
-        for group in (self.ground_target_page.pc_group,
-                      self.ground_target_page.activity_led_group):
-            self.ground_target_page.root_layout.removeWidget(group)
-            self.air_link_page.root_layout.insertWidget(self.air_link_page.root_layout.count() - 1, group)
         self.build_page = BuildPage(self._translator)
-        self.air_link_page.root_layout.insertWidget(self.air_link_page.root_layout.count() - 1, self.ground_target_page.status)
-        self.build_page.root_layout.insertWidget(2, self.ground_target_page.build_group)
-        for page, owner in ((self.board_hardware_page, self.flight_configuration_page),
-                            (self.ground_target_page, self.air_link_page)):
-            page.root_layout.removeWidget(page.advanced_section)
-            owner.root_layout.insertWidget(owner.root_layout.count() - 1, page.advanced_section)
-        # Keep the existing editors and signal ownership while placing each
-        # configuration group on the page that owns it in the user workflow.
-        for group in (
-            self.flight_configuration_page.strategy_group,
-            self.flight_configuration_page.ins_strategy_group,
-            self.flight_configuration_page.estimator_strategy_group,
-            self.flight_configuration_page.mode_group,
-            self.flight_configuration_page.capability_group,
-        ):
-            self.flight_configuration_page.root_layout.removeWidget(group)
-        self.algorithm_parameters_page.ExistingEditors_Attach(
-            sources=self.flight_configuration_page.capability_group,
-            calibration=self.flight_configuration_page.mode_group,
-            alignment=self.flight_configuration_page.strategy_group,
-            ins=self.flight_configuration_page.ins_strategy_group,
-            estimator=self.flight_configuration_page.estimator_strategy_group,
-        )
-        self.devices_page.root_layout.removeWidget(self.devices_page.telemetry_group)
-        self.ground_target_page.root_layout.removeWidget(
-            self.ground_target_page.radio_selection_group
-        )
-        for index, group in enumerate((
-            self.flight_configuration_page.telemetry_protocol_group,
-            self.devices_page.telemetry_group,
-            self.ground_target_page.radio_selection_group,
-        ), start=1):
-            self.air_link_page.root_layout.insertWidget(index, group)
-        self._page_widgets = (
-            self.devices_page,
-            self.flight_configuration_page,
-            self.algorithm_parameters_page,
-            self.air_link_page,
-            self.board_hardware_page,
-            self.ground_target_page,
-            self.build_page,
-        )
+        self.hardware_workspace = HardwareWorkspacePage(self._translator,self.devices_page,
+            self.board_hardware_page,self.ground_target_page,self.air_link_page)
+        self.workflow_page = FlightWorkflowPage(self._translator,self.flight_configuration_page,
+            self.algorithm_parameters_page)
+        self.build_page.TargetEditors_Attach(self.board_hardware_page,self.ground_target_page)
+        self._page_widgets = (self.hardware_workspace,self.workflow_page,self.build_page)
         for page in self._page_widgets:
             self.pages.addWidget(page)
         self.plugin_manager_dialog = PluginManagerDialog(self._translator, self)
@@ -576,6 +545,11 @@ class MainWindow(QMainWindow):
         self.flight_configuration_page.modeChanged.connect(self._Mode_Change)
         self.flight_configuration_page.mission_profile_panel.exportRequested.connect(self._MissionProfile_Export)
         self.flight_configuration_page.mission_process_panel.processChanged.connect(self._MissionProcess_Queue)
+        self.workflow_page.functionsChanged.connect(self._Functions_Queue)
+        self.workflow_page.functionAddRequested.connect(self._Function_Add)
+        self.workflow_page.functionRemoveRequested.connect(self._Function_Remove)
+        self.workflow_page.parameterImportRequested.connect(self._ParameterProfile_Import)
+        self.workflow_page.parameterExportRequested.connect(self._ParameterProfile_Export)
         self.flight_configuration_page.modeParameterChanged.connect(
             self._ModeParameter_Change
         )
@@ -592,6 +566,7 @@ class MainWindow(QMainWindow):
             self._LogDecoderProfileExport_Request
         )
         self.build_page.detectionRequested.connect(self._Toolchains_Detect)
+        self.build_page.issueActivated.connect(lambda issue:self._ValidationIssue_Navigate((issue,)))
         self.build_page.actionRequested.connect(self._Build_Request)
         self.build_page.memoryLayoutChanged.connect(self._MemoryLayout_Change)
         self.build_page.native_usb.actionRequested.connect(self._NativeUsb_Request)
@@ -605,9 +580,46 @@ class MainWindow(QMainWindow):
         )
 
     def _NavigationPage_Change(self, index: int) -> None:
+        if self._component_views and not self._displaying_model and index != self._last_workspace_index:
+            if not self._WorkflowDrafts_Commit():
+                with QSignalBlocker(self.navigation_list):self.navigation_list.setCurrentRow(self._last_workspace_index)
+                self.pages.setCurrentIndex(self._last_workspace_index)
+                return
+        self._last_workspace_index=index
+        self._Workspace_Save()
         if index == self.PAGE_CODES.index("page.build") and not self._toolchain_checked:
             self._toolchain_checked = True
             QTimer.singleShot(0, self._Toolchains_Detect)
+
+    def _WorkspaceKey_Get(self):
+        identity=str(self._project_root or '__draft__')
+        return 'workspaces/v1/'+hashlib.sha256(identity.encode('utf-8')).hexdigest()[:20]
+
+    def _Workspace_Save(self):
+        if not hasattr(self,'workflow_page'):return
+        key=self._WorkspaceKey_Get()
+        index=self.navigation_list.currentRow()
+        if 0<=index<len(self.PAGE_CODES):self._settings.Value_Set(key+'/page',self.PAGE_CODES[index])
+        self._settings.Value_Set(key+'/hardware',json.dumps(self.hardware_workspace.ExpandedState_Get()))
+        self._settings.Value_Set(key+'/workflow',json.dumps(self.workflow_page.ExpandedState_Get()))
+        self._settings.Value_Set(key+'/stage',self.workflow_page.stage_panel.selected_stage_id)
+
+    def _Workspace_Restore(self):
+        key=self._WorkspaceKey_Get()
+        value=self._settings.Value_Get(key+'/page',self._settings.Value_Get('page_index',0))
+        old={'page.devices':0,'page.flight_configuration':1,'page.navigation_configuration':1,
+             'page.telemetry_configuration':0,'page.board_hardware':0,'page.ground':0,'page.build':2}
+        if isinstance(value,str) and value in self.PAGE_CODES:index=self.PAGE_CODES.index(value)
+        elif isinstance(value,str) and value in old:index=old[value]
+        else:
+            try:index=(0,1,1,0,0,0,2)[int(value)] if 0<=int(value)<7 else 0
+            except (TypeError,ValueError):index=0
+        for name,workspace in (('hardware',self.hardware_workspace),('workflow',self.workflow_page)):
+            try:workspace.ExpandedState_Set(json.loads(str(self._settings.Value_Get(key+'/'+name,'{}'))))
+            except (ValueError,TypeError):pass
+        stage=self._settings.Value_Get(key+'/stage','')
+        if stage in self.workflow_page.stage_panel.cards:self.workflow_page.stage_panel.Stage_Select(stage)
+        self.navigation_list.setCurrentRow(index)
 
     def _Catalog_Load(self) -> None:
         self._project_display_state = None
@@ -844,9 +856,6 @@ class MainWindow(QMainWindow):
             except ValueError:
                 mission_profile = None
             self.flight_configuration_page.mission_profile_panel.Profile_Set(mission_profile)
-            self.flight_configuration_page.mission_process_panel.Configuration_Set(display.model.mission_process,
-                [item.instance_id for item in display.model.device_instances if
-                 'actuator.mission_action.parachute_deploy' in self._service.catalog.Component_Get(item.plugin).provides])
             self.flight_configuration_page.Protocols_Set(
                 display.protocol_profiles,
                 display.selected_protocol_profiles,
@@ -936,6 +945,12 @@ class MainWindow(QMainWindow):
             self.legacy_migration_button.setVisible(bool(ReleaseCompatibilityIssues_Get(display.model)))
             self._BoardPage_Refresh(display)
             self._TargetPages_Refresh(display.model)
+            self.hardware_workspace.Configuration_Set(display.model)
+            self.build_page.TargetConfiguration_Set(display.model)
+            from silverstar_fccg.project.validation import Project_Validate
+            checks=Project_Validate(display.model,self._service.catalog)
+            self.build_page.Issues_Set(checks.issues)
+            self.workflow_page.Configuration_Set(display.model,self._service.catalog)
             self._HeaderProject_Refresh(display.model)
         finally:
             self._displaying_model = False
@@ -1135,6 +1150,7 @@ class MainWindow(QMainWindow):
         self._LoggingState_Apply(self._model)
 
     def _MissionProfile_Export(self) -> None:
+        if not self._WorkflowDrafts_Commit(): return
         if self._pending_logging_streams is not None:
             self._LoggingChanges_Apply()
         if self._pending_mode_changes or self._pending_mode_parameter_changes:
@@ -1205,7 +1221,14 @@ class MainWindow(QMainWindow):
     ) -> ProjectConfigurationResult | None:
         if self._displaying_model:
             return None
+        try:
+            pending_process=self.workflow_page.Pending_Commit()
+            pending_functions=self.workflow_page.PendingFunctions_Collect()
+        except ValueError as error:
+            self._Error_Show(error);return None
         candidate = deepcopy(self._model)
+        if pending_process is not None:candidate.mission_process=pending_process
+        if pending_functions is not None:candidate.mission_functions=pending_functions
         restore_project = (self._project_root, self._model.identity.name)
         logging_transport_choice = (self._logging_transport_choice
             if self._selection_restore_project == restore_project else None)
@@ -1266,6 +1289,11 @@ class MainWindow(QMainWindow):
                         result.model, self._service.catalog
                     ),
                 )
+            from silverstar_fccg.project.mission_functions import FunctionsStrategies_Synchronize
+            synchronized=FunctionsStrategies_Synchronize(self._model,result.model,self._service.catalog)
+            if synchronized.mission_functions != result.model.mission_functions:
+                refreshed=self._service.ProjectConfiguration_Reconcile(synchronized)
+                result=replace(refreshed,notices=result.notices+refreshed.notices)
             candidate_display = self._ProjectDisplayState_Build(
                 result.model, result
             )
@@ -1282,6 +1310,7 @@ class MainWindow(QMainWindow):
             self._Error_Show(error)
             return None
         self._model = result.model
+        self.workflow_page.Drafts_Clear()
         self._logging_transport_choice = logging_transport_choice
         self._logging_transport_streams = logging_transport_streams
         self._generation_plan = None
@@ -2464,11 +2493,108 @@ class MainWindow(QMainWindow):
                 logging_availability_changed=True,
             )
 
-    def _MissionProcess_Queue(self, process):
-        from copy import deepcopy
-        snapshot = deepcopy(process)
-        QTimer.singleShot(0, self, lambda: self._ProjectConfiguration_Change(
-            lambda candidate: setattr(candidate, 'mission_process', snapshot)))
+    def _MissionProcess_Queue(self,process):
+        self._pending_mission_process=deepcopy(process)
+        if self._mission_process_pending:return
+        self._mission_process_pending=True
+        QTimer.singleShot(0,self,self._MissionProcessChanges_Apply)
+
+    def _MissionProcessChanges_Apply(self):
+        if not self._mission_process_pending:return
+        candidate=self._pending_mission_process
+        self._mission_process_pending=False
+        self._ProjectConfiguration_Change(lambda model:setattr(model,'mission_process',candidate))
+
+    def _Functions_Queue(self,configuration):
+        self._pending_functions=deepcopy(configuration)
+        QTimer.singleShot(0,self,self._FunctionsChanges_Apply)
+
+    def _FunctionsChanges_Apply(self):
+        if self._pending_functions is None:return
+        value=self._pending_functions;self._pending_functions=None
+        self._ProjectConfiguration_Change(lambda model:setattr(model,'mission_functions',value))
+
+    def _WorkflowDrafts_Commit(self):
+        try:
+            self._MissionProcessChanges_Apply();self._FunctionsChanges_Apply()
+            if self._pending_strategy_changes:self._StrategyChanges_Apply()
+            if self._pending_mode_changes or self._pending_mode_parameter_changes:self._ModeChanges_Apply()
+            functions=self.workflow_page.PendingFunctions_Collect()
+            if functions is not None:
+                self._ProjectConfiguration_Change(lambda model:setattr(model,'mission_functions',functions))
+            value=self.workflow_page.Pending_Commit()
+            if value is not None:
+                self._ProjectConfiguration_Change(lambda model:setattr(model,'mission_process',value))
+            return True
+        except (ValueError,TypeError) as error:
+            self._Error_Show(error);return False
+
+    def _Function_Add(self,plugin_id):
+        QTimer.singleShot(0,self,lambda:self._FunctionAdd_Apply(plugin_id))
+
+    def _FunctionAdd_Apply(self,plugin_id):
+        from silverstar_fccg.project.mission_functions import Functions_Derive,FunctionsCanonical_Get,Function_Create
+        existing=next((row for row in Functions_Derive(self._model,self._service.catalog)['functions'] if row['plugin_id']==plugin_id),None)
+        if existing:
+            for editor in self.workflow_page.function_editors:editor.Reveal(existing['instance_id'])
+            return
+        def change(candidate):
+            manifest=self._service.catalog.Component_Get(plugin_id)
+            existing=Functions_Derive(candidate,self._service.catalog)
+            if manifest.selection is not None and manifest.selection.slot in candidate.strategies:
+                candidate.strategies[manifest.selection.slot]=plugin_id
+            elif plugin_id not in candidate.ComponentIds_Get():
+                raise ValueError(self._translator.Text_Get('workflow.function.select_owner'))
+            reconciled=self._service.ProjectConfiguration_Reconcile(candidate).model
+            canonical=FunctionsCanonical_Get(reconciled,self._service.catalog)
+            function=next((row for row in canonical['functions'] if row['plugin_id']==plugin_id),None)
+            if function is None:raise ValueError(self._translator.Text_Get('workflow.function.select_owner'))
+            values=[row for row in existing['functions'] if row['instance_id']!=function['instance_id']]
+            values.append(function)
+            candidate.strategies=reconciled.strategies
+            candidate.algorithm_parameters=reconciled.algorithm_parameters
+            candidate.base_components=reconciled.base_components
+            candidate.mission_functions={'schema_version':1,'functions':values}
+        self._ProjectConfiguration_Change(change)
+
+    def _Function_Remove(self,identity):
+        def change(candidate):
+            from silverstar_fccg.project.mission_functions import Functions_Derive
+            functions=Functions_Derive(candidate,self._service.catalog)
+            function=next(row for row in functions['functions'] if row['instance_id']==identity)
+            manifest=self._service.catalog.Component_Get(function['plugin_id'])
+            if identity=='ins' or manifest.selection is None or manifest.selection.slot!='estimator':
+                raise ValueError(self._translator.Text_Get('workflow.function.system_owned'))
+            candidate.strategies['estimator']=None
+            functions['functions']=[row for row in functions['functions'] if row['instance_id']!=identity]
+            candidate.mission_functions=functions
+        QTimer.singleShot(0,self,lambda:self._ProjectConfiguration_Change(change))
+
+    def _ParameterProfile_Import(self,plugin_id):
+        if not self._WorkflowDrafts_Commit():return
+        from silverstar_fccg.project.mission_functions import ParameterProfile_Read,ParameterProfile_Preview,ParameterProfile_Apply
+        path,_filter=QFileDialog.getOpenFileName(self,self._translator.Text_Get('workflow.function.import'),'', 'Algorithm parameters (*.ssparams *.json)')
+        if not path:return
+        try:
+            value=ParameterProfile_Read(path)
+            changes=ParameterProfile_Preview(self._model,self._service.catalog,plugin_id,value)
+            details='\n'.join(row['parameter_id']+': '+str(row['before'])+' → '+str(row['after'])+' '+row['unit'] for row in changes)
+            answer=self._MessageBox_Exec(QMessageBox.Icon.Question,self._translator.Text_Get('workflow.import.preview'),
+                self._translator.Text_Get('workflow.import.changes',count=len(changes)),details=details,
+                buttons=QMessageBox.StandardButton.Apply | QMessageBox.StandardButton.Cancel,
+                default=QMessageBox.StandardButton.Cancel)
+            if answer!=QMessageBox.StandardButton.Apply:return
+            updated=ParameterProfile_Apply(self._model,self._service.catalog,plugin_id,value)
+            self._ProjectConfiguration_Change(lambda model:setattr(model,'algorithm_parameters',updated.algorithm_parameters))
+        except (OSError,ValueError,TypeError) as error:self._Error_Show(error)
+
+    def _ParameterProfile_Export(self,plugin_id):
+        from silverstar_fccg.project.mission_functions import ParameterProfile_Build,ParameterProfile_Write
+        if not self._WorkflowDrafts_Commit():return
+        path,_filter=QFileDialog.getSaveFileName(self,self._translator.Text_Get('workflow.function.export'),plugin_id+'.ssparams','Algorithm parameters (*.ssparams)')
+        if not path:return
+        try:ParameterProfile_Write(path,ParameterProfile_Build(self._model,self._service.catalog,plugin_id),replace_existing=Path(path).exists())
+        except (OSError,ValueError,TypeError) as error:self._Error_Show(error)
 
     def _Mode_Change(self, slot: str, values: object) -> None:
         self._pending_mode_changes[slot] = (
@@ -2609,6 +2735,7 @@ class MainWindow(QMainWindow):
         )
 
     def _GenerateOrApply_Request(self) -> None:
+        if not self._WorkflowDrafts_Commit(): return
         if UsbGroundBound_Is(self._model):
             self._UsbGroundOperation_Request('generate')
             return
@@ -2765,7 +2892,8 @@ class MainWindow(QMainWindow):
 
     def _ValidationIssue_Clear(self) -> None:
         widget = self._validation_focus_widget
-        if widget is None:
+        if widget is None or not isValid(widget):
+            self._validation_focus_widget=None
             return
         widget.setProperty("validationIssue", False)
         widget.style().unpolish(widget)
@@ -2776,7 +2904,7 @@ class MainWindow(QMainWindow):
     def _ValidationIssue_Navigate(
         self, issues: tuple[ValidationIssue, ...]
     ) -> None:
-        issue = next((item for item in issues if item.level == "error"), None)
+        issue = next((item for item in issues if item.level == "error"), next(iter(issues),None))
         if issue is None:
             return
         self._ValidationIssue_Clear()
@@ -2800,6 +2928,12 @@ class MainWindow(QMainWindow):
                 "STORAGE_DEVICE_REQUIRED", "STORAGE_DEVICE_AMBIGUOUS",
                 "STORAGE_COMPONENT_UNAVAILABLE",
             } else self.board_hardware_page.resource_table)
+        elif code.startswith(('INSTALLATION_', 'AUGMENTED_LEVER_ARM')):
+            target = self.devices_page.installation_map
+        elif code.startswith(('ALIGNMENT_', 'EXPERIMENTAL_ESTIMATOR')):
+            target = self.algorithm_parameters_page.alignment_editor
+        elif code.startswith(('COMPACT_LOG', 'log_sink')):
+            target = self.flight_configuration_page.logging_table
         elif code.startswith(("AIR_LINK", "protocol_telemetry")):
             target = self.air_link_page
         elif code.startswith(("strategy", "capability", "TIMING_PROFILE", "REPLAY", "IMU_RATE")):
@@ -2827,8 +2961,29 @@ class MainWindow(QMainWindow):
                 )
             else:
                 target = self.flight_configuration_page
+        elif code.startswith('MISSION_PROCESS'):
+            target = self.workflow_page.stage_panel.condition_editor
+            if target is None:
+                target = self.workflow_page.stage_panel
+        elif code.startswith('FUNCTION_'):
+            from silverstar_fccg.project.mission_functions import Functions_Issues
+            found=next((item for item in Functions_Issues(self._model,self._service.catalog)
+                        if item.code == code and issue.message == item.function_id + ': ' + item.message),None)
+            target=self.workflow_page
+            if found:
+                stage_id=getattr(found,'stage_id','')
+                if stage_id in self.workflow_page.stage_panel.cards:
+                    self.workflow_page.stage_panel.Stage_Select(stage_id)
+                for editor in self.workflow_page.function_editors:
+                    editor.Reveal(found.function_id)
+                    if found.function_id in editor._sections:target=editor._sections[found.function_id]
         elif code == "algorithm_parameters":
-            target = self.algorithm_parameters_page
+            matching=next((key for key in self.algorithm_parameters_page.editors
+                if key[0] in issue.message and key[1] in issue.message),None)
+            if matching:
+                self.workflow_page.Parameters_Select(matching[0])
+                target=self.algorithm_parameters_page.editors[matching]
+            else:target=self.workflow_page.parameters
         elif code.startswith("device"):
             target = next(
                 iter(self.devices_page.device_combos.values()),
@@ -2836,10 +2991,17 @@ class MainWindow(QMainWindow):
             )
         # Editors can move between pages without changing their stable IDs.
         # Find the actual owner instead of retaining obsolete numeric indices.
+        if target is self.ground_target_page:target=self.hardware_workspace._target_sections['ground']
+        elif target is self.devices_page:target=self.hardware_workspace._target_sections['flight']
+        elif target is self.algorithm_parameters_page:target=self.workflow_page.preparation
+        elif target is self.flight_configuration_page:target=self.workflow_page
+        elif target is self.air_link_page:target=self.hardware_workspace.link_summary
         page_index = next((index for index, page in enumerate(self._page_widgets)
                            if page is target or page.isAncestorOf(target)),
                           self.PAGE_CODES.index("page.build"))
         self.navigation_list.setCurrentRow(page_index)
+        if page_index==0:self.hardware_workspace.Reveal(target)
+        elif page_index==1:self.workflow_page.Reveal(target)
         target.setProperty("validationIssue", True)
         target.style().unpolish(target)
         target.style().polish(target)
@@ -2870,7 +3032,36 @@ class MainWindow(QMainWindow):
             except (OSError, ValueError) as error:
                 self._Error_Show(error)
 
+    def _WorkspaceDrafts_DiscardConfirm(self):
+        editor=self.workflow_page.stage_panel.condition_editor
+        dirty=(editor is not None and editor._dirty) or self.workflow_page.PendingFunctions_Collect() is not None
+        if not dirty and not self._mission_process_pending and self._pending_functions is None:return True
+        answer=self._MessageBox_Exec(QMessageBox.Icon.Question,PRODUCT_NAME,
+            self._translator.Text_Get('workflow.pending_context'),
+            QMessageBox.StandardButton.Save | QMessageBox.StandardButton.Discard | QMessageBox.StandardButton.Cancel,
+            QMessageBox.StandardButton.Cancel)
+        if answer==QMessageBox.StandardButton.Cancel:return False
+        if answer==QMessageBox.StandardButton.Save:
+            self._Project_Save()
+            if self._project_root is None:return False
+            try:
+                saved=self._service.Project_Open(self._project_root)
+                if saved.Dictionary_Get()!=self._model.Dictionary_Get():return False
+            except Exception:return False
+        self._EditQueues_Clear()
+        self._Project_Refresh()
+        return True
+
+    def _EditQueues_Clear(self):
+        self._mission_process_pending=False;self._pending_mission_process=None;self._pending_functions=None
+        self._pending_mode_changes.clear();self._pending_mode_parameter_changes.clear()
+        self._pending_strategy_changes.clear();self._pending_logging_streams=None
+        self.workflow_page.Drafts_Clear()
+        if self.workflow_page.stage_panel.condition_editor is not None:
+            self.workflow_page.stage_panel.condition_editor._dirty=False
+
     def _NewProject_Show(self) -> None:
+        if not self._WorkspaceDrafts_DiscardConfirm():return
         wizard = NewProjectWizard(self._translator, self,
                                   default_root=self._path_preferences.DefaultProjectRoot_EffectiveGet())
         if wizard.exec() != QDialog.DialogCode.Accepted:
@@ -2883,7 +3074,7 @@ class MainWindow(QMainWindow):
         except Exception as error:
             self._Error_Show(error)
             return
-        self._pending_strategy_changes.clear()
+        self._EditQueues_Clear()
         self.algorithm_parameters_page.alignment_editor.Draft_Discard()
         self._model = model
         self._logging_transport_choice = None
@@ -2893,6 +3084,7 @@ class MainWindow(QMainWindow):
         self._generation_plan = None
         self._project_state = ProjectLifecycleState.DRAFT
         self._Project_Refresh()
+        self.navigation_list.setCurrentRow(0)
         self.status_label.setText(
             self._translator.Text_Get("status.project_draft")
         )
@@ -2908,6 +3100,7 @@ class MainWindow(QMainWindow):
             self._Project_Open(Path(selected))
 
     def _Project_Open(self, path: Path) -> None:
+        if not self._WorkspaceDrafts_DiscardConfirm():return
         try:
             descriptor = path / "SilverStar.ssproject" if path.is_dir() else path
             source_bytes = descriptor.read_bytes()
@@ -2917,12 +3110,11 @@ class MainWindow(QMainWindow):
                 reconciled = loaded
             else:
                 opening = deepcopy(loaded)
-                opening.ground_target = replace(opening.ground_target, enabled=True)
                 reconciled = self._service.ProjectConfiguration_Reconcile(opening).model
             changed_during_open = (
                 loaded.Dictionary_Get() != reconciled.Dictionary_Get()
             )
-            self._pending_strategy_changes.clear()
+            self._EditQueues_Clear()
             self.algorithm_parameters_page.alignment_editor.Draft_Discard()
             self._model = reconciled
             self._logging_transport_choice = None
@@ -2944,6 +3136,7 @@ class MainWindow(QMainWindow):
             else readiness.state
         )
         self._Project_Refresh()
+        self._Workspace_Restore()
         self.status_label.setText(
             self._translator.Text_Get(
                 "status.project_opened", name=self._model.identity.name
@@ -2985,7 +3178,7 @@ class MainWindow(QMainWindow):
         self._model = candidate
         self._legacy_source_bytes = None
         self._Project_SaveAs_Complete(Path(selected).resolve())
-        self.navigation_list.setCurrentRow(2)
+        self.navigation_list.setCurrentRow(1)
         self._MessageBox_Exec(QMessageBox.Icon.Information,
             self._translator.Text_Get("release.migrate"),
             self._translator.Text_Get("release.migrated", path=str(Path(selected).resolve())))
@@ -3038,6 +3231,7 @@ class MainWindow(QMainWindow):
         )
 
     def _Project_Save(self) -> None:
+        if not self._WorkflowDrafts_Commit(): return
         draft_pending = self.algorithm_parameters_page.alignment_editor.draft_dirty
         self._ProjectModel_Sync()
         if self._project_root is None:
@@ -3068,6 +3262,7 @@ class MainWindow(QMainWindow):
         self._Error_Show(error)
 
     def _Project_SaveAs(self) -> None:
+        if not self._WorkflowDrafts_Commit(): return
         self._ProjectModel_Sync()
         dialog = QFileDialog(
             self,
@@ -3306,63 +3501,6 @@ class MainWindow(QMainWindow):
         )
         self.build_page.Tools_Set(views)
 
-        if self._toolchain_dialog is not None:
-            self._toolchain_dialog.close()
-        dialog = QDialog(self)
-        dialog.setWindowTitle(
-            self._translator.Text_Get("dialog.toolchain_detection_results")
-        )
-        dialog.setMinimumWidth(760)
-        layout = QVBoxLayout(dialog)
-        for result, view in zip(results, views, strict=True):
-            row = QWidget(dialog)
-            row_layout = QHBoxLayout(row)
-            row_layout.setContentsMargins(0, 3, 0, 3)
-            name = QLabel(view.display_name)
-            name.setMinimumWidth(170)
-            detail = QLabel(
-                "\n".join(
-                    value
-                    for value in (
-                        view.path or view.command,
-                        view.version,
-                        result.target,
-                    )
-                    if value
-                )
-            )
-            detail.setWordWrap(True)
-            status = QLabel(
-                self._translator.Text_Get(f"tool.status.{view.status}")
-            )
-            status.setObjectName("statusPill")
-            status.setProperty(
-                "statusLevel",
-                "success" if view.status == "found" else "error",
-            )
-            choose = QPushButton(
-                self._translator.Text_Get("action.select_installed_location")
-            )
-            choose.clicked.connect(
-                lambda _checked=False, tool_id=view.tool_id: self._ToolchainBrowse(
-                    tool_id
-                )
-            )
-            row_layout.addWidget(name)
-            row_layout.addWidget(detail, 1)
-            row_layout.addWidget(status)
-            row_layout.addWidget(choose)
-            layout.addWidget(row)
-        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
-        buttons.rejected.connect(dialog.close)
-        layout.addWidget(buttons)
-        dialog.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
-        dialog.destroyed.connect(
-            lambda _object=None: setattr(self, "_toolchain_dialog", None)
-        )
-        self._toolchain_dialog = dialog
-        dialog.show()
-
     def _ToolchainBrowse(self, tool_id: str) -> bool:
         tool_name = self._translator.Text_Get(f"tool.{tool_id}")
         selected, _filter = QFileDialog.getOpenFileName(
@@ -3389,6 +3527,7 @@ class MainWindow(QMainWindow):
         return False
 
     def _Targets_Generate(self, action_text: str) -> None:
+        if not self._WorkflowDrafts_Commit(): return
         if UsbGroundBound_Is(self._model) and action_text in {'generate_ground', 'generate_all'}:
             if action_text == 'generate_all':
                 self._Error_Show('USB candidate and Flight generation require their separate existing target actions')
@@ -3468,6 +3607,7 @@ class MainWindow(QMainWindow):
         )
 
     def _Build_Request(self, action_text: str) -> None:
+        if not self._WorkflowDrafts_Commit(): return
         if (action_text.startswith(("flight_build", "ground_build"))
                 and self.algorithm_parameters_page.alignment_editor.draft_dirty):
             self._Error_Show(self._translator.Text_Get("alignment.confirm_before_generation"))
@@ -4930,6 +5070,8 @@ class MainWindow(QMainWindow):
             self.manage_plugins_action,
             self.install_plugin_action,
             self.refresh_plugins_action,
+            self.hardware_workspace,
+            self.workflow_page,
             self.board_hardware_page.prepare_button,
             self.board_hardware_page.generate_button,
             self.ground_target_page.generate_button,
@@ -4949,6 +5091,21 @@ class MainWindow(QMainWindow):
         self._action_enabled_snapshot = {}
         for control in controls:
             control.setEnabled(snapshot.get(control, True))
+
+    def resizeEvent(self, event) -> None:
+        super().resizeEvent(event)
+        if not hasattr(self, '_header_controls'):
+            return
+        compact = self.width() < 1180
+        if compact == self._header_compact:
+            return
+        self._header_compact = compact
+        if compact:
+            self._header_main_layout.removeWidget(self._header_controls)
+            self._header_layout.addWidget(self._header_controls)
+        else:
+            self._header_layout.removeWidget(self._header_controls)
+            self._header_main_layout.addWidget(self._header_controls)
 
     def _HeaderProject_Refresh(self, model: ProjectModel | None = None) -> None:
         displayed_model = model or self._model
@@ -4975,6 +5132,7 @@ class MainWindow(QMainWindow):
             self.Theme_Apply(theme)
 
     def Language_Apply(self, language: str) -> None:
+        if self._component_views and not self._WorkflowDrafts_Commit():return
         self._translator.Language_Set(language)
         self.legacy_migration_button.setText(self._translator.Text_Get("release.migrate"))
         self.power10_export_button.setText(self._translator.Text_Get("power10.export"))
@@ -5134,6 +5292,7 @@ class MainWindow(QMainWindow):
         event.acceptProposedAction()
 
     def closeEvent(self, event: QCloseEvent) -> None:
+        self._Workspace_Save()
         if self._active_worker is not None:
             if self._close_after_worker:
                 event.ignore()
@@ -5153,6 +5312,8 @@ class MainWindow(QMainWindow):
             self._active_worker.Worker_Cancel()
             event.ignore()
             return
+        if not self._WorkspaceDrafts_DiscardConfirm():
+            event.ignore();return
         self._UsbGroundRefresh_Invalidate()
         self._close_after_worker = True
         event.accept()

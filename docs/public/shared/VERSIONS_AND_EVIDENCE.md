@@ -1,5 +1,35 @@
 # 产品、格式与证据身份
 
+## SCG 三页工作区（2026-10-25）
+
+本次在 `09d5860b` 基线上实现“硬件与通信、飞行流程、检查与生成”。阶段同页详情、唯一功能实例、连续区间、参数档预览导入/导出、草稿保存和问题定位均使用实际模型；旧标准工程纯显示不新增流程或功能字段。显式功能绑定原生格式为 23，任务快照为 v3，v1/v2 保持原义。任意阶段调度仍缺少固件消费者，保存参考草稿与生成准入分开；记录/遥测范围只读显示已有生命周期。未增加控制算法、AIR 阶段消息或 SSLOG 阶段记录。
+
+可复现标准例为 `apps/SCG/examples/Standard_Generation.ssproject`，配套 `Standard_Generation_KF6.ssparams`。两者无本机路径；打开、另存、硬件核对、实际参数修改后可独立生成飞控。`Uncontrolled_Desktop_Reference.ssproject` 是参考编排样例，不能生成新阶段运行逻辑。启动入口仍为 `.\.venv\Scripts\python.exe SCG.py`。
+
+实际 GUI 从新建向导开始，选择 SS0.5、将惯导聚合样本数 2 改为 1、保存重开、后台 Flight-only 生成，再使用新构建页完成 **ARM 编译/链接 exit 0**。生成耗时 13.962 s，构建 129.85 s；参数头仅对应宏由 2 改为 1，未自动加入 mission_process/functions。记录在 `.work/caps3_20261025/final/p5_gui_results.json`，包含当时源码哈希、完整命令和产物摘要；后续布局修正没有重编这一 ELF，不将旧产物归属于后续未记录的源码。
+
+- ARM GCC 14.3.1，Host GCC 16.1.0，GNU Make 4.4.1，Python 3.14，PySide6 6.10.1。
+- p5 ELF SHA-256：`52e2d951076b4605dae307e3360eaa5b33e47f4bc346868dad9813ac2445e190`。
+- p5 BIN SHA-256：`d92fa5ffd099efbcbfd3bc609916c10376dad86d1b63eb72d421569b04230cd5`。
+- 原始 Flight 与串口 Ground 基线均实际 ARM 编译/链接，架构、静态分析编译和产物检查退出 0，完整证据在 `baseline/`。P10 文本检查退出 0 仍保留关键契约人工审查 NOT PROVEN；Ground 的 libnosys 警告保留，不声称整个固件无警告或 NASA 合规。
+- 完整 Host 基线最初因 logger 测试陈旧的 42 条断言失败。owning 测试改为真实 43 条，同时核验新增记录 ID/version/size/name；新生成工程的 6 个定向可执行检查累计 **4,218,865 checks、0 failures**，另 4 组存储完整性检查通过。未重跑并宣称完整 Host 全套通过，原失败保留在 `baseline/build_results.json`。
+
+软件检查分别记录，不拼成未执行的单次全套结果：
+
+| 检查范围 | 实际结果 | 本地证据（均在 `.work/caps3_20261025/`） |
+|---|---|---|
+| 功能/参数模型及相关格式原始冻结检查 | 71 passed；随后生成准入错误定位增量 1 passed | `model/junit_frozen.xml`、`model/junit_reference_issue2.xml` |
+| 页面、模型、旧数值/安装布局、进度的第一次组合检查 | 65 passed、2 failed；旧测试仍查旧父控件，另一个测试临时目录超出其应用策略 | `acceptance1/capsule_scg/junit.xml` |
+| 上述测试适配新真实控件归属、限定测试授权目录后的定向重跑 | 18 passed，生产路径策略未放宽 | `qa/closing_ui/junit.xml` |
+| 三页/模型/参数/保存取消/进度组合重跑，含硬件中英 900/1024 窗口 | 69 passed | `acceptance_final/summary.json` |
+| 随后仅工作流英文窄窗布局增量：工具条上下排列、表单及详情边界 | 2 passed；不将其拼成修改后未执行的 71 项整组结果 | `qa/workflow_width/junit.xml` |
+| 产品/入口版本、项目 schema 与身份检查 | root 33、SCG 59 passed | `acceptance1/root/junit.xml`、`acceptance1/scg/junit.xml` |
+| GSHC/FLP 实际离线读取，含新增 v3 共享功能绑定 | FLP 6、GSHC 7 passed | `consumers_v3/summary.json` |
+
+验证途中初版 UI 构造器插入点错误导致 setup 失败，已修复并由后续专用集成检查覆盖；相关失败 JUnit 保留。p/p2/p3/p4 GUI 构建验证脚本的等待/诊断与参数宏断言失败也保留，p5 才是成功链路；没有据此修改产品线程调度。最终 8 张真实截图和 GUI 源码摘要位于 `gui/reviewed2/`，包含三页、记录表、中英/浅深主题及 900/1024 窗口。硬件独立 7 项边界验证及 4 张截图位于 `hardware/final_en/`。截图不代替保存/取消与后台任务检查。
+
+没有烧录、H7 整板、时序/栈上界、电气输出或飞行验证。所有合成数据与参考 trace 均非实飞数据。后文 2026-10-24 及更早数字只代表当时的历史源码与检查范围。
+
 ## GUI 修正与七阶段默认任务（2026-10-24）
 
 在 `be61f301` 之上，安装分布图按实际字体计算布局并避让同投影标签、原点和轴标；测量点不移动。阶段详情及工具条使用普通下拉框，超过十项时提供滚动条；惯导参数组标题改为“惯导算法”，保留实际算法 ID、参数和名称提示。任务快照区收为紧凑的 GSHC 导出入口，摘要默认折叠，明确是离线配置而非实时状态。

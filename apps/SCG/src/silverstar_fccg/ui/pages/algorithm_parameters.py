@@ -141,6 +141,7 @@ class NavigationConfigurationPage(ScrollableLocalizedPage):
         shared_groups = AlgorithmParameterSharedGroups_Get(owners)
         if shared_groups:
             common = QGroupBox(self._translator.Text_Get("algorithm_parameters.shared"))
+            common.setObjectName("sharedAlgorithmParameters")
             common_layout = QVBoxLayout(common)
             form = QFormLayout()
             for shared_key, members in shared_groups.items():
@@ -246,7 +247,8 @@ class NavigationConfigurationPage(ScrollableLocalizedPage):
 
     def Language_Apply(self, translator: Translator) -> None:
         super().Language_Apply(translator)
-        for heading in self.findChildren(QLabel):
+        for heading in [label for section in (self.parameters_section,self.impact_section)
+                        for label in section.findChildren(QLabel)]:
             key = heading.property("navigationSectionKey")
             if key:
                 heading.setText(self._translator.Text_Get(key))

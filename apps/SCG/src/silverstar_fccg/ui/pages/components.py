@@ -135,7 +135,8 @@ class DevicesPage(ScrollableLocalizedPage):
         self.InstallationReference_Set(None)
         self.installation_map = SensorLayoutView(translator)
         global_form.addRow(self.installation_map)
-        self.root_layout.addWidget(self.Group_Create("group.global_configuration", global_form))
+        self.global_configuration_group = self.Group_Create("group.global_configuration", global_form)
+        self.root_layout.addWidget(self.global_configuration_group)
         self.instance_order_note = QLabel()
         self.instance_order_note.setObjectName("deviceInstanceOrderNote")
         self.instance_order_note.setWordWrap(True)
@@ -945,9 +946,8 @@ class BoardHardwarePage(ScrollableLocalizedPage):
         preparation_row.addWidget(self.prepare_button)
         preparation_row.addWidget(self.preparation_status, 1)
         selection_form.addRow(self.preparation_label, self.preparation_widget)
-        self.root_layout.addWidget(
-            self.Group_Create("group.board_selection", selection_form)
-        )
+        self.selection_group = self.Group_Create("group.board_selection", selection_form)
+        self.root_layout.addWidget(self.selection_group)
         self.generate_button = QPushButton()
         self.generate_button.setObjectName("primaryButton")
         self.Text_Register(self.generate_button, "action.generate_ground_project" if target == "ground" else "action.generate_flight_project")
@@ -984,9 +984,8 @@ class BoardHardwarePage(ScrollableLocalizedPage):
             value.setWordWrap(True)
             self.platform_form.addRow(label, value)
             self.platform_values[field] = value
-        self.root_layout.addWidget(
-            self.Group_Create("group.detected_platform", self.platform_form)
-        )
+        self.platform_group = self.Group_Create("group.detected_platform", self.platform_form)
+        self.root_layout.addWidget(self.platform_group)
 
         self.provider_notice = QLabel()
         self.provider_notice.setWordWrap(True)
@@ -1183,7 +1182,9 @@ class BoardHardwarePage(ScrollableLocalizedPage):
         index = self.board_combo.findData(current_data)
         self.board_combo.setCurrentIndex(index)
         self.board_combo.blockSignals(False)
-        self.custom_widget.setVisible(custom_available)
+        # The consolidated workspace always exposes complete-project import:
+        # its MCU comes from the imported project, not the current selection.
+        self.custom_widget.setVisible(custom_available or hasattr(self, '_hardware_workspace_owner'))
         self.export_button.setEnabled(custom_ready)
         board_selected = hardware_mode == "board_plugin"
         self.preparation_label.setVisible(False)

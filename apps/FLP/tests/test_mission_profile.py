@@ -1,6 +1,7 @@
 from dataclasses import replace
 from pathlib import Path
 import runpy
+import json
 
 import pytest
 from PySide6.QtCore import Qt
@@ -14,13 +15,22 @@ ROOT = Path(__file__).resolve().parents[3]
 API = runpy.run_path(str(ROOT / 'tools/silverstar_mission_profile.py'))
 
 
-def test_exact_custom_phase_metadata_and_reference_trace_preserve_source(tmp_path,qapp,monkeypatch):
+@pytest.mark.parametrize('schema_version', [2, 3])
+def test_exact_custom_phase_metadata_and_reference_trace_preserve_source(tmp_path,qapp,monkeypatch,schema_version):
     from silverstar_flp.decoder_profiles.mission_profile import MissionTrace_FromPath
     profile=API['MissionProfile_Read'](ROOT/'contracts/mission_profile_v1.golden.json')
     profile.update(schema_id='silverstar.mission-profile/2',schema_version=2,
         process=API['MissionProcess_Default'](),devices=[])
+    if schema_version == 3:
+        adapter = next(row for row in json.loads((ROOT/'contracts/mission_functions_v1.json').read_text(encoding='utf-8'))['adapters'] if row['category']=='recording')
+        function = {key: adapter[key] for key in ('instance_id','plugin_id','category','output')}
+        function.update(execution='continuous', start={'kind':adapter['start'],'stage_id':''},
+            stop={'kind':adapter['stop'],'stage_id':''}, depends_on=[], input_bindings={})
+        profile.update(schema_id='silverstar.mission-profile/3', schema_version=3,
+            functions={'schema_version':1,'functions':[function]})
     profile['sha256']=API['MissionProfile_Digest'](profile)
     opened=NavigationPair_Open(tmp_path/'process',flight_samples=7,mission_profile=profile)
+    assert MissionProfile_FromDataset(opened.dataset) == profile
     original=opened.dataset.source_path.read_bytes()
     runner=API['MissionProcessRunner'](profile['process'])
     _,events=runner.Sample_Step(dict(time_us=100,valid=True,events=['ready'],altitude_agl_m=None,vertical_velocity_mps=None))

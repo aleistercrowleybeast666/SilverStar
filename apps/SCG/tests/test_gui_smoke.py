@@ -20,6 +20,7 @@ import silverstar_fccg.ui.main_window as main_window_module
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.app.version import PRODUCT_NAME, __version__
 from silverstar_fccg.core.settings import SettingsStore
+from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.generator.assembler import ApplyResult, GenerationPlan
 from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
 from silverstar_fccg.project.protocols import ProtocolResolution_Resolve
@@ -30,7 +31,9 @@ from silverstar_fccg.ui.widgets import LockedCheckBox, StandardCheckBox
 
 
 def _Window_Create(tmp_path: Path, qapp) -> MainWindow:
-    window = MainWindow(SettingsStore(tmp_path / "settings.ini"))
+    service = FccgService(Path(__file__).resolve().parents[1])
+    service.policy = WorkspacePolicy(Path(__file__).resolve().parents[3])
+    window = MainWindow(SettingsStore(tmp_path / "settings.ini"), service=service)
     window.show()
     qapp.processEvents()
     return window
@@ -241,14 +244,14 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
     try:
         assert window.windowTitle() == PRODUCT_NAME
         assert window.version_label.text() == f"v{__version__}"
-        assert window.pages.count() == 7
-        assert window.navigation_list.count() == 7
+        assert window.pages.count() == 3
+        assert window.navigation_list.count() == 3
         assert not hasattr(window, "project_page")
         assert not hasattr(window, "plugins_page")
         assert [
             window.navigation_list.item(index).text()
             for index in range(window.navigation_list.count())
-        ] == ["飞控设备", "飞行配置", "导航配置", "遥测配置", "飞控硬件", "地面站硬件", "构建与检测"]
+        ] == ["硬件与通信", "飞行流程", "检查与生成"]
         assert not hasattr(window.build_page, "configuration_combo")
         assert set(window.build_page.action_buttons) == {
             "flight_build", "flight_clean", "flight_open_vscode",
@@ -284,13 +287,9 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
             window.navigation_list.item(index).text()
             for index in range(window.navigation_list.count())
         ] == [
-                "Flight Devices",
-                "Flight Configuration",
-                "Navigation Configuration",
-                "Telemetry Configuration",
-                "Flight Hardware",
-                "Ground Station Hardware",
-                "Build & Validation",
+                "Hardware & communication",
+                "Flight workflow",
+                "Checks & generation",
             ]
         assert window.build_page.action_buttons["flight_build"].text() == "Build Firmware"
         assert all(

@@ -32,16 +32,26 @@
 ## 6. 测试
 至少覆盖：浅/深主题、中文/英文、窗口尺寸、对话框、长任务进度、取消、异常恢复、图表与 3D smoke test，以及 signal/rebuild 回归。
 
-## Algorithm Parameters page
+## 三个配置工作区
 
-The seven-page order is Flight Devices → Flight Configuration → Navigation Configuration → Telemetry Configuration → Flight Hardware → Ground Station Hardware → Build & Validation. Algorithm parameter widgets are generated from strict plugin declarations; use actual values/units, localized descriptions, basic/advanced CollapsibleSection and per-algorithm reset.
+现行主导航固定为 **硬件与通信 → 飞行流程 → 检查与生成**。三页可自由切换，不是强制“下一步”向导；飞行流程没有估计、控制或日志子页。旧七页以及更早的五页属于历史界面，不能据此增加现行主导航。新工程首先展示硬件与通信，已有页码偏好按语义迁移。
+
+硬件页顶部同时呈现飞控与地面两个目标。每个目标先放真实板卡选择和完整 CubeMX 工程目录导入；900/1024 px 主窗口中两个目标入口仍应在首屏可发现。常显身份、MCU、状态及最多三条去重设备摘要，额外数量可见、完整清单放工具提示。导入 MCU/外设不代表已知外接设备接线或实机验证；未选择生成 Ground 也不隐藏其配置入口。
+
+硬件、设备、PC 物理接口和资源编辑器各只有一份，由 HardwareWorkspacePage 统一挂载。公共空地链路只有一份可编辑配置，频率、两端功率和匹配结果常显，物理细项默认折叠。平台来源、资源表、安装细节和活动灯详情按需展开；问题定位须展开实际所属目标，不按旧页号跳转。GSHC 的现场 COM 端口和本机目录不进入 SCG 硬件配置。
+
+飞行流程采用阶段胶囊与同页详情。常规编辑在进入条件、状态估计、控制与动作、记录与遥测四组内完成，小窗口可上下排列。任务前准备、任务记录和运行范围总览可折叠，但不得成为额外子页。未自定义的标准任务只派生展示，不注入执行配置、不改功能档或插件选择。
+
+检查与生成有 Flight/Ground 两张目标卡，使用各自实际生成、构建和产物命令。小窗口动作按钮应换行。工具检测显示版本和状态；路径、完整日志和详细诊断默认折叠，任务进度与失败仍来自后台真实执行。
+
+算法参数编辑器继续来自严格插件声明，保留真实值、单位、精度、常用/高级分组和恢复默认。跨阶段功能引用同一个实例及参数来源，不因选择另一个胶囊复制估计器或复位状态。收起时显示实际运行边界、参数来源、修改数量和问题，不隐藏待修复状态。
 
 惯导参数组标题固定为“惯导算法”；具体算法名称在选择器和工具提示中保留，插件 ID 与参数不因标题改动而变化。任务快照使用紧凑的 GSHC 导出入口及默认折叠的只读摘要，不作为独立的任务配置区。
 
 
 ## 任务阶段胶囊
 
-胶囊表示有序任务阶段，可选择插入位置并调整顺序；编号表达顺序，稳定 ID 不依赖位置或显示名。名称、数值条件阈值可内联编辑，详情弹窗编辑条件、持续确认和动作引用。应用提交、取消不改工程；未编辑数值不因显示精度被重写。模板提供 START/实际起飞分开或显式合并的选择，不把 START 隐式解释为物理起飞。
+胶囊表示有序任务阶段，可选择插入位置并调整顺序；编号表达顺序，稳定 ID 不依赖位置或显示名。同页详情编辑名称、进入条件、持续确认、功能区间与动作引用；保留未提交编辑的明确提交/取消语义，不在自身信号栈同步销毁编辑器。模板应用须预览具体变化，不静默覆盖任务。未编辑数值不因显示精度被重写；阶段改名不改变绑定，删除边界不能自动换绑相邻阶段。模板提供 START/实际起飞分开或显式合并的选择，不把 START 隐式解释为物理起飞。
 
 设备实体、输出能力和通道归设备/硬件配置；阶段引用稳定设备 ID。当前自定义阶段为桌面参考，不能用动画、参考 trace 或配置声明冒充真实板端过程。阶段规则与连续估计/采样/记录分开；页面重建在当前信号返回后执行。
 
@@ -75,4 +85,4 @@ root: a valid configured directory, then existing Documents, Home, or cwd. Save 
 dialog rooted there with the current project name prefilled; it does not create that directory
 until the user explicitly does so. Ordinary Save keeps its current project destination.
 Missing/corrupt preferences safely fall back without creating a root or rewriting preferences.
-Plugin/toolchain/IOC/source-package dialogs and the five-page flow keep their existing semantics.
+Plugin/toolchain/IOC/source-package dialogs retain their existing contracts; the current navigation is the three workspaces described above.
