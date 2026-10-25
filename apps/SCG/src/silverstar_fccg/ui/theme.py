@@ -182,7 +182,8 @@ QListWidget#navigation {
 QListWidget#navigation::item {
     background: $brand;
     color: $header_text;
-    padding: 12px 14px;
+    min-height: 24px;
+    padding: 20px 14px;
     border: 0;
     border-bottom: 1px solid $brand_hover;
 }

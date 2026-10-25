@@ -1,6 +1,7 @@
 """The three-workspace hardware composition keeps unique target/editor ownership."""
 from copy import deepcopy
 from pathlib import Path
+import json
 
 from PySide6.QtCore import QCoreApplication, QEvent, Qt
 from PySide6.QtTest import QSignalSpy, QTest
@@ -160,10 +161,84 @@ def test_actual_window_first_screen_contains_both_target_imports(qapp, workspace
         assert len(workspace.device_summaries['flight'].text().splitlines()) <= 4
         assert workspace.device_summaries['flight'].toolTip() == '\n'.join(rows)
         assert window._model.Dictionary_Get() == before
-        evidence = workspace_root.parents[1]/'.work/caps3_20261025/hardware/final_en'
-        evidence.mkdir(parents=True,exist_ok=True)
-        assert window.grab().save(str(evidence/f'hardware_{language}_{theme}_{width}.png'))
+        assert window.grab().save(str(tmp_path/f'hardware_{language}_{theme}_{width}.png'))
     finally:
         window._project_dirty = False
         window.close(); _Events_Flush(qapp)
+        qapp.setFont(previous_font)
+
+
+@pytest.mark.parametrize('width,language,theme,font_size', [
+    (1440, 'zh_CN', 'light', 9), (1920, 'en_US', 'dark', 12)])
+def test_complete_target_columns_align_and_shared_link_follows_them(qapp, workspace_root, tmp_path,
+                                                                  width, language, theme, font_size):
+    from PySide6.QtCore import QRect
+    from PySide6.QtGui import QFont
+    from PySide6.QtWidgets import QMessageBox
+    from silverstar_fccg.core.settings import SettingsStore
+    from silverstar_fccg.core.workspace import WorkspacePolicy
+    from silverstar_fccg.ui.main_window import MainWindow
+    _Fonts_Register()
+    previous_font = qapp.font()
+    qapp.setFont(QFont('Microsoft YaHei', font_size))
+    service = FccgService(workspace_root)
+    service.policy = WorkspacePolicy(workspace_root.parents[1])
+    window = MainWindow(SettingsStore(tmp_path/'settings.ini'), service=service)
+    window._toolchain_checked = True
+    window._MessageBox_Exec = lambda *args, **kwargs: QMessageBox.StandardButton.Discard
+    errors = []
+    window._Error_Show = lambda *args: errors.append(args)
+    window._model = service.ReferenceProject_Create('TwoTargetColumns')
+    window._Project_Refresh()
+
+    def Bounds(widget):
+        return QRect(widget.mapTo(window.hardware_workspace, widget.rect().topLeft()), widget.size())
+
+    try:
+        flight_before = deepcopy(window._model.hardware)
+        window.ground_target_page.enabled.setChecked(True)
+        combo = window.ground_target_page.board_combo
+        combo.setCurrentIndex(combo.findData('silverstar.board.ground_station_0_5'))
+        _Events_Flush(qapp)
+        assert window._model.ground_target.board == 'silverstar.board.ground_station_0_5'
+        assert window._model.hardware == flight_before
+        before = deepcopy(window._model.Dictionary_Get())
+        window.resize(width, 1000)
+        window.Language_Apply(language)
+        window.Theme_Apply(theme)
+        window.show()
+        _Events_Flush(qapp)
+        QTest.qWait(30)
+        _Events_Flush(qapp)
+        workspace = window.hardware_workspace
+        for flight_control, ground_control in (
+            (window.board_hardware_page.board_combo, window.ground_target_page.board_combo),
+            (window.board_hardware_page.import_directory_button, window.ground_target_page.import_directory_button),
+            (workspace.target_buttons['flight'], workspace.target_buttons['ground']),
+        ):
+            left, right = Bounds(flight_control), Bounds(ground_control)
+            assert abs(left.top() - right.top()) <= 1
+            assert abs(left.height() - right.height()) <= 1
+        left, right = (Bounds(workspace._target_sections[target]) for target in ('flight','ground'))
+        assert left.top() == right.top()
+        assert left.right() < right.left()
+        assert abs(left.width() - right.width()) <= 1
+        assert workspace._target_sections['flight'].isAncestorOf(window.devices_page.position_editors['imu0'])
+        assert workspace._target_sections['ground'].isAncestorOf(window.ground_target_page.pc_interface)
+        assert Bounds(workspace.link_summary).top() > max(left.bottom(), right.bottom())
+        assert Bounds(window.air_link_page.air_link_group).top() > Bounds(workspace.link_summary).bottom()
+        assert all(window.navigation_list.visualItemRect(window.navigation_list.item(index)).height() >= 60
+                   for index in range(3))
+        for index in (1, 2, 0):
+            window.navigation_list.setCurrentRow(index)
+            _Events_Flush(qapp)
+        assert window._model.Dictionary_Get() == before
+        root = service.ProjectRoot_Save(window._model, tmp_path/'saved')
+        # JSON persists arrays; tuple-valued provider metadata becomes lists.
+        assert service.Project_Open(root).Dictionary_Get() == json.loads(json.dumps(before))
+        assert window.grab().save(str(tmp_path/'complete_columns.png'))
+        assert not errors
+    finally:
+        window.close()
+        _Events_Flush(qapp)
         qapp.setFont(previous_font)
