@@ -1,0 +1,10 @@
+{
+  "schema_id": "silverstar.mission-profile/3",
+  "schema_version": 3,
+  "extends": "silverstar.mission-profile/1",
+  "additional_required_fields": ["functions", "devices"],
+  "additional_optional_fields": ["process"],
+  "functions_contract": "silverstar.mission-functions/1",
+  "qualification": "declarative bindings; only exact existing system-lifecycle adapters may generate firmware; arbitrary stage scheduling remains desktop-reference",
+  "compatibility": "v1 and v2 retain their original meaning; absence of process does not invent custom stages or execution events"
+}

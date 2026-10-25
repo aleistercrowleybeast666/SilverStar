@@ -21,7 +21,8 @@ from silverstar_fccg.project.model import (
     PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION,
     PROJECT_NIS_INPUT_FORMAT_VERSION, PROJECT_NATIVE_USB_FORMAT_VERSION,
     PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION, PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION,
-    PROJECT_MISSION_PROCESS_FORMAT_VERSION, RAW_IMU_MOUNT_PLUGINS, RAW_IMU_NOSE_AXIS_MAPS,
+    PROJECT_MISSION_PROCESS_FORMAT_VERSION, PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION,
+    RAW_IMU_MOUNT_PLUGINS, RAW_IMU_NOSE_AXIS_MAPS,
 )
 from silverstar_fccg.project.mission_process import MissionProcess_Default
 from silverstar_fccg.project.native_usb import NativeUsbReference
@@ -80,6 +81,9 @@ def _Document_Get(version, catalog):
         model.device_instances = [replace(item, plugin='silverstar.device.imu.bmi088',
             mount_x_axis='y_positive', position_body_m=SensorPosition(0.02, -0.03, 0.1))
             if item.instance_id == 'imu0' else item for item in model.device_instances]
+    if version == 23:
+        from silverstar_fccg.project.mission_functions import Functions_Derive
+        model.mission_functions = Functions_Derive(model,catalog)
     document = model.Dictionary_Get()
     assert document["format_version"] == version
     # The public schema describes JSON, including list-normalized inventory
@@ -95,7 +99,8 @@ def test_published_schema_tracks_supported_versions_and_shared_installation_cont
         PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION,
         PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION,
         PROJECT_MISSION_PROCESS_FORMAT_VERSION,
-    ] == list(range(14, 23))
+        PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION,
+    ] == list(range(14, 24))
     assert {"alignment", "flight_tx_power_dbm", "ground_target"} <= set(schema["required"])
     hardware = schema["properties"]["hardware"]
     assert set(hardware["required"]) <= set(hardware["properties"])
@@ -110,7 +115,7 @@ def test_published_schema_tracks_supported_versions_and_shared_installation_cont
         assert set(constraint['then']['properties']['plugin']['enum']) == RAW_IMU_MOUNT_PLUGINS
 
 
-@pytest.mark.parametrize("version", range(14, 23))
+@pytest.mark.parametrize("version", range(14, 24))
 def test_real_serializer_outputs_pass_schema_and_parser(version, validator, builtin_catalog):
     document = _Document_Get(version, builtin_catalog)
     validator.validate(document)

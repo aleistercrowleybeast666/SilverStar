@@ -17,6 +17,7 @@ from silverstar_fccg.core.errors import FccgError
 from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.project.native_usb import NativeUsbReference, NativeUsbReference_Parse
 from silverstar_fccg.project.mission_process import MissionProcess_Require
+from silverstar_fccg.project.mission_functions import Functions_Require
 from silverstar_fccg.project.sensor_installation import (
     SensorInstallationConfiguration, SensorInstallationConfiguration_Parse,
     SensorPosition, SensorPosition_Parse,
@@ -58,6 +59,7 @@ PROJECT_NATIVE_USB_FORMAT_VERSION = 19
 PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION = 20
 PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION = 21
 PROJECT_MISSION_PROCESS_FORMAT_VERSION = 22
+PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION = 23
 AlgorithmParameterInput = float | int | dict[str, Any]
 FEATURE_TIERS = ("full", "standard", "compact", "minimal")
 PROTOCOL_CATEGORIES = ("telemetry", "maintenance", "logging")
@@ -387,6 +389,7 @@ class ProjectModel:
     native_usb: NativeUsbReference | None = None
     sensor_installation: SensorInstallationConfiguration | None = None
     mission_process: dict | None = None
+    mission_functions: dict | None = None
     format_version: int = PROJECT_FORMAT_VERSION
 
     def ComponentIds_Get(self) -> tuple[str, ...]:
@@ -436,7 +439,9 @@ class ProjectModel:
 
     def Dictionary_Get(self) -> dict[str, Any]:
         return {
-            "format_version": (PROJECT_MISSION_PROCESS_FORMAT_VERSION
+            "format_version": (PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION
+                if self.mission_functions is not None or self.format_version == PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION
+                else PROJECT_MISSION_PROCESS_FORMAT_VERSION
                 if self.mission_process is not None or any(item.mount_x_axis for item in self.device_instances) or self.format_version == PROJECT_MISSION_PROCESS_FORMAT_VERSION
                 else PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION
                 if self.format_version == PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION or
@@ -635,6 +640,7 @@ class ProjectModel:
             **({"sensor_installation": self.sensor_installation.Dictionary_Get()}
                if self.sensor_installation is not None else {}),
             **({'mission_process': MissionProcess_Require(self.mission_process)} if self.mission_process is not None else {}),
+            **({'mission_functions': Functions_Require(self.mission_functions)} if self.mission_functions is not None else {}),
         }
 
 
@@ -2032,7 +2038,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
     }
     if "flight_tx_power_dbm" not in root:
         root["flight_tx_power_dbm"] = 12
-    if set(root) - {"feature_tier_presets", "native_usb", "sensor_installation", "mission_process"} != required_root:
+    if set(root) - {"feature_tier_presets", "native_usb", "sensor_installation", "mission_process", "mission_functions"} != required_root:
         missing = required_root - set(root)
         unknown = set(root) - required_root
         details = [
@@ -2040,15 +2046,23 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
             *(f"unknown {name}" for name in sorted(unknown)),
         ]
         raise ProjectModelError("Project fields are invalid: " + ", ".join(details))
-    if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION, PROJECT_NIS_INPUT_FORMAT_VERSION, PROJECT_NATIVE_USB_FORMAT_VERSION, PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION, PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION, PROJECT_MISSION_PROCESS_FORMAT_VERSION):
+    if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION, PROJECT_NIS_INPUT_FORMAT_VERSION, PROJECT_NATIVE_USB_FORMAT_VERSION, PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION, PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION, PROJECT_MISSION_PROCESS_FORMAT_VERSION, PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION):
         raise ProjectModelError(
-            "Only project format_version 14 through 22 is supported"
+            "Only project format_version 14 through 23 is supported"
         )
     if (set(_Object_Require(root.get("build"), "build")) & {"magnetometer_enabled", "maintenance_log_export_enabled"}
             and root["format_version"] < PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION):
         raise ProjectModelError("Optional resource selections require project format_version 21")
     sensor_installation = None
     mission_process = None
+    mission_functions = None
+    if 'mission_functions' in root:
+        if root['format_version'] < PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION:
+            raise ProjectModelError('mission_functions requires project format_version 23')
+        try:
+            mission_functions = Functions_Require(root['mission_functions'])
+        except (ValueError, TypeError) as error:
+            raise ProjectModelError(str(error)) from error
     if 'mission_process' in root:
         if root['format_version'] < PROJECT_MISSION_PROCESS_FORMAT_VERSION:
             raise ProjectModelError('mission_process requires project format_version 22')
@@ -2198,6 +2212,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
         native_usb=native_usb,
         sensor_installation=sensor_installation,
         mission_process=mission_process,
+        mission_functions=mission_functions,
         format_version=root["format_version"],
     )
 

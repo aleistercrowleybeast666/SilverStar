@@ -25,9 +25,10 @@
       },
       "additionalProperties": false
     },
-    "format_version": {"enum": [14, 15, 16, 17, 18, 19, 20, 21, 22]},
+    "format_version": {"enum": [14, 15, 16, 17, 18, 19, 20, 21, 22, 23]},
     "sensor_installation": {"oneOf": [{"$ref": "#/$defs/sensorInstallation"}, {"$ref": "#/$defs/navigationInstallation"}]},
     "mission_process": {"$ref": "#/$defs/missionProcess"},
+    "mission_functions": {"$ref": "#/$defs/missionFunctions"},
     "native_usb": {"$ref": "#/$defs/nativeUsb"},
     "feature_tier_presets": {
       "type": "object", "additionalProperties": false,
@@ -348,6 +349,7 @@
   },
   "additionalProperties": false,
   "allOf": [
+    {"if": {"properties": {"format_version": {"maximum": 22}}}, "then": {"not": {"required": ["mission_functions"]}}},
     {"if": {"properties": {"format_version": {"maximum": 21}}},
      "then": {"not": {"required": ["mission_process"]}, "properties": {"components": {"properties": {"devices": {"items": {"properties": {"mount_x_axis": {"const": ""}}}}}}}}},
     {"if": {"properties": {"format_version": {"maximum": 20}}},
@@ -384,6 +386,32 @@
     }
   ],
   "$defs": {
+    "missionFunctions": {
+      "$comment": "Semantic issues (missing boundaries, dependency cycles, unsupported runtime intervals) remain repairable drafts; generation validates them against actual plugin adapters.",
+      "type": "object", "additionalProperties": false, "required": ["schema_version", "functions"],
+      "properties": {"schema_version": {"type": "integer", "const": 1},
+        "functions": {"type": "array", "maxItems": 32, "items": {"$ref": "#/$defs/missionFunction"}}}
+    },
+    "functionIdentity": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{0,127}$"},
+    "functionBoundary": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "stage_id"],
+      "properties": {"kind": {"enum": ["system_prepare", "mission_start", "stage_enter", "system_landed", "lifecycle_end"]},
+        "stage_id": {"oneOf": [{"const": ""}, {"$ref": "#/$defs/functionIdentity"}]}},
+      "allOf": [{"if": {"properties": {"kind": {"enum": ["system_prepare", "mission_start", "system_landed", "lifecycle_end"]}}}, "then": {"properties": {"stage_id": {"const": ""}}}}]
+    },
+    "missionFunction": {
+      "type": "object", "additionalProperties": false,
+      "required": ["instance_id", "plugin_id", "category", "execution", "start", "stop", "depends_on", "input_bindings", "output"],
+      "properties": {
+        "instance_id": {"$ref": "#/$defs/functionIdentity"}, "plugin_id": {"$ref": "#/$defs/functionIdentity"},
+        "category": {"enum": ["estimation", "preparation", "control", "recording", "telemetry"]},
+        "execution": {"enum": ["once", "continuous"]},
+        "start": {"$ref": "#/$defs/functionBoundary"}, "stop": {"$ref": "#/$defs/functionBoundary"},
+        "depends_on": {"type": "array", "maxItems": 32, "uniqueItems": true, "items": {"$ref": "#/$defs/functionIdentity"}},
+        "input_bindings": {"type": "object", "maxProperties": 64, "propertyNames": {"$ref": "#/$defs/functionIdentity"}, "additionalProperties": {"$ref": "#/$defs/functionIdentity"}},
+        "output": {"$ref": "#/$defs/functionIdentity"}
+      }
+    },
     "navigationInstallation": {
       "type": "object", "additionalProperties": false,
       "required": ["schema", "frame", "unit", "origin_kind", "body_frame", "input_source"],

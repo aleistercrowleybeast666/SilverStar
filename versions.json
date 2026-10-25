@@ -8,7 +8,7 @@
     "mission.profile": {
       "scope": "independent declarative configuration snapshot; no runtime authority",
       "source": {
-        "path": "contracts/mission_profile_v2.json",
+        "path": "contracts/mission_profile_v3.json",
         "kind": "json",
         "selector": [
           "schema_version"
@@ -253,6 +253,36 @@
       "scope": "right-handed body axes and fixed navigation reference point",
       "source": {
         "path": "contracts/body_frame_v1.json",
+        "kind": "json",
+        "selector": [
+          "schema_version"
+        ]
+      }
+    },
+    "mission.profile.v2": {
+      "scope": "independent declarative configuration snapshot; no runtime authority",
+      "source": {
+        "path": "contracts/mission_profile_v2.json",
+        "kind": "json",
+        "selector": [
+          "schema_version"
+        ]
+      }
+    },
+    "mission.functions": {
+      "scope": "shared function instances and bounded reference intervals",
+      "source": {
+        "path": "contracts/mission_functions_v1.json",
+        "kind": "json",
+        "selector": [
+          "schema_version"
+        ]
+      }
+    },
+    "function.parameters": {
+      "scope": "actual-input parameter profiles; no executable content",
+      "source": {
+        "path": "contracts/function_parameters_v1.json",
         "kind": "json",
         "selector": [
           "schema_version"

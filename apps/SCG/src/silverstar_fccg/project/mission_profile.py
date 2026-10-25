@@ -61,5 +61,12 @@ def MissionProfile_Build(model, catalog):
                 'instance_id': item.instance_id, 'plugin_id': item.plugin,
                 'recovery_action': 'actuator.mission_action.parachute_deploy' in catalog.Component_Get(item.plugin).provides}
                 for item in model.device_instances])
+    if model.mission_functions is not None:
+        from silverstar_fccg.project.mission_functions import Functions_Require
+        profile.update(schema_id='silverstar.mission-profile/3', schema_version=3,
+            functions=Functions_Require(model.mission_functions), devices=[{
+                'instance_id': item.instance_id, 'plugin_id': item.plugin,
+                'recovery_action': 'actuator.mission_action.parachute_deploy' in catalog.Component_Get(item.plugin).provides}
+                for item in model.device_instances])
     profile["sha256"] = _API["MissionProfile_Digest"](profile)
     return MissionProfile_Require(profile)

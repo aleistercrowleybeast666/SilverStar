@@ -18,6 +18,7 @@ MissionProcess_Default = _PROCESS['MissionProcess_Default']
 MissionProcess_Require = _PROCESS['MissionProcess_Require']
 MissionProcessRunner = _PROCESS['MissionProcessRunner']
 MissionTrace_Require = _PROCESS['MissionTrace_Require']
+Functions_Require = runpy.run_path(str(ROOT / 'tools/silverstar_mission_functions.py'))['Functions_Require']
 
 
 class MissionProfileResult(str, Enum):
@@ -76,13 +77,15 @@ def _Component_Require(value):
 
 
 def MissionProfile_Require(value):
-    if type(value) is not dict or type(value.get('schema_version')) is not int or value['schema_version'] not in (1, 2):
+    if type(value) is not dict or type(value.get('schema_version')) is not int or value['schema_version'] not in (1, 2, 3):
         raise MissionProfileError('mission_profile_version')
     version = value['schema_version']
-    _Keys_Require(value, [*CONTRACT['fields'], *(['process', 'devices'] if version == 2 else [])], 'root')
+    extra = ['process', 'devices'] if version == 2 else ['functions', 'devices'] if version == 3 else []
+    if version == 3 and 'process' in value: extra.append('process')
+    _Keys_Require(value, [*CONTRACT['fields'], *extra], 'root')
     if value["schema_id"] != 'silverstar.mission-profile/' + str(version):
         raise MissionProfileError("mission_profile_version")
-    if version == 2:
+    if version in (2, 3):
         devices = value['devices']
         if type(devices) is not list or len(devices) > 128:
             raise MissionProfileError('mission_profile_devices')
@@ -99,7 +102,12 @@ def MissionProfile_Require(value):
             if device['recovery_action']:
                 recovery_targets.add(device['instance_id'])
         try:
-            MissionProcess_Require(value['process'], recovery_targets)
+            if 'process' in value: MissionProcess_Require(value['process'], recovery_targets)
+            if version == 3:
+                functions = Functions_Require(value['functions'])
+                for function in functions['functions']:
+                    if any(identity not in identities for identity in function['input_bindings'].values()):
+                        raise ValueError('mission_profile_function_device_missing')
         except (ValueError, TypeError) as error:
             raise MissionProfileError(str(error)) from error
     if value["source"] != "scg_project" or value["frame"] != CONTRACT["frame"]:

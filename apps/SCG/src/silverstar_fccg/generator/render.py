@@ -877,6 +877,8 @@ def _TestBuildIdentity_Get(model: ProjectModel) -> dict[str, Any] | None:
 def _FlightConfigHeader_Render(
     model: ProjectModel, catalog: PluginCatalog
 ) -> str:
+    from silverstar_fccg.project.mission_functions import FunctionsGeneration_Require
+    FunctionsGeneration_Require(model, catalog)
     if model.mission_process is not None:
         raise ValueError('mission_process_firmware_binding_unavailable: custom phases are desktop-reference only; '
                          'firmware generation is refused rather than silently executing the legacy process')

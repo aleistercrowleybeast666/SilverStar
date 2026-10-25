@@ -81,6 +81,7 @@ def _GroundModel_Get(model: ProjectModel, catalog: PluginCatalog) -> ProjectMode
         }, development_environment="", hardware=ground.hardware,
         resource_assignments=dict(ground.resource_assignments),
         capability_source_overrides={}, logging_streams=[],
+        mission_functions=None, mission_process=None, sensor_installation=None,
         build=ground.build,
     )
 

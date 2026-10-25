@@ -1,0 +1,15 @@
+{
+  "schema_id": "silverstar.function-parameters/1",
+  "schema_version": 1,
+  "extension": ".ssparams",
+  "compatible_extensions": [".ssparams", ".ssparameters"],
+  "maximum_bytes": 262144,
+  "fields": ["schema_id", "schema_version", "plugin_id", "plugin_version", "manifest_sha256", "parameter_schema", "value_source", "parameters"],
+  "parameter_fields": ["id", "value", "unit", "representation", "storage_type"],
+  "parameter_schema": "silverstar.algorithm-parameters/1.0",
+  "value_source": "project_actual_input",
+  "value_semantics": "Exact project inputs, including an explicitly typed NIS probability when supported; validated and resolved by the selected plugin into float32 or int32 for generation. No guessed unit conversion.",
+  "identity": "Exact selected plugin ID, implementation version, manifest SHA-256 and parameter-schema identity required before applying",
+  "shared_parameters": "Apply through the existing shared_key authority, then resolve every selected owner transactionally",
+  "scope": "Parameters only. No hardware, task process, firmware code, runtime loading or TreeDiagram compatibility is implied."
+}

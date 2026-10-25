@@ -4,13 +4,29 @@
 
 ## 当前配置与版本
 
-产品版本是 0.1.2；SCG 工程格式 14/15/16/17 保持各自兼容边界，四档预设使用 17；decoder/project-semantics 为 1.2，旧 1.1 拒绝。算法实际参数位于 Navigation Configuration，保留 actual values、单位、representation 和共享参数约束。产品版本不机械改写独立插件、协议或已有用户工程身份。
+当前产品为 0.1.3 development，稳定发布仍为 0.1.2。SCG 当前原生格式 14 至 23 保持各自兼容边界，显式共享功能配置使用 23；decoder/project-semantics 容器合同仍沿用既有 1.2，不以 GUI 重构改写旧记录。算法参数在飞行流程的具体功能区编辑，保留 actual values、单位、representation、来源和共享参数约束。产品版本不机械改写独立插件、协议或已有用户工程身份。
 
 详细参数见[参数契约](ALGORITHM_PARAMETERS.md)，界面流程见[应用说明](APP_README.md)。
 
 
 
 插件是严格声明式manifest + payload，不执行安装包脚本。未知核心字段、非法路径、非法类别和ABI不匹配必须失败。
+
+## 任务功能目录与后端支持
+
+当前 `contracts/mission_functions_v1.json` 为已有插件提供显式 legacy adapter 声明，结合实际 PluginCatalog 产生用户可选目录。声明包括精确支持版本、一次性/持续方式、单实例限制、输入输出、准备/初始化和停止边界、完成含义、参数修改时机及支持范围。未声明或版本不匹配的插件不会仅凭显示名进入“可调度”目录。
+
+此适配没有改写旧 manifest 或协议锁 SHA-256，也没有新增动态回调、任意脚本或 RTOS 任务。单实例插件仍只有一个实际参数 owner。各阶段引用同一实例和原有 `algorithm_parameters`；参数不会因为区间跨越多个阶段而复制或重复初始化。
+
+已声明的 INS/估计器沿用已接受 START 的初始化事务及现有 LANDED gate；准备、校准/对准、输出服务、日志与遥测各保留原生命周期。校准卡片本身不启用未选择的校准模式。一次性任务必须等待明确的插件完成/失败报告，软件输出完成也不代表物理开伞确认。
+
+任意 `stage_enter` 区间、改变 canonical 输入或依赖调度仅为参考编排，生成前明确拒绝；没有通过删除既有不支持错误来宣称固件已消费。日志自定义区间尚未实现普通流门控，Logger 会话、必需记录和收尾保持原义。当前目录不提供虚构的 PID/LQR 插件或示例增益。
+
+## 功能参数交换
+
+`.ssparams`（兼容 `.ssparameters`）是 `silverstar.function-parameters/1` 的声明式 JSON。导入要求精确 plugin ID/version、manifest SHA-256、`silverstar.algorithm-parameters/1.0`、完整字段、单位、representation 和存储类型；未知/不兼容字段不能静默忽略。内容先校验并预览，再通过原 Value_Resolve 与 shared_key 合同应用到唯一参数 owner，保留未编辑数值精度。仅构建时参数不会因放入功能卡片就成为飞行中可变参数。
+
+`.ssmission` v3 在显式功能配置时保存同一份实例/范围声明，并继续支持旧 v1/v2 消费；`.ssdecoder` 由既有真实生成路径携带配置身份。上述文件都不是 MCU 代码加载格式，也未声明与未来 TreeDiagram 参数协议兼容。
 
 ## Types
 Core、MCU/Platform、Board、Device、Algorithm、FlightLogic、OS、Protocol、HardwareConfigurationProvider、DevelopmentEnvironment。

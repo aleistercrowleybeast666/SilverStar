@@ -1,0 +1,341 @@
+{
+  "schema_id": "silverstar.mission-functions/1",
+  "schema_version": 1,
+  "maximum_functions": 32,
+  "boundary_kinds": [
+    "system_prepare",
+    "mission_start",
+    "stage_enter",
+    "system_landed",
+    "lifecycle_end"
+  ],
+  "interval": "start inclusive, stop exclusive; system preparation and accepted START retain their existing semantics",
+  "once_semantics": "Request once per runtime instance; completion/failure must be reported explicitly, never inferred from a single invocation",
+  "parameter_source": "Project algorithm_parameters and plugin actual-value contract; bindings do not copy parameters",
+  "backend": "Legacy adapter declarations preserve the installed manifest identities. Arbitrary stage bounds remain desktop-reference only.",
+  "adapters": [
+    {
+      "plugin_id": "silverstar.algorithm.alignment.external_attitude_source",
+      "instance_id": "alignment",
+      "category": "preparation",
+      "executions": [
+        "once"
+      ],
+      "support": "system_lifecycle",
+      "singleton": true,
+      "output": "alignment.initial_state",
+      "start": "system_prepare",
+      "stop": "lifecycle_end",
+      "initialization": "existing_system_prepare",
+      "parameter_timing": "build_only",
+      "completion": "explicit_plugin_complete_or_failure",
+      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "supported_version": "0.1.0"
+    },
+    {
+      "plugin_id": "silverstar.algorithm.alignment.gravity_known_yaw",
+      "instance_id": "alignment",
+      "category": "preparation",
+      "executions": [
+        "once"
+      ],
+      "support": "system_lifecycle",
+      "singleton": true,
+      "output": "alignment.initial_state",
+      "start": "system_prepare",
+      "stop": "lifecycle_end",
+      "initialization": "existing_system_prepare",
+      "parameter_timing": "build_only",
+      "completion": "explicit_plugin_complete_or_failure",
+      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "supported_version": "0.1.0"
+    },
+    {
+      "plugin_id": "silverstar.algorithm.alignment.gravity_mag_triad",
+      "instance_id": "alignment",
+      "category": "preparation",
+      "executions": [
+        "once"
+      ],
+      "support": "system_lifecycle",
+      "singleton": true,
+      "output": "alignment.initial_state",
+      "start": "system_prepare",
+      "stop": "lifecycle_end",
+      "initialization": "existing_system_prepare",
+      "parameter_timing": "build_only",
+      "completion": "explicit_plugin_complete_or_failure",
+      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "supported_version": "0.1.0"
+    },
+    {
+      "plugin_id": "silverstar.algorithm.alignment.hardware_quat_6axis_known_yaw",
+      "instance_id": "alignment",
+      "category": "preparation",
+      "executions": [
+        "once"
+      ],
+      "support": "system_lifecycle",
+      "singleton": true,
+      "output": "alignment.initial_state",
+      "start": "system_prepare",
+      "stop": "lifecycle_end",
+      "initialization": "existing_system_prepare",
+      "parameter_timing": "build_only",
+      "completion": "explicit_plugin_complete_or_failure",
+      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "supported_version": "0.1.0"
+    },
+    {
+      "plugin_id": "silverstar.algorithm.alignment.hardware_quat_9axis",
+      "instance_id": "alignment",
+      "category": "preparation",
+      "executions": [
+        "once"
+      ],
+      "support": "system_lifecycle",
+      "singleton": true,
+      "output": "alignment.initial_state",
+      "start": "system_prepare",
+      "stop": "lifecycle_end",
+      "initialization": "existing_system_prepare",
+      "parameter_timing": "build_only",
+      "completion": "explicit_plugin_complete_or_failure",
+      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "supported_version": "0.1.0"
+    },
+    {
+      "plugin_id": "silverstar.algorithm.alignment.vector_constraints",
+      "instance_id": "alignment",
+      "category": "preparation",
+      "executions": [
+        "once"
+      ],
+      "support": "system_lifecycle",
+      "singleton": true,
+      "output": "alignment.initial_state",
+      "start": "system_prepare",
+      "stop": "lifecycle_end",
+      "initialization": "existing_system_prepare",
+      "parameter_timing": "build_only",
+      "completion": "explicit_plugin_complete_or_failure",
+      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "supported_version": "0.1.0"
+    },
+    {
+      "plugin_id": "silverstar.algorithm.calibration",
+      "instance_id": "calibration",
+      "category": "preparation",
+      "executions": [
+        "once"
+      ],
+      "support": "system_lifecycle",
+      "singleton": true,
+      "output": "calibration.profile",
+      "start": "system_prepare",
+      "stop": "lifecycle_end",
+      "initialization": "existing_system_prepare",
+      "parameter_timing": "build_only",
+      "completion": "explicit_plugin_complete_or_failure",
+      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "supported_version": "0.1.0"
+    },
+    {
+      "plugin_id": "silverstar.algorithm.estimator.eskf15",
+      "instance_id": "estimator",
+      "category": "estimation",
+      "executions": [
+        "continuous"
+      ],
+      "support": "system_lifecycle",
+      "singleton": true,
+      "output": "navigation.estimate",
+      "start": "mission_start",
+      "stop": "system_landed",
+      "initialization": "accepted_start_transaction",
+      "parameter_timing": "build_only",
+      "completion": "existing_system_lifecycle",
+      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "supported_version": "0.4.0"
+    },
+    {
+      "plugin_id": "silverstar.algorithm.estimator.eskf20",
+      "instance_id": "estimator",
+      "category": "estimation",
+      "executions": [
+        "continuous"
+      ],
+      "support": "system_lifecycle",
+      "singleton": true,
+      "output": "navigation.estimate",
+      "start": "mission_start",
+      "stop": "system_landed",
+      "initialization": "accepted_start_transaction",
+      "parameter_timing": "build_only",
+      "completion": "existing_system_lifecycle",
+      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "supported_version": "0.3.0"
+    },
+    {
+      "plugin_id": "silverstar.algorithm.estimator.inekf15",
+      "instance_id": "estimator",
+      "category": "estimation",
+      "executions": [
+        "continuous"
+      ],
+      "support": "system_lifecycle",
+      "singleton": true,
+      "output": "navigation.estimate",
+      "start": "mission_start",
+      "stop": "system_landed",
+      "initialization": "accepted_start_transaction",
+      "parameter_timing": "build_only",
+      "completion": "existing_system_lifecycle",
+      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "supported_version": "0.3.0"
+    },
+    {
+      "plugin_id": "silverstar.algorithm.estimator.inekf20",
+      "instance_id": "estimator",
+      "category": "estimation",
+      "executions": [
+        "continuous"
+      ],
+      "support": "system_lifecycle",
+      "singleton": true,
+      "output": "navigation.estimate",
+      "start": "mission_start",
+      "stop": "system_landed",
+      "initialization": "accepted_start_transaction",
+      "parameter_timing": "build_only",
+      "completion": "existing_system_lifecycle",
+      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "supported_version": "0.3.0"
+    },
+    {
+      "plugin_id": "silverstar.algorithm.estimator.kf6",
+      "instance_id": "estimator",
+      "category": "estimation",
+      "executions": [
+        "continuous"
+      ],
+      "support": "system_lifecycle",
+      "singleton": true,
+      "output": "navigation.estimate",
+      "start": "mission_start",
+      "stop": "system_landed",
+      "initialization": "accepted_start_transaction",
+      "parameter_timing": "build_only",
+      "completion": "existing_system_lifecycle",
+      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "supported_version": "0.4.0"
+    },
+    {
+      "plugin_id": "silverstar.algorithm.estimator.sf6",
+      "instance_id": "estimator",
+      "category": "estimation",
+      "executions": [
+        "continuous"
+      ],
+      "support": "system_lifecycle",
+      "singleton": true,
+      "output": "navigation.estimate",
+      "start": "mission_start",
+      "stop": "system_landed",
+      "initialization": "accepted_start_transaction",
+      "parameter_timing": "build_only",
+      "completion": "existing_system_lifecycle",
+      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "supported_version": "0.2.0"
+    },
+    {
+      "plugin_id": "silverstar.algorithm.ins.coning2_sculling2",
+      "instance_id": "ins",
+      "category": "estimation",
+      "executions": [
+        "continuous"
+      ],
+      "support": "system_lifecycle",
+      "singleton": true,
+      "output": "navigation.pure_ins",
+      "start": "mission_start",
+      "stop": "system_landed",
+      "initialization": "accepted_start_transaction",
+      "parameter_timing": "build_only",
+      "completion": "existing_system_lifecycle",
+      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "supported_version": "0.1.0"
+    },
+    {
+      "plugin_id": "silverstar.flight_logic.mission_action.gpio_output_service",
+      "instance_id": "recovery_action",
+      "category": "control",
+      "executions": [
+        "continuous"
+      ],
+      "support": "system_lifecycle",
+      "singleton": true,
+      "output": "mission.recovery_request",
+      "start": "system_prepare",
+      "stop": "lifecycle_end",
+      "initialization": "existing_system_prepare",
+      "parameter_timing": "build_only",
+      "completion": "existing_system_lifecycle",
+      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "supported_version": "0.1.0"
+    },
+    {
+      "plugin_id": "silverstar.protocol.logging.sslog_0_0",
+      "instance_id": "recording",
+      "category": "recording",
+      "executions": [
+        "continuous"
+      ],
+      "support": "system_lifecycle",
+      "singleton": true,
+      "output": "log.session",
+      "start": "system_prepare",
+      "stop": "lifecycle_end",
+      "initialization": "existing_system_prepare",
+      "parameter_timing": "build_only",
+      "completion": "existing_system_lifecycle",
+      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "supported_version": "0.2.0"
+    },
+    {
+      "plugin_id": "silverstar.protocol.telemetry.air_m0",
+      "instance_id": "telemetry",
+      "category": "telemetry",
+      "executions": [
+        "continuous"
+      ],
+      "support": "system_lifecycle",
+      "singleton": true,
+      "output": "telemetry.air",
+      "start": "system_prepare",
+      "stop": "lifecycle_end",
+      "initialization": "existing_system_prepare",
+      "parameter_timing": "build_only",
+      "completion": "existing_system_lifecycle",
+      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "supported_version": "0.1.0"
+    }
+  ],
+  "condition_source_strategy_order": [
+    "estimator",
+    "ins"
+  ],
+  "condition_signal_outputs": {
+    "altitude_agl_m": [
+      "navigation.estimate",
+      "navigation.pure_ins"
+    ],
+    "vertical_velocity_mps": [
+      "navigation.estimate",
+      "navigation.pure_ins"
+    ]
+  },
+  "condition_source_semantics": "The first selected project navigation strategy owns numeric condition signals. Its output must be available before entry-condition sampling; producer start at the same entry cannot satisfy it.",
+  "external_event_semantics": "Events such as launch_detected are supplied by their authoritative producer; this adapter does not infer an estimator dependency from an event or stage name.",
+  "reference_snapshot_order": "One validated state/time snapshot: evaluate entry condition, commit at most one stage transition, stop intervals, start intervals in dependency order, then return each continuous instance once. No algorithm/hardware execution is inferred."
+}

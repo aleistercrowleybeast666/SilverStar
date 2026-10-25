@@ -51,6 +51,14 @@ class ProjectValidationResult:
         return not any(issue.level == "error" for issue in self.issues)
 
 
+def MissionProcessIssues_Get(model: ProjectModel, *, editing: bool = False) -> tuple[ValidationIssue, ...]:
+    if model.mission_process is None:
+        return ()
+    return (ValidationIssue('warning' if editing else 'error', 'MISSION_PROCESS_REFERENCE_ONLY',
+        'mission_process is desktop-reference only: no firmware phase-scheduling consumer is implemented. '
+        'The draft can be saved, but Flight generation must reject it instead of executing the legacy process.'),)
+
+
 def SensorInstallationIssues_Get(
     model: ProjectModel, catalog: PluginCatalog, *, editing: bool = False,
 ) -> tuple[ValidationIssue, ...]:
@@ -807,6 +815,10 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
             (ValidationIssue("error", "device_variant", str(error)),)
         )
     issues.extend(SensorInstallationIssues_Get(model, catalog))
+    issues.extend(MissionProcessIssues_Get(model))
+    from silverstar_fccg.project.mission_functions import Functions_Issues
+    issues.extend(ValidationIssue(row.level, row.code, row.function_id + ': ' + row.message)
+                  for row in Functions_Issues(model, catalog))
     issues.extend(ValidationIssue("error", "COMPACT_LOG_PROFILE", message)
                   for message in CompactLogProfileErrors_Get(model, catalog))
     from silverstar_fccg.project.compact import CompactErrors_Get
@@ -1222,6 +1234,10 @@ def Project_EditValidate(
         )
 
     issues.extend(SensorInstallationIssues_Get(model, catalog, editing=True))
+    issues.extend(MissionProcessIssues_Get(model, editing=True))
+    from silverstar_fccg.project.mission_functions import Functions_Issues
+    issues.extend(ValidationIssue('warning', row.code, row.function_id + ': ' + row.message)
+                  for row in Functions_Issues(model, catalog))
     issues.extend(ValidationIssue("error", "COMPACT_LOG_PROFILE", message)
                   for message in CompactLogProfileErrors_Get(model, catalog))
     from silverstar_fccg.project.compact import CompactErrors_Get
