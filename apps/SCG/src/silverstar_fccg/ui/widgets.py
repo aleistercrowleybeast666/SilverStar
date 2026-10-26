@@ -150,11 +150,13 @@ class CollapsibleSection(QWidget):
         )
         self.toggle_button.setText(title)
         self.toggle_button.toggled.connect(self._Expanded_Set)
-        self.body = QWidget()
+        self.body = QWidget(self)
         self.body.setObjectName("collapsibleBody")
-        self.body.setVisible(expanded)
         layout.addWidget(self.toggle_button)
         layout.addWidget(self.body)
+        # Parent/layout ownership precedes visibility. Showing an expanded
+        # parentless body briefly created an independent blank native window.
+        self.body.setVisible(expanded)
 
     def _Expanded_Set(self, expanded: bool) -> None:
         self.toggle_button.setArrowType(

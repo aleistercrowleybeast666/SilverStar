@@ -1,5 +1,7 @@
 # Decoder Profile Package 1.2
 
+This page retains the exact 1.2 contract. The development branch additionally reads/writes 1.3 with a bound `object_catalog.json`; see the [implementation and compatibility record](../TELEMETRY_UNIFICATION_20261026.md). The 1.2 generation hash and five-member reading path remain unchanged.
+
 ## Historical firmware/Golden identity scope
 
 Statements below mentioning firmware `0.0.10` or `SILV0008` describe that explicitly named historical implementation and its Golden evidence. They do not claim all current algorithms have that build identity, nor upgrade their fidelity. Current runs report their own implementation, configuration, input contract and Golden/fidelity status.

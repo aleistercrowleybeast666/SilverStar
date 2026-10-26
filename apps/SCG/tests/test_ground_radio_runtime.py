@@ -35,10 +35,10 @@ def runtime_executables(tmp_path_factory):
     radio = root / "plugins/builtin/silverstar_device_telemetry_sx1281/payload"
     result = {}
     for name, cfg in {"single": config(), "multi": config(2),
-        "owner": config(3, 1), "shared_led": config(tx="led_a", rx="led_a"),
+        "owner": config(3, 1), "simplex": config(2), "shared_led": config(tx="led_a", rx="led_a"),
         "separate_led": config(tx="led_a", rx="led_b", rx_high=True)}.items():
         work = tmp_path_factory.mktemp(name)
-        (work / "ground_radio_config.h").write_text(GroundRadioConfig_Render(cfg), encoding="utf-8")
+        (work / "ground_radio_config.h").write_text(GroundRadioConfig_Render(cfg, "ss_tm.s.0_1" if name == "simplex" else ""), encoding="utf-8")
         (work / "project_resources.h").write_text(f"#define PROJECT_SX1281_INSTANCE_COUNT {len(cfg.radio_instances)}U\n", encoding="utf-8")
         includes = [work, core / "Inc", ground / "Core/Inc",
             root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
@@ -56,7 +56,7 @@ def runtime_executables(tmp_path_factory):
 
 
 @pytest.mark.parametrize("name,scenario", [
-    ("single", "routing"), ("single", "quiet"), ("single", "init_error"),
+    ("simplex", "simplex"), ("single", "routing"), ("single", "quiet"), ("single", "init_error"),
     ("single", "config_error"), ("single", "role_error"),
     ("multi", "routing"), ("multi", "quiet"), ("multi", "transient"),
     ("multi", "init_error"), ("multi", "retire_error"), ("multi", "forward"), ("multi", "wrap"),

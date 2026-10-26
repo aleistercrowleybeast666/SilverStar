@@ -18,10 +18,11 @@ class FunctionBindingsEditor(QWidget):
     importRequested = Signal(str)
     exportRequested = Signal(str)
 
-    def __init__(self, translator, categories, parent=None):
+    def __init__(self, translator, categories, parent=None, *, transactional=False):
         super().__init__(parent)
         self._translator = translator
         self.categories = tuple(categories)
+        self._transactional = transactional
         self._model = None
         self._selected = ''
         self._sections = {}
@@ -49,6 +50,7 @@ class FunctionBindingsEditor(QWidget):
         add=QPushButton(text('workflow.function.add'));add.setEnabled(self.add_combo.count()>0)
         add.clicked.connect(lambda:self.addRequested.emit(str(self.add_combo.currentData())))
         bar.addWidget(add);self.root.addWidget(toolbar)
+        toolbar.setVisible(not self._transactional)
         functions=[row for row in self._configuration['functions'] if row['category'] in self.categories]
         if functions:
             self.add_combo.setCurrentIndex(max(0,self.add_combo.findData(functions[0]['plugin_id'])))
@@ -90,10 +92,12 @@ class FunctionBindingsEditor(QWidget):
             actions=QHBoxLayout()
             owner=declaration.get('parameter_owner','')
             for key,signal in (('parameters',self.parametersRequested),('import',self.importRequested),('export',self.exportRequested)):
+                if self._transactional and key != 'parameters': continue
                 button=QPushButton(text('workflow.function.'+key));button.setEnabled(bool(owner))
                 button.clicked.connect(lambda _checked=False, selected=owner, callback=signal:callback.emit(selected))
                 actions.addWidget(button)
             remove=QPushButton(text('workflow.function.remove'))
+            remove.setVisible(not self._transactional)
             remove.setEnabled(function['category']=='estimation' and identity!='ins')
             remove.clicked.connect(lambda _checked=False, selected=identity:self.removeRequested.emit(selected))
             actions.addWidget(remove);body.addLayout(actions)
@@ -101,17 +105,21 @@ class FunctionBindingsEditor(QWidget):
             self.root.addWidget(card);self._sections[identity]=section
 
     def _BoundaryText_Get(self,boundary):
-        if boundary['kind']=='stage_enter':
+        if boundary['kind'] in ('stage_enter', 'stage_exit'):
             name=next((row['name'] for row in self._process['stages'] if row['stage_id']==boundary['stage_id']),boundary['stage_id'])
-            return self._translator.Text_Get('workflow.boundary.stage',name=name)
+            return self._translator.Text_Get('workflow.boundary.' + ('stage_exit' if boundary['kind']=='stage_exit' else 'stage'),name=name)
         return self._translator.Text_Get('workflow.boundary.'+boundary['kind'])
 
-    def _BoundaryCombo_Create(self,boundary):
+    def _BoundaryCombo_Create(self,boundary, *, stop=False):
         combo=StandardComboBox()
         for kind in ('system_prepare','mission_start','system_landed','lifecycle_end'):
             combo.addItem(self._translator.Text_Get('workflow.boundary.'+kind),(kind,''))
         for stage in self._process['stages']:
-            combo.addItem(self._translator.Text_Get('workflow.boundary.stage',name=stage['name']),('stage_enter',stage['stage_id']))
+            kind = 'stage_exit' if stop else 'stage_enter'
+            combo.addItem(self._translator.Text_Get('workflow.boundary.'+('stage_exit' if stop else 'stage'),name=stage['name']),(kind,stage['stage_id']))
+            # Preserve an old explicit entry-stop until the user migrates it.
+            if stop and boundary == {'kind':'stage_enter','stage_id':stage['stage_id']}:
+                combo.addItem(self._translator.Text_Get('workflow.boundary.legacy_stop',name=stage['name']),('stage_enter',stage['stage_id']))
         value=(boundary['kind'],boundary['stage_id'])
         index=combo.findData(value)
         if index<0:combo.addItem(self._translator.Text_Get('workflow.boundary.missing',id=boundary['stage_id']),value);index=combo.count()-1
@@ -124,7 +132,7 @@ class FunctionBindingsEditor(QWidget):
         section.ExpandedChanged.connect(lambda expanded,key=range_key:self._expanded.__setitem__(key,expanded))
         layout=QFormLayout(section.body)
         draft=self._range_drafts.get(function['instance_id'],function)
-        start=self._BoundaryCombo_Create(draft['start']);stop=self._BoundaryCombo_Create(draft['stop'])
+        start=self._BoundaryCombo_Create(draft['start']);stop=self._BoundaryCombo_Create(draft['stop'],stop=True)
         layout.addRow(self._translator.Text_Get('workflow.start'),start)
         layout.addRow(self._translator.Text_Get('workflow.stop'),stop)
         note=QLabel(self._translator.Text_Get('workflow.range_note'));note.setWordWrap(True);layout.addRow(note)
@@ -151,6 +159,7 @@ class FunctionBindingsEditor(QWidget):
                 depends_on=[key for key,check in dependencies.items() if check.isChecked()])
             return selected
         def Draft_Change(*_args):
+            if start.currentData() is None or stop.currentData() is None: return
             self._range_drafts[function['instance_id']]=Collect()
         for combo in (start,stop,*input_editors.values()):
             combo.setEnabled(not lifecycle_only)
@@ -162,6 +171,8 @@ class FunctionBindingsEditor(QWidget):
             candidate=deepcopy(self._configuration)
             selected=next(row for row in candidate['functions'] if row['instance_id']==function['instance_id'])
             selected.update(Collect())
+            if any(row[key]['kind']=='stage_exit' for row in candidate['functions'] for key in ('start','stop')):
+                candidate['schema_version']=2
             self._range_drafts.pop(function['instance_id'],None)
             self.functionsChanged.emit(candidate)
         apply.clicked.connect(Apply);apply.setVisible(not lifecycle_only);layout.addRow(apply)

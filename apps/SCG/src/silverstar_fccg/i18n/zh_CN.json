@@ -1157,7 +1157,7 @@
   "workflow.start": "开始边界",
   "workflow.stop": "停止边界",
   "workflow.dependency": "依赖功能",
-  "workflow.range_note": "区间包含开始、不包含停止；自定义阶段边界仅参考，尚无固件调度消费者。一次性任务不会因一次调用自动完成。",
+  "workflow.range_note": "持续：开始阶段进入至结束阶段退出，包含结束阶段；相同阶段表示仅在该阶段持续。旧配置的进入结束边界保持原义，手动选择退出边界后迁移。当前任意阶段区间尚无固件调度支持，生成检查会明确拒绝。",
   "workflow.import.preview": "预览参数档变化",
   "workflow.import.changes": "将修改 {count} 个参数；共享参数会同步关联的唯一配置。硬件与任务流程不替换。",
   "workspace.hardware.more": "另 {count} 项",
@@ -1178,5 +1178,13 @@
   "workflow.lifecycle_only": "当前后端不支持按自定义阶段门控记录流或切换遥测档；这里仅显示系统生命周期。记录内容和节奏在任务记录卡编辑，日志准备、必要事件、排空和关闭不由阶段重置。",
   "workflow.restore_lifecycle": "恢复已有系统生命周期边界",
   "workspace.checks.issues": "问题列表 · 点击定位",
-  "workspace.checks.issue_summary": "当前配置：{errors} 项错误、{warnings} 项提示。目标独立校验；未选的地面目标不会阻挡飞控独立生成。"
+  "workspace.checks.issue_summary": "当前配置：{errors} 项错误、{warnings} 项提示。目标独立校验；未选的地面目标不会阻挡飞控独立生成。",
+  "field.ground_generate_include": "本次生成包含地面端",
+  "telemetry.mode.s": "SS-TM-S 0.1 · 预飞半双工；START 完成后单向下行",
+  "telemetry.mode.h": "SS-TM-H 0.1 · 全程有界半双工",
+  "telemetry.mode.legacy": "AIR M0 · 历史协议（显式兼容）",
+  "telemetry.budget": "默认任务计划：空口发送 {tx}%；含收发窗口的调度需求 {scheduler}%（模型预算，不是 RF 实测；事件另占余量）",
+  "workflow.transaction.shared": "这些参数由所有引用该实例的阶段共享；整个弹窗确认后统一提交，取消则全部丢弃。数值框按回车确认。",
+  "workflow.boundary.stage_exit": "{name} 退出",
+  "workflow.boundary.legacy_stop": "{name} 进入（旧版结束边界）"
 }

@@ -23,6 +23,7 @@ SystemDeviceResult Sx1281TelemetryInstance_RecoveryDiagnosticsGet(
 const char *Sx1281TelemetryInstance_NameGet(uint8_t instance);
 SystemDeviceResult Sx1281TelemetryInstance_Init(uint8_t instance);
 SystemDeviceResult Sx1281TelemetryInstance_Start(uint8_t instance);
+SystemDeviceResult Sx1281TelemetryInstance_ModeSet(uint8_t instance, SystemTelemetryMode mode);
 SystemDeviceResult Sx1281TelemetryInstance_Stop(uint8_t instance);
 SystemDeviceResult Sx1281TelemetryInstance_Send(
     uint8_t instance, const uint8_t *data, uint16_t length);

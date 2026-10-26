@@ -196,7 +196,8 @@
         "pass_instance": true,
         "operations": {
           "SendControl": "Sx1281TelemetryInstance_SendControl",
-          "TxResultGet": "Sx1281TelemetryInstance_TxResultGet"
+          "TxResultGet": "Sx1281TelemetryInstance_TxResultGet",
+          "ModeSet": "Sx1281TelemetryInstance_ModeSet"
         }
       }
     },
@@ -240,9 +241,9 @@
         }
       ]
     },
-      "source_origins": {
-        "default": "reference_base",
-        "Devices/Telemetry/SX1281/Inc/sx1281_config.h": "fccg_radio_variant_capabilities",
+    "source_origins": {
+      "default": "reference_base",
+      "Devices/Telemetry/SX1281/Inc/sx1281_config.h": "fccg_radio_variant_capabilities",
       "Devices/Telemetry/SX1281/Inc/sx1281_bus.h": "fccg_multi_instance_context",
       "Devices/Telemetry/SX1281/Inc/sx1281_device.h": "fccg_multi_instance_context",
       "Devices/Telemetry/SX1281/Adapter/Inc/sx1281_instance.h": "fccg_multi_instance_context",

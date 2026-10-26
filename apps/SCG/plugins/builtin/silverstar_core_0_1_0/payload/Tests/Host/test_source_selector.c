@@ -402,6 +402,12 @@ SystemDeviceResult ProjectTelemetryInstance_Start(uint8_t instance_id)
     { s_telemetry_health[instance_id].started = 1U; }
     return s_telemetry_start_result[instance_id];
 }
+SystemDeviceResult ProjectTelemetryInstance_ModeSet(uint8_t instance_id, SystemTelemetryMode mode)
+{
+    (void)instance_id;
+    return (mode == SYSTEM_TELEMETRY_HALF_DUPLEX) ? SYSTEM_DEVICE_OK : SYSTEM_DEVICE_UNSUPPORTED;
+}
+
 SystemDeviceResult ProjectTelemetryInstance_Stop(uint8_t instance_id)
 {
     s_telemetry_stop_count[instance_id]++;

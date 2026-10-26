@@ -395,6 +395,12 @@ class MainWindow(QMainWindow):
         self.workflow_page = FlightWorkflowPage(self._translator,self.flight_configuration_page,
             self.algorithm_parameters_page)
         self.build_page.TargetEditors_Attach(self.board_hardware_page,self.ground_target_page)
+        # One protocol owner, beside the single shared link on page one.
+        protocol_group = self.flight_configuration_page.telemetry_protocol_group
+        self.workflow_page.recording.body.layout().removeWidget(protocol_group)
+        self.hardware_workspace.root_layout.insertWidget(
+            self.hardware_workspace.root_layout.indexOf(self.hardware_workspace.link_summary) + 1, protocol_group)
+
         self._page_widgets = (self.hardware_workspace,self.workflow_page,self.build_page)
         for page in self._page_widgets:
             self.pages.addWidget(page)
@@ -549,6 +555,7 @@ class MainWindow(QMainWindow):
         self.flight_configuration_page.mission_profile_panel.exportRequested.connect(self._MissionProfile_Export)
         self.flight_configuration_page.mission_process_panel.processChanged.connect(self._MissionProcess_Queue)
         self.workflow_page.functionsChanged.connect(self._Functions_Queue)
+        self.workflow_page.configurationChanged.connect(self._WorkflowTransaction_Apply)
         self.workflow_page.functionAddRequested.connect(self._Function_Add)
         self.workflow_page.functionRemoveRequested.connect(self._Function_Remove)
         self.workflow_page.parameterImportRequested.connect(self._ParameterProfile_Import)
@@ -2070,7 +2077,7 @@ class MainWindow(QMainWindow):
         )
         self.ground_target_page.Configuration_Set(
             model.ground_target, boards, tuple(radios), requirements,
-            GroundTargetIssues_Get(model, self._service.catalog),
+            GroundTargetIssues_Get(replace(model, ground_target=replace(model.ground_target, enabled=True)), self._service.catalog),
         )
         ground = model.ground_target
         platform = self._service.PlatformMatchView_Get(
@@ -2502,6 +2509,12 @@ class MainWindow(QMainWindow):
         self._mission_process_pending=True
         QTimer.singleShot(0,self,self._MissionProcessChanges_Apply)
 
+    def _WorkflowTransaction_Apply(self, configuration):
+        def Apply(candidate):
+            for key in ('mission_process', 'mission_functions', 'algorithm_parameters', 'logging_streams'):
+                setattr(candidate, key, deepcopy(getattr(configuration, key)))
+        self._ProjectConfiguration_Change(Apply)
+
     def _MissionProcessChanges_Apply(self):
         if not self._mission_process_pending:return
         candidate=self._pending_mission_process
@@ -2702,18 +2715,14 @@ class MainWindow(QMainWindow):
         if not component_id or not profile_id:
             return
         manifest = self._service.Plugin_Get(component_id)
-        self._ProjectConfiguration_Change(
-            lambda candidate: candidate.protocols.__setitem__(
-                category,
-                ProtocolSelection(
-                    component=manifest.component_id,
-                    version=manifest.version,
-                    profile=profile_id,
-                    manifest_sha256=manifest.ManifestSha256_Get(),
-                ),
-            ),
-            logging_availability_changed=category == "logging",
-        )
+        def change(candidate):
+            candidate.protocols[category] = ProtocolSelection(
+                component=manifest.component_id, version=manifest.version,
+                profile=profile_id, manifest_sha256=manifest.ManifestSha256_Get())
+            if category == "telemetry":
+                from dataclasses import replace
+                candidate.air_link = replace(candidate.air_link, protocol_profile=profile_id)
+        self._ProjectConfiguration_Change(change, logging_availability_changed=category == "logging")
 
     def _Logging_Change(self) -> None:
         if self._displaying_model:

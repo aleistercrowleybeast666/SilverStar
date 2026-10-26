@@ -308,6 +308,7 @@ def GeneratedFiles_Render(
         "Generated/Inc/project_capability_routes.h": _CapabilityRoutesHeader_Render(),
         "Generated/Inc/project_device_build_capabilities.h": _DeviceBuildCapabilitiesHeader_Render(model, catalog),
         "Generated/Inc/project_algorithm_parameters.h": AlgorithmParametersHeader_Render(model, catalog),
+        "Generated/Inc/project_telemetry_protocol.h": _TelemetryProtocolHeader_Render(model).encode("utf-8"),
         "Generated/Inc/project_flight_config.h": _FlightConfigHeader_Render(
             model, catalog
         ),
@@ -875,6 +876,16 @@ def _TestBuildIdentity_Get(model: ProjectModel) -> dict[str, Any] | None:
             "source_commit": commit, "version_parts": [int(part) for part in parts]}
 
 
+def _TelemetryProtocolHeader_Render(model):
+    selection = model.protocols.get('telemetry')
+    extended = selection is not None and selection.component == 'silverstar.protocol.telemetry.ss_tm'
+    header = 'ss_tm_protocol.h' if extended else 'air_protocol.h'
+    sequence = 'uint16_t' if extended else 'uint8_t'
+    return ('#ifndef __PROJECT_TELEMETRY_PROTOCOL_H\n#define __PROJECT_TELEMETRY_PROTOCOL_H\n'
+            + '#include "' + header + '"\n' + 'typedef ' + sequence + ' TelemetrySequence;\n'
+            + '#include "telemetry_extended_if.h"\n#endif /* __PROJECT_TELEMETRY_PROTOCOL_H */\n')
+
+
 def _FlightConfigHeader_Render(
     model: ProjectModel, catalog: PluginCatalog
 ) -> str:
@@ -907,6 +918,13 @@ def _FlightConfigHeader_Render(
             "1U" if model.protocols.get("logging") is not None else "0U",
         ),
     ]
+    if model.protocols.get('telemetry') is not None and model.protocols['telemetry'].component == 'silverstar.protocol.telemetry.ss_tm':
+        from silverstar_telemetry.plan import LoraAirtimeUs_Compute
+        link = model.air_link
+        phy = dict(sf=link.spreading_factor, bandwidth_hz=link.bandwidth_hz,
+                   coding_rate=link.coding_rate, preamble=link.preamble_symbols)
+        definitions.extend((('SYSTEM_TELEMETRY_TM_EVENT_AIRTIME_US', str(LoraAirtimeUs_Compute(32, **phy) + 4000) + 'ULL'),
+                            ('SYSTEM_TELEMETRY_TM_RX_GRANT_US', str(max(120000, ((LoraAirtimeUs_Compute(64, **phy)+999)//1000)*1000+4000))+'ULL')))
     definitions.extend(_DeviceRuntimeDefaults_Get(model, catalog))
     from silverstar_fccg.generator.maintenance_uart import MaintenanceUart_Profile
     uart_profile = MaintenanceUart_Profile(model, catalog)
@@ -3229,7 +3247,7 @@ def _DeviceInstanceFunctionSwitch_Render(
             for key, value in overrides.items()
         ):
             raise ValueError("Device-instance operation overrides are invalid")
-        if (label == "Telemetry" and operation in ("SendControl", "TxResultGet")
+        if (label == "Telemetry" and operation in ("SendControl", "TxResultGet", "ModeSet")
                 and operation not in overrides):
             cases.append(f"        case {instance_id}U: return SYSTEM_DEVICE_UNSUPPORTED;")
             continue

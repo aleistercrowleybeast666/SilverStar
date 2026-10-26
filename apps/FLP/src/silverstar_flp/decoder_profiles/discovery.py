@@ -310,6 +310,26 @@ class DecoderProfileCache:
         base = Path(local_app_data) if local_app_data else Path.home() / "AppData" / "Local"
         return base / "SilverStar" / "FLP" / "decoder_profiles"
 
+    def ExactCandidates_Get(self, descriptor: DecoderProfileDescriptor) -> tuple[Path, ...]:
+        """Only the Descriptor's exact hash-prefix directory, at most 64 files.
+
+        Every candidate is subsequently fully loaded and matched; a directory
+        name is an index hint, never sufficient evidence of compatibility.
+        """
+        from itertools import islice
+        prefix = descriptor.generation_profile_hash_128
+        if len(prefix) != 32 or any(character not in '0123456789abcdef' for character in prefix):
+            raise DecoderProfileError('decoder_cache_descriptor_hash_invalid')
+        directory = self.root / prefix
+        self._Target_Validate(directory)
+        if not directory.is_dir() or directory.is_symlink():
+            return ()
+        entries = list(islice(directory.iterdir(), 65))
+        if len(entries) > 64:
+            raise DecoderProfileError('decoder_cache_search_limit_reached')
+        return tuple(sorted((path for path in entries if path.is_file() and not path.is_symlink()
+                             and path.suffix.casefold() == '.ssdecoder'), key=lambda path: path.name))
+
     def Package_Import(
         self,
         source_path: Path,

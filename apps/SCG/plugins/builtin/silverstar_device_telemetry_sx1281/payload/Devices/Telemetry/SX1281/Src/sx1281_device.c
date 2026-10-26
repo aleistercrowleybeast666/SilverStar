@@ -106,6 +106,8 @@ typedef struct
     uint8_t tx_control_burst;
     uint8_t rx_window_active;
     uint8_t schedule_role;
+    LoraOperatingMode operating_mode;
+    uint32_t mode_cancelled_count;
     uint8_t rx_packet_active;
     uint32_t rx_packet_started_ms;
     uint32_t tx_ids[LORA_TX_QUEUE_DEPTH];
@@ -468,6 +470,12 @@ static void Lora_ClearRuntimeState(uint8_t instance)
     uint32_t primask = Lora_IrqLock();
     LoraStats lifetime_stats = s_stats;
     uint32_t next_tx_id = s_contexts[instance].next_tx_id;
+    LoraOperatingMode mode = s_contexts[instance].operating_mode;
+    uint8_t role = s_contexts[instance].schedule_role;
+    uint32_t cancelled = s_contexts[instance].mode_cancelled_count;
+    SILVERSTAR_ASSERT((mode == LoraOperatingMode_HalfDuplex) ||
+        (mode == LoraOperatingMode_TransmitOnly) || (mode == LoraOperatingMode_ReceiveOnly),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
 
     /* Retire receipts and READY, but never reuse an old tracked TX ID or
      * rewind counters observed by the source selector across recovery. */
@@ -478,6 +486,9 @@ static void Lora_ClearRuntimeState(uint8_t instance)
     s_stats.last_rx_snr = 0;
     s_stats.last_rx_type = 0U;
     s_contexts[instance].next_tx_id = next_tx_id;
+    s_contexts[instance].operating_mode = mode;
+    s_contexts[instance].schedule_role = role;
+    s_contexts[instance].mode_cancelled_count = cancelled;
     s_rx_error_code = IRQ_HEADER_ERROR_CODE;
     s_stats.radio_state = LORA_RADIO_STATE_NOT_INIT;
     Lora_IrqUnlock(primask);
@@ -526,6 +537,7 @@ static uint8_t Lora_TxIdPending(uint8_t instance, uint32_t id)
 static uint8_t Lora_TxQueuePushClass(uint8_t instance, const uint8_t *data,
     uint8_t len, uint8_t control, uint32_t *transaction_id)
 {
+    if (s_contexts[instance].operating_mode == LoraOperatingMode_ReceiveOnly) { return 0U; }
     uint32_t primask;
     uint32_t id = 0U;
     if ((data == NULL) || (len == 0U) || (len > LORA_MAX_PAYLOAD_LEN)) { return 0U; }
@@ -991,6 +1003,8 @@ LoraInitResult Lora_Init(uint8_t instance)
 
 void Lora_StartRx(uint8_t instance)
 {
+    if ((instance < PROJECT_SX1281_INSTANCE_COUNT) &&
+        (s_contexts[instance].operating_mode == LoraOperatingMode_TransmitOnly)) { return; }
     SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     if (s_inited == 0)
@@ -1038,6 +1052,9 @@ void Lora_StartRx(uint8_t instance)
 
 LoraTxEnqueueResult Lora_TxEnqueue(uint8_t instance, const uint8_t *data, uint8_t len)
 {
+    if ((instance < PROJECT_SX1281_INSTANCE_COUNT) &&
+        (s_contexts[instance].operating_mode == LoraOperatingMode_ReceiveOnly))
+    { return LORA_TX_ENQUEUE_MODE_BLOCKED; }
     SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     if (s_inited == 0)
@@ -1061,6 +1078,9 @@ LoraTxEnqueueResult Lora_TxEnqueue(uint8_t instance, const uint8_t *data, uint8_
 
 LoraTxEnqueueResult Lora_TxEnqueuePriority(uint8_t instance, const uint8_t *data, uint8_t len)
 {
+    if ((instance < PROJECT_SX1281_INSTANCE_COUNT) &&
+        (s_contexts[instance].operating_mode == LoraOperatingMode_ReceiveOnly))
+    { return LORA_TX_ENQUEUE_MODE_BLOCKED; }
     SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     if (s_inited == 0)
@@ -1085,6 +1105,9 @@ LoraTxEnqueueResult Lora_TxEnqueuePriority(uint8_t instance, const uint8_t *data
 LoraTxEnqueueResult Lora_TxEnqueueTracked(uint8_t instance,
     const uint8_t *data, uint8_t len, uint32_t *transaction_id)
 {
+    if ((instance < PROJECT_SX1281_INSTANCE_COUNT) &&
+        (s_contexts[instance].operating_mode == LoraOperatingMode_ReceiveOnly))
+    { return LORA_TX_ENQUEUE_MODE_BLOCKED; }
     SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     if (transaction_id == NULL) { return LORA_TX_ENQUEUE_BAD_PARAM; }
@@ -1379,6 +1402,61 @@ static void Lora_RxErrorProcess(uint8_t instance)
     }
 }
 
+static uint8_t Lora_OperatingModeProcess(uint8_t instance)
+{
+    LoraOperatingMode mode = s_contexts[instance].operating_mode;
+    SILVERSTAR_ASSERT((mode == LoraOperatingMode_HalfDuplex) ||
+        (mode == LoraOperatingMode_TransmitOnly) || (mode == LoraOperatingMode_ReceiveOnly),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    SILVERSTAR_ASSERT(s_tx_busy <= 1U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if (mode == LoraOperatingMode_HalfDuplex) { return 0U; }
+    if (s_tx_busy != 0U) { return 1U; }
+    if (mode == LoraOperatingMode_ReceiveOnly)
+    { if (s_radio_in_rx == 0U) { Lora_StartRx(instance); } return 1U; }
+    if ((s_radio_in_rx != 0U) && (Lora_RadioRecover(instance, 0U) == 0U)) { return 1U; }
+    if (s_tx_count != 0U) { Lora_TryStartNextTx(instance); }
+    return 1U;
+}
+
+LoraOperatingMode Lora_OperatingModeGet(uint8_t instance)
+{
+    SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    return s_contexts[instance].operating_mode;
+}
+
+LoraModeSetResult Lora_OperatingModeSet(uint8_t instance, LoraOperatingMode mode)
+{
+    uint32_t primask;
+    if ((instance >= PROJECT_SX1281_INSTANCE_COUNT) || ((mode != LoraOperatingMode_HalfDuplex) &&
+        (mode != LoraOperatingMode_TransmitOnly) && (mode != LoraOperatingMode_ReceiveOnly)))
+    { return LoraModeSetResult_InvalidArgument; }
+    /* An idempotent policy update must not stop an active RX or erase its
+     * half-duplex grant. Ground reapplies desired policy after recovery. */
+    if ((s_contexts[instance].operating_mode == mode) && (s_inited != 0U))
+    { return LoraModeSetResult_Ok; }
+    if ((s_tx_busy != 0U) || (s_tx_done_flag != 0U) || (s_tx_timeout_flag != 0U) ||
+        (s_control_transaction.state == LoraControlStateActive) ||
+        (s_control_transaction.state == LoraControlStateSubmitted)) { return LoraModeSetResult_Busy; }
+    s_contexts[instance].operating_mode = mode;
+    if (s_inited == 0U) { return LoraModeSetResult_NotReady; }
+    if ((s_radio_in_rx != 0U) && (Lora_RadioRecover(instance, 0U) == 0U)) { return LoraModeSetResult_IoError; }
+    primask = Lora_IrqLock();
+    Lora_TxQueueAssert(instance); Lora_RxQueueAssert(instance);
+    if (mode == LoraOperatingMode_ReceiveOnly)
+    {
+        s_contexts[instance].mode_cancelled_count += s_tx_count;
+        s_tx_count = 0U; s_tx_control_count = 0U; s_contexts[instance].tx_control_burst = 0U;
+        s_tx_head = 0U; s_tx_tail = 0U;
+    }
+    if (mode == LoraOperatingMode_TransmitOnly)
+    { s_rx_head = 0U; s_rx_tail = 0U; s_rx_count = 0U; }
+    s_contexts[instance].rx_window_active = 0U;
+    Lora_IrqUnlock(primask);
+    return LoraModeSetResult_Ok;
+}
+
 void Lora_Process(uint8_t instance)
 {
     SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
@@ -1411,6 +1489,7 @@ void Lora_Process(uint8_t instance)
     if (s_inited == 0U) { return; }
     Lora_RxErrorProcess(instance);
     if (s_inited == 0U) { return; }
+    if (Lora_OperatingModeProcess(instance) != 0U) { return; }
     if (s_tx_busy == 0)
     {
         if (Lora_RxPacketHeld(instance) != 0U) { return; }
@@ -1550,6 +1629,7 @@ LoraDiagResult Lora_IrqClear(uint8_t instance, uint16_t *raw_before)
 
 static LoraDiagResult Lora_ForceRxContinuousDirect(uint8_t instance)
 {
+    if (s_contexts[instance].operating_mode == LoraOperatingMode_TransmitOnly) { return LORA_DIAG_RESULT_BUSY; }
     SILVERSTAR_ASSERT(instance < PROJECT_SX1281_INSTANCE_COUNT,
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
     uint32_t primask;

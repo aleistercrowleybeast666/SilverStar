@@ -2,9 +2,12 @@ $ErrorActionPreference = 'Stop'
 
 $repoRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '..')).Path
 $architectureTargetProfile = 'SilverStar_F407'
+$extendedTelemetrySelected = $false
 $architectureProject = Join-Path $repoRoot 'SilverStar.ssproject'
 if (Test-Path -LiteralPath $architectureProject -PathType Leaf) {
-    $architectureTargetProfile = (Get-Content -Raw -LiteralPath $architectureProject | ConvertFrom-Json).build.target_profile
+    $architectureDocument = Get-Content -Raw -LiteralPath $architectureProject | ConvertFrom-Json
+    $architectureTargetProfile = $architectureDocument.build.target_profile
+    $extendedTelemetrySelected = $architectureDocument.protocols.telemetry.component -eq 'silverstar.protocol.telemetry.ss_tm'
 }
 $architectureFacts = switch ($architectureTargetProfile) {
     'SilverStar_F407' { @{ Backend='STM32F4'; Cpu='cortex-m4'; EideCpu='Cortex-M4'; Fpu='single'; Abi='hard'; Linker='STM32F407XX_FLASH.ld'; Hal='stm32f4xx'; Tick='TIM1'; RtosProfile='SilverStar_F407' } }
@@ -661,6 +664,7 @@ $expectedGeneratedFiles = @(
     'Generated\Inc\project_capability_routes.h',
     'Generated\Src\project_capability_routes.c',
     'Generated\Inc\project_flight_config.h',
+    'Generated\Inc\project_telemetry_protocol.h',
     'Generated\Inc\project_algorithm_parameters.h',
     'Generated\Inc\project_storage_binding.h',
     'Generated\project_sources.mk',
@@ -1273,9 +1277,18 @@ Write-Output 'FCCG_PROGRESS|ARCHITECTURE|BEGIN|5|6|protocol'
 Assert-FileContainsPattern -RelativePath 'System\User\system_user_config.h' `
     -Pattern 'SILVERSTAR_VERSION_MINOR\s+1' `
     -Message 'SilverStar firmware version is not 0.1.0.'
+if ($extendedTelemetrySelected) {
+    Assert-FileContainsPattern -RelativePath 'Generated\Inc\project_telemetry_protocol.h' `
+        -Pattern 'typedef\s+uint16_t\s+TelemetrySequence' `
+        -Message 'SS-TM sequence contract is not uint16_t.'
+    Assert-FileContainsPattern -RelativePath 'Protocol\SS_TM\Src\ss_tm_protocol.c' `
+        -Pattern 'SS_TM_HEADER_SIZE\s+8U' `
+        -Message 'SS-TM common header must be exactly eight bytes.'
+} else {
 Assert-FileContainsPattern -RelativePath 'Protocol\Inc\air_protocol.h' `
     -Pattern 'AIR_PROFILE_COMPACT_V0\s*=\s*0U' `
     -Message 'AIR_PROFILE_COMPACT_V0 wire profile changed during refactoring.'
+}
 
 # Logging selection was checked against explicit generated semantics before the
 # exact thin-glue comparison. Here verify actual source and payload membership.
@@ -1488,6 +1501,14 @@ else {
     Write-Output ('FCCG architecture note: generated source omits installed-plugin ' +
         'documentation; maintenance Markdown was audited during reference import.')
 }
+if ($extendedTelemetrySelected) {
+    Assert-FileContainsPattern -RelativePath 'Protocol\SS_TM\Inc\ss_tm_protocol.h' `
+        -Pattern 'AIR_FLIGHT_STATE_LEN\s+56U' -Message 'SS-TM FLIGHT_DATA length changed.'
+    Assert-FileContainsPattern -RelativePath 'Protocol\SS_TM\Inc\ss_tm_protocol.h' `
+        -Pattern 'AIR_SENSOR_STATUS_LEN\s+15U' -Message 'SS-TM SENSOR_STATUS length changed.'
+    Assert-FileContainsPattern -RelativePath 'Protocol\SS_TM\Legacy\ss_tm_legacy.h' `
+        -Pattern 'LEGACY_AIR_FLIGHT_STATE_LEN\s+50U' -Message 'Unchanged numeric body adapter changed.'
+} else {
 Assert-FileContainsPattern `
     -RelativePath 'Protocol\Inc\air_protocol.h' `
     -Pattern 'AIR_FLIGHT_STATE_LEN\s+50U' `
@@ -1496,6 +1517,7 @@ Assert-FileContainsPattern `
     -RelativePath 'Protocol\Inc\air_protocol.h' `
     -Pattern 'AIR_SENSOR_STATUS_LEN\s+9U' `
     -Message 'AIR M0 SENSOR_STATUS length changed.'
+}
 if ($loggingEnabled) {
 $sslogProtocolContent = Get-Content -Raw -LiteralPath (
     Join-Path $repoRoot 'Protocol\SSLOG\Inc\sslog_protocol.h')

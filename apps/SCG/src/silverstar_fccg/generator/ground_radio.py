@@ -6,7 +6,7 @@ from silverstar_fccg.project.model import GroundRadioConfigurations_Get
 from silverstar_fccg.project.radio_variants import RadioVariant_Get, RadioInstanceMacros_Render
 
 
-def GroundRadioConfig_Render(ground) -> str:
+def GroundRadioConfig_Render(ground, telemetry_profile="") -> str:
     radios = GroundRadioConfigurations_Get(ground)
     identities = [radio.instance_id for radio in radios]
     if not 1 <= len(radios) <= 4 or len(set(identities)) != len(radios):
@@ -56,6 +56,8 @@ def GroundRadioConfig_Render(ground) -> str:
     return f"""#ifndef __GROUND_RADIO_CONFIG_H
 #define __GROUND_RADIO_CONFIG_H
 #include "platform_gpio.h"
+
+#define GROUND_TM_S_ENABLED {int(telemetry_profile == "ss_tm.s.0_1")}U
 
 /* Ordered cold replacement only; no aggregation or command replay. */
 #define GROUND_RADIO_INITIAL_INSTANCE {owner}U

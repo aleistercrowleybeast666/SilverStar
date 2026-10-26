@@ -18,6 +18,8 @@ typedef struct
     uint32_t receive_limit_count;
     uint32_t quantization_saturation_count;
     uint32_t capability_tx_count;
+    uint32_t completed_tx_count;
+    uint32_t failed_tx_count;
     TelemetryCapabilityState capability_state;
     uint8_t capability_acked;
 } TelemetryServiceDiagnostics;

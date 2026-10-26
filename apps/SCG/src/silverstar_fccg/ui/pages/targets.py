@@ -311,7 +311,7 @@ class GroundTargetPage(BoardHardwarePage):
         super().__init__(translator, target="ground")
         self.enabled = StandardCheckBox()
         self.enabled.setObjectName("standardCheckBox")
-        self.Text_Register(self.enabled, "field.ground_enabled")
+        self.Text_Register(self.enabled, "field.ground_generate_include")
         self.enabled.toggled.connect(self.enabledChanged.emit)
         self.root_layout.addWidget(self.enabled)
         self.board = self.board_combo
@@ -492,7 +492,7 @@ class GroundTargetPage(BoardHardwarePage):
             self.radio_instances_editor.note.setText(self.radio_instances_editor.note.text() + "\n" +
                 self._translator.Text_Get("ground.radio_runtime_pending"))
         self.pc_interface.setCurrentIndex(max(0, self.pc_interface.findData(ground.pc_interface)))
-        uart_selected = ground.enabled and ground.pc_interface == "uart"
+        uart_selected = ground.pc_interface == "uart"
         self.pc_resource.setEnabled(uart_selected)
         self.pc_resource.clear()
         self.pc_resource.addItem("—", "")
@@ -528,7 +528,7 @@ class GroundTargetPage(BoardHardwarePage):
         with QSignalBlocker(self.activity_led_enabled):
             active = GroundActivityLedEnabled_Get(ground)
             self.activity_led_enabled.setChecked(active)
-            self.activity_led_enabled.setEnabled(ground.enabled)
+            self.activity_led_enabled.setEnabled(True)
         self.activity_led_enabled.setToolTip(
             self._translator.Text_Get(
                 "ground.activity_led_hint" if self.activity_led_enabled.isEnabled()
@@ -567,8 +567,7 @@ class GroundTargetPage(BoardHardwarePage):
         for notice in (self.resource_scope_notice, self.activity_led_notice):
             notice.style().unpolish(notice)
             notice.style().polish(notice)
-        self.status.setText(self._translator.Text_Get("status.ground_disabled")
-                            if not ground.enabled else issue_summary)
+        self.status.setText(issue_summary)
         self.status.setToolTip(
             "\n".join(filter(None, (issue_details,
                 "\n".join(f"{issue.code}: {issue.message}" for issue in issues),

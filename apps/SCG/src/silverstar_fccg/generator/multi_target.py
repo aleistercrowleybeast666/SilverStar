@@ -448,7 +448,7 @@ def GroundFiles_Render(
     files["Generated/Src/platform_resources.c"] = _PlatformResources_Render(
         ground_model, catalog
     ).encode("utf-8")
-    files["Generated/Inc/ground_radio_config.h"] = GroundRadioConfig_Render(ground).encode("utf-8")
+    files["Generated/Inc/ground_radio_config.h"] = GroundRadioConfig_Render(ground, model.air_link.protocol_profile).encode("utf-8")
     files["Generated/Inc/air_link_config.h"] = GroundRadioAirHeader_Render(
         ground, AirLinkHeader_Render(model, target="ground")).encode("utf-8")
     files["Generated/Src/pc_byte_stream.c"] = _PcAdapter_Render(model, family).encode("utf-8")

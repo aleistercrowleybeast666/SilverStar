@@ -106,11 +106,12 @@ def test_inline_condition_and_one_shared_interval_survive_reopen(workspace_windo
     start = form.itemAt(0, form.ItemRole.FieldRole).widget()
     stop = form.itemAt(1, form.ItemRole.FieldRole).widget()
     start.setCurrentIndex(start.findData(('stage_enter', 'ascent')))
-    stop.setCurrentIndex(stop.findData(('stage_enter', 'landed')))
+    stop.setCurrentIndex(stop.findData(('stage_exit', 'landed')))
     section.body.findChildren(QPushButton)[-1].click()
     _Events_Flush(qapp)
     function = next(row for row in window._model.mission_functions['functions'] if row['instance_id'] == 'estimator')
     assert function['start']['stage_id'] == 'ascent' and function['stop']['stage_id'] == 'landed'
+    assert function['stop']['kind'] == 'stage_exit' and window._model.mission_functions['schema_version'] == 2
     for identity in ('ascent', 'coast', 'descent', 'landed'):
         stage_panel.Stage_Select(identity)
         _Events_Flush(qapp)
@@ -252,7 +253,7 @@ def test_unapplied_range_survives_stage_switch_and_save(workspace_window, tmp_pa
     start = form.itemAt(0, form.ItemRole.FieldRole).widget()
     stop = form.itemAt(1, form.ItemRole.FieldRole).widget()
     start.setCurrentIndex(start.findData(('stage_enter', 'ascent')))
-    stop.setCurrentIndex(stop.findData(('stage_enter', 'landed')))
+    stop.setCurrentIndex(stop.findData(('stage_exit', 'landed')))
     panel.Stage_Select('descent')
     _Events_Flush(qapp)
     window._Project_Save()
@@ -260,7 +261,8 @@ def test_unapplied_range_survives_stage_switch_and_save(workspace_window, tmp_pa
     saved = window._service.Project_Open(root)
     function = next(row for row in saved.mission_functions['functions'] if row['instance_id']=='estimator')
     assert function['start'] == {'kind':'stage_enter','stage_id':'ascent'}
-    assert function['stop'] == {'kind':'stage_enter','stage_id':'landed'}
+    assert function['stop'] == {'kind':'stage_exit','stage_id':'landed'}
+    assert saved.mission_functions['schema_version'] == 2
     assert not errors
 
 

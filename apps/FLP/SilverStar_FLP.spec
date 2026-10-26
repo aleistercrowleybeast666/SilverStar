@@ -14,6 +14,7 @@ resource = versioninfo.VSVersionInfo(ffi=versioninfo.FixedFileInfo(filevers=rele
         versioninfo.StringStruct("ProductVersion", release.full)])])])
 
 datas = collect_data_files("silverstar_flp") + collect_data_files("matplotlib")
+datas += [(str(repository / 'apps/SCG/src/silverstar_data_contracts/data/persistent_objects_v1.json'), 'silverstar_data_contracts/data')]
 datas += [(str(repository / name), str(Path(name).parent)) for name in ("VERSION", "versions.json", "tools/silverstar_version.py")]
 datas += [(str(repository / name), str(Path(name).parent)) for name in
           ("tools/silverstar_mission_profile.py", "tools/silverstar_mission_process.py", "tools/silverstar_mission_functions.py", "contracts/mission_functions_v1.json", "contracts/function_parameters_v1.json", "contracts/mission_profile_v3.json", "contracts/mission_profile_v1.json", "contracts/mission_profile_v2.json", "contracts/mission_process_v1.json", "contracts/body_frame_v1.json")]
@@ -25,7 +26,7 @@ hiddenimports = (
 
 analysis = Analysis(
     ["main.py"],
-    pathex=["src"],
+    pathex=["src", str(repository / "apps/SCG/src")],
     binaries=[],
     datas=datas,
     hiddenimports=hiddenimports,

@@ -27,6 +27,8 @@ version = {attr = "silverstar_fccg.app.version.__package_version__"}
 [tool.setuptools.package-data]
 silverstar_fccg = ["i18n/*.json", "ui/assets/*.svg", "hardware/usb_profiles/*.json"]
 silverstar_diagnostics = ["*.json"]
+silverstar_telemetry = ["data/*.json"]
+silverstar_data_contracts = ["data/*.json"]
 
 [tool.pytest.ini_options]
 addopts = "-ra --basetemp=.work/pytest"

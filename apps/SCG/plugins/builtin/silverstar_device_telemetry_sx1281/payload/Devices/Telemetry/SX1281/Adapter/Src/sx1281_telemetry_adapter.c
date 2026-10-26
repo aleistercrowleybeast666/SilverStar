@@ -17,6 +17,25 @@
 #define SX1281_RECOVERY_DELAY_US 1000000ULL
 #define SX1281_RECOVERY_BACKOFF_MAX 5U
 
+SystemDeviceResult Sx1281TelemetryInstance_ModeSet(uint8_t instance, SystemTelemetryMode mode)
+{
+    LoraOperatingMode radio_mode;
+    LoraModeSetResult result;
+    switch (mode)
+    {
+        case SYSTEM_TELEMETRY_HALF_DUPLEX: radio_mode = LoraOperatingMode_HalfDuplex; break;
+        case SYSTEM_TELEMETRY_TRANSMIT_ONLY: radio_mode = LoraOperatingMode_TransmitOnly; break;
+        case SYSTEM_TELEMETRY_RECEIVE_ONLY: radio_mode = LoraOperatingMode_ReceiveOnly; break;
+        default: return SYSTEM_DEVICE_INVALID_ARGUMENT;
+    }
+    result = Lora_OperatingModeSet(instance, radio_mode);
+    if (result == LoraModeSetResult_Ok) { return SYSTEM_DEVICE_OK; }
+    if (result == LoraModeSetResult_Busy) { return SYSTEM_DEVICE_BUSY; }
+    if (result == LoraModeSetResult_NotReady) { return SYSTEM_DEVICE_NOT_READY; }
+    if (result == LoraModeSetResult_IoError) { return SYSTEM_DEVICE_IO_ERROR; }
+    return SYSTEM_DEVICE_INVALID_ARGUMENT;
+}
+
 typedef struct
 {
     volatile uint8_t initialized;

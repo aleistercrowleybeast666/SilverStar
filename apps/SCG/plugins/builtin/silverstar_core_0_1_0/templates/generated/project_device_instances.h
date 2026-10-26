@@ -225,6 +225,7 @@ uint8_t ProjectTelemetryInstance_CountGet(void);
 SystemDeviceResult ProjectTelemetryInstance_Init(uint8_t instance_id);
 SystemDeviceResult ProjectTelemetryInstance_Start(uint8_t instance_id);
 SystemDeviceResult ProjectTelemetryInstance_Stop(uint8_t instance_id);
+SystemDeviceResult ProjectTelemetryInstance_ModeSet(uint8_t instance_id, SystemTelemetryMode mode);
 SystemDeviceResult ProjectTelemetryInstance_Send(
     uint8_t instance_id, const uint8_t *data, uint16_t length);
 SystemDeviceResult ProjectTelemetryInstance_SendControl(uint8_t instance_id,

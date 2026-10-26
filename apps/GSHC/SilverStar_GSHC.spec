@@ -4,7 +4,7 @@ from pathlib import Path
 
 product_resource = runpy.run_path(str(Path(SPECPATH) / "packaging/product_version.py"))["ProductVersionResource_Create"]()
 shared = Path(SPECPATH).resolve().parent / 'SCG/src'
-datas = [(str(shared / 'silverstar_diagnostics/stm32_targets.json'), 'silverstar_diagnostics'),
+datas = [(str(shared / 'silverstar_telemetry/data/ss_tm_v0_1.json'), 'silverstar_telemetry/data'), (str(shared / 'silverstar_diagnostics/stm32_targets.json'), 'silverstar_diagnostics'),
          (str(Path(SPECPATH).resolve().parents[1] / 'contracts/swd_diagnostics_v1.json'), 'silverstar_diagnostics'),
          (str(Path(SPECPATH).resolve().parents[1] / 'contracts/swd_project_descriptor_v1.json'), 'silverstar_diagnostics')]
 repository = Path(SPECPATH).resolve().parents[1]

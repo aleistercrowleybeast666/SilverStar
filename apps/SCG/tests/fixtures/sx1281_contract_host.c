@@ -260,12 +260,51 @@ static void Test_Deactivate(void)
     TEST_CHECK(snapshot.initialized == 0U);
 }
 
+static void Test_Simplex(void)
+{
+    uint8_t bytes[56] = {0U};
+    uint32_t transaction;
+    uint32_t age;
+    uint32_t receive_before;
+    TEST_CHECK(Lora_Init(0U) == LORA_INIT_OK);
+    TEST_CHECK(Lora_OperatingModeSet(0U, LoraOperatingMode_TransmitOnly) == LoraModeSetResult_Ok);
+    receive_before = s_set_rx_count;
+    for (uint32_t frame = 0U; frame < 200U; frame++)
+    {
+        TEST_CHECK(Lora_TxEnqueueTracked(0U, bytes, sizeof(bytes), &transaction) == LORA_TX_ENQUEUE_OK);
+        Lora_Process(0U);
+        TEST_CHECK(s_contexts[0].tx_busy == 1U);
+        TEST_CHECK(Lora_TxResultGet(0U, transaction, &age) == LoraTxQueryResult_Pending);
+        s_tick_ms += Lora_PacketAirtimeMs(0U, sizeof(bytes));
+        Lora_IrqProcess(0U, IRQ_TX_DONE);
+        Lora_Process(0U);
+        TEST_CHECK(Lora_TxResultGet(0U, transaction, &age) == LoraTxQueryResult_Complete);
+        TEST_CHECK(s_set_rx_count == receive_before);
+    }
+    TEST_CHECK(s_contexts[0].stats.tx_ok == 200U);
+    TEST_CHECK(Lora_Init(0U) == LORA_INIT_OK);
+    TEST_CHECK(Lora_OperatingModeGet(0U) == LoraOperatingMode_TransmitOnly);
+    Lora_StartRx(0U); Lora_Process(0U);
+    TEST_CHECK(s_set_rx_count == receive_before);
+    TEST_CHECK(Lora_TxEnqueue(0U, bytes, sizeof(bytes)) == LORA_TX_ENQUEUE_OK);
+    TEST_CHECK(Lora_OperatingModeSet(0U, LoraOperatingMode_ReceiveOnly) == LoraModeSetResult_Ok);
+    TEST_CHECK(s_contexts[0].tx_count == 0U);
+    TEST_CHECK(s_contexts[0].mode_cancelled_count == 1U);
+    TEST_CHECK(Lora_TxEnqueue(0U, bytes, sizeof(bytes)) == LORA_TX_ENQUEUE_MODE_BLOCKED);
+    Lora_Process(0U);
+    TEST_CHECK(s_set_rx_count > receive_before);
+    TEST_CHECK(Lora_Init(0U) == LORA_INIT_OK);
+    TEST_CHECK(Lora_OperatingModeGet(0U) == LoraOperatingMode_ReceiveOnly);
+    TEST_CHECK(Lora_OperatingModeSet(0U, (LoraOperatingMode)-1) == LoraModeSetResult_InvalidArgument);
+}
+
 int main(int argc, char **argv)
 {
     if (argc != 2) { return 2; }
     if (strcmp(argv[1], "reinit") == 0) { Test_ReinitializationFailure(); }
     else if (strcmp(argv[1], "normal") == 0) { Test_NormalQueuesAndTimeout(); }
     else if (strcmp(argv[1], "deactivate") == 0) { Test_Deactivate(); }
+    else if (strcmp(argv[1], "simplex") == 0) { Test_Simplex(); }
     else { Test_Corruption(argv[1]); }
     return Test_Finish(argv[1]);
 }

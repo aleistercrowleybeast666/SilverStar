@@ -179,6 +179,7 @@ class MissionStageDialog(QDialog):
 class MissionProcessPanel(QGroupBox):
     processChanged = Signal(object)
     selectionChanged = Signal(str)
+    editRequested = Signal(str)
 
     def __init__(self, translator, parent=None):
         super().__init__(parent)
@@ -280,7 +281,7 @@ class MissionProcessPanel(QGroupBox):
             row = QVBoxLayout(card)
             choose = QPushButton(f"{index+1}  {stage['name']}")
             choose.setCheckable(True); choose.setChecked(identity == self.selected_stage_id)
-            choose.clicked.connect(lambda _checked=False, selected=identity: self.Stage_Select(selected))
+            choose.clicked.connect(lambda _checked=False, selected=identity: self.Dialog_Open(selected))
             row.addWidget(choose)
             condition = stage['condition']
             value = self._translator.Text_Get('process.event.' + condition['value']) if condition['signal']=='event' else str(condition['value'])+' '+condition['unit']
@@ -445,7 +446,10 @@ class MissionProcessPanel(QGroupBox):
 
     def Dialog_Open(self,index):
         selected=self._StageIndex_Get(index)
-        if selected is not None:self.Stage_Select(self._process['stages'][selected]['stage_id'])
+        if selected is not None:
+            identity = self._process['stages'][selected]['stage_id']
+            self.Stage_Select(identity)
+            if not self._derived: self.editRequested.emit(identity)
 
     def _StageIndex_Get(self, identity):
         if self._process is None:

@@ -40,6 +40,7 @@ from .common import (
     air_sensor_canonical_name,
     enum_name,
 )
+from .ss_tm import TelemetryFrame_Parse
 from .gsp_min import GsStatus, GsToPcAirFrame, GspAck, GspFrame, GspParser, parse_gsp_frame
 
 FLIGHT_TELEMETRY_PERIOD_MS = 200
@@ -61,6 +62,7 @@ class ProtocolEvent:
     capability_context: AirCapabilityMessage | None = None
     packet_stats: dict[str, int | float | bool] | None = None
     recovery_session: int | None = None
+    tm_frame: Any | None = None
 
 
 @dataclass(frozen=True)
@@ -113,6 +115,7 @@ class ReceivePipeline:
             air_frame: AirFrame | None = None
             air_message: Any | None = None
             air_error = ""
+            tm_frame = None
             rssi_dbm: int | None = None
             snr_db: float | None = None
             accel: tuple[float, float, float] | None = None
@@ -123,7 +126,13 @@ class ReceivePipeline:
                 self.air_frames += 1
                 rssi_dbm = parsed_gsp.rssi_dbm
                 snr_db = parsed_gsp.snr_db
-                if (
+                if parsed_gsp.air_frame and parsed_gsp.air_frame[0] not in {int(value) for value in AirType}:
+                    try:
+                        air_frame, air_message, tm_frame = TelemetryFrame_Parse(parsed_gsp.air_frame)
+                    except ValueError as error:
+                        self.air_parse_errors += 1
+                        air_error = str(error)
+                elif (
                     self.unsupported_profile_id is not None
                     and parsed_gsp.air_frame
                     and parsed_gsp.air_frame[0] != int(AirType.CAPABILITY)
@@ -155,7 +164,7 @@ class ReceivePipeline:
             ):
                 self._mission_reset(active=True)
 
-            if isinstance(air_message, AirFlightStateMessage):
+            if isinstance(air_message, AirFlightStateMessage) and tm_frame is None:
                 if not self._mission_tracking:
                     self._mission_reset(active=True)
                 packet_stats = self._flight_packet_track(air_message.time_ms)
@@ -185,7 +194,7 @@ class ReceivePipeline:
                 if self._recovery_preflight_time is not None and air_message.time_ms < self._recovery_preflight_time:
                     self._recovery_epoch += 1
                 self._recovery_preflight_time = air_message.time_ms
-            recovery_session = (self._recovery_connection << 32) | self._recovery_epoch
+            recovery_session = ((self._recovery_connection << 32) | self._recovery_epoch) if tm_frame is None else None
             processed_ns = time.monotonic_ns()
             event = ProtocolEvent(
                 host_rx_monotonic_ns=rx_ns,
@@ -202,6 +211,7 @@ class ReceivePipeline:
                 capability_context=context,
                 packet_stats=packet_stats,
                 recovery_session=recovery_session,
+                tm_frame=tm_frame,
             )
             events.append(event)
 
@@ -387,6 +397,12 @@ def protocol_event_log_records(event: ProtocolEvent) -> list[dict[str, Any]]:
         )
         return records
 
+    if event.tm_frame is not None:
+        tm = event.tm_frame
+        records.append({**base, **radio_metadata, "layer": "SS_TM", "kind": "SS_TM_FRAME",
+            "profile": tm.profile, "boot_session": tm.boot_session, "sequence": tm.sequence,
+            "message_type": tm.message_type, "known_type": tm.known, "fields": tm.values,
+            "raw_hex": tm.raw.hex()})
     message = event.air_message
     common = {
         **base,

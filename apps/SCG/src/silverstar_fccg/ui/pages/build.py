@@ -337,6 +337,8 @@ class BuildPage(ScrollableLocalizedPage):
             page.root_layout.removeWidget(page.generate_button)
             self.target_action_layouts[target].addWidget(page.generate_button, 0, 0)
             page.generate_button.show()
+        self.target_action_layouts['ground'].addWidget(ground_page.enabled, 0, 1)
+        ground_page.enabled.show()
         self.advanced_section.body.layout().addWidget(ground_page.build_group)
 
     def TargetConfiguration_Set(self, model):

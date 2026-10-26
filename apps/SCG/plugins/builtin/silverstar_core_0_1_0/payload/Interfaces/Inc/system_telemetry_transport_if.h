@@ -10,6 +10,16 @@
 #define SYSTEM_TELEM_CAP_RSSI            (1UL << 4)
 #define SYSTEM_TELEM_CAP_SNR             (1UL << 5)
 
+typedef enum
+{
+    SYSTEM_TELEMETRY_HALF_DUPLEX = 0U,
+    SYSTEM_TELEMETRY_TRANSMIT_ONLY,
+    SYSTEM_TELEMETRY_RECEIVE_ONLY
+} SystemTelemetryMode;
+
+/* Protocol-independent desired operating mode; radio recovery must retain it. */
+SystemDeviceResult SystemTelemetry_ModeSet(SystemTelemetryMode mode);
+
 typedef struct
 {
     uint64_t last_transmit_timestamp_us;

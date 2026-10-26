@@ -4,6 +4,8 @@
 
 面向无控探空火箭航电开发的开源工具链：用 **SCG** 配置硬件与生成工程，用 **GSHC** 查看地面遥测，用 **FLP** 阅读和分析记录日志。
 
+当前开发分支的 SS-TM、寻回和解码包改造范围、验证及未完成项见[统一改造记录](docs/public/TELEMETRY_UNIFICATION_20261026.md)。该开发工作尚未完成全部验收，不改变稳定发布身份。
+
 **稳定发布：[v0.1.2 · 2026-10-12](https://github.com/aleistercrowleybeast666/SilverStar/releases/tag/v0.1.2)** · [下载 Windows 便携包](https://github.com/aleistercrowleybeast666/SilverStar/releases/download/v0.1.2/SilverStar_0_1_2_Windows_Portable.zip) · [示例日志](docs/public/examples/README.md) · [使用文档](docs/public/README.md) · [问题反馈](https://github.com/aleistercrowleybeast666/SilverStar/issues)
 
 ## 下载与快速体验

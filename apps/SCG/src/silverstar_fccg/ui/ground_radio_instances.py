@@ -73,10 +73,10 @@ class GroundRadioInstancesEditor(QWidget):
             for radio in self._radios:
                 self.initial_instance.addItem(radio.instance_id, radio.instance_id)
             self.initial_instance.setCurrentIndex(self.initial_instance.findData(ground.active_radio_instance))
-        self.initial_instance.setEnabled(ground.enabled and len(self._radios) > 1)
+        self.initial_instance.setEnabled(len(self._radios) > 1)
         self.initial_instance.setVisible(len(self._radios) > 1)
         self.initial_label.setVisible(len(self._radios) > 1)
-        self.add_button.setEnabled(ground.enabled and len(self._radios) < 4 and
+        self.add_button.setEnabled(len(self._radios) < 4 and
             any(self._ModuleAvailability_Get(identity, module_id, available, reason)[0]
                 for _, identity, available, reason in choices
                 for module_id in (contracts[identity].modules if identity in contracts else ())))
@@ -124,7 +124,7 @@ class GroundRadioInstancesEditor(QWidget):
                 power.addItem(f"{radio.tx_power_dbm} dBm", radio.tx_power_dbm)
                 power.model().item(power.count() - 1).setEnabled(False)
             power.setCurrentIndex(power.findData(radio.tx_power_dbm))
-            power.setEnabled(ground.enabled and bool(supported))
+            power.setEnabled(bool(supported))
             power.currentIndexChanged.connect(lambda _index, identity=radio.instance_id, combo=power:
                 self._Field_Change(identity, "tx_power_dbm", combo.currentData()))
             self.power_form.addRow(
@@ -132,11 +132,11 @@ class GroundRadioInstancesEditor(QWidget):
             controls = {"title": instance_title, "selection": plugin, "tx_power_dbm": power}
             button = QPushButton(self._translator.Text_Get("action.remove_device"))
             button.setObjectName("groundRadio_remove_" + radio.instance_id)
-            button.setEnabled(ground.enabled and bool(radio.plugin))
+            button.setEnabled(bool(radio.plugin))
             button.clicked.connect(lambda _checked=False, identity=radio.instance_id: self._Remove(identity))
             TelemetryRemoveButton_Add(form, button)
             controls["remove"] = button
-            plugin.setEnabled(ground.enabled)
+            plugin.setEnabled(True)
             self.rows[radio.instance_id] = controls
             self.rows_layout.addWidget(group)
 
@@ -156,7 +156,7 @@ class GroundRadioInstancesEditor(QWidget):
             self._Commit(self._radios, active)
 
     def _Add(self):
-        if not self._ground or not self._ground.enabled or len(self._radios) >= 4:
+        if not self._ground or len(self._radios) >= 4:
             return
         selected = next((radio for radio in self._radios
                          if radio.instance_id == self._ground.active_radio_instance),

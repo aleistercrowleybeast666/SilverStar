@@ -815,6 +815,8 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
             (ValidationIssue("error", "device_variant", str(error)),)
         )
     issues.extend(SensorInstallationIssues_Get(model, catalog))
+    from silverstar_fccg.project.telemetry import TelemetryProfile_Issues
+    issues.extend(ValidationIssue('error', code, message) for code, message in TelemetryProfile_Issues(model, catalog))
     issues.extend(MissionProcessIssues_Get(model))
     from silverstar_fccg.project.mission_functions import Functions_Issues
     issues.extend(ValidationIssue(row.level, row.code, row.function_id + ': ' + row.message)

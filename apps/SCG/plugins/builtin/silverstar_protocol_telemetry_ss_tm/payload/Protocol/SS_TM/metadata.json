@@ -1,0 +1,9 @@
+{
+  "format_version": 1,
+  "family": "SS-TM",
+  "version": "0.1",
+  "service": "telemetry_service",
+  "slot": "telemetry_protocol",
+  "minimum_mtu": 56,
+  "contract": "silverstar.telemetry/0.1"
+}

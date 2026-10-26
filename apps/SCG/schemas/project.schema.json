@@ -389,13 +389,13 @@
     "missionFunctions": {
       "$comment": "Semantic issues (missing boundaries, dependency cycles, unsupported runtime intervals) remain repairable drafts; generation validates them against actual plugin adapters.",
       "type": "object", "additionalProperties": false, "required": ["schema_version", "functions"],
-      "properties": {"schema_version": {"type": "integer", "const": 1},
+      "properties": {"schema_version": {"type": "integer", "enum": [1, 2]},
         "functions": {"type": "array", "maxItems": 32, "items": {"$ref": "#/$defs/missionFunction"}}}
     },
     "functionIdentity": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{0,127}$"},
     "functionBoundary": {
       "type": "object", "additionalProperties": false, "required": ["kind", "stage_id"],
-      "properties": {"kind": {"enum": ["system_prepare", "mission_start", "stage_enter", "system_landed", "lifecycle_end"]},
+      "properties": {"kind": {"enum": ["system_prepare", "mission_start", "stage_enter", "stage_exit", "system_landed", "lifecycle_end"]},
         "stage_id": {"oneOf": [{"const": ""}, {"$ref": "#/$defs/functionIdentity"}]}},
       "allOf": [{"if": {"properties": {"kind": {"enum": ["system_prepare", "mission_start", "system_landed", "lifecycle_end"]}}}, "then": {"properties": {"stage_id": {"const": ""}}}}]
     },

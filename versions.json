@@ -288,6 +288,26 @@
           "schema_version"
         ]
       }
+    },
+    "SS-TM": {
+      "scope": "wire contract; S/H profile bit is explicit; legacy M0 is separate",
+      "source": {
+        "path": "contracts/ss_tm_v0_1.json",
+        "kind": "json",
+        "selector": [
+          "schema"
+        ]
+      }
+    },
+    "persistent.objects": {
+      "scope": "declarative decoder layout identity; existing object bytes retain their versions",
+      "source": {
+        "path": "contracts/persistent_objects_v1.json",
+        "kind": "json",
+        "selector": [
+          "schema_id"
+        ]
+      }
     }
   },
   "compatibility": [

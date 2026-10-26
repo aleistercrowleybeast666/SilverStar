@@ -92,6 +92,7 @@ typedef struct
     uint32_t cooldown_scheduled_ms[PROJECT_TELEMETRY_INSTANCE_COUNT_MAX];
 } SystemSourceSelectorTelemetryState;
 
+static SystemTelemetryMode s_telemetry_mode = SYSTEM_TELEMETRY_HALF_DUPLEX;
 static SystemSourceSelectorImuState s_imu;
 static SystemSourceSelectorGnssState s_gnss;
 static SystemSourceSelectorTelemetryState s_telemetry;
@@ -1545,6 +1546,11 @@ SystemSourceSelector_TelemetryCandidateStart(uint8_t candidate)
         { return SystemSourceSelectorTelemetryCandidate_Failed; }
         s_telemetry.initialized[candidate] = 1U;
     }
+    if (s_telemetry_mode != SYSTEM_TELEMETRY_HALF_DUPLEX)
+    {
+        result = ProjectTelemetryInstance_ModeSet(candidate, s_telemetry_mode);
+        if (result != SYSTEM_DEVICE_OK) { return SystemSourceSelectorTelemetryCandidate_Failed; }
+    }
     result = ProjectTelemetryInstance_Start(candidate);
     SILVERSTAR_ASSERT((uint32_t)result <= (uint32_t)SYSTEM_DEVICE_NOT_PRESENT,
         SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
@@ -1950,6 +1956,20 @@ SystemDeviceResult SystemTelemetry_SendControl(
         (SystemSourceSelector_TelemetryCleanupPending() != 0U))
     { return SYSTEM_DEVICE_NOT_READY; }
     return ProjectTelemetryInstance_SendControl(s_telemetry.active, data, length, transaction_id);
+}
+
+SystemDeviceResult SystemTelemetry_ModeSet(SystemTelemetryMode mode)
+{
+    SystemDeviceResult result;
+    if ((mode != SYSTEM_TELEMETRY_HALF_DUPLEX) && (mode != SYSTEM_TELEMETRY_TRANSMIT_ONLY) &&
+        (mode != SYSTEM_TELEMETRY_RECEIVE_ONLY)) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if (s_telemetry.active == SYSTEM_SOURCE_SELECTOR_INSTANCE_NONE)
+    { s_telemetry_mode = mode; return SYSTEM_DEVICE_NOT_READY; }
+    result = ProjectTelemetryInstance_ModeSet(s_telemetry.active, mode);
+    if ((result == SYSTEM_DEVICE_OK) || (result == SYSTEM_DEVICE_NOT_READY)) { s_telemetry_mode = mode; }
+    if ((mode == SYSTEM_TELEMETRY_HALF_DUPLEX) && (result == SYSTEM_DEVICE_UNSUPPORTED))
+    { s_telemetry_mode = mode; return SYSTEM_DEVICE_OK; }
+    return result;
 }
 
 SystemDeviceResult SystemTelemetry_TxResultGet(uint32_t transaction_id, uint32_t *age_ms)

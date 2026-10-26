@@ -1162,6 +1162,7 @@ _ENUM_KEYS["calibration_diagnostic_reason"] = {
     ),
 }
 _ENUM_KEYS["mission_phase"] = {
+    "UNKNOWN": ("阶段未知 / 历史不完整", "Unknown / incomplete history"),
     "PRE_START": ("任务前", "Pre-start"),
     "MISSION_ACTIVE": ("任务已开始 / 等待发射", "Mission Active / Waiting Launch"),
     "IN_FLIGHT": ("飞行中", "In Flight"),

@@ -230,7 +230,7 @@ SystemDeviceResult ProjectSx1281Resources_Get(uint8_t instance,ProjectSx1281Reso
     return SYSTEM_DEVICE_OK;
 }
 '''
-    files['Generated/Inc/ground_radio_config.h'] = GroundRadioConfig_Render(ground).encode()
+    files['Generated/Inc/ground_radio_config.h'] = GroundRadioConfig_Render(ground, model.air_link.protocol_profile).encode()
     files['Generated/Inc/air_link_config.h'] = GroundRadioAirHeader_Render(ground,AirLinkHeader_Render(model,target='ground')).encode()
     usb_class_digest = hashlib.sha256(native_files[proof['cdc']['owners']['usbd_cdc.c']]).hexdigest()
     usb_profiles = {

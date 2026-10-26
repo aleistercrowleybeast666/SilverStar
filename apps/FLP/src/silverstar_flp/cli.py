@@ -57,6 +57,7 @@ def _Dataset_Parse(options: argparse.Namespace) -> tuple[PluginRegistry, LogOpen
             decoder_package_path=options.decoder,
             auto_find=bool(options.auto_find),
             task_directory=options.path.parent if options.auto_find else None,
+            decoder_search_directories=tuple(getattr(options, 'decoder_search_dir', ())),
             source_mode=LogOpenSourceMode.CLI,
         )
     )
@@ -277,6 +278,8 @@ def _Command_ProjectCache(options: argparse.Namespace) -> int:
 
 
 def _DecoderArguments_Add(parser: argparse.ArgumentParser, *, required: bool) -> None:
+    parser.add_argument('--decoder-search-dir', type=Path, action='append', default=[],
+                        help='additional configured project directory (maximum four; bounded exact search)')
     group = parser.add_mutually_exclusive_group(required=required)
     group.add_argument("--decoder", type=Path, help="exact .ssdecoder package")
     group.add_argument(

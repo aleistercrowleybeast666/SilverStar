@@ -9,6 +9,7 @@ from typing import Iterable
 
 from config import MAX_LIVE_POINTS, PLOT_WINDOW_SECONDS, UI_EVENT_HISTORY_LIMIT
 from services.mission_trajectory import MissionTrajectoryHistory
+from services.telemetry_session import TelemetrySession
 from services.recovery_position import RecoveryPosition
 from services.navigation_state import NavigationState
 from protocol.air import AirCapabilityMessage, AirSensorStatusMessage
@@ -319,6 +320,7 @@ class AlignmentSensorSnapshotCache:
 
 
 class MissionPhase(str, Enum):
+    UNKNOWN = "UNKNOWN"
     PRE_START = "PRE_START"
     MISSION_ACTIVE = "MISSION_ACTIVE"
     IN_FLIGHT = "IN_FLIGHT"
@@ -456,6 +458,7 @@ class ReceiveHealth:
 
 @dataclass
 class FlightControllerState:
+    telemetry: TelemetrySession = field(default_factory=TelemetrySession)
     session_generation: int = 0
     recovery: RecoveryPosition = field(default_factory=RecoveryPosition)
     recovery_current_session: int | None = None
@@ -547,6 +550,8 @@ class FlightControllerState:
         return enum_name(AirAckResult, self.start_block_reason)
 
     def air_command_link_allowed(self) -> bool:
+        if self.telemetry.boot_session is not None and self.telemetry.passive:
+            return False
         if (not self.connected or not self.capability_acked or self.capability is None
                 or self.controller_restart_suspected):
             return False

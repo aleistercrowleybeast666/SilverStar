@@ -12,12 +12,12 @@ from typing import Any
 from silverstar_fccg.project.model import LogDecoderProfileReference
 from silverstar_fccg.project.record_catalog import RecordCatalog_Validate
 
-LOG_DECODER_PACKAGE_SCHEMA_ID = "silverstar.ssdecoder.package-schema/1.2"
+LOG_DECODER_PACKAGE_SCHEMA_ID = "silverstar.ssdecoder.package-schema/1.3"
 LOG_DECODER_PACKAGE_SCHEMA_MAJOR = 1
-LOG_DECODER_PACKAGE_SCHEMA_MINOR = 2
-LOG_DECODER_PACKAGE_SCHEMA_VERSION = "1.2"
+LOG_DECODER_PACKAGE_SCHEMA_MINOR = 3
+LOG_DECODER_PACKAGE_SCHEMA_VERSION = "1.3"
 LOG_DECODER_CONTAINER_PLUGIN_ID = "silverstar.sslog.container/0.0"
-LOG_DECODER_REQUIRED_FLP_VERSION = "0.1.0"
+LOG_DECODER_REQUIRED_FLP_VERSION = "0.1.3"
 LOG_DECODER_FIXED_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
 LOG_DECODER_FALLBACK_CREATION_TIME = "1970-01-01T00:00:00+00:00"
 LOG_DECODER_FORBIDDEN_SUFFIXES = frozenset(
@@ -156,23 +156,29 @@ def GenerationProfileHash_Get(
     record_catalog_sha256: str,
     project_semantics_sha256: str,
     container_plugin_id: str = LOG_DECODER_CONTAINER_PLUGIN_ID,
+    *, object_catalog_sha256: str | None = None, package_schema: str = "1.2",
 ) -> str:
     """Apply the firmware-owned decoder-profile hash contract exactly."""
+    if package_schema not in ("1.2", "1.3") or (package_schema == "1.3") != (object_catalog_sha256 is not None):
+        raise ValueError("decoder_generation_schema_inputs")
     return Sha256_Get(
-        LOG_DECODER_PACKAGE_SCHEMA_ID.encode("utf-8")
-        + b"\n"
-        + container_plugin_id.encode("utf-8")
-        + b"\n"
-        + bytes.fromhex(record_catalog_sha256)
-        + bytes.fromhex(project_semantics_sha256)
-    )
+        ("silverstar.ssdecoder.package-schema/" + package_schema).encode("utf-8") + b"\n"
+        + container_plugin_id.encode("utf-8") + b"\n"
+        + bytes.fromhex(record_catalog_sha256) + bytes.fromhex(project_semantics_sha256)
+        + (bytes.fromhex(object_catalog_sha256) if object_catalog_sha256 is not None else b""))
+
 
 
 def LogDecoderPackage_Build(
     record_catalog: dict[str, Any],
     project_semantics: dict[str, Any],
     context: LogDecoderPackageContext,
+    *, object_catalog: dict[str, Any] | None = None,
 ) -> LogDecoderPackageResult:
+    from silverstar_data_contracts.objects import ObjectCatalog_DefaultGet, ObjectCatalog_Validate
+    objects = ObjectCatalog_DefaultGet() if object_catalog is None else ObjectCatalog_Validate(object_catalog)
+    object_catalog_bytes = CanonicalJson_Encode(objects)
+    object_catalog_sha256 = Sha256_Get(object_catalog_bytes)
     record_catalog_bytes = CanonicalJson_Encode(record_catalog)
     project_semantics_bytes = CanonicalJson_Encode(project_semantics)
     record_catalog_sha256 = Sha256_Get(record_catalog_bytes)
@@ -180,7 +186,7 @@ def LogDecoderPackage_Build(
     generation_profile_sha256 = GenerationProfileHash_Get(
         record_catalog_sha256,
         project_semantics_sha256,
-        context.container_plugin_id,
+        context.container_plugin_id, object_catalog_sha256=object_catalog_sha256, package_schema="1.3",
     )
     container_format_major, container_format_minor = _VersionPair_Parse(
         context.container_version
@@ -202,6 +208,7 @@ def LogDecoderPackage_Build(
             "README.md",
             "checksums.sha256",
             "manifest.json",
+            "object_catalog.json",
             "project_semantics.json",
             "record_catalog.json",
         ],
@@ -222,6 +229,7 @@ def LogDecoderPackage_Build(
         "protocols": context.selected_protocols,
         "firmware_components": context.firmware_components,
         "hardware": context.hardware_identity,
+        "object_catalog_sha256": object_catalog_sha256,
         "project_semantics_sha256": project_semantics_sha256,
         "record_catalog_sha256": record_catalog_sha256,
         "required_flp_minimum_version": LOG_DECODER_REQUIRED_FLP_VERSION,
@@ -243,11 +251,12 @@ def LogDecoderPackage_Build(
         "`checksums.sha256` before loading the package.\n"
         "Firmware algorithm parameters are actual float32/int32 values with units "
         "and representation. Recorded Configuration is separate from Offline What-if. "
-        "Package and semantics schemas are 1.2; 1.1 is unsupported.\n"
+        "Package schema 1.3 binds object_catalog.json; project semantics remains 1.2. Legacy package 1.2 keeps its five-member/hash rule; 1.1 is unsupported.\n"
     ).encode("utf-8")
     payloads = {
         "README.md": readme,
         "manifest.json": CanonicalJson_Encode(manifest),
+        "object_catalog.json": object_catalog_bytes,
         "project_semantics.json": project_semantics_bytes,
         "record_catalog.json": record_catalog_bytes,
     }
@@ -407,14 +416,25 @@ def LogDecoderPackage_Verify(content: bytes) -> dict[str, Any]:
     )
     try:
         with zipfile.ZipFile(io.BytesIO(content), "r") as archive:
+            if len(content) > 64 * 1024 * 1024 or len(archive.infolist()) > 6:
+                raise ValueError("Log decoder package capacity exceeded")
+            if any(info.file_size > 16 * 1024 * 1024 for info in archive.infolist()):
+                raise ValueError("Log decoder member capacity exceeded")
             names = tuple(archive.namelist())
+            _LogDecoderEntries_Validate(names)
+            preview = json.loads(archive.read("manifest.json"))
+            if type(preview) is not dict or type(preview.get("package_schema")) is not dict:
+                raise ValueError("Log decoder manifest schema must be an object")
+            schema_minor = preview["package_schema"].get("minor")
+            if schema_minor == 3:
+                required_entries = tuple(sorted((*required_entries, "object_catalog.json")))
             _LogDecoderEntries_Validate(names)
             if names != required_entries or len(names) != len(set(names)):
                 raise ValueError(
                     "Log decoder package entries are missing, duplicated, or unordered"
                 )
             payloads = {name: archive.read(name) for name in names}
-    except (OSError, zipfile.BadZipFile, RuntimeError) as error:
+    except (OSError, zipfile.BadZipFile, RuntimeError, KeyError, UnicodeError, json.JSONDecodeError) as error:
         raise ValueError("Log decoder package is not a valid ZIP archive") from error
 
     json_values: dict[str, Any] = {}
@@ -422,6 +442,7 @@ def LogDecoderPackage_Verify(content: bytes) -> dict[str, Any]:
         "manifest.json",
         "project_semantics.json",
         "record_catalog.json",
+        *(("object_catalog.json",) if schema_minor == 3 else ()),
     ):
         raw = payloads[name]
         try:
@@ -442,10 +463,11 @@ def LogDecoderPackage_Verify(content: bytes) -> dict[str, Any]:
         or manifest.get("entries") != list(required_entries)
         or package_schema
         != {
-            "id": LOG_DECODER_PACKAGE_SCHEMA_ID,
-            "major": LOG_DECODER_PACKAGE_SCHEMA_MAJOR,
-            "minor": LOG_DECODER_PACKAGE_SCHEMA_MINOR,
+            "id": "silverstar.ssdecoder.package-schema/1." + str(schema_minor),
+            "major": 1,
+            "minor": schema_minor,
         }
+        or type(schema_minor) is not int or schema_minor not in (2, 3)
         or not isinstance(container_plugin, dict)
         or not isinstance(container_plugin.get("id"), str)
         or not container_plugin["id"]
@@ -548,11 +570,16 @@ def LogDecoderPackage_Verify(content: bytes) -> dict[str, Any]:
 
     record_catalog_sha256 = Sha256_Get(payloads["record_catalog.json"])
     project_semantics_sha256 = Sha256_Get(payloads["project_semantics.json"])
+    object_hash = None
+    if schema_minor == 3:
+        from silverstar_data_contracts.objects import ObjectCatalog_Validate
+        ObjectCatalog_Validate(json_values["object_catalog.json"])
+        object_hash = Sha256_Get(payloads["object_catalog.json"])
+        if manifest.get("object_catalog_sha256") != object_hash:
+            raise ValueError("Log decoder object catalog hash mismatch")
     generation_profile_sha256 = GenerationProfileHash_Get(
-        record_catalog_sha256,
-        project_semantics_sha256,
-        str(container_plugin["id"]),
-    )
+        record_catalog_sha256, project_semantics_sha256, str(container_plugin["id"]),
+        object_catalog_sha256=object_hash, package_schema="1." + str(schema_minor))
     if (
         manifest.get("record_catalog_sha256") != record_catalog_sha256
         or manifest.get("project_semantics_sha256")

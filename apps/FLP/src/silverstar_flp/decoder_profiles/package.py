@@ -98,6 +98,7 @@ class DecoderProfilePackage:
     checksums: Mapping[str, str]
     member_names: tuple[str, ...]
     metadata: Mapping[str, Any] = field(default_factory=dict)
+    object_catalog: Mapping[str, Any] | None = None
 
     @classmethod
     def Load(
@@ -129,9 +130,14 @@ class DecoderProfilePackage:
             raise DecoderProfileError("decoder_package_zip_invalid", str(exc)) from exc
 
         actual_names = frozenset(files)
-        if actual_names != _REQUIRED_FILES:
-            missing = sorted(_REQUIRED_FILES - actual_names)
-            unexpected = sorted(actual_names - _REQUIRED_FILES)
+        if "manifest.json" not in files:
+            raise DecoderProfileError("decoder_package_required_file_missing", "manifest.json")
+        manifest = _Json_Load(files["manifest.json"], "manifest.json", package_limits)
+        major, minor = _PackageSchema_Get(manifest)
+        required_files = _REQUIRED_FILES | ({"object_catalog.json"} if (major, minor) == (1, 3) else set())
+        if actual_names != required_files:
+            missing = sorted(required_files - actual_names)
+            unexpected = sorted(actual_names - required_files)
             raise DecoderProfileError(
                 (
                     "decoder_package_required_file_missing"
@@ -168,6 +174,19 @@ class DecoderProfilePackage:
             semantics_name,
         )
         _Manifest_Validate(manifest, actual_names)
+        object_document = None
+        object_sha256 = None
+        if (major, minor) == (1, 3):
+            from silverstar_flp.decoder_profiles.object_catalog import ObjectCatalog_Validate
+            object_document = _Json_Load(files["object_catalog.json"], "object_catalog.json", package_limits)
+            _CanonicalJson_Validate(object_document, files["object_catalog.json"], "object_catalog.json")
+            try:
+                ObjectCatalog_Validate(object_document)
+            except (ValueError, TypeError) as error:
+                raise DecoderProfileError("decoder_object_catalog_invalid", str(error)) from error
+            object_sha256 = hashlib.sha256(files["object_catalog.json"]).hexdigest()
+            _DeclaredHash_Validate(manifest, ("object_catalog_sha256",), object_sha256,
+                                   "decoder_object_catalog_hash_mismatch", required=True)
         _ApplicationVersion_Validate(manifest)
         _PrimitiveTypes_Validate(manifest)
         try:
@@ -272,6 +291,7 @@ class DecoderProfilePackage:
             catalog.sha256,
             semantics.sha256,
             generation_sha256,
+            object_sha256,
         )
         declared_generation_hash_128 = _Hash_Get(
             manifest,
@@ -287,6 +307,7 @@ class DecoderProfilePackage:
 
         result = cls(
             source_path=source_path,
+            object_catalog=MappingProxyType(object_document) if object_document is not None else None,
             manifest=MappingProxyType(dict(manifest)),
             catalog=catalog,
             semantics=semantics,
@@ -500,7 +521,7 @@ def _Manifest_Validate(
     if manifest.get("format") != "SilverStar.ssdecoder":
         raise DecoderProfileError("decoder_package_format_invalid")
     major, minor = _PackageSchema_Get(manifest)
-    if major != 1 or minor != 2:
+    if major != 1 or minor not in (2, 3):
         raise DecoderProfileError(
             "decoder_package_format_version_unsupported",
             f"{major}.{minor}",
@@ -508,7 +529,7 @@ def _Manifest_Validate(
     package_schema = manifest.get("package_schema")
     if isinstance(package_schema, Mapping):
         schema_id = package_schema.get("id")
-        if schema_id != "silverstar.ssdecoder.package-schema/1.2":
+        if schema_id != f"silverstar.ssdecoder.package-schema/1.{minor}":
             raise DecoderProfileError("decoder_package_schema_invalid")
     else:
         raise DecoderProfileError("decoder_package_schema_invalid")
@@ -738,6 +759,7 @@ def _GenerationHash_Validate(
     catalog_sha256: str,
     semantics_sha256: str,
     declared_sha256: str,
+    object_sha256: str | None = None,
 ) -> None:
     package_schema = manifest.get("package_schema")
     if not isinstance(package_schema, Mapping):
@@ -752,6 +774,7 @@ def _GenerationHash_Validate(
         + b"\n"
         + bytes.fromhex(catalog_sha256)
         + bytes.fromhex(semantics_sha256)
+        + (bytes.fromhex(object_sha256) if object_sha256 is not None else b"")
     ).hexdigest()
     if declared_sha256 != binary_contract:
         raise DecoderProfileError(

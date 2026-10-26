@@ -21,6 +21,12 @@ static PlatformResult gpio_result = PLATFORM_OK;
 static LoraDeactivateResult retire_result = LoraDeactivateResult_Ok;
 static LoraTxEnqueueResult tx_result = LORA_TX_ENQUEUE_OK;
 static LoraRxDequeueResult rx_result = LORA_RX_DEQUEUE_EMPTY;
+#if (GROUND_TM_S_ENABLED != 0U)
+static uint8_t tm_frame[61], tm_length;
+static LoraOperatingMode tm_mode;
+LoraModeSetResult Lora_OperatingModeSet(uint8_t instance, LoraOperatingMode mode)
+{ assert(instance < PROJECT_SX1281_INSTANCE_COUNT); tm_mode = mode; return LoraModeSetResult_Ok; }
+#endif
 static char calls[128];
 static unsigned call_count;
 static void Call(char name) { assert(call_count < sizeof(calls)); calls[call_count++] = name; }
@@ -51,7 +57,15 @@ void Lora_GetStats(uint8_t i, LoraStats *out) { *out = states[i]; }
 LoraTxEnqueueResult Lora_TxEnqueue(uint8_t i, const uint8_t *data, uint8_t len)
 { assert(data != NULL && len == 1U); tx_count[i]++; return tx_result; }
 LoraRxDequeueResult Lora_RxDequeue(uint8_t i, uint8_t *data, uint8_t *len, int8_t *rssi, int8_t *snr)
-{ (void)data; (void)len; (void)rssi; (void)snr; rx_count[i]++; return rx_result; }
+{
+    (void)rssi; (void)snr; rx_count[i]++;
+#if (GROUND_TM_S_ENABLED != 0U)
+    if (rx_result == LORA_RX_DEQUEUE_OK) { memcpy(data, tm_frame, tm_length); *len = tm_length; }
+#else
+    (void)data; (void)len;
+#endif
+    return rx_result;
+}
 
 static void Routing(uint8_t owner)
 {
@@ -184,5 +198,36 @@ int main(int argc, char **argv)
         assert(gpio_level[tx] == GROUND_ACTIVITY_TX_ACTIVE_HIGH);
         return 0;
     }
+#if (GROUND_TM_S_ENABLED != 0U)
+    if (strcmp(argv[1], "simplex") == 0)
+    {
+        uint8_t out[61], length = 0U, byte = 1U;
+        int8_t rssi = 0, snr = 0;
+        assert(tm_mode == LoraOperatingMode_ReceiveOnly);
+        assert(GroundRadio_TxEnqueue(&byte, 1U) == GROUND_RADIO_BUSY);
+        rx_result = LORA_RX_DEQUEUE_OK;
+        tm_frame[0] = 1U; tm_frame[1] = 0x12U; tm_frame[4] = 123U;
+        tm_frame[9] = 1U; tm_frame[10] = 7U; tm_frame[11] = 15U;
+        tm_frame[12] = 16U; tm_frame[13] = 1U; tm_frame[15] = 1U;
+        tm_frame[16] = 1U; tm_length = 24U;
+        assert(GroundRadio_RxDequeue(out, &length, &rssi, &snr) == GROUND_RADIO_OK);
+        Tick(1U); assert(tm_mode == LoraOperatingMode_HalfDuplex);
+        assert(GroundRadio_TxEnqueue(&byte, 1U) == GROUND_RADIO_OK);
+        memset(tm_frame + 8, 0, sizeof(tm_frame) - 8U);
+        tm_frame[1] = 0x40U; tm_frame[10] = 1U; tm_frame[12] = 2U; tm_length = 16U;
+        assert(GroundRadio_RxDequeue(out, &length, &rssi, &snr) == GROUND_RADIO_OK);
+        assert(GroundRadio_TxEnqueue(&byte, 1U) == GROUND_RADIO_BUSY);
+        Tick(2U); assert(tm_mode == LoraOperatingMode_ReceiveOnly);
+        /* A delayed preflight capability cannot reopen this mission. */
+        tm_frame[1] = 0x12U; tm_frame[9] = 1U; tm_frame[10] = 7U;
+        tm_frame[11] = 15U; tm_frame[12] = 16U; tm_frame[13] = 1U;
+        tm_frame[15] = 1U; tm_frame[16] = 1U; tm_length = 24U;
+        assert(GroundRadio_RxDequeue(out, &length, &rssi, &snr) == GROUND_RADIO_OK);
+        Tick(3U); assert(tm_mode == LoraOperatingMode_ReceiveOnly);
+        online[initial] = 0U; Tick(4U); Tick(254U);
+        assert(tm_mode == LoraOperatingMode_ReceiveOnly);
+        return 0;
+    }
+#endif
     assert(0 && "unknown scenario"); return 1;
 }

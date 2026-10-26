@@ -27,7 +27,8 @@
   "build": {
     "sources": [
       "Platform/STM32F4/Src/platform_critical_stm32f4.c",
-      "Platform/STM32F4/Src/platform_memory_stm32f4.c"
+      "Platform/STM32F4/Src/platform_memory_stm32f4.c",
+      "Platform/STM32F4/Src/platform_boot_session_stm32f4.c"
     ],
     "include_dirs": [
       "Platform/STM32F4/Inc",
@@ -55,6 +56,12 @@
     "display_names": {
       "zh_CN": "STM32F4 系列后端",
       "en_US": "STM32F4 Family Backend"
+    },
+    "boot_session": {
+      "provider": "hardware_rng",
+      "owner": "telemetry startup",
+      "clock": "48 MHz RNG kernel",
+      "qualification": "ARM compile/Host model only; hardware entropy not verified"
     }
   },
   "platform": {

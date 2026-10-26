@@ -49,34 +49,31 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
             summary.setWordWrap(True)
             summary.setTextFormat(Qt.TextFormat.PlainText)
             summary.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
-            body.addWidget(summary, 1, 0)
+            body.addWidget(summary, 2, 0)
             device_summary = QLabel()
             device_summary.setWordWrap(True)
             device_summary.setTextFormat(Qt.TextFormat.PlainText)
             device_summary.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
-            body.addWidget(device_summary, 2, 0)
+            body.addWidget(device_summary, 3, 0)
             self.device_summaries[target] = device_summary
             # A long English status must wrap inside its target, rather than
             # increase the scroll content width beyond the visible viewport.
             page.hardware_status.setWordWrap(True)
             page.selection_group.layout().setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
             page.root_layout.removeWidget(page.selection_group)
-            body.addWidget(page.selection_group, 3, 0)
+            body.addWidget(page.selection_group, 0, 0)
             page.root_layout.removeWidget(page.custom_widget)
-            body.addWidget(page.custom_widget, 4, 0)
+            body.addWidget(page.custom_widget, 1, 0)
             page.root_layout.removeWidget(page.provider_notice)
             option = QWidget()
             if target == 'ground':
-                # Ground inclusion controls generation, never existence of this editor.
                 ground_target_page.radio_form.removeWidget(ground_target_page.enabled)
-                option = ground_target_page.enabled
-                ground_target_page.enabled.show()
-            body.addWidget(option, 0, 0)
+                ground_target_page.enabled.hide()
+            body.addWidget(option, 4, 0)
             button = QPushButton()
             button.clicked.connect(lambda _checked=False, selected=target: self.Reveal(self._target_sections[selected]))
             body.addWidget(button, 5, 0)
-            self._header_rows[target] = (option, summary, device_summary,
-                                         page.selection_group, page.custom_widget, button)
+            self._header_rows[target] = (page.selection_group, page.custom_widget, summary, device_summary, option, button)
             self.target_cards[target] = card
             self.target_summaries[target] = summary
             self.target_buttons[target] = button
@@ -237,6 +234,21 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
             ' / ' + str(item.tx_power_dbm) + ' dBm' for item in GroundRadioConfigurations_Get(ground) if item.plugin) or '—'
         self.link_summary.setText(text('workspace.hardware.link_summary',
             frequency=f'{model.air_link.frequency_hz/1000000:g}', flight=flight_text, ground=ground_text))
+        profile = model.air_link.protocol_profile
+        summary = text('telemetry.mode.s' if profile == 'ss_tm.s.0_1' else
+                       'telemetry.mode.h' if profile == 'ss_tm.h.0_1' else 'telemetry.mode.legacy')
+        if profile in ('ss_tm.s.0_1', 'ss_tm.h.0_1') and model.air_link.radio_family == 'sx128x':
+            from silverstar_telemetry.plan import TelemetryPlan_Get
+            try:
+                plan = TelemetryPlan_Get('S' if profile == 'ss_tm.s.0_1' else 'H',
+                    sf=model.air_link.spreading_factor, bandwidth_hz=model.air_link.bandwidth_hz,
+                    coding_rate=model.air_link.coding_rate, preamble=model.air_link.preamble_symbols)
+                summary += '\n' + text('telemetry.budget', tx=f"{plan['tx_fraction']*100:.2f}",
+                                        scheduler=f"{plan['scheduler_fraction']*100:.2f}")
+            except ValueError as error:
+                summary += '\n' + str(error)
+        self.link_summary.setText(self.link_summary.text() + '\n' + summary)
+
         selected = set(model.ComponentIds_Get())
         devices = [item.instance_id + ': ' + item.name + (' / ' + item.interface if item.interface else '')
                    for item in self.devices_page._instances]

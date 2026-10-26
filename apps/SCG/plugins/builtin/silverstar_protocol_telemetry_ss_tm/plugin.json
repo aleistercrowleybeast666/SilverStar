@@ -1,0 +1,158 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.protocol.telemetry.ss_tm",
+  "name": "SilverStar Telemetry",
+  "type": "protocol",
+  "class": "telemetry",
+  "version": "0.1.0",
+  "description": "SS-TM-S/H 0.1 explicit shared header, absolute recovery position and health; legacy payload arithmetic retained.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "protocol.air"
+  ],
+  "build": {
+    "sources": [],
+    "asm_sources": [],
+    "include_dirs": [],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "Protocol/SS_TM"
+    ]
+  },
+  "metadata": {
+    "display_names": {
+      "zh_CN": "SilverStar Telemetry",
+      "en_US": "SilverStar Telemetry"
+    },
+    "source_origins": {
+      "legacy_payload_codec": "Owned AIR M0 at 3ee3dcb3; symbol-prefixed private payload serializer; historical wire remains unchanged"
+    },
+    "contract": "contracts/ss_tm_v0_1.json",
+    "log_compatibility_tag": "SSTM0001"
+  },
+  "protocol": {
+    "category": "telemetry",
+    "logging_metadata": "Protocol/SS_TM/metadata.json",
+    "maintenance_protocol_version": "0.0",
+    "firmware_version": "0.1.0",
+    "documentation_version": "0.1.0",
+    "profiles": {
+      "telemetry": [
+        {
+          "id": "ss_tm.s.0_1",
+          "version": "0.1",
+          "display_names": {
+            "zh_CN": "SS-TM-S 0.1",
+            "en_US": "SS-TM-S 0.1"
+          },
+          "service": "telemetry_service",
+          "slot": "telemetry_protocol",
+          "codec_sources": [
+            "Protocol/SS_TM/Legacy/ss_tm_legacy.c",
+            "Protocol/SS_TM/Src/ss_tm_protocol.c",
+            "Modules/Src/telemetry_tm.c"
+          ],
+          "parser_sources": [
+            "Protocol/SS_TM/Src/ss_tm_protocol.c"
+          ],
+          "include_dirs": [
+            "Protocol/SS_TM/Inc",
+            "Protocol/SS_TM/Legacy"
+          ],
+          "defines": [
+            "SYSTEM_TELEMETRY_TM_ENABLED=1U",
+            "SYSTEM_TELEMETRY_TM_PROFILE=0U"
+          ],
+          "binding": "telemetry_transport",
+          "transport_selection": "ordered_failover",
+          "transport": {
+            "capability": "transport.packet",
+            "kind": "packet",
+            "minimum_mtu": 56,
+            "ordered": true,
+            "bidirectional": true,
+            "reliable": false,
+            "mode": "datagram"
+          },
+          "decoder_metadata": "Protocol/SS_TM/metadata.json",
+          "documentation": [
+            "docs/AIR_PROTOCOL.md"
+          ],
+          "host_tests": [
+            "Tests/Host/test_air_kf.c",
+            "Tests/Host/test_telemetry.c"
+          ],
+          "golden_tests": [
+            "Tests/Host/test_air_kf.c",
+            "Tests/Host/test_telemetry.c"
+          ]
+        },
+        {
+          "id": "ss_tm.h.0_1",
+          "version": "0.1",
+          "display_names": {
+            "zh_CN": "SS-TM-H 0.1",
+            "en_US": "SS-TM-H 0.1"
+          },
+          "service": "telemetry_service",
+          "slot": "telemetry_protocol",
+          "codec_sources": [
+            "Protocol/SS_TM/Legacy/ss_tm_legacy.c",
+            "Protocol/SS_TM/Src/ss_tm_protocol.c",
+            "Modules/Src/telemetry_tm.c"
+          ],
+          "parser_sources": [
+            "Protocol/SS_TM/Src/ss_tm_protocol.c"
+          ],
+          "include_dirs": [
+            "Protocol/SS_TM/Inc",
+            "Protocol/SS_TM/Legacy"
+          ],
+          "defines": [
+            "SYSTEM_TELEMETRY_TM_ENABLED=1U",
+            "SYSTEM_TELEMETRY_TM_PROFILE=1U"
+          ],
+          "binding": "telemetry_transport",
+          "transport_selection": "ordered_failover",
+          "transport": {
+            "capability": "transport.packet",
+            "kind": "packet",
+            "minimum_mtu": 56,
+            "ordered": true,
+            "bidirectional": true,
+            "reliable": false,
+            "mode": "datagram"
+          },
+          "decoder_metadata": "Protocol/SS_TM/metadata.json",
+          "documentation": [
+            "docs/AIR_PROTOCOL.md"
+          ],
+          "host_tests": [
+            "Tests/Host/test_air_kf.c",
+            "Tests/Host/test_telemetry.c"
+          ],
+          "golden_tests": [
+            "Tests/Host/test_air_kf.c",
+            "Tests/Host/test_telemetry.c"
+          ]
+        }
+      ]
+    }
+  }
+}

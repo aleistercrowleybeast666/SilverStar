@@ -53,6 +53,7 @@ class LogOpenRequest:
     project_path: Path | None = None
     dataset_cache_reference: dict | None = None
     allow_unverified_decoder: bool = False
+    decoder_search_directories: tuple[Path, ...] = ()
 
     def __post_init__(self) -> None:
         if isinstance(self.log_path, (list, tuple, set, frozenset)):
@@ -71,6 +72,10 @@ class LogOpenRequest:
             )
         if self.task_directory is not None:
             object.__setattr__(self, "task_directory", Path(self.task_directory))
+        if (type(self.decoder_search_directories) is not tuple or len(self.decoder_search_directories) > 4
+                or any(not isinstance(path, (str, Path)) for path in self.decoder_search_directories)):
+            raise ValueError('decoder_search_directories_invalid')
+        object.__setattr__(self, 'decoder_search_directories', tuple(Path(path) for path in self.decoder_search_directories))
         if type(self.allow_unverified_decoder) is not bool:
             raise ValueError("custom_decoder_opt_in_invalid")
         if self.allow_unverified_decoder and (
@@ -244,6 +249,51 @@ class LogOpenCoordinator:
             limit_reached=discovery.limit_reached,
         )
 
+    def _ExactCachePair_Find(self, log_path):
+        containers = self._ContainerPlugins_Get()
+        candidates = set()
+        visited = set()
+        for container in containers.values():
+            if id(container) in visited:
+                continue
+            visited.add(id(container))
+            try:
+                descriptor = DecoderProfileMatcher.Descriptor_Read(log_path, container)
+            except (DecoderProfileError, OSError):
+                continue
+            # A capacity error from the exact cache is a diagnostic, not a
+            # reason to silently pretend the cache was empty.
+            candidates.update(self.cache.ExactCandidates_Get(descriptor))
+        matches = DecoderProfileMatcher(containers, package_limits=self.package_limits).Match(log_path, tuple(candidates))
+        if len(matches.matches) > 1:
+            raise DecoderProfileError('decoder_profile_match_ambiguous', 'exact cache contains distinct matching packages')
+        return matches.matches[0].package.source_path if matches.matches else None
+
+    def _AutomaticPair_Find(self, request, log_path):
+        cached = self._ExactCachePair_Find(log_path)
+        if cached is not None:
+            return cached
+        roots = [request.task_directory or log_path.parent, *request.decoder_search_directories]
+        if request.project_path is not None:
+            roots.append(Path(request.project_path).parent)
+        paths, visited = set(), set()
+        scanned = 0
+        for root in roots:
+            resolved = Path(root).resolve()
+            if resolved in visited or not resolved.is_dir():
+                continue
+            visited.add(resolved)
+            discovery = self.scanner.Scan(resolved)
+            scanned += discovery.scanned_file_count
+            if discovery.limit_reached or scanned > self.scanner.limits.maximum_file_count:
+                raise DecoderProfileError('decoder_discovery_limit_reached', str(root))
+            paths.update(discovery.decoder_package_paths)
+        matches = DecoderProfileMatcher(self._ContainerPlugins_Get(), package_limits=self.package_limits).Match(log_path, tuple(paths))
+        if len(matches.matches) != 1:
+            raise DecoderProfileError('decoder_profile_match_ambiguous' if matches.matches else
+                'decoder_profile_exact_match_missing', 'Descriptor identity required; no filename/version fallback')
+        return matches.matches[0].package.source_path
+
     def Open(
         self,
         request: LogOpenRequest,
@@ -254,29 +304,14 @@ class LogOpenCoordinator:
         task_context.Progress_Report(0.02, "log_open.package")
         if request.allow_unverified_decoder:
             return self._OpenUserCustom(request, log_path, task_context)
+        # An explicitly supplied existing package is checked first, including
+        # against the Descriptor. A bad pair cannot be hidden by a good cache.
+        if request.decoder_package_path is not None and request.decoder_package_path.is_file():
+            return self._OpenWithSourcePackage(log_path, self._PackagePath_Validate(request.decoder_package_path),
+                                               task_context, cache_request=request)
         if request.auto_find:
-            selected = request.task_directory or log_path.parent
-            discovery = self.PairDiscovery_Run(
-                selected,
-                target_log_path=log_path,
-            )
-            if len(discovery.pairs) != 1:
-                code = (
-                    "decoder_profile_match_ambiguous"
-                    if len(discovery.pairs) > 1
-                    else "decoder_profile_exact_match_missing"
-                )
-                raise DecoderProfileError(
-                    code,
-                    "|".join(discovery.diagnostics),
-                )
-            package_path = discovery.pairs[0].decoder_package_path
-            return self._OpenWithSourcePackage(
-                log_path,
-                package_path,
-                task_context,
-                cache_request=request,
-            )
+            package_path = self._AutomaticPair_Find(request, log_path)
+            return self._OpenWithSourcePackage(log_path, package_path, task_context, cache_request=request)
 
         containers = self._ContainerPlugins_Get()
         cached_package: DecoderProfilePackage | None = None

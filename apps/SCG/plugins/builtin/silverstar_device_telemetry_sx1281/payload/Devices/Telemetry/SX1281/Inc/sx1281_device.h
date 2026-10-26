@@ -26,8 +26,31 @@ typedef enum
     LORA_TX_ENQUEUE_OK = 0U,
     LORA_TX_ENQUEUE_NOT_INIT,
     LORA_TX_ENQUEUE_BAD_PARAM,
-    LORA_TX_ENQUEUE_QUEUE_FULL
+    LORA_TX_ENQUEUE_QUEUE_FULL,
+    LORA_TX_ENQUEUE_MODE_BLOCKED
 } LoraTxEnqueueResult;
+
+typedef enum
+{
+    LoraOperatingMode_HalfDuplex = 0U,
+    LoraOperatingMode_TransmitOnly,
+    LoraOperatingMode_ReceiveOnly
+} LoraOperatingMode;
+
+typedef enum
+{
+    LoraModeSetResult_Ok = 0U,
+    LoraModeSetResult_InvalidArgument,
+    LoraModeSetResult_Busy,
+    LoraModeSetResult_NotReady,
+    LoraModeSetResult_IoError
+} LoraModeSetResult;
+
+/* Owner context only. A live TX/transaction must finish before a switch.
+ * ReceiveOnly retires queued uplinks; TransmitOnly retires stale RX commands.
+ * Desired mode and role survive radio fault/reinitialization. */
+LoraModeSetResult Lora_OperatingModeSet(uint8_t instance, LoraOperatingMode mode);
+LoraOperatingMode Lora_OperatingModeGet(uint8_t instance);
 
 typedef enum
 {

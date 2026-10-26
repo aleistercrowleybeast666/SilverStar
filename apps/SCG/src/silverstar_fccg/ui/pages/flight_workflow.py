@@ -12,6 +12,7 @@ from silverstar_fccg.ui.widgets import CollapsibleSection
 
 
 class FlightWorkflowPage(ScrollableLocalizedPage):
+    configurationChanged = Signal(object)
     functionsChanged = Signal(object)
     functionAddRequested = Signal(str)
     functionRemoveRequested = Signal(str)
@@ -70,7 +71,21 @@ class FlightWorkflowPage(ScrollableLocalizedPage):
         for owner in (legacy,navigation):
             owner.hide();owner.setParent(self)
         self.stage_panel.selectionChanged.connect(self._Stage_Changed)
+        self.stage_panel.editRequested.connect(self._StageDialog_Open)
         self.Language_Apply(translator)
+
+    def _StageDialog_Open(self, identity):
+        if self._model is None or self._model.mission_process is None: return
+        from PySide6.QtWidgets import QDialog
+        from silverstar_fccg.ui.mission_stage_transaction import MissionStageTransactionDialog
+        snapshot = deepcopy(self._model)
+        snapshot.mission_process = deepcopy(self.stage_panel._process)
+        functions = self.PendingFunctions_Collect()
+        if functions is not None: snapshot.mission_functions = functions
+        dialog = MissionStageTransactionDialog(self._translator, snapshot, self._catalog, identity, self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            self.configurationChanged.emit(dialog.Configuration_Get())
+        dialog.deleteLater()
 
     def eventFilter(self, watched, event):
         if watched is self._scroll.viewport() and event.type() == QEvent.Type.Resize:
@@ -105,7 +120,7 @@ class FlightWorkflowPage(ScrollableLocalizedPage):
         references={}
         for function in Functions_Derive(model,catalog)['functions']:
             for key in ('start','stop'):
-                if function[key]['kind']=='stage_enter':
+                if function[key]['kind'] in ('stage_enter','stage_exit'):
                     references.setdefault(function[key]['stage_id'],[]).append(function['instance_id'])
         self.stage_panel.boundary_references=references
         self._refreshing=True
@@ -170,6 +185,8 @@ class FlightWorkflowPage(ScrollableLocalizedPage):
         if not drafts:return None
         value=Functions_Derive(self._model,self._catalog)
         value['functions']=[drafts.get(row['instance_id'],row) for row in value['functions']]
+        if any(row[key]['kind']=='stage_exit' for row in value['functions'] for key in ('start','stop')):
+            value['schema_version']=2
         return value
 
     def Drafts_Clear(self):

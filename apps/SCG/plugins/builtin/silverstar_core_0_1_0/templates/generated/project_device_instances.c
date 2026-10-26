@@ -1127,6 +1127,16 @@ SystemDeviceResult ProjectTelemetryInstance_Stop(uint8_t instance_id)
     }
 }
 
+SystemDeviceResult ProjectTelemetryInstance_ModeSet(uint8_t instance_id, SystemTelemetryMode mode)
+{
+    (void)mode; /* A legacy endpoint may explicitly lack this operation. */
+    switch (instance_id)
+    {
+        case 0U: return SystemTelemetry_ModeSet(mode);
+        default: return SYSTEM_DEVICE_NOT_PRESENT;
+    }
+}
+
 SystemDeviceResult ProjectTelemetryInstance_Send(
     uint8_t instance_id, const uint8_t *data, uint16_t length)
 {

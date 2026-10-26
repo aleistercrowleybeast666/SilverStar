@@ -27,7 +27,8 @@
   "build": {
     "sources": [
       "Platform/STM32H7/Src/platform_critical_stm32h7.c",
-      "Platform/STM32H7/Src/platform_memory_stm32h7.c"
+      "Platform/STM32H7/Src/platform_memory_stm32h7.c",
+      "Platform/STM32H7/Src/platform_boot_session_stm32h7.c"
     ],
     "include_dirs": [
       "Platform/STM32H7/Inc",
@@ -61,6 +62,12 @@
     "source_origins": {
       "default": "silverstar_h743zi_static_candidate",
       "Drivers": "STM32Cube FW_H7 V1.12.1"
+    },
+    "boot_session": {
+      "provider": "hardware_rng",
+      "owner": "telemetry startup",
+      "clock": "48 MHz RNG kernel",
+      "qualification": "ARM compile/Host model only; hardware entropy not verified"
     }
   },
   "platform": {

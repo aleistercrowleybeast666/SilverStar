@@ -7,9 +7,10 @@
     "mission_start",
     "stage_enter",
     "system_landed",
-    "lifecycle_end"
+    "lifecycle_end",
+    "stage_exit"
   ],
-  "interval": "start inclusive, stop exclusive; system preparation and accepted START retain their existing semantics",
+  "interval": "v1 retains entry-stop exclusive semantics; v2 stage_enter to stage_exit includes the final stage, including equal-stage intervals; arbitrary bounds remain reference-only",
   "once_semantics": "Request once per runtime instance; completion/failure must be reported explicitly, never inferred from a single invocation",
   "parameter_source": "Project algorithm_parameters and plugin actual-value contract; bindings do not copy parameters",
   "backend": "Legacy adapter declarations preserve the installed manifest identities. Arbitrary stage bounds remain desktop-reference only.",
@@ -337,5 +338,9 @@
   },
   "condition_source_semantics": "The first selected project navigation strategy owns numeric condition signals. Its output must be available before entry-condition sampling; producer start at the same entry cannot satisfy it.",
   "external_event_semantics": "Events such as launch_detected are supplied by their authoritative producer; this adapter does not infer an estimator dependency from an event or stage name.",
-  "reference_snapshot_order": "One validated state/time snapshot: evaluate entry condition, commit at most one stage transition, stop intervals, start intervals in dependency order, then return each continuous instance once. No algorithm/hardware execution is inferred."
+  "reference_snapshot_order": "One validated state/time snapshot: evaluate entry condition, commit at most one stage transition, stop intervals, start intervals in dependency order, then return each continuous instance once. No algorithm/hardware execution is inferred.",
+  "compatible_schema_versions": [
+    1,
+    2
+  ]
 }

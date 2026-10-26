@@ -60,6 +60,8 @@ from protocol.common import (
 )
 from protocol.gsp_min import GsStatus, GsToPcAirFrame, GspAck, build_pc_to_gs_air_frame
 from protocol.receive_pipeline import ProtocolEvent
+from protocol.ss_tm import TelemetryCommand_Build
+from services.telemetry_session import TelemetryObserveResult
 from services.data_migration import DataMigrationConflictPolicy
 from services.i18n import EnumParam, I18n
 from services.logger import AsyncJsonlLogger
@@ -1089,8 +1091,10 @@ class Controller(QObject):
         self._controller_time_ms = None
         self._controller_rollback_ms = None
         recovery = self.state.recovery
+        telemetry = self.state.telemetry
+        if telemetry.boot_session is not None: telemetry.passive = True
         self.state = FlightControllerState(
-            recovery=recovery,
+            recovery=recovery, telemetry=telemetry,
             session_generation=self._next_state_generation(),
             connected=connected,
             connection_text=connection_text,
@@ -1393,7 +1397,7 @@ class Controller(QObject):
     def on_protocol_batch(self, batch: ProtocolBatch) -> None:
         if batch.session_generation != self._connection_generation:
             return
-        if batch.recovery_session is not None:
+        if batch.recovery_session is not None and self.state.telemetry.boot_session is None:
             self.state.recovery_current_session = batch.recovery_session
         for event in batch.events:
             if isinstance(event.parsed_gsp, GsToPcAirFrame):
@@ -1445,7 +1449,7 @@ class Controller(QObject):
 
     def _next_air_seq(self) -> int:
         value = self.air_seq
-        self.air_seq = (self.air_seq + 1) & 0xFF
+        self.air_seq = (self.air_seq + 1) & (0xFFFF if self.state.telemetry.boot_session is not None else 0xFF)
         return value
 
     def _cal_start_allowed(self, mode: int) -> bool:
@@ -1471,6 +1475,12 @@ class Controller(QObject):
             }
         )
         return False
+
+    def TelemetryCommand_Build(self, sequence, command, token, param0=0, param1=0):
+        tm = self.state.telemetry
+        if tm.boot_session is None:
+            return build_air_cmd(sequence, command, token, param0, param1)
+        return TelemetryCommand_Build(tm.profile, tm.boot_session, sequence, command, token, param0, param1)
 
     def _send_air_cmd(
         self,
@@ -1502,7 +1512,7 @@ class Controller(QObject):
             return False
 
         seq = self._next_air_seq()
-        air_frame = build_air_cmd(seq, cmd_id, token, param0, param1)
+        air_frame = self.TelemetryCommand_Build(seq, cmd_id, token, param0, param1)
         gsp_frame = build_pc_to_gs_air_frame(air_frame)
         pending = PendingAirCommand(
             seq=seq,
@@ -1528,6 +1538,9 @@ class Controller(QObject):
         *,
         is_retry: bool,
     ) -> None:
+        if self.state.telemetry.boot_session is not None and self.state.telemetry.passive:
+            self._resolve_pending_air_cmd(pending, "PASSIVE_SESSION", detail="SS-TM uplink disabled")
+            return
         if pending.cmd_id == int(AirCmdId.START_MISSION) and not self.state.start_prerequisites_ready():
             self._resolve_pending_air_cmd(pending, "LOCAL_REJECTED", detail="M0 board prerequisites expired")
             self._set_radio_message("radio.start_blocked", reason=self._tr("common.not_ready"))
@@ -1589,12 +1602,9 @@ class Controller(QObject):
             )
 
         command_seq = self._next_air_seq()
-        air_frame = build_air_cmd(
-            command_seq,
-            int(AirCmdId.CAPABILITY_ACK),
-            0,
-            capability.seq,
-            capability.air_profile_id,
+        air_frame = self.TelemetryCommand_Build(
+            command_seq, int(AirCmdId.CAPABILITY_ACK), 0, capability.seq & 0xFF,
+            (capability.seq >> 8) if self.state.telemetry.boot_session is not None else capability.air_profile_id,
         )
         self.pending_capability_ack = PendingCapabilityAck(
             capability_seq=capability.seq,
@@ -1614,6 +1624,9 @@ class Controller(QObject):
     def _transmit_capability_ack(self, *, is_retry: bool) -> None:
         pending = self.pending_capability_ack
         if pending is None or self.worker is None:
+            return
+        if self.state.telemetry.boot_session is not None and self.state.telemetry.passive:
+            self._clear_capability_ack("PASSIVE_SESSION")
             return
         self.worker.send_bytes(pending.gsp_frame)
         pending.sent_count += 1
@@ -1810,7 +1823,7 @@ class Controller(QObject):
         result: int | None = None,
         detail: str = "",
     ) -> bool:
-        key = (pending.seq & 0xFF, pending.cmd_id & 0xFF)
+        key = (pending.seq, pending.cmd_id & 0xFF)
         if self.pending_air_cmds.get(key) is not pending:
             return False
         del self.pending_air_cmds[key]
@@ -2073,6 +2086,39 @@ class Controller(QObject):
         self._send_air_cmd(int(AirCmdId.ALIGN_RESET), TOKEN_ALIGNMENT)
 
     def _handle_air_message(self, message, event: ProtocolEvent | None = None) -> None:
+        tm_frame = getattr(event, 'tm_frame', None)
+        if tm_frame is not None:
+            tm = self.state.telemetry
+            previous_session = tm.boot_session
+            observed = tm.Frame_Observe(tm_frame, event.host_rx_monotonic_ns)
+            if observed is not TelemetryObserveResult.Accepted:
+                self._log({"dir": "LOCAL", "layer": "SS_TM", "kind": observed.value,
+                           "boot_session": tm_frame.boot_session, "sequence": tm_frame.sequence})
+                return
+            self.state.recovery_current_session = tm.boot_session
+            if previous_session != tm.boot_session:
+                self.FlightSession_Restart("SS_TM_BOOT_SESSION")
+                self.state.mission_presentation.phase = MissionPhase.UNKNOWN
+            if tm.passive:
+                self._clear_capability_ack("SS_TM_PASSIVE")
+                # An ACK is still matched below before pending transactions are
+                # cancelled; no queued retry may escape this receive boundary.
+                if not isinstance(message, AirAckMessage): self._clear_pending_air_cmds("SS_TM_PASSIVE")
+            if tm_frame.message_type == 0x20 and tm_frame.values.get('event_code') == 3:
+                if tm.current_mission_key != (tm_frame.values['occurred_us'], tm_frame.values['event_id']):
+                    return  # Record late history without replacing the active mission segment.
+                self.state.horizontal_trajectory.Clear()
+                self.state.mission_started = False
+                self.state.mission_first_time_ms = None
+            if tm_frame.message_type == 0x18:
+                self.state.recovery.Absolute_Observe(tm_frame, event.host_rx_monotonic_ns,
+                    source="SS-TM " + tm_frame.profile + " / WGS84 GNSS")
+                self.state.recovery_current_session = tm_frame.boot_session
+                return
+            if tm_frame.message_type == 0x19 or not tm_frame.known:
+                return
+            if tm_frame.message_type == 0x12 and tm.passive:
+                return
         self.state.handshake.last_air_rx_monotonic_ns = (
             event.host_rx_monotonic_ns if event is not None else time.monotonic_ns()
         )
@@ -2092,6 +2138,8 @@ class Controller(QObject):
             self._handle_status_message(message, event)
         elif isinstance(message, AirAckMessage):
             self._handle_ack_message(message)
+            if tm_frame is not None and self.state.telemetry.passive:
+                self._clear_pending_air_cmds("SS_TM_PASSIVE")
 
     def Navigation_HandleMessage(self, message, event: ProtocolEvent | None = None) -> None:
         navigation = self.state.navigation
@@ -2120,7 +2168,7 @@ class Controller(QObject):
         self._clear_capability_ack(reason)
         self.pending_air_cmds.clear()
         self.state = FlightControllerState(
-            recovery=previous.recovery,
+            recovery=previous.recovery, telemetry=previous.telemetry,
             recovery_current_session=previous.recovery_current_session,
             session_generation=previous.session_generation + 1,
             connected=previous.connected, connection_text=previous.connection_text,
@@ -2348,9 +2396,10 @@ class Controller(QObject):
         message: AirFlightStateMessage,
         event: ProtocolEvent | None,
     ) -> None:
-        self._mark_mission_started("first_flight_state", message.time_ms)
-        if self.state.mission_presentation.phase is MissionPhase.PRE_START:
-            self.state.mission_presentation.phase = MissionPhase.MISSION_ACTIVE
+        if getattr(event, 'tm_frame', None) is None:
+            self._mark_mission_started("first_flight_state", message.time_ms)
+            if self.state.mission_presentation.phase is MissionPhase.PRE_START:
+                self.state.mission_presentation.phase = MissionPhase.MISSION_ACTIVE
         self._handle_sensor_message(message, event, source="FLIGHT_STATE")
         # The immutable receive-time identity is independent of GUI delivery order.
         received_session = getattr(event, "recovery_session", None)
@@ -2372,6 +2421,11 @@ class Controller(QObject):
             _ = self.state.horizontal_trajectory.Sample_Append(message.time_ms / 1000.0, message.pos_m)
 
         stats = event.packet_stats if event is not None else None
+        if stats is None and getattr(event, 'tm_frame', None) is not None:
+            # TM mixes several frame types/rates. A timestamp gap is not a
+            # measured RF loss count, and cannot assume the historical 5 Hz.
+            self.state.received_flight_packets += 1
+            return
         if stats is None:
             stats = self._track_flight_packet(message.time_ms)
         self.state.received_flight_packets = int(stats["received_flight_packets"])
@@ -2401,6 +2455,8 @@ class Controller(QObject):
         self._resolve_calibration_pending_from_status(message)
 
         status_id = message.status_id
+        if status_id == int(AirStatusId.BOOT) and getattr(event, 'tm_frame', None) is not None:
+            return  # boot_session, not repeated BOOT events, owns invalidation
         if status_id == int(AirStatusId.BOOT):
             signature = (message.seq, message.time_ms)
             if getattr(self, "_last_boot_signature", None) != signature:
@@ -2554,7 +2610,7 @@ class Controller(QObject):
                 )
             return
 
-        key = (message.ack_seq & 0xFF, message.ack_cmd_id & 0xFF)
+        key = (message.ack_seq, message.ack_cmd_id & 0xFF)
         pending = self.pending_air_cmds.get(key)
         matched = pending is not None
         if pending is not None:

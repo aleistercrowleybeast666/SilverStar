@@ -2,7 +2,7 @@
 from copy import deepcopy
 import re
 
-BOUNDARIES = ('system_prepare', 'mission_start', 'stage_enter', 'system_landed', 'lifecycle_end')
+BOUNDARIES = ('system_prepare', 'mission_start', 'stage_enter', 'stage_exit', 'system_landed', 'lifecycle_end')
 CATEGORIES = ('estimation', 'preparation', 'control', 'recording', 'telemetry')
 
 
@@ -19,7 +19,7 @@ def _Id_Require(value, *, empty=False):
 def Functions_Require(value):
     """Validate structure, retaining unresolved boundaries as repairable drafts."""
     _Keys_Require(value, ('schema_version', 'functions'))
-    if type(value['schema_version']) is not int or value['schema_version'] != 1:
+    if type(value['schema_version']) is not int or value['schema_version'] not in (1, 2):
         raise ValueError('mission_functions_version')
     if type(value['functions']) is not list or len(value['functions']) > 32:
         raise ValueError('mission_functions_count')
@@ -38,8 +38,10 @@ def Functions_Require(value):
             _Keys_Require(boundary, ('kind', 'stage_id'))
             if boundary['kind'] not in BOUNDARIES:
                 raise ValueError('mission_functions_boundary_kind')
+            if boundary['kind'] == 'stage_exit' and value['schema_version'] != 2:
+                raise ValueError('mission_functions_stage_exit_requires_v2')
             _Id_Require(boundary['stage_id'], empty=True)
-            if boundary['kind'] != 'stage_enter' and boundary['stage_id']:
+            if boundary['kind'] not in ('stage_enter', 'stage_exit') and boundary['stage_id']:
                 raise ValueError('mission_functions_unexpected_stage')
         if type(function['depends_on']) is not list or len(function['depends_on']) > 32:
             raise ValueError('mission_functions_dependencies')
@@ -55,15 +57,15 @@ def Functions_Require(value):
 
 def BoundaryIndex_Get(boundary, stage_ids):
     kind = boundary['kind']
-    if kind == 'stage_enter':
-        return stage_ids.index(boundary['stage_id']) if boundary['stage_id'] in stage_ids else None
+    if kind in ('stage_enter', 'stage_exit'):
+        return stage_ids.index(boundary['stage_id']) + (kind == 'stage_exit') if boundary['stage_id'] in stage_ids else None
     if kind == 'system_landed':
         return stage_ids.index('landed') if 'landed' in stage_ids else len(stage_ids)
     return {'system_prepare': -2, 'mission_start': -1, 'lifecycle_end': len(stage_ids)}[kind]
 
 
 def FunctionCoverage_Get(function, stage_ids):
-    """Start inclusive, stop exclusive. A stop marker is displayed separately."""
+    """v1 entry-stop stays exclusive; v2 exit-stop includes the named stage."""
     start, stop = (BoundaryIndex_Get(function[key], stage_ids) for key in ('start', 'stop'))
     result = {}
     if start is None or stop is None or start >= stop:
@@ -103,10 +105,12 @@ class FunctionsReferenceRunner:
         self.last_time_us = None
         self.last_stage_index = -3
 
-    def Snapshot_Step(self, time_us, *, stage_id='', system_prepared=False, mission_started=False):
+    def Snapshot_Step(self, time_us, *, stage_id='', system_prepared=False, mission_started=False,
+                      stage_exited=False, lifecycle_ended=False):
         if type(time_us) is not int or not 0 <= time_us < 2**64 or (self.last_time_us is not None and time_us <= self.last_time_us):
             raise ValueError('mission_functions_time_not_monotonic')
-        if type(stage_id) is not str or type(system_prepared) is not bool or type(mission_started) is not bool or (stage_id and stage_id not in self.stage_ids):
+        if type(stage_id) is not str or any(type(value) is not bool for value in
+                (system_prepared, mission_started, stage_exited, lifecycle_ended)) or (stage_id and stage_id not in self.stage_ids):
             raise ValueError('mission_functions_snapshot')
         stage_index = self.stage_ids.index(stage_id) if stage_id else self.last_stage_index
         if stage_index < self.last_stage_index:
@@ -114,7 +118,11 @@ class FunctionsReferenceRunner:
         def Reached(boundary):
             if boundary['kind'] == 'system_prepare': return system_prepared
             if boundary['kind'] == 'mission_start': return mission_started
-            if boundary['kind'] == 'lifecycle_end': return False
+            if boundary['kind'] == 'lifecycle_end': return lifecycle_ended
+            if boundary['kind'] == 'stage_exit':
+                index = BoundaryIndex_Get(boundary, self.stage_ids)
+                return index is not None and (stage_index >= index or
+                    (stage_index == index - 1 and (stage_exited or lifecycle_ended)))
             if boundary['kind'] == 'system_landed':
                 return 'landed' in self.stage_ids and stage_index >= self.stage_ids.index('landed')
             boundary_index = BoundaryIndex_Get(boundary, self.stage_ids)

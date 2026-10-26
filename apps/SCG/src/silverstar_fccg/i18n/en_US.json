@@ -1157,7 +1157,7 @@
   "workflow.start": "Start boundary",
   "workflow.stop": "Stop boundary",
   "workflow.dependency": "Dependency",
-  "workflow.range_note": "Start inclusive, stop exclusive. Custom phase bounds are reference-only and have no firmware scheduler consumer. Once tasks do not complete after a single invocation.",
+  "workflow.range_note": "Continuous: from start-stage entry through end-stage exit, including the end stage. Equal stages run only in that stage. Legacy entry stops keep their original meaning until explicitly migrated. Arbitrary stage intervals have no firmware scheduler yet; generation rejects them.",
   "workflow.import.preview": "Preview parameter profile changes",
   "workflow.import.changes": "Modify {count} parameters; shared values update their single canonical configuration. Hardware and mission process are retained.",
   "workspace.hardware.more": "{count} more",
@@ -1178,5 +1178,13 @@
   "workflow.lifecycle_only": "The backend does not support custom phase gates for streams or telemetry-profile switching. These are system lifecycle bounds. Edit content/cadence in Mission recording; phases do not reset preparation, required events, drain or finalization.",
   "workflow.restore_lifecycle": "Restore existing system lifecycle bounds",
   "workspace.checks.issues": "Issues · select to locate",
-  "workspace.checks.issue_summary": "Current configuration: {errors} errors, {warnings} notices. Targets validate independently; an unselected Ground target does not block Flight-only generation."
+  "workspace.checks.issue_summary": "Current configuration: {errors} errors, {warnings} notices. Targets validate independently; an unselected Ground target does not block Flight-only generation.",
+  "field.ground_generate_include": "Include Ground in generation",
+  "telemetry.mode.s": "SS-TM-S 0.1 · half duplex preflight; downlink only after START",
+  "telemetry.mode.h": "SS-TM-H 0.1 · bounded half duplex throughout",
+  "telemetry.mode.legacy": "AIR M0 · explicit legacy compatibility",
+  "telemetry.budget": "Default mission plan: TX airtime {tx}%; scheduler demand including RX windows {scheduler}% (model, not RF measurement; events use remaining capacity)",
+  "workflow.transaction.shared": "Parameters are shared by every reference to this instance. Apply commits this dialog as one transaction; Cancel discards all changes. Press Enter to commit numeric values.",
+  "workflow.boundary.stage_exit": "Exit {name}",
+  "workflow.boundary.legacy_stop": "Enter {name} (legacy stop)"
 }

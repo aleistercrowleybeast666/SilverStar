@@ -157,6 +157,8 @@ class FccgService:
 
     def ProjectDraft_Create(self, name: str) -> ProjectModel:
         model = self.ReferenceProject_Create(name)
+        from silverstar_fccg.project.telemetry import TelemetryProfile_Apply
+        model = TelemetryProfile_Apply(model, self.catalog, 'ss_tm.s.0_1')
         model.board = ""
         provider = self.HardwareProviderForMcu_Get(model.mcu)
         model.hardware = (
@@ -171,7 +173,7 @@ class FccgService:
         model.resource_assignments = {}
         model.build = replace(model.build, memory_layout="auto")
         model.ground_target = replace(
-            model.ground_target, enabled=True,
+            model.ground_target, enabled=False,
             radio_plugin="silverstar.device.telemetry.sx1281",
             module_variant="e28_2g4m12sx",
             pc_interface="uart",
