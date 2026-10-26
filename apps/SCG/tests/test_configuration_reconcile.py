@@ -445,9 +445,9 @@ def test_strict_validation_navigates_to_and_highlights_hardware_issue(
         )
         assert not window._GenerationPlan_ApplyAllowed(plan)
         assert window.navigation_list.currentRow() == window.PAGE_CODES.index(
-            "page.board_hardware"
+            "workspace.hardware.title"
         )
-        assert window.pages.currentWidget() is window.board_hardware_page
+        assert window.pages.currentWidget() is window.hardware_workspace
         assert (
             window.board_hardware_page.board_combo.property("validationIssue")
             is True

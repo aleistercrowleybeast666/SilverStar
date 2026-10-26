@@ -23,6 +23,7 @@ $targetFacts = switch ($TargetProfile) {
     'SilverStar_F407' { @{ Linker='STM32F407XX_FLASH.ld'; Sram=131072; Ccm=65536 } }
     'SilverStar_F103RE' { @{ Linker='STM32F103RE_FLASH.ld'; Sram=65536; Ccm=0 } }
     'SilverStar_F103RF' { @{ Linker='STM32F103RF_FLASH.ld'; Sram=98304; Ccm=0 } }
+    'SilverStar_H743ZI' { @{ Linker='STM32H743XX_FLASH.ld'; Sram=524288; Ccm=0 } }
     default { throw "Unsupported artifact target: $TargetProfile" }
 }
 $linkerPath = Join-Path $repoRoot $targetFacts.Linker
@@ -60,12 +61,14 @@ function Get-MemoryName {
         ($Address -lt [uint64]0x10010000)) {
         return 'CCMRAM'
     }
-    if (($Address -ge [uint64]0x20000000) -and
-        ($Address -lt ([uint64]0x20000000 + [uint64]$targetFacts.Sram))) {
+    if (($Address -ge $mainSramStart) -and
+        ($Address -lt ($mainSramStart + [uint64]$targetFacts.Sram))) {
         return 'main SRAM'
     }
+    if (($TargetProfile -eq 'SilverStar_H743ZI') -and ($Address -ge [uint64]0x20000000) -and
+        ($Address -lt [uint64]0x20020000)) { return 'DTCM (MSP only)' }
     if (($Address -ge [uint64]0x08000000) -and
-        ($Address -lt [uint64]0x08080000)) {
+        ($Address -lt ([uint64]0x08000000 + $flashLength))) {
         return 'FLASH'
     }
     return 'other'
@@ -196,6 +199,37 @@ $ccmLength = [uint64]$targetFacts.Ccm
 $mainSramStart = [uint64]0x20000000
 $mainSramLength = [uint64]$targetFacts.Sram
 $flashLength = [uint64](512 * 1024)
+if ($TargetProfile -eq 'SilverStar_H743ZI') {
+    Assert-ArtifactCondition -Condition ($MemoryLayout -eq 'legacy') `
+        -Message 'H743 static profile currently supports its explicit AXI/DTCM linker layout only.'
+    $mainSramStart = [uint64]0x24000000
+    $flashLength = [uint64](2 * 1024 * 1024)
+    foreach ($name in @('.data', '.bss')) {
+        Assert-ArtifactCondition -Condition $sections.ContainsKey($name) -Message ('H743 section missing: ' + $name)
+        if ($sections.ContainsKey($name)) {
+            $section = $sections[$name]
+            Assert-ArtifactCondition -Condition (($section.Vma -ge $mainSramStart) -and
+                (($section.Vma + $section.Size) -le ($mainSramStart + $mainSramLength))) `
+                -Message ('H743 initialized/zeroed data must stay in AXI SRAM: ' + $name)
+        }
+    }
+    Assert-ArtifactCondition -Condition ($symbols.ContainsKey('_estack') -and
+        ($symbols['_estack'].Address -eq [uint64]0x20020000)) -Message 'H743 MSP must start at DTCM top.'
+    Assert-ArtifactCondition -Condition $sections.ContainsKey('._user_heap_stack') -Message 'H743 MSP reservation missing.'
+    if ($sections.ContainsKey('._user_heap_stack')) {
+        $msp = $sections['._user_heap_stack']
+        Assert-ArtifactCondition -Condition (($msp.Vma -eq [uint64]0x2001E000) -and
+            ($msp.Size -eq 8192)) -Message 'H743 must reserve the top 8 KiB of DTCM for MSP.'
+    }
+    foreach ($name in @('.isr_vector', '.text', '.rodata', '.ARM.extab', '.ARM', '.init_array', '.fini_array', '.data')) {
+        if ($sections.ContainsKey($name) -and ($sections[$name].Size -gt 0)) {
+            $section = $sections[$name]
+            Assert-ArtifactCondition -Condition (($section.Lma -ge [uint64]0x08000000) -and
+                (($section.Lma + $section.Size) -le ([uint64]0x08000000 + $flashLength))) `
+                -Message ('H743 load image exceeds physical ZI Flash: ' + $name)
+        }
+    }
+}
 
 # The whitelist has one private CPU-only scratch object. Inspect the actual
 # linked address and the startup-cleared bounds, not just requested flags.
@@ -427,6 +461,10 @@ $mainSramUsed = (Get-SectionSize -Sections $sections -Name '.data') +
     (Get-SectionSize -Sections $sections -Name '._user_heap_stack')
 $ccmUsed = (Get-SectionSize -Sections $sections -Name '.ccmram_data') +
     (Get-SectionSize -Sections $sections -Name '.ccmram_bss')
+if ($TargetProfile -eq 'SilverStar_H743ZI') {
+    # MSP resides in DTCM, separate from AXI data and static task stacks.
+    $mainSramUsed -= Get-SectionSize -Sections $sections -Name '._user_heap_stack'
+}
 
 Write-Output 'FCCG_PROGRESS|ARTIFACT|BEGIN|4|8|FLASH'
 Assert-ArtifactCondition -Condition ($flashUsed -le $flashLength) `
@@ -445,7 +483,7 @@ if ($MemoryLayout -eq 'auto') {
         Write-Warning 'Auto layout exceeds the historical 100 KiB main-SRAM regression budget by relocating CPU-only objects. Physical overflow, DMA, stack reservation and startup checks remain blocking; budget spare is not stack margin.'
     }
 }
-else {
+elseif ($TargetProfile -ne 'SilverStar_H743ZI') {
     Assert-ArtifactCondition -Condition ($mainSramUsed -le [uint64](100 * 1024)) `
         -Message ("Main SRAM exceeds the reviewed full-rate logging budget: " +
             "used=$mainSramUsed maximum=102400")
@@ -465,6 +503,10 @@ Write-Output ('  main SRAM used={0} remaining={1} capacity={2}' -f `
     $mainSramUsed, $mainSramRemaining, $mainSramLength)
 Write-Output ('  CCMRAM    used={0} remaining={1} capacity={2}' -f `
     $ccmUsed, $ccmRemaining, $ccmLength)
+if ($TargetProfile -eq 'SilverStar_H743ZI') {
+    Write-Output '  DTCM MSP  reserved=8192 capacity=131072; main/ISR stack margin NOT PROVEN'
+    Write-Output '  H743 uses a separate physical AXI budget; F407 historical 100 KiB logging budget does not apply.'
+}
 Write-Output '  heap      reserved=0 runtime_symbols=0'
 
 Write-Output 'FCCG_PROGRESS|ARTIFACT|DONE|7|8|heap'

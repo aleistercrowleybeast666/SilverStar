@@ -982,8 +982,7 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
             issues.append(ValidationIssue("error", "missing_component", str(error)))
             continue
         required_shared_core = (
-            model.build.compact_mode
-            and component_type == "core"
+            component_type == "core"
             and any(
                 requirement.component_id == component_id and not requirement.optional
                 for selected_id in model.ComponentIds_Get()

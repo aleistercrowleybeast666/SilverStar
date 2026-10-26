@@ -34,7 +34,7 @@ static void TestMmc5983ma_Seed(TestMmc5983maBus *bus)
     TestMmc5983ma_RawSet(bus->registers, 2U, 131072U);
 }
 
-static Mmc5983maBusResult TestMmc5983ma_Read(void *owner,
+Mmc5983maBusResult Mmc5983maBus_Read(void *owner,
     uint8_t address, uint8_t *bytes, uint8_t length)
 {
     TestMmc5983maBus *bus = (TestMmc5983maBus *)owner;
@@ -46,7 +46,7 @@ static Mmc5983maBusResult TestMmc5983ma_Read(void *owner,
     return Mmc5983maBusOk;
 }
 
-static Mmc5983maBusResult TestMmc5983ma_Write(void *owner,
+Mmc5983maBusResult Mmc5983maBus_Write(void *owner,
     uint8_t address, uint8_t value)
 {
     TestMmc5983maBus *bus = (TestMmc5983maBus *)owner;
@@ -75,8 +75,7 @@ static Mmc5983maBusResult TestMmc5983ma_Write(void *owner,
 
 static Mmc5983maPort TestMmc5983ma_PortGet(TestMmc5983maBus *bus)
 {
-    Mmc5983maPort port = { bus, TestMmc5983ma_Read,
-        TestMmc5983ma_Write };
+    Mmc5983maPort port = { bus };
     return port;
 }
 
@@ -108,7 +107,7 @@ static void TestMmc5983ma_FreshVector(void)
         100.0061F) < 0.02F);
     assert(fabsf(context.sample.magnetic_field_b_uT[1] + 50.0F) < 0.02F);
     assert(fabsf(context.sample.temperature_c - 25.0F) < 0.01F);
-    assert((context.sample.valid_mask & SYSTEM_MAG_VALID_TEMPERATURE) != 0U);
+    assert((context.sample.valid_mask & MMC5983MA_SAMPLE_VALID_TEMPERATURE) != 0U);
     assert(context.sample.calibration_valid == 0U);
     assert(Mmc5983ma_Step(&context, (uint64_t)(tick + 1U) * 1000ULL) ==
         Mmc5983maStepPending);
@@ -165,8 +164,8 @@ static void TestMmc5983ma_MeasurementTimeouts(void)
         if (result != Mmc5983maStepPending) { break; }
     }
     assert(result == Mmc5983maStepSampleReady);
-    assert(context.sample.valid_mask == (SYSTEM_MAG_VALID_RAW |
-        SYSTEM_MAG_VALID_PHYSICAL_UNIT));
+    assert(context.sample.valid_mask == (MMC5983MA_SAMPLE_VALID_RAW |
+        MMC5983MA_SAMPLE_VALID_PHYSICAL_UNIT));
 }
 
 int main(void)

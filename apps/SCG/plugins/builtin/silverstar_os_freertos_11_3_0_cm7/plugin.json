@@ -1,0 +1,86 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.os.freertos_11_3_0_cm7",
+  "name": "FreeRTOS Kernel 11.3.0 CM7 r0p1",
+  "type": "os",
+  "class": "rtos",
+  "version": "11.3.0",
+  "description": "Official CM7 r0p1 port for the H743ZI static candidate; no board runtime qualification.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      },
+      {
+        "id": "silverstar.mcu_family.stm32h7",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": [
+      "mcu.cortex_m7"
+    ]
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "os.freertos",
+    "os.static_allocation"
+  ],
+  "build": {
+    "sources": [
+      "OS/FreeRTOS/freertos_hooks.c",
+      "Targets/SilverStar_H743ZI/Src/freertos_target_irq.c",
+      "ThirdParty/FreeRTOS-Kernel/list.c",
+      "ThirdParty/FreeRTOS-Kernel/queue.c",
+      "ThirdParty/FreeRTOS-Kernel/tasks.c",
+      "ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM7/r0p1/port.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "OS/FreeRTOS",
+      "ThirdParty/FreeRTOS-Kernel/include",
+      "ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM7/r0p1",
+      "Targets/SilverStar_H743ZI/Inc"
+    ],
+    "defines": [],
+    "virtual_sources": [
+      "ThirdParty/FreeRTOS-Kernel/list.c",
+      "ThirdParty/FreeRTOS-Kernel/queue.c",
+      "ThirdParty/FreeRTOS-Kernel/tasks.c"
+    ]
+  },
+  "payload": {
+    "roots": [
+      "OS/FreeRTOS",
+      "ThirdParty/FreeRTOS-Kernel/list.c",
+      "ThirdParty/FreeRTOS-Kernel/queue.c",
+      "ThirdParty/FreeRTOS-Kernel/tasks.c",
+      "ThirdParty/FreeRTOS-Kernel/include",
+      "ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM7/r0p1",
+      "ThirdParty/FreeRTOS-Kernel/LICENSE.md",
+      "ThirdParty/FreeRTOS-Kernel/README.md",
+      "ThirdParty/FreeRTOS-Kernel/FreeRTOS-Kernel-V11.3.0-repository-SPDX2.3.spdx",
+      "BuildSystem/freertos.mk",
+      "Targets/SilverStar_H743ZI/Inc/freertos_target_config.h",
+      "Targets/SilverStar_H743ZI/Src/freertos_target_irq.c"
+    ]
+  },
+  "metadata": {
+    "reference": {
+      "upstream": "https://github.com/FreeRTOS/FreeRTOS-Kernel/tree/V11.3.0",
+      "hardware_tested": false
+    },
+    "display_names": {
+      "zh_CN": "FreeRTOS 11.3.0 CM7 r0p1（静态候选）",
+      "en_US": "FreeRTOS 11.3.0 CM7 r0p1 (static candidate)"
+    },
+    "source_origins": {
+      "default": "freertos_11_3_0_mit"
+    }
+  }
+}

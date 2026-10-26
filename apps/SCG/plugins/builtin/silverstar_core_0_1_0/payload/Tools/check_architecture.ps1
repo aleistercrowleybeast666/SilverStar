@@ -10,6 +10,7 @@ $architectureFacts = switch ($architectureTargetProfile) {
     'SilverStar_F407' { @{ Backend='STM32F4'; Cpu='cortex-m4'; EideCpu='Cortex-M4'; Fpu='single'; Abi='hard'; Linker='STM32F407XX_FLASH.ld'; Hal='stm32f4xx'; Tick='TIM1'; RtosProfile='SilverStar_F407' } }
     'SilverStar_F103RE' { @{ Backend='STM32F1'; Cpu='cortex-m3'; EideCpu='Cortex-M3'; Fpu='none'; Abi='soft'; Linker='STM32F103RE_FLASH.ld'; Hal='stm32f1xx'; Tick='TIM6'; Part='STM32F103RET6'; RtosProfile='SilverStar_F103RE' } }
     'SilverStar_F103RF' { @{ Backend='STM32F1'; Cpu='cortex-m3'; EideCpu='Cortex-M3'; Fpu='none'; Abi='soft'; Linker='STM32F103RF_FLASH.ld'; Hal='stm32f1xx'; Tick='TIM6'; Part='STM32F103RFT6'; RtosProfile='SilverStar_F103RE' } }
+    'SilverStar_H743ZI' { @{ Backend='STM32H7'; Cpu='cortex-m7'; EideCpu='Cortex-M7'; Fpu='double'; Abi='hard'; Linker='STM32H743XX_FLASH.ld'; Hal='stm32h7xx'; Tick='TIM6'; Part='STM32H743ZIT6'; RtosProfile='SilverStar_H743ZI' } }
     default { throw "Unsupported Flight architecture target: $architectureTargetProfile" }
 }
 $architectureTargetMk = 'Targets\' + $architectureTargetProfile + '\target.mk'
@@ -784,8 +785,8 @@ $eideIncludes = @(Get-YamlListValues -Content $eideContent `
 $eideExcludedSources = @(Get-YamlListValues -Content $eideContent `
     -BlockPattern '(?ms)^ {4}excludeList:\s*\r?\n(?<items>(?: {6}-[^\r\n]+\r?\n)+)' `
     -ItemPattern '^\s{6}-\s+(?<value>.+?)\s*$')
-Assert-ArchitectureCondition -Condition ($eideSourceDirs.Count -ne 0) `
-    -Message 'EIDE srcDirs is empty.'
+Assert-ArchitectureCondition -Condition (($eideSourceDirs.Count -ne 0) -or ($eideVirtualSources.Count -ne 0)) `
+    -Message 'EIDE has no source directories or explicit virtual source files.'
 $broadEideDirectories = @(
     'Algorithm', 'APP', 'Core', 'Devices', 'Drivers', 'Middlewares',
     'Platform', 'Protocol', 'System', 'ThirdParty'
@@ -940,7 +941,7 @@ foreach ($iocEntry in $requiredIocEntries) {
     Assert-ArchitectureCondition -Condition ($iocContent.Contains('NVIC.SysTick_IRQn=true\:15\:0')) `
         -Message 'RET6 SysTick priority must remain 15.'
     foreach ($irq in [regex]::Matches($iocContent,
-        '(?m)^NVIC\.(?<name>(?:DMA\w*|USART\w*|EXTI\w*|TIM6|SDIO)_IRQn)=true\\:(?<priority>[0-9]+)\\:')) {
+        '(?m)^NVIC\.(?<name>(?:DMA\w*|USART\w*|EXTI\w*|TIM6(?:_DAC)?|SDIO|SDMMC1)_IRQn)=true\\:(?<priority>[0-9]+)\\:')) {
         Assert-ArchitectureCondition -Condition ([int]$irq.Groups['priority'].Value -ge 5) `
             -Message ('RET6 peripheral IRQ violates FreeRTOS syscall ceiling: ' + $irq.Groups['name'].Value)
     }
@@ -952,6 +953,30 @@ foreach ($iocEntry in $requiredIocEntries) {
                 ($iocContent -match ('(?m)^Mcu.IP[0-9]+=' + [regex]::Escape($instance) + '\r?$'))) `
                 -Message ('RET6 imported resource is absent from official IOC: ' + $instance)
         }
+    }
+    if ($architectureTargetProfile -eq 'SilverStar_H743ZI') {
+        foreach ($entry in @('RCC.HSE_VALUE=25000000', 'RCC.SYSCLKFreq_VALUE=480000000',
+            'RCC.HCLKFreq_Value=240000000', 'RCC.PLLSourceVirtual=RCC_PLLSOURCE_HSE',
+            'PA13\ (JTMS/SWDIO).Signal=DEBUG_JTMS-SWDIO',
+            'PA14\ (JTCK/SWCLK).Signal=DEBUG_JTCK-SWCLK')) {
+            Assert-ArchitectureCondition -Condition $iocContent.Contains($entry) `
+                -Message ('H743 static profile IOC requirement missing: ' + $entry)
+        }
+        $mainPath = Join-Path $repoRoot ($cubeCorePath + '\Src\main.c')
+        $mainContent = Get-Content -Raw -LiteralPath $mainPath
+        foreach ($pattern in @('HSEState\s*=\s*RCC_HSE_ON', 'PLLM\s*=\s*5',
+            'PLLN\s*=\s*192', 'PLLP\s*=\s*2', 'PWR_REGULATOR_VOLTAGE_SCALE0')) {
+            Assert-ArchitectureCondition -Condition ($mainContent -match $pattern) `
+                -Message ('H743 actual clock initialization requirement missing: ' + $pattern)
+        }
+        Assert-NoArchitecturePattern -Name 'CubeMX must not duplicate RTOS exception handlers.' `
+            -Paths @($cubeCorePath + '\Src\stm32h7xx_it.c') -Extensions @('.c') `
+            -Pattern '\bvoid\s+(?:SVC|PendSV|SysTick)_Handler\s*\('
+        Assert-NoArchitecturePattern -Name 'H743 static DMA backend requires D-cache disabled.' `
+            -Paths @($cubeCorePath + '\Src') -Extensions @('.c') `
+            -Pattern '\bSCB_EnableDCache\s*\('
+        Assert-FileContainsPattern -RelativePath $architectureTargetMk `
+            -Pattern '(?m)^\s+-mfpu=fpv5-d16(?:\s+\\)?\s*$' -Message 'H743 requires FPv5-D16.'
     }
 }
 
@@ -999,7 +1024,7 @@ if ($makeExitCode -eq 0) {
     } | Sort-Object)
     $expectedKernelSources = @(
         'ThirdParty/FreeRTOS-Kernel/list.c',
-        ('ThirdParty/FreeRTOS-Kernel/portable/GCC/' + $(if ($architectureFacts.Backend -eq 'STM32F1') { 'ARM_CM3' } else { 'ARM_CM4F' }) + '/port.c'),
+        ('ThirdParty/FreeRTOS-Kernel/portable/GCC/' + $(switch ($architectureFacts.Backend) { 'STM32F1' { 'ARM_CM3' }; 'STM32H7' { 'ARM_CM7/r0p1' }; default { 'ARM_CM4F' } }) + '/port.c'),
         'ThirdParty/FreeRTOS-Kernel/queue.c',
         'ThirdParty/FreeRTOS-Kernel/tasks.c'
     ) | Sort-Object
@@ -1020,7 +1045,7 @@ if ($makeExitCode -eq 0) {
             ($forbiddenSelectedSources -join ', '))
 
     $wrongPlatformSources = @($uniqueSources | Where-Object {
-        ($_ -like 'Platform/*') -and $(if ($architectureFacts.Backend -eq 'STM32F1') { ($_ -notlike 'Platform/STM32F1/*') -and ($_ -notlike 'Platform/STM32F1Flight/*') } else { $_ -notlike 'Platform/STM32F4/*' })
+        ($_ -like 'Platform/*') -and $(if ($architectureFacts.Backend -eq 'STM32F1') { ($_ -notlike 'Platform/STM32F1/*') -and ($_ -notlike 'Platform/STM32F1Flight/*') } else { $_ -notlike ('Platform/' + $architectureFacts.Backend + '/*') })
     })
     Assert-ArchitectureCondition -Condition ($wrongPlatformSources.Count -eq 0) `
         -Message ("Unselected Platform backend entered the build: " +

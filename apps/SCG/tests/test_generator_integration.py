@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import hashlib
+import pytest
 from dataclasses import replace
 from pathlib import Path
 
@@ -105,8 +106,14 @@ def test_regeneration_preserves_expected_provenance_and_rejects_local_edits(
     assert ownership["components"][component]["files"][relative] == expected
     assert ownership["upstream_components"][component]["payload_digest"] == "e" * 64
     assert (root / relative).read_bytes() == original
-    (root / relative).write_bytes(original + b"\n/* local edit */\n")
-    assembler.Apply(saved, assembler.Plan(saved, root))
+    edited_source = original + b"\n/* local edit */\n"
+    (root / relative).write_bytes(edited_source)
+    # A timing-qualified declaration cannot survive an unreviewed source edit.
+    # Reject before publication and preserve both the user's bytes and the last
+    # known project identity, rather than silently re-declaring that identity.
+    with pytest.raises(ValueError, match="Fusion timing payload identity NOT PROVEN"):
+        assembler.Plan(saved, root)
+    assert (root / relative).read_bytes() == edited_source
     edited = ProjectModel_Load(root / "SilverStar.ssproject")
     assert edited.component_provenance[component]["files"][relative] == expected
     assert assembler._ComponentModified_Is(root, edited.component_provenance[component])

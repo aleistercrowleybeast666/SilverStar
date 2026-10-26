@@ -44,6 +44,8 @@ $env:SILVERSTAR_GSHC_DATA_ROOT = Join-Path $env:LOCALAPPDATA 'SilverStar_GSHC_Da
 
 SCG 提供完整、标准、轻量和最简四种配置档位。可配置设备与接口、安装方向、校准/初始对准、导航参数及遥测任务；导航组件包括 Pure INS、SF6、KF6 和 ESKF15。设备与算法以声明式插件组织。FCCG 是 SCG 的历史名称，`silverstar_fccg` 包名与旧入口继续兼容。
 
+开发分支另提供 [H743ZI 静态验证候选](docs/public/SCG/H743_STATIC_VALIDATION.md)：25 MHz HSE / 480 MHz / SWD，以及 ESKF20、InEKF15、InEKF20 和双 BMI088 的离线检查。尚未上板或飞行验证；不属于上述 v0.1.2 便携包。
+
 **设备与功能档位**：图中为 FINAL 项目的真实配置，包括 JY901、NEO-M9N 及各自接口选项。
 
 ![SCG v0.1.2：设备、接口与功能档位](docs/public/assets/v0.1.2/scg_final_devices.png)

@@ -1,0 +1,10 @@
+#ifndef __PLATFORM_MEMORY_TARGET_H
+#define __PLATFORM_MEMORY_TARGET_H
+/* AXI SRAM only; D-cache must remain disabled for this validation backend. */
+#define PLATFORM_MEMORY_DMA_SRAM_START 0x24000000UL
+#define PLATFORM_MEMORY_DMA_SRAM_END 0x24080000UL
+#define PLATFORM_CPU_FAST_DATA
+#define PLATFORM_CPU_FAST_BSS
+#define PLATFORM_DMA_ACCESSIBLE __attribute__((aligned(32)))
+#define PLATFORM_ESKF_WINDOW_BSS
+#endif /* __PLATFORM_MEMORY_TARGET_H */

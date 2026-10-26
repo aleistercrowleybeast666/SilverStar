@@ -23,6 +23,8 @@ def MissionProfile_Build(model, catalog):
     catalog = catalog.ProjectView_Get(model)
     if "silverstar.flight_logic.cycle.reference" not in model.ComponentIds_Get():
         raise MissionProfileUnsupportedError("mission_profile_template_unsupported")
+    if not model.board:
+        raise MissionProfileUnsupportedError("mission_profile_custom_hardware_without_board_identity")
     def component(component_id):
         if component_id is None:
             return None

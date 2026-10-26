@@ -285,31 +285,33 @@ class HardwareInventory:
                     },
                 )
             )
-        if any(item.startswith("SDIO") for item in self.peripherals):
+        sd_peripherals = tuple(item for item in self.peripherals if item in ("SDIO", "SDMMC1"))
+        if len(sd_peripherals) == 1:
+            sd_peripheral = sd_peripherals[0]
             sdio_dmas = tuple(
                 item
                 for item in self.dmas
-                if item.request.startswith("SDIO_") or item.request == "SDIO"
+                if item.request.startswith(sd_peripheral + "_") or item.request == sd_peripheral
             )
             sdio_irq = next(
-                (item for item in self.nvic if item.irq == "SDIO_IRQn"),
+                (item for item in self.nvic if item.irq == sd_peripheral + "_IRQn"),
                 None,
             )
             sdio_pins = {
-                _PinSignalParts_Get(pin.signal, "SDIO"): pin.pin
+                _PinSignalParts_Get(pin.signal, sd_peripheral): pin.pin
                 for pin in self.pins
-                if pin.signal.startswith("SDIO_")
+                if pin.signal.startswith(sd_peripheral + "_")
             }
             resources.append(
                 HardwareResource(
-                    "SDIO",
+                    sd_peripheral,
                     "sdio",
                     {
                         "c_id": "PLATFORM_SDIO_1",
-                        "header": "sdio.h",
+                        "header": "sdio.h" if sd_peripheral == "SDIO" else "sdmmc.h",
                         "handle": self.fatfs.sd_handle,
-                        "peripheral": self.fatfs.sd_instance or "SDIO",
-                        "physical_resource": "SDIO",
+                        "peripheral": self.fatfs.sd_instance or sd_peripheral,
+                        "physical_resource": sd_peripheral,
                         "pins": sdio_pins,
                         "dma": [asdict(item) for item in sdio_dmas],
                         **({"shared_dma_directions": ["rx", "tx"]} if self.sdio_shared_dma_bound else {}),
@@ -1105,8 +1107,7 @@ def _FatFsInventory_Get(
     sdio_text = "\n".join(
         text
         for path, text in generated_files.items()
-        if path.casefold().endswith("/core/src/sdio.c")
-        or path.casefold() == "core/src/sdio.c"
+        if any(path.casefold().endswith(suffix) for suffix in ("core/src/sdio.c", "core/src/sdmmc.c"))
     )
     handles = tuple(
         dict.fromkeys(
@@ -1123,7 +1124,8 @@ def _FatFsInventory_Get(
         )
     ) if sd_handle else ()
     sd_instance = instances[0] if len(instances) == 1 else ""
-    if len(handles) != 1 or len(instances) != 1 or sd_instance != "SDIO":
+    sd_peripherals = tuple(item for item in peripherals if item in ("SDIO", "SDMMC1"))
+    if len(handles) != 1 or len(instances) != 1 or len(sd_peripherals) != 1 or sd_instance != sd_peripherals[0]:
         errors.append(
             "CubeMX SDIO handle/instance is missing or ambiguous / "
             "CubeMX SDIO 句柄或实例缺失或存在歧义"
@@ -1140,7 +1142,7 @@ def _FatFsInventory_Get(
         errors.append(
             "CubeMX FatFs Target glue is missing / CubeMX FatFs Target 胶水缺失"
         )
-    if "SDIO" not in peripherals:
+    if not sd_peripherals:
         errors.append(
             "FatFs is enabled without STM32 SDIO / 已启用 FatFs 但未启用 STM32 SDIO"
         )

@@ -53,26 +53,30 @@ SystemDeviceResult ProjectBmp390SpiResources_Get(uint8_t, ProjectBmp390SpiResour
     includes = [
         tmp_path,
         PAYLOAD / "Devices/Barometer/BMP390/Inc",
+        PAYLOAD / "Devices/Barometer/BMP390/Adapter/Inc",
         core / "Interfaces/Inc",
         core / "Common/Inc",
         BUILTIN / "silverstar_platform_api/payload/Platform/Inc",
     ]
     flags = [_Compiler_Get(), "-std=c11", "-Wall", "-Wextra", "-Werror",
              "-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wvla"]
+    flags += ["-DSYSTEM_BUILD_BMP390_I2C_ENABLED=1U", "-DSYSTEM_BUILD_BMP390_SPI_ENABLED=1U", "-fanalyzer"]
     flags += ["-I" + str(path) for path in includes]
     source = PAYLOAD / "Devices/Barometer/BMP390/Src"
     for name, sources in (
         ("core", [source / "bmp390_core.c", PAYLOAD / "Tests/Host/test_bmp390_core.c"]),
-        ("adapter", [source / "bmp390_core.c", source / "bmp390_adapter.c",
+        ("adapter", [source / "bmp390_core.c", PAYLOAD / "Devices/Barometer/BMP390/Adapter/Src/bmp390_adapter.c",
                      PAYLOAD / "Tests/Host/test_bmp390_adapter.c"]),
     ):
         binary = tmp_path / f"bmp390_{name}.exe"
         _Command_Run(flags + [str(path) for path in sources] + ["-lm", "-o", str(binary)],
                      tmp_path, f"compile_{name}")
         _Command_Run([str(binary)], tmp_path, f"run_{name}")
-    _Command_Run(flags + ["-c", str(source / "bmp390_instance.c"),
-                          "-o", str(tmp_path / "bmp390_instance.o")],
-                 tmp_path, "compile_instance")
+    _Command_Run(flags + ["-c", str(PAYLOAD / "Devices/Barometer/BMP390/Adapter/Src/bmp390_i2c_instance.c"),
+                         "-o", str(tmp_path / "bmp390_i2c_instance.o")], tmp_path, "compile_i2c_instance")
+    _Command_Run(flags + ["-c", str(PAYLOAD / "Devices/Barometer/BMP390/Adapter/Src/bmp390_spi_instance.c"),
+                         "-o", str(tmp_path / "bmp390_spi_instance.o")], tmp_path, "compile_spi_instance")
+
 
 
 def test_bmp390_one_physical_plugin_two_bus_variants(builtin_catalog) -> None:
@@ -87,7 +91,7 @@ def test_bmp390_one_physical_plugin_two_bus_variants(builtin_catalog) -> None:
             "PROJECT_PHYSICAL_DEVICE_ID_BMP390"
         )
         assert sum(source.endswith("bmp390_core.c") for source in resolved.build.sources) == 1
-    assert builtin_catalog.Component_Get(manifest.component_id).version == "0.1.0"
+    assert builtin_catalog.Component_Get(manifest.component_id).version == "0.1.1"
 
 
 def test_bmp390_i2c_generated_resource_and_dispatch(builtin_catalog) -> None:

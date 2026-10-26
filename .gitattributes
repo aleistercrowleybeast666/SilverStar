@@ -38,3 +38,10 @@ docs/evidence/test5_gshc_dap_20261008/** -text
 # Health-finalization regression and gate evidence retain exact recorded bytes.
 docs/evidence/logger_health_finalization_20261008/** -text
 docs/evidence/logger_health_retest_20261008/** -text
+
+# H743 frozen input contracts, source provenance and recorded results are byte-exact.
+apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/h743_stack_inputs.json -text
+apps/SCG/plugins/builtin/silverstar_mcu_family_stm32h7/payload/Drivers/** -text
+apps/SCG/plugins/builtin/silverstar_mcu_family_stm32h7/payload/Middlewares/Third_Party/FatFs/** -text
+apps/SCG/plugins/builtin/silverstar_os_freertos_11_3_0_cm7/payload/ThirdParty/** -text
+apps/SCG/tests/fixtures/h743_static/** -text

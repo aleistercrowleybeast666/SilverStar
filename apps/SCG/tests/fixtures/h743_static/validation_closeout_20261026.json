@@ -1,0 +1,1485 @@
+{
+  "schema": "silverstar.h743-software-closeout/1",
+  "recorded_at": "2026-10-26T13:40:05.535014+08:00",
+  "scope": "Exact H743ZI static test allocation; software gates and named regressions only. Test groups overlap; counts must not be summed into coverage or an unexecuted full-suite pass.",
+  "baseline_commit": "7fbddd1e964c8febcf9ee289e024a23412730cd5",
+  "owner_code_snapshot": ".work/h7_20261025/backend_closeout/owner_code_snapshot.json",
+  "owner_code_snapshot_sha256": "984ad2b249a7f15cec766200c87be8d0f4100eb78e35fe7931ab046f72676997",
+  "owner_code_file_count": 236,
+  "original_inputs_changed": [],
+  "original_ioc_sha256": "234d352e68fca1e9a0689a15007966830f53d0b8d6284f4f607ffa848af61099",
+  "input_review_revision": "h743_raw_i2c_20261026_v3",
+  "input_review_sha256": "47d8261e90ec7cc93eff68271b54e5c7c5400afc56ab10e42b6899907264ee3a",
+  "input_review_receipt": ".work/h7_20261025/backend_closeout/h743_input_review_v3.json",
+  "input_review_receipt_sha256": "72475054c45a77def003ed9c39b35e7dd057fcb9144eda983d9a3fc9382cafdb",
+  "cases": [
+    {
+      "case": "eskf20_x1",
+      "configuration": "Release",
+      "project": ".work/h7_20261025/software_release_v3/eskf20_x1/Flight_Controller/SilverStar.ssproject",
+      "gates": {
+        "all": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\eskf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "all"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/eskf20_x1/all.log",
+          "log_sha256": "e9115c01a6c7ec3637920356dd30ee38cf7d6e23be867fa47cfde8afd7fc2c05"
+        },
+        "architecture-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\eskf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "architecture-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/eskf20_x1/architecture-check.log",
+          "log_sha256": "50892dbb6a93a7763e032a2b740fc2eaf711a45e6761210e8b2ee3f0cf036878"
+        },
+        "power10-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\eskf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "power10-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/eskf20_x1/power10-check.log",
+          "log_sha256": "efa822beab04cb37bd92302250ba6b3c12bbc6287d58fc9d9c5ca55755b1c410"
+        },
+        "static-analysis": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\eskf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "static-analysis"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/eskf20_x1/static-analysis.log",
+          "log_sha256": "799283b0e0da1e36165198d5e21822eb8486cce3219346a3d49fd69ad8eb60c9"
+        },
+        "artifact-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\eskf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "artifact-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/eskf20_x1/artifact-check.log",
+          "log_sha256": "468f51da308799ee79db506130d82ffe8907dd0d4759061434aa4885cf1b3cbd"
+        },
+        "stack-report": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\eskf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "stack-report"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/eskf20_x1/stack-report.log",
+          "log_sha256": "53ee5621219a55c4d0ffdc298bd69184a1cc3345a58487cf9d30b1baa74c0a4a"
+        },
+        "stack-diagnostic": {
+          "command": [
+            "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\eskf20_x1\\Flight_Controller\\Tools\\check_task_stacks.py",
+            "--project",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\eskf20_x1\\Flight_Controller",
+            "--config",
+            "Release",
+            "--prefix",
+            "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-",
+            "--diagnostic"
+          ],
+          "exit_code": 2,
+          "log": ".work/h7_20261025/software_release_v3/eskf20_x1/stack-diagnostic.log",
+          "log_sha256": "b518097a0096bb7f46cd808f823722d2da135a49931327ddb39a9e17bd506bb7"
+        }
+      },
+      "elf": ".work/h7_20261025/software_release_v3/eskf20_x1/Flight_Controller/build/FCCG/SilverStar_H743ZI/Release/SilverStar_0_1_3.elf",
+      "elf_sha256": "e0d001af4f7d082f0796884700849375640627ad0585ecdf5e3353a76db3b526",
+      "elf_text_data_bss_bytes": {
+        "text": 359760,
+        "data": 1280,
+        "bss": 227432
+      },
+      "source_inventory": ".work/h7_20261025/software_release_v3/eskf20_x1/source-inventory.json",
+      "source_inventory_sha256": "8800df14aa7131bf5c9563335b6dc40ee8ce74282e7ac0a1a562f7081391dce5",
+      "stack_report": ".work/h7_20261025/software_release_v3/eskf20_x1/Flight_Controller/build/FCCG/SilverStar_H743ZI/Release/stack-budget.json",
+      "stack_report_sha256": "9539c5bb123d8ee0c067f20fde04763e2b11255c40ac4f94a84ed49bf16a0bbd",
+      "checker_sha256": "128a70d4b289d8945268e7574720e71f24c760a3c0513f790376107de83e5594",
+      "compiler": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+      "tasks": [
+        {
+          "task": "Device",
+          "configured_bytes": 2560,
+          "worst_known_bytes": 2188,
+          "margin_bytes": 372,
+          "passes": true
+        },
+        {
+          "task": "INS",
+          "configured_bytes": 3072,
+          "worst_known_bytes": 2336,
+          "margin_bytes": 736,
+          "passes": true
+        },
+        {
+          "task": "Estimator",
+          "configured_bytes": 5120,
+          "worst_known_bytes": 4016,
+          "margin_bytes": 1104,
+          "passes": true
+        },
+        {
+          "task": "Flight",
+          "configured_bytes": 4096,
+          "worst_known_bytes": 3376,
+          "margin_bytes": 720,
+          "passes": true
+        },
+        {
+          "task": "Logger",
+          "configured_bytes": 3072,
+          "worst_known_bytes": 2344,
+          "margin_bytes": 728,
+          "passes": true
+        },
+        {
+          "task": "Serial",
+          "configured_bytes": 6144,
+          "worst_known_bytes": 4440,
+          "margin_bytes": 1704,
+          "passes": true
+        },
+        {
+          "task": "Telemetry",
+          "configured_bytes": 4096,
+          "worst_known_bytes": 2160,
+          "margin_bytes": 1936,
+          "passes": true
+        },
+        {
+          "task": "Idle",
+          "configured_bytes": 512,
+          "worst_known_bytes": 256,
+          "margin_bytes": 256,
+          "passes": true
+        }
+      ],
+      "decoder": ".work/h7_20261025/software_release_v3/eskf20_x1/H743ZI_eskf20_x1.ssdecoder",
+      "decoder_sha256": "56e341816e46490eba1d419b60be5335ed4bbd76e47d65724475bbdccd8e8ace",
+      "decoder_generation_profile_sha256": "3125d682388c3547f5dfc43a1180baa785c5ec0e75ab8fef3a6b46bd2ced917f",
+      "flp_package_consumer": "accepted schema/checksums/semantics; no H7 recorded flight data or live readiness tested",
+      "whole_program_stack_acceptance": "NOT PROVEN: MSP/main/ISR nesting and hardware margins require separate evidence",
+      "hardware_tested": false,
+      "flight_tested": false
+    },
+    {
+      "case": "inekf15_x1",
+      "configuration": "Release",
+      "project": ".work/h7_20261025/software_release_v3/inekf15_x1/Flight_Controller/SilverStar.ssproject",
+      "gates": {
+        "all": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\inekf15_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "all"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/inekf15_x1/all.log",
+          "log_sha256": "f6dc28e1ba8eac07d0e9a89a26e10ac6269cd889264d1aeb2c3482bf679d89d7"
+        },
+        "architecture-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\inekf15_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "architecture-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/inekf15_x1/architecture-check.log",
+          "log_sha256": "a6874103ea9287cbf5b57127792dee479172b7d471faede45dbf5ce2a7fa23ac"
+        },
+        "power10-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\inekf15_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "power10-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/inekf15_x1/power10-check.log",
+          "log_sha256": "326ce6b7e2e3f8f8f52cc28de7cb102cf469dbe91bbe1ab806d57654231cd0da"
+        },
+        "static-analysis": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\inekf15_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "static-analysis"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/inekf15_x1/static-analysis.log",
+          "log_sha256": "12f0027e397e41474b3e887a32db028574f4dffde2c7fd05348901f6acc4bfe5"
+        },
+        "artifact-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\inekf15_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "artifact-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/inekf15_x1/artifact-check.log",
+          "log_sha256": "a2c6b7a68ce9c99a7c2b10b839722ee48be090d321ce19997fdb582efc3e6d86"
+        },
+        "stack-report": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\inekf15_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "stack-report"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/inekf15_x1/stack-report.log",
+          "log_sha256": "f234c5dc05b9ce38876b513f547aac484837be7b312e714bc1c7c6c61075572a"
+        },
+        "stack-diagnostic": {
+          "command": [
+            "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\inekf15_x1\\Flight_Controller\\Tools\\check_task_stacks.py",
+            "--project",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\inekf15_x1\\Flight_Controller",
+            "--config",
+            "Release",
+            "--prefix",
+            "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-",
+            "--diagnostic"
+          ],
+          "exit_code": 2,
+          "log": ".work/h7_20261025/software_release_v3/inekf15_x1/stack-diagnostic.log",
+          "log_sha256": "ad01b31aaa73eba9a7eb453979ff51c3ca82f1354a374d959bda96b9a1250de6"
+        }
+      },
+      "elf": ".work/h7_20261025/software_release_v3/inekf15_x1/Flight_Controller/build/FCCG/SilverStar_H743ZI/Release/SilverStar_0_1_3.elf",
+      "elf_sha256": "b733d8a0f9b75dda051dccb95bfb491d5295a344a7111bd543317a59bafe249a",
+      "elf_text_data_bss_bytes": {
+        "text": 351528,
+        "data": 1280,
+        "bss": 227176
+      },
+      "source_inventory": ".work/h7_20261025/software_release_v3/inekf15_x1/source-inventory.json",
+      "source_inventory_sha256": "5b03b5fee6c7e5d2caa5b0f62c387bed285206048c830c47e28fdfd4042d283c",
+      "stack_report": ".work/h7_20261025/software_release_v3/inekf15_x1/Flight_Controller/build/FCCG/SilverStar_H743ZI/Release/stack-budget.json",
+      "stack_report_sha256": "097352f04301f4306943dc9d9337de551c4686f908bd51338e159d90b68b395e",
+      "checker_sha256": "128a70d4b289d8945268e7574720e71f24c760a3c0513f790376107de83e5594",
+      "compiler": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+      "tasks": [
+        {
+          "task": "Device",
+          "configured_bytes": 2560,
+          "worst_known_bytes": 2188,
+          "margin_bytes": 372,
+          "passes": true
+        },
+        {
+          "task": "INS",
+          "configured_bytes": 3072,
+          "worst_known_bytes": 2336,
+          "margin_bytes": 736,
+          "passes": true
+        },
+        {
+          "task": "Estimator",
+          "configured_bytes": 5120,
+          "worst_known_bytes": 3824,
+          "margin_bytes": 1296,
+          "passes": true
+        },
+        {
+          "task": "Flight",
+          "configured_bytes": 4096,
+          "worst_known_bytes": 3376,
+          "margin_bytes": 720,
+          "passes": true
+        },
+        {
+          "task": "Logger",
+          "configured_bytes": 3072,
+          "worst_known_bytes": 2344,
+          "margin_bytes": 728,
+          "passes": true
+        },
+        {
+          "task": "Serial",
+          "configured_bytes": 6144,
+          "worst_known_bytes": 4440,
+          "margin_bytes": 1704,
+          "passes": true
+        },
+        {
+          "task": "Telemetry",
+          "configured_bytes": 4096,
+          "worst_known_bytes": 2160,
+          "margin_bytes": 1936,
+          "passes": true
+        },
+        {
+          "task": "Idle",
+          "configured_bytes": 512,
+          "worst_known_bytes": 256,
+          "margin_bytes": 256,
+          "passes": true
+        }
+      ],
+      "decoder": ".work/h7_20261025/software_release_v3/inekf15_x1/H743ZI_inekf15_x1.ssdecoder",
+      "decoder_sha256": "f73fb6b1e8d0b2b159e062e1c7b2220067aad9974f9aabc8f004ab4286404894",
+      "decoder_generation_profile_sha256": "369d237e8c709d320e3f527b57d29af9927958b9d7f5add0fce76b7512fa8618",
+      "flp_package_consumer": "accepted schema/checksums/semantics; no H7 recorded flight data or live readiness tested",
+      "whole_program_stack_acceptance": "NOT PROVEN: MSP/main/ISR nesting and hardware margins require separate evidence",
+      "hardware_tested": false,
+      "flight_tested": false
+    },
+    {
+      "case": "inekf20_x1",
+      "configuration": "Release",
+      "project": ".work/h7_20261025/software_release_v3/inekf20_x1/Flight_Controller/SilverStar.ssproject",
+      "gates": {
+        "all": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\inekf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "all"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/inekf20_x1/all.log",
+          "log_sha256": "57cbc951af5bc4c084308623a6bbcd2b445c0475060c5ab6fe6a1bb85c3894d2"
+        },
+        "architecture-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\inekf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "architecture-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/inekf20_x1/architecture-check.log",
+          "log_sha256": "a136a42474259c1e334c84a917edff1ad59de6115f4c777b372b68f46d3f2d0a"
+        },
+        "power10-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\inekf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "power10-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/inekf20_x1/power10-check.log",
+          "log_sha256": "2aa0e5b07c01b20ca9ac628da8a5106b3b4c4373f6b90cb3bc9fff4719f80ced"
+        },
+        "static-analysis": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\inekf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "static-analysis"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/inekf20_x1/static-analysis.log",
+          "log_sha256": "68b75907fd853a5c7c0e91d506b917d992cf24eab2a1ab5cc84a30a5d232a0f4"
+        },
+        "artifact-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\inekf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "artifact-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/inekf20_x1/artifact-check.log",
+          "log_sha256": "80b4832dd3ae08ee5833d1a61b28bc20c7661cec954d25c1bc3961268c683968"
+        },
+        "stack-report": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\inekf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "stack-report"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/inekf20_x1/stack-report.log",
+          "log_sha256": "93b3fb3cb488f24b937bccbbc7640706dce3676acfbfc472da65c1c9240972da"
+        },
+        "stack-diagnostic": {
+          "command": [
+            "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\inekf20_x1\\Flight_Controller\\Tools\\check_task_stacks.py",
+            "--project",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\inekf20_x1\\Flight_Controller",
+            "--config",
+            "Release",
+            "--prefix",
+            "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-",
+            "--diagnostic"
+          ],
+          "exit_code": 2,
+          "log": ".work/h7_20261025/software_release_v3/inekf20_x1/stack-diagnostic.log",
+          "log_sha256": "bfd3776f37877c9c17ae8df67431020ab68d28cf2492fb4087746eaf90e10d27"
+        }
+      },
+      "elf": ".work/h7_20261025/software_release_v3/inekf20_x1/Flight_Controller/build/FCCG/SilverStar_H743ZI/Release/SilverStar_0_1_3.elf",
+      "elf_sha256": "55fae429413caa631fa88ec3d203308bd3f2aa1eedb286b6885a771c7568355d",
+      "elf_text_data_bss_bytes": {
+        "text": 359760,
+        "data": 1280,
+        "bss": 227432
+      },
+      "source_inventory": ".work/h7_20261025/software_release_v3/inekf20_x1/source-inventory.json",
+      "source_inventory_sha256": "10ec75291ebb7bf458fcd32bfd12bc690f49470531c1dd8990206ca53117f673",
+      "stack_report": ".work/h7_20261025/software_release_v3/inekf20_x1/Flight_Controller/build/FCCG/SilverStar_H743ZI/Release/stack-budget.json",
+      "stack_report_sha256": "0c80aedd7c15171b0fe8c5b3758a94a760643d3d9c4659a38ca4a8f84ff301eb",
+      "checker_sha256": "128a70d4b289d8945268e7574720e71f24c760a3c0513f790376107de83e5594",
+      "compiler": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+      "tasks": [
+        {
+          "task": "Device",
+          "configured_bytes": 2560,
+          "worst_known_bytes": 2188,
+          "margin_bytes": 372,
+          "passes": true
+        },
+        {
+          "task": "INS",
+          "configured_bytes": 3072,
+          "worst_known_bytes": 2336,
+          "margin_bytes": 736,
+          "passes": true
+        },
+        {
+          "task": "Estimator",
+          "configured_bytes": 5120,
+          "worst_known_bytes": 4016,
+          "margin_bytes": 1104,
+          "passes": true
+        },
+        {
+          "task": "Flight",
+          "configured_bytes": 4096,
+          "worst_known_bytes": 3376,
+          "margin_bytes": 720,
+          "passes": true
+        },
+        {
+          "task": "Logger",
+          "configured_bytes": 3072,
+          "worst_known_bytes": 2344,
+          "margin_bytes": 728,
+          "passes": true
+        },
+        {
+          "task": "Serial",
+          "configured_bytes": 6144,
+          "worst_known_bytes": 4440,
+          "margin_bytes": 1704,
+          "passes": true
+        },
+        {
+          "task": "Telemetry",
+          "configured_bytes": 4096,
+          "worst_known_bytes": 2160,
+          "margin_bytes": 1936,
+          "passes": true
+        },
+        {
+          "task": "Idle",
+          "configured_bytes": 512,
+          "worst_known_bytes": 256,
+          "margin_bytes": 256,
+          "passes": true
+        }
+      ],
+      "decoder": ".work/h7_20261025/software_release_v3/inekf20_x1/H743ZI_inekf20_x1.ssdecoder",
+      "decoder_sha256": "fd667d29c15166be61ff0d237b2c69de28959cd12a71d2d0ea3167ba3b0650fb",
+      "decoder_generation_profile_sha256": "d1c33b8ab759f879bc2508daf48d98bc655146ade1e8f6a6d08a64e6f6f49eb5",
+      "flp_package_consumer": "accepted schema/checksums/semantics; no H7 recorded flight data or live readiness tested",
+      "whole_program_stack_acceptance": "NOT PROVEN: MSP/main/ISR nesting and hardware margins require separate evidence",
+      "hardware_tested": false,
+      "flight_tested": false
+    },
+    {
+      "case": "eskf20_x2",
+      "configuration": "Release",
+      "project": ".work/h7_20261025/software_release_v3/eskf20_x2/Flight_Controller/SilverStar.ssproject",
+      "gates": {
+        "all": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\eskf20_x2\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "all"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/eskf20_x2/all.log",
+          "log_sha256": "7f2e2ba51a9cb367f93fff97f0c3029878fc4c6d1c365c4831f0080a54ab7920"
+        },
+        "architecture-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\eskf20_x2\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "architecture-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/eskf20_x2/architecture-check.log",
+          "log_sha256": "a91b12796c8a9a3b2e8bb846241a4de5b158ed5b88d56dda6b280a5459995c4f"
+        },
+        "power10-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\eskf20_x2\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "power10-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/eskf20_x2/power10-check.log",
+          "log_sha256": "296e81b7c48eb91b3975d916218f8cbd1764ae0d8176d3b918d54e8001149a0e"
+        },
+        "static-analysis": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\eskf20_x2\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "static-analysis"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/eskf20_x2/static-analysis.log",
+          "log_sha256": "49db1b1de946ca1e58948aba758c29c14073530c1dc26c7b51840389dfbda4e1"
+        },
+        "artifact-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\eskf20_x2\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "artifact-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/eskf20_x2/artifact-check.log",
+          "log_sha256": "66220449127e5f19a693e8e6fc67841c7e5105d7820f24e1a617804a794a08e0"
+        },
+        "stack-report": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\eskf20_x2\\Flight_Controller",
+            "-j4",
+            "CONFIG=Release",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "stack-report"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_release_v3/eskf20_x2/stack-report.log",
+          "log_sha256": "ddafef6b721c62a61ce929a2cfe50b254b44b010914da93fa56fc07d42701448"
+        },
+        "stack-diagnostic": {
+          "command": [
+            "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\eskf20_x2\\Flight_Controller\\Tools\\check_task_stacks.py",
+            "--project",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_release_v3\\eskf20_x2\\Flight_Controller",
+            "--config",
+            "Release",
+            "--prefix",
+            "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-",
+            "--diagnostic"
+          ],
+          "exit_code": 2,
+          "log": ".work/h7_20261025/software_release_v3/eskf20_x2/stack-diagnostic.log",
+          "log_sha256": "ed31d26858403d7726afc2b57bc57ca06e3c57093db11afd0045f7cea11698a1"
+        }
+      },
+      "elf": ".work/h7_20261025/software_release_v3/eskf20_x2/Flight_Controller/build/FCCG/SilverStar_H743ZI/Release/SilverStar_0_1_3.elf",
+      "elf_sha256": "f4b013358d5052046a40fc1f0e6fbcf4f9d4c6fed56a822f19c4b988969eedb8",
+      "elf_text_data_bss_bytes": {
+        "text": 359984,
+        "data": 1280,
+        "bss": 227688
+      },
+      "source_inventory": ".work/h7_20261025/software_release_v3/eskf20_x2/source-inventory.json",
+      "source_inventory_sha256": "4741234c67c39fedd0ded249936ea4ca62d435ec731b24cb1ff66c1996d2bef4",
+      "stack_report": ".work/h7_20261025/software_release_v3/eskf20_x2/Flight_Controller/build/FCCG/SilverStar_H743ZI/Release/stack-budget.json",
+      "stack_report_sha256": "4f3f72e0509a4ec0ccde1aaddaca1245efa2d651380628232c25483e9b905114",
+      "checker_sha256": "128a70d4b289d8945268e7574720e71f24c760a3c0513f790376107de83e5594",
+      "compiler": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+      "tasks": [
+        {
+          "task": "Device",
+          "configured_bytes": 2560,
+          "worst_known_bytes": 2188,
+          "margin_bytes": 372,
+          "passes": true
+        },
+        {
+          "task": "INS",
+          "configured_bytes": 3072,
+          "worst_known_bytes": 2336,
+          "margin_bytes": 736,
+          "passes": true
+        },
+        {
+          "task": "Estimator",
+          "configured_bytes": 5120,
+          "worst_known_bytes": 4016,
+          "margin_bytes": 1104,
+          "passes": true
+        },
+        {
+          "task": "Flight",
+          "configured_bytes": 4096,
+          "worst_known_bytes": 3376,
+          "margin_bytes": 720,
+          "passes": true
+        },
+        {
+          "task": "Logger",
+          "configured_bytes": 3072,
+          "worst_known_bytes": 2344,
+          "margin_bytes": 728,
+          "passes": true
+        },
+        {
+          "task": "Serial",
+          "configured_bytes": 6144,
+          "worst_known_bytes": 4440,
+          "margin_bytes": 1704,
+          "passes": true
+        },
+        {
+          "task": "Telemetry",
+          "configured_bytes": 4096,
+          "worst_known_bytes": 2160,
+          "margin_bytes": 1936,
+          "passes": true
+        },
+        {
+          "task": "Idle",
+          "configured_bytes": 512,
+          "worst_known_bytes": 256,
+          "margin_bytes": 256,
+          "passes": true
+        }
+      ],
+      "decoder": ".work/h7_20261025/software_release_v3/eskf20_x2/H743ZI_eskf20_x2.ssdecoder",
+      "decoder_sha256": "6bc2d0c550c822283ea65825b6007a8c70104af095d5e6ffd7d9d30c5f731dd7",
+      "decoder_generation_profile_sha256": "ccfbe786f43453d7679e20fb27fc623c69690c63d4457ba7409a5a865b588fca",
+      "flp_package_consumer": "accepted schema/checksums/semantics; no H7 recorded flight data or live readiness tested",
+      "whole_program_stack_acceptance": "NOT PROVEN: MSP/main/ISR nesting and hardware margins require separate evidence",
+      "hardware_tested": false,
+      "flight_tested": false
+    },
+    {
+      "case": "eskf20_x1",
+      "configuration": "Debug",
+      "project": ".work/h7_20261025/software_debug_v3/eskf20_x1/Flight_Controller/SilverStar.ssproject",
+      "gates": {
+        "all": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\eskf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Debug",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "all"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_debug_v3/eskf20_x1/all.log",
+          "log_sha256": "eb204bc6aedc6977316449ff59343243886ca08d5151ed87a9128db32d1c58e2"
+        },
+        "architecture-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\eskf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Debug",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "architecture-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_debug_v3/eskf20_x1/architecture-check.log",
+          "log_sha256": "693b3779b6fdcbeab16122055fb8d7ebadd7cca56c7b360440bfe9560eabdad0"
+        },
+        "power10-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\eskf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Debug",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "power10-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_debug_v3/eskf20_x1/power10-check.log",
+          "log_sha256": "5a7c7a45ee20bbd0de4819dea00e3fc84e6bb75fd23302db62f4967b4ef3092b"
+        },
+        "static-analysis": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\eskf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Debug",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "static-analysis"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_debug_v3/eskf20_x1/static-analysis.log",
+          "log_sha256": "803705aec65a0af0eaf0c4874e695a2e9309c10fd721c2461afb87b2f39999ef"
+        },
+        "artifact-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\eskf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Debug",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "artifact-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_debug_v3/eskf20_x1/artifact-check.log",
+          "log_sha256": "b02f75bec5730423c1c48b22931f68e2f6a62e1d1dfce5a39ce2c5b46c19feed"
+        },
+        "stack-report": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\eskf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Debug",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "stack-report"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_debug_v3/eskf20_x1/stack-report.log",
+          "log_sha256": "b959bd05c673b7341269b5c1a305d355802aebd1b7b4b4c21ada294d1fdbaf35"
+        },
+        "stack-diagnostic": {
+          "command": [
+            "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\eskf20_x1\\Flight_Controller\\Tools\\check_task_stacks.py",
+            "--project",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\eskf20_x1\\Flight_Controller",
+            "--config",
+            "Debug",
+            "--prefix",
+            "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-",
+            "--diagnostic"
+          ],
+          "exit_code": 2,
+          "log": ".work/h7_20261025/software_debug_v3/eskf20_x1/stack-diagnostic.log",
+          "log_sha256": "def426becf26914d5968d0ed46fa6ebecaf9b4af5d8f370048433423d4d3d357"
+        }
+      },
+      "elf": ".work/h7_20261025/software_debug_v3/eskf20_x1/Flight_Controller/build/FCCG/SilverStar_H743ZI/Debug/SilverStar_0_1_3.elf",
+      "elf_sha256": "2a0a71727dbdfa2c5e1bd222390a778fd8dcf94006c5243250153bdb014bd4a4",
+      "elf_text_data_bss_bytes": {
+        "text": 374856,
+        "data": 1280,
+        "bss": 227468
+      },
+      "source_inventory": ".work/h7_20261025/software_debug_v3/eskf20_x1/source-inventory.json",
+      "source_inventory_sha256": "8800df14aa7131bf5c9563335b6dc40ee8ce74282e7ac0a1a562f7081391dce5",
+      "stack_report": ".work/h7_20261025/software_debug_v3/eskf20_x1/Flight_Controller/build/FCCG/SilverStar_H743ZI/Debug/stack-budget.json",
+      "stack_report_sha256": "1bf59821f0be78f13caf623902b2f626295e3218a5ae39e3ac2ed831e8de1567",
+      "checker_sha256": "128a70d4b289d8945268e7574720e71f24c760a3c0513f790376107de83e5594",
+      "compiler": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+      "tasks": [
+        {
+          "task": "Device",
+          "configured_bytes": 2560,
+          "worst_known_bytes": 1640,
+          "margin_bytes": 920,
+          "passes": true
+        },
+        {
+          "task": "INS",
+          "configured_bytes": 3072,
+          "worst_known_bytes": 2168,
+          "margin_bytes": 904,
+          "passes": true
+        },
+        {
+          "task": "Estimator",
+          "configured_bytes": 5120,
+          "worst_known_bytes": 3448,
+          "margin_bytes": 1672,
+          "passes": true
+        },
+        {
+          "task": "Flight",
+          "configured_bytes": 4096,
+          "worst_known_bytes": 2104,
+          "margin_bytes": 1992,
+          "passes": true
+        },
+        {
+          "task": "Logger",
+          "configured_bytes": 3072,
+          "worst_known_bytes": 2016,
+          "margin_bytes": 1056,
+          "passes": true
+        },
+        {
+          "task": "Serial",
+          "configured_bytes": 6144,
+          "worst_known_bytes": 3016,
+          "margin_bytes": 3128,
+          "passes": true
+        },
+        {
+          "task": "Telemetry",
+          "configured_bytes": 4096,
+          "worst_known_bytes": 1912,
+          "margin_bytes": 2184,
+          "passes": true
+        },
+        {
+          "task": "Idle",
+          "configured_bytes": 512,
+          "worst_known_bytes": 256,
+          "margin_bytes": 256,
+          "passes": true
+        }
+      ],
+      "decoder": ".work/h7_20261025/software_debug_v3/eskf20_x1/H743ZI_eskf20_x1.ssdecoder",
+      "decoder_sha256": "56e341816e46490eba1d419b60be5335ed4bbd76e47d65724475bbdccd8e8ace",
+      "decoder_generation_profile_sha256": "3125d682388c3547f5dfc43a1180baa785c5ec0e75ab8fef3a6b46bd2ced917f",
+      "flp_package_consumer": "accepted schema/checksums/semantics; no H7 recorded flight data or live readiness tested",
+      "whole_program_stack_acceptance": "NOT PROVEN: MSP/main/ISR nesting and hardware margins require separate evidence",
+      "hardware_tested": false,
+      "flight_tested": false
+    },
+    {
+      "case": "inekf15_x1",
+      "configuration": "Debug",
+      "project": ".work/h7_20261025/software_debug_v3/inekf15_x1/Flight_Controller/SilverStar.ssproject",
+      "gates": {
+        "all": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\inekf15_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Debug",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "all"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_debug_v3/inekf15_x1/all.log",
+          "log_sha256": "754276c7d1b3c47d505de377957e8b7a2e289a2acc201324b2152d75686b7b05"
+        },
+        "architecture-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\inekf15_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Debug",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "architecture-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_debug_v3/inekf15_x1/architecture-check.log",
+          "log_sha256": "c4431701265fc6abdfbe696f997515f7b103df9ec59aff1bb3aa597462ac158e"
+        },
+        "power10-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\inekf15_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Debug",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "power10-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_debug_v3/inekf15_x1/power10-check.log",
+          "log_sha256": "ad7768b9ce97762d5596f9010227c601abd874af7a43dfe599e1941f8db96127"
+        },
+        "static-analysis": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\inekf15_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Debug",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "static-analysis"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_debug_v3/inekf15_x1/static-analysis.log",
+          "log_sha256": "27a7af887f80fb4c764823b6da87fe3847e6b7dd551b46f5442ab072112d63d0"
+        },
+        "artifact-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\inekf15_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Debug",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "artifact-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_debug_v3/inekf15_x1/artifact-check.log",
+          "log_sha256": "0d3efb0dc7ce8e656754dcd661e3856efc3a853a4fd168fead3f25bd0bdc3835"
+        },
+        "stack-report": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\inekf15_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Debug",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "stack-report"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_debug_v3/inekf15_x1/stack-report.log",
+          "log_sha256": "2ea3cb44ab2411c2b5184e4faed37810b83f134a9869394ae3624503d051ec0e"
+        },
+        "stack-diagnostic": {
+          "command": [
+            "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\inekf15_x1\\Flight_Controller\\Tools\\check_task_stacks.py",
+            "--project",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\inekf15_x1\\Flight_Controller",
+            "--config",
+            "Debug",
+            "--prefix",
+            "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-",
+            "--diagnostic"
+          ],
+          "exit_code": 2,
+          "log": ".work/h7_20261025/software_debug_v3/inekf15_x1/stack-diagnostic.log",
+          "log_sha256": "b6e06ff140fe74d095b76ddbf04749d2b76c8ef2896ee460c2893cbbec3b0e73"
+        }
+      },
+      "elf": ".work/h7_20261025/software_debug_v3/inekf15_x1/Flight_Controller/build/FCCG/SilverStar_H743ZI/Debug/SilverStar_0_1_3.elf",
+      "elf_sha256": "f7f48fc6fec8d14a95626dca5d4f69997b1f3f91ea2cc1671f3e0cec7340225c",
+      "elf_text_data_bss_bytes": {
+        "text": 368720,
+        "data": 1280,
+        "bss": 227220
+      },
+      "source_inventory": ".work/h7_20261025/software_debug_v3/inekf15_x1/source-inventory.json",
+      "source_inventory_sha256": "5b03b5fee6c7e5d2caa5b0f62c387bed285206048c830c47e28fdfd4042d283c",
+      "stack_report": ".work/h7_20261025/software_debug_v3/inekf15_x1/Flight_Controller/build/FCCG/SilverStar_H743ZI/Debug/stack-budget.json",
+      "stack_report_sha256": "9b05a124580a26cc89a465a1c5e587bd37d040be570c81a11fa9fadfe5edbf04",
+      "checker_sha256": "128a70d4b289d8945268e7574720e71f24c760a3c0513f790376107de83e5594",
+      "compiler": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+      "tasks": [
+        {
+          "task": "Device",
+          "configured_bytes": 2560,
+          "worst_known_bytes": 1640,
+          "margin_bytes": 920,
+          "passes": true
+        },
+        {
+          "task": "INS",
+          "configured_bytes": 3072,
+          "worst_known_bytes": 2168,
+          "margin_bytes": 904,
+          "passes": true
+        },
+        {
+          "task": "Estimator",
+          "configured_bytes": 5120,
+          "worst_known_bytes": 3432,
+          "margin_bytes": 1688,
+          "passes": true
+        },
+        {
+          "task": "Flight",
+          "configured_bytes": 4096,
+          "worst_known_bytes": 2104,
+          "margin_bytes": 1992,
+          "passes": true
+        },
+        {
+          "task": "Logger",
+          "configured_bytes": 3072,
+          "worst_known_bytes": 2016,
+          "margin_bytes": 1056,
+          "passes": true
+        },
+        {
+          "task": "Serial",
+          "configured_bytes": 6144,
+          "worst_known_bytes": 3016,
+          "margin_bytes": 3128,
+          "passes": true
+        },
+        {
+          "task": "Telemetry",
+          "configured_bytes": 4096,
+          "worst_known_bytes": 1912,
+          "margin_bytes": 2184,
+          "passes": true
+        },
+        {
+          "task": "Idle",
+          "configured_bytes": 512,
+          "worst_known_bytes": 256,
+          "margin_bytes": 256,
+          "passes": true
+        }
+      ],
+      "decoder": ".work/h7_20261025/software_debug_v3/inekf15_x1/H743ZI_inekf15_x1.ssdecoder",
+      "decoder_sha256": "f73fb6b1e8d0b2b159e062e1c7b2220067aad9974f9aabc8f004ab4286404894",
+      "decoder_generation_profile_sha256": "369d237e8c709d320e3f527b57d29af9927958b9d7f5add0fce76b7512fa8618",
+      "flp_package_consumer": "accepted schema/checksums/semantics; no H7 recorded flight data or live readiness tested",
+      "whole_program_stack_acceptance": "NOT PROVEN: MSP/main/ISR nesting and hardware margins require separate evidence",
+      "hardware_tested": false,
+      "flight_tested": false
+    },
+    {
+      "case": "inekf20_x1",
+      "configuration": "Debug",
+      "project": ".work/h7_20261025/software_debug_v3/inekf20_x1/Flight_Controller/SilverStar.ssproject",
+      "gates": {
+        "all": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\inekf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Debug",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "all"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_debug_v3/inekf20_x1/all.log",
+          "log_sha256": "4cc52c7d667c4057e6691ecca7a0bbbc3993a84d6b506611936990da464ee9ae"
+        },
+        "architecture-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\inekf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Debug",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "architecture-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_debug_v3/inekf20_x1/architecture-check.log",
+          "log_sha256": "7dd739f255e21b81a5de5f0fd0d115cbb81a096f41baa8bb718b6d3e2eea73d5"
+        },
+        "power10-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\inekf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Debug",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "power10-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_debug_v3/inekf20_x1/power10-check.log",
+          "log_sha256": "2a99a02e2006e6ae3c4beff1673d459f80fc115ea0e6bfc61ecaa6a1402f7e60"
+        },
+        "static-analysis": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\inekf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Debug",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "static-analysis"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_debug_v3/inekf20_x1/static-analysis.log",
+          "log_sha256": "a86f1cb97d45c20b4fa2b3a03f9d3a5605ffe66db495c5c087d41064d6b7aa80"
+        },
+        "artifact-check": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\inekf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Debug",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "artifact-check"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_debug_v3/inekf20_x1/artifact-check.log",
+          "log_sha256": "708a0f6ee4ed46757389d2df99da1408bbfb963278b519a5530d5f1468dadf59"
+        },
+        "stack-report": {
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\inekf20_x1\\Flight_Controller",
+            "-j4",
+            "CONFIG=Debug",
+            "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+            "stack-report"
+          ],
+          "exit_code": 0,
+          "log": ".work/h7_20261025/software_debug_v3/inekf20_x1/stack-report.log",
+          "log_sha256": "faeffd1975079595be07764c9f077d0f483533e2e9abf0cfb8ce2bd9fee1af4b"
+        },
+        "stack-diagnostic": {
+          "command": [
+            "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\inekf20_x1\\Flight_Controller\\Tools\\check_task_stacks.py",
+            "--project",
+            "D:\\python_software\\SilverStar\\.work\\h7_20261025\\software_debug_v3\\inekf20_x1\\Flight_Controller",
+            "--config",
+            "Debug",
+            "--prefix",
+            "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-",
+            "--diagnostic"
+          ],
+          "exit_code": 2,
+          "log": ".work/h7_20261025/software_debug_v3/inekf20_x1/stack-diagnostic.log",
+          "log_sha256": "2d1404ad25e0cb0afc7b9ef0f6c2ec1fa2231f40c28af8d4082aa258dff68a7e"
+        }
+      },
+      "elf": ".work/h7_20261025/software_debug_v3/inekf20_x1/Flight_Controller/build/FCCG/SilverStar_H743ZI/Debug/SilverStar_0_1_3.elf",
+      "elf_sha256": "8e947a4fc0e5824fe6cd6875f6347232b5076b1ab16727cf3a75a37c3f640d48",
+      "elf_text_data_bss_bytes": {
+        "text": 374856,
+        "data": 1280,
+        "bss": 227468
+      },
+      "source_inventory": ".work/h7_20261025/software_debug_v3/inekf20_x1/source-inventory.json",
+      "source_inventory_sha256": "10ec75291ebb7bf458fcd32bfd12bc690f49470531c1dd8990206ca53117f673",
+      "stack_report": ".work/h7_20261025/software_debug_v3/inekf20_x1/Flight_Controller/build/FCCG/SilverStar_H743ZI/Debug/stack-budget.json",
+      "stack_report_sha256": "42227f44c433074e54f6bec3bcba1b3be82c270543b8fd3b40213d3cfa3eb537",
+      "checker_sha256": "128a70d4b289d8945268e7574720e71f24c760a3c0513f790376107de83e5594",
+      "compiler": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+      "tasks": [
+        {
+          "task": "Device",
+          "configured_bytes": 2560,
+          "worst_known_bytes": 1640,
+          "margin_bytes": 920,
+          "passes": true
+        },
+        {
+          "task": "INS",
+          "configured_bytes": 3072,
+          "worst_known_bytes": 2168,
+          "margin_bytes": 904,
+          "passes": true
+        },
+        {
+          "task": "Estimator",
+          "configured_bytes": 5120,
+          "worst_known_bytes": 3448,
+          "margin_bytes": 1672,
+          "passes": true
+        },
+        {
+          "task": "Flight",
+          "configured_bytes": 4096,
+          "worst_known_bytes": 2104,
+          "margin_bytes": 1992,
+          "passes": true
+        },
+        {
+          "task": "Logger",
+          "configured_bytes": 3072,
+          "worst_known_bytes": 2016,
+          "margin_bytes": 1056,
+          "passes": true
+        },
+        {
+          "task": "Serial",
+          "configured_bytes": 6144,
+          "worst_known_bytes": 3016,
+          "margin_bytes": 3128,
+          "passes": true
+        },
+        {
+          "task": "Telemetry",
+          "configured_bytes": 4096,
+          "worst_known_bytes": 1912,
+          "margin_bytes": 2184,
+          "passes": true
+        },
+        {
+          "task": "Idle",
+          "configured_bytes": 512,
+          "worst_known_bytes": 256,
+          "margin_bytes": 256,
+          "passes": true
+        }
+      ],
+      "decoder": ".work/h7_20261025/software_debug_v3/inekf20_x1/H743ZI_inekf20_x1.ssdecoder",
+      "decoder_sha256": "fd667d29c15166be61ff0d237b2c69de28959cd12a71d2d0ea3167ba3b0650fb",
+      "decoder_generation_profile_sha256": "d1c33b8ab759f879bc2508daf48d98bc655146ade1e8f6a6d08a64e6f6f49eb5",
+      "flp_package_consumer": "accepted schema/checksums/semantics; no H7 recorded flight data or live readiness tested",
+      "whole_program_stack_acceptance": "NOT PROVEN: MSP/main/ISR nesting and hardware margins require separate evidence",
+      "hardware_tested": false,
+      "flight_tested": false
+    }
+  ],
+  "test_groups": [
+    {
+      "scope": "SCG final selected regression",
+      "tests": 300,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 14,
+      "passed": 286,
+      "seconds": 634.118,
+      "junit": ".work/h7_20261025/regression/scg_final_junit.xml",
+      "junit_sha256": "d610e379986a01f4c9c5c8a3deb8687655ccecef84aed3643ad2cbe0b61098be",
+      "skip_details": [
+        {
+          "test": "tests.test_native_platform.test_actual_native_platform_contract[f103-usb]",
+          "reason": "real complete native CDC inputs not configured"
+        },
+        {
+          "test": "tests.test_native_platform.test_actual_native_platform_contract[f407-usb]",
+          "reason": "real complete native CDC inputs not configured"
+        },
+        {
+          "test": "tests.test_native_platform.test_native_platform_conflicting_owner_rejected[f103-usb-prescaler]",
+          "reason": "real complete native CDC inputs not configured"
+        },
+        {
+          "test": "tests.test_native_platform.test_native_platform_conflicting_owner_rejected[f103-usb-expression]",
+          "reason": "real complete native CDC inputs not configured"
+        },
+        {
+          "test": "tests.test_native_platform.test_native_platform_conflicting_owner_rejected[f103-usb-dio-irq]",
+          "reason": "real complete native CDC inputs not configured"
+        },
+        {
+          "test": "tests.test_native_platform.test_native_platform_conflicting_owner_rejected[f103-usb-dio-route]",
+          "reason": "real complete native CDC inputs not configured"
+        },
+        {
+          "test": "tests.test_native_platform.test_native_platform_conflicting_owner_rejected[f103-usb-spi-pin]",
+          "reason": "real complete native CDC inputs not configured"
+        },
+        {
+          "test": "tests.test_native_platform.test_native_platform_conflicting_owner_rejected[f103-usb-callback]",
+          "reason": "real complete native CDC inputs not configured"
+        },
+        {
+          "test": "tests.test_native_platform.test_native_platform_conflicting_owner_rejected[f407-usb-prescaler]",
+          "reason": "real complete native CDC inputs not configured"
+        },
+        {
+          "test": "tests.test_native_platform.test_native_platform_conflicting_owner_rejected[f407-usb-expression]",
+          "reason": "real complete native CDC inputs not configured"
+        },
+        {
+          "test": "tests.test_native_platform.test_native_platform_conflicting_owner_rejected[f407-usb-dio-irq]",
+          "reason": "real complete native CDC inputs not configured"
+        },
+        {
+          "test": "tests.test_native_platform.test_native_platform_conflicting_owner_rejected[f407-usb-dio-route]",
+          "reason": "real complete native CDC inputs not configured"
+        },
+        {
+          "test": "tests.test_native_platform.test_native_platform_conflicting_owner_rejected[f407-usb-spi-pin]",
+          "reason": "real complete native CDC inputs not configured"
+        },
+        {
+          "test": "tests.test_native_platform.test_native_platform_conflicting_owner_rejected[f407-usb-callback]",
+          "reason": "real complete native CDC inputs not configured"
+        }
+      ]
+    },
+    {
+      "scope": "Logger/storage/install/mission backend",
+      "tests": 109,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "passed": 109,
+      "seconds": 457.896,
+      "junit": ".work/h7_20261025/regression/modules_resume_junit.xml",
+      "junit_sha256": "6470580522bdd34736a0dad09cd22f833e5bdc955f9d51b532797eef102d9364",
+      "skip_details": []
+    },
+    {
+      "scope": "Configuration and ground indicators",
+      "tests": 31,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "passed": 31,
+      "seconds": 207.567,
+      "junit": ".work/h7_20261025/regression/configuration_final.xml",
+      "junit_sha256": "bf168868d56d7e6b12d7286cd279a2776e29179bb5d59ba1b6ad9851dcecb2bb",
+      "skip_details": []
+    },
+    {
+      "scope": "Stack checker positive/negative contracts",
+      "tests": 88,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "passed": 88,
+      "seconds": 4.13,
+      "junit": ".work/h7_20261025/regression/checker_v3.xml",
+      "junit_sha256": "1e1a937284c640208a090889c5ce3756a01bb55df620c047c368f8e4da009a50",
+      "skip_details": []
+    },
+    {
+      "scope": "Determinism and focused contracts",
+      "tests": 34,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "passed": 34,
+      "seconds": 57.374,
+      "junit": ".work/h7_20261025/regression/determinism_after.xml",
+      "junit_sha256": "cf38972c739fa6ed1df4bd46764899630add3697c89b1dbde95b13314026c18d",
+      "skip_details": []
+    },
+    {
+      "scope": "Sensor normal/timeout/fault tests",
+      "tests": 17,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "passed": 17,
+      "seconds": 8.19,
+      "junit": ".work/h7_20261025/sensors_phase2/after_junit.xml",
+      "junit_sha256": "2526fcb4c28949d2147ea3808acfd604c82fb6fe9b63426be81624f95f8960dd",
+      "skip_details": []
+    },
+    {
+      "scope": "GSHC mission/readiness/descriptor",
+      "tests": 51,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "passed": 51,
+      "seconds": 17.331,
+      "junit": ".work/h7_20261025/backend_closeout/gshc_ready_junit.xml",
+      "junit_sha256": "e24c23ee8c07727a32f2569232e0857f98433b481470c947c1bed47d3b3e09b0",
+      "skip_details": []
+    },
+    {
+      "scope": "FLP mission/decoder/navigation journal",
+      "tests": 68,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "passed": 68,
+      "seconds": 23.821,
+      "junit": ".work/h7_20261025/backend_closeout/flp_junit.xml",
+      "junit_sha256": "d52d196ccc8967d595038cfe459997066ec245deb88e743cdf98cc5896f35210",
+      "skip_details": []
+    }
+  ],
+  "retained_failure_examples": [
+    "regression/determinism_repro2.log",
+    "regression/configuration.log",
+    "sensors_phase2/timeout_before.log",
+    "verified_release/summary.json",
+    "final/summary.json",
+    "final_debug/summary.json"
+  ],
+  "remaining": [
+    "MSP/main/ISR nesting and hardware task high-water marks NOT PROVEN",
+    "Critical-contract manual acceptance NOT PROVEN",
+    "Electrical clocks/cache/DMA/driver timeouts/PPS/magnetometer/SD/RF timing and WCET need hardware",
+    "Navigation accuracy and flight qualification not established",
+    "Custom hardware without board identity cannot export optional .ssmission",
+    "14 native CDC regression skips: real complete CDC input not configured"
+  ],
+  "hardware_tested": false,
+  "flight_tested": false
+}

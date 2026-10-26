@@ -1,0 +1,334 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.mcu.stm32h743zit6",
+  "name": "STM32H743ZIT6 (static candidate)",
+  "type": "mcu",
+  "class": "stm32h7",
+  "version": "0.1.0",
+  "description": "Exact H743ZI 2 MiB Flash / 1,056 KiB total RAM, M7 FPv5-D16 static-validation candidate; no board qualification.",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.mcu_family.stm32h7",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "mcu.cortex_m7",
+    "hardware_provider.stm32_cubemx"
+  ],
+  "build": {
+    "sources": [],
+    "asm_sources": [
+      "startup_stm32h743xx.s"
+    ],
+    "include_dirs": [
+      "Targets/SilverStar_H743ZI/Inc"
+    ],
+    "defines": [
+      "USE_HAL_DRIVER",
+      "STM32H743xx",
+      "USE_FLASH_ECC=0",
+      "USE_SDIO_TRANSCEIVER=0"
+    ],
+    "mcu_flags": [
+      "-mcpu=cortex-m7",
+      "-mthumb",
+      "-mfpu=fpv5-d16",
+      "-mfloat-abi=hard",
+      "-isystemDrivers/CMSIS/Include",
+      "-isystemDrivers/STM32H7xx_HAL_Driver/Inc"
+    ],
+    "specs": [
+      "-specs=nano.specs"
+    ],
+    "libraries": [
+      "-lc",
+      "-lm",
+      "-lnosys"
+    ],
+    "forced_includes": [
+      "Targets/SilverStar_H743ZI/Inc/platform_memory_target.h"
+    ],
+    "linker_script": "STM32H743XX_FLASH.ld",
+    "toolchain_prefix": "arm-none-eabi-",
+    "exclude_sources": []
+  },
+  "payload": {
+    "roots": [
+      "Targets/SilverStar_H743ZI/Inc",
+      "startup_stm32h743xx.s",
+      "STM32H743XX_FLASH.ld"
+    ]
+  },
+  "metadata": {
+    "platform_family_id": "silverstar.mcu_family.stm32h7",
+    "reference": {
+      "vendor_package": "STM32Cube FW_H7 V1.12.1",
+      "hardware_status": "HARDWARE_UNVERIFIED",
+      "configuration": "SSFC_1-derived test allocation; 25 MHz HSE, 480 MHz CPU, SWD"
+    },
+    "vendor": "STM32",
+    "mcu_model": "STM32H743ZIT6",
+    "cpu_profile": "cortex_m7_hardfp",
+    "max_hclk_hz": 240000000,
+    "flash_bytes": 2097152,
+    "sram_bytes": 1081344,
+    "memory_regions": [
+      {
+        "name": "FLASH",
+        "origin": 134217728,
+        "bytes": 2097152
+      },
+      {
+        "name": "RAM",
+        "origin": 603979776,
+        "bytes": 524288
+      },
+      {
+        "name": "DTCMRAM",
+        "origin": 536870912,
+        "bytes": 131072
+      },
+      {
+        "name": "RAM_D2",
+        "origin": 805306368,
+        "bytes": 294912
+      },
+      {
+        "name": "RAM_D3",
+        "origin": 939524096,
+        "bytes": 65536
+      },
+      {
+        "name": "ITCMRAM",
+        "origin": 0,
+        "bytes": 65536
+      }
+    ],
+    "display_names": {
+      "zh_CN": "STM32H743ZIT6（静态候选，未上板）",
+      "en_US": "STM32H743ZIT6 (static candidate, board untested)"
+    },
+    "supported_environments": [
+      "silverstar.environment.vscode_eide_gcc"
+    ],
+    "supported_toolchains": [
+      "arm-none-eabi-gcc"
+    ],
+    "resource_capacities": {
+      "uarts": 6,
+      "spis": 6,
+      "gpios": 114,
+      "i2cs": 4,
+      "timebases": 1
+    },
+    "source_origins": {
+      "default": "silverstar_h743zi_static_candidate"
+    },
+    "device_build_capabilities": [
+      {
+        "class": "SYSTEM_DEVICE_CLASS_IMU",
+        "symbol": "SYSTEM_SELECTED_IMU_ACCEL_AVAILABLE",
+        "capability": "imu.acceleration"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_IMU",
+        "symbol": "SYSTEM_SELECTED_IMU_GYRO_AVAILABLE",
+        "capability": "imu.angular_rate"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_IMU",
+        "symbol": "SYSTEM_SELECTED_IMU_SOFTWARE_PROPAGATION_QUALIFIED",
+        "capability": "imu.software_propagation_qualified"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_IMU",
+        "symbol": "SYSTEM_SELECTED_IMU_SOFTWARE_ALIGNMENT_QUALIFIED",
+        "capability": "imu.software_alignment_qualified"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_IMU",
+        "symbol": "SYSTEM_SELECTED_IMU_LANDING_STILLNESS_QUALIFIED",
+        "capability": "imu.landing_stillness_qualified"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_IMU",
+        "symbol": "SYSTEM_SELECTED_IMU_LANDING_IMPACT_QUALIFIED",
+        "capability": "imu.landing_impact_qualified"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_GNSS",
+        "symbol": "SYSTEM_SELECTED_GNSS_POSITION_AVAILABLE",
+        "capability": "gnss.position"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_MAGNETOMETER",
+        "symbol": "SYSTEM_SELECTED_MAGNETOMETER_RAW_OUTPUT_AVAILABLE",
+        "capability": "magnetometer.field",
+        "enable_symbol": "SYSTEM_USER_MAGNETOMETER_ENABLE"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_MAGNETOMETER",
+        "symbol": "SYSTEM_SELECTED_MAGNETOMETER_PHYSICAL_UNIT_AVAILABLE",
+        "capability": "magnetometer.physical_unit",
+        "enable_symbol": "SYSTEM_USER_MAGNETOMETER_ENABLE"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_MAGNETOMETER",
+        "symbol": "SYSTEM_SELECTED_MAGNETOMETER_ABSOLUTE_VECTOR_QUALIFIED",
+        "capability": "magnetometer.absolute_vector_qualified",
+        "enable_symbol": "SYSTEM_USER_MAGNETOMETER_ENABLE"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_BAROMETER",
+        "symbol": "SYSTEM_SELECTED_BAROMETER_DIRECT_ALTITUDE_AVAILABLE",
+        "capability": "barometer.altitude"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_BAROMETER",
+        "symbol": "SYSTEM_SELECTED_BAROMETER_ALIGNMENT_ORIGIN_QUALIFIED",
+        "capability": "barometer.alignment_origin_qualified"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_BAROMETER",
+        "symbol": "SYSTEM_SELECTED_BAROMETER_LANDING_WINDOW_QUALIFIED",
+        "capability": "barometer.landing_window_qualified"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_HARDWARE_QUATERNION",
+        "symbol": "SYSTEM_SELECTED_HARDWARE_QUATERNION_OUTPUT_AVAILABLE",
+        "capability": "attitude.external"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_HARDWARE_QUATERNION",
+        "symbol": "SYSTEM_SELECTED_HARDWARE_QUATERNION_PREFLIGHT_FALLBACK_QUALIFIED",
+        "capability": "attitude.external.preflight_fallback_qualified"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_HARDWARE_QUATERNION",
+        "symbol": "SYSTEM_SELECTED_HARDWARE_QUATERNION_PREFLIGHT_ALIGNMENT_6AXIS_QUALIFIED",
+        "capability": "attitude.external.preflight_alignment_6axis_qualified"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_HARDWARE_QUATERNION",
+        "symbol": "SYSTEM_SELECTED_HARDWARE_QUATERNION_PREFLIGHT_ALIGNMENT_9AXIS_QUALIFIED",
+        "capability": "attitude.external.preflight_alignment_9axis_qualified"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_HARDWARE_QUATERNION",
+        "symbol": "SYSTEM_SELECTED_HARDWARE_QUATERNION_AUTHORITATIVE_6AXIS_QUALIFIED",
+        "capability": "attitude.external.authoritative_6axis_qualified"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_HARDWARE_QUATERNION",
+        "symbol": "SYSTEM_SELECTED_HARDWARE_QUATERNION_AUTHORITATIVE_9AXIS_QUALIFIED",
+        "capability": "attitude.external.authoritative_9axis_qualified"
+      },
+      {
+        "class": "*",
+        "symbol": "SYSTEM_SELECTED_MISSION_ACTION_START_AVAILABLE",
+        "capability": "actuator.mission_action.launch_ignition"
+      },
+      {
+        "class": "*",
+        "symbol": "SYSTEM_SELECTED_MISSION_ACTION_PARACHUTE_DEPLOY_AVAILABLE",
+        "capability": "actuator.mission_action.parachute_deploy"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_IMU",
+        "symbol": "SYSTEM_SELECTED_IMU_ESTIMATOR_NOISE_RECOMMENDATION_AVAILABLE",
+        "recommendations": [
+          "process_accel_std_e",
+          "process_accel_std_n",
+          "process_accel_std_u"
+        ]
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_IMU",
+        "symbol": "SYSTEM_SELECTED_IMU_RECOMMENDED_PROCESS_ACCEL_E_STD_MPS2",
+        "recommendation": "process_accel_std_e"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_IMU",
+        "symbol": "SYSTEM_SELECTED_IMU_RECOMMENDED_PROCESS_ACCEL_N_STD_MPS2",
+        "recommendation": "process_accel_std_n"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_IMU",
+        "symbol": "SYSTEM_SELECTED_IMU_RECOMMENDED_PROCESS_ACCEL_U_STD_MPS2",
+        "recommendation": "process_accel_std_u"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_GNSS",
+        "symbol": "SYSTEM_SELECTED_GNSS_ESTIMATOR_NOISE_RECOMMENDATION_AVAILABLE",
+        "recommendations": [
+          "gnss_position_std_horizontal",
+          "gnss_position_std_vertical",
+          "gnss_velocity_std"
+        ]
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_GNSS",
+        "symbol": "SYSTEM_SELECTED_GNSS_RECOMMENDED_HORIZONTAL_POSITION_STD_FLOOR_M",
+        "recommendation": "gnss_position_std_horizontal"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_GNSS",
+        "symbol": "SYSTEM_SELECTED_GNSS_RECOMMENDED_VERTICAL_POSITION_STD_FLOOR_M",
+        "recommendation": "gnss_position_std_vertical"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_GNSS",
+        "symbol": "SYSTEM_SELECTED_GNSS_RECOMMENDED_VELOCITY_STD_FLOOR_MPS",
+        "recommendation": "gnss_velocity_std"
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_BAROMETER",
+        "symbol": "SYSTEM_SELECTED_BAROMETER_ESTIMATOR_NOISE_RECOMMENDATION_AVAILABLE",
+        "recommendations": [
+          "baro_std_m"
+        ]
+      },
+      {
+        "class": "SYSTEM_DEVICE_CLASS_BAROMETER",
+        "symbol": "SYSTEM_SELECTED_BAROMETER_RECOMMENDED_ALTITUDE_STD_M",
+        "recommendation": "baro_std_m"
+      }
+    ],
+    "compile_only": true,
+    "compact_entry": "cubemx_static_tasks",
+    "compact_platform": {
+      "family": "silverstar.mcu_family.stm32h7",
+      "os": "silverstar.os.freertos_11_3_0_cm7",
+      "device_replacements": {
+        "silverstar.device.storage.sd_sdio_fatfs": "silverstar.device.storage.sdmmc_fatfs_h7"
+      }
+    },
+    "cpu_max_clock_hz": 480000000
+  },
+  "platform": {
+    "build_target": {
+      "profile": "SilverStar_H743ZI"
+    },
+    "match_rules": [
+      {
+        "vendor": "STM32",
+        "exact_part": "STM32H743ZIT6",
+        "family_pattern": "STM32H7*",
+        "package_pattern": "LQFP144",
+        "priority": 100,
+        "specificity": 1000,
+        "verification": "supported"
+      }
+    ]
+  }
+}

@@ -37,3 +37,5 @@ EIDE与VS Code从同一SourceGraph渲染。FCCG不生成已验证flash按钮；�
 更多平台构建边界见 `platform/details/BUILD_AND_TARGETS.md`（历史或内部参考，不纳入公共说明的验收依据）。
 
 默认生成Release配置。构建输出仅位于`build/FCCG/`，Host测试使用`build/FCCG/Host/Tests`。`stack-report`通过生成Make显式运行，需要Python作离线分析；普通固件编译不运行Python生成器。
+
+H743ZI 的独立静态候选、复现命令与未通过项见 [H743 静态验证](H743_STATIC_VALIDATION.md)。该候选不代表已完成板卡或飞行验证。

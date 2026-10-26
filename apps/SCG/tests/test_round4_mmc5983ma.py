@@ -51,6 +51,7 @@ SystemDeviceResult ProjectMmc5983maSpiResources_Get(uint8_t, ProjectMmc5983maSpi
     includes = [
         tmp_path,
         PAYLOAD / "Devices/Magnetometer/MMC5983MA/Inc",
+        PAYLOAD / "Devices/Magnetometer/MMC5983MA/Adapter/Inc",
         core / "Interfaces/Inc",
         core / "Common/Inc",
         BUILTIN / "silverstar_platform_api/payload/Platform/Inc",
@@ -59,20 +60,23 @@ SystemDeviceResult ProjectMmc5983maSpiResources_Get(uint8_t, ProjectMmc5983maSpi
         _Compiler_Get(), "-std=c11", "-Wall", "-Wextra", "-Werror",
         "-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wvla",
     ]
+    flags += ["-DSYSTEM_BUILD_MMC5983MA_I2C_ENABLED=1U", "-DSYSTEM_BUILD_MMC5983MA_SPI_ENABLED=1U", "-fanalyzer"]
     flags += ["-I" + str(path) for path in includes]
     source = PAYLOAD / "Devices/Magnetometer/MMC5983MA/Src"
     for name, sources in (
         ("core", [source / "mmc5983ma_core.c", PAYLOAD / "Tests/Host/test_mmc5983ma_core.c"]),
-        ("adapter", [source / "mmc5983ma_core.c", source / "mmc5983ma_adapter.c",
+        ("adapter", [source / "mmc5983ma_core.c", PAYLOAD / "Devices/Magnetometer/MMC5983MA/Adapter/Src/mmc5983ma_adapter.c",
                      PAYLOAD / "Tests/Host/test_mmc5983ma_adapter.c"]),
     ):
         binary = tmp_path / f"mmc5983ma_{name}.exe"
         _Command_Run(flags + [str(path) for path in sources] + ["-lm", "-o", str(binary)],
                      tmp_path, f"compile_{name}")
         _Command_Run([str(binary)], tmp_path, f"run_{name}")
-    _Command_Run(flags + ["-c", str(source / "mmc5983ma_instance.c"),
-                          "-o", str(tmp_path / "mmc5983ma_instance.o")],
-                 tmp_path, "compile_instance")
+    _Command_Run(flags + ["-c", str(PAYLOAD / "Devices/Magnetometer/MMC5983MA/Adapter/Src/mmc5983ma_i2c_instance.c"),
+                         "-o", str(tmp_path / "mmc5983ma_i2c_instance.o")], tmp_path, "compile_i2c_instance")
+    _Command_Run(flags + ["-c", str(PAYLOAD / "Devices/Magnetometer/MMC5983MA/Adapter/Src/mmc5983ma_spi_instance.c"),
+                         "-o", str(tmp_path / "mmc5983ma_spi_instance.o")], tmp_path, "compile_spi_instance")
+
 
 
 def test_mmc5983ma_one_physical_plugin_two_bus_variants(builtin_catalog) -> None:
@@ -87,7 +91,7 @@ def test_mmc5983ma_one_physical_plugin_two_bus_variants(builtin_catalog) -> None
             "PROJECT_PHYSICAL_DEVICE_ID_MMC5983MA"
         )
         assert sum(source.endswith("mmc5983ma_core.c") for source in resolved.build.sources) == 1
-    assert builtin_catalog.Component_Get(manifest.component_id).version == "0.1.0"
+    assert builtin_catalog.Component_Get(manifest.component_id).version == "0.1.1"
 
 
 def test_mmc5983ma_i2c_generated_resource_and_dispatch(builtin_catalog) -> None:

@@ -227,6 +227,13 @@ def test_sparse_preflight_producers_start_boundary_and_diagnostic_override(stora
                 "ALGORITHM_DESCRIPTOR", "LOG_STREAM_DESCRIPTOR", "CALIBRATION_RESULT",
                 "ALIGNMENT_RESULT", "MISSION_CONFIG", "INITIAL_STATE"}
     high_rate = {"IMU_CORRECTED", "BARO_NATIVE", "GNSS_NATIVE"}
+    semantics = json.loads((project / 'Generated/project_semantics.json').read_text(encoding='utf8'))
+    availability = {row['record']: row for row in semantics['available_records']}
+    # The selected KF6 profile explicitly rejects the independent PURE_INS
+    # record. An unsupported producer must remain absent even under diagnostic
+    # overrides; the other real producers must still emit at START.
+    assert not availability['FLIGHT_LOG_RECORD_PURE_INS']['available']
+    assert availability['FLIGHT_LOG_RECORD_PURE_INS']['reason_code'] == 'logging.algorithm.disabled'
     for mode in ("normal", "diagnostic"):
         for seconds in (30, 120):
             data = (output / f"preflight-{mode}-{seconds}.sslog").read_bytes()
@@ -257,8 +264,10 @@ def test_sparse_preflight_producers_start_boundary_and_diagnostic_override(stora
                 times = [t for n, t, _, _ in records if n == name and start <= t < landing]
                 assert times == list(range(start, landing, 10000))
             for name in ("ESTIMATOR", "KF6_DIAGNOSTIC", "KF6_FULL_P", "INERTIAL_INCREMENT",
-                         "BARO_MEASUREMENT", "GNSS_MEASUREMENT", "PURE_INS"):
+                         "BARO_MEASUREMENT", "GNSS_MEASUREMENT"):
+                assert availability['FLIGHT_LOG_RECORD_' + name]['available']
                 assert any(n == name and t == start for n, t, _, _ in records)
+            assert not any(n == 'PURE_INS' for n, _, _, _ in records)
             preflight = [r for r in records if r[1] < start]
             summaries[f"{mode}-{seconds}"] = {
                 "file_bytes": len(data), "records": report["records"],

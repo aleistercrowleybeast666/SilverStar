@@ -9,7 +9,7 @@ from silverstar_fccg.project.reference import ReferenceProject_Create
 
 
 @pytest.mark.parametrize("device,qualified", [
-    ("bmi088", 0), ("bmi323", 1), ("icm42688p", 1), ("icm45686", 1),
+    ("bmi088", 1), ("bmi323", 1), ("icm42688p", 1), ("icm45686", 1),
     ("lsm6dsv32x", 1), ("mpu6050", 1),
 ])
 def test_single_new_imu_compiles_without_legacy_headers(builtin_catalog, tmp_path: Path, device, qualified):
@@ -69,7 +69,9 @@ def test_reference_and_mixed_primary_capabilities_follow_provider(builtin_catalo
     model.modes = {}
     model.capability_source_overrides.clear()
     header = _DeviceBuildCapabilitiesHeader_Render(model, builtin_catalog)
-    assert "SYSTEM_SELECTED_IMU_SOFTWARE_PROPAGATION_QUALIFIED 0U" in header
+    # BMI088's existing software-only qualification does not grant hardware
+    # attitude, timing verification, or a legacy estimator-noise recommendation.
+    assert "SYSTEM_SELECTED_IMU_SOFTWARE_PROPAGATION_QUALIFIED 1U" in header
     assert "SYSTEM_SELECTED_IMU_ESTIMATOR_NOISE_RECOMMENDATION_AVAILABLE 0U" in header
     assert "SYSTEM_SELECTED_BAROMETER_DIRECT_ALTITUDE_AVAILABLE 1U" in header
 

@@ -741,7 +741,9 @@ def _RequiredDependencies_Reconcile(
     while True:
         selected = set(model.ComponentIds_Get())
         additions: list[str] = []
-        for component_id in tuple(selected):
+        # Preserve selection order: set iteration changes persisted component
+        # order and firmware/decoder identities across Python hash seeds.
+        for component_id in model.ComponentIds_Get():
             manifest = catalog.Component_Get(component_id)
             for requirement in manifest.dependencies:
                 if requirement.optional or requirement.component_id in selected:

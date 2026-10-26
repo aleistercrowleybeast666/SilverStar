@@ -4,7 +4,7 @@
   "name": "BMI088",
   "type": "device",
   "class": "imu",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "BMI088 raw sensor driver; HARDWARE_UNVERIFIED.",
   "requires": {
     "components": [
@@ -68,11 +68,12 @@
   "build": {
     "sources": [
       "Devices/IMU/BMI088/Src/bmi088_device.c",
-      "Devices/IMU/BMI088/Src/bmi088_instance.c"
+      "Devices/IMU/BMI088/Adapter/Src/bmi088_instance.c"
     ],
     "asm_sources": [],
     "include_dirs": [
-      "Devices/IMU/BMI088/Inc"
+      "Devices/IMU/BMI088/Inc",
+      "Devices/IMU/BMI088/Adapter/Inc"
     ],
     "defines": []
   },
@@ -278,10 +279,11 @@
         "build": {
           "sources": [
             "Devices/IMU/BMI088_SPI/Src/bmi088_spi_device.c",
-            "Devices/IMU/BMI088_SPI/Src/bmi088_spi_instance.c"
+            "Devices/IMU/BMI088_SPI/Adapter/Src/bmi088_spi_instance.c"
           ],
           "include_dirs": [
-            "Devices/IMU/BMI088_SPI/Inc"
+            "Devices/IMU/BMI088_SPI/Inc",
+            "Devices/IMU/BMI088_SPI/Adapter/Inc"
           ]
         },
         "payload": {
@@ -440,10 +442,11 @@
         "build": {
           "sources": [
             "Devices/IMU/BMI088_SYNC400/Src/bmi088_sync400_device.c",
-            "Devices/IMU/BMI088_SYNC400/Src/bmi088_sync400_instance.c"
+            "Devices/IMU/BMI088_SYNC400/Adapter/Src/bmi088_sync400_instance.c"
           ],
           "include_dirs": [
-            "Devices/IMU/BMI088_SYNC400/Inc"
+            "Devices/IMU/BMI088_SYNC400/Inc",
+            "Devices/IMU/BMI088_SYNC400/Adapter/Inc"
           ]
         },
         "payload": {
@@ -632,10 +635,11 @@
         "build": {
           "sources": [
             "Devices/IMU/BMI088_SYNC400_SPI/Src/bmi088_sync400_spi_device.c",
-            "Devices/IMU/BMI088_SYNC400_SPI/Src/bmi088_sync400_spi_instance.c"
+            "Devices/IMU/BMI088_SYNC400_SPI/Adapter/Src/bmi088_sync400_spi_instance.c"
           ],
           "include_dirs": [
-            "Devices/IMU/BMI088_SYNC400_SPI/Inc"
+            "Devices/IMU/BMI088_SYNC400_SPI/Inc",
+            "Devices/IMU/BMI088_SYNC400_SPI/Adapter/Inc"
           ]
         },
         "payload": {

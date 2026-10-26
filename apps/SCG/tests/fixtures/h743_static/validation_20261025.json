@@ -1,0 +1,876 @@
+{
+  "schema": "silverstar.h743-static-evidence/1",
+  "date": "2026-10-25",
+  "git_head_before_changes": "7fbddd1e964c8febcf9ee289e024a23412730cd5",
+  "scope": "Static-only pre-closeout baseline; all full firmware gates are recorded, not an overall PASS",
+  "whole_program_stack_acceptance": "NOT PROVEN",
+  "hardware_tested": false,
+  "flight_tested": false,
+  "configurations": {
+    "Release": {
+      "eskf20_x1": {
+        "gates": {
+          "all": {
+            "exit_code": 0,
+            "log_sha256": "08b1b6022f538c0ec853db0307ddaa71b3f9eaaf619aad60ca302a331ac867e9"
+          },
+          "architecture-check": {
+            "exit_code": 2,
+            "log_sha256": "e56f25538599fec8b09d245fafd4fb454ab5e5b3481fa6425dacf041350d690f"
+          },
+          "power10-check": {
+            "exit_code": 2,
+            "log_sha256": "0f0395078676e28290881a430795094b68687f601ef0418ad04a89b45a41bd0a"
+          },
+          "static-analysis": {
+            "exit_code": 0,
+            "log_sha256": "aa12b7f62a69afa2bc0b0e4edca8d140e3d5567b81008b68e6e2fc9fcd99a2ec"
+          },
+          "artifact-check": {
+            "exit_code": 0,
+            "log_sha256": "291b4e4f7827e87ae44ff6631018a2505641d318983530fd841743813f2051cb"
+          },
+          "stack-report": {
+            "exit_code": 2,
+            "log_sha256": "efcdc0ece3cc28acedc869e97025d997ff91ecf71fe2fd550526160acb8d8867"
+          },
+          "stack-diagnostic": {
+            "exit_code": 2,
+            "log_sha256": "5a01b2d1d833a68b0a437010d62ac3495081cbf0bb3770dd509526008463901c"
+          }
+        },
+        "elf_sha256": {
+          "build/FCCG/SilverStar_H743ZI/Release/SilverStar_0_1_3.elf": "4bb6f7b44dd91c4b0ee2c701bba4af8adfffd7ec708f6ef69a003b2e8a79460d",
+          "build/FCCG/SilverStar_H743ZI/StaticAnalysis/Release/SilverStar_0_1_3.elf": "820906ed0baa0d2db026323c42bcfe8d077ee3a7a66951ad7a98d75941edd665"
+        },
+        "size": {
+          "text": 359608,
+          "data": 1280,
+          "bss": 227448
+        },
+        "tasks": [
+          {
+            "task": "Device",
+            "configured_bytes": 2560,
+            "accounted_direct_path_bytes": 1880,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [
+              "Bmp390_Step",
+              "Mmc5983ma_Step",
+              "SensorImu_ProcessConfigure",
+              "SensorImu_Read",
+              "SensorImu_Verify",
+              "SensorRegister_Read",
+              "SensorRegister_Write",
+              "SystemDeviceStartup_Tick"
+            ],
+            "direct_graph_closed": false
+          },
+          {
+            "task": "INS",
+            "configured_bytes": 3072,
+            "accounted_direct_path_bytes": 2080,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Estimator",
+            "configured_bytes": 5120,
+            "accounted_direct_path_bytes": 3760,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Flight",
+            "configured_bytes": 4096,
+            "accounted_direct_path_bytes": 3120,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Logger",
+            "configured_bytes": 3072,
+            "accounted_direct_path_bytes": 1912,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [
+              "disk_initialize",
+              "disk_ioctl",
+              "disk_read",
+              "disk_status",
+              "disk_write"
+            ],
+            "direct_graph_closed": false
+          },
+          {
+            "task": "Serial",
+            "configured_bytes": 6144,
+            "accounted_direct_path_bytes": 4184,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Telemetry",
+            "configured_bytes": 4096,
+            "accounted_direct_path_bytes": 1904,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Idle",
+            "configured_bytes": 512,
+            "accounted_direct_path_bytes": 0,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          }
+        ],
+        "source_inventory_sha256": "466e6a64c8a924cf63de709a84845ddb16e7e82f533a767a633822eda90891c0"
+      },
+      "inekf15_x1": {
+        "gates": {
+          "all": {
+            "exit_code": 0,
+            "log_sha256": "aa6eb6d5058ad57716dead3bbbeb301f9f8183d710f462108fad4935ede3968d"
+          },
+          "architecture-check": {
+            "exit_code": 2,
+            "log_sha256": "ec42abc4f2115eb2fd300f378f82a217834f92073e6a74a65ac4812a96967bb5"
+          },
+          "power10-check": {
+            "exit_code": 2,
+            "log_sha256": "0a199901cbb885eaeb7bab0f2da94e1c5f859af416477e44174da81348a2bd86"
+          },
+          "static-analysis": {
+            "exit_code": 0,
+            "log_sha256": "955ae974ab028ddf4c16a641fe4789cc529e0783a3b0032ff379ccd905367328"
+          },
+          "artifact-check": {
+            "exit_code": 0,
+            "log_sha256": "cbc57efcda537c012ab8dd5ea096d7ecafd3ea48c41a412c13b479f432238ceb"
+          },
+          "stack-report": {
+            "exit_code": 2,
+            "log_sha256": "887ee39fb6dd5aa7941a404759e0a824a97676e64b86dc1bcde9ed4c82c93672"
+          },
+          "stack-diagnostic": {
+            "exit_code": 2,
+            "log_sha256": "3c43975f3255d0365092dd431d4692d75a086a4c5079563af911edb62333153b"
+          }
+        },
+        "elf_sha256": {
+          "build/FCCG/SilverStar_H743ZI/Release/SilverStar_0_1_3.elf": "eff25ff0e4d9903b289374c695045e8db7dcf0a951a3195c2a9f86fb20debf7e",
+          "build/FCCG/SilverStar_H743ZI/StaticAnalysis/Release/SilverStar_0_1_3.elf": "c52e4de381915d2b5632f13842ea88cac94b2c3c7818c788eaa08271573cc171"
+        },
+        "size": {
+          "text": 351376,
+          "data": 1280,
+          "bss": 227192
+        },
+        "tasks": [
+          {
+            "task": "Device",
+            "configured_bytes": 2560,
+            "accounted_direct_path_bytes": 1880,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [
+              "Bmp390_Step",
+              "Mmc5983ma_Step",
+              "SensorImu_ProcessConfigure",
+              "SensorImu_Read",
+              "SensorImu_Verify",
+              "SensorRegister_Read",
+              "SensorRegister_Write",
+              "SystemDeviceStartup_Tick"
+            ],
+            "direct_graph_closed": false
+          },
+          {
+            "task": "INS",
+            "configured_bytes": 3072,
+            "accounted_direct_path_bytes": 2080,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Estimator",
+            "configured_bytes": 5120,
+            "accounted_direct_path_bytes": 3568,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Flight",
+            "configured_bytes": 4096,
+            "accounted_direct_path_bytes": 3120,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Logger",
+            "configured_bytes": 3072,
+            "accounted_direct_path_bytes": 1912,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [
+              "disk_initialize",
+              "disk_ioctl",
+              "disk_read",
+              "disk_status",
+              "disk_write"
+            ],
+            "direct_graph_closed": false
+          },
+          {
+            "task": "Serial",
+            "configured_bytes": 6144,
+            "accounted_direct_path_bytes": 4184,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Telemetry",
+            "configured_bytes": 4096,
+            "accounted_direct_path_bytes": 1904,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Idle",
+            "configured_bytes": 512,
+            "accounted_direct_path_bytes": 0,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          }
+        ],
+        "source_inventory_sha256": "827898f064b3318988f157023c945d71695bc1530a249d10f27c195990f9df8f"
+      },
+      "inekf20_x1": {
+        "gates": {
+          "all": {
+            "exit_code": 0,
+            "log_sha256": "7543283f8f81118e298e96998a0609999a60e83cee1621d1e6cc1ef8a228f022"
+          },
+          "architecture-check": {
+            "exit_code": 2,
+            "log_sha256": "0cd3165d16fb7c59a4a5e4ddc2fdbf1d67428f705c5f61a2410fa3c0c34998cc"
+          },
+          "power10-check": {
+            "exit_code": 2,
+            "log_sha256": "09e61738e85fc27a132a69439580cdeab328100ca127a2f17de7c86a7fb7c8e0"
+          },
+          "static-analysis": {
+            "exit_code": 0,
+            "log_sha256": "4c1be1afd6682df4860ea21ec158bca589338987aad99c548d0b57d12666cbcf"
+          },
+          "artifact-check": {
+            "exit_code": 0,
+            "log_sha256": "4afe28f9e615ce3fc294618595d6f2dcb7ec27eafafb848a1bc5ac49727320c7"
+          },
+          "stack-report": {
+            "exit_code": 2,
+            "log_sha256": "04872ab314b12b83b2c6def7198af05603a362b48779dbec117d0d4b2c6ce5de"
+          },
+          "stack-diagnostic": {
+            "exit_code": 2,
+            "log_sha256": "f1b08ba9b51f9da90153315bc981f5edb02fefc77fe3fb48cfa13a58e8cb8b1a"
+          }
+        },
+        "elf_sha256": {
+          "build/FCCG/SilverStar_H743ZI/Release/SilverStar_0_1_3.elf": "bee8fdf192234f74609bf759f90fee61358eba566a4bf539e51521a5125d2697",
+          "build/FCCG/SilverStar_H743ZI/StaticAnalysis/Release/SilverStar_0_1_3.elf": "401f8be7c69fe66249d172db1f18d22ddc542301901079d0dbd76fb302cebe96"
+        },
+        "size": {
+          "text": 359608,
+          "data": 1280,
+          "bss": 227448
+        },
+        "tasks": [
+          {
+            "task": "Device",
+            "configured_bytes": 2560,
+            "accounted_direct_path_bytes": 1880,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [
+              "Bmp390_Step",
+              "Mmc5983ma_Step",
+              "SensorImu_ProcessConfigure",
+              "SensorImu_Read",
+              "SensorImu_Verify",
+              "SensorRegister_Read",
+              "SensorRegister_Write",
+              "SystemDeviceStartup_Tick"
+            ],
+            "direct_graph_closed": false
+          },
+          {
+            "task": "INS",
+            "configured_bytes": 3072,
+            "accounted_direct_path_bytes": 2080,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Estimator",
+            "configured_bytes": 5120,
+            "accounted_direct_path_bytes": 3760,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Flight",
+            "configured_bytes": 4096,
+            "accounted_direct_path_bytes": 3120,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Logger",
+            "configured_bytes": 3072,
+            "accounted_direct_path_bytes": 1912,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [
+              "disk_initialize",
+              "disk_ioctl",
+              "disk_read",
+              "disk_status",
+              "disk_write"
+            ],
+            "direct_graph_closed": false
+          },
+          {
+            "task": "Serial",
+            "configured_bytes": 6144,
+            "accounted_direct_path_bytes": 4184,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Telemetry",
+            "configured_bytes": 4096,
+            "accounted_direct_path_bytes": 1904,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Idle",
+            "configured_bytes": 512,
+            "accounted_direct_path_bytes": 0,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          }
+        ],
+        "source_inventory_sha256": "cc991e0c91f023c735c582d9e6f1d7ecbc57bca7f75720e0aedcdfa445d4d858"
+      },
+      "eskf20_x2": {
+        "gates": {
+          "all": {
+            "exit_code": 0,
+            "log_sha256": "2b616c520de0d48e403118c50ee8ad82d4bc5865a954f4f8545e9b5b5fd80bdd"
+          },
+          "architecture-check": {
+            "exit_code": 2,
+            "log_sha256": "75dfbe63da62aa3b9c10b54aba0b2e6751b08a35a52debec7f5b031310495f99"
+          },
+          "power10-check": {
+            "exit_code": 2,
+            "log_sha256": "d4ec967f38431859eff9384929590ad0ed30d4c8ac88771d4e73dfd7a53aa2d7"
+          },
+          "static-analysis": {
+            "exit_code": 0,
+            "log_sha256": "16800f6d304eb00ad1fc5f0a5542100e5bb1a6e96cf1642bf2704c9931ea43f5"
+          },
+          "artifact-check": {
+            "exit_code": 0,
+            "log_sha256": "1300760b8976f606af79b2f0cca4543c0d58e3497b7f850087de8bcd647c2a4f"
+          },
+          "stack-report": {
+            "exit_code": 2,
+            "log_sha256": "d855f387e916789369b01d8133aa0294bdafc0f55e7997f93ba280c5433a6d8f"
+          },
+          "stack-diagnostic": {
+            "exit_code": 2,
+            "log_sha256": "f4414c136174cb180d0a54f1ad9eaafccb89d704c81de8ebf88a4ac63456052f"
+          }
+        },
+        "elf_sha256": {
+          "build/FCCG/SilverStar_H743ZI/Release/SilverStar_0_1_3.elf": "1758189052fd89442963fc6055fd7d80f28eff8d29320042e34572069413bd50",
+          "build/FCCG/SilverStar_H743ZI/StaticAnalysis/Release/SilverStar_0_1_3.elf": "2720f05666201af1dea1fd81c907d8dbc1eff3f8248462b0f0d31a68855958ce"
+        },
+        "size": {
+          "text": 359832,
+          "data": 1280,
+          "bss": 227704
+        },
+        "tasks": [
+          {
+            "task": "Device",
+            "configured_bytes": 2560,
+            "accounted_direct_path_bytes": 1880,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [
+              "Bmp390_Step",
+              "Mmc5983ma_Step",
+              "SensorImu_ProcessConfigure",
+              "SensorImu_Read",
+              "SensorImu_Verify",
+              "SensorRegister_Read",
+              "SensorRegister_Write",
+              "SystemDeviceStartup_Tick"
+            ],
+            "direct_graph_closed": false
+          },
+          {
+            "task": "INS",
+            "configured_bytes": 3072,
+            "accounted_direct_path_bytes": 2080,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Estimator",
+            "configured_bytes": 5120,
+            "accounted_direct_path_bytes": 3760,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Flight",
+            "configured_bytes": 4096,
+            "accounted_direct_path_bytes": 3120,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Logger",
+            "configured_bytes": 3072,
+            "accounted_direct_path_bytes": 1912,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [
+              "disk_initialize",
+              "disk_ioctl",
+              "disk_read",
+              "disk_status",
+              "disk_write"
+            ],
+            "direct_graph_closed": false
+          },
+          {
+            "task": "Serial",
+            "configured_bytes": 6144,
+            "accounted_direct_path_bytes": 4184,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Telemetry",
+            "configured_bytes": 4096,
+            "accounted_direct_path_bytes": 1904,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Idle",
+            "configured_bytes": 512,
+            "accounted_direct_path_bytes": 0,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          }
+        ],
+        "source_inventory_sha256": "f310b204270aab35eed483eedb081aa8ac8df8553983f48081340c4d7d07b719"
+      }
+    },
+    "Debug": {
+      "eskf20_x1": {
+        "gates": {
+          "all": {
+            "exit_code": 0,
+            "log_sha256": "2fee0e337207b0593ebe16149320aa6ed7c3251ba33767519941f138ecd32d6f"
+          },
+          "architecture-check": {
+            "exit_code": 2,
+            "log_sha256": "69c9c31a524e49eec98590d7261ae25e539fffc7577aeadf59921fb08ccbb38d"
+          },
+          "power10-check": {
+            "exit_code": 2,
+            "log_sha256": "3e358186c8f4d3348cb0ef442a94bef2b88148fd55cabe625ec612997b94dd63"
+          },
+          "static-analysis": {
+            "exit_code": 0,
+            "log_sha256": "7a60757256bcbb40e55229806a97a71415cf5f42aeadf22b4d0c82af6c82a162"
+          },
+          "artifact-check": {
+            "exit_code": 0,
+            "log_sha256": "8bc7e718b61a7c814c6e1f579b20a321fe450cfea0e8daae5043cfee0e1e6822"
+          },
+          "stack-report": {
+            "exit_code": 2,
+            "log_sha256": "9a3aaa875ce3d78d7383b18718359cb5c790efda815c907ad6cbed3188aad8ee"
+          },
+          "stack-diagnostic": {
+            "exit_code": 2,
+            "log_sha256": "70e41674baa283ca3af068197e09c121f27b75a2ccb8170792e120a3ee90ba43"
+          }
+        },
+        "elf_sha256": {
+          "build/FCCG/SilverStar_H743ZI/Debug/SilverStar_0_1_3.elf": "b2fb09d62b63b2eec1b3326efdca523f3f05f447ad8c25fc6474918ea4e20c00",
+          "build/FCCG/SilverStar_H743ZI/StaticAnalysis/Debug/SilverStar_0_1_3.elf": "bf4c9e89ece73e3582580c609c3fe9520063baa606bc3ae40948c837fb102e7e"
+        },
+        "size": {
+          "text": 374376,
+          "data": 1280,
+          "bss": 227484
+        },
+        "tasks": [
+          {
+            "task": "Device",
+            "configured_bytes": 2560,
+            "accounted_direct_path_bytes": 1384,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [
+              "Bmp390_Step",
+              "Mmc5983ma_Step",
+              "SensorImu_ProcessConfigure",
+              "SensorImu_Read",
+              "SensorImu_Verify",
+              "SensorRegister_Read",
+              "SensorRegister_Write",
+              "SystemDeviceStartup_Tick"
+            ],
+            "direct_graph_closed": false
+          },
+          {
+            "task": "INS",
+            "configured_bytes": 3072,
+            "accounted_direct_path_bytes": 1912,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Estimator",
+            "configured_bytes": 5120,
+            "accounted_direct_path_bytes": 3192,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Flight",
+            "configured_bytes": 4096,
+            "accounted_direct_path_bytes": 1848,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Logger",
+            "configured_bytes": 3072,
+            "accounted_direct_path_bytes": 1536,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [
+              "disk_initialize",
+              "disk_ioctl",
+              "disk_read",
+              "disk_status",
+              "disk_write"
+            ],
+            "direct_graph_closed": false
+          },
+          {
+            "task": "Serial",
+            "configured_bytes": 6144,
+            "accounted_direct_path_bytes": 2760,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Telemetry",
+            "configured_bytes": 4096,
+            "accounted_direct_path_bytes": 1656,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Idle",
+            "configured_bytes": 512,
+            "accounted_direct_path_bytes": 0,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          }
+        ],
+        "source_inventory_sha256": "466e6a64c8a924cf63de709a84845ddb16e7e82f533a767a633822eda90891c0"
+      },
+      "inekf15_x1": {
+        "gates": {
+          "all": {
+            "exit_code": 0,
+            "log_sha256": "7a5bbb3580c76f2a365c68d88a3b3ee17e99ab131ef8fc878342d0ce223f3ab2"
+          },
+          "architecture-check": {
+            "exit_code": 2,
+            "log_sha256": "b9ea660768aa5abafc60fca4ab4761a02fa5ce10ab78ba92aaa6d5ef9532a2eb"
+          },
+          "power10-check": {
+            "exit_code": 2,
+            "log_sha256": "5d46a6af4268b3a925300eda28d64208d496ac64cccb27992ea74afe4b16ee59"
+          },
+          "static-analysis": {
+            "exit_code": 0,
+            "log_sha256": "9162bba2e35f5be8de929c7cb3ae7cceea18e6e08256fd75f8166db9fa26a6de"
+          },
+          "artifact-check": {
+            "exit_code": 0,
+            "log_sha256": "6496fbe1bfbe9264b986b443596d8dd50d6541f3f10e776290f284960c3322ac"
+          },
+          "stack-report": {
+            "exit_code": 2,
+            "log_sha256": "bacf88901ea310992c791948d5fa073edbfeac7ff09976178eb5e897644c8461"
+          },
+          "stack-diagnostic": {
+            "exit_code": 2,
+            "log_sha256": "6ddf3d1c130ce107cf4f1954b4a5da1804e868da3d81eecf0e1a041355ec2273"
+          }
+        },
+        "elf_sha256": {
+          "build/FCCG/SilverStar_H743ZI/Debug/SilverStar_0_1_3.elf": "b0b6b010ffdcf7400e10fe70a04978132d09b902194767993e41fc2db0975310",
+          "build/FCCG/SilverStar_H743ZI/StaticAnalysis/Debug/SilverStar_0_1_3.elf": "9a42a9bbf27e12c1cd58c8b06c23cb6bbeddbf322ec01c789cc062fd2d79ff9c"
+        },
+        "size": {
+          "text": 368240,
+          "data": 1280,
+          "bss": 227236
+        },
+        "tasks": [
+          {
+            "task": "Device",
+            "configured_bytes": 2560,
+            "accounted_direct_path_bytes": 1384,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [
+              "Bmp390_Step",
+              "Mmc5983ma_Step",
+              "SensorImu_ProcessConfigure",
+              "SensorImu_Read",
+              "SensorImu_Verify",
+              "SensorRegister_Read",
+              "SensorRegister_Write",
+              "SystemDeviceStartup_Tick"
+            ],
+            "direct_graph_closed": false
+          },
+          {
+            "task": "INS",
+            "configured_bytes": 3072,
+            "accounted_direct_path_bytes": 1912,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Estimator",
+            "configured_bytes": 5120,
+            "accounted_direct_path_bytes": 3176,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Flight",
+            "configured_bytes": 4096,
+            "accounted_direct_path_bytes": 1848,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Logger",
+            "configured_bytes": 3072,
+            "accounted_direct_path_bytes": 1536,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [
+              "disk_initialize",
+              "disk_ioctl",
+              "disk_read",
+              "disk_status",
+              "disk_write"
+            ],
+            "direct_graph_closed": false
+          },
+          {
+            "task": "Serial",
+            "configured_bytes": 6144,
+            "accounted_direct_path_bytes": 2760,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Telemetry",
+            "configured_bytes": 4096,
+            "accounted_direct_path_bytes": 1656,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Idle",
+            "configured_bytes": 512,
+            "accounted_direct_path_bytes": 0,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          }
+        ],
+        "source_inventory_sha256": "5acbfd63f0764c86ca6acb70a6f67c40e081a652029e24c098c1edf7bd0bd08b"
+      },
+      "inekf20_x1": {
+        "gates": {
+          "all": {
+            "exit_code": 0,
+            "log_sha256": "217651bcb303638ddf9f315918895b72be5f1e9e2597c12e4d279f0192a8e91e"
+          },
+          "architecture-check": {
+            "exit_code": 2,
+            "log_sha256": "d5319330957b0b7fbbcfc03fc6b04dceac91ff6880490cd1824ba371e386e7a3"
+          },
+          "power10-check": {
+            "exit_code": 2,
+            "log_sha256": "810ae1eca0ae325269df976cb68e801a202099b53dbbda3f29f625ebc2718a23"
+          },
+          "static-analysis": {
+            "exit_code": 0,
+            "log_sha256": "3e3642071ac085b9ce709be18dba2e5ed0517f50c217dadc85570301aed456e4"
+          },
+          "artifact-check": {
+            "exit_code": 0,
+            "log_sha256": "7c62a5bae816b2712a35006c9c7c19c5fed666807316c2edc9bfda124a3c30da"
+          },
+          "stack-report": {
+            "exit_code": 2,
+            "log_sha256": "fd421afa60888488e204dc3282f11b539241c77854f3adecbc5ebe7690d14a5f"
+          },
+          "stack-diagnostic": {
+            "exit_code": 2,
+            "log_sha256": "c7d8381af68b9102d1ff879b295d7461288f78cd1e3da7dadfbe27962b930e26"
+          }
+        },
+        "elf_sha256": {
+          "build/FCCG/SilverStar_H743ZI/Debug/SilverStar_0_1_3.elf": "8d28e59c4c6d4e131c20a566a84ddffbd800e115b24fdfdac0d898f3347fa9e6",
+          "build/FCCG/SilverStar_H743ZI/StaticAnalysis/Debug/SilverStar_0_1_3.elf": "80f665b29cbc8ac0dcc6aacd4e95e827ff46a5b2854c53f62f521f88e0e35a69"
+        },
+        "size": {
+          "text": 374376,
+          "data": 1280,
+          "bss": 227484
+        },
+        "tasks": [
+          {
+            "task": "Device",
+            "configured_bytes": 2560,
+            "accounted_direct_path_bytes": 1384,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [
+              "Bmp390_Step",
+              "Mmc5983ma_Step",
+              "SensorImu_ProcessConfigure",
+              "SensorImu_Read",
+              "SensorImu_Verify",
+              "SensorRegister_Read",
+              "SensorRegister_Write",
+              "SystemDeviceStartup_Tick"
+            ],
+            "direct_graph_closed": false
+          },
+          {
+            "task": "INS",
+            "configured_bytes": 3072,
+            "accounted_direct_path_bytes": 1912,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Estimator",
+            "configured_bytes": 5120,
+            "accounted_direct_path_bytes": 3192,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Flight",
+            "configured_bytes": 4096,
+            "accounted_direct_path_bytes": 1848,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Logger",
+            "configured_bytes": 3072,
+            "accounted_direct_path_bytes": 1536,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [
+              "disk_initialize",
+              "disk_ioctl",
+              "disk_read",
+              "disk_status",
+              "disk_write"
+            ],
+            "direct_graph_closed": false
+          },
+          {
+            "task": "Serial",
+            "configured_bytes": 6144,
+            "accounted_direct_path_bytes": 2760,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Telemetry",
+            "configured_bytes": 4096,
+            "accounted_direct_path_bytes": 1656,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          },
+          {
+            "task": "Idle",
+            "configured_bytes": 512,
+            "accounted_direct_path_bytes": 0,
+            "context_reserve_bytes": 256,
+            "unresolved_boundaries": [],
+            "direct_graph_closed": true
+          }
+        ],
+        "source_inventory_sha256": "cc991e0c91f023c735c582d9e6f1d7ecbc57bca7f75720e0aedcdfa445d4d858"
+      }
+    }
+  }
+}

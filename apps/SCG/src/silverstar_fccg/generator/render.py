@@ -753,15 +753,16 @@ def _DeviceBuildCapabilitiesHeader_Render(model: ProjectModel, catalog: PluginCa
         "1U" if model.build.compact_mode and len(imu_entries) == 1
         and imu_entries[0].get("_component_id") == "silverstar.device.imu.mpu6050" else "0U"
     )
-    if model.build.compact_mode:
-        barometer = providers.get("SYSTEM_DEVICE_CLASS_BAROMETER")
+    barometer = providers.get("SYSTEM_DEVICE_CLASS_BAROMETER")
+    if model.build.compact_mode or (barometer is not None and "barometer.pressure" in barometer.provides):
         definitions["SYSTEM_SELECTED_BAROMETER_PRESSURE_AVAILABLE"] = (
             "1U" if barometer and "barometer.pressure" in barometer.provides else "0U"
         )
-        estimator_id = model.strategies.get("estimator")
-        noise_required = not estimator_id or catalog.Component_Get(estimator_id).metadata.get(
-            "uses_covariance_noise_parameters", True
-        ) is not False
+    estimator_id = model.strategies.get("estimator")
+    noise_required = not estimator_id or catalog.Component_Get(estimator_id).metadata.get(
+        "uses_covariance_noise_parameters", True
+    ) is not False
+    if model.build.compact_mode or not noise_required:
         definitions["SYSTEM_BUILD_ESTIMATOR_NOISE_CONTRACT_ENABLED"] = "1U" if noise_required else "0U"
     for binding in bindings:
         if not isinstance(binding, dict):
@@ -912,9 +913,9 @@ def _FlightConfigHeader_Render(
     uart_fields = (f' uart_baud={uart_profile["baudrate"]} uart_format=8N1 idle_timeout_ms=30000'
                    if uart_profile is not None else '')
     definitions.append(('SILVERSTAR_MAINTENANCE_UART_FIELDS', json.dumps(uart_fields)))
-    if model.build.compact_mode:
-        power_available = any(entry.get("class") == "SYSTEM_DEVICE_CLASS_POWER"
-                              for entry in _DeviceDescriptorEntries_Get(model, catalog))
+    power_available = any(entry.get("class") == "SYSTEM_DEVICE_CLASS_POWER"
+                          for entry in _DeviceDescriptorEntries_Get(model, catalog))
+    if model.build.compact_mode or not power_available:
         definitions.extend((
             ("SYSTEM_USER_POWER_ENABLE", "1U" if power_available else "0U"),
             ("SYSTEM_BUILD_POWER_IMPLEMENTATION_AVAILABLE", "1U" if power_available else "0U"),
@@ -948,7 +949,8 @@ def _FlightConfigHeader_Render(
                 "gnss.position" in catalog.InstanceComponent_Get(instance).provides
                 for instance in model.device_instances) else "1U"),
         ))
-    if model.hardware.mode == "custom" and model.mcu_family == "silverstar.mcu_family.stm32f1_flight":
+    if model.hardware.mode == "custom" and model.mcu_family in (
+            "silverstar.mcu_family.stm32f1_flight", "silverstar.mcu_family.stm32h7"):
         gpio_indices = [int(resource.metadata["logical_index"])
                         for resource in model.hardware.resources
                         if resource.kind.startswith("gpio_")]
@@ -3884,6 +3886,7 @@ def _EideTarget_Render(
     )
     replacements = (
         (r"(?m)^(            C_FLAGS:).*$", rf"\1 {forced_flags}"),
+        (r"(?m)^(            misc-control:).*$", rf"\1 {' '.join(graph.mcu_flags)}"),
         (r"(?m)^(            optimization:).*$", rf"\1 {optimization}"),
         (r"(?m)^(            LIB_FLAGS:).*$", rf"\1 {libraries}"),
         (
@@ -3917,15 +3920,28 @@ def _Eide_Render(
     model: ProjectModel, graph: SourceGraph, environment: PluginManifest
 ) -> str:
     reference = _EnvironmentTemplate_Read(environment, ".eide/eide.yml")
-    if "-mcpu=cortex-m3" in graph.mcu_flags:
-        reference = reference.replace("cpuType: Cortex-M4", "cpuType: Cortex-M3")
-        reference = reference.replace("floatingPointHardware: single", "floatingPointHardware: none")
-        reference = reference.replace("$float-abi-type: hard", "$float-abi-type: soft")
+    cpu = next((flag.split("=", 1)[1] for flag in graph.mcu_flags if flag.startswith("-mcpu=")), None)
+    if cpu is None or re.fullmatch(r"cortex-m[0-9]+", cpu) is None:
+        raise ValueError("Flight EIDE requires an explicit supported Cortex-M CPU")
+    fpu = next((flag.split("=", 1)[1] for flag in graph.mcu_flags if flag.startswith("-mfpu=")), None)
+    abi = next((flag.split("=", 1)[1] for flag in graph.mcu_flags if flag.startswith("-mfloat-abi=")), None)
+    if abi not in ("soft", "softfp", "hard"):
+        raise ValueError("Flight EIDE requires an explicit float ABI")
+    reference = reference.replace("cpuType: Cortex-M4", "cpuType: Cortex-M" + cpu.removeprefix("cortex-m"))
+    reference = reference.replace("floatingPointHardware: single", "floatingPointHardware: " +
+                                  ("none" if fpu is None else "single" if "sp" in fpu else "double"))
+    reference = reference.replace("$float-abi-type: hard", "$float-abi-type: " + abi)
+    if model.mcu_family == "silverstar.mcu_family.stm32h7":
+        reference = reference.replace("stm32f4x", "stm32h7x")
     target_marker = "targets:\n  Debug:\n"
     if target_marker not in reference:
         raise ValueError("Reference EIDE template has no Debug target")
     prefix, reference_target = reference.split(target_marker, 1)
-    virtual_set = set(graph.virtual_sources)
+    # Imported H7 vendor directories contain additional, unselected HAL units.
+    # List the complete resolved graph explicitly rather than let EIDE discover
+    # a second source set. Existing platform metadata retains its prior layout.
+    virtual_sources = graph.sources if model.mcu_family == "silverstar.mcu_family.stm32h7" else graph.virtual_sources
+    virtual_set = set(virtual_sources)
     source_dirs = tuple(
         dict.fromkeys(
             str(Path(source).parent).replace("\\", "/")
@@ -3936,7 +3952,7 @@ def _Eide_Render(
     source_directories = "\n".join(f"  - {value}" for value in source_dirs)
     virtual_files = "\n".join(
         f"    - path: {value}"
-        for value in (*graph.virtual_sources, *graph.asm_sources)
+        for value in (*virtual_sources, *graph.asm_sources)
     )
     prefix, count = re.subn(
         r"(?m)^name:.*$",
@@ -3948,7 +3964,7 @@ def _Eide_Render(
         raise ValueError("Reference EIDE project name field changed")
     prefix = re.sub(
         r"(?ms)^srcDirs:\n.*?(?=^virtualFolder:)",
-        f"srcDirs:\n{source_directories}\n",
+        f"srcDirs:\n{source_directories}\n" if source_dirs else "srcDirs: []\n",
         prefix,
         count=1,
     )

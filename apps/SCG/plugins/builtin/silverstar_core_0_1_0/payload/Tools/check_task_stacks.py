@@ -36,7 +36,7 @@ STARTUP_CALLBACK_SOURCES = (
     "Devices/IMU/JY901B/Adapter/Src/jy901b_startup.c",
     "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_startup.c",
 )
-# Cortex-M4F: hardware core + FP exception frame (104), software r4-r11/lr
+# Cortex-M4F/CM7 r0p1 FP ports: hardware core + FP exception frame (104), software r4-r11/lr
 # and s16-s31 (100), worst alignment padding (4), rounded up to 256 bytes.
 # Nested ISR frames use MSP, whose separate linker reservation is audited too.
 CONTEXT_BYTES = 256
@@ -88,6 +88,8 @@ def MpuCallbackBindings_Resolve(root, sources, instructions, edges, indirect, nm
     project = json.loads((root / "SilverStar.ssproject").read_text(encoding="utf-8"))
     imus = {device["plugin"] for device in project["components"]["devices"]
             if device["plugin"].startswith("silverstar.device.imu.")}
+    if imus == {"silverstar.device.imu.bmi088"}:
+        return BmiCallbackBindings_Resolve(root, sources, instructions, edges, indirect, nm, prefix, elf)
     if imus != {"silverstar.device.imu.mpu6050"}:
         raise ValueError("Unreviewed SensorImu selected profile binding")
     imu = "Devices/SensorBus/Src/sensor_imu.c"
@@ -186,6 +188,86 @@ def MpuCallbackBindings_Resolve(root, sources, instructions, edges, indirect, nm
     return [{"kind": "immutable_mpu6050_i2c", "profile_address": hex(address),
              "null_callbacks": ["prepare", "frame_read", "extra_verify"],
              "bus_edges": resolved, "reviewed_sources": proofs}]
+
+
+def BmiCallbackBindings_Resolve(root, sources, instructions, edges, indirect, nm, prefix, elf):
+    """Exact raw-I2C BMI088 profile, including its two real optional callbacks.
+
+    The common bodies below are unchanged from the MPU binding review. BMI088
+    adds a fixed gyro-address preparation and a bounded 14-byte split read.
+    This resolves targets only; complete compilation-input checks still run.
+    SPI/sync profiles and arbitrary profile injection are not admitted.
+    """
+    imu = "Devices/SensorBus/Src/sensor_imu.c"
+    bus = "Devices/SensorBus/Src/sensor_register_bus.c"
+    adapter = "Devices/SensorBus/Adapter/Src/sensor_imu_adapter.c"
+    instance = "Devices/IMU/BMI088/Adapter/Src/bmi088_instance.c"
+    profile = "Devices/IMU/BMI088/Src/bmi088_device.c"
+    reviewed = {
+        imu: {"SensorImu_Init": "da3bd34fc08e65fb32e5a72b68f60a0f2a08eafd2c630a92914621c949878453",
+              "SensorImu_Verify": "8b6786ccf36eec5eddabb1878139eb463d345eefa88a573e34c7ddf8bf7a3a04",
+              "SensorImu_ProcessConfigure": "6eb4ee07a620e1c9a2ea532046a25bd3f1c4595ac90461fd9e17f76e02dd71d2",
+              "SensorImu_Read": "f97d205c95377a02e4d1a4283d7018688f67caef15d10942bb5bd8aa7843c579"},
+        bus: {"SensorRegister_Read": "29b0b73fcbc3f3f3d248d790bab51870a564852c4eec5a4b1d265be19af3f971",
+              "SensorRegister_Write": "b08b754cf52dc6558f9d3af40ea3db36a09331df7774ba3a96987f62bfd82929"},
+        adapter: {"SensorImuAdapter_PrepareI2c": "652772579357ed30ad767d5d49a6888a691e30ea07b5addd7f12a89b76b4c1a4",
+                  "SensorImuAdapter_InitI2c": "61fd64c667c57a0f98244e77aca30db1872b684475f71e729062dc2d3d093047"},
+        instance: {"Bmi088ImuInstance_Init": "3a7ff8f4b38533887128115ba3446d23c75584c31bf6c5105d628febc996eb0f"},
+    }
+    proofs = []
+    for path, bodies in reviewed.items():
+        if path not in sources:
+            raise ValueError("Missing selected BMI088 I2C binding source: " + path)
+        text = (root / path).read_text(encoding="utf8")
+        for name, expected in bodies.items():
+            if hashlib.sha256(FunctionBody_Get(text, name).encode()).hexdigest() != expected:
+                raise ValueError("Changed reviewed BMI088 binding body: " + name)
+        proofs.append({"source": path, "sha256": hashlib.sha256(text.encode()).hexdigest()})
+    if profile not in sources or BindingSourceHash_Get((root / profile).read_text(encoding="utf8")) != "6a14e88d610063b460a0bf2f2f095f8846c87da51c6fe46fdda3baf6022a208f":
+        raise ValueError("Unreviewed complete BMI088 raw-I2C profile")
+    header = re.sub(r"/\*.*?\*/", "", (root / "Devices/SensorBus/Inc/sensor_imu.h").read_text(encoding="utf8"), flags=re.DOTALL)
+    layout = ("constchar*name;uint8_tregister_width;uint8_ti2c_dummy_bytes;"
+              "uint8_tauxiliary_address_7bit;uint8_tspi_dummy_bytes;"
+              "uint8_tauxiliary_spi_dummy_bytes;floataccel_full_scale_g;"
+              "SensorImuPrepareprepare;SensorImuFrameReadframe_read;SensorImuExtraVerifyextra_verify;")
+    if layout not in re.sub(r"\s+", "", header):
+        raise ValueError("Changed BMI088 profile callback ABI")
+    symbols = [parts for line in nm.splitlines() if len(parts := line.split()) == 4 and parts[3] == "s_profile"]
+    if len(symbols) != 1 or symbols[0][2] != "r" or int(symbols[0][1], 16) != 188:
+        raise ValueError("BMI088 profile must be one linked read-only table")
+    address = int(symbols[0][0], 16)
+    functions = {parts[3]: int(parts[0], 16) for line in nm.splitlines() if len(parts := line.split()) == 4}
+    expected = []
+    for name in ("Bmi088_Prepare", "Bmi088_FrameRead"):
+        if name not in instructions or name not in functions:
+            raise ValueError("Missing concrete BMI088 callback: " + name)
+        expected.append(functions[name] | 1)
+    data = TableBytes_Get(root, prefix, elf, address, 28)
+    if [int.from_bytes(data[offset:offset + 4], "little") for offset in (16, 20, 24)] != [*expected, 0]:
+        raise ValueError("Linked BMI088 optional callback slots differ from reviewed profile")
+    words = {int(args, 16) for op, args in instructions.get("Bmi088_ProfileGet", []) if op == ".word"}
+    if address not in words:
+        raise ValueError("Linked BMI088 getter does not return its reviewed table")
+    for callee, callers in {"SensorImu_Init": {"SensorImuAdapter_PrepareI2c"},
+                            "SensorImuAdapter_PrepareI2c": {"SensorImuAdapter_InitI2c"},
+                            "SensorImuAdapter_InitI2c": {"Bmi088ImuInstance_Init"},
+                            "Bmi088_ProfileGet": {"Bmi088ImuInstance_Init"}}.items():
+        if {name for name, calls in edges.items() if callee in calls} != callers:
+            raise ValueError("Unreviewed BMI088 initialization callers: " + callee)
+    resolved = {"SensorImu_ProcessConfigure": "Bmi088_Prepare", "SensorImu_Read": "Bmi088_FrameRead",
+                "SensorImu_Verify": None, "SensorRegister_Read": "SensorImuAdapter_ReadRegister",
+                "SensorRegister_Write": "SensorImuAdapter_WriteRegister"}
+    for caller, callee in resolved.items():
+        if caller not in indirect or len(IndirectSites_Get(instructions[caller])) != 1:
+            raise ValueError("Unreviewed BMI088 indirect call count: " + caller)
+        if callee is not None:
+            if callee not in instructions:
+                raise ValueError("Missing concrete BMI088 bus target: " + callee)
+            edges[caller].add(callee)
+        indirect.remove(caller)
+    return [{"kind": "immutable_bmi088_raw_i2c", "profile_address": hex(address),
+             "null_callbacks": ["extra_verify"], "resolved_edges": resolved,
+             "reviewed_sources": proofs, "compilation_input_acceptance": "requires separate complete closure"}]
 
 
 # Reviewed binding contract v2 freezes all selected translation units and
@@ -4756,6 +4838,22 @@ BINDING_COMPILED_INPUTS_BATCH_UART_V27 = {'APP/Src/app_tasks.c': ['525ac1ed0f315
                                         '7247ac6dc83598eb5dfc47599f1c60142189dbbc8681f15dced37b1b3d65bd01']}
 
 
+# Source-only review, 2026-10-25. Compared against the previously reviewed Git
+# inputs 887f720 (user configuration), 615d505 (logger) and 258aaa6 (console).
+# These exact bytes add version guards/augmented defaults, a bounded journal
+# record, bootstrap drain admission and bounded installation/file responses.
+# No callback target or compiled dependency tuple is authorized by this table.
+# New compilation closures involving these versions MUST still fail closed.
+BINDING_SOURCE_ONLY_REVIEW_REVISION = "preboard_identity_20261025_v28"
+BINDING_SOURCE_PREBOARD_IDENTITY_V28 = {
+    "System/User/system_user_config.h": ["4baa9ee7f7292e12b2f81608614d9b2e08c0b21bcaac7c1db971306235e52bf2"],
+    "APP/Inc/logger_bus.h": ["177693ced2587d2e9f3931fb5c726a2c67125c23b0f29165fba8b7630397e0e6"],
+    "APP/Src/logger_bus.c": ["cb78a66a89d19e4497c33e69cffe07b5fcd545c0a3060a0622b0ca1941384082"],
+    "System/Src/system_console.c": ["f695a90aac0a1d9263475b5e0d30324ee9f535c1ba96ea6d4835ecf4b4d10599"],
+    "APP/Inc/app_task_config.h": ["1d5df36b8cd01a2ed59d035dd56c99b53ade001c411e4fb65468fdaf9c62613b"],
+}
+
+
 def BindingSourceVersions_Get(path):
     return (BINDING_SOURCE_V2.get(path, []) + BINDING_SOURCE_EPOCH_V3.get(path, []) +
             BINDING_SOURCE_LOGGER_V4.get(path, []) + BINDING_SOURCE_NRF_V5.get(path, []) +
@@ -4777,7 +4875,8 @@ def BindingSourceVersions_Get(path):
             BINDING_SOURCE_LOGFILE_TRANSFER_V24.get(path, []) +
             BINDING_SOURCE_BLOCK_TRANSFER_V25.get(path, []) +
             BINDING_SOURCE_OPTIONAL_RESOURCES_V26.get(path, []) +
-            BINDING_SOURCE_BATCH_UART_V27.get(path, []))
+            BINDING_SOURCE_BATCH_UART_V27.get(path, []) +
+            BINDING_SOURCE_PREBOARD_IDENTITY_V28.get(path, []))
 
 
 def BindingSourceHash_Get(text):
@@ -4791,7 +4890,71 @@ def BindingClosureHash_Get(source, source_hash, inputs):
     return hashlib.sha256(json.dumps(payload, sort_keys=True,
                                      separators=(",", ":")).encode()).hexdigest()
 
+
+H743_INPUT_REVIEW_SHA256 = "47d8261e90ec7cc93eff68271b54e5c7c5400afc56ab10e42b6899907264ee3a"
+
+
+H743_INPUT_REVIEW_PATH = Path(__file__).with_name("h743_stack_inputs.json")
+
+
+def H743InputHash_Get(root, relative):
+    path = root / relative
+    if path.is_symlink() or not path.resolve().is_relative_to(root.resolve()) or not path.is_file():
+        raise ValueError("Unsafe or missing H743 compilation input: " + relative)
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+
+
+def H743CompilationInputs_Verify(root, sources, build):
+    """Frozen static candidates, with complete ordered source/header closures.
+
+    H7's vendor headers use -isystem and are omitted by -MMD. Freeze the whole
+    project header/assembly/linker input set as well, rather than silently lose
+    those dependencies. This is an input identity proof, not a C alias or ISR
+    proof. Unknown configurations and changed compiler inputs fail closed.
+    """
+    path = H743_INPUT_REVIEW_PATH
+    if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != H743_INPUT_REVIEW_SHA256:
+        raise ValueError("Unreviewed H743 compilation-input manifest")
+    review = json.loads(path.read_text(encoding="utf8"))
+    if review.get("schema") != "silverstar.h743-stack-inputs/1":
+        raise ValueError("Unsupported H743 compilation-input review")
+    declarations = {name: H743InputHash_Get(root, name) for name in
+                    ("Makefile", "Targets/SilverStar_H743ZI/target.mk", "Generated/project_sources.mk")}
+    if {"configuration": build.name, "files": declarations} not in review["build_declarations"]:
+        raise ValueError("Unreviewed H743 build declarations or configuration")
+    headers = {p.relative_to(root).as_posix() for p in root.rglob("*")
+               if p.is_file() and p.suffix.lower() in (".h", ".inc", ".s", ".ld")
+               and p.relative_to(root).parts[0] not in ("build", ".git", ".fccg")}
+    if headers != set(review["header_assembly_linker_inputs"]):
+        raise ValueError("Changed H743 project header/assembly/linker input set")
+    for relative in sorted(headers):
+        if H743InputHash_Get(root, relative) not in review["file_versions"].get(relative, []):
+            raise ValueError("Changed complete H743 project input: " + relative)
+    proofs = []
+    for source in sources:
+        digest = H743InputHash_Get(root, source)
+        dependency = build / Path(source).with_suffix(".d")
+        if not dependency.is_file():
+            raise ValueError("Missing H743 compiler dependency report: " + source)
+        dependencies = dependency.read_text(encoding="utf8").split(":", 1)[1].replace("\\\n", " ").split("\n", 1)[0].split()
+        inputs = []
+        for relative in dependencies:
+            value = H743InputHash_Get(root, relative)
+            if value not in review["file_versions"].get(relative, []):
+                raise ValueError("Changed complete H743 compiled input: " + relative)
+            inputs.append([relative, value])
+        closure = BindingClosureHash_Get(source, digest, inputs)
+        if closure not in review["compiled_input_closures"].get(source, []):
+            raise ValueError("Unreviewed paired H743 source/compiler input closure: " + source)
+        proofs.append({"source": source, "normalized_source_sha256": digest,
+                       "dependencies": dependencies, "compiled_input_sha256": closure,
+                       "review_revision": review["review_revision"]})
+    return proofs
+
 def BindingSources_Verify(root, sources, build):
+    project = root / "SilverStar.ssproject"
+    if project.is_file() and json.loads(project.read_text(encoding="utf8"))["build"]["target_profile"] == "SilverStar_H743ZI":
+        return H743CompilationInputs_Verify(root, sources, build)
     proofs = []
     for path in sources:
         (root / path).resolve().relative_to(root.resolve())
@@ -4822,7 +4985,8 @@ def BindingSources_Verify(root, sources, build):
         if graph_hash not in expected_graph:
             raise ValueError("Changed compiled callback dependency graph: " + path)
         compiled_inputs = []
-        current_review = (actual in BINDING_SOURCE_ALGORITHM_TIMING_V18.get(path, []) or
+        current_review = (actual in BINDING_SOURCE_PREBOARD_IDENTITY_V28.get(path, []) or
+                          actual in BINDING_SOURCE_ALGORITHM_TIMING_V18.get(path, []) or
                           actual in BINDING_SOURCE_HORIZON_V19.get(path, []) or
                           actual in BINDING_SOURCE_RECEIPT_V20.get(path, []) or
                           actual in BINDING_SOURCE_TF_INTEGRATION_V21.get(path, []) or
@@ -4838,6 +5002,7 @@ def BindingSources_Verify(root, sources, build):
             digest = BindingHeader_Verify(root, dependency_input)
             compiled_inputs.append([dependency_input, digest])
             current_review = (current_review or
+                digest in BINDING_SOURCE_PREBOARD_IDENTITY_V28.get(dependency_input, []) or
                 digest in BINDING_SOURCE_ALGORITHM_TIMING_V18.get(dependency_input, []) or
                 digest in BINDING_SOURCE_HORIZON_V19.get(dependency_input, []) or
                 digest in BINDING_SOURCE_RECEIPT_V20.get(dependency_input, []) or
@@ -4912,7 +5077,7 @@ def TableBytes_Get(root, prefix, elf, address, size):
     return bytes(memory[address + offset] for offset in range(size))
 
 
-def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str = "legacy") -> dict:
+def StackGraph_Load(root: Path, config: str, prefix: str, memory_layout: str = "legacy") -> dict:
     target = json.loads((root / "SilverStar.ssproject").read_text(encoding="utf-8"))["build"]["target_profile"]
     if memory_layout not in ("legacy", "eskf_window_sram", "auto"):
         raise ValueError("Unsupported memory layout")
@@ -4991,6 +5156,105 @@ def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str =
             frames[name] = frame
             library_frames[name] = frame
 
+    return {"build": build, "elf": elf, "nm": nm, "sizes": sizes,
+            "sources": sources, "su_paths": su_paths, "instructions": instructions,
+            "frames": frames, "edges": edges, "indirect": indirect,
+            "unbounded": unbounded, "library_frames": library_frames}
+
+
+def StackDiagnostic_Build(root: Path, config: str, prefix: str, memory_layout: str = "legacy") -> dict:
+    """Report allocations and unresolved boundaries without accepting bindings.
+
+    This deliberately does not call the reviewed callback resolvers. A partial
+    path count stops at each unknown boundary; it is neither an upper bound for
+    that task nor evidence of spare stack. The ordinary stack gate is unchanged.
+    """
+    graph = StackGraph_Load(root, config, prefix, memory_layout)
+    edges, frames = graph["edges"], graph["frames"]
+    unknown = graph["indirect"] | graph["unbounded"]
+    memo = {}
+
+    def Path_Read(name, visiting=()):
+        if name in visiting:
+            return 0, [], {"recursion:" + name}
+        if name in memo:
+            return memo[name]
+        if name in unknown:
+            return frames[name], [name], {name}
+        children = [Path_Read(child, (*visiting, name)) for child in sorted(edges.get(name, ()))]
+        count, chain, _ = max(children, default=(0, [], set()), key=lambda row: row[0])
+        unresolved = set().union(*(row[2] for row in children))
+        memo[name] = (frames[name] + count, [name, *chain], unresolved)
+        return memo[name]
+
+    tasks = []
+    for label, (entry, stack) in TASKS.items():
+        if entry not in graph["instructions"]:
+            if stack in graph["sizes"]:
+                raise ValueError("Task stack exists without entry: " + label)
+            continue
+        if stack not in graph["sizes"]:
+            raise ValueError("Missing configured stack symbol: " + stack)
+        count, chain, unresolved = Path_Read(entry)
+        tasks.append({"task": label, "configured_bytes": graph["sizes"][stack],
+                      "accounted_direct_path_bytes": count,
+                      "context_reserve_bytes": CONTEXT_BYTES,
+                      "unresolved_boundaries": sorted(unresolved),
+                      "direct_graph_closed": not unresolved,
+                      "chain": [{"function": name, "frame_bytes": frames[name]} for name in chain],
+                      "acceptance": "NOT PROVEN: diagnostic only; no reviewed callback/source closure"})
+    return {"schema": "silverstar.stack-diagnostic/1", "configuration": config,
+            "elf": str(graph["elf"].relative_to(root)),
+            "elf_sha256": hashlib.sha256(graph["elf"].read_bytes()).hexdigest(),
+            "compiler": Command_Read([prefix + "gcc", "--version"], root).splitlines()[0],
+            "source_graph_sha256": hashlib.sha256((root / "Generated/project_sources.mk").read_bytes()).hexdigest(),
+            "su_files": len(graph["su_paths"]), "tasks": tasks,
+            "unresolved_indirect_functions": sorted(graph["indirect"]),
+            "unbounded_functions": sorted(graph["unbounded"]),
+            "whole_program_stack_acceptance": "NOT PROVEN: callback/source closure, main/MSP and ISR nesting unaudited",
+            "hardware_high_water_marks": "not measured", "passes": False}
+
+
+def StartupCallbackSites_Resolve(instructions, edges, indirect, startup_tables, config):
+    callers = ("SystemDeviceStartup_ProbeTick", "SystemDeviceStartup_ReadTick",
+               "SystemDeviceStartup_ApplyTick", "SystemDeviceStartup_Tick")
+    # GCC 14.3 Release inlines all sites in Tick; Debug retains the three
+    # phase helpers. Both layouts were checked on actual linked H743 ELFs.
+    shapes = {
+        "Release": ([], [], [], [4, 0, 8, 12, 16, 20, 24]),
+        "Debug": ([0, 4], [8], [12], [16, 20, 24]),
+    }
+    if config not in shapes:
+        raise ValueError("Unreviewed startup compilation mode")
+    if any(name.startswith("SystemDeviceStartup_") and name not in callers for name in indirect):
+        raise ValueError("Unreviewed startup indirect caller")
+    result = []
+    for caller, expected in zip(callers, shapes[config]):
+        rows = instructions.get(caller, [])
+        sites = [index for index, row in enumerate(rows) if IndirectSites_Get([row])]
+        if bool(sites) != (caller in indirect):
+            raise ValueError("Inconsistent startup indirect call-site graph")
+        slots = [CallbackSlot_Get(rows, index) for index in sites]
+        if slots != expected:
+            raise ValueError("Unreviewed linked startup callback slot sequence: " + caller)
+        for index, slot in zip(sites, slots):
+            targets = [entries[slot // 4] for _, entries in startup_tables]
+            if not targets or any(name not in instructions for name in targets):
+                raise ValueError("Missing selected startup callback target")
+            edges[caller].update(targets)
+            result.append({"caller": caller, "instruction_index": index,
+                           "slot_offset": slot, "targets": targets})
+        if sites:
+            indirect.remove(caller)
+    return result
+
+
+def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str = "legacy") -> dict:
+    graph = StackGraph_Load(root, config, prefix, memory_layout)
+    build, elf, nm = graph["build"], graph["elf"], graph["nm"]
+    sizes, sources, su_paths = graph["sizes"], graph["sources"], graph["su_paths"]
+    instructions, frames, edges = graph["instructions"], graph["frames"], graph["edges"]
+    indirect, unbounded, library_frames = graph["indirect"], graph["unbounded"], graph["library_frames"]
     callback_site_bindings = []
     sd_sources = [source for source in sources if source.endswith("/sd_diskio.c") or
                   source == "Platform/STM32F1Flight/Src/sd_diskio_stm32f1flight.c"]
@@ -5107,8 +5371,6 @@ def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str =
         if startup_callers not in reviewed_callers:
             raise ValueError("Unreviewed device startup operation binding: " +
                              repr(sorted(startup_callers)))
-        if config != "Release":
-            raise ValueError("Startup callback Debug binding NOT PROVEN; requires a reviewed linked shape")
         if "System/Src/system_device_startup.c" not in sources:
             raise ValueError("Missing complete reviewed startup controller source")
         BindingHeader_Verify(root, "System/Inc/system_device_startup.h")
@@ -5151,26 +5413,8 @@ def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str =
             if matches[0] not in words:
                 raise ValueError("Linked startup initializer does not bind its reviewed table")
             del available[matches[0]]
-        callers = ("SystemDeviceStartup_ProbeTick", "SystemDeviceStartup_ReadTick",
-                   "SystemDeviceStartup_ApplyTick", "SystemDeviceStartup_Tick")
-        # Reviewed GCC 14.3 Release inlines all seven source callback sites.
-        # Other shapes remain NOT PROVEN until separately reviewed.
-        if any(name in indirect for name in callers[:-1]) or len(IndirectSites_Get(instructions["SystemDeviceStartup_Tick"])) != 7:
-            raise ValueError("Unreviewed startup indirect call-site coverage")
-        slots = [CallbackSlot_Get(instructions["SystemDeviceStartup_Tick"], index)
-                 for index, row in enumerate(instructions["SystemDeviceStartup_Tick"]) if IndirectSites_Get([row])]
-        if slots != [4, 0, 8, 12, 16, 20, 24]:
-            raise ValueError("Unreviewed linked startup callback slot sequence")
-        for index, row in enumerate(instructions["SystemDeviceStartup_Tick"]):
-            if IndirectSites_Get([row]):
-                slot = CallbackSlot_Get(instructions["SystemDeviceStartup_Tick"], index)
-                callback_site_bindings.append({"caller": "SystemDeviceStartup_Tick",
-                    "instruction_index": index, "slot_offset": slot,
-                    "targets": [entries[slot // 4] for _, entries in startup_tables]})
-        for caller in callers:
-            if caller in indirect:
-                edges[caller].update(callbacks)
-                indirect.remove(caller)
+        callback_site_bindings.extend(StartupCallbackSites_Resolve(
+            instructions, edges, indirect, startup_tables, config))
 
     callback_bindings = MpuCallbackBindings_Resolve(
         root, sources, instructions, edges, indirect, nm, prefix, elf)
@@ -5230,17 +5474,18 @@ def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str =
     reachable = set().union(*(Closure_Get(TASKS[row["task"]][0]) for row in tasks))
     return {"schema": "silverstar.stack-budget/1", "configuration": config,
             "elf": str(elf.relative_to(root)), "elf_sha256": hashlib.sha256(elf.read_bytes()).hexdigest(),
+            "checker_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
             "compiler": Command_Read([prefix + "gcc", "--version"], root).splitlines()[0],
             "su_files": len(su_paths), "minimum_margin_bytes": MIN_MARGIN_BYTES,
             "callback_bindings": callback_bindings,
             "binding_contract": "silverstar.reviewed-callback-bindings/2",
-            "binding_review_revision": BINDING_REVIEW_REVISION,
+            "binding_review_revision": binding_source_proofs[0].get("review_revision", BINDING_REVIEW_REVISION) if binding_source_proofs else BINDING_REVIEW_REVISION,
             "binding_source_proofs": binding_source_proofs,
             "callback_site_bindings": callback_site_bindings,
             "whole_program_stack_acceptance": "NOT PROVEN: MSP/main/ISR nesting and hardware margins require separate evidence",
             "method": __doc__, "checks": checks, "tasks": tasks,
             "library_frames": {name: count for name, count in sorted(library_frames.items()) if name in reachable},
-            "hardware_high_water_marks": "not measured; use normal stack snapshot on SS0.5",
+            "hardware_high_water_marks": "not measured; collect target task high-water marks before hardware acceptance",
             "passes": all(checks.values()) and all(row["passes"] for row in tasks)}
 
 
@@ -5250,8 +5495,18 @@ def main() -> int:
     parser.add_argument("--config", choices=("Release", "Debug"), default="Release")
     parser.add_argument("--memory-layout", choices=("legacy", "eskf_window_sram", "auto"), default="legacy")
     parser.add_argument("--prefix", default="arm-none-eabi-")
+    parser.add_argument("--diagnostic", action="store_true",
+                        help="Write allocations and incomplete direct paths; always exits 2 (NOT PROVEN), never a gate pass")
     arguments = parser.parse_args()
     root = arguments.project.resolve(strict=True)
+    if arguments.diagnostic:
+        report = StackDiagnostic_Build(root, arguments.config, arguments.prefix, arguments.memory_layout)
+        destination = root / Path(report["elf"]).parent / "stack-diagnostic.json"
+        destination.resolve().relative_to(root)
+        destination.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+        print(report["whole_program_stack_acceptance"])
+        print(destination)
+        return 2
     print("FCCG_PROGRESS|STACK_REPORT|PLAN|1", flush=True)
     print("FCCG_PROGRESS|STACK_REPORT|BEGIN|1|1|ELF and stack budget", flush=True)
     report = StackReport_Build(root, arguments.config, arguments.prefix, arguments.memory_layout)

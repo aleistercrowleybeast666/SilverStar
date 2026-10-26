@@ -2,6 +2,7 @@ from copy import deepcopy
 from dataclasses import replace
 
 import pytest
+from silverstar_fccg.core.workspace import WorkspacePolicy
 
 from silverstar_fccg.project.configuration import ProjectConfiguration_Reconcile
 from silverstar_fccg.project.feature_tiers import FeatureTier_Apply
@@ -87,7 +88,7 @@ def test_switch_save_reopen_keeps_one_storage_and_maintenance_policy(window, tmp
         for _ in range(2):
             window._Project_Refresh()
         path = tmp_path / 'SilverStar.ssproject'
-        ProjectModel_Save(window._model, path, window._service.policy)
+        ProjectModel_Save(window._model, path, WorkspacePolicy(tmp_path))
         window._Project_Open(path)
         assert sum(item.plugin in (_F4_STORAGE, _F1_STORAGE)
                    for item in window._model.device_instances) == 1
@@ -125,7 +126,7 @@ def test_duplicate_import_retained_without_storage_delete_buttons(window, tmp_pa
     model = ReferenceProject_Create(catalog=window._service.catalog)
     model.device_instances.append(DeviceInstance('extra_card', _F4_STORAGE))
     path = tmp_path / 'SilverStar.ssproject'
-    ProjectModel_Save(model, path, window._service.policy)
+    ProjectModel_Save(model, path, WorkspacePolicy(tmp_path))
     errors = []
     window._Error_Show = errors.append
     window._Project_Open(path)
@@ -151,7 +152,7 @@ def test_old_official_project_open_does_not_inject_storage(window, tmp_path, wor
     for _ in range(2):
         window._Project_Open(path)
         assert not errors
-        assert window._model.identity.firmware_version == '0.1.2'
+        assert window._model.identity.firmware_version == ReferenceProject_Create(catalog=window._service.catalog).identity.firmware_version
         assert sum(item.plugin in (_F4_STORAGE, _F1_STORAGE)
                    for item in window._model.device_instances) == 1
         assert set(key for key in window.devices_page.device_checks

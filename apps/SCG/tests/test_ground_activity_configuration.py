@@ -92,8 +92,8 @@ def test_led_gui_keeps_defaults_until_explicit_binding(window):
     window._Project_Refresh()
     page = window.ground_target_page
     checkbox = page.activity_led_enabled
-    assert window.air_link_page.isAncestorOf(page.activity_led_group)
-    assert not page.isAncestorOf(page.activity_led_group)
+    assert window.hardware_workspace._sections['ground.indicators'].isAncestorOf(page.activity_led_group)
+    assert not window.air_link_page.isAncestorOf(page.activity_led_group)
     assert page.activity_led_group.findChildren(QCheckBox) == [checkbox]
     assert checkbox.isEnabled() and not checkbox.isChecked()
     assert page.ActivityLedCandidate_Get(window._model.ground_target) == ("PLATFORM_GPIO_6", False)

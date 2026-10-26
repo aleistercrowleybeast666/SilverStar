@@ -12,6 +12,7 @@ static uint64_t s_now_us;
 static uint8_t s_cs_high;
 static uint32_t s_i2c_reads;
 static uint32_t s_spi_reads;
+static uint8_t s_stall_mag;
 
 static void TestMmc5983ma_RawSet(uint32_t index, uint32_t raw)
 {
@@ -64,7 +65,7 @@ PlatformResult PlatformI2c_MemoryWrite(PlatformI2cId id,
     { return PLATFORM_IO_ERROR; }
     if (register_address == 0x09U)
     {
-        if (data[0] == 0x01U) { s_registers[0x08U] |= 0x01U; }
+        if ((data[0] == 0x01U) && (s_stall_mag == 0U)) { s_registers[0x08U] |= 0x01U; }
         if (data[0] == 0x02U) { s_registers[0x08U] |= 0x02U; }
     }
     else { s_registers[register_address] = data[0]; }
@@ -104,7 +105,7 @@ PlatformResult PlatformSpi_Transfer(PlatformSpiId id,
         { return PLATFORM_IO_ERROR; }
         if (address == 0x09U)
         {
-            if (tx[1] == 0x01U) { s_registers[0x08U] |= 0x01U; }
+            if ((tx[1] == 0x01U) && (s_stall_mag == 0U)) { s_registers[0x08U] |= 0x01U; }
             if (tx[1] == 0x02U) { s_registers[0x08U] |= 0x02U; }
         }
         else { s_registers[address] = tx[1]; }
@@ -154,6 +155,27 @@ static void TestMmc5983ma_Run(Mmc5983maAdapter *adapter)
     assert(health.healthy == 0U);
 }
 
+static void TestMmc5983ma_Timeout(Mmc5983maAdapter *adapter)
+{
+    SystemDeviceResult result = SYSTEM_DEVICE_NOT_READY;
+    SystemDeviceHealth health;
+    SystemMagnetometerSample sample;
+    s_stall_mag = 1U;
+    assert(Mmc5983maAdapter_Start(adapter) == SYSTEM_DEVICE_OK);
+    for (uint32_t tick = 0U; tick < 70U; tick++)
+    {
+        result = Mmc5983maAdapter_Process(adapter);
+        if (result != SYSTEM_DEVICE_NOT_READY) { break; }
+        s_now_us += 1000U;
+    }
+    assert(result == SYSTEM_DEVICE_TIMEOUT);
+    assert(Mmc5983maAdapter_HealthGet(adapter, &health) == SYSTEM_DEVICE_OK);
+    assert(health.timeout_count == 1U && health.error_count == 1U);
+    assert(health.healthy == 0U && health.online == 0U && health.sample_count == 0U);
+    assert(Mmc5983maAdapter_LatestSampleGet(adapter, &sample) == SYSTEM_DEVICE_NOT_READY);
+    s_stall_mag = 0U;
+}
+
 int main(void)
 {
     Mmc5983maAdapter adapter;
@@ -168,5 +190,11 @@ int main(void)
     TestMmc5983ma_Run(&adapter);
     assert(s_i2c_reads == 0U && s_spi_reads > 0U);
     assert(s_cs_high == 1U);
+    TestMmc5983ma_Seed();
+    assert(Mmc5983maAdapter_InitI2c(&adapter, PLATFORM_I2C_1, 0x30U) == SYSTEM_DEVICE_OK);
+    TestMmc5983ma_Timeout(&adapter);
+    TestMmc5983ma_Seed();
+    assert(Mmc5983maAdapter_InitSpi(&adapter, PLATFORM_SPI_1, PLATFORM_GPIO_0) == SYSTEM_DEVICE_OK);
+    TestMmc5983ma_Timeout(&adapter);
     return 0;
 }

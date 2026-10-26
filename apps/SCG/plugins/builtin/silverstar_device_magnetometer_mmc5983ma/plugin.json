@@ -4,55 +4,96 @@
   "name": "MMC5983MA · I²C",
   "type": "device",
   "class": "magnetometer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MMC5983MA 3-axis magnetic sensor with bounded 20 Hz startup and sample processing; HARDWARE_UNVERIFIED.",
   "requires": {
-    "components": [{"id": "silverstar.core.0_1_0", "optional": false}],
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      }
+    ],
     "resources": [
       {
-        "name": "data", "kind": "i2c",
-        "constraints": {"i2c": {"address_7bit": 48, "maximum_bus_frequency_hz": 400000}},
-        "platform_capabilities": ["i2c.master_blocking", "i2c.memory_read_write"],
+        "name": "data",
+        "kind": "i2c",
+        "constraints": {
+          "i2c": {
+            "address_7bit": 48,
+            "maximum_bus_frequency_hz": 400000
+          }
+        },
+        "platform_capabilities": [
+          "i2c.master_blocking",
+          "i2c.memory_read_write"
+        ],
         "mode": "shared"
       },
-      {"name": "time", "kind": "time", "mode": "shared"}
+      {
+        "name": "time",
+        "kind": "time",
+        "mode": "shared"
+      }
     ],
     "capabilities": []
   },
-  "resources": {"provides": [], "roles": [], "conflicts": []},
-  "provides": ["device.magnetometer", "magnetometer.field"],
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "device.magnetometer",
+    "magnetometer.field"
+  ],
   "build": {
     "sources": [
       "Devices/Magnetometer/MMC5983MA/Src/mmc5983ma_core.c",
-      "Devices/Magnetometer/MMC5983MA/Src/mmc5983ma_adapter.c",
-      "Devices/Magnetometer/MMC5983MA/Src/mmc5983ma_instance.c"
+      "Devices/Magnetometer/MMC5983MA/Adapter/Src/mmc5983ma_adapter.c",
+      "Devices/Magnetometer/MMC5983MA/Adapter/Src/mmc5983ma_i2c_instance.c"
     ],
     "asm_sources": [],
-    "include_dirs": ["Devices/Magnetometer/MMC5983MA/Inc"],
+    "include_dirs": [
+      "Devices/Magnetometer/MMC5983MA/Inc",
+      "Devices/Magnetometer/MMC5983MA/Adapter/Inc"
+    ],
     "defines": []
   },
-  "payload": {"roots": ["Devices/Magnetometer/MMC5983MA"]},
+  "payload": {
+    "roots": [
+      "Devices/Magnetometer/MMC5983MA"
+    ]
+  },
   "metadata": {
-    "display_names": {"zh_CN": "MMC5983MA · I²C", "en_US": "MMC5983MA · I²C"},
-    "device_descriptors": [{
-      "order": 3,
-      "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_MMC5983MA",
-      "class": "SYSTEM_DEVICE_CLASS_MAGNETOMETER",
-      "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
-      "capability": "SYSTEM_CAPABILITY_MAGNETOMETER",
-      "rate": "20U",
-      "driver_hash": "0x4D4D4335UL",
-      "name_hash": "0x3938334DUL"
-    }],
+    "display_names": {
+      "zh_CN": "MMC5983MA · I²C",
+      "en_US": "MMC5983MA · I²C"
+    },
+    "device_descriptors": [
+      {
+        "order": 3,
+        "physical_device_id": "PROJECT_PHYSICAL_DEVICE_ID_MMC5983MA",
+        "class": "SYSTEM_DEVICE_CLASS_MAGNETOMETER",
+        "flags": "SYSTEM_DESCRIPTOR_FLAG_ENABLED | SYSTEM_DESCRIPTOR_FLAG_PRIMARY",
+        "capability": "SYSTEM_CAPABILITY_MAGNETOMETER",
+        "rate": "20U",
+        "driver_hash": "0x4D4D4335UL",
+        "name_hash": "0x3938334DUL"
+      }
+    ],
     "device_group": "primary_devices",
     "device_group_order": 40,
     "device_selection_style": "instance",
     "device_category": "sensor.magnetometer",
-    "build_feature_symbols": ["SYSTEM_USER_MAGNETOMETER_ENABLE"],
+    "build_feature_symbols": [
+      "SYSTEM_USER_MAGNETOMETER_ENABLE"
+    ],
     "device_instance_bindings": {
       "SYSTEM_DEVICE_CLASS_MAGNETOMETER": {
         "function_prefix": "Mmc5983maI2cMagnetometerInstance",
-        "headers": ["mmc5983ma_instance.h"],
+        "headers": [
+          "mmc5983ma_instance.h"
+        ],
         "pass_instance": true
       }
     },
@@ -62,12 +103,20 @@
       "count_symbol": "PROJECT_MMC5983MA_I2C_INSTANCE_COUNT",
       "runtime_context_upper_bound": 4,
       "fields": [
-        {"requirement": "data", "member": "i2c"},
-        {"requirement": "time", "member": "time"}
+        {
+          "requirement": "data",
+          "member": "i2c"
+        },
+        {
+          "requirement": "time",
+          "member": "time"
+        }
       ]
     },
     "runtime_defaults": {
-      "SYSTEM_DEVICE_CLASS_MAGNETOMETER": {"SYSTEM_MAGNETOMETER_OUTPUT_RATE_HZ": 20}
+      "SYSTEM_DEVICE_CLASS_MAGNETOMETER": {
+        "SYSTEM_MAGNETOMETER_OUTPUT_RATE_HZ": 20
+      }
     },
     "recordable_outputs": {
       "magnetometer.field": {
@@ -77,7 +126,9 @@
     "unqualified_capabilities": {
       "magnetometer.absolute_vector_qualified": "Physical calibration and hardware integration pending"
     },
-    "source_origins": {"default": "silverstar_mmc5983ma_datasheet_implementation"},
+    "source_origins": {
+      "default": "silverstar_mmc5983ma_datasheet_implementation"
+    },
     "initialization": {
       "configure_on_boot": true,
       "persistent_storage": "none",
@@ -87,11 +138,25 @@
         "zh_CN": "确认 0x30 芯片身份；只写入不同的控制寄存器 1/2 配置并读回；首个新磁场样本前不 READY",
         "en_US": "Verify identity 0x30, update only differing control 1/2 settings with readback, and gate READY on a fresh magnetic sample"
       }
-    }
+    },
+    "payload_relocations": {
+      "Devices/Magnetometer/MMC5983MA/Inc/mmc5983ma_adapter.h": "Devices/Magnetometer/MMC5983MA/Adapter/Inc/mmc5983ma_adapter.h",
+      "Devices/Magnetometer/MMC5983MA/Inc/mmc5983ma_instance.h": "Devices/Magnetometer/MMC5983MA/Adapter/Inc/mmc5983ma_instance.h",
+      "Devices/Magnetometer/MMC5983MA/Src/mmc5983ma_adapter.c": "Devices/Magnetometer/MMC5983MA/Adapter/Src/mmc5983ma_adapter.c"
+    },
+    "instance_feature_symbols": [
+      "SYSTEM_BUILD_MMC5983MA_I2C_ENABLED",
+      "SYSTEM_BUILD_MMC5983MA_SPI_ENABLED"
+    ],
+    "active_instance_feature_symbols": [
+      "SYSTEM_BUILD_MMC5983MA_I2C_ENABLED"
+    ]
   },
   "instance_policy": {
-    "plugin_max": 4, "class_max": 4,
-    "same_plugin_multiple": true, "multi_instance_ready": true
+    "plugin_max": 4,
+    "class_max": 4,
+    "same_plugin_multiple": true,
+    "multi_instance_ready": true
   },
   "physical_device": {
     "vendor": "MEMSIC",
@@ -101,42 +166,80 @@
   },
   "transports": [],
   "device_variants": {
-    "i2c": {"interface": "i2c", "profile": "oneshot_20_hz_8g", "overrides": {}},
+    "i2c": {
+      "interface": "i2c",
+      "profile": "oneshot_20_hz_8g",
+      "overrides": {
+        "build": {
+          "sources": [
+            "Devices/Magnetometer/MMC5983MA/Src/mmc5983ma_core.c",
+            "Devices/Magnetometer/MMC5983MA/Adapter/Src/mmc5983ma_adapter.c",
+            "Devices/Magnetometer/MMC5983MA/Adapter/Src/mmc5983ma_i2c_instance.c"
+          ]
+        },
+        "metadata": {
+          "active_instance_feature_symbols": [
+            "SYSTEM_BUILD_MMC5983MA_I2C_ENABLED"
+          ]
+        }
+      }
+    },
     "spi": {
       "interface": "spi",
       "profile": "oneshot_20_hz_8g",
       "overrides": {
         "name": "MMC5983MA · SPI",
-        "requires": {"resources": [
-          {
-            "name": "data", "kind": "spi",
-            "constraints": {"spi": {
-              "mode": "master", "cpol": "high", "cpha": "2edge",
-              "data_bits": 8, "bit_order": "msb",
-              "minimum_clock_hz": 100000,
-              "maximum_clock_hz": 10000000,
-              "dma": false, "irq": false
-            }},
-            "mode": "shared"
-          },
-          {
-            "name": "cs", "kind": "gpio_output",
-            "electrical_constraints": {
-              "mode": "gpio_output", "output_type": "push_pull",
-              "pull": "none", "speed": "low",
-              "safe_initial_level": "inactive",
-              "active_polarity": "low",
-              "startup_glitch_free": true
+        "requires": {
+          "resources": [
+            {
+              "name": "data",
+              "kind": "spi",
+              "constraints": {
+                "spi": {
+                  "mode": "master",
+                  "cpol": "high",
+                  "cpha": "2edge",
+                  "data_bits": 8,
+                  "bit_order": "msb",
+                  "minimum_clock_hz": 100000,
+                  "maximum_clock_hz": 10000000,
+                  "dma": false,
+                  "irq": false
+                }
+              },
+              "mode": "shared"
+            },
+            {
+              "name": "cs",
+              "kind": "gpio_output",
+              "electrical_constraints": {
+                "mode": "gpio_output",
+                "output_type": "push_pull",
+                "pull": "none",
+                "speed": "low",
+                "safe_initial_level": "inactive",
+                "active_polarity": "low",
+                "startup_glitch_free": true
+              }
+            },
+            {
+              "name": "time",
+              "kind": "time",
+              "mode": "shared"
             }
-          },
-          {"name": "time", "kind": "time", "mode": "shared"}
-        ]},
+          ]
+        },
         "metadata": {
-          "display_names": {"zh_CN": "MMC5983MA · SPI", "en_US": "MMC5983MA · SPI"},
+          "display_names": {
+            "zh_CN": "MMC5983MA · SPI",
+            "en_US": "MMC5983MA · SPI"
+          },
           "device_instance_bindings": {
             "SYSTEM_DEVICE_CLASS_MAGNETOMETER": {
               "function_prefix": "Mmc5983maSpiMagnetometerInstance",
-              "headers": ["mmc5983ma_instance.h"],
+              "headers": [
+                "mmc5983ma_instance.h"
+              ],
               "pass_instance": true
             }
           },
@@ -146,11 +249,30 @@
             "count_symbol": "PROJECT_MMC5983MA_SPI_INSTANCE_COUNT",
             "runtime_context_upper_bound": 4,
             "fields": [
-              {"requirement": "data", "member": "spi"},
-              {"requirement": "cs", "member": "cs"},
-              {"requirement": "time", "member": "time"}
+              {
+                "requirement": "data",
+                "member": "spi"
+              },
+              {
+                "requirement": "cs",
+                "member": "cs"
+              },
+              {
+                "requirement": "time",
+                "member": "time"
+              }
             ]
-          }
+          },
+          "active_instance_feature_symbols": [
+            "SYSTEM_BUILD_MMC5983MA_SPI_ENABLED"
+          ]
+        },
+        "build": {
+          "sources": [
+            "Devices/Magnetometer/MMC5983MA/Src/mmc5983ma_core.c",
+            "Devices/Magnetometer/MMC5983MA/Adapter/Src/mmc5983ma_adapter.c",
+            "Devices/Magnetometer/MMC5983MA/Adapter/Src/mmc5983ma_spi_instance.c"
+          ]
         }
       }
     }

@@ -1,4 +1,5 @@
 #include "bmp390_core.h"
+#include "system_barometer_if.h" /* Verify the native/System boundary identity. */
 
 #include <assert.h>
 #include <math.h>
@@ -52,7 +53,7 @@ static void TestBmp390_BusSeed(TestBmp390Bus *bus)
     TestBmp390_RawSet(&bus->registers[0x07U], 6120000U);
 }
 
-static Bmp390BusResult TestBmp390_Read(void *bus, uint8_t address,
+Bmp390BusResult Bmp390Bus_Read(void *bus, uint8_t address,
     uint8_t *bytes, uint8_t length)
 {
     TestBmp390Bus *mock = (TestBmp390Bus *)bus;
@@ -63,7 +64,7 @@ static Bmp390BusResult TestBmp390_Read(void *bus, uint8_t address,
     return Bmp390BusOk;
 }
 
-static Bmp390BusResult TestBmp390_Write(void *bus, uint8_t address,
+Bmp390BusResult Bmp390Bus_Write(void *bus, uint8_t address,
     uint8_t value)
 {
     TestBmp390Bus *mock = (TestBmp390Bus *)bus;
@@ -88,8 +89,6 @@ static void TestBmp390_CompensationAndReadback(void)
     uint64_t now_us;
     TestBmp390_BusSeed(&bus);
     port.bus = &bus;
-    port.read = TestBmp390_Read;
-    port.write = TestBmp390_Write;
     Bmp390_Init(&context, &port);
     for (now_us = 0U; now_us < 100000U; now_us += 1000U)
     {
@@ -126,8 +125,6 @@ static void TestBmp390_BadIdentityAndTimeout(void)
     uint64_t now_us;
     TestBmp390_BusSeed(&bus);
     port.bus = &bus;
-    port.read = TestBmp390_Read;
-    port.write = TestBmp390_Write;
     bus.registers[0x00U] = 0U;
     Bmp390_Init(&context, &port);
     assert(Bmp390_Step(&context, 0U) == Bmp390StepNotPresent);

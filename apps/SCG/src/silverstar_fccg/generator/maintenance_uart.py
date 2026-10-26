@@ -103,7 +103,9 @@ foreach ($name in $fields.Keys) {
         throw ('Maintenance UART mismatch in actual CubeMX source: ' + $name)
     }
 }
-$iocs = @(Get-ChildItem -LiteralPath $root -Filter '*.ioc' -File)
+$iocRoot = Join-Path $root 'HardwareGenerated/STM32CubeMX'
+if (-not (Test-Path -LiteralPath $iocRoot -PathType Container)) { $iocRoot = $root }
+$iocs = @(Get-ChildItem -LiteralPath $iocRoot -Filter '*.ioc' -File)
 if ($iocs.Count -ne 1) { throw 'Maintenance UART check requires one explicit project IOC' }
 $lines = Get-Content -Encoding UTF8 -LiteralPath $iocs[0].FullName
 $prefix = $profile.peripheral + '.BaudRate='
@@ -126,6 +128,15 @@ $minimum = 16; $maximum = 65535
 if ($mode -ceq 'UART_OVERSAMPLING_8') { $minimum = 8; $maximum = 32767 }
 $clockKey = 'RCC.APB1Freq_Value='
 if ($profile.peripheral -cin @('USART1', 'USART6')) { $clockKey = 'RCC.APB2Freq_Value=' }
+if (@($lines | Where-Object { $_ -ceq 'Mcu.Family=STM32H7' }).Count -eq 1) {
+    $clockKey = 'RCC.USART234578Freq_Value='
+    if ($profile.peripheral -cin @('USART1', 'USART6')) { $clockKey = 'RCC.USART16Freq_Value=' }
+    if ($profile.peripheral -ceq 'LPUART1') { $clockKey = 'RCC.LPUART1Freq_Value=' }
+    $prescalers = [regex]::Matches($text, $handle + '\.Init\.ClockPrescaler\s*=\s*([^;]+);')
+    if ($prescalers.Count -ne 1 -or $prescalers[0].Groups[1].Value.Trim() -cne 'UART_PRESCALER_DIV1') {
+        throw 'H7 maintenance UART requires an explicit divide-by-one kernel clock prescaler'
+    }
+}
 $clocks = @($lines | Where-Object { $_.StartsWith($clockKey) } | ForEach-Object { $_.Substring($clockKey.Length).Trim() })
 if ($clocks.Count -ne 1 -or $clocks[0] -notmatch '^\d+$') {
     throw 'Maintenance UART requires the imported CubeMX peripheral clock'

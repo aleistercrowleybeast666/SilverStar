@@ -86,8 +86,8 @@
     "algorithm_revision": 1,
     "navigation_contract": "silverstar.navigation/1",
     "display_names": {
-      "zh_CN": "InEKF15（实验，未经飞行验证）",
-      "en_US": "InEKF15 (experimental, flight unverified)"
+      "zh_CN": "InEKF15（H7离线检查通过，未上板）",
+      "en_US": "InEKF15 (H7 offline checks passed, board untested)"
     },
     "software_validation_parameter": "software_validation_build",
     "algorithm_descriptors": [
@@ -124,6 +124,16 @@
       "hardware_tested": false,
       "flight_tested": false,
       "timing_qualified": false
+    },
+    "offline_verification": {
+      "status": "h743_release_build_analyzer_task_stacks_passed",
+      "scope": "Frozen H743ZI 480 MHz raw-I2C static candidates only; exact parameter/input identities required",
+      "evidence": "docs/public/SCG/H743_STATIC_VALIDATION.md",
+      "whole_program_manual_acceptance": "NOT PROVEN",
+      "main_msp_isr_stack_acceptance": "NOT PROVEN",
+      "debug_task_stack_acceptance": "NOT PROVEN",
+      "hardware_tested": false,
+      "flight_tested": false
     }
   },
   "selection": {

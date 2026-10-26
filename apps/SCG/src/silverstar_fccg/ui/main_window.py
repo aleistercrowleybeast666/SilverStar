@@ -219,7 +219,10 @@ class MainWindow(QMainWindow):
         self._settings = settings
         workspace_root = Path(__file__).resolve().parents[3]
         self._service = service or FccgService(workspace_root)
-        self._path_preferences = PathPreferences(self._service.policy, self._settings.path.parent / "path_preferences.json")
+        self._path_preferences = PathPreferences(
+            WorkspacePolicy(self._settings.path.parent),
+            self._settings.path.parent / "path_preferences.json",
+        )
         self._translator = Translator(language)
         self._theme = theme if theme in {"light", "dark"} else "light"
         self._thread_pool = QThreadPool.globalInstance()

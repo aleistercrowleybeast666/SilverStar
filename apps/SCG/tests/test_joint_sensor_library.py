@@ -96,7 +96,7 @@ def test_joint_sensor_real_generation_dual_i2c_binding(builtin_catalog, tmp_path
     assert "ProjectBmi088Resources_Get" in header
     graph = SourceGraph_Resolve(model, builtin_catalog)
     assert "Devices/SensorBus/Src/sensor_imu.c" in graph.sources
-    assert "Devices/IMU/BMI088/Src/bmi088_instance.c" in graph.sources
+    assert "Devices/IMU/BMI088/Adapter/Src/bmi088_instance.c" in graph.sources
     (tmp_path / "project_resources.h").write_text(header, encoding="utf-8")
     source = tmp_path / "check.c"
     source.write_text('#include "project_resources.h"\nint main(void) { return sizeof(ProjectBmi088Resources) == 0; }\n', encoding="utf-8")
@@ -114,16 +114,32 @@ def test_joint_sensor_real_generation_dual_i2c_binding(builtin_catalog, tmp_path
 
 
 def test_joint_sensor_st240_jy_aux200_generated_profile_compiles(builtin_catalog, tmp_path: Path) -> None:
+    from dataclasses import replace
     from silverstar_fccg.generator.render import (
         _DeviceBuildCapabilitiesHeader_Render,
         _FlightConfigHeader_Render,
     )
-    from silverstar_fccg.project.model import DeviceInstance
+    from silverstar_fccg.project.model import DeviceInstance, HardwareResource
     from silverstar_fccg.project.reference import ReferenceProject_Create
+    from silverstar_fccg.project.resources import ResourceAssignments_Resolve
+    from test_internal_platform_refactor import _Inventory_Create
 
     model = ReferenceProject_Create("MixedRateProfile", catalog=builtin_catalog)
+    assignments = ResourceAssignments_Resolve(model, builtin_catalog)
+    assert assignments.valid
+    # This is a custom two-IMU fixture with an additional I2C bus. The verified
+    # board's fixed UART IMU role must never be silently reused for an I2C IMU.
+    provisions = {item.provision.resource_id: item.provision for item in assignments.assignments}
+    board_resources = tuple(HardwareResource(p.resource_id, p.kind, p.metadata)
+                            for p in provisions.values())
+    i2c = next(p for p in _Inventory_Create().HardwareResources_Get() if p.kind == 'i2c')
+    model.board = ''
+    model.hardware = replace(model.hardware, mode='custom', resources=(*board_resources, i2c))
+    model.resource_assignments = {item.requirement_key: item.provision.resource_id for item in assignments.assignments}
+    model.resource_assignments.update({'st0:data': i2c.resource_id, 'st0:time': model.resource_assignments['imu0:time']})
     model.device_instances.insert(0, DeviceInstance("st0", "silverstar.device.imu.lsm6dsv32x"))
     model.capability_source_overrides.update({"imu.acceleration": "st0", "imu.angular_rate": "st0"})
+    assert ResourceAssignments_Resolve(model, builtin_catalog).valid
     header = _FlightConfigHeader_Render(model, builtin_catalog)
     assert any(line.split() == ["#define", "SYSTEM_IMU_OUTPUT_RATE_HZ", "240U"] for line in header.splitlines())
     from silverstar_fccg.generator.render import AlgorithmParametersHeader_Render

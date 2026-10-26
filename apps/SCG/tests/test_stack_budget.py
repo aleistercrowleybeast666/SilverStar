@@ -116,6 +116,29 @@ def test_stack_budget_rejects_unknown_indirect_and_recursion(tmp_path, monkeypat
     with pytest.raises(ValueError, match=error):
         stacks.StackReport_Build(root, "Release", "unused-")
 
+
+def test_diagnostic_never_grants_acceptance_even_with_closed_direct_paths(tmp_path, monkeypatch):
+    root = _ElfFixture_Create(tmp_path, monkeypatch)
+    report = stacks.StackDiagnostic_Build(root, "Release", "unused-")
+    assert report["schema"] == "silverstar.stack-diagnostic/1"
+    assert not report["passes"]
+    assert all(row["direct_graph_closed"] for row in report["tasks"])
+    assert all("margin_bytes" not in row for row in report["tasks"])
+    assert report["whole_program_stack_acceptance"].startswith("NOT PROVEN")
+
+
+@pytest.mark.parametrize("instruction,boundary", [
+    (" 8000004: 4798 blx r3\n", "AppTask_Serial"),
+    (" 8000004: f000 f000 bl 8000000 <AppTask_Serial>\n", "recursion:AppTask_Serial"),
+])
+def test_diagnostic_reports_unknown_boundary_without_synthesizing_a_margin(tmp_path, monkeypatch, instruction, boundary):
+    root = _ElfFixture_Create(tmp_path, monkeypatch, serial=instruction)
+    report = stacks.StackDiagnostic_Build(root, "Release", "unused-")
+    serial = next(row for row in report["tasks"] if row["task"] == "Serial")
+    assert boundary in serial["unresolved_boundaries"]
+    assert not serial["direct_graph_closed"]
+    assert not report["passes"]
+
 @pytest.mark.parametrize("mutation", ["unknown_source", "missing_dependency", "changed_dependencies"])
 def test_complete_compilation_input_contract_fails_closed(tmp_path, monkeypatch, mutation):
     root = _ElfFixture_Create(tmp_path, monkeypatch)
@@ -176,9 +199,10 @@ def test_product_patch_binding_accepts_only_authorized_complete_header(tmp_path,
     payload = Path(__file__).resolve().parents[1] / 'plugins/builtin/silverstar_core_0_1_0/payload'
     relative = 'System/User/system_user_config.h'
     text = (payload / relative).read_text(encoding='utf-8')
-    # The current integration header is a separately reviewed complete v21 input.
+    # V28 reviews these complete source bytes, without granting a compiled
+    # dependency closure or weakening either forbidden mutation below.
     # Both original forbidden mutations below remain rejected.
-    assert stacks.BindingSourceHash_Get(text) == 'd54d5b90cf5249e959272dec7ad79238bd5b161a8e8315c5377f837d7f4b945b'
+    assert stacks.BindingSourceHash_Get(text) == '4baa9ee7f7292e12b2f81608614d9b2e08c0b21bcaac7c1db971306235e52bf2'
     target = tmp_path / relative
     target.parent.mkdir(parents=True)
     target.write_text(text, encoding='utf-8')
@@ -190,6 +214,21 @@ def test_product_patch_binding_accepts_only_authorized_complete_header(tmp_path,
     target.write_text(changed, encoding='utf-8')
     with pytest.raises(ValueError, match='Changed or missing reviewed callback compilation input'):
         stacks.BindingHeader_Verify(tmp_path, relative)
+
+
+def test_source_only_review_cannot_grant_a_compiled_dependency_closure(tmp_path, monkeypatch):
+    payload = Path(__file__).resolve().parents[1] / 'plugins/builtin/silverstar_core_0_1_0/payload'
+    relative = 'APP/Src/logger_bus.c'
+    destination = tmp_path / relative
+    destination.parent.mkdir(parents=True)
+    destination.write_bytes((payload / relative).read_bytes())
+    build = tmp_path / 'build'
+    (build / 'APP/Src').mkdir(parents=True)
+    (build / 'APP/Src/logger_bus.d').write_text('fixture.o: ' + relative + '\n', encoding='utf8')
+    import hashlib
+    monkeypatch.setitem(stacks.BINDING_DEPENDENCIES_V2, relative, [hashlib.sha256(relative.encode()).hexdigest()])
+    with pytest.raises(ValueError, match='paired source/compiler input closure'):
+        stacks.BindingSources_Verify(tmp_path, [relative], build)
 
 
 @pytest.mark.parametrize("fault", ["placement", "missing_header", "compiled_graph"])

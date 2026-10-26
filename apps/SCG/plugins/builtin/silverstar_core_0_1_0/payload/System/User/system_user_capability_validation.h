@@ -127,7 +127,7 @@ _Static_assert((SYSTEM_ALIGNMENT_ALGORITHM !=
                   (SYSTEM_SELECTED_HARDWARE_QUATERNION_PREFLIGHT_ALIGNMENT_9AXIS_QUALIFIED != 0U)))),
                "External attitude needs a qualified quaternion and yaw mode");
 
-#if defined(SILVERSTAR_COMPACT_MODE)
+#if defined(SILVERSTAR_COMPACT_MODE) || (SYSTEM_BUILD_BAROMETER_COLD_ENABLED != 0U)
 /* The cold barometer path derives height from validated SI pressure through
  * SystemBarometer_AltitudeResolve, with one fixed datum before/after START. */
 _Static_assert(((SYSTEM_USER_ALIGNMENT_REQUIRED_MASK &

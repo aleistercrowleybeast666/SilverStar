@@ -3,7 +3,27 @@
 
 #include <stdint.h>
 
-#include "system_barometer_if.h"
+#define BMP390_SAMPLE_FIELD_PRESSURE (1UL << 0)
+#define BMP390_SAMPLE_FIELD_TEMPERATURE (1UL << 3)
+
+/* Native driver value; the System-facing adapter performs the conversion.
+ * Preserve every field and its representation; no RAM or record reduction. */
+typedef struct
+{
+    uint64_t sample_timestamp_us;
+    uint64_t receive_timestamp_us;
+    uint8_t measurement_timestamp_trusted;
+    uint32_t sequence;
+    int32_t pressure_raw_pa;
+    int32_t altitude_raw_cm;
+    float pressure_pa;
+    float altitude_m;
+    float altitude_variance_m2;
+    float temperature_c;
+    uint32_t supported_fields;
+    uint32_t valid_fields;
+    uint32_t valid_mask;
+} Bmp390Sample;
 
 typedef enum
 {
@@ -11,17 +31,13 @@ typedef enum
     Bmp390BusError
 } Bmp390BusResult;
 
-typedef Bmp390BusResult (*Bmp390ReadOperation)(void *bus, uint8_t register_address,
-    uint8_t *bytes, uint8_t length);
-typedef Bmp390BusResult (*Bmp390WriteOperation)(void *bus, uint8_t register_address,
-    uint8_t value);
-
 typedef struct
 {
     void *bus;
-    Bmp390ReadOperation read;
-    Bmp390WriteOperation write;
 } Bmp390Port;
+
+Bmp390BusResult Bmp390Bus_Read(void *bus, uint8_t register_address, uint8_t *bytes, uint8_t length);
+Bmp390BusResult Bmp390Bus_Write(void *bus, uint8_t register_address, uint8_t value);
 
 typedef enum
 {
@@ -60,7 +76,7 @@ typedef struct
 {
     Bmp390Port port;
     Bmp390Trim trim;
-    SystemBarometerSample sample;
+    Bmp390Sample sample;
     Bmp390State state;
     uint64_t conversion_started_us;
     uint64_t cycle_started_us;
