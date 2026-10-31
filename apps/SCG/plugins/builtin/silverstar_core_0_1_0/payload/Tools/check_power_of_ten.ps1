@@ -55,9 +55,25 @@ function Get-FirstPartyCFiles {
     # A reviewed H7 owner implements the FatFs ABI in canonical vendor-named
     # paths. Include those exact owning units without reclassifying middleware.
     $ownershipPath = Join-Path $repoRoot '.fccg/ownership.json'
-    if (($TargetKind -eq 'Flight') -and (Test-Path -LiteralPath $ownershipPath -PathType Leaf)) {
-        $ownership = Get-Content -LiteralPath $ownershipPath -Raw | ConvertFrom-Json
-        if ($ownership.active_components -contains 'silverstar.device.storage.sdmmc_fatfs_h7') {
+    if ($TargetKind -eq 'Flight') {
+        $ownership = $null
+        if (Test-Path -LiteralPath $ownershipPath -PathType Leaf) {
+            $ownership = Get-Content -LiteralPath $ownershipPath -Raw | ConvertFrom-Json
+        }
+        $makePath = Join-Path $repoRoot 'Makefile'
+        $firstPartyDeclaration = ''
+        if (Test-Path -LiteralPath $makePath -PathType Leaf) {
+            $firstPartyDeclaration = @(
+                Get-Content -LiteralPath $makePath | Where-Object { $_ -match '^FIRST_PARTY_C_SOURCES\s*:=' }
+            ) -join ' '
+        }
+        $hasDiskioOwner = $firstPartyDeclaration -match '\bFATFS/Target/sd_diskio\.c\b'
+        $hasBspOwner = $firstPartyDeclaration -match '\bFATFS/Target/bsp_driver_sd\.c\b'
+        $ownerActive = $ownership.active_components -contains 'silverstar.device.storage.sdmmc_fatfs_h7'
+        if ($hasDiskioOwner -or $hasBspOwner -or $ownerActive) {
+            if (-not ($hasDiskioOwner -and $hasBspOwner -and $ownerActive)) {
+                throw 'H7 first-party coverage requires matching Make and active owner identities'
+            }
             $receipt = $ownership.hardware.storage_replacement
             if (($receipt.schema_id -ne 'silverstar.h7-storage-replacement/1') -or
                 ($receipt.owner -ne 'silverstar.device.storage.sdmmc_fatfs_h7')) {

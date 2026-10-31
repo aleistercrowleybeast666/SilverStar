@@ -160,7 +160,7 @@ def test_h7_diskio_rejects_unreviewed_read_only_abi(tmp_path):
     assert "reviewed H743 FatFs ABI requires write and ioctl support" in result.stderr
 
 
-@pytest.mark.parametrize("mode", ("missing", "mismatch"))
+@pytest.mark.parametrize("mode", ("missing", "mismatch", "no-file", "no-active", "no-make"))
 def test_h7_power10_refuses_missing_or_inconsistent_owner_receipt(tmp_path, mode):
     powershell = shutil.which("powershell") or shutil.which("pwsh")
     if not powershell:
@@ -170,15 +170,21 @@ def test_h7_power10_refuses_missing_or_inconsistent_owner_receipt(tmp_path, mode
     tools = tmp_path / "Tools"
     tools.mkdir()
     shutil.copyfile(owner, tools / owner.name)
+    if mode != "no-make":
+        (tmp_path / "Makefile").write_text("FIRST_PARTY_C_SOURCES := " + " ".join(REPLACEMENTS.values()))
     (tmp_path / ".fccg").mkdir()
     receipt = {"schema_id": "silverstar.h7-storage-replacement/1", "owner": OWNER,
                "replacements": {**REPLACEMENTS, next(iter(REPLACEMENTS)): "wrong.c"}}
     record = {"active_components": [OWNER], "hardware": {}}
     if mode == "mismatch":
         record["hardware"]["storage_replacement"] = receipt
-    (tmp_path / ".fccg/ownership.json").write_text(json.dumps(record), encoding="utf8")
+    if mode == "no-active":
+        record["active_components"] = []
+    if mode != "no-file":
+        (tmp_path / ".fccg/ownership.json").write_text(json.dumps(record), encoding="utf8")
     result = subprocess.run([powershell, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
         str(tools / owner.name)], capture_output=True, encoding="utf8", errors="replace")
     assert result.returncode != 0
-    message = "requires the exact owning receipt" if mode == "missing" else "replacement is inconsistent"
+    message = "requires matching Make and active owner identities" if mode.startswith("no-") else (
+        "requires the exact owning receipt" if mode == "missing" else "replacement is inconsistent")
     assert message in result.stdout + result.stderr
