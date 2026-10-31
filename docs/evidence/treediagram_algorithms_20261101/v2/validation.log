@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\docs\evidence\treediagram_algorithms_20261101\v2\validate_actual_runs.py", line 194, in <module>
+    Main()
+    ~~~~^^
+  File "D:\python_software\SilverStar\docs\evidence\treediagram_algorithms_20261101\v2\validate_actual_runs.py", line 157, in Main
+    assert controller.implementation_identity == bundle["implementation_identity"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,52 @@
+{
+  "command": [
+    "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-shared",
+    "-static-libgcc",
+    "-ID:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\native",
+    "-ID:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk",
+    "-ID:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk\\silverstar_algorithm_augmented_common",
+    "-ID:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk\\silverstar_algorithm_common",
+    "-ID:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk\\silverstar_algorithm_control_lqr",
+    "-ID:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk\\silverstar_algorithm_control_pid",
+    "-ID:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk\\silverstar_algorithm_estimator_eskf15",
+    "-ID:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk\\silverstar_algorithm_estimator_eskf20",
+    "-ID:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk\\silverstar_algorithm_estimator_inekf15",
+    "-ID:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk\\silverstar_algorithm_estimator_inekf20",
+    "-ID:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk\\silverstar_algorithm_estimator_kf6",
+    "-ID:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk\\silverstar_algorithm_estimator_sf6",
+    "-ID:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk\\silverstar_algorithm_ins_coning2_sculling2",
+    "D:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk\\silverstar_algorithm_augmented_common\\navigation_bounded.c",
+    "D:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk\\silverstar_algorithm_common\\attitude_frame.c",
+    "D:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk\\silverstar_algorithm_control_lqr\\control_lqr.c",
+    "D:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk\\silverstar_algorithm_control_pid\\control_pid.c",
+    "D:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk\\silverstar_algorithm_estimator_eskf15\\navigation_eskf.c",
+    "D:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk\\silverstar_algorithm_estimator_kf6\\navigation_kf.c",
+    "D:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk\\silverstar_algorithm_estimator_sf6\\navigation_sf6.c",
+    "D:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\sdk\\silverstar_algorithm_ins_coning2_sculling2\\ins_mechanization.c",
+    "D:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\native\\host_assert.c",
+    "D:\\python_software\\TreeDiagram\\src\\treediagram\\algorithms\\native\\host_navigation.c",
+    "-lm",
+    "-o",
+    "D:\\python_software\\TreeDiagram\\.test-tmp\\sdk-cache\\algorithms\\6a72f60b5b9bf41b16632d8f0bb5a7e9e4028106ffe8b8c2421138fd097bf824\\.420-19208.dll"
+  ],
+  "compiler_version": "gcc.EXE (Rev5, Built by MSYS2 project) 16.1.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "returncode": 0,
+  "wrapper_hashes": {
+    "native.py": "97a69884bfe0d80c1a3fc7965a47c918ed58be5dc3c11179088864b04ba71115",
+    "navigation.py": "6f08919c8b9d1eb461e5362f4650f1f2e16c6cdce47077622b44d98ef3075d97",
+    "control.py": "71d9aa915709850b196e01e37ba4cc86f61f52a5306cc8ce2c5eb2a5d0cc6b23"
+  },
+  "numerical_runtime": {
+    "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+    "numpy": "2.4.1",
+    "scipy": "1.16.3"
+  },
+  "stdout": "",
+  "stderr": ""
+}

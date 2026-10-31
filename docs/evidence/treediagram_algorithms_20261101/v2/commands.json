@@ -1,0 +1,12 @@
+[
+  {
+    "name": "host-compiler-version",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "--version"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 0.027950799994869158
+  }
+]

@@ -1,0 +1,18 @@
+{
+  "silverstar_code_commit": "4f701b4a7822302dc0f4ac858549f7cc7fa4ba0e",
+  "silverstar_evidence_head_before_run": "a5be57c94d178a145852b884e656a636cb6cc96d",
+  "tree_diagram_head_before_run": "1983911f419190e80241a4ed851462516a1de737",
+  "tree_diagram_state": "final content-addressed working tree; final commit pending",
+  "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+  "source_records": [
+    {
+      "path": "D:\\python_software\\TreeDiagram\\examples\\underline-pid.json",
+      "sha256": "c2b0cfb006b45e3c533b4dcae07e581fab0c8ee326a9e95e8b4c17c252aa5601"
+    },
+    {
+      "path": "D:\\python_software\\TreeDiagram\\tools\\verify_examples.py",
+      "sha256": "eb285c8e1ce8d5af9e174e7ef03e15d701de8e2c7e277a1241f2fca81c81054b"
+    }
+  ],
+  "scope": "actual final run parameter adoption and generated Host consumer; no new ARM or hardware validation"
+}

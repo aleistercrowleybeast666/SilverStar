@@ -1,0 +1,50 @@
+[
+  {
+    "case": "underline-pid",
+    "bundle_sha256": "726c068e92fd1bb4f65f8aacbb89b570bf555085924e4a65bdc168b37b9b9246",
+    "model_id": "6ff555987dc2625712e87fc9077b8f94583b17926b98400b4b4fb60124df1ca6",
+    "run_id": "c7122141-13be-4860-b3f8-b7780dc81754",
+    "implementation_identity": "6a72f60b5b9bf41b16632d8f0bb5a7e9e4028106ffe8b8c2421138fd097bf824",
+    "generation_result": "TargetGenerationResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/control-core-v2-matched-runtime/underline-pid'), targets=('Flight_Controller',), file_hashes={})",
+    "parameter_comparisons": 49,
+    "decoder_sha256": "b7650eeea8f3eae127722765c9272757e8bc36bdc72290d9cdab2aa3b40c0ba6",
+    "generation_profile_sha256": "839cba94dcf298fb0233b4bb34d714cc11a8f45bb2ece83fb0cb465d41e5b168",
+    "host_sdk_control_output": 0.015029999427497387,
+    "generated_consumer_control_output": 0.015029999427497387,
+    "original_project_unchanged": true,
+    "deployment_ready": false,
+    "result": "PASS"
+  },
+  {
+    "case": "pid",
+    "bundle_sha256": "9543851c74938c3e21383de2bfea8f7b9281c0ea6cf84beba1cda7534898c49b",
+    "model_id": "260893ee82e38a629bf043be9a309f308c8ed5dd25f49ce3b1d9ec0c29f82905",
+    "run_id": "efedb4b1-10fd-4572-b1cb-3dbd59595025",
+    "implementation_identity": "6a72f60b5b9bf41b16632d8f0bb5a7e9e4028106ffe8b8c2421138fd097bf824",
+    "generation_result": "TargetGenerationResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/control-core-v2-matched-runtime/pid'), targets=('Flight_Controller',), file_hashes={})",
+    "parameter_comparisons": 49,
+    "decoder_sha256": "ebd174d1237005f16a6c056937b3173b542cbce8db6237d63d33ae7c8e192659",
+    "generation_profile_sha256": "ee5a1aa1709f701dc005067ad704d6e959c15bf2fa2d3459c0ba0889bbbfce9b",
+    "host_sdk_control_output": 0.015029999427497387,
+    "generated_consumer_control_output": 0.015029999427497387,
+    "original_project_unchanged": true,
+    "deployment_ready": false,
+    "result": "PASS"
+  },
+  {
+    "case": "lqr",
+    "bundle_sha256": "56466affd077c538d2d2d9f7b9868c8e67951fec0db83690e1522ea361af2b74",
+    "model_id": "b938ae1716d07c5563c3c55701ac0f1f25d37ad0425ecc12b30d62734110cc9f",
+    "run_id": "a461a5b1-0021-49bc-852c-f95530524c47",
+    "implementation_identity": "6a72f60b5b9bf41b16632d8f0bb5a7e9e4028106ffe8b8c2421138fd097bf824",
+    "generation_result": "TargetGenerationResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/control-core-v2-matched-runtime/lqr'), targets=('Flight_Controller',), file_hashes={})",
+    "parameter_comparisons": 45,
+    "decoder_sha256": "a24acef76cf62dbf4a9b31571c3f9fa7defd07dfb0ba6994bc970e3579ac1d6f",
+    "generation_profile_sha256": "e9a8caa3702ba929450fa4438c1a8538878d9ffac00327d3b423219a9c27e383",
+    "host_sdk_control_output": -0.049142077565193176,
+    "generated_consumer_control_output": -0.049142077565193176,
+    "original_project_unchanged": true,
+    "deployment_ready": false,
+    "result": "PASS"
+  }
+]

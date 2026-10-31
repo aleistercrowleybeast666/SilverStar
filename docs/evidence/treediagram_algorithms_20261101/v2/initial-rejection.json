@@ -1,0 +1,10 @@
+{
+  "result": "REJECTED",
+  "exit_code": 1,
+  "reason": "Final bundle implementation identity differs from default interpreter numerical runtime; identity assertion retained unchanged",
+  "expected_identity": "6a72f60b5b9bf41b16632d8f0bb5a7e9e4028106ffe8b8c2421138fd097bf824",
+  "actual_identity": "12c7b0d96ef09239eed7f77e0f504253f91653ab4baee6f1773903d8fba1a149",
+  "numpy_expected": "2.4.1",
+  "numpy_actual": "2.4.0",
+  "corrective_action": "Use exact final simulation interpreter D:/python_software/TreeDiagram/.venv/Scripts/python.exe; retain rejected output and use new output directory"
+}
