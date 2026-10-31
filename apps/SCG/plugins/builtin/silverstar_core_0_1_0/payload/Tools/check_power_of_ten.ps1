@@ -52,6 +52,27 @@ function Get-FirstPartyCFiles {
                 -Filter '*.c'
         }
     }
+    # A reviewed H7 owner implements the FatFs ABI in canonical vendor-named
+    # paths. Include those exact owning units without reclassifying middleware.
+    $ownershipPath = Join-Path $repoRoot '.fccg/ownership.json'
+    if (($TargetKind -eq 'Flight') -and (Test-Path -LiteralPath $ownershipPath -PathType Leaf)) {
+        $ownership = Get-Content -LiteralPath $ownershipPath -Raw | ConvertFrom-Json
+        if ($ownership.active_components -contains 'silverstar.device.storage.sdmmc_fatfs_h7') {
+            $receipt = $ownership.hardware.storage_replacement
+            if (($receipt.schema_id -ne 'silverstar.h7-storage-replacement/1') -or
+                ($receipt.owner -ne 'silverstar.device.storage.sdmmc_fatfs_h7')) {
+                throw 'H7 first-party storage coverage requires the exact owning receipt'
+            }
+            foreach ($name in @('sd_diskio.c', 'bsp_driver_sd.c')) {
+                $original = 'HardwareGenerated/STM32CubeMX/FATFS/Target/' + $name
+                $relative = 'FATFS/Target/' + $name
+                if ($receipt.replacements.$original -ne $relative) {
+                    throw ('H7 first-party storage replacement is inconsistent: ' + $name)
+                }
+                $files += Get-Item -LiteralPath (Join-Path $repoRoot $relative) -ErrorAction Stop
+            }
+        }
+    }
     return @($files | Sort-Object -Property FullName -Unique)
 }
 

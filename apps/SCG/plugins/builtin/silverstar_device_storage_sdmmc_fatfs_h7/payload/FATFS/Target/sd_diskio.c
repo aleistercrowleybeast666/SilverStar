@@ -35,6 +35,8 @@ static volatile uint8_t s_sd_transfer_active;
 
 _Static_assert(sizeof(s_sd_scratch) == SD_IO_SECTOR_BYTES,
                "SD scratch must contain exactly one sector");
+_Static_assert((_USE_WRITE == 1) && (_USE_IOCTL == 1),
+               "The reviewed H743 FatFs ABI requires write and ioctl support");
 
 static DRESULT SdDiskIo_Claim(void)
 {
@@ -124,7 +126,7 @@ static DRESULT SdDiskIo_SectorWrite(DWORD sector, TickType_t started)
     return SdDiskIo_CompletionWait(SD_IO_WRITE_COMPLETE, started);
 }
 
-DSTATUS SD_initialize(BYTE lun)
+static DSTATUS SD_initialize(BYTE lun)
 {
     if ((lun != 0U) || (xTaskGetSchedulerState() != taskSCHEDULER_RUNNING) ||
         (SdDiskIo_Claim() != RES_OK)) { return STA_NOINIT; }
@@ -147,7 +149,7 @@ DSTATUS SD_initialize(BYTE lun)
     return s_sd_status;
 }
 
-DSTATUS SD_status(BYTE lun)
+static DSTATUS SD_status(BYTE lun)
 {
     if ((lun != 0U) || (s_sd_poisoned != 0U)) { return STA_NOINIT; }
     return s_sd_status;
@@ -163,7 +165,7 @@ static DRESULT SdDiskIo_RequestValidate(BYTE lun, const void *buffer,
     return SdDiskIo_Claim();
 }
 
-DRESULT SD_read(BYTE lun, BYTE *buffer, DWORD sector, UINT count)
+static DRESULT SD_read(BYTE lun, BYTE *buffer, DWORD sector, UINT count)
 {
     UINT index;
     TickType_t started = xTaskGetTickCount();
@@ -181,8 +183,7 @@ DRESULT SD_read(BYTE lun, BYTE *buffer, DWORD sector, UINT count)
     return result;
 }
 
-#if _USE_WRITE == 1
-DRESULT SD_write(BYTE lun, const BYTE *buffer, DWORD sector, UINT count)
+static DRESULT SD_write(BYTE lun, const BYTE *buffer, DWORD sector, UINT count)
 {
     UINT index;
     TickType_t started = xTaskGetTickCount();
@@ -199,10 +200,7 @@ DRESULT SD_write(BYTE lun, const BYTE *buffer, DWORD sector, UINT count)
     SdDiskIo_Release();
     return result;
 }
-#endif
-
-#if _USE_IOCTL == 1
-DRESULT SD_ioctl(BYTE lun, BYTE command, void *buffer)
+static DRESULT SD_ioctl(BYTE lun, BYTE command, void *buffer)
 {
     BSP_SD_CardInfo info = {0};
     DWORD value32;
@@ -238,8 +236,6 @@ DRESULT SD_ioctl(BYTE lun, BYTE command, void *buffer)
     SdDiskIo_Release();
     return result;
 }
-#endif
-
 static void SdDiskIo_CompleteFromIsr(uint16_t event)
 {
     BaseType_t woken = pdFALSE;
@@ -269,10 +265,6 @@ void BSP_SD_ReadCpltCallback(void) { SdDiskIo_CompleteFromIsr(SD_IO_READ_COMPLET
 
 const Diskio_drvTypeDef SD_Driver = {
     SD_initialize, SD_status, SD_read,
-#if _USE_WRITE == 1
     SD_write,
-#endif
-#if _USE_IOCTL == 1
     SD_ioctl,
-#endif
 };

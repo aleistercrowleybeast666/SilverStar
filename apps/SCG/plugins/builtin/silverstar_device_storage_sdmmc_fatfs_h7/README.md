@@ -16,6 +16,11 @@ Reimporting other CubeMX output requires a new explicit source review.
 `.fccg/ownership.json` under `hardware.storage_replacement`. There is no new
 architecture exclusion, generic source override, runtime registry or callback table.
 The fixed `SD_Driver` table remains the required FatFs ABI.
+Its five operations are file-local; the pinned ABI requires write and ioctl
+support and rejects other configurations at compile time. The exact two owning
+C files are first-party sources in both emitted Power10 and strict analyzer
+compilation. This classification is selected by the H7 plugin/receipt, never
+by a same-named user CubeMX file or by reclassifying all FatFs sources.
 
 The disk interface permits one owner at a time, at most 128 sectors per request,
 and always transfers one sector through a static 32-byte-aligned scratch buffer.

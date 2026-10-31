@@ -1,6 +1,7 @@
 """Preserved input identity and real owning H7 HAL boundary behavior."""
 from copy import deepcopy
 import hashlib
+import json
 from pathlib import Path
 import shutil
 import subprocess
@@ -142,3 +143,42 @@ def test_real_h7_diskio_rejects_late_ready_error_and_initialization_failure(tmp_
     for mode in (0, 1, 2, 3, 4):
         result = subprocess.run([str(binary), str(mode)], capture_output=True, text=True)
         assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_h7_diskio_rejects_unreviewed_read_only_abi(tmp_path):
+    root = Path(__file__).resolve().parents[1]
+    fixture = root / "tests/fixtures/h7_diskio"
+    header = (fixture / "ff_gen_drv.h").read_text(encoding="utf8")
+    (tmp_path / "ff_gen_drv.h").write_text(header.replace("#define _USE_WRITE 1", "#define _USE_WRITE 0"))
+    port = root / "plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/storage_integrity"
+    platform = root / "plugins/builtin/silverstar_platform_api/payload/Platform/Inc"
+    source = root / "plugins/builtin/silverstar_device_storage_sdmmc_fatfs_h7/payload/FATFS/Target/sd_diskio.c"
+    result = subprocess.run([shutil.which("gcc"), "-std=c11", "-I"+str(tmp_path),
+        "-I"+str(port), "-I"+str(platform), "-c", str(source), "-o", str(tmp_path/"unsupported.o")],
+        capture_output=True, text=True)
+    assert result.returncode != 0
+    assert "reviewed H743 FatFs ABI requires write and ioctl support" in result.stderr
+
+
+@pytest.mark.parametrize("mode", ("missing", "mismatch"))
+def test_h7_power10_refuses_missing_or_inconsistent_owner_receipt(tmp_path, mode):
+    powershell = shutil.which("powershell") or shutil.which("pwsh")
+    if not powershell:
+        pytest.skip("PowerShell is required for the emitted Power10 gate")
+    root = Path(__file__).resolve().parents[1]
+    owner = root / "plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_power_of_ten.ps1"
+    tools = tmp_path / "Tools"
+    tools.mkdir()
+    shutil.copyfile(owner, tools / owner.name)
+    (tmp_path / ".fccg").mkdir()
+    receipt = {"schema_id": "silverstar.h7-storage-replacement/1", "owner": OWNER,
+               "replacements": {**REPLACEMENTS, next(iter(REPLACEMENTS)): "wrong.c"}}
+    record = {"active_components": [OWNER], "hardware": {}}
+    if mode == "mismatch":
+        record["hardware"]["storage_replacement"] = receipt
+    (tmp_path / ".fccg/ownership.json").write_text(json.dumps(record), encoding="utf8")
+    result = subprocess.run([powershell, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+        str(tools / owner.name)], capture_output=True, encoding="utf8", errors="replace")
+    assert result.returncode != 0
+    message = "requires the exact owning receipt" if mode == "missing" else "replacement is inconsistent"
+    assert message in result.stdout + result.stderr
