@@ -1,0 +1,32 @@
+[
+  {
+    "kind": "pid",
+    "decoder_sha256": "259d928c2932dd85f3ade7f49a73818d63294df3f52859054eb3e69abccbff72",
+    "decoder_verified": true,
+    "generation_profile_sha256": "523e33fd759e16584c48d2c911ea1b42fe5dae050dc9878fcd287ee50045513f",
+    "gravity_mps2": 9.806650161743164,
+    "control_parameters": {
+      "kp": 3.25,
+      "ki": 0.20000000298023224,
+      "kd": 0.10000000149011612,
+      "derivative_tau_s": 0.019999999552965164,
+      "integral_limit": 0.20000000298023224,
+      "output_limit": 0.30000001192092896,
+      "sample_period_s": 0.009999999776482582
+    },
+    "header_decoder_bundle_match": true
+  },
+  {
+    "kind": "lqr",
+    "decoder_sha256": "8dd5ae1f799d84eaadf700c9847bd31070d25757471b9d5f4094aef30d23e898",
+    "decoder_verified": true,
+    "generation_profile_sha256": "e9f66aa4c2ada1b857cc9ccd5fb167be9cd39f6541826e7e1092bf68978b787a",
+    "gravity_mps2": 9.806650161743164,
+    "control_parameters": {
+      "k_angle": 2.9666454792022705,
+      "k_rate": 1.2138482332229614,
+      "output_limit": 0.30000001192092896
+    },
+    "header_decoder_bundle_match": true
+  }
+]

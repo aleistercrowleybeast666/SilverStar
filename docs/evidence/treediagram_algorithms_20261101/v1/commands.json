@@ -1,0 +1,290 @@
+[
+  {
+    "name": "arm-none-eabi-gcc-version",
+    "command": [
+      "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-gcc.EXE",
+      "--version"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 0.09934729999804404
+  },
+  {
+    "name": "gcc-version",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "--version"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 0.044304600000032224
+  },
+  {
+    "name": "pid-generated-consumer-compile",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O2",
+      "-fanalyzer",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\pid\\Flight_Controller\\Algorithm\\Control\\PID\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\pid\\Flight_Controller\\Generated\\Inc",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\pid\\Flight_Controller\\Algorithm\\Control\\PID\\Src\\control_pid.c",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\pid\\Flight_Controller\\Algorithm\\Control\\PID\\Src\\control_pid_project.c",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\pid-consumer.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\pid-consumer.exe"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 1.582309900000837
+  },
+  {
+    "name": "pid-generated-consumer-execute",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\pid-consumer.exe"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 0.22387190000154078
+  },
+  {
+    "name": "pid-all",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\pid\\Flight_Controller",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "HOST_CC=D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "all"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 175.3119493999984
+  },
+  {
+    "name": "pid-architecture-check",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\pid\\Flight_Controller",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "HOST_CC=D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "architecture-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 31.348105700002634
+  },
+  {
+    "name": "pid-power10-check",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\pid\\Flight_Controller",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "HOST_CC=D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "power10-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 48.73178140000164
+  },
+  {
+    "name": "pid-static-analysis",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\pid\\Flight_Controller",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "HOST_CC=D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "static-analysis"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 241.70174380000026
+  },
+  {
+    "name": "pid-artifact-check",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\pid\\Flight_Controller",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "HOST_CC=D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "artifact-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 11.152807999998913
+  },
+  {
+    "name": "pid-stack-report",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\pid\\Flight_Controller",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "HOST_CC=D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "stack-report"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 2,
+    "seconds": 11.974118599999201
+  },
+  {
+    "name": "lqr-generated-consumer-compile",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O2",
+      "-fanalyzer",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\lqr\\Flight_Controller\\Algorithm\\Control\\LQR\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\lqr\\Flight_Controller\\Generated\\Inc",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\lqr\\Flight_Controller\\Algorithm\\Control\\LQR\\Src\\control_lqr.c",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\lqr\\Flight_Controller\\Algorithm\\Control\\LQR\\Src\\control_lqr_project.c",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\lqr-consumer.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\lqr-consumer.exe"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 1.9328628999974171
+  },
+  {
+    "name": "lqr-generated-consumer-execute",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\lqr-consumer.exe"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 0.23568510000040988
+  },
+  {
+    "name": "lqr-all",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\lqr\\Flight_Controller",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "HOST_CC=D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "all"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 182.025827700003
+  },
+  {
+    "name": "lqr-architecture-check",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\lqr\\Flight_Controller",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "HOST_CC=D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "architecture-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 26.559279099998093
+  },
+  {
+    "name": "lqr-power10-check",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\lqr\\Flight_Controller",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "HOST_CC=D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "power10-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 42.35806749999756
+  },
+  {
+    "name": "lqr-static-analysis",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\lqr\\Flight_Controller",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "HOST_CC=D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "static-analysis"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 246.9718783999997
+  },
+  {
+    "name": "lqr-artifact-check",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\lqr\\Flight_Controller",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "HOST_CC=D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "artifact-check"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 11.673748199998954
+  },
+  {
+    "name": "lqr-stack-report",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v1\\lqr\\Flight_Controller",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "HOST_CC=D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "stack-report"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 2,
+    "seconds": 13.843073399999412
+  }
+]
