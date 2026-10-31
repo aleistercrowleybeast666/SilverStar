@@ -1,0 +1,397 @@
+{
+  "schema_id": "silverstar.tuning-bundle/1",
+  "schema_version": 1,
+  "model_id": "d9dd9c9dd120edc94100f5610a1b29fcb43b489be23dedf6f7e9908285f797e6",
+  "run_id": "77b67819-afb8-4c88-80fd-0389d73e052c",
+  "coordinates": "ENU; body+Z; Hamilton-wxyz; q_nb",
+  "implementation_identity": "6a72f60b5b9bf41b16632d8f0bb5a7e9e4028106ffe8b8c2421138fd097bf824",
+  "profiles": [
+    {
+      "schema_id": "silverstar.function-parameters/1",
+      "schema_version": 1,
+      "plugin_id": "silverstar.algorithm.ins.coning2_sculling2",
+      "plugin_version": "0.1.0",
+      "manifest_sha256": "eb3feaf055c8dc1e6e26d455b6ffd35d08be0f86a765d71f37102043696a4af0",
+      "parameter_schema": "silverstar.algorithm-parameters/1.0",
+      "value_source": "project_actual_input",
+      "parameters": [
+        {
+          "id": "gravity_mps2",
+          "value": 9.806650161743164,
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32"
+        },
+        {
+          "id": "mechanization_aggregation",
+          "value": 2,
+          "unit": "samples",
+          "representation": "value",
+          "storage_type": "int32"
+        }
+      ]
+    },
+    {
+      "schema_id": "silverstar.function-parameters/1",
+      "schema_version": 1,
+      "plugin_id": "silverstar.algorithm.estimator.kf6",
+      "plugin_version": "0.4.0",
+      "manifest_sha256": "e0d75bfc19decfbdfc0098671cb679c4320952b0e49a74dedf1f9f43f567466c",
+      "parameter_schema": "silverstar.algorithm-parameters/1.0",
+      "value_source": "project_actual_input",
+      "parameters": [
+        {
+          "id": "gravity_mps2",
+          "value": 9.806650161743164,
+          "unit": "m/s^2",
+          "representation": "value",
+          "storage_type": "float32"
+        },
+        {
+          "id": "p0_position_e",
+          "value": 4.0,
+          "unit": "m^2",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32"
+        },
+        {
+          "id": "p0_position_n",
+          "value": 4.0,
+          "unit": "m^2",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32"
+        },
+        {
+          "id": "p0_position_u",
+          "value": 9.0,
+          "unit": "m^2",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32"
+        },
+        {
+          "id": "p0_velocity_e",
+          "value": 0.25,
+          "unit": "m^2/s^2",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32"
+        },
+        {
+          "id": "p0_velocity_n",
+          "value": 0.25,
+          "unit": "m^2/s^2",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32"
+        },
+        {
+          "id": "p0_velocity_u",
+          "value": 0.25,
+          "unit": "m^2/s^2",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32"
+        },
+        {
+          "id": "process_accel_std_e",
+          "value": 1.5,
+          "unit": "m/s^2",
+          "representation": "sigma",
+          "storage_type": "float32"
+        },
+        {
+          "id": "process_accel_std_n",
+          "value": 1.5,
+          "unit": "m/s^2",
+          "representation": "sigma",
+          "storage_type": "float32"
+        },
+        {
+          "id": "process_accel_std_u",
+          "value": 2.0,
+          "unit": "m/s^2",
+          "representation": "sigma",
+          "storage_type": "float32"
+        },
+        {
+          "id": "gnss_position_std_horizontal",
+          "value": 1.5,
+          "unit": "m",
+          "representation": "sigma",
+          "storage_type": "float32"
+        },
+        {
+          "id": "gnss_position_std_vertical",
+          "value": 2.5,
+          "unit": "m",
+          "representation": "sigma",
+          "storage_type": "float32"
+        },
+        {
+          "id": "gnss_velocity_std",
+          "value": 0.15000000596046448,
+          "unit": "m/s",
+          "representation": "sigma",
+          "storage_type": "float32"
+        },
+        {
+          "id": "baro_std_m",
+          "value": 2.5,
+          "unit": "m",
+          "representation": "sigma",
+          "storage_type": "float32"
+        },
+        {
+          "id": "nis_1d_soft",
+          "value": 6.635000228881836,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32"
+        },
+        {
+          "id": "nis_1d_hard",
+          "value": 10.82800006866455,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32"
+        },
+        {
+          "id": "nis_2d_soft",
+          "value": 9.210000038146973,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32"
+        },
+        {
+          "id": "nis_2d_hard",
+          "value": 13.815999984741211,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32"
+        },
+        {
+          "id": "nis_3d_soft",
+          "value": 11.345000267028809,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32"
+        },
+        {
+          "id": "nis_3d_hard",
+          "value": 16.266000747680664,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32"
+        },
+        {
+          "id": "nis_max_r_scale",
+          "value": 10.0,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32"
+        },
+        {
+          "id": "gnss_velocity_vertical_scale",
+          "value": 1.75,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32"
+        },
+        {
+          "id": "gnss_reacquire_outage_ms",
+          "value": 300,
+          "unit": "ms",
+          "representation": "value",
+          "storage_type": "int32"
+        },
+        {
+          "id": "gnss_position_measurement_delay_ms",
+          "value": 0,
+          "unit": "ms",
+          "representation": "value",
+          "storage_type": "int32"
+        },
+        {
+          "id": "gnss_velocity_measurement_delay_ms",
+          "value": 270,
+          "unit": "ms",
+          "representation": "value",
+          "storage_type": "int32"
+        },
+        {
+          "id": "baro_measurement_delay_ms",
+          "value": 0,
+          "unit": "ms",
+          "representation": "value",
+          "storage_type": "int32"
+        },
+        {
+          "id": "gnss_integrity_enable",
+          "value": 1,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32"
+        },
+        {
+          "id": "gnss_integrity_max_gap_ms",
+          "value": 120,
+          "unit": "ms",
+          "representation": "value",
+          "storage_type": "int32"
+        },
+        {
+          "id": "gnss_integrity_error_threshold_m",
+          "value": 10.0,
+          "unit": "m",
+          "representation": "value",
+          "storage_type": "float32"
+        },
+        {
+          "id": "gnss_integrity_recovery_threshold_m",
+          "value": 4.0,
+          "unit": "m",
+          "representation": "value",
+          "storage_type": "float32"
+        },
+        {
+          "id": "gnss_integrity_suspect_duration_ms",
+          "value": 2000,
+          "unit": "ms",
+          "representation": "value",
+          "storage_type": "int32"
+        },
+        {
+          "id": "gnss_integrity_reject_duration_ms",
+          "value": 5000,
+          "unit": "ms",
+          "representation": "value",
+          "storage_type": "int32"
+        },
+        {
+          "id": "gnss_integrity_recovery_duration_ms",
+          "value": 8000,
+          "unit": "ms",
+          "representation": "value",
+          "storage_type": "int32"
+        },
+        {
+          "id": "gnss_integrity_position_r_scale",
+          "value": 4.0,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "float32"
+        },
+        {
+          "id": "gnss_integrity_hacc_max_m",
+          "value": 6.0,
+          "unit": "m",
+          "representation": "value",
+          "storage_type": "float32"
+        },
+        {
+          "id": "gnss_integrity_sacc_max_mps",
+          "value": 1.2,
+          "unit": "m/s",
+          "representation": "value",
+          "storage_type": "float32"
+        },
+        {
+          "id": "nis_soft_enabled",
+          "value": 1,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32"
+        },
+        {
+          "id": "nis_hard_enabled",
+          "value": 1,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32"
+        },
+        {
+          "id": "fusion_timing_mode",
+          "value": 1,
+          "unit": "1",
+          "representation": "value",
+          "storage_type": "int32"
+        },
+        {
+          "id": "fusion_horizon_ms",
+          "value": 300,
+          "unit": "ms",
+          "representation": "value",
+          "storage_type": "int32"
+        }
+      ]
+    }
+  ],
+  "control_research": {
+    "schema_id": "silverstar.control-research/1",
+    "kind": "lqr",
+    "deployable": false,
+    "parameters": {
+      "k_angle": 2.1111114025115967,
+      "k_rate": 1.4015482664108276,
+      "output_limit": 0.4000000059604645
+    },
+    "design": {
+      "a": [
+        [
+          1.0,
+          0.02
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "b": [
+        [
+          0.0007870093611484304
+        ],
+        [
+          0.07870093611484304
+        ]
+      ],
+      "q": [
+        [
+          5.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "r": [
+        [
+          1.0
+        ]
+      ],
+      "k": [
+        [
+          2.1111114025115967,
+          1.4015482664108276
+        ]
+      ],
+      "dt_s": 0.02,
+      "model_source": "single rigid-body axis, small angle, constant specified inertia/torque authority",
+      "state_order": [
+        "angle_error_rad",
+        "angular_rate_radps"
+      ],
+      "input_order": [
+        "actuator_command"
+      ],
+      "storage_order": "row_major",
+      "riccati_residual": 2.613378610786997e-16,
+      "closed_loop_radius": 0.9441177383459842
+    }
+  },
+  "limitations": [
+    "Control cores are research-only: target mission dispatch and actuator drivers are not connected.",
+    "Scalar profiles propose pinned target defaults plus the simulated gravity binding; they do not certify full backend parity.",
+    "KF6 host adapter uses current-state updates on arrival; no delayed replay is claimed.",
+    "Non-INS/KF6 tuning is retained as research; no unverified firmware scalar profile is exported.",
+    "Initial pose and zero launch velocity are explicit simulation priors; no sensor or hardware qualification is claimed."
+  ],
+  "content_sha256": "94e2445febd26e85ffc7bd1a8b8d7167db7563939315e277dd7b6ddb9c2d7871"
+}

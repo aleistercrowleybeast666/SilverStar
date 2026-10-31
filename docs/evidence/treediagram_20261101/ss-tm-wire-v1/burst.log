@@ -1,0 +1,8 @@
+TM profile=0 scenario=burst flight=47 position=10 health=5 event=32 completed=94 failed=0 mode=1 rx=0
+TX_DONE type=16 first_ms=614
+TX_DONE type=16 maximum_gap_ms=202 last_ms=9822
+TX_DONE type=24 first_ms=693
+TX_DONE type=24 maximum_gap_ms=1008 last_ms=9099
+TX_DONE type=25 first_ms=880
+TX_DONE type=25 maximum_gap_ms=2002 last_ms=8286
+burst: 9907 checks, 0 failures

@@ -1,0 +1,32 @@
+[
+  {
+    "path": "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.bin",
+    "bytes": 355908,
+    "sha256": "a529589ac510a46ab54ba9378aab9e36fb6bdfd6c1af6ec16d888ce5ca9b3003"
+  },
+  {
+    "path": "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.elf",
+    "bytes": 3586320,
+    "sha256": "e40faee6b093e83740db5600f119926fe844e7c3b6492fef752f267266d59aa2"
+  },
+  {
+    "path": "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.map",
+    "bytes": 1600542,
+    "sha256": "cad4e136ac432ec9b19f8ac006ace9f86d14f86f4dd28592d6e588c219a48fed"
+  },
+  {
+    "path": "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_3.bin",
+    "bytes": 355908,
+    "sha256": "a529589ac510a46ab54ba9378aab9e36fb6bdfd6c1af6ec16d888ce5ca9b3003"
+  },
+  {
+    "path": "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_3.elf",
+    "bytes": 3586500,
+    "sha256": "7194b0b1a610f182d96066758a0ff9ff966c8904517fedfc79f6f1365f957679"
+  },
+  {
+    "path": "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_3.map",
+    "bytes": 1744707,
+    "sha256": "15261c54b8290cc1240af6d6891a2aab2abf74907efcbd1762c4bc5138af73e6"
+  }
+]

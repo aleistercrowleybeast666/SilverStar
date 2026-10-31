@@ -1,0 +1,2 @@
+BUNDLE_INPUT_SHA256 5186baef85ba262d390bba6c1189722689a8edb23e32a479dd9623bb002ee68e
+TargetGenerationResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/firmware-v1/bundle'), targets=('Flight_Controller',), file_hashes={})

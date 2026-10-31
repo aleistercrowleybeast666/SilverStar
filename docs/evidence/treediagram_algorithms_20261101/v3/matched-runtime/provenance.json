@@ -1,0 +1,39 @@
+{
+  "silverstar_code_commit": "4f701b4a7822302dc0f4ac858549f7cc7fa4ba0e",
+  "silverstar_evidence_head_before_run": "10e1eb3fd6b9a190946111d1a5a7572ef1965358",
+  "tree_diagram_head_before_run": "440db630ac12c5e3ad128623870ef00771c49e25",
+  "tree_diagram_state": "final actuator boundary implementation committed; source/run byte hashes retained",
+  "tree_diagram_tested_runtime_commit": "440db630ac12c5e3ad128623870ef00771c49e25",
+  "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+  "source_records": [
+    {
+      "path": "D:\\python_software\\TreeDiagram\\examples\\underline-pid.json",
+      "sha256": "9b9e38e464c460839b8463ad7d1e0e9a1fb87a9e7691aa93108654a73cb40673"
+    },
+    {
+      "path": "D:\\python_software\\TreeDiagram\\examples\\pid.json",
+      "sha256": "a21e7fd0b33d31498c35f4b6558e26449978fddcce9fca0263d557ac7da3dc77"
+    },
+    {
+      "path": "D:\\python_software\\TreeDiagram\\examples\\lqr.json",
+      "sha256": "79456e66ed7f0f9f909493c12fb80272e778781d0a68f47bd4477b31c8c9d243"
+    },
+    {
+      "path": "D:\\python_software\\TreeDiagram\\tools\\verify_examples.py",
+      "sha256": "eb285c8e1ce8d5af9e174e7ef03e15d701de8e2c7e277a1241f2fca81c81054b"
+    },
+    {
+      "path": "D:\\python_software\\TreeDiagram\\src\\treediagram\\physics.py",
+      "sha256": "9812fd0c4f63677cbf42d0066b83ec9350dad9ff25a2423e2a5d56cf05a76669"
+    },
+    {
+      "path": "D:\\python_software\\TreeDiagram\\src\\treediagram\\simulation.py",
+      "sha256": "f4627202fdb97b4c6ee2344c611556ad7fb6bda5b6c71841e7122da1f87faee2"
+    },
+    {
+      "path": "D:\\python_software\\TreeDiagram\\src\\treediagram\\export.py",
+      "sha256": "df2d00d57b2e20c0672a9e2e2efc5618b671c88bb3a86a61ae8c858914b5ded0"
+    }
+  ],
+  "scope": "actual final run parameter adoption and generated Host consumer; no new ARM or hardware validation"
+}

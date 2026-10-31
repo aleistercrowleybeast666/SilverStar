@@ -1,0 +1,128 @@
+[
+  {
+    "profile": "S",
+    "scope": "current active",
+    "message": "POSITION",
+    "sequence": 0,
+    "boot_session": 305419896,
+    "fields": {
+      "latitude_e7": 0,
+      "longitude_e7": 1799999999,
+      "ellipsoid_height_mm": -12000,
+      "sample_age_ms": 12345,
+      "horizontal_accuracy_cm": 65534,
+      "position_flags": 15,
+      "satellite_count": 12
+    },
+    "hex": "011800007856341200000000ffd1496b20d1ffff39300000feff0f0c"
+  },
+  {
+    "profile": "S",
+    "scope": "current active",
+    "message": "HEALTH",
+    "sequence": 1,
+    "boot_session": 305419896,
+    "fields": {
+      "battery_mv": 0,
+      "battery_age_ds": 65534,
+      "known_mask": 2047,
+      "fault_mask": 66
+    },
+    "hex": "01190100785634120000feffff074200"
+  },
+  {
+    "profile": "S",
+    "scope": "current active",
+    "message": "ACK",
+    "sequence": 2,
+    "boot_session": 305419896,
+    "fields": {
+      "acked_sequence": 48879,
+      "command_id": 1,
+      "result": 0,
+      "time_ms": 123456
+    },
+    "hex": "0140020078563412efbe010040e20100"
+  },
+  {
+    "profile": "S",
+    "scope": "current active",
+    "message": "EVENT",
+    "sequence": 3,
+    "boot_session": 305419896,
+    "fields": {
+      "event_id": 270544960,
+      "occurred_us": 123456789,
+      "event_code": 256,
+      "stage_id": 287454020,
+      "instance_id": 2,
+      "transaction_id": 65534,
+      "arg0": 7,
+      "arg1": 9
+    },
+    "hex": "01200300785634124030201015cd5b07000000000001443322110200feff0709"
+  },
+  {
+    "profile": "H",
+    "scope": "historical read compatibility",
+    "message": "POSITION",
+    "sequence": 0,
+    "boot_session": 305419896,
+    "fields": {
+      "latitude_e7": 0,
+      "longitude_e7": 1799999999,
+      "ellipsoid_height_mm": -12000,
+      "sample_age_ms": 12345,
+      "horizontal_accuracy_cm": 65534,
+      "position_flags": 15,
+      "satellite_count": 12
+    },
+    "hex": "019800007856341200000000ffd1496b20d1ffff39300000feff0f0c"
+  },
+  {
+    "profile": "H",
+    "scope": "historical read compatibility",
+    "message": "HEALTH",
+    "sequence": 1,
+    "boot_session": 305419896,
+    "fields": {
+      "battery_mv": 0,
+      "battery_age_ds": 65534,
+      "known_mask": 2047,
+      "fault_mask": 66
+    },
+    "hex": "01990100785634120000feffff074200"
+  },
+  {
+    "profile": "H",
+    "scope": "historical read compatibility",
+    "message": "ACK",
+    "sequence": 2,
+    "boot_session": 305419896,
+    "fields": {
+      "acked_sequence": 48879,
+      "command_id": 1,
+      "result": 0,
+      "time_ms": 123456
+    },
+    "hex": "01c0020078563412efbe010040e20100"
+  },
+  {
+    "profile": "H",
+    "scope": "historical read compatibility",
+    "message": "EVENT",
+    "sequence": 3,
+    "boot_session": 305419896,
+    "fields": {
+      "event_id": 270544960,
+      "occurred_us": 123456789,
+      "event_code": 256,
+      "stage_id": 287454020,
+      "instance_id": 2,
+      "transaction_id": 65534,
+      "arg0": 7,
+      "arg1": 9
+    },
+    "hex": "01a00300785634124030201015cd5b07000000000001443322110200feff0709"
+  }
+]

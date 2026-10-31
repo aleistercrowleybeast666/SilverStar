@@ -1,0 +1,186 @@
+{
+  "head": "10e1eb3fd6b9a190946111d1a5a7572ef1965358",
+  "scope": "Current dirty source identity; generated-input hashes separately bind each compiled project.",
+  "entries": [
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/storage_integrity/run_storage_integrity.py",
+      "status": " M",
+      "sha256": "2f2c36485b0316e9b964b04d9b843d384cfd85dd69951e11d8a89c6cb91bef15"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_device_storage_sdmmc_fatfs_h7/plugin.json",
+      "status": " M",
+      "sha256": "b8757759bca9392c936d7712f573669328c1daf8bc491531f35c1b4f7f2cbea4"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_protocol_telemetry_ss_tm/docs/AIR_PROTOCOL.md",
+      "status": " M",
+      "sha256": "ef5121a57f9a9089ad2d60458f0be027e26a7984a31b35ebc513b082143ab922"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/assembler.py",
+      "status": " M",
+      "sha256": "92ad0e4c797fe3c03563cf264ec1754cde25f6e162ce0b8697686c79d9d8043c"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/source_graph.py",
+      "status": " M",
+      "sha256": "faf445612149d2f84202de918fa62df7cda688384a9557c12affb367e23e1e7a"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/i18n/en_US.json",
+      "status": " M",
+      "sha256": "51ccd24aeb57db0dd55be4184d8a876b81bbea8e16b897a6d6b1c3cba8fb3ce3"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/i18n/zh_CN.json",
+      "status": " M",
+      "sha256": "61d4f9e9b55bab9e667fe6bf629452d5988c2d283b538a61d89fc929f31a83eb"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/project/model.py",
+      "status": " M",
+      "sha256": "93fbf0b847caa700b0639983b891c3e23e6cf477ff9b86e33ae59ac5af5d73a1"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/mission_coverage.py",
+      "status": " M",
+      "sha256": "f7388170e17ecba76cbd2deb870052513c2f3039bd1b3645eaef237d257186b2"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/mission_stage_transaction.py",
+      "status": " M",
+      "sha256": "a25d883efd220af7fba707374acb911e9424934a03774e49a164b0aca66137e2"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/pages/build.py",
+      "status": " M",
+      "sha256": "c1860d85653cd12bbcf68d8b0862c1e81d0640c07cb23b0aeaa215c9bc8768b2"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/radio_transaction.py",
+      "status": " M",
+      "sha256": "d60340a1e16124374015605c1ec498cd1b05f1ae9f64b37410e376bc7916547e"
+    },
+    {
+      "path": "apps/SCG/tests/test_device_capability_architecture.py",
+      "status": " M",
+      "sha256": "9e927b8a8b724b51a77fdc40547822edc80b921ec8b998bc83c35a3622d533a6"
+    },
+    {
+      "path": "apps/SCG/tests/test_gui_smoke.py",
+      "status": " M",
+      "sha256": "c8af771785138b22f26b5a1e8098550af3d91cd915daf73fa9555fbee868d6a6"
+    },
+    {
+      "path": "apps/SCG/tests/test_i18n.py",
+      "status": " M",
+      "sha256": "ef7a6eef2afdfaf04bb77781cdd943edbca470d3861863aa1df0b6e9d283f01d"
+    },
+    {
+      "path": "apps/SCG/tests/test_radio_transaction.py",
+      "status": " M",
+      "sha256": "f3c5b5ea22e362d4eecdb702ecf87d27e56945b0d9e2fffaccc55f94edfdb6a6"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_device_storage_sdmmc_fatfs_h7/README.md",
+      "status": "??",
+      "sha256": "a981e74540b928c18127e270f5e3959c277415081b1f9a481bdce33e6449c99d"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_device_storage_sdmmc_fatfs_h7/payload/FATFS/Target/bsp_driver_sd.c",
+      "status": "??",
+      "sha256": "abf1f08d114379639b14b093e84557641d176985074414423387aa0677f52fe3"
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_device_storage_sdmmc_fatfs_h7/payload/FATFS/Target/sd_diskio.c",
+      "status": "??",
+      "sha256": "e25aaeaaac2f52eb3e7d46ede99f0f9245ed4658abf578fe5fa3748e6c50c719"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/h7_storage.py",
+      "status": "??",
+      "sha256": "14c6955d023d6520a951bb58034ecfb0dee36b543ec1f452c7817cbb8efee467"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/h7_diskio/ff_gen_drv.h",
+      "status": "??",
+      "sha256": "fdc8bfd11f4787ebd670cc8dd22d077c8efb43cacdbe7baad676d2bc084c5235"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/h7_diskio/test_diskio_faults.c",
+      "status": "??",
+      "sha256": "ff202c1061be189f16f42beb641ecb98d784b4c8e4592bdf1b5ac45fa2da8271"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/h7_storage/bsp_driver_sd.h",
+      "status": "??",
+      "sha256": "cddb3db3e8db976188aa15d87982d44acc01b24c677034cd9bc7914e0c087c4a"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/h7_storage/platform_memory.h",
+      "status": "??",
+      "sha256": "a6723a15a8c902fb5861fd88baf9a4df1437f1b57eb2d92694560f28c27558e7"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/h7_storage/sdmmc.h",
+      "status": "??",
+      "sha256": "1b6f683f2c5dade5d4c1de1bd4e08f4eca855f3872cc06fedaa1146a4e569b1c"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/h7_storage/test_bsp.c",
+      "status": "??",
+      "sha256": "17f8525c3281c733d8f454e4f7a9bf6b7e35bedabe32071d000fd523bb23ed17"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/legacy_project_fields/README.md",
+      "status": "??",
+      "sha256": "5f8710410f5672bfc7a99584a7d3397be0b60d96c7bf4a122c7de096c65ebcf4"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/legacy_project_fields/build_fixtures.py",
+      "status": "??",
+      "sha256": "2366dfbf2c39932ac8f42312723ddd910df69ee540106c0bd632797ea2d65a3e"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/legacy_project_fields/provenance.json",
+      "status": "??",
+      "sha256": "3e35a3d7b4bc7be7d1e3eca713442ce88d7be7f45a9bf150ca0cf903cb89351d"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/legacy_project_fields/v2.json",
+      "status": "??",
+      "sha256": "e3412ff009a6e946fce3db016fa8066ba1ebf5ec53c8ec9133dfb8e628ae93fe"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/legacy_project_fields/v3.json",
+      "status": "??",
+      "sha256": "4694cacb161f2e6be7f8a307728f64d43281506557cc5f98969e8e8c2ba6b142"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/legacy_project_fields/v4.json",
+      "status": "??",
+      "sha256": "25706722a146811415aa24a9d56f6ecd28e929ceb0c39e661fca0627a9f7ade9"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/legacy_project_fields/v5.json",
+      "status": "??",
+      "sha256": "835b48a4cf7dbfb0c28134cef1a862a85f2e9bf85157a1e46537e9ab4ae28653"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/legacy_project_fields/v6.json",
+      "status": "??",
+      "sha256": "ef03ed8e859283b0b5c41a232de9993ffde65b300c118bd1e54a6785c6b43b53"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/legacy_project_fields/v7.json",
+      "status": "??",
+      "sha256": "30166df156add6e49f40688cbce243aa1864ad1c058ee2638a02af158d26312a"
+    },
+    {
+      "path": "apps/SCG/tests/test_h7_storage_replacement.py",
+      "status": "??",
+      "sha256": "4423d2236e885f541ee3426390301c0a675fd42df429d1546a1fcf4222010747"
+    }
+  ]
+}

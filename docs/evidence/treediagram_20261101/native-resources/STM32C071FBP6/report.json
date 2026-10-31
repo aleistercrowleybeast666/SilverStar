@@ -1,0 +1,112 @@
+{
+  "part": "STM32C071FBP6",
+  "status": "linked private candidate; release gate remains blocked",
+  "method": "ARM objdump ALLOC VMA and LOAD LMA sections mapped to exact linked MEMORY regions; alignment span reported separately",
+  "stack_status": "NOT PROVEN; reserved linker bytes are included, not safe dynamic headroom",
+  "artifacts": {
+    "build\\native.elf": "8b5e09dfecef8d80eb66b05fbc7ee88c4e72c47591fd7cfb996cd3ddd00ddc68",
+    "build\\native.map": "30ddfdb376955738c9cdccf3f8dbafe31e400a73429f3ff406fc4de3da2a818e"
+  },
+  "regions": [
+    {
+      "name": "RAM",
+      "origin": 536870912,
+      "capacity_bytes": 24576,
+      "sections": [
+        {
+          "name": ".data",
+          "bytes": 336,
+          "address": 536870912,
+          "role": "run"
+        },
+        {
+          "name": ".bss",
+          "bytes": 8124,
+          "address": 536871248,
+          "role": "run"
+        },
+        {
+          "name": "._user_heap_stack",
+          "bytes": 2052,
+          "address": 536879372,
+          "role": "run"
+        }
+      ],
+      "used_bytes": 10512,
+      "allocated_span_bytes": 10512,
+      "unallocated_bytes_by_sum": 14064,
+      "tail_bytes_after_last_section": 14064
+    },
+    {
+      "name": "FLASH",
+      "origin": 134217728,
+      "capacity_bytes": 131072,
+      "sections": [
+        {
+          "name": ".isr_vector",
+          "bytes": 192,
+          "address": 134217728,
+          "role": "run"
+        },
+        {
+          "name": ".text",
+          "bytes": 40280,
+          "address": 134217920,
+          "role": "run"
+        },
+        {
+          "name": ".rodata",
+          "bytes": 1452,
+          "address": 134258200,
+          "role": "run"
+        },
+        {
+          "name": ".ARM",
+          "bytes": 8,
+          "address": 134259652,
+          "role": "run"
+        },
+        {
+          "name": ".init_array",
+          "bytes": 4,
+          "address": 134259660,
+          "role": "run"
+        },
+        {
+          "name": ".fini_array",
+          "bytes": 4,
+          "address": 134259664,
+          "role": "run"
+        },
+        {
+          "name": ".data",
+          "bytes": 336,
+          "address": 134259668,
+          "role": "load"
+        }
+      ],
+      "used_bytes": 42276,
+      "allocated_span_bytes": 42276,
+      "unallocated_bytes_by_sum": 88796,
+      "tail_bytes_after_last_section": 88796
+    }
+  ],
+  "commands": [
+    {
+      "command": [
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-size.exe",
+        "-A",
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\c071-v1\\candidate\\build\\native.elf"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-objdump.exe",
+        "-h",
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\c071-v1\\candidate\\build\\native.elf"
+      ],
+      "exit_code": 0
+    }
+  ]
+}

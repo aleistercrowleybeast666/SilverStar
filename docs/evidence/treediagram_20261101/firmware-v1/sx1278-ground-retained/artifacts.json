@@ -1,0 +1,42 @@
+[
+  {
+    "path": "build/ground-artifact.bin",
+    "bytes": 17500,
+    "sha256": "94437d64f962a6ece776bda4678120b17841fe3a52b06924310b18b49aaa30d0"
+  },
+  {
+    "path": "build/ground-vector.bin",
+    "bytes": 268,
+    "sha256": "58da9ab84b42579a310355096c413d426f7cd1164c36eb593b61882b3d730ba4"
+  },
+  {
+    "path": "build/ground.bin",
+    "bytes": 17500,
+    "sha256": "94437d64f962a6ece776bda4678120b17841fe3a52b06924310b18b49aaa30d0"
+  },
+  {
+    "path": "build/ground.elf",
+    "bytes": 42460,
+    "sha256": "31780238fcf841c22c18c3f71573dfc5efb17942568b629ecc958e23f05d18a1"
+  },
+  {
+    "path": "build/ground.map",
+    "bytes": 142966,
+    "sha256": "0e236536c04754530504ba25a7a75ee1d757b7e432ec9161d71b13161e5f101b"
+  },
+  {
+    "path": "build/analysis/ground.bin",
+    "bytes": 17500,
+    "sha256": "94437d64f962a6ece776bda4678120b17841fe3a52b06924310b18b49aaa30d0"
+  },
+  {
+    "path": "build/analysis/ground.elf",
+    "bytes": 42460,
+    "sha256": "31780238fcf841c22c18c3f71573dfc5efb17942568b629ecc958e23f05d18a1"
+  },
+  {
+    "path": "build/analysis/ground.map",
+    "bytes": 148942,
+    "sha256": "90b20014c581001a6148f958452ddaf93406b4fc941ab3b570d2e545d1b447c5"
+  }
+]

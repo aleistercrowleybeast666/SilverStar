@@ -1,0 +1,387 @@
+{
+  "platform": "offscreen",
+  "scale_factor": "1.25",
+  "scope": "Actual Qt widget renders and normal button/modal paths. Offscreen, not native desktop or hardware validation.",
+  "model_unchanged_after_all_cancel": true,
+  "shared_library_duplicate_function_forms": 0,
+  "surfaces": [
+    {
+      "name": "01-hardware",
+      "logical_width": 1320,
+      "logical_height": 900,
+      "pixels": [
+        1650,
+        1125
+      ],
+      "device_pixel_ratio": 1.25
+    },
+    {
+      "name": "02-workflow",
+      "logical_width": 1320,
+      "logical_height": 900,
+      "pixels": [
+        1650,
+        1125
+      ],
+      "device_pixel_ratio": 1.25
+    },
+    {
+      "name": "03-build",
+      "logical_width": 1320,
+      "logical_height": 900,
+      "pixels": [
+        1650,
+        1125
+      ],
+      "device_pixel_ratio": 1.25
+    },
+    {
+      "name": "04-radio-private-draft",
+      "logical_width": 780,
+      "logical_height": 680,
+      "pixels": [
+        975,
+        850
+      ],
+      "device_pixel_ratio": 1.25,
+      "layout_geometry": [
+        {
+          "kind": "QLabel",
+          "rect": [
+            11,
+            11,
+            758,
+            16
+          ],
+          "minimum": [
+            24,
+            16
+          ]
+        },
+        {
+          "kind": "QScrollArea",
+          "rect": [
+            11,
+            33,
+            758,
+            578
+          ],
+          "minimum": [
+            69,
+            69
+          ]
+        },
+        {
+          "kind": "QLabel",
+          "rect": [
+            11,
+            617,
+            758,
+            16
+          ],
+          "minimum": [
+            24,
+            16
+          ]
+        },
+        {
+          "kind": "QDialogButtonBox",
+          "rect": [
+            11,
+            639,
+            758,
+            30
+          ],
+          "minimum": [
+            106,
+            30
+          ]
+        }
+      ],
+      "button_boxes": [
+        {
+          "visible": true,
+          "rect": [
+            11,
+            639,
+            758,
+            30
+          ],
+          "buttons": [
+            {
+              "text": "\u5e94\u7528",
+              "visible": true
+            },
+            {
+              "text": "\u53d6\u6d88",
+              "visible": true
+            }
+          ]
+        }
+      ],
+      "bottom_hit": "QPushButton:"
+    },
+    {
+      "name": "05-stage-condition-and-references",
+      "logical_width": 1020,
+      "logical_height": 780,
+      "pixels": [
+        1275,
+        975
+      ],
+      "device_pixel_ratio": 1.25,
+      "layout_geometry": [
+        {
+          "kind": "QLabel",
+          "rect": [
+            20,
+            18,
+            980,
+            29
+          ],
+          "minimum": [
+            28,
+            29
+          ]
+        },
+        {
+          "kind": "QLabel",
+          "rect": [
+            20,
+            53,
+            980,
+            16
+          ],
+          "minimum": [
+            24,
+            16
+          ]
+        },
+        {
+          "kind": "NoneType",
+          "rect": [
+            20,
+            75,
+            980,
+            30
+          ],
+          "minimum": [
+            110,
+            30
+          ]
+        },
+        {
+          "kind": "QScrollArea",
+          "rect": [
+            20,
+            111,
+            980,
+            597
+          ],
+          "minimum": [
+            67,
+            67
+          ]
+        },
+        {
+          "kind": "QLabel",
+          "rect": [
+            20,
+            714,
+            980,
+            16
+          ],
+          "minimum": [
+            6,
+            16
+          ]
+        },
+        {
+          "kind": "QDialogButtonBox",
+          "rect": [
+            20,
+            736,
+            980,
+            30
+          ],
+          "minimum": [
+            154,
+            30
+          ]
+        }
+      ],
+      "button_boxes": [
+        {
+          "visible": false,
+          "rect": [
+            0,
+            0,
+            640,
+            480
+          ],
+          "buttons": [
+            {
+              "text": "\u5e94\u7528",
+              "visible": false
+            },
+            {
+              "text": "\u53d6\u6d88",
+              "visible": false
+            }
+          ]
+        },
+        {
+          "visible": true,
+          "rect": [
+            20,
+            736,
+            980,
+            30
+          ],
+          "buttons": [
+            {
+              "text": "\u786e\u8ba4\u9636\u6bb5\u914d\u7f6e",
+              "visible": true
+            },
+            {
+              "text": "\u53d6\u6d88",
+              "visible": true
+            }
+          ]
+        }
+      ],
+      "bottom_hit": "QPushButton:primaryButton"
+    },
+    {
+      "name": "06-single-ins-owner",
+      "logical_width": 1020,
+      "logical_height": 780,
+      "pixels": [
+        1275,
+        975
+      ],
+      "device_pixel_ratio": 1.25,
+      "layout_geometry": [
+        {
+          "kind": "QLabel",
+          "rect": [
+            20,
+            18,
+            980,
+            29
+          ],
+          "minimum": [
+            33,
+            29
+          ]
+        },
+        {
+          "kind": "QLabel",
+          "rect": [
+            20,
+            53,
+            980,
+            16
+          ],
+          "minimum": [
+            24,
+            16
+          ]
+        },
+        {
+          "kind": "NoneType",
+          "rect": [
+            20,
+            75,
+            980,
+            30
+          ],
+          "minimum": [
+            110,
+            30
+          ]
+        },
+        {
+          "kind": "QScrollArea",
+          "rect": [
+            20,
+            111,
+            980,
+            597
+          ],
+          "minimum": [
+            67,
+            67
+          ]
+        },
+        {
+          "kind": "QLabel",
+          "rect": [
+            20,
+            714,
+            980,
+            16
+          ],
+          "minimum": [
+            6,
+            16
+          ]
+        },
+        {
+          "kind": "QDialogButtonBox",
+          "rect": [
+            20,
+            736,
+            980,
+            30
+          ],
+          "minimum": [
+            106,
+            30
+          ]
+        }
+      ],
+      "button_boxes": [
+        {
+          "visible": false,
+          "rect": [
+            0,
+            0,
+            640,
+            480
+          ],
+          "buttons": [
+            {
+              "text": "\u5e94\u7528",
+              "visible": false
+            },
+            {
+              "text": "\u53d6\u6d88",
+              "visible": false
+            }
+          ]
+        },
+        {
+          "visible": true,
+          "rect": [
+            20,
+            736,
+            980,
+            30
+          ],
+          "buttons": [
+            {
+              "text": "\u5e94\u7528",
+              "visible": true
+            },
+            {
+              "text": "\u53d6\u6d88",
+              "visible": true
+            }
+          ]
+        }
+      ],
+      "bottom_hit": "QPushButton:primaryButton"
+    }
+  ]
+}

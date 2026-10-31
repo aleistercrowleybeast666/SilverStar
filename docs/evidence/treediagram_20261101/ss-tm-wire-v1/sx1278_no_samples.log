@@ -1,0 +1,4 @@
+Unavailable samples: flight=0 event=3 position=5 health=3
+TX_DONE type=32 first_ms=229
+TX_DONE type=32 maximum_gap_ms=250 last_ms=729
+sx1278_no_samples: 5024 checks, 0 failures

@@ -1,0 +1,6 @@
+{
+  "commit": "09c057a67acfc10e3ff387a4a8821c8ee0e83b0c",
+  "key_files_unchanged_during_run": true,
+  "tracked_scg_and_contracts_match_commit": true,
+  "scope": "receiver source stability only; no ARM/hardware validation"
+}

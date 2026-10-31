@@ -1,0 +1,1 @@
+Interrupted own v3 after missing C harness environment was diagnosed. Partial run is not full-suite evidence; final v5 uses newly compiled harnesses and portable shorter output paths.

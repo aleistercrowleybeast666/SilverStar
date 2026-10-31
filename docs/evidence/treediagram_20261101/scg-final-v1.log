@@ -1,0 +1,228 @@
+...............FFFF..................................................... [ 59%]
+........................................F.........                       [100%]
+================================== FAILURES ===================================
+______ test_normal_capsule_cancel_discards_parameters_and_ranges[cancel] ______
+
+workspace_window = (<silverstar_fccg.ui.main_window.MainWindow(0x1d449674ab0) at 0x000001D44FAEEE00>, [])
+qapp = <PySide6.QtWidgets.QApplication(0x1d44258d6a0) at 0x000001D4449D41C0>
+close_kind = 'cancel'
+
+    @pytest.mark.parametrize('close_kind', ['cancel', 'escape', 'close'])
+    def test_normal_capsule_cancel_discards_parameters_and_ranges(workspace_window, qapp, close_kind):
+        window, errors = workspace_window
+        window._model = window._service.ReferenceProject_Create('Cancel transaction')
+        window._Project_Refresh()
+        before = _Snapshot(window._model)
+        def Discard(dialog):
+            dialog.stage_editor.name_edit.setText('Keyboard coast draft')
+            owner = dialog._draft.strategies['ins']
+            dialog._Parameters_Reveal(owner)
+            editor = dialog.parameters.editors[(owner, 'mechanization_aggregation')]
+            editor.CommittedValue_Set(1)
+            dialog._Parameter_Set(owner, 'mechanization_aggregation', 1)
+            if close_kind == 'escape':
+                QTest.keyClick(dialog, Qt.Key.Key_Escape)
+            elif close_kind == 'close':
+                dialog.close()
+            else:
+                dialog.reject()
+>       _Capsule_Click(window, 'ascent', Discard)
+
+tests\test_three_workspace_workflow.py:269: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_three_workspace_workflow.py:50: in _Capsule_Click
+    raise outcomes[0]
+tests\test_three_workspace_workflow.py:39: in DuringDialog
+    interact(dialog)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+dialog = <silverstar_fccg.ui.mission_stage_transaction.MissionStageTransactionDialog(0x1d44d753a10, name="missionStageTransaction") at 0x000001D45288C3C0>
+
+    def Discard(dialog):
+        dialog.stage_editor.name_edit.setText('Keyboard coast draft')
+        owner = dialog._draft.strategies['ins']
+        dialog._Parameters_Reveal(owner)
+>       editor = dialog.parameters.editors[(owner, 'mechanization_aggregation')]
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: ('silverstar.algorithm.ins.coning2_sculling2', 'mechanization_aggregation')
+
+tests\test_three_workspace_workflow.py:260: KeyError
+______ test_normal_capsule_cancel_discards_parameters_and_ranges[escape] ______
+
+workspace_window = (<silverstar_fccg.ui.main_window.MainWindow(0x1d449672fb0) at 0x000001D4525DBF00>, [])
+qapp = <PySide6.QtWidgets.QApplication(0x1d44258d6a0) at 0x000001D4449D41C0>
+close_kind = 'escape'
+
+    @pytest.mark.parametrize('close_kind', ['cancel', 'escape', 'close'])
+    def test_normal_capsule_cancel_discards_parameters_and_ranges(workspace_window, qapp, close_kind):
+        window, errors = workspace_window
+        window._model = window._service.ReferenceProject_Create('Cancel transaction')
+        window._Project_Refresh()
+        before = _Snapshot(window._model)
+        def Discard(dialog):
+            dialog.stage_editor.name_edit.setText('Keyboard coast draft')
+            owner = dialog._draft.strategies['ins']
+            dialog._Parameters_Reveal(owner)
+            editor = dialog.parameters.editors[(owner, 'mechanization_aggregation')]
+            editor.CommittedValue_Set(1)
+            dialog._Parameter_Set(owner, 'mechanization_aggregation', 1)
+            if close_kind == 'escape':
+                QTest.keyClick(dialog, Qt.Key.Key_Escape)
+            elif close_kind == 'close':
+                dialog.close()
+            else:
+                dialog.reject()
+>       _Capsule_Click(window, 'ascent', Discard)
+
+tests\test_three_workspace_workflow.py:269: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_three_workspace_workflow.py:50: in _Capsule_Click
+    raise outcomes[0]
+tests\test_three_workspace_workflow.py:39: in DuringDialog
+    interact(dialog)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+dialog = <silverstar_fccg.ui.mission_stage_transaction.MissionStageTransactionDialog(0x1d449697ee0, name="missionStageTransaction") at 0x000001D446DCC6C0>
+
+    def Discard(dialog):
+        dialog.stage_editor.name_edit.setText('Keyboard coast draft')
+        owner = dialog._draft.strategies['ins']
+        dialog._Parameters_Reveal(owner)
+>       editor = dialog.parameters.editors[(owner, 'mechanization_aggregation')]
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: ('silverstar.algorithm.ins.coning2_sculling2', 'mechanization_aggregation')
+
+tests\test_three_workspace_workflow.py:260: KeyError
+______ test_normal_capsule_cancel_discards_parameters_and_ranges[close] _______
+
+workspace_window = (<silverstar_fccg.ui.main_window.MainWindow(0x1d449673b80) at 0x000001D450E482C0>, [])
+qapp = <PySide6.QtWidgets.QApplication(0x1d44258d6a0) at 0x000001D4449D41C0>
+close_kind = 'close'
+
+    @pytest.mark.parametrize('close_kind', ['cancel', 'escape', 'close'])
+    def test_normal_capsule_cancel_discards_parameters_and_ranges(workspace_window, qapp, close_kind):
+        window, errors = workspace_window
+        window._model = window._service.ReferenceProject_Create('Cancel transaction')
+        window._Project_Refresh()
+        before = _Snapshot(window._model)
+        def Discard(dialog):
+            dialog.stage_editor.name_edit.setText('Keyboard coast draft')
+            owner = dialog._draft.strategies['ins']
+            dialog._Parameters_Reveal(owner)
+            editor = dialog.parameters.editors[(owner, 'mechanization_aggregation')]
+            editor.CommittedValue_Set(1)
+            dialog._Parameter_Set(owner, 'mechanization_aggregation', 1)
+            if close_kind == 'escape':
+                QTest.keyClick(dialog, Qt.Key.Key_Escape)
+            elif close_kind == 'close':
+                dialog.close()
+            else:
+                dialog.reject()
+>       _Capsule_Click(window, 'ascent', Discard)
+
+tests\test_three_workspace_workflow.py:269: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_three_workspace_workflow.py:50: in _Capsule_Click
+    raise outcomes[0]
+tests\test_three_workspace_workflow.py:39: in DuringDialog
+    interact(dialog)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+dialog = <silverstar_fccg.ui.mission_stage_transaction.MissionStageTransactionDialog(0x1d44b659170, name="missionStageTransaction") at 0x000001D4543D4700>
+
+    def Discard(dialog):
+        dialog.stage_editor.name_edit.setText('Keyboard coast draft')
+        owner = dialog._draft.strategies['ins']
+        dialog._Parameters_Reveal(owner)
+>       editor = dialog.parameters.editors[(owner, 'mechanization_aggregation')]
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: ('silverstar.algorithm.ins.coning2_sculling2', 'mechanization_aggregation')
+
+tests\test_three_workspace_workflow.py:260: KeyError
+____ test_invalid_range_keeps_draft_and_referenced_stage_cannot_be_removed ____
+
+workspace_window = (<silverstar_fccg.ui.main_window.MainWindow(0x1d4496728f0) at 0x000001D446A31100>, [])
+qapp = <PySide6.QtWidgets.QApplication(0x1d44258d6a0) at 0x000001D4449D41C0>
+
+    def test_invalid_range_keeps_draft_and_referenced_stage_cannot_be_removed(workspace_window, qapp):
+        window, errors = workspace_window
+        model = window._service.ReferenceProject_Create('Invalid native range')
+        model.mission_process = MissionProcess_FirmwareDefault(acceleration_detection=True)
+        model.mission_functions = Functions_Derive(model, window._service.catalog)
+        function = next(row for row in model.mission_functions['functions'] if row['instance_id'] == 'recording')
+        function.update(start={'kind':'stage_enter','stage_id':'ascent'}, stop={'kind':'stage_exit','stage_id':'coast'})
+        model.mission_functions['schema_version'] = 2
+        window._model = model
+        window._Project_Refresh()
+        before = _Snapshot(window._model)
+        panel = window.workflow_page.stage_panel
+        panel.Stage_Remove('ascent')
+        assert panel.error.text() and _Snapshot(window._model) == before
+        def Invalid(dialog):
+            dialog.stage_editor.name_edit.setText('Keep this draft')
+            section = dialog.bindings[2]._sections['recording.range']
+            form = section.body.layout()
+            start = form.itemAt(0, form.ItemRole.FieldRole).widget()
+            stop = form.itemAt(1, form.ItemRole.FieldRole).widget()
+            start.setCurrentIndex(start.findData(('stage_enter', 'coast')))
+            stop.setCurrentIndex(stop.findData(('stage_exit', 'ascent')))
+            dialog.accept()
+            assert dialog.result() != QDialog.DialogCode.Accepted
+            assert dialog.error.text()
+            assert dialog.stage_editor.name_edit.text() == 'Keep this draft'
+            dialog.reject()
+>       _Capsule_Click(window, 'coast', Invalid)
+
+tests\test_three_workspace_workflow.py:303: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_three_workspace_workflow.py:50: in _Capsule_Click
+    raise outcomes[0]
+tests\test_three_workspace_workflow.py:39: in DuringDialog
+    interact(dialog)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+dialog = <silverstar_fccg.ui.mission_stage_transaction.MissionStageTransactionDialog(0x1d44bc54e60, name="missionStageTransaction") at 0x000001D454844780>
+
+    def Invalid(dialog):
+        dialog.stage_editor.name_edit.setText('Keep this draft')
+>       section = dialog.bindings[2]._sections['recording.range']
+                  ^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_three_workspace_workflow.py:292: IndexError
+_ test_async_gui_terminal_uses_batch_outcome_and_keeps_other_target_result[ground] _
+
+qapp = <PySide6.QtWidgets.QApplication(0x1d44258d6a0) at 0x000001D4449D41C0>
+window = <silverstar_fccg.ui.main_window.MainWindow(0x1d449673820) at 0x000001D4551D89C0>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-final-v1/test_async_gui_terminal_uses_b1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001D4547CE2E0>
+failed = 'ground'
+
+    @pytest.mark.parametrize("failed", ["", "ground"])
+    def test_async_gui_terminal_uses_batch_outcome_and_keeps_other_target_result(qapp, window, tmp_path, monkeypatch, failed):
+        from test_task_progress_busy import _Wait
+        inputs = _Inputs_Create(tmp_path)
+        window._project_root = tmp_path
+        window._model = inputs[0][2]
+        window.build_page.quality_target_checks["ground"].setChecked(True)
+        _Runner_Fake(monkeypatch, failed=failed)
+        window._Build_Request("architecture_check")
+        _Wait(qapp, lambda: window._active_worker is None)
+        terminal_details = {target: window.build_page.target_quality_labels[target]["architecture_check"].toolTip()
+                            for target in ("flight", "ground")}
+        assert window.progress_bar.property("taskState") == ("error" if failed else "success"), terminal_details
+        assert (window.progress_bar.value() == 1000) == (not failed)
+>       assert window.build_page.quality_result_labels["architecture_check"].property("statusLevel") == "success"
+E       AssertionError: assert 'info' == 'success'
+E         
+E         - success
+E         + info
+
+tests\test_target_quality_checks.py:377: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_three_workspace_workflow.py::test_normal_capsule_cancel_discards_parameters_and_ranges[cancel]
+FAILED tests/test_three_workspace_workflow.py::test_normal_capsule_cancel_discards_parameters_and_ranges[escape]
+FAILED tests/test_three_workspace_workflow.py::test_normal_capsule_cancel_discards_parameters_and_ranges[close]
+FAILED tests/test_three_workspace_workflow.py::test_invalid_range_keeps_draft_and_referenced_stage_cannot_be_removed
+FAILED tests/test_target_quality_checks.py::test_async_gui_terminal_uses_batch_outcome_and_keeps_other_target_result[ground]
+5 failed, 117 passed in 1240.06s (0:20:40)

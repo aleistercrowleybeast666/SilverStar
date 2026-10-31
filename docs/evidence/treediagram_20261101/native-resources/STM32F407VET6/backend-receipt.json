@@ -1,0 +1,30 @@
+{
+  "format_version": 1,
+  "status": "CompiledCandidate",
+  "scope": "PRIVATE_NATIVE_GROUND_BACKEND",
+  "started_utc": "2026-10-31T17:45:01.391998+00:00",
+  "finished_utc": "2026-10-31T17:46:58.739132+00:00",
+  "model_sha256": "76f397abd48b8cfd7bde189910925bab59ecd3d50da900302e87a3bccd0eb6d6",
+  "project_root": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\n2\\p9",
+  "snapshot_id": "4ab3bdc0be8ff5104cda55f3a122c094b189c1c15a0a8e31a4584a8de39a74c0",
+  "profile": "f407-tim1-indexed-v1",
+  "compile_receipt_sha256": "574acd0dbb592758fb1cf8e2522d6f953f4d2d00b1a9e90964af01d9ac83d4be",
+  "binding": {
+    "format_version": 1,
+    "scope": "PRIVATE_NATIVE_GROUND_BACKEND",
+    "profile": "f407-tim1-indexed-v1",
+    "hclk_hz": 168000000,
+    "facts_sha256": "326ef1613047ce65de0d5aef04f6fb58079308d00909c6895f4ed1c9655b1308",
+    "snapshot_id": "4ab3bdc0be8ff5104cda55f3a122c094b189c1c15a0a8e31a4584a8de39a74c0",
+    "spi": "SPI1",
+    "gpio": [
+      "RADIO_NSS",
+      "RADIO_RST",
+      "RADIO_BUSY",
+      "RADIO_DIO1"
+    ],
+    "formal_generation": "BLOCKED"
+  },
+  "failure": null,
+  "limits": "PRIVATE CANDIDATE ONLY; formal generation BLOCKED. NOT PROVEN: complete EP0/async lifecycle, manual critical contracts, whole-program stack/WCET and physical timing/hardware. F103 shared control ordinary integration only; independent USB safety review has no passed outcome. F407 shared EP0 repair not integrated."
+}

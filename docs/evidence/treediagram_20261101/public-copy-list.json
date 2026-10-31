@@ -1,0 +1,349 @@
+{
+  "schema": "silverstar.public-evidence-selection/1",
+  "source_relative_root": "docs/evidence/treediagram_20261101",
+  "receiver_code_commit": "09c057a67acfc10e3ff387a4a8821c8ee0e83b0c",
+  "note": "Original source and complete historical success/failure logs remain in the separately committed SilverStar evidence directory. This selection contains summaries, final logs, wire evidence and real Qt offscreen images; no generated firmware. The copying repository should add the actual SilverStar evidence commit to its provenance manifest after that commit exists.",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 58,
+      "sha256": "e4915c45c761c952dfeb3c2e66171ce7099e02f20fa89ec450400c3c1708cbb8"
+    },
+    {
+      "path": "REPORT_ZH.md",
+      "bytes": 25203,
+      "sha256": "956f9f68ed80b674e797a65c16b01387ac3730084b844baa5c46b681f8d64ecc"
+    },
+    {
+      "path": "RESOURCE_SUMMARY.md",
+      "bytes": 5959,
+      "sha256": "9eb0848f52cd061658c516a6b9926d06ac9d7c73338752b387606973fd38c5c6"
+    },
+    {
+      "path": "capability-v6-receipt.json",
+      "bytes": 1129,
+      "sha256": "f41cb54bbbe753a4f0110aa3892a3f5a6927f047439fc3386aaf02961706c28c"
+    },
+    {
+      "path": "capability-v6.exit",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "capability-v6.log",
+      "bytes": 113,
+      "sha256": "f200e6564b7aaccdcb6f46129e2f3375b05de32b6b18dc931ea37b2665f2dcf8"
+    },
+    {
+      "path": "code-stage-list.json",
+      "bytes": 28189,
+      "sha256": "03ca44c28345ab1cad02d86d74306c36b03e03fa2dd21ae0f73989d7ab187a25"
+    },
+    {
+      "path": "entry-v3.exit",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "entry-v3.log",
+      "bytes": 101,
+      "sha256": "757bd00b5b4ff003519b28b75a7fc24541594fd129c1de6bb0c382ebd64e6e26"
+    },
+    {
+      "path": "final-code-stage-list.json",
+      "bytes": 4280,
+      "sha256": "defb8a6290132ef13bb52d2d81f57034865af758f9af26557de7753aedb17f96"
+    },
+    {
+      "path": "flp-contract-v1.exit",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "flp-contract-v1.log",
+      "bytes": 102,
+      "sha256": "aaa2df13eac88372e537f26d47dfc9885a1c15811ecc8c745b29b461046e7f8c"
+    },
+    {
+      "path": "flp-v3.exit",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "flp-v3.log",
+      "bytes": 193,
+      "sha256": "e81c2256a8a2146b5616473c22d95fe060da0ca9f19f89bf4ea3c1535d69e65c"
+    },
+    {
+      "path": "gshc-full-v5.exit",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "gshc-full-v5.log",
+      "bytes": 1696,
+      "sha256": "989aeff1dc0c72c82f9ea7d56da9d97e4d89e281ce408fcfc9ea041d93a68b3a"
+    },
+    {
+      "path": "gui-offscreen-125-v8/01-hardware.png",
+      "bytes": 182579,
+      "sha256": "f6b29c9d830c967ad8382e3a2ee6804d51f9a2acfab9712219423085960b6f6a"
+    },
+    {
+      "path": "gui-offscreen-125-v8/02-workflow.png",
+      "bytes": 170839,
+      "sha256": "d493873f9c6ad22ef27c52d0e6976accd73ea6f54f9f1f1d45769b461fe180fe"
+    },
+    {
+      "path": "gui-offscreen-125-v8/03-build.png",
+      "bytes": 155522,
+      "sha256": "ba5d6c9bc1ee732a60a68150142532827054af9da89e398f3f9a5f5219263dff"
+    },
+    {
+      "path": "gui-offscreen-125-v8/04-radio-private-draft.png",
+      "bytes": 100981,
+      "sha256": "a94e20ef4f2335dd603aa6765fe44be3972654be78175aa7f78607f8960b92e2"
+    },
+    {
+      "path": "gui-offscreen-125-v8/05-stage-condition-and-references.png",
+      "bytes": 87982,
+      "sha256": "8fb6a6f353fef63839bc89b14a20b75b96e290f8f42a45ca93ab543ed1b649fa"
+    },
+    {
+      "path": "gui-offscreen-125-v8/06-single-ins-owner.png",
+      "bytes": 131212,
+      "sha256": "20ac39c3888b6094c08cd5d79715d34f68761a8f049ce9dd3f2ed0220cb59402"
+    },
+    {
+      "path": "gui-offscreen-125-v8/provenance.json",
+      "bytes": 7518,
+      "sha256": "71e8ad4ea9cc65f202ea4104fe307c26a35ccaa5b7d361ee1313144891d63ce0"
+    },
+    {
+      "path": "gui-offscreen-150-v8/01-hardware.png",
+      "bytes": 188871,
+      "sha256": "6cc434b4fd2db337fff064f8b6c1b83558459b371dbe54b241ffaacb789c9e56"
+    },
+    {
+      "path": "gui-offscreen-150-v8/02-workflow.png",
+      "bytes": 155593,
+      "sha256": "73de480be85802413905cf907960b6238bb2f8d0ce2854f45c5582f99a5970e4"
+    },
+    {
+      "path": "gui-offscreen-150-v8/03-build.png",
+      "bytes": 166729,
+      "sha256": "90418d846dd25362532ed21a70e10c6aa573320510469c6af23c593d0bef99c4"
+    },
+    {
+      "path": "gui-offscreen-150-v8/04-radio-private-draft.png",
+      "bytes": 101884,
+      "sha256": "8eb457889d13ab2f734e0183b61057fe97de548fba0fb9029fb540085f473640"
+    },
+    {
+      "path": "gui-offscreen-150-v8/05-stage-condition-and-references.png",
+      "bytes": 81206,
+      "sha256": "dfebca337608cff821e7c82dc6cb37e03336ffc91dc480bce231673d2b514dd9"
+    },
+    {
+      "path": "gui-offscreen-150-v8/06-single-ins-owner.png",
+      "bytes": 113056,
+      "sha256": "3e06dbccd2f82edd892a46dfdf5c18e58482c22a34438c1da46ea9d76f76e22e"
+    },
+    {
+      "path": "gui-offscreen-150-v8/provenance.json",
+      "bytes": 7426,
+      "sha256": "bfc46674c48432dca84ca9d869f86d6139cfd5a45403038dba562a2e1310a7c8"
+    },
+    {
+      "path": "layout-v3.exit",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "layout-v3.log",
+      "bytes": 113,
+      "sha256": "cb85f4d0dc5286ad6393d95d1a6b4d06fbb1a1de0209bf7b888a9a1da71de7f5"
+    },
+    {
+      "path": "native-v2.exit",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "native-v2.log",
+      "bytes": 113,
+      "sha256": "34c20ea06878b1b2903d3029ec2124dcf97b68fe4268dec6f8bcbf887f720e67"
+    },
+    {
+      "path": "python-environment.txt",
+      "bytes": 78,
+      "sha256": "1d8283f56812e0301bc17e38b918d1f6d560e08485c38e0b69f2d0486d527823"
+    },
+    {
+      "path": "resource-summary.json",
+      "bytes": 37241,
+      "sha256": "c061cb5c8680a664ab467b24ff42487a11be5e90c8d0585815ad36b47167630b"
+    },
+    {
+      "path": "scg-final-v2.exit",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "scg-final-v2.log",
+      "bytes": 195,
+      "sha256": "42970c0f38153f16a6f0f42f3c14fb6af866e39a3df6101ea5173469cefacdd5"
+    },
+    {
+      "path": "scg-resource-v1.exit",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "scg-resource-v1.log",
+      "bytes": 102,
+      "sha256": "a84a5535f2f117c868b74214f337eb5b60036514cd384e1ad8e9071b8d41059c"
+    },
+    {
+      "path": "scg-runtime-v2.exit",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "scg-runtime-v2.log",
+      "bytes": 195,
+      "sha256": "bd99d5ad938e7481a75d8a413e9e05b9bc65f00bc8c4fbacf37118e60c173185"
+    },
+    {
+      "path": "ss-tm-wire-v1/WIRE_BYTES_ZH.md",
+      "bytes": 7754,
+      "sha256": "ff3d1be2415aaf7333019fe17e12d1d9695c1d3e62ee7fe46646bd51a53a6c4e"
+    },
+    {
+      "path": "ss-tm-wire-v1/ack.log",
+      "bytes": 370,
+      "sha256": "bbde9e67a62dbe99fc756d6e8422ee05601bec76a0c5790ff1c8e272eb083d43"
+    },
+    {
+      "path": "ss-tm-wire-v1/burst.log",
+      "bytes": 374,
+      "sha256": "3ccefdc2b52a83f16764634744bc88663880392bdde553265b88fb875edbcdd1"
+    },
+    {
+      "path": "ss-tm-wire-v1/codec-c-vectors.log",
+      "bytes": 384,
+      "sha256": "2300e8a95c3a725c5b0cf5d5a39799b5c4bba38298d0b729219b76155e426ad7"
+    },
+    {
+      "path": "ss-tm-wire-v1/codec-compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "ss-tm-wire-v1/commands.json",
+      "bytes": 5574,
+      "sha256": "69c1d0b0c4224defdc3e567bd337311548f21b30eb012eb77cddaae33f4686a6"
+    },
+    {
+      "path": "ss-tm-wire-v1/golden-vectors.json",
+      "bytes": 3175,
+      "sha256": "d11f8d2cc97f3c0bf74548cce4728fe0789200de26805b3c92a08158700f4f40"
+    },
+    {
+      "path": "ss-tm-wire-v1/landed.log",
+      "bytes": 339,
+      "sha256": "77c372fa21dfcd68318d5514f3bfc02dd6bebf3000bdc0d26ca00323e2c53699"
+    },
+    {
+      "path": "ss-tm-wire-v1/local_start.log",
+      "bytes": 38,
+      "sha256": "3e572e974e954647853b2c318bcc5aeb9f858e50b7d956753e5fc9c05710afa0"
+    },
+    {
+      "path": "ss-tm-wire-v1/long.log",
+      "bytes": 378,
+      "sha256": "2d86e941d695a6ab14077a3a1b352da47d3e3c11d2dcd82c8bfd601c5cdba442"
+    },
+    {
+      "path": "ss-tm-wire-v1/lost_start_ack.log",
+      "bytes": 41,
+      "sha256": "1572ca6322080dc6b4be067ddb285d355032003a6d703c9880d47e986a26cbf6"
+    },
+    {
+      "path": "ss-tm-wire-v1/normal.log",
+      "bytes": 375,
+      "sha256": "b78096d8f301704beff725f7f0a6079ce89702ee7ffce8c16761c00be169e480"
+    },
+    {
+      "path": "ss-tm-wire-v1/observations.log",
+      "bytes": 37,
+      "sha256": "4c1f2f34db07ba9f672632c7dd13f8fb5d39c64b1e2304e04c6fe673a9744aff"
+    },
+    {
+      "path": "ss-tm-wire-v1/preflight.log",
+      "bytes": 116,
+      "sha256": "1ec2f139d7e77fd1c0888cbb477046802d28d5ef37fb264ee7538492e63c03db"
+    },
+    {
+      "path": "ss-tm-wire-v1/provenance.json",
+      "bytes": 1147,
+      "sha256": "53db0fb5b5a2e072d951ec29acd4d1d086d04dcaaac674fae169bd593cfaca20"
+    },
+    {
+      "path": "ss-tm-wire-v1/scheduler-compiler-receipt.json",
+      "bytes": 83195,
+      "sha256": "d2da13126ad3f2a7631155b7d9635df492e536c287ee0c18d3aea3b35c740ca3"
+    },
+    {
+      "path": "ss-tm-wire-v1/scheduler-measurements.json",
+      "bytes": 4408,
+      "sha256": "330d11090ca91060d7ccc518d1bc21ea6d470b8a494ccf804c44f9c25841b54b"
+    },
+    {
+      "path": "ss-tm-wire-v1/ss_tm_v0_1.json",
+      "bytes": 13102,
+      "sha256": "19e1c9ae05d173028e1e1e27db36cf46d9060037fbac61250854aa357f045fc3"
+    },
+    {
+      "path": "ss-tm-wire-v1/stage_event.log",
+      "bytes": 38,
+      "sha256": "1021e8b53e3adf294d30ae4c89365a087d633f91ac1c69752f101e84d37f453c"
+    },
+    {
+      "path": "ss-tm-wire-v1/stage_scope.log",
+      "bytes": 38,
+      "sha256": "a730574afa5cab5b633237f8f14fd689061f975c092c486f427123f4c30baae4"
+    },
+    {
+      "path": "ss-tm-wire-v1/start_ack_backlog.log",
+      "bytes": 282,
+      "sha256": "f2b812a01bf6f3e6c3794f71d3f1ecf35f52375a21c4b6994dc015ebdc2300ad"
+    },
+    {
+      "path": "ss-tm-wire-v1/start_event_full.log",
+      "bytes": 41,
+      "sha256": "db948da64227486cce9edbc9920fb9cd5eec0a64f5d8ebd042f25f389f194e0a"
+    },
+    {
+      "path": "ss-tm-wire-v1/start_order.log",
+      "bytes": 272,
+      "sha256": "6764a837a36b9171253549863f9cbfb200ff9e48bdd9cf1a98abbcb7269e80e2"
+    },
+    {
+      "path": "ss-tm-wire-v1/sx1278_airtime_events.log",
+      "bytes": 453,
+      "sha256": "2dc3d8450a05432fcebf1eb304ad5350eb6527b04e452cdf7c7d9f5979e82dbb"
+    },
+    {
+      "path": "ss-tm-wire-v1/sx1278_no_samples.log",
+      "bytes": 181,
+      "sha256": "f05a0e2107265689a7ad3c6d7e0dd56f3b0bbed33db36169b5f550694c5f29f5"
+    },
+    {
+      "path": "validation-scopes.json",
+      "bytes": 5393,
+      "sha256": "ba67ca4da32e4556d21471f56586ee6c8d52416551f6b74cfa70676267c31991"
+    }
+  ],
+  "total_bytes": 1883993
+}

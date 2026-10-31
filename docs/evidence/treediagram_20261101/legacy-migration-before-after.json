@@ -1,0 +1,184 @@
+{
+  "before_commit": "4f701b4a7822302dc0f4ac858549f7cc7fa4ba0e",
+  "before_source_sha256": "aac03215fab077cb6d9d02efb30fc7bdf0333c3b22565525629fd0a836922f25",
+  "after_source_sha256": "7fc2bb6b407a208f8e509ee00adf4effc416af3d591b166e2903782a3bbda76a",
+  "cases": [
+    {
+      "input": "v12.json",
+      "input_sha256": "9707a3984e9bb69fc8d9f81a37dcc0dabee795744f79a57cb6d644c835c0d75e",
+      "before": {
+        "status": "rejected",
+        "error_type": "ProjectModelError",
+        "message": "Project fields are invalid: missing air_link, missing alignment, missing ground_target"
+      },
+      "after": {
+        "status": "parsed",
+        "format_version": 24,
+        "protocols": {
+          "logging": "flight_log.0_0",
+          "maintenance": "maintenance.serial.0_0",
+          "telemetry": "air.m0"
+        },
+        "ground_hardware": "unselected",
+        "algorithm_parameters": {
+          "silverstar.algorithm.ins.coning2_sculling2": {
+            "gravity_mps2": 9.78,
+            "mechanization_aggregation": 2
+          },
+          "silverstar.algorithm.estimator.kf6": {
+            "gravity_mps2": 9.78,
+            "p0_position_e": 4.0,
+            "p0_position_n": 4.0,
+            "p0_position_u": 9.0,
+            "p0_velocity_e": 0.25,
+            "p0_velocity_n": 0.25,
+            "p0_velocity_u": 0.25,
+            "process_accel_std_e": 1.5,
+            "process_accel_std_n": 1.5,
+            "process_accel_std_u": 2.0,
+            "gnss_position_std_horizontal": 1.5,
+            "gnss_position_std_vertical": 2.5,
+            "gnss_velocity_std": 0.15,
+            "baro_std_m": 2.5,
+            "nis_1d_soft": 6.635,
+            "nis_1d_hard": 10.828,
+            "nis_2d_soft": 9.21,
+            "nis_2d_hard": 13.816,
+            "nis_3d_soft": 11.345,
+            "nis_3d_hard": 16.266,
+            "nis_max_r_scale": 10.0,
+            "gnss_velocity_vertical_scale": 1.75,
+            "gnss_reacquire_outage_ms": 300,
+            "gnss_position_measurement_delay_ms": 0,
+            "gnss_velocity_measurement_delay_ms": 270,
+            "baro_measurement_delay_ms": 0,
+            "gnss_integrity_enable": 1,
+            "gnss_integrity_max_gap_ms": 120,
+            "gnss_integrity_error_threshold_m": 10.0,
+            "gnss_integrity_recovery_threshold_m": 4.0,
+            "gnss_integrity_suspect_duration_ms": 2000,
+            "gnss_integrity_reject_duration_ms": 5000,
+            "gnss_integrity_recovery_duration_ms": 8000,
+            "gnss_integrity_position_r_scale": 4.0,
+            "gnss_integrity_hacc_max_m": 6.0,
+            "gnss_integrity_sacc_max_mps": 1.2
+          }
+        }
+      }
+    },
+    {
+      "input": "v2.json",
+      "input_sha256": "740bf4732691f135a8db61042af96d29faeade3bcbe5b1fa06f8f3c63fcb26b1",
+      "before": {
+        "status": "rejected",
+        "error_type": "ProjectModelError",
+        "message": "Project fields are invalid: missing air_link, missing alignment, missing ground_target"
+      },
+      "after": {
+        "status": "rejected",
+        "error_type": "ProjectModelError",
+        "message": "device instance must contain instance_id, plugin, interface and profile"
+      }
+    },
+    {
+      "input": "v3.json",
+      "input_sha256": "7fd566ad32acc89cd1a701e0ef4fc4fc2d2a3e0d85c0627b2cd9459e302f34e7",
+      "before": {
+        "status": "rejected",
+        "error_type": "ProjectModelError",
+        "message": "Project fields are invalid: missing air_link, missing alignment, missing ground_target"
+      },
+      "after": {
+        "status": "parsed",
+        "format_version": 24,
+        "protocols": {
+          "telemetry": "air.m0",
+          "maintenance": "maintenance.serial.0_0",
+          "logging": "flight_log.0_0"
+        },
+        "ground_hardware": "unselected",
+        "algorithm_parameters": {}
+      }
+    },
+    {
+      "input": "v4.json",
+      "input_sha256": "17e119bcbc69be00bda7f3a730b522425aa139b7e81eac46da3d14b72feadb72",
+      "before": {
+        "status": "rejected",
+        "error_type": "ProjectModelError",
+        "message": "Project fields are invalid: missing air_link, missing alignment, missing ground_target"
+      },
+      "after": {
+        "status": "parsed",
+        "format_version": 24,
+        "protocols": {
+          "telemetry": "air.m0",
+          "maintenance": "maintenance.serial.0_0",
+          "logging": "flight_log.0_0"
+        },
+        "ground_hardware": "unselected",
+        "algorithm_parameters": {}
+      }
+    },
+    {
+      "input": "v5.json",
+      "input_sha256": "5b2f1b57cee9930c73d2cff8c3b1d7b5f89ae72559e69e742135fa69c8fe5312",
+      "before": {
+        "status": "rejected",
+        "error_type": "ProjectModelError",
+        "message": "Project fields are invalid: missing air_link, missing alignment, missing ground_target"
+      },
+      "after": {
+        "status": "parsed",
+        "format_version": 24,
+        "protocols": {
+          "telemetry": "air.m0",
+          "maintenance": "maintenance.serial.0_0",
+          "logging": "flight_log.0_0"
+        },
+        "ground_hardware": "unselected",
+        "algorithm_parameters": {}
+      }
+    },
+    {
+      "input": "v6.json",
+      "input_sha256": "ab6a1924f41bfd90bba12a77050c00337ec3184844348575e79f775e21440331",
+      "before": {
+        "status": "rejected",
+        "error_type": "ProjectModelError",
+        "message": "Project fields are invalid: missing air_link, missing alignment, missing ground_target"
+      },
+      "after": {
+        "status": "parsed",
+        "format_version": 24,
+        "protocols": {
+          "telemetry": "air.m0",
+          "maintenance": "maintenance.serial.0_0",
+          "logging": "flight_log.0_0"
+        },
+        "ground_hardware": "unselected",
+        "algorithm_parameters": {}
+      }
+    },
+    {
+      "input": "v7.json",
+      "input_sha256": "953d6f0759643ceb6a8b7d4e6e54552b5196c8ee983ea0d4b3663565ba2ba94a",
+      "before": {
+        "status": "rejected",
+        "error_type": "ProjectModelError",
+        "message": "Project fields are invalid: missing air_link, missing alignment, missing ground_target"
+      },
+      "after": {
+        "status": "parsed",
+        "format_version": 24,
+        "protocols": {
+          "telemetry": "air.m0",
+          "maintenance": "maintenance.serial.0_0",
+          "logging": "flight_log.0_0"
+        },
+        "ground_hardware": "unselected",
+        "algorithm_parameters": {}
+      }
+    }
+  ]
+}

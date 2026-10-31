@@ -1,0 +1,80 @@
+.......FF                                                                [100%]
+================================== FAILURES ===================================
+____ test_shared_source_group_and_dependency_apply_once_cancel_and_reopen _____
+
+workspace_window = (<silverstar_fccg.ui.main_window.MainWindow(0x1ef8252dd30) at 0x000001EF803A2E40>, [])
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/workflow-v1/test_shared_source_group_and_d0')
+qapp = <PySide6.QtWidgets.QApplication(0x1effab46f20) at 0x000001EFFDD0E680>
+
+    def _InFunction(stage_dialog, identity, edit):
+        from PySide6.QtCore import QTimer
+        from PySide6.QtWidgets import QApplication
+        outcomes = []
+        def During():
+            dialog = QApplication.activeModalWidget()
+            try:
+                assert dialog is not stage_dialog
+                assert dialog._function_id == identity
+                assert sum(len(editor._sections) for editor in dialog.bindings) == 2
+                edit(dialog)
+                dialog.accept()
+                assert dialog.result() == QDialog.DialogCode.Accepted, dialog.error.text()
+                outcomes.append(None)
+            except BaseException as error:
+                outcomes.append(error)
+                dialog.reject()
+        QTimer.singleShot(0, During)
+        stage_dialog._FunctionDialog_Open(identity, stage_dialog.stage_editor._process['stages'][stage_dialog.stage_editor._index]['stage_id'])
+>       assert outcomes
+
+tests\test_workflow_connections.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_three_workspace_workflow.py:50: in _Capsule_Click
+    raise outcomes[0]
+tests\test_three_workspace_workflow.py:39: in DuringDialog
+    interact(dialog)
+tests\test_workflow_connections.py:55: in <lambda>
+    assert outcomes
+                    
+tests\test_workflow_connections.py:44: in Edit
+    assert dialog._function_id == identity
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+dialog = <silverstar_fccg.ui.mission_stage_transaction.MissionStageTransactionDialog(0x1ef83e4ae40, name="missionStageTransaction") at 0x000001EF87BC0FC0>
+provider = 'imu1'
+
+    def _Source_Choose(dialog, provider):
+        combo = dialog.findChild(StandardComboBox, 'functionInput_ins_imu.acceleration')
+>       assert combo is not None and combo.isEnabled()
+E       assert (None is not None)
+
+tests\test_workflow_connections.py:24: AssertionError
+_____ test_dependency_outside_owner_interval_keeps_modal_draft_for_repair _____
+
+workspace_window = (<silverstar_fccg.ui.main_window.MainWindow(0x1ef8252c230) at 0x000001EF87D52940>, [])
+qapp = <PySide6.QtWidgets.QApplication(0x1effab46f20) at 0x000001EFFDD0E680>
+
+>   ???
+
+tests\test_workflow_connections.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_three_workspace_workflow.py:50: in _Capsule_Click
+    raise outcomes[0]
+tests\test_three_workspace_workflow.py:39: in DuringDialog
+    interact(dialog)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+dialog = <silverstar_fccg.ui.mission_stage_transaction.MissionStageTransactionDialog(0x1ef86525170, name="missionStageTransaction") at 0x000001EF88139FC0>
+
+        assert current.currentData() == 'imu0'
+    _InFunction(dialog, 'ins', Inspect)
+>   if apply:
+           ^^^
+E   AttributeError: 'NoneType' object has no attribute 'isEnabled'
+
+tests\test_workflow_connections.py:109: AttributeError
+=========================== short test summary info ===========================
+FAILED tests/test_workflow_connections.py::test_shared_source_group_and_dependency_apply_once_cancel_and_reopen
+FAILED tests/test_workflow_connections.py::test_dependency_outside_owner_interval_keeps_modal_draft_for_repair
+2 failed, 7 passed in 61.69s (0:01:01)

@@ -1,0 +1,7 @@
+TX_DONE type=64 first_ms=183
+TX_DONE type=64 maximum_gap_ms=0 last_ms=183
+TX_DONE type=32 first_ms=268
+TX_DONE type=32 maximum_gap_ms=602 last_ms=1277
+TX_DONE type=16 first_ms=385
+TX_DONE type=16 maximum_gap_ms=205 last_ms=1785
+start_order: 1868 checks, 0 failures

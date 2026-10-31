@@ -1,0 +1,35 @@
+
+D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\n2\o22\b\build\native.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   0000010c  08000000  08000000  00001000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  1 .text         0000982c  08000110  08000110  00001110  2**3
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       00000250  0800993c  0800993c  0000a93c  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .ARM.extab    00000000  08009b8c  08009b8c  0000b1d4  2**0
+                  CONTENTS, READONLY
+  4 .ARM          00000008  08009b8c  08009b8c  0000ab8c  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  5 .preinit_array 00000000  08009b94  08009b94  0000b1d4  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  08009b94  08009b94  0000ab94  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  7 .fini_array   00000004  08009b98  08009b98  0000ab98  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  8 .data         000001d4  20000000  08009b9c  0000b000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .bss          00002254  200001d8  08009d70  0000b1d8  2**3
+                  ALLOC
+ 10 ._user_heap_stack 00000804  2000242c  08009d70  0000b42c  2**0
+                  ALLOC
+ 11 .ARM.attributes 00000029  00000000  00000000  0000b1d4  2**0
+                  CONTENTS, READONLY
+ 12 .comment      00000046  00000000  00000000  0000b1fd  2**0
+                  CONTENTS, READONLY
+ 13 .debug_frame  00000378  00000000  00000000  0000b244  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 14 .debug_line_str 000001c5  00000000  00000000  0000b5bc  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS

@@ -1,0 +1,8 @@
+TM profile=0 scenario=ack flight=50 position=10 health=5 event=0 completed=66 failed=0 mode=1 rx=1
+TX_DONE type=16 first_ms=300
+TX_DONE type=16 maximum_gap_ms=200 last_ms=9913
+TX_DONE type=24 first_ms=613
+TX_DONE type=24 maximum_gap_ms=1000 last_ms=9192
+TX_DONE type=25 first_ms=796
+TX_DONE type=25 maximum_gap_ms=2000 last_ms=8379
+ack: 10283 checks, 0 failures

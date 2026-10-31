@@ -1,0 +1,996 @@
+
+=================================== ERRORS ====================================
+__________ ERROR collecting apps/GSHC/tests/test_acceptance14_ui.py ___________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_acceptance14_ui.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_acceptance14_ui.py:8: in <module>
+    from services.i18n import I18n
+E   ModuleNotFoundError: No module named 'services'
+_____ ERROR collecting apps/GSHC/tests/test_acceptance15_transactions.py ______
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_acceptance15_transactions.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_acceptance15_transactions.py:12: in <module>
+    from app import Controller
+E   ModuleNotFoundError: No module named 'app'
+____ ERROR collecting apps/GSHC/tests/test_acceptance41_local_rejection.py ____
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_acceptance41_local_rejection.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_acceptance41_local_rejection.py:10: in <module>
+    from app import Controller
+E   ModuleNotFoundError: No module named 'app'
+____________ ERROR collecting apps/GSHC/tests/test_air_protocol.py ____________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_air_protocol.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_air_protocol.py:7: in <module>
+    from protocol.air import (
+E   ModuleNotFoundError: No module named 'protocol'
+___________ ERROR collecting apps/GSHC/tests/test_axis_notation.py ____________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_axis_notation.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_axis_notation.py:6: in <module>
+    from processing.flight_plotter import FlightPlotter
+E   ModuleNotFoundError: No module named 'processing'
+_______ ERROR collecting apps/GSHC/tests/test_calibration_capability.py _______
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_calibration_capability.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_calibration_capability.py:14: in <module>
+    from app import AIR_CMD_MAX_RETRIES
+E   ModuleNotFoundError: No module named 'app'
+_____________ ERROR collecting apps/GSHC/tests/test_data_paths.py _____________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_data_paths.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_data_paths.py:14: in <module>
+    import config
+E   ModuleNotFoundError: No module named 'config'
+___________ ERROR collecting apps/GSHC/tests/test_device_export.py ____________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_device_export.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_device_export.py:11: in <module>
+    from services.device_export import DeviceExport, ExportCancelled
+E   ModuleNotFoundError: No module named 'services'
+________ ERROR collecting apps/GSHC/tests/test_device_export_dialog.py ________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_device_export_dialog.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_device_export_dialog.py:9: in <module>
+    from services.i18n import I18n, Language
+E   ModuleNotFoundError: No module named 'services'
+_________ ERROR collecting apps/GSHC/tests/test_diagnostic_labels.py __________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_diagnostic_labels.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_diagnostic_labels.py:3: in <module>
+    from ui.diagnostic_labels import DiagnosticValue_Format,DiagnosticReason_Format,WatchValue_Format
+E   ModuleNotFoundError: No module named 'ui'
+___ ERROR collecting apps/GSHC/tests/test_diagnostics_descriptor_offline.py ___
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_diagnostics_descriptor_offline.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_diagnostics_descriptor_offline.py:6: in <module>
+    from silverstar_diagnostics.contract import DiagnosticError
+E   ModuleNotFoundError: No module named 'silverstar_diagnostics'
+______ ERROR collecting apps/GSHC/tests/test_diagnostics_eide_offline.py ______
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_diagnostics_eide_offline.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_diagnostics_eide_offline.py:11: in <module>
+    from silverstar_diagnostics.eide import EideHooks_Create, EideHooks_Merge, EideDiagnostics_Bind
+E   ModuleNotFoundError: No module named 'silverstar_diagnostics'
+________________ ERROR collecting apps/GSHC/tests/test_docs.py ________________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_docs.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_docs.py:10: in <module>
+    from protocol import air
+E   ModuleNotFoundError: No module named 'protocol'
+__________ ERROR collecting apps/GSHC/tests/test_export_features.py ___________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_export_features.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_export_features.py:13: in <module>
+    from processing.flight_log_processor import (
+E   ModuleNotFoundError: No module named 'processing'
+____ ERROR collecting apps/GSHC/tests/test_file_service_activity_budget.py ____
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_file_service_activity_budget.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_file_service_activity_budget.py:6: in <module>
+    from services.device_export import ExportCancelled
+E   ModuleNotFoundError: No module named 'services'
+________ ERROR collecting apps/GSHC/tests/test_file_service_backend.py ________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_file_service_backend.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_file_service_backend.py:5: in <module>
+    from services.file_service_block import Block_Decode
+E   ModuleNotFoundError: No module named 'services'
+_________ ERROR collecting apps/GSHC/tests/test_file_service_batch.py _________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_file_service_batch.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_file_service_batch.py:10: in <module>
+    from services.device_export import ExportCancelled
+E   ModuleNotFoundError: No module named 'services'
+_________ ERROR collecting apps/GSHC/tests/test_file_service_block.py _________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_file_service_block.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_file_service_block.py:9: in <module>
+    from services.device_export import ExportCancelled
+E   ModuleNotFoundError: No module named 'services'
+_ ERROR collecting apps/GSHC/tests/test_file_service_capability_classification.py _
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_file_service_capability_classification.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_file_service_capability_classification.py:3: in <module>
+    from services.file_service_client import FileServiceClient,FileServiceError,FileServiceResult
+E   ModuleNotFoundError: No module named 'services'
+________ ERROR collecting apps/GSHC/tests/test_file_service_client.py _________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_file_service_client.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_file_service_client.py:12: in <module>
+    from services.device_export import ExportCancelled
+E   ModuleNotFoundError: No module named 'services'
+_ ERROR collecting apps/GSHC/tests/test_file_service_owner_classification.py __
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_file_service_owner_classification.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_file_service_owner_classification.py:4: in <module>
+    import ui.file_transfer as module
+E   ModuleNotFoundError: No module named 'ui'
+____ ERROR collecting apps/GSHC/tests/test_file_service_probe_boundary.py _____
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_file_service_probe_boundary.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_file_service_probe_boundary.py:7: in <module>
+    import transport.file_service_backend as backend
+E   ModuleNotFoundError: No module named 'transport'
+_______ ERROR collecting apps/GSHC/tests/test_file_service_recovery.py ________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_file_service_recovery.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_file_service_recovery.py:9: in <module>
+    from services.device_export import ExportCancelled
+E   ModuleNotFoundError: No module named 'services'
+__________ ERROR collecting apps/GSHC/tests/test_file_transfer_ui.py __________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_file_transfer_ui.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_file_transfer_ui.py:12: in <module>
+    from app import Controller
+E   ModuleNotFoundError: No module named 'app'
+__________ ERROR collecting apps/GSHC/tests/test_firmware_status.py ___________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_firmware_status.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_firmware_status.py:9: in <module>
+    from services.file_service_client import FileServiceClient, FileServiceError
+E   ModuleNotFoundError: No module named 'services'
+_______ ERROR collecting apps/GSHC/tests/test_flight_status_compact.py ________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_flight_status_compact.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_flight_status_compact.py:9: in <module>
+    from services.i18n import I18n
+E   ModuleNotFoundError: No module named 'services'
+______ ERROR collecting apps/GSHC/tests/test_gui_maintenance_workflow.py ______
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_gui_maintenance_workflow.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_gui_maintenance_workflow.py:12: in <module>
+    from app import Controller
+E   ModuleNotFoundError: No module named 'app'
+______ ERROR collecting apps/GSHC/tests/test_gui_protocol_boundaries.py _______
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_gui_protocol_boundaries.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_gui_protocol_boundaries.py:6: in <module>
+    from services.device_export import ExportCancelled
+E   ModuleNotFoundError: No module named 'services'
+_____ ERROR collecting apps/GSHC/tests/test_header_connection_20261005.py _____
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_header_connection_20261005.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_header_connection_20261005.py:12: in <module>
+    from services.i18n import I18n
+E   ModuleNotFoundError: No module named 'services'
+_______ ERROR collecting apps/GSHC/tests/test_horizontal_trajectory.py ________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_horizontal_trajectory.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_horizontal_trajectory.py:4: in <module>
+    from processing.flight_plotter import FlightPlotter, PlotterConfig
+E   ModuleNotFoundError: No module named 'processing'
+________________ ERROR collecting apps/GSHC/tests/test_i18n.py ________________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_i18n.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_i18n.py:13: in <module>
+    from protocol.common import AirStatusId, GspType
+E   ModuleNotFoundError: No module named 'protocol'
+_____ ERROR collecting apps/GSHC/tests/test_installation_active_owner.py ______
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_installation_active_owner.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_installation_active_owner.py:13: in <module>
+    from services.installation_calibration_backend import InstallationBackend, InstallationResult
+E   ModuleNotFoundError: No module named 'services'
+_____ ERROR collecting apps/GSHC/tests/test_installation_active_packet.py _____
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_installation_active_packet.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_installation_active_packet.py:9: in <module>
+    from services.installation_calibration_active import ActivePacket_FromCandidate, ActivePacket_Check
+E   ModuleNotFoundError: No module named 'services'
+__ ERROR collecting apps/GSHC/tests/test_installation_calibration_backend.py __
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_installation_calibration_backend.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_installation_calibration_backend.py:15: in <module>
+    from services.installation_calibration_backend import (InstallationBackend, InstallationCapabilities_Parse,
+E   ModuleNotFoundError: No module named 'services'
+_______ ERROR collecting apps/GSHC/tests/test_installation_candidate.py _______
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_installation_candidate.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_installation_candidate.py:9: in <module>
+    from services.installation_calibration_backend import InstallationBackend,InstallationResult
+E   ModuleNotFoundError: No module named 'services'
+___ ERROR collecting apps/GSHC/tests/test_installation_capture_contract.py ____
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_installation_capture_contract.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_installation_capture_contract.py:9: in <module>
+    from services.installation_calibration_backend import InstallationBinding_Parse, InstallationCapabilities_Parse
+E   ModuleNotFoundError: No module named 'services'
+_____ ERROR collecting apps/GSHC/tests/test_installation_owner_adapter.py _____
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_installation_owner_adapter.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_installation_owner_adapter.py:17: in <module>
+    from services.installation_calibration_backend import InstallationBackend,InstallationResult
+E   ModuleNotFoundError: No module named 'services'
+_____ ERROR collecting apps/GSHC/tests/test_installation_workflow_gui.py ______
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_installation_workflow_gui.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_installation_workflow_gui.py:9: in <module>
+    from services.installation_calibration_backend import (InstallationBackend, InstallationCapabilities_Parse,
+E   ModuleNotFoundError: No module named 'services'
+_______ ERROR collecting apps/GSHC/tests/test_legacy_firmware_status.py _______
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_legacy_firmware_status.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_legacy_firmware_status.py:6: in <module>
+    from services.device_export import ExportCancelled
+E   ModuleNotFoundError: No module named 'services'
+______ ERROR collecting apps/GSHC/tests/test_magnetometer_calibration.py ______
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_magnetometer_calibration.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_magnetometer_calibration.py:5: in <module>
+    from services.magnetometer_calibration import (
+E   ModuleNotFoundError: No module named 'services'
+____ ERROR collecting apps/GSHC/tests/test_magnetometer_calibration_ui.py _____
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_magnetometer_calibration_ui.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_magnetometer_calibration_ui.py:5: in <module>
+    from services.i18n import I18n
+E   ModuleNotFoundError: No module named 'services'
+________ ERROR collecting apps/GSHC/tests/test_magnetometer_dialog.py _________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_magnetometer_dialog.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_magnetometer_dialog.py:15: in <module>
+    from app import Controller
+E   ModuleNotFoundError: No module named 'app'
+______ ERROR collecting apps/GSHC/tests/test_magnetometer_maintenance.py ______
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_magnetometer_maintenance.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_magnetometer_maintenance.py:3: in <module>
+    from services.magnetometer_calibration import (
+E   ModuleNotFoundError: No module named 'services'
+________ ERROR collecting apps/GSHC/tests/test_magnetometer_preview.py ________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_magnetometer_preview.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_magnetometer_preview.py:5: in <module>
+    from services.i18n import I18n, Language
+E   ModuleNotFoundError: No module named 'services'
+_______ ERROR collecting apps/GSHC/tests/test_magnetometer_transport.py _______
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_magnetometer_transport.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_magnetometer_transport.py:6: in <module>
+    from services.magnetometer_maintenance import MagMaintenanceDecoder
+E   ModuleNotFoundError: No module named 'services'
+_______ ERROR collecting apps/GSHC/tests/test_magnetometer_workflow.py ________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_magnetometer_workflow.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_magnetometer_workflow.py:4: in <module>
+    from services.magnetometer_calibration import MagCalibrationFitStatus
+E   ModuleNotFoundError: No module named 'services'
+__________ ERROR collecting apps/GSHC/tests/test_maintenance_api.py ___________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_maintenance_api.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_maintenance_api.py:10: in <module>
+    from maintenance_cli import MaintenanceCli_Run
+E   ModuleNotFoundError: No module named 'maintenance_cli'
+_____ ERROR collecting apps/GSHC/tests/test_maintenance_serial_profile.py _____
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_maintenance_serial_profile.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_maintenance_serial_profile.py:5: in <module>
+    from services.maintenance_serial_profile import MaintenanceSerial_Check, MaintenanceSerial_Timeout
+E   ModuleNotFoundError: No module named 'services'
+_____ ERROR collecting apps/GSHC/tests/test_maintenance_trace_priority.py _____
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_maintenance_trace_priority.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_maintenance_trace_priority.py:5: in <module>
+    from services.maintenance_trace import MaintenanceTrace
+E   ModuleNotFoundError: No module named 'services'
+__________ ERROR collecting apps/GSHC/tests/test_mission_profile.py ___________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_mission_profile.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_mission_profile.py:10: in <module>
+    from services.i18n import I18n, Language
+E   ModuleNotFoundError: No module named 'services'
+_________ ERROR collecting apps/GSHC/tests/test_mission_trajectory.py _________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_mission_trajectory.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_mission_trajectory.py:5: in <module>
+    from config import HORIZONTAL_TRAJECTORY_MAX_POINTS, UI_EVENT_HISTORY_LIMIT
+E   ModuleNotFoundError: No module named 'config'
+___________ ERROR collecting apps/GSHC/tests/test_navigation_gui.py ___________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_navigation_gui.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_navigation_gui.py:12: in <module>
+    from protocol.air import parse_air_frame
+E   ModuleNotFoundError: No module named 'protocol'
+________ ERROR collecting apps/GSHC/tests/test_navigation_readiness.py ________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_navigation_readiness.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_navigation_readiness.py:7: in <module>
+    from test_start_ack_state import capability, configure_ready, make_controller
+apps\GSHC\tests\test_start_ack_state.py:8: in <module>
+    from app import Controller, PendingAirCommand, format_air_status_message
+E   ModuleNotFoundError: No module named 'app'
+__________ ERROR collecting apps/GSHC/tests/test_nrf24_transport.py ___________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_nrf24_transport.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_nrf24_transport.py:8: in <module>
+    from protocol.gsp_min import GspFrame, GsToPcAirFrame, GspParser, build_gsp_frame, parse_gsp_frame
+E   ModuleNotFoundError: No module named 'protocol'
+____________ ERROR collecting apps/GSHC/tests/test_packet_loss.py _____________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_packet_loss.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_packet_loss.py:10: in <module>
+    from processing.flight_log_processor import (
+E   ModuleNotFoundError: No module named 'processing'
+______________ ERROR collecting apps/GSHC/tests/test_port_gui.py ______________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_port_gui.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_port_gui.py:15: in <module>
+    from app import Controller
+E   ModuleNotFoundError: No module named 'app'
+__________ ERROR collecting apps/GSHC/tests/test_position_display.py __________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_position_display.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_position_display.py:7: in <module>
+    from processing.flight_log_processor import FlightData, TimedVector
+E   ModuleNotFoundError: No module named 'processing'
+__________ ERROR collecting apps/GSHC/tests/test_probe_inventory.py ___________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_probe_inventory.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_probe_inventory.py:6: in <module>
+    from transport import probe_inventory as inventory
+E   ModuleNotFoundError: No module named 'transport'
+______________ ERROR collecting apps/GSHC/tests/test_probe_ui.py ______________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_probe_ui.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_probe_ui.py:13: in <module>
+    from services.i18n import I18n
+E   ModuleNotFoundError: No module named 'services'
+_________ ERROR collecting apps/GSHC/tests/test_qt_test_lifecycle.py __________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_qt_test_lifecycle.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_qt_test_lifecycle.py:13: in <module>
+    from services.i18n import I18n
+E   ModuleNotFoundError: No module named 'services'
+__________ ERROR collecting apps/GSHC/tests/test_receive_pipeline.py __________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_receive_pipeline.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_receive_pipeline.py:10: in <module>
+    from protocol.air import (
+E   ModuleNotFoundError: No module named 'protocol'
+_________ ERROR collecting apps/GSHC/tests/test_reconnect_recovery.py _________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_reconnect_recovery.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_reconnect_recovery.py:3: in <module>
+    from protocol.air import AirAckMessage, AirStatusMessage
+E   ModuleNotFoundError: No module named 'protocol'
+___________ ERROR collecting apps/GSHC/tests/test_release_layout.py ___________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_release_layout.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_release_layout.py:8: in <module>
+    from config import APP_VERSION
+E   ModuleNotFoundError: No module named 'config'
+________ ERROR collecting apps/GSHC/tests/test_runtime_diagnostics.py _________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_runtime_diagnostics.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_runtime_diagnostics.py:4: in <module>
+    from services.file_service_client import FileServiceError
+E   ModuleNotFoundError: No module named 'services'
+__________ ERROR collecting apps/GSHC/tests/test_sensor_snapshot.py ___________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_sensor_snapshot.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_sensor_snapshot.py:5: in <module>
+    from protocol.air import AirSensorStatusMessage
+E   ModuleNotFoundError: No module named 'protocol'
+_______________ ERROR collecting apps/GSHC/tests/test_ss_tm.py ________________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_ss_tm.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_ss_tm.py:3: in <module>
+    from protocol.ss_tm import TelemetryCommand_Build
+E   ModuleNotFoundError: No module named 'protocol'
+__________ ERROR collecting apps/GSHC/tests/test_start_ack_state.py ___________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_start_ack_state.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_start_ack_state.py:8: in <module>
+    from app import Controller, PendingAirCommand, format_air_status_message
+E   ModuleNotFoundError: No module named 'app'
+______ ERROR collecting apps/GSHC/tests/test_swd_eide_build_lifecycle.py ______
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_swd_eide_build_lifecycle.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_swd_eide_build_lifecycle.py:9: in <module>
+    from test_swd_image_contract import image, TARGET
+apps\GSHC\tests\test_swd_image_contract.py:10: in <module>
+    from silverstar_diagnostics.contract import Schema_Create,DiagnosticError,Contract_Get
+E   ModuleNotFoundError: No module named 'silverstar_diagnostics'
+____________ ERROR collecting apps/GSHC/tests/test_swd_firmware.py ____________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_swd_firmware.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_swd_firmware.py:16: in <module>
+    from transport.swd_firmware import (Firmware_Import, Target_Get, Targets_List,
+E   ModuleNotFoundError: No module named 'transport'
+_____________ ERROR collecting apps/GSHC/tests/test_swd_guard.py ______________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_swd_guard.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_swd_guard.py:12: in <module>
+    from transport.swd_session import SwdSession, SwdResult as R, SwdError
+E   ModuleNotFoundError: No module named 'transport'
+_________ ERROR collecting apps/GSHC/tests/test_swd_gui_lifecycle.py __________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_swd_gui_lifecycle.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_swd_gui_lifecycle.py:11: in <module>
+    import ui.swd_connection as module
+E   ModuleNotFoundError: No module named 'ui'
+_________ ERROR collecting apps/GSHC/tests/test_swd_image_contract.py _________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_swd_image_contract.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_swd_image_contract.py:10: in <module>
+    from silverstar_diagnostics.contract import Schema_Create,DiagnosticError,Contract_Get
+E   ModuleNotFoundError: No module named 'silverstar_diagnostics'
+_________ ERROR collecting apps/GSHC/tests/test_swd_image_lma_gap.py __________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_swd_image_lma_gap.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_swd_image_lma_gap.py:10: in <module>
+    from test_swd_image_contract import image,load_v2,DiagnosticError,Contract_Get
+apps\GSHC\tests\test_swd_image_contract.py:10: in <module>
+    from silverstar_diagnostics.contract import Schema_Create,DiagnosticError,Contract_Get
+E   ModuleNotFoundError: No module named 'silverstar_diagnostics'
+_____________ ERROR collecting apps/GSHC/tests/test_swd_import.py _____________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_swd_import.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_swd_import.py:6: in <module>
+    from services.swd_import import Firmware_ImportAuto
+E   ModuleNotFoundError: No module named 'services'
+_________ ERROR collecting apps/GSHC/tests/test_swd_project_entry.py __________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_swd_project_entry.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_swd_project_entry.py:11: in <module>
+    from test_swd_firmware import arm_elf as arm_elf_fixture
+apps\GSHC\tests\test_swd_firmware.py:16: in <module>
+    from transport.swd_firmware import (Firmware_Import, Target_Get, Targets_List,
+E   ModuleNotFoundError: No module named 'transport'
+______ ERROR collecting apps/GSHC/tests/test_swd_project_image_entry.py _______
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_swd_project_image_entry.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_swd_project_image_entry.py:5: in <module>
+    from test_swd_image_contract import image, TARGET
+apps\GSHC\tests\test_swd_image_contract.py:10: in <module>
+    from silverstar_diagnostics.contract import Schema_Create,DiagnosticError,Contract_Get
+E   ModuleNotFoundError: No module named 'silverstar_diagnostics'
+_____________ ERROR collecting apps/GSHC/tests/test_swd_pyocd.py ______________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_swd_pyocd.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_swd_pyocd.py:11: in <module>
+    from transport._swd_pyocd import PyOcdMemAp, _LoadLibrary, _LibraryOwner, _BulkInterface, _SelectDevice
+E   ModuleNotFoundError: No module named 'transport'
+____________ ERROR collecting apps/GSHC/tests/test_swd_session.py _____________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_swd_session.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_swd_session.py:9: in <module>
+    from transport.probe_inventory import HostProbe, ProbeInventory, ProbeInventoryResult
+E   ModuleNotFoundError: No module named 'transport'
+_____________ ERROR collecting apps/GSHC/tests/test_swd_stage1.py _____________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_swd_stage1.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_swd_stage1.py:11: in <module>
+    from test_probe_ui import panel as probe_panel_fixture
+apps\GSHC\tests\test_probe_ui.py:13: in <module>
+    from services.i18n import I18n
+E   ModuleNotFoundError: No module named 'services'
+_____________ ERROR collecting apps/GSHC/tests/test_swd_stlink.py _____________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_swd_stlink.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_swd_stlink.py:7: in <module>
+    from transport.probe_inventory import HostProbe
+E   ModuleNotFoundError: No module named 'transport'
+_______________ ERROR collecting apps/GSHC/tests/test_swd_ui.py _______________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_swd_ui.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_swd_ui.py:8: in <module>
+    from transport.probe_inventory import ProbeInventory, ProbeInventoryResult
+E   ModuleNotFoundError: No module named 'transport'
+_____________ ERROR collecting apps/GSHC/tests/test_swd_watch.py ______________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_swd_watch.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_swd_watch.py:9: in <module>
+    from transport.swd_firmware import Firmware_Import, DiagnosticResult
+E   ModuleNotFoundError: No module named 'transport'
+____________ ERROR collecting apps/GSHC/tests/test_time_exports.py ____________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_time_exports.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_time_exports.py:15: in <module>
+    from processing.flight_log_processor import FlightData, FlightLogProcessor, ProcessingCancelledError, TimedVector, main as Processor_Main
+E   ModuleNotFoundError: No module named 'processing'
+__________ ERROR collecting apps/GSHC/tests/test_tm_receive_order.py __________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_tm_receive_order.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_tm_receive_order.py:6: in <module>
+    from protocol.air import AirFlightStateMessage
+E   ModuleNotFoundError: No module named 'protocol'
+____________ ERROR collecting apps/GSHC/tests/test_touch_scroll.py ____________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_touch_scroll.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_touch_scroll.py:17: in <module>
+    from ui.touch_scroll import TouchScroll_Enable
+E   ModuleNotFoundError: No module named 'ui'
+_________ ERROR collecting apps/GSHC/tests/test_transfer_progress.py __________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_transfer_progress.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_transfer_progress.py:9: in <module>
+    from services.file_service_client import FileServiceClient, FileServiceError
+E   ModuleNotFoundError: No module named 'services'
+____________ ERROR collecting apps/GSHC/tests/test_ui_workflow.py _____________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_ui_workflow.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_ui_workflow.py:13: in <module>
+    from config import APP_VERSION
+E   ModuleNotFoundError: No module named 'config'
+____________ ERROR collecting apps/GSHC/tests/test_windows_mtp.py _____________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_windows_mtp.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_windows_mtp.py:9: in <module>
+    from services.device_export import DeviceExport
+E   ModuleNotFoundError: No module named 'services'
+_________ ERROR collecting apps/GSHC/tests/test_windows_mtp_shell.py __________
+ImportError while importing test module 'D:\python_software\SilverStar\apps\GSHC\tests\test_windows_mtp_shell.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\GSHC\tests\test_windows_mtp_shell.py:9: in <module>
+    from services.windows_mtp import WindowsMtp, MtpOperationResult
+E   ModuleNotFoundError: No module named 'services'
+=========================== short test summary info ===========================
+ERROR apps/GSHC/tests/test_acceptance14_ui.py
+ERROR apps/GSHC/tests/test_acceptance15_transactions.py
+ERROR apps/GSHC/tests/test_acceptance41_local_rejection.py
+ERROR apps/GSHC/tests/test_air_protocol.py
+ERROR apps/GSHC/tests/test_axis_notation.py
+ERROR apps/GSHC/tests/test_calibration_capability.py
+ERROR apps/GSHC/tests/test_data_paths.py
+ERROR apps/GSHC/tests/test_device_export.py
+ERROR apps/GSHC/tests/test_device_export_dialog.py
+ERROR apps/GSHC/tests/test_diagnostic_labels.py
+ERROR apps/GSHC/tests/test_diagnostics_descriptor_offline.py
+ERROR apps/GSHC/tests/test_diagnostics_eide_offline.py
+ERROR apps/GSHC/tests/test_docs.py
+ERROR apps/GSHC/tests/test_export_features.py
+ERROR apps/GSHC/tests/test_file_service_activity_budget.py
+ERROR apps/GSHC/tests/test_file_service_backend.py
+ERROR apps/GSHC/tests/test_file_service_batch.py
+ERROR apps/GSHC/tests/test_file_service_block.py
+ERROR apps/GSHC/tests/test_file_service_capability_classification.py
+ERROR apps/GSHC/tests/test_file_service_client.py
+ERROR apps/GSHC/tests/test_file_service_owner_classification.py
+ERROR apps/GSHC/tests/test_file_service_probe_boundary.py
+ERROR apps/GSHC/tests/test_file_service_recovery.py
+ERROR apps/GSHC/tests/test_file_transfer_ui.py
+ERROR apps/GSHC/tests/test_firmware_status.py
+ERROR apps/GSHC/tests/test_flight_status_compact.py
+ERROR apps/GSHC/tests/test_gui_maintenance_workflow.py
+ERROR apps/GSHC/tests/test_gui_protocol_boundaries.py
+ERROR apps/GSHC/tests/test_header_connection_20261005.py
+ERROR apps/GSHC/tests/test_horizontal_trajectory.py
+ERROR apps/GSHC/tests/test_i18n.py
+ERROR apps/GSHC/tests/test_installation_active_owner.py
+ERROR apps/GSHC/tests/test_installation_active_packet.py
+ERROR apps/GSHC/tests/test_installation_calibration_backend.py
+ERROR apps/GSHC/tests/test_installation_candidate.py
+ERROR apps/GSHC/tests/test_installation_capture_contract.py
+ERROR apps/GSHC/tests/test_installation_owner_adapter.py
+ERROR apps/GSHC/tests/test_installation_workflow_gui.py
+ERROR apps/GSHC/tests/test_legacy_firmware_status.py
+ERROR apps/GSHC/tests/test_magnetometer_calibration.py
+ERROR apps/GSHC/tests/test_magnetometer_calibration_ui.py
+ERROR apps/GSHC/tests/test_magnetometer_dialog.py
+ERROR apps/GSHC/tests/test_magnetometer_maintenance.py
+ERROR apps/GSHC/tests/test_magnetometer_preview.py
+ERROR apps/GSHC/tests/test_magnetometer_transport.py
+ERROR apps/GSHC/tests/test_magnetometer_workflow.py
+ERROR apps/GSHC/tests/test_maintenance_api.py
+ERROR apps/GSHC/tests/test_maintenance_serial_profile.py
+ERROR apps/GSHC/tests/test_maintenance_trace_priority.py
+ERROR apps/GSHC/tests/test_mission_profile.py
+ERROR apps/GSHC/tests/test_mission_trajectory.py
+ERROR apps/GSHC/tests/test_navigation_gui.py
+ERROR apps/GSHC/tests/test_navigation_readiness.py
+ERROR apps/GSHC/tests/test_nrf24_transport.py
+ERROR apps/GSHC/tests/test_packet_loss.py
+ERROR apps/GSHC/tests/test_port_gui.py
+ERROR apps/GSHC/tests/test_position_display.py
+ERROR apps/GSHC/tests/test_probe_inventory.py
+ERROR apps/GSHC/tests/test_probe_ui.py
+ERROR apps/GSHC/tests/test_qt_test_lifecycle.py
+ERROR apps/GSHC/tests/test_receive_pipeline.py
+ERROR apps/GSHC/tests/test_reconnect_recovery.py
+ERROR apps/GSHC/tests/test_release_layout.py
+ERROR apps/GSHC/tests/test_runtime_diagnostics.py
+ERROR apps/GSHC/tests/test_sensor_snapshot.py
+ERROR apps/GSHC/tests/test_ss_tm.py
+ERROR apps/GSHC/tests/test_start_ack_state.py
+ERROR apps/GSHC/tests/test_swd_eide_build_lifecycle.py
+ERROR apps/GSHC/tests/test_swd_firmware.py
+ERROR apps/GSHC/tests/test_swd_guard.py
+ERROR apps/GSHC/tests/test_swd_gui_lifecycle.py
+ERROR apps/GSHC/tests/test_swd_image_contract.py
+ERROR apps/GSHC/tests/test_swd_image_lma_gap.py
+ERROR apps/GSHC/tests/test_swd_import.py
+ERROR apps/GSHC/tests/test_swd_project_entry.py
+ERROR apps/GSHC/tests/test_swd_project_image_entry.py
+ERROR apps/GSHC/tests/test_swd_pyocd.py
+ERROR apps/GSHC/tests/test_swd_session.py
+ERROR apps/GSHC/tests/test_swd_stage1.py
+ERROR apps/GSHC/tests/test_swd_stlink.py
+ERROR apps/GSHC/tests/test_swd_ui.py
+ERROR apps/GSHC/tests/test_swd_watch.py
+ERROR apps/GSHC/tests/test_time_exports.py
+ERROR apps/GSHC/tests/test_tm_receive_order.py
+ERROR apps/GSHC/tests/test_touch_scroll.py
+ERROR apps/GSHC/tests/test_transfer_progress.py
+ERROR apps/GSHC/tests/test_ui_workflow.py
+ERROR apps/GSHC/tests/test_windows_mtp.py
+ERROR apps/GSHC/tests/test_windows_mtp_shell.py
+!!!!!!!!!!!!!!!!!! Interrupted: 89 errors during collection !!!!!!!!!!!!!!!!!!!
+89 errors in 7.91s

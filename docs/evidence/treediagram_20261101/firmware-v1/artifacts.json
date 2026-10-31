@@ -1,0 +1,254 @@
+[
+  {
+    "project": "f407",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\f407\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.elf",
+    "bytes": 3586308,
+    "sha256": "81ecf7fea2a61eddbf5f0074a13bb44db3d3edd9d5c0cbd07c1113c5f7c1d140"
+  },
+  {
+    "project": "f407",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\f407\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\StaticAnalysis\\Release\\SilverStar_0_1_3.elf",
+    "bytes": 3586488,
+    "sha256": "a556e35eb993c396f910fef183be1bf3ea44483ada2790c82b0ed9cb3cdd35e2"
+  },
+  {
+    "project": "f407",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\f407\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.map",
+    "bytes": 1600502,
+    "sha256": "a1c716ba02a5f91224b1a6979e8c1c11ad507b3c10c5194301850f647131e7b4"
+  },
+  {
+    "project": "f407",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\f407\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\StaticAnalysis\\Release\\SilverStar_0_1_3.map",
+    "bytes": 1744667,
+    "sha256": "7acdc33a5135aa8edb44f68dc3ccc41aed6d617767e2bfcfe32982f68d3c7ef7"
+  },
+  {
+    "project": "f407",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\f407\\Flight_Controller\\Generated\\memory_contract.json",
+    "bytes": 11328,
+    "sha256": "8b7f321e17cac0b62bfc0ace098064cb1f18a387fee80d8787727fc00de2bdfa"
+  },
+  {
+    "project": "f407",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\f407\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\memory-report.json",
+    "bytes": 5394,
+    "sha256": "652ef74596a2574f118b4f1c94583c35b39bf5a3c3f7e67bbefe50d746afd453"
+  },
+  {
+    "project": "f407",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\f407\\Flight_Controller\\Tools\\astra_stack_inputs.json",
+    "bytes": 634568,
+    "sha256": "8e0fd46211b5b37373c8daefb29655a4707763ea21dc15d4e9a92c58664ff94f"
+  },
+  {
+    "project": "f407",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\f407\\Flight_Controller\\Tools\\h743_stack_inputs.json",
+    "bytes": 155202,
+    "sha256": "47d8261e90ec7cc93eff68271b54e5c7c5400afc56ab10e42b6899907264ee3a"
+  },
+  {
+    "project": "f407",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\f407\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\stack-diagnostic.json",
+    "bytes": 13293,
+    "sha256": "3f870de73cddbe15c770bea536779d52634b157e64307a36726f9f3d0c35bd1e"
+  },
+  {
+    "project": "installation",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\installation\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.elf",
+    "bytes": 3893480,
+    "sha256": "b12b8778d8d1213e473114fe42b15c460f2cafda4b73e72082da5d4edbf1d466"
+  },
+  {
+    "project": "installation",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\installation\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\StaticAnalysis\\Release\\SilverStar_0_1_3.elf",
+    "bytes": 3893660,
+    "sha256": "a50cf46193a4fc5bbe760945d9a4d5f7b0fce183db787a7f8b35e1aada254e4a"
+  },
+  {
+    "project": "installation",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\installation\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.map",
+    "bytes": 1696620,
+    "sha256": "9b1d9e85f1c9e355d86906967e61c25a57ceee84c907e63b0e72c63cc0b1b7f8"
+  },
+  {
+    "project": "installation",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\installation\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\StaticAnalysis\\Release\\SilverStar_0_1_3.map",
+    "bytes": 1849815,
+    "sha256": "6c65cf9fb40658764ea6996c3b51d23db2b4b369f530ca89cc9d73fed72a4c4f"
+  },
+  {
+    "project": "installation",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\installation\\Flight_Controller\\Generated\\memory_contract.json",
+    "bytes": 11654,
+    "sha256": "a3ce728d90d6ac46fbb2e0612c235c1e410c065b0ca19e6cbd4210a20ce4450a"
+  },
+  {
+    "project": "installation",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\installation\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\memory-report.json",
+    "bytes": 5425,
+    "sha256": "be3def1c991b4e4149d59db0d1dd6ca4437446d2b4192901eb0f555acdd5169f"
+  },
+  {
+    "project": "installation",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\installation\\Flight_Controller\\Tools\\astra_stack_inputs.json",
+    "bytes": 634568,
+    "sha256": "8e0fd46211b5b37373c8daefb29655a4707763ea21dc15d4e9a92c58664ff94f"
+  },
+  {
+    "project": "installation",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\installation\\Flight_Controller\\Tools\\h743_stack_inputs.json",
+    "bytes": 155202,
+    "sha256": "47d8261e90ec7cc93eff68271b54e5c7c5400afc56ab10e42b6899907264ee3a"
+  },
+  {
+    "project": "installation",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\installation\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\stack-diagnostic.json",
+    "bytes": 13933,
+    "sha256": "f33c4d0cb8647683e06612ab804cc2cc71faefe5c08ec3d448910e009efc1c2a"
+  },
+  {
+    "project": "h743",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\h743\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.elf",
+    "bytes": 3754568,
+    "sha256": "767dd8baa2d8d5aa324e9e82f2138232434a05ec51ac053ba415288afccbcd6a"
+  },
+  {
+    "project": "h743",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\h743\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\StaticAnalysis\\Release\\SilverStar_0_1_3.elf",
+    "bytes": 3754744,
+    "sha256": "0f7d6c3e3af988932c22222d1484ddc96ad9d93da387c2e7559e38b30b3e1c30"
+  },
+  {
+    "project": "h743",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\h743\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.map",
+    "bytes": 1680103,
+    "sha256": "a76aa04ae9d8dd93f8410182613b779010832c31c5e31eb1272ddf5759b1ee21"
+  },
+  {
+    "project": "h743",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\h743\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\StaticAnalysis\\Release\\SilverStar_0_1_3.map",
+    "bytes": 1831243,
+    "sha256": "95c4f5df9b93a68c51c81e3efb2e138c40dfd5923dea38f60d1926ef1239f05f"
+  },
+  {
+    "project": "h743",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\h743\\Flight_Controller\\Generated\\memory_contract.json",
+    "bytes": 11961,
+    "sha256": "dd37a5c457a25f68b92ecf9b5ca70aa2b4e786dde5684f7e268e4d437c5472a2"
+  },
+  {
+    "project": "h743",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\h743\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\memory-report.json",
+    "bytes": 6783,
+    "sha256": "d6c79bb084335cff2d1d33180c7d8d6a1be3f589c21598120d20cdf4c65afa72"
+  },
+  {
+    "project": "h743",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\h743\\Flight_Controller\\Tools\\astra_stack_inputs.json",
+    "bytes": 634568,
+    "sha256": "8e0fd46211b5b37373c8daefb29655a4707763ea21dc15d4e9a92c58664ff94f"
+  },
+  {
+    "project": "h743",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\h743\\Flight_Controller\\Tools\\h743_stack_inputs.json",
+    "bytes": 155202,
+    "sha256": "47d8261e90ec7cc93eff68271b54e5c7c5400afc56ab10e42b6899907264ee3a"
+  },
+  {
+    "project": "h743",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\h743\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\stack-budget.json",
+    "bytes": 270732,
+    "sha256": "cc0459306e1d01bfa009e062f8f323c9688f50d969b39f7711f2bd2b97964276"
+  },
+  {
+    "project": "sx1278",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.elf",
+    "bytes": 3453284,
+    "sha256": "cd949eb45b8843b7764ef64df28f4589b610d1328211fb3ff8a849ebd7963467"
+  },
+  {
+    "project": "sx1278",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\StaticAnalysis\\Release\\SilverStar_0_1_3.elf",
+    "bytes": 3453464,
+    "sha256": "f0271bac09eedc991c33a40615572d53a8f7f88fb8408119976128eef6f4992b"
+  },
+  {
+    "project": "sx1278",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.map",
+    "bytes": 1533958,
+    "sha256": "7c35eb8d4b2dd5fbfcf94a88361cc985ea5526129430b6b1998d19fa1ea56502"
+  },
+  {
+    "project": "sx1278",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\StaticAnalysis\\Release\\SilverStar_0_1_3.map",
+    "bytes": 1672453,
+    "sha256": "71927a6d3765de21c432f36e4d1c934684029e66beaa0beda90be003f974376d"
+  },
+  {
+    "project": "sx1278",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Flight_Controller\\Generated\\memory_contract.json",
+    "bytes": 11338,
+    "sha256": "f0f942b8a5db92c517337b7e650cc2d721dd9822f126133d2d61be7b0d54ff21"
+  },
+  {
+    "project": "sx1278",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\memory-report.json",
+    "bytes": 5437,
+    "sha256": "87a0b317e1fda465966977a61cdf118b060efa47ae6740bc2253c5ecf2b62a12"
+  },
+  {
+    "project": "sx1278",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Flight_Controller\\Tools\\astra_stack_inputs.json",
+    "bytes": 634568,
+    "sha256": "8e0fd46211b5b37373c8daefb29655a4707763ea21dc15d4e9a92c58664ff94f"
+  },
+  {
+    "project": "sx1278",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Flight_Controller\\Tools\\h743_stack_inputs.json",
+    "bytes": 155202,
+    "sha256": "47d8261e90ec7cc93eff68271b54e5c7c5400afc56ab10e42b6899907264ee3a"
+  },
+  {
+    "project": "sx1278",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\stack-budget.json",
+    "bytes": 398626,
+    "sha256": "f210577bf3c7c06e11ffbc9b6ce358ab3cdbfed464d1136a0812a224cdec4336"
+  },
+  {
+    "project": "sx1278-ground",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Ground_Station\\build\\ground.elf",
+    "bytes": 42460,
+    "sha256": "31780238fcf841c22c18c3f71573dfc5efb17942568b629ecc958e23f05d18a1"
+  },
+  {
+    "project": "sx1278-ground",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Ground_Station\\build\\analysis\\ground.elf",
+    "bytes": 42460,
+    "sha256": "31780238fcf841c22c18c3f71573dfc5efb17942568b629ecc958e23f05d18a1"
+  },
+  {
+    "project": "sx1278-ground",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Ground_Station\\build\\ground.map",
+    "bytes": 142966,
+    "sha256": "0e236536c04754530504ba25a7a75ee1d757b7e432ec9161d71b13161e5f101b"
+  },
+  {
+    "project": "sx1278-ground",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Ground_Station\\build\\analysis\\ground.map",
+    "bytes": 148942,
+    "sha256": "90b20014c581001a6148f958452ddaf93406b4fc941ab3b570d2e545d1b447c5"
+  },
+  {
+    "project": "sx1278-ground",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Ground_Station\\build\\memory-report.json",
+    "bytes": 4272,
+    "sha256": "80109126a77f7cdc2177cd18492360dd224c03d317fc55b6f241fae12b7fdac6"
+  },
+  {
+    "project": "sx1278-ground",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Ground_Station\\Generated\\memory_contract.json",
+    "bytes": 3146,
+    "sha256": "0414655bdf110ce071b06ac3663653e3f5346eac7ba331158467c9aa80798c0c"
+  }
+]

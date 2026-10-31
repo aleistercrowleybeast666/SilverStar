@@ -1,0 +1,146 @@
+{
+  "scope_note": "Exact pytest file scopes for complete recorded groups. Commands below are equivalent replay commands; the original PowerShell redirection wrappers were not all captured. Firmware commands and private native compile commands are preserved verbatim in their command/receipt JSON. Choose a NEW bounded task output path for any replay; pytest basetemp must not point at retained evidence or original inputs.",
+  "python": "D:/python_software/SilverStar/.venv/Scripts/python.exe",
+  "common_environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "HOST_CC": "D:/msys64/ucrt64/bin/gcc.exe"
+  },
+  "pytest_command": [
+    "python",
+    "-u",
+    "-m",
+    "pytest",
+    "<files>",
+    "-q",
+    "--basetemp=<new-generated-task-directory>"
+  ],
+  "groups": [
+    {
+      "log": "scg-final-v2.log",
+      "cwd": "apps/SCG",
+      "pythonpath": "apps/SCG/src",
+      "files": [
+        "tests/test_hardware_workspace.py",
+        "tests/test_three_workspace_workflow.py",
+        "tests/test_flight_state_scheduler_generated_host.py",
+        "tests/test_source_selector_contract_host.py",
+        "tests/test_workflow_connections.py",
+        "tests/test_mission_phase_gui.py",
+        "tests/test_tm_workflow_transaction.py",
+        "tests/test_workflow_startup_windows.py",
+        "tests/test_memory_presentation.py",
+        "tests/test_target_quality_checks.py",
+        "tests/test_radio_transaction.py",
+        "tests/test_tuning_bundle_gui.py"
+      ]
+    },
+    {
+      "log": "scg-runtime-v2.log",
+      "cwd": "apps/SCG",
+      "pythonpath": "apps/SCG/src",
+      "files": [
+        "tests/test_gnss_receipt_publication.py",
+        "tests/test_gnss_reacquisition_configuration_c.py",
+        "tests/test_installation_store_lifecycle.py",
+        "tests/test_installation_capture_generation.py",
+        "tests/test_installation_baseline_consumer.py",
+        "tests/test_nrf24_pair.py",
+        "tests/test_nrf24_architecture.py",
+        "tests/test_ss_tm_scheduler_host.py",
+        "tests/test_ss_tm_contract.py",
+        "tests/test_stack_budget.py",
+        "tests/test_sx1278_project.py"
+      ]
+    },
+    {
+      "log": "scg-resource-v1.log",
+      "cwd": "apps/SCG",
+      "pythonpath": "apps/SCG/src",
+      "files": [
+        "tests/test_memory_report_v1.py",
+        "tests/test_artifact_memory_gui.py",
+        "tests/test_astra_stack_inputs.py",
+        "tests/test_storage_host_driver_scope.py",
+        "tests/test_storage_host_diskio_contract.py",
+        "tests/test_console_dispatch.py",
+        "tests/test_console_physical_capacity.py"
+      ]
+    },
+    {
+      "log": "entry-v3.log",
+      "cwd": ".",
+      "pythonpath": "apps/SCG/src",
+      "files": [
+        "apps/SCG/tests/test_radio_transaction.py",
+        "apps/SCG/tests/test_tuning_bundle_gui.py"
+      ]
+    },
+    {
+      "log": "layout-v3.log",
+      "cwd": ".",
+      "pythonpath": "apps/SCG/src",
+      "files": [
+        "apps/SCG/tests/test_gui_smoke.py",
+        "apps/SCG/tests/test_scg_ui_metadata_hotfix.py",
+        "apps/SCG/tests/test_i18n.py"
+      ]
+    },
+    {
+      "log": "flp-v3.log",
+      "cwd": "apps/FLP",
+      "pythonpath": "apps/FLP/src;apps/SCG/src",
+      "files": [
+        "tests/test_decoder_directory_gui.py",
+        "tests/test_decoder_profiles.py",
+        "tests/test_mission_snapshot_gui.py",
+        "tests/test_mission_snapshot_view.py",
+        "tests/test_path_preferences.py"
+      ]
+    },
+    {
+      "log": "flp-contract-v1.log",
+      "cwd": "apps/FLP",
+      "pythonpath": "apps/FLP/src;apps/SCG/src",
+      "files": [
+        "tests/test_object_catalog13.py",
+        "tests/test_user_custom_decoder.py",
+        "tests/test_custom_review_v2.py",
+        "tests/test_magnetometer_decoder_routes.py"
+      ]
+    },
+    {
+      "log": "native-v2.log",
+      "cwd": "apps/SCG",
+      "pythonpath": "apps/SCG/src",
+      "files": [
+        "tests/test_usb_lifecycle_normal.py",
+        "tests/test_native_ground_backend.py"
+      ],
+      "environment_note": "Exact real native input/companion identities and enabled ARM compile cases are in native-resources/*/compile-receipt.json and native-build-v2-index.jsonl. Normal release admission remains blocked."
+    },
+    {
+      "log": "gshc-full-v5.log",
+      "cwd": "apps/GSHC",
+      "pythonpath": "apps/GSHC;apps/SCG/src",
+      "files": [
+        "tests"
+      ],
+      "environment": {
+        "INSTALLATION_CAPTURE_DLL": "D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/gshc-harness-v2/capture.dll",
+        "INSTALLATION_ACTIVE_DLL": "D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/gshc-harness-v2/active.dll"
+      },
+      "helper": "prepare_gshc_harnesses.py (fresh actual generated installation C plus explicit Host-only native/media boundary); complete compile commands and source hashes in gshc-harness-v2.json"
+    },
+    {
+      "log": "capability-v6.log",
+      "cwd": ".",
+      "pythonpath": "apps/SCG/src",
+      "files": [
+        "apps/SCG/tests/test_device_capability_architecture.py",
+        "apps/SCG/tests/test_project_domain.py",
+        "apps/SCG/tests/test_release_migration.py"
+      ],
+      "actual_command_receipt": "capability-v6-receipt.json"
+    }
+  ]
+}

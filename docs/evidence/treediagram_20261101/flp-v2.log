@@ -1,0 +1,62 @@
+...................F.................................................... [ 96%]
+...                                                                      [100%]
+================================== FAILURES ===================================
+_ test_project_open_rediscover_exact_package_when_cache_and_source_are_missing _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/flp-v2/test_project_open_rediscover_e0')
+
+    def test_project_open_rediscover_exact_package_when_cache_and_source_are_missing(
+        tmp_path: Path,
+    ) -> None:
+        source_path, hashes = _Package_Write(tmp_path / "source.ssdecoder")
+        builder = SyntheticSslogBuilder()
+        builder.Record_Add(
+            DESCRIPTOR_RECORD_TYPE,
+            _DescriptorPayload_Build(hashes),
+            START_TIMESTAMP_US - 3,
+        )
+        builder.Record_Add(
+            0x17,
+            _CalibrationNonePayload_Build(),
+            START_TIMESTAMP_US - 2,
+        )
+        builder.Record_Add(0x02, Event_Payload(0x03), START_TIMESTAMP_US)
+        log_path = builder.File_Write(tmp_path / "flight.sslog")
+        imported = LogOpenCoordinator(
+            builtin_registry(),
+            cache=DecoderProfileCache(tmp_path / "original-cache"),
+        ).Open(
+            LogOpenRequest(
+                log_path=log_path,
+                decoder_package_path=source_path,
+            )
+        )
+        search_root = tmp_path / "relocated-task"
+        search_root.mkdir()
+        relocated_package = search_root / "renamed.ssdecoder"
+        relocated_package.write_bytes(source_path.read_bytes())
+    
+        reopened = LogOpenCoordinator(
+            builtin_registry(),
+            cache=DecoderProfileCache(tmp_path / "empty-cache"),
+        ).Open(
+            LogOpenRequest(
+                log_path=log_path,
+                decoder_package_path=tmp_path / "missing.ssdecoder",
+                cache_reference=imported.cache_reference,
+                task_directory=search_root,
+                source_mode=LogOpenSourceMode.PROJECT,
+            )
+        )
+    
+        assert reopened.package.package_sha256 == imported.package.package_sha256
+>       assert reopened.source_package_path == relocated_package.resolve()
+E       AssertionError: assert WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/flp-v2/test_project_open_rediscover_e0/source.ssdecoder') == WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/flp-v2/test_project_open_rediscover_e0/relocated-task/renamed.ssdecoder')
+E        +  where WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/flp-v2/test_project_open_rediscover_e0/source.ssdecoder') = LogOpenResult(dataset=FlightDataset(source_path=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-202...gaps=(), mission_record_continuity='continuous', structural_integrity='normal'), match_mode='exact_generation_profile').source_package_path
+E        +  and   WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/flp-v2/test_project_open_rediscover_e0/relocated-task/renamed.ssdecoder') = resolve()
+E        +    where resolve = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/flp-v2/test_project_open_rediscover_e0/relocated-task/renamed.ssdecoder').resolve
+
+tests\test_decoder_profiles.py:1152: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_decoder_profiles.py::test_project_open_rediscover_exact_package_when_cache_and_source_are_missing
+1 failed, 74 passed in 82.45s (0:01:22)

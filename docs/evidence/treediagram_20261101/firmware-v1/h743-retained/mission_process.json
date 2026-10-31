@@ -1,0 +1,163 @@
+{
+  "schema": "silverstar.mission-process-generated/1",
+  "process": {
+    "schema_version": 2,
+    "execution": "firmware_bounded",
+    "start_policy": "start_is_launch",
+    "maximum_gap_ms": 1000,
+    "stages": [
+      {
+        "stage_id": "ready",
+        "name": "就绪",
+        "condition": {
+          "signal": "event",
+          "operator": "is",
+          "value": "ready",
+          "unit": "event_id"
+        },
+        "hold_ms": 0,
+        "action": {
+          "kind": "record_marker",
+          "target": ""
+        }
+      },
+      {
+        "stage_id": "ascent",
+        "name": "上升",
+        "condition": {
+          "signal": "event",
+          "operator": "is",
+          "value": "start_accepted",
+          "unit": "event_id"
+        },
+        "hold_ms": 0,
+        "action": {
+          "kind": "record_marker",
+          "target": ""
+        }
+      }
+    ]
+  },
+  "stage_id_hash_algorithm": "crc32-ieee-ascii",
+  "stage_ids": {
+    "ready": 680887727,
+    "ascent": 125912425
+  },
+  "continuous_functions": [
+    {
+      "instance_id": "alignment",
+      "plugin_id": "silverstar.algorithm.alignment.gravity_known_yaw",
+      "category": "preparation",
+      "execution": "once",
+      "start": {
+        "kind": "system_prepare",
+        "stage_id": ""
+      },
+      "stop": {
+        "kind": "lifecycle_end",
+        "stage_id": ""
+      },
+      "depends_on": [],
+      "input_bindings": {
+        "imu.acceleration": "imu0",
+        "imu.angular_rate": "imu0",
+        "imu.software_alignment_qualified": "imu0"
+      },
+      "output": "alignment.initial_state"
+    },
+    {
+      "instance_id": "estimator",
+      "plugin_id": "silverstar.algorithm.estimator.eskf20",
+      "category": "estimation",
+      "execution": "continuous",
+      "start": {
+        "kind": "mission_start",
+        "stage_id": ""
+      },
+      "stop": {
+        "kind": "system_landed",
+        "stage_id": ""
+      },
+      "depends_on": [
+        "ins"
+      ],
+      "input_bindings": {
+        "gnss.position": "gnss0",
+        "gnss.velocity": "gnss0"
+      },
+      "output": "navigation.estimate"
+    },
+    {
+      "instance_id": "ins",
+      "plugin_id": "silverstar.algorithm.ins.coning2_sculling2",
+      "category": "estimation",
+      "execution": "continuous",
+      "start": {
+        "kind": "mission_start",
+        "stage_id": ""
+      },
+      "stop": {
+        "kind": "system_landed",
+        "stage_id": ""
+      },
+      "depends_on": [],
+      "input_bindings": {
+        "imu.acceleration": "imu0",
+        "imu.angular_rate": "imu0"
+      },
+      "output": "navigation.pure_ins"
+    },
+    {
+      "instance_id": "recovery_action",
+      "plugin_id": "silverstar.flight_logic.mission_action.gpio_output_service",
+      "category": "control",
+      "execution": "continuous",
+      "start": {
+        "kind": "system_prepare",
+        "stage_id": ""
+      },
+      "stop": {
+        "kind": "lifecycle_end",
+        "stage_id": ""
+      },
+      "depends_on": [],
+      "input_bindings": {},
+      "output": "mission.recovery_request"
+    },
+    {
+      "instance_id": "recording",
+      "plugin_id": "silverstar.protocol.logging.sslog_0_0",
+      "category": "recording",
+      "execution": "continuous",
+      "start": {
+        "kind": "system_prepare",
+        "stage_id": ""
+      },
+      "stop": {
+        "kind": "lifecycle_end",
+        "stage_id": ""
+      },
+      "depends_on": [],
+      "input_bindings": {},
+      "output": "log.session"
+    },
+    {
+      "instance_id": "telemetry",
+      "plugin_id": "silverstar.protocol.telemetry.ss_tm",
+      "category": "telemetry",
+      "execution": "continuous",
+      "start": {
+        "kind": "system_prepare",
+        "stage_id": ""
+      },
+      "stop": {
+        "kind": "lifecycle_end",
+        "stage_id": ""
+      },
+      "depends_on": [],
+      "input_bindings": {},
+      "output": "telemetry.air"
+    }
+  ],
+  "acceleration_source": "calibrated specific-force magnitude / 9.80665 m/s^2; fresh canonical IMU only"
+}

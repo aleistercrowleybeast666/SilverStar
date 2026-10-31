@@ -1,0 +1,14 @@
+[
+  {
+    "component": "silverstar.core.0_1_0",
+    "path": "Tests/Host/storage_integrity/test_logger_storage.c",
+    "before": "1fdc4c0e34ac3b42c257d64b111f5f9d92dd24241d9c085d2fbcd719888d6210",
+    "now": "314425913a0f26875b0b804971b522eaba402b7a61a3e8d0a3e82087ff161a23"
+  },
+  {
+    "component": "silverstar.core.0_1_0",
+    "path": "Tests/Host/storage_integrity/test_storage_integrity.c",
+    "before": "423df3c72127a17953e74102a02f608d0ee66bf180488a402dbcdc5e7ca00407",
+    "now": "582b5811d844b13d1b9785b98c4e4762446e637b555101a27696c53caae6a6da"
+  }
+]

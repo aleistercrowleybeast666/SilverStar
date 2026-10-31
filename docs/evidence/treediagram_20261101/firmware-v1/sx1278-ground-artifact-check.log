@@ -1,0 +1,265 @@
+mingw32-make: Entering directory 'D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/firmware-v1/sx1278/project/Ground_Station'
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe Tools/check_ground.py dependencies --build-dir build --compiler "arm-none-eabi-gcc"
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+"FCCG_BUILD_ARTIFACT|ELF|build/ground.elf"
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe Tools/check_ground.py artifact --prefix "arm-none-eabi-"
+PASS Ground declared source graph (38 sources), ownership and startup
+Critical-contract manual review, call graph, stack and MCU timing: NOT PROVEN
+COMMAND ["arm-none-eabi-readelf", "-h", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Ground_Station\\build\\ground.elf"]
+ELF Header:
+  Magic:   7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00 
+  Class:                             ELF32
+  Data:                              2's complement, little endian
+  Version:                           1 (current)
+  OS/ABI:                            UNIX - System V
+  ABI Version:                       0
+  Type:                              EXEC (Executable file)
+  Machine:                           ARM
+  Version:                           0x1
+  Entry point address:               0x8003ec9
+  Start of program headers:          52 (bytes into file)
+  Start of section headers:          41740 (bytes into file)
+  Flags:                             0x5000200, Version5 EABI, soft-float ABI
+  Size of this header:               52 (bytes)
+  Size of program headers:           32 (bytes)
+  Number of program headers:         4
+  Size of section headers:           40 (bytes)
+  Number of section headers:         18
+  Section header string table index: 17
+COMMAND ["arm-none-eabi-nm", "-g", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Ground_Station\\build\\ground.elf"]
+20001104 B __bss_end__
+20000010 B __bss_start__
+08004448 N __exidx_end
+08004448 N __exidx_start
+08003f24 T __libc_init_array
+2000000c D __TMC_END__
+20001104 B _ebss
+2000000c D _edata
+20005000 R _estack
+08003fa0 T _etext
+08003f94 T _fini
+08003f88 T _init
+00000000 A _Min_Heap_Size
+00000400 A _Min_Stack_Size
+20000010 B _sbss
+20000000 D _sdata
+08004450 A _sidata
+08003f10 W ADC1_2_IRQHandler
+080040c3 R AHBPrescTable
+080040bb R APBPrescTable
+080038ca T BusFault_Handler
+08003f10 W CAN1_RX1_IRQHandler
+08003f10 W CAN1_SCE_IRQHandler
+080038d0 T DebugMon_Handler
+08003f10 T Default_Handler
+08003f10 W DMA1_Channel1_IRQHandler
+08003f10 W DMA1_Channel2_IRQHandler
+08003f10 W DMA1_Channel3_IRQHandler
+080038e0 T DMA1_Channel4_IRQHandler
+080038ec T DMA1_Channel5_IRQHandler
+08003f10 W DMA1_Channel6_IRQHandler
+08003f10 W DMA1_Channel7_IRQHandler
+20001108 B end
+080037c0 T Error_Handler
+080038d8 T EXTI0_IRQHandler
+08003f10 W EXTI1_IRQHandler
+08003f10 W EXTI15_10_IRQHandler
+08003f10 W EXTI2_IRQHandler
+08003f10 W EXTI3_IRQHandler
+08003f10 W EXTI4_IRQHandler
+08003f10 W EXTI9_5_IRQHandler
+08003f10 W FLASH_IRQHandler
+08000000 R g_pfnVectors
+0800045c T GroundBridge_Init
+08000198 T GroundBridge_PcReset
+080004f0 T GroundBridge_Process
+08003a2c T GroundRadio_Init
+08003a28 T GroundRadio_MetricsSupportedGet
+08003a5c T GroundRadio_Process
+08003ab0 T GroundRadio_RxDequeue
+08003af0 T GroundRadio_StatsGet
+08003a82 T GroundRadio_TxEnqueue
+08000b88 T GroundRadioTm_Observe
+08000cf4 T GroundRadioTm_PassiveGet
+080009b8 T GspMin_BuildAckFrame
+08000a2c T GspMin_BuildAirRxFrame
+08000938 T GspMin_BuildFrame
+080009dc T GspMin_BuildGsStatusFrame
+08000a9c T GspMin_BuildNrf24AirRxFrame
+080007d0 T GspMinParser_GetCrcErrorCount
+080007b8 T GspMinParser_Init
+080007d8 T GspMinParser_InputByte
+08001608 T HAL_DMA_Abort
+08001648 T HAL_DMA_Abort_IT
+080017fc T HAL_DMA_GetError
+08001530 T HAL_DMA_Init
+080016d4 T HAL_DMA_IRQHandler
+08001590 T HAL_DMA_Start_IT
+08000d94 W HAL_GetTick
+080024c6 T HAL_GPIO_EXTI_Callback
+08001518 T HAL_GPIO_EXTI_IRQHandler
+08001364 T HAL_GPIO_Init
+0800150c T HAL_GPIO_WritePin
+08000d7c W HAL_IncTick
+08000d58 T HAL_Init
+08000d10 W HAL_InitTick
+08003880 T HAL_MspInit
+08000e24 T HAL_NVIC_EnableIRQ
+08000dc4 T HAL_NVIC_SetPriority
+08000da0 T HAL_NVIC_SetPriorityGrouping
+080011ec T HAL_RCC_ClockConfig
+08001324 T HAL_RCC_GetPCLK1Freq
+08001344 T HAL_RCC_GetPCLK2Freq
+080011a0 T HAL_RCC_GetSysClockFreq
+08000e68 T HAL_RCC_OscConfig
+080020e8 T HAL_SPI_Init
+0800380c T HAL_SPI_MspInit
+08002198 T HAL_SPI_TransmitReceive
+08000e40 T HAL_SYSTICK_Config
+080019a4 T HAL_UART_AbortReceive
+08003d84 T HAL_UART_ErrorCallback
+080018d0 T HAL_UART_Init
+08001c74 T HAL_UART_IRQHandler
+08003940 T HAL_UART_MspInit
+08001a9a W HAL_UART_RxCpltCallback
+08001a9c W HAL_UART_RxHalfCpltCallback
+08001930 T HAL_UART_Transmit_DMA
+08003d6c T HAL_UART_TxCpltCallback
+08001a8e W HAL_UART_TxHalfCpltCallback
+08001fa0 T HAL_UARTEx_ReceiveToIdle_DMA
+08003ca8 T HAL_UARTEx_RxEventCallback
+080038c6 T HardFault_Handler
+20000d5c B hdma_usart1_rx
+20000d18 B hdma_usart1_tx
+20000cc0 B hspi1
+20000da0 B huart1
+08003f10 W I2C1_ER_IRQHandler
+08003f10 W I2C1_EV_IRQHandler
+08003f10 W I2C2_ER_IRQHandler
+08003f10 W I2C2_EV_IRQHandler
+08003792 T main
+08003f6c T memcpy
+080038c8 T MemManage_Handler
+08003f12 T memset
+0800359c T MX_DMA_Init
+080035dc T MX_GPIO_Init
+080037c4 T MX_SPI1_Init
+08003908 T MX_USART1_UART_Init
+080038c4 T NMI_Handler
+08003c68 T PcByteStream_Init
+08003da4 T PcByteStream_Read
+08003eb0 T PcByteStream_ReadSession
+08003e94 T PcByteStream_Session_Check
+08003e9c T PcByteStream_Session_Enter
+08003eae T PcByteStream_Session_Exit
+08003e90 T PcByteStream_Session_Get
+08003e10 T PcByteStream_Write
+08003ebe T PcByteStream_WriteSession
+080038d2 T PendSV_Handler
+08000d00 T PlatformCritical_Enter
+08000d08 T PlatformCritical_Exit
+08002498 T PlatformGpio_IrqConsume
+08002478 T PlatformGpio_Write
+0800241a T PlatformSpi_Transfer
+08002390 T PlatformSpi_TransferObserved
+08003bfc T PlatformStm32f1Resource_GpioGet
+08003be8 T PlatformStm32f1Resource_SpiHandleGet
+080024ec T PlatformTime_Ms
+080024f0 T PlatformTime_Us
+08003bc8 T ProjectSx1278Resources_Get
+08000adc T ProtocolCrc16_CcittFalse
+08003f10 W PVD_IRQHandler
+08003f10 W RCC_IRQHandler
+08003ec8 W Reset_Handler
+08003f10 W RTC_Alarm_IRQHandler
+08003f10 W RTC_IRQHandler
+08003b64 T SilverStarAssert_Check
+08003b34 T SilverStarAssert_Fail
+08003b7a T SilverStarAssert_ObjectCheck
+08003f10 W SPI1_IRQHandler
+08003f10 W SPI2_IRQHandler
+080038ce T SVC_Handler
+08002db4 T Sx1278_Init
+08002eac T Sx1278_ModeSet
+08002f30 T Sx1278_Process
+08003478 T Sx1278_Receive
+0800338c T Sx1278_Send
+08002e78 T Sx1278_Start
+08003564 T Sx1278_StatsGet
+080026d0 T Sx1278Chip_Configure
+08002686 T Sx1278Chip_ModeSet
+08002602 T Sx1278Chip_Read
+0800263e T Sx1278Chip_RegisterWrite
+0800261e T Sx1278Chip_Write
+08003734 T SystemClock_Config
+20000008 D SystemCoreClock
+08003904 T SystemInit
+080038d4 T SysTick_Handler
+08003f10 W TAMPER_IRQHandler
+08003f10 W TIM1_BRK_IRQHandler
+08003f10 W TIM1_CC_IRQHandler
+08003f10 W TIM1_TRG_COM_IRQHandler
+08003f10 W TIM1_UP_IRQHandler
+08003f10 W TIM2_IRQHandler
+08003f10 W TIM3_IRQHandler
+08003f10 W TIM4_IRQHandler
+08001f08 T UART_Start_Receive_DMA
+080038cc T UsageFault_Handler
+080038f8 T USART1_IRQHandler
+08003f10 W USART2_IRQHandler
+08003f10 W USART3_IRQHandler
+08003f10 W USB_HP_CAN1_TX_IRQHandler
+08003f10 W USB_LP_CAN1_RX0_IRQHandler
+08003f10 W USBWakeUp_IRQHandler
+20000250 B uwTick
+20000001 D uwTickFreq
+20000004 D uwTickPrio
+08003f10 W WWDG_IRQHandler
+COMMAND ["arm-none-eabi-objcopy", "-j", ".isr_vector", "-O", "binary", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Ground_Station\\build\\ground.elf", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Ground_Station\\build\\ground-vector.bin"]
+Legacy Ground IRQ contract: NOT PROVEN (no complete-import IRQ inventory)
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+Legacy Ground effective clock macro contract: NOT PROVEN
+COMMAND ["arm-none-eabi-objdump", "-h", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Ground_Station\\build\\ground.elf"]
+
+D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\silverstar\firmware-v1\sx1278\project\Ground_Station\build\ground.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   0000010c  08000000  08000000  00001000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  1 .text         00003e94  0800010c  0800010c  0000110c  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       000004a8  08003fa0  08003fa0  00004fa0  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .ARM.extab    00000000  08004448  08004448  0000600c  2**0
+                  CONTENTS, READONLY
+  4 .ARM          00000000  08004448  08004448  0000600c  2**0
+                  CONTENTS, READONLY
+  5 .preinit_array 00000000  08004448  08004448  0000600c  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  08004448  08004448  00005448  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  7 .fini_array   00000004  0800444c  0800444c  0000544c  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  8 .data         0000000c  20000000  08004450  00006000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .bss          000010f4  20000010  0800445c  00006010  2**3
+                  ALLOC
+ 10 ._user_heap_stack 00000404  20001104  0800445c  00006104  2**0
+                  ALLOC
+ 11 .ARM.attributes 00000029  00000000  00000000  0000600c  2**0
+                  CONTENTS, READONLY
+ 12 .comment      00000046  00000000  00000000  00006035  2**0
+                  CONTENTS, READONLY
+ 13 .debug_frame  00000074  00000000  00000000  0000607c  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+COMMAND ["arm-none-eabi-objcopy", "-O", "binary", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Ground_Station\\build\\ground.elf", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Ground_Station\\build\\ground-artifact.bin"]
+SHA256 D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\silverstar\firmware-v1\sx1278\project\Ground_Station\build\ground.elf 31780238fcf841c22c18c3f71573dfc5efb17942568b629ecc958e23f05d18a1
+SHA256 D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\silverstar\firmware-v1\sx1278\project\Ground_Station\build\ground.bin 94437d64f962a6ece776bda4678120b17841fe3a52b06924310b18b49aaa30d0
+PASS ARM ELF/BIN identity, declared memory bounds, required symbols and linked source graph
+Metadata version is configuration provenance; embedded product version NOT PROVEN
+Actual task/ISR stack margin, radio timing and hardware qualification: NOT PROVEN
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\python.exe Generated/memory_audit.py --elf build/ground.elf --map build/ground.map --linker STM32F103XX_FLASH.ld --contract Generated/memory_contract.json --output build/memory-report.json --prefix "arm-none-eabi-"
+FIRMWARE_MEMORY_REPORT|D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\silverstar\firmware-v1\sx1278\project\Ground_Station\build\memory-report.json
+"FIRMWARE_MEMORY_REPORT|build/memory-report.json"
+mingw32-make: Leaving directory 'D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/firmware-v1/sx1278/project/Ground_Station'

@@ -1,0 +1,13 @@
+{
+  "scheduler_binary_sha256": "23d7fa2e73097a1bd35eb31bd737375c3a9e2be2338a0f38aa684024ff246302",
+  "codec_binary_sha256": "c2be25fcff5685416ab0f3c8c2e55feb070b57a8fdb59fcfbb85d1cfbb2d1c98",
+  "source_hashes": {
+    "contracts\\ss_tm_v0_1.json": "19e1c9ae05d173028e1e1e27db36cf46d9060037fbac61250854aa357f045fc3",
+    "apps\\SCG\\plugins\\builtin\\silverstar_protocol_telemetry_ss_tm\\payload\\Protocol\\SS_TM\\Legacy\\ss_tm_legacy.c": "38c58b1093364797bc143c52620274b596779677b517c593deaccbe114d9437c",
+    "apps\\SCG\\plugins\\builtin\\silverstar_protocol_telemetry_ss_tm\\payload\\Protocol\\SS_TM\\Src\\ss_tm_protocol.c": "0c3cca1c94c5b59306660af2ea53f4a35398a8e30e0fc12dbf73e41730b42a25",
+    "apps\\SCG\\tests\\fixtures\\ss_tm_codec_host.c": "9e8e19de64a20dc499b3b04e91959250d603d34490a8dbc57f05c6c2aa055124"
+  },
+  "scope": "Actual generated telemetry service/codec with actual SX1281 driver and Host ports; simulated TX_DONE from PHY airtime, not measured RF. SX1278 scenarios use capacity-one transport facade plus SX1278 exact PHY ToA, not driver/hardware timing proof.",
+  "expected_c_python_vectors": 8,
+  "mismatches": 0
+}

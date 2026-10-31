@@ -1,0 +1,69 @@
+{
+  "platform": "offscreen",
+  "scale_factor": "1.25",
+  "scope": "Actual Qt widget renders and normal button/modal paths. Offscreen, not native desktop or hardware validation.",
+  "model_unchanged_after_all_cancel": true,
+  "shared_library_duplicate_function_forms": 0,
+  "surfaces": [
+    {
+      "name": "01-hardware",
+      "logical_width": 1320,
+      "logical_height": 900,
+      "pixels": [
+        1650,
+        1125
+      ],
+      "device_pixel_ratio": 1.25
+    },
+    {
+      "name": "02-workflow",
+      "logical_width": 1320,
+      "logical_height": 900,
+      "pixels": [
+        1650,
+        1125
+      ],
+      "device_pixel_ratio": 1.25
+    },
+    {
+      "name": "03-build",
+      "logical_width": 1320,
+      "logical_height": 900,
+      "pixels": [
+        1650,
+        1125
+      ],
+      "device_pixel_ratio": 1.25
+    },
+    {
+      "name": "04-radio-private-draft",
+      "logical_width": 780,
+      "logical_height": 680,
+      "pixels": [
+        975,
+        850
+      ],
+      "device_pixel_ratio": 1.25
+    },
+    {
+      "name": "05-stage-condition-and-references",
+      "logical_width": 1020,
+      "logical_height": 780,
+      "pixels": [
+        1275,
+        975
+      ],
+      "device_pixel_ratio": 1.25
+    },
+    {
+      "name": "06-single-ins-owner",
+      "logical_width": 1020,
+      "logical_height": 780,
+      "pixels": [
+        1275,
+        975
+      ],
+      "device_pixel_ratio": 1.25
+    }
+  ]
+}

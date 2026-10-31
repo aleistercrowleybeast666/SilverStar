@@ -1,0 +1,11 @@
+SX1278 PHY model ordinary_events=15 flight=75
+TX_DONE type=16 first_ms=118
+TX_DONE type=16 maximum_gap_ms=207 last_ms=14917
+ordinary event 0 first TX_DONE 603 ms
+ordinary event 1 first TX_DONE 810 ms
+ordinary event 2 first TX_DONE 1017 ms
+ordinary event 3 first TX_DONE 1605 ms
+ordinary event 4 first TX_DONE 1812 ms
+TX_DONE type=32 first_ms=603
+TX_DONE type=32 maximum_gap_ms=791 last_ms=5812
+sx1278_airtime_events: 15385 checks, 0 failures

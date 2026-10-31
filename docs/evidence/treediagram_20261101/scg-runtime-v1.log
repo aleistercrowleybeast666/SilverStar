@@ -1,0 +1,1338 @@
+EEEEEEEEEE............EEEEEEEEEEEEEE......ssssssssssssssssssssssssssss.. [ 45%]
+........................................................................ [ 91%]
+.........ssE..                                                           [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_actual_source_handoff_barrier_and_clock_proof[-O0-liveness_atomic_publication] _
+
+request = <SubRequest 'executable' for <Function test_actual_source_handoff_barrier_and_clock_proof[-O0-liveness_atomic_publication]>>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module", params=["-O0", "-O2"])
+    def executable(request, tmp_path_factory):
+        output = tmp_path_factory.mktemp("receipt_" + request.param[1:])
+        compiler = shutil.which("gcc")
+        assert compiler
+        source = Path(
+            os.environ.get(
+                "SILVERSTAR_GNSS_SELECTOR_SOURCE",
+                str(CORE / "System/Src/system_source_selector.c"),
+            )
+        ).resolve()
+        fixture = Path(__file__).parent / "fixtures/gnss_receipt_publication.c"
+        sources = [
+            fixture,
+            CORE / "System/Src/system_gnss_receipt.c",
+            CORE / "Common/Src/silverstar_assert.c",
+        ]
+        includes = [
+            ROOT / "apps/SCG/tests/fixtures/source_selector",
+            CORE / "Tests/Host",
+            CORE / "Interfaces/Inc",
+            CORE / "System/Inc",
+            CORE / "System/User",
+            CORE / "Common/Inc",
+            BUILTIN / "silverstar_platform_api/payload/Platform/Inc",
+        ]
+        includes += [path for path in CORE.rglob("Inc") if path not in includes]
+        target = output / "receipt.exe"
+        command = [
+            compiler,
+            "-std=c11",
+            request.param,
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-Wpedantic",
+            "-Wconversion",
+            "-Wsign-conversion",
+            "-Wshadow",
+            "-Wstrict-prototypes",
+            "-Wmissing-prototypes",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-Wl,--gc-sections",
+            "-DSILVERSTAR_PROTOCOL_LOGGING_ENABLED=0U",
+            "-DSYSTEM_BUILD_BAROMETER_COLD_ENABLED=0U",
+            '-DSOURCE_SELECTOR_FIXTURE="'
+            + (CORE / "Tests/Host/test_source_selector.c").as_posix()
+            + '"',
+            '-DSOURCE_SELECTOR_SOURCE="' + source.as_posix() + '"',
+            *["-I" + str(path) for path in includes],
+            *map(str, sources),
+            "-lm",
+            "-o",
+            str(target),
+        ]
+        run = subprocess.run(command, capture_output=True, text=True, timeout=120, check=False)
+        evidence = {
+            "command": command,
+            "exit_code": run.returncode,
+            "stdout": run.stdout,
+            "stderr": run.stderr,
+            "source_sha256": {
+                str(path): sha256(path.read_bytes()).hexdigest()
+                for path in [*sources, source, CORE / "Tests/Host/test_source_selector.c"]
+            },
+        }
+        (output / "compile.json").write_text(
+            json.dumps(evidence, indent=2), encoding="utf8"
+        )
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\SCG\tests\fixtures\gnss_receipt_publication.c:17:
+E         D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_source_selector.c:405:20: error: no previous prototype for 'ProjectTelemetryInstance_ModeSet' [-Werror=missing-prototypes]
+E           405 | SystemDeviceResult ProjectTelemetryInstance_ModeSet(uint8_t instance_id, SystemTelemetryMode mode)
+E               |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O0', '-Wall', '-Wextra', '-Werror', '-Wpedant...e mode)\n      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+tests\test_gnss_receipt_publication.py:87: AssertionError
+_ ERROR at setup of test_actual_source_handoff_barrier_and_clock_proof[-O0-recovery_atomic_publication] _
+
+request = <SubRequest 'executable' for <Function test_actual_source_handoff_barrier_and_clock_proof[-O0-liveness_atomic_publication]>>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module", params=["-O0", "-O2"])
+    def executable(request, tmp_path_factory):
+        output = tmp_path_factory.mktemp("receipt_" + request.param[1:])
+        compiler = shutil.which("gcc")
+        assert compiler
+        source = Path(
+            os.environ.get(
+                "SILVERSTAR_GNSS_SELECTOR_SOURCE",
+                str(CORE / "System/Src/system_source_selector.c"),
+            )
+        ).resolve()
+        fixture = Path(__file__).parent / "fixtures/gnss_receipt_publication.c"
+        sources = [
+            fixture,
+            CORE / "System/Src/system_gnss_receipt.c",
+            CORE / "Common/Src/silverstar_assert.c",
+        ]
+        includes = [
+            ROOT / "apps/SCG/tests/fixtures/source_selector",
+            CORE / "Tests/Host",
+            CORE / "Interfaces/Inc",
+            CORE / "System/Inc",
+            CORE / "System/User",
+            CORE / "Common/Inc",
+            BUILTIN / "silverstar_platform_api/payload/Platform/Inc",
+        ]
+        includes += [path for path in CORE.rglob("Inc") if path not in includes]
+        target = output / "receipt.exe"
+        command = [
+            compiler,
+            "-std=c11",
+            request.param,
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-Wpedantic",
+            "-Wconversion",
+            "-Wsign-conversion",
+            "-Wshadow",
+            "-Wstrict-prototypes",
+            "-Wmissing-prototypes",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-Wl,--gc-sections",
+            "-DSILVERSTAR_PROTOCOL_LOGGING_ENABLED=0U",
+            "-DSYSTEM_BUILD_BAROMETER_COLD_ENABLED=0U",
+            '-DSOURCE_SELECTOR_FIXTURE="'
+            + (CORE / "Tests/Host/test_source_selector.c").as_posix()
+            + '"',
+            '-DSOURCE_SELECTOR_SOURCE="' + source.as_posix() + '"',
+            *["-I" + str(path) for path in includes],
+            *map(str, sources),
+            "-lm",
+            "-o",
+            str(target),
+        ]
+        run = subprocess.run(command, capture_output=True, text=True, timeout=120, check=False)
+        evidence = {
+            "command": command,
+            "exit_code": run.returncode,
+            "stdout": run.stdout,
+            "stderr": run.stderr,
+            "source_sha256": {
+                str(path): sha256(path.read_bytes()).hexdigest()
+                for path in [*sources, source, CORE / "Tests/Host/test_source_selector.c"]
+            },
+        }
+        (output / "compile.json").write_text(
+            json.dumps(evidence, indent=2), encoding="utf8"
+        )
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\SCG\tests\fixtures\gnss_receipt_publication.c:17:
+E         D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_source_selector.c:405:20: error: no previous prototype for 'ProjectTelemetryInstance_ModeSet' [-Werror=missing-prototypes]
+E           405 | SystemDeviceResult ProjectTelemetryInstance_ModeSet(uint8_t instance_id, SystemTelemetryMode mode)
+E               |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O0', '-Wall', '-Wextra', '-Werror', '-Wpedant...e mode)\n      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+tests\test_gnss_receipt_publication.py:87: AssertionError
+_ ERROR at setup of test_actual_source_handoff_barrier_and_clock_proof[-O0-clock_proof] _
+
+request = <SubRequest 'executable' for <Function test_actual_source_handoff_barrier_and_clock_proof[-O0-liveness_atomic_publication]>>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module", params=["-O0", "-O2"])
+    def executable(request, tmp_path_factory):
+        output = tmp_path_factory.mktemp("receipt_" + request.param[1:])
+        compiler = shutil.which("gcc")
+        assert compiler
+        source = Path(
+            os.environ.get(
+                "SILVERSTAR_GNSS_SELECTOR_SOURCE",
+                str(CORE / "System/Src/system_source_selector.c"),
+            )
+        ).resolve()
+        fixture = Path(__file__).parent / "fixtures/gnss_receipt_publication.c"
+        sources = [
+            fixture,
+            CORE / "System/Src/system_gnss_receipt.c",
+            CORE / "Common/Src/silverstar_assert.c",
+        ]
+        includes = [
+            ROOT / "apps/SCG/tests/fixtures/source_selector",
+            CORE / "Tests/Host",
+            CORE / "Interfaces/Inc",
+            CORE / "System/Inc",
+            CORE / "System/User",
+            CORE / "Common/Inc",
+            BUILTIN / "silverstar_platform_api/payload/Platform/Inc",
+        ]
+        includes += [path for path in CORE.rglob("Inc") if path not in includes]
+        target = output / "receipt.exe"
+        command = [
+            compiler,
+            "-std=c11",
+            request.param,
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-Wpedantic",
+            "-Wconversion",
+            "-Wsign-conversion",
+            "-Wshadow",
+            "-Wstrict-prototypes",
+            "-Wmissing-prototypes",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-Wl,--gc-sections",
+            "-DSILVERSTAR_PROTOCOL_LOGGING_ENABLED=0U",
+            "-DSYSTEM_BUILD_BAROMETER_COLD_ENABLED=0U",
+            '-DSOURCE_SELECTOR_FIXTURE="'
+            + (CORE / "Tests/Host/test_source_selector.c").as_posix()
+            + '"',
+            '-DSOURCE_SELECTOR_SOURCE="' + source.as_posix() + '"',
+            *["-I" + str(path) for path in includes],
+            *map(str, sources),
+            "-lm",
+            "-o",
+            str(target),
+        ]
+        run = subprocess.run(command, capture_output=True, text=True, timeout=120, check=False)
+        evidence = {
+            "command": command,
+            "exit_code": run.returncode,
+            "stdout": run.stdout,
+            "stderr": run.stderr,
+            "source_sha256": {
+                str(path): sha256(path.read_bytes()).hexdigest()
+                for path in [*sources, source, CORE / "Tests/Host/test_source_selector.c"]
+            },
+        }
+        (output / "compile.json").write_text(
+            json.dumps(evidence, indent=2), encoding="utf8"
+        )
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\SCG\tests\fixtures\gnss_receipt_publication.c:17:
+E         D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_source_selector.c:405:20: error: no previous prototype for 'ProjectTelemetryInstance_ModeSet' [-Werror=missing-prototypes]
+E           405 | SystemDeviceResult ProjectTelemetryInstance_ModeSet(uint8_t instance_id, SystemTelemetryMode mode)
+E               |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O0', '-Wall', '-Wextra', '-Werror', '-Wpedant...e mode)\n      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+tests\test_gnss_receipt_publication.py:87: AssertionError
+_ ERROR at setup of test_actual_source_handoff_barrier_and_clock_proof[-O0-snapshot_output_and_nesting] _
+
+request = <SubRequest 'executable' for <Function test_actual_source_handoff_barrier_and_clock_proof[-O0-liveness_atomic_publication]>>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module", params=["-O0", "-O2"])
+    def executable(request, tmp_path_factory):
+        output = tmp_path_factory.mktemp("receipt_" + request.param[1:])
+        compiler = shutil.which("gcc")
+        assert compiler
+        source = Path(
+            os.environ.get(
+                "SILVERSTAR_GNSS_SELECTOR_SOURCE",
+                str(CORE / "System/Src/system_source_selector.c"),
+            )
+        ).resolve()
+        fixture = Path(__file__).parent / "fixtures/gnss_receipt_publication.c"
+        sources = [
+            fixture,
+            CORE / "System/Src/system_gnss_receipt.c",
+            CORE / "Common/Src/silverstar_assert.c",
+        ]
+        includes = [
+            ROOT / "apps/SCG/tests/fixtures/source_selector",
+            CORE / "Tests/Host",
+            CORE / "Interfaces/Inc",
+            CORE / "System/Inc",
+            CORE / "System/User",
+            CORE / "Common/Inc",
+            BUILTIN / "silverstar_platform_api/payload/Platform/Inc",
+        ]
+        includes += [path for path in CORE.rglob("Inc") if path not in includes]
+        target = output / "receipt.exe"
+        command = [
+            compiler,
+            "-std=c11",
+            request.param,
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-Wpedantic",
+            "-Wconversion",
+            "-Wsign-conversion",
+            "-Wshadow",
+            "-Wstrict-prototypes",
+            "-Wmissing-prototypes",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-Wl,--gc-sections",
+            "-DSILVERSTAR_PROTOCOL_LOGGING_ENABLED=0U",
+            "-DSYSTEM_BUILD_BAROMETER_COLD_ENABLED=0U",
+            '-DSOURCE_SELECTOR_FIXTURE="'
+            + (CORE / "Tests/Host/test_source_selector.c").as_posix()
+            + '"',
+            '-DSOURCE_SELECTOR_SOURCE="' + source.as_posix() + '"',
+            *["-I" + str(path) for path in includes],
+            *map(str, sources),
+            "-lm",
+            "-o",
+            str(target),
+        ]
+        run = subprocess.run(command, capture_output=True, text=True, timeout=120, check=False)
+        evidence = {
+            "command": command,
+            "exit_code": run.returncode,
+            "stdout": run.stdout,
+            "stderr": run.stderr,
+            "source_sha256": {
+                str(path): sha256(path.read_bytes()).hexdigest()
+                for path in [*sources, source, CORE / "Tests/Host/test_source_selector.c"]
+            },
+        }
+        (output / "compile.json").write_text(
+            json.dumps(evidence, indent=2), encoding="utf8"
+        )
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\SCG\tests\fixtures\gnss_receipt_publication.c:17:
+E         D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_source_selector.c:405:20: error: no previous prototype for 'ProjectTelemetryInstance_ModeSet' [-Werror=missing-prototypes]
+E           405 | SystemDeviceResult ProjectTelemetryInstance_ModeSet(uint8_t instance_id, SystemTelemetryMode mode)
+E               |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O0', '-Wall', '-Wextra', '-Werror', '-Wpedant...e mode)\n      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+tests\test_gnss_receipt_publication.py:87: AssertionError
+_ ERROR at setup of test_actual_source_handoff_barrier_and_clock_proof[-O0-corrupt_owned_selector_rejected] _
+
+request = <SubRequest 'executable' for <Function test_actual_source_handoff_barrier_and_clock_proof[-O0-liveness_atomic_publication]>>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module", params=["-O0", "-O2"])
+    def executable(request, tmp_path_factory):
+        output = tmp_path_factory.mktemp("receipt_" + request.param[1:])
+        compiler = shutil.which("gcc")
+        assert compiler
+        source = Path(
+            os.environ.get(
+                "SILVERSTAR_GNSS_SELECTOR_SOURCE",
+                str(CORE / "System/Src/system_source_selector.c"),
+            )
+        ).resolve()
+        fixture = Path(__file__).parent / "fixtures/gnss_receipt_publication.c"
+        sources = [
+            fixture,
+            CORE / "System/Src/system_gnss_receipt.c",
+            CORE / "Common/Src/silverstar_assert.c",
+        ]
+        includes = [
+            ROOT / "apps/SCG/tests/fixtures/source_selector",
+            CORE / "Tests/Host",
+            CORE / "Interfaces/Inc",
+            CORE / "System/Inc",
+            CORE / "System/User",
+            CORE / "Common/Inc",
+            BUILTIN / "silverstar_platform_api/payload/Platform/Inc",
+        ]
+        includes += [path for path in CORE.rglob("Inc") if path not in includes]
+        target = output / "receipt.exe"
+        command = [
+            compiler,
+            "-std=c11",
+            request.param,
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-Wpedantic",
+            "-Wconversion",
+            "-Wsign-conversion",
+            "-Wshadow",
+            "-Wstrict-prototypes",
+            "-Wmissing-prototypes",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-Wl,--gc-sections",
+            "-DSILVERSTAR_PROTOCOL_LOGGING_ENABLED=0U",
+            "-DSYSTEM_BUILD_BAROMETER_COLD_ENABLED=0U",
+            '-DSOURCE_SELECTOR_FIXTURE="'
+            + (CORE / "Tests/Host/test_source_selector.c").as_posix()
+            + '"',
+            '-DSOURCE_SELECTOR_SOURCE="' + source.as_posix() + '"',
+            *["-I" + str(path) for path in includes],
+            *map(str, sources),
+            "-lm",
+            "-o",
+            str(target),
+        ]
+        run = subprocess.run(command, capture_output=True, text=True, timeout=120, check=False)
+        evidence = {
+            "command": command,
+            "exit_code": run.returncode,
+            "stdout": run.stdout,
+            "stderr": run.stderr,
+            "source_sha256": {
+                str(path): sha256(path.read_bytes()).hexdigest()
+                for path in [*sources, source, CORE / "Tests/Host/test_source_selector.c"]
+            },
+        }
+        (output / "compile.json").write_text(
+            json.dumps(evidence, indent=2), encoding="utf8"
+        )
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\SCG\tests\fixtures\gnss_receipt_publication.c:17:
+E         D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_source_selector.c:405:20: error: no previous prototype for 'ProjectTelemetryInstance_ModeSet' [-Werror=missing-prototypes]
+E           405 | SystemDeviceResult ProjectTelemetryInstance_ModeSet(uint8_t instance_id, SystemTelemetryMode mode)
+E               |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O0', '-Wall', '-Wextra', '-Werror', '-Wpedant...e mode)\n      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+tests\test_gnss_receipt_publication.py:87: AssertionError
+_ ERROR at setup of test_actual_source_handoff_barrier_and_clock_proof[-O2-liveness_atomic_publication] _
+
+request = <SubRequest 'executable' for <Function test_actual_source_handoff_barrier_and_clock_proof[-O2-liveness_atomic_publication]>>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module", params=["-O0", "-O2"])
+    def executable(request, tmp_path_factory):
+        output = tmp_path_factory.mktemp("receipt_" + request.param[1:])
+        compiler = shutil.which("gcc")
+        assert compiler
+        source = Path(
+            os.environ.get(
+                "SILVERSTAR_GNSS_SELECTOR_SOURCE",
+                str(CORE / "System/Src/system_source_selector.c"),
+            )
+        ).resolve()
+        fixture = Path(__file__).parent / "fixtures/gnss_receipt_publication.c"
+        sources = [
+            fixture,
+            CORE / "System/Src/system_gnss_receipt.c",
+            CORE / "Common/Src/silverstar_assert.c",
+        ]
+        includes = [
+            ROOT / "apps/SCG/tests/fixtures/source_selector",
+            CORE / "Tests/Host",
+            CORE / "Interfaces/Inc",
+            CORE / "System/Inc",
+            CORE / "System/User",
+            CORE / "Common/Inc",
+            BUILTIN / "silverstar_platform_api/payload/Platform/Inc",
+        ]
+        includes += [path for path in CORE.rglob("Inc") if path not in includes]
+        target = output / "receipt.exe"
+        command = [
+            compiler,
+            "-std=c11",
+            request.param,
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-Wpedantic",
+            "-Wconversion",
+            "-Wsign-conversion",
+            "-Wshadow",
+            "-Wstrict-prototypes",
+            "-Wmissing-prototypes",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-Wl,--gc-sections",
+            "-DSILVERSTAR_PROTOCOL_LOGGING_ENABLED=0U",
+            "-DSYSTEM_BUILD_BAROMETER_COLD_ENABLED=0U",
+            '-DSOURCE_SELECTOR_FIXTURE="'
+            + (CORE / "Tests/Host/test_source_selector.c").as_posix()
+            + '"',
+            '-DSOURCE_SELECTOR_SOURCE="' + source.as_posix() + '"',
+            *["-I" + str(path) for path in includes],
+            *map(str, sources),
+            "-lm",
+            "-o",
+            str(target),
+        ]
+        run = subprocess.run(command, capture_output=True, text=True, timeout=120, check=False)
+        evidence = {
+            "command": command,
+            "exit_code": run.returncode,
+            "stdout": run.stdout,
+            "stderr": run.stderr,
+            "source_sha256": {
+                str(path): sha256(path.read_bytes()).hexdigest()
+                for path in [*sources, source, CORE / "Tests/Host/test_source_selector.c"]
+            },
+        }
+        (output / "compile.json").write_text(
+            json.dumps(evidence, indent=2), encoding="utf8"
+        )
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\SCG\tests\fixtures\gnss_receipt_publication.c:17:
+E         D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_source_selector.c:405:20: error: no previous prototype for 'ProjectTelemetryInstance_ModeSet' [-Werror=missing-prototypes]
+E           405 | SystemDeviceResult ProjectTelemetryInstance_ModeSet(uint8_t instance_id, SystemTelemetryMode mode)
+E               |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...e mode)\n      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+tests\test_gnss_receipt_publication.py:87: AssertionError
+_ ERROR at setup of test_actual_source_handoff_barrier_and_clock_proof[-O2-recovery_atomic_publication] _
+
+request = <SubRequest 'executable' for <Function test_actual_source_handoff_barrier_and_clock_proof[-O2-liveness_atomic_publication]>>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module", params=["-O0", "-O2"])
+    def executable(request, tmp_path_factory):
+        output = tmp_path_factory.mktemp("receipt_" + request.param[1:])
+        compiler = shutil.which("gcc")
+        assert compiler
+        source = Path(
+            os.environ.get(
+                "SILVERSTAR_GNSS_SELECTOR_SOURCE",
+                str(CORE / "System/Src/system_source_selector.c"),
+            )
+        ).resolve()
+        fixture = Path(__file__).parent / "fixtures/gnss_receipt_publication.c"
+        sources = [
+            fixture,
+            CORE / "System/Src/system_gnss_receipt.c",
+            CORE / "Common/Src/silverstar_assert.c",
+        ]
+        includes = [
+            ROOT / "apps/SCG/tests/fixtures/source_selector",
+            CORE / "Tests/Host",
+            CORE / "Interfaces/Inc",
+            CORE / "System/Inc",
+            CORE / "System/User",
+            CORE / "Common/Inc",
+            BUILTIN / "silverstar_platform_api/payload/Platform/Inc",
+        ]
+        includes += [path for path in CORE.rglob("Inc") if path not in includes]
+        target = output / "receipt.exe"
+        command = [
+            compiler,
+            "-std=c11",
+            request.param,
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-Wpedantic",
+            "-Wconversion",
+            "-Wsign-conversion",
+            "-Wshadow",
+            "-Wstrict-prototypes",
+            "-Wmissing-prototypes",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-Wl,--gc-sections",
+            "-DSILVERSTAR_PROTOCOL_LOGGING_ENABLED=0U",
+            "-DSYSTEM_BUILD_BAROMETER_COLD_ENABLED=0U",
+            '-DSOURCE_SELECTOR_FIXTURE="'
+            + (CORE / "Tests/Host/test_source_selector.c").as_posix()
+            + '"',
+            '-DSOURCE_SELECTOR_SOURCE="' + source.as_posix() + '"',
+            *["-I" + str(path) for path in includes],
+            *map(str, sources),
+            "-lm",
+            "-o",
+            str(target),
+        ]
+        run = subprocess.run(command, capture_output=True, text=True, timeout=120, check=False)
+        evidence = {
+            "command": command,
+            "exit_code": run.returncode,
+            "stdout": run.stdout,
+            "stderr": run.stderr,
+            "source_sha256": {
+                str(path): sha256(path.read_bytes()).hexdigest()
+                for path in [*sources, source, CORE / "Tests/Host/test_source_selector.c"]
+            },
+        }
+        (output / "compile.json").write_text(
+            json.dumps(evidence, indent=2), encoding="utf8"
+        )
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\SCG\tests\fixtures\gnss_receipt_publication.c:17:
+E         D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_source_selector.c:405:20: error: no previous prototype for 'ProjectTelemetryInstance_ModeSet' [-Werror=missing-prototypes]
+E           405 | SystemDeviceResult ProjectTelemetryInstance_ModeSet(uint8_t instance_id, SystemTelemetryMode mode)
+E               |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...e mode)\n      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+tests\test_gnss_receipt_publication.py:87: AssertionError
+_ ERROR at setup of test_actual_source_handoff_barrier_and_clock_proof[-O2-clock_proof] _
+
+request = <SubRequest 'executable' for <Function test_actual_source_handoff_barrier_and_clock_proof[-O2-liveness_atomic_publication]>>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module", params=["-O0", "-O2"])
+    def executable(request, tmp_path_factory):
+        output = tmp_path_factory.mktemp("receipt_" + request.param[1:])
+        compiler = shutil.which("gcc")
+        assert compiler
+        source = Path(
+            os.environ.get(
+                "SILVERSTAR_GNSS_SELECTOR_SOURCE",
+                str(CORE / "System/Src/system_source_selector.c"),
+            )
+        ).resolve()
+        fixture = Path(__file__).parent / "fixtures/gnss_receipt_publication.c"
+        sources = [
+            fixture,
+            CORE / "System/Src/system_gnss_receipt.c",
+            CORE / "Common/Src/silverstar_assert.c",
+        ]
+        includes = [
+            ROOT / "apps/SCG/tests/fixtures/source_selector",
+            CORE / "Tests/Host",
+            CORE / "Interfaces/Inc",
+            CORE / "System/Inc",
+            CORE / "System/User",
+            CORE / "Common/Inc",
+            BUILTIN / "silverstar_platform_api/payload/Platform/Inc",
+        ]
+        includes += [path for path in CORE.rglob("Inc") if path not in includes]
+        target = output / "receipt.exe"
+        command = [
+            compiler,
+            "-std=c11",
+            request.param,
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-Wpedantic",
+            "-Wconversion",
+            "-Wsign-conversion",
+            "-Wshadow",
+            "-Wstrict-prototypes",
+            "-Wmissing-prototypes",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-Wl,--gc-sections",
+            "-DSILVERSTAR_PROTOCOL_LOGGING_ENABLED=0U",
+            "-DSYSTEM_BUILD_BAROMETER_COLD_ENABLED=0U",
+            '-DSOURCE_SELECTOR_FIXTURE="'
+            + (CORE / "Tests/Host/test_source_selector.c").as_posix()
+            + '"',
+            '-DSOURCE_SELECTOR_SOURCE="' + source.as_posix() + '"',
+            *["-I" + str(path) for path in includes],
+            *map(str, sources),
+            "-lm",
+            "-o",
+            str(target),
+        ]
+        run = subprocess.run(command, capture_output=True, text=True, timeout=120, check=False)
+        evidence = {
+            "command": command,
+            "exit_code": run.returncode,
+            "stdout": run.stdout,
+            "stderr": run.stderr,
+            "source_sha256": {
+                str(path): sha256(path.read_bytes()).hexdigest()
+                for path in [*sources, source, CORE / "Tests/Host/test_source_selector.c"]
+            },
+        }
+        (output / "compile.json").write_text(
+            json.dumps(evidence, indent=2), encoding="utf8"
+        )
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\SCG\tests\fixtures\gnss_receipt_publication.c:17:
+E         D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_source_selector.c:405:20: error: no previous prototype for 'ProjectTelemetryInstance_ModeSet' [-Werror=missing-prototypes]
+E           405 | SystemDeviceResult ProjectTelemetryInstance_ModeSet(uint8_t instance_id, SystemTelemetryMode mode)
+E               |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...e mode)\n      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+tests\test_gnss_receipt_publication.py:87: AssertionError
+_ ERROR at setup of test_actual_source_handoff_barrier_and_clock_proof[-O2-snapshot_output_and_nesting] _
+
+request = <SubRequest 'executable' for <Function test_actual_source_handoff_barrier_and_clock_proof[-O2-liveness_atomic_publication]>>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module", params=["-O0", "-O2"])
+    def executable(request, tmp_path_factory):
+        output = tmp_path_factory.mktemp("receipt_" + request.param[1:])
+        compiler = shutil.which("gcc")
+        assert compiler
+        source = Path(
+            os.environ.get(
+                "SILVERSTAR_GNSS_SELECTOR_SOURCE",
+                str(CORE / "System/Src/system_source_selector.c"),
+            )
+        ).resolve()
+        fixture = Path(__file__).parent / "fixtures/gnss_receipt_publication.c"
+        sources = [
+            fixture,
+            CORE / "System/Src/system_gnss_receipt.c",
+            CORE / "Common/Src/silverstar_assert.c",
+        ]
+        includes = [
+            ROOT / "apps/SCG/tests/fixtures/source_selector",
+            CORE / "Tests/Host",
+            CORE / "Interfaces/Inc",
+            CORE / "System/Inc",
+            CORE / "System/User",
+            CORE / "Common/Inc",
+            BUILTIN / "silverstar_platform_api/payload/Platform/Inc",
+        ]
+        includes += [path for path in CORE.rglob("Inc") if path not in includes]
+        target = output / "receipt.exe"
+        command = [
+            compiler,
+            "-std=c11",
+            request.param,
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-Wpedantic",
+            "-Wconversion",
+            "-Wsign-conversion",
+            "-Wshadow",
+            "-Wstrict-prototypes",
+            "-Wmissing-prototypes",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-Wl,--gc-sections",
+            "-DSILVERSTAR_PROTOCOL_LOGGING_ENABLED=0U",
+            "-DSYSTEM_BUILD_BAROMETER_COLD_ENABLED=0U",
+            '-DSOURCE_SELECTOR_FIXTURE="'
+            + (CORE / "Tests/Host/test_source_selector.c").as_posix()
+            + '"',
+            '-DSOURCE_SELECTOR_SOURCE="' + source.as_posix() + '"',
+            *["-I" + str(path) for path in includes],
+            *map(str, sources),
+            "-lm",
+            "-o",
+            str(target),
+        ]
+        run = subprocess.run(command, capture_output=True, text=True, timeout=120, check=False)
+        evidence = {
+            "command": command,
+            "exit_code": run.returncode,
+            "stdout": run.stdout,
+            "stderr": run.stderr,
+            "source_sha256": {
+                str(path): sha256(path.read_bytes()).hexdigest()
+                for path in [*sources, source, CORE / "Tests/Host/test_source_selector.c"]
+            },
+        }
+        (output / "compile.json").write_text(
+            json.dumps(evidence, indent=2), encoding="utf8"
+        )
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\SCG\tests\fixtures\gnss_receipt_publication.c:17:
+E         D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_source_selector.c:405:20: error: no previous prototype for 'ProjectTelemetryInstance_ModeSet' [-Werror=missing-prototypes]
+E           405 | SystemDeviceResult ProjectTelemetryInstance_ModeSet(uint8_t instance_id, SystemTelemetryMode mode)
+E               |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...e mode)\n      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+tests\test_gnss_receipt_publication.py:87: AssertionError
+_ ERROR at setup of test_actual_source_handoff_barrier_and_clock_proof[-O2-corrupt_owned_selector_rejected] _
+
+request = <SubRequest 'executable' for <Function test_actual_source_handoff_barrier_and_clock_proof[-O2-liveness_atomic_publication]>>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module", params=["-O0", "-O2"])
+    def executable(request, tmp_path_factory):
+        output = tmp_path_factory.mktemp("receipt_" + request.param[1:])
+        compiler = shutil.which("gcc")
+        assert compiler
+        source = Path(
+            os.environ.get(
+                "SILVERSTAR_GNSS_SELECTOR_SOURCE",
+                str(CORE / "System/Src/system_source_selector.c"),
+            )
+        ).resolve()
+        fixture = Path(__file__).parent / "fixtures/gnss_receipt_publication.c"
+        sources = [
+            fixture,
+            CORE / "System/Src/system_gnss_receipt.c",
+            CORE / "Common/Src/silverstar_assert.c",
+        ]
+        includes = [
+            ROOT / "apps/SCG/tests/fixtures/source_selector",
+            CORE / "Tests/Host",
+            CORE / "Interfaces/Inc",
+            CORE / "System/Inc",
+            CORE / "System/User",
+            CORE / "Common/Inc",
+            BUILTIN / "silverstar_platform_api/payload/Platform/Inc",
+        ]
+        includes += [path for path in CORE.rglob("Inc") if path not in includes]
+        target = output / "receipt.exe"
+        command = [
+            compiler,
+            "-std=c11",
+            request.param,
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-Wpedantic",
+            "-Wconversion",
+            "-Wsign-conversion",
+            "-Wshadow",
+            "-Wstrict-prototypes",
+            "-Wmissing-prototypes",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-Wl,--gc-sections",
+            "-DSILVERSTAR_PROTOCOL_LOGGING_ENABLED=0U",
+            "-DSYSTEM_BUILD_BAROMETER_COLD_ENABLED=0U",
+            '-DSOURCE_SELECTOR_FIXTURE="'
+            + (CORE / "Tests/Host/test_source_selector.c").as_posix()
+            + '"',
+            '-DSOURCE_SELECTOR_SOURCE="' + source.as_posix() + '"',
+            *["-I" + str(path) for path in includes],
+            *map(str, sources),
+            "-lm",
+            "-o",
+            str(target),
+        ]
+        run = subprocess.run(command, capture_output=True, text=True, timeout=120, check=False)
+        evidence = {
+            "command": command,
+            "exit_code": run.returncode,
+            "stdout": run.stdout,
+            "stderr": run.stderr,
+            "source_sha256": {
+                str(path): sha256(path.read_bytes()).hexdigest()
+                for path in [*sources, source, CORE / "Tests/Host/test_source_selector.c"]
+            },
+        }
+        (output / "compile.json").write_text(
+            json.dumps(evidence, indent=2), encoding="utf8"
+        )
+>       assert run.returncode == 0, run.stdout + run.stderr
+E       AssertionError: In file included from D:\python_software\SilverStar\apps\SCG\tests\fixtures\gnss_receipt_publication.c:17:
+E         D:/python_software/SilverStar/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_source_selector.c:405:20: error: no previous prototype for 'ProjectTelemetryInstance_ModeSet' [-Werror=missing-prototypes]
+E           405 | SystemDeviceResult ProjectTelemetryInstance_ModeSet(uint8_t instance_id, SystemTelemetryMode mode)
+E               |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+E         cc1.exe: all warnings being treated as errors
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...e mode)\n      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\ncc1.exe: all warnings being treated as errors\n").returncode
+
+tests\test_gnss_receipt_publication.py:87: AssertionError
+_ ERROR at setup of test_late_cancel_or_timeout_reports_actual_publication[cancel-1] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def dll(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        assert gcc, "Host GCC is required for actual C lifecycle regressions"
+        output = tmp_path_factory.mktemp("installation-store") / "coordinator.dll"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wpedantic", "-Wswitch-enum", "-shared",
+                   "-DSYSTEM_INSTALLATION_CAPTURE_ENABLED=1", "-DRYU_ONLY_64_BIT_OPS"]
+        code = PAYLOAD / "Modules/InstallationCapture"
+        for directory in [ROOT / "tests/fixtures/installation_store", code / "Inc", code / "Src", PAYLOAD / "ThirdParty/InstallationCapture", EXPERIMENT,
+                          EXPERIMENT / "fixtures", CORE / "Common/Inc", CORE / "Interfaces/Inc",
+                          CORE / "System/Inc"]:
+            command += ["-I", str(directory)]
+        sources = [EXPERIMENT / name for name in ("capture_test_access.c", "capture_port_host.c", "integration_stubs.c")]
+        sources += [code / "Src" / name for name in ("capture_info.c", "capture_primitives.c", "installation_lease.c", "installation_store.c")]
+        sources += [PAYLOAD / "ThirdParty/InstallationCapture/ryu/d2s.c", ROOT / "tests/fixtures/installation_store_host.c"]
+        result = subprocess.run([*command, *map(str, sources), "-o", str(output)], capture_output=True, text=True, timeout=90)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccXTzcNO.o:capture_test_access.c:(.text+0x12cd): undefined reference to `CapturePort_WordConsume'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccGpL6BS.o:installation_lease.c:(.text+0xaf): undefined reference to `SystemInstallationActive_DependenciesChanged'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...defined reference to `SystemInstallationActive_DependenciesChanged'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+tests\test_installation_store_lifecycle.py:56: AssertionError
+_ ERROR at setup of test_late_cancel_or_timeout_reports_actual_publication[cancel-2] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def dll(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        assert gcc, "Host GCC is required for actual C lifecycle regressions"
+        output = tmp_path_factory.mktemp("installation-store") / "coordinator.dll"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wpedantic", "-Wswitch-enum", "-shared",
+                   "-DSYSTEM_INSTALLATION_CAPTURE_ENABLED=1", "-DRYU_ONLY_64_BIT_OPS"]
+        code = PAYLOAD / "Modules/InstallationCapture"
+        for directory in [ROOT / "tests/fixtures/installation_store", code / "Inc", code / "Src", PAYLOAD / "ThirdParty/InstallationCapture", EXPERIMENT,
+                          EXPERIMENT / "fixtures", CORE / "Common/Inc", CORE / "Interfaces/Inc",
+                          CORE / "System/Inc"]:
+            command += ["-I", str(directory)]
+        sources = [EXPERIMENT / name for name in ("capture_test_access.c", "capture_port_host.c", "integration_stubs.c")]
+        sources += [code / "Src" / name for name in ("capture_info.c", "capture_primitives.c", "installation_lease.c", "installation_store.c")]
+        sources += [PAYLOAD / "ThirdParty/InstallationCapture/ryu/d2s.c", ROOT / "tests/fixtures/installation_store_host.c"]
+        result = subprocess.run([*command, *map(str, sources), "-o", str(output)], capture_output=True, text=True, timeout=90)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccXTzcNO.o:capture_test_access.c:(.text+0x12cd): undefined reference to `CapturePort_WordConsume'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccGpL6BS.o:installation_lease.c:(.text+0xaf): undefined reference to `SystemInstallationActive_DependenciesChanged'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...defined reference to `SystemInstallationActive_DependenciesChanged'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+tests\test_installation_store_lifecycle.py:56: AssertionError
+_ ERROR at setup of test_late_cancel_or_timeout_reports_actual_publication[cancel-3] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def dll(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        assert gcc, "Host GCC is required for actual C lifecycle regressions"
+        output = tmp_path_factory.mktemp("installation-store") / "coordinator.dll"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wpedantic", "-Wswitch-enum", "-shared",
+                   "-DSYSTEM_INSTALLATION_CAPTURE_ENABLED=1", "-DRYU_ONLY_64_BIT_OPS"]
+        code = PAYLOAD / "Modules/InstallationCapture"
+        for directory in [ROOT / "tests/fixtures/installation_store", code / "Inc", code / "Src", PAYLOAD / "ThirdParty/InstallationCapture", EXPERIMENT,
+                          EXPERIMENT / "fixtures", CORE / "Common/Inc", CORE / "Interfaces/Inc",
+                          CORE / "System/Inc"]:
+            command += ["-I", str(directory)]
+        sources = [EXPERIMENT / name for name in ("capture_test_access.c", "capture_port_host.c", "integration_stubs.c")]
+        sources += [code / "Src" / name for name in ("capture_info.c", "capture_primitives.c", "installation_lease.c", "installation_store.c")]
+        sources += [PAYLOAD / "ThirdParty/InstallationCapture/ryu/d2s.c", ROOT / "tests/fixtures/installation_store_host.c"]
+        result = subprocess.run([*command, *map(str, sources), "-o", str(output)], capture_output=True, text=True, timeout=90)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccXTzcNO.o:capture_test_access.c:(.text+0x12cd): undefined reference to `CapturePort_WordConsume'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccGpL6BS.o:installation_lease.c:(.text+0xaf): undefined reference to `SystemInstallationActive_DependenciesChanged'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...defined reference to `SystemInstallationActive_DependenciesChanged'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+tests\test_installation_store_lifecycle.py:56: AssertionError
+_ ERROR at setup of test_late_cancel_or_timeout_reports_actual_publication[cancel-4] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def dll(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        assert gcc, "Host GCC is required for actual C lifecycle regressions"
+        output = tmp_path_factory.mktemp("installation-store") / "coordinator.dll"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wpedantic", "-Wswitch-enum", "-shared",
+                   "-DSYSTEM_INSTALLATION_CAPTURE_ENABLED=1", "-DRYU_ONLY_64_BIT_OPS"]
+        code = PAYLOAD / "Modules/InstallationCapture"
+        for directory in [ROOT / "tests/fixtures/installation_store", code / "Inc", code / "Src", PAYLOAD / "ThirdParty/InstallationCapture", EXPERIMENT,
+                          EXPERIMENT / "fixtures", CORE / "Common/Inc", CORE / "Interfaces/Inc",
+                          CORE / "System/Inc"]:
+            command += ["-I", str(directory)]
+        sources = [EXPERIMENT / name for name in ("capture_test_access.c", "capture_port_host.c", "integration_stubs.c")]
+        sources += [code / "Src" / name for name in ("capture_info.c", "capture_primitives.c", "installation_lease.c", "installation_store.c")]
+        sources += [PAYLOAD / "ThirdParty/InstallationCapture/ryu/d2s.c", ROOT / "tests/fixtures/installation_store_host.c"]
+        result = subprocess.run([*command, *map(str, sources), "-o", str(output)], capture_output=True, text=True, timeout=90)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccXTzcNO.o:capture_test_access.c:(.text+0x12cd): undefined reference to `CapturePort_WordConsume'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccGpL6BS.o:installation_lease.c:(.text+0xaf): undefined reference to `SystemInstallationActive_DependenciesChanged'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...defined reference to `SystemInstallationActive_DependenciesChanged'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+tests\test_installation_store_lifecycle.py:56: AssertionError
+_ ERROR at setup of test_late_cancel_or_timeout_reports_actual_publication[cancel-5] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def dll(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        assert gcc, "Host GCC is required for actual C lifecycle regressions"
+        output = tmp_path_factory.mktemp("installation-store") / "coordinator.dll"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wpedantic", "-Wswitch-enum", "-shared",
+                   "-DSYSTEM_INSTALLATION_CAPTURE_ENABLED=1", "-DRYU_ONLY_64_BIT_OPS"]
+        code = PAYLOAD / "Modules/InstallationCapture"
+        for directory in [ROOT / "tests/fixtures/installation_store", code / "Inc", code / "Src", PAYLOAD / "ThirdParty/InstallationCapture", EXPERIMENT,
+                          EXPERIMENT / "fixtures", CORE / "Common/Inc", CORE / "Interfaces/Inc",
+                          CORE / "System/Inc"]:
+            command += ["-I", str(directory)]
+        sources = [EXPERIMENT / name for name in ("capture_test_access.c", "capture_port_host.c", "integration_stubs.c")]
+        sources += [code / "Src" / name for name in ("capture_info.c", "capture_primitives.c", "installation_lease.c", "installation_store.c")]
+        sources += [PAYLOAD / "ThirdParty/InstallationCapture/ryu/d2s.c", ROOT / "tests/fixtures/installation_store_host.c"]
+        result = subprocess.run([*command, *map(str, sources), "-o", str(output)], capture_output=True, text=True, timeout=90)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccXTzcNO.o:capture_test_access.c:(.text+0x12cd): undefined reference to `CapturePort_WordConsume'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccGpL6BS.o:installation_lease.c:(.text+0xaf): undefined reference to `SystemInstallationActive_DependenciesChanged'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...defined reference to `SystemInstallationActive_DependenciesChanged'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+tests\test_installation_store_lifecycle.py:56: AssertionError
+_ ERROR at setup of test_late_cancel_or_timeout_reports_actual_publication[timeout-1] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def dll(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        assert gcc, "Host GCC is required for actual C lifecycle regressions"
+        output = tmp_path_factory.mktemp("installation-store") / "coordinator.dll"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wpedantic", "-Wswitch-enum", "-shared",
+                   "-DSYSTEM_INSTALLATION_CAPTURE_ENABLED=1", "-DRYU_ONLY_64_BIT_OPS"]
+        code = PAYLOAD / "Modules/InstallationCapture"
+        for directory in [ROOT / "tests/fixtures/installation_store", code / "Inc", code / "Src", PAYLOAD / "ThirdParty/InstallationCapture", EXPERIMENT,
+                          EXPERIMENT / "fixtures", CORE / "Common/Inc", CORE / "Interfaces/Inc",
+                          CORE / "System/Inc"]:
+            command += ["-I", str(directory)]
+        sources = [EXPERIMENT / name for name in ("capture_test_access.c", "capture_port_host.c", "integration_stubs.c")]
+        sources += [code / "Src" / name for name in ("capture_info.c", "capture_primitives.c", "installation_lease.c", "installation_store.c")]
+        sources += [PAYLOAD / "ThirdParty/InstallationCapture/ryu/d2s.c", ROOT / "tests/fixtures/installation_store_host.c"]
+        result = subprocess.run([*command, *map(str, sources), "-o", str(output)], capture_output=True, text=True, timeout=90)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccXTzcNO.o:capture_test_access.c:(.text+0x12cd): undefined reference to `CapturePort_WordConsume'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccGpL6BS.o:installation_lease.c:(.text+0xaf): undefined reference to `SystemInstallationActive_DependenciesChanged'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...defined reference to `SystemInstallationActive_DependenciesChanged'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+tests\test_installation_store_lifecycle.py:56: AssertionError
+_ ERROR at setup of test_late_cancel_or_timeout_reports_actual_publication[timeout-2] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def dll(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        assert gcc, "Host GCC is required for actual C lifecycle regressions"
+        output = tmp_path_factory.mktemp("installation-store") / "coordinator.dll"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wpedantic", "-Wswitch-enum", "-shared",
+                   "-DSYSTEM_INSTALLATION_CAPTURE_ENABLED=1", "-DRYU_ONLY_64_BIT_OPS"]
+        code = PAYLOAD / "Modules/InstallationCapture"
+        for directory in [ROOT / "tests/fixtures/installation_store", code / "Inc", code / "Src", PAYLOAD / "ThirdParty/InstallationCapture", EXPERIMENT,
+                          EXPERIMENT / "fixtures", CORE / "Common/Inc", CORE / "Interfaces/Inc",
+                          CORE / "System/Inc"]:
+            command += ["-I", str(directory)]
+        sources = [EXPERIMENT / name for name in ("capture_test_access.c", "capture_port_host.c", "integration_stubs.c")]
+        sources += [code / "Src" / name for name in ("capture_info.c", "capture_primitives.c", "installation_lease.c", "installation_store.c")]
+        sources += [PAYLOAD / "ThirdParty/InstallationCapture/ryu/d2s.c", ROOT / "tests/fixtures/installation_store_host.c"]
+        result = subprocess.run([*command, *map(str, sources), "-o", str(output)], capture_output=True, text=True, timeout=90)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccXTzcNO.o:capture_test_access.c:(.text+0x12cd): undefined reference to `CapturePort_WordConsume'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccGpL6BS.o:installation_lease.c:(.text+0xaf): undefined reference to `SystemInstallationActive_DependenciesChanged'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...defined reference to `SystemInstallationActive_DependenciesChanged'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+tests\test_installation_store_lifecycle.py:56: AssertionError
+_ ERROR at setup of test_late_cancel_or_timeout_reports_actual_publication[timeout-3] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def dll(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        assert gcc, "Host GCC is required for actual C lifecycle regressions"
+        output = tmp_path_factory.mktemp("installation-store") / "coordinator.dll"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wpedantic", "-Wswitch-enum", "-shared",
+                   "-DSYSTEM_INSTALLATION_CAPTURE_ENABLED=1", "-DRYU_ONLY_64_BIT_OPS"]
+        code = PAYLOAD / "Modules/InstallationCapture"
+        for directory in [ROOT / "tests/fixtures/installation_store", code / "Inc", code / "Src", PAYLOAD / "ThirdParty/InstallationCapture", EXPERIMENT,
+                          EXPERIMENT / "fixtures", CORE / "Common/Inc", CORE / "Interfaces/Inc",
+                          CORE / "System/Inc"]:
+            command += ["-I", str(directory)]
+        sources = [EXPERIMENT / name for name in ("capture_test_access.c", "capture_port_host.c", "integration_stubs.c")]
+        sources += [code / "Src" / name for name in ("capture_info.c", "capture_primitives.c", "installation_lease.c", "installation_store.c")]
+        sources += [PAYLOAD / "ThirdParty/InstallationCapture/ryu/d2s.c", ROOT / "tests/fixtures/installation_store_host.c"]
+        result = subprocess.run([*command, *map(str, sources), "-o", str(output)], capture_output=True, text=True, timeout=90)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccXTzcNO.o:capture_test_access.c:(.text+0x12cd): undefined reference to `CapturePort_WordConsume'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccGpL6BS.o:installation_lease.c:(.text+0xaf): undefined reference to `SystemInstallationActive_DependenciesChanged'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...defined reference to `SystemInstallationActive_DependenciesChanged'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+tests\test_installation_store_lifecycle.py:56: AssertionError
+_ ERROR at setup of test_late_cancel_or_timeout_reports_actual_publication[timeout-4] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def dll(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        assert gcc, "Host GCC is required for actual C lifecycle regressions"
+        output = tmp_path_factory.mktemp("installation-store") / "coordinator.dll"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wpedantic", "-Wswitch-enum", "-shared",
+                   "-DSYSTEM_INSTALLATION_CAPTURE_ENABLED=1", "-DRYU_ONLY_64_BIT_OPS"]
+        code = PAYLOAD / "Modules/InstallationCapture"
+        for directory in [ROOT / "tests/fixtures/installation_store", code / "Inc", code / "Src", PAYLOAD / "ThirdParty/InstallationCapture", EXPERIMENT,
+                          EXPERIMENT / "fixtures", CORE / "Common/Inc", CORE / "Interfaces/Inc",
+                          CORE / "System/Inc"]:
+            command += ["-I", str(directory)]
+        sources = [EXPERIMENT / name for name in ("capture_test_access.c", "capture_port_host.c", "integration_stubs.c")]
+        sources += [code / "Src" / name for name in ("capture_info.c", "capture_primitives.c", "installation_lease.c", "installation_store.c")]
+        sources += [PAYLOAD / "ThirdParty/InstallationCapture/ryu/d2s.c", ROOT / "tests/fixtures/installation_store_host.c"]
+        result = subprocess.run([*command, *map(str, sources), "-o", str(output)], capture_output=True, text=True, timeout=90)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccXTzcNO.o:capture_test_access.c:(.text+0x12cd): undefined reference to `CapturePort_WordConsume'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccGpL6BS.o:installation_lease.c:(.text+0xaf): undefined reference to `SystemInstallationActive_DependenciesChanged'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...defined reference to `SystemInstallationActive_DependenciesChanged'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+tests\test_installation_store_lifecycle.py:56: AssertionError
+_ ERROR at setup of test_late_cancel_or_timeout_reports_actual_publication[timeout-5] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def dll(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        assert gcc, "Host GCC is required for actual C lifecycle regressions"
+        output = tmp_path_factory.mktemp("installation-store") / "coordinator.dll"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wpedantic", "-Wswitch-enum", "-shared",
+                   "-DSYSTEM_INSTALLATION_CAPTURE_ENABLED=1", "-DRYU_ONLY_64_BIT_OPS"]
+        code = PAYLOAD / "Modules/InstallationCapture"
+        for directory in [ROOT / "tests/fixtures/installation_store", code / "Inc", code / "Src", PAYLOAD / "ThirdParty/InstallationCapture", EXPERIMENT,
+                          EXPERIMENT / "fixtures", CORE / "Common/Inc", CORE / "Interfaces/Inc",
+                          CORE / "System/Inc"]:
+            command += ["-I", str(directory)]
+        sources = [EXPERIMENT / name for name in ("capture_test_access.c", "capture_port_host.c", "integration_stubs.c")]
+        sources += [code / "Src" / name for name in ("capture_info.c", "capture_primitives.c", "installation_lease.c", "installation_store.c")]
+        sources += [PAYLOAD / "ThirdParty/InstallationCapture/ryu/d2s.c", ROOT / "tests/fixtures/installation_store_host.c"]
+        result = subprocess.run([*command, *map(str, sources), "-o", str(output)], capture_output=True, text=True, timeout=90)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccXTzcNO.o:capture_test_access.c:(.text+0x12cd): undefined reference to `CapturePort_WordConsume'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccGpL6BS.o:installation_lease.c:(.text+0xaf): undefined reference to `SystemInstallationActive_DependenciesChanged'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...defined reference to `SystemInstallationActive_DependenciesChanged'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+tests\test_installation_store_lifecycle.py:56: AssertionError
+__ ERROR at setup of test_unconfirmed_commit_retains_owner_even_after_cancel __
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def dll(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        assert gcc, "Host GCC is required for actual C lifecycle regressions"
+        output = tmp_path_factory.mktemp("installation-store") / "coordinator.dll"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wpedantic", "-Wswitch-enum", "-shared",
+                   "-DSYSTEM_INSTALLATION_CAPTURE_ENABLED=1", "-DRYU_ONLY_64_BIT_OPS"]
+        code = PAYLOAD / "Modules/InstallationCapture"
+        for directory in [ROOT / "tests/fixtures/installation_store", code / "Inc", code / "Src", PAYLOAD / "ThirdParty/InstallationCapture", EXPERIMENT,
+                          EXPERIMENT / "fixtures", CORE / "Common/Inc", CORE / "Interfaces/Inc",
+                          CORE / "System/Inc"]:
+            command += ["-I", str(directory)]
+        sources = [EXPERIMENT / name for name in ("capture_test_access.c", "capture_port_host.c", "integration_stubs.c")]
+        sources += [code / "Src" / name for name in ("capture_info.c", "capture_primitives.c", "installation_lease.c", "installation_store.c")]
+        sources += [PAYLOAD / "ThirdParty/InstallationCapture/ryu/d2s.c", ROOT / "tests/fixtures/installation_store_host.c"]
+        result = subprocess.run([*command, *map(str, sources), "-o", str(output)], capture_output=True, text=True, timeout=90)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccXTzcNO.o:capture_test_access.c:(.text+0x12cd): undefined reference to `CapturePort_WordConsume'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccGpL6BS.o:installation_lease.c:(.text+0xaf): undefined reference to `SystemInstallationActive_DependenciesChanged'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...defined reference to `SystemInstallationActive_DependenciesChanged'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+tests\test_installation_store_lifecycle.py:56: AssertionError
+__ ERROR at setup of test_queued_store_data_is_a_copy_of_the_callers_buffer ___
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def dll(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        assert gcc, "Host GCC is required for actual C lifecycle regressions"
+        output = tmp_path_factory.mktemp("installation-store") / "coordinator.dll"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wpedantic", "-Wswitch-enum", "-shared",
+                   "-DSYSTEM_INSTALLATION_CAPTURE_ENABLED=1", "-DRYU_ONLY_64_BIT_OPS"]
+        code = PAYLOAD / "Modules/InstallationCapture"
+        for directory in [ROOT / "tests/fixtures/installation_store", code / "Inc", code / "Src", PAYLOAD / "ThirdParty/InstallationCapture", EXPERIMENT,
+                          EXPERIMENT / "fixtures", CORE / "Common/Inc", CORE / "Interfaces/Inc",
+                          CORE / "System/Inc"]:
+            command += ["-I", str(directory)]
+        sources = [EXPERIMENT / name for name in ("capture_test_access.c", "capture_port_host.c", "integration_stubs.c")]
+        sources += [code / "Src" / name for name in ("capture_info.c", "capture_primitives.c", "installation_lease.c", "installation_store.c")]
+        sources += [PAYLOAD / "ThirdParty/InstallationCapture/ryu/d2s.c", ROOT / "tests/fixtures/installation_store_host.c"]
+        result = subprocess.run([*command, *map(str, sources), "-o", str(output)], capture_output=True, text=True, timeout=90)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccXTzcNO.o:capture_test_access.c:(.text+0x12cd): undefined reference to `CapturePort_WordConsume'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccGpL6BS.o:installation_lease.c:(.text+0xaf): undefined reference to `SystemInstallationActive_DependenciesChanged'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...defined reference to `SystemInstallationActive_DependenciesChanged'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+tests\test_installation_store_lifecycle.py:56: AssertionError
+_ ERROR at setup of test_late_native_data_cannot_enter_the_new_capture[previous_session_time] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def dll(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        assert gcc, "Host GCC is required for actual C lifecycle regressions"
+        output = tmp_path_factory.mktemp("installation-store") / "coordinator.dll"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wpedantic", "-Wswitch-enum", "-shared",
+                   "-DSYSTEM_INSTALLATION_CAPTURE_ENABLED=1", "-DRYU_ONLY_64_BIT_OPS"]
+        code = PAYLOAD / "Modules/InstallationCapture"
+        for directory in [ROOT / "tests/fixtures/installation_store", code / "Inc", code / "Src", PAYLOAD / "ThirdParty/InstallationCapture", EXPERIMENT,
+                          EXPERIMENT / "fixtures", CORE / "Common/Inc", CORE / "Interfaces/Inc",
+                          CORE / "System/Inc"]:
+            command += ["-I", str(directory)]
+        sources = [EXPERIMENT / name for name in ("capture_test_access.c", "capture_port_host.c", "integration_stubs.c")]
+        sources += [code / "Src" / name for name in ("capture_info.c", "capture_primitives.c", "installation_lease.c", "installation_store.c")]
+        sources += [PAYLOAD / "ThirdParty/InstallationCapture/ryu/d2s.c", ROOT / "tests/fixtures/installation_store_host.c"]
+        result = subprocess.run([*command, *map(str, sources), "-o", str(output)], capture_output=True, text=True, timeout=90)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccXTzcNO.o:capture_test_access.c:(.text+0x12cd): undefined reference to `CapturePort_WordConsume'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccGpL6BS.o:installation_lease.c:(.text+0xaf): undefined reference to `SystemInstallationActive_DependenciesChanged'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...defined reference to `SystemInstallationActive_DependenciesChanged'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+tests\test_installation_store_lifecycle.py:56: AssertionError
+_ ERROR at setup of test_late_native_data_cannot_enter_the_new_capture[previous_epoch] _
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def dll(tmp_path_factory):
+        gcc = shutil.which("gcc")
+        assert gcc, "Host GCC is required for actual C lifecycle regressions"
+        output = tmp_path_factory.mktemp("installation-store") / "coordinator.dll"
+        command = [gcc, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror", "-Wpedantic", "-Wswitch-enum", "-shared",
+                   "-DSYSTEM_INSTALLATION_CAPTURE_ENABLED=1", "-DRYU_ONLY_64_BIT_OPS"]
+        code = PAYLOAD / "Modules/InstallationCapture"
+        for directory in [ROOT / "tests/fixtures/installation_store", code / "Inc", code / "Src", PAYLOAD / "ThirdParty/InstallationCapture", EXPERIMENT,
+                          EXPERIMENT / "fixtures", CORE / "Common/Inc", CORE / "Interfaces/Inc",
+                          CORE / "System/Inc"]:
+            command += ["-I", str(directory)]
+        sources = [EXPERIMENT / name for name in ("capture_test_access.c", "capture_port_host.c", "integration_stubs.c")]
+        sources += [code / "Src" / name for name in ("capture_info.c", "capture_primitives.c", "installation_lease.c", "installation_store.c")]
+        sources += [PAYLOAD / "ThirdParty/InstallationCapture/ryu/d2s.c", ROOT / "tests/fixtures/installation_store_host.c"]
+        result = subprocess.run([*command, *map(str, sources), "-o", str(output)], capture_output=True, text=True, timeout=90)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccXTzcNO.o:capture_test_access.c:(.text+0x12cd): undefined reference to `CapturePort_WordConsume'
+E         D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccGpL6BS.o:installation_lease.c:(.text+0xaf): undefined reference to `SystemInstallationActive_DependenciesChanged'
+E         collect2.exe: error: ld returned 1 exit status
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-Wpedant...defined reference to `SystemInstallationActive_DependenciesChanged'\ncollect2.exe: error: ld returned 1 exit status\n").returncode
+
+tests\test_installation_store_lifecycle.py:56: AssertionError
+___ ERROR at setup of test_normal_stack_lifecycle_and_buffer_sessions[C071] ___
+
+request = <SubRequest 'first_batch' for <Function test_normal_stack_lifecycle_and_buffer_sessions[C071]>>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1/test_normal_stack_lifecycle_an2')
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...e/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/scg-runtime-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024D26F427B0>
+
+    @pytest.fixture(params=['F103','F407','C071'])
+    def first_batch(request,tmp_path,tmp_path_factory,builtin_catalog):
+        if request.param in ('F103','F407'):
+            native=nf.native.__wrapped__(SimpleNamespace(param='f103-usb' if request.param=='F103' else 'f407-usb'),tmp_path)
+            service,imported,args,_=nb.bound.__wrapped__(native,tmp_path_factory,builtin_catalog)
+            plan=service.NativeClassicCdcGroundCandidate_Plan(imported.model,device_facts=args['device_facts'])
+        else:
+>           service,imported,header,companion,_=cb.c071.__wrapped__(tmp_path_factory,builtin_catalog)
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_usb_lifecycle_normal.py:383: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_usb_ground_backend.py:74: in c071
+    source = Path(os.environ['SILVERSTAR_C071_NATIVE'])
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = environ({'ACE_STUDIO_PATH': 'D:\\ACE Studio', 'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\chdxm\\AppD...ST_CURRENT_TEST': 'tests/test_usb_lifecycle_normal.py::test_normal_stack_lifecycle_and_buffer_sessions[C071] (setup)'})
+key = 'SILVERSTAR_C071_NATIVE'
+
+>   ???
+E   KeyError: 'SILVERSTAR_C071_NATIVE'
+
+<frozen os>:709: KeyError
+=========================== short test summary info ===========================
+SKIPPED [2] tests\test_native_ground_backend.py:37: real complete native CDC inputs not configured
+SKIPPED [2] tests\test_native_ground_backend.py:73: real complete native CDC inputs not configured
+SKIPPED [12] tests\test_native_ground_backend.py:84: real complete native CDC inputs not configured
+SKIPPED [2] tests\test_native_ground_backend.py:108: real complete native CDC inputs not configured
+SKIPPED [2] tests\test_native_ground_backend.py:126: real complete native CDC inputs not configured
+SKIPPED [2] tests\test_native_ground_backend.py:138: real complete native CDC inputs not configured
+SKIPPED [2] tests\test_native_ground_backend.py:159: real complete native CDC inputs not configured
+SKIPPED [2] tests\test_native_ground_backend.py:179: real complete native CDC inputs not configured
+SKIPPED [2] tests\test_native_ground_backend.py:211: real complete native CDC inputs not configured
+SKIPPED [2] tests\test_usb_lifecycle_normal.py:387: real complete native CDC inputs not configured
+ERROR tests/test_gnss_receipt_publication.py::test_actual_source_handoff_barrier_and_clock_proof[-O0-liveness_atomic_publication]
+ERROR tests/test_gnss_receipt_publication.py::test_actual_source_handoff_barrier_and_clock_proof[-O0-recovery_atomic_publication]
+ERROR tests/test_gnss_receipt_publication.py::test_actual_source_handoff_barrier_and_clock_proof[-O0-clock_proof]
+ERROR tests/test_gnss_receipt_publication.py::test_actual_source_handoff_barrier_and_clock_proof[-O0-snapshot_output_and_nesting]
+ERROR tests/test_gnss_receipt_publication.py::test_actual_source_handoff_barrier_and_clock_proof[-O0-corrupt_owned_selector_rejected]
+ERROR tests/test_gnss_receipt_publication.py::test_actual_source_handoff_barrier_and_clock_proof[-O2-liveness_atomic_publication]
+ERROR tests/test_gnss_receipt_publication.py::test_actual_source_handoff_barrier_and_clock_proof[-O2-recovery_atomic_publication]
+ERROR tests/test_gnss_receipt_publication.py::test_actual_source_handoff_barrier_and_clock_proof[-O2-clock_proof]
+ERROR tests/test_gnss_receipt_publication.py::test_actual_source_handoff_barrier_and_clock_proof[-O2-snapshot_output_and_nesting]
+ERROR tests/test_gnss_receipt_publication.py::test_actual_source_handoff_barrier_and_clock_proof[-O2-corrupt_owned_selector_rejected]
+ERROR tests/test_installation_store_lifecycle.py::test_late_cancel_or_timeout_reports_actual_publication[cancel-1]
+ERROR tests/test_installation_store_lifecycle.py::test_late_cancel_or_timeout_reports_actual_publication[cancel-2]
+ERROR tests/test_installation_store_lifecycle.py::test_late_cancel_or_timeout_reports_actual_publication[cancel-3]
+ERROR tests/test_installation_store_lifecycle.py::test_late_cancel_or_timeout_reports_actual_publication[cancel-4]
+ERROR tests/test_installation_store_lifecycle.py::test_late_cancel_or_timeout_reports_actual_publication[cancel-5]
+ERROR tests/test_installation_store_lifecycle.py::test_late_cancel_or_timeout_reports_actual_publication[timeout-1]
+ERROR tests/test_installation_store_lifecycle.py::test_late_cancel_or_timeout_reports_actual_publication[timeout-2]
+ERROR tests/test_installation_store_lifecycle.py::test_late_cancel_or_timeout_reports_actual_publication[timeout-3]
+ERROR tests/test_installation_store_lifecycle.py::test_late_cancel_or_timeout_reports_actual_publication[timeout-4]
+ERROR tests/test_installation_store_lifecycle.py::test_late_cancel_or_timeout_reports_actual_publication[timeout-5]
+ERROR tests/test_installation_store_lifecycle.py::test_unconfirmed_commit_retains_owner_even_after_cancel
+ERROR tests/test_installation_store_lifecycle.py::test_queued_store_data_is_a_copy_of_the_callers_buffer
+ERROR tests/test_installation_store_lifecycle.py::test_late_native_data_cannot_enter_the_new_capture[previous_session_time]
+ERROR tests/test_installation_store_lifecycle.py::test_late_native_data_cannot_enter_the_new_capture[previous_epoch]
+ERROR tests/test_usb_lifecycle_normal.py::test_normal_stack_lifecycle_and_buffer_sessions[C071]
+103 passed, 30 skipped, 25 errors in 410.96s (0:06:50)

@@ -1,0 +1,32 @@
+[
+  {
+    "path": "build/native.elf",
+    "bytes": 82564,
+    "sha256": "8b5e09dfecef8d80eb66b05fbc7ee88c4e72c47591fd7cfb996cd3ddd00ddc68"
+  },
+  {
+    "path": "build/native.map",
+    "bytes": 285546,
+    "sha256": "30ddfdb376955738c9cdccf3f8dbafe31e400a73429f3ff406fc4de3da2a818e"
+  },
+  {
+    "path": "build/vectors.bin",
+    "bytes": 192,
+    "sha256": "486abdb33fa2da7b9bc6b2a31887709e80fb03e4e1d5e2fd90eec3a860a7c083"
+  },
+  {
+    "path": "build/analysis/native.elf",
+    "bytes": 82564,
+    "sha256": "8b5e09dfecef8d80eb66b05fbc7ee88c4e72c47591fd7cfb996cd3ddd00ddc68"
+  },
+  {
+    "path": "build/analysis/native.map",
+    "bytes": 296616,
+    "sha256": "11a9070a0d986babd307681555ae8a49ea5853a596c10f616fa901346cc698a0"
+  },
+  {
+    "path": "build/analysis/vectors.bin",
+    "bytes": 192,
+    "sha256": "486abdb33fa2da7b9bc6b2a31887709e80fb03e4e1d5e2fd90eec3a860a7c083"
+  }
+]

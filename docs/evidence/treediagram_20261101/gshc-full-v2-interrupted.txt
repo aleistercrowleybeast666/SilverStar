@@ -1,0 +1,1 @@
+Interrupted after dependency diagnosis: global Python lacks pytest-qt and has rejected numpy 2.4.0. Replaced with repository .venv; partial run is not a completed suite.

@@ -1,0 +1,2 @@
+preflight profile=0 cap=10 state=20 health=10 position=20 ack=20 completed=80
+preflight: 20255 checks, 0 failures

@@ -1,0 +1,163 @@
+[
+  {
+    "name": "normal",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\scg-runtime-v2\\tm_scheduler_build0\\tm_scheduler.exe",
+      "normal"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "burst",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\scg-runtime-v2\\tm_scheduler_build0\\tm_scheduler.exe",
+      "burst"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "landed",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\scg-runtime-v2\\tm_scheduler_build0\\tm_scheduler.exe",
+      "landed"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "ack",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\scg-runtime-v2\\tm_scheduler_build0\\tm_scheduler.exe",
+      "ack"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "observations",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\scg-runtime-v2\\tm_scheduler_build0\\tm_scheduler.exe",
+      "observations"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "local_start",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\scg-runtime-v2\\tm_scheduler_build0\\tm_scheduler.exe",
+      "local_start"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "long",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\scg-runtime-v2\\tm_scheduler_build0\\tm_scheduler.exe",
+      "long"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "lost_start_ack",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\scg-runtime-v2\\tm_scheduler_build0\\tm_scheduler.exe",
+      "lost_start_ack"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "preflight",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\scg-runtime-v2\\tm_scheduler_build0\\tm_scheduler.exe",
+      "preflight"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "start_order",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\scg-runtime-v2\\tm_scheduler_build0\\tm_scheduler.exe",
+      "start_order"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "start_ack_backlog",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\scg-runtime-v2\\tm_scheduler_build0\\tm_scheduler.exe",
+      "start_ack_backlog"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "start_event_full",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\scg-runtime-v2\\tm_scheduler_build0\\tm_scheduler.exe",
+      "start_event_full"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "stage_event",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\scg-runtime-v2\\tm_scheduler_build0\\tm_scheduler.exe",
+      "stage_event"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "stage_scope",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\scg-runtime-v2\\tm_scheduler_build0\\tm_scheduler.exe",
+      "stage_scope"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "sx1278_airtime_events",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\scg-runtime-v2\\tm_scheduler_build0\\tm_scheduler.exe",
+      "sx1278_airtime_events"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "sx1278_no_samples",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\scg-runtime-v2\\tm_scheduler_build0\\tm_scheduler.exe",
+      "sx1278_no_samples"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "codec-compile",
+    "command": [
+      "D:/msys64/ucrt64/bin/gcc.exe",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Wconversion",
+      "-Wsign-conversion",
+      "-Wshadow",
+      "-Wvla",
+      "-fanalyzer",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Modules\\Inc",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_protocol_telemetry_ss_tm\\payload\\Protocol\\SS_TM\\Inc",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_protocol_telemetry_ss_tm\\payload\\Protocol\\SS_TM\\Legacy",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc",
+      "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_protocol_telemetry_ss_tm\\payload\\Protocol\\SS_TM\\Legacy\\ss_tm_legacy.c",
+      "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_protocol_telemetry_ss_tm\\payload\\Protocol\\SS_TM\\Src\\ss_tm_protocol.c",
+      "D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\ss_tm_codec_host.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\wire-v1\\ss_tm_codec.exe"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "codec-c-vectors",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\wire-v1\\ss_tm_codec.exe"
+    ],
+    "exit_code": 0
+  }
+]

@@ -1,0 +1,76 @@
+{
+  "version_identity": {
+    "schema": "silverstar.version-identity/1",
+    "product_version": "0.1.3",
+    "firmware_version": "0.1.3",
+    "product_version_matches": true,
+    "maturity": "development",
+    "numeric_version": [
+      0,
+      1,
+      3
+    ],
+    "build_number": 0,
+    "log_build_tag": "SILV0103",
+    "runtime_identity_fields": " product_version=0.1.3 maturity=development",
+    "registry_sha256": "9ddbe1adebcd06ce29afc7586c8f5a17192e56bb17ef9c0e89b39b02fdc7d32d",
+    "version_source_sha256": "2d2454ef0edeb462a6ce8b25d387aaa74df08093d5cea0428a10ce55510c6326",
+    "evidence_scope": "version declaration; source/artifact evidence remains in owning build audit"
+  },
+  "silverstar_version": "0.1.3",
+  "firmware_version": "0.1.3",
+  "target_role": "ground_station",
+  "receipt_version": 2,
+  "target": "ground",
+  "generation_authority_sha256": "ae58af40209ed7b5d3d06f495a75b115838ec80f7416ed407f94b5ada2e35b25",
+  "generation_input_sha256": "fe58ccc165b2c591b7317231a1baf0fad02d44a81cc3d7856b0682140775d8fd",
+  "component_locks": {
+    "silverstar.core.0_1_0": {
+      "manifest_sha256": "acd330f02605edfa23cb02a02b0b8835290179ac2170cd0d8aeb95609e776f06",
+      "payload_sha256": "bf6b8acd1e1f2e91b44fe26e2c0b47f1a35ade7237f8f920103c5a714a52960b",
+      "templates_sha256": "ad41501060e36d17205e4670a90b76c1ada8d2dccc10ca965e6b86539b96db88"
+    },
+    "silverstar.core.ground.0_1_0": {
+      "manifest_sha256": "28f8270f755c71d423c55bdae37232235c1beb8139ee882a365fa154a18a640a",
+      "payload_sha256": "320822077d3d61540d9b890fae5b75c6cfeeba35b45681e7c76bf15b0b7b8183",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.device.telemetry.sx1278": {
+      "manifest_sha256": "9b2e54c99dc15d204239e6dfd158df2334f565e65b6ff970816ffaade457f3c5",
+      "payload_sha256": "602ff9b4a2f52ab00f0d57ba0b5d600b8c3701dc2a0af543d10841913fb0b7db",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.hardware_provider.stm32_cubemx": {
+      "manifest_sha256": "a066f56bf020f99e6befd1f476fcf1c8706144b41a7a2c48b3c4d35946ca3be3",
+      "payload_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.mcu.stm32f103c8t6": {
+      "manifest_sha256": "3119226ecc59a45bb022019146eebacdcef5b57a9ff612fb058e33b70e426bcc",
+      "payload_sha256": "53c73b24f1ca0a487157b6a6b0d0ee7c18d5184288505fa350eb313d526d0977",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.mcu_family.stm32f1": {
+      "manifest_sha256": "17cd2e2b14e2b038b6e27eb923de4ce36831022323460b92a8090588950e03fb",
+      "payload_sha256": "e48a0edc6d28631b434172a5346cf7c9b9e2f428f44dcf6ae3d52348b4cfdebf",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.platform.api": {
+      "manifest_sha256": "60e20aab8d5a61d25f5f914ce816e5723e591b13dbc591c97d09ea5945f5ef45",
+      "payload_sha256": "5e46f32cde51d229857266aa44760ea8b0f6b6e037fc6f178e8eb26a290e06d5",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "air_profile": "ss_tm.s.0_1",
+  "radio_module": "e32_400m20s",
+  "radio_family": "sx127x",
+  "frequency_hz": 433000000,
+  "phy": {
+    "mode": "lora",
+    "spreading_factor": 7,
+    "bandwidth_hz": 125000,
+    "coding_rate": "4/5"
+  },
+  "pc_interface": "uart",
+  "hardware_fingerprint": "fefbb954932ea5a24897b249e4726b7b21223a2c0b1134748a5c9737210115ac"
+}

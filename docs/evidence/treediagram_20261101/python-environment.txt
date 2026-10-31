@@ -1,0 +1,5 @@
+Windows-11-10.0.26200-SP0
+3.14.0
+PySide6 6.10.1
+numpy 2.4.1
+pytest 9.1.1

@@ -1,0 +1,47 @@
+[
+  {
+    "case": "underline-pid",
+    "path": ".qa\\20261101\\final-runs-v2\\underline-pid.tdrun.json",
+    "sha256": "b149b5e5d5a2adfd36affeb5641b8391e330e1f952564ebd55c4ae5f9a69f8a3",
+    "run_id": "ea1ae4e4-f827-4347-9cfd-c4af1463f058",
+    "input_digest": "7aa0b00e983ff8e5f981a8f43ec01bb8946e9c0af4dc744cf7de76a8983075f3",
+    "summary": {
+      "maximum_altitude_m": 382.98257215989327,
+      "duration_s": 18.0,
+      "landed": false,
+      "total_impulse_ns": 200.00000000000003,
+      "hardware_validation": "not performed"
+    },
+    "row_count": 901
+  },
+  {
+    "case": "pid",
+    "path": ".qa\\20261101\\final-runs-v2\\pid.tdrun.json",
+    "sha256": "db32d5526ced482bc21ebca1a0955b510890a2e92a1e87af0ba17b1b6b87c8ac",
+    "run_id": "27e46815-7944-4c74-9372-482ad09820ff",
+    "input_digest": "05c8f05c12696efd5cfc695fc386e663157b6f972400363ee246b5979150a553",
+    "summary": {
+      "maximum_altitude_m": 117.17769575511667,
+      "duration_s": 10.865561,
+      "landed": true,
+      "total_impulse_ns": 109.875,
+      "hardware_validation": "not performed"
+    },
+    "row_count": 545
+  },
+  {
+    "case": "lqr",
+    "path": ".qa\\20261101\\final-runs-v2\\lqr.tdrun.json",
+    "sha256": "e898360b8aa7595176887e78f36524506c43194feff0089a246710c815b60fd0",
+    "run_id": "77b67819-afb8-4c88-80fd-0389d73e052c",
+    "input_digest": "d9dd9c9dd120edc94100f5610a1b29fcb43b489be23dedf6f7e9908285f797e6",
+    "summary": {
+      "maximum_altitude_m": 117.24944905593019,
+      "duration_s": 10.866709,
+      "landed": true,
+      "total_impulse_ns": 109.875,
+      "hardware_validation": "not performed"
+    },
+    "row_count": 545
+  }
+]

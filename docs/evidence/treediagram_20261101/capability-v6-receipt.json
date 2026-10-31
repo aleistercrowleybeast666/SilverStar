@@ -1,0 +1,33 @@
+{
+  "code_commit": "09c057a67acfc10e3ff387a4a8821c8ee0e83b0c",
+  "command": [
+    "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "-u",
+    "-m",
+    "pytest",
+    "apps/SCG/tests/test_device_capability_architecture.py",
+    "apps/SCG/tests/test_project_domain.py",
+    "apps/SCG/tests/test_release_migration.py",
+    "-q",
+    "--basetemp=D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\cap6"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "environment": {
+    "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\SCG\\src",
+    "QT_QPA_PLATFORM": "offscreen",
+    "PYTHONIOENCODING": "utf-8"
+  },
+  "before": {
+    "scg_tree": "50afcc9e4283a3355e978ccde06cef148e9daf50",
+    "contracts_tree": "366d389ea3904a3050ae74c72e65e77232a89410",
+    "dirty": ""
+  },
+  "exit_code": 0,
+  "after": {
+    "scg_tree": "50afcc9e4283a3355e978ccde06cef148e9daf50",
+    "contracts_tree": "366d389ea3904a3050ae74c72e65e77232a89410",
+    "dirty": ""
+  },
+  "log_sha256": "f200e6564b7aaccdcb6f46129e2f3375b05de32b6b18dc931ea37b2665f2dcf8",
+  "sources_unchanged": true
+}

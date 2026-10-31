@@ -1,0 +1,8 @@
+TM profile=0 scenario=long flight=297 position=60 health=30 event=0 completed=387 failed=0 mode=1 rx=0
+TX_DONE type=16 first_ms=614
+TX_DONE type=16 maximum_gap_ms=200 last_ms=59814
+TX_DONE type=24 first_ms=693
+TX_DONE type=24 maximum_gap_ms=1000 last_ms=59093
+TX_DONE type=25 first_ms=880
+TX_DONE type=25 maximum_gap_ms=2000 last_ms=58280
+long: 61070 checks, 0 failures

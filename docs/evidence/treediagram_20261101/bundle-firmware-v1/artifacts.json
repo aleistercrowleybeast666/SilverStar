@@ -1,0 +1,50 @@
+[
+  {
+    "project": "bundle",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\bundle\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.elf",
+    "bytes": 3586320,
+    "sha256": "e40faee6b093e83740db5600f119926fe844e7c3b6492fef752f267266d59aa2"
+  },
+  {
+    "project": "bundle",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\bundle\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\StaticAnalysis\\Release\\SilverStar_0_1_3.elf",
+    "bytes": 3586500,
+    "sha256": "7194b0b1a610f182d96066758a0ff9ff966c8904517fedfc79f6f1365f957679"
+  },
+  {
+    "project": "bundle",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\bundle\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.map",
+    "bytes": 1600542,
+    "sha256": "cad4e136ac432ec9b19f8ac006ace9f86d14f86f4dd28592d6e588c219a48fed"
+  },
+  {
+    "project": "bundle",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\bundle\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\StaticAnalysis\\Release\\SilverStar_0_1_3.map",
+    "bytes": 1744707,
+    "sha256": "15261c54b8290cc1240af6d6891a2aab2abf74907efcbd1762c4bc5138af73e6"
+  },
+  {
+    "project": "bundle",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\bundle\\Flight_Controller\\Generated\\memory_contract.json",
+    "bytes": 11328,
+    "sha256": "b8477a2a2825bbccc50e359efc061f7d585ab9f29e0be8d7ad3da15add9bc9ba"
+  },
+  {
+    "project": "bundle",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\bundle\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\memory-report.json",
+    "bytes": 5402,
+    "sha256": "3c460a278fcb8bea145bc681fca4c09d1ed846a34fcdec771d0e4632b9c724fc"
+  },
+  {
+    "project": "bundle",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\bundle\\Flight_Controller\\Tools\\astra_stack_inputs.json",
+    "bytes": 634568,
+    "sha256": "8e0fd46211b5b37373c8daefb29655a4707763ea21dc15d4e9a92c58664ff94f"
+  },
+  {
+    "project": "bundle",
+    "path": ".work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\bundle\\Flight_Controller\\Tools\\h743_stack_inputs.json",
+    "bytes": 155202,
+    "sha256": "47d8261e90ec7cc93eff68271b54e5c7c5400afc56ab10e42b6899907264ee3a"
+  }
+]

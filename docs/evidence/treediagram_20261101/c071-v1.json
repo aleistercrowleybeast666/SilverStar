@@ -1,0 +1,13 @@
+{
+  "owner": "silverstar_finish",
+  "native": "C:\\Users\\chdxm\\Documents\\Codex\\2026-10-08\\task\\c071-cubemx-input\\full-native-clean\\C071FBP6_PCD_TEST",
+  "independent_sdk_header": "C:\\Users\\chdxm\\STM32Cube\\Repository\\STM32Cube_FW_C0_V1.4.1\\Drivers\\CMSIS\\Device\\ST\\STM32C0xx\\Include\\stm32c071xx.h",
+  "independent_sdk_header_sha256": "fa5f83d0763b0446aff74182074f52343fc0f2056e54661469e4ed8605484361",
+  "companion": "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_usb_cdc_stm32c071_mini",
+  "api": "UsbGroundCandidate_Build",
+  "normal_admission": false,
+  "hardware_tested": false,
+  "profile": "ss_tm.s.0_1",
+  "result": "CompiledCandidate",
+  "detail": "PRIVATE C071 native PCD plus pinned classic CDC companion Ground candidate. Formal USB release BLOCKED: b66 independent review has no passed outcome and must not be retried or bypassed. Full EP0/async lifecycle, critical contracts, stack/WCET and hardware NOT PROVEN."
+}

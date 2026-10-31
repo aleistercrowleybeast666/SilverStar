@@ -1,0 +1,80 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_explicit_default_directory_setting_and_same_owner_manual_read ______
+
+gui = (<ui.main_window.MainWindow(0x2a18450db20) at 0x000002A185D18240>, <app.Controller(0x2a186d18e50) at 0x000002A1870BE50...on_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/gshc-directory-v1/test_explicit_default_director0'))
+
+    def test_explicit_default_directory_setting_and_same_owner_manual_read(gui):
+        window,c,root=gui;page=window.maintenance_page;destination=root/'exports';destination.mkdir()
+        with patch('ui.file_transfer.QFileDialog.getExistingDirectory',return_value=str(destination)):
+            page.btn_destination.click()
+        assert page.destination_path.text()==str(destination)
+        assert window.i18n.settings.value(page.TF_DIRECTORY_KEY)==str(destination)
+        wire=MockTransport();connect(window,c,wire);manager=c.file_transfer
+        assert manager.send_command(f'LOGFILE READ 1 {wire.token} 0')
+        assert not manager.send_command('SYSTEM STATUS')
+        wait_for(lambda:not manager.busy)
+        assert 'data=313233343536373839' in page.console.output.toPlainText()
+        assert not any(command=='LOGFILE ENTER' for command in wire.commands)
+        assert list(destination.iterdir())==[]
+        manager.choose_download();manager.export_dialog.set_catalog([{'id':1,'size':9}]);manager.export_dialog.all.setChecked(True)
+        with patch('ui.log_export_dialog.QMessageBox.question',return_value=QMessageBox.Yes):manager.export_dialog.start.click()
+        wait_for(lambda:not manager.busy)
+>       assert len(list(destination.glob('SilverStar_download_*/*.sslog')))==1
+E       AssertionError: assert 0 == 1
+E        +  where 0 = len([])
+E        +    where [] = list(<map object at 0x000002A18A6BC100>)
+E        +      where <map object at 0x000002A18A6BC100> = glob('SilverStar_download_*/*.sslog')
+E        +        where glob = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/gshc-directory-v1/test_explicit_default_director0/exports').glob
+
+tests\test_gui_maintenance_workflow.py:139: AssertionError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QtWarningMsg: This plugin does not support propagateSizeHints()
+QtWarningMsg: This plugin does not support propagateSizeHints()
+QtWarningMsg: This plugin does not support propagateSizeHints()
+QtWarningMsg: This plugin does not support raise()
+------------------------------ Captured log call ------------------------------
+ERROR    services.file_service_client:file_service_client.py:659 Could not update failed download checkpoint
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\GSHC\services\file_service_client.py", line 602, in download
+    with partial.open("xb", buffering=0) as fp:
+         ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 776, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\gshc-directory-v1\\test_explicit_default_director0\\exports\\SilverStar_download_20261101_014734_6291cfc08c63\\mission_000001_1-CBF43926-00000009.sslog.c9a19fade1b64ffb9afe544230156e47.partial'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\GSHC\services\file_service_client.py", line 655, in download
+    _download_checkpoint(sidecar, metadata)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\GSHC\services\file_service_client.py", line 59, in _download_checkpoint
+    temporary.replace(path)
+    ~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 1096, in replace
+    os.replace(self, target)
+    ~~~~~~~~~~^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 3] ϵͳ�Ҳ���ָ����·����: 'D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\gshc-directory-v1\\test_explicit_default_director0\\exports\\SilverStar_download_20261101_014734_6291cfc08c63\\.checkpoint-58473185828f4838af9e21cdcc794257.tmp' -> 'D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\gshc-directory-v1\\test_explicit_default_director0\\exports\\SilverStar_download_20261101_014734_6291cfc08c63\\mission_000001_1-CBF43926-00000009.sslog.c9a19fade1b64ffb9afe544230156e47.partial.json'
+ERROR    ui.file_transfer:file_transfer.py:154 Maintenance file operation failed
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\GSHC\ui\file_transfer.py", line 146, in run
+    report = job.run(client,progress=self.progress.emit,catalog=catalog_ready,
+        byte_progress=relay)
+  File "D:\python_software\SilverStar\apps\GSHC\services\file_service_jobs.py", line 167, in run
+    path=client.download(identifier,self.output,progress=progress,
+        byte_progress=lambda done,total,stage:batch.update(identifier,done,total,stage))
+  File "D:\python_software\SilverStar\apps\GSHC\services\file_service_client.py", line 602, in download
+    with partial.open("xb", buffering=0) as fp:
+         ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 776, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\gshc-directory-v1\\test_explicit_default_director0\\exports\\SilverStar_download_20261101_014734_6291cfc08c63\\mission_000001_1-CBF43926-00000009.sslog.c9a19fade1b64ffb9afe544230156e47.partial'
+=========================== short test summary info ===========================
+FAILED tests\test_gui_maintenance_workflow.py::test_explicit_default_directory_setting_and_same_owner_manual_read
+1 failed in 8.34s

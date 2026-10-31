@@ -1,0 +1,902 @@
+{
+  "scope": "linked section bytes, including load copies and explicit reservations; no hardware measurement",
+  "caveats": [
+    "Unallocated banks and summed free bytes are not a contiguous allocation guarantee.",
+    "Physical free bytes and review-budget free bytes are different limits.",
+    "No unused RAM value establishes dynamic stack safety; strict stack failures remain failures.",
+    "null review budget means none recorded for this bank, never an inferred budget."
+  ],
+  "cases": [
+    {
+      "name": "f407",
+      "mcu": "STM32F407VET6",
+      "source": "firmware-v1\\f407-retained\\build\\FCCG\\SilverStar_F407\\Release\\memory-report.json",
+      "source_sha256": "652ef74596a2574f118b4f1c94583c35b39bf5a3c3f7e67bbefe50d746afd453",
+      "artifacts": {
+        "contract": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\f407\\Flight_Controller\\Generated\\memory_contract.json",
+          "sha256": "8b7f321e17cac0b62bfc0ace098064cb1f18a387fee80d8787727fc00de2bdfa"
+        },
+        "elf": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\f407\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.elf",
+          "sha256": "81ecf7fea2a61eddbf5f0074a13bb44db3d3edd9d5c0cbd07c1113c5f7c1d140"
+        },
+        "linker": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\f407\\Flight_Controller\\STM32F407XX_FLASH.ld",
+          "sha256": "49f0ef8eff37093c6c7bdc389c7ebccac9db490bfbe7467425b8041ccfe016dd"
+        },
+        "map": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\f407\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.map",
+          "sha256": "a1c716ba02a5f91224b1a6979e8c1c11ad507b3c10c5194301850f647131e7b4"
+        }
+      },
+      "generation_input_sha256": "932a94a1544519de7af730951c18fd9c373b5fdfdb7a277faacf1388f6093ddc",
+      "gates": {
+        "all": 0,
+        "architecture-check": 0,
+        "power10-check": 0,
+        "static-analysis": 0,
+        "artifact-check": 0,
+        "host-tests": 0,
+        "stack-report": 2
+      },
+      "stack_status": "strict command FAIL",
+      "whole_program_stack": "NOT PROVEN",
+      "regions": [
+        {
+          "allocated_span_bytes": 355900,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 32.118988037109375,
+          "linker_capacity_bytes": 524288,
+          "linker_free_bytes": 168396,
+          "name": "FLASH",
+          "origin": 134217728,
+          "physical_capacity_bytes": 524288,
+          "physical_free_bytes": 168396,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 355892,
+          "used_percent": 67.88101196289062,
+          "tail_after_allocated_span_bytes": 168388
+        },
+        {
+          "allocated_span_bytes": 102152,
+          "budget_free_bytes": 252,
+          "budget_used_percent": 99.75390625,
+          "free_percent": 22.0672607421875,
+          "linker_capacity_bytes": 131072,
+          "linker_free_bytes": 28924,
+          "name": "RAM",
+          "origin": 536870912,
+          "physical_capacity_bytes": 131072,
+          "physical_free_bytes": 28924,
+          "reserved_bytes": 1024,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": 102400,
+          "used_bytes": 102148,
+          "used_percent": 77.9327392578125,
+          "tail_after_allocated_span_bytes": 28920
+        },
+        {
+          "allocated_span_bytes": 60888,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 7.09228515625,
+          "linker_capacity_bytes": 65536,
+          "linker_free_bytes": 4648,
+          "name": "CCMRAM",
+          "origin": 268435456,
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 4648,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 60888,
+          "used_percent": 92.90771484375,
+          "tail_after_allocated_span_bytes": 4648
+        }
+      ]
+    },
+    {
+      "name": "installation",
+      "mcu": "STM32F407VET6",
+      "source": "firmware-v1\\installation-retained\\build\\FCCG\\SilverStar_F407\\Release\\memory-report.json",
+      "source_sha256": "be3def1c991b4e4149d59db0d1dd6ca4437446d2b4192901eb0f555acdd5169f",
+      "artifacts": {
+        "contract": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\installation\\Flight_Controller\\Generated\\memory_contract.json",
+          "sha256": "a3ce728d90d6ac46fbb2e0612c235c1e410c065b0ca19e6cbd4210a20ce4450a"
+        },
+        "elf": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\installation\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.elf",
+          "sha256": "b12b8778d8d1213e473114fe42b15c460f2cafda4b73e72082da5d4edbf1d466"
+        },
+        "linker": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\installation\\Flight_Controller\\STM32F407XX_FLASH.ld",
+          "sha256": "49f0ef8eff37093c6c7bdc389c7ebccac9db490bfbe7467425b8041ccfe016dd"
+        },
+        "map": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\installation\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.map",
+          "sha256": "9b1d9e85f1c9e355d86906967e61c25a57ceee84c907e63b0e72c63cc0b1b7f8"
+        }
+      },
+      "generation_input_sha256": "e0c31ed0ad80be613a74080d8a5c547564bec16c9b8bd0df5c76be4eabc80e60",
+      "gates": {
+        "all": 0,
+        "architecture-check": 0,
+        "power10-check": 0,
+        "static-analysis": 0,
+        "artifact-check": 0,
+        "host-tests": 0,
+        "stack-report": 2
+      },
+      "stack_status": "strict command FAIL",
+      "whole_program_stack": "NOT PROVEN",
+      "regions": [
+        {
+          "allocated_span_bytes": 408324,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 22.119903564453125,
+          "linker_capacity_bytes": 524288,
+          "linker_free_bytes": 115972,
+          "name": "FLASH",
+          "origin": 134217728,
+          "physical_capacity_bytes": 524288,
+          "physical_free_bytes": 115972,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 408316,
+          "used_percent": 77.88009643554688,
+          "tail_after_allocated_span_bytes": 115964
+        },
+        {
+          "allocated_span_bytes": 102320,
+          "budget_free_bytes": 84,
+          "budget_used_percent": 99.91796875,
+          "free_percent": 21.9390869140625,
+          "linker_capacity_bytes": 131072,
+          "linker_free_bytes": 28756,
+          "name": "RAM",
+          "origin": 536870912,
+          "physical_capacity_bytes": 131072,
+          "physical_free_bytes": 28756,
+          "reserved_bytes": 1024,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": 102400,
+          "used_bytes": 102316,
+          "used_percent": 78.0609130859375,
+          "tail_after_allocated_span_bytes": 28752
+        },
+        {
+          "allocated_span_bytes": 63304,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 3.40576171875,
+          "linker_capacity_bytes": 65536,
+          "linker_free_bytes": 2232,
+          "name": "CCMRAM",
+          "origin": 268435456,
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 2232,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 63304,
+          "used_percent": 96.59423828125,
+          "tail_after_allocated_span_bytes": 2232
+        }
+      ]
+    },
+    {
+      "name": "h743",
+      "mcu": "STM32H743ZIT6",
+      "source": "firmware-v1\\h743-retained\\build\\FCCG\\SilverStar_H743ZI\\Release\\memory-report.json",
+      "source_sha256": "d6c79bb084335cff2d1d33180c7d8d6a1be3f589c21598120d20cdf4c65afa72",
+      "artifacts": {
+        "contract": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\h743\\Flight_Controller\\Generated\\memory_contract.json",
+          "sha256": "dd37a5c457a25f68b92ecf9b5ca70aa2b4e786dde5684f7e268e4d437c5472a2"
+        },
+        "elf": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\h743\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.elf",
+          "sha256": "767dd8baa2d8d5aa324e9e82f2138232434a05ec51ac053ba415288afccbcd6a"
+        },
+        "linker": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\h743\\Flight_Controller\\STM32H743XX_FLASH.ld",
+          "sha256": "5ec9c9ca0d89e9a09591d94bd901fa2dcf75adf223bcbe5c8a1598b7de0b3d31"
+        },
+        "map": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\h743\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.map",
+          "sha256": "a76aa04ae9d8dd93f8410182613b779010832c31c5e31eb1272ddf5759b1ee21"
+        }
+      },
+      "generation_input_sha256": "9c269d1ffefbb344783e4cc8e7fe4c151617550a5fff8970aeb6365767936522",
+      "gates": {
+        "all": 0,
+        "architecture-check": 0,
+        "power10-check": 0,
+        "static-analysis": 0,
+        "artifact-check": 0,
+        "host-tests": 2,
+        "stack-report": 0
+      },
+      "stack_status": "task estimate only",
+      "whole_program_stack": "NOT PROVEN",
+      "regions": [
+        {
+          "allocated_span_bytes": 369064,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 82.40203857421875,
+          "linker_capacity_bytes": 2097152,
+          "linker_free_bytes": 1728096,
+          "name": "FLASH",
+          "origin": 134217728,
+          "physical_capacity_bytes": 2097152,
+          "physical_free_bytes": 1728096,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 369056,
+          "used_percent": 17.59796142578125,
+          "tail_after_allocated_span_bytes": 1728088
+        },
+        {
+          "allocated_span_bytes": 218096,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 58.4014892578125,
+          "linker_capacity_bytes": 524288,
+          "linker_free_bytes": 306192,
+          "name": "RAM",
+          "origin": 603979776,
+          "physical_capacity_bytes": 524288,
+          "physical_free_bytes": 306192,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 218096,
+          "used_percent": 41.5985107421875,
+          "tail_after_allocated_span_bytes": 306192
+        },
+        {
+          "allocated_span_bytes": 131072,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 93.75,
+          "linker_capacity_bytes": 131072,
+          "linker_free_bytes": 122880,
+          "name": "DTCMRAM",
+          "origin": 536870912,
+          "physical_capacity_bytes": 131072,
+          "physical_free_bytes": 122880,
+          "reserved_bytes": 8192,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 8192,
+          "used_percent": 6.25,
+          "tail_after_allocated_span_bytes": 0
+        },
+        {
+          "allocated_span_bytes": 0,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 100.0,
+          "linker_capacity_bytes": 294912,
+          "linker_free_bytes": 294912,
+          "name": "RAM_D2",
+          "origin": 805306368,
+          "physical_capacity_bytes": 294912,
+          "physical_free_bytes": 294912,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 0,
+          "used_percent": 0.0,
+          "tail_after_allocated_span_bytes": 294912
+        },
+        {
+          "allocated_span_bytes": 0,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 100.0,
+          "linker_capacity_bytes": 65536,
+          "linker_free_bytes": 65536,
+          "name": "RAM_D3",
+          "origin": 939524096,
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 65536,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 0,
+          "used_percent": 0.0,
+          "tail_after_allocated_span_bytes": 65536
+        },
+        {
+          "allocated_span_bytes": 0,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 100.0,
+          "linker_capacity_bytes": 65536,
+          "linker_free_bytes": 65536,
+          "name": "ITCMRAM",
+          "origin": 0,
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 65536,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 0,
+          "used_percent": 0.0,
+          "tail_after_allocated_span_bytes": 65536
+        }
+      ]
+    },
+    {
+      "name": "sx1278",
+      "mcu": "STM32F407VET6",
+      "source": "firmware-v1\\sx1278-retained\\build\\FCCG\\SilverStar_F407\\Release\\memory-report.json",
+      "source_sha256": "87a0b317e1fda465966977a61cdf118b060efa47ae6740bc2253c5ecf2b62a12",
+      "artifacts": {
+        "contract": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Flight_Controller\\Generated\\memory_contract.json",
+          "sha256": "f0f942b8a5db92c517337b7e650cc2d721dd9822f126133d2d61be7b0d54ff21"
+        },
+        "elf": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.elf",
+          "sha256": "cd949eb45b8843b7764ef64df28f4589b610d1328211fb3ff8a849ebd7963467"
+        },
+        "linker": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Flight_Controller\\STM32F407XX_FLASH.ld",
+          "sha256": "49f0ef8eff37093c6c7bdc389c7ebccac9db490bfbe7467425b8041ccfe016dd"
+        },
+        "map": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.map",
+          "sha256": "7c35eb8d4b2dd5fbfcf94a88361cc985ea5526129430b6b1998d19fa1ea56502"
+        }
+      },
+      "generation_input_sha256": "1b0313360096bcd51e6752a6c50afa20fa91d1e5828fc397666b63d4d4611f51",
+      "gates": {
+        "all": 0,
+        "architecture-check": 0,
+        "power10-check": 0,
+        "static-analysis": 0,
+        "artifact-check": 0,
+        "host-tests": 0,
+        "stack-report": 0
+      },
+      "stack_status": "task estimate only",
+      "whole_program_stack": "NOT PROVEN",
+      "regions": [
+        {
+          "allocated_span_bytes": 344276,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 34.336090087890625,
+          "linker_capacity_bytes": 524288,
+          "linker_free_bytes": 180020,
+          "name": "FLASH",
+          "origin": 134217728,
+          "physical_capacity_bytes": 524288,
+          "physical_free_bytes": 180020,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 344268,
+          "used_percent": 65.66390991210938,
+          "tail_after_allocated_span_bytes": 180012
+        },
+        {
+          "allocated_span_bytes": 92848,
+          "budget_free_bytes": 9556,
+          "budget_used_percent": 90.66796875,
+          "free_percent": 29.1656494140625,
+          "linker_capacity_bytes": 131072,
+          "linker_free_bytes": 38228,
+          "name": "RAM",
+          "origin": 536870912,
+          "physical_capacity_bytes": 131072,
+          "physical_free_bytes": 38228,
+          "reserved_bytes": 1028,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": 102400,
+          "used_bytes": 92844,
+          "used_percent": 70.8343505859375,
+          "tail_after_allocated_span_bytes": 38224
+        },
+        {
+          "allocated_span_bytes": 60888,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 7.09228515625,
+          "linker_capacity_bytes": 65536,
+          "linker_free_bytes": 4648,
+          "name": "CCMRAM",
+          "origin": 268435456,
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 4648,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 60888,
+          "used_percent": 92.90771484375,
+          "tail_after_allocated_span_bytes": 4648
+        }
+      ]
+    },
+    {
+      "name": "sx1278-ground",
+      "mcu": "STM32F103C8T6",
+      "source": "firmware-v1\\sx1278-ground-retained\\build\\memory-report.json",
+      "source_sha256": "80109126a77f7cdc2177cd18492360dd224c03d317fc55b6f241fae12b7fdac6",
+      "artifacts": {
+        "contract": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Ground_Station\\Generated\\memory_contract.json",
+          "sha256": "0414655bdf110ce071b06ac3663653e3f5346eac7ba331158467c9aa80798c0c"
+        },
+        "elf": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Ground_Station\\build\\ground.elf",
+          "sha256": "31780238fcf841c22c18c3f71573dfc5efb17942568b629ecc958e23f05d18a1"
+        },
+        "linker": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Ground_Station\\STM32F103XX_FLASH.ld",
+          "sha256": "45ae86cc16571cb1547d80d8e2f2490e5668cd85a3feaa3ca9413da74e10e0d9"
+        },
+        "map": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\sx1278\\project\\Ground_Station\\build\\ground.map",
+          "sha256": "0e236536c04754530504ba25a7a75ee1d757b7e432ec9161d71b13161e5f101b"
+        }
+      },
+      "generation_input_sha256": "fe58ccc165b2c591b7317231a1baf0fad02d44a81cc3d7856b0682140775d8fd",
+      "gates": {
+        "all": 0,
+        "architecture-check": 0,
+        "power10-check": 0,
+        "static-analysis": 0,
+        "artifact-check": 0,
+        "host-tests": 0
+      },
+      "stack_status": "no full stack gate",
+      "whole_program_stack": "NOT PROVEN",
+      "regions": [
+        {
+          "allocated_span_bytes": 17500,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 73.297119140625,
+          "linker_capacity_bytes": 65536,
+          "linker_free_bytes": 48036,
+          "name": "FLASH",
+          "origin": 134217728,
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 48036,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 17500,
+          "used_percent": 26.702880859375,
+          "tail_after_allocated_span_bytes": 48036
+        },
+        {
+          "allocated_span_bytes": 5384,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 73.73046875,
+          "linker_capacity_bytes": 20480,
+          "linker_free_bytes": 15100,
+          "name": "RAM",
+          "origin": 536870912,
+          "physical_capacity_bytes": 20480,
+          "physical_free_bytes": 15100,
+          "reserved_bytes": 1028,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 5380,
+          "used_percent": 26.26953125,
+          "tail_after_allocated_span_bytes": 15096
+        }
+      ]
+    },
+    {
+      "name": "bundle",
+      "mcu": "STM32F407VET6",
+      "source": "bundle-firmware-v1\\bundle-retained\\build\\FCCG\\SilverStar_F407\\Release\\memory-report.json",
+      "source_sha256": "3c460a278fcb8bea145bc681fca4c09d1ed846a34fcdec771d0e4632b9c724fc",
+      "artifacts": {
+        "contract": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\bundle\\Flight_Controller\\Generated\\memory_contract.json",
+          "sha256": "b8477a2a2825bbccc50e359efc061f7d585ab9f29e0be8d7ad3da15add9bc9ba"
+        },
+        "elf": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\bundle\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.elf",
+          "sha256": "e40faee6b093e83740db5600f119926fe844e7c3b6492fef752f267266d59aa2"
+        },
+        "linker": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\bundle\\Flight_Controller\\STM32F407XX_FLASH.ld",
+          "sha256": "49f0ef8eff37093c6c7bdc389c7ebccac9db490bfbe7467425b8041ccfe016dd"
+        },
+        "map": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\firmware-v1\\bundle\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_3.map",
+          "sha256": "cad4e136ac432ec9b19f8ac006ace9f86d14f86f4dd28592d6e588c219a48fed"
+        }
+      },
+      "generation_input_sha256": "3bcc0e5c84c0f6ef2b974e6f0e730b03e9a9ef0c318fc09d0d128c9fe0727416",
+      "gates": {
+        "all": 0,
+        "architecture-check": 0,
+        "power10-check": 0,
+        "static-analysis": 0,
+        "artifact-check": 0,
+        "host-tests": 0,
+        "stack-report": 2
+      },
+      "stack_status": "strict command FAIL",
+      "whole_program_stack": "NOT PROVEN",
+      "regions": [
+        {
+          "allocated_span_bytes": 355908,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 32.117462158203125,
+          "linker_capacity_bytes": 524288,
+          "linker_free_bytes": 168388,
+          "name": "FLASH",
+          "origin": 134217728,
+          "physical_capacity_bytes": 524288,
+          "physical_free_bytes": 168388,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 355900,
+          "used_percent": 67.88253784179688,
+          "tail_after_allocated_span_bytes": 168380
+        },
+        {
+          "allocated_span_bytes": 102152,
+          "budget_free_bytes": 252,
+          "budget_used_percent": 99.75390625,
+          "free_percent": 22.0672607421875,
+          "linker_capacity_bytes": 131072,
+          "linker_free_bytes": 28924,
+          "name": "RAM",
+          "origin": 536870912,
+          "physical_capacity_bytes": 131072,
+          "physical_free_bytes": 28924,
+          "reserved_bytes": 1024,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": 102400,
+          "used_bytes": 102148,
+          "used_percent": 77.9327392578125,
+          "tail_after_allocated_span_bytes": 28920
+        },
+        {
+          "allocated_span_bytes": 60888,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 7.09228515625,
+          "linker_capacity_bytes": 65536,
+          "linker_free_bytes": 4648,
+          "name": "CCMRAM",
+          "origin": 268435456,
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 4648,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 60888,
+          "used_percent": 92.90771484375,
+          "tail_after_allocated_span_bytes": 4648
+        }
+      ]
+    },
+    {
+      "name": "h743-owned-v6",
+      "mcu": "STM32H743ZIT6",
+      "source": "../h7_storage_20261101/v6/memory-report.json",
+      "source_sha256": "17efbd17ca8d24d6b215ec6e49f4b97ddf161ee0306493ac62cbda151dc4a66c",
+      "code_commit": "09c057a67acfc10e3ff387a4a8821c8ee0e83b0c",
+      "artifacts": {
+        "contract": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\Generated\\memory_contract.json",
+          "sha256": "0065b435e504ee6856f907bc6a4b76783dea75aa15a1fc1b7c30400496ce339e"
+        },
+        "elf": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.elf",
+          "sha256": "085ae2334a4afed3fd6bbe0ffdea00847e4a76258415c853123ff10927e6dbea"
+        },
+        "linker": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\STM32H743XX_FLASH.ld",
+          "sha256": "5ec9c9ca0d89e9a09591d94bd901fa2dcf75adf223bcbe5c8a1598b7de0b3d31"
+        },
+        "map": {
+          "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.map",
+          "sha256": "3d666c2bd1dcc28813f8afa3c391bcbcdef906d695a1ca547cec4f5789dc44a3"
+        }
+      },
+      "generation_input_sha256": "9c269d1ffefbb344783e4cc8e7fe4c151617550a5fff8970aeb6365767936522",
+      "gates": {
+        "all": 0,
+        "architecture-check": 0,
+        "power10-check": 0,
+        "static-analysis": 0,
+        "artifact-check": 0,
+        "stack-report": 2,
+        "storage_integrity_runner": 0
+      },
+      "host_scope": "complete storage_integrity runner; not full generated make host-tests",
+      "stack_status": "strict command FAIL",
+      "whole_program_stack": "NOT PROVEN",
+      "regions": [
+        {
+          "allocated_span_bytes": 372140,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 82.25536346435547,
+          "linker_capacity_bytes": 2097152,
+          "linker_free_bytes": 1725020,
+          "name": "FLASH",
+          "origin": 134217728,
+          "physical_capacity_bytes": 2097152,
+          "physical_free_bytes": 1725020,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 372132,
+          "used_percent": 17.74463653564453,
+          "tail_after_allocated_span_bytes": 1725012
+        },
+        {
+          "allocated_span_bytes": 218712,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 58.284759521484375,
+          "linker_capacity_bytes": 524288,
+          "linker_free_bytes": 305580,
+          "name": "RAM",
+          "origin": 603979776,
+          "physical_capacity_bytes": 524288,
+          "physical_free_bytes": 305580,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 218708,
+          "used_percent": 41.715240478515625,
+          "tail_after_allocated_span_bytes": 305576
+        },
+        {
+          "allocated_span_bytes": 131072,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 93.75,
+          "linker_capacity_bytes": 131072,
+          "linker_free_bytes": 122880,
+          "name": "DTCMRAM",
+          "origin": 536870912,
+          "physical_capacity_bytes": 131072,
+          "physical_free_bytes": 122880,
+          "reserved_bytes": 8192,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 8192,
+          "used_percent": 6.25,
+          "tail_after_allocated_span_bytes": 0
+        },
+        {
+          "allocated_span_bytes": 0,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 100.0,
+          "linker_capacity_bytes": 294912,
+          "linker_free_bytes": 294912,
+          "name": "RAM_D2",
+          "origin": 805306368,
+          "physical_capacity_bytes": 294912,
+          "physical_free_bytes": 294912,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 0,
+          "used_percent": 0.0,
+          "tail_after_allocated_span_bytes": 294912
+        },
+        {
+          "allocated_span_bytes": 0,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 100.0,
+          "linker_capacity_bytes": 65536,
+          "linker_free_bytes": 65536,
+          "name": "RAM_D3",
+          "origin": 939524096,
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 65536,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 0,
+          "used_percent": 0.0,
+          "tail_after_allocated_span_bytes": 65536
+        },
+        {
+          "allocated_span_bytes": 0,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "free_percent": 100.0,
+          "linker_capacity_bytes": 65536,
+          "linker_free_bytes": 65536,
+          "name": "ITCMRAM",
+          "origin": 0,
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 65536,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true,
+          "review_budget_bytes": null,
+          "used_bytes": 0,
+          "used_percent": 0.0,
+          "tail_after_allocated_span_bytes": 65536
+        }
+      ]
+    },
+    {
+      "name": "native-private-STM32C071FBP6",
+      "mcu": "STM32C071FBP6",
+      "source": "native-resources\\STM32C071FBP6\\report.json",
+      "source_sha256": "ab4432b6fb933d6d201eb00a19ef43829bbcaf820caa7660e494a9a979786c1a",
+      "artifacts": {
+        "build\\native.elf": "8b5e09dfecef8d80eb66b05fbc7ee88c4e72c47591fd7cfb996cd3ddd00ddc68",
+        "build\\native.map": "30ddfdb376955738c9cdccf3f8dbafe31e400a73429f3ff406fc4de3da2a818e"
+      },
+      "gates": {
+        "release_admission": "BLOCKED"
+      },
+      "stack_status": "reserved linker bytes only",
+      "whole_program_stack": "NOT PROVEN",
+      "regions": [
+        {
+          "name": "RAM",
+          "used_bytes": 10512,
+          "physical_capacity_bytes": 24576,
+          "physical_free_bytes": 14064,
+          "used_percent": 42.7734375,
+          "free_percent": 57.2265625,
+          "allocated_span_bytes": 10512,
+          "tail_after_allocated_span_bytes": 14064,
+          "review_budget_bytes": null,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "reserved_bytes": 2052,
+          "reserved_included_in_used": true
+        },
+        {
+          "name": "FLASH",
+          "used_bytes": 42276,
+          "physical_capacity_bytes": 131072,
+          "physical_free_bytes": 88796,
+          "used_percent": 32.2540283203125,
+          "free_percent": 67.7459716796875,
+          "allocated_span_bytes": 42276,
+          "tail_after_allocated_span_bytes": 88796,
+          "review_budget_bytes": null,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true
+        }
+      ]
+    },
+    {
+      "name": "native-private-STM32F103C8T6",
+      "mcu": "STM32F103C8T6",
+      "source": "native-resources\\STM32F103C8T6\\report.json",
+      "source_sha256": "3395e3f9fbc0ee13240ed12830e9c185f8a4507abd3405a87eeb85a9757a6b93",
+      "artifacts": {
+        "build\\native.elf": "a4055f73b3bc9eea0eec5b8cb714c20a465d689b00e9c5fb73207cd4e4270aa9",
+        "build\\native.map": "20acbc51380bfbaacbec31b852efc73b28b6f6d4555cebe5508e6b5876455e9f"
+      },
+      "gates": {
+        "release_admission": "BLOCKED"
+      },
+      "stack_status": "reserved linker bytes only",
+      "whole_program_stack": "NOT PROVEN",
+      "regions": [
+        {
+          "name": "RAM",
+          "used_bytes": 11308,
+          "physical_capacity_bytes": 20480,
+          "physical_free_bytes": 9172,
+          "used_percent": 55.21484375,
+          "free_percent": 44.78515625,
+          "allocated_span_bytes": 11312,
+          "tail_after_allocated_span_bytes": 9168,
+          "review_budget_bytes": null,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "reserved_bytes": 2052,
+          "reserved_included_in_used": true
+        },
+        {
+          "name": "FLASH",
+          "used_bytes": 40300,
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 25236,
+          "used_percent": 61.492919921875,
+          "free_percent": 38.507080078125,
+          "allocated_span_bytes": 40304,
+          "tail_after_allocated_span_bytes": 25232,
+          "review_budget_bytes": null,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true
+        }
+      ]
+    },
+    {
+      "name": "native-private-STM32F407VET6",
+      "mcu": "STM32F407VET6",
+      "source": "native-resources\\STM32F407VET6\\report.json",
+      "source_sha256": "8fc4a45a4e1ad84a43c71fb90ad945adcdfe786e689bf03ab482f7aec137fc51",
+      "artifacts": {
+        "build\\native.elf": "e3094a3d672830ebcdfa1a97f4260fc060d8434a81805f7eb14e7fcab711d1cc",
+        "build\\native.map": "396e1bde67d0aa56e586ab89109c1a8413d4149b387de2e575ebb0e6abca9851"
+      },
+      "gates": {
+        "release_admission": "BLOCKED"
+      },
+      "stack_status": "reserved linker bytes only",
+      "whole_program_stack": "NOT PROVEN",
+      "regions": [
+        {
+          "name": "RAM",
+          "used_bytes": 13976,
+          "physical_capacity_bytes": 131072,
+          "physical_free_bytes": 117096,
+          "used_percent": 10.662841796875,
+          "free_percent": 89.337158203125,
+          "allocated_span_bytes": 13976,
+          "tail_after_allocated_span_bytes": 117096,
+          "review_budget_bytes": null,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "reserved_bytes": 2052,
+          "reserved_included_in_used": true
+        },
+        {
+          "name": "CCMRAM",
+          "used_bytes": 0,
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 65536,
+          "used_percent": 0.0,
+          "free_percent": 100.0,
+          "allocated_span_bytes": 0,
+          "tail_after_allocated_span_bytes": 65536,
+          "review_budget_bytes": null,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true
+        },
+        {
+          "name": "FLASH",
+          "used_bytes": 41912,
+          "physical_capacity_bytes": 524288,
+          "physical_free_bytes": 482376,
+          "used_percent": 7.99407958984375,
+          "free_percent": 92.00592041015625,
+          "allocated_span_bytes": 41912,
+          "tail_after_allocated_span_bytes": 482376,
+          "review_budget_bytes": null,
+          "budget_free_bytes": null,
+          "budget_used_percent": null,
+          "reserved_bytes": 0,
+          "reserved_included_in_used": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,317 @@
+.FF.F..                                                                  [100%]
+================================== FAILURES ===================================
+________ test_ground_page_excludes_flight_board_and_owns_uart_binding _________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/layout-v2/test_ground_page_excludes_flig0')
+qapp = <PySide6.QtWidgets.QApplication(0x29fb698e360) at 0x0000029FB9450100>
+
+    def test_ground_page_excludes_flight_board_and_owns_uart_binding(tmp_path: Path, qapp) -> None:
+        window = _Window_Create(tmp_path, qapp)
+        try:
+            page = window.ground_target_page
+            assert not hasattr(page, 'enabled')
+            assert page.board.findData("silverstar.board.silverstar_0_5") == -1
+            assert page.board.currentData() == "__custom__"  # New Ground uses the custom hardware workflow.
+            page.radio.setCurrentIndex(
+                page.radio.findData("silverstar.device.telemetry.sx1281")
+            )
+            page.module.setCurrentIndex(page.module.findData("e28_2g4m12sx"))
+            page.pc_interface.setCurrentIndex(page.pc_interface.findData("uart"))
+>           assert "GROUND_UART_UNBOUND" in page.status.text()
+E           AssertionError: assert 'GROUND_UART_UNBOUND' in '����վ���� 9 �����ô���ɣ�����ǰ��鿴������顣'
+E            +  where '����վ���� 9 �����ô���ɣ�����ǰ��鿴������顣' = <built-in method text of PySide6.QtWidgets.QLabel object at 0x0000029FBE65CD80>()
+E            +    where <built-in method text of PySide6.QtWidgets.QLabel object at 0x0000029FBE65CD80> = <PySide6.QtWidgets.QLabel(0x29fb9ebfa10) at 0x0000029FBE65CD80>.text
+E            +      where <PySide6.QtWidgets.QLabel(0x29fb9ebfa10) at 0x0000029FBE65CD80> = <silverstar_fccg.ui.pages.targets.GroundTargetPage(0x29fba0cc2f0) at 0x0000029FBE653340>.status
+
+apps\SCG\tests\test_gui_smoke.py:321: AssertionError
+______ test_devices_page_is_physical_and_capabilities_are_on_flight_page ______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/layout-v2/test_devices_page_is_physical_0')
+qapp = <PySide6.QtWidgets.QApplication(0x29fb698e360) at 0x0000029FB9450100>
+
+    def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
+        tmp_path: Path, qapp
+    ) -> None:
+        window = _Window_Create(tmp_path, qapp)
+        try:
+            qapp.processEvents()
+            assert set(window.devices_page.device_combos) == {
+                "imu0",
+                "gnss0",
+                "barometer0",
+                "magnetometer0",
+                "telemetry0",
+            }
+            telemetry_label = window.devices_page.telemetry_form.labelForField(
+                window.devices_page.device_combos["telemetry0"]
+            )
+            assert isinstance(telemetry_label, QLabel)
+            assert telemetry_label.text() == "ң�� 0"
+            assert "silverstar.device.console.uart" not in (
+                window.devices_page.device_checks
+            )
+            assert not hasattr(window.devices_page, "mcu_combo")
+            assert set(window.board_hardware_page.platform_values) == {
+                "source",
+                "part",
+                "family",
+                "package",
+                "core",
+                "cubemx",
+                "firmware_package",
+                "source_policy",
+                "timebase",
+                "storage",
+                "i2c",
+                "pwm",
+                "can",
+                "plugin",
+                "reason",
+                "verification",
+                "provenance",
+            }
+            assert not hasattr(window.devices_page, "capability_table")
+            assert not hasattr(window.devices_page, "capability_source_combos")
+            assert window._model.hardware.mode == "custom"
+            assert window._model.hardware.provider == (
+                "silverstar.hardware_provider.stm32_cubemx"
+            )
+            assert window.board_hardware_page.board_combo.currentIndex() == 0
+            assert window.board_hardware_page.board_combo.currentData() == "__custom__"
+            assert window.board_hardware_page.board_combo.findData("__unselected__") == -1
+            board_labels = {
+                window.board_hardware_page.board_combo.itemText(index)
+                for index in range(window.board_hardware_page.board_combo.count())
+            }
+            assert "SSFC0.5" in board_labels
+            assert all("SilverStar 0.5" not in label for label in board_labels)
+            assert not window.board_hardware_page.preparation_widget.isVisible()
+            assert not window.board_hardware_page.prepare_button.isVisible()
+            assert window.devices_page.other_group.isVisible()
+            assert not window.devices_page.other_empty_label.isVisible()
+            assert window.devices_page.device_checks[
+                "silverstar.device.sensor.input_voltage"
+            ].isChecked()
+            assert window.devices_page.actuator_group.isVisible()
+            for actuator_id in (
+                "silverstar.device.actuator.launch_ignition",
+                "silverstar.device.actuator.parachute_pyro",
+            ):
+                actuator = window.devices_page.device_checks[actuator_id]
+                assert isinstance(actuator, StandardCheckBox)
+                assert not isinstance(actuator, LockedCheckBox)
+            assert not hasattr(window.devices_page, "requirement_table")
+            assert set(window.devices_page.add_buttons) == {
+                "imu",
+                "gnss",
+                "barometer",
+                "magnetometer",
+                "telemetry",
+            }
+            assert all(
+                button.isEnabled()
+                for button in window.devices_page.add_buttons.values()
+            )
+            assert "maintenance0" in {
+                instance.instance_id for instance in window._model.device_instances
+            }
+            assert any(
+                resource.key.startswith("maintenance0:")
+                for resource in window.board_hardware_page._resources
+            )
+            assert set(window.flight_configuration_page.protocol_combos) == {
+                "telemetry",
+                "maintenance",
+                "logging",
+            }
+            maintenance_combo = window.flight_configuration_page.protocol_combos['maintenance']
+            selected_maintenance = window._model.protocols['maintenance']
+            assert tuple(maintenance_combo.currentData()) == (selected_maintenance.component, selected_maintenance.profile)
+            assert maintenance_combo.currentText() == "����ά��Э�� 0.1"
+            for category, combo in window.flight_configuration_page.protocol_combos.items():
+                declared = window.flight_configuration_page._protocol_profiles[category]
+                assert combo.itemData(0) is None
+                choices = [tuple(combo.itemData(index)) for index in range(1, combo.count())]
+                assert len(choices) == len(set(choices))
+                assert set(choices) == {(profile.component_id, profile.profile_id) for profile in declared}
+            source = (Path(__file__).resolve().parents[1] /
+                      "src/silverstar_fccg/ui/pages/components.py").read_text(encoding="utf-8")
+            assert "JY901B" not in source
+            assert "BMI088" not in source
+            # The hardware workspace now owns the reparented physical detail form.
+            jy901b_summary = window.hardware_workspace.findChild(
+                QLabel, "deviceCapabilitySummary_imu0"
+            )
+            assert jy901b_summary is not None
+            assert "���ٶ�" in jy901b_summary.text()
+            assert "���߱���;�ʸ�" in jy901b_summary.text()
+            assert "�ų�" not in jy901b_summary.text()
+    
+            capability_table = window.flight_configuration_page.capability_table
+            assert capability_table.rowCount() > 0
+            assert all(
+                capability_table.cellWidget(row, 3) is None
+                for row in range(capability_table.rowCount())
+            )
+            statuses = {
+                capability_table.item(row, 0).toolTip(): capability_table.item(row, 2).text()
+                for row in range(capability_table.rowCount())
+            }
+            kinds = {
+                capability_table.item(row, 0).toolTip(): capability_table.item(row, 1).text()
+                for row in range(capability_table.rowCount())
+            }
+            assert statuses["imu.acceleration"] == "ʹ��"
+            assert not any(key.startswith("magnetometer.") for key in statuses)
+            assert statuses["attitude.external"] == "δʹ��"
+            assert kinds["imu.acceleration"] == "ԭʼ����"
+            assert kinds["imu.software_alignment_qualified"] == "�ϸ�����"
+    
+            alignment_combo = window.flight_configuration_page.strategy_combos[
+                "alignment"
+            ]
+            for required_slot in ("alignment", "ins", "landing"):
+                required_combo = window.flight_configuration_page.strategy_combos[
+                    required_slot
+                ]
+                assert required_combo.findData(None) == -1
+                assert all(
+                    "��ѡ�����" not in required_combo.itemText(index)
+                    for index in range(required_combo.count())
+                )
+            assert (
+                window.flight_configuration_page.strategy_combos["estimator"].findData(
+                    None
+                )
+                >= 0
+            )
+            assert {
+                alignment_combo.itemData(index)
+                for index in range(alignment_combo.count())
+            } == {
+                "silverstar.algorithm.alignment.vector_constraints",
+                "silverstar.algorithm.alignment.external_attitude_source",
+            }
+            assert qapp.palette().color(
+                QPalette.ColorGroup.Disabled, QPalette.ColorRole.Text
+            ) == QColor("#64748B")
+            assert qapp.palette().color(
+                QPalette.ColorGroup.Disabled, QPalette.ColorRole.Base
+            ) == QColor("#E2E8F0")
+            assert "background: #E2E8F0;" in qapp.styleSheet()
+            landing_combo = window.flight_configuration_page.strategy_combos["landing"]
+            impact_item = landing_combo.model().item(
+                landing_combo.findData(
+                    "silverstar.flight_logic.landing.impact_then_stillness"
+                )
+            )
+            assert impact_item is not None and not impact_item.isEnabled()
+            assert "���߱���½�������ʸ�" in impact_item.toolTip()
+            assert landing_combo.model().item(
+                landing_combo.findData("silverstar.flight_logic.landing.stillness")
+            ).isEnabled()
+    
+            logging_table = window.flight_configuration_page.logging_table
+            assert logging_table.horizontalHeaderItem(1).text() == "��־��¼ / ��־��"
+            assert logging_table.item(0, 1).text() == "�����¼�"
+            assert abs(logging_table.columnWidth(1) - logging_table.columnWidth(6)) <= 2
+            assert any(
+                isinstance(
+                    logging_table.cellWidget(row, 0).findChild(LockedCheckBox),
+                    LockedCheckBox,
+                )
+                for row in range(logging_table.rowCount())
+            )
+    
+            # Capsules only render enabled rules; use the active Tilt rule.
+            active_spin = window.flight_configuration_page.mode_parameter_spins[
+                ("deployment", "Tilt", "tilt_threshold")
+            ]
+            assert active_spin.buttonSymbols() == (
+                QAbstractSpinBox.ButtonSymbols.PlusMinus
+            )
+            assert "spin_plus_light.svg" in qapp.styleSheet()
+            assert "spin_minus_light.svg" in qapp.styleSheet()
+    
+            tables = window.findChildren(QTableWidget)
+            assert tables
+>           assert all(
+                table.horizontalScrollMode()
+                == QAbstractItemView.ScrollMode.ScrollPerPixel
+                and table.verticalScrollMode()
+                == QAbstractItemView.ScrollMode.ScrollPerPixel
+                for table in tables
+            )
+E           assert False
+E            +  where False = all(<generator object test_devices_page_is_physical_and_capabilities_are_on_flight_page.<locals>.<genexpr> at 0x0000029FBEAEBE00>)
+
+apps\SCG\tests\test_gui_smoke.py:600: AssertionError
+______ test_target_build_controls_and_quality_actions_use_shared_worker _______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/layout-v2/test_target_build_controls_and0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+qapp = <PySide6.QtWidgets.QApplication(0x29fb698e360) at 0x0000029FB9450100>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000029FC1DB8C30>
+
+    def test_target_build_controls_and_quality_actions_use_shared_worker(
+        tmp_path: Path, workspace_root: Path, qapp, monkeypatch
+    ) -> None:
+        service = FccgService(workspace_root)
+        project_root = tmp_path / "ProgressActions"
+        model = service.ReferenceProject_Create("ProgressActions")
+        TargetGeneration_Apply(
+            model, service.catalog, service.policy, project_root, TargetScope.FLIGHT
+        )
+        window = MainWindow(
+            SettingsStore(tmp_path / "progress-actions.ini"),
+            service=service,
+        )
+        invocations: list[tuple[str, bool]] = []
+    
+        def task_run(
+            function,
+            _result_callback,
+            _error_callback=None,
+            *,
+            indeterminate=False,
+            line_callback=None,
+            progress_range=(0.0, 1.0),
+        ):
+            invocations.append((function.__name__, indeterminate))
+            return True
+    
+        try:
+            window._Project_Open(project_root)
+            monkeypatch.setattr(window, "Task_Run", task_run)
+            plan_calls: list[tuple[object, Path]] = []
+            original_plan_create = service.GenerationPlan_Create
+    
+            def plan_create(model, root):
+                plan_calls.append((model, root))
+                return original_plan_create(model, root)
+    
+            monkeypatch.setattr(service, "GenerationPlan_Create", plan_create)
+            window._HardwarePrepare_Request()
+            assert plan_calls == []
+            assert window.build_page.action_buttons["flight_open_vscode"].isEnabled()
+            assert not window.build_page.action_buttons["ground_open_folder"].isEnabled()
+            assert window.build_page.root_layout.indexOf(window.build_page.tool_status_group) == 1
+            descriptor_before_validation = window._model.Dictionary_Get()
+            window._Build_Request("architecture_check")
+            assert window._model.Dictionary_Get() == descriptor_before_validation
+            assert window.build_page.action_buttons["flight_clean"].text() == "����"
+        finally:
+            window.close()
+    
+>       assert invocations == [("prepare_plan", False), ("build", False)]
+E       AssertionError: assert [('prepare_pl..._run', False)] == [('prepare_pl...uild', False)]
+E         
+E         At index 1 diff: ('quality_run', False) != ('build', False)
+E         Use -v to get more diff
+
+apps\SCG\tests\test_gui_smoke.py:831: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_gui_smoke.py::test_ground_page_excludes_flight_board_and_owns_uart_binding
+FAILED apps\SCG\tests\test_gui_smoke.py::test_devices_page_is_physical_and_capabilities_are_on_flight_page
+FAILED apps\SCG\tests\test_gui_smoke.py::test_target_build_controls_and_quality_actions_use_shared_worker
+3 failed, 4 passed, 13 deselected in 113.98s (0:01:53)

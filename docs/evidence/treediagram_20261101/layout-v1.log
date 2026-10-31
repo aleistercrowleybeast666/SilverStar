@@ -1,0 +1,355 @@
+.....FF.F.F..F...................F....                                   [100%]
+================================== FAILURES ===================================
+____________ test_main_window_shell_navigation_theme_and_language _____________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/layout-v1/test_main_window_shell_navigat0')
+qapp = <PySide6.QtWidgets.QApplication(0x26d55895260) at 0x0000026D57E2C040>
+
+    def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -> None:
+        window = _Window_Create(tmp_path, qapp)
+        try:
+            assert window.windowTitle() == PRODUCT_NAME
+            assert window.version_label.text() == f"v{__version__}"
+            assert window.pages.count() == 3
+            assert window.navigation_list.count() == 3
+            assert not hasattr(window, "project_page")
+            assert not hasattr(window, "plugins_page")
+>           assert [
+                window.navigation_list.item(index).text()
+                for index in range(window.navigation_list.count())
+            ] == ["Ӳ����ͨ��", "��������", "���������"]
+E           AssertionError: assert ['Ӳ����ͨ��', '��������', '���������'] == ['Ӳ����ͨ��', '��������', '���������']
+E             
+E             At index 1 diff: '��������' != '��������'
+E             Use -v to get more diff
+
+apps\SCG\tests\test_gui_smoke.py:251: AssertionError
+________ test_ground_page_excludes_flight_board_and_owns_uart_binding _________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/layout-v1/test_ground_page_excludes_flig0')
+qapp = <PySide6.QtWidgets.QApplication(0x26d55895260) at 0x0000026D57E2C040>
+
+    def test_ground_page_excludes_flight_board_and_owns_uart_binding(tmp_path: Path, qapp) -> None:
+        window = _Window_Create(tmp_path, qapp)
+        try:
+            page = window.ground_target_page
+>           page.enabled.setChecked(True)
+            ^^^^^^^^^^^^
+E           AttributeError: 'GroundTargetPage' object has no attribute 'enabled'. Did you mean: 'isEnabled'?
+
+apps\SCG\tests\test_gui_smoke.py:312: AttributeError
+______ test_devices_page_is_physical_and_capabilities_are_on_flight_page ______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/layout-v1/test_devices_page_is_physical_0')
+qapp = <PySide6.QtWidgets.QApplication(0x26d55895260) at 0x0000026D57E2C040>
+
+    def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
+        tmp_path: Path, qapp
+    ) -> None:
+        window = _Window_Create(tmp_path, qapp)
+        try:
+            qapp.processEvents()
+            assert set(window.devices_page.device_combos) == {
+                "imu0",
+                "gnss0",
+                "barometer0",
+                "magnetometer0",
+                "telemetry0",
+            }
+            telemetry_label = window.devices_page.telemetry_form.labelForField(
+                window.devices_page.device_combos["telemetry0"]
+            )
+            assert isinstance(telemetry_label, QLabel)
+            assert telemetry_label.text() == "ң�� 0"
+            assert "silverstar.device.console.uart" not in (
+                window.devices_page.device_checks
+            )
+            assert not hasattr(window.devices_page, "mcu_combo")
+            assert set(window.board_hardware_page.platform_values) == {
+                "source",
+                "part",
+                "family",
+                "package",
+                "core",
+                "cubemx",
+                "firmware_package",
+                "source_policy",
+                "timebase",
+                "storage",
+                "i2c",
+                "pwm",
+                "can",
+                "plugin",
+                "reason",
+                "verification",
+                "provenance",
+            }
+            assert not hasattr(window.devices_page, "capability_table")
+            assert not hasattr(window.devices_page, "capability_source_combos")
+            assert window._model.hardware.mode == "custom"
+            assert window._model.hardware.provider == (
+                "silverstar.hardware_provider.stm32_cubemx"
+            )
+            assert window.board_hardware_page.board_combo.currentIndex() == 0
+            assert window.board_hardware_page.board_combo.currentData() == "__custom__"
+            assert window.board_hardware_page.board_combo.findData("__unselected__") == -1
+            board_labels = {
+                window.board_hardware_page.board_combo.itemText(index)
+                for index in range(window.board_hardware_page.board_combo.count())
+            }
+            assert "SSFC0.5" in board_labels
+            assert all("SilverStar 0.5" not in label for label in board_labels)
+            assert not window.board_hardware_page.preparation_widget.isVisible()
+            assert not window.board_hardware_page.prepare_button.isVisible()
+            assert window.devices_page.other_group.isVisible()
+            assert not window.devices_page.other_empty_label.isVisible()
+            assert window.devices_page.device_checks[
+                "silverstar.device.sensor.input_voltage"
+            ].isChecked()
+            assert window.devices_page.actuator_group.isVisible()
+            for actuator_id in (
+                "silverstar.device.actuator.launch_ignition",
+                "silverstar.device.actuator.parachute_pyro",
+            ):
+                actuator = window.devices_page.device_checks[actuator_id]
+                assert isinstance(actuator, StandardCheckBox)
+                assert not isinstance(actuator, LockedCheckBox)
+            assert not hasattr(window.devices_page, "requirement_table")
+            assert set(window.devices_page.add_buttons) == {
+                "imu",
+                "gnss",
+                "barometer",
+                "magnetometer",
+                "telemetry",
+            }
+            assert all(
+                button.isEnabled()
+                for button in window.devices_page.add_buttons.values()
+            )
+            assert "maintenance0" in {
+                instance.instance_id for instance in window._model.device_instances
+            }
+            assert any(
+                resource.key.startswith("maintenance0:")
+                for resource in window.board_hardware_page._resources
+            )
+            assert set(window.flight_configuration_page.protocol_combos) == {
+                "telemetry",
+                "maintenance",
+                "logging",
+            }
+            maintenance_combo = window.flight_configuration_page.protocol_combos['maintenance']
+            selected_maintenance = window._model.protocols['maintenance']
+            assert tuple(maintenance_combo.currentData()) == (selected_maintenance.component, selected_maintenance.profile)
+            assert maintenance_combo.currentText() == "����ά��Э�� 0.1"
+            for category, combo in window.flight_configuration_page.protocol_combos.items():
+                declared = window.flight_configuration_page._protocol_profiles[category]
+                assert combo.itemData(0) is None
+                choices = [tuple(combo.itemData(index)) for index in range(1, combo.count())]
+                assert len(choices) == len(set(choices))
+                assert set(choices) == {(profile.component_id, profile.profile_id) for profile in declared}
+            source = (Path(__file__).resolve().parents[1] /
+                      "src/silverstar_fccg/ui/pages/components.py").read_text(encoding="utf-8")
+            assert "JY901B" not in source
+            assert "BMI088" not in source
+            jy901b_summary = window.devices_page.findChild(
+                QLabel, "deviceCapabilitySummary_imu0"
+            )
+>           assert jy901b_summary is not None
+E           assert None is not None
+
+apps\SCG\tests\test_gui_smoke.py:505: AssertionError
+____ test_official_repeated_device_rows_add_to_limit_and_remove_atomically ____
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/layout-v1/test_official_repeated_device_0')
+qapp = <PySide6.QtWidgets.QApplication(0x26d55895260) at 0x0000026D57E2C040>
+
+    def test_official_repeated_device_rows_add_to_limit_and_remove_atomically(
+        tmp_path: Path, qapp
+    ) -> None:
+        window = _Window_Create(tmp_path, qapp)
+        try:
+            for component_class, prefix in (
+                ("imu", "imu"),
+                ("gnss", "gnss"),
+                ("telemetry", "telemetry"),
+            ):
+                window.devices_page.add_buttons[component_class].click()
+                qapp.processEvents()
+                instances = [
+                    item
+                    for item in window._model.device_instances
+                    if item.instance_id.startswith(prefix)
+                ]
+                assert [item.instance_id for item in instances] == [
+                    f"{prefix}0",
+                    f"{prefix}1",
+                ]
+                assert instances[0].plugin == instances[1].plugin
+    
+            for expected_index in (2, 3):
+                window.devices_page.add_buttons["imu"].click()
+                qapp.processEvents()
+                assert f"imu{expected_index}" in window.devices_page.device_combos
+>           assert "imu" not in window.devices_page.add_buttons
+E           assert 'imu' not in {'imu': <PySide6.QtWidgets.QPushButton(0x26d5ec89480, name="addDeviceButton_imu") at 0x0000026D60EE4580>, 'gnss': <PyS...meter': <PySide6.QtWidgets.QPushButton(0x26d5ec8ce80, name="addDeviceButton_magnetometer") at 0x0000026D60E8EC00>, ...}
+E            +  where {'imu': <PySide6.QtWidgets.QPushButton(0x26d5ec89480, name="addDeviceButton_imu") at 0x0000026D60EE4580>, 'gnss': <PyS...meter': <PySide6.QtWidgets.QPushButton(0x26d5ec8ce80, name="addDeviceButton_magnetometer") at 0x0000026D60E8EC00>, ...} = <silverstar_fccg.ui.pages.components.DevicesPage(0x26d5b9873e0) at 0x0000026D609FF800>.add_buttons
+E            +    where <silverstar_fccg.ui.pages.components.DevicesPage(0x26d5b9873e0) at 0x0000026D609FF800> = <silverstar_fccg.ui.main_window.MainWindow(0x26d5b98a9e0) at 0x0000026D5D913D40>.devices_page
+
+apps\SCG\tests\test_gui_smoke.py:686: AssertionError
+______ test_target_build_controls_and_quality_actions_use_shared_worker _______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/layout-v1/test_target_build_controls_and0')
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+qapp = <PySide6.QtWidgets.QApplication(0x26d55895260) at 0x0000026D57E2C040>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000026D5C517570>
+
+    def test_target_build_controls_and_quality_actions_use_shared_worker(
+        tmp_path: Path, workspace_root: Path, qapp, monkeypatch
+    ) -> None:
+        service = FccgService(workspace_root)
+        project_root = tmp_path / "ProgressActions"
+        model = service.ReferenceProject_Create("ProgressActions")
+        TargetGeneration_Apply(
+            model, service.catalog, service.policy, project_root, TargetScope.FLIGHT
+        )
+        window = MainWindow(
+            SettingsStore(tmp_path / "progress-actions.ini"),
+            service=service,
+        )
+        invocations: list[tuple[str, bool]] = []
+    
+        def task_run(
+            function,
+            _result_callback,
+            _error_callback=None,
+            *,
+            indeterminate=False,
+            line_callback=None,
+        ):
+            invocations.append((function.__name__, indeterminate))
+            return True
+    
+        try:
+            window._Project_Open(project_root)
+            monkeypatch.setattr(window, "Task_Run", task_run)
+            plan_calls: list[tuple[object, Path]] = []
+            original_plan_create = service.GenerationPlan_Create
+    
+            def plan_create(model, root):
+                plan_calls.append((model, root))
+                return original_plan_create(model, root)
+    
+            monkeypatch.setattr(service, "GenerationPlan_Create", plan_create)
+>           window._HardwarePrepare_Request()
+
+apps\SCG\tests\test_gui_smoke.py:813: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <silverstar_fccg.ui.main_window.MainWindow(0x26d5b98ad40) at 0x0000026D5DDFFB80>
+
+    def _HardwarePrepare_Request(self) -> None:
+        if self._model.hardware.mode == "custom":
+            return
+        self._ProjectModel_Sync()
+        if self._project_root is None:
+            self._Error_Show(
+                self._translator.Text_Get("error.save_before_hardware_prepare")
+            )
+            return
+        candidate = deepcopy(self._model)
+        project_root = self._project_root
+    
+        def prepare_plan(context) -> tuple[ProjectModel, GenerationPlan]:
+            context.ProgressEvent_Report(
+                "HARDWARE_PREPARE_PLAN",
+                TaskProgressState.PLAN,
+                total=2,
+                code="status.hardware_preparing",
+            )
+            context.ProgressEvent_Report(
+                "HARDWARE_PREPARE_PLAN",
+                TaskProgressState.BEGIN,
+                current=1,
+                total=2,
+                subject="validate_configuration",
+                code="status.hardware_validating",
+            )
+            configuration = self._service.ProjectConfiguration_Reconcile(candidate)
+            context.ProgressEvent_Report(
+                "HARDWARE_PREPARE_PLAN",
+                TaskProgressState.DONE,
+                current=1,
+                total=2,
+                subject="validate_configuration",
+                code="status.hardware_validating",
+            )
+            context.ProgressEvent_Report(
+                "HARDWARE_PREPARE_PLAN",
+                TaskProgressState.BEGIN,
+                current=2,
+                total=2,
+                subject="plan_files",
+                code="status.hardware_preparing",
+            )
+            plan = self._service.GenerationPlan_Create(
+                configuration.model, project_root
+            )
+            context.ProgressEvent_Report(
+                "HARDWARE_PREPARE_PLAN",
+                TaskProgressState.DONE,
+                current=2,
+                total=2,
+                subject="plan_files",
+                code="status.hardware_preparing",
+            )
+            return configuration.model, plan
+    
+        self.status_label.setText(
+            self._translator.Text_Get("status.hardware_preparing")
+        )
+>       self.Task_Run(
+            prepare_plan,
+            self._HardwarePreparePlan_Complete,
+            self._HardwarePreparePlan_Error,
+            indeterminate=False,
+            progress_range=(0.0, 0.2),
+        )
+E       TypeError: test_target_build_controls_and_quality_actions_use_shared_worker.<locals>.task_run() got an unexpected keyword argument 'progress_range'
+
+apps\SCG\src\silverstar_fccg\ui\main_window.py:1794: TypeError
+________________ test_translation_catalogs_have_matching_keys _________________
+
+>   ???
+
+D:\python_software\SilverStar\apps\FCCG\tests\test_i18n.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:792: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('src/silverstar_fccg/i18n/zh_CN.json'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'src\\silverstar_fccg\\i18n\\zh_CN.json'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:776: FileNotFoundError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_gui_smoke.py::test_main_window_shell_navigation_theme_and_language
+FAILED apps\SCG\tests\test_gui_smoke.py::test_ground_page_excludes_flight_board_and_owns_uart_binding
+FAILED apps\SCG\tests\test_gui_smoke.py::test_devices_page_is_physical_and_capabilities_are_on_flight_page
+FAILED apps\SCG\tests\test_gui_smoke.py::test_official_repeated_device_rows_add_to_limit_and_remove_atomically
+FAILED apps\SCG\tests\test_gui_smoke.py::test_target_build_controls_and_quality_actions_use_shared_worker
+FAILED apps\SCG\tests\test_i18n.py::test_translation_catalogs_have_matching_keys
+6 failed, 32 passed in 629.72s (0:10:29)

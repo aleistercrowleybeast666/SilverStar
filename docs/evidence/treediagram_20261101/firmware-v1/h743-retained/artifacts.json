@@ -1,0 +1,32 @@
+[
+  {
+    "path": "build/FCCG/SilverStar_H743ZI/Release/SilverStar_0_1_3.bin",
+    "bytes": 369064,
+    "sha256": "e937748e65201821454b5977b7403042dd2366918f92c942f19a414c5e3c5b56"
+  },
+  {
+    "path": "build/FCCG/SilverStar_H743ZI/Release/SilverStar_0_1_3.elf",
+    "bytes": 3754568,
+    "sha256": "767dd8baa2d8d5aa324e9e82f2138232434a05ec51ac053ba415288afccbcd6a"
+  },
+  {
+    "path": "build/FCCG/SilverStar_H743ZI/Release/SilverStar_0_1_3.map",
+    "bytes": 1680103,
+    "sha256": "a76aa04ae9d8dd93f8410182613b779010832c31c5e31eb1272ddf5759b1ee21"
+  },
+  {
+    "path": "build/FCCG/SilverStar_H743ZI/StaticAnalysis/Release/SilverStar_0_1_3.bin",
+    "bytes": 369064,
+    "sha256": "e937748e65201821454b5977b7403042dd2366918f92c942f19a414c5e3c5b56"
+  },
+  {
+    "path": "build/FCCG/SilverStar_H743ZI/StaticAnalysis/Release/SilverStar_0_1_3.elf",
+    "bytes": 3754744,
+    "sha256": "0f7d6c3e3af988932c22222d1484ddc96ad9d93da387c2e7559e38b30b3e1c30"
+  },
+  {
+    "path": "build/FCCG/SilverStar_H743ZI/StaticAnalysis/Release/SilverStar_0_1_3.map",
+    "bytes": 1831243,
+    "sha256": "95c4f5df9b93a68c51c81e3efb2e138c40dfd5923dea38f60d1926ef1239f05f"
+  }
+]

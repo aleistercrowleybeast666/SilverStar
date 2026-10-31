@@ -1,0 +1,269 @@
+{
+  "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "numpy": "2.4.1",
+  "scipy": "1.16.3",
+  "cases": [
+    {
+      "case": "none",
+      "summary": {
+        "maximum_altitude_m": 117.12440560346042,
+        "duration_s": 10.860796,
+        "landed": true,
+        "total_impulse_ns": 109.875,
+        "hardware_validation": "not performed"
+      },
+      "algorithm_results": {},
+      "diagnostics": [
+        "gnss: invalid/saturated/outage measurement rejected",
+        "气动超出已声明小攻角域；法向系数按边界限幅，结果属外推"
+      ],
+      "input_digest": "ca0ba410e0fd31ed73a809db6fdd0c41688d6c0ac4f2e51fad993e6dcc78f2c0",
+      "algorithm_identity": {
+        "estimator": "none",
+        "controller": "none"
+      }
+    },
+    {
+      "case": "pid",
+      "summary": {
+        "maximum_altitude_m": 117.17769575511667,
+        "duration_s": 10.865561,
+        "landed": true,
+        "total_impulse_ns": 109.875,
+        "hardware_validation": "not performed"
+      },
+      "algorithm_results": {
+        "imu_Waiting": 544,
+        "barometer_Ok": 69,
+        "magnetometer_Unsupported": 109,
+        "imu_Ok": 543,
+        "gnss_Ok": 44,
+        "barometer_Rejected": 40
+      },
+      "diagnostics": [
+        "magnetometer: Unsupported",
+        "barometer: Rejected",
+        "gnss: invalid/saturated/outage measurement rejected",
+        "气动超出已声明小攻角域；法向系数按边界限幅，结果属外推"
+      ],
+      "input_digest": "05c8f05c12696efd5cfc695fc386e663157b6f972400363ee246b5979150a553",
+      "algorithm_identity": {
+        "estimator": "kf6",
+        "controller": "pid",
+        "initialization": "configured launcher orientation, zero position/velocity; simulated source",
+        "source": "6a72f60b5b9bf41b16632d8f0bb5a7e9e4028106ffe8b8c2421138fd097bf824"
+      }
+    },
+    {
+      "case": "lqr",
+      "summary": {
+        "maximum_altitude_m": 117.24944905593019,
+        "duration_s": 10.866709,
+        "landed": true,
+        "total_impulse_ns": 109.875,
+        "hardware_validation": "not performed"
+      },
+      "algorithm_results": {
+        "imu_Waiting": 544,
+        "barometer_Ok": 69,
+        "magnetometer_Unsupported": 109,
+        "imu_Ok": 543,
+        "gnss_Ok": 44,
+        "barometer_Rejected": 40
+      },
+      "diagnostics": [
+        "magnetometer: Unsupported",
+        "barometer: Rejected",
+        "gnss: invalid/saturated/outage measurement rejected",
+        "气动超出已声明小攻角域；法向系数按边界限幅，结果属外推"
+      ],
+      "input_digest": "d9dd9c9dd120edc94100f5610a1b29fcb43b489be23dedf6f7e9908285f797e6",
+      "algorithm_identity": {
+        "estimator": "kf6",
+        "controller": "lqr",
+        "initialization": "configured launcher orientation, zero position/velocity; simulated source",
+        "source": "6a72f60b5b9bf41b16632d8f0bb5a7e9e4028106ffe8b8c2421138fd097bf824"
+      }
+    },
+    {
+      "case": "gimbal",
+      "summary": {
+        "maximum_altitude_m": 77.90291394649735,
+        "duration_s": 3.0,
+        "landed": false,
+        "total_impulse_ns": 109.875,
+        "hardware_validation": "not performed"
+      },
+      "max_actual_nm": 0.08105345570645514,
+      "diagnostics": [
+        "magnetometer: Unsupported",
+        "barometer: Rejected",
+        "气动超出已声明小攻角域；法向系数按边界限幅，结果属外推"
+      ],
+      "input_digest": "79e83469169ba5675542413efd5ff500ed905c331f59c25034c4a83e05801212"
+    },
+    {
+      "case": "fin",
+      "summary": {
+        "maximum_altitude_m": 77.89819495547411,
+        "duration_s": 3.0,
+        "landed": false,
+        "total_impulse_ns": 109.875,
+        "hardware_validation": "not performed"
+      },
+      "max_actual_nm": 0.0780247715038521,
+      "diagnostics": [
+        "magnetometer: Unsupported",
+        "barometer: Rejected",
+        "气动超出已声明小攻角域；法向系数按边界限幅，结果属外推"
+      ],
+      "input_digest": "bd9785b41b9f20d9cd85869e337ae4ad5c27d3bd6b88a966af897b3b2c346654"
+    },
+    {
+      "case": "wheel",
+      "summary": {
+        "maximum_altitude_m": 77.91411927625856,
+        "duration_s": 3.0,
+        "landed": false,
+        "total_impulse_ns": 109.875,
+        "hardware_validation": "not performed"
+      },
+      "max_actual_nm": 0.07868023961782455,
+      "diagnostics": [
+        "magnetometer: Unsupported",
+        "barometer: Rejected",
+        "气动超出已声明小攻角域；法向系数按边界限幅，结果属外推"
+      ],
+      "input_digest": "c64028511bb6d00805f9aa9b85b83c45bca4c6328e3403fc647f41761e030aa6"
+    },
+    {
+      "case": "rcs",
+      "summary": {
+        "maximum_altitude_m": 77.01046596132036,
+        "duration_s": 3.0,
+        "landed": false,
+        "total_impulse_ns": 109.875,
+        "hardware_validation": "not performed"
+      },
+      "max_actual_nm": 0.0897083431304302,
+      "diagnostics": [
+        "magnetometer: Unsupported",
+        "barometer: Rejected",
+        "气动超出已声明小攻角域；法向系数按边界限幅，结果属外推"
+      ],
+      "input_digest": "d11bd26ca0b2fe81360b9cce97f4d362cd5a3050038f1af5680ab0c09a53dc9f"
+    },
+    {
+      "case": "ins",
+      "valid_estimates": 50,
+      "final_position_error_m": 0.0013820865784786192,
+      "algorithm_results": {
+        "imu_Waiting": 51,
+        "gnss_Invalid": 6,
+        "barometer_Unsupported": 11,
+        "magnetometer_Unsupported": 11,
+        "imu_Ok": 50
+      },
+      "input_digest": "64f0f84f147960e30452316aebfcc43c28a945b0ea5c775a56c439572d7cd614"
+    },
+    {
+      "case": "sf6",
+      "valid_estimates": 50,
+      "final_position_error_m": 0.10885157331469308,
+      "algorithm_results": {
+        "imu_Waiting": 51,
+        "gnss_Ok": 6,
+        "barometer_Ok": 11,
+        "magnetometer_Unsupported": 11,
+        "imu_Ok": 50
+      },
+      "input_digest": "84394f0690ed1477162996e8c8284b026751c0c7ed10b1734ab4066877eb97d0"
+    },
+    {
+      "case": "kf6",
+      "valid_estimates": 50,
+      "final_position_error_m": 0.1953185671020043,
+      "algorithm_results": {
+        "imu_Waiting": 51,
+        "gnss_Ok": 6,
+        "barometer_Ok": 11,
+        "magnetometer_Unsupported": 11,
+        "imu_Ok": 50
+      },
+      "input_digest": "ae937e49250ff0b9ac787d19209a03414fae072ecead17d350392bdba4cf1b60"
+    },
+    {
+      "case": "eskf15",
+      "valid_estimates": 50,
+      "final_position_error_m": 0.1889289494432526,
+      "algorithm_results": {
+        "imu_Waiting": 1,
+        "gnss_Ok": 6,
+        "barometer_Ok": 11,
+        "magnetometer_Unsupported": 11,
+        "imu_Ok": 100
+      },
+      "input_digest": "f535f2c28a3576eba703c3f13637352b19fd60d5a20cdfa257dea35eb67f84c9"
+    },
+    {
+      "case": "eskf20",
+      "valid_estimates": 50,
+      "final_position_error_m": 0.259576356527585,
+      "algorithm_results": {
+        "imu_Waiting": 1,
+        "gnss_Ok": 6,
+        "barometer_Unsupported": 11,
+        "magnetometer_Ok": 11,
+        "imu_Ok": 100
+      },
+      "input_digest": "a48554aade6080713f56b0b24726cc888ae3a18516ac1d2ad6d6825093d7aa92"
+    },
+    {
+      "case": "inekf15",
+      "valid_estimates": 50,
+      "final_position_error_m": 0.26324709917881683,
+      "algorithm_results": {
+        "imu_Waiting": 1,
+        "gnss_Ok": 6,
+        "barometer_Unsupported": 11,
+        "magnetometer_Unsupported": 11,
+        "imu_Ok": 100
+      },
+      "input_digest": "6a3e87ca61d272f48a11a650f9d7023ba3d695610d97137898fa906134cca83e"
+    },
+    {
+      "case": "inekf20",
+      "valid_estimates": 50,
+      "final_position_error_m": 0.2554148556859624,
+      "algorithm_results": {
+        "imu_Waiting": 1,
+        "gnss_Ok": 6,
+        "barometer_Unsupported": 11,
+        "magnetometer_Ok": 11,
+        "imu_Ok": 100
+      },
+      "input_digest": "8ea2a61635e8c9a1671ece6bc9af971251636eb1b1d6166fc293aabb46f29106"
+    },
+    {
+      "case": "underline-pid",
+      "summary": {
+        "maximum_altitude_m": 382.98257215989327,
+        "duration_s": 18.0,
+        "landed": false,
+        "total_impulse_ns": 200.00000000000003,
+        "hardware_validation": "not performed"
+      },
+      "algorithm_results": {
+        "imu_Waiting": 901,
+        "barometer_Ok": 102,
+        "magnetometer_Unsupported": 180,
+        "imu_Ok": 900,
+        "gnss_Ok": 80,
+        "barometer_Rejected": 78
+      },
+      "input_digest": "7aa0b00e983ff8e5f981a8f43ec01bb8946e9c0af4dc744cf7de76a8983075f3"
+    }
+  ],
+  "scope": "Host software only; scientific approximations and hardware limitations retained"
+}

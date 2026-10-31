@@ -1,0 +1,102 @@
+{
+  "scope": "Reviewed final SCG layout and explicit old-schema migration; excludes H7 owner and historical unrelated dirty files",
+  "head_before": "267e7ad4a5e1b1668dffb2873a89f205f968049c",
+  "paths": [
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_protocol_telemetry_ss_tm/docs/AIR_PROTOCOL.md",
+      "sha256": "ef5121a57f9a9089ad2d60458f0be027e26a7984a31b35ebc513b082143ab922"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/i18n/en_US.json",
+      "sha256": "51ccd24aeb57db0dd55be4184d8a876b81bbea8e16b897a6d6b1c3cba8fb3ce3"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/i18n/zh_CN.json",
+      "sha256": "61d4f9e9b55bab9e667fe6bf629452d5988c2d283b538a61d89fc929f31a83eb"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/project/model.py",
+      "sha256": "7fc2bb6b407a208f8e509ee00adf4effc416af3d591b166e2903782a3bbda76a"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/mission_coverage.py",
+      "sha256": "f7388170e17ecba76cbd2deb870052513c2f3039bd1b3645eaef237d257186b2"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/mission_stage_transaction.py",
+      "sha256": "a25d883efd220af7fba707374acb911e9424934a03774e49a164b0aca66137e2"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/pages/build.py",
+      "sha256": "c1860d85653cd12bbcf68d8b0862c1e81d0640c07cb23b0aeaa215c9bc8768b2"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/ui/radio_transaction.py",
+      "sha256": "d60340a1e16124374015605c1ec498cd1b05f1ae9f64b37410e376bc7916547e"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/legacy_project_fields/README.md",
+      "sha256": "763789d2ef35f690af6b885d2eb8f12f4f792165330b855f4294b28c407231fb"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/legacy_project_fields/build_fixtures.py",
+      "sha256": "c3c4a413c5ecb14542dcf4a77495cdb0eff972e293e23e7eea775ff5ca740d7d"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/legacy_project_fields/provenance.json",
+      "sha256": "250ab4977df1ae198ec690ab56104a474629353df834e32d1c42674f64cae9d5"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/legacy_project_fields/v12.json",
+      "sha256": "9707a3984e9bb69fc8d9f81a37dcc0dabee795744f79a57cb6d644c835c0d75e"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/legacy_project_fields/v2.json",
+      "sha256": "740bf4732691f135a8db61042af96d29faeade3bcbe5b1fa06f8f3c63fcb26b1"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/legacy_project_fields/v3.json",
+      "sha256": "7fd566ad32acc89cd1a701e0ef4fc4fc2d2a3e0d85c0627b2cd9459e302f34e7"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/legacy_project_fields/v4.json",
+      "sha256": "17e119bcbc69be00bda7f3a730b522425aa139b7e81eac46da3d14b72feadb72"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/legacy_project_fields/v5.json",
+      "sha256": "5b2f1b57cee9930c73d2cff8c3b1d7b5f89ae72559e69e742135fa69c8fe5312"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/legacy_project_fields/v6.json",
+      "sha256": "ab6a1924f41bfd90bba12a77050c00337ec3184844348575e79f775e21440331"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/legacy_project_fields/v7.json",
+      "sha256": "953d6f0759643ceb6a8b7d4e6e54552b5196c8ee983ea0d4b3663565ba2ba94a"
+    },
+    {
+      "path": "apps/SCG/tests/fixtures/reference_source_graph_s_workflow_delta.json",
+      "sha256": "674a69a2a1182ad6256a034637012ce5565549d2d58f797c8b970facdb982a32"
+    },
+    {
+      "path": "apps/SCG/tests/test_device_capability_architecture.py",
+      "sha256": "5a266b4d242247f5a389acb4f671659d00b6577dd08b2cebd1714e04a43d8458"
+    },
+    {
+      "path": "apps/SCG/tests/test_gui_smoke.py",
+      "sha256": "c8af771785138b22f26b5a1e8098550af3d91cd915daf73fa9555fbee868d6a6"
+    },
+    {
+      "path": "apps/SCG/tests/test_i18n.py",
+      "sha256": "ef7a6eef2afdfaf04bb77781cdd943edbca470d3861863aa1df0b6e9d283f01d"
+    },
+    {
+      "path": "apps/SCG/tests/test_project_domain.py",
+      "sha256": "9165bc82eda84083290006fb6df7d6205712f153d28aec6565a51700bb22fb86"
+    },
+    {
+      "path": "apps/SCG/tests/test_radio_transaction.py",
+      "sha256": "f3c5b5ea22e362d4eecdb702ecf87d27e56945b0d9e2fffaccc55f94edfdb6a6"
+    }
+  ]
+}

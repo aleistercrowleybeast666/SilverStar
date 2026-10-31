@@ -1,0 +1,84 @@
+F.                                                                       [100%]
+================================== FAILURES ===================================
+____ test_shared_source_group_and_dependency_apply_once_cancel_and_reopen _____
+
+workspace_window = (<silverstar_fccg.ui.main_window.MainWindow(0x1a043556280) at 0x000001A048E3C700>, [])
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/workflow-v3/test_shared_source_group_and_d0')
+qapp = <PySide6.QtWidgets.QApplication(0x1a04494d8f0) at 0x000001A04890D940>
+
+    def test_shared_source_group_and_dependency_apply_once_cancel_and_reopen(workspace_window, tmp_path, qapp):
+        window, errors = workspace_window
+        _Sources_Prepare(window)
+        before = _Snapshot(window._model)
+        changes = []
+        window.workflow_page.configurationChanged.connect(changes.append)
+    
+        def Edit(dialog, apply):
+            assert not dialog.bindings and not dialog.parameters.editors
+            _InFunction(dialog, 'ins', lambda child: _Source_Choose(child, 'imu1'))
+            def Telemetry(child):
+                dependency = child.findChild(QCheckBox, 'functionDependency_telemetry_estimator')
+                assert dependency.isEnabled()
+                dependency.setChecked(True)
+                _TelemetryStart_Choose(child)
+            _InFunction(dialog, 'telemetry', Telemetry)
+            if apply:
+                dialog.accept()
+                assert dialog.result() == QDialog.DialogCode.Accepted, dialog.error.text()
+            else:
+                dialog.reject()
+    
+        _Capsule_Click(window, 'ascent', lambda dialog: Edit(dialog, False))
+        _Events_Flush(qapp)
+        assert _Snapshot(window._model) == before and not changes
+        _Capsule_Click(window, 'ascent', lambda dialog: Edit(dialog, True))
+        _Events_Flush(qapp)
+        assert len(changes) == 1 and not errors
+        assert window._model.capability_source_overrides['imu.acceleration'] == 'imu1'
+        assert window._model.capability_source_overrides['imu.angular_rate'] == 'imu1'
+        canonical = {row['instance_id']: row for row in FunctionsCanonical_Get(window._model, window._service.catalog)['functions']}
+        functions = Functions_Derive(window._model, window._service.catalog)['functions']
+        assert all(row['input_bindings'] == canonical[row['instance_id']]['input_bindings'] for row in functions)
+        assert next(row for row in functions if row['instance_id'] == 'telemetry')['depends_on'] == ['estimator']
+        saved = _Snapshot(window._model)
+        root = window._service.ProjectRoot_Save(window._model, tmp_path / 'connected')
+        assert _Snapshot(window._service.Project_Open(root)) == saved
+    
+        # A pending edit in the shared library travels into the same modal draft.
+        # Cancelling preserves both the committed model and that uncommitted edit.
+        combo = window.workflow_page.findChild(StandardComboBox, 'functionInput_ins_imu.acceleration')
+        combo.setCurrentIndex(combo.findData('imu0'))
+        pending = deepcopy(window.workflow_page.PendingFunctions_Collect())
+        assert pending is not None
+        def Pending(dialog, apply):
+            def Inspect(child):
+                current = child.findChild(StandardComboBox, 'functionInput_ins_imu.acceleration')
+                assert current.currentData() == 'imu0'
+            _InFunction(dialog, 'ins', Inspect)
+            if apply:
+                dialog.accept()
+                assert dialog.result() == QDialog.DialogCode.Accepted, dialog.error.text()
+            else:
+                dialog.reject()
+        _Capsule_Click(window, 'ascent', lambda dialog: Pending(dialog, False))
+        _Events_Flush(qapp)
+        assert _Snapshot(window._model) == saved
+        assert window.workflow_page.PendingFunctions_Collect() == pending
+        _Capsule_Click(window, 'ascent', lambda dialog: Pending(dialog, True))
+        _Events_Flush(qapp)
+        assert len(changes) == 2 and not errors
+        # The canonical default source needs no redundant override entry.
+        restored = Functions_Derive(window._model, window._service.catalog)['functions']
+        ins = next(row for row in restored if row['instance_id'] == 'ins')
+>       assert ins['input_bindings']['imu.acceleration'] == 'imu0'
+E       AssertionError: assert 'imu1' == 'imu0'
+E         
+E         - imu0
+E         ?    ^
+E         + imu1
+E         ?    ^
+
+tests\test_workflow_connections.py:124: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_workflow_connections.py::test_shared_source_group_and_dependency_apply_once_cancel_and_reopen
+1 failed, 1 passed in 28.89s

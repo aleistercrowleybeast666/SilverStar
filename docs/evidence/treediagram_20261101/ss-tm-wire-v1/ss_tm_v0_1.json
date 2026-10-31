@@ -1,0 +1,569 @@
+{
+  "schema": "silverstar.telemetry/0.1",
+  "name": "SilverStar Telemetry",
+  "version": 1,
+  "byte_order": "little",
+  "header_bytes": 8,
+  "maximum_frame_bytes": 61,
+  "application_crc_bytes": 0,
+  "profiles": {
+    "S": {
+      "bit": 0,
+      "default": true,
+      "behavior": "half_duplex_before_start_downlink_only_after_transition",
+      "flight_periods_us": {
+        "FLIGHT_DATA": 200000,
+        "POSITION": 1000000,
+        "HEALTH": 2000000
+      }
+    },
+    "H": {
+      "bit": 1,
+      "behavior": "bounded_half_duplex_throughout",
+      "flight_periods_us": {
+        "FLIGHT_DATA": 500000,
+        "POSITION": 2000000,
+        "HEALTH": 2000000
+      }
+    }
+  },
+  "landed_periods_us": {
+    "POSITION": 1000000,
+    "HEALTH": 5000000
+  },
+  "header": [
+    {
+      "name": "version",
+      "type": "u8",
+      "unit": "0x01"
+    },
+    {
+      "name": "profile_type",
+      "type": "u8",
+      "unit": "bit7 S/H; bits0..6 message"
+    },
+    {
+      "name": "tx_sequence",
+      "type": "u16",
+      "unit": "frame sequence modulo65536"
+    },
+    {
+      "name": "boot_session",
+      "type": "u32",
+      "unit": "nonzero FC boot identity; not authentication"
+    }
+  ],
+  "messages": {
+    "FLIGHT_DATA": {
+      "type": 16,
+      "length": 56,
+      "fields": [
+        {
+          "name": "time_ms",
+          "type": "u32",
+          "unit": "ms monotonic"
+        },
+        {
+          "name": "accel_i16",
+          "type": "i16[3]",
+          "unit": "configured full scale"
+        },
+        {
+          "name": "gyro_i16",
+          "type": "i16[3]",
+          "unit": "configured full scale"
+        },
+        {
+          "name": "quaternion_q15",
+          "type": "i16[4]",
+          "unit": "Body to ENU Hamilton wxyz"
+        },
+        {
+          "name": "velocity_enu_mps",
+          "type": "f32[3]",
+          "unit": "m/s"
+        },
+        {
+          "name": "position_enu_m",
+          "type": "f32[3]",
+          "unit": "m"
+        }
+      ]
+    },
+    "PREFLIGHT_DATA": {
+      "type": 17,
+      "length": 32,
+      "fields": [
+        {
+          "name": "time_ms",
+          "type": "u32",
+          "unit": "ms monotonic"
+        },
+        {
+          "name": "accel_i16",
+          "type": "i16[3]",
+          "unit": "configured full scale"
+        },
+        {
+          "name": "gyro_i16",
+          "type": "i16[3]",
+          "unit": "configured full scale"
+        },
+        {
+          "name": "quaternion_q15",
+          "type": "i16[4]",
+          "unit": "Body to ENU Hamilton wxyz"
+        }
+      ]
+    },
+    "CAPABILITY": {
+      "type": 18,
+      "length": 24,
+      "fields": [
+        {
+          "name": "flight_encoding",
+          "type": "u8",
+          "unit": "0 compact layout"
+        },
+        {
+          "name": "command_policy",
+          "type": "u8",
+          "unit": "1 preflight-only, 2 mission allowed"
+        },
+        {
+          "name": "calibration_mode_mask",
+          "type": "u8",
+          "unit": "bits0..2"
+        },
+        {
+          "name": "sensor_summary_flags",
+          "type": "u8",
+          "unit": "bits0..3"
+        },
+        {
+          "name": "accel_full_scale_g",
+          "type": "u8",
+          "unit": "g"
+        },
+        {
+          "name": "gyro_full_scale_dps",
+          "type": "u16",
+          "unit": "deg/s"
+        },
+        {
+          "name": "preflight_flags",
+          "type": "u8",
+          "unit": "bit0 preflight advertisement, others0"
+        },
+        {
+          "name": "advertised_monotonic_us",
+          "type": "u64",
+          "unit": "us"
+        }
+      ]
+    },
+    "PREFLIGHT_STATUS": {
+      "type": 19,
+      "length": 15,
+      "fields": [
+        {
+          "name": "lifecycle_state",
+          "type": "u8",
+          "unit": "lifecycle enum"
+        },
+        {
+          "name": "calibration_state_mode",
+          "type": "u8",
+          "unit": "low nibble state, high mode; 15 not selected"
+        },
+        {
+          "name": "completed_face_mask",
+          "type": "u8",
+          "unit": "6 bits"
+        },
+        {
+          "name": "current_face",
+          "type": "u8",
+          "unit": "0..5 or255"
+        },
+        {
+          "name": "alignment_state",
+          "type": "u8",
+          "unit": "low nibble; upper0"
+        },
+        {
+          "name": "flags",
+          "type": "u8",
+          "unit": "preflight flags bits0..6"
+        },
+        {
+          "name": "start_block_reason",
+          "type": "u8",
+          "unit": "stable admission reason"
+        }
+      ]
+    },
+    "SENSOR_STATUS": {
+      "type": 20,
+      "length": 15,
+      "fields": [
+        {
+          "name": "snapshot_id",
+          "type": "u8",
+          "unit": "transaction snapshot"
+        },
+        {
+          "name": "sensor_id",
+          "type": "u8",
+          "unit": "stable physical type"
+        },
+        {
+          "name": "instance_id",
+          "type": "u8",
+          "unit": "physical instance"
+        },
+        {
+          "name": "status_flags",
+          "type": "u8",
+          "unit": "sensor flags"
+        },
+        {
+          "name": "detail_code",
+          "type": "u8",
+          "unit": "sensor detail"
+        },
+        {
+          "name": "index",
+          "type": "u8",
+          "unit": "ordinal"
+        },
+        {
+          "name": "total",
+          "type": "u8",
+          "unit": "count"
+        }
+      ]
+    },
+    "NAV_CAPABILITY": {
+      "type": 21,
+      "length": 15,
+      "fields": [
+        {
+          "name": "navigation_session",
+          "type": "u16",
+          "unit": "legacy navigation generation scope"
+        },
+        {
+          "name": "generation",
+          "type": "u16",
+          "unit": "counter"
+        },
+        {
+          "name": "schema",
+          "type": "u8",
+          "unit": "1"
+        },
+        {
+          "name": "algorithm_id",
+          "type": "u8",
+          "unit": "navigation enum"
+        },
+        {
+          "name": "group_mask",
+          "type": "u8",
+          "unit": "bits0..4"
+        }
+      ]
+    },
+    "NAV_PREPARATION": {
+      "type": 22,
+      "length": 15,
+      "fields": [
+        {
+          "name": "navigation_session",
+          "type": "u16",
+          "unit": "legacy navigation generation scope"
+        },
+        {
+          "name": "generation",
+          "type": "u16",
+          "unit": "counter"
+        },
+        {
+          "name": "required_mask",
+          "type": "u8",
+          "unit": "bits0..6"
+        },
+        {
+          "name": "ready_mask",
+          "type": "u8",
+          "unit": "bits0..6"
+        },
+        {
+          "name": "reason",
+          "type": "u8",
+          "unit": "start reason"
+        }
+      ]
+    },
+    "NAV_HEALTH": {
+      "type": 23,
+      "length": 15,
+      "fields": [
+        {
+          "name": "navigation_session",
+          "type": "u16",
+          "unit": "legacy navigation generation scope"
+        },
+        {
+          "name": "generation",
+          "type": "u16",
+          "unit": "counter"
+        },
+        {
+          "name": "selector",
+          "type": "u8",
+          "unit": "navigation selector"
+        },
+        {
+          "name": "value",
+          "type": "u16",
+          "unit": "selector-specific"
+        }
+      ]
+    },
+    "POSITION": {
+      "type": 24,
+      "length": 28,
+      "fields": [
+        {
+          "name": "latitude_e7",
+          "type": "i32",
+          "unit": "WGS84 deg*1e7"
+        },
+        {
+          "name": "longitude_e7",
+          "type": "i32",
+          "unit": "WGS84 deg*1e7"
+        },
+        {
+          "name": "ellipsoid_height_mm",
+          "type": "i32",
+          "unit": "WGS84 ellipsoid mm"
+        },
+        {
+          "name": "sample_age_ms",
+          "type": "u32",
+          "unit": "ms"
+        },
+        {
+          "name": "horizontal_accuracy_cm",
+          "type": "u16",
+          "unit": "cm"
+        },
+        {
+          "name": "position_flags",
+          "type": "u8",
+          "unit": "bits0..5"
+        },
+        {
+          "name": "satellite_count",
+          "type": "u8",
+          "unit": "count"
+        }
+      ]
+    },
+    "HEALTH": {
+      "type": 25,
+      "length": 16,
+      "fields": [
+        {
+          "name": "battery_mv",
+          "type": "u16",
+          "unit": "mV"
+        },
+        {
+          "name": "battery_age_ds",
+          "type": "u16",
+          "unit": "0.1 s"
+        },
+        {
+          "name": "known_mask",
+          "type": "u16",
+          "unit": "bits0..10"
+        },
+        {
+          "name": "fault_mask",
+          "type": "u16",
+          "unit": "subset of known"
+        }
+      ]
+    },
+    "EVENT": {
+      "type": 32,
+      "length": 32,
+      "fields": [
+        {
+          "name": "event_id",
+          "type": "u32",
+          "unit": "nonzero unique within boot"
+        },
+        {
+          "name": "occurred_us",
+          "type": "u64",
+          "unit": "original monotonic us"
+        },
+        {
+          "name": "event_code",
+          "type": "u16",
+          "unit": "stable event code"
+        },
+        {
+          "name": "stage_id",
+          "type": "u32",
+          "unit": "stable generated stage hash,0 unknown"
+        },
+        {
+          "name": "instance_id",
+          "type": "u16",
+          "unit": "stable generated instance code,0 none"
+        },
+        {
+          "name": "transaction_id",
+          "type": "u16",
+          "unit": "START/command sequence when event declares it"
+        },
+        {
+          "name": "arg0",
+          "type": "u8",
+          "unit": "event-specific"
+        },
+        {
+          "name": "arg1",
+          "type": "u8",
+          "unit": "event-specific"
+        }
+      ]
+    },
+    "CMD": {
+      "type": 48,
+      "length": 15,
+      "fields": [
+        {
+          "name": "command_id",
+          "type": "u8",
+          "unit": "legacy stable command ID"
+        },
+        {
+          "name": "token",
+          "type": "u32",
+          "unit": "admission token, not authentication"
+        },
+        {
+          "name": "param0",
+          "type": "u8",
+          "unit": "command-specific; CAP_ACK correlation low byte"
+        },
+        {
+          "name": "param1",
+          "type": "u8",
+          "unit": "command-specific; CAP_ACK correlation high byte"
+        }
+      ]
+    },
+    "ACK": {
+      "type": 64,
+      "length": 16,
+      "fields": [
+        {
+          "name": "acked_sequence",
+          "type": "u16",
+          "unit": "full command frame sequence"
+        },
+        {
+          "name": "command_id",
+          "type": "u8",
+          "unit": "stable command ID"
+        },
+        {
+          "name": "result",
+          "type": "u8",
+          "unit": "stable result"
+        },
+        {
+          "name": "time_ms",
+          "type": "u32",
+          "unit": "monotonic ms modulo2^32"
+        }
+      ]
+    }
+  },
+  "position_flags": {
+    "POSITION_VALID": 1,
+    "HEIGHT_VALID": 2,
+    "CURRENT_FIX_USABLE": 4,
+    "AGE_FROM_MEASUREMENT": 8,
+    "RETAINED_FIX": 16,
+    "QUALITY_DEGRADED": 32
+  },
+  "health_bits": [
+    "power",
+    "primary_imu",
+    "gnss",
+    "barometer",
+    "magnetometer",
+    "estimator",
+    "storage",
+    "logger",
+    "telemetry_tx",
+    "scheduler",
+    "configuration_calibration"
+  ],
+  "invalid": {
+    "coordinate": -2147483648,
+    "height": -2147483648,
+    "age_unknown": 4294967295,
+    "age_saturated": 4294967294,
+    "accuracy_unknown": 65535,
+    "accuracy_saturated": 65534,
+    "satellite_count_unknown": 255,
+    "battery_unknown": 65535,
+    "battery_age_unknown": 65535,
+    "battery_age_saturated": 65534
+  },
+  "events": {
+    "BOOT": 1,
+    "SELFTEST_COMPLETE": 2,
+    "MISSION_START": 3,
+    "LAUNCH": 4,
+    "PARACHUTE_DEPLOY": 5,
+    "LANDED": 6,
+    "LOCKED": 7,
+    "UNLOCKED": 8,
+    "GNSS_USABILITY": 9,
+    "ALIGNMENT": 10,
+    "CALIBRATION": 11,
+    "CALIBRATION_FACE": 12,
+    "CALIBRATION_DIAGNOSTIC": 13,
+    "STAGE_ENTER": 256,
+    "STAGE_EXIT": 257,
+    "FUNCTION_START": 512,
+    "FUNCTION_COMPLETE": 513,
+    "FUNCTION_FAILED": 514
+  },
+  "queue": {
+    "event_depth": 16,
+    "event_transmissions": 3,
+    "event_expiry_us": 30000000,
+    "periodic_latest_only": true
+  },
+  "phy_baseline": {
+    "spreading_factor": 10,
+    "bandwidth_label_hz": 800000,
+    "bandwidth_calculation_hz": 812500,
+    "coding_rate": "4/5",
+    "preamble_symbols": 16,
+    "header": "explicit",
+    "crc": true
+  }
+}

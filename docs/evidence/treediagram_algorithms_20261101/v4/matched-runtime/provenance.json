@@ -1,0 +1,67 @@
+{
+  "silverstar_sdk_source_commit": "4f701b4a7822302dc0f4ac858549f7cc7fa4ba0e",
+  "silverstar_receiver_commit": "09c057a67acfc10e3ff387a4a8821c8ee0e83b0c",
+  "receiver_source_records": [
+    {
+      "path": "apps/SCG/src/silverstar_fccg/project/model.py",
+      "committed_sha256": "7fc2bb6b407a208f8e509ee00adf4effc416af3d591b166e2903782a3bbda76a",
+      "runtime_sha256": "7fc2bb6b407a208f8e509ee00adf4effc416af3d591b166e2903782a3bbda76a"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/project/tuning_bundle.py",
+      "committed_sha256": "bef363c0261d9104c40cdaed42fe8aeae65e8c8a6e9aeda11c625b803a6e90e4",
+      "runtime_sha256": "bef363c0261d9104c40cdaed42fe8aeae65e8c8a6e9aeda11c625b803a6e90e4"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/multi_target.py",
+      "committed_sha256": "5e7421937257418922e2f1f104a6fa77c9a2c02981f4a5d5e84f596a7fdf8df4",
+      "runtime_sha256": "2714ad8b7d140213bd3ff85f96f0a285d189d7cb0adb3a8f94c388c2fbc044ec"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/log_decoder_profile.py",
+      "committed_sha256": "37bdb81922f0e5d041989bd6df7ee08e6306807c53b66dcb5d2fba3a73dfc73c",
+      "runtime_sha256": "517c7a3bef68b07b047820a3cbadbac04c016c4cffc938d73a06cdfad8793c45"
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/app/service.py",
+      "committed_sha256": "224b8335cffcfd0283d05ac2677a3a6d8959ba9afe1871d267dda8de10348ae2",
+      "runtime_sha256": "79186ad50ab9aafc877e8aa8fb3c9b6f50429d017abae6ac40eb6a5f9898b52a"
+    }
+  ],
+  "silverstar_evidence_head_before_run": "09c057a67acfc10e3ff387a4a8821c8ee0e83b0c",
+  "tree_diagram_head_before_run": "d21c5f77637c0ff38116f1c5b1aa401bb5728949",
+  "tree_diagram_state": "final actuator boundary implementation committed; source/run byte hashes retained",
+  "tree_diagram_tested_runtime_commit": "440db630ac12c5e3ad128623870ef00771c49e25",
+  "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+  "source_records": [
+    {
+      "path": "D:\\python_software\\TreeDiagram\\examples\\underline-pid.json",
+      "sha256": "9b9e38e464c460839b8463ad7d1e0e9a1fb87a9e7691aa93108654a73cb40673"
+    },
+    {
+      "path": "D:\\python_software\\TreeDiagram\\examples\\pid.json",
+      "sha256": "a21e7fd0b33d31498c35f4b6558e26449978fddcce9fca0263d557ac7da3dc77"
+    },
+    {
+      "path": "D:\\python_software\\TreeDiagram\\examples\\lqr.json",
+      "sha256": "79456e66ed7f0f9f909493c12fb80272e778781d0a68f47bd4477b31c8c9d243"
+    },
+    {
+      "path": "D:\\python_software\\TreeDiagram\\tools\\verify_examples.py",
+      "sha256": "eb285c8e1ce8d5af9e174e7ef03e15d701de8e2c7e277a1241f2fca81c81054b"
+    },
+    {
+      "path": "D:\\python_software\\TreeDiagram\\src\\treediagram\\physics.py",
+      "sha256": "9812fd0c4f63677cbf42d0066b83ec9350dad9ff25a2423e2a5d56cf05a76669"
+    },
+    {
+      "path": "D:\\python_software\\TreeDiagram\\src\\treediagram\\simulation.py",
+      "sha256": "f4627202fdb97b4c6ee2344c611556ad7fb6bda5b6c71841e7122da1f87faee2"
+    },
+    {
+      "path": "D:\\python_software\\TreeDiagram\\src\\treediagram\\export.py",
+      "sha256": "df2d00d57b2e20c0672a9e2e2efc5618b671c88bb3a86a61ae8c858914b5ded0"
+    }
+  ],
+  "scope": "actual final run parameter adoption and generated Host consumer; no new ARM or hardware validation"
+}

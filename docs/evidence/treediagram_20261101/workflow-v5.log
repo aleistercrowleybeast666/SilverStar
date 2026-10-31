@@ -1,0 +1,74 @@
+.........F........                                                       [100%]
+================================== FAILURES ===================================
+____ test_invalid_range_keeps_draft_and_referenced_stage_cannot_be_removed ____
+
+workspace_window = (<silverstar_fccg.ui.main_window.MainWindow(0x20edf5a4a00) at 0x0000020EE690E200>, [])
+qapp = <PySide6.QtWidgets.QApplication(0x20ed853d890) at 0x0000020EDDA71A00>
+
+    def test_invalid_range_keeps_draft_and_referenced_stage_cannot_be_removed(workspace_window, qapp):
+        window, errors = workspace_window
+        model = window._service.ReferenceProject_Create('Invalid native range')
+        model.mission_process = MissionProcess_FirmwareDefault(acceleration_detection=True)
+        model.mission_functions = Functions_Derive(model, window._service.catalog)
+        function = next(row for row in model.mission_functions['functions'] if row['instance_id'] == 'recording')
+        function.update(start={'kind':'stage_enter','stage_id':'ascent'}, stop={'kind':'stage_exit','stage_id':'coast'})
+        model.mission_functions['schema_version'] = 2
+        window._model = model
+        window._Project_Refresh()
+        before = _Snapshot(window._model)
+        panel = window.workflow_page.stage_panel
+        panel.Stage_Remove('ascent')
+        assert panel.error.text() and _Snapshot(window._model) == before
+        def Invalid(dialog):
+            from test_workflow_connections import _InFunction
+            dialog.stage_editor.name_edit.setText('Keep this draft')
+            def Range(child):
+                form = child.bindings[0]._sections['recording.range'].body.layout()
+                start = form.itemAt(0, form.ItemRole.FieldRole).widget()
+                stop = form.itemAt(1, form.ItemRole.FieldRole).widget()
+                start.setCurrentIndex(start.findData(('stage_enter', 'coast')))
+                stop.setCurrentIndex(stop.findData(('stage_exit', 'ascent')))
+                child.accept()
+                assert child.result() != QDialog.DialogCode.Accepted
+                assert child.error.text()
+                assert start.currentData() == ('stage_enter', 'coast')
+                child.reject()
+            _InFunction(dialog, 'recording', Range, apply=False)
+            assert dialog.stage_editor.name_edit.text() == 'Keep this draft'
+            dialog.reject()
+>       _Capsule_Click(window, 'coast', Invalid)
+
+tests\test_three_workspace_workflow.py:329: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_three_workspace_workflow.py:50: in _Capsule_Click
+    raise outcomes[0]
+tests\test_three_workspace_workflow.py:39: in DuringDialog
+    interact(dialog)
+tests\test_three_workspace_workflow.py:326: in Invalid
+    _InFunction(dialog, 'recording', Range, apply=False)
+tests\test_workflow_connections.py:58: in _InFunction
+    raise outcomes[0]
+tests\test_workflow_connections.py:46: in During
+    edit(dialog)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+child = <silverstar_fccg.ui.mission_stage_transaction.MissionStageTransactionDialog(0x20ed94224e0, name="missionStageTransaction") at 0x0000020EE6BC1680>
+
+    def Range(child):
+        form = child.bindings[0]._sections['recording.range'].body.layout()
+        start = form.itemAt(0, form.ItemRole.FieldRole).widget()
+        stop = form.itemAt(1, form.ItemRole.FieldRole).widget()
+        start.setCurrentIndex(start.findData(('stage_enter', 'coast')))
+        stop.setCurrentIndex(stop.findData(('stage_exit', 'ascent')))
+        child.accept()
+        assert child.result() != QDialog.DialogCode.Accepted
+        assert child.error.text()
+>       assert start.currentData() == ('stage_enter', 'coast')
+E       AssertionError: assert ['stage_enter', 'coast'] == ('stage_enter', 'coast')
+E         
+E         Use -v to get more diff
+
+tests\test_three_workspace_workflow.py:324: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_three_workspace_workflow.py::test_invalid_range_keeps_draft_and_referenced_stage_cannot_be_removed
+1 failed, 17 passed in 390.26s (0:06:30)

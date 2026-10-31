@@ -1,0 +1,13 @@
+{
+  "status": "CompiledCandidate",
+  "scope": "PRIVATE_C071_GROUND_BACKEND",
+  "model_sha256": "c64c427d4d38c49c75be854cc152a322cee60036d8defbd24962289ccdbe76ef",
+  "snapshot_id": "751f3d0065e4b0336f4c32eeedbba043d14f7a8a779da52d27865bd6560d72a6",
+  "project_root": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\c071-v1\\project",
+  "runtime_project": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\c071-v1\\project\\SilverStar.ssproject",
+  "runtime_project_sha256": "4c8e4bbfa63e9aa1540d37524c51c9b0645f474b2ba93e30a46934ffef730b89",
+  "snapshot_root": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\silverstar\\c071-v1\\.fccg\\hardware_imports\\751f3d0065e4b0336f4c32eeedbba043d14f7a8a779da52d27865bd6560d72a6\\UsbGroundNative",
+  "compile_receipt_sha256": "cd2d60c6f90aa37505634946d3ff6c482bd66ee6e269abd0f718f2793cfa7ac7",
+  "failure": null,
+  "limits": "PRIVATE C071 native PCD plus pinned classic CDC companion Ground candidate. Formal USB release BLOCKED: b66 independent review has no passed outcome and must not be retried or bypassed. Full EP0/async lifecycle, critical contracts, stack/WCET and hardware NOT PROVEN."
+}

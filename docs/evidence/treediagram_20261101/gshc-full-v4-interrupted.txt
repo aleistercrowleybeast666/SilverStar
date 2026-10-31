@@ -1,0 +1,1 @@
+Interrupted own v4 after deterministic Windows path length failure in exported partial/checkpoint files. No application guard was weakened; final v5 uses shorter versioned task output. Partial run is not full-suite evidence.

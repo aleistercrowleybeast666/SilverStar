@@ -1,0 +1,80 @@
+[
+  {
+    "part": "STM32C071FBP6",
+    "regions": [
+      {
+        "name": "RAM",
+        "origin": 536870912,
+        "capacity_bytes": 24576,
+        "used_bytes": 10512,
+        "allocated_span_bytes": 10512,
+        "unallocated_bytes_by_sum": 14064,
+        "tail_bytes_after_last_section": 14064
+      },
+      {
+        "name": "FLASH",
+        "origin": 134217728,
+        "capacity_bytes": 131072,
+        "used_bytes": 42276,
+        "allocated_span_bytes": 42276,
+        "unallocated_bytes_by_sum": 88796,
+        "tail_bytes_after_last_section": 88796
+      }
+    ]
+  },
+  {
+    "part": "STM32F103C8T6",
+    "regions": [
+      {
+        "name": "RAM",
+        "origin": 536870912,
+        "capacity_bytes": 20480,
+        "used_bytes": 11308,
+        "allocated_span_bytes": 11312,
+        "unallocated_bytes_by_sum": 9172,
+        "tail_bytes_after_last_section": 9168
+      },
+      {
+        "name": "FLASH",
+        "origin": 134217728,
+        "capacity_bytes": 65536,
+        "used_bytes": 40300,
+        "allocated_span_bytes": 40304,
+        "unallocated_bytes_by_sum": 25236,
+        "tail_bytes_after_last_section": 25232
+      }
+    ]
+  },
+  {
+    "part": "STM32F407VET6",
+    "regions": [
+      {
+        "name": "RAM",
+        "origin": 536870912,
+        "capacity_bytes": 131072,
+        "used_bytes": 13976,
+        "allocated_span_bytes": 13976,
+        "unallocated_bytes_by_sum": 117096,
+        "tail_bytes_after_last_section": 117096
+      },
+      {
+        "name": "CCMRAM",
+        "origin": 268435456,
+        "capacity_bytes": 65536,
+        "used_bytes": 0,
+        "allocated_span_bytes": 0,
+        "unallocated_bytes_by_sum": 65536,
+        "tail_bytes_after_last_section": 65536
+      },
+      {
+        "name": "FLASH",
+        "origin": 134217728,
+        "capacity_bytes": 524288,
+        "used_bytes": 41912,
+        "allocated_span_bytes": 41912,
+        "unallocated_bytes_by_sum": 482376,
+        "tail_bytes_after_last_section": 482376
+      }
+    ]
+  }
+]

@@ -1,0 +1,108 @@
+[
+  {
+    "name": "host-compiler-version",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "--version"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 0.03757820000464562
+  },
+  {
+    "name": "underline-pid-consumer-compile",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O2",
+      "-fanalyzer",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\underline-pid\\Flight_Controller\\Algorithm\\Control\\PID\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\underline-pid\\Flight_Controller\\Generated\\Inc",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\underline-pid\\Flight_Controller\\Algorithm\\Control\\PID\\Src\\control_pid.c",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\underline-pid\\Flight_Controller\\Algorithm\\Control\\PID\\Src\\control_pid_project.c",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\underline-pid-consumer.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\underline-pid-consumer.exe"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 1.3715395999970497
+  },
+  {
+    "name": "underline-pid-consumer-execute",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\underline-pid-consumer.exe"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 0.17994390000239946
+  },
+  {
+    "name": "pid-consumer-compile",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O2",
+      "-fanalyzer",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\pid\\Flight_Controller\\Algorithm\\Control\\PID\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\pid\\Flight_Controller\\Generated\\Inc",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\pid\\Flight_Controller\\Algorithm\\Control\\PID\\Src\\control_pid.c",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\pid\\Flight_Controller\\Algorithm\\Control\\PID\\Src\\control_pid_project.c",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\pid-consumer.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\pid-consumer.exe"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 1.390709200000856
+  },
+  {
+    "name": "pid-consumer-execute",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\pid-consumer.exe"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 0.153435600004741
+  },
+  {
+    "name": "lqr-consumer-compile",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-O2",
+      "-fanalyzer",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\lqr\\Flight_Controller\\Algorithm\\Control\\LQR\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\lqr\\Flight_Controller\\Generated\\Inc",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\lqr\\Flight_Controller\\Algorithm\\Control\\LQR\\Src\\control_lqr.c",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\lqr\\Flight_Controller\\Algorithm\\Control\\LQR\\Src\\control_lqr_project.c",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\lqr-consumer.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\lqr-consumer.exe"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 1.262137799996708
+  },
+  {
+    "name": "lqr-consumer-execute",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\control-core-v3\\lqr-consumer.exe"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit_code": 0,
+    "seconds": 0.13417899999330984
+  }
+]

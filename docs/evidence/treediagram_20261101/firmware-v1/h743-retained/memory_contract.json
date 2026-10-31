@@ -1,0 +1,216 @@
+{
+  "component_locks": {
+    "silverstar.algorithm.alignment.common": {
+      "manifest_sha256": "ee13457380353d6f0613a3279b529f0f0c76fdc8b67b6b5be3ee07c264c17b00",
+      "payload_sha256": "8babc5ae4e2ee81f885ce808ba59630d562afe4ab5f8f103126af7a4ebc501c9",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.algorithm.alignment.gravity_known_yaw": {
+      "manifest_sha256": "02992cc22dc88d547e67ee23cc2262b5daed6022afcf6209f6789d49e955360c",
+      "payload_sha256": "4a074b3685c154cea339a01643d2803d0c462e44d0b92d71888f82772b3424c3",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.algorithm.augmented.common": {
+      "manifest_sha256": "e846939e7c6a57148094ef60792d5e8f9d5b5d43b77049ffd66a6b61a89f32a6",
+      "payload_sha256": "ec80e76a3ad4f68016b65076e6ae2dbbc8559845e5d6691b38892ff30590388b",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.algorithm.calibration": {
+      "manifest_sha256": "b2f9898ad8ada08676b36445b15aedc35b0127861acc2c2f5e7bbcba0e8ee950",
+      "payload_sha256": "94ac2edff1a9c09a2f18672c83aad8afb7a126cc9da8b89e1913fdad8d7f35a1",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.algorithm.common": {
+      "manifest_sha256": "e098a4812f5a0005b7c4465d11401b91ce98d31ac2791de64892929671827864",
+      "payload_sha256": "93dcede1c7a92e51667b88e2b09790d694777c981c80114165bae984438f338f",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.algorithm.estimator.eskf20": {
+      "manifest_sha256": "a06b80e02156b98d3c247019ca0266bfe2f47e47f6452d7ab8b613833ed3ad95",
+      "payload_sha256": "6648507544e3d7d0237e45013285f8b5fac94bb28362f237927ce295bf41e080",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.algorithm.ins.coning2_sculling2": {
+      "manifest_sha256": "eb3feaf055c8dc1e6e26d455b6ffd35d08be0f86a765d71f37102043696a4af0",
+      "payload_sha256": "143ef75fbef5d9e22756d1626236c334e4cbf811d2a02bd0abc150b9a8573810",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.core.0_1_0": {
+      "manifest_sha256": "acd330f02605edfa23cb02a02b0b8835290179ac2170cd0d8aeb95609e776f06",
+      "payload_sha256": "628645215f282b73ee431c256f61e57fcfee8ecd30410736596b8dada4918807",
+      "templates_sha256": "ad41501060e36d17205e4670a90b76c1ada8d2dccc10ca965e6b86539b96db88"
+    },
+    "silverstar.device.actuator.launch_ignition": {
+      "manifest_sha256": "6d0124b67db2a8ba05acdd7ec7537756efa92390a2738b4066ba7655565eead7",
+      "payload_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.device.barometer.bmp390": {
+      "manifest_sha256": "4d22a9fc4aa820450a5a5791fab857a0e91cee384146918a1068dd2f01ff895e",
+      "payload_sha256": "207c866632ab792df171038953397b8a5c82553b56ef5ff137beb8ba5eecd7ac",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.device.console.uart": {
+      "manifest_sha256": "c30c71b9322465544841db6dad7642703ad41b95298efe2fcdf2b51e35702fbc",
+      "payload_sha256": "6e62939b5d3b0f62432572a79960904514e9c89fdbd4eb4e04fef0a3533eb00a",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.device.gnss.neo_m9n": {
+      "manifest_sha256": "ee317d000622e68434d7feea089e681da624f4400c4803cbc53e3deb2efe570e",
+      "payload_sha256": "a328efe75b78245733046837f68dae5ae080c039ae50a1c0b9545f80aaa85d12",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.device.imu.bmi088": {
+      "manifest_sha256": "be0467cca5aa9a07973d6914babad92a43693205222e5d3dd15ad2b194034e05",
+      "payload_sha256": "dfe8d4ead7c8a5128ba2db3534413a6d3a0603f4337d2c387376aba92136aa69",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.device.magnetometer.mmc5983ma": {
+      "manifest_sha256": "b3c2017bcc385e1abcb1459b119a44f583ab01d5f6d565f61987affcadc1161d",
+      "payload_sha256": "99a9a1f51aecfbea6154d58d71ef6b60dbf8501c5eeace2365bfc1aa76a68aca",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.device.storage.sdmmc_fatfs_h7": {
+      "manifest_sha256": "9779a7afb71a2898ed6e412866bea3d30f40ed23b04de87b1c2ddc87c0317af9",
+      "payload_sha256": "419740224d33e6a1d61baba8a10397a55041ee3ab3f01111431a259fc75aee48",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.device.telemetry.sx1281": {
+      "manifest_sha256": "788591d04d0a92e331b299c962af58678053ae2e0545c38b4ed1a3b42dd7008d",
+      "payload_sha256": "d73b15966effc54122b982c90067222775f5b2a8beab0f0f18418146e5bb440f",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.environment.vscode_eide_gcc": {
+      "manifest_sha256": "b9d2059611225406ab864c4f1e2e9492ff45de9cbad6371480fb3f7dde204cc1",
+      "payload_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "templates_sha256": "2465ce455d9e1274411aa7345fbdc19b3969d2ae4c49d03b0c5a1777f342edb0"
+    },
+    "silverstar.flight_logic.cycle.reference": {
+      "manifest_sha256": "05d6159db96a3c8b63d6fe17c84418a41279407c8b615cec5bac76cb9c6180cc",
+      "payload_sha256": "8f8905fc29b9bf693a6b3ffd561f8950c5d2b1ee97890fdb0d23813407d1a530",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.flight_logic.deployment.multi_trigger": {
+      "manifest_sha256": "17f1d2e4fa00a9bfde546412362ed6613b9280b72afdffa346b871f5d023c91c",
+      "payload_sha256": "bec1e93fd844d83e69656c157cf6f84d8dca22fb97408584124da17608240cb7",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.flight_logic.indicator.gpio_status_service": {
+      "manifest_sha256": "63cc41ba3752ccfc61902346dc4285c6aefd6cc1a5f5b963ca53be9adbe60bad",
+      "payload_sha256": "7fc69dc1dfd40f49bc10c9fd4ce4be3cd41fee56d907a6faa8c40dcc81d2f27a",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.flight_logic.landing.baro_imu_window": {
+      "manifest_sha256": "d829b38a55ba3309b8a32bdd049a6864752b9fe4d1e189b80b13154d372b9c62",
+      "payload_sha256": "1fce6da1b1970fa6ce60e459f7738d278ce917bcc5085c974d9c54045d7c41c7",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.flight_logic.landing.stillness": {
+      "manifest_sha256": "eccb4af62da2cfd31131b787241b5955406797a2a6ad66c05e643e0ceadac374",
+      "payload_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.flight_logic.mission_action.gpio_output_service": {
+      "manifest_sha256": "c84ef868b6fd2056dbe37fbfa46fb286aed5f72aad1cd6e4f93f81ba4101ac93",
+      "payload_sha256": "9186eda0f790c11b5009b760151b0b2c39e2546cf2254108cae4d833c6d19c26",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.hardware_provider.stm32_cubemx": {
+      "manifest_sha256": "a066f56bf020f99e6befd1f476fcf1c8706144b41a7a2c48b3c4d35946ca3be3",
+      "payload_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.mcu.stm32h743zit6": {
+      "manifest_sha256": "88b1bef205afb000bfb9cfd043b6a5dffabc7becdc2493d1045be517af0642b6",
+      "payload_sha256": "d51fdc07de2b88992dc160b1738c4ea16944a70c0d275f02b25452c289c889af",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.mcu_family.stm32h7": {
+      "manifest_sha256": "65406804f6916179302522ef725e1dda82860c13a1e24c0be03111fd13abf864",
+      "payload_sha256": "7f76fc3b81fb2257558d33f7d880aa45ffa73baee107b86d3ef9e83422609063",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.os.freertos_11_3_0_cm7": {
+      "manifest_sha256": "950ee76f4dfa7b0c512a4849769ca1adc3697a92543ccf216616e4d7c42ed07a",
+      "payload_sha256": "f265e2c015717838fb92224e55a41f691908ce25d2a1bc6aa1ec3e353e91f50f",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.platform.api": {
+      "manifest_sha256": "60e20aab8d5a61d25f5f914ce816e5723e591b13dbc591c97d09ea5945f5ef45",
+      "payload_sha256": "5e46f32cde51d229857266aa44760ea8b0f6b6e037fc6f178e8eb26a290e06d5",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.protocol.logging.sslog_0_0": {
+      "manifest_sha256": "cf02d9c7e37e831edd0b9326f6dd3bf7017a18ef8fb1caf66b2d8561d4f6f79e",
+      "payload_sha256": "cdcaa263bef50261d4b23a99ac2601255322f5603726e8fe1c26cfb5fb31be0c",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.protocol.maintenance.serial_0_0": {
+      "manifest_sha256": "27dafb10b7323ac2d07f39d2d7b1c11039f016a9d01b35160d6002e2e3782d77",
+      "payload_sha256": "4c762ac6e4f70abd4b27f5fa600a7db8a94e7bf73ef43515c954f5945bbeacde",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.protocol.telemetry.ss_tm": {
+      "manifest_sha256": "323a3fc0e2ce895d350eb47bc6ac372a85265649ef57b47588258c791866b106",
+      "payload_sha256": "6ad270145f6e5d5ce6ba47a01e89b57daf9911545c26a01f93afdd6ea74fa844",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "silverstar.sensor.register_bus": {
+      "manifest_sha256": "66068abd4211e380cf222fb6e25ec3d69bb2319f0069ec35fd734a73d619df27",
+      "payload_sha256": "bb63b66f6b44ef2d94a136602ac063e7ec62fda7575cbcd16f5310a569ec9282",
+      "templates_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "generation_authority_sha256": "5e307ea6da8308fb5b16374f7c6a1740acec1b85e9169b1eb92e86c0e6034285",
+  "generation_input_sha256": "9c269d1ffefbb344783e4cc8e7fe4c151617550a5fff8970aeb6365767936522",
+  "linker_script": "STM32H743XX_FLASH.ld",
+  "mcu": "silverstar.mcu.stm32h743zit6",
+  "mcu_flags": [
+    "-mcpu=cortex-m7",
+    "-mthumb",
+    "-mfpu=fpv5-d16",
+    "-mfloat-abi=hard",
+    "-isystemDrivers/CMSIS/Include",
+    "-isystemDrivers/STM32H7xx_HAL_Driver/Inc"
+  ],
+  "mcu_manifest_sha256": "88b1bef205afb000bfb9cfd043b6a5dffabc7becdc2493d1045be517af0642b6",
+  "mcu_model": "STM32H743ZIT6",
+  "memory_layout": "legacy",
+  "receipt_version": 2,
+  "regions": [
+    {
+      "bytes": 2097152,
+      "name": "FLASH",
+      "origin": 134217728
+    },
+    {
+      "bytes": 524288,
+      "name": "RAM",
+      "origin": 603979776
+    },
+    {
+      "bytes": 131072,
+      "name": "DTCMRAM",
+      "origin": 536870912
+    },
+    {
+      "bytes": 294912,
+      "name": "RAM_D2",
+      "origin": 805306368
+    },
+    {
+      "bytes": 65536,
+      "name": "RAM_D3",
+      "origin": 939524096
+    },
+    {
+      "bytes": 65536,
+      "name": "ITCMRAM",
+      "origin": 0
+    }
+  ],
+  "review_budget_bytes": {},
+  "schema": "silverstar.memory-contract/1",
+  "target": "flight",
+  "target_profile": "SilverStar_H743ZI"
+}

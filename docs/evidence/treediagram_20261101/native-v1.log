@@ -1,0 +1,1374 @@
+EE.EEEEEEEEEEEEEEEE..EEEEEEEEEE                                          [100%]
+=================================== ERRORS ====================================
+___ ERROR at setup of test_normal_stack_lifecycle_and_buffer_sessions[F103] ___
+
+request = <SubRequest 'first_batch' for <Function test_normal_stack_lifecycle_and_buffer_sessions[F103]>>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_normal_stack_lifecycle_an0')
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture(params=['F103','F407','C071'])
+    def first_batch(request,tmp_path,tmp_path_factory,builtin_catalog):
+        if request.param in ('F103','F407'):
+            native=nf.native.__wrapped__(SimpleNamespace(param='f103-usb' if request.param=='F103' else 'f407-usb'),tmp_path)
+>           service,imported,args,_=nb.bound.__wrapped__(native,tmp_path_factory,builtin_catalog)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_usb_lifecycle_normal.py:380: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_native_ground_backend.py:30: in bound
+    result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x0000024222D9C2F0>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_normal_stack_lifecycle_an0/native')
+device_facts = NativeDeviceFacts(part='STM32F103C8T6', core='cortex-m3', device_macro='STM32F103xB', startup='startup_stm32f103xb.s',...s\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h')
+spi_resource = 'SPI1'
+gpio_resources = ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+___ ERROR at setup of test_normal_stack_lifecycle_and_buffer_sessions[F407] ___
+
+request = <SubRequest 'first_batch' for <Function test_normal_stack_lifecycle_and_buffer_sessions[F407]>>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_normal_stack_lifecycle_an1')
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture(params=['F103','F407','C071'])
+    def first_batch(request,tmp_path,tmp_path_factory,builtin_catalog):
+        if request.param in ('F103','F407'):
+            native=nf.native.__wrapped__(SimpleNamespace(param='f103-usb' if request.param=='F103' else 'f407-usb'),tmp_path)
+>           service,imported,args,_=nb.bound.__wrapped__(native,tmp_path_factory,builtin_catalog)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_usb_lifecycle_normal.py:380: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_native_ground_backend.py:30: in bound
+    result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x00000242233C1950>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_normal_stack_lifecycle_an1/native')
+device_facts = NativeDeviceFacts(part='STM32F407VET6', core='cortex-m4', device_macro='STM32F407xx', startup='startup_stm32f407xx.s',...\\Embedded\\STM32\\Repository\\STM32Cube_FW_F4_V1.28.3\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f407xx.h')
+spi_resource = 'SPI1'
+gpio_resources = ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_backend_import_save_reload_render_normal_flow[f103-usb] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_backend_import_...stm32f103xb.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x00000242233DE8B0>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_backend_import_save_reloa0/native')
+device_facts = NativeDeviceFacts(part='STM32F103C8T6', core='cortex-m3', device_macro='STM32F103xB', startup='startup_stm32f103xb.s',...s\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h')
+spi_resource = 'SPI1'
+gpio_resources = ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_backend_import_save_reload_render_normal_flow[f407-usb] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_backend_import_...de\\stm32f407xx.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x00000242245C9B50>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_backend_import_save_reloa1/native')
+device_facts = NativeDeviceFacts(part='STM32F407VET6', core='cortex-m4', device_macro='STM32F407xx', startup='startup_stm32f407xx.s',...\\Embedded\\STM32\\Repository\\STM32Cube_FW_F4_V1.28.3\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f407xx.h')
+spi_resource = 'SPI1'
+gpio_resources = ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_formal_build_rejects_even_without_ensure_buildable[f103-usb] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_formal_build_re...stm32f103xb.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x0000024222E33020>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_formal_build_rejects_even0/native')
+device_facts = NativeDeviceFacts(part='STM32F103C8T6', core='cortex-m3', device_macro='STM32F103xB', startup='startup_stm32f103xb.s',...s\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h')
+spi_resource = 'SPI1'
+gpio_resources = ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_formal_build_rejects_even_without_ensure_buildable[f407-usb] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_formal_build_re...de\\stm32f407xx.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x00000242249006B0>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_formal_build_rejects_even1/native')
+device_facts = NativeDeviceFacts(part='STM32F407VET6', core='cortex-m4', device_macro='STM32F407xx', startup='startup_stm32f407xx.s',...\\Embedded\\STM32\\Repository\\STM32Cube_FW_F4_V1.28.3\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f407xx.h')
+spi_resource = 'SPI1'
+gpio_resources = ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_bound_project_mismatch_rejected_before_output[f103-usb-facts] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_m...stm32f103xb.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x000002422499AA50>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_mismatch_re0/native')
+device_facts = NativeDeviceFacts(part='STM32F103C8T6', core='cortex-m3', device_macro='STM32F103xB', startup='startup_stm32f103xb.s',...s\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h')
+spi_resource = 'SPI1'
+gpio_resources = ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_bound_project_mismatch_rejected_before_output[f103-usb-profile] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_m...stm32f103xb.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x0000024224680650>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_mismatch_re1/native')
+device_facts = NativeDeviceFacts(part='STM32F103C8T6', core='cortex-m3', device_macro='STM32F103xB', startup='startup_stm32f103xb.s',...s\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h')
+spi_resource = 'SPI1'
+gpio_resources = ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_bound_project_mismatch_rejected_before_output[f103-usb-source-graph] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_m...stm32f103xb.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x0000024224655C70>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_mismatch_re2/native')
+device_facts = NativeDeviceFacts(part='STM32F103C8T6', core='cortex-m3', device_macro='STM32F103xB', startup='startup_stm32f103xb.s',...s\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h')
+spi_resource = 'SPI1'
+gpio_resources = ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_bound_project_mismatch_rejected_before_output[f103-usb-resource] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_m...stm32f103xb.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x00000242246573E0>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_mismatch_re3/native')
+device_facts = NativeDeviceFacts(part='STM32F103C8T6', core='cortex-m3', device_macro='STM32F103xB', startup='startup_stm32f103xb.s',...s\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h')
+spi_resource = 'SPI1'
+gpio_resources = ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_bound_project_mismatch_rejected_before_output[f103-usb-clock] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_m...stm32f103xb.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x0000024222830910>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_mismatch_re4/native')
+device_facts = NativeDeviceFacts(part='STM32F103C8T6', core='cortex-m3', device_macro='STM32F103xB', startup='startup_stm32f103xb.s',...s\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h')
+spi_resource = 'SPI1'
+gpio_resources = ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_bound_project_mismatch_rejected_before_output[f103-usb-release-flag] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_m...stm32f103xb.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x000002422289E890>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_mismatch_re5/native')
+device_facts = NativeDeviceFacts(part='STM32F103C8T6', core='cortex-m3', device_macro='STM32F103xB', startup='startup_stm32f103xb.s',...s\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h')
+spi_resource = 'SPI1'
+gpio_resources = ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_bound_project_mismatch_rejected_before_output[f407-usb-facts] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_m...de\\stm32f407xx.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x00000242227DD8B0>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_mismatch_re6/native')
+device_facts = NativeDeviceFacts(part='STM32F407VET6', core='cortex-m4', device_macro='STM32F407xx', startup='startup_stm32f407xx.s',...\\Embedded\\STM32\\Repository\\STM32Cube_FW_F4_V1.28.3\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f407xx.h')
+spi_resource = 'SPI1'
+gpio_resources = ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_bound_project_mismatch_rejected_before_output[f407-usb-profile] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_m...de\\stm32f407xx.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x0000024226D13D10>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_mismatch_re7/native')
+device_facts = NativeDeviceFacts(part='STM32F407VET6', core='cortex-m4', device_macro='STM32F407xx', startup='startup_stm32f407xx.s',...\\Embedded\\STM32\\Repository\\STM32Cube_FW_F4_V1.28.3\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f407xx.h')
+spi_resource = 'SPI1'
+gpio_resources = ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_bound_project_mismatch_rejected_before_output[f407-usb-source-graph] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_m...de\\stm32f407xx.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x00000242247B07D0>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_mismatch_re8/native')
+device_facts = NativeDeviceFacts(part='STM32F407VET6', core='cortex-m4', device_macro='STM32F407xx', startup='startup_stm32f407xx.s',...\\Embedded\\STM32\\Repository\\STM32Cube_FW_F4_V1.28.3\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f407xx.h')
+spi_resource = 'SPI1'
+gpio_resources = ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_bound_project_mismatch_rejected_before_output[f407-usb-resource] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_m...de\\stm32f407xx.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x00000242246C6D00>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_mismatch_re9/native')
+device_facts = NativeDeviceFacts(part='STM32F407VET6', core='cortex-m4', device_macro='STM32F407xx', startup='startup_stm32f407xx.s',...\\Embedded\\STM32\\Repository\\STM32Cube_FW_F4_V1.28.3\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f407xx.h')
+spi_resource = 'SPI1'
+gpio_resources = ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_bound_project_mismatch_rejected_before_output[f407-usb-clock] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_m...de\\stm32f407xx.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x00000242246E8050>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_mismatch_re10/native')
+device_facts = NativeDeviceFacts(part='STM32F407VET6', core='cortex-m4', device_macro='STM32F407xx', startup='startup_stm32f407xx.s',...\\Embedded\\STM32\\Repository\\STM32Cube_FW_F4_V1.28.3\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f407xx.h')
+spi_resource = 'SPI1'
+gpio_resources = ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_bound_project_mismatch_rejected_before_output[f407-usb-release-flag] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_m...de\\stm32f407xx.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x0000024222895090>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_bound_project_mismatch_re11/native')
+device_facts = NativeDeviceFacts(part='STM32F407VET6', core='cortex-m4', device_macro='STM32F407xx', startup='startup_stm32f407xx.s',...\\Embedded\\STM32\\Repository\\STM32Cube_FW_F4_V1.28.3\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f407xx.h')
+spi_resource = 'SPI1'
+gpio_resources = ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+___ ERROR at setup of test_changed_snapshot_preserved_and_refused[f103-usb] ___
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_changed_snapsho...stm32f103xb.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x00000242280CAAD0>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_changed_snapshot_preserve0/native')
+device_facts = NativeDeviceFacts(part='STM32F103C8T6', core='cortex-m3', device_macro='STM32F103xB', startup='startup_stm32f103xb.s',...s\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h')
+spi_resource = 'SPI1'
+gpio_resources = ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+___ ERROR at setup of test_changed_snapshot_preserved_and_refused[f407-usb] ___
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_changed_snapsho...de\\stm32f407xx.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x0000024226DCA750>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_changed_snapshot_preserve1/native')
+device_facts = NativeDeviceFacts(part='STM32F407VET6', core='cortex-m4', device_macro='STM32F407xx', startup='startup_stm32f407xx.s',...\\Embedded\\STM32\\Repository\\STM32Cube_FW_F4_V1.28.3\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f407xx.h')
+spi_resource = 'SPI1'
+gpio_resources = ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_existing_output_and_unsaved_project_not_overwritten[f103-usb] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_existing_output...stm32f103xb.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x000002422B4C57F0>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_existing_output_and_unsav0/native')
+device_facts = NativeDeviceFacts(part='STM32F103C8T6', core='cortex-m3', device_macro='STM32F103xB', startup='startup_stm32f103xb.s',...s\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h')
+spi_resource = 'SPI1'
+gpio_resources = ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_existing_output_and_unsaved_project_not_overwritten[f407-usb] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_existing_output...de\\stm32f407xx.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x000002422B4B33F0>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_existing_output_and_unsav1/native')
+device_facts = NativeDeviceFacts(part='STM32F407VET6', core='cortex-m4', device_macro='STM32F407xx', startup='startup_stm32f407xx.s',...\\Embedded\\STM32\\Repository\\STM32Cube_FW_F4_V1.28.3\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f407xx.h')
+spi_resource = 'SPI1'
+gpio_resources = ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_compile_failure_is_not_reported_as_candidate_success[f103-usb] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_compile_failure...stm32f103xb.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x0000024224506210>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_compile_failure_is_not_re0/native')
+device_facts = NativeDeviceFacts(part='STM32F103C8T6', core='cortex-m3', device_macro='STM32F103xB', startup='startup_stm32f103xb.s',...s\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h')
+spi_resource = 'SPI1'
+gpio_resources = ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_compile_failure_is_not_reported_as_candidate_success[f407-usb] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_compile_failure...de\\stm32f407xx.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x00000242246AC2F0>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_compile_failure_is_not_re1/native')
+device_facts = NativeDeviceFacts(part='STM32F407VET6', core='cortex-m4', device_macro='STM32F407xx', startup='startup_stm32f407xx.s',...\\Embedded\\STM32\\Repository\\STM32Cube_FW_F4_V1.28.3\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f407xx.h')
+spi_resource = 'SPI1'
+gpio_resources = ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+______ ERROR at setup of test_real_backend_bound_build_receipt[f103-usb] ______
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_real_backend_bo...stm32f103xb.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x000002422492D3D0>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_real_backend_bound_build_0/native')
+device_facts = NativeDeviceFacts(part='STM32F103C8T6', core='cortex-m3', device_macro='STM32F103xB', startup='startup_stm32f103xb.s',...s\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h')
+spi_resource = 'SPI1'
+gpio_resources = ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+______ ERROR at setup of test_real_backend_bound_build_receipt[f407-usb] ______
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_real_backend_bo...de\\stm32f407xx.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x0000024224641670>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_real_backend_bound_build_1/native')
+device_facts = NativeDeviceFacts(part='STM32F407VET6', core='cortex-m4', device_macro='STM32F407xx', startup='startup_stm32f407xx.s',...\\Embedded\\STM32\\Repository\\STM32Cube_FW_F4_V1.28.3\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f407xx.h')
+spi_resource = 'SPI1'
+gpio_resources = ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_formal_plan_and_generation_reject_bound_model[f103-usb] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_formal_plan_and...stm32f103xb.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x000002422338E2D0>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_formal_plan_and_generatio0/native')
+device_facts = NativeDeviceFacts(part='STM32F103C8T6', core='cortex-m3', device_macro='STM32F103xB', startup='startup_stm32f103xb.s',...s\\Embedded\\STM32\\Repository\\STM32Cube_FW_F1_V1.8.7\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include\\stm32f103xb.h')
+spi_resource = 'SPI1'
+gpio_resources = ('SPI_RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+_ ERROR at setup of test_formal_plan_and_generation_reject_bound_model[f407-usb] _
+
+native = (WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_formal_plan_and...de\\stm32f407xx.h'), 'spi_resource': 'SPI1', 'gpio_resources': ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')})
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar...ftware/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024222C530E0>
+
+    @pytest.fixture
+    def bound(native, tmp_path_factory, builtin_catalog):
+        root, args = native
+        service = FccgService(tmp_path_factory.mktemp('w'))
+        service.catalog = builtin_catalog
+        model = ProjectModel_Load(Path(os.environ['SILVERSTAR_NATIVE_BACKEND_CONFIG']))
+        original = deepcopy(model.Dictionary_Get())
+        hclk = 72_000_000 if args['device_facts'].part == 'STM32F103C8T6' else 168_000_000
+>       result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+            hclk_hz=hclk, risk_acknowledged=True)
+
+tests\test_native_ground_backend.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\silverstar_fccg\app\service.py:948: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+src\silverstar_fccg\app\native_ground.py:122: in NativeGroundProject_Import
+    imported = NativeClassicCdc_Import(importer, input_path, device_facts=device_facts,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+importer = <silverstar_fccg.hardware.cubemx.CubeMxImporter object at 0x000002422B420D10>
+input_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/silverstar/native-v1/test_formal_plan_and_generatio1/native')
+device_facts = NativeDeviceFacts(part='STM32F407VET6', core='cortex-m4', device_macro='STM32F407xx', startup='startup_stm32f407xx.s',...\\Embedded\\STM32\\Repository\\STM32Cube_FW_F4_V1.28.3\\Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include\\stm32f407xx.h')
+spi_resource = 'SPI1'
+gpio_resources = ('RADIO_NSS', 'RADIO_RST', 'RADIO_BUSY', 'RADIO_DIO1')
+risk_acknowledged = True
+
+    def NativeClassicCdc_Import(importer: CubeMxImporter, input_path: Path, *, device_facts: NativeDeviceFacts,
+                                spi_resource: str, gpio_resources: tuple[str, ...],
+                                risk_acknowledged: bool) -> CubeMxImportResult:
+        root, _ioc = importer._Input_Resolve(input_path)
+        proof, inventory, files = NativeClassicCdc_Inspect(root, device_facts=device_facts,
+            spi_resource=spi_resource, gpio_resources=gpio_resources)
+        encoded = json.dumps(proof, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        digest = hashlib.sha256(encoded).hexdigest()
+        destination = importer.policy.Path_Resolve(importer.cache_root/digest/"NativeClassicCdc", allow_root=False)
+        # A directory rename can succeed while making deeper children inaccessible
+        # on a Windows host without long-path support. Reject before any publication.
+        if os.name == "nt" and any(len(str(destination/p)) >= 248 for p in files):
+>           raise CubeMxImportError("Native snapshot paths exceed the portable Windows limit; select a shorter workspace path")
+E           silverstar_fccg.hardware.cubemx.CubeMxImportError: Native snapshot paths exceed the portable Windows limit; select a shorter workspace path
+
+src\silverstar_fccg\hardware\native_classic_cdc.py:385: CubeMxImportError
+=========================== short test summary info ===========================
+ERROR tests/test_usb_lifecycle_normal.py::test_normal_stack_lifecycle_and_buffer_sessions[F103]
+ERROR tests/test_usb_lifecycle_normal.py::test_normal_stack_lifecycle_and_buffer_sessions[F407]
+ERROR tests/test_native_ground_backend.py::test_backend_import_save_reload_render_normal_flow[f103-usb]
+ERROR tests/test_native_ground_backend.py::test_backend_import_save_reload_render_normal_flow[f407-usb]
+ERROR tests/test_native_ground_backend.py::test_formal_build_rejects_even_without_ensure_buildable[f103-usb]
+ERROR tests/test_native_ground_backend.py::test_formal_build_rejects_even_without_ensure_buildable[f407-usb]
+ERROR tests/test_native_ground_backend.py::test_bound_project_mismatch_rejected_before_output[f103-usb-facts]
+ERROR tests/test_native_ground_backend.py::test_bound_project_mismatch_rejected_before_output[f103-usb-profile]
+ERROR tests/test_native_ground_backend.py::test_bound_project_mismatch_rejected_before_output[f103-usb-source-graph]
+ERROR tests/test_native_ground_backend.py::test_bound_project_mismatch_rejected_before_output[f103-usb-resource]
+ERROR tests/test_native_ground_backend.py::test_bound_project_mismatch_rejected_before_output[f103-usb-clock]
+ERROR tests/test_native_ground_backend.py::test_bound_project_mismatch_rejected_before_output[f103-usb-release-flag]
+ERROR tests/test_native_ground_backend.py::test_bound_project_mismatch_rejected_before_output[f407-usb-facts]
+ERROR tests/test_native_ground_backend.py::test_bound_project_mismatch_rejected_before_output[f407-usb-profile]
+ERROR tests/test_native_ground_backend.py::test_bound_project_mismatch_rejected_before_output[f407-usb-source-graph]
+ERROR tests/test_native_ground_backend.py::test_bound_project_mismatch_rejected_before_output[f407-usb-resource]
+ERROR tests/test_native_ground_backend.py::test_bound_project_mismatch_rejected_before_output[f407-usb-clock]
+ERROR tests/test_native_ground_backend.py::test_bound_project_mismatch_rejected_before_output[f407-usb-release-flag]
+ERROR tests/test_native_ground_backend.py::test_changed_snapshot_preserved_and_refused[f103-usb]
+ERROR tests/test_native_ground_backend.py::test_changed_snapshot_preserved_and_refused[f407-usb]
+ERROR tests/test_native_ground_backend.py::test_existing_output_and_unsaved_project_not_overwritten[f103-usb]
+ERROR tests/test_native_ground_backend.py::test_existing_output_and_unsaved_project_not_overwritten[f407-usb]
+ERROR tests/test_native_ground_backend.py::test_compile_failure_is_not_reported_as_candidate_success[f103-usb]
+ERROR tests/test_native_ground_backend.py::test_compile_failure_is_not_reported_as_candidate_success[f407-usb]
+ERROR tests/test_native_ground_backend.py::test_real_backend_bound_build_receipt[f103-usb]
+ERROR tests/test_native_ground_backend.py::test_real_backend_bound_build_receipt[f407-usb]
+ERROR tests/test_native_ground_backend.py::test_formal_plan_and_generation_reject_bound_model[f103-usb]
+ERROR tests/test_native_ground_backend.py::test_formal_plan_and_generation_reject_bound_model[f407-usb]
+3 passed, 28 errors in 288.53s (0:04:48)

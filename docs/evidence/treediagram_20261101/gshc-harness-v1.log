@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\docs\evidence\treediagram_20261101\prepare_gshc_harnesses.py", line 48, in <module>
+    assert generated_includes, 'Normal generated include graph is required'
+           ^^^^^^^^^^^^^^^^^^
+AssertionError: Normal generated include graph is required

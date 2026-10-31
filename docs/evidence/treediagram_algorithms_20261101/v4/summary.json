@@ -1,0 +1,41 @@
+{
+  "result": "PASS",
+  "exit_code": 0,
+  "receiver_commit": "09c057a67acfc10e3ff387a4a8821c8ee0e83b0c",
+  "sdk_source_commit": "4f701b4a7822302dc0f4ac858549f7cc7fa4ba0e",
+  "parameter_comparisons_passed": 143,
+  "parameter_comparisons_total": 143,
+  "actual_run_identities_verified": 3,
+  "receiver_source_stable": true,
+  "arm_reexecuted": false,
+  "hardware_validation": "not performed",
+  "script_sha256": "99a6239e46cd7245f824e6c8972e68a8297b0e65f0b6ae866e2c5070a39a58c2",
+  "cases": [
+    {
+      "case": "underline-pid",
+      "comparisons": 49,
+      "model_id": "7aa0b00e983ff8e5f981a8f43ec01bb8946e9c0af4dc744cf7de76a8983075f3",
+      "run_id": "ea1ae4e4-f827-4347-9cfd-c4af1463f058",
+      "host_sdk_control_output": 0.015029999427497387,
+      "generated_consumer_control_output": 0.015029999427497387
+    },
+    {
+      "case": "pid",
+      "comparisons": 49,
+      "model_id": "05c8f05c12696efd5cfc695fc386e663157b6f972400363ee246b5979150a553",
+      "run_id": "27e46815-7944-4c74-9372-482ad09820ff",
+      "host_sdk_control_output": 0.015029999427497387,
+      "generated_consumer_control_output": 0.015029999427497387
+    },
+    {
+      "case": "lqr",
+      "comparisons": 45,
+      "model_id": "d9dd9c9dd120edc94100f5610a1b29fcb43b489be23dedf6f7e9908285f797e6",
+      "run_id": "77b67819-afb8-4c88-80fd-0389d73e052c",
+      "host_sdk_control_output": -0.049142077565193176,
+      "generated_consumer_control_output": -0.049142077565193176
+    }
+  ],
+  "commands_exit_zero": 7,
+  "generated_c_compile_execute_commands_exit_zero": 6
+}

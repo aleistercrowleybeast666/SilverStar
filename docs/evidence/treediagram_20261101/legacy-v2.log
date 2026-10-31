@@ -1,0 +1,48 @@
+....FF......                                                             [100%]
+================================== FAILURES ===================================
+_______ test_legacy_project_migrates_without_selecting_new_hardware[6] ________
+
+version = 6
+
+    @pytest.mark.parametrize("version", range(3, 8))
+    def test_legacy_project_migrates_without_selecting_new_hardware(version: int) -> None:
+        data = _LegacyProject_Read(version)
+        original = json.dumps(data, sort_keys=True)
+        migrated = ProjectModel_Parse(data)
+        assert json.dumps(data, sort_keys=True) == original
+        assert migrated.format_version == PROJECT_TARGET_SCOPE_FORMAT_VERSION
+        assert migrated.ground_target.hardware.mode == "unselected"
+        assert migrated.ground_target.mcu == migrated.ground_target.radio_plugin == ""
+        assert migrated.air_link.protocol_profile == "air.m0"
+        assert migrated.ProtocolProfiles_Get() == {
+            "telemetry": "air.m0", "maintenance": "maintenance.serial.0_0", "logging": "flight_log.0_0"}
+        assert migrated.protocols["telemetry"].component == "silverstar.protocol.telemetry.air_m0"
+>       assert migrated.mode_parameters["deployment"]["Delay"]["delay"] == 60.0
+E       assert 10.0 == 60.0
+
+apps\SCG\tests\test_device_capability_architecture.py:341: AssertionError
+_______ test_legacy_project_migrates_without_selecting_new_hardware[7] ________
+
+version = 7
+
+    @pytest.mark.parametrize("version", range(3, 8))
+    def test_legacy_project_migrates_without_selecting_new_hardware(version: int) -> None:
+        data = _LegacyProject_Read(version)
+        original = json.dumps(data, sort_keys=True)
+        migrated = ProjectModel_Parse(data)
+        assert json.dumps(data, sort_keys=True) == original
+        assert migrated.format_version == PROJECT_TARGET_SCOPE_FORMAT_VERSION
+        assert migrated.ground_target.hardware.mode == "unselected"
+        assert migrated.ground_target.mcu == migrated.ground_target.radio_plugin == ""
+        assert migrated.air_link.protocol_profile == "air.m0"
+        assert migrated.ProtocolProfiles_Get() == {
+            "telemetry": "air.m0", "maintenance": "maintenance.serial.0_0", "logging": "flight_log.0_0"}
+        assert migrated.protocols["telemetry"].component == "silverstar.protocol.telemetry.air_m0"
+>       assert migrated.mode_parameters["deployment"]["Delay"]["delay"] == 60.0
+E       assert 10.0 == 60.0
+
+apps\SCG\tests\test_device_capability_architecture.py:341: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_device_capability_architecture.py::test_legacy_project_migrates_without_selecting_new_hardware[6]
+FAILED apps\SCG\tests\test_device_capability_architecture.py::test_legacy_project_migrates_without_selecting_new_hardware[7]
+2 failed, 10 passed, 16 deselected in 26.13s

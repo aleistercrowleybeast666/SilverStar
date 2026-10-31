@@ -1,0 +1,38 @@
+{
+  "code_commit": "362a4e4dbbd64200af9abb2253ce85452ef80502",
+  "scope": "Final complete compatibility/domain/release group after H7 owner positively covered by first-party Make and Power10; all apps/SCG/contracts tracked sources clean at snapshot",
+  "command": [
+    ".venv/Scripts/python.exe",
+    "-u",
+    "-m",
+    "pytest",
+    "apps/SCG/tests/test_device_capability_architecture.py",
+    "apps/SCG/tests/test_project_domain.py",
+    "apps/SCG/tests/test_release_migration.py",
+    "-q",
+    "--basetemp=.work/0.1.3-treediagram-20261101/cap5"
+  ],
+  "cwd": "D:\\python_software\\SilverStar",
+  "environment": {
+    "PYTHONPATH": "apps/SCG/src",
+    "QT_QPA_PLATFORM": "offscreen",
+    "PYTHONIOENCODING": "utf-8"
+  },
+  "key_sources": {
+    "apps/SCG/src/silverstar_fccg/project/model.py": "7fc2bb6b407a208f8e509ee00adf4effc416af3d591b166e2903782a3bbda76a",
+    "apps/SCG/src/silverstar_fccg/generator/render.py": "de68385bfa4ccd379fca590f72df6f651ec1deea73431f48cc9bd7f5fb845fbd",
+    "apps/SCG/src/silverstar_fccg/generator/assembler.py": "92ad0e4c797fe3c03563cf264ec1754cde25f6e162ce0b8697686c79d9d8043c",
+    "apps/SCG/src/silverstar_fccg/generator/source_graph.py": "faf445612149d2f84202de918fa62df7cda688384a9557c12affb367e23e1e7a",
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_power_of_ten.ps1": "6ee80eb0426cbc35151e3e68b95a8b03ac7968076adad94a1885569696a8a701",
+    "apps/SCG/tests/test_device_capability_architecture.py": "5a266b4d242247f5a389acb4f671659d00b6577dd08b2cebd1714e04a43d8458",
+    "apps/SCG/tests/test_project_domain.py": "9165bc82eda84083290006fb6df7d6205712f153d28aec6565a51700bb22fb86",
+    "apps/SCG/tests/test_release_migration.py": "4dd8b5aeef91f0d1034f68367ee1a6a69b2404959ebfca000bdea0a9a2e2276f"
+  },
+  "exit_code": 0,
+  "result": "38 passed in 149.99s",
+  "postrun_dirty_paths": [],
+  "postrun_key_source_changes": {
+    "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_power_of_ten.ps1": "a4aca423ec1df7a1ea273f80ddc8c9f0baaac5b9d4bac6481d1386c9a1312fac"
+  },
+  "scope_note": "Result is retained for 362a4e4. A subsequent H7 coverage fail-closed patch arrived before receipt finalization; final generated/reopen group will be rerun after that patch freezes."
+}
