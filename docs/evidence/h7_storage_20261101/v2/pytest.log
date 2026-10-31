@@ -1,0 +1,658 @@
+...........................................FFFFFFF..........F....        [100%]
+================================== FAILURES ===================================
+_______________ test_project_v2_legacy_device_shape_is_rejected _______________
+
+>   ???
+E   AssertionError: Regex pattern did not match.
+E     Expected regex: 'device instance'
+E     Actual message: 'mission_process requires project format_version 22'
+
+D:\python_software\SilverStar\apps\FCCG\tests\test_device_capability_architecture.py:339: AssertionError
+___________ test_project_v3_migrates_without_capability_selections ____________
+
+>   ???
+
+D:\python_software\SilverStar\apps\FCCG\tests\test_device_capability_architecture.py:347: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+data = {'format_version': 3, 'project': {'name': 'MigrateV3', 'firmware_version': '0.1.3', 'build_target': 'SilverStar_0_1_3'...rstar.board.silverstar_0_5', ...}, 'modes': {'calibration': [], 'deployment': ['ApogeeVerticalVelocity', 'Tilt']}, ...}
+
+    def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
+        root = _Object_Require(data, "project file")
+        if root.get("format_version") == 0:
+            root = _ProjectV0_Migrate(root)
+        if root.get("format_version") == 1:
+            root = _ProjectV1_Migrate(root)
+        if root.get("format_version") == 2:
+            root = _ProjectV2_Migrate(root)
+        if root.get("format_version") == 3:
+            root = _ProjectV3_Migrate(root)
+        if root.get("format_version") == 4:
+            root = _ProjectV4_Migrate(root)
+        if root.get("format_version") == 5:
+            root = _ProjectV5_Migrate(root)
+        if root.get("format_version") == 6:
+            root = _ProjectV6_Migrate(root)
+        if root.get("format_version") == 7:
+            root = _ProjectV7_Migrate(root)
+        if root.get("format_version") == 8:
+            root = _ProjectV8_Migrate(root)
+        if root.get("format_version") == 9:
+            root = _ProjectV9_Migrate(root)
+        if root.get("format_version") == 10:
+            root = _ProjectV10_Migrate(root)
+        if root.get("format_version") == 11:
+            root = deepcopy(root)
+            root["format_version"] = PROJECT_FORMAT_VERSION
+            root["algorithm_parameters"] = {}
+            if isinstance(root.get("generated_glue"), list):
+                root["generated_glue"] = list(dict.fromkeys([*root["generated_glue"], "project_algorithm_parameters"]))
+        if root.get("format_version") == 13:
+            root = deepcopy(root)
+            root["format_version"] = PROJECT_FORMAT_VERSION
+            alignment = AlignmentConfiguration()
+            components = root.get("components")
+            strategies = components.get("strategies") if isinstance(components, dict) else None
+            if isinstance(strategies, dict):
+                selected = strategies.get("alignment")
+                if selected == "silverstar.algorithm.alignment.gravity_mag_triad":
+                    alignment = AlignmentConfiguration(constraints=(
+                        AlignmentConstraint("gravity"),
+                        AlignmentConstraint("magnetic_field"),
+                    ))
+                    strategies["alignment"] = "silverstar.algorithm.alignment.vector_constraints"
+                elif selected in {
+                    "silverstar.algorithm.alignment.hardware_quat_6axis_known_yaw",
+                    "silverstar.algorithm.alignment.hardware_quat_9axis",
+                }:
+                    alignment = AlignmentConfiguration(
+                        external_yaw_authoritative=selected.endswith("9axis"),
+                        external_known_azimuth_deg=None if selected.endswith("9axis") else 90.0,
+                    )
+                    strategies["alignment"] = "silverstar.algorithm.alignment.external_attitude_source"
+                elif selected == "silverstar.algorithm.alignment.gravity_known_yaw":
+                    strategies["alignment"] = "silverstar.algorithm.alignment.vector_constraints"
+            root["alignment"] = alignment.Dictionary_Get()
+        root = _CurrentPreRelease_Migrate(root)
+        root = _OfficialCoreV10_Migrate(root)
+        root = _ProductPatchIdentity_Migrate(root)
+        required_root = {
+            "format_version",
+            "project",
+            "components",
+            "modes",
+            "mode_parameters",
+            "algorithm_parameters",
+            "alignment",
+            "protocols",
+            "hardware",
+            "air_link",
+            "flight_tx_power_dbm",
+            "ground_target",
+            "resources",
+            "capability_sources",
+            "logging",
+            "log_decoder_profile",
+            "build",
+            "generated_glue",
+            "component_provenance",
+            "reference_provenance",
+        }
+        if "flight_tx_power_dbm" not in root:
+            root["flight_tx_power_dbm"] = 12
+        if set(root) - {"feature_tier_presets", "native_usb", "sensor_installation", "mission_process", "mission_functions"} != required_root:
+            missing = required_root - set(root)
+            unknown = set(root) - required_root
+            details = [
+                *(f"missing {name}" for name in sorted(missing)),
+                *(f"unknown {name}" for name in sorted(unknown)),
+            ]
+            raise ProjectModelError("Project fields are invalid: " + ", ".join(details))
+        if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION, PROJECT_NIS_INPUT_FORMAT_VERSION, PROJECT_NATIVE_USB_FORMAT_VERSION, PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION, PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION, PROJECT_MISSION_PROCESS_FORMAT_VERSION, PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION, PROJECT_TARGET_SCOPE_FORMAT_VERSION):
+            raise ProjectModelError(
+                "Only project format_version 14 through 24 is supported"
+            )
+        if (set(_Object_Require(root.get("build"), "build")) & {"magnetometer_enabled", "maintenance_log_export_enabled"}
+                and root["format_version"] < PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION):
+            raise ProjectModelError("Optional resource selections require project format_version 21")
+        sensor_installation = None
+        mission_process = None
+        mission_functions = None
+        if 'mission_functions' in root:
+            if root['format_version'] < PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION:
+                raise ProjectModelError('mission_functions requires project format_version 23')
+            try:
+                mission_functions = Functions_Require(root['mission_functions'])
+            except (ValueError, TypeError) as error:
+                raise ProjectModelError(str(error)) from error
+        if 'mission_process' in root:
+            if root['format_version'] < PROJECT_MISSION_PROCESS_FORMAT_VERSION:
+>               raise ProjectModelError('mission_process requires project format_version 22')
+E               silverstar_fccg.project.model.ProjectModelError: mission_process requires project format_version 22
+
+src\silverstar_fccg\project\model.py:2064: ProjectModelError
+_________ test_project_v4_removes_legacy_capability_and_build_choices _________
+
+>   ???
+
+D:\python_software\SilverStar\apps\FCCG\tests\test_device_capability_architecture.py:359: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+data = {'format_version': 4, 'project': {'name': 'MigrateV4', 'firmware_version': '0.1.3', 'build_target': 'SilverStar_0_1_3'...rstar.board.silverstar_0_5', ...}, 'modes': {'calibration': [], 'deployment': ['ApogeeVerticalVelocity', 'Tilt']}, ...}
+
+    def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
+        root = _Object_Require(data, "project file")
+        if root.get("format_version") == 0:
+            root = _ProjectV0_Migrate(root)
+        if root.get("format_version") == 1:
+            root = _ProjectV1_Migrate(root)
+        if root.get("format_version") == 2:
+            root = _ProjectV2_Migrate(root)
+        if root.get("format_version") == 3:
+            root = _ProjectV3_Migrate(root)
+        if root.get("format_version") == 4:
+            root = _ProjectV4_Migrate(root)
+        if root.get("format_version") == 5:
+            root = _ProjectV5_Migrate(root)
+        if root.get("format_version") == 6:
+            root = _ProjectV6_Migrate(root)
+        if root.get("format_version") == 7:
+            root = _ProjectV7_Migrate(root)
+        if root.get("format_version") == 8:
+            root = _ProjectV8_Migrate(root)
+        if root.get("format_version") == 9:
+            root = _ProjectV9_Migrate(root)
+        if root.get("format_version") == 10:
+            root = _ProjectV10_Migrate(root)
+        if root.get("format_version") == 11:
+            root = deepcopy(root)
+            root["format_version"] = PROJECT_FORMAT_VERSION
+            root["algorithm_parameters"] = {}
+            if isinstance(root.get("generated_glue"), list):
+                root["generated_glue"] = list(dict.fromkeys([*root["generated_glue"], "project_algorithm_parameters"]))
+        if root.get("format_version") == 13:
+            root = deepcopy(root)
+            root["format_version"] = PROJECT_FORMAT_VERSION
+            alignment = AlignmentConfiguration()
+            components = root.get("components")
+            strategies = components.get("strategies") if isinstance(components, dict) else None
+            if isinstance(strategies, dict):
+                selected = strategies.get("alignment")
+                if selected == "silverstar.algorithm.alignment.gravity_mag_triad":
+                    alignment = AlignmentConfiguration(constraints=(
+                        AlignmentConstraint("gravity"),
+                        AlignmentConstraint("magnetic_field"),
+                    ))
+                    strategies["alignment"] = "silverstar.algorithm.alignment.vector_constraints"
+                elif selected in {
+                    "silverstar.algorithm.alignment.hardware_quat_6axis_known_yaw",
+                    "silverstar.algorithm.alignment.hardware_quat_9axis",
+                }:
+                    alignment = AlignmentConfiguration(
+                        external_yaw_authoritative=selected.endswith("9axis"),
+                        external_known_azimuth_deg=None if selected.endswith("9axis") else 90.0,
+                    )
+                    strategies["alignment"] = "silverstar.algorithm.alignment.external_attitude_source"
+                elif selected == "silverstar.algorithm.alignment.gravity_known_yaw":
+                    strategies["alignment"] = "silverstar.algorithm.alignment.vector_constraints"
+            root["alignment"] = alignment.Dictionary_Get()
+        root = _CurrentPreRelease_Migrate(root)
+        root = _OfficialCoreV10_Migrate(root)
+        root = _ProductPatchIdentity_Migrate(root)
+        required_root = {
+            "format_version",
+            "project",
+            "components",
+            "modes",
+            "mode_parameters",
+            "algorithm_parameters",
+            "alignment",
+            "protocols",
+            "hardware",
+            "air_link",
+            "flight_tx_power_dbm",
+            "ground_target",
+            "resources",
+            "capability_sources",
+            "logging",
+            "log_decoder_profile",
+            "build",
+            "generated_glue",
+            "component_provenance",
+            "reference_provenance",
+        }
+        if "flight_tx_power_dbm" not in root:
+            root["flight_tx_power_dbm"] = 12
+        if set(root) - {"feature_tier_presets", "native_usb", "sensor_installation", "mission_process", "mission_functions"} != required_root:
+            missing = required_root - set(root)
+            unknown = set(root) - required_root
+            details = [
+                *(f"missing {name}" for name in sorted(missing)),
+                *(f"unknown {name}" for name in sorted(unknown)),
+            ]
+            raise ProjectModelError("Project fields are invalid: " + ", ".join(details))
+        if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION, PROJECT_NIS_INPUT_FORMAT_VERSION, PROJECT_NATIVE_USB_FORMAT_VERSION, PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION, PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION, PROJECT_MISSION_PROCESS_FORMAT_VERSION, PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION, PROJECT_TARGET_SCOPE_FORMAT_VERSION):
+            raise ProjectModelError(
+                "Only project format_version 14 through 24 is supported"
+            )
+        if (set(_Object_Require(root.get("build"), "build")) & {"magnetometer_enabled", "maintenance_log_export_enabled"}
+                and root["format_version"] < PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION):
+            raise ProjectModelError("Optional resource selections require project format_version 21")
+        sensor_installation = None
+        mission_process = None
+        mission_functions = None
+        if 'mission_functions' in root:
+            if root['format_version'] < PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION:
+                raise ProjectModelError('mission_functions requires project format_version 23')
+            try:
+                mission_functions = Functions_Require(root['mission_functions'])
+            except (ValueError, TypeError) as error:
+                raise ProjectModelError(str(error)) from error
+        if 'mission_process' in root:
+            if root['format_version'] < PROJECT_MISSION_PROCESS_FORMAT_VERSION:
+>               raise ProjectModelError('mission_process requires project format_version 22')
+E               silverstar_fccg.project.model.ProjectModelError: mission_process requires project format_version 22
+
+src\silverstar_fccg\project\model.py:2064: ProjectModelError
+_________ test_project_v5_adds_mode_protocol_and_assignment_contracts _________
+
+>   ???
+
+D:\python_software\SilverStar\apps\FCCG\tests\test_device_capability_architecture.py:378: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+data = {'format_version': 5, 'project': {'name': 'MigrateV5', 'firmware_version': '0.1.3', 'build_target': 'SilverStar_0_1_3'...rstar.board.silverstar_0_5', ...}, 'modes': {'calibration': [], 'deployment': ['ApogeeVerticalVelocity', 'Tilt']}, ...}
+
+    def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
+        root = _Object_Require(data, "project file")
+        if root.get("format_version") == 0:
+            root = _ProjectV0_Migrate(root)
+        if root.get("format_version") == 1:
+            root = _ProjectV1_Migrate(root)
+        if root.get("format_version") == 2:
+            root = _ProjectV2_Migrate(root)
+        if root.get("format_version") == 3:
+            root = _ProjectV3_Migrate(root)
+        if root.get("format_version") == 4:
+            root = _ProjectV4_Migrate(root)
+        if root.get("format_version") == 5:
+            root = _ProjectV5_Migrate(root)
+        if root.get("format_version") == 6:
+            root = _ProjectV6_Migrate(root)
+        if root.get("format_version") == 7:
+            root = _ProjectV7_Migrate(root)
+        if root.get("format_version") == 8:
+            root = _ProjectV8_Migrate(root)
+        if root.get("format_version") == 9:
+            root = _ProjectV9_Migrate(root)
+        if root.get("format_version") == 10:
+            root = _ProjectV10_Migrate(root)
+        if root.get("format_version") == 11:
+            root = deepcopy(root)
+            root["format_version"] = PROJECT_FORMAT_VERSION
+            root["algorithm_parameters"] = {}
+            if isinstance(root.get("generated_glue"), list):
+                root["generated_glue"] = list(dict.fromkeys([*root["generated_glue"], "project_algorithm_parameters"]))
+        if root.get("format_version") == 13:
+            root = deepcopy(root)
+            root["format_version"] = PROJECT_FORMAT_VERSION
+            alignment = AlignmentConfiguration()
+            components = root.get("components")
+            strategies = components.get("strategies") if isinstance(components, dict) else None
+            if isinstance(strategies, dict):
+                selected = strategies.get("alignment")
+                if selected == "silverstar.algorithm.alignment.gravity_mag_triad":
+                    alignment = AlignmentConfiguration(constraints=(
+                        AlignmentConstraint("gravity"),
+                        AlignmentConstraint("magnetic_field"),
+                    ))
+                    strategies["alignment"] = "silverstar.algorithm.alignment.vector_constraints"
+                elif selected in {
+                    "silverstar.algorithm.alignment.hardware_quat_6axis_known_yaw",
+                    "silverstar.algorithm.alignment.hardware_quat_9axis",
+                }:
+                    alignment = AlignmentConfiguration(
+                        external_yaw_authoritative=selected.endswith("9axis"),
+                        external_known_azimuth_deg=None if selected.endswith("9axis") else 90.0,
+                    )
+                    strategies["alignment"] = "silverstar.algorithm.alignment.external_attitude_source"
+                elif selected == "silverstar.algorithm.alignment.gravity_known_yaw":
+                    strategies["alignment"] = "silverstar.algorithm.alignment.vector_constraints"
+            root["alignment"] = alignment.Dictionary_Get()
+        root = _CurrentPreRelease_Migrate(root)
+        root = _OfficialCoreV10_Migrate(root)
+        root = _ProductPatchIdentity_Migrate(root)
+        required_root = {
+            "format_version",
+            "project",
+            "components",
+            "modes",
+            "mode_parameters",
+            "algorithm_parameters",
+            "alignment",
+            "protocols",
+            "hardware",
+            "air_link",
+            "flight_tx_power_dbm",
+            "ground_target",
+            "resources",
+            "capability_sources",
+            "logging",
+            "log_decoder_profile",
+            "build",
+            "generated_glue",
+            "component_provenance",
+            "reference_provenance",
+        }
+        if "flight_tx_power_dbm" not in root:
+            root["flight_tx_power_dbm"] = 12
+        if set(root) - {"feature_tier_presets", "native_usb", "sensor_installation", "mission_process", "mission_functions"} != required_root:
+            missing = required_root - set(root)
+            unknown = set(root) - required_root
+            details = [
+                *(f"missing {name}" for name in sorted(missing)),
+                *(f"unknown {name}" for name in sorted(unknown)),
+            ]
+            raise ProjectModelError("Project fields are invalid: " + ", ".join(details))
+        if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION, PROJECT_NIS_INPUT_FORMAT_VERSION, PROJECT_NATIVE_USB_FORMAT_VERSION, PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION, PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION, PROJECT_MISSION_PROCESS_FORMAT_VERSION, PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION, PROJECT_TARGET_SCOPE_FORMAT_VERSION):
+            raise ProjectModelError(
+                "Only project format_version 14 through 24 is supported"
+            )
+        if (set(_Object_Require(root.get("build"), "build")) & {"magnetometer_enabled", "maintenance_log_export_enabled"}
+                and root["format_version"] < PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION):
+            raise ProjectModelError("Optional resource selections require project format_version 21")
+        sensor_installation = None
+        mission_process = None
+        mission_functions = None
+        if 'mission_functions' in root:
+            if root['format_version'] < PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION:
+                raise ProjectModelError('mission_functions requires project format_version 23')
+            try:
+                mission_functions = Functions_Require(root['mission_functions'])
+            except (ValueError, TypeError) as error:
+                raise ProjectModelError(str(error)) from error
+        if 'mission_process' in root:
+            if root['format_version'] < PROJECT_MISSION_PROCESS_FORMAT_VERSION:
+>               raise ProjectModelError('mission_process requires project format_version 22')
+E               silverstar_fccg.project.model.ProjectModelError: mission_process requires project format_version 22
+
+src\silverstar_fccg\project\model.py:2064: ProjectModelError
+_____________ test_project_v6_adds_log_decoder_profile_reference ______________
+
+>   ???
+
+D:\python_software\SilverStar\apps\FCCG\tests\test_device_capability_architecture.py:393: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+data = {'format_version': 6, 'project': {'name': 'MigrateV6', 'firmware_version': '0.1.3', 'build_target': 'SilverStar_0_1_3'...rstar.board.silverstar_0_5', ...}, 'modes': {'calibration': [], 'deployment': ['ApogeeVerticalVelocity', 'Tilt']}, ...}
+
+    def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
+        root = _Object_Require(data, "project file")
+        if root.get("format_version") == 0:
+            root = _ProjectV0_Migrate(root)
+        if root.get("format_version") == 1:
+            root = _ProjectV1_Migrate(root)
+        if root.get("format_version") == 2:
+            root = _ProjectV2_Migrate(root)
+        if root.get("format_version") == 3:
+            root = _ProjectV3_Migrate(root)
+        if root.get("format_version") == 4:
+            root = _ProjectV4_Migrate(root)
+        if root.get("format_version") == 5:
+            root = _ProjectV5_Migrate(root)
+        if root.get("format_version") == 6:
+            root = _ProjectV6_Migrate(root)
+        if root.get("format_version") == 7:
+            root = _ProjectV7_Migrate(root)
+        if root.get("format_version") == 8:
+            root = _ProjectV8_Migrate(root)
+        if root.get("format_version") == 9:
+            root = _ProjectV9_Migrate(root)
+        if root.get("format_version") == 10:
+            root = _ProjectV10_Migrate(root)
+        if root.get("format_version") == 11:
+            root = deepcopy(root)
+            root["format_version"] = PROJECT_FORMAT_VERSION
+            root["algorithm_parameters"] = {}
+            if isinstance(root.get("generated_glue"), list):
+                root["generated_glue"] = list(dict.fromkeys([*root["generated_glue"], "project_algorithm_parameters"]))
+        if root.get("format_version") == 13:
+            root = deepcopy(root)
+            root["format_version"] = PROJECT_FORMAT_VERSION
+            alignment = AlignmentConfiguration()
+            components = root.get("components")
+            strategies = components.get("strategies") if isinstance(components, dict) else None
+            if isinstance(strategies, dict):
+                selected = strategies.get("alignment")
+                if selected == "silverstar.algorithm.alignment.gravity_mag_triad":
+                    alignment = AlignmentConfiguration(constraints=(
+                        AlignmentConstraint("gravity"),
+                        AlignmentConstraint("magnetic_field"),
+                    ))
+                    strategies["alignment"] = "silverstar.algorithm.alignment.vector_constraints"
+                elif selected in {
+                    "silverstar.algorithm.alignment.hardware_quat_6axis_known_yaw",
+                    "silverstar.algorithm.alignment.hardware_quat_9axis",
+                }:
+                    alignment = AlignmentConfiguration(
+                        external_yaw_authoritative=selected.endswith("9axis"),
+                        external_known_azimuth_deg=None if selected.endswith("9axis") else 90.0,
+                    )
+                    strategies["alignment"] = "silverstar.algorithm.alignment.external_attitude_source"
+                elif selected == "silverstar.algorithm.alignment.gravity_known_yaw":
+                    strategies["alignment"] = "silverstar.algorithm.alignment.vector_constraints"
+            root["alignment"] = alignment.Dictionary_Get()
+        root = _CurrentPreRelease_Migrate(root)
+        root = _OfficialCoreV10_Migrate(root)
+        root = _ProductPatchIdentity_Migrate(root)
+        required_root = {
+            "format_version",
+            "project",
+            "components",
+            "modes",
+            "mode_parameters",
+            "algorithm_parameters",
+            "alignment",
+            "protocols",
+            "hardware",
+            "air_link",
+            "flight_tx_power_dbm",
+            "ground_target",
+            "resources",
+            "capability_sources",
+            "logging",
+            "log_decoder_profile",
+            "build",
+            "generated_glue",
+            "component_provenance",
+            "reference_provenance",
+        }
+        if "flight_tx_power_dbm" not in root:
+            root["flight_tx_power_dbm"] = 12
+        if set(root) - {"feature_tier_presets", "native_usb", "sensor_installation", "mission_process", "mission_functions"} != required_root:
+            missing = required_root - set(root)
+            unknown = set(root) - required_root
+            details = [
+                *(f"missing {name}" for name in sorted(missing)),
+                *(f"unknown {name}" for name in sorted(unknown)),
+            ]
+            raise ProjectModelError("Project fields are invalid: " + ", ".join(details))
+        if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION, PROJECT_NIS_INPUT_FORMAT_VERSION, PROJECT_NATIVE_USB_FORMAT_VERSION, PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION, PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION, PROJECT_MISSION_PROCESS_FORMAT_VERSION, PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION, PROJECT_TARGET_SCOPE_FORMAT_VERSION):
+            raise ProjectModelError(
+                "Only project format_version 14 through 24 is supported"
+            )
+        if (set(_Object_Require(root.get("build"), "build")) & {"magnetometer_enabled", "maintenance_log_export_enabled"}
+                and root["format_version"] < PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION):
+            raise ProjectModelError("Optional resource selections require project format_version 21")
+        sensor_installation = None
+        mission_process = None
+        mission_functions = None
+        if 'mission_functions' in root:
+            if root['format_version'] < PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION:
+                raise ProjectModelError('mission_functions requires project format_version 23')
+            try:
+                mission_functions = Functions_Require(root['mission_functions'])
+            except (ValueError, TypeError) as error:
+                raise ProjectModelError(str(error)) from error
+        if 'mission_process' in root:
+            if root['format_version'] < PROJECT_MISSION_PROCESS_FORMAT_VERSION:
+>               raise ProjectModelError('mission_process requires project format_version 22')
+E               silverstar_fccg.project.model.ProjectModelError: mission_process requires project format_version 22
+
+src\silverstar_fccg\project\model.py:2064: ProjectModelError
+_________ test_pre_release_protocol_profile_ids_migrate_to_public_ids _________
+
+>   ???
+
+D:\python_software\SilverStar\apps\FCCG\tests\test_device_capability_architecture.py:419: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+data = {'format_version': 7, 'project': {'name': 'MigrateProtocolIds', 'firmware_version': '0.1.3', 'build_target': 'SilverSt...rstar.board.silverstar_0_5', ...}, 'modes': {'calibration': [], 'deployment': ['ApogeeVerticalVelocity', 'Tilt']}, ...}
+
+    def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
+        root = _Object_Require(data, "project file")
+        if root.get("format_version") == 0:
+            root = _ProjectV0_Migrate(root)
+        if root.get("format_version") == 1:
+            root = _ProjectV1_Migrate(root)
+        if root.get("format_version") == 2:
+            root = _ProjectV2_Migrate(root)
+        if root.get("format_version") == 3:
+            root = _ProjectV3_Migrate(root)
+        if root.get("format_version") == 4:
+            root = _ProjectV4_Migrate(root)
+        if root.get("format_version") == 5:
+            root = _ProjectV5_Migrate(root)
+        if root.get("format_version") == 6:
+            root = _ProjectV6_Migrate(root)
+        if root.get("format_version") == 7:
+            root = _ProjectV7_Migrate(root)
+        if root.get("format_version") == 8:
+            root = _ProjectV8_Migrate(root)
+        if root.get("format_version") == 9:
+            root = _ProjectV9_Migrate(root)
+        if root.get("format_version") == 10:
+            root = _ProjectV10_Migrate(root)
+        if root.get("format_version") == 11:
+            root = deepcopy(root)
+            root["format_version"] = PROJECT_FORMAT_VERSION
+            root["algorithm_parameters"] = {}
+            if isinstance(root.get("generated_glue"), list):
+                root["generated_glue"] = list(dict.fromkeys([*root["generated_glue"], "project_algorithm_parameters"]))
+        if root.get("format_version") == 13:
+            root = deepcopy(root)
+            root["format_version"] = PROJECT_FORMAT_VERSION
+            alignment = AlignmentConfiguration()
+            components = root.get("components")
+            strategies = components.get("strategies") if isinstance(components, dict) else None
+            if isinstance(strategies, dict):
+                selected = strategies.get("alignment")
+                if selected == "silverstar.algorithm.alignment.gravity_mag_triad":
+                    alignment = AlignmentConfiguration(constraints=(
+                        AlignmentConstraint("gravity"),
+                        AlignmentConstraint("magnetic_field"),
+                    ))
+                    strategies["alignment"] = "silverstar.algorithm.alignment.vector_constraints"
+                elif selected in {
+                    "silverstar.algorithm.alignment.hardware_quat_6axis_known_yaw",
+                    "silverstar.algorithm.alignment.hardware_quat_9axis",
+                }:
+                    alignment = AlignmentConfiguration(
+                        external_yaw_authoritative=selected.endswith("9axis"),
+                        external_known_azimuth_deg=None if selected.endswith("9axis") else 90.0,
+                    )
+                    strategies["alignment"] = "silverstar.algorithm.alignment.external_attitude_source"
+                elif selected == "silverstar.algorithm.alignment.gravity_known_yaw":
+                    strategies["alignment"] = "silverstar.algorithm.alignment.vector_constraints"
+            root["alignment"] = alignment.Dictionary_Get()
+        root = _CurrentPreRelease_Migrate(root)
+        root = _OfficialCoreV10_Migrate(root)
+        root = _ProductPatchIdentity_Migrate(root)
+        required_root = {
+            "format_version",
+            "project",
+            "components",
+            "modes",
+            "mode_parameters",
+            "algorithm_parameters",
+            "alignment",
+            "protocols",
+            "hardware",
+            "air_link",
+            "flight_tx_power_dbm",
+            "ground_target",
+            "resources",
+            "capability_sources",
+            "logging",
+            "log_decoder_profile",
+            "build",
+            "generated_glue",
+            "component_provenance",
+            "reference_provenance",
+        }
+        if "flight_tx_power_dbm" not in root:
+            root["flight_tx_power_dbm"] = 12
+        if set(root) - {"feature_tier_presets", "native_usb", "sensor_installation", "mission_process", "mission_functions"} != required_root:
+            missing = required_root - set(root)
+            unknown = set(root) - required_root
+            details = [
+                *(f"missing {name}" for name in sorted(missing)),
+                *(f"unknown {name}" for name in sorted(unknown)),
+            ]
+            raise ProjectModelError("Project fields are invalid: " + ", ".join(details))
+        if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION, PROJECT_NIS_INPUT_FORMAT_VERSION, PROJECT_NATIVE_USB_FORMAT_VERSION, PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION, PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION, PROJECT_MISSION_PROCESS_FORMAT_VERSION, PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION, PROJECT_TARGET_SCOPE_FORMAT_VERSION):
+            raise ProjectModelError(
+                "Only project format_version 14 through 24 is supported"
+            )
+        if (set(_Object_Require(root.get("build"), "build")) & {"magnetometer_enabled", "maintenance_log_export_enabled"}
+                and root["format_version"] < PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION):
+            raise ProjectModelError("Optional resource selections require project format_version 21")
+        sensor_installation = None
+        mission_process = None
+        mission_functions = None
+        if 'mission_functions' in root:
+            if root['format_version'] < PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION:
+                raise ProjectModelError('mission_functions requires project format_version 23')
+            try:
+                mission_functions = Functions_Require(root['mission_functions'])
+            except (ValueError, TypeError) as error:
+                raise ProjectModelError(str(error)) from error
+        if 'mission_process' in root:
+            if root['format_version'] < PROJECT_MISSION_PROCESS_FORMAT_VERSION:
+>               raise ProjectModelError('mission_process requires project format_version 22')
+E               silverstar_fccg.project.model.ProjectModelError: mission_process requires project format_version 22
+
+src\silverstar_fccg\project\model.py:2064: ProjectModelError
+_________ test_reference_capability_resolution_matches_physical_truth _________
+
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001A451207380>
+
+>   ???
+E   AssertionError: assert {'attitude.ex...hysical_unit'} == {'attitude.ex...r.field', ...}
+E     
+E     Extra items in the right set:
+E     'barometer.altitude'
+E     Use -v to get more diff
+
+D:\python_software\SilverStar\apps\FCCG\tests\test_device_capability_architecture.py:447: AssertionError
+__________ test_physical_names_and_protocol_versions_are_structured ___________
+
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001A451207380>
+
+>   ???
+E   AssertionError: assert '0.1' == '0.0'
+E     
+E     - 0.0
+E     + 0.1
+
+D:\python_software\SilverStar\apps\FCCG\tests\test_device_capability_architecture.py:952: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_device_capability_architecture.py::test_project_v2_legacy_device_shape_is_rejected
+FAILED tests/test_device_capability_architecture.py::test_project_v3_migrates_without_capability_selections
+FAILED tests/test_device_capability_architecture.py::test_project_v4_removes_legacy_capability_and_build_choices
+FAILED tests/test_device_capability_architecture.py::test_project_v5_adds_mode_protocol_and_assignment_contracts
+FAILED tests/test_device_capability_architecture.py::test_project_v6_adds_log_decoder_profile_reference
+FAILED tests/test_device_capability_architecture.py::test_pre_release_protocol_profile_ids_migrate_to_public_ids
+FAILED tests/test_device_capability_architecture.py::test_reference_capability_resolution_matches_physical_truth
+FAILED tests/test_device_capability_architecture.py::test_physical_names_and_protocol_versions_are_structured
+8 failed, 57 passed in 256.26s (0:04:16)

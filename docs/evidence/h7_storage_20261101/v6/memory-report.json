@@ -1,0 +1,214 @@
+{
+  "artifacts": {
+    "contract": {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\Generated\\memory_contract.json",
+      "sha256": "0065b435e504ee6856f907bc6a4b76783dea75aa15a1fc1b7c30400496ce339e"
+    },
+    "elf": {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.elf",
+      "sha256": "085ae2334a4afed3fd6bbe0ffdea00847e4a76258415c853123ff10927e6dbea"
+    },
+    "linker": {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\STM32H743XX_FLASH.ld",
+      "sha256": "5ec9c9ca0d89e9a09591d94bd901fa2dcf75adf223bcbe5c8a1598b7de0b3d31"
+    },
+    "map": {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.map",
+      "sha256": "3d666c2bd1dcc28813f8afa3c391bcbcdef906d695a1ca547cec4f5789dc44a3"
+    }
+  },
+  "compiler": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+  "elf_modified_at_utc": "2026-10-31T18:53:01.391641+00:00",
+  "errors": [],
+  "generation_input_sha256": "9c269d1ffefbb344783e4cc8e7fe4c151617550a5fff8970aeb6365767936522",
+  "map_consistency": "checked",
+  "mcu": "STM32H743ZIT6",
+  "mcu_flags": [
+    "-mcpu=cortex-m7",
+    "-mthumb",
+    "-mfpu=fpv5-d16",
+    "-mfloat-abi=hard",
+    "-isystemDrivers/CMSIS/Include",
+    "-isystemDrivers/STM32H7xx_HAL_Driver/Inc"
+  ],
+  "mcu_manifest_sha256": "88b1bef205afb000bfb9cfd043b6a5dffabc7becdc2493d1045be517af0642b6",
+  "memory_layout": "legacy",
+  "regions": [
+    {
+      "allocated_span_bytes": 372140,
+      "budget_free_bytes": null,
+      "budget_used_percent": null,
+      "free_percent": 82.25536346435547,
+      "linker_capacity_bytes": 2097152,
+      "linker_free_bytes": 1725020,
+      "name": "FLASH",
+      "origin": 134217728,
+      "physical_capacity_bytes": 2097152,
+      "physical_free_bytes": 1725020,
+      "reserved_bytes": 0,
+      "reserved_included_in_used": true,
+      "review_budget_bytes": null,
+      "sections": [
+        {
+          "address": 134217728,
+          "bytes": 664,
+          "role": "run",
+          "section": ".isr_vector"
+        },
+        {
+          "address": 134218400,
+          "bytes": 331648,
+          "role": "run",
+          "section": ".text"
+        },
+        {
+          "address": 134550048,
+          "bytes": 38528,
+          "role": "run",
+          "section": ".rodata"
+        },
+        {
+          "address": 134588576,
+          "bytes": 8,
+          "role": "run",
+          "section": ".ARM"
+        },
+        {
+          "address": 134588584,
+          "bytes": 4,
+          "role": "run",
+          "section": ".init_array"
+        },
+        {
+          "address": 134588588,
+          "bytes": 4,
+          "role": "run",
+          "section": ".fini_array"
+        },
+        {
+          "address": 134588592,
+          "bytes": 1276,
+          "role": "load",
+          "section": ".data"
+        }
+      ],
+      "used_bytes": 372132,
+      "used_percent": 17.74463653564453
+    },
+    {
+      "allocated_span_bytes": 218712,
+      "budget_free_bytes": null,
+      "budget_used_percent": null,
+      "free_percent": 58.284759521484375,
+      "linker_capacity_bytes": 524288,
+      "linker_free_bytes": 305580,
+      "name": "RAM",
+      "origin": 603979776,
+      "physical_capacity_bytes": 524288,
+      "physical_free_bytes": 305580,
+      "reserved_bytes": 0,
+      "reserved_included_in_used": true,
+      "review_budget_bytes": null,
+      "sections": [
+        {
+          "address": 603979776,
+          "bytes": 1276,
+          "role": "run",
+          "section": ".data"
+        },
+        {
+          "address": 603981056,
+          "bytes": 217432,
+          "role": "run",
+          "section": ".bss"
+        }
+      ],
+      "used_bytes": 218708,
+      "used_percent": 41.715240478515625
+    },
+    {
+      "allocated_span_bytes": 131072,
+      "budget_free_bytes": null,
+      "budget_used_percent": null,
+      "free_percent": 93.75,
+      "linker_capacity_bytes": 131072,
+      "linker_free_bytes": 122880,
+      "name": "DTCMRAM",
+      "origin": 536870912,
+      "physical_capacity_bytes": 131072,
+      "physical_free_bytes": 122880,
+      "reserved_bytes": 8192,
+      "reserved_included_in_used": true,
+      "review_budget_bytes": null,
+      "sections": [
+        {
+          "address": 536993792,
+          "bytes": 8192,
+          "role": "run",
+          "section": "._user_heap_stack"
+        }
+      ],
+      "used_bytes": 8192,
+      "used_percent": 6.25
+    },
+    {
+      "allocated_span_bytes": 0,
+      "budget_free_bytes": null,
+      "budget_used_percent": null,
+      "free_percent": 100.0,
+      "linker_capacity_bytes": 294912,
+      "linker_free_bytes": 294912,
+      "name": "RAM_D2",
+      "origin": 805306368,
+      "physical_capacity_bytes": 294912,
+      "physical_free_bytes": 294912,
+      "reserved_bytes": 0,
+      "reserved_included_in_used": true,
+      "review_budget_bytes": null,
+      "sections": [],
+      "used_bytes": 0,
+      "used_percent": 0.0
+    },
+    {
+      "allocated_span_bytes": 0,
+      "budget_free_bytes": null,
+      "budget_used_percent": null,
+      "free_percent": 100.0,
+      "linker_capacity_bytes": 65536,
+      "linker_free_bytes": 65536,
+      "name": "RAM_D3",
+      "origin": 939524096,
+      "physical_capacity_bytes": 65536,
+      "physical_free_bytes": 65536,
+      "reserved_bytes": 0,
+      "reserved_included_in_used": true,
+      "review_budget_bytes": null,
+      "sections": [],
+      "used_bytes": 0,
+      "used_percent": 0.0
+    },
+    {
+      "allocated_span_bytes": 0,
+      "budget_free_bytes": null,
+      "budget_used_percent": null,
+      "free_percent": 100.0,
+      "linker_capacity_bytes": 65536,
+      "linker_free_bytes": 65536,
+      "name": "ITCMRAM",
+      "origin": 0,
+      "physical_capacity_bytes": 65536,
+      "physical_free_bytes": 65536,
+      "reserved_bytes": 0,
+      "reserved_included_in_used": true,
+      "review_budget_bytes": null,
+      "sections": [],
+      "used_bytes": 0,
+      "used_percent": 0.0
+    }
+  ],
+  "reported_at_utc": "2026-10-31T18:56:20.557268+00:00",
+  "schema": "silverstar.memory-report/1",
+  "stack_proof": "NOT_PROVEN",
+  "target": "flight",
+  "target_profile": "SilverStar_H743ZI"
+}

@@ -1,0 +1,98 @@
+{
+  "verified_inputs": [
+    {
+      "path": "HardwareGenerated/STM32CubeMX/FATFS/Target/sd_diskio.c",
+      "expected": "792645700767fb5af67dc3d1f2688cfbb234196eef0befb948660ec69526604a",
+      "source_sha256": "792645700767fb5af67dc3d1f2688cfbb234196eef0befb948660ec69526604a",
+      "retained_sha256": "792645700767fb5af67dc3d1f2688cfbb234196eef0befb948660ec69526604a"
+    },
+    {
+      "path": "HardwareGenerated/STM32CubeMX/FATFS/Target/bsp_driver_sd.c",
+      "expected": "fdecbb877585404b94ebb29859fd1a3ea363cf174765baae68fa9b30a6203bd1",
+      "source_sha256": "fdecbb877585404b94ebb29859fd1a3ea363cf174765baae68fa9b30a6203bd1",
+      "retained_sha256": "fdecbb877585404b94ebb29859fd1a3ea363cf174765baae68fa9b30a6203bd1"
+    },
+    {
+      "path": "HardwareGenerated/STM32CubeMX/FATFS/Target/sd_diskio.h",
+      "expected": "020f370c23b29f44a41711582aa5b86db7500870f32b6d0768c711c8fe01bda7",
+      "source_sha256": "020f370c23b29f44a41711582aa5b86db7500870f32b6d0768c711c8fe01bda7",
+      "retained_sha256": "020f370c23b29f44a41711582aa5b86db7500870f32b6d0768c711c8fe01bda7"
+    },
+    {
+      "path": "HardwareGenerated/STM32CubeMX/FATFS/Target/bsp_driver_sd.h",
+      "expected": "18943f4fc3d0a59dcf8e91a3b2fa602563aca0ae56c78d0ce68126e6c6eea6f2",
+      "source_sha256": "18943f4fc3d0a59dcf8e91a3b2fa602563aca0ae56c78d0ce68126e6c6eea6f2",
+      "retained_sha256": "18943f4fc3d0a59dcf8e91a3b2fa602563aca0ae56c78d0ce68126e6c6eea6f2"
+    },
+    {
+      "path": "HardwareGenerated/STM32CubeMX/FATFS/Target/ffconf.h",
+      "expected": "084b94dcd9bfb9bc3dfd953c9689338dd62b5a75d39f32044cb1702d2f08f4bb",
+      "source_sha256": "084b94dcd9bfb9bc3dfd953c9689338dd62b5a75d39f32044cb1702d2f08f4bb",
+      "retained_sha256": "084b94dcd9bfb9bc3dfd953c9689338dd62b5a75d39f32044cb1702d2f08f4bb"
+    },
+    {
+      "path": "HardwareGenerated/STM32CubeMX/FATFS/App/fatfs.c",
+      "expected": "12605169bed679d240c49f6e342e41a9c283b54d570d0eb696b27633b5326ac6",
+      "source_sha256": "12605169bed679d240c49f6e342e41a9c283b54d570d0eb696b27633b5326ac6",
+      "retained_sha256": "12605169bed679d240c49f6e342e41a9c283b54d570d0eb696b27633b5326ac6"
+    },
+    {
+      "path": "HardwareGenerated/STM32CubeMX/FATFS/App/fatfs.h",
+      "expected": "97d0a8f9295f623c4f33e34e4c1b3e0ac7204bf9adbd42d34b98eca2bb8f5325",
+      "source_sha256": "97d0a8f9295f623c4f33e34e4c1b3e0ac7204bf9adbd42d34b98eca2bb8f5325",
+      "retained_sha256": "97d0a8f9295f623c4f33e34e4c1b3e0ac7204bf9adbd42d34b98eca2bb8f5325"
+    },
+    {
+      "path": "HardwareGenerated/STM32CubeMX/Core/Src/sdmmc.c",
+      "expected": "ba8073d6989129e3f8170fc140415e452250298385f86e33d4914a347b212b4c",
+      "source_sha256": "ba8073d6989129e3f8170fc140415e452250298385f86e33d4914a347b212b4c",
+      "retained_sha256": "ba8073d6989129e3f8170fc140415e452250298385f86e33d4914a347b212b4c"
+    },
+    {
+      "path": "HardwareGenerated/STM32CubeMX/Core/Inc/sdmmc.h",
+      "expected": "4f305afb18498ed76211b6f080fe2d61677788056d48a5989fd29691bfab528b",
+      "source_sha256": "4f305afb18498ed76211b6f080fe2d61677788056d48a5989fd29691bfab528b",
+      "retained_sha256": "4f305afb18498ed76211b6f080fe2d61677788056d48a5989fd29691bfab528b"
+    },
+    {
+      "path": "HardwareGenerated/STM32CubeMX/Core/Src/stm32h7xx_it.c",
+      "expected": "d1d2daaf5ed4c683a8db04416f4eaa4458a0e58f77b2c270073cdd34021811c5",
+      "source_sha256": "d1d2daaf5ed4c683a8db04416f4eaa4458a0e58f77b2c270073cdd34021811c5",
+      "retained_sha256": "d1d2daaf5ed4c683a8db04416f4eaa4458a0e58f77b2c270073cdd34021811c5"
+    }
+  ],
+  "active_owner": [
+    {
+      "path": "FATFS/Target/bsp_driver_sd.c",
+      "sha256": "abf1f08d114379639b14b093e84557641d176985074414423387aa0677f52fe3"
+    },
+    {
+      "path": "FATFS/Target/sd_diskio.c",
+      "sha256": "0e610c5eef4d37761fbea1a163e51b072e1141a771e2e09eef982745cdfabcb4"
+    }
+  ],
+  "make_and_eide_match": true,
+  "emitted_host_matches_owner": true,
+  "receipt": {
+    "hardware_qualified": false,
+    "owner": "silverstar.device.storage.sdmmc_fatfs_h7",
+    "replacements": {
+      "HardwareGenerated/STM32CubeMX/FATFS/Target/bsp_driver_sd.c": "FATFS/Target/bsp_driver_sd.c",
+      "HardwareGenerated/STM32CubeMX/FATFS/Target/sd_diskio.c": "FATFS/Target/sd_diskio.c"
+    },
+    "schema_id": "silverstar.h7-storage-replacement/1",
+    "source_policy": "imported bytes retained; exact two C units replaced in Make and IDE",
+    "verified_inputs": {
+      "HardwareGenerated/STM32CubeMX/Core/Inc/sdmmc.h": "4f305afb18498ed76211b6f080fe2d61677788056d48a5989fd29691bfab528b",
+      "HardwareGenerated/STM32CubeMX/Core/Src/sdmmc.c": "ba8073d6989129e3f8170fc140415e452250298385f86e33d4914a347b212b4c",
+      "HardwareGenerated/STM32CubeMX/Core/Src/stm32h7xx_it.c": "d1d2daaf5ed4c683a8db04416f4eaa4458a0e58f77b2c270073cdd34021811c5",
+      "HardwareGenerated/STM32CubeMX/FATFS/App/fatfs.c": "12605169bed679d240c49f6e342e41a9c283b54d570d0eb696b27633b5326ac6",
+      "HardwareGenerated/STM32CubeMX/FATFS/App/fatfs.h": "97d0a8f9295f623c4f33e34e4c1b3e0ac7204bf9adbd42d34b98eca2bb8f5325",
+      "HardwareGenerated/STM32CubeMX/FATFS/Target/bsp_driver_sd.c": "fdecbb877585404b94ebb29859fd1a3ea363cf174765baae68fa9b30a6203bd1",
+      "HardwareGenerated/STM32CubeMX/FATFS/Target/bsp_driver_sd.h": "18943f4fc3d0a59dcf8e91a3b2fa602563aca0ae56c78d0ce68126e6c6eea6f2",
+      "HardwareGenerated/STM32CubeMX/FATFS/Target/ffconf.h": "084b94dcd9bfb9bc3dfd953c9689338dd62b5a75d39f32044cb1702d2f08f4bb",
+      "HardwareGenerated/STM32CubeMX/FATFS/Target/sd_diskio.c": "792645700767fb5af67dc3d1f2688cfbb234196eef0befb948660ec69526604a",
+      "HardwareGenerated/STM32CubeMX/FATFS/Target/sd_diskio.h": "020f370c23b29f44a41711582aa5b86db7500870f32b6d0768c711c8fe01bda7"
+    }
+  }
+}

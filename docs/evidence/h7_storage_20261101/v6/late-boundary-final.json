@@ -1,0 +1,57 @@
+{
+  "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\FATFS\\Target\\sd_diskio.c",
+  "source_sha256": "0e610c5eef4d37761fbea1a163e51b072e1141a771e2e09eef982745cdfabcb4",
+  "binary_sha256": "36e300feb0e8a396ccad34af50710b0e966f727ade55eb9512c96ef8232545a1",
+  "results": [
+    {
+      "mode": 0,
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\late-boundary\\h7-diskio.exe",
+        "0"
+      ],
+      "exit_code": 0,
+      "stdout": "normal transfer passed\n",
+      "stderr": ""
+    },
+    {
+      "mode": 1,
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\late-boundary\\h7-diskio.exe",
+        "1"
+      ],
+      "exit_code": 0,
+      "stdout": "late deadline/error quarantine passed\n",
+      "stderr": ""
+    },
+    {
+      "mode": 2,
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\late-boundary\\h7-diskio.exe",
+        "2"
+      ],
+      "exit_code": 0,
+      "stdout": "late deadline/error quarantine passed\n",
+      "stderr": ""
+    },
+    {
+      "mode": 3,
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\late-boundary\\h7-diskio.exe",
+        "3"
+      ],
+      "exit_code": 0,
+      "stdout": "init-error refused READY\n",
+      "stderr": ""
+    },
+    {
+      "mode": 4,
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\late-boundary\\h7-diskio.exe",
+        "4"
+      ],
+      "exit_code": 0,
+      "stdout": "card-info error refused success\n",
+      "stderr": ""
+    }
+  ]
+}

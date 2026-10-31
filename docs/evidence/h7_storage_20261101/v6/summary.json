@@ -1,0 +1,181 @@
+{
+  "source_commit": "09c057a67acfc10e3ff387a4a8821c8ee0e83b0c",
+  "snapshot_sha256": "36fb7efc5117b28d831ddf4ae75eefb593bf5253e5d88bdb8c71cedf014ad6da",
+  "final_output": ".work/0.1.3-treediagram-20261101/h7-storage-v6/final/Flight_Controller",
+  "gate_exit_codes": {
+    "all": 0,
+    "architecture-check": 0,
+    "power10-check": 0,
+    "static-analysis": 0,
+    "artifact-check": 0,
+    "stack-report": 2
+  },
+  "pytest": "51 passed in 32.33s",
+  "storage_host": {
+    "h743": {
+      "command": [
+        "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\Tests\\Host\\storage_integrity\\run_storage_integrity.py",
+        "--project",
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller",
+        "--compiler",
+        "D:\\msys64\\ucrt64\\bin\\gcc.EXE"
+      ],
+      "exit_code": 0,
+      "seconds": 198.15702779999992,
+      "scope": "complete emitted storage_integrity runner, not complete make host-tests; logical sensor records, no physical epoch path",
+      "logger_modes": {
+        "normal": "LOGGER_QUEUE_OBSERVED normal=16/80 estimator=0/48 drops=0 producer_failures=0 jitter_count=0",
+        "overflow": "LOGGER_QUEUE_OBSERVED normal=80/80 estimator=0/48 drops=427 producer_failures=0 jitter_count=0",
+        "startup-overflow": "LOGGER_QUEUE_OBSERVED normal=80/80 estimator=0/48 drops=551 producer_failures=0 jitter_count=0",
+        "startup-burst": "LOGGER_QUEUE_OBSERVED normal=70/80 estimator=20/48 drops=0 producer_failures=0 jitter_count=188",
+        "startup-burst-overload": "LOGGER_QUEUE_OBSERVED normal=80/80 estimator=21/48 drops=432 producer_failures=10 jitter_count=189",
+        "preflight-normal-30": "LOGGER_QUEUE_OBSERVED normal=10/80 estimator=3/48 drops=0 producer_failures=0 jitter_count=0",
+        "preflight-normal-120": "LOGGER_QUEUE_OBSERVED normal=10/80 estimator=3/48 drops=0 producer_failures=0 jitter_count=0",
+        "preflight-diagnostic-30": "LOGGER_QUEUE_OBSERVED normal=10/80 estimator=3/48 drops=0 producer_failures=0 jitter_count=0",
+        "preflight-diagnostic-120": "LOGGER_QUEUE_OBSERVED normal=13/80 estimator=3/48 drops=0 producer_failures=0 jitter_count=0"
+      },
+      "dma_faults": [
+        "DISK_FAILURE mode=timeout-write bounded_ticks=30584 no_reuse=1",
+        "DISK_FAILURE mode=timeout-read bounded_ticks=30584 no_reuse=1",
+        "DISK_FAILURE mode=wrong-write bounded_ticks=586 no_reuse=1",
+        "DISK_FAILURE mode=wrong-read bounded_ticks=586 no_reuse=1",
+        "DISK_FAILURE mode=start-write bounded_ticks=584 no_reuse=1",
+        "DISK_FAILURE mode=start-read bounded_ticks=584 no_reuse=1",
+        "DISK_FAILURE mode=sync-timeout bounded_ticks=30584 no_reuse=1"
+      ],
+      "not_applicable": [
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_33|record unsupported by selected profile; rejection exercised",
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_34|record unsupported by selected profile; rejection exercised",
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_35|record unsupported by selected profile; rejection exercised",
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_36|record unsupported by selected profile; rejection exercised",
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_37|record unsupported by selected profile; rejection exercised",
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_38|record unsupported by selected profile; rejection exercised",
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_43|record unsupported by selected profile; rejection exercised",
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_44|record unsupported by selected profile; rejection exercised",
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_4|record unsupported by selected profile; rejection exercised",
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_7|record unsupported by selected profile; rejection exercised",
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_8|record unsupported by selected profile; rejection exercised",
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_9|record unsupported by selected profile; rejection exercised"
+      ],
+      "complete_marker": true,
+      "log_sha256": "d765a204d0ddebe7247bb14768469ad6647c84cd29049c77c37565e8770ad336"
+    },
+    "f407": {
+      "command": [
+        "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Tests\\Host\\storage_integrity\\run_storage_integrity.py",
+        "--project",
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller",
+        "--compiler",
+        "D:\\msys64\\ucrt64\\bin\\gcc.EXE"
+      ],
+      "exit_code": 0,
+      "seconds": 203.349014600004,
+      "scope": "complete emitted storage_integrity runner, not complete make host-tests; logical sensor records, no physical epoch path",
+      "logger_modes": {
+        "normal": "LOGGER_QUEUE_OBSERVED normal=15/80 estimator=1/48 drops=0 producer_failures=0 jitter_count=0",
+        "overflow": "LOGGER_QUEUE_OBSERVED normal=80/80 estimator=1/48 drops=427 producer_failures=0 jitter_count=0",
+        "startup-overflow": "LOGGER_QUEUE_OBSERVED normal=80/80 estimator=1/48 drops=550 producer_failures=0 jitter_count=0",
+        "startup-burst": "LOGGER_QUEUE_OBSERVED normal=73/80 estimator=37/48 drops=0 producer_failures=0 jitter_count=252",
+        "startup-burst-overload": "LOGGER_QUEUE_OBSERVED normal=80/80 estimator=36/48 drops=439 producer_failures=14 jitter_count=263",
+        "preflight-normal-30": "LOGGER_QUEUE_OBSERVED normal=10/80 estimator=5/48 drops=0 producer_failures=0 jitter_count=0",
+        "preflight-normal-120": "LOGGER_QUEUE_OBSERVED normal=10/80 estimator=5/48 drops=0 producer_failures=0 jitter_count=0",
+        "preflight-diagnostic-30": "LOGGER_QUEUE_OBSERVED normal=10/80 estimator=5/48 drops=0 producer_failures=0 jitter_count=0",
+        "preflight-diagnostic-120": "LOGGER_QUEUE_OBSERVED normal=13/80 estimator=6/48 drops=0 producer_failures=0 jitter_count=0"
+      },
+      "dma_faults": [
+        "DISK_FAILURE mode=timeout-write bounded_ticks=30584 no_reuse=1",
+        "DISK_FAILURE mode=timeout-read bounded_ticks=30584 no_reuse=1",
+        "DISK_FAILURE mode=wrong-write bounded_ticks=586 no_reuse=1",
+        "DISK_FAILURE mode=wrong-read bounded_ticks=586 no_reuse=1",
+        "DISK_FAILURE mode=start-write bounded_ticks=584 no_reuse=1",
+        "DISK_FAILURE mode=start-read bounded_ticks=584 no_reuse=1",
+        "DISK_FAILURE mode=sync-timeout bounded_ticks=30584 no_reuse=1"
+      ],
+      "not_applicable": [
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_33|record unsupported by selected profile; rejection exercised",
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_34|record unsupported by selected profile; rejection exercised",
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_35|record unsupported by selected profile; rejection exercised",
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_36|record unsupported by selected profile; rejection exercised",
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_37|record unsupported by selected profile; rejection exercised",
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_38|record unsupported by selected profile; rejection exercised",
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_43|record unsupported by selected profile; rejection exercised",
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_44|record unsupported by selected profile; rejection exercised",
+        "FCCG_HOST_NOT_APPLICABLE|storage_record_positive_7|record unsupported by selected profile; rejection exercised"
+      ],
+      "complete_marker": true,
+      "log_sha256": "eecb78a687d021035f40bd0f0e68d379b6f8c240f4a27254520110227e16b923"
+    }
+  },
+  "power10": "Power of Ten project text checks passed: 6938 checks, 138 first-party C files, 2971 functions; 996 assertion recommendations. Critical-contract review NOT PROVEN; manual acceptance pending.",
+  "h7_first_party_files": 138,
+  "f407_first_party_files": 125,
+  "f407_make_and_coverage_unchanged": true,
+  "resources": [
+    "FLASH     used=372132 remaining=1725020 capacity=2097152",
+    "main SRAM used=218708 remaining=305580 capacity=524288",
+    "CCMRAM    used=0 remaining=0 capacity=0",
+    "DTCM MSP  reserved=8192 capacity=131072; main/ISR stack margin NOT PROVEN",
+    "heap      reserved=0 runtime_symbols=0",
+    "SilverStar artifact check passed: target=SilverStar_H743ZI config=Release elf_bytes=3790580 bin_bytes=372140 heap_symbols=0"
+  ],
+  "artifacts": [
+    {
+      "path": ".work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.bin",
+      "bytes": 372140,
+      "sha256": "4b2053306eea318e26f43d17d032e82252306accfe48aec41cd7fc939eda2c99"
+    },
+    {
+      "path": ".work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.elf",
+      "bytes": 3790580,
+      "sha256": "085ae2334a4afed3fd6bbe0ffdea00847e4a76258415c853123ff10927e6dbea"
+    },
+    {
+      "path": ".work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.hex",
+      "bytes": 1046793,
+      "sha256": "2ecd7aea368ffa4d8ac696e04f1b6e56d66196b5271e4375ccf36548b88d9e21"
+    },
+    {
+      "path": ".work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.map",
+      "bytes": 1679230,
+      "sha256": "3d666c2bd1dcc28813f8afa3c391bcbcdef906d695a1ca547cec4f5789dc44a3"
+    }
+  ],
+  "scratch_symbol": "2401fb60 00000200 b s_sd_scratch",
+  "metadata_faults": {
+    "original_ownership_sha256": "910581e356be5c6168bbc76bda011fe1bd7c80194346993430f4a164dbf8eeff",
+    "metadata_restored_exactly": true,
+    "rows": [
+      {
+        "mode": "missing-file",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-C",
+          "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller",
+          "power10-check"
+        ],
+        "exit_code": 2,
+        "sources_scanned": 0,
+        "owning_files_scanned": 0
+      },
+      {
+        "mode": "missing-active",
+        "command": [
+          "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+          "-C",
+          "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller",
+          "power10-check"
+        ],
+        "exit_code": 2,
+        "sources_scanned": 0,
+        "owning_files_scanned": 0
+      }
+    ]
+  },
+  "strict_stack": "FAIL: unreviewed new H743 build declarations; no whitelist changes",
+  "critical_contract_review": "NOT PROVEN; tool text checks do not complete manual acceptance",
+  "hardware": "NOT TESTED: no MCU, SD-card electrical/timing/cache, power-loss or flight qualification",
+  "coverage_history": "v1-v4 P10/strict analyzer omitted canonical owner C; those passes do not qualify the new files. v5 probes exposed and fixed exact coverage, ABI/prototype and missing-metadata gaps; v6 is final.",
+  "no_push": "SilverStar source/evidence commits are local; parent owns requested TreeDiagram publication."
+}

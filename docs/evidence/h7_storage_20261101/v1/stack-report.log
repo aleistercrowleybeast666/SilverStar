@@ -1,0 +1,22 @@
+mingw32-make.EXE: Entering directory 'D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/h7-storage-v1/post-fix/Flight_Controller'
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_maintenance_uart.ps1
+Maintenance UART source/IOC matched 921600/8N1; no source overwritten
+"FCCG_BUILD_ARTIFACT|ELF|build/FCCG/SilverStar_H743ZI/Release/SilverStar_0_1_3.elf"
+python Tools/check_task_stacks.py --config Release --memory-layout legacy --prefix "D:\Arm GNU Toolchain\14.3 rel1\bin/arm-none-eabi-"
+FCCG_PROGRESS|STACK_REPORT|PLAN|1
+FCCG_PROGRESS|STACK_REPORT|BEGIN|1|1|ELF and stack budget
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v1\post-fix\Flight_Controller\Tools\check_task_stacks.py", line 5605, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v1\post-fix\Flight_Controller\Tools\check_task_stacks.py", line 5590, in main
+    report = StackReport_Build(root, arguments.config, arguments.prefix, arguments.memory_layout)
+  File "D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v1\post-fix\Flight_Controller\Tools\check_task_stacks.py", line 5500, in StackReport_Build
+    binding_source_proofs = BindingSources_Verify(root, sources, build, prefix)
+  File "D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v1\post-fix\Flight_Controller\Tools\check_task_stacks.py", line 5033, in BindingSources_Verify
+    return H743CompilationInputs_Verify(root, sources, build)
+  File "D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v1\post-fix\Flight_Controller\Tools\check_task_stacks.py", line 4997, in H743CompilationInputs_Verify
+    raise ValueError("Unreviewed H743 build declarations or configuration")
+ValueError: Unreviewed H743 build declarations or configuration
+mingw32-make.EXE: *** [Makefile:217: stack-report] Error 1
+mingw32-make.EXE: Leaving directory 'D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/h7-storage-v1/post-fix/Flight_Controller'

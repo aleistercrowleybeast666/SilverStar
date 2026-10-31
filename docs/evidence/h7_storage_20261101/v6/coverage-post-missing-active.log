@@ -1,0 +1,12 @@
+mingw32-make.EXE: Entering directory 'D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/h7-storage-v6/final/Flight_Controller'
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_power_of_ten.ps1
+H7 first-party coverage requires matching Make and active owner identities
+At D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v6\final\Flight_Controller\Tools\check_pow
+er_of_ten.ps1:75 char:17
++ ...             throw 'H7 first-party coverage requires matching Make and ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (H7 first-party ...wner identities:String) [], RuntimeException
+    + FullyQualifiedErrorId : H7 first-party coverage requires matching Make and active owner identities
+ 
+mingw32-make.EXE: *** [Makefile:227: power10-check] Error 1
+mingw32-make.EXE: Leaving directory 'D:/python_software/SilverStar/.work/0.1.3-treediagram-20261101/h7-storage-v6/final/Flight_Controller'

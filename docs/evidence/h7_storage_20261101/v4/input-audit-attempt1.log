@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\docs\evidence\h7_storage_20261101\v4\audit_inputs.py", line 18, in <module>
+    manifest = json.loads((SCG / "plugins/builtin/silverstar_device_storage_sdmmc_fatfs_h7/plugin.json").read_text())
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 793, in read_text
+    return f.read()
+           ~~~~~~^^
+UnicodeDecodeError: 'gbk' codec can't decode byte 0xa1 in position 863: illegal multibyte sequence

@@ -1,0 +1,5 @@
+{
+  "sd_diskio_power10_covered": false,
+  "bsp_power10_covered": false,
+  "cause": "Make classifies FATFS as vendor and Power10 fixed roots omit FATFS; these new owning files require exact positive coverage"
+}

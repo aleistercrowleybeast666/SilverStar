@@ -1,0 +1,29 @@
+{
+  "source_sha256": "357efa13a5a8daee713b86e8b60afe1d2bf30a06556c6a9c6afa0612cddfa59d",
+  "results": [
+    {
+      "mode": 0,
+      "exit_code": 0,
+      "stdout": "normal transfer passed\n",
+      "stderr": ""
+    },
+    {
+      "mode": 1,
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "line 58: s_started==(mode==1U?0U:1U)\n"
+    },
+    {
+      "mode": 2,
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "line 57: SD_Driver.read(0U,output,0U,1U)==RES_ERROR\n"
+    },
+    {
+      "mode": 3,
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "line 46: SD_Driver.initialize(0U)==STA_NOINIT\n"
+    }
+  ]
+}

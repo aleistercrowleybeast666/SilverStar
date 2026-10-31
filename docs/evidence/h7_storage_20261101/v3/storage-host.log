@@ -1,0 +1,231 @@
+FCCG_PROGRESS|STORAGE_INTEGRITY|PLAN|4
+FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|1|4|compile
+FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|1|4|compile
+FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|2|4|byte-integrity
+BYTE_WRITE_COMPLETE unaligned_dma=0
+BYTE_INTEGRITY bytes=1668166 writes=10000 unaligned_dma=0
+SSLOG_MIX records=40000 bytes=3596803 transactions=29263
+{
+  "file_bytes": 3596803,
+  "header_crc_ok": true,
+  "records": 40000,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "IMU_CORRECTED": 3334,
+    "GNSS_NATIVE": 3334,
+    "BARO_NATIVE": 3334,
+    "ALIGNMENT_RESULT": 3334,
+    "ALIGNMENT_EVIDENCE": 3333,
+    "MISSION_SNAPSHOT_IDENTITY": 3333,
+    "MAG_CALIBRATION_IDENTITY": 3333,
+    "CALIBRATION_RESULT": 3333,
+    "MISSION_CONFIG": 3333,
+    "INITIAL_STATE": 3333,
+    "EVENT": 3333,
+    "STATS": 3333
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": null,
+  "passed": true,
+  "strict_end_offset": 3596803,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+DISK_FAILURE mode=timeout-write bounded_ticks=32643 no_reuse=1
+DISK_FAILURE mode=timeout-read bounded_ticks=32643 no_reuse=1
+DISK_FAILURE mode=wrong-write bounded_ticks=2649 no_reuse=1
+DISK_FAILURE mode=wrong-read bounded_ticks=2649 no_reuse=1
+DISK_FAILURE mode=start-write bounded_ticks=2646 no_reuse=1
+DISK_FAILURE mode=start-read bounded_ticks=2646 no_reuse=1
+DISK_FAILURE mode=sync-timeout bounded_ticks=32644 no_reuse=1
+TARGET_BENCH_HOST result=0
+FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|2|4|byte-integrity
+FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|3|4|logger-compile
+FCCG_HOST_FIXTURE|storage_writer|logical sensor records; physical epoch path not exercised
+FCCG_HOST_STORAGE_DEFINITIONS|-DUSE_HAL_DRIVER -DSTM32H743xx -DUSE_FLASH_ECC=0 -DUSE_SDIO_TRANSCEIVER=0 -DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_GRAVITY_KNOWN_YAW -DSYSTEM_ALIGNMENT_BUILD_SOURCE=SYSTEM_ALIGNMENT_ATTITUDE_SOURCE_GRAVITY_KNOWN_YAW -DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_IMU=1U -DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_MAGNETOMETER=0U -DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_HARDWARE_QUATERNION=0U -DSYSTEM_ALIGNMENT_BUILD_GUARD_HARDWARE_QUATERNION=0U -DSYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_ESKF20 -DSYSTEM_BUILD_ESTIMATOR_ENABLED=0U -DSYSTEM_BUILD_AUGMENTED_ENABLED=1U -DSYSTEM_BUILD_AUGMENTED_MODEL=1U -DSYSTEM_BUILD_MECHANIZATION_ALGORITHM=SYSTEM_MECHANIZATION_CONING2_SCULLING2 -DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_STILLNESS -DSYSTEM_TELEMETRY_TM_ENABLED=1U -DSYSTEM_TELEMETRY_TM_PROFILE=0U -DSILVERSTAR_AIR_LINK_ENABLED=1 -DSYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED=0U
+FCCG_HOST_COMMAND|["D:/msys64/ucrt64/bin/gcc.exe", "-std=c11", "-O2", "-Wall", "-Wextra", "-Wno-unused-parameter", "-Wno-unused-variable", "-Wno-pointer-to-int-cast", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-Wl,--wrap=f_close", "-include", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Generated\\Inc\\project_flight_config.h", "-DUSE_HAL_DRIVER", "-DSTM32H743xx", "-DUSE_FLASH_ECC=0", "-DUSE_SDIO_TRANSCEIVER=0", "-DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_GRAVITY_KNOWN_YAW", "-DSYSTEM_ALIGNMENT_BUILD_SOURCE=SYSTEM_ALIGNMENT_ATTITUDE_SOURCE_GRAVITY_KNOWN_YAW", "-DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_IMU=1U", "-DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_MAGNETOMETER=0U", "-DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_HARDWARE_QUATERNION=0U", "-DSYSTEM_ALIGNMENT_BUILD_GUARD_HARDWARE_QUATERNION=0U", "-DSYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_ESKF20", "-DSYSTEM_BUILD_ESTIMATOR_ENABLED=0U", "-DSYSTEM_BUILD_AUGMENTED_ENABLED=1U", "-DSYSTEM_BUILD_AUGMENTED_MODEL=1U", "-DSYSTEM_BUILD_MECHANIZATION_ALGORITHM=SYSTEM_MECHANIZATION_CONING2_SCULLING2", "-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_STILLNESS", "-DSYSTEM_TELEMETRY_TM_ENABLED=1U", "-DSYSTEM_TELEMETRY_TM_PROFILE=0U", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DSYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED=0U", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Targets\\SilverStar_H743ZI\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\build\\FCCG\\Host\\Tests\\StorageIntegrity", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Tests\\Host\\storage_integrity", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Middlewares\\Third_Party\\FatFs\\src", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Protocol\\SSLOG\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Common\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Platform\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Tests\\Host\\Fixtures\\MultiInstance\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Tests\\Host\\Fixtures\\MaintenanceUart", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Tests\\Host", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\APP\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Algorithm\\Common\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Algorithm\\Calibration\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Algorithm\\Alignment\\Common\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Algorithm\\Alignment\\GravityKnownYaw\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Algorithm\\Alignment\\GravityMagTriad\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Algorithm\\Alignment\\VectorConstraints\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Algorithm\\Alignment\\ExternalAttitude\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Algorithm\\INS\\Coning2Sculling2\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Algorithm\\Estimator\\KF6\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Algorithm\\Estimator\\SF6\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Common\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Modules\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Protocol\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Protocol\\SSLOG\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Interfaces\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\System\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\System\\Alignment\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\System\\Calibration\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\System\\Indicator\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\System\\Inertial\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\System\\User", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Targets\\SilverStar_F407\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Board\\SilverStar_0_5\\Services\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Generated\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\FlightLogic\\Deployment\\MultiTrigger\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\FlightLogic\\Landing\\BarometerImuWindow\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Platform\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Platform\\STM32F4\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Platform\\STM32H7\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Platform\\STM32F1Flight\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\IMU\\JY901B\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\IMU\\JY901B\\Adapter\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\GNSS\\NEO_M9N\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\GNSS\\NEO_M9N\\Adapter\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\Telemetry\\SX1281\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\Telemetry\\SX1281\\Adapter\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\SensorBus\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\SensorBus\\Adapter\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\Barometer\\BMP280\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\Barometer\\BMP280\\Adapter\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\Power\\InputVoltage\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\IMU\\MPU6050\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\IMU\\MPU6050\\Adapter\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Middlewares\\Third_Party\\SX1280lib", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Modules\\InstallationCapture\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\ThirdParty\\InstallationCapture", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Algorithm\\Alignment\\GravityKnownYaw\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Algorithm\\Alignment\\GravityMagTriad\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Algorithm\\Alignment\\HardwareQuat6AxisKnownYaw\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Algorithm\\Alignment\\HardwareQuat9Axis\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\FlightLogic\\MissionAction\\GpioOutput\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\System\\Src", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Tests\\Host\\console_frames\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Platform\\STM32F4\\Src", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\Console\\UART\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Algorithm\\Estimator\\ESKF15\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Algorithm\\Estimator\\Augmented\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Algorithm\\Estimator\\ESKF15\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Algorithm\\Estimator\\ESKF15\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Algorithm\\Estimator\\ESKF15\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Modules\\InstallationCapture\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Modules\\InstallationCapture\\Src", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\ThirdParty\\InstallationCapture", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Src", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Inc", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Tests\\Host\\storage_integrity\\test_logger_storage.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\build\\FCCG\\Host\\Tests\\StorageIntegrity\\sd_diskio.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Src\\fatfs_lfn_ascii.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Middlewares\\Third_Party\\FatFs\\src\\ff.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Middlewares\\Third_Party\\FatFs\\src\\ff_gen_drv.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Middlewares\\Third_Party\\FatFs\\src\\diskio.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Protocol\\SSLOG\\Src\\sslog_protocol.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Protocol\\SSLOG\\Src\\sslog_records.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Common\\Src\\silverstar_assert.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Tests\\Target\\storage_integrity.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\APP\\Src\\device_native_log.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\APP\\Src\\imu_sample_bus.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\System\\Calibration\\Src\\system_calibration_correction.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\System\\Calibration\\Src\\system_mag_calibration.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\APP\\Src\\logger_bus.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\APP\\Src\\logger_task.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Common\\Src\\common_spsc_queue.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\System\\Src\\system_log_file.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Common\\Src\\common_format.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Src\\log_file_storage.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\System\\Src\\system_log_policy.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\System\\Src\\system_profile.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\System\\Src\\system_mission_process.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Generated\\Src\\project_mission_process.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\System\\Src\\system_navigation_profile.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\System\\Src\\system_estimator_profile.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Generated\\Src\\project_metadata.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Generated\\Src\\project_log_config.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Generated\\Src\\project_mission_parameters.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Generated\\Src\\project_log_decoder_profile.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Src\\storage_service.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Src\\persistent_storage.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Src\\mission_snapshot.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Src\\mission_radio_profile.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Src\\mag_calibration_storage.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Src\\log_sink_service.c", "-lm", "-o", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\build\\FCCG\\Host\\Tests\\StorageIntegrity\\logger_storage.exe"]
+FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|3|4|logger-compile
+FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|4|4|logger-integrity
+PERSISTENT_OBJECTS generation=1 fallback=1 lfn=1
+BOOT_MEDIUM mode=initial-absent unavailable=1 warning=1 attempts=1 no_hotplug=1
+BOOT_MEDIUM mode=initial-no-filesystem unavailable=1 warning=1 attempts=1 no_hotplug=1
+BOOT_MEDIUM mode=initial-io-error unavailable=0 warning=0 attempts=2 no_hotplug=1
+POST_MOUNT_FAULT mode=initial-manifest-error initial_unavailable=0 healthy=0
+POST_MOUNT_FAULT mode=post-open-write-error initial_unavailable=0 healthy=0
+MAINTENANCE mode=maintenance state=2 writer_open=0 fault=0 steps=4
+MAINTENANCE mode=maintenance-fault state=3 writer_open=0 fault=0 steps=4
+MAINTENANCE mode=maintenance-write-fault state=3 writer_open=0 fault=1 steps=3
+BOOTSTRAP_MAINTENANCE mode=maintenance-bootstrap state=2 startup=0 snapshot_ready=0 writer_open=0 final=3 fault=0 deadline=0 steps=4
+{
+  "file_bytes": 2792,
+  "header_crc_ok": true,
+  "records": 60,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 1,
+    "DEVICE_DESCRIPTOR": 10,
+    "ALGORITHM_DESCRIPTOR": 4,
+    "LOG_STREAM_DESCRIPTOR": 43
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 2792,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+BOOTSTRAP_MAINTENANCE mode=maintenance-calibration-failed state=2 startup=0 snapshot_ready=0 writer_open=0 final=3 fault=0 deadline=0 steps=4
+{
+  "file_bytes": 2872,
+  "header_crc_ok": true,
+  "records": 62,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 3,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 1,
+    "DEVICE_DESCRIPTOR": 10,
+    "ALGORITHM_DESCRIPTOR": 4,
+    "LOG_STREAM_DESCRIPTOR": 43
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 2872,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+BOOTSTRAP_MAINTENANCE mode=maintenance-sensor-unready state=2 startup=0 snapshot_ready=0 writer_open=0 final=3 fault=0 deadline=0 steps=4
+{
+  "file_bytes": 2872,
+  "header_crc_ok": true,
+  "records": 62,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 3,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 1,
+    "DEVICE_DESCRIPTOR": 10,
+    "ALGORITHM_DESCRIPTOR": 4,
+    "LOG_STREAM_DESCRIPTOR": 43
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 2872,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+BOOTSTRAP_MAINTENANCE mode=maintenance-early-bootstrap state=2 startup=0 snapshot_ready=0 writer_open=0 final=3 fault=0 deadline=0 steps=4
+{
+  "file_bytes": 2792,
+  "header_crc_ok": true,
+  "records": 60,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 1,
+    "DEVICE_DESCRIPTOR": 10,
+    "ALGORITHM_DESCRIPTOR": 4,
+    "LOG_STREAM_DESCRIPTOR": 43
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 2792,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+BOOTSTRAP_MAINTENANCE mode=maintenance-repeat-enter state=2 startup=0 snapshot_ready=0 writer_open=0 final=3 fault=0 deadline=0 steps=4
+{
+  "file_bytes": 2872,
+  "header_crc_ok": true,
+  "records": 62,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 3,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 1,
+    "DEVICE_DESCRIPTOR": 10,
+    "ALGORITHM_DESCRIPTOR": 4,
+    "LOG_STREAM_DESCRIPTOR": 43
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 2872,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+BOOTSTRAP_MAINTENANCE mode=maintenance-write-timeout state=3 startup=1 snapshot_ready=1 writer_open=0 final=2 fault=1 deadline=0 steps=3
+BOOTSTRAP_MAINTENANCE mode=maintenance-close-fault state=3 startup=1 snapshot_ready=1 writer_open=0 final=2 fault=1 deadline=0 steps=4
+BOOTSTRAP_MAINTENANCE mode=maintenance-final-status-fault state=3 startup=1 snapshot_ready=1 writer_open=0 final=3 fault=0 deadline=0 steps=4
+MAG_MAINTENANCE mode=mag-disabled generation=1 no_log_session=1 steps=3
+MAG_MAINTENANCE mode=mag-finalized generation=1 no_log_session=1 steps=3
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_4|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_7|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_8|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_9|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_33|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_34|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_35|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_36|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_37|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_38|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_43|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_44|record unsupported by selected profile; rejection exercised
+LOGGER_QUEUE_OBSERVED normal=80/80 estimator=0/48 drops=287 producer_failures=0 jitter_count=0
+LOGGER_SAME_EPOCH_PEAK normal=0 estimator=0 period_us=5000
+FAIL line 545: s_overflow_test ? bus.overflow_count > 0U : bus.overflow_count == 0U
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v3\post-fix\Flight_Controller\Tests\Host\storage_integrity\run_storage_integrity.py", line 281, in <module>
+    StorageIntegrity_Run(args.project.resolve(), args.compiler, args.sf6_compact,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         args.maintenance_only, args.output, args.maintenance_mode)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v3\post-fix\Flight_Controller\Tests\Host\storage_integrity\run_storage_integrity.py", line 226, in StorageIntegrity_Run
+    subprocess.run(command, check=True, cwd=project, env=environment)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\subprocess.py", line 577, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\build\\FCCG\\Host\\Tests\\StorageIntegrity\\logger_storage.exe', 'D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\build\\FCCG\\Host\\Tests\\StorageIntegrity\\logger-normal.sslog']' returned non-zero exit status 1.

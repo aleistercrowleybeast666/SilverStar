@@ -1,0 +1,19 @@
+{
+  "gate_exit_codes": {
+    "all": 0,
+    "architecture-check": 0,
+    "power10-check": 0,
+    "static-analysis": 0,
+    "artifact-check": 0,
+    "stack-report": 2
+  },
+  "pytest": "51 passed in 32.33s",
+  "resources": [
+    "FLASH     used=372132 remaining=1725020 capacity=2097152",
+    "main SRAM used=218708 remaining=305580 capacity=524288",
+    "CCMRAM    used=0 remaining=0 capacity=0",
+    "DTCM MSP  reserved=8192 capacity=131072; main/ISR stack margin NOT PROVEN",
+    "heap      reserved=0 runtime_symbols=0",
+    "SilverStar artifact check passed: target=SilverStar_H743ZI config=Release elf_bytes=3790580 bin_bytes=372140 heap_symbols=0"
+  ]
+}

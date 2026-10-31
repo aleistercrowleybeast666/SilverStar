@@ -1,0 +1,36 @@
+{
+  "artifacts": [
+    {
+      "path": ".work\\0.1.3-treediagram-20261101\\h7-storage-v4\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.bin",
+      "bytes": 372140,
+      "sha256": "ac28abd7e2c62923d6d1f6e5f61aa67e4b0e8a1bde2ff5e1112e5a2763a2646b"
+    },
+    {
+      "path": ".work\\0.1.3-treediagram-20261101\\h7-storage-v4\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.elf",
+      "bytes": 3790612,
+      "sha256": "f00178f876064f93834ad6cf1ecead49428d0b8f8cf9861fe870d8115c72f9a0"
+    },
+    {
+      "path": ".work\\0.1.3-treediagram-20261101\\h7-storage-v4\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.hex",
+      "bytes": 1046793,
+      "sha256": "ae7e166392248b044bdf4e692a410949da1efaf33187d2d3722a994400d8030a"
+    },
+    {
+      "path": ".work\\0.1.3-treediagram-20261101\\h7-storage-v4\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.map",
+      "bytes": 1680060,
+      "sha256": "42ce1f82f5671ab1b25a3190fca95f0c2bc8ec71e55ed5567a9e977179eb0420"
+    }
+  ],
+  "nm_command": [
+    "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-nm.EXE",
+    "-S",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v4\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.elf"
+  ],
+  "scratch_symbol": "2401fb60 00000200 b s_sd_scratch",
+  "scratch_AXI_SRAM_32_aligned": true,
+  "local_frames": {
+    "sd_diskio.su": "FATFS/Target/sd_diskio.c:150:9:SD_status\t0\tstatic\nFATFS/Target/sd_diskio.c:127:9:SD_initialize\t40\tstatic\nFATFS/Target/sd_diskio.c:71:16:SdDiskIo_ReadyWait\t24\tstatic\nFATFS/Target/sd_diskio.c:91:16:SdDiskIo_CompletionWait\t24\tstatic\nFATFS/Target/sd_diskio.c:205:9:SD_ioctl\t72\tstatic\nFATFS/Target/sd_diskio.c:185:9:SD_write\t48\tstatic\nFATFS/Target/sd_diskio.c:166:9:SD_read\t48\tstatic\nFATFS/Target/sd_diskio.c:259:6:BSP_SD_AbortCallback\t32\tstatic\nFATFS/Target/sd_diskio.c:267:6:BSP_SD_WriteCpltCallback\t24\tstatic\nFATFS/Target/sd_diskio.c:268:6:BSP_SD_ReadCpltCallback\t24\tstatic\n",
+    "bsp_driver_sd.su": "FATFS/Target/bsp_driver_sd.c:27:16:SdH7_RequestValid\t64\tstatic\nFATFS/Target/bsp_driver_sd.c:18:9:BSP_SD_Init\t8\tstatic\nFATFS/Target/bsp_driver_sd.c:40:9:BSP_SD_ReadBlocks_DMA\t16\tstatic\nFATFS/Target/bsp_driver_sd.c:48:9:BSP_SD_WriteBlocks_DMA\t16\tstatic\nFATFS/Target/bsp_driver_sd.c:56:9:BSP_SD_GetCardState\t8\tstatic\nFATFS/Target/bsp_driver_sd.c:63:6:BSP_SD_GetCardInfo\t8\tstatic\nDrivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_sd.h:658:19:HAL_SD_AbortCallback\t0\tstatic\nDrivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_sd.h:657:19:HAL_SD_ErrorCallback\t0\tstatic\nDrivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_sd.h:655:19:HAL_SD_TxCpltCallback\t0\tstatic\nDrivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_sd.h:656:19:HAL_SD_RxCpltCallback\t0\tstatic\n"
+  },
+  "scope": "Local emitted frames and symbol placement only; strict stack gate remains authoritative; no whole-task/MSP/ISR bound inferred."
+}

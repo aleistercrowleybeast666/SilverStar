@@ -1,0 +1,57 @@
+{
+  "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\FATFS\\Target\\sd_diskio.c",
+  "source_sha256": "eafd9c18f8304f86a169e7e905f3fb9573bc01edd782ac287bbbe7ab3c27ed79",
+  "fixture_sha256": "ff202c1061be189f16f42beb641ecb98d784b4c8e4592bdf1b5ac45fa2da8271",
+  "results": [
+    {
+      "mode": 0,
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\late-boundary\\h7-diskio.exe",
+        "0"
+      ],
+      "exit_code": 0,
+      "stdout": "normal transfer passed\n",
+      "stderr": ""
+    },
+    {
+      "mode": 1,
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\late-boundary\\h7-diskio.exe",
+        "1"
+      ],
+      "exit_code": 0,
+      "stdout": "late deadline/error quarantine passed\n",
+      "stderr": ""
+    },
+    {
+      "mode": 2,
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\late-boundary\\h7-diskio.exe",
+        "2"
+      ],
+      "exit_code": 0,
+      "stdout": "late deadline/error quarantine passed\n",
+      "stderr": ""
+    },
+    {
+      "mode": 3,
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\late-boundary\\h7-diskio.exe",
+        "3"
+      ],
+      "exit_code": 0,
+      "stdout": "init-error refused READY\n",
+      "stderr": ""
+    },
+    {
+      "mode": 4,
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\late-boundary\\h7-diskio.exe",
+        "4"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "line 55: SD_Driver.ioctl(0U,GET_SECTOR_COUNT,&sectors)==RES_ERROR\n"
+    }
+  ]
+}

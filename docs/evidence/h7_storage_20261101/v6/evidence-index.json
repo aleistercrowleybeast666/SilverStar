@@ -1,0 +1,356 @@
+[
+  {
+    "path": "v1/pre-fix-host.log",
+    "sha256": "8e67663386edc8ca9b2b9009440a3c23f9cdb15add4de8e5193db4f378d3687f",
+    "lines": [
+      {
+        "line": 8,
+        "text": "    raise ValueError(\"Authoritative diskio uses blocking BSP transfers; the delayed-DMA \""
+      },
+      {
+        "line": 11,
+        "text": "ValueError: Authoritative diskio uses blocking BSP transfers; the delayed-DMA Host model cannot qualify it. Supply a reviewed bounded storage implementation; no DMA/storage acceptance is inferred."
+      }
+    ]
+  },
+  {
+    "path": "v3/storage-host.log",
+    "sha256": "096deb2961594991c483f289dd67472daf9b2ebbdd77f4277987e7b6c3f2a647",
+    "lines": [
+      {
+        "line": 216,
+        "text": "LOGGER_QUEUE_OBSERVED normal=80/80 estimator=0/48 drops=287 producer_failures=0 jitter_count=0"
+      },
+      {
+        "line": 218,
+        "text": "FAIL line 545: s_overflow_test ? bus.overflow_count > 0U : bus.overflow_count == 0U"
+      }
+    ]
+  },
+  {
+    "path": "v5/probe-owner-analyzer.log",
+    "sha256": "5f84546b9a163b6ef44b2c19ba81df7bb2e820035311911985772dfe66b478a5",
+    "lines": [
+      {
+        "line": 6,
+        "text": "FATFS/Target/sd_diskio.c:127:9: error: no previous prototype for 'SD_initialize' [-Werror=missing-prototypes]"
+      },
+      {
+        "line": 9,
+        "text": "FATFS/Target/sd_diskio.c:150:9: error: no previous prototype for 'SD_status' [-Werror=missing-prototypes]"
+      },
+      {
+        "line": 12,
+        "text": "FATFS/Target/sd_diskio.c:166:9: error: no previous prototype for 'SD_read' [-Werror=missing-prototypes]"
+      },
+      {
+        "line": 15,
+        "text": "FATFS/Target/sd_diskio.c:185:9: error: no previous prototype for 'SD_write' [-Werror=missing-prototypes]"
+      },
+      {
+        "line": 18,
+        "text": "FATFS/Target/sd_diskio.c:205:9: error: no previous prototype for 'SD_ioctl' [-Werror=missing-prototypes]"
+      }
+    ]
+  },
+  {
+    "path": "v5/probe-power10.log",
+    "sha256": "25e04a665112ed3a28b1c22e2f5eff2c2e1fb6b37553fb06461fc82f2733597c",
+    "lines": [
+      {
+        "line": 7362,
+        "text": "- first-party C conditional compilation violation:"
+      },
+      {
+        "line": 7363,
+        "text": "  FATFS\\Target\\sd_diskio.c:184: #if _USE_WRITE == 1"
+      },
+      {
+        "line": 7364,
+        "text": "  FATFS\\Target\\sd_diskio.c:204: #if _USE_IOCTL == 1"
+      },
+      {
+        "line": 7365,
+        "text": "  FATFS\\Target\\sd_diskio.c:272: #if _USE_WRITE == 1"
+      },
+      {
+        "line": 7366,
+        "text": "  FATFS\\Target\\sd_diskio.c:275: #if _USE_IOCTL == 1"
+      }
+    ]
+  },
+  {
+    "path": "v4/power10-check.log",
+    "sha256": "f3c7be924ac70ffb7c36c491c79c62d9ebab64a91c3f9904f7385ab6c8b98bf9",
+    "lines": [
+      {
+        "line": 7288,
+        "text": "Power of Ten project text checks passed: 6868 checks, 136 first-party C files, 2943 functions; 985 assertion recommendations. Critical-contract review NOT PROVEN; manual acceptance pending."
+      }
+    ]
+  },
+  {
+    "path": "v6/power10-check.log",
+    "sha256": "e67d1fd3322b37ae6d7538c0ce81a5335202392dd14f2073da4b0a9dd6e822f8",
+    "lines": [
+      {
+        "line": 212,
+        "text": "POWER10_SOURCE|FATFS\\Target\\bsp_driver_sd.c|abf1f08d114379639b14b093e84557641d176985074414423387aa0677f52fe3"
+      },
+      {
+        "line": 215,
+        "text": "POWER10_SOURCE|FATFS\\Target\\sd_diskio.c|0e610c5eef4d37761fbea1a163e51b072e1141a771e2e09eef982745cdfabcb4"
+      },
+      {
+        "line": 7361,
+        "text": "Power of Ten project text checks passed: 6938 checks, 138 first-party C files, 2971 functions; 996 assertion recommendations. Critical-contract review NOT PROVEN; manual acceptance pending."
+      }
+    ]
+  },
+  {
+    "path": "v6/stack-report.log",
+    "sha256": "c72465b3f15de1ef8976cb0e1c93c6781696db02b589feb2e7e511c03f745586",
+    "lines": [
+      {
+        "line": 19,
+        "text": "    raise ValueError(\"Unreviewed H743 build declarations or configuration\")"
+      },
+      {
+        "line": 20,
+        "text": "ValueError: Unreviewed H743 build declarations or configuration"
+      }
+    ]
+  },
+  {
+    "path": "v2/late-boundary-pre.json",
+    "sha256": "63c7e41c9bb99521c5f7728a4fbeef628cfb457c8877d6f7d51f453e096ce4b1",
+    "record": {
+      "source_sha256": "357efa13a5a8daee713b86e8b60afe1d2bf30a06556c6a9c6afa0612cddfa59d",
+      "results": [
+        {
+          "mode": 0,
+          "exit_code": 0,
+          "stdout": "normal transfer passed\n",
+          "stderr": ""
+        },
+        {
+          "mode": 1,
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "line 58: s_started==(mode==1U?0U:1U)\n"
+        },
+        {
+          "mode": 2,
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "line 57: SD_Driver.read(0U,output,0U,1U)==RES_ERROR\n"
+        },
+        {
+          "mode": 3,
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "line 46: SD_Driver.initialize(0U)==STA_NOINIT\n"
+        }
+      ]
+    }
+  },
+  {
+    "path": "v3/late-boundary-results.json",
+    "sha256": "37f7584d0cf9406a1c11fee82d2bf92d94bad114b784dab8017053f9073a1373",
+    "record": {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\Flight_Controller\\FATFS\\Target\\sd_diskio.c",
+      "source_sha256": "eafd9c18f8304f86a169e7e905f3fb9573bc01edd782ac287bbbe7ab3c27ed79",
+      "fixture_sha256": "ff202c1061be189f16f42beb641ecb98d784b4c8e4592bdf1b5ac45fa2da8271",
+      "results": [
+        {
+          "mode": 0,
+          "command": [
+            "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\late-boundary\\h7-diskio.exe",
+            "0"
+          ],
+          "exit_code": 0,
+          "stdout": "normal transfer passed\n",
+          "stderr": ""
+        },
+        {
+          "mode": 1,
+          "command": [
+            "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\late-boundary\\h7-diskio.exe",
+            "1"
+          ],
+          "exit_code": 0,
+          "stdout": "late deadline/error quarantine passed\n",
+          "stderr": ""
+        },
+        {
+          "mode": 2,
+          "command": [
+            "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\late-boundary\\h7-diskio.exe",
+            "2"
+          ],
+          "exit_code": 0,
+          "stdout": "late deadline/error quarantine passed\n",
+          "stderr": ""
+        },
+        {
+          "mode": 3,
+          "command": [
+            "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\late-boundary\\h7-diskio.exe",
+            "3"
+          ],
+          "exit_code": 0,
+          "stdout": "init-error refused READY\n",
+          "stderr": ""
+        },
+        {
+          "mode": 4,
+          "command": [
+            "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v3\\post-fix\\late-boundary\\h7-diskio.exe",
+            "4"
+          ],
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "line 55: SD_Driver.ioctl(0U,GET_SECTOR_COUNT,&sectors)==RES_ERROR\n"
+        }
+      ]
+    }
+  },
+  {
+    "path": "v4/coverage-precheck.json",
+    "sha256": "10cfdedc8c72037dc92c592ada316a1df7f772c0461157633672c890b14e2583",
+    "record": {
+      "sd_diskio_power10_covered": false,
+      "bsp_power10_covered": false,
+      "cause": "Make classifies FATFS as vendor and Power10 fixed roots omit FATFS; these new owning files require exact positive coverage"
+    }
+  },
+  {
+    "path": "v5/coverage-metadata-pre.json",
+    "sha256": "76fa77a2f89e3038f3f0f19000ba71fc01c3e0493b6838dd925a7735dae63392",
+    "record": {
+      "original_ownership_sha256": "324f7d694d541668e80651938f0f2890dfaeadc30faac6ecd3ebcb2ed5d26b08",
+      "metadata_restored_exactly": true,
+      "rows": [
+        {
+          "mode": "missing-file",
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v5\\probe2\\Flight_Controller",
+            "power10-check"
+          ],
+          "exit_code": 0,
+          "sources_scanned": 136,
+          "owning_files_scanned": 0
+        },
+        {
+          "mode": "missing-active",
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v5\\probe2\\Flight_Controller",
+            "power10-check"
+          ],
+          "exit_code": 0,
+          "sources_scanned": 136,
+          "owning_files_scanned": 0
+        }
+      ]
+    }
+  },
+  {
+    "path": "v6/late-boundary-final.json",
+    "sha256": "b3ac40e8cd6fc95b1a1aa42e83c5f15c39278444304bc2bb60cd42bca59616fa",
+    "record": {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\FATFS\\Target\\sd_diskio.c",
+      "source_sha256": "0e610c5eef4d37761fbea1a163e51b072e1141a771e2e09eef982745cdfabcb4",
+      "binary_sha256": "36e300feb0e8a396ccad34af50710b0e966f727ade55eb9512c96ef8232545a1",
+      "results": [
+        {
+          "mode": 0,
+          "command": [
+            "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\late-boundary\\h7-diskio.exe",
+            "0"
+          ],
+          "exit_code": 0,
+          "stdout": "normal transfer passed\n",
+          "stderr": ""
+        },
+        {
+          "mode": 1,
+          "command": [
+            "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\late-boundary\\h7-diskio.exe",
+            "1"
+          ],
+          "exit_code": 0,
+          "stdout": "late deadline/error quarantine passed\n",
+          "stderr": ""
+        },
+        {
+          "mode": 2,
+          "command": [
+            "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\late-boundary\\h7-diskio.exe",
+            "2"
+          ],
+          "exit_code": 0,
+          "stdout": "late deadline/error quarantine passed\n",
+          "stderr": ""
+        },
+        {
+          "mode": 3,
+          "command": [
+            "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\late-boundary\\h7-diskio.exe",
+            "3"
+          ],
+          "exit_code": 0,
+          "stdout": "init-error refused READY\n",
+          "stderr": ""
+        },
+        {
+          "mode": 4,
+          "command": [
+            "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\late-boundary\\h7-diskio.exe",
+            "4"
+          ],
+          "exit_code": 0,
+          "stdout": "card-info error refused success\n",
+          "stderr": ""
+        }
+      ]
+    }
+  },
+  {
+    "path": "v6/coverage-metadata-post.json",
+    "sha256": "db4e5761b11e61fd979be776395a8840516b63cac3c9ac8651355b828601437b",
+    "record": {
+      "original_ownership_sha256": "910581e356be5c6168bbc76bda011fe1bd7c80194346993430f4a164dbf8eeff",
+      "metadata_restored_exactly": true,
+      "rows": [
+        {
+          "mode": "missing-file",
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller",
+            "power10-check"
+          ],
+          "exit_code": 2,
+          "sources_scanned": 0,
+          "owning_files_scanned": 0
+        },
+        {
+          "mode": "missing-active",
+          "command": [
+            "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+            "-C",
+            "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller",
+            "power10-check"
+          ],
+          "exit_code": 2,
+          "sources_scanned": 0,
+          "owning_files_scanned": 0
+        }
+      ]
+    }
+  }
+]

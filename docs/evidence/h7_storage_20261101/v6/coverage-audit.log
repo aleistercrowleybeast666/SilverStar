@@ -1,0 +1,8 @@
+{
+  "f407_make_unchanged": true,
+  "f407_make_sha256": "daed2bbb5ed6dbc8f84d29d09ed611bf9762dfbab649cc86ae24d3f6ad4832a6",
+  "f407_power10_source_lines_identical": true,
+  "f407_first_party_files": 125,
+  "h7_first_party_files": 138,
+  "scope": "Exact H7 owning units added; no vendor/middleware reclassification or threshold exceptions."
+}

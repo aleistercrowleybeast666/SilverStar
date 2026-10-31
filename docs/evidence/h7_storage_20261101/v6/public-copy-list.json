@@ -1,0 +1,116 @@
+{
+  "source_repository": "SilverStar",
+  "source_commit": "09c057a67acfc10e3ff387a4a8821c8ee0e83b0c",
+  "files": [
+    {
+      "source": "docs/evidence/h7_storage_20261101/v6/DELIVERY.md",
+      "destination": "DELIVERY.md",
+      "bytes": 6544,
+      "sha256": "b63cc0c33761924c8747e73b2ad90236eeaf7242c972e9346b62781cd52297a7"
+    },
+    {
+      "source": "docs/evidence/h7_storage_20261101/v6/summary.json",
+      "destination": "summary.json",
+      "bytes": 11885,
+      "sha256": "68c35fc75c9336268047f0349c069bfe57992a353363f668a02ff4f80b7917f4"
+    },
+    {
+      "source": "docs/evidence/h7_storage_20261101/v6/compact-source-identity.json",
+      "destination": "compact-source-identity.json",
+      "bytes": 5667,
+      "sha256": "75ae94756ffe8da2afbc4bc9dbc1751fb5c08a6f7c24c5df34eab8cf8467aefc"
+    },
+    {
+      "source": "docs/evidence/h7_storage_20261101/v6/commands.json",
+      "destination": "commands.json",
+      "bytes": 3220,
+      "sha256": "0a5ba50ebfa7bad29083480aba04ccddbb84b02dd3d31bebd411da8676285efb"
+    },
+    {
+      "source": "docs/evidence/h7_storage_20261101/v6/coverage-proof.json",
+      "destination": "coverage-proof.json",
+      "bytes": 7387,
+      "sha256": "a8314e9ce845740b05075ce9445ced54362f260256d5db76cfa4f9386cb137be"
+    },
+    {
+      "source": "docs/evidence/h7_storage_20261101/v6/stack-report.log",
+      "destination": "stack-report.log",
+      "bytes": 2141,
+      "sha256": "c72465b3f15de1ef8976cb0e1c93c6781696db02b589feb2e7e511c03f745586"
+    },
+    {
+      "source": "docs/evidence/h7_storage_20261101/v6/evidence-index.json",
+      "destination": "evidence-index.json",
+      "bytes": 12507,
+      "sha256": "6f929ed8d32949dab33f0ac27ce545faa6e44579f6928bdee3e4270831d3d63f"
+    },
+    {
+      "source": "docs/evidence/h7_storage_20261101/v6/coverage-metadata-post.json",
+      "destination": "coverage-metadata-post.json",
+      "bytes": 913,
+      "sha256": "db4e5761b11e61fd979be776395a8840516b63cac3c9ac8651355b828601437b"
+    },
+    {
+      "source": "docs/evidence/h7_storage_20261101/v6/coverage-post-missing-file.log",
+      "destination": "coverage-post-missing-file.log",
+      "bytes": 1027,
+      "sha256": "682398ca43d5ad666215a18d5389672130390428cb7fc66fe86247ece43cae15"
+    },
+    {
+      "source": "docs/evidence/h7_storage_20261101/v6/coverage-post-missing-active.log",
+      "destination": "coverage-post-missing-active.log",
+      "bytes": 1027,
+      "sha256": "682398ca43d5ad666215a18d5389672130390428cb7fc66fe86247ece43cae15"
+    },
+    {
+      "source": "docs/evidence/h7_storage_20261101/v6/linked-placement-and-local-frames.json",
+      "destination": "linked-placement-and-local-frames.json",
+      "bytes": 7320,
+      "sha256": "4dce3da64979ecce2412a0e5d83cf82338481543a50265db2a2dd888fafbe83a"
+    },
+    {
+      "source": "docs/evidence/h7_storage_20261101/v6/memory-report.json",
+      "destination": "memory-report.json",
+      "bytes": 6751,
+      "sha256": "17efbd17ca8d24d6b215ec6e49f4b97ddf161ee0306493ac62cbda151dc4a66c"
+    },
+    {
+      "source": "docs/evidence/h7_storage_20261101/v6/h743-storage-host-command.json",
+      "destination": "h743-storage-host-command.json",
+      "bytes": 616,
+      "sha256": "5cb2de0e7607e6cfa15d7452bbbfc3104fbfbd951d2a197cdd08e5c7b71f1ffc"
+    },
+    {
+      "source": "docs/evidence/h7_storage_20261101/v6/f407-storage-host-command.json",
+      "destination": "f407-storage-host-command.json",
+      "bytes": 624,
+      "sha256": "ff470d150e046a5b37731bdea26d238901684a83ba32ec575063b90552f37ba3"
+    },
+    {
+      "source": "docs/evidence/h7_storage_20261101/v6/tool-versions.json",
+      "destination": "tool-versions.json",
+      "bytes": 1370,
+      "sha256": "132b51b81e0ba4e537c24cfb39f6b3067bc51174cc5e8e84a7719d34c11e9f50"
+    },
+    {
+      "source": "docs/evidence/h7_storage_20261101/v6/input-owner-audit.json",
+      "destination": "input-owner-audit.json",
+      "bytes": 5817,
+      "sha256": "355bcd34cb945aada99a8b36f76f43e4811e5b83465dd20fb3248aeb0a09c019"
+    },
+    {
+      "source": "docs/evidence/h7_storage_20261101/v6/late-boundary-final.json",
+      "destination": "late-boundary-final.json",
+      "bytes": 1870,
+      "sha256": "b3ac40e8cd6fc95b1a1aa42e83c5f15c39278444304bc2bb60cd42bca59616fa"
+    },
+    {
+      "source": "docs/evidence/h7_storage_20261101/.gitattributes",
+      "destination": ".gitattributes",
+      "bytes": 83,
+      "sha256": "0ee2aa36f3bfccb1ce59ed43847f5a08fdf587943d158627ebfa455e3f256a09"
+    }
+  ],
+  "total_bytes": 76769,
+  "note": "Copy these files flat, preserving bytes. This manifest may be copied too; it is excluded from its own hash list. Full upstream inventory and all versioned logs remain in SilverStar."
+}

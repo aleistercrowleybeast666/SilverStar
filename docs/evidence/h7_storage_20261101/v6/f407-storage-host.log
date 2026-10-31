@@ -1,0 +1,754 @@
+FCCG_PROGRESS|STORAGE_INTEGRITY|PLAN|4
+FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|1|4|compile
+FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|1|4|compile
+FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|2|4|byte-integrity
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+BYTE_WRITE_COMPLETE unaligned_dma=0
+BYTE_INTEGRITY bytes=1668166 writes=10000 unaligned_dma=0
+SSLOG_MIX records=40000 bytes=3596803 transactions=29263
+{
+  "file_bytes": 3596803,
+  "header_crc_ok": true,
+  "records": 40000,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "IMU_CORRECTED": 3334,
+    "GNSS_NATIVE": 3334,
+    "BARO_NATIVE": 3334,
+    "ALIGNMENT_RESULT": 3334,
+    "ALIGNMENT_EVIDENCE": 3333,
+    "MISSION_SNAPSHOT_IDENTITY": 3333,
+    "MAG_CALIBRATION_IDENTITY": 3333,
+    "CALIBRATION_RESULT": 3333,
+    "MISSION_CONFIG": 3333,
+    "INITIAL_STATE": 3333,
+    "EVENT": 3333,
+    "STATS": 3333
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": null,
+  "passed": true,
+  "strict_end_offset": 3596803,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+DISK_FAILURE mode=timeout-write bounded_ticks=30584 no_reuse=1
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+DISK_FAILURE mode=timeout-read bounded_ticks=30584 no_reuse=1
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+DISK_FAILURE mode=wrong-write bounded_ticks=586 no_reuse=1
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+DISK_FAILURE mode=wrong-read bounded_ticks=586 no_reuse=1
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+DISK_FAILURE mode=start-write bounded_ticks=584 no_reuse=1
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+DISK_FAILURE mode=start-read bounded_ticks=584 no_reuse=1
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+DISK_FAILURE mode=sync-timeout bounded_ticks=30584 no_reuse=1
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+TARGET_BENCH_HOST result=0
+FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|2|4|byte-integrity
+FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|3|4|logger-compile
+FCCG_HOST_FIXTURE|storage_writer|logical sensor records; physical epoch path not exercised
+FCCG_HOST_STORAGE_DEFINITIONS|-DUSE_HAL_DRIVER -DSTM32F407xx -DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_VECTOR_CONSTRAINTS -DSYSTEM_ALIGNMENT_BUILD_SOURCE=SYSTEM_ALIGNMENT_ATTITUDE_SOURCE_VECTOR_CONSTRAINTS -DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_IMU=1U -DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_MAGNETOMETER=SYSTEM_ALIGNMENT_USES_MAGNETIC_CONSTRAINT -DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_HARDWARE_QUATERNION=0U -DSYSTEM_ALIGNMENT_BUILD_GUARD_HARDWARE_QUATERNION=0U -DSYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_KF6 -DSYSTEM_BUILD_ESTIMATOR_ENABLED=1U -DSYSTEM_BUILD_MECHANIZATION_ALGORITHM=SYSTEM_MECHANIZATION_CONING2_SCULLING2 -DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_BARO_IMU_WINDOW -DSYSTEM_TELEMETRY_TM_ENABLED=1U -DSYSTEM_TELEMETRY_TM_PROFILE=0U -DSILVERSTAR_AIR_LINK_ENABLED=1 -DSYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED=0U
+FCCG_HOST_COMMAND|["D:\\msys64\\ucrt64\\bin\\gcc.EXE", "-std=c11", "-O2", "-Wall", "-Wextra", "-Wno-unused-parameter", "-Wno-unused-variable", "-Wno-pointer-to-int-cast", "-ffunction-sections", "-fdata-sections", "-Wl,--gc-sections", "-Wl,--wrap=f_close", "-include", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Generated\\Inc\\project_flight_config.h", "-DUSE_HAL_DRIVER", "-DSTM32F407xx", "-DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_VECTOR_CONSTRAINTS", "-DSYSTEM_ALIGNMENT_BUILD_SOURCE=SYSTEM_ALIGNMENT_ATTITUDE_SOURCE_VECTOR_CONSTRAINTS", "-DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_IMU=1U", "-DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_MAGNETOMETER=SYSTEM_ALIGNMENT_USES_MAGNETIC_CONSTRAINT", "-DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_HARDWARE_QUATERNION=0U", "-DSYSTEM_ALIGNMENT_BUILD_GUARD_HARDWARE_QUATERNION=0U", "-DSYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_KF6", "-DSYSTEM_BUILD_ESTIMATOR_ENABLED=1U", "-DSYSTEM_BUILD_MECHANIZATION_ALGORITHM=SYSTEM_MECHANIZATION_CONING2_SCULLING2", "-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_BARO_IMU_WINDOW", "-DSYSTEM_TELEMETRY_TM_ENABLED=1U", "-DSYSTEM_TELEMETRY_TM_PROFILE=0U", "-DSILVERSTAR_AIR_LINK_ENABLED=1", "-DSYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED=0U", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Targets\\SilverStar_F407\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\build\\FCCG\\Host\\Tests\\StorageIntegrity", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Tests\\Host\\storage_integrity", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Middlewares\\Third_Party\\FatFs\\src", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Protocol\\SSLOG\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Common\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Platform\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Tests\\Host\\Fixtures\\MultiInstance\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Tests\\Host\\Fixtures\\MaintenanceUart", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Tests\\Host", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\APP\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Algorithm\\Common\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Algorithm\\Calibration\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Algorithm\\Alignment\\Common\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Algorithm\\Alignment\\GravityKnownYaw\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Algorithm\\Alignment\\GravityMagTriad\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Algorithm\\Alignment\\VectorConstraints\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Algorithm\\Alignment\\ExternalAttitude\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Algorithm\\INS\\Coning2Sculling2\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Algorithm\\Estimator\\KF6\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Algorithm\\Estimator\\SF6\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Common\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Modules\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Protocol\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Protocol\\SSLOG\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Interfaces\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\System\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\System\\Alignment\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\System\\Calibration\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\System\\Indicator\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\System\\Inertial\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\System\\User", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Targets\\SilverStar_F407\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Board\\SilverStar_0_5\\Services\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Generated\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\FlightLogic\\Deployment\\MultiTrigger\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\FlightLogic\\Landing\\BarometerImuWindow\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Platform\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Platform\\STM32F4\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Platform\\STM32H7\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Platform\\STM32F1Flight\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\IMU\\JY901B\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\IMU\\JY901B\\Adapter\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\GNSS\\NEO_M9N\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\GNSS\\NEO_M9N\\Adapter\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\Telemetry\\SX1281\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\Telemetry\\SX1281\\Adapter\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\SensorBus\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\SensorBus\\Adapter\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\Barometer\\BMP280\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\Barometer\\BMP280\\Adapter\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\Power\\InputVoltage\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\IMU\\MPU6050\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\IMU\\MPU6050\\Adapter\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Middlewares\\Third_Party\\SX1280lib", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Modules\\InstallationCapture\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\ThirdParty\\InstallationCapture", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Algorithm\\Alignment\\GravityKnownYaw\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Algorithm\\Alignment\\GravityMagTriad\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Algorithm\\Alignment\\HardwareQuat6AxisKnownYaw\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Algorithm\\Alignment\\HardwareQuat9Axis\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\FlightLogic\\MissionAction\\GpioOutput\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\System\\Src", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Tests\\Host\\console_frames\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Platform\\STM32F4\\Src", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\Console\\UART\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Algorithm\\Estimator\\ESKF15\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Algorithm\\Estimator\\Augmented\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Algorithm\\Estimator\\ESKF15\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Algorithm\\Estimator\\ESKF15\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Algorithm\\Estimator\\ESKF15\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Modules\\InstallationCapture\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Modules\\InstallationCapture\\Src", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\ThirdParty\\InstallationCapture", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Src", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Inc", "-ID:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Inc", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Tests\\Host\\storage_integrity\\test_logger_storage.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\build\\FCCG\\Host\\Tests\\StorageIntegrity\\sd_diskio.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Src\\fatfs_lfn_ascii.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Middlewares\\Third_Party\\FatFs\\src\\ff.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Middlewares\\Third_Party\\FatFs\\src\\ff_gen_drv.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Middlewares\\Third_Party\\FatFs\\src\\diskio.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Protocol\\SSLOG\\Src\\sslog_protocol.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Protocol\\SSLOG\\Src\\sslog_records.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Common\\Src\\silverstar_assert.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Tests\\Target\\storage_integrity.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\APP\\Src\\device_native_log.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\APP\\Src\\imu_sample_bus.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\System\\Calibration\\Src\\system_calibration_correction.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\System\\Calibration\\Src\\system_mag_calibration.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\APP\\Src\\logger_bus.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\APP\\Src\\logger_task.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Common\\Src\\common_spsc_queue.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\System\\Src\\system_log_file.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Common\\Src\\common_format.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Src\\log_file_storage.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\System\\Src\\system_log_policy.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\System\\Src\\system_profile.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\System\\Src\\system_mission_process.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Generated\\Src\\project_mission_process.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\System\\Src\\system_navigation_profile.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\System\\Src\\system_estimator_profile.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Generated\\Src\\project_metadata.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Generated\\Src\\project_log_config.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Generated\\Src\\project_mission_parameters.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Generated\\Src\\project_log_decoder_profile.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Src\\storage_service.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Src\\persistent_storage.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Src\\mission_snapshot.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Src\\mission_radio_profile.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Src\\mag_calibration_storage.c", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Src\\log_sink_service.c", "-lm", "-o", "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\f407-final\\Flight_Controller\\build\\FCCG\\Host\\Tests\\StorageIntegrity\\logger_storage.exe"]
+FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|3|4|logger-compile
+FCCG_PROGRESS|STORAGE_INTEGRITY|BEGIN|4|4|logger-integrity
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+PERSISTENT_OBJECTS generation=1 fallback=1 lfn=1
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+BOOT_MEDIUM mode=initial-absent unavailable=1 warning=1 attempts=1 no_hotplug=1
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+BOOT_MEDIUM mode=initial-no-filesystem unavailable=1 warning=1 attempts=1 no_hotplug=1
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+BOOT_MEDIUM mode=initial-io-error unavailable=0 warning=0 attempts=2 no_hotplug=1
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+POST_MOUNT_FAULT mode=initial-manifest-error initial_unavailable=0 healthy=0
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+POST_MOUNT_FAULT mode=post-open-write-error initial_unavailable=0 healthy=0
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+MAINTENANCE mode=maintenance state=2 writer_open=0 fault=0 steps=4
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+MAINTENANCE mode=maintenance-fault state=3 writer_open=0 fault=0 steps=4
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+MAINTENANCE mode=maintenance-write-fault state=3 writer_open=0 fault=1 steps=3
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+BOOTSTRAP_MAINTENANCE mode=maintenance-bootstrap state=2 startup=0 snapshot_ready=0 writer_open=0 final=3 fault=0 deadline=0 steps=4
+{
+  "file_bytes": 2900,
+  "header_crc_ok": true,
+  "records": 62,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 1,
+    "DEVICE_DESCRIPTOR": 12,
+    "ALGORITHM_DESCRIPTOR": 4,
+    "LOG_STREAM_DESCRIPTOR": 43
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 2900,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+BOOTSTRAP_MAINTENANCE mode=maintenance-calibration-failed state=2 startup=0 snapshot_ready=0 writer_open=0 final=3 fault=0 deadline=0 steps=4
+{
+  "file_bytes": 2980,
+  "header_crc_ok": true,
+  "records": 64,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 3,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 1,
+    "DEVICE_DESCRIPTOR": 12,
+    "ALGORITHM_DESCRIPTOR": 4,
+    "LOG_STREAM_DESCRIPTOR": 43
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 2980,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+BOOTSTRAP_MAINTENANCE mode=maintenance-sensor-unready state=2 startup=0 snapshot_ready=0 writer_open=0 final=3 fault=0 deadline=0 steps=4
+{
+  "file_bytes": 2980,
+  "header_crc_ok": true,
+  "records": 64,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 3,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 1,
+    "DEVICE_DESCRIPTOR": 12,
+    "ALGORITHM_DESCRIPTOR": 4,
+    "LOG_STREAM_DESCRIPTOR": 43
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 2980,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+BOOTSTRAP_MAINTENANCE mode=maintenance-early-bootstrap state=2 startup=0 snapshot_ready=0 writer_open=0 final=3 fault=0 deadline=0 steps=4
+{
+  "file_bytes": 2900,
+  "header_crc_ok": true,
+  "records": 62,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 1,
+    "DEVICE_DESCRIPTOR": 12,
+    "ALGORITHM_DESCRIPTOR": 4,
+    "LOG_STREAM_DESCRIPTOR": 43
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 2900,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+BOOTSTRAP_MAINTENANCE mode=maintenance-repeat-enter state=2 startup=0 snapshot_ready=0 writer_open=0 final=3 fault=0 deadline=0 steps=4
+{
+  "file_bytes": 2980,
+  "header_crc_ok": true,
+  "records": 64,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 3,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 1,
+    "DEVICE_DESCRIPTOR": 12,
+    "ALGORITHM_DESCRIPTOR": 4,
+    "LOG_STREAM_DESCRIPTOR": 43
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 2980,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+BOOTSTRAP_MAINTENANCE mode=maintenance-write-timeout state=3 startup=1 snapshot_ready=1 writer_open=0 final=2 fault=1 deadline=0 steps=3
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+BOOTSTRAP_MAINTENANCE mode=maintenance-close-fault state=3 startup=1 snapshot_ready=1 writer_open=0 final=2 fault=1 deadline=0 steps=4
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+BOOTSTRAP_MAINTENANCE mode=maintenance-final-status-fault state=3 startup=1 snapshot_ready=1 writer_open=0 final=3 fault=0 deadline=0 steps=4
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+MAG_MAINTENANCE mode=mag-disabled generation=1 no_log_session=1 steps=3
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+MAG_MAINTENANCE mode=mag-finalized generation=1 no_log_session=1 steps=3
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_7|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_33|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_34|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_35|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_36|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_37|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_38|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_43|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_44|record unsupported by selected profile; rejection exercised
+LOGGER_QUEUE_OBSERVED normal=15/80 estimator=1/48 drops=0 producer_failures=0 jitter_count=0
+LOGGER_SAME_EPOCH_PEAK normal=0 estimator=0 period_us=5000
+LOGGER_OVERLOAD_RECOVERY sampled_frame=1500 sampled_drops=0 final_drops=0 last_drop_frame=0
+LOGGER_STORAGE accepted=40027 drops=0 hwm=15/1 max_write_us=30000 max_sync_us=8000 max_iteration_us=316240
+LOGGER_RATE pre_steps=1000 pre_us=9992560 post_steps=39000 post_us=77999120 pre_accepted=1026
+LOGGER_BOOTSTRAP suppressed=36 ready_us=1001880 first_delay_ticks=2 slot_bytes=240 depth=80/48
+LOGGER_JITTER count=0 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=0 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=13767 steps=0/0
+{
+  "file_bytes": 4004794,
+  "header_crc_ok": true,
+  "records": 40079,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 54,
+    "ALIGNMENT_RESULT": 1,
+    "CALIBRATION_RESULT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 1,
+    "DEVICE_DESCRIPTOR": 12,
+    "ALGORITHM_DESCRIPTOR": 4,
+    "LOG_STREAM_DESCRIPTOR": 43,
+    "MISSION_CONFIG": 2,
+    "INITIAL_STATE": 1,
+    "STATS": 41,
+    "IMU_CORRECTED": 15466,
+    "GNSS_NATIVE": 7734,
+    "BARO_NATIVE": 7734,
+    "MAG_NATIVE": 7696,
+    "ESTIMATOR": 1288
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 4004794,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_7|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_33|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_34|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_35|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_36|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_37|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_38|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_43|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_44|record unsupported by selected profile; rejection exercised
+LOGGER_QUEUE_OBSERVED normal=80/80 estimator=1/48 drops=427 producer_failures=0 jitter_count=0
+LOGGER_SAME_EPOCH_PEAK normal=0 estimator=0 period_us=5000
+LOGGER_OVERLOAD_RECOVERY sampled_frame=1500 sampled_drops=427 final_drops=427 last_drop_frame=1008
+LOGGER_STORAGE accepted=40101 drops=427 hwm=80/1 max_write_us=30000 max_sync_us=8000 max_iteration_us=316240
+LOGGER_RATE pre_steps=1000 pre_us=9992560 post_steps=39000 post_us=77997900 pre_accepted=1026
+LOGGER_BOOTSTRAP suppressed=36 ready_us=1001880 first_delay_ticks=2 slot_bytes=240 depth=80/48
+LOGGER_JITTER count=0 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=427 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=13805 steps=0/0
+{
+  "file_bytes": 4007530,
+  "header_crc_ok": true,
+  "records": 40153,
+  "integrity_ok": true,
+  "sequence_gap_records": 427,
+  "sequence_gap_count": 1,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 427,
+  "record_counts": {
+    "EVENT": 133,
+    "ALIGNMENT_RESULT": 1,
+    "CALIBRATION_RESULT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 1,
+    "DEVICE_DESCRIPTOR": 12,
+    "ALGORITHM_DESCRIPTOR": 4,
+    "LOG_STREAM_DESCRIPTOR": 43,
+    "MISSION_CONFIG": 2,
+    "INITIAL_STATE": 1,
+    "STATS": 41,
+    "IMU_CORRECTED": 15464,
+    "GNSS_NATIVE": 7732,
+    "BARO_NATIVE": 7733,
+    "MAG_NATIVE": 7695,
+    "ESTIMATOR": 1289
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 4007530,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": false,
+  "queue_drop_accounted": true
+}
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_7|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_33|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_34|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_35|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_36|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_37|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_38|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_43|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_44|record unsupported by selected profile; rejection exercised
+LOGGER_QUEUE_OBSERVED normal=80/80 estimator=1/48 drops=550 producer_failures=0 jitter_count=0
+LOGGER_SAME_EPOCH_PEAK normal=0 estimator=0 period_us=5000
+LOGGER_OVERLOAD_RECOVERY sampled_frame=1500 sampled_drops=550 final_drops=550 last_drop_frame=1007
+LOGGER_STORAGE accepted=40176 drops=550 hwm=80/1 max_write_us=30000 max_sync_us=8000 max_iteration_us=336320
+LOGGER_RATE pre_steps=1000 pre_us=9993720 post_steps=39000 post_us=77997500 pre_accepted=1100
+LOGGER_BOOTSTRAP suppressed=39 ready_us=1028120 first_delay_ticks=2 slot_bytes=240 depth=80/48
+LOGGER_JITTER count=0 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=550 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=13816 steps=0/0
+{
+  "file_bytes": 4010298,
+  "header_crc_ok": true,
+  "records": 40228,
+  "integrity_ok": true,
+  "sequence_gap_records": 550,
+  "sequence_gap_count": 2,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 550,
+  "record_counts": {
+    "EVENT": 212,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "MISSION_CONFIG": 2,
+    "INITIAL_STATE": 1,
+    "STATS": 41,
+    "SYSTEM_CONFIG": 1,
+    "DEVICE_DESCRIPTOR": 12,
+    "ALGORITHM_DESCRIPTOR": 4,
+    "LOG_STREAM_DESCRIPTOR": 43,
+    "MAG_NATIVE": 7695,
+    "IMU_CORRECTED": 15463,
+    "GNSS_NATIVE": 7732,
+    "BARO_NATIVE": 7732,
+    "ESTIMATOR": 1289
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 4010298,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": false,
+  "queue_drop_accounted": true
+}
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+LOGGER_QUEUE_OBSERVED normal=73/80 estimator=37/48 drops=0 producer_failures=0 jitter_count=252
+LOGGER_SAME_EPOCH_PEAK normal=7 estimator=5 period_us=5000
+LOGGER_OVERLOAD_RECOVERY sampled_frame=1500 sampled_drops=0 final_drops=0 last_drop_frame=0
+LOGGER_STORAGE accepted=157901 drops=0 hwm=73/37 max_write_us=130000 max_sync_us=108000 max_iteration_us=370140
+LOGGER_RATE pre_steps=1200 pre_us=5711380 post_steps=38800 post_us=193995560 pre_accepted=116
+LOGGER_BOOTSTRAP suppressed=41 ready_us=1404800 first_delay_ticks=2 slot_bytes=240 depth=80/48
+LOGGER_JITTER count=252 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=0 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=17402 steps=40000/40000
+{
+  "file_bytes": 15541503,
+  "header_crc_ok": true,
+  "records": 157953,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 54,
+    "CALIBRATION_RESULT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 2,
+    "DEVICE_DESCRIPTOR": 24,
+    "ALGORITHM_DESCRIPTOR": 8,
+    "LOG_STREAM_DESCRIPTOR": 86,
+    "POWER": 1992,
+    "ALIGNMENT_RESULT": 1,
+    "MISSION_CONFIG": 1,
+    "ESTIMATOR_STEP": 19400,
+    "INITIAL_STATE": 1,
+    "BARO_NATIVE": 38800,
+    "ESTIMATOR": 4850,
+    "GNSS_NATIVE": 4850,
+    "BARO_MEASUREMENT": 19400,
+    "IMU_CORRECTED": 38800,
+    "INERTIAL_INCREMENT": 19400,
+    "GNSS_MEASUREMENT": 4850,
+    "TELEMETRY_DIAG": 194,
+    "STATS": 194,
+    "HEALTH": 194,
+    "GNSS_RECOVERY": 4850
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 15541503,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v6\f407-final\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=207 result=2 frame=1203 normal=80 estimator=1 time=6603000
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v6\f407-final\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=209 result=2 frame=1203 normal=80 estimator=1 time=6603000
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v6\f407-final\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=215 result=2 frame=1203 normal=80 estimator=1 time=6603000
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v6\f407-final\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=207 result=2 frame=1204 normal=80 estimator=3 time=6607000
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v6\f407-final\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=209 result=2 frame=1204 normal=80 estimator=3 time=6607000
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v6\f407-final\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=196 result=2 frame=1205 normal=80 estimator=3 time=6613000
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v6\f407-final\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=207 result=2 frame=1205 normal=80 estimator=3 time=6613000
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v6\f407-final\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=209 result=2 frame=1205 normal=80 estimator=3 time=6613000
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v6\f407-final\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=215 result=2 frame=1205 normal=80 estimator=3 time=6613000
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v6\f407-final\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=207 result=2 frame=1206 normal=80 estimator=5 time=6617120
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v6\f407-final\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=209 result=2 frame=1206 normal=80 estimator=5 time=6617120
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v6\f407-final\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=207 result=2 frame=1207 normal=80 estimator=5 time=6623120
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v6\f407-final\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=209 result=2 frame=1207 normal=80 estimator=5 time=6623120
+PUSH_FAILURE file=D:\python_software\SilverStar\.work\0.1.3-treediagram-20261101\h7-storage-v6\f407-final\Flight_Controller\Tests\Host\storage_integrity\test_logger_storage.c line=215 result=2 frame=1207 normal=80 estimator=5 time=6623120
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+LOGGER_QUEUE_OBSERVED normal=80/80 estimator=36/48 drops=439 producer_failures=14 jitter_count=263
+LOGGER_SAME_EPOCH_PEAK normal=7 estimator=5 period_us=5000
+LOGGER_OVERLOAD_RECOVERY sampled_frame=1500 sampled_drops=439 final_drops=439 last_drop_frame=1207
+LOGGER_STORAGE accepted=157964 drops=439 hwm=80/36 max_write_us=130000 max_sync_us=88000 max_iteration_us=370140
+LOGGER_RATE pre_steps=1200 pre_us=5711380 post_steps=38800 post_us=193995200 pre_accepted=116
+LOGGER_BOOTSTRAP suppressed=41 ready_us=1404800 first_delay_ticks=2 slot_bytes=240 depth=80/48
+LOGGER_JITTER count=263 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=439 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=17533 steps=40000/40000
+{
+  "file_bytes": 15543467,
+  "header_crc_ok": true,
+  "records": 158016,
+  "integrity_ok": true,
+  "sequence_gap_records": 439,
+  "sequence_gap_count": 1,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 439,
+  "record_counts": {
+    "EVENT": 129,
+    "CALIBRATION_RESULT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 2,
+    "DEVICE_DESCRIPTOR": 24,
+    "ALGORITHM_DESCRIPTOR": 8,
+    "LOG_STREAM_DESCRIPTOR": 86,
+    "POWER": 1992,
+    "ALIGNMENT_RESULT": 1,
+    "MISSION_CONFIG": 1,
+    "ESTIMATOR_STEP": 19400,
+    "INITIAL_STATE": 1,
+    "BARO_NATIVE": 38795,
+    "ESTIMATOR": 4850,
+    "GNSS_NATIVE": 4850,
+    "BARO_MEASUREMENT": 19400,
+    "IMU_CORRECTED": 38795,
+    "INERTIAL_INCREMENT": 19397,
+    "GNSS_MEASUREMENT": 4850,
+    "TELEMETRY_DIAG": 194,
+    "STATS": 195,
+    "HEALTH": 194,
+    "GNSS_RECOVERY": 4850
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 15543467,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": false,
+  "queue_drop_accounted": true
+}
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_7|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_33|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_34|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_35|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_36|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_37|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_38|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_43|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_44|record unsupported by selected profile; rejection exercised
+SPARSE_PREFLIGHT pre_s=30 samples=5100 start_us=30593160 landing_us=50592000 final_us=51637220 native=0 corrected=0
+LOGGER_QUEUE_OBSERVED normal=10/80 estimator=5/48 drops=0 producer_failures=0 jitter_count=0
+LOGGER_SAME_EPOCH_PEAK normal=0 estimator=0 period_us=5000
+LOGGER_OVERLOAD_RECOVERY sampled_frame=1500 sampled_drops=0 final_drops=0 last_drop_frame=0
+LOGGER_STORAGE accepted=6379 drops=0 hwm=10/5 max_write_us=22000 max_sync_us=8000 max_iteration_us=344320
+LOGGER_RATE pre_steps=1000 pre_us=30001120 post_steps=39000 post_us=20989720 pre_accepted=152
+LOGGER_BOOTSTRAP suppressed=2 ready_us=1003620 first_delay_ticks=2 slot_bytes=240 depth=80/48
+LOGGER_JITTER count=0 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=0 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=11673 steps=5100/5100
+{
+  "file_bytes": 713923,
+  "header_crc_ok": true,
+  "records": 6431,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 55,
+    "STATS": 51,
+    "CALIBRATION_RESULT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 2,
+    "DEVICE_DESCRIPTOR": 24,
+    "ALGORITHM_DESCRIPTOR": 8,
+    "LOG_STREAM_DESCRIPTOR": 86,
+    "ALIGNMENT_RESULT": 1,
+    "POWER": 50,
+    "HEALTH": 50,
+    "MISSION_CONFIG": 1,
+    "ESTIMATOR": 500,
+    "INITIAL_STATE": 1,
+    "GNSS_NATIVE": 250,
+    "KF6_DIAGNOSTIC": 500,
+    "BARO_NATIVE": 500,
+    "KF6_FULL_P": 100,
+    "IMU_CORRECTED": 2000,
+    "BARO_MEASUREMENT": 1000,
+    "INERTIAL_INCREMENT": 1000,
+    "GNSS_MEASUREMENT": 250
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 713923,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_7|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_33|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_34|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_35|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_36|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_37|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_38|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_43|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_44|record unsupported by selected profile; rejection exercised
+SPARSE_PREFLIGHT pre_s=120 samples=14100 start_us=120593040 landing_us=140592000 final_us=141637700 native=0 corrected=0
+LOGGER_QUEUE_OBSERVED normal=10/80 estimator=5/48 drops=0 producer_failures=0 jitter_count=0
+LOGGER_SAME_EPOCH_PEAK normal=0 estimator=0 period_us=5000
+LOGGER_OVERLOAD_RECOVERY sampled_frame=1500 sampled_drops=0 final_drops=0 last_drop_frame=0
+LOGGER_STORAGE accepted=6649 drops=0 hwm=10/5 max_write_us=28000 max_sync_us=8000 max_iteration_us=344320
+LOGGER_RATE pre_steps=1000 pre_us=120001000 post_steps=39000 post_us=20990320 pre_accepted=422
+LOGGER_BOOTSTRAP suppressed=2 ready_us=1003620 first_delay_ticks=2 slot_bytes=240 depth=80/48
+LOGGER_JITTER count=0 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=0 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=9014 steps=14100/14100
+{
+  "file_bytes": 730843,
+  "header_crc_ok": true,
+  "records": 6701,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 55,
+    "STATS": 141,
+    "CALIBRATION_RESULT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 2,
+    "DEVICE_DESCRIPTOR": 24,
+    "ALGORITHM_DESCRIPTOR": 8,
+    "LOG_STREAM_DESCRIPTOR": 86,
+    "ALIGNMENT_RESULT": 1,
+    "POWER": 140,
+    "HEALTH": 140,
+    "MISSION_CONFIG": 1,
+    "ESTIMATOR": 500,
+    "INITIAL_STATE": 1,
+    "GNSS_NATIVE": 250,
+    "KF6_DIAGNOSTIC": 500,
+    "BARO_NATIVE": 500,
+    "KF6_FULL_P": 100,
+    "IMU_CORRECTED": 2000,
+    "BARO_MEASUREMENT": 1000,
+    "INERTIAL_INCREMENT": 1000,
+    "GNSS_MEASUREMENT": 250
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 730843,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_7|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_33|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_34|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_35|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_36|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_37|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_38|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_43|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_44|record unsupported by selected profile; rejection exercised
+SPARSE_PREFLIGHT pre_s=30 samples=5100 start_us=30593100 landing_us=50592000 final_us=51654400 native=1 corrected=1
+LOGGER_QUEUE_OBSERVED normal=10/80 estimator=5/48 drops=0 producer_failures=0 jitter_count=0
+LOGGER_SAME_EPOCH_PEAK normal=0 estimator=0 period_us=5000
+LOGGER_OVERLOAD_RECOVERY sampled_frame=1500 sampled_drops=0 final_drops=0 last_drop_frame=0
+LOGGER_STORAGE accepted=10583 drops=0 hwm=10/5 max_write_us=30000 max_sync_us=8000 max_iteration_us=344320
+LOGGER_RATE pre_steps=1000 pre_us=30001060 post_steps=39000 post_us=20990880 pre_accepted=4218
+LOGGER_BOOTSTRAP suppressed=61 ready_us=1003620 first_delay_ticks=2 slot_bytes=240 depth=80/48
+LOGGER_JITTER count=0 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=0 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=13874 steps=5100/5100
+{
+  "file_bytes": 1097627,
+  "header_crc_ok": true,
+  "records": 10635,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 55,
+    "STATS": 51,
+    "CALIBRATION_RESULT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 2,
+    "DEVICE_DESCRIPTOR": 24,
+    "ALGORITHM_DESCRIPTOR": 8,
+    "LOG_STREAM_DESCRIPTOR": 86,
+    "IMU_CORRECTED": 5058,
+    "BARO_NATIVE": 1264,
+    "GNSS_NATIVE": 632,
+    "ALIGNMENT_RESULT": 1,
+    "POWER": 50,
+    "HEALTH": 50,
+    "ESTIMATOR": 500,
+    "MISSION_CONFIG": 1,
+    "INITIAL_STATE": 1,
+    "KF6_DIAGNOSTIC": 500,
+    "KF6_FULL_P": 100,
+    "BARO_MEASUREMENT": 1000,
+    "INERTIAL_INCREMENT": 1000,
+    "GNSS_MEASUREMENT": 250
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 1097627,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+HOST_CLOCK read-only queries=1000 elapsed_ticks=0
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_7|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_33|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_34|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_35|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_36|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_37|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_38|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_43|record unsupported by selected profile; rejection exercised
+FCCG_HOST_NOT_APPLICABLE|storage_record_positive_44|record unsupported by selected profile; rejection exercised
+SPARSE_PREFLIGHT pre_s=120 samples=14100 start_us=120593160 landing_us=140592000 final_us=141656080 native=1 corrected=1
+LOGGER_QUEUE_OBSERVED normal=13/80 estimator=6/48 drops=0 producer_failures=0 jitter_count=0
+LOGGER_SAME_EPOCH_PEAK normal=0 estimator=0 period_us=5000
+LOGGER_OVERLOAD_RECOVERY sampled_frame=1500 sampled_drops=0 final_drops=0 last_drop_frame=0
+LOGGER_STORAGE accepted=23228 drops=0 hwm=13/6 max_write_us=28000 max_sync_us=8000 max_iteration_us=344320
+LOGGER_RATE pre_steps=1000 pre_us=120001120 post_steps=39000 post_us=20990440 pre_accepted=16863
+LOGGER_BOOTSTRAP suppressed=61 ready_us=1003620 first_delay_ticks=2 slot_bytes=240 depth=80/48
+LOGGER_JITTER count=0 range_ms=20-100
+LOGGER_CAUSALITY capacity_reject=0 state_reject=0 append_fail=0 flush_fail=0 discard_bytes=0 opens=1/1 write_avg_us=14942 steps=14100/14100
+{
+  "file_bytes": 2244047,
+  "header_crc_ok": true,
+  "records": 23280,
+  "integrity_ok": true,
+  "sequence_gap_records": 0,
+  "sequence_gap_count": 0,
+  "sequence_reorders": 0,
+  "queue_overflow_max": 0,
+  "record_counts": {
+    "EVENT": 55,
+    "STATS": 141,
+    "CALIBRATION_RESULT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 2,
+    "DEVICE_DESCRIPTOR": 24,
+    "ALGORITHM_DESCRIPTOR": 8,
+    "LOG_STREAM_DESCRIPTOR": 86,
+    "IMU_CORRECTED": 14058,
+    "BARO_NATIVE": 3514,
+    "GNSS_NATIVE": 1757,
+    "ALIGNMENT_RESULT": 1,
+    "POWER": 140,
+    "HEALTH": 140,
+    "ESTIMATOR": 500,
+    "MISSION_CONFIG": 1,
+    "INITIAL_STATE": 1,
+    "KF6_DIAGNOSTIC": 500,
+    "KF6_FULL_P": 100,
+    "BARO_MEASUREMENT": 1000,
+    "INERTIAL_INCREMENT": 1000,
+    "GNSS_MEASUREMENT": 250
+  },
+  "errors": [],
+  "boundary_signatures": [],
+  "decoder_match": true,
+  "passed": true,
+  "strict_end_offset": 2244047,
+  "unvalidated_tail_bytes": 0,
+  "sequence_ok": true,
+  "queue_drop_accounted": true
+}
+FCCG_PROGRESS|STORAGE_INTEGRITY|DONE|4|4|logger-integrity

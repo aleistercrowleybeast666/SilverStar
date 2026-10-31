@@ -1,0 +1,30 @@
+{
+  "original_ownership_sha256": "324f7d694d541668e80651938f0f2890dfaeadc30faac6ecd3ebcb2ed5d26b08",
+  "metadata_restored_exactly": true,
+  "rows": [
+    {
+      "mode": "missing-file",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+        "-C",
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v5\\probe2\\Flight_Controller",
+        "power10-check"
+      ],
+      "exit_code": 0,
+      "sources_scanned": 136,
+      "owning_files_scanned": 0
+    },
+    {
+      "mode": "missing-active",
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+        "-C",
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v5\\probe2\\Flight_Controller",
+        "power10-check"
+      ],
+      "exit_code": 0,
+      "sources_scanned": 136,
+      "owning_files_scanned": 0
+    }
+  ]
+}

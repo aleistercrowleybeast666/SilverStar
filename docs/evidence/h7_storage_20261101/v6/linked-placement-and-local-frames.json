@@ -1,0 +1,65 @@
+{
+  "artifacts": [
+    {
+      "path": ".work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.bin",
+      "bytes": 372140,
+      "sha256": "4b2053306eea318e26f43d17d032e82252306accfe48aec41cd7fc939eda2c99"
+    },
+    {
+      "path": ".work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.elf",
+      "bytes": 3790580,
+      "sha256": "085ae2334a4afed3fd6bbe0ffdea00847e4a76258415c853123ff10927e6dbea"
+    },
+    {
+      "path": ".work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.hex",
+      "bytes": 1046793,
+      "sha256": "2ecd7aea368ffa4d8ac696e04f1b6e56d66196b5271e4375ccf36548b88d9e21"
+    },
+    {
+      "path": ".work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.map",
+      "bytes": 1679230,
+      "sha256": "3d666c2bd1dcc28813f8afa3c391bcbcdef906d695a1ca547cec4f5789dc44a3"
+    }
+  ],
+  "nm_command": [
+    "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-nm.EXE",
+    "-S",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.elf"
+  ],
+  "scratch_symbol": "2401fb60 00000200 b s_sd_scratch",
+  "scratch_AXI_SRAM_32_aligned": true,
+  "disassembly": {
+    "BSP_SD_ReadBlocks_DMA": {
+      "command": [
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-objdump.EXE",
+        "-d",
+        "--disassemble=BSP_SD_ReadBlocks_DMA",
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.elf"
+      ],
+      "stdout": "\nD:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.elf:     file format elf32-littlearm\n\n\nDisassembly of section .text:\n\n08033c50 <BSP_SD_ReadBlocks_DMA>:\n 8033c50:\tb570      \tpush\t{r4, r5, r6, lr}\n 8033c52:\t4604      \tmov\tr4, r0\n 8033c54:\t460d      \tmov\tr5, r1\n 8033c56:\t4616      \tmov\tr6, r2\n 8033c58:\tf7ff ff9a \tbl\t8033b90 <SdH7_RequestValid>\n 8033c5c:\tb908      \tcbnz\tr0, 8033c62 <BSP_SD_ReadBlocks_DMA+0x12>\n 8033c5e:\t2001      \tmovs\tr0, #1\n 8033c60:\tbd70      \tpop\t{r4, r5, r6, pc}\n 8033c62:\tf3bf 8f5f \tdmb\tsy\n 8033c66:\t4805      \tldr\tr0, [pc, #20]\t@ (8033c7c <BSP_SD_ReadBlocks_DMA+0x2c>)\n 8033c68:\t4633      \tmov\tr3, r6\n 8033c6a:\t462a      \tmov\tr2, r5\n 8033c6c:\t4621      \tmov\tr1, r4\n 8033c6e:\tf7eb fd49 \tbl\t801f704 <HAL_SD_ReadBlocks_DMA>\n 8033c72:\t3800      \tsubs\tr0, #0\n 8033c74:\tbf18      \tit\tne\n 8033c76:\t2001      \tmovne\tr0, #1\n 8033c78:\tbd70      \tpop\t{r4, r5, r6, pc}\n 8033c7a:\tbf00      \tnop\n 8033c7c:\t24034e80 \t.word\t0x24034e80\n"
+    },
+    "BSP_SD_WriteBlocks_DMA": {
+      "command": [
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-objdump.EXE",
+        "-d",
+        "--disassemble=BSP_SD_WriteBlocks_DMA",
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.elf"
+      ],
+      "stdout": "\nD:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.elf:     file format elf32-littlearm\n\n\nDisassembly of section .text:\n\n08033c80 <BSP_SD_WriteBlocks_DMA>:\n 8033c80:\tb570      \tpush\t{r4, r5, r6, lr}\n 8033c82:\t4604      \tmov\tr4, r0\n 8033c84:\t460d      \tmov\tr5, r1\n 8033c86:\t4616      \tmov\tr6, r2\n 8033c88:\tf7ff ff82 \tbl\t8033b90 <SdH7_RequestValid>\n 8033c8c:\tb908      \tcbnz\tr0, 8033c92 <BSP_SD_WriteBlocks_DMA+0x12>\n 8033c8e:\t2001      \tmovs\tr0, #1\n 8033c90:\tbd70      \tpop\t{r4, r5, r6, pc}\n 8033c92:\tf3bf 8f5f \tdmb\tsy\n 8033c96:\t4805      \tldr\tr0, [pc, #20]\t@ (8033cac <BSP_SD_WriteBlocks_DMA+0x2c>)\n 8033c98:\t4633      \tmov\tr3, r6\n 8033c9a:\t462a      \tmov\tr2, r5\n 8033c9c:\t4621      \tmov\tr1, r4\n 8033c9e:\tf7eb fd97 \tbl\t801f7d0 <HAL_SD_WriteBlocks_DMA>\n 8033ca2:\t3800      \tsubs\tr0, #0\n 8033ca4:\tbf18      \tit\tne\n 8033ca6:\t2001      \tmovne\tr0, #1\n 8033ca8:\tbd70      \tpop\t{r4, r5, r6, pc}\n 8033caa:\tbf00      \tnop\n 8033cac:\t24034e80 \t.word\t0x24034e80\n"
+    },
+    "HAL_SD_RxCpltCallback": {
+      "command": [
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-objdump.EXE",
+        "-d",
+        "--disassemble=HAL_SD_RxCpltCallback",
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.elf"
+      ],
+      "stdout": "\nD:\\python_software\\SilverStar\\.work\\0.1.3-treediagram-20261101\\h7-storage-v6\\final\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\SilverStar_0_1_3.elf:     file format elf32-littlearm\n\n\nDisassembly of section .text:\n\n08033d48 <HAL_SD_RxCpltCallback>:\n 8033d48:\t4b03      \tldr\tr3, [pc, #12]\t@ (8033d58 <HAL_SD_RxCpltCallback+0x10>)\n 8033d4a:\t4283      \tcmp\tr3, r0\n 8033d4c:\td000      \tbeq.n\t8033d50 <HAL_SD_RxCpltCallback+0x8>\n 8033d4e:\t4770      \tbx\tlr\n 8033d50:\tf3bf 8f5f \tdmb\tsy\n 8033d54:\tf7ff bee8 \tb.w\t8033b28 <BSP_SD_ReadCpltCallback>\n 8033d58:\t24034e80 \t.word\t0x24034e80\n"
+    }
+  },
+  "local_frames": {
+    "sd_diskio.su": "FATFS/Target/sd_diskio.c:152:16:SD_status\t0\tstatic\nFATFS/Target/sd_diskio.c:129:16:SD_initialize\t40\tstatic\nFATFS/Target/sd_diskio.c:73:16:SdDiskIo_ReadyWait\t24\tstatic\nFATFS/Target/sd_diskio.c:203:16:SD_ioctl\t72\tstatic\nFATFS/Target/sd_diskio.c:93:16:SdDiskIo_CompletionWait\t24\tstatic\nFATFS/Target/sd_diskio.c:186:16:SD_write\t48\tstatic\nFATFS/Target/sd_diskio.c:168:16:SD_read\t48\tstatic\nFATFS/Target/sd_diskio.c:255:6:BSP_SD_AbortCallback\t32\tstatic\nFATFS/Target/sd_diskio.c:263:6:BSP_SD_WriteCpltCallback\t24\tstatic\nFATFS/Target/sd_diskio.c:264:6:BSP_SD_ReadCpltCallback\t24\tstatic\n",
+    "bsp_driver_sd.su": "FATFS/Target/bsp_driver_sd.c:27:16:SdH7_RequestValid\t64\tstatic\nFATFS/Target/bsp_driver_sd.c:18:9:BSP_SD_Init\t8\tstatic\nFATFS/Target/bsp_driver_sd.c:40:9:BSP_SD_ReadBlocks_DMA\t16\tstatic\nFATFS/Target/bsp_driver_sd.c:48:9:BSP_SD_WriteBlocks_DMA\t16\tstatic\nFATFS/Target/bsp_driver_sd.c:56:9:BSP_SD_GetCardState\t8\tstatic\nFATFS/Target/bsp_driver_sd.c:63:6:BSP_SD_GetCardInfo\t8\tstatic\nDrivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_sd.h:658:19:HAL_SD_AbortCallback\t0\tstatic\nDrivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_sd.h:657:19:HAL_SD_ErrorCallback\t0\tstatic\nDrivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_sd.h:655:19:HAL_SD_TxCpltCallback\t0\tstatic\nDrivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_sd.h:656:19:HAL_SD_RxCpltCallback\t0\tstatic\n"
+  },
+  "scope": "Local emitted frames and symbol placement only; strict stack gate remains authoritative; no whole-task/MSP/ISR bound inferred."
+}
