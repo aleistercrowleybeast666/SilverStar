@@ -4,8 +4,8 @@
   "name": "SD/TF Card · H7 SDMMC + FatFs (static candidate)",
   "type": "device",
   "class": "storage",
-  "version": "0.1.0",
-  "description": "Existing storage service with generated H7 SDMMC/FatFs glue; static-validation candidate, no board qualification.",
+  "version": "0.1.1",
+  "description": "Single-owner bounded H743 SDMMC1 IDMA/FatFs adapter with retained and identity-checked CubeMX input; DCache disabled; hardware unqualified.",
   "requires": {
     "components": [
       {
@@ -62,7 +62,9 @@
       "Devices/Storage/SdSdioFatFs/Src/mission_radio_profile.c",
       "Devices/Storage/SdSdioFatFs/Adapter/Src/mag_calibration_storage.c",
       "Devices/Storage/SdSdioFatFs/Src/fatfs_lfn_ascii.c",
-      "Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c"
+      "Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c",
+      "FATFS/Target/sd_diskio.c",
+      "FATFS/Target/bsp_driver_sd.c"
     ],
     "asm_sources": [],
     "include_dirs": [
@@ -87,7 +89,9 @@
       "Devices/Storage/SdSdioFatFs/Adapter/Inc/persistent_storage.h",
       "Devices/Storage/SdSdioFatFs/Adapter/Src/log_sink_service.c",
       "Devices/Storage/SdSdioFatFs/Inc/mission_radio_profile.h",
-      "Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c"
+      "Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c",
+      "FATFS/Target/sd_diskio.c",
+      "FATFS/Target/bsp_driver_sd.c"
     ]
   },
   "metadata": {
@@ -146,6 +150,25 @@
     "source_origins": {
       "Devices/Storage/SdSdioFatFs/Adapter/Src/storage_service.c": "fccg_storage_integrity",
       "Devices/Storage/SdSdioFatFs/Adapter/Src/log_sink_service.c": "fccg_storage_integrity"
+    },
+    "h7_storage_replacement": {
+      "schema_id": "silverstar.h7-storage-replacement/1",
+      "replacements": {
+        "HardwareGenerated/STM32CubeMX/FATFS/Target/sd_diskio.c": "FATFS/Target/sd_diskio.c",
+        "HardwareGenerated/STM32CubeMX/FATFS/Target/bsp_driver_sd.c": "FATFS/Target/bsp_driver_sd.c"
+      },
+      "required_input_sha256": {
+        "HardwareGenerated/STM32CubeMX/FATFS/Target/sd_diskio.c": "792645700767fb5af67dc3d1f2688cfbb234196eef0befb948660ec69526604a",
+        "HardwareGenerated/STM32CubeMX/FATFS/Target/bsp_driver_sd.c": "fdecbb877585404b94ebb29859fd1a3ea363cf174765baae68fa9b30a6203bd1",
+        "HardwareGenerated/STM32CubeMX/FATFS/Target/sd_diskio.h": "020f370c23b29f44a41711582aa5b86db7500870f32b6d0768c711c8fe01bda7",
+        "HardwareGenerated/STM32CubeMX/FATFS/Target/bsp_driver_sd.h": "18943f4fc3d0a59dcf8e91a3b2fa602563aca0ae56c78d0ce68126e6c6eea6f2",
+        "HardwareGenerated/STM32CubeMX/FATFS/Target/ffconf.h": "084b94dcd9bfb9bc3dfd953c9689338dd62b5a75d39f32044cb1702d2f08f4bb",
+        "HardwareGenerated/STM32CubeMX/FATFS/App/fatfs.c": "12605169bed679d240c49f6e342e41a9c283b54d570d0eb696b27633b5326ac6",
+        "HardwareGenerated/STM32CubeMX/FATFS/App/fatfs.h": "97d0a8f9295f623c4f33e34e4c1b3e0ac7204bf9adbd42d34b98eca2bb8f5325",
+        "HardwareGenerated/STM32CubeMX/Core/Src/sdmmc.c": "ba8073d6989129e3f8170fc140415e452250298385f86e33d4914a347b212b4c",
+        "HardwareGenerated/STM32CubeMX/Core/Inc/sdmmc.h": "4f305afb18498ed76211b6f080fe2d61677788056d48a5989fd29691bfab528b",
+        "HardwareGenerated/STM32CubeMX/Core/Src/stm32h7xx_it.c": "d1d2daaf5ed4c683a8db04416f4eaa4458a0e58f77b2c270073cdd34021811c5"
+      }
     }
   },
   "instance_policy": {

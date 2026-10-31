@@ -62,6 +62,15 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
     config_path = diskio.parent / "ffconf.h"
     if diskio == f1_diskio.resolve():
         config_path = project / "HardwareGenerated/STM32CubeMX/FATFS/Target/ffconf.h"
+    ownership_path = project / ".fccg/ownership.json"
+    ownership = json.loads(ownership_path.read_text(encoding="utf-8")) if ownership_path.is_file() else {}
+    receipt = ownership.get("hardware", {}).get("storage_replacement")
+    if receipt is not None:
+        if (receipt.get("schema_id") != "silverstar.h7-storage-replacement/1" or
+                receipt.get("owner") != "silverstar.device.storage.sdmmc_fatfs_h7" or
+                diskio != (project / "FATFS/Target/sd_diskio.c").resolve()):
+            raise ValueError("H7 storage Host requires the exact owning replacement")
+        config_path = project / "HardwareGenerated/STM32CubeMX/FATFS/Target/ffconf.h"
     configuration = config_path.read_text(encoding="utf-8")
     for header in ("main.h", "stm32f4xx_hal.h", "stm32f1xx_hal.h", "stm32h7xx_hal.h", "bsp_driver_sd.h"):
         configuration = configuration.replace(f'#include "{header}"', "")

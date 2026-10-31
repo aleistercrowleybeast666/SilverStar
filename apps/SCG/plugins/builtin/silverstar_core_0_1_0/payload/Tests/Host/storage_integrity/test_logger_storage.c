@@ -153,9 +153,9 @@ SystemDeviceResult SystemSourceSelector_GnssActiveInstanceGet(uint8_t *instance)
 
 TickType_t xTaskGetTickCount(void)
 {
-    /* The multi-stream model uses a wall clock: reading SysTick does not cost
-     * a millisecond. The legacy slow-card model retains its original clock. */
-    return (s_startup_burst_test || s_sparse_test) ? (TickType_t)(PlatformTime_Us() / 1000ULL) : Fixture_BaseTickCount();
+    /* All modes use the same explicit simulated wall clock. A query cannot
+     * create a producer epoch or a millisecond of storage latency. */
+    return (TickType_t)(PlatformTime_Us() / 1000ULL);
 }
 
 static void Fixture_ResultCheckAt(LoggerBusResult result, const char *file, unsigned line)
@@ -984,6 +984,10 @@ static int Test_Maintenance(const char *mode)
 
 int main(int argc, char **argv)
 {
+    TickType_t initial_ticks = xTaskGetTickCount();
+    for (unsigned query = 0U; query < 1000U; query++)
+    { if (xTaskGetTickCount() != initial_ticks) { return 6; } }
+    puts("HOST_CLOCK read-only queries=1000 elapsed_ticks=0");
     if (argc != 2 && argc != 3 && argc != 4) { return 2; }
     if (argc == 4 && strcmp(argv[2], "sparse") == 0)
     {

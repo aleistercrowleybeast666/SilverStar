@@ -34,7 +34,9 @@ static unsigned s_failures;
     fprintf(stderr, "FAIL line %d: %s\n", __LINE__, #condition); \
     s_failures++; return 0; } } while (0)
 
-TickType_t xTaskGetTickCount(void) { return s_ticks++; }
+/* Querying SysTick has no elapsed-time side effect. Only delay and modeled
+ * queue/DMA waits advance this clock; extra safety checks cannot slow the card. */
+TickType_t xTaskGetTickCount(void) { return s_ticks; }
 BaseType_t xTaskGetSchedulerState(void) { return taskSCHEDULER_RUNNING; }
 void vTaskDelay(TickType_t ticks) { s_ticks += ticks; }
 void Fixture_CriticalEnter(void) { }
@@ -386,6 +388,10 @@ static int Test_DiskFailure(const char *mode)
 int main(int argc, char **argv)
 {
     char path[4];
+    TickType_t initial_ticks = xTaskGetTickCount();
+    for (unsigned query = 0U; query < 1000U; query++)
+    { if (xTaskGetTickCount() != initial_ticks) { return 6; } }
+    puts("HOST_CLOCK read-only queries=1000 elapsed_ticks=0");
     if (argc != 2 && argc != 3) { return 2; }
     if (FATFS_LinkDriver(&SD_Driver, path) != 0U) { return 3; }
 #if defined(SILVERSTAR_HOST_FATFS_R011)

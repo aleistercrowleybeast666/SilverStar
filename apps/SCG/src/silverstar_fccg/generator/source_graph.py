@@ -444,6 +444,11 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
     # the declarative module map in the exclusion graph so EIDE and Make see
     # the same exact source set. This is an exclusion only; it must never turn
     # into an implicit compile-all fallback.
+    from silverstar_fccg.generator.h7_storage import H7StorageSources_Replace
+    try:
+        H7StorageSources_Replace(model, catalog, sources, exclude_sources)
+    except ValueError as error:
+        raise SourceGraphError(str(error)) from error
     exclude_sources.extend(
         source
         for source in (

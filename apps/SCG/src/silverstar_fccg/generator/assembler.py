@@ -423,6 +423,12 @@ class ProjectAssembler:
             for component_id in model.ComponentIds_Get()
         }
         self._Progress_Report(progress_callback, 4, "generate_glue", False)
+        from silverstar_fccg.generator.h7_storage import H7StorageInputs_Validate
+        try:
+            storage_replacement = H7StorageInputs_Validate(
+                render_model, self.catalog, hardware_files or {}, project_root)
+        except ValueError as error:
+            raise ProjectAssemblerError(str(error)) from error
         graph = SourceGraph_Resolve(render_model, self.catalog)
         desired = GeneratedFiles_Render(render_model, self.catalog, graph)
         self._Progress_Report(progress_callback, 4, "generate_glue", True)
@@ -500,6 +506,8 @@ class ProjectAssembler:
                 "target_profile": model.build.target_profile,
             },
         }
+        if storage_replacement is not None:
+            ownership["hardware"]["storage_replacement"] = storage_replacement
         desired[".fccg/ownership.json"] = (
             json.dumps(ownership, ensure_ascii=False, indent=2, sort_keys=True)
             + "\n"
