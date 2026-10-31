@@ -31,6 +31,7 @@ static uint64_t s_test_now = 1000000ULL;
 static SystemGnssSample s_test_gnss;
 static EstimatorPressureSnapshot s_test_pressure;
 static uint8_t s_storage_ready = 1U;
+static uint8_t s_test_barometer;
 
 void vTaskDelay(TickType_t ticks)
 { s_test_now += (uint64_t)ticks * 1000ULL; HostPlatformMock_TimeSetUs(s_test_now); }
@@ -110,9 +111,9 @@ static void Test_Collect(uint8_t gnss_available)
     s_test_gnss.velocity_variance_m2ps2[2] = 0.04f;
     s_test_pressure.altitude_m = 10.0f;
     s_test_pressure.pressure_pa = 101325.0f;
-    s_test_pressure.valid = 1U;
+    s_test_pressure.valid = s_test_barometer;
     s_test_pressure.supported_fields = SYSTEM_BARO_FIELD_PRESSURE | SYSTEM_BARO_FIELD_ALTITUDE;
-    s_test_pressure.valid_fields = s_test_pressure.supported_fields;
+    s_test_pressure.valid_fields = s_test_barometer ? s_test_pressure.supported_fields : 0U;
     for (index = 0U; index < SYSTEM_ESTIMATOR_GNSS_ORIGIN_WINDOW_SAMPLES; index++)
     {
         s_test_now += 50000ULL;
@@ -132,6 +133,7 @@ static void Test_Collect(uint8_t gnss_available)
 
 static void Test_Reset(uint8_t fix, uint8_t barometer)
 {
+    s_test_barometer = barometer;
     InsTask_AbortMission();
     EstimatorTask_AbortMission();
     HostPlatformMock_TimeSetUs(s_test_now);
@@ -199,6 +201,19 @@ static void Test_StartNoFix(void)
         /* Even a caller bypassing Alignment cannot freeze a required missing origin. */
         TEST_CHECK(EstimatorTask_FreezeOrigins() == SYSTEM_DEVICE_NOT_READY);
         TEST_CHECK(s_estimator.origin_collection_frozen == 0U);
+        return;
+    }
+    if (SYSTEM_BUILD_AUGMENTED_ENABLED != 0U)
+    {
+        /* These models need a measured geodetic origin even when ALIGN's
+         * user policy makes GNSS optional. Prove START rolls back safely. */
+        TEST_CHECK(EstimatorTask_PrepareNavigation() == SYSTEM_DEVICE_NOT_READY);
+        TEST_CHECK(SystemLifecycleBackend_StorageReadyGet() == 1U);
+        TEST_CHECK(SystemLifecycle_EnterReady() == SYSTEM_DEVICE_OK);
+        TEST_CHECK(SystemLifecycle_StartTransaction() == SYSTEM_LIFECYCLE_START_NAVIGATION_FAILED);
+        TEST_CHECK(SystemLifecycle_GetState() != SYSTEM_STATE_FLIGHT);
+        TEST_CHECK(Estimator_GetLatestSnapshot(&output) == 0U);
+        TEST_CHECK(s_estimator.initialized == 0U && s_estimator.mission_running == 0U);
         return;
     }
     TEST_CHECK(EstimatorTask_PrepareNavigation() == SYSTEM_DEVICE_OK);
@@ -295,6 +310,13 @@ static void Test_StartWithOrigin(void)
     TEST_CHECK(output.gnss_origin_valid ==
                (uint8_t)(SYSTEM_BUILD_GNSS_ORIGIN_AVAILABLE != 0U));
     TEST_CHECK(output.mission_running == 1U);
+    if (output.baro_origin_valid != barometer_configured)
+    {
+        (void)fprintf(stderr, "barometer origin: snapshot=%u configured=%u task=%u input=%u fusion_mask=%lu\n",
+            (unsigned)output.baro_origin_valid, (unsigned)barometer_configured,
+            (unsigned)s_estimator.baro_origin_valid, (unsigned)s_test_barometer,
+            (unsigned long)SYSTEM_FUSION_CONFIGURED_MASK);
+    }
     TEST_CHECK(output.baro_origin_valid == barometer_configured);
     TEST_CHECK(s_estimator.gnss_fusion_enabled ==
                (uint8_t)((SYSTEM_BUILD_GNSS_ORIGIN_AVAILABLE != 0U) &&

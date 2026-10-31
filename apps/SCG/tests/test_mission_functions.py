@@ -29,6 +29,7 @@ def _Configured(catalog):
 
 def test_legacy_display_is_read_only_and_exact_system_adapters_preserve_generated_header(builtin_catalog):
     model = ReferenceProject_Create('Legacy',catalog=builtin_catalog)
+    model.mission_process = None  # Explicit historical import, not a new native project.
     before = deepcopy(model.Dictionary_Get())
     header = _FlightConfigHeader_Render(model,builtin_catalog)
     graph = SourceGraph_Resolve(model,builtin_catalog)
@@ -42,7 +43,7 @@ def test_legacy_display_is_read_only_and_exact_system_adapters_preserve_generate
     no_marker=[identity for identity in stages if identity!='mission_start']
     assert FunctionCoverage_Get(estimator,no_marker)=={'landed':'stop'}
     candidate = Functions_Update(model,builtin_catalog,functions)
-    assert candidate.Dictionary_Get()['format_version'] == 23
+    assert candidate.Dictionary_Get()['format_version'] == 24
     assert _FlightConfigHeader_Render(candidate,builtin_catalog) == header
     assert SourceGraph_Resolve(candidate,builtin_catalog) == graph
     assert Functions_Issues(candidate,builtin_catalog) == ()
@@ -259,14 +260,58 @@ def test_reference_process_is_a_generation_issue_but_remains_a_saveable_draft(bu
     model.mission_process=MissionProcess_Default()
     generation=Project_Validate(model,builtin_catalog)
     issue=next(row for row in generation.issues if row.code=='MISSION_PROCESS_REFERENCE_ONLY')
-    assert issue.level=='error' and not generation.valid and 'consumer' in issue.message
+    assert issue.level=='error' and not generation.valid and 'desktop evidence is not executable' in issue.message
     draft=Project_EditValidate(model,builtin_catalog)
     assert draft.valid
     assert next(row for row in draft.issues if row.code=='MISSION_PROCESS_REFERENCE_ONLY').level=='warning'
     assert ProjectModel_Parse(model.Dictionary_Get()).mission_process==model.mission_process
-    with pytest.raises(ValueError,match='mission_process_firmware_binding_unavailable'):
+    with pytest.raises(ValueError,match='MISSION_PROCESS_REFERENCE_ONLY'):
         _FlightConfigHeader_Render(model,builtin_catalog)
     model.ground_target=_GroundF103Model_Get(builtin_catalog).ground_target
     ground=_GroundModel_Get(model,builtin_catalog)
     assert ground.mission_process is None and ground.mission_functions is None
     assert MissionProcessIssues_Get(ground)==()
+
+
+def test_native_inputs_update_single_project_authority_and_shared_rows(builtin_catalog):
+    from silverstar_fccg.project.model import DeviceInstance
+    from silverstar_fccg.project.mission_functions import FunctionsConfiguration_Apply
+    from silverstar_fccg.project.capabilities import CapabilityResolution_Resolve
+    model = ReferenceProject_Create(catalog=builtin_catalog)
+    model.device_instances.append(DeviceInstance('imu1', 'silverstar.device.imu.jy901b'))
+    original = deepcopy(model.Dictionary_Get())
+    configuration = Functions_Derive(model, builtin_catalog)
+    ins = next(row for row in configuration['functions'] if row['instance_id'] == 'ins')
+    ins['input_bindings']['imu.acceleration'] = 'imu1'
+    candidate = FunctionsConfiguration_Apply(model, builtin_catalog, configuration)
+    assert model.Dictionary_Get() == original
+    assert candidate.capability_source_overrides['imu.acceleration'] == 'imu1'
+    assert candidate.capability_source_overrides['imu.angular_rate'] == 'imu1'
+    routes = CapabilityResolution_Resolve(candidate, builtin_catalog).routes
+    assert all(row.provider.instance_id == 'imu1' for row in routes
+               if row.requirement.capability in ('imu.acceleration', 'imu.angular_rate'))
+    for function in candidate.mission_functions['functions']:
+        if 'imu.acceleration' in function['input_bindings']:
+            assert function['input_bindings']['imu.acceleration'] == 'imu1'
+    ins['input_bindings']['imu.acceleration'] = 'absent'
+    with pytest.raises(ValueError, match='FUNCTION_INPUT_MISSING'):
+        FunctionsConfiguration_Apply(model, builtin_catalog, configuration)
+    assert model.Dictionary_Get() == original
+
+
+def test_native_dependency_support_remains_bounded_to_real_navigation_owners(builtin_catalog):
+    from silverstar_fccg.project.mission_functions import FunctionsConfiguration_Apply
+    model = ReferenceProject_Create(catalog=builtin_catalog)
+    configuration = Functions_Derive(model, builtin_catalog)
+    for row in configuration['functions']:
+        if row['instance_id'] in ('ins', 'estimator'):
+            row['stop'] = {'kind': 'lifecycle_end', 'stage_id': ''}
+        if row['instance_id'] == 'recording':
+            row['depends_on'] = ['ins', 'estimator']
+            row['start'] = {'kind': 'mission_start', 'stage_id': ''}
+    candidate = FunctionsConfiguration_Apply(model, builtin_catalog, configuration)
+    assert not Functions_Issues(candidate, builtin_catalog)
+    recording = next(row for row in configuration['functions'] if row['instance_id'] == 'recording')
+    recording['depends_on'] = ['telemetry']
+    with pytest.raises(ValueError, match='FUNCTION_DEPENDENCY_REFERENCE_ONLY'):
+        FunctionsConfiguration_Apply(model, builtin_catalog, configuration)

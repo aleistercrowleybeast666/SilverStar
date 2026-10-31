@@ -348,54 +348,62 @@ static SystemDeviceResult SilverStarStorageService_MissionDirectoryBuild(
     return SYSTEM_DEVICE_OK;
 }
 
-static SystemDeviceResult SilverStarStorageService_ObjectPathBuild(
-    uint8_t kind, uint8_t instance, uint8_t slot,
-    SilverStarStorageObjectPath *object_path)
+/* Fixed object namespaces are independent of the current mission directory. */
+static SystemDeviceResult SilverStarStorageService_ObjectNamespaceGet(
+    uint8_t kind, SilverStarStorageObjectPath *object_path)
 {
-    const char *prefix = NULL;
-    uint8_t length=0U;
-    if ((instance >= 32U) || (slot > 1U) || (object_path == NULL))
-    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
-    SILVERSTAR_ASSERT_OBJECT(object_path, SilverStarStorageObjectPath,
-        SILVERSTAR_ASSERT_MODULE_BOARD);
+    if(object_path==NULL){return SYSTEM_DEVICE_INVALID_ARGUMENT;}
     switch (kind)
     {
         case PERSISTENT_STORAGE_OBJECT_MAG_CALIBRATION:
             object_path->directory = "0:/system/calibration";
-            prefix = "0:/system/calibration/mag";
+            (void)memcpy(object_path->path, "0:/system/calibration/mag", sizeof("0:/system/calibration/mag"));
             break;
         case PERSISTENT_STORAGE_OBJECT_DEVICE_CONFIG:
             object_path->directory = "0:/system/device";
-            prefix = "0:/system/device/dev";
+            (void)memcpy(object_path->path, "0:/system/device/dev", sizeof("0:/system/device/dev"));
             break;
         case PERSISTENT_STORAGE_OBJECT_PREFERENCES:
             object_path->directory = "0:/system/preferences";
-            prefix = "0:/system/preferences/pre";
+            (void)memcpy(object_path->path, "0:/system/preferences/pre", sizeof("0:/system/preferences/pre"));
             break;
         case PERSISTENT_STORAGE_OBJECT_INSTALLATION_CANDIDATE:
             object_path->directory = "0:/system/install";
-            prefix = "0:/system/install/head";
+            (void)memcpy(object_path->path, "0:/system/install/head", sizeof("0:/system/install/head"));
             break;
-        case PERSISTENT_STORAGE_OBJECT_MISSION_SNAPSHOT:
-            if (SilverStarStorageService_MissionDirectoryBuild(
-                    s_mission_id, object_path->directory_buffer) !=
-                SYSTEM_DEVICE_OK)
-            { return SYSTEM_DEVICE_NOT_READY; }
-            object_path->directory = object_path->directory_buffer;
-            (void)memcpy(object_path->path,
-                object_path->directory_buffer, 18U);
-            (void)memcpy(&object_path->path[18], "/snap", 5U);
-            length = 23U;
+        case PERSISTENT_STORAGE_OBJECT_INSTALLATION_ACTIVE:
+            object_path->directory = "0:/system/install";
+            (void)memcpy(object_path->path, "0:/system/install/active", sizeof("0:/system/install/active"));
             break;
-        default:
-            return SYSTEM_DEVICE_INVALID_ARGUMENT;
+        default: return SYSTEM_DEVICE_INVALID_ARGUMENT;
     }
-    if (kind != PERSISTENT_STORAGE_OBJECT_MISSION_SNAPSHOT)
+    return SYSTEM_DEVICE_OK;
+}
+
+static SystemDeviceResult SilverStarStorageService_ObjectPathBuild(
+    uint8_t kind, uint8_t instance, uint8_t slot,
+    SilverStarStorageObjectPath *object_path)
+{
+    uint8_t length;
+    if ((instance >= 32U) || (slot > 1U) || (object_path == NULL))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    SILVERSTAR_ASSERT_OBJECT(object_path, SilverStarStorageObjectPath,
+        SILVERSTAR_ASSERT_MODULE_BOARD);
+    if (kind == PERSISTENT_STORAGE_OBJECT_MISSION_SNAPSHOT)
     {
-        if (prefix == NULL) { return SYSTEM_DEVICE_INTERNAL_ERROR; }
-        length = (uint8_t)strlen(prefix);
-        (void)memcpy(object_path->path, prefix, length);
+        if (SilverStarStorageService_MissionDirectoryBuild(
+                s_mission_id, object_path->directory_buffer) != SYSTEM_DEVICE_OK)
+        { return SYSTEM_DEVICE_NOT_READY; }
+        object_path->directory = object_path->directory_buffer;
+        (void)memcpy(object_path->path, object_path->directory_buffer, 18U);
+        (void)memcpy(&object_path->path[18], "/snap", 6U);
     }
+    else
+    {
+        SystemDeviceResult result=SilverStarStorageService_ObjectNamespaceGet(kind,object_path);
+        if(result!=SYSTEM_DEVICE_OK){return result;}
+    }
+    length=(uint8_t)strlen(object_path->path);
     if ((uint32_t)length + 5U > sizeof(object_path->path))
     { return SYSTEM_DEVICE_INTERNAL_ERROR; }
     object_path->path[length] = (char)('0' + instance / 10U);

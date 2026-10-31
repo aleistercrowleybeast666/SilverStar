@@ -1,3 +1,6 @@
+#include "system_time.h"
+/* Logical sample fixture: no physical capture clock is claimed. */
+uint64_t SystemTime_GetMonotonicUs(void) { return 0U; }
 #include <string.h>
 
 #include "system_imu_if.h"

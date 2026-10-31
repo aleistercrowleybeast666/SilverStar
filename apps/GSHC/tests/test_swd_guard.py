@@ -1,5 +1,7 @@
 """Fault-only synthetic ownership/claim tests, no real probe enumeration/open."""
 import io
+import os
+from pathlib import Path
 from threading import Event
 import subprocess
 import sys
@@ -188,7 +190,11 @@ with SwdSession(_backend_factory=lambda _:fake) as session:
     assert session.Swd_Attach(PROBE).result==SwdResult.Ok
 print('synthetic second process accepted')
 '''
-        run=subprocess.run([sys.executable,'-c',code],capture_output=True,text=True,timeout=5)
+        environment = os.environ.copy()
+        environment['PYTHONPATH'] = os.pathsep.join((str(Path(__file__).resolve().parent),
+                                                    environment.get('PYTHONPATH', '')))
+        run=subprocess.run([sys.executable,'-c',code],capture_output=True,text=True,timeout=5,
+                           env=environment)
         assert run.returncode==0 and 'second process accepted' in run.stdout
         assert backend.closed==0
     finally:

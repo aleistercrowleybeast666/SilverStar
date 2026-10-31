@@ -80,6 +80,10 @@ class OverviewPage(QWidget):
         self.mission_profile_label.setTextFormat(Qt.TextFormat.PlainText)
         self.mission_profile_label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         summary_layout.addWidget(self.mission_profile_label)
+        self.mission_snapshot_button = QPushButton(translator.Text_Get('mission_snapshot.open'))
+        self.mission_snapshot_button.setEnabled(False)
+        self.mission_snapshot_button.clicked.connect(self._MissionSnapshot_Open)
+        summary_layout.addWidget(self.mission_snapshot_button)
         self.mission_trace_button = QPushButton(translator.Text_Get('mission_process.trace_open'))
         self.mission_trace_button.setEnabled(False)
         self.mission_trace_button.clicked.connect(self._MissionTrace_Open)
@@ -203,6 +207,14 @@ class OverviewPage(QWidget):
         outer.addWidget(self.scroll_area)
         self.Language_Apply(translator)
 
+    def _MissionSnapshot_Open(self):
+        if self._dataset is None:
+            return
+        from silverstar_flp.ui.mission_snapshot import MissionSnapshotDialog
+        dialog = MissionSnapshotDialog(self._dataset.metadata.get('mission_snapshot'), self._translator, self)
+        dialog.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
+        dialog.open()
+
     def _MissionTrace_Open(self):
         path, _filter = QFileDialog.getOpenFileName(self, self._translator.Text_Get('mission_process.trace_open'), '',
                                                    'Mission trace (*.ssmissiontrace)')
@@ -230,6 +242,8 @@ class OverviewPage(QWidget):
         if getattr(self, '_dataset', None) is not dataset:
             self._mission_trace = None
         self._dataset = dataset
+        self.mission_snapshot_button.setEnabled(True)
+        self.mission_snapshot_button.setText(self._translator.Text_Get('mission_snapshot.open'))
         self.mission_trace_label.clear()
         self.mission_trace_button.setText(self._translator.Text_Get('mission_process.trace_open'))
         self.mission_trace_button.setEnabled(False)
@@ -605,6 +619,7 @@ class OverviewPage(QWidget):
 
     def Language_Apply(self, translator: Translator) -> None:
         self._translator = translator
+        self.mission_snapshot_button.setText(translator.Text_Get('mission_snapshot.open'))
         self.summary_group.setTitle(translator.Text_Get("overview.mission_summary"))
         self.duration_card.setTitle(translator.Text_Get("label.duration"))
         self.altitude_card.setTitle(translator.Text_Get("label.max_altitude"))

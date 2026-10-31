@@ -37,6 +37,7 @@ class BuildAction(StrEnum):
     POWER10_CHECK = "power10_check"
     STATIC_ANALYSIS = "static_analysis"
     ARTIFACT_CHECK = "artifact_check"
+    STACK_REPORT = "stack_report"
 
     def MakeTarget_Get(self) -> str:
         return {
@@ -48,6 +49,7 @@ class BuildAction(StrEnum):
             BuildAction.POWER10_CHECK: "power10-check",
             BuildAction.STATIC_ANALYSIS: "static-analysis",
             BuildAction.ARTIFACT_CHECK: "artifact-check",
+            BuildAction.STACK_REPORT: "stack-report",
         }[self]
 
     def Configuration_Get(self) -> str:

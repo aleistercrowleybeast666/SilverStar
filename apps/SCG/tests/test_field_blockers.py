@@ -3,14 +3,17 @@ import shutil
 
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.core.settings import SettingsStore
+from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.project.model import ProjectModel_Parse
 from silverstar_fccg.project.air_link import GroundTargetIssues_Get
 from silverstar_fccg.ui.main_window import MainWindow
 
 
 def window_create(workspace_root, tmp_path):
-    return MainWindow(SettingsStore(workspace_root/'.work'/tmp_path.name/'field.ini'),
-                      service=FccgService(workspace_root))
+    service=FccgService(workspace_root)
+    service.policy=WorkspacePolicy(tmp_path)
+    service.installer.policy=service.policy
+    return MainWindow(SettingsStore(tmp_path/'field.ini'), service=service)
 
 
 def test_new_defaults_and_old_memory_policies(workspace_root):
@@ -38,7 +41,6 @@ def test_ground_controls_save_reopen_keep_actual_uart(qapp,workspace_root,tmp_pa
     assert p.import_ioc.isEnabled() and p.import_directory.isEnabled()
     assert not p.save_instance.isEnabled()
     p.board.setCurrentIndex(p.board.findData('silverstar.board.ground_station_0_5'))
-    p.enabled.setChecked(True)
     p.radio.setCurrentIndex(p.radio.findData('silverstar.device.telemetry.sx1281'))
     p.pc_interface.setCurrentIndex(p.pc_interface.findData('uart'))
     qapp.processEvents()
@@ -64,7 +66,6 @@ def test_ground_controls_save_reopen_keep_actual_uart(qapp,workspace_root,tmp_pa
 
 def test_empty_and_stale_uart_are_explained(qapp,workspace_root,tmp_path):
     w=window_create(workspace_root,tmp_path);w.show()
-    w._GroundTarget_Change('enabled',True)
     w._GroundTarget_Change('pc_interface','uart')
     p=w.ground_target_page
     assert p.pc_resource_notice.text()
@@ -105,7 +106,6 @@ def test_ground_ioc_import_updates_actual_resources(qapp,workspace_root,tmp_path
         for file in (output/'Ground_Station').glob(pattern):shutil.copy2(file,source/file.name)
     result=w._service.CubeMxProject_Import(source,w._model,risk_acknowledged=True)
     w._GroundCubeMxImport_Complete(result)
-    w._GroundTarget_Change('enabled',True)
     w._GroundTarget_Change('pc_interface','uart')
     p=w.ground_target_page
     ids={p.pc_resource.itemData(i) for i in range(1,p.pc_resource.count())}
@@ -122,13 +122,12 @@ def test_ground_ioc_import_updates_actual_resources(qapp,workspace_root,tmp_path
     w.close()
 
 
-def test_enabled_ground_without_inventory_does_not_claim_ready(qapp,workspace_root,tmp_path):
+def test_unconfigured_ground_without_inventory_does_not_claim_ready(qapp,workspace_root,tmp_path):
     w=window_create(workspace_root,tmp_path)
     p=w.ground_target_page
-    w._GroundTarget_Change('enabled',True)
     assert not w._model.ground_target.hardware.inventory
     assert GroundTargetIssues_Get(w._model,w._service.catalog)
-    assert p.generate_button.isEnabled()
+    assert not p.generate_button.isEnabled()
     for language in ('zh_CN','en_US'):
         w.Language_Apply(language)
         tooltip=p.generate_button.toolTip()
@@ -143,12 +142,13 @@ def test_enabled_ground_without_inventory_does_not_claim_ready(qapp,workspace_ro
         w.Language_Apply(language)
         assert p.generate_button.toolTip()==w._translator.Text_Get('status.ground_ready')
     w._GroundTarget_Change('enabled',False)
-    assert w._model.ground_target.enabled
+    assert 'enabled' not in w._model.Dictionary_Get()['ground_target']
     assert p.generate_button.isEnabled()
-    # Explicit stored/API-disabled models still retain the generation gate;
-    # GUI availability must not be implemented by mutating display snapshots.
-    w._model.ground_target=replace(w._model.ground_target,enabled=False)
+    # Removing actual hardware completeness, rather than a persistent enable
+    # preference, makes the target unavailable without mutating the snapshot.
+    w._model.ground_target=replace(w._model.ground_target,
+        hardware=replace(w._model.ground_target.hardware, mode='unselected'))
     w._Project_Refresh()
     assert not p.generate_button.isEnabled()
-    assert p.generate_button.toolTip()==w._translator.Text_Get('status.ground_disabled')
+    assert p.generate_button.toolTip()==w._translator.Text_Get('status.ground_configuration_required')
     w.close()

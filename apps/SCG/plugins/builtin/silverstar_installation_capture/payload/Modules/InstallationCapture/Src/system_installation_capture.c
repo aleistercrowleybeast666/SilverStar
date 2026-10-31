@@ -6,6 +6,7 @@
 #include "system_calibration.h"
 #include "system_mag_calibration.h"
 #include "system_descriptor_if.h"
+#include "system_installation_active_if.h"
 
 typedef struct {
     uint8_t sid[16];
@@ -146,6 +147,15 @@ static uint8_t InstallationWire_ProofValid(const SystemInstallationCaptureProof 
         proof->raw_definition_known==1U&&proof->physical_body_units_known==1U&&proof->uncertainty_us!=UINT32_MAX);
 }
 
+uint8_t SystemInstallationCapture_ActiveQualifiedGet(float R_GA[9])
+{
+    /* Existing profiles 2/3 expose decode-time proxies, unknown native
+     * continuity/epoch and no R_GA authority. A packet bit cannot qualify
+     * those providers. No physical-provider implementation exists yet. */
+    (void)R_GA;
+    return 0U;
+}
+
 void SystemInstallationCapture_ImuObserve(const SystemImuSample *sample,const SystemInstallationCaptureProof *proof,uint64_t now_us)
 {
     InstallationCaptureSample value;InstallationCaptureResult result;uint8_t i;
@@ -257,9 +267,11 @@ static uint8_t InstallationWire_Inspection(const InstallationWireTokens *tokens,
     uint32_t cursor;
     if(strcmp(tokens->part[1],"CAPS")==0){
         if(count==2U){
-            (void)CommonFormat_Print(out,capacity,"OK INSTALL CAPS maintenance=0.1 supported=1 install_contract=1 face_auto=1 check_only=1 sample_format=1 max_request=191 max_line=511 train_pairs=%u holdout_pairs=%u pair_capacity=4096 offline=%u",
+            (void)CommonFormat_Print(out,capacity,"OK INSTALL CAPS maintenance=0.1 supported=1 install_contract=1 face_auto=1 check_only=1 sample_format=1 max_request=191 max_line=511 train_pairs=%u holdout_pairs=%u pair_capacity=4096 offline=%u contract_supported=1 capture_available=%u apply_supported=0 save_supported=0 active_record=3 reason=%s",
                 s_wire.configured?(unsigned int)s_wire.train_pairs:3U,
-                s_wire.configured?(unsigned int)s_wire.holdout_pairs:3U,(unsigned int)s_wire.offline);
+                s_wire.configured?(unsigned int)s_wire.holdout_pairs:3U,(unsigned int)s_wire.offline,
+                (s_wire.configured!=0U&&s_wire.offline!=0U)?1U:0U,
+                (s_wire.configured!=0U&&s_wire.offline!=0U)?"SYNTHETIC_ONLY":"SOURCE_QUALIFICATION");
         }
         return 1U;
     }
@@ -283,6 +295,7 @@ void SystemInstallationCapture_ExecuteLine(const char *line,char *out,uint16_t c
      * because admission guarantees that capacity; full-frame TX is checked. */
     (void)CommonFormat_Print(out,capacity,"ERR INSTALL CAPS code=BAD_FORMAT reason=REQUEST");
     if(line==NULL){return;}
+    if(SystemInstallationActive_ExecuteLine(line,out,capacity,now_us)){return;}
     for(i=0U;i<192U;i++){text[i]=line[i];if(line[i]=='\0'){break;}}
     if(i==192U){return;}
     count=InstallationWire_Split(text,&tokens,5U,' ');
@@ -333,6 +346,7 @@ void SystemInstallationCapture_ExecuteLine(const char *line,char *out,uint16_t c
 void SystemInstallationCapture_Process(uint64_t now_us)
 {
     char line[439];uint16_t length;InstallationCaptureResult result,committed;
+    SystemInstallationActive_Service(now_us);
     result=InstallationCapture_Poll(now_us);
     if(result!=InstallationCaptureResult_Pending&&result!=InstallationCaptureResult_Complete){return;}
     result=InstallationCapture_EventPeek(line,sizeof(line),&length);

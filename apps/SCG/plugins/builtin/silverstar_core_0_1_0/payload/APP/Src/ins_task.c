@@ -30,6 +30,7 @@
 #include "system_navigation_backend.h"
 #include "system_lifecycle.h"
 #include "system_magnetometer_if.h"
+#include "system_mission_process.h"
 #include "system_navigation_profile.h"
 #include "system_time.h"
 
@@ -142,6 +143,17 @@ static void InsTask_DiagnosticsPublish(void)
         diagnostics.position_valid = 0U;
         diagnostics.software_attitude_propagation = 0U;
     }
+    if ((SystemMissionProcess_InsStoppedGet() != 0U) ||
+        ((SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE) &&
+         (SystemMissionProcess_EstimatorStoppedGet() != 0U)))
+    {
+        diagnostics.started = 0U;
+        diagnostics.attitude_ready = 0U;
+        diagnostics.quaternion_valid = 0U;
+        diagnostics.velocity_valid = 0U;
+        diagnostics.position_valid = 0U;
+        diagnostics.software_attitude_propagation = 0U;
+    }
     SystemInsDiagnostics_Publish(&diagnostics);
 }
 
@@ -149,6 +161,12 @@ static void InsTask_OutputPublish(void)
 {
     uint32_t primask = InsTask_IrqLock();
 
+    if (SystemMissionProcess_InsStoppedGet() != 0U)
+    {
+        s_output.ins_valid = 0U;
+        s_output.alignment_valid = 0U;
+        s_output.mission_running = 0U;
+    }
     s_published_output = s_output;
     InsTask_IrqUnlock(primask);
     InsTask_DiagnosticsPublish();
@@ -901,6 +919,26 @@ static void InsTask_Propagate(const InsImuSample *imu_sample)
 #endif
 }
 
+static void InsTask_MissionScopeStop(void)
+{
+    uint32_t lock;
+    if ((s_mission_running == 0U) || (SystemMissionProcess_InsStoppedGet() == 0U))
+    { return; }
+    lock = InsTask_IrqLock();
+    s_mission_running = 0U;
+    s_output.ins_valid = 0U;
+    s_output.alignment_valid = 0U;
+    s_output.mission_running = 0U;
+    s_published_output = s_output;
+    InsTask_IrqUnlock(lock);
+    /* The owner discards incomplete aggregation. It never resumes integration
+     * across the unobserved interval or reuses preflight alignment in flight. */
+    if (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_NONE)
+    { InsMechanization_ResetNavigation(&s_navigation_input.pure_ins); }
+    else { InsInertial_Reset(&s_navigation_input.inertial); }
+    InsTask_DiagnosticsPublish();
+}
+
 void AppTask_Ins(void *argument)
 {
     InsImuSample sample;
@@ -923,6 +961,7 @@ void AppTask_Ins(void *argument)
 
     for (;;)
     {
+        InsTask_MissionScopeStop();
         for (sample_index = 0U;
              sample_index < INS_MAX_SAMPLES_PER_CYCLE;
              sample_index++)
@@ -932,6 +971,7 @@ void AppTask_Ins(void *argument)
                 break;
             }
             lifecycle_state = SystemLifecycle_GetState();
+            InsTask_MissionScopeStop();
             if ((s_mission_running != 0U) &&
                 ((lifecycle_state == SYSTEM_STATE_FLIGHT) ||
                  (lifecycle_state == SYSTEM_STATE_RECOVERY)) &&
@@ -940,7 +980,8 @@ void AppTask_Ins(void *argument)
             {
                 InsTask_Propagate(&sample);
             }
-            else if (s_mission_running == 0U)
+            else if ((s_mission_running == 0U) &&
+                     (SystemMissionProcess_InsStoppedGet() == 0U))
             {
                 InsTask_AlignmentProcess(&sample);
             }
@@ -1175,6 +1216,12 @@ uint8_t Ins_GetLatestSnapshot(InsOutputSnapshot *snapshot)
     }
     primask = InsTask_IrqLock();
     published = s_published_output;
+    if (SystemMissionProcess_InsStoppedGet() != 0U)
+    {
+        published.ins_valid = 0U;
+        published.alignment_valid = 0U;
+        published.mission_running = 0U;
+    }
     InsTask_IrqUnlock(primask);
     *snapshot = published;
     return (uint8_t)((published.alignment_valid != 0U) ||

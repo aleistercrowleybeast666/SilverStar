@@ -69,7 +69,8 @@ SystemDeviceResult ProjectMmc5983maSpiResources_Get(uint8_t, ProjectMmc5983maSpi
                      PAYLOAD / "Tests/Host/test_mmc5983ma_adapter.c"]),
     ):
         binary = tmp_path / f"mmc5983ma_{name}.exe"
-        _Command_Run(flags + [str(path) for path in sources] + ["-lm", "-o", str(binary)],
+        capture_flags = ["-DSYSTEM_INSTALLATION_CAPTURE_ENABLED=1U"] if name == "adapter" else []
+        _Command_Run(flags + capture_flags + [str(path) for path in sources] + ["-lm", "-o", str(binary)],
                      tmp_path, f"compile_{name}")
         _Command_Run([str(binary)], tmp_path, f"run_{name}")
     _Command_Run(flags + ["-c", str(PAYLOAD / "Devices/Magnetometer/MMC5983MA/Adapter/Src/mmc5983ma_i2c_instance.c"),

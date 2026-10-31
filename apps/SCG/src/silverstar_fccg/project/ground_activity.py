@@ -30,7 +30,7 @@ def _ResourceClaims_Get(resource):
 
 def GroundActivityLedIssues_Get(ground, catalog=None):
     from silverstar_fccg.project.air_link import AirLinkIssue
-    if not ground.enabled or not GroundActivityLedEnabled_Get(ground):
+    if not GroundActivityLedEnabled_Get(ground):
         return ()
     issues = []
     if not (ground.tx_led_resource or ground.rx_led_resource):

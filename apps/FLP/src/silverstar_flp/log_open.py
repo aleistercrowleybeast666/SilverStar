@@ -276,7 +276,10 @@ class LogOpenCoordinator:
         roots = [request.task_directory or log_path.parent, *request.decoder_search_directories]
         if request.project_path is not None:
             roots.append(Path(request.project_path).parent)
-        paths, visited = set(), set()
+        # Preserve the user's root order and prefer a copy inside each root to
+        # identical copies discovered in ancestors. The matcher deduplicates by
+        # full package hash; an unordered set made the reported source random.
+        paths, visited = {}, set()
         scanned = 0
         for root in roots:
             resolved = Path(root).resolve()
@@ -287,7 +290,10 @@ class LogOpenCoordinator:
             scanned += discovery.scanned_file_count
             if discovery.limit_reached or scanned > self.scanner.limits.maximum_file_count:
                 raise DecoderProfileError('decoder_discovery_limit_reached', str(root))
-            paths.update(discovery.decoder_package_paths)
+            for path in sorted(discovery.decoder_package_paths,
+                               key=lambda item: (not item.is_relative_to(resolved),
+                                                 str(item).casefold())):
+                paths.setdefault(path, None)
         matches = DecoderProfileMatcher(self._ContainerPlugins_Get(), package_limits=self.package_limits).Match(log_path, tuple(paths))
         if len(matches.matches) != 1:
             raise DecoderProfileError('decoder_profile_match_ambiguous' if matches.matches else
@@ -306,7 +312,10 @@ class LogOpenCoordinator:
             return self._OpenUserCustom(request, log_path, task_context)
         # An explicitly supplied existing package is checked first, including
         # against the Descriptor. A bad pair cannot be hidden by a good cache.
-        if request.decoder_package_path is not None and request.decoder_package_path.is_file():
+        if request.decoder_package_path is not None and (
+            request.decoder_package_path.is_file()
+            or request.source_mode != LogOpenSourceMode.PROJECT
+        ):
             return self._OpenWithSourcePackage(log_path, self._PackagePath_Validate(request.decoder_package_path),
                                                task_context, cache_request=request)
         if request.auto_find:
@@ -315,7 +324,6 @@ class LogOpenCoordinator:
 
         containers = self._ContainerPlugins_Get()
         cached_package: DecoderProfilePackage | None = None
-        cache_load_failed = False
         if request.cache_reference is not None:
             try:
                 cached_package = self.cache.Package_Load(
@@ -324,7 +332,6 @@ class LogOpenCoordinator:
                     limits=self.package_limits,
                 )
             except (DecoderProfileError, OSError):
-                cache_load_failed = True
                 if (
                     request.decoder_package_path is None
                     and request.source_mode != LogOpenSourceMode.PROJECT
@@ -341,34 +348,15 @@ class LogOpenCoordinator:
             )
         if (
             request.source_mode == LogOpenSourceMode.PROJECT
-            and cache_load_failed
             and (
                 request.decoder_package_path is None
                 or not request.decoder_package_path.is_file()
             )
         ):
-            selected = request.task_directory or (
-                request.decoder_package_path.parent
-                if request.decoder_package_path is not None
-                else log_path.parent
-            )
-            discovery = self.PairDiscovery_Run(
-                selected,
-                target_log_path=log_path,
-            )
-            if len(discovery.pairs) != 1:
-                code = (
-                    "decoder_profile_match_ambiguous"
-                    if len(discovery.pairs) > 1
-                    else "decoder_profile_exact_match_missing"
-                )
-                raise DecoderProfileError(
-                    code,
-                    "|".join(discovery.diagnostics),
-                )
+            package_path = self._AutomaticPair_Find(request, log_path)
             return self._OpenWithSourcePackage(
                 log_path,
-                discovery.pairs[0].decoder_package_path,
+                package_path,
                 task_context,
                 cache_request=request,
             )
@@ -505,6 +493,8 @@ class LogOpenCoordinator:
                     raise ValueError("log_source_changed_during_parse")
                 from silverstar_flp.decoder_profiles.fusion_timing_records import FusionTimingRecords_Validate
                 FusionTimingRecords_Validate(dataset)
+                from silverstar_flp.decoder_profiles.mission_snapshot import MissionSnapshot_Attach
+                dataset = MissionSnapshot_Attach(dataset, package)
                 progress.Progress_Report(1.0, "log_open.complete")
                 return LogOpenResult(dataset, package, descriptor, reference,
                     Path(source_package_path), dataset.diagnostics, dataset.data_quality)
@@ -521,6 +511,8 @@ class LogOpenCoordinator:
         FusionTimingRecords_Validate(dataset)
         from silverstar_flp.decoder_profiles.sf6_revision import Sf6Revision_Get
         Sf6Revision_Get(dataset)
+        from silverstar_flp.decoder_profiles.mission_snapshot import MissionSnapshot_Attach
+        dataset = MissionSnapshot_Attach(dataset, package)
         progress.Progress_Report(0.96, "progress.open.source_check")
         if (FileHash_Get(log_path, progress.Context_Build(0.96, 0.99), quantified=True) != identity["log_sha256"]
                 or log_path.stat().st_size != identity["log_bytes"]):

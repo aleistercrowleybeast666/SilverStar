@@ -74,7 +74,8 @@ typedef enum
     Mmc5983maStepNotPresent,
     Mmc5983maStepBusError,
     Mmc5983maStepVerifyFailed,
-    Mmc5983maStepMeasurementTimeout
+    Mmc5983maStepMeasurementTimeout,
+    Mmc5983maStepSequenceExhausted
 } Mmc5983maStepResult;
 
 typedef struct

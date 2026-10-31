@@ -33,9 +33,22 @@ def _Host_Run(project, sources, defines=(), *, reject=False):
     command = [compiler, "-std=c11", "-O2", "-Wall", "-Wextra", "-Werror",
                "-I" + str(root / "Tests/Host"),
                "-include", str(root / "Generated/Inc/project_flight_config.h")]
+    legacy = "Protocol/Src/air_protocol.c" in sources
+    if legacy:
+        # These cases intentionally assert historical AIR byte positions and
+        # command-manager behavior. Compile the retained codec as a Host fixture;
+        # it is not admitted as a normal generated Flight protocol selection.
+        owner = Path(__file__).resolve().parents[1] / 'plugins/builtin/silverstar_protocol_telemetry_air_m0/payload'
+        fixture = output.parent / 'legacy-wire'; fixture.mkdir(exist_ok=True)
+        (fixture / 'project_telemetry_protocol.h').write_text(
+            '#ifndef __PROJECT_TELEMETRY_PROTOCOL_H\n#define __PROJECT_TELEMETRY_PROTOCOL_H\n'
+            '#include "air_protocol.h"\ntypedef uint8_t TelemetrySequence;\n'
+            '#include "telemetry_extended_if.h"\n#endif\n', encoding='utf-8')
+        command += ['-I' + str(fixture), '-I' + str(owner / 'Protocol/Inc'), '-DSYSTEM_TELEMETRY_TM_ENABLED=0U']
     command += ["-D" + value for value in defines]
     command += ["-I" + str(root / include) for include in graph.include_dirs]
-    command += [str(root / source) for source in sources]
+    command += [str(owner / source) if legacy and source == 'Protocol/Src/air_protocol.c'
+                else str(root / source) for source in sources]
     command += [str(root / "Common/Src/silverstar_assert.c"), "-lm", "-o", str(output)]
     result = subprocess.run(command, cwd=root, env=environment, capture_output=True, text=True)
     if reject:

@@ -34,7 +34,7 @@ def source_selector_contract_executable(tmp_path_factory):
 
 @pytest.mark.parametrize("kind", ["1", "2", "3"])
 @pytest.mark.parametrize("scenario", ["init_order", "init_result", "start_order", "start_count",
-                                      "start_result", "failed_restart", "init_capacity", "normal"])
+                                      "start_result", "failed_restart", "init_capacity", "normal", "async_stop_progress"])
 def test_source_selector_contract(source_selector_contract_executable, kind, scenario):
     result = subprocess.run([str(source_selector_contract_executable), kind, scenario],
                             capture_output=True, text=True, timeout=20)

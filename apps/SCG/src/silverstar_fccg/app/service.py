@@ -173,7 +173,7 @@ class FccgService:
         model.resource_assignments = {}
         model.build = replace(model.build, memory_layout="auto")
         model.ground_target = replace(
-            model.ground_target, enabled=False,
+            model.ground_target,
             radio_plugin="silverstar.device.telemetry.sx1281",
             module_variant="e28_2g4m12sx",
             pc_interface="uart",

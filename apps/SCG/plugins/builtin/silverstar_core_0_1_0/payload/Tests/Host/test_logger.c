@@ -794,7 +794,7 @@ static void Test_DecoderProfileDescriptor(void)
     TEST_CHECK(record.payload.decoder_profile_descriptor.
                package_schema_major == 1U);
     TEST_CHECK(record.payload.decoder_profile_descriptor.
-               package_schema_minor == 2U);
+               package_schema_minor == 3U);
     TEST_CHECK(record.payload.decoder_profile_descriptor.
                container_format_major == 0U);
     TEST_CHECK(memcmp(record.payload.decoder_profile_descriptor.
@@ -810,7 +810,9 @@ static void Test_DecoderProfileDescriptor(void)
         &record, payload, sizeof(payload));
     TEST_CHECK(payload_size == sizeof(payload));
     TEST_CHECK(payload[0] == 1U && payload[1] == 0U);
-    TEST_CHECK(payload[2] == 2U && payload[3] == 0U);
+    /* Normal generation includes the exact persistent-object catalog in 1.3.
+     * Historical 1.2 readers are exercised by the decoder compatibility suite. */
+    TEST_CHECK(payload[2] == 3U && payload[3] == 0U);
     TEST_CHECK(payload[4] == 0U && payload[5] == 0U);
     (void)memset(&decoded, 0, sizeof(decoded));
     decoded.record_type = FLIGHT_LOG_RECORD_DECODER_PROFILE_DESCRIPTOR;

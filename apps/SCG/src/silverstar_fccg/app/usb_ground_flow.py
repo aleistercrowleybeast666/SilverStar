@@ -238,7 +238,7 @@ def UsbGroundRefresh_Inspect(service, model, project, context):
         pointer = json.loads(before)
         records = service.QualityResults_Get(output)
         files = _QualityTools_Read(output, context) if records else ()
-        states = {}
+        states = {'stack_report': 'unavailable'}  # Bare-metal candidates have no RTOS task budget entry.
         for record in records:
             context.Cancel_RaiseIfRequested()
             if (record.task in {'artifact_check', 'static_analysis'} and
@@ -262,6 +262,8 @@ def UsbGroundQuality_Run(service, model, project, action, context):
     digest = ''
     error = ''
     try:
+        if action == BuildAction.STACK_REPORT:
+            raise ValueError('Native USB candidate has no RTOS task-stack report; MSP/main/ISR remain NOT PROVEN')
         output, before = UsbGroundQualityHash_Get(service, model, project, action.value, task_context=context)
         checker = 'check_c071_candidate.py' if model.ground_target.hardware.mcu == C071_PART else 'check_native_ground.py'
         selected = deepcopy(model)

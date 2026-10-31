@@ -54,13 +54,56 @@ class PathPreferences:
         root = Path(root).resolve(strict=True)
         if not root.is_dir():
             raise ValueError("Default project root must be an existing directory")
+        document = self._Document_Get()
+        document["default_project_root"] = str(root)
+        self._Document_Save(document)
+
+    def _Document_Get(self) -> dict:
+        try:
+            document = json.loads(self.path.read_text(encoding="utf-8"))
+            if isinstance(document, dict) and type(document.get("schema_version")) is int and document["schema_version"] == 1:
+                return document
+        except (OSError, ValueError, TypeError):
+            pass
+        return {"schema_version": 1}
+
+    def DecoderDirectories_Get(self) -> tuple[Path, ...]:
+        values = self._Document_Get().get("decoder_search_directories", [])
+        if not isinstance(values, list) or len(values) > 4:
+            return ()
+        directories = []
+        for value in values:
+            if not isinstance(value, str) or not value.strip():
+                return ()
+            path = Path(value)
+            if not path.is_absolute():
+                return ()
+            # Keep disconnected removable directories visible for the user;
+            # the bounded scanner skips unavailable directories at open time.
+            if path not in directories:
+                directories.append(path)
+        return tuple(directories)
+
+    def DecoderDirectories_Set(self, directories: tuple[Path, ...]) -> None:
+        if len(directories) > 4:
+            raise ValueError("decoder_search_directory_limit")
+        resolved = []
+        for directory in directories:
+            path = Path(directory).resolve()
+            if path not in resolved:
+                resolved.append(path)
+        document = self._Document_Get()
+        document["decoder_search_directories"] = [str(path) for path in resolved]
+        self._Document_Save(document)
+
+    def _Document_Save(self, document: dict) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         handle, name = tempfile.mkstemp(prefix=".path_preferences-", dir=self.path.parent)
         temporary = Path(name)
         try:
             with os.fdopen(handle, "w", encoding="utf-8", newline="\n") as stream:
                 json.dump(
-                    {"schema_version": 1, "default_project_root": str(root)},
+                    document,
                     stream,
                     ensure_ascii=False,
                     indent=2,

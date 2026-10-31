@@ -64,7 +64,8 @@ static uint8_t PersistentStorage_KeyValid(
     PersistentStorageObjectKind kind, uint8_t instance)
 {
     return (uint8_t)((kind >= PERSISTENT_STORAGE_OBJECT_MAG_CALIBRATION) &&
-        (kind <= PERSISTENT_STORAGE_OBJECT_MISSION_SNAPSHOT) &&
+        ((kind <= PERSISTENT_STORAGE_OBJECT_MISSION_SNAPSHOT) ||
+         (kind == PERSISTENT_STORAGE_OBJECT_INSTALLATION_ACTIVE)) &&
         (instance < 32U));
 }
 

@@ -1,0 +1,205 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.algorithm.control.pid",
+  "name": "PID bounded mathematical core",
+  "type": "algorithm",
+  "class": "control",
+  "version": "0.1.0",
+  "description": "Host/target mathematical core; no actuator hardware driver or mission dispatcher claimed.",
+  "requires": {
+    "components": [],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "algorithm.control.pid.core"
+  ],
+  "build": {
+    "sources": [
+      "Algorithm/Control/PID/Src/control_pid.c",
+      "Algorithm/Control/PID/Src/control_pid_project.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "Algorithm/Control/PID/Inc"
+    ],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "Algorithm/Control/PID"
+    ]
+  },
+  "metadata": {
+    "maturity": "mathematical_core_only",
+    "deployment_ready": false,
+    "blocking_reasons": [
+      "No target actuator driver or mission adapter registered."
+    ],
+    "generated_interface": "ControlPid_ProjectConfigGet; mathematical consumer, no dispatch"
+  },
+  "algorithm_parameters": {
+    "schema_id": "silverstar.algorithm-parameters/1.0",
+    "parameters": [
+      {
+        "id": "kp",
+        "type": "float",
+        "default": 2.0,
+        "unit": "1",
+        "representation": "value",
+        "min": 0.0,
+        "max": 1000.0,
+        "precision": 6,
+        "step": 0.01,
+        "group": "basic",
+        "order": 0,
+        "generated_symbol": "SYSTEM_CONTROL_PID_KP",
+        "display_names": {
+          "en_US": "kp",
+          "zh_CN": "kp"
+        },
+        "description": {
+          "en_US": "Actual scalar mathematical input; no hardware deployment claim.",
+          "zh_CN": "数学内核实际标量输入；不代表硬件部署资格。"
+        }
+      },
+      {
+        "id": "ki",
+        "type": "float",
+        "default": 0.2,
+        "unit": "1/s",
+        "representation": "value",
+        "min": 0.0,
+        "max": 1000.0,
+        "precision": 6,
+        "step": 0.01,
+        "group": "basic",
+        "order": 1,
+        "generated_symbol": "SYSTEM_CONTROL_PID_KI",
+        "display_names": {
+          "en_US": "ki",
+          "zh_CN": "ki"
+        },
+        "description": {
+          "en_US": "Actual scalar mathematical input; no hardware deployment claim.",
+          "zh_CN": "数学内核实际标量输入；不代表硬件部署资格。"
+        }
+      },
+      {
+        "id": "kd",
+        "type": "float",
+        "default": 0.1,
+        "unit": "s",
+        "representation": "value",
+        "min": 0.0,
+        "max": 1000.0,
+        "precision": 6,
+        "step": 0.01,
+        "group": "basic",
+        "order": 2,
+        "generated_symbol": "SYSTEM_CONTROL_PID_KD",
+        "display_names": {
+          "en_US": "kd",
+          "zh_CN": "kd"
+        },
+        "description": {
+          "en_US": "Actual scalar mathematical input; no hardware deployment claim.",
+          "zh_CN": "数学内核实际标量输入；不代表硬件部署资格。"
+        }
+      },
+      {
+        "id": "derivative_tau_s",
+        "type": "float",
+        "default": 0.02,
+        "unit": "s",
+        "representation": "value",
+        "min": 0.0,
+        "max": 1.0,
+        "precision": 6,
+        "step": 0.01,
+        "group": "basic",
+        "order": 3,
+        "generated_symbol": "SYSTEM_CONTROL_PID_DERIVATIVE_TAU_S",
+        "display_names": {
+          "en_US": "derivative_tau_s",
+          "zh_CN": "derivative_tau_s"
+        },
+        "description": {
+          "en_US": "Actual scalar mathematical input; no hardware deployment claim.",
+          "zh_CN": "数学内核实际标量输入；不代表硬件部署资格。"
+        }
+      },
+      {
+        "id": "integral_limit",
+        "type": "float",
+        "default": 0.2,
+        "unit": "1",
+        "representation": "value",
+        "min": 0.0,
+        "max": 1000.0,
+        "precision": 6,
+        "step": 0.01,
+        "group": "basic",
+        "order": 4,
+        "generated_symbol": "SYSTEM_CONTROL_PID_INTEGRAL_LIMIT",
+        "display_names": {
+          "en_US": "integral_limit",
+          "zh_CN": "integral_limit"
+        },
+        "description": {
+          "en_US": "Actual scalar mathematical input; no hardware deployment claim.",
+          "zh_CN": "数学内核实际标量输入；不代表硬件部署资格。"
+        }
+      },
+      {
+        "id": "output_limit",
+        "type": "float",
+        "default": 0.3,
+        "unit": "1",
+        "representation": "value",
+        "min": 1e-06,
+        "max": 1000.0,
+        "precision": 6,
+        "step": 0.01,
+        "group": "basic",
+        "order": 5,
+        "generated_symbol": "SYSTEM_CONTROL_PID_OUTPUT_LIMIT",
+        "display_names": {
+          "en_US": "output_limit",
+          "zh_CN": "output_limit"
+        },
+        "description": {
+          "en_US": "Actual scalar mathematical input; no hardware deployment claim.",
+          "zh_CN": "数学内核实际标量输入；不代表硬件部署资格。"
+        }
+      },
+      {
+        "id": "sample_period_s",
+        "type": "float",
+        "default": 0.01,
+        "unit": "s",
+        "representation": "value",
+        "min": 1e-06,
+        "max": 1.0,
+        "precision": 6,
+        "step": 0.01,
+        "group": "basic",
+        "order": 6,
+        "generated_symbol": "SYSTEM_CONTROL_PID_SAMPLE_PERIOD_S",
+        "display_names": {
+          "en_US": "sample_period_s",
+          "zh_CN": "sample_period_s"
+        },
+        "description": {
+          "en_US": "Actual scalar mathematical input; no hardware deployment claim.",
+          "zh_CN": "数学内核实际标量输入；不代表硬件部署资格。"
+        }
+      }
+    ]
+  }
+}

@@ -53,11 +53,12 @@
   "build": {
     "sources": [
       "Devices/IMU/ICM42688P/Src/icm42688p_device.c",
-      "Devices/IMU/ICM42688P/Src/icm42688p_instance.c"
+      "Devices/IMU/ICM42688P/Adapter/Src/icm42688p_instance.c"
     ],
     "asm_sources": [],
     "include_dirs": [
-      "Devices/IMU/ICM42688P/Inc"
+      "Devices/IMU/ICM42688P/Inc",
+      "Devices/IMU/ICM42688P/Adapter/Inc"
     ],
     "defines": []
   },
@@ -84,12 +85,12 @@
       "persistent_storage": "none",
       "persist_if_changed": false,
       "hardware_status": "HARDWARE_UNVERIFIED",
-      "register_evidence": "https://invensense.tdk.com/wp-content/uploads/2021/06/DS-000347-ICM-42688-P-v1.5.pdf",
+      "register_evidence": "TDK DS-000347 revision 1.9 (2024-11-12), sections 12.6/12.7; https://www.invensense.tdk.com/en-us/products/6-axis/icm-42688-p",
       "sample_timestamp": "bounded read/IRQ consumption proxy; TIME_UNCERTAIN (no edge capture mapping)",
       "driver_status": "IMPLEMENTED_HARDWARE_UNVERIFIED",
       "fifo": {
-        "zh_CN": "16 字节原生 accel/gyro/temp/timestamp；1 µs 计时器回绕检查；不接受 20-bit 帧",
-        "en_US": "Native 16-byte accel/gyro/temp/timestamp; 1 us counter wrap checks; 20-bit packets rejected"
+        "zh_CN": "16 字节原生 accel/gyro/temp/timestamp；32/30 µs 原生 tick、保留换算余数与回绕检查；不接受 20-bit 帧",
+        "en_US": "Native 16-byte accel/gyro/temp/timestamp; 32/30 us ticks with conversion remainder and wrap checks; 20-bit packets rejected"
       },
       "bandwidth_hz": 50,
       "output_rate_hz": 200,
@@ -239,10 +240,11 @@
         "build": {
           "sources": [
             "Devices/IMU/ICM42688P_SPI/Src/icm42688p_spi_device.c",
-            "Devices/IMU/ICM42688P_SPI/Src/icm42688p_spi_instance.c"
+            "Devices/IMU/ICM42688P_SPI/Adapter/Src/icm42688p_spi_instance.c"
           ],
           "include_dirs": [
-            "Devices/IMU/ICM42688P_SPI/Inc"
+            "Devices/IMU/ICM42688P_SPI/Inc",
+            "Devices/IMU/ICM42688P_SPI/Adapter/Inc"
           ]
         },
         "payload": {

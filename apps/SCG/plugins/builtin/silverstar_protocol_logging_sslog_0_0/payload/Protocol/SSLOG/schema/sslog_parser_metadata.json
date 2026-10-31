@@ -4551,5 +4551,13 @@
       "height": "GNSS ellipsoid relative ENU U and barometer relative preflight altitude use the same pU gain, independently once per new observation. GNSS position, GNSS velocity, then barometer; per-observation gain is rate dependent.",
       "defaults": "Initial engineering defaults, not bench tuned or optimal."
     }
+  },
+  "mission_stage_events": {
+    "enter": 48,
+    "exit": 49,
+    "arg0": "crc32_ieee_ascii_stage_id",
+    "arg1": "monotonic_phase_event_sequence",
+    "timestamp": "MCU transition time in microseconds",
+    "identity_map": "Generated/mission_process.json and exact project semantics"
   }
 }

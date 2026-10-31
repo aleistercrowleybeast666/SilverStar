@@ -1315,6 +1315,7 @@ class MainWindow(QMainWindow):
         self.on_send_unlock: Callable[[], None] | None = None
         self.on_send_start: Callable[[], None] | None = None
         self.on_mag_calibration: Callable[[], None] | None = None
+        self.on_installation_calibration: Callable[[], None] | None = None
         self.on_mag_retranslate: Callable[[], None] | None = None
         self.on_cal_start: Callable[[int], None] | None = None
         self.on_cal_face: Callable[[int], None] | None = None
@@ -1440,6 +1441,7 @@ class MainWindow(QMainWindow):
         self.pages.setTabText(self.pages.indexOf(self.maintenance_scroll), self.i18n.tr("page.maintenance"))
         self.maintenance_page.retranslate()
         self.btn_mag_calibration.setText(Text(self.i18n, '磁力计校准', 'Magnetometer calibration'))
+        self.btn_installation_calibration.setText(Text(self.i18n, '安装标定', 'Installation calibration'))
         if self.on_mag_retranslate is not None:
             self.on_mag_retranslate()
         self._DebugStatus_Render()
@@ -1878,6 +1880,10 @@ class MainWindow(QMainWindow):
         self.btn_mag_calibration.setText(Text(self.i18n, '磁力计校准', 'Magnetometer calibration'))
         self.btn_mag_calibration.clicked.connect(lambda: self.on_mag_calibration and self.on_mag_calibration())
         actions.addWidget(self.btn_mag_calibration)
+        self.btn_installation_calibration = QPushButton(Text(self.i18n, '安装标定', 'Installation calibration'))
+        self.btn_installation_calibration.setMinimumHeight(34)
+        self.btn_installation_calibration.clicked.connect(lambda: self.on_installation_calibration and self.on_installation_calibration())
+        actions.addWidget(self.btn_installation_calibration)
         layout.addLayout(actions)
         self.btn_calibration.clicked.connect(self._show_calibration_dialog)
         return box
@@ -3167,6 +3173,7 @@ class MainWindow(QMainWindow):
             state.preflight_command_entry_allowed() and not state.pending_command_name
         )
         self.btn_mag_calibration.setEnabled(not state.mission_started and not state.start_transaction_pending())
+        self.btn_installation_calibration.setEnabled(not state.mission_started and not state.start_transaction_pending())
         self.btn_align_start.setEnabled(preflight_allowed and state.calibration.ready)
         self.btn_align_stop.setEnabled(preflight_allowed)
         self.btn_align_reset.setEnabled(preflight_allowed)

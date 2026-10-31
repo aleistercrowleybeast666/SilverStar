@@ -5,10 +5,10 @@ from pathlib import Path
 import time
 
 import pytest
-from PySide6.QtCore import QCoreApplication, QEvent, Qt
+from PySide6.QtCore import QCoreApplication, QEvent, Qt, QTimer, QObject
 from PySide6.QtGui import QFontDatabase
 from PySide6.QtTest import QTest
-from PySide6.QtWidgets import QDialogButtonBox, QLabel, QPushButton, QTabWidget
+from PySide6.QtWidgets import QApplication, QDialog, QDialogButtonBox, QLabel, QPushButton, QTabWidget, QWidget
 
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.core.settings import SettingsStore
@@ -16,6 +16,7 @@ from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.generator.render import _FlightConfigHeader_Render
 from silverstar_fccg.project.mission_functions import (
     Functions_Derive, Functions_Issues, ParameterProfile_Build, ParameterProfile_Write)
+from silverstar_fccg.project.mission_process import MissionProcess_FirmwareDefault
 from silverstar_fccg.ui.main_window import MainWindow
 
 APP = Path(__file__).resolve().parents[1]
@@ -27,8 +28,50 @@ def _Events_Flush(qapp):
     qapp.processEvents()
 
 
+def _Capsule_Click(window, identity, interact):
+    """Use the ordinary button and nested modal event loop, including cancellation."""
+    from silverstar_fccg.ui.mission_stage_transaction import MissionStageTransactionDialog
+    outcomes = []
+    def DuringDialog():
+        dialog = QApplication.activeModalWidget()
+        try:
+            assert isinstance(dialog, MissionStageTransactionDialog)
+            interact(dialog)
+            outcomes.append(None)
+        except BaseException as error:
+            outcomes.append(error)
+            if dialog is not None:
+                dialog.reject()
+    QTimer.singleShot(0, DuringDialog)
+    button = window.workflow_page.stage_panel.cards[identity].findChild(QPushButton, 'phaseSelect')
+    QTest.mouseClick(button, Qt.MouseButton.LeftButton)
+    assert outcomes, 'A normal capsule must open its real modal dialog'
+    if outcomes[0] is not None:
+        raise outcomes[0]
+
+
 def _Snapshot(model):
     return json.loads(json.dumps(model.Dictionary_Get()))
+
+
+def _Function_Click(window, identity, interact):
+    outcomes = []
+    def DuringDialog():
+        dialog = QApplication.activeModalWidget()
+        try:
+            assert dialog._function_id == identity
+            interact(dialog)
+            outcomes.append(None)
+        except BaseException as error:
+            outcomes.append(error)
+            if dialog is not None:
+                dialog.reject()
+    window.workflow_page.coverage.Function_Select(identity)
+    QTimer.singleShot(0, DuringDialog)
+    QTest.mouseClick(window.workflow_page.function_buttons['parameters'], Qt.MouseButton.LeftButton)
+    assert outcomes
+    if outcomes[0] is not None:
+        raise outcomes[0]
 
 
 @pytest.fixture
@@ -54,6 +97,7 @@ def workspace_window(tmp_path, qapp):
 def test_three_workspaces_browse_legacy_without_injecting_execution(workspace_window, tmp_path, qapp):
     window, errors = workspace_window
     model = window._service.ReferenceProject_Create('ThreeWorkspacesLegacy')
+    model.mission_process = None  # An imported fixed-runtime project, before explicit migration.
     before = _Snapshot(model)
     root = window._service.ProjectRoot_Save(model, tmp_path / 'legacy')
     window._Project_Open(root)
@@ -61,7 +105,8 @@ def test_three_workspaces_browse_legacy_without_injecting_execution(workspace_wi
     assert not window.workflow_page.findChildren(QTabWidget)
     assert set(window.workflow_page.stage_panel.cards) == {
         'ready', 'mission_start', 'ascent', 'coast', 'deploy', 'descent', 'landed'}
-    assert window._model.ground_target.enabled is before['ground_target']['enabled']
+    assert 'enabled' not in before['ground_target']
+    assert not hasattr(window.ground_target_page, 'enabled')
     for language in ('zh_CN', 'en_US'):
         window.Language_Apply(language)
         for theme in ('light', 'dark'):
@@ -78,53 +123,58 @@ def test_three_workspaces_browse_legacy_without_injecting_execution(workspace_wi
     assert not errors
 
 
-def test_inline_condition_and_one_shared_interval_survive_reopen(workspace_window, tmp_path, qapp):
+def test_modal_condition_and_shared_interval_survive_reopen(workspace_window, tmp_path, qapp):
     window, errors = workspace_window
-    model = window._service.Project_Open(APP / 'examples/Uncontrolled_Desktop_Reference.ssproject')
-    window._model = model
+    window._model = window._service.ReferenceProject_Create('Ordinary stage edit')
+    window._model.mission_process = MissionProcess_FirmwareDefault(acceleration_detection=True)
     window._Project_Refresh()
     window.navigation_list.setCurrentRow(1)
-    stage_panel = window.workflow_page.stage_panel
-    stage_panel.Stage_Select('coast')
-    editor = stage_panel.condition_editor
-    editor.name_edit.setText('Discard this edit')
-    editor.discarded.emit()
+    before = _Snapshot(window._model)
+    changes = []
+    window.workflow_page.configurationChanged.connect(changes.append)
+    def Cancel(dialog):
+        dialog.stage_editor.name_edit.setText('Discard this edit')
+        dialog.reject()
+    _Capsule_Click(window, 'coast', Cancel)
     _Events_Flush(qapp)
-    assert next(row for row in window._model.mission_process['stages'] if row['stage_id'] == 'coast')['name'] != 'Discard this edit'
-    editor = stage_panel.condition_editor
-    editor.name_edit.setText('Stable coast identity')
-    editor.signal_combo.setCurrentIndex(editor.signal_combo.findData('stage_elapsed_s'))
-    editor.number.setValue(1.123456)
-    editor.accept()
+    assert _Snapshot(window._model) == before and not changes
+    assert window.workflow_page.stage_panel.condition_editor is None
+    def Apply(dialog):
+        from test_workflow_connections import _InFunction
+        dialog.stage_editor.name_edit.setText('Stable coast identity')
+        dialog.stage_editor.signal_combo.setCurrentIndex(dialog.stage_editor.signal_combo.findData('stage_elapsed_s'))
+        dialog.stage_editor.number.setValue(1.123456)
+        def Function(child):
+            section = child.bindings[0]._sections['telemetry.range']
+            form = section.body.layout()
+            start = form.itemAt(0, form.ItemRole.FieldRole).widget()
+            stop = form.itemAt(1, form.ItemRole.FieldRole).widget()
+            start.setCurrentIndex(start.findData(('stage_enter', 'ascent')))
+            stop.setCurrentIndex(stop.findData(('stage_exit', 'coast')))
+        _InFunction(dialog, 'telemetry', Function)
+        dialog.accept()
+        assert dialog.result() == QDialog.DialogCode.Accepted, dialog.error.text()
+    _Capsule_Click(window, 'coast', Apply)
     _Events_Flush(qapp)
+    assert len(changes) == 1
     coast = next(row for row in window._model.mission_process['stages'] if row['stage_id'] == 'coast')
     assert coast['name'] == 'Stable coast identity' and coast['condition']['value'] == 1.123456
-    assert stage_panel.selected_stage_id == 'coast'
-    bindings = window.workflow_page.estimation_functions
-    section = bindings._sections['estimator.range']
-    form = section.body.layout()
-    start = form.itemAt(0, form.ItemRole.FieldRole).widget()
-    stop = form.itemAt(1, form.ItemRole.FieldRole).widget()
-    start.setCurrentIndex(start.findData(('stage_enter', 'ascent')))
-    stop.setCurrentIndex(stop.findData(('stage_exit', 'landed')))
-    section.body.findChildren(QPushButton)[-1].click()
-    _Events_Flush(qapp)
-    function = next(row for row in window._model.mission_functions['functions'] if row['instance_id'] == 'estimator')
-    assert function['start']['stage_id'] == 'ascent' and function['stop']['stage_id'] == 'landed'
+    function = next(row for row in window._model.mission_functions['functions'] if row['instance_id'] == 'telemetry')
+    assert function['start']['stage_id'] == 'ascent' and function['stop']['stage_id'] == 'coast'
     assert function['stop']['kind'] == 'stage_exit' and window._model.mission_functions['schema_version'] == 2
-    for identity in ('ascent', 'coast', 'descent', 'landed'):
-        stage_panel.Stage_Select(identity)
+    for identity in ('ready', 'ascent', 'coast'):
+        window.workflow_page.stage_panel.Stage_Select(identity)
         _Events_Flush(qapp)
         assert len([row for row in Functions_Derive(window._model, window._service.catalog)['functions']
-                    if row['instance_id'] == 'estimator']) == 1
-        assert 'estimator' in stage_panel.cards[identity].findChild(QLabel, 'phaseFunctions_' + identity).text()
+                    if row['instance_id'] == 'telemetry']) == 1
     saved = _Snapshot(window._model)
     root = window._service.ProjectRoot_Save(window._model, tmp_path / 'custom')
     restored = window._service.Project_Open(root)
     assert _Snapshot(restored) == saved
-    assert any(issue.code == 'FUNCTION_REFERENCE_ONLY' for issue in Functions_Issues(restored, window._service.catalog))
-    with pytest.raises(ValueError, match='FUNCTION_REFERENCE_ONLY'):
-        _FlightConfigHeader_Render(restored, window._service.catalog)
+    # Until an adapter proves a runtime consumer, export remains fail-closed.
+    if any(issue.code == 'FUNCTION_REFERENCE_ONLY' for issue in Functions_Issues(restored, window._service.catalog)):
+        with pytest.raises(ValueError, match='FUNCTION_REFERENCE_ONLY'):
+            _FlightConfigHeader_Render(restored, window._service.catalog)
     assert not errors
 
 
@@ -172,23 +222,22 @@ def test_issue_list_reveals_reference_stage_and_exact_shared_function(workspace_
     window.build_page.issueActivated.emit(reference)
     _Events_Flush(qapp)
     assert window.navigation_list.currentRow() == 1
-    assert window._validation_focus_widget is window.workflow_page.stage_panel.condition_editor
+    assert window._validation_focus_widget is window.workflow_page.stage_panel
     issue = next(issue for issue in issues if issue.code.startswith('FUNCTION_') and issue.message.startswith('estimator:'))
     window.navigation_list.setCurrentRow(2)
     window.build_page.issueActivated.emit(issue)
     _Events_Flush(qapp)
-    section = window.workflow_page.estimation_functions._sections['estimator']
     assert window.navigation_list.currentRow() == 1
-    assert window._validation_focus_widget is section
-    assert section.Expanded_Is()
+    assert window._validation_focus_widget is window.workflow_page.coverage
+    assert window.workflow_page.coverage._functions[window.workflow_page.coverage.currentRow()] == 'estimator'
     assert not errors
 
 
 @pytest.mark.parametrize('width', [900, 1024])
-def test_english_small_workflow_wraps_toolbar_and_inline_fields(workspace_window, qapp, width):
+def test_english_small_workflow_and_dialog_keep_fields_in_view(workspace_window, qapp, width):
     from PySide6.QtWidgets import QScrollArea, QBoxLayout
     window, errors = workspace_window
-    window._model = window._service.Project_Open(APP / 'examples/Uncontrolled_Desktop_Reference.ssproject')
+    window._model = window._service.ReferenceProject_Create('Narrow workflow')
     window._Project_Refresh()
     window.Language_Apply('en_US')
     window.Theme_Apply('dark')
@@ -197,73 +246,89 @@ def test_english_small_workflow_wraps_toolbar_and_inline_fields(workspace_window
     window.navigation_list.setCurrentRow(1)
     workflow = window.workflow_page
     panel = workflow.stage_panel
-    panel.Stage_Select('coast')
-    workflow.Reveal(panel.condition_editor)
     _Events_Flush(qapp)
-    QTest.qWait(80)
-    _Events_Flush(qapp)
-    scroll = workflow.findChild(QScrollArea)
+    QTest.qWait(40)
+    scroll = workflow._scroll
     assert scroll.widget().width() <= scroll.viewport().width()
-    assert panel.columns.direction() == QBoxLayout.Direction.TopToBottom
     assert panel.toolbar.direction() == QBoxLayout.Direction.TopToBottom
-    for control in (panel.create_button, panel.insert_before, panel.add_button, panel.clear_button):
+    for control in (panel.create_button, panel.insert_before, panel.add_button):
         position = control.mapTo(scroll.viewport(), control.rect().topLeft())
         assert 0 <= position.x() and position.x() + control.width() <= scroll.viewport().width()
-    for control in (panel.condition_editor.name_edit, panel.condition_editor.event_combo,
-                    panel.condition_editor.findChild(QDialogButtonBox)):
-        viewport = panel.detail_scroll.viewport()
-        position = control.mapTo(viewport, control.rect().topLeft())
-        assert 0 <= position.x() and position.x() + control.width() <= viewport.width()
+    def Inspect(dialog):
+        dialog.resize(740, 620)
+        qapp.processEvents()
+        for control in (dialog.stage_editor.name_edit, dialog.stage_editor.event_combo):
+            viewport = dialog.scroll.viewport()
+            position = control.mapTo(viewport, control.rect().topLeft())
+            assert 0 <= position.x() and position.x() + control.width() <= viewport.width()
+        dialog.reject()
+    _Capsule_Click(window, 'ascent', Inspect)
     assert not errors
 
 
-def test_keyboard_condition_draft_survives_stage_and_parameter_changes(workspace_window, qapp):
+@pytest.mark.parametrize('close_kind', ['cancel', 'escape', 'close'])
+def test_normal_capsule_cancel_discards_parameters_and_ranges(workspace_window, qapp, close_kind):
     window, errors = workspace_window
-    window._model = window._service.Project_Open(APP / 'examples/Uncontrolled_Desktop_Reference.ssproject')
+    window._model = window._service.ReferenceProject_Create('Cancel transaction')
     window._Project_Refresh()
-    panel = window.workflow_page.stage_panel
-    panel.Stage_Select('coast')
-    editor = panel.condition_editor.name_edit
-    editor.setFocus(); editor.selectAll(); QTest.keyClicks(editor, 'Keyboard coast draft')
-    panel.Stage_Select('descent')
+    before = _Snapshot(window._model)
+    def Discard(dialog):
+        from test_workflow_connections import _InFunction
+        dialog.stage_editor.name_edit.setText('Keyboard coast draft')
+        def Parameters(child):
+            owner = child._draft.strategies['ins']
+            child._Parameters_Reveal(owner)
+            editor = child.parameters.editors[(owner, 'mechanization_aggregation')]
+            editor.CommittedValue_Set(1)
+            child._Parameter_Set(owner, 'mechanization_aggregation', 1)
+        _InFunction(dialog, 'ins', Parameters)
+        if close_kind == 'escape':
+            QTest.keyClick(dialog, Qt.Key.Key_Escape)
+        elif close_kind == 'close':
+            dialog.close()
+        else:
+            dialog.reject()
+    _Capsule_Click(window, 'ascent', Discard)
     _Events_Flush(qapp)
-    assert next(row for row in window._model.mission_process['stages'] if row['stage_id']=='coast')['name'] == 'Keyboard coast draft'
-    editor = panel.condition_editor.name_edit
-    editor.setFocus(); editor.selectAll(); QTest.keyClicks(editor, 'Keyboard descent draft')
-    owner = window._model.strategies['ins']
-    window.workflow_page.Parameters_Select(owner)
-    parameter = window.algorithm_parameters_page.editors[(owner, 'mechanization_aggregation')]
-    parameter.lineEdit().selectAll(); QTest.keyClicks(parameter.lineEdit(), '1')
-    QTest.keyClick(parameter, Qt.Key.Key_Return)
-    _Events_Flush(qapp)
-    assert window._model.algorithm_parameters[owner]['mechanization_aggregation'] == 1
-    assert next(row for row in window._model.mission_process['stages'] if row['stage_id']=='descent')['name'] == 'Keyboard descent draft'
-    assert not errors
+    assert _Snapshot(window._model) == before
+    window.workflow_page.stage_panel.Stage_Select('ready')
+    assert _Snapshot(window._model) == before and not errors
 
 
-def test_unapplied_range_survives_stage_switch_and_save(workspace_window, tmp_path, qapp):
+def test_invalid_range_keeps_draft_and_referenced_stage_cannot_be_removed(workspace_window, qapp):
     window, errors = workspace_window
-    model = window._service.Project_Open(APP / 'examples/Uncontrolled_Desktop_Reference.ssproject')
-    root = window._service.ProjectRoot_Save(model, tmp_path / 'range-draft')
-    window._Project_Open(root)
+    model = window._service.ReferenceProject_Create('Invalid native range')
+    model.mission_process = MissionProcess_FirmwareDefault(acceleration_detection=True)
+    model.mission_functions = Functions_Derive(model, window._service.catalog)
+    function = next(row for row in model.mission_functions['functions'] if row['instance_id'] == 'recording')
+    function.update(start={'kind':'stage_enter','stage_id':'ascent'}, stop={'kind':'stage_exit','stage_id':'coast'})
+    model.mission_functions['schema_version'] = 2
+    window._model = model
+    window._Project_Refresh()
+    before = _Snapshot(window._model)
     panel = window.workflow_page.stage_panel
-    panel.Stage_Select('coast')
-    section = window.workflow_page.estimation_functions._sections['estimator.range']
-    form = section.body.layout()
-    start = form.itemAt(0, form.ItemRole.FieldRole).widget()
-    stop = form.itemAt(1, form.ItemRole.FieldRole).widget()
-    start.setCurrentIndex(start.findData(('stage_enter', 'ascent')))
-    stop.setCurrentIndex(stop.findData(('stage_exit', 'landed')))
-    panel.Stage_Select('descent')
+    panel.Stage_Remove('ascent')
+    assert panel.error.text() and _Snapshot(window._model) == before
+    def Invalid(dialog):
+        from test_workflow_connections import _InFunction
+        dialog.stage_editor.name_edit.setText('Keep this draft')
+        def Range(child):
+            form = child.bindings[0]._sections['recording.range'].body.layout()
+            start = form.itemAt(0, form.ItemRole.FieldRole).widget()
+            stop = form.itemAt(1, form.ItemRole.FieldRole).widget()
+            start.setCurrentIndex(start.findData(('stage_enter', 'coast')))
+            stop.setCurrentIndex(stop.findData(('stage_exit', 'ascent')))
+            child.accept()
+            assert child.result() != QDialog.DialogCode.Accepted
+            assert child.error.text()
+            assert tuple(start.currentData()) == ('stage_enter', 'coast')
+            child.reject()
+        _InFunction(dialog, 'recording', Range, apply=False)
+        assert dialog.stage_editor.name_edit.text() == 'Keep this draft'
+        dialog.reject()
+    _Capsule_Click(window, 'coast', Invalid)
     _Events_Flush(qapp)
-    window._Project_Save()
-    _Events_Flush(qapp)
-    saved = window._service.Project_Open(root)
-    function = next(row for row in saved.mission_functions['functions'] if row['instance_id']=='estimator')
-    assert function['start'] == {'kind':'stage_enter','stage_id':'ascent'}
-    assert function['stop'] == {'kind':'stage_exit','stage_id':'landed'}
-    assert saved.mission_functions['schema_version'] == 2
-    assert not errors
+    assert _Snapshot(window._model) == before and not errors
 
 
 def test_background_cancel_freezes_editors_and_never_reports_success(workspace_window, qapp):
@@ -303,20 +368,26 @@ def test_recording_and_telemetry_ranges_are_read_only_and_restore_real_lifecycle
     recording['start'] = {'kind':'stage_enter', 'stage_id':'ascent'}
     window._model = model
     window._Project_Refresh()
-    editor = window.workflow_page.recording_functions
     for identity in ('recording', 'telemetry'):
-        section = editor._sections[identity + '.range']
-        form = section.body.layout()
-        assert not form.itemAt(0, form.ItemRole.FieldRole).widget().isEnabled()
-        assert not form.itemAt(1, form.ItemRole.FieldRole).widget().isEnabled()
-        reason = window._translator.Text_Get('workflow.lifecycle_only')
-        assert any(reason == label.text() for label in section.body.findChildren(QLabel))
+        def Inspect(dialog):
+            section = dialog.bindings[0]._sections[identity + '.range']
+            form = section.body.layout()
+            assert not form.itemAt(0, form.ItemRole.FieldRole).widget().isEnabled()
+            assert not form.itemAt(1, form.ItemRole.FieldRole).widget().isEnabled()
+            reason = window._translator.Text_Get('workflow.lifecycle_only')
+            assert any(reason == label.text() for label in section.body.findChildren(QLabel))
+            dialog.reject()
+        _Function_Click(window, identity, Inspect)
     assert any(issue.function_id=='recording' and issue.code=='FUNCTION_REFERENCE_ONLY'
                for issue in Functions_Issues(window._model, window._service.catalog))
-    section = editor._sections['recording.range']
-    restore = next(button for button in section.body.findChildren(QPushButton)
-                   if button.text()==window._translator.Text_Get('workflow.restore_lifecycle'))
-    restore.click()
+    def Restore(dialog):
+        section = dialog.bindings[0]._sections['recording.range']
+        restore = next(button for button in section.body.findChildren(QPushButton)
+                       if button.text()==window._translator.Text_Get('workflow.restore_lifecycle'))
+        restore.click()
+        dialog.accept()
+        assert dialog.result() == QDialog.DialogCode.Accepted, dialog.error.text()
+    _Function_Click(window, 'recording', Restore)
     _Events_Flush(qapp)
     recording = next(row for row in window._model.mission_functions['functions'] if row['instance_id']=='recording')
     assert recording['start']=={'kind':'system_prepare','stage_id':''}

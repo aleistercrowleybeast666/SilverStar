@@ -51,6 +51,8 @@
       "System/Src/system_device_startup.c",
       "System/Src/system_startup.c",
       "System/Src/system_time.c",
+      "System/Src/system_mission_process.c",
+      "System/Src/system_mission_process_runtime.c",
       "System/Alignment/Src/system_alignment.c",
       "System/Alignment/Src/system_alignment_source.c",
       "System/Calibration/Src/system_calibration.c",
@@ -130,7 +132,24 @@
       ]
     },
     "source_origins": {
+      "Interfaces/Inc/system_installation_capture_if.h": "fccg_installation_handoff",
+      "System/Alignment/Inc/system_alignment.h": "fccg_installation_handoff",
+      "Tests/Host/installation_unit_lease_boundary.c": "fccg_installation_handoff",
+      "Tests/Host/installation_start_unit_boundary.c": "fccg_installation_handoff",
+      "Interfaces/Inc/system_installation_active_if.h": "fccg_installation_active",
+      "System/Calibration/Src/system_mag_calibration.c": "fccg_installation_active",
+      "Tests/Host/installation_baseline_fixture.h": "fccg_installation_active",
+      "Tests/Host/installation_capture_host_port.c": "fccg_installation_active",
+      "Tests/Host/installation_unit_boundary.c": "fccg_installation_active",
+      "Tests/Host/installation_calibration_unit_boundary.c": "fccg_installation_active",
+      "Tests/Host/installation_alignment_unit_boundary.c": "fccg_installation_active",
+      "Tests/Host/test_installation_active.c": "fccg_installation_active",
+      "Tests/Host/test_system_inertial.c": "fccg_installation_active",
+      "Tests/Host/optional_start_mag_inputs.c": "fccg_installation_active",
       "default": "reference_base",
+      "System/Inc/system_mission_process.h": "fccg_mission_process",
+      "System/Src/system_mission_process.c": "fccg_mission_process",
+      "System/Src/system_mission_process_runtime.c": "fccg_mission_process",
       "APP/Inc/app_task_config.h": "fccg_runtime_safety",
       "Common/Inc/silverstar_assert.h": "fccg_runtime_safety",
       "Common/Src/silverstar_assert.c": "fccg_runtime_safety",
@@ -194,7 +213,10 @@
       "Tests/Host/test_fusion_timing.c": "fccg_fusion_timing",
       "Tests/Host/test_navigation_kf_current.c": "fccg_fusion_timing",
       "Tests/Host/test_eskf_current.c": "fccg_fusion_timing",
-      "Tests/Host/test_fusion_timing_records.c": "fccg_fusion_timing"
+      "Tests/Host/test_fusion_timing_records.c": "fccg_fusion_timing",
+      "System/Inc/system_console_dispatch.h": "fccg_runtime_safety",
+      "System/Src/system_console_dispatch.c": "fccg_runtime_safety",
+      "Tools/astra_stack_inputs.json": "fccg_runtime_safety"
     },
     "device_descriptors": [
       {

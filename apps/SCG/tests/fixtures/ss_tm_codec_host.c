@@ -3,6 +3,8 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+#include <string.h>
 
 void SilverStarAssert_Check(uint8_t condition, SilverStarAssertModuleId module,
     const char *file, uint32_t line, SilverStarAssertReasonId reason)
@@ -47,6 +49,20 @@ int main(void)
         assert(SsTm_HealthBuild(4000U, 0U, 0U, 1U, frame, sizeof(frame), &length) != AIR_BUILD_OK);
         assert(SsTm_PositionBuild(900000001L, 0, 0, 0U, 0U, 3U, 0U,
             frame, sizeof(frame), &length) != AIR_BUILD_OK);
+        AirFlightStatePayload flight = {0};
+        const float invalid[] = {NAN, INFINITY, -INFINITY};
+        for (uint8_t axis = 0U; axis < 3U; axis++)
+        {
+            for (uint8_t value = 0U; value < 3U; value++)
+            {
+                flight.velocity_enu_mps[axis] = invalid[value];
+                assert(Air_FlightStateBuild(0U, &flight, frame, sizeof(frame), &length) == AIR_BUILD_BAD_PARAM);
+                flight.velocity_enu_mps[axis] = 0.0f;
+                assert(Air_FlightStateBuild(0U, &flight, frame, sizeof(frame), &length) == AIR_BUILD_OK);
+                memcpy(&frame[32U + 4U * axis], &invalid[value], sizeof(float));
+                assert(Air_FrameValidate(frame, length) == AIR_PARSE_BAD_FIELD);
+            }
+        }
     }
     return EXIT_SUCCESS;
 }

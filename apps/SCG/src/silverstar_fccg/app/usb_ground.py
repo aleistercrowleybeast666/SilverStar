@@ -194,7 +194,7 @@ def _C071Native_Inspect(root):
 def _C071Model_Validate(model, spi, gpio):
     radios = GroundRadioConfigurations_Get(model.ground_target)
     ground = model.ground_target
-    if (not ground.enabled or ground.pc_interface != "usb_cdc" or
+    if (ground.pc_interface != "usb_cdc" or
             model.air_link.radio_family != "sx128x" or len(radios) != 1 or
             radios[0].plugin != "silverstar.device.telemetry.sx1281" or
             radios[0].module_variant != "e28_2g4m12sx" or radios[0].instance_id != "radio0" or

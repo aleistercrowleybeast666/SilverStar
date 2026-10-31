@@ -1,4 +1,5 @@
 #include "system_flight_recovery.h"
+#include "project_mission_process.h"
 
 #include <math.h>
 #include <stddef.h>
@@ -34,6 +35,22 @@ _Static_assert((SYSTEM_FLIGHT_ROCKET_LONGITUDINAL_AXIS >=
                "invalid SYSTEM_FLIGHT_ROCKET_LONGITUDINAL_AXIS");
 
 static SystemFlightRecoveryStatus s_status;
+static uint8_t s_stage_recovery_requested;
+static uint8_t s_stage_action_attempted;
+
+SystemDeviceResult SystemFlightRecovery_StageRecoveryRequest(uint32_t stage_id_hash)
+{
+    if ((PROJECT_MISSION_PHASE_AUTHORITY == 0U) ||
+        (PROJECT_MISSION_RECOVERY_STAGE_HASH == 0U) ||
+        (stage_id_hash != PROJECT_MISSION_RECOVERY_STAGE_HASH))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if (s_stage_recovery_requested != 0U) { return SYSTEM_DEVICE_ALREADY_MATCHED; }
+    if (SystemLifecycle_GetState() != SYSTEM_STATE_FLIGHT) { return SYSTEM_DEVICE_NOT_READY; }
+    /* FlightTask alone requests and consumes. Confirmation and hardware actions
+     * remain in this owner; a stage request cannot bypass deployment conditions. */
+    s_stage_recovery_requested = 1U;
+    return SYSTEM_DEVICE_OK;
+}
 static uint64_t s_deploy_confirm_start_sample_us;
 static SystemDeployTriggerMask s_deploy_confirm_mask;
 static uint64_t s_last_deploy_estimator_timestamp_us;
@@ -517,6 +534,16 @@ static SystemDeviceResult SystemFlightRecovery_DeployProcess(
                              SILVERSTAR_ASSERT_MODULE_FLIGHT_LOGIC);
     SILVERSTAR_ASSERT_OBJECT(input, SystemFlightRecoveryInput,
                              SILVERSTAR_ASSERT_MODULE_FLIGHT_LOGIC);
+    if ((PROJECT_MISSION_PHASE_AUTHORITY != 0U) && (status->deploy_triggered != 0U))
+    {
+        if ((s_stage_recovery_requested != 0U) && (s_stage_action_attempted == 0U) &&
+            (lifecycle_state == SYSTEM_STATE_FLIGHT))
+        {
+            s_stage_action_attempted = 1U;
+            return SystemFlightRecovery_DeployActionProcess(status, input);
+        }
+        return SYSTEM_DEVICE_OK;
+    }
     if (lifecycle_state != SYSTEM_STATE_FLIGHT)
     {
         (void)SystemFlightRecovery_EstimatorSampleIsNew(input);
@@ -543,6 +570,9 @@ static SystemDeviceResult SystemFlightRecovery_DeployProcess(
     }
     SystemFlightRecovery_DeployStatusRecord(
         status, input, matched_mask, tilt_angle_deg, vertical_velocity_mps);
+    if ((PROJECT_MISSION_PHASE_AUTHORITY != 0U) && (s_stage_recovery_requested == 0U))
+    { SystemFlightRecovery_StatusCommit(status); return SYSTEM_DEVICE_OK; }
+    if (PROJECT_MISSION_PHASE_AUTHORITY != 0U) { s_stage_action_attempted = 1U; }
     return SystemFlightRecovery_DeployActionProcess(status, input);
 }
 
@@ -1284,6 +1314,8 @@ SystemDeviceResult SystemFlightRecovery_Init(void)
 {
     SystemFlightRecoveryStatus status;
     SystemDeviceResult init_result;
+    s_stage_recovery_requested = 0U;
+    s_stage_action_attempted = 0U;
 
     SILVERSTAR_ASSERT(
         SYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK <= SYSTEM_DEPLOY_TRIGGER_MASK_ALL,
@@ -1339,10 +1371,13 @@ SystemDeviceResult SystemFlightRecovery_Process(
         return SYSTEM_DEVICE_INTERNAL_ERROR;
     }
     if (status.initialized == 0U) { return SYSTEM_DEVICE_NOT_READY; }
+    if ((PROJECT_MISSION_PHASE_AUTHORITY != 0U) && (PROJECT_MISSION_RECOVERY_STAGE_HASH == 0U))
+    { return SYSTEM_DEVICE_OK; } /* A recording-only mission never auto-deploys or auto-lands. */
     lifecycle_state = SystemLifecycle_GetState();
     status.last_process_timestamp_us = input->now_us;
     SystemFlightRecovery_InitialAxisCapture(&status, input, lifecycle_state);
-    SystemFlightRecovery_StartActionProcess(&status, input, lifecycle_state);
+    if (PROJECT_MISSION_PHASE_AUTHORITY == 0U)
+    { SystemFlightRecovery_StartActionProcess(&status, input, lifecycle_state); }
     result = SystemFlightRecovery_DeployProcess(&status, input,
                                                  lifecycle_state);
     if ((lifecycle_state == SYSTEM_STATE_FLIGHT) &&

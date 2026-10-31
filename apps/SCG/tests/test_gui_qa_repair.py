@@ -43,7 +43,7 @@ def _GroundF103Model_Get(catalog):
     resources = tuple(HardwareResource(item.resource_id, item.kind, item.metadata)
                       for item in BoardResourceProvisions_Get(board))
     model.ground_target = GroundTargetConfiguration(
-        enabled=True, mcu="silverstar.mcu.stm32f103c8t6", board=board.component_id,
+         mcu="silverstar.mcu.stm32f103c8t6", board=board.component_id,
         hardware=HardwareConfiguration(
             mode="board_plugin", source_kind=board.board.source_kind,
             mcu=inventory.mcu_part, inventory=inventory.Dictionary_Get(),
@@ -123,7 +123,7 @@ def test_radio_invalid_selection_remains_visible_and_backend_rejects(qapp, tmp_p
     window = _Window_Create(tmp_path)
     try:
         model = ReferenceProject_Create("RadioQA", catalog=window._service.catalog)
-        model.ground_target = replace(model.ground_target, enabled=True,
+        model.ground_target = replace(model.ground_target, 
                                       radio_plugin=RADIO,
                                       module_variant="e28_2g4m12sx")
         model.air_link = replace(model.air_link, spreading_factor=7)

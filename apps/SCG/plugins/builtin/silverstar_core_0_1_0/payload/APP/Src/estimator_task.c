@@ -35,6 +35,7 @@
 #include "system_gnss_if.h"
 #include "system_gnss_quality.h"
 #include "system_lifecycle.h"
+#include "system_mission_process.h"
 #include "system_navigation_profile.h"
 #include "system_navigation_health.h"
 #include "system_navigation_backend.h"
@@ -450,6 +451,11 @@ static void EstimatorTask_SnapshotCommit(void)
     uint32_t primask = EstimatorTask_IrqLock();
 
     s_published_snapshot = s_snapshot;
+    if (SystemMissionProcess_EstimatorStoppedGet() != 0U)
+    {
+        s_published_snapshot.initialized = 0U;
+        s_published_snapshot.mission_running = 0U;
+    }
     EstimatorTask_IrqUnlock(primask);
 }
 
@@ -4063,6 +4069,9 @@ static void Estimator_PredictionsProcessCycle(void)
     SystemInertialIncrement prediction;
     uint32_t prediction_index;
 
+    if ((s_estimator.mission_running != 0U) &&
+        (SystemMissionProcess_EstimatorStoppedGet() != 0U))
+    { EstimatorTask_AbortMission(); }
     for (prediction_index = 0U;
          prediction_index < ESTIMATOR_MAX_PREDICTIONS_PER_CYCLE;
          prediction_index++)
@@ -4072,7 +4081,8 @@ static void Estimator_PredictionsProcessCycle(void)
         {
             break;
         }
-        Estimator_PredictionProcess(&prediction);
+        if (SystemMissionProcess_EstimatorStoppedGet() == 0U)
+        { Estimator_PredictionProcess(&prediction); }
     }
     s_estimator_task_timing.sequence++;
     s_estimator_task_timing.last_prediction_count = prediction_index;
@@ -4721,6 +4731,11 @@ uint8_t Estimator_GetLatestSnapshot(EstimatorOutputSnapshot *snapshot)
     }
     primask = EstimatorTask_IrqLock();
     published = s_published_snapshot;
+    if (SystemMissionProcess_EstimatorStoppedGet() != 0U)
+    {
+        published.initialized = 0U;
+        published.mission_running = 0U;
+    }
     EstimatorTask_IrqUnlock(primask);
     *snapshot = published;
     return published.initialized;

@@ -403,7 +403,7 @@ def test_custom_ground_hardware_exports_local_unverified_pcb_instance(
     )
     model = ReferenceProject_Create("CustomGround", catalog=catalog)
     model.ground_target = replace(
-        model.ground_target, enabled=True,
+        model.ground_target, 
         mcu="silverstar.mcu.stm32f407vet6", board="",
         hardware=imported.hardware,
         resource_assignments={"radio0:radio_bus": "PLATFORM_SPI_1"},

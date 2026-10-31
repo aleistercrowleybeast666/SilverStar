@@ -43,8 +43,30 @@ def test_start_merge_does_not_discard_customized_phase(qapp):
         panel.close()
 
 
+def _Modal_Click(button, dialog_type, interact):
+    from PySide6.QtWidgets import QApplication
+    outcomes = []
+    def DuringDialog():
+        dialog = QApplication.activeModalWidget()
+        try:
+            assert isinstance(dialog, dialog_type)
+            interact(dialog)
+            outcomes.append(None)
+        except BaseException as error:
+            outcomes.append(error)
+            if dialog is not None: dialog.reject()
+    QTimer.singleShot(0, DuringDialog)
+    QTest.mouseClick(button, Qt.MouseButton.LeftButton)
+    assert outcomes, 'The normal action must open a modal editor'
+    if outcomes[0] is not None: raise outcomes[0]
+
+
 def test_real_project_phase_capsules_insert_dialog_start_policy_and_reopen(tmp_path, qapp, monkeypatch):
-    from silverstar_fccg.ui.mission_process_panel import MissionStageDialog
+    from copy import deepcopy
+    from PySide6.QtWidgets import QDialog
+    from silverstar_fccg.ui.mission_template import MissionTemplateDialog
+    from silverstar_fccg.ui.mission_stage_transaction import MissionStageTransactionDialog
+    from test_three_workspace_workflow import _Capsule_Click
     service = FccgService(APP)
     service.policy = WorkspacePolicy(APP.parents[1])
     window = MainWindow(SettingsStore(tmp_path / 'settings.ini'), service=service)
@@ -52,33 +74,50 @@ def test_real_project_phase_capsules_insert_dialog_start_policy_and_reopen(tmp_p
     window._Project_Refresh()
     errors = []; monkeypatch.setattr(window, '_Error_Show', errors.append)
     try:
-        panel = window.flight_configuration_page.mission_process_panel
-        monkeypatch.setattr('silverstar_fccg.ui.mission_process_panel.QMessageBox.question',lambda *a,**k:QMessageBox.StandardButton.Apply)
-        panel.create_button.click(); _Events_Flush(qapp)
-        assert len(window._model.mission_process['stages']) == 7
-        panel.insert_before.setCurrentIndex(panel.insert_before.findData('deploy'))
-        panel.add_button.click(); _Events_Flush(qapp)
+        panel = window.workflow_page.stage_panel
+        assert list(panel.cards) == ['ready', 'ascent']
+        original = deepcopy(window._model.Dictionary_Get())
+        _Modal_Click(panel.create_button, MissionTemplateDialog, lambda dialog: dialog.reject())
+        assert window._model.Dictionary_Get() == original
+        def Template(dialog):
+            assert dialog.launch_threshold.value() == dialog.burnout_threshold.value() == 2.0
+            assert not dialog.recovery.isChecked()
+            dialog.preset.setCurrentIndex(dialog.preset.findData('acceleration'))
+            dialog.accept()
+        _Modal_Click(panel.create_button, MissionTemplateDialog, Template)
+        _Events_Flush(qapp)
         rows = window._model.mission_process['stages']
-        assert len(rows) == 8 and rows[5]['stage_id'] == 'deploy'
-        identity = rows[4]['stage_id']
-        panel.Stage_Select(identity); _Events_Flush(qapp)
-        editor=panel.condition_editor
-        editor.number.setValue(1.25);editor.accept();_Events_Flush(qapp)
-        assert window._model.mission_process['stages'][4]['condition']['value']==1.25
-        panel.condition_editor.name_edit.setText('discarded')
-        panel.condition_editor._Discard_Click();_Events_Flush(qapp)
-        assert window._model.mission_process['stages'][4]['name']!='discarded'
-        panel.condition_editor.name_edit.setText('Pre-deployment confirmation')
-        panel.condition_editor.number.setValue(2.5)
-        panel.condition_editor.accept();_Events_Flush(qapp)
-        assert window._model.mission_process['stages'][4]['condition']['value']==2.5
-        assert window._model.mission_process['stages'][4]['stage_id']==identity
-        panel.start_policy.setCurrentIndex(panel.start_policy.findData('start_is_launch')); _Events_Flush(qapp)
+        assert [row['stage_id'] for row in rows] == ['ready', 'mission_start', 'ascent', 'coast']
+        assert [row['condition']['value'] for row in rows[2:]] == [2.0, 2.0]
+        panel.insert_before.setCurrentIndex(panel.insert_before.findData('coast'))
+        before_add = deepcopy(window._model.Dictionary_Get())
+        _Modal_Click(panel.add_button, MissionStageTransactionDialog, lambda dialog: dialog.reject())
+        assert window._model.Dictionary_Get() == before_add
+        def Add(dialog):
+            dialog.stage_editor.name_edit.setText('User observation')
+            dialog.stage_editor.number.setValue(1.25)
+            dialog.accept()
+            assert dialog.result() == QDialog.DialogCode.Accepted, dialog.error.text()
+        _Modal_Click(panel.add_button, MissionStageTransactionDialog, Add)
+        _Events_Flush(qapp)
         rows = window._model.mission_process['stages']
-        assert not any(row['stage_id'] == 'mission_start' for row in rows)
-        assert next(row for row in rows if row['stage_id'] == 'ascent')['condition']['value'] == 'start_accepted'
-        panel.start_policy.setCurrentIndex(panel.start_policy.findData('separate')); _Events_Flush(qapp)
-        assert any(row['stage_id'] == 'mission_start' for row in window._model.mission_process['stages'])
+        assert len(rows) == 5 and rows[4]['stage_id'] == 'coast'
+        identity = rows[3]['stage_id']
+        assert rows[3]['name'] == 'User observation'
+        assert rows[3]['condition']['value'] == 1.25
+        def Cancel(dialog):
+            dialog.stage_editor.name_edit.setText('discarded')
+            dialog.reject()
+        _Capsule_Click(window, identity, Cancel); _Events_Flush(qapp)
+        assert window._model.mission_process['stages'][3]['name'] == 'User observation'
+        def Apply(dialog):
+            dialog.stage_editor.name_edit.setText('Observation confirmation')
+            dialog.stage_editor.number.setValue(2.5)
+            dialog.accept()
+            assert dialog.result() == QDialog.DialogCode.Accepted, dialog.error.text()
+        _Capsule_Click(window, identity, Apply); _Events_Flush(qapp)
+        assert window._model.mission_process['stages'][3]['condition']['value'] == 2.5
+        assert window._model.mission_process['stages'][3]['stage_id'] == identity
         profile = MissionProfile_Build(window._model, service.catalog)
         assert profile['schema_version'] == 2
         service.ProjectRoot_Save(window._model, tmp_path / 'saved_project')
@@ -95,11 +134,12 @@ def test_real_project_phase_capsules_insert_dialog_start_policy_and_reopen(tmp_p
                 window.Theme_Apply(theme)
                 for width in (960, 1440):
                     window.resize(width, 900); _Events_Flush(qapp)
-                    assert identity in window.flight_configuration_page.mission_process_panel.cards
-                    assert 'process.' not in window.flight_configuration_page.mission_process_panel.add_button.text()
+                    assert identity in window.workflow_page.stage_panel.cards
+                    assert 'process.' not in panel.add_button.text()
         assert MissionProfile_Build(window._model, service.catalog) == profile
         assert not errors
     finally:
+        window._project_dirty = False
         window.close(); _Events_Flush(qapp)
 
 

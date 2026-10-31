@@ -128,6 +128,36 @@ QLabel#headerControlLabel { color: $header_text; font-weight: 600; }
 QLabel#headerProjectValue { color: $header_muted; font-weight: 600; }
 QLabel#pageTitle { color: $text; font-size: 23px; font-weight: 700; }
 QLabel#pageDescription, QLabel#muted { color: $muted; }
+QFrame#workflowSummaryStrip {
+    background: $surface_alt;
+    border: 1px solid $border;
+    border-left: 3px solid $accent;
+    border-radius: 6px;
+}
+QLabel#workflowSummary { color: $text; font-weight: 600; padding: 3px; }
+QLabel#workflowDialogTitle { color: $text; font-size: 22px; font-weight: 700; }
+QFrame#missionPhaseCapsule {
+    background: $surface_alt;
+    border: 1px solid $border;
+    border-top: 3px solid $border_strong;
+    border-radius: 10px;
+}
+QFrame#missionPhaseCapsule[selected="true"] { border: 1px solid $accent; border-top: 3px solid $accent; }
+QLabel#phaseBoundary { color: $muted; font-size: 11px; }
+QPushButton#phaseSelect {
+    color: $text; background: transparent; border: 0;
+    padding: 5px 0; text-align: left; font-size: 14px; font-weight: 700;
+}
+QPushButton#phaseSelect:hover, QPushButton#phaseSelect:checked { color: $accent; }
+QToolButton#phaseTool { background: $surface; color: $muted; border: 1px solid $border; padding: 2px 8px; }
+QToolButton#phaseTool:hover { color: $accent; border-color: $accent; }
+QPushButton#missionAddCard {
+    background: $surface; color: $accent; border: 1px dashed $border_strong;
+    border-radius: 10px; padding: 24px 12px; font-weight: 600;
+}
+QPushButton#missionAddCard:hover { background: $surface_alt; border-color: $accent; }
+QLabel#workflowError { color: $error; }
+QTableWidget#missionCoverage { border: 1px solid $border; border-radius: 6px; gridline-color: $border; }
 QLabel#noticeLabel {
     color: $text;
     background: $warning_surface;

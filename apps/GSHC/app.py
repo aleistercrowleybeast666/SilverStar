@@ -1010,6 +1010,10 @@ class Controller(QObject):
         self._connection_generation = 0
         self._state_generation = 0
         self.state = FlightControllerState(session_generation=self._next_state_generation())
+        from services.recovery_position import RecoveryCacheResult
+        cached = self.state.recovery.Cache_Load(self.data_dir / 'recovery-last-wgs84.json')
+        if cached in (RecoveryCacheResult.Invalid, RecoveryCacheResult.IoError):
+            self.state.receive_health.warning = 'Last WGS84 position cache could not be loaded: ' + cached.value
         self.events = EventHistory()
         self.window.bind_runtime_model(self.state, self.events, select_preflight=True)
 
@@ -1210,7 +1214,8 @@ class Controller(QObject):
             )
             return
 
-        self.protocol_worker = ProtocolWorker(generation, self.logger)
+        self.protocol_worker = ProtocolWorker(generation, self.logger,
+            recovery_cache_path=self.data_dir / 'recovery-last-wgs84.json')
         self.protocol_worker.diagnostics_ready.connect(
             self.on_protocol_diagnostics,
             Qt.QueuedConnection,
@@ -2088,17 +2093,22 @@ class Controller(QObject):
     def _handle_air_message(self, message, event: ProtocolEvent | None = None) -> None:
         tm_frame = getattr(event, 'tm_frame', None)
         if tm_frame is not None:
-            tm = self.state.telemetry
-            previous_session = tm.boot_session
-            observed = tm.Frame_Observe(tm_frame, event.host_rx_monotonic_ns)
+            previous_session = self.state.telemetry.boot_session
+            previous_mission = self.state.telemetry.current_mission_key
+            observed = event.telemetry_result
             if observed is not TelemetryObserveResult.Accepted:
-                self._log({"dir": "LOCAL", "layer": "SS_TM", "kind": observed.value,
+                self._log({"dir": "LOCAL", "layer": "SS_TM", "kind": observed.value if observed else "unqualified_receive",
                            "boot_session": tm_frame.boot_session, "sequence": tm_frame.sequence})
                 return
+            tm = event.telemetry_snapshot
+            self.state.telemetry = tm
             self.state.recovery_current_session = tm.boot_session
             if previous_session != tm.boot_session:
                 self.FlightSession_Restart("SS_TM_BOOT_SESSION")
                 self.state.mission_presentation.phase = MissionPhase.UNKNOWN
+            # This receive fact precedes all type-specific returns. Measurement
+            # age remains separate in POSITION and HEALTH snapshots.
+            self.state.handshake.last_air_rx_monotonic_ns = event.host_rx_monotonic_ns
             if tm.passive:
                 self._clear_capability_ack("SS_TM_PASSIVE")
                 # An ACK is still matched below before pending transactions are
@@ -2107,12 +2117,13 @@ class Controller(QObject):
             if tm_frame.message_type == 0x20 and tm_frame.values.get('event_code') == 3:
                 if tm.current_mission_key != (tm_frame.values['occurred_us'], tm_frame.values['event_id']):
                     return  # Record late history without replacing the active mission segment.
-                self.state.horizontal_trajectory.Clear()
-                self.state.mission_started = False
-                self.state.mission_first_time_ms = None
+                if previous_session == tm.boot_session and previous_mission != (-1, -1):
+                    self.state.horizontal_trajectory.Clear()
+                    self.state.mission_started = False
+                    self.state.mission_first_time_ms = None
             if tm_frame.message_type == 0x18:
                 self.state.recovery.Absolute_Observe(tm_frame, event.host_rx_monotonic_ns,
-                    source="SS-TM " + tm_frame.profile + " / WGS84 GNSS")
+                    source="SS-TM " + tm_frame.profile + " / WGS84 GNSS", accepted=True)
                 self.state.recovery_current_session = tm_frame.boot_session
                 return
             if tm_frame.message_type == 0x19 or not tm_frame.known:
@@ -2356,7 +2367,9 @@ class Controller(QObject):
         # but must never change the live controller session after ACK.
         accel = None
         gyro = None
-        if self.state.capability is not None and self.state.capability.profile_supported:
+        if getattr(event, 'tm_frame', None) is not None:
+            accel, gyro = event.accel_mps2, event.gyro_radps
+        elif self.state.capability is not None and self.state.capability.profile_supported:
             try:
                 accel = accel_raw_to_mps2(
                     message.accel_raw,
@@ -2455,6 +2468,13 @@ class Controller(QObject):
         self._resolve_calibration_pending_from_status(message)
 
         status_id = message.status_id
+        tm_frame = getattr(event, 'tm_frame', None)
+        if tm_frame is not None and status_id in (3, 4, 5, 6):
+            fact_key = (tm_frame.values['occurred_us'], tm_frame.values['event_id'])
+            if fact_key < self.state.telemetry.last_phase_key:
+                if status_id == int(AirStatusId.MISSION_START):
+                    self._mark_mission_started('mission_start_status')
+                return  # Retain received history without rolling the current phase back.
         if status_id == int(AirStatusId.BOOT) and getattr(event, 'tm_frame', None) is not None:
             return  # boot_session, not repeated BOOT events, owns invalidation
         if status_id == int(AirStatusId.BOOT):
@@ -2466,11 +2486,14 @@ class Controller(QObject):
         elif status_id == int(AirStatusId.SELFTEST_COMPLETE):
             self.state.selftest_passed = message.arg0 == 1
         elif status_id == int(AirStatusId.MISSION_START):
-            if self.state.mission_presentation.phase is MissionPhase.LANDED:
+            tm_start = getattr(event, 'tm_frame', None) is not None
+            if self.state.mission_presentation.phase is MissionPhase.LANDED and not tm_start:
                 # Explicit new mission after landing; duplicate active START
                 # and a late START after first telemetry preserve task history.
                 self.state.horizontal_trajectory.Clear()
-            self._mark_mission_started("mission_start_status", message.time_ms)
+            # TM event time is boot-monotonic, while main data time is
+            # mission-relative. Do not mix these clocks or erase early samples.
+            self._mark_mission_started("mission_start_status", None if tm_start else message.time_ms)
             self._update_mission_presentation(
                 MissionPhase.MISSION_ACTIVE,
                 "MISSION_START",

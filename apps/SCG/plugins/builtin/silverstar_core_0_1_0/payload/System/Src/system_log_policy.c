@@ -7,6 +7,7 @@
 #include "project_log_config.h"
 #include "silverstar_assert.h"
 #include "system_installation_capture_if.h"
+#include "system_mission_process.h"
 
 typedef struct
 {
@@ -19,6 +20,15 @@ typedef struct
 static SystemLogStreamRuntime s_streams[SSLOG_RECORD_COUNT];
 static uint8_t s_initialized;
 static uint8_t s_frozen;
+
+static uint8_t SystemLogPolicy_PhaseAllows(const SystemLogStreamConfig *config)
+{
+    /* Event/one-shot identity, faults and phase evidence remain recordable.
+     * Ordinary data streams obey the one shared function interval. */
+    return (uint8_t)((config->policy == SSLOG_STREAM_POLICY_EVENT) ||
+        (config->policy == SSLOG_STREAM_POLICY_ONE_SHOT) ||
+        (SystemMissionProcess_LoggingActiveGet() != 0U));
+}
 
 static int16_t SystemLogPolicy_StreamIndexFind(
     FlightLogRecordType record_type)
@@ -196,7 +206,8 @@ uint8_t SystemLogPolicy_ShouldEmit(FlightLogRecordType record_type)
     state = PlatformCritical_Enter();
     index = SystemLogPolicy_StreamIndexFind(record_type);
     if ((index >= 0) &&
-        (s_streams[(uint16_t)index].config.enabled != 0U))
+        (s_streams[(uint16_t)index].config.enabled != 0U) &&
+        (SystemLogPolicy_PhaseAllows(&s_streams[(uint16_t)index].config) != 0U))
     {
         const uint16_t decimation =
             s_streams[(uint16_t)index].config.decimation;
@@ -232,7 +243,8 @@ uint8_t SystemLogPolicy_ShouldEmitAt(FlightLogRecordType record_type,
     SystemLogPolicy_Init();
     state = PlatformCritical_Enter();
     index = SystemLogPolicy_StreamIndexFind(record_type);
-    if ((index >= 0) && (s_streams[(uint16_t)index].config.enabled != 0U))
+    if ((index >= 0) && (s_streams[(uint16_t)index].config.enabled != 0U) &&
+        (SystemLogPolicy_PhaseAllows(&s_streams[(uint16_t)index].config) != 0U))
     {
         SystemLogStreamRuntime *stream = &s_streams[(uint16_t)index];
         SILVERSTAR_ASSERT(stream->config.decimation > 0U,

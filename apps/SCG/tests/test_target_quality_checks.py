@@ -11,6 +11,7 @@ from pathlib import Path
 import pytest
 
 from test_scg_ui_metadata_hotfix import window
+from test_round2_targets import _GroundBoardProject_Get
 from silverstar_fccg.build.quality_batch import QualityBatch_Run
 from silverstar_fccg.build.runner import BuildAction, BuildProgress, BuildResult, BuildRunner
 from silverstar_fccg.core.i18n import Translator
@@ -19,12 +20,14 @@ from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.project.model import ProjectModel_Save
 from silverstar_fccg.project.quality_inputs import QualityInputHash_Get
 from silverstar_fccg.project.quality_results import QualityResult_Save, QualityResults_Load
-from silverstar_fccg.project.reference import ReferenceProject_Create
 from silverstar_fccg.ui.pages.build import BuildPage
+from silverstar_fccg.app.service import FccgService
+from silverstar_fccg.project.generation_state import TargetGenerationReceipt_Get
 
 
 def _Inputs_Create(tmp_path):
-    model = ReferenceProject_Create("CheckRouting")
+    service = FccgService(Path(__file__).resolve().parents[1])
+    model = _GroundBoardProject_Get(service.catalog)
     inputs = []
     for target, directory in (("flight", "Flight_Controller"), ("ground", "Ground_Station")):
         root = tmp_path / directory
@@ -42,6 +45,14 @@ def _Inputs_Create(tmp_path):
             (generated / "ground_source_graph.json").write_text(json.dumps(dict(
                 sources=["sample.c"], asm_sources=[], include_dirs=[], defines=[], linker_script="sample.ld")), encoding="utf-8")
             (generated / "ground_target_metadata.json").write_text('{"target_role":"ground_station"}', encoding="utf-8")
+        # Synthetic routing inputs carry current target provenance through the
+        # same receipt authority. The echo runner is never firmware evidence.
+        generated = root / 'Generated'
+        generated.mkdir(exist_ok=True)
+        receipt = TargetGenerationReceipt_Get(model, service.catalog, target)
+        receipt['target_role'] = 'flight_controller' if target == 'flight' else 'ground_station'
+        name = 'memory_contract.json' if target == 'flight' else 'ground_target_metadata.json'
+        (generated / name).write_text(json.dumps(receipt), encoding='utf-8')
         (root / "sample.c").write_text("int input_value = 1;\n", encoding="utf-8")
         (root / "sample.ld").write_text("/* synthetic linker input */\n", encoding="utf-8")
         inputs.append((target, root, model))
@@ -105,9 +116,9 @@ def test_input_changes_during_check_block_current_result(tmp_path, monkeypatch):
 
 
 def test_ground_power10_persists_without_flight_report_inputs(window, tmp_path, monkeypatch):
-    _Inputs_Create(tmp_path)
+    inputs = _Inputs_Create(tmp_path)
     window._project_root = tmp_path
-    window._model = ReferenceProject_Create("CheckRouting")
+    window._model = inputs[0][2]
     _Runner_Fake(monkeypatch, power10=True)
     for target, checkbox in window.build_page.quality_target_checks.items():
         checkbox.setChecked(target == "ground")
@@ -178,9 +189,9 @@ def test_ground_runner_uses_real_make_target_without_flight_descriptor(tmp_path,
 
 @pytest.mark.parametrize("selection", [("flight",), ("ground",), ("flight", "ground"), ()])
 def test_gui_selection_routes_and_saves_per_target(window, tmp_path, monkeypatch, selection):
-    _Inputs_Create(tmp_path)
+    inputs = _Inputs_Create(tmp_path)
     window._project_root = tmp_path
-    window._model = ReferenceProject_Create("CheckRouting")
+    window._model = inputs[0][2]
     calls = _Runner_Fake(monkeypatch)
     for target, checkbox in window.build_page.quality_target_checks.items():
         checkbox.setChecked(target in selection)
@@ -201,7 +212,9 @@ def test_gui_selection_routes_and_saves_per_target(window, tmp_path, monkeypatch
         window._Build_Request = module.MainWindow._Build_Request.__get__(window)
     monkeypatch.setattr(window, "_Project_SaveAs", lambda: pytest.fail("Check must not save project"))
     window._Build_Request("architecture_check")
-    assert tuple(call[0] for call in calls) == selection
+    details = {target: window.build_page.target_quality_labels[target]["architecture_check"].toolTip()
+               for target in ("flight", "ground")}
+    assert tuple(call[0] for call in calls) == selection, details
     for target, directory in (("flight", "Flight_Controller"), ("ground", "Ground_Station")):
         records = QualityResults_Load(tmp_path / directory)
         assert bool(records) == (target in selection)
@@ -232,6 +245,31 @@ def test_gui_old_result_invalidates_after_file_or_tool_change(window, tmp_path):
     window._model.build = replace(model.build, tool_paths={"make": "changed-make.exe"})
     window._TargetQualityResults_Refresh()
     assert label.text() == window._translator.Text_Get("quality.target.stale")
+
+
+@pytest.mark.parametrize('stale_target', ('flight', 'ground'))
+def test_gui_model_change_rejects_only_stale_target_before_quality_run(window, tmp_path, monkeypatch, stale_target):
+    inputs = _Inputs_Create(tmp_path)
+    window._project_root = tmp_path
+    window._model = inputs[0][2]
+    if stale_target == 'ground':
+        window._model.ground_target = replace(window._model.ground_target, baudrate=57600)
+    else:
+        from silverstar_fccg.project.mission_process import MissionProcess_FirmwareDefault
+        window._model.mission_process = MissionProcess_FirmwareDefault(acceleration_detection=True)
+    calls = _Runner_Fake(monkeypatch)
+    for checkbox in window.build_page.quality_target_checks.values():
+        checkbox.setChecked(True)
+    def task(function, callback, error_callback=None, **kwargs):
+        callback(function(TaskContext(line_callback=kwargs['line_callback'])))
+        return True
+    monkeypatch.setattr(window, 'Task_Run', task)
+    window._Build_Request('architecture_check')
+    current_target = 'ground' if stale_target == 'flight' else 'flight'
+    assert [call[0] for call in calls] == [current_target]
+    assert not QualityResults_Load(inputs[0 if stale_target == 'flight' else 1][1])
+    assert window.build_page.target_quality_labels[stale_target]['architecture_check'].property('statusLevel') != 'success'
+    assert window.build_page.target_quality_labels[current_target]['architecture_check'].property('statusLevel') == 'success'
 
 
 def test_legacy_result_unbound_and_ground_result_not_inherited(window, tmp_path):
@@ -332,7 +370,9 @@ def test_async_gui_terminal_uses_batch_outcome_and_keeps_other_target_result(qap
     _Runner_Fake(monkeypatch, failed=failed)
     window._Build_Request("architecture_check")
     _Wait(qapp, lambda: window._active_worker is None)
-    assert window.progress_bar.property("taskState") == ("error" if failed else "success")
+    terminal_details = {target: window.build_page.target_quality_labels[target]["architecture_check"].toolTip()
+                        for target in ("flight", "ground")}
+    assert window.progress_bar.property("taskState") == ("error" if failed else "success"), terminal_details
     assert (window.progress_bar.value() == 1000) == (not failed)
     assert window.build_page.quality_result_labels["architecture_check"].property("statusLevel") == "success"
     ground_label = window.build_page.target_quality_labels["ground"]["architecture_check"]

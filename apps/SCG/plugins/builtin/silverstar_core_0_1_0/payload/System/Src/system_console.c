@@ -1,6 +1,7 @@
 #include "system_version.h"
 #include "system_installation_capture_if.h"
 #include "system_console.h"
+#include "system_console_dispatch.h"
 #include "system_log_file.h"
 
 #include <math.h>
@@ -219,9 +220,13 @@ typedef struct
     uint8_t valid;
 } SystemConsoleIoBaseline;
 
-/* SerialTask diagnostics are CPU-only; no peripheral DMA reads this table. */
+/* Every slot belongs to a generated physical descriptor. Multiple logical
+ * capabilities of one device share its diagnostic baseline. CPU-only. */
+_Static_assert((PROJECT_SELECTED_PHYSICAL_DEVICE_COUNT > 0U) &&
+               (PROJECT_SELECTED_PHYSICAL_DEVICE_COUNT <= SYSTEM_DESCRIPTOR_DEVICE_COUNT_MAX),
+               "Console baseline capacity must fit the descriptor registry");
 static PLATFORM_CPU_FAST_BSS SystemConsoleIoBaseline
-    s_io_baselines[SYSTEM_DESCRIPTOR_DEVICE_COUNT_MAX];
+    s_io_baselines[PROJECT_SELECTED_PHYSICAL_DEVICE_COUNT];
 
 static const char *SystemConsole_SensorStatusText(
     SystemConsoleSensorStatus status)
@@ -1228,7 +1233,7 @@ static SystemConsoleIoBaseline *SystemConsole_IoBaselineFind(
 {
     uint16_t index;
 
-    for (index = 0U; index < SYSTEM_DESCRIPTOR_DEVICE_COUNT_MAX; index++)
+    for (index = 0U; index < PROJECT_SELECTED_PHYSICAL_DEVICE_COUNT; index++)
     {
         if ((s_io_baselines[index].valid != 0U) &&
             (s_io_baselines[index].physical_device_id == physical_device_id))
@@ -1247,7 +1252,7 @@ static SystemConsoleIoBaseline *SystemConsole_IoBaselineSlotGet(
     uint16_t index;
 
     if (baseline != NULL) { return baseline; }
-    for (index = 0U; index < SYSTEM_DESCRIPTOR_DEVICE_COUNT_MAX; index++)
+    for (index = 0U; index < PROJECT_SELECTED_PHYSICAL_DEVICE_COUNT; index++)
     {
         if (s_io_baselines[index].valid == 0U)
         {
@@ -1348,6 +1353,7 @@ static SystemDeviceResult SystemConsole_IoBaselineCapture(
     SystemConsoleModule module, uint8_t instance_id)
 {
     SystemDeviceDescriptor owner_descriptor;
+    SystemDeviceDescriptor selected_descriptor;
     SystemConsoleIoBaseline *slot;
     SystemConsoleIoBaseline baseline;
     SystemDeviceResult result;
@@ -1358,6 +1364,11 @@ static SystemDeviceResult SystemConsole_IoBaselineCapture(
     result = SystemConsole_IoDiagnosticsRawGet(
         module, instance_id, &baseline.diagnostics, &owner_descriptor);
     if (result != SYSTEM_DEVICE_OK) { return result; }
+    result = SystemDescriptor_DeviceFind(owner_descriptor.device_class,
+        owner_descriptor.instance_id, &selected_descriptor);
+    if (result != SYSTEM_DEVICE_OK) { return result; }
+    if (selected_descriptor.physical_device_id != owner_descriptor.physical_device_id)
+    { return SYSTEM_DEVICE_VERIFY_FAILED; }
     baseline.physical_device_id = owner_descriptor.physical_device_id;
     baseline.owner_class = owner_descriptor.device_class;
     baseline.owner_instance_id = owner_descriptor.instance_id;
@@ -4760,30 +4771,13 @@ static SystemConsoleExecuteResult SystemConsole_MagCalExecute(
     return SYSTEM_CONSOLE_EXECUTE_OK;
 }
 
-SystemConsoleExecuteResult SystemConsole_ExecuteLine(const char *line,
+SystemConsoleExecuteResult SystemConsole_CommandsExecute(const char *line,
                                                      char *response,
                                                      uint16_t capacity)
 {
     SystemConsoleCommand parsed;
     SystemConsoleExecuteResult result;
 
-    if ((SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U) &&
-        (line != NULL) && (strncmp(line, "INSTALL ", 8U) == 0))
-    {
-        SystemInstallationCapture_ExecuteLine(line, response, capacity,
-            SystemTime_GetMonotonicUs());
-        return SYSTEM_CONSOLE_EXECUTE_OK;
-    }
-    if ((SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U) &&
-        (SystemInstallationCapture_CommandBlocked() != 0U))
-    {
-        (void)CommonFormat_Print(response, capacity,
-            "ERR SYSTEM INSTALL code=BUSY reason=INSTALLATION_OWNER");
-        return SYSTEM_CONSOLE_EXECUTE_OK;
-    }
-
-    if ((line != NULL) && (strncmp(line, "LOGFILE ", 8U) == 0))
-    { return SystemLogFile_ExecuteLine(line, response, capacity); }
     result = SystemConsole_CommandParse(line, &parsed, response, capacity);
     if (result != SYSTEM_CONSOLE_EXECUTE_OK) { return result; }
     SILVERSTAR_ASSERT_OBJECT(&parsed, SystemConsoleCommand,

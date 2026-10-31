@@ -69,6 +69,7 @@ def radio_duplex_executable(tmp_path_factory):
     compile_run(flags(flight) + ["-I", str(ground / "Ground/Core/Inc"),
         "-include", str(flight / "Generated/Inc/project_flight_config.h"),
         str(fixture), str(ground_object), str(adapter_object),
+        str(ground / "Ground/Radio/Src/ground_radio_tm.c"),
         str(flight / "Generated/Src/project_resources.c"),
         str(flight / "Common/Src/silverstar_assert.c"), "-lm", "-Wl,--gc-sections", "-o", str(executable)])
     files = [source, adapter, fixture, flight / "Devices/Telemetry/SX1281/Src/sx1281_device.c",

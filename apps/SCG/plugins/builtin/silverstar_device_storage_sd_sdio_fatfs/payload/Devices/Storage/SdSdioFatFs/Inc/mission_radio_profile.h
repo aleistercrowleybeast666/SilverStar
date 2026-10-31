@@ -15,12 +15,13 @@ typedef enum
 typedef enum
 {
     MissionRadioBackend_Sx128x = 0,
-    MissionRadioBackend_Nrf24 = 1
+    MissionRadioBackend_Nrf24 = 1,
+    MissionRadioBackend_Sx1278 = 2
 } MissionRadioBackend;
 
 typedef struct
 {
-    uint8_t bytes[15];
+    uint8_t bytes[16];
     uint8_t length;
     uint8_t schema;
     uint8_t version;

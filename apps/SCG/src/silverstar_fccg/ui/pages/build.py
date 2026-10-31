@@ -23,7 +23,9 @@ from silverstar_fccg.ui.touch_scroll import TouchScroll_Enable
 from silverstar_fccg.ui.theme import ThemeTokens_Get
 from silverstar_fccg.core.i18n import Translator
 from silverstar_fccg.core.view_models import ToolchainToolView
-from silverstar_fccg.project.artifact_memory import ArtifactMemorySummary_Decode, ArtifactMemoryMarginLevel_Get
+from silverstar_fccg.project.artifact_memory import (ArtifactMemorySummary_Decode,
+    ArtifactMemoryMarginLevel_Get, ArtifactMemoryReportSummary_Decode)
+from silverstar_fccg.project.artifact_stack import ArtifactStackReportSummary_Decode
 from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
 from silverstar_fccg.ui.pages.native_usb import NativeUsbPanel
 from silverstar_fccg.ui.widgets import (
@@ -51,6 +53,7 @@ class BuildPage(ScrollableLocalizedPage):
         ("power10_check", "action.power10_check"),
         ("static_analysis", "action.static_analysis"),
         ("artifact_check", "action.artifact_check"),
+        ("stack_report", "action.stack_report"),
     )
     def __init__(self, translator: Translator) -> None:
         super().__init__(translator, "page.build", "page.build.description")
@@ -85,7 +88,11 @@ class BuildPage(ScrollableLocalizedPage):
         self.Text_Register(self.memory_margin_label, "field.linked_memory")
         self.memory_margin_value = QLabel()
         self.memory_margin_value.setWordWrap(True)
-        summary_form.addRow(self.memory_margin_label, self.memory_margin_value)
+        self.ground_memory_label = QLabel()
+        self.Text_Register(self.ground_memory_label, 'memory.ground')
+        self.ground_memory_value = QLabel()
+        self.ground_memory_value.setWordWrap(True)
+        self.target_memory_values = {'flight': self.memory_margin_value, 'ground': self.ground_memory_value}
         summary_layout = QVBoxLayout()
         summary_layout.addLayout(summary_form)
         self.configuration_group = self.Group_Create("group.build_configuration", summary_layout)
@@ -95,6 +102,9 @@ class BuildPage(ScrollableLocalizedPage):
         self.target_status_labels: dict[str, QLabel] = {}
         self.target_summary_labels: dict[str, QLabel] = {}
         self.target_action_layouts = {}
+        self.target_stack_values = {}
+        self.target_stack_sections = {}
+        self.target_stack_details = {}
         for target, group_key in (
             ("flight", "group.flight_build"),
             ("ground", "group.ground_build_target"),
@@ -108,6 +118,20 @@ class BuildPage(ScrollableLocalizedPage):
             summary.setTextFormat(Qt.TextFormat.PlainText)
             target_layout.addWidget(summary)
             self.target_summary_labels[target] = summary
+            target_layout.addWidget(self.target_memory_values[target])
+            stack_summary = QLabel()
+            stack_summary.setWordWrap(True)
+            self.target_stack_values[target] = stack_summary
+            target_layout.addWidget(stack_summary)
+            stack_section = CollapsibleSection(expanded=False)
+            stack_detail = QLabel()
+            stack_detail.setWordWrap(True)
+            stack_detail.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+            stack_layout = QVBoxLayout(stack_section.body)
+            stack_layout.addWidget(stack_detail)
+            self.target_stack_sections[target] = stack_section
+            self.target_stack_details[target] = stack_detail
+            target_layout.addWidget(stack_section)
             actions = QGridLayout()
             self.target_action_layouts[target] = actions
             for index, (action_id, key) in enumerate(self._TARGET_ACTIONS, start=1):
@@ -128,10 +152,10 @@ class BuildPage(ScrollableLocalizedPage):
         quality_help.setProperty("muted", True)
         self.Text_Register(quality_help, "build.help.quality")
         advanced_layout.addWidget(quality_help)
-        quality_actions = QHBoxLayout()
-        for action_id, key in self._QUALITY_ACTIONS:
+        quality_actions = QGridLayout()
+        for index, (action_id, key) in enumerate(self._QUALITY_ACTIONS):
             button = self._ActionButton_Create(action_id, key)
-            quality_actions.addWidget(button)
+            quality_actions.addWidget(button, index // 3, index % 3)
         advanced_layout.addLayout(quality_actions)
         self.quality_target_checks = {}
         self.target_quality_labels = {}
@@ -282,7 +306,7 @@ class BuildPage(ScrollableLocalizedPage):
         self.root_layout.addStretch(1)
         self._tools: tuple[ToolchainToolView, ...] = ()
         self._target_generated = {"flight": False, "ground": False}
-        self._ground_enabled = False
+        self._ground_configured = False
         self._action_keys = {
             action_id: key
             for action_id, key in (
@@ -337,8 +361,6 @@ class BuildPage(ScrollableLocalizedPage):
             page.root_layout.removeWidget(page.generate_button)
             self.target_action_layouts[target].addWidget(page.generate_button, 0, 0)
             page.generate_button.show()
-        self.target_action_layouts['ground'].addWidget(ground_page.enabled, 0, 1)
-        ground_page.enabled.show()
         self.advanced_section.body.layout().addWidget(ground_page.build_group)
 
     def TargetConfiguration_Set(self, model):
@@ -392,18 +414,21 @@ class BuildPage(ScrollableLocalizedPage):
             "power10_check": make_found,
             "static_analysis": compiler_found and make_found,
             "artifact_check": compiler_found and make_found,
+            "stack_report": compiler_found and make_found,
         }
         for action_id, enabled in enabled_by_action.items():
             self.action_buttons[action_id].setEnabled(enabled)
         self._TargetActions_Update()
         self._ActionTooltips_Apply()
 
-    def Targets_Set(self, *, flight_generated: bool, ground_enabled: bool,
-                    ground_generated: bool, usb_candidate: bool = False) -> None:
+    def Targets_Set(self, *, flight_generated: bool, ground_configured: bool,
+                    ground_generated: bool, usb_candidate: bool = False,
+                    flight_current: bool = True, ground_current: bool = True) -> None:
         self._target_generated = {
             "flight": flight_generated, "ground": ground_generated,
         }
-        self._ground_enabled = ground_enabled
+        self._ground_configured = ground_configured
+        self._target_current = {'flight': flight_current, 'ground': ground_current}
         self._usb_candidate = usb_candidate
         self._TargetActions_Update()
 
@@ -411,17 +436,19 @@ class BuildPage(ScrollableLocalizedPage):
         statuses = {tool.tool_id: tool.status for tool in self._tools}
         for target in ("flight", "ground"):
             generated = self._target_generated[target]
-            configured = target == "flight" or self._ground_enabled
+            configured = target == "flight" or self._ground_configured
+            current = getattr(self, '_target_current', {}).get(target, True)
             status_key = (
                 "target.status.not_configured" if not configured
                 else "target.status.not_generated" if not generated
+                else "target.status.stale" if not current
                 else "target.status.generated"
             )
             self.target_status_labels[target].setText(self._translator.Text_Get(status_key))
             for action, _key in self._TARGET_ACTIONS:
                 enabled = generated and configured
                 if action == "build":
-                    enabled = enabled and statuses.get("compiler") == "found" and (
+                    enabled = enabled and current and statuses.get("compiler") == "found" and (
                         (target == 'ground' and getattr(self, '_usb_candidate', False))
                         or statuses.get("make") == "found")
                 elif action == "clean":
@@ -468,27 +495,8 @@ class BuildPage(ScrollableLocalizedPage):
             for record in records
         }
         artifact = by_task.get("artifact_check")
-        regions = ArtifactMemorySummary_Decode(str(getattr(artifact, "summary", "")))
-        if target == "flight" and regions and selected and not states.get("artifact_check"):
-            levels = [ArtifactMemoryMarginLevel_Get(remaining, capacity) for _, remaining, capacity in regions]
-            application = QApplication.instance()
-            theme = application.property("fccgAppliedTheme") if application else "light"
-            tokens = ThemeTokens_Get(theme)
-            colors = {"error": tokens.error, "warning": tokens.warning, "success": tokens.success}
-            text = "<br>".join('<span style="color:' + colors[level] + '">' + self._translator.Text_Get(
-                "memory.region", name=name, used=f"{used:,}", capacity=f"{capacity:,}",
-                remaining=f"{remaining:,}") + f" ({remaining / capacity * 100:.2f}%)</span>"
-                for name, (used, remaining, capacity), level in zip(("Flash", "SRAM", "CCMRAM"), regions, levels))
-            narrow = regions[2][1] < 4096
-            text += "<br>" + self._translator.Text_Get("memory.ccm_narrow" if narrow else "memory.static_only")
-            text += "<br>" + self._translator.Text_Get("memory.keep_green")
-            self.memory_margin_value.setText(text)
-            self.memory_margin_value.setProperty("statusLevel", "error" if "error" in levels else "warning" if "warning" in levels else "success")
-            self.memory_margin_value.setToolTip(str(getattr(artifact, "timestamp", "")))
-        elif target == "flight":
-            self.memory_margin_value.setText(self._translator.Text_Get("memory.not_checked"))
-            self.memory_margin_value.setProperty("statusLevel", "info")
-            self.memory_margin_value.setToolTip("")
+        self._MemoryReport_Show(target, artifact, selected, states.get('artifact_check', ''))
+        self._StackReport_Show(target, by_task.get('stack_report'), selected, states.get('stack_report', ''))
         for task, label in labels.items():
             record = by_task.get(task)
             raw_summary = str(getattr(record, "summary", "")).strip()
@@ -520,7 +528,7 @@ class BuildPage(ScrollableLocalizedPage):
                 summary = raw_summary
                 if task == "power10_check":
                     summary = self._translator.Text_Get("power10.automatic_checks")
-                if ArtifactMemorySummary_Decode(summary):
+                if ArtifactMemorySummary_Decode(summary) or ArtifactMemoryReportSummary_Decode(summary):
                     summary = self._translator.Text_Get(
                         "quality.summary.artifact_validated" if passed else "quality.summary.completed")
                 elif summary.startswith("checks="):
@@ -546,6 +554,11 @@ class BuildPage(ScrollableLocalizedPage):
                     " · ".join(value for value in (status, summary) if value)
                 )
                 label.setProperty("statusLevel", "success" if passed else "error")
+                if task == 'stack_report':
+                    stack = ArtifactStackReportSummary_Decode(raw_summary)
+                    label.setText(self._translator.Text_Get(
+                        'stack.tasks_passed' if passed and stack and stack['passes'] else 'stack.unverified'))
+                    label.setProperty('statusLevel', 'warning' if passed and stack and stack['passes'] else 'error')
                 label.setToolTip(
                     self._translator.Text_Get(
                         "quality.result.tooltip",
@@ -557,6 +570,108 @@ class BuildPage(ScrollableLocalizedPage):
             label.style().unpolish(label)
             label.style().polish(label)
 
+    def _StackReport_Show(self, target, record, selected, state):
+        import html
+        import json
+        label = self.target_stack_values[target]
+        section = self.target_stack_sections[target]
+        detail = self.target_stack_details[target]
+        section.Title_Set(self._translator.Text_Get('stack.details'))
+        report = ArtifactStackReportSummary_Decode(str(getattr(record, 'summary', '')))
+        visible = selected and not state and report is not None and report['target'] == target
+        section.setVisible(visible)
+        detail.clear()
+        label.setToolTip('')
+        if not visible:
+            key = ('quality.target.' + ('not_selected' if not selected else state)
+                   if not selected or state else 'stack.not_checked')
+            label.setText(self._translator.Text_Get('stack.caption') + ' · ' + self._translator.Text_Get(key))
+            label.setProperty('statusLevel', 'warning' if state == 'stale' else 'info')
+            return
+        passed = getattr(record, 'result', '') == 'passed' and report['passes']
+        label.setText(self._translator.Text_Get('stack.tasks_passed' if passed else 'stack.tasks_failed'))
+        label.setProperty('statusLevel', 'warning' if passed else 'error')
+        headers = [self._translator.Text_Get('stack.column.' + key)
+                   for key in ('task', 'known', 'configured', 'margin')]
+        rows = ['<tr>' + ''.join('<th align="left">' + html.escape(text) + '</th>' for text in headers) + '</tr>']
+        for task in report['tasks']:
+            cells = (task['task'], f"{task['worst_known_bytes']:,}", f"{task['configured_bytes']:,}",
+                     f"{task['margin_bytes']:,} ({task['margin_bytes'] / task['configured_bytes'] * 100:.1f}%)")
+            rows.append('<tr>' + ''.join('<td>' + html.escape(text) + '</td>' for text in cells) + '</tr>')
+        detail.setText('<table cellspacing="8">' + ''.join(rows) + '</table><p>' +
+            html.escape(self._translator.Text_Get('stack.scope', minimum=report['minimum_margin_bytes'])) + '</p>')
+        detail.setToolTip(json.dumps(report['tasks'], ensure_ascii=False, indent=2))
+        label.setToolTip(report['report_path'] + '\nSHA256 ' + report['report_sha256'] + '\n' +
+                         json.dumps(report['artifacts'], ensure_ascii=False, indent=2))
+
+    def _MemoryReport_Show(self, target, artifact, selected, state):
+        import html
+        import json
+        label = self.target_memory_values[target]
+        summary = str(getattr(artifact, 'summary', ''))
+        report = ArtifactMemoryReportSummary_Decode(summary)
+        legacy = ArtifactMemorySummary_Decode(summary)
+        if target == 'flight' and legacy and selected and not state:
+            self._MemoryLegacy_Show(label, legacy)
+            return
+        if not selected or state or report is None or report['target'] != target:
+            # Historical three-number summaries remain readable in the result tooltip;
+            # they do not establish a current exact-MCU bank report.
+            label.setText(self._translator.Text_Get('memory.caption') + ' · ' + (
+                self._translator.Text_Get('quality.target.' + state) if state
+                else self._translator.Text_Get('memory.not_checked')))
+            label.setProperty('statusLevel', 'warning' if state == 'stale' else 'info')
+            label.setToolTip('')
+            return
+        application = QApplication.instance()
+        tokens = ThemeTokens_Get(application.property('fccgAppliedTheme') if application else 'light')
+        colors = {'error': tokens.error, 'warning': tokens.warning, 'success': tokens.success}
+        lines, details, levels = [html.escape(self._translator.Text_Get('memory.caption') + ' · ' + report['mcu'])], [], []
+        for region in report['regions']:
+            capacity, used, remaining = (region[key] for key in
+                ('physical_capacity_bytes', 'used_bytes', 'physical_free_bytes'))
+            level = 'error' if remaining < 0 else ArtifactMemoryMarginLevel_Get(remaining, capacity)
+            budget_remaining = region['budget_free_bytes']
+            if budget_remaining is not None:
+                budget_level = ('error' if budget_remaining < 0 else
+                    ArtifactMemoryMarginLevel_Get(budget_remaining, region['review_budget_bytes']))
+                severity = {'success': 0, 'warning': 1, 'error': 2}
+                level = max((level, budget_level), key=severity.__getitem__)
+            levels.append(level)
+            text = self._translator.Text_Get('memory.bank', name=region['name'],
+                used=f'{used:,}', capacity=f'{capacity:,}', percent=f'{used / capacity * 100:.1f}',
+                remaining=f'{remaining:,}')
+            if region['linker_capacity_bytes'] == 0:
+                text += ' · ' + self._translator.Text_Get('memory.unallocated')
+            lines.append('<span style="color:' + colors[level] + '">' + html.escape(text) + '</span>')
+            if budget_remaining is not None:
+                lines.append(html.escape(self._translator.Text_Get('memory.budget', name=region['name'],
+                    remaining=f'{budget_remaining:,}', capacity=f"{region['review_budget_bytes']:,}")))
+            details.append(json.dumps(region, ensure_ascii=False, indent=2))
+        lines.append(html.escape(self._translator.Text_Get('memory.static_only')))
+        if report['errors']:
+            lines.append(html.escape(' · '.join(report['errors'])))
+        label.setText('<br>'.join(lines))
+        label.setProperty('statusLevel', 'error' if report['errors'] or 'error' in levels
+                          else 'warning' if 'warning' in levels else 'success')
+        label.setToolTip(str(getattr(artifact, 'timestamp', '')) + '\n' +
+            report.get('report_path', '') + '\n' + '\n'.join(details) + '\n' +
+            json.dumps(report.get('artifacts', {}), indent=2))
+
+    def _MemoryLegacy_Show(self, label, regions):
+        application = QApplication.instance()
+        tokens = ThemeTokens_Get(application.property('fccgAppliedTheme') if application else 'light')
+        colors = {'error': tokens.error, 'warning': tokens.warning, 'success': tokens.success}
+        levels = [ArtifactMemoryMarginLevel_Get(remaining, capacity) for _, remaining, capacity in regions]
+        text = self._translator.Text_Get('memory.legacy_report') + '<br>'
+        text += '<br>'.join('<span style="color:' + colors[level] + '">' + self._translator.Text_Get(
+            'memory.region', name=name, used=f'{used:,}', capacity=f'{capacity:,}', remaining=f'{remaining:,}') + '</span>'
+            for name, (used, remaining, capacity), level in zip(('Flash', 'SRAM', 'CCMRAM'), regions, levels))
+        text += '<br>' + self._translator.Text_Get('memory.ccm_narrow' if regions[2][1] < 4096 else 'memory.static_only')
+        label.setText(text)
+        label.setProperty('statusLevel', 'error' if 'error' in levels else 'warning')
+        label.setToolTip(self._translator.Text_Get('memory.legacy_report'))
+
     def _ActionTooltips_Apply(self) -> None:
         if not hasattr(self, "_action_keys"):
             return
@@ -567,6 +682,7 @@ class BuildPage(ScrollableLocalizedPage):
             "power10_check": ("make",),
             "static_analysis": ("compiler", "make"),
             "artifact_check": ("compiler", "make"),
+            "stack_report": ("compiler", "make"),
         }
         for action_id, key in self._action_keys.items():
             button = self.action_buttons.get(action_id)

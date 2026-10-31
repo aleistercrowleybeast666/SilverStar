@@ -97,7 +97,7 @@ def test_classified_pcbs_preserve_legacy_and_conflicts(tmp_path, workspace_root)
     model = ReferenceProject_Create('Boards', catalog=catalog)
     model.board = ''
     model.hardware = imported.hardware
-    model.ground_target = replace(model.ground_target, enabled=True, mcu=model.mcu,
+    model.ground_target = replace(model.ground_target,  mcu=model.mcu,
                                   hardware=imported.hardware, board='')
     installer = PluginInstaller(policy, installed_root, catalog)
     exporter = BoardPluginExporter(policy)

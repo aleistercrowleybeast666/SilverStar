@@ -30,7 +30,7 @@ def RfActualRates_Run(project: Path, compiler: str) -> int:
     disk = project / disk_paths[0]
     (output / "sd_diskio.c").write_bytes(disk.read_bytes())
     config = (project / "HardwareGenerated/STM32CubeMX/FATFS/Target/ffconf.h").read_text(encoding="utf8")
-    for header in ("main.h", "stm32f1xx_hal.h", "bsp_driver_sd.h"):
+    for header in ("main.h", "stm32f4xx_hal.h", "stm32f1xx_hal.h", "stm32h7xx_hal.h", "bsp_driver_sd.h"):
         config = config.replace(f'#include "{header}"', "")
     (output / "ffconf.h").write_text(config, encoding="utf8")
     fatfs = project / "Middlewares/Third_Party/FatFs/src"
@@ -50,6 +50,7 @@ def RfActualRates_Run(project: Path, compiler: str) -> int:
         "System/Calibration/Src/system_mag_calibration.c",
         "APP/Src/logger_bus.c", "APP/Src/logger_task.c", "Common/Src/common_spsc_queue.c",
         "System/Src/system_log_policy.c", "System/Src/system_profile.c",
+        "System/Src/system_mission_process.c", "Generated/Src/project_mission_process.c",
         "System/Src/system_navigation_profile.c", "System/Src/system_estimator_profile.c",
         "Generated/Src/project_metadata.c", "Generated/Src/project_log_config.c",
         "Generated/Src/project_mission_parameters.c", "Generated/Src/project_log_decoder_profile.c",

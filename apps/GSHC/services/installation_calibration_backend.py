@@ -1,7 +1,7 @@
-"""GSHC installation backend over an injected exclusive owner; no port opens/UI.
+"""Installation capture over the shared exclusive maintenance owner.
 
-The current firmware does not implement this optional contract. This service
-never falls back to legacy MAG/CAL/ALIGN controls or uploads/applies/saves fits.
+The target implements candidate capture/storage contracts. Capability discovery
+separates those contracts from qualified native capture and active correction.
 """
 from dataclasses import asdict, dataclass, field, fields as DataclassFields, replace
 from enum import Enum
@@ -55,6 +55,12 @@ class InstallationCapabilities:
     holdout_pairs: int=0
     pair_capacity: int=0
     simulated: bool=False
+    contract_supported: bool=False
+    capture_available: bool=False
+    apply_supported: bool=False
+    save_supported: bool=False
+    blocking_reason: str='CAPABILITY_NOT_QUERIED'
+    active_record: int=0
 
 
 def InstallationCapabilities_Parse(line,*,allow_simulated=False):
@@ -79,8 +85,22 @@ def InstallationCapabilities_Parse(line,*,allow_simulated=False):
         if reply.Field("offline") not in ("0","1") or (simulated and not allow_simulated):
             return InstallationCapabilities(InstallationOutcome(InstallationResult.Unsupported,"SIMULATION_NOT_AUTHORIZED"))
         if values["train_pairs"]+values["holdout_pairs"]>values["pair_capacity"]: raise ValueError("logical face record budget")
-        return InstallationCapabilities(InstallationOutcome(InstallationResult.Ok,"EXPLICIT_CAPABILITY"),
-            values["train_pairs"],values["holdout_pairs"],values["pair_capacity"],simulated)
+        layered = tuple(reply.Field(key) for key in
+            ('contract_supported','capture_available','apply_supported','save_supported'))
+        if any(value is not None for value in layered) and any(value not in ('0','1') for value in layered):
+            raise ValueError('incomplete layered capability')
+        # Legacy offline peers are test-only. A real peer missing the new
+        # availability facts is explicitly unqualified, never assumed ready.
+        contract_supported = layered[0] == '1' if layered[0] is not None else True
+        capture_available = layered[1] == '1' if layered[1] is not None else simulated
+        reason = reply.Field('reason') or ('OK' if capture_available else 'CAPTURE_QUALIFICATION_UNDECLARED')
+        outcome = InstallationOutcome(InstallationResult.Ok if contract_supported and capture_available else
+            InstallationResult.Unsupported, 'EXPLICIT_CAPABILITY' if capture_available else reason)
+        return InstallationCapabilities(outcome, values["train_pairs"],values["holdout_pairs"],
+            values["pair_capacity"],simulated,contract_supported,capture_available,
+            layered[2]=='1' and reply.Field('active_record')=='3',
+            layered[3]=='1' and reply.Field('active_record')=='3',reason,
+            3 if reply.Field('active_record')=='3' else 0)
     except (ValueError,TypeError):
         return InstallationCapabilities(InstallationOutcome(InstallationResult.Unknown,"BAD_CAPABILITY_RESPONSE"))
 
@@ -175,7 +195,8 @@ class InstallationBackend:
 
     Lease.Request(request_bytes, deadline=monotonic, cancel=Event) -> tuple[bytes]
     contains a bounded batch of complete event/reply bodies. Lease.Release() must
-    release the same shared owner. No lease adapter is registered in the GUI.
+    release the same shared owner. The normal GUI registers the existing owner;
+    qualification remains the target's explicit capability, not a UI switch.
     """
     def __init__(self,provider=None,*,allow_simulated=False,clock=time.monotonic):
         self.contract=InstallationContract_Load(); self.rules=self.contract.Read()
@@ -186,6 +207,7 @@ class InstallationBackend:
         self._arrivals={}; self._evaluated_policy=None
         self._faces_started=0; self._evaluations=0
         self.proposed_accel=None; self.proposed_gyro_bias=None
+        self._active_transaction=False
 
     def _worker(self):
         if threading.current_thread() is threading.main_thread(): raise ValueError("WORKER_THREAD_REQUIRED")
@@ -210,6 +232,25 @@ class InstallationBackend:
         if len(replies)!=1: raise ValueError("ONE_MATCHED_REPLY_REQUIRED")
         return replies[0]
 
+    def Probe(self, cancel, progress=lambda *_:None):
+        self._worker()
+        if self.lease is not None:
+            return InstallationOutcome(InstallationResult.Busy, 'SESSION_ACTIVE')
+        if self.provider is None:
+            return InstallationOutcome(InstallationResult.Unsupported, 'NO_SHARED_OWNER_PROVIDER')
+        self.lease = self.provider.Acquire('installation')
+        if self.lease is None:
+            return InstallationOutcome(InstallationResult.Busy, 'MAINTENANCE_OWNER_BUSY')
+        try:
+            lines = self._request(Request('CAPS'), cancel, self.clock()+5)
+            if len(lines) != 1:
+                raise ValueError('ONE_CAPABILITY_REPLY_REQUIRED')
+            self.capabilities = InstallationCapabilities_Parse(lines[0], allow_simulated=self.allow_simulated)
+            outcome = self.capabilities.outcome
+            return InstallationOutcome(outcome.result, outcome.reason, self.capabilities)
+        finally:
+            self._release()
+
     def Begin(self,archive_path,cancel,progress=lambda *_:None,*,imu_instance=0,mag_instance=0):
         self._worker()
         if self.lease is not None: return InstallationOutcome(InstallationResult.Busy,"SESSION_ACTIVE")
@@ -221,6 +262,7 @@ class InstallationBackend:
         self.lease=self.provider.Acquire("installation")
         if self.lease is None: return InstallationOutcome(InstallationResult.Busy,"MAINTENANCE_OWNER_BUSY")
         self.sid=None; self.binding=None; self.cleanup_confirmed=True
+        self._active_transaction=False
         deadline=self.clock()+self.rules["limits"]["job_timeout_s"]
         try:
             lines=self._request(Request("CAPS"),cancel,deadline)
@@ -365,8 +407,17 @@ class InstallationBackend:
         if "FIT_DEPENDENCY_UNAVAILABLE" in report.reasons: result=InstallationResult.Unsupported
         return InstallationOutcome(result,";".join(report.reasons) or "NUMERIC_CANDIDATE_ONLY",report)
 
-    def Apply(self,*_): return InstallationOutcome(InstallationResult.ApplyDisabled,"EXPERIMENTAL_APPLY_DISABLED")
-    def Save(self,*_): return InstallationOutcome(InstallationResult.ApplyDisabled,"EXPERIMENTAL_SAVE_DISABLED")
+    def Apply(self, candidate_path=None, cancel=None, progress=lambda *_:None):
+        from services.installation_calibration_active_transfer import Active_Apply
+        return Active_Apply(self,candidate_path,cancel,progress)
+
+    def Save(self, cancel=None, progress=lambda *_:None):
+        from services.installation_calibration_active_transfer import Active_Save
+        return Active_Save(self,cancel,progress)
+
+    def VerifySaved(self, candidate_path, cancel, progress=lambda *_:None):
+        from services.installation_calibration_active_transfer import Active_VerifySaved
+        return Active_VerifySaved(self,candidate_path,cancel,progress)
 
     def CandidateSnapshot(self):
         self._worker()
@@ -444,7 +495,7 @@ class InstallationBackend:
                 self.rid+=1; rid=self.rid; deadline=self.clock()+1
                 request=Request("DO",(self.sid,str(rid),"CANCEL"))
                 for poll in range(8):
-                    reply=self._reply(self._request(request if poll==0 else Request("POLL",(self.sid,str(rid))),
+                    reply=self._reply(self._request(request if poll==0 or self._active_transaction else Request("POLL",(self.sid,str(rid))),
                         threading.Event(),deadline),"DO",self.sid,rid)
                     if reply.status=="OK" and reply.Field("cleanup_complete")=="1": confirmed=True; break
         except (OSError,ValueError,TimeoutError,InterruptedError):

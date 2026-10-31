@@ -44,6 +44,19 @@ SystemDeviceResult Sx1278TelemetryInstance_Stop(uint8_t instance)
         Sx1278_StopStatusGet(instance) : result);
 }
 
+SystemDeviceResult Sx1278TelemetryInstance_ModeSet(uint8_t instance, SystemTelemetryMode mode)
+{
+    Sx1278OperatingMode requested;
+    switch (mode)
+    {
+        case SYSTEM_TELEMETRY_HALF_DUPLEX: requested = Sx1278OperatingMode_HalfDuplex; break;
+        case SYSTEM_TELEMETRY_TRANSMIT_ONLY: requested = Sx1278OperatingMode_TransmitOnly; break;
+        case SYSTEM_TELEMETRY_RECEIVE_ONLY: requested = Sx1278OperatingMode_ReceiveOnly; break;
+        default: return SYSTEM_DEVICE_INVALID_ARGUMENT;
+    }
+    return Sx1278Telemetry_Result(Sx1278_ModeSet(instance, requested));
+}
+
 SystemDeviceResult Sx1278TelemetryInstance_Send(uint8_t instance,
     const uint8_t *data, uint16_t length)
 {

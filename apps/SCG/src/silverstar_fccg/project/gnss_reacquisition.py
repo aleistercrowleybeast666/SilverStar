@@ -154,7 +154,7 @@ def GnssReacquisitionActivation_Validate(model, catalog):
         return
     config = GnssReacquisitionMetadata_Validate(manifest, model.algorithm_parameters.get(owner, {}))
     if config.enabled:
-        raise ValueError("Active GNSS reacquisition is blocked: end-to-end acceptance evidence is incomplete; keep gnss_recovery_enabled=0")
+        raise ValueError("ESKF15 v0.4.0 experimental GNSS fusion recovery is blocked: end-to-end acceptance evidence is incomplete; keep gnss_recovery_enabled=0. Existing KF6 GNSS fusion recovery is unaffected")
 
 
 def GnssReacquisitionDeclaration_Get(model, catalog):

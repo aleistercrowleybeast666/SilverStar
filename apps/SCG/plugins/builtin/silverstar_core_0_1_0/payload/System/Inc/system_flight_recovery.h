@@ -163,6 +163,7 @@ typedef struct
 } SystemFlightRecoveryFinalStatus;
 
 SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemFlightRecovery_Init(void);
+SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemFlightRecovery_StageRecoveryRequest(uint32_t stage_id_hash);
 SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemFlightRecovery_Process(
     const SystemFlightRecoveryInput *input);
 SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemFlightRecovery_StatusGet(

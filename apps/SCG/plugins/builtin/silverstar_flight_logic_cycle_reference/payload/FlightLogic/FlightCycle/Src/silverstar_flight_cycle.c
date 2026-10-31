@@ -34,6 +34,7 @@ static volatile uint8_t s_configuration_actions;
 static volatile SystemMaintenanceState s_maintenance;
 static SystemLifecycleStartDiagnostic s_start_diagnostics[3];
 static uint32_t s_start_diagnostic_sequence;
+static uint32_t s_start_lease_token;
 
 static uint32_t SystemLifecycle_IrqLock(void)
 {
@@ -329,6 +330,8 @@ SystemDeviceResult SystemLifecycle_EnterReady(void)
 {
     if ((s_lifecycle_state == SYSTEM_STATE_FLIGHT) ||
         (s_lifecycle_state == SYSTEM_STATE_RECOVERY) ||
+        (s_lifecycle_state == SYSTEM_STATE_LANDED) ||
+        (s_lifecycle_state == SYSTEM_STATE_POSTFLIGHT) ||
         (s_lifecycle_state == SYSTEM_STATE_FAULT))
     {
         return SYSTEM_DEVICE_BAD_STATE;
@@ -547,20 +550,23 @@ SystemLifecycleStartResult SystemLifecycle_StartTransaction(void)
         SystemLifecycle_IrqUnlock(primask);
         return SYSTEM_LIFECYCLE_START_BUSY;
     }
-    if(SystemInstallationCapture_OperationBegin(SystemInstallationOperation_Start,0U)!=SYSTEM_DEVICE_OK)
+    if(((SYSTEM_INSTALLATION_CAPTURE_ENABLED!=0U)?SystemAlignment_StartLeaseBegin(&s_start_lease_token):
+        SystemInstallationCapture_OperationBegin(SystemInstallationOperation_Start,0U))!=SYSTEM_DEVICE_OK)
     {SystemLifecycle_IrqUnlock(primask);return SYSTEM_LIFECYCLE_START_BUSY;}
     s_start_transaction_active = 1U;
     SystemLifecycle_IrqUnlock(primask);
 
     response.source = SYSTEM_START_SOURCE_LOCAL;
     response.request_id = 0U;
-    response.timestamp_us = SystemTime_GetMonotonicUs();
     response.result = SystemLifecycle_StartExecute(&response.reason);
+    /* Result occurrence is after the admission transaction completes. */
+    response.timestamp_us = SystemTime_GetMonotonicUs();
 
     primask = SystemLifecycle_IrqLock();
     SystemLifecycle_DiagnosticStore(&response);
     s_start_transaction_active = 0U;
-    SystemInstallationCapture_OperationEnd(SystemInstallationOperation_Start);
+    if(SYSTEM_INSTALLATION_CAPTURE_ENABLED!=0U){SystemAlignment_StartLeaseEnd(s_start_lease_token);s_start_lease_token=0U;}
+    else{SystemInstallationCapture_OperationEnd(SystemInstallationOperation_Start);}
     SystemLifecycle_IrqUnlock(primask);
     return response.result;
 }
@@ -600,7 +606,8 @@ SystemDeviceResult SystemLifecycle_SubmitStart(
         SystemLifecycle_IrqUnlock(primask);
         return SYSTEM_DEVICE_BUSY;
     }
-    if(SystemInstallationCapture_OperationBegin(SystemInstallationOperation_Start,0U)!=SYSTEM_DEVICE_OK)
+    if(((SYSTEM_INSTALLATION_CAPTURE_ENABLED!=0U)?SystemAlignment_StartLeaseBegin(&s_start_lease_token):
+        SystemInstallationCapture_OperationBegin(SystemInstallationOperation_Start,0U))!=SYSTEM_DEVICE_OK)
     {
         SystemLifecycle_DiagnosticStore(&response);
         SystemLifecycle_IrqUnlock(primask);return SYSTEM_DEVICE_BUSY;
@@ -669,8 +676,8 @@ void SystemLifecycle_Process(void)
 
     response.source = request.source;
     response.request_id = request.request_id;
-    response.timestamp_us = SystemTime_GetMonotonicUs();
     response.result = SystemLifecycle_StartExecute(&response.reason);
+    response.timestamp_us = SystemTime_GetMonotonicUs();
 
     primask = SystemLifecycle_IrqLock();
     SystemLifecycle_DiagnosticStore(&response);
@@ -682,7 +689,8 @@ void SystemLifecycle_Process(void)
     }
     s_start_transaction_active = 0U;
     s_start_request_pending = 0U;
-    SystemInstallationCapture_OperationEnd(SystemInstallationOperation_Start);
+    if(SYSTEM_INSTALLATION_CAPTURE_ENABLED!=0U){SystemAlignment_StartLeaseEnd(s_start_lease_token);s_start_lease_token=0U;}
+    else{SystemInstallationCapture_OperationEnd(SystemInstallationOperation_Start);}
     SystemLifecycle_IrqUnlock(primask);
 }
 

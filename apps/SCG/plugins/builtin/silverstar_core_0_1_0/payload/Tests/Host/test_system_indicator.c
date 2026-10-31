@@ -91,6 +91,29 @@ static void ResetState(void)
 int main(void)
 {
     ResetState();
+    if ((SYSTEM_INDICATOR_SYSTEM_ENABLE == 0U) &&
+        (SYSTEM_INDICATOR_GNSS_ENABLE == 0U))
+    {
+        s_calibration.state = SYSTEM_CALIBRATION_STATE_COLLECTING;
+        SystemIndicator_Process();
+        s_calibration.state = SYSTEM_CALIBRATION_STATE_READY;
+        s_calibration.ready = 1U;
+        s_alignment.ready = 1U;
+        s_health_ready = 1U;
+        s_gnss_health_result = SYSTEM_DEVICE_OK;
+        s_gnss_sample_result = SYSTEM_DEVICE_OK;
+        s_gnss_health.initialized = 1U;
+        s_gnss_health.online = 1U;
+        s_gnss_sample.position_usable = 1U;
+        s_lifecycle = SYSTEM_STATE_FLIGHT;
+        s_now_us = SYSTEM_INDICATOR_EVENT_CONFIRM_US;
+        SystemIndicator_Process();
+        TEST_CHECK(s_channel_write_count[0] == 0U);
+        TEST_CHECK(s_channel_write_count[1] == 0U);
+        TEST_CHECK(s_channel_output[0] == 0U);
+        TEST_CHECK(s_channel_output[1] == 0U);
+        return Test_Finish("system_indicator_disabled");
+    }
     TEST_CHECK(SystemIndicator_SystemModeResolve(
         SYSTEM_CALIBRATION_STATE_IDLE, 0U, 0U, 0U,
         SYSTEM_STATE_PREFLIGHT) == SYSTEM_INDICATOR_MODE_OFF);

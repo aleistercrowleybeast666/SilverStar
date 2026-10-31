@@ -35,6 +35,8 @@ class ImportDialog(QDialog):
     importRequested = Signal(object, object)
     customImportRequested = Signal(object, object)
     folderSearchRequested = Signal(object)
+    autoImportRequested = Signal(object)
+    decoderDirectoriesRequested = Signal()
 
     def __init__(self, translator: Translator, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -105,6 +107,9 @@ class ImportDialog(QDialog):
         layout.addWidget(self.result_label)
 
         button_row = QHBoxLayout()
+        self.decoder_directories_button = QPushButton()
+        self.decoder_directories_button.clicked.connect(self.decoderDirectoriesRequested.emit)
+        button_row.addWidget(self.decoder_directories_button)
         button_row.addStretch(1)
         self.cancel_button = QPushButton()
         self.cancel_button.clicked.connect(self.reject)
@@ -223,9 +228,11 @@ class ImportDialog(QDialog):
         if log_path is not None:
             self.path_edit.setText(str(log_path))
             self.folder_path_edit.setText(str(Path(log_path).parent))
+            if decoder_path is None:
+                self.decoder_path_edit.clear()
         if decoder_path is not None:
             self.decoder_path_edit.setText(str(decoder_path))
-        if log_path is not None and decoder_path is not None:
+        if log_path is not None:
             index = self.source_type_combo.findData("manual")
             self.source_type_combo.setCurrentIndex(max(index, 0))
 
@@ -242,7 +249,7 @@ class ImportDialog(QDialog):
             return
         path_text = self.path_edit.text().strip()
         decoder_text = self.decoder_path_edit.text().strip()
-        if not path_text or not decoder_text:
+        if not path_text or (not decoder_text and self.custom_decoder_check.isChecked()):
             self.result_label.setText(self._translator.Text_Get("import.path_required"))
             self.result_label.show()
             return
@@ -250,8 +257,10 @@ class ImportDialog(QDialog):
         if self.custom_decoder_check.isChecked():
             self.customImportRequested.emit(Path(path_text), Path(decoder_text))
             self.custom_decoder_check.setChecked(False)
-        else:
+        elif decoder_text:
             self.importRequested.emit(Path(path_text), Path(decoder_text))
+        else:
+            self.autoImportRequested.emit(Path(path_text))
         self.accept()
 
     def Language_Apply(self, translator: Translator) -> None:
@@ -277,6 +286,7 @@ class ImportDialog(QDialog):
         self.candidate_label.setText(translator.Text_Get("label.exact_pair"))
         self.browse_button.setText(translator.Text_Get("action.browse"))
         self.decoder_browse_button.setText(translator.Text_Get("action.browse"))
+        self.decoder_directories_button.setText(translator.Text_Get("action.decoder_directories"))
         self.folder_browse_button.setText(translator.Text_Get("action.browse"))
         self.folder_search_button.setText(translator.Text_Get("action.search"))
         self.cancel_button.setText(translator.Text_Get("action.dialog_cancel"))

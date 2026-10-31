@@ -12,6 +12,9 @@
 #include "system_user_config.h"
 #include "system_user_startup_config.h"
 #include "system_installation_capture_if.h"
+#include "system_descriptor_if.h"
+#include "system_installation_active_if.h"
+#include "platform_memory.h"
 
 typedef enum
 {
@@ -38,6 +41,54 @@ static volatile uint8_t s_latest_sample_valid;
 static volatile uint8_t s_action_active;
 static uint32_t s_epoch_revision;
 static uint8_t s_configuration_action;
+static PLATFORM_CPU_FAST_BSS SystemCalibrationImuCorrection s_installation_baseline;
+static PLATFORM_CPU_FAST_BSS SystemCalibrationBaselineIdentity s_installation_identity;
+static uint32_t s_installation_generation;
+
+static uint8_t SystemCalibration_BaselineIdentityMatches(
+    const SystemCalibrationBaselineIdentity *identity)
+{
+    SystemDeviceDescriptor descriptor;
+    if (SystemDescriptor_DeviceFind(SYSTEM_DEVICE_CLASS_IMU,
+            identity->instance_id, &descriptor) != SYSTEM_DEVICE_OK)
+    { return 0U; }
+    return (uint8_t)((identity->configuration_digest == SystemDescriptor_ConfigDigestGet()) &&
+        (identity->descriptor_id == descriptor.descriptor_id) &&
+        (identity->physical_device_id == descriptor.physical_device_id) &&
+        (identity->driver_hash == descriptor.driver_name_hash) &&
+        (identity->model_hash == descriptor.model_name_hash));
+}
+
+static uint8_t SystemCalibration_BaselineValid(
+    const SystemCalibrationImuCorrection *correction)
+{
+    uint8_t axis;
+    if (correction->ready != 1U) { return 0U; }
+    for (axis = 0U; axis < 3U; axis++)
+    {
+        if ((!isfinite(correction->accel_bias_mps2[axis])) ||
+            (!isfinite(correction->accel_scale[axis])) ||
+            (!isfinite(correction->gyro_bias_radps[axis])) ||
+            (correction->accel_scale[axis] <= 0.0f) ||
+            (correction->accel_scale[axis] > 10.0f) ||
+            (correction->gyro_scale[axis] != 1.0f))
+        { return 0U; }
+    }
+    return 1U;
+}
+
+static uint8_t SystemCalibration_BaselineCurrent(void)
+{
+    uint8_t instance_id;
+    if ((SYSTEM_INSTALLATION_CAPTURE_ENABLED == 0U) ||
+        (s_installation_generation == 0U) ||
+        (s_status.mode != SYSTEM_CALIBRATION_MODE_NONE))
+    { return 1U; }
+    return (uint8_t)((SystemSourceSelector_ImuActiveInstanceGet(&instance_id) == SYSTEM_DEVICE_OK) &&
+        (instance_id == s_installation_identity.instance_id) &&
+        (SystemCalibration_BaselineIdentityMatches(&s_installation_identity) != 0U) &&
+        (SystemInstallationActive_RuntimeReady(s_installation_generation) != 0U));
+}
 
 static void SystemCalibration_CaptureReleaseIfTerminal(void)
 {
@@ -452,6 +503,12 @@ void SystemCalibration_Init(void)
     s_compute_pending = 0U;
     s_latest_sample_valid = 0U;
     s_action_active = 0U;
+    if (SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U)
+    {
+        (void)memset(&s_installation_baseline, 0, sizeof(s_installation_baseline));
+        (void)memset(&s_installation_identity, 0, sizeof(s_installation_identity));
+        s_installation_generation = 0U;
+    }
     SystemCalibration_StatusReset();
     if (SYSTEM_CALIBRATION_BUILD_PROCEDURE_MASK == 0U)
     {
@@ -1034,6 +1091,94 @@ uint32_t SystemCalibration_GenerationGet(void)
     return generation;
 }
 
+static SystemCalibrationBaselineResult SystemCalibration_BaselinePublish(
+    const SystemCalibrationBaselineIdentity *identity,
+    const SystemCalibrationImuCorrection *correction, uint32_t expected_generation,
+    uint32_t *applied_generation, uint32_t active_owner_token)
+{
+    uint32_t lock;
+    SystemDeviceResult result;
+    uint8_t yielded = 0U;
+    if ((identity == NULL) || (correction == NULL) || (applied_generation == NULL))
+    { return SystemCalibrationBaselineResult_InvalidArgument; }
+    if (SYSTEM_INSTALLATION_CAPTURE_ENABLED == 0U)
+    { return SystemCalibrationBaselineResult_Unsupported; }
+    if (SystemCalibration_BaselineValid(correction) == 0U)
+    { return SystemCalibrationBaselineResult_InvalidArgument; }
+    if (SystemCalibration_BaselineIdentityMatches(identity) == 0U)
+    { return SystemCalibrationBaselineResult_DependencyChanged; }
+    if (SystemCalibration_ModificationAllowed() == 0U)
+    { return SystemCalibrationBaselineResult_Busy; }
+    if(active_owner_token!=0U){
+        if(!SystemInstallationActive_ApplyOwnerHeld(active_owner_token)||!SystemCalibration_ActionBegin())
+        {return SystemCalibrationBaselineResult_Busy;}
+    }else if(SystemCalibration_ConfigurationActionBegin(1U,&yielded)!=SYSTEM_DEVICE_OK)
+    {return SystemCalibrationBaselineResult_Busy;}
+    if ((expected_generation != s_installation_generation) ||
+        (s_sampling_active != 0U) || (s_compute_pending != 0U))
+    { SystemCalibration_ActionEnd(); return SystemCalibrationBaselineResult_Busy; }
+    if ((s_installation_generation == UINT32_MAX) || (s_status.start_sequence == UINT32_MAX))
+    { SystemCalibration_ActionEnd(); return SystemCalibrationBaselineResult_GenerationExhausted; }
+    result = (yielded != 0U) ? SYSTEM_DEVICE_OK : SystemAlignment_CalibrationInvalidate();
+    if (result != SYSTEM_DEVICE_OK)
+    { SystemCalibration_ActionEnd(); return SystemCalibrationBaselineResult_Busy; }
+    lock = SystemCalibration_IrqLock();
+    SILVERSTAR_ASSERT(s_action_active != 0U, SILVERSTAR_ASSERT_MODULE_SYSTEM,
+        SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if (SystemCalibration_BaselineIdentityMatches(identity) == 0U)
+    {
+        SystemCalibration_IrqUnlock(lock); SystemCalibration_ActionEnd();
+        return SystemCalibrationBaselineResult_DependencyChanged;
+    }
+    s_installation_baseline = *correction;
+    s_installation_baseline.mode = SYSTEM_CALIBRATION_MODE_NONE;
+    s_installation_identity = *identity;
+    s_installation_generation++;
+    *applied_generation = s_installation_generation;
+    SystemCalibration_StatusReset();
+    s_status.start_sequence++;
+    s_latest_sample_valid = 0U;
+    if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
+    { SystemImuEpoch_CalibrationInvalidate(); s_epoch_revision = 0U; }
+    SystemCalibration_IrqUnlock(lock);
+    SystemCalibration_ActionEnd();
+    return SystemCalibrationBaselineResult_Ok;
+}
+
+SystemCalibrationBaselineResult SystemCalibration_BaselineApply(
+    const SystemCalibrationBaselineIdentity *identity,
+    const SystemCalibrationImuCorrection *correction,uint32_t expected_generation,
+    uint32_t *applied_generation)
+{return SystemCalibration_BaselinePublish(identity,correction,expected_generation,applied_generation,0U);}
+
+SystemCalibrationBaselineResult SystemCalibration_BaselineApplyOwned(
+    const SystemCalibrationBaselineIdentity *identity,
+    const SystemCalibrationImuCorrection *correction,uint32_t expected_generation,
+    uint32_t *applied_generation,uint32_t active_owner_token)
+{
+    if(active_owner_token==0U){return SystemCalibrationBaselineResult_InvalidArgument;}
+    return SystemCalibration_BaselinePublish(identity,correction,expected_generation,applied_generation,active_owner_token);
+}
+
+SystemCalibrationBaselineResult SystemCalibration_BaselineGet(
+    SystemCalibrationBaselineIdentity *identity,
+    SystemCalibrationImuCorrection *correction, uint32_t *generation)
+{
+    uint32_t lock;
+    if ((identity == NULL) || (correction == NULL) || (generation == NULL))
+    { return SystemCalibrationBaselineResult_InvalidArgument; }
+    if (SYSTEM_INSTALLATION_CAPTURE_ENABLED == 0U)
+    { return SystemCalibrationBaselineResult_Unsupported; }
+    lock = SystemCalibration_IrqLock();
+    if ((s_installation_generation == 0U) || (s_action_active != 0U))
+    { SystemCalibration_IrqUnlock(lock); return SystemCalibrationBaselineResult_NotReady; }
+    *identity = s_installation_identity;
+    *correction = s_installation_baseline;
+    *generation = s_installation_generation;
+    SystemCalibration_IrqUnlock(lock);
+    return SystemCalibrationBaselineResult_Ok;
+}
+
 SystemDeviceResult SystemCalibration_StatusGet(SystemCalibrationStatus *status)
 {
     uint32_t primask;
@@ -1056,6 +1201,11 @@ SystemDeviceResult SystemCalibration_StatusGet(SystemCalibrationStatus *status)
         return SYSTEM_DEVICE_BUSY;
     }
     *status = s_status;
+    if ((SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U) && s_installation_generation != 0U &&
+        s_status.mode == SYSTEM_CALIBRATION_MODE_NONE)
+    { status->correction = s_installation_baseline; status->baseline_generation = s_installation_generation; }
+    if (SystemCalibration_BaselineCurrent() == 0U)
+    { status->ready = 0U; status->correction.ready = 0U; status->state = SYSTEM_CALIBRATION_STATE_IDLE; }
     if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
     {
         if (SystemImuEpoch_CalibrationIsReady(s_status.start_sequence,
@@ -1101,7 +1251,15 @@ SystemDeviceResult SystemCalibration_ImuCorrectionGet(
             return SYSTEM_DEVICE_NOT_READY;
         }
     }
-    *correction = s_status.correction;
+    if ((SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U) &&
+        (s_installation_generation != 0U) &&
+        (s_status.mode == SYSTEM_CALIBRATION_MODE_NONE))
+    {
+        if (SystemCalibration_BaselineCurrent() == 0U)
+        { SystemCalibration_IrqUnlock(primask); return SYSTEM_DEVICE_NOT_READY; }
+        *correction = s_installation_baseline;
+    }
+    else { *correction = s_status.correction; }
     SystemCalibration_IrqUnlock(primask);
     return SYSTEM_DEVICE_OK;
 }
@@ -1113,7 +1271,8 @@ uint8_t SystemCalibration_IsReady(void)
 
     ready = (uint8_t)((s_initialized != 0U) &&
                       (s_action_active == 0U) &&
-                      (s_status.ready != 0U));
+                      (s_status.ready != 0U) &&
+                      (SystemCalibration_BaselineCurrent() != 0U));
     if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
     {
         ready = (uint8_t)((ready != 0U) &&

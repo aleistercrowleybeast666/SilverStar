@@ -238,7 +238,7 @@ def test_real_gui_entry_instance_switch_language_and_save_reopen(tmp_path, works
     window._model = window._service.ReferenceProject_Create("InstallationGui013")
     # The existing GUI open workflow enables the Ground target. Start with the
     # same editing state so the whole-model assertion tests an actual roundtrip.
-    window._model.ground_target = replace(window._model.ground_target, enabled=True)
+    window._model.ground_target = replace(window._model.ground_target)
     window._Project_Refresh()
     window.resize(1280, 900)
     window.show()

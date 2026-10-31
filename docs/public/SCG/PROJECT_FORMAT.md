@@ -1,6 +1,6 @@
 # SilverStar Project Format
 
-当前开发产品为 **0.1.3 development**，稳定发布仍为 **0.1.2**。当前原生工程身份为 **14 至 23**，以 `project/model.py` 的格式常量及 `schemas/project.schema.json` 为准。打开、显示或切换工作区不把旧文件机械改成最新格式；早期格式仅沿用已有的明确迁移路径。项目包括 Flight 配置、独立 `ground_target`、唯一 `air_link`、alignment、设备实例、算法实际参数及日志策略。
+当前开发产品为 **0.1.3 development**，稳定发布仍为 **0.1.2**。当前工程格式为 **24**，兼容版本化迁移的旧格式，以 `project/model.py` 和 `schemas/project.schema.json` 为准。读取迁移作用于内存模型，原始文件在用户保存前保持不变。项目包括 Flight 配置、独立 `ground_target`、唯一 `air_link`、alignment、设备实例、算法实际参数及日志策略。
 
 | 格式 | 扩展身份 |
 |---|---|
@@ -13,24 +13,25 @@
 | 21 | 磁力计、维护导出等可选资源选择 |
 | 22 | 桌面参考 `mission_process` 与原始 IMU 第二安装轴 |
 | 23 | 可选 `mission_functions`：共享实例及有界范围绑定 |
+| 24 | 移除 Ground `enabled` 门控；由显式目标动作决定生成范围 |
 
 详见[Target model](../shared/TARGET_MODEL.md)、[AIR Link](../shared/AIR_LINK.md)与[Device variants](../shared/DEVICE_VARIANTS.md)。当前 GUI 是硬件与通信、飞行流程、检查与生成三个自由切换工作区；状态估计、控制/动作及记录在飞行流程中编辑。
 
 ## 共享任务功能与实际消费者
 
-没有 `mission_process` 或 `mission_functions` 的标准工程，只派生只读胶囊/功能展示，不写入这两个字段，也不改变功能档、算法、硬件、参数或生成资格。显式保存功能绑定时使用格式 23；原字段 `strategies`、`algorithm_parameters`、`modes`、`mode_parameters`、日志和 Ground 配置仍是对应消费者的配置权威。
+新工程使用原生准备/上升默认流程，普通阶段卡片可以直接打开事务弹窗。没有显式流程的旧工程保留兼容入口；阶段编辑经校验后显式转换，浏览或取消不修改项目。原字段 `strategies`、`algorithm_parameters`、`modes`、`mode_parameters`、日志和 Ground 配置仍是对应消费者的参数权威。
 
-`mission_functions` 为 `{schema_version:1, functions:[...]}`。每项有稳定 `instance_id`、`plugin_id`、分类、一次性/持续方式、开始/停止边界、依赖、输入引用和输出；参数不复制进卡片或每个阶段。阶段改名不更换引用，区间内插入阶段自然覆盖。缺失边界、倒序、重复实例/输出、不可用输入与依赖环作为可定位问题保留；草稿可保存，生成前拒绝。
+`mission_functions` 为 `{schema_version:1, functions:[...]}`。每项有稳定 `instance_id`、`plugin_id`、分类、一次性/持续方式、开始/停止边界、依赖、输入引用和输出；参数不复制进卡片或每个阶段。阶段改名不更换引用，区间内插入阶段自然覆盖。缺失边界、倒序、重复实例/输出、不可用输入与依赖环作为可定位问题保留；校验失败保留草稿供修正，生成前拒绝。
 
-数值阶段条件的输入由显式合同映射：`altitude_agl_m`、`vertical_velocity_mps` 使用已选择的 estimator 输出；未选择 estimator 时才使用 INS 输出。生产者必须在进入条件取样前可用，不能等待这个条件进入阶段后才启动。检查自等待环、输入缺失和上游范围覆盖；外部 `launch_detected` 等事件不按名称猜测来自估计器。一次参考快照的顺序是条件取样、至多一次阶段转换、停止区间、按依赖启动区间，再返回每个持续实例一次；不执行算法或硬件。
+数值阶段条件由版本化合同映射：高度、垂速使用已选择的导航输出，`acceleration_g` 使用经过校正的规范 IMU 比力模长。生产者必须在条件取样前可用，检查自等待、输入缺失、过期和上游范围覆盖。阶段名称不会产生事件；事件必须有真实生产者。原生调度每步最多转换一个阶段，执行退出/停止、转换、进入/启动的确定顺序。
 
 普通边界为 `system_prepare`、`mission_start`、`system_landed`、`lifecycle_end`；它们复用已有准备、已接受 START、LANDED 和收尾合同，不改变初始化。`stage_enter` 是显式阶段进入边界，区间包含开始、不包含停止。同一实例只保存一次。一次性任务是一次请求后等待实际插件完成/失败，不等于调用一次函数或自动显示物理完成。
 
-声明目录为 `contracts/mission_functions_v1.json`。只有与现有生命周期和 canonical 输入/依赖精确一致的 adapter 绑定能生成；任意阶段区间、改变调度依赖和不同输入映射仍缺少固件消费者，明确报告参考编排并拒绝生成。旧 `mission_process_firmware_binding_unavailable` 拒绝保留，不吞掉自定义过程后生成旧行为。Ground-only 生成隔离 Flight 的过程、功能及安装元数据，顶层工程仍保留原草稿。
+声明目录为 `contracts/mission_functions_v1.json` 和 `contracts/mission_process_v2.json`。合法原生阶段、功能区间、输入和依赖生成有界表并由实际固件消费者执行。输入来源修改通过唯一 capability authority 同步依赖功能；缺失插件、非法模式、冲突、环或未支持消费者在生成前拒绝。Ground-only 生成隔离 Flight 的过程、功能及安装元数据，顶层工程仍保留原草稿。
 
-含 `mission_process` 的工程在“检查与生成”校验阶段即报告 `MISSION_PROCESS_REFERENCE_ONLY` 错误；编辑校验仅给警告，允许保存草稿。该提示不替代渲染器的最终拒绝，不能出现校验显示可生成、渲染时才发现缺少阶段消费者的假象。
+旧桌面参考流程不直接获得原生执行资格；必须显式迁移并通过当前合同与消费者校验。未知参考表达式和未支持事件继续明确拒绝，不能只改 execution 字符串或丢弃流程后生成旧行为。
 
-日志功能引用原有 `logging_streams`，不创建第二份记录表。Logger 会话仍从启动准备，飞前 native/corrected 默认开关保持，关键记录及落地 drain/flush/finalize 不因普通卡片停止而删除。自定义日志区间尚无固件门控消费者，因此不以可编辑草稿宣称支持板端记录门控。
+日志功能引用原有 `logging_streams`。记录和遥测区间接入实际运行门控，支持合同允许的 INS/估计器依赖；无效或过期依赖暂停相应数据流。Logger 会话、关键身份/诊断和必要 drain/flush/finalize 保持各自 owner。默认不配置回收时，不隐式插入燃尽、滑行、开伞或落地停止，记录按配置持续到任务终止。
 
 ## 导出身份与参数文件
 

@@ -41,7 +41,7 @@ AIR frames are deliberately outside the SSLOG container.
 ```text
 read-only SSLOG BIN
   -> trusted SSLOG0 container (CRC plus bounded/validated FLG1 recovery, RawRecordFrame)
-  -> mandatory bootstrap Descriptor + exact .ssdecoder 1.2 validation/cache
+  -> mandatory bootstrap Descriptor + exact .ssdecoder 1.3 (or historical 1.2) validation/cache
   -> dynamic Record Catalog parser (raw Records and instance channels)
   -> semantic adapter + mandatory Calibration Result
   -> FlightDataset + DataQualitySummary + DatasetSemanticContext

@@ -3,6 +3,9 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from enum import Enum
 import math
+import json
+import os
+import time
 from pathlib import Path
 
 
@@ -10,6 +13,14 @@ class RecoveryObserveResult(str, Enum):
     Accepted = "accepted"
     Invalid = "invalid"
     Older = "older"
+
+
+class RecoveryCacheResult(str, Enum):
+    Saved = "saved"
+    Loaded = "loaded"
+    Missing = "missing"
+    Invalid = "invalid"
+    IoError = "io_error"
 
 
 @dataclass(frozen=True)
@@ -35,6 +46,7 @@ class AbsoluteRecoverySample:
     satellites: int
     received_ns: int
     source: str
+    restored: bool = False
 
 
 class RecoveryPosition:
@@ -66,7 +78,7 @@ class RecoveryPosition:
         self.sample = RecoverySample(session, time_ms, point, received_ns, source, sequence)
         return RecoveryObserveResult.Accepted
 
-    def Absolute_Observe(self, frame, received_ns, *, source):
+    def Absolute_Observe(self, frame, received_ns, *, source, accepted=False):
         if frame.message_type != 0x18 or type(received_ns) is not int or received_ns < 0:
             return RecoveryObserveResult.Invalid
         fields = frame.values
@@ -76,7 +88,7 @@ class RecoveryPosition:
         same_session = old is not None and old.session == frame.boot_session
         if same_session:
             delta = (frame.sequence - old.sequence) & 0xFFFF
-            if delta == 0 or delta >= 0x8000 or received_ns < old.received_ns:
+            if (not accepted and (delta == 0 or delta >= 0x8000)) or received_ns < old.received_ns:
                 return RecoveryObserveResult.Older
         age = None if fields['sample_age_ms'] == 0xFFFFFFFF else fields['sample_age_ms'] / 1000
         same_point = same_session and (old.latitude_e7, old.longitude_e7) == (fields['latitude_e7'], fields['longitude_e7'])
@@ -101,7 +113,7 @@ class RecoveryPosition:
             return {"kind": "wgs84", "sample": absolute, "latitude": latitude, "longitude": longitude,
                 "age_s": None if absolute.age_s is None else absolute.age_s + elapsed,
                 "receive_age_s": elapsed, "frame_confirmed": False,
-                "source_current": bool(connected and current_session == absolute.session),
+                "source_current": bool(connected and current_session == absolute.session and not absolute.restored),
                 "map_url": f"https://www.openstreetmap.org/?mlat={latitude:.7f}&mlon={longitude:.7f}#map=17/{latitude:.7f}/{longitude:.7f}"}
         sample = self.sample
         if sample is None:
@@ -118,6 +130,72 @@ class RecoveryPosition:
             "source_current": bool(connected and current_session == sample.session),
         }
 
+    def Cache_Save(self, path, *, now_ns=None, wall_ns=None):
+        """Atomic display cache, never an authoritative recorded flight log."""
+        if self.absolute is None:
+            return RecoveryCacheResult.Missing
+        mono = time.monotonic_ns() if now_ns is None else now_ns
+        wall = time.time_ns() if wall_ns is None else wall_ns
+        sample = self.absolute
+        age = None if sample.age_s is None else sample.age_s + max(0, mono - sample.received_ns) / 1e9
+        document = {'schema': 1, 'saved_unix_ns': wall, 'session': sample.session,
+            'sequence': sample.sequence, 'latitude_e7': sample.latitude_e7,
+            'longitude_e7': sample.longitude_e7, 'height_mm': sample.height_mm,
+            'age_s': age, 'accuracy_cm': sample.accuracy_cm, 'flags': sample.flags,
+            'satellites': sample.satellites, 'source': sample.source}
+        target = Path(path)
+        try:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            with target.with_suffix(target.suffix + '.tmp').open('w', encoding='utf-8') as stream:
+                json.dump(document, stream, ensure_ascii=False, allow_nan=False)
+                stream.flush()
+                os.fsync(stream.fileno())
+            os.replace(target.with_suffix(target.suffix + '.tmp'), target)
+        except (OSError, ValueError):
+            return RecoveryCacheResult.IoError
+        return RecoveryCacheResult.Saved
+
+    def Cache_Load(self, path, *, now_ns=None, wall_ns=None):
+        mono = time.monotonic_ns() if now_ns is None else now_ns
+        wall = time.time_ns() if wall_ns is None else wall_ns
+        try:
+            with Path(path).open('r', encoding='utf-8') as stream:
+                raw = stream.read(8193)
+            if len(raw) > 8192:
+                return RecoveryCacheResult.Invalid
+            row = json.loads(raw)
+            ranges = {'session': (0, 0xFFFFFFFF), 'sequence': (0, 65535),
+                'latitude_e7': (-900000000, 900000000), 'longitude_e7': (-1800000000, 1800000000),
+                'accuracy_cm': (0, 65535), 'flags': (0, 31), 'satellites': (0, 255),
+                'saved_unix_ns': (1, 2**63 - 1)}
+            if type(row) is not dict or type(row.get('schema')) is not int or row['schema'] != 1:
+                return RecoveryCacheResult.Invalid
+            if any(type(row.get(key)) is not int or not low <= row[key] <= high for key, (low, high) in ranges.items()):
+                return RecoveryCacheResult.Invalid
+            if not row['flags'] & 1 or type(row.get('source')) is not str or not 1 <= len(row['source']) <= 512:
+                return RecoveryCacheResult.Invalid
+            height = row.get('height_mm')
+            if height is not None and (type(height) is not int or not -2147483647 <= height <= 2147483647):
+                return RecoveryCacheResult.Invalid
+            age = row.get('age_s')
+            if age is not None and (type(age) not in (int, float) or not math.isfinite(age) or age < 0):
+                return RecoveryCacheResult.Invalid
+            # Cross-process monotonic clocks are never persisted. If the wall
+            # clock moved backwards, retain the point with an unknown age.
+            elapsed = wall - row['saved_unix_ns']
+            age = None if age is None or elapsed < 0 else age + elapsed / 1e9
+            sample = AbsoluteRecoverySample(row['session'], row['sequence'], row['latitude_e7'],
+                row['longitude_e7'], height, age, row['accuracy_cm'], row['flags'], row['satellites'],
+                mono, row['source'], True)
+        except FileNotFoundError:
+            return RecoveryCacheResult.Missing
+        except OSError:
+            return RecoveryCacheResult.IoError
+        except (ValueError, TypeError, KeyError, OverflowError):
+            return RecoveryCacheResult.Invalid
+        self.absolute = sample
+        return RecoveryCacheResult.Loaded
+
 
 def Recovery_Text(snapshot):
     if snapshot is None:
@@ -131,7 +209,8 @@ def Recovery_Text(snapshot):
             f"纬度 {snapshot['latitude']:.7f}  经度 {snapshot['longitude']:.7f}\n"
             f"定位年龄 {age_text}；最近定位收包 {snapshot['receive_age_s']:.1f} s 前\n"
             f"水平精度参考 {accuracy}；高度 {height}\n"
-            f"来源 {sample.source}；{'保留点' if sample.flags & 16 else '当前定位样本'}；"
+            f"来源 {sample.source}；卫星数 {'未知' if sample.satellites == 255 else sample.satellites}；"
+            f"{'历史缓存' if sample.restored else '保留点' if sample.flags & 16 else '当前定位样本'}；"
             f"{'当前连接' if snapshot['source_current'] else '保留 / 断线或先前会话'}\n"
             f"boot_session={sample.session:08X}；帧序号={sample.sequence}\n"
             "ENU 为辅助相对轨迹；本坐标不代表已确认的实际落点。\n" + snapshot['map_url'])

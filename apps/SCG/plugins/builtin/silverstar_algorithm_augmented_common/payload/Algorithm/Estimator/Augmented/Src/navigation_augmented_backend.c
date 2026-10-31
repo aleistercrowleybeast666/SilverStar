@@ -24,6 +24,7 @@ _Static_assert((SYSTEM_FUSION_ALGORITHM==SYSTEM_FUSION_ESKF20 && SYSTEM_BUILD_AU
  (SYSTEM_FUSION_ALGORITHM==SYSTEM_FUSION_INEKF20 && SYSTEM_BUILD_AUGMENTED_MODEL==3U),"Model/algorithm ID mismatch");
 /* Static, CPU-only memory. EstimatorTask is the sole owner; no DMA or callbacks. */
 static NavigationReplay s_replay;
+static uint8_t s_baro_origin_valid;
 static NavigationMagQuality s_mag_quality;
 static NavigationMagQualityInput s_mag_quality_input;
 static NavigationMagQualityOutput s_mag_quality_output;
@@ -124,6 +125,7 @@ void SystemNavigationBackend_Reset(void)
     s_mag_seen=0U;s_mag_sequence=0U;NavigationMagQuality_Reset(&s_mag_quality);
     memset(s_unadmitted_rejections,0,sizeof(s_unadmitted_rejections));
     s_active=0U;s_started=0U;s_gnss_seen=0U;s_input_sequence=0U;
+    s_baro_origin_valid=0U;
     s_diagnostics.algorithm_id=(uint8_t)SYSTEM_FUSION_ALGORITHM;
     s_diagnostics.error_dimension=(uint8_t)Backend_Dimension();
     s_diagnostics.magnetic_result=NavigationAugmentedMag_Missing;
@@ -219,6 +221,9 @@ SystemDeviceResult SystemNavigationBackend_Initialize(const float q_nb[4],const 
     Backend_MagneticBind(&observations[2]);
     s_diagnostics.last_result=NavigationSession_Initialize(&s_replay.current,&s_replay_work.session,&s_replay_work.session.staged,0U,&imu,observations);
     if(s_diagnostics.last_result!=NavigationSessionResult_Ok) { return SYSTEM_DEVICE_NOT_READY; }
+    /* Origin metadata describes the accepted initialization input. It does
+     * not claim that this model performs a barometric measurement update. */
+    s_baro_origin_valid=barometer_origin_valid;
     s_diagnostics.generation=generation;s_diagnostics.calibration_generation=imu.calibration;s_active=activate;
     s_origin_geodetic[0]=origin->latitude_e7;s_origin_geodetic[1]=origin->longitude_e7;s_origin_geodetic[2]=origin->ellipsoid_height_mm;
     SystemNavigationHealth_Reset(0U);
@@ -346,6 +351,7 @@ SystemDeviceResult SystemNavigationBackend_SnapshotGet(EstimatorOutputSnapshot *
 {
     float r[3][3],q[4];
     if(output==NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    SILVERSTAR_ASSERT(s_baro_origin_valid<=1U,SILVERSTAR_ASSERT_MODULE_ALGORITHM,SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     if(s_replay.current.initialized!=1U) { output->initialized=0U;output->mission_running=0U;return SYSTEM_DEVICE_NOT_READY; }
     if(Navigation_Validate(&s_replay.current.navigation,&s_replay_work.session.core)!=NavigationOk || !Backend_StateFloatable()) { return Backend_Fault(output,NavigationSessionResult_InvalidState); }
     for(uint32_t i=0;i<3U;i++) { for(uint32_t j=0;j<3U;j++) { r[i][j]=(float)s_replay.current.navigation.rotation[i*3U+j]; } }
@@ -365,7 +371,7 @@ SystemDeviceResult SystemNavigationBackend_SnapshotGet(EstimatorOutputSnapshot *
         s_diagnostics.magnetic_updates=accepted[2];s_diagnostics.last_magnetic_fusion_us=last[2];
         s_diagnostics.magnetic_rejections=rejected[2]+s_unadmitted_rejections[2];
     }
-    output->initialized=1U;output->mission_running=s_active;output->gnss_origin_valid=s_frame.valid;output->baro_origin_valid=0U;
+    output->initialized=1U;output->mission_running=s_active;output->gnss_origin_valid=s_frame.valid;output->baro_origin_valid=s_baro_origin_valid;
     output->health_flags|=ESTIMATOR_HEALTH_TIMING_UNQUALIFIED;
     if(SystemNavigationHealth_DegradedGet(s_replay.current.state_us)) { output->health_flags|=ESTIMATOR_HEALTH_FUSION_TIMEOUT; }
     else { output->health_flags&=~ESTIMATOR_HEALTH_FUSION_TIMEOUT; }

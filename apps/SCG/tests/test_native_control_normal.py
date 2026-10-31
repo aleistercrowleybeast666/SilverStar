@@ -72,7 +72,10 @@ def test_valid_f103_control_flow_and_preserved_bulk(bound,tmp_path):
     service,imported,args,_source=bound
     plan=service.NativeClassicCdcGroundCandidate_Plan(imported.model,device_facts=args['device_facts'])
     if args['device_facts'].part=='STM32F407VET6':
-        assert plan.contract['usb_control'] is None
+        assert plan.contract['usb_control']['profile']=='classic-f407-indexed-v1'
+        assert plan.contract['usb_control']['independent_review']=='NO_PASSED_OUTCOME'
+        # The indexed actual class/core/callback is compiled and fault-injected
+        # in test_usb_lifecycle_normal, rather than the scalar F103 facade here.
         return
     manifest=plan.contract['usb_control']
     assert manifest['independent_review']=='NO_PASSED_OUTCOME' and manifest['formal_release'] is False

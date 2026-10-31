@@ -224,10 +224,22 @@ def main() -> int:
     validate_records(catalog)
     validate_parser_mirror(catalog, parser_metadata)
     validate_c_mirror(repo, catalog)
-    hashes = profile_hashes(catalog, semantics)
+    from sslog_audit import Audit_ProfileLoad
+    project = load_json(repo / "SilverStar.ssproject")
+    name = project["project"]["name"]
+    require(isinstance(name,str) and Path(name).name == name and "/" not in name and "\\" not in name,
+            "Project decoder name is unsafe")
+    package_catalog, package_hashes = Audit_ProfileLoad(repo / (name + ".ssdecoder"))
+    require(package_catalog == catalog, "Decoder package Record Catalog differs from generated source")
+    local = profile_hashes(catalog, semantics)
+    require(package_hashes["record_catalog_hash_128"] == local[0][:16].hex() and
+            package_hashes["project_semantics_hash_128"] == local[1][:16].hex(),
+            "Decoder package semantics differ from generated source")
+    hashes = (local[0],local[1],bytes.fromhex(package_hashes["generation_profile_hash_128"]))
     labels = ("record_catalog", "project_semantics", "generation_profile")
     for label, digest in zip(labels, hashes):
-        print(f"{label}_sha256={digest.hex()}")
+        suffix = 'sha256' if len(digest) == 32 else 'hash_128'
+        print(f"{label}_{suffix}={digest.hex()}")
     if not args.print_hashes:
         validate_generated_hashes(repo, hashes)
     count = len(catalog["records"])

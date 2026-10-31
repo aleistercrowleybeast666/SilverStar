@@ -165,7 +165,8 @@
         "pass_instance": true,
         "operations": {
           "SendControl": "Sx1278TelemetryInstance_SendControl",
-          "TxResultGet": "Sx1278TelemetryInstance_TxResultGet"
+          "TxResultGet": "Sx1278TelemetryInstance_TxResultGet",
+          "ModeSet": "Sx1278TelemetryInstance_ModeSet"
         }
       }
     },

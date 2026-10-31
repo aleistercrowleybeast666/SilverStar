@@ -50,7 +50,7 @@ def native_radio_executables(tmp_path_factory):
     return build
 
 
-@pytest.mark.parametrize('scenario',['normal','reinit','deactivate'])
+@pytest.mark.parametrize('scenario',['normal','reinit','deactivate','simplex'])
 def test_real_driver_timestamps_are_sampled_before_irq_locks(native_radio_executables,scenario):
     result=subprocess.run([str(native_radio_executables/'contract.exe'),scenario],capture_output=True,text=True,timeout=15)
     (native_radio_executables/(scenario+'.log')).write_text(result.stdout+result.stderr)
@@ -63,3 +63,10 @@ def test_actual_owner_diagnostics_controls_and_tx_rx_loops(native_radio_executab
     (native_radio_executables/'owner.log').write_text(result.stdout+result.stderr)
     assert result.returncode==0,result.stdout+result.stderr
     assert '0 failures' in result.stdout
+
+
+def test_native_source_revision_stays_pinned():
+    root = Path(__file__).resolve().parents[1]
+    source = root / 'plugins/builtin/silverstar_device_telemetry_sx1281/payload/Devices/Telemetry/SX1281/Src/sx1281_device.c'
+    with pytest.raises(ValueError, match='payload changed'):
+        NativeRadioDevice_Derive(source.read_bytes() + b'\n')

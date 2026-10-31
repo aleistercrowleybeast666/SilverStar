@@ -21,6 +21,20 @@ static volatile uint32_t *Capture_OperationSlot(uint8_t owner)
     return (owner==11U)?&s_capture.frozen.store_token:NULL;
 }
 
+static void Capture_StartRestoreDrain(void)
+{
+    CaptureControl *control=&s_capture.control.fields;
+    uint32_t token=CapturePort_WordTake(&s_capture.transaction.fields.start_restore_token);
+    if(token==0U){return;}
+    SILVERSTAR_ASSERT(control->resource_owner==6U&&control->resource_token==token,
+        SILVERSTAR_ASSERT_MODULE_MODULES,SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
+    SILVERSTAR_ASSERT(CapturePort_WordRead(Capture_OperationSlot(5U))==0U&&
+        CapturePort_WordRead(Capture_OperationSlot(6U))==0U,
+        SILVERSTAR_ASSERT_MODULE_MODULES,SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
+    control->resource_owner=5U;
+    CapturePort_WordSet(Capture_OperationSlot(5U),token);
+}
+
 static void Capture_ReleaseDrain(void)
 {
     CaptureControl *control=&s_capture.control.fields;
@@ -76,7 +90,7 @@ static void Capture_ObjectCheck(void)
 static uint8_t Capture_Enter(void)
 {
     if(CapturePort_Try(&s_capture.control.fields.gate)==0U){return 0U;}
-    Capture_ReleaseDrain();Capture_ObjectCheck();return 1U;
+    Capture_ReleaseDrain();Capture_StartRestoreDrain();Capture_ObjectCheck();return 1U;
 }
 static void Capture_Leave(void)
 { CapturePort_Leave(&s_capture.control.fields.gate); }
@@ -264,6 +278,42 @@ InstallationCaptureResult InstallationCapture_OperationEnd(uint8_t owner)
     if(token==0U){return InstallationCaptureResult_Stale;}
     return (CapturePort_WordPublish(&s_capture.frozen.release_token,token)!=0U)?
         InstallationCaptureResult_Ok:InstallationCaptureResult_Failed;
+}
+
+InstallationCaptureResult InstallationCapture_StartClaim(uint8_t from_alignment,uint32_t *token)
+{
+    CaptureControl *control=&s_capture.control.fields;
+    uint32_t held;
+    if(from_alignment>1U||token==NULL){return InstallationCaptureResult_Invalid;}
+    if(!Capture_Enter()){return InstallationCaptureResult_Busy;}
+    if(from_alignment==0U){
+        if(control->resource_owner!=0U){Capture_Leave();return InstallationCaptureResult_Busy;}
+    }else{
+        held=CapturePort_WordRead(Capture_OperationSlot(5U));
+        if(held==0U||control->resource_owner!=5U||control->resource_token!=held){
+            Capture_Leave();return InstallationCaptureResult_Stale;
+        }
+    }
+    if(control->resource_generation==UINT32_MAX){Capture_Leave();return InstallationCaptureResult_Capacity;}
+    SILVERSTAR_ASSERT(CapturePort_WordRead(Capture_OperationSlot(6U))==0U,
+        SILVERSTAR_ASSERT_MODULE_MODULES,SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
+    /* No unowned gap, but each START attempt needs a fresh identity. A
+     * failed attempt restored to ALIGN must not authorize a late End. */
+    held=++control->resource_generation;control->resource_token=held;control->enabled=1U;
+    if(from_alignment!=0U){CapturePort_WordSet(Capture_OperationSlot(5U),0U);}
+    CapturePort_WordSet(Capture_OperationSlot(6U),held);control->resource_owner=6U;
+    *token=held;Capture_Leave();return InstallationCaptureResult_Ok;
+}
+
+InstallationCaptureResult InstallationCapture_StartRelease(uint32_t token,uint8_t restore_alignment)
+{
+    uint8_t published;
+    if(restore_alignment>1U||token==0U){return InstallationCaptureResult_Invalid;}
+    if(CapturePort_WordConsume(Capture_OperationSlot(6U),token)==0U){return InstallationCaptureResult_Stale;}
+    if(restore_alignment!=0U){
+        published=CapturePort_WordPublish(&s_capture.transaction.fields.start_restore_token,token);
+    }else{published=CapturePort_WordPublish(&s_capture.frozen.release_token,token);}
+    return published?InstallationCaptureResult_Ok:InstallationCaptureResult_Failed;
 }
 
 static void Capture_Cleanup(void)

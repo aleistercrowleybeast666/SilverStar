@@ -587,6 +587,24 @@ static SensorImuResult SensorImu_FifoEpochMap(SensorImu *imu, uint64_t receive_u
     return SENSOR_IMU_OK;
 }
 
+static uint32_t SensorImu_IcmTickDelta(SensorImu *imu, uint16_t elapsed)
+{
+    uint32_t scaled = elapsed;
+    SILVERSTAR_ASSERT(imu->profile->fifo_timestamp_32_over_30 <= 1U,
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    if (imu->profile->fifo_timestamp_32_over_30 != 0U)
+    {
+        /* Only bytes 0/1 of this existing ICM scratch hold the previous tick.
+         * Byte 2 retains the exact 16/15 fractional phase; no long-run drift. */
+        SILVERSTAR_ASSERT(imu->fifo_pending[2] < 15U,
+            SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+        scaled = (uint32_t)elapsed * 16U + imu->fifo_pending[2];
+        imu->fifo_pending[2] = (uint8_t)(scaled % 15U);
+        scaled /= 15U;
+    }
+    return scaled;
+}
+
 static SensorImuResult SensorImu_IcmFifoDecode(SensorImu *imu,
     const uint8_t *packet, uint8_t *frame, uint64_t *epoch)
 {
@@ -607,8 +625,9 @@ static SensorImuResult SensorImu_IcmFifoDecode(SensorImu *imu,
         uint16_t elapsed = (uint16_t)(tick - previous);
         if ((elapsed == 0U) || (elapsed >= 32768U))
         { imu->time_errors++; return SensorImu_Fail(imu, SENSOR_IMU_TIME_ERROR); }
-        *epoch = imu->last_sample_us + elapsed;
+        *epoch = imu->last_sample_us + SensorImu_IcmTickDelta(imu, elapsed);
     }
+    else { imu->fifo_pending[2] = 0U; }
     memcpy(&frame[imu->profile->accel_offset], &packet[1], 6U);
     memcpy(&frame[imu->profile->gyro_offset], &packet[7], 6U);
     temperature = (int16_t)(((packet[13] >= 128U) ? (int16_t)packet[13] - 256 :

@@ -20,14 +20,15 @@ def Sx1278Link_Validate(link):
         raise ValueError("SX1278 cannot retain NRF24 parameters")
 
 
-def Sx1278Model_Validate(model):
+def Sx1278Model_Validate(model, target="flight"):
     from silverstar_fccg.project.model import GroundRadioConfigurations_Get
     Sx1278Link_Validate(model.air_link)
-    radios = [item for item in model.device_instances if item.plugin == SX1278_PLUGIN]
-    if len(radios) != 1 or radios[0].instance_id != model.air_link.flight_radio_instance:
-        raise ValueError("SX1278 experimental profile requires one explicit Flight owner")
-    Sx1278Module_Validate(radios[0].module_variant, radios[0].tx_power_dbm)
-    if model.ground_target.enabled:
+    if target in ("flight", "all"):
+        radios = [item for item in model.device_instances if item.plugin == SX1278_PLUGIN]
+        if len(radios) != 1 or radios[0].instance_id != model.air_link.flight_radio_instance:
+            raise ValueError("SX1278 experimental profile requires one explicit Flight owner")
+        Sx1278Module_Validate(radios[0].module_variant, radios[0].tx_power_dbm)
+    if target in ("ground", "all"):
         ground = GroundRadioConfigurations_Get(model.ground_target)
         if len(ground) != 1 or ground[0].plugin != SX1278_PLUGIN:
             raise ValueError("SX1278 requires exactly one matching Ground radio")
@@ -37,7 +38,7 @@ def Sx1278Model_Validate(model):
 def Sx1278Header_Render(model, target="flight"):
     if target not in ("flight", "ground"):
         raise ValueError("SX1278 target must be Flight or Ground")
-    Sx1278Model_Validate(model)
+    Sx1278Model_Validate(model, target)
     return '''#ifndef __AIR_LINK_CONFIG_H
 #define __AIR_LINK_CONFIG_H
 /* Experimental E32-400M20S. 3.3 V only. HARDWARE_UNVERIFIED. */

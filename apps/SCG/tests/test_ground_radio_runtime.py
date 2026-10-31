@@ -48,7 +48,7 @@ def runtime_executables(tmp_path_factory):
             *("-I" + str(path) for path in includes),
             str(root / "tests/fixtures/ground_radio_runtime_host.c"),
             str(core / "Src/silverstar_assert.c"), str(ground / "Radio/Src/ground_radio_activity.c"),
-            str(ground / "Radio/Src/ground_radio_sx1281.c"), "-o", str(executable)]
+            str(ground / "Radio/Src/ground_radio_tm.c"), str(ground / "Radio/Src/ground_radio_sx1281.c"), "-o", str(executable)]
         compiled = subprocess.run(command, capture_output=True, text=True, timeout=60)
         assert compiled.returncode == 0, compiled.stdout + compiled.stderr
         result[name] = executable

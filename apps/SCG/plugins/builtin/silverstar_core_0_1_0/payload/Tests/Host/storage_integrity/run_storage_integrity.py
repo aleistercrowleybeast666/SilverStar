@@ -50,6 +50,12 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
     diskio = (project / diskio_paths[0]).resolve()
     if not diskio.is_relative_to(project.resolve()) or not diskio.is_file():
         raise ValueError("declared diskio source is missing or escaped")
+    diskio_text = re.sub(r"/\*.*?\*/|//[^\r\n]*", "",
+                         diskio.read_text(encoding="utf-8"), flags=re.DOTALL)
+    if re.search(r"\bBSP_SD_(?:Read|Write)Blocks\s*\(", diskio_text):
+        raise ValueError("Authoritative diskio uses blocking BSP transfers; the delayed-DMA "
+                         "Host model cannot qualify it. Supply a reviewed bounded storage "
+                         "implementation; no DMA/storage acceptance is inferred.")
     # Copy byte-for-byte so quoted local vendor includes use the Host facade.
     (output / "sd_diskio.c").write_bytes(diskio.read_bytes())
     f1_diskio = project / "Platform/STM32F1Flight/Src/sd_diskio_stm32f1flight.c"
@@ -57,7 +63,7 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
     if diskio == f1_diskio.resolve():
         config_path = project / "HardwareGenerated/STM32CubeMX/FATFS/Target/ffconf.h"
     configuration = config_path.read_text(encoding="utf-8")
-    for header in ("main.h", "stm32f4xx_hal.h", "stm32f1xx_hal.h", "bsp_driver_sd.h"):
+    for header in ("main.h", "stm32f4xx_hal.h", "stm32f1xx_hal.h", "stm32h7xx_hal.h", "bsp_driver_sd.h"):
         configuration = configuration.replace(f'#include "{header}"', "")
     (output / "ffconf.h").write_text(configuration, encoding="utf-8")
     binary = output / "storage_integrity.exe"
@@ -108,6 +114,7 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
         "System/Src/system_log_file.c", "Common/Src/common_format.c",
         "Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c",
         "System/Src/system_log_policy.c", "System/Src/system_profile.c",
+        "System/Src/system_mission_process.c", "Generated/Src/project_mission_process.c",
         "System/Src/system_navigation_profile.c", "System/Src/system_estimator_profile.c",
         "Generated/Src/project_metadata.c", "Generated/Src/project_log_config.c",
         "Generated/Src/project_mission_parameters.c",
@@ -158,6 +165,10 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
     definitions["SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED"] = (
         "-DSYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED=0U")
     print("FCCG_HOST_FIXTURE|storage_writer|logical sensor records; physical epoch path not exercised", flush=True)
+    if "SYSTEM_INSTALLATION_CAPTURE_ENABLED" in definitions:
+        logger_sources.append(project / "Tests/Host/installation_unit_boundary.c")
+        logger_sources.append(project / "Tests/Host/installation_unit_lease_boundary.c")
+        print("FCCG_HOST_FIXTURE|storage_writer|installation boundary: no active record; active transaction is separately integrated", flush=True)
     command += list(definitions.values())
     print("FCCG_HOST_STORAGE_DEFINITIONS|" + " ".join(definitions.values()), flush=True)
     command += ["-I" + str(path) for path in logger_includes]

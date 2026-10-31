@@ -5,7 +5,7 @@
   "type": "protocol",
   "class": "telemetry",
   "version": "0.1.0",
-  "description": "SS-TM-S/H 0.1 explicit shared header, absolute recovery position and health; legacy payload arithmetic retained.",
+  "description": "SS-TM-S 0.1: preflight handshake, Flight TX-only and Ground RX-only after START; historical codec bytes retained.",
   "requires": {
     "components": [
       {
@@ -78,55 +78,6 @@
           "defines": [
             "SYSTEM_TELEMETRY_TM_ENABLED=1U",
             "SYSTEM_TELEMETRY_TM_PROFILE=0U"
-          ],
-          "binding": "telemetry_transport",
-          "transport_selection": "ordered_failover",
-          "transport": {
-            "capability": "transport.packet",
-            "kind": "packet",
-            "minimum_mtu": 56,
-            "ordered": true,
-            "bidirectional": true,
-            "reliable": false,
-            "mode": "datagram"
-          },
-          "decoder_metadata": "Protocol/SS_TM/metadata.json",
-          "documentation": [
-            "docs/AIR_PROTOCOL.md"
-          ],
-          "host_tests": [
-            "Tests/Host/test_air_kf.c",
-            "Tests/Host/test_telemetry.c"
-          ],
-          "golden_tests": [
-            "Tests/Host/test_air_kf.c",
-            "Tests/Host/test_telemetry.c"
-          ]
-        },
-        {
-          "id": "ss_tm.h.0_1",
-          "version": "0.1",
-          "display_names": {
-            "zh_CN": "SS-TM-H 0.1",
-            "en_US": "SS-TM-H 0.1"
-          },
-          "service": "telemetry_service",
-          "slot": "telemetry_protocol",
-          "codec_sources": [
-            "Protocol/SS_TM/Legacy/ss_tm_legacy.c",
-            "Protocol/SS_TM/Src/ss_tm_protocol.c",
-            "Modules/Src/telemetry_tm.c"
-          ],
-          "parser_sources": [
-            "Protocol/SS_TM/Src/ss_tm_protocol.c"
-          ],
-          "include_dirs": [
-            "Protocol/SS_TM/Inc",
-            "Protocol/SS_TM/Legacy"
-          ],
-          "defines": [
-            "SYSTEM_TELEMETRY_TM_ENABLED=1U",
-            "SYSTEM_TELEMETRY_TM_PROFILE=1U"
           ],
           "binding": "telemetry_transport",
           "transport_selection": "ordered_failover",

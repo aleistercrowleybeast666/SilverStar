@@ -26,6 +26,8 @@ def test_gnss_outage_keeps_fresh_tilt_available(tmp_path):
 
         service = FccgService(root)
         model = service.Project_Open(root / "tests/fixtures/radio_handshake.ssproject")
+        from silverstar_fccg.project.telemetry import TelemetryProfile_Apply
+        model = TelemetryProfile_Apply(model, service.catalog, 'ss_tm.s.0_1')
         project = tmp_path / "generated"
         service.Project_Save(model, project, confirm_dangerous=True)
 

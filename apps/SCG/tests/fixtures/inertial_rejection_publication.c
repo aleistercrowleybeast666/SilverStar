@@ -10,6 +10,13 @@
 #include "estimator_task.h"
 #include "logger_bus.h"
 #include "silverstar_assert.h"
+#include "system_mission_process.h"
+#include "platform_critical.h"
+
+/* This numeric-fault test has no stage transition; the stage-specific Host
+ * harness separately verifies the stopped boundary against real owner bodies. */
+uint8_t SystemMissionProcess_InsStoppedGet(void) { return 0U; }
+uint8_t SystemMissionProcess_EstimatorStoppedGet(void) { return 0U; }
 
 #undef SYSTEM_FUSION_ALGORITHM
 #define SYSTEM_FUSION_ALGORITHM TEST_FUSION

@@ -1,7 +1,7 @@
 """Ordinary valid first-batch lifecycle only, actual generated stack/adapter.
 
-All setups are standard valid requests. Controller LL and Cortex intrinsics are
-Host substitutes; no malformed inputs, alternate owners or security probing.
+Boundary requests, lifecycle and failure cases exercise the actual generated
+class/core/control adapter. Controller LL and Cortex intrinsics are Host substitutes.
 """
 from pathlib import Path
 from types import SimpleNamespace
@@ -62,6 +62,7 @@ void *USBD_static_malloc(uint32_t size)
 void USBD_static_free(void *p)
 { assert(p==class_storage && allocated==1U);assert(rx_ptr[1]==NULL && tx_ptr[1]==NULL);allocated=0U;frees++; }
 uint8_t NativeRuntime_ReadyGet(void) { return 1U; }
+void NativeRuntime_TransportFaultRecord(void) { }
 uint8_t NativeClock_ContextAllowedGet(void) { return host_mask==0U; }
 int NativeClock_DelayUs(uint32_t v) { assert(v==1U && host_mask==0U);return 0; }
 USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef *d)
@@ -181,6 +182,29 @@ static void ControlNormal(void)
  assert(USBD_LL_DataOutStage(&hUsbDeviceFS,0U,rx_ptr[0])==USBD_OK);
  Setup(0x21U,CDC_SET_CONTROL_LINE_STATE,3U,0U,0U);InDone(0U);
 }
+static void ControlBoundaries(void)
+{
+ static const uint16_t lengths[]={0U,1U,6U,7U,8U,64U,255U,65535U};
+ for(unsigned i=0U;i<sizeof(lengths)/sizeof(lengths[0]);i++)
+ {
+  uint16_t n=lengths[i];uint8_t get[8]={0xA1U,CDC_GET_LINE_CODING,0U,0U,0U,0U,(uint8_t)n,(uint8_t)(n>>8U)};
+  assert(USBD_LL_SetupStage(&hUsbDeviceFS,get)==USBD_OK);
+  assert(tx_size[0]==(n<7U?n:7U));
+ }
+ allow_control_error=1U;
+ for(unsigned i=0U;i<sizeof(lengths)/sizeof(lengths[0]);i++)
+ {
+  uint16_t n=lengths[i];uint8_t set[8]={0x21U,CDC_SET_LINE_CODING,0U,0U,0U,0U,(uint8_t)n,(uint8_t)(n>>8U)};
+  if(n!=7U){assert(USBD_LL_SetupStage(&hUsbDeviceFS,set)!=USBD_OK);}
+ }
+ Setup(0x21U,CDC_SET_LINE_CODING,0U,0U,7U);
+ memset(rx_ptr[0],0,64U);rx_count[0]=64U;
+ assert(USBD_LL_DataOutStage(&hUsbDeviceFS,0U,rx_ptr[0])!=USBD_OK);
+ Setup(0x21U,CDC_SET_LINE_CODING,0U,0U,7U);
+ rx_count[0]=6U;assert(USBD_LL_DataOutStage(&hUsbDeviceFS,0U,rx_ptr[0])!=USBD_OK);
+ allow_control_error=0U;
+ ControlNormal();
+}
 static uint32_t PendingData(void)
 {
  uint8_t input[64],output[64],read[64];uint32_t session;
@@ -202,7 +226,9 @@ int main(int argc,char **argv)
  assert(USBD_Init(&hUsbDeviceFS,&FS_Desc,0U)==USBD_OK);
  assert(USBD_RegisterClass(&hUsbDeviceFS,&USBD_CDC)==USBD_OK);
  assert(USBD_CDC_RegisterInterface(&hUsbDeviceFS,&USBD_Interface_fops_FS)==USBD_OK);
- assert(USBD_Start(&hUsbDeviceFS)==USBD_OK);EnumConfigure();ControlNormal();
+ assert(USBD_Start(&hUsbDeviceFS)==USBD_OK);EnumConfigure();
+ if(strcmp(argv[1],"control-boundaries")==0){ControlBoundaries();assert(USBD_DeInit(&hUsbDeviceFS)==USBD_OK);return 0;}
+ ControlNormal();
  if(strcmp(argv[1],"tx-failure")==0)
  {
   session=PcByteStream_Session_Get();fail_tx_once=1U;
@@ -347,10 +373,10 @@ int main(int argc,char **argv)
 }
 '''
 
-@pytest.fixture(params=['F103','C071'])
+@pytest.fixture(params=['F103','F407','C071'])
 def first_batch(request,tmp_path,tmp_path_factory,builtin_catalog):
-    if request.param=='F103':
-        native=nf.native.__wrapped__(SimpleNamespace(param='f103-usb'),tmp_path)
+    if request.param in ('F103','F407'):
+        native=nf.native.__wrapped__(SimpleNamespace(param='f103-usb' if request.param=='F103' else 'f407-usb'),tmp_path)
         service,imported,args,_=nb.bound.__wrapped__(native,tmp_path_factory,builtin_catalog)
         plan=service.NativeClassicCdcGroundCandidate_Plan(imported.model,device_facts=args['device_facts'])
     else:
@@ -365,10 +391,15 @@ def test_normal_stack_lifecycle_and_buffer_sessions(first_batch,tmp_path):
     assert re.search(r'^C_SOURCES := (.*)$',make,re.M)[1].split()==graph['sources']
     names=('usbd_core.c','usbd_ctlreq.c','usbd_ioreq.c','usbd_cdc.c','usbd_cdc_if.c','usbd_desc.c','pc_byte_stream.c')
     selected={name:next(p for p in graph['sources'] if p.endswith('/'+name)) for name in names}
-    if part=='F103':selected['pc_usb_control.c']='Generated/Src/pc_usb_control.c'
+    if 'Generated/Src/pc_usb_control.c' in files:selected['pc_usb_control.c']='Generated/Src/pc_usb_control.c'
     used={}
     for name,path in selected.items():
-        (tmp_path/name).write_bytes(files[path]);used[path]=hashlib.sha256(files[path]).hexdigest()
+        body=files[path]
+        if name=='usbd_cdc_if.c':
+            source=body.decode('utf8'); _start,opening,_end=NativeC_FunctionSpanGet(source,'CDC_Control_FS')
+            source=source[:opening+1]+'\n  assert((cmd != CDC_GET_LINE_CODING) || (length == 7U));\n'+source[opening+1:]
+            body=('#include <assert.h>\n'+source).encode('utf8')
+        (tmp_path/name).write_bytes(body);used[path]=hashlib.sha256(files[path]).hexdigest()
     headers=('usbd_def.h','usbd_core.h','usbd_ctlreq.h','usbd_ioreq.h','usbd_cdc.h','usbd_cdc_if.h','usbd_desc.h','pc_byte_stream.h','gsp_min_protocol.h','pc_c071_usb.h','pc_c071_control.h','pc_usb_control.h','native_runtime.h','native_clock.h','platform_types.h')
     for name in headers:
         matches=[prefix+'/'+name for prefix in graph['include_dirs'] if prefix+'/'+name in files]
@@ -386,12 +417,12 @@ def test_normal_stack_lifecycle_and_buffer_sessions(first_batch,tmp_path):
     compiler=shutil.which('gcc');assert compiler
     command=[compiler,'-std=c11','-O2','-Wall','-Wextra','-Werror=implicit-function-declaration','-Werror=incompatible-pointer-types','-DUSBD_CLASS_BOS_ENABLED=0','-DUSBD_MAX_SUPPORTED_CLASS=1','-I'+str(tmp_path),*[str(tmp_path/n) for n in selected],str(tmp_path/'normal.c'),'-o',str(tmp_path/'normal.exe')]
     if part=='F103':command.insert(1,'-DHOST_F103=1')
-    else:command.insert(1,'-DHOST_C071=1')
+    elif part=='C071':command.insert(1,'-DHOST_C071=1')
     result=subprocess.run(command,capture_output=True,text=True,timeout=60)
     (tmp_path/'compile.log').write_text(result.stdout+result.stderr,encoding='utf8')
     assert result.returncode==0,result.stdout+result.stderr
     runs=[]
-    for scenario in ('complete-zlp','unconfigure','reset','disconnect','stop','deinit','close-retry','deinit-close-retry','init-open','init-prepare','tx-failure','rx-rearm','reset-close-failure','disconnect-close-failure','suspend-resume','suspend-reset','suspend-disconnect'):
+    for scenario in ('control-boundaries','complete-zlp','unconfigure','reset','disconnect','stop','deinit','close-retry','deinit-close-retry','init-open','init-prepare','tx-failure','rx-rearm','reset-close-failure','disconnect-close-failure','suspend-resume','suspend-reset','suspend-disconnect'):
         result=subprocess.run([str(tmp_path/'normal.exe'),scenario],capture_output=True,text=True,timeout=15)
         runs.append({'scenario':scenario,'exit':result.returncode,'stdout':result.stdout,'stderr':result.stderr})
     (tmp_path/'lifecycle-receipt.json').write_text(json.dumps({'part':part,'model_sha256':plan.model_sha256,'compiled_generated_sources_sha256':used,'command':command,'compile_exit':0,'runs':runs,'controller':'Host LL mock; native HAL/PMA/IRQ hardware is not executed'},indent=2),encoding='utf8')

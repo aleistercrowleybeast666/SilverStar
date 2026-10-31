@@ -2,6 +2,7 @@
 #include "sx1278_device.h"
 #include "ground_radio_activity.h"
 #include "ground_radio_config.h"
+#include "ground_radio_tm.h"
 #include "gsp_min_protocol.h"
 #include "platform_time.h"
 #include <stddef.h>
@@ -14,6 +15,9 @@ GroundRadioResult GroundRadio_Init(void)
 {
     Sx1278Result result = Sx1278_Init(0U);
     if ((result != Sx1278Result_Ok) && (result != Sx1278Result_Busy)) { return GROUND_RADIO_ERROR; }
+    if ((GROUND_TM_S_ENABLED != 0U) &&
+        (Sx1278_ModeSet(0U, (GroundRadioTm_PassiveGet() != 0U) ? Sx1278OperatingMode_ReceiveOnly :
+            Sx1278OperatingMode_HalfDuplex) != Sx1278Result_Ok)) { return GROUND_RADIO_ERROR; }
     if (Sx1278_Start(0U) != Sx1278Result_Ok) { return GROUND_RADIO_ERROR; }
     if (GROUND_ACTIVITY_ENABLED != 0U) { GroundRadioActivity_Init(0U, 0U); }
     return GROUND_RADIO_OK;
@@ -24,12 +28,19 @@ void GroundRadio_Process(void)
     Sx1278Stats stats;
     Sx1278Result result = Sx1278_Process(0U);
     if ((result != Sx1278Result_Ok) && (result != Sx1278Result_Offline)) { return; }
+    if (GROUND_TM_S_ENABLED != 0U)
+    {
+        result = Sx1278_ModeSet(0U, (GroundRadioTm_PassiveGet() != 0U) ?
+            Sx1278OperatingMode_ReceiveOnly : Sx1278OperatingMode_HalfDuplex);
+        if ((result != Sx1278Result_Ok) && (result != Sx1278Result_Busy)) { return; }
+    }
     if ((GROUND_ACTIVITY_ENABLED != 0U) && (Sx1278_StatsGet(0U, &stats) == Sx1278Result_Ok))
     { GroundRadioActivity_Process(PlatformTime_Ms(), stats.tx_ok, stats.rx_ok); }
 }
 
 GroundRadioResult GroundRadio_TxEnqueue(const uint8_t *data, uint8_t length)
 {
+    if ((GROUND_TM_S_ENABLED != 0U) && (GroundRadioTm_PassiveGet() != 0U)) { return GROUND_RADIO_BUSY; }
     Sx1278Result result = Sx1278_Send(0U, data, length, 1U, NULL);
     if (result == Sx1278Result_Ok) { return GROUND_RADIO_OK; }
     return ((result == Sx1278Result_Busy) || (result == Sx1278Result_Offline)) ? GROUND_RADIO_BUSY : GROUND_RADIO_ERROR;
@@ -48,6 +59,7 @@ GroundRadioResult GroundRadio_RxDequeue(uint8_t *data, uint8_t *length,
     if (result == Sx1278Result_Empty) { return GROUND_RADIO_EMPTY; }
     if (result != Sx1278Result_Ok) { return GROUND_RADIO_ERROR; }
     *length = (uint8_t)received;
+    if (GROUND_TM_S_ENABLED != 0U) { GroundRadioTm_Observe(data, *length); }
     return GROUND_RADIO_OK;
 }
 

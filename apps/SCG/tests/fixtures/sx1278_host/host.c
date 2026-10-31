@@ -205,6 +205,47 @@ int main(int argc, char **argv)
     uint8_t data[61]={1U}; uint32_t id,age; uint16_t length;
     CHECK(argc >= 2); (void)memset(gpio,0,sizeof(gpio));
     if (strcmp(argv[1],"tx")==0) { ScenarioTx(); }
+    else if ((strcmp(argv[1],"transmit_only")==0) || (strcmp(argv[1],"mode_stop_start")==0))
+    {
+        Boot(); CHECK(Sx1278_ModeSet(0U,Sx1278OperatingMode_TransmitOnly)==Sx1278Result_Busy);
+        ProcessAt(9U); CHECK((registers[1]&7U)==1U && gpio[3]==0U && gpio[4]==0U);
+        CHECK(Sx1278_ModeSet(0U,Sx1278OperatingMode_TransmitOnly)==Sx1278Result_Ok);
+        if (strcmp(argv[1],"mode_stop_start")==0)
+        {
+            CHECK(Sx1278_Stop(0U)==Sx1278Result_Ok); now_ms=10U;
+            CHECK(Sx1278_Process(0U)==Sx1278Result_Offline);
+            CHECK(Sx1278_Start(0U)==Sx1278Result_Ok); ProcessAt(11U); ProcessAt(13U); ProcessAt(19U);
+            CHECK((registers[1]&7U)==1U && gpio[3]==0U);
+        }
+        CHECK(Sx1278_Send(0U,data,61U,1U,&id)==Sx1278Result_Ok); ProcessAt(20U);
+        CHECK((registers[1]&7U)==3U && gpio[3]==0U && gpio[4]==1U);
+        registers[0x12]=8U; ProcessAt(21U);
+        CHECK(Sx1278_ReceiptGet(0U,id,&age)==Sx1278Result_Ok);
+        CHECK((registers[1]&7U)==1U && gpio[3]==0U && gpio[4]==0U);
+    }
+    else if (strcmp(argv[1],"receive_only")==0)
+    {
+        Boot(); CHECK(Sx1278_Send(0U,data,61U,1U,&id)==Sx1278Result_Ok);
+        CHECK(Sx1278_ModeSet(0U,Sx1278OperatingMode_ReceiveOnly)==Sx1278Result_Busy);
+        ProcessAt(9U); CHECK((registers[1]&7U)==5U && gpio[4]==0U);
+        CHECK(Sx1278_Send(0U,data,61U,1U,&id)==Sx1278Result_Offline);
+        CHECK(s_context.control.count==0U); ProcessAt(200U); CHECK((registers[1]&7U)==5U);
+    }
+    else if (strcmp(argv[1],"mode_recovery")==0)
+    {
+        Boot(); CHECK(Sx1278_ModeSet(0U,Sx1278OperatingMode_TransmitOnly)==Sx1278Result_Busy); ProcessAt(9U);
+        fail_spi=spi_calls+1U; now_ms=10U; CHECK(Sx1278_Process(0U)==Sx1278Result_Io);
+        ProcessAt(1010U); ProcessAt(1012U); ProcessAt(1018U);
+        CHECK(s_published.ready==1U && (registers[1]&7U)==1U && gpio[3]==0U);
+    }
+    else if (strcmp(argv[1],"mode_during_tx")==0)
+    {
+        Boot(); CHECK(Sx1278_Send(0U,data,61U,1U,&id)==Sx1278Result_Ok); ProcessAt(158U);
+        CHECK(Sx1278_ModeSet(0U,Sx1278OperatingMode_TransmitOnly)==Sx1278Result_Busy);
+        registers[0x12]=8U; ProcessAt(159U);
+        CHECK(Sx1278_ReceiptGet(0U,id,&age)==Sx1278Result_Ok);
+        CHECK((registers[1]&7U)==1U && gpio[3]==0U);
+    }
     else if (strcmp(argv[1],"rx")==0) { ScenarioRx(); }
     else if (strcmp(argv[1],"crc_race")==0)
     {

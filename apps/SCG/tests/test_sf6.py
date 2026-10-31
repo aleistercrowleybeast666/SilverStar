@@ -120,11 +120,8 @@ def test_sf6_gui_order_gains_edit_save_reopen(tmp_path, workspace_root, qapp, mo
         assert window._model.algorithm_parameters[SF6]["gain_pe"] == 0.35
         service = FccgService(workspace_root)
         project = fixture_root / "SF6GuiRoundtrip"
-        # Match the GUI Flight export flow while keeping the enabled,
-        # unconfigured Ground target and its ordinary rejection gate intact.
-        assert window._model.ground_target.enabled
-        with pytest.raises(FccgError, match="GROUND_HARDWARE_UNBOUND"):
-            service.Project_Save(window._model, project, confirm_dangerous=True)
+        # Explicit Flight export does not require a configured Ground MCU.
+        assert not window._model.ground_target.mcu
         service.ProjectRoot_Save(window._model, project, create_new=True)
         generated = TargetGeneration_Apply(
             window._model, service.catalog, WorkspacePolicy(workspace_root),
@@ -133,7 +130,7 @@ def test_sf6_gui_order_gains_edit_save_reopen(tmp_path, workspace_root, qapp, mo
         assert generated.targets == ("Flight_Controller",)
         assert (project / "Flight_Controller/Makefile").is_file()
         assert not (project / "Ground_Station/Makefile").exists()
-        assert window._model.ground_target.enabled
+        assert not window._model.ground_target.mcu
         reopened = service.Project_Open(project)
         assert reopened.algorithm_parameters[SF6]["gain_pe"] == 0.35
     finally:

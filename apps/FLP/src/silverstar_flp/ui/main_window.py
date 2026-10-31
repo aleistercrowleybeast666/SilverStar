@@ -316,6 +316,8 @@ class MainWindow(QMainWindow):
         self.import_dialog.importRequested.connect(self.LogPair_Open)
         self.import_dialog.customImportRequested.connect(self._CustomLogPair_Open)
         self.import_dialog.folderSearchRequested.connect(self._FolderSearch_Start)
+        self.import_dialog.autoImportRequested.connect(lambda path: self.Log_Open(path, auto_find=True))
+        self.import_dialog.decoderDirectoriesRequested.connect(self._DecoderDirectories_Select)
         self.import_dialog.rejected.connect(self._PendingProject_Cancel)
         self.import_dialog.rejected.connect(self._FolderSearch_Invalidate)
         self.import_dialog.folder_path_edit.textChanged.connect(self._FolderSearch_Invalidate)
@@ -341,6 +343,8 @@ class MainWindow(QMainWindow):
         ]
         self.default_root_action = QAction(self)
         self.default_root_action.triggered.connect(self._DefaultProjectRoot_Select)
+        self.decoder_directories_action = QAction(self)
+        self.decoder_directories_action.triggered.connect(self._DecoderDirectories_Select)
         self.new_project_action = QAction(self)
         self.new_project_action.setShortcut("Ctrl+N")
         self.new_project_action.triggered.connect(self._Project_New)
@@ -382,6 +386,7 @@ class MainWindow(QMainWindow):
         self.file_menu.addAction(self.save_project_as_action)
         self.file_menu.addSeparator()
         self.file_menu.addAction(self.default_root_action)
+        self.file_menu.addAction(self.decoder_directories_action)
         self.file_menu.addAction(self.import_action)
         self.file_menu.addAction(self.export_action)
         self.file_menu.addSeparator()
@@ -394,6 +399,15 @@ class MainWindow(QMainWindow):
     def _PluginManager_Show(self) -> None:
         self.plugin_manager_dialog.Registry_Set(self._registry, self._plugin_discovery)
         self.plugin_manager_dialog.open()
+
+    def _DecoderDirectories_Select(self) -> None:
+        from silverstar_flp.ui.decoder_directories import DecoderDirectoriesDialog
+        dialog = DecoderDirectoriesDialog(self._translator, self._path_preferences.DecoderDirectories_Get(), self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            try:
+                self._path_preferences.DecoderDirectories_Set(dialog.Directories_Get())
+            except (OSError, ValueError) as exc:
+                self._Error_Show(str(exc))
 
     def _About_Show(self) -> None:
         self.about_dialog.open()
@@ -605,6 +619,7 @@ class MainWindow(QMainWindow):
             task_directory=source_path.parent if auto_find else None,
             source_mode=source_mode,
             allow_unverified_decoder=allow_unverified_decoder,
+            decoder_search_directories=self._path_preferences.DecoderDirectories_Get(),
         )
         self.status_label.setText(self._translator.Text_Get("status.loading"))
         worker = FunctionWorker(lambda context: self._LogOpen_Run(request, context))
@@ -617,7 +632,7 @@ class MainWindow(QMainWindow):
                 mark_dirty=mark_dirty_on_success,
                 silverstar_root=self._SilverStarRootForPair_Get(source_path, decoder_path),
             ),
-            self._LogOpen_Error,
+            lambda message: self._LogOpen_Error(message, source_path),
         )
 
     def _LogOpen_Run(self, request, context):
@@ -682,10 +697,10 @@ class MainWindow(QMainWindow):
         log_path = project.LogPath_Resolve()
         if not log_path.is_file():
             raise ValueError(f"project_log_missing:{log_path}")
-        if decoder_path is None or not decoder_path.is_file():
-            raise ValueError(f"project_decoder_missing:{decoder_path}")
         request = LogOpenRequest(log_path=log_path, decoder_package_path=decoder_path,
-            task_directory=decoder_path.parent, source_mode=LogOpenSourceMode.PROJECT,
+            task_directory=log_path.parent, source_mode=LogOpenSourceMode.PROJECT,
+            cache_reference=project.decoder_profile.cache_reference,
+            decoder_search_directories=self._path_preferences.DecoderDirectories_Get(),
             project_path=project.project_path, dataset_cache_reference=project.parse_artifact)
         result = self._ProjectLogOpen_Run(project, request, progress.Context_Build(0.04, 0.98))
         return result, project
@@ -1473,8 +1488,19 @@ class MainWindow(QMainWindow):
             save_data_and_results=self._project.save_data_and_results,
         )
 
-    def _LogOpen_Error(self, message: str) -> None:
+    def _LogOpen_Error(self, message: str, log_path: Path | None = None) -> None:
         self._pending_new_project_path = None
+        code = message.partition(":")[0].strip()
+        if log_path is not None and code in (
+            "decoder_profile_exact_match_missing", "decoder_profile_match_ambiguous",
+            "decoder_package_open_failed", "decoder_package_path_required",
+            "decoder_discovery_limit_reached",
+        ):
+            self.import_dialog.Paths_Set(log_path=log_path)
+            self.import_dialog.result_label.setText(message)
+            self.import_dialog.result_label.show()
+            self.import_dialog.open()
+            return
         if message.partition(":")[0].strip() == "calibration_selection_boundary_missing":
             self.status_label.setText(self._translator.Text_Get("import.startup_fragment"))
             QMessageBox.information(
@@ -1751,6 +1777,7 @@ class MainWindow(QMainWindow):
         self.help_menu.setTitle(self._translator.Text_Get("menu.help"))
         self.new_project_action.setText(self._translator.Text_Get("action.new_project"))
         self.default_root_action.setText(self._translator.Text_Get("action.default_project_root"))
+        self.decoder_directories_action.setText(self._translator.Text_Get("action.decoder_directories"))
         self.import_action.setText(self._translator.Text_Get("action.import"))
         self.export_action.setText(self._translator.Text_Get("action.export"))
         self.open_project_action.setText(self._translator.Text_Get("action.open_project"))

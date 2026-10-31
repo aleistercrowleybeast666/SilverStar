@@ -22,9 +22,12 @@ def RadioLinkCompatible_Get(link, radio: RadioContribution) -> bool:
 
 def _AirLinkProfileIssues_Get(link) -> list[AirLinkIssue]:
     if link.radio_family == "nrf24":
-        from silverstar_fccg.project.nrf24 import Nrf24Link_Validate
+        return [AirLinkIssue("RADIO_SUPPORT_REMOVED",
+            "NRF24 support was removed. Select and bind the actual replacement hardware explicitly.")]
+    if link.radio_family == "sx127x":
+        from silverstar_fccg.project.sx1278 import Sx1278Link_Validate
         try:
-            Nrf24Link_Validate(link)
+            Sx1278Link_Validate(link)
         except ValueError as error:
             return [AirLinkIssue("AIR_LINK_PHY_INCOMPATIBLE", str(error))]
         return []
@@ -105,28 +108,21 @@ def RadioCandidateIssues_Get(
     return tuple(issues)
 
 
-def AirLinkIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple[AirLinkIssue, ...]:
-    """Validate one shared AIR snapshot against both physical radio endpoints."""
+def AirLinkIssues_Get(model: ProjectModel, catalog: PluginCatalog, *, target_scope="flight") -> tuple[AirLinkIssue, ...]:
+    """Validate the shared link and only the explicitly requested endpoints."""
+    target_scope = getattr(target_scope, "value", target_scope)
+    if target_scope not in ("flight", "ground", "all"):
+        raise ValueError("AIR link target scope is invalid")
     link = model.air_link
     issues = _AirLinkProfileIssues_Get(link)
-    if link.radio_family == "nrf24":
-        from silverstar_fccg.project.nrf24 import NRF24_PLUGIN
-        from silverstar_fccg.project.model import GroundRadioConfigurations_Get
-        telemetry = [instance for instance in model.device_instances
-                     if "device.telemetry" in catalog.Component_Get(instance.plugin).provides]
-        if len(telemetry) != 1 or telemetry[0].plugin != NRF24_PLUGIN:
-            issues.append(AirLinkIssue("NRF24_ONE_PAIR_REQUIRED", "NRF24 supports exactly one Flight radio and no mixed-family failover"))
-        if model.ground_target.enabled:
-            ground_radios = GroundRadioConfigurations_Get(model.ground_target)
-            if len(ground_radios) != 1 or ground_radios[0].plugin != NRF24_PLUGIN:
-                issues.append(AirLinkIssue("NRF24_ONE_PAIR_REQUIRED", "NRF24 requires exactly one matching Ground radio"))
     flight_instance = model.DeviceInstance_Get(link.flight_radio_instance)
-    flight, flight_error = _Radio_Get(
-        catalog, flight_instance.plugin if flight_instance else "", "Flight"
-    )
+    flight = flight_error = None
+    if target_scope in ("flight", "all"):
+        flight, flight_error = _Radio_Get(
+            catalog, flight_instance.plugin if flight_instance else "", "Flight")
     ground = None
     ground_error = None
-    if model.ground_target.enabled:
+    if target_scope in ("ground", "all"):
         ground, ground_error = _Radio_Get(
             catalog, model.ground_target.radio_plugin, "Ground"
         )
@@ -176,7 +172,7 @@ def AirLinkIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple[AirL
     usable_mtu = min(
         (radio.logical_mtu or radio.maximum_payload for _endpoint, radio in radios), default=0
     )
-    if model.ground_target.enabled:
+    if target_scope in ("ground", "all"):
         usable_mtu = min(usable_mtu, 61)
     if radios and not minimum_air_mtu <= link.packet_mtu <= usable_mtu:
         issues.append(AirLinkIssue(
@@ -187,10 +183,8 @@ def AirLinkIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple[AirL
 
 
 def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple[AirLinkIssue, ...]:
-    if not model.ground_target.enabled:
-        return ()
     ground = model.ground_target
-    issues = list(AirLinkIssues_Get(model, catalog))
+    issues = list(AirLinkIssues_Get(model, catalog, target_scope="ground"))
     from silverstar_fccg.project.ground_radios import GroundRadiosRuntimeIssue_Get
     runtime_issue = GroundRadiosRuntimeIssue_Get(ground, catalog)
     if runtime_issue is not None:

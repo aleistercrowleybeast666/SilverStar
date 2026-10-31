@@ -26,7 +26,11 @@ def NativeRadioHal_Derive(original: bytes, *, context_header="native_clock.h", c
 
 
 def NativeRadioDevice_Derive(original: bytes) -> bytes:
-    if hashlib.sha256(original).hexdigest() != '56ee9b35e54535249816363d0328120a6018f157ce51f8bad93185ebea78428c':
+    # aaef99f8 adds the direction policy, preserving the seven timestamp/lock
+    # contracts below. Its new queue-clearing lock has no time/SPI operations.
+    # The simplex Host case also exercises this exact native derivative with
+    # PlatformTime probes rejecting calls while interrupts are masked.
+    if hashlib.sha256(original).hexdigest() != 'dc5a8d2f065a865950142f1a864fa42b86062a2e26a4ca3a5a614b2f8fa38b76':
         raise ValueError('Native radio device payload changed; review timestamp/IRQ ownership')
     source=original.decode('utf-8-sig')
     contracts=(('Lora_RadioFault',1,0),('Lora_TxResultGet',1,0),('Lora_DiagnosticsRefresh',2,0),

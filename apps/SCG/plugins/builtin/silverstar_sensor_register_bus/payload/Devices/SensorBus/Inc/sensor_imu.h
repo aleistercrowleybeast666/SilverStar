@@ -73,6 +73,8 @@ typedef struct
     uint8_t reset_register;
     uint8_t reset_value;
     uint8_t reset_mask;
+    /* Occupies the existing byte before power_register; retain profile ABI. */
+    uint8_t fifo_timestamp_32_over_30;
     uint16_t power_register;
     uint16_t stop_value;
     uint16_t second_power_register;

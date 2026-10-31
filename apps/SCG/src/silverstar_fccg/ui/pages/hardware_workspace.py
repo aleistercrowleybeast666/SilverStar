@@ -3,7 +3,7 @@
 Editors keep their signals and authoritative project fields.  This composition
 mounts each existing widget once; refresh never copies controls or configuration.
 """
-from PySide6.QtCore import QEvent, QTimer, Qt
+from PySide6.QtCore import QEvent, QTimer, Qt, Signal
 from PySide6.QtWidgets import QBoxLayout, QFormLayout, QGridLayout, QGroupBox, QLabel, QPushButton, QScrollArea, QVBoxLayout, QWidget
 
 from silverstar_fccg.project.model import GroundRadioConfigurations_Get
@@ -12,6 +12,7 @@ from silverstar_fccg.ui.widgets import CollapsibleSection
 
 
 class HardwareWorkspacePage(ScrollableLocalizedPage):
+    linkEditRequested = Signal()
     def __init__(self, translator, devices_page, board_hardware_page, ground_target_page, air_link_page):
         super().__init__(translator, 'workspace.hardware.title', 'workspace.hardware.description')
         for page in (devices_page, board_hardware_page, ground_target_page, air_link_page):
@@ -66,9 +67,6 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
             body.addWidget(page.custom_widget, 1, 0)
             page.root_layout.removeWidget(page.provider_notice)
             option = QWidget()
-            if target == 'ground':
-                ground_target_page.radio_form.removeWidget(ground_target_page.enabled)
-                ground_target_page.enabled.hide()
             body.addWidget(option, 4, 0)
             button = QPushButton()
             button.clicked.connect(lambda _checked=False, selected=target: self.Reveal(self._target_sections[selected]))
@@ -77,9 +75,16 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
             self.target_cards[target] = card
             self.target_summaries[target] = summary
             self.target_buttons[target] = button
-        self.link_summary = QLabel()
+        self.link_group = QGroupBox(self)
+        link_body = QVBoxLayout(self.link_group)
+        self.link_summary = QLabel(self.link_group)
         self.link_summary.setWordWrap(True)
         self.link_summary.setTextFormat(Qt.TextFormat.PlainText)
+        link_body.addWidget(self.link_summary)
+        self.link_button = QPushButton(self.link_group)
+        self.link_button.clicked.connect(self.linkEditRequested)
+        link_body.addWidget(self.link_button)
+        link_body.addWidget(air_link_page.status)
         self._target_sections = {}
         for target in ('flight', 'ground'):
             section = self._Section_Create('workspace.hardware.' + target + '.devices', expanded=True)
@@ -118,11 +123,10 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
             self._sections[target + '.resources'] = page.advanced_section
             skip = {page.generate_button, getattr(page, 'build_group', None)}
             self._PageWidgets_Attach(page, body, skip=skip)
-        # The complete target editors stay in their own column; the single
-        # shared air-link configuration follows both targets at the page end.
-        self.root_layout.addWidget(self.link_summary)
-        self.root_layout.addWidget(air_link_page.status)
-        self._PageWidgets_Attach(air_link_page, self.root_layout, skip={air_link_page.status})
+        # The common link is one transaction directly after both board summaries.
+        # The old editor remains an internal state presenter; edits use the draft dialog.
+        air_link_page.setParent(self)
+        air_link_page.hide()
         self._sections['link.details'] = air_link_page.air_link_group
         self.root_layout.addStretch(1)
         self._Targets_Layout()
@@ -160,11 +164,13 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
             owner.custom_widget.layout().setDirection(direction)
         if columns != self._columns or details_columns != self._details_columns:
             self._columns, self._details_columns = columns, details_columns
-            for widget in (*self.target_cards.values(), *self._target_sections.values()):
+            for widget in (*self.target_cards.values(), self.link_group, *self._target_sections.values()):
                 self.target_grid.removeWidget(widget)
             for index, card in enumerate(self.target_cards.values()):
                 self.target_grid.addWidget(card, index // columns, index % columns)
             first_detail_row = 1 if columns == 2 else 2
+            self.target_grid.addWidget(self.link_group, first_detail_row, 0, 1, columns)
+            first_detail_row += 1
             for index, section in enumerate(self._target_sections.values()):
                 self.target_grid.addWidget(section, first_detail_row + index // details_columns,
                                            index % details_columns, 1, columns // details_columns,
@@ -311,6 +317,8 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
         super().Language_Apply(translator)
         for page in (self.devices_page, self.board_hardware_page, self.ground_target_page, self.air_link_page):
             page.Language_Apply(translator)
+        self.link_group.setTitle(translator.Text_Get('group.air_link'))
+        self.link_button.setText(translator.Text_Get('radio.transaction.title'))
         for target, card in self.target_cards.items():
             card.setTitle(translator.Text_Get('workspace.hardware.' + target))
             self.target_buttons[target].setText(translator.Text_Get('workspace.hardware.' + target + '.edit'))

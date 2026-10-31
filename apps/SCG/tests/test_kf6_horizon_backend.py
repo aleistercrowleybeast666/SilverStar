@@ -55,7 +55,8 @@ def executable(request,project,tmp_path_factory):
     sources += [KERNEL/'Src/navigation_kf.c',KERNEL/'Src/navigation_kf_replay.c',KERNEL/'Src/navigation_kf_horizon.c',
         KERNEL/'Src/navigation_integrity.c',INS/'Src/ins_mechanization.c',COMMON/'Src/attitude_frame.c',
         COMMON/'Src/geodesy_local.c',COMMON/'Src/navigation_quality.c',PROTOCOL/'Src/sslog_records.c',PROTOCOL/'Src/sslog_protocol.c']
-    sources += [project/'Generated/Src'/p for p in ['project_metadata.c','project_log_decoder_profile.c','project_log_config.c']]
+    sources += [project/'Generated/Src'/p for p in ['project_metadata.c','project_log_decoder_profile.c','project_log_config.c','project_mission_process.c']]
+    sources.append(CORE/'System/Src/system_mission_process.c')
     compiler=shutil.which('gcc');assert compiler,'Actual GCC is required'
     target=output/'kf_horizon_backend.exe'
     native = os.environ.get('SILVERSTAR_HORIZON_NATIVE_CONFIGURATION') == '1'

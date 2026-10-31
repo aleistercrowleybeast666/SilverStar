@@ -31,26 +31,43 @@ def Audit_ProfileLoad(path: Path) -> tuple[dict[str, Any], dict[str, str] | None
         names = archive.namelist()
         if len(names) != len(set(names)):
             raise ValueError("duplicate decoder archive members")
-        # No extraction, imports, scripts or archive-specified paths are executed.
-        for name in ("manifest.json", "record_catalog.json", "project_semantics.json"):
-            if archive.getinfo(name).file_size > 8 * 1024 * 1024:
-                raise ValueError("decoder member exceeds audit input bound")
+        # No extraction, imports, scripts or archive-specified paths execute.
+        if any(info.file_size > 8 * 1024 * 1024 for info in archive.infolist()):
+            raise ValueError("decoder member exceeds audit input bound")
         manifest = json.loads(archive.read("manifest.json"))
         if manifest.get("format") != "SilverStar.ssdecoder":
             raise ValueError("invalid decoder format")
         schema = manifest.get("package_schema", {})
-        if (schema.get("major"), schema.get("minor")) != (1, 2):
-            raise ValueError("audit requires decoder package 1.2")
-        catalog_bytes = archive.read("record_catalog.json")
-        semantics_bytes = archive.read("project_semantics.json")
+        minor = schema.get("minor")
+        if schema.get("major") != 1 or minor not in (2,3):
+            raise ValueError("audit requires decoder package 1.2 or 1.3")
+        expected = {"README.md","checksums.sha256","manifest.json","record_catalog.json","project_semantics.json"}
+        if minor == 3: expected.add("object_catalog.json")
+        if set(names) != expected: raise ValueError("decoder exact member set mismatch")
+        members = {name:archive.read(name) for name in expected}
+        declared = {}
+        for line in members["checksums.sha256"].decode("ascii").splitlines():
+            digest, name = line.split("  ",1)
+            if name in declared: raise ValueError("decoder duplicate checksum")
+            declared[name] = digest
+        if set(declared) != expected - {"checksums.sha256"}:
+            raise ValueError("decoder checksum member set mismatch")
+        if any(hashlib.sha256(members[name]).hexdigest() != digest for name,digest in declared.items()):
+            raise ValueError("decoder checksum mismatch")
+        catalog_bytes = members["record_catalog.json"]
+        semantics_bytes = members["project_semantics.json"]
+        object_bytes = members.get("object_catalog.json")
     catalog_hash = hashlib.sha256(catalog_bytes).hexdigest()
     semantics_hash = hashlib.sha256(semantics_bytes).hexdigest()
+    object_hash = hashlib.sha256(object_bytes).hexdigest() if object_bytes is not None else None
     if (catalog_hash != manifest.get("record_catalog_sha256") or
-            semantics_hash != manifest.get("project_semantics_sha256")):
+            semantics_hash != manifest.get("project_semantics_sha256") or
+            (minor == 3 and object_hash != manifest.get("object_catalog_sha256"))):
         raise ValueError("decoder payload hash mismatch")
     generation_hash = hashlib.sha256(
-        b"silverstar.ssdecoder.package-schema/1.2\nsilverstar.sslog.container/0.0\n"
-        + bytes.fromhex(catalog_hash) + bytes.fromhex(semantics_hash)).hexdigest()
+        f"silverstar.ssdecoder.package-schema/1.{minor}\nsilverstar.sslog.container/0.0\n".encode()
+        + bytes.fromhex(catalog_hash) + bytes.fromhex(semantics_hash)
+        + (bytes.fromhex(object_hash) if object_hash is not None else b"")).hexdigest()
     if generation_hash != manifest.get("generation_profile_sha256"):
         raise ValueError("decoder generation profile hash mismatch")
     return json.loads(catalog_bytes), {

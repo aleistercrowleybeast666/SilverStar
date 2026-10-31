@@ -62,7 +62,7 @@ from silverstar_fccg.build.runner import (
     BuildRunner,
 )
 from silverstar_fccg.build.toolchain import ArmGnuSubtoolPaths_Derive
-from silverstar_fccg.build.quality_batch import QualityBatch_Run, QualityBatchResult
+from silverstar_fccg.build.quality_batch import QualityBatch_Run, QualityBatchResult, TargetQualityResult
 from silverstar_fccg.core.errors import FccgError
 from silverstar_fccg.core.i18n import Translator
 from silverstar_fccg.core.path_preferences import PathPreferences
@@ -137,7 +137,9 @@ from silverstar_fccg.project.power10_report import (
     Power10Report_Create, Power10Report_Save, Power10Report_Load,
     Power10Report_Current_Is, Power10Report_Csv, Power10TextPassed_Is,
 )
-from silverstar_fccg.project.artifact_memory import ArtifactMemorySummary_Encode
+from silverstar_fccg.project.artifact_memory import ArtifactMemorySummary_Encode, ArtifactMemoryReportSummary_Encode
+from silverstar_fccg.project.artifact_stack import ArtifactStackReportSummary_Encode
+from silverstar_fccg.project.generation_state import ProjectTargetGenerated_IsCurrent
 from silverstar_fccg.project.resources import BoardInventory_ReadScope, ResourceAssignments_Resolve
 from silverstar_fccg.project.ground_activity import GroundActivityLedEnabled_Get
 from silverstar_fccg.project.release_policy import (
@@ -533,9 +535,7 @@ class MainWindow(QMainWindow):
         )
         self.air_link_page.configurationChanged.connect(self._AirLink_Change)
         self.air_link_page.endpointPowerChanged.connect(self._EndpointPower_Change)
-        self.ground_target_page.enabledChanged.connect(
-            lambda enabled: self._GroundTarget_Change("enabled", enabled)
-        )
+        self.hardware_workspace.linkEditRequested.connect(self._AirLinkTransaction_Open)
         self.ground_target_page.configurationChanged.connect(self._GroundTarget_Change)
         self.ground_target_page.activityLedToggled.connect(self._GroundActivityLed_Toggle)
         self.ground_target_page.assignmentChanged.connect(self._GroundAssignment_Change)
@@ -693,6 +693,7 @@ class MainWindow(QMainWindow):
                         ),
                     )
                     for profile in profiles
+                    if category != 'telemetry' or profile.profile_id == 'ss_tm.s.0_1'
                 )
         definitions = ProtocolLogDefinitions_Get(model, self._service.catalog)
         workspace_file = (
@@ -851,7 +852,7 @@ class MainWindow(QMainWindow):
                  for manifest in self._service.catalog.Type_Get("device")
                  if manifest.radio is not None},
                 {instance.instance_id: FlightRadioConfiguration_Get(display.model, instance)
-                 for instance in display.model.device_instances if instance.plugin in {RADIO_PLUGIN, "silverstar.device.telemetry.nrf24l01p"}},
+                 for instance in display.model.device_instances if instance.plugin in {RADIO_PLUGIN, "silverstar.device.telemetry.sx1278"}},
             )
             self.flight_configuration_page.Configuration_Set(
                 display.selectable_components,
@@ -928,23 +929,27 @@ class MainWindow(QMainWindow):
                 self.algorithm_parameters_page.RatePlan_Set(rate_plan)
             project_root = self._project_root
             usb_reimport_issue = UsbGroundReimportIssue_Get(display.model)
+            current_targets = {target: bool(project_root and ProjectTargetGenerated_IsCurrent(
+                display.model, self._service.catalog, project_root / directory, target))
+                for target, directory in (('flight', 'Flight_Controller'), ('ground', 'Ground_Station'))}
             self.build_page.Targets_Set(
                 flight_generated=bool(
                     project_root and (project_root / "Flight_Controller" / "Makefile").is_file()
                 ),
-                ground_enabled=display.model.ground_target.enabled and not usb_reimport_issue,
+                ground_configured=display.model.ground_target.hardware.mode != "unselected" and not usb_reimport_issue,
                 usb_candidate=UsbGroundBound_Is(display.model),
                 ground_generated=bool(
                     project_root and not UsbGroundBound_Is(display.model)
                     and (project_root / "Ground_Station" / "Makefile").is_file()
                 ),
+                flight_current=current_targets['flight'], ground_current=current_targets['ground'],
             )
             self.build_page.FirmwareArtifact_Set(
                 str(display.firmware_output_directory or ""),
                 display.firmware_artifact_name,
             )
             self.build_page.QualityResults_Set(display.quality_results)
-            self._TargetQualityResults_Refresh(display.model)
+            self._TargetQualityResults_Refresh(display.model, current_targets=current_targets)
             if UsbGroundBound_Is(display.model):
                 self.build_page.target_status_labels['ground'].setText(
                     REIMPORT_STATUS if usb_reimport_issue else RELEASE_STATUS)
@@ -1228,17 +1233,17 @@ class MainWindow(QMainWindow):
         status_key: str = "status.configuration_changed_simple",
         logging_snapshot: tuple[LoggingStreamView, ...] | None = None,
         logging_availability_changed: bool = False,
+        include_workflow_drafts: bool = True,
     ) -> ProjectConfigurationResult | None:
         if self._displaying_model:
             return None
         try:
-            pending_process=self.workflow_page.Pending_Commit()
-            pending_functions=self.workflow_page.PendingFunctions_Collect()
+            pending_process=self.workflow_page.Pending_Commit() if include_workflow_drafts else None
+            pending_functions=self.workflow_page.PendingFunctions_Collect() if include_workflow_drafts else None
         except ValueError as error:
             self._Error_Show(error);return None
         candidate = deepcopy(self._model)
         if pending_process is not None:candidate.mission_process=pending_process
-        if pending_functions is not None:candidate.mission_functions=pending_functions
         restore_project = (self._project_root, self._model.identity.name)
         logging_transport_choice = (self._logging_transport_choice
             if self._selection_restore_project == restore_project else None)
@@ -1251,6 +1256,8 @@ class MainWindow(QMainWindow):
         previous_lifecycle = self._project_state
         previous_display: _ProjectDisplayState | None = None
         try:
+            if pending_functions is not None:
+                self._FunctionsConfiguration_Update(candidate, pending_functions)
             cached_display = getattr(self, "_project_display_state", None)
             previous_display = (cached_display if cached_display is not None
                 and cached_display.model is self._model
@@ -1481,7 +1488,7 @@ class MainWindow(QMainWindow):
         self._ProjectConfiguration_Change(change)
 
     def _FlightRadioSelection_Change(self, identity: str, plugin: str, module: str) -> None:
-        if not plugin or plugin not in {RADIO_PLUGIN, "silverstar.device.telemetry.nrf24l01p"}:
+        if not plugin or plugin not in {RADIO_PLUGIN, "silverstar.device.telemetry.sx1278"}:
             self._DeviceInstance_Change(identity, plugin)
             return
         manifest = self._service.catalog.Component_Get(plugin)
@@ -1943,13 +1950,12 @@ class MainWindow(QMainWindow):
                         for issue in module_issues))
             selected_module = (
                 model.ground_target.module_variant
-                if model.ground_target.enabled
-                and candidate.component_id == model.ground_target.radio_plugin else ""
+                if candidate.component_id == model.ground_target.radio_plugin else ""
             )
             issues = RadioCandidateIssues_Get(
                 model.air_link, candidate.radio, selected_module, "Ground",
             )
-            if model.ground_target.enabled and model.air_link.packet_mtu > 61:
+            if model.air_link.packet_mtu > 61:
                 issues = (*issues, "AIR_LINK_MTU_TOO_SMALL: Ground GSP bridge permits 61 bytes")
             technology = "LoRa" if candidate.radio.technology == "lora" else "Packet Radio / Other"
             radios.append((
@@ -2044,7 +2050,7 @@ class MainWindow(QMainWindow):
         except ValueError:
             flight_manifest = None
         flight_module_id, flight_power = (FlightRadioConfiguration_Get(model, flight_instance)
-                                        if flight_instance is not None and flight_instance.plugin in {RADIO_PLUGIN, "silverstar.device.telemetry.nrf24l01p"}
+                                        if flight_instance is not None and flight_instance.plugin in {RADIO_PLUGIN, "silverstar.device.telemetry.sx1278"}
                                         else ("", model.flight_tx_power_dbm))
         flight_module = (flight_manifest.radio.modules.get(flight_module_id)
                          if flight_manifest is not None and flight_manifest.radio is not None else None)
@@ -2054,7 +2060,7 @@ class MainWindow(QMainWindow):
         )
         active_modules = [item for item in (
             flight_module,
-            ground_module if model.ground_target.enabled else None,
+            ground_module,
         ) if item is not None]
         frequency_range = None
         if active_modules and flight_module is not None:
@@ -2066,18 +2072,19 @@ class MainWindow(QMainWindow):
             frequency_range,
             tuple(flight_module["supported_tx_powers_dbm"]) if flight_module else (),
             tuple(ground_module["supported_tx_powers_dbm"]) if ground_module else (),
-            model.ground_target.enabled,
+            ground_module is not None,
         )
+        from silverstar_fccg.project.radio_transaction import RadioTransaction_IssuesGet
         self.air_link_page.Configuration_Set(
-            model.air_link, AirLinkIssues_Get(model, self._service.catalog)
+            model.air_link, RadioTransaction_IssuesGet(model, self._service.catalog)
         )
         self.air_link_page.EndpointPowers_Set(
             flight_power, model.ground_target.tx_power_dbm,
-            model.ground_target.enabled,
+            ground_module is not None,
         )
         self.ground_target_page.Configuration_Set(
             model.ground_target, boards, tuple(radios), requirements,
-            GroundTargetIssues_Get(replace(model, ground_target=replace(model.ground_target, enabled=True)), self._service.catalog),
+            GroundTargetIssues_Get(model, self._service.catalog),
         )
         ground = model.ground_target
         platform = self._service.PlatformMatchView_Get(
@@ -2088,15 +2095,10 @@ class MainWindow(QMainWindow):
         self.ground_target_page.Platform_Set(platform)
         if UsbGroundBound_Is(model):
             issue = UsbGroundReimportIssue_Get(model)
-            self.ground_target_page.generate_button.setEnabled(ground.enabled and not issue)
+            self.ground_target_page.generate_button.setEnabled(not issue)
             self.ground_target_page.generate_button.setToolTip(issue or RELEASE_NOTICE)
 
     def _AirLink_Change(self, field: str, value: object) -> None:
-        if field == "radio_family" and value == "nrf24":
-            self._ProjectConfiguration_Change(lambda candidate: setattr(candidate, "air_link",
-                replace(candidate.air_link, radio_family="nrf24", radio_technology="esb", phy_mode="esb",
-                    nrf24={"data_rate_kbps": 1000, "address": "E7E7E7E701", "retry_delay_us": 1000, "retry_count": 3})))
-            return
         if field == "radio_family" and value == "sx128x":
             self._ProjectConfiguration_Change(lambda candidate: setattr(candidate, "air_link",
                 replace(candidate.air_link, radio_family="sx128x", radio_technology="lora", phy_mode="lora", nrf24=None)))
@@ -2106,6 +2108,17 @@ class MainWindow(QMainWindow):
                 candidate, "air_link", replace(candidate.air_link, **{field: value})
             )
         )
+
+    def _AirLinkTransaction_Open(self):
+        from silverstar_fccg.ui.radio_transaction import RadioTransactionDialog
+        dialog = RadioTransactionDialog(self._translator, self._model, self._service.catalog, self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            configuration = dialog.Configuration_Get()
+            def Apply(candidate):
+                for key in ('air_link', 'device_instances', 'resource_assignments', 'ground_target', 'protocols'):
+                    setattr(candidate, key, deepcopy(getattr(configuration, key)))
+            self._ProjectConfiguration_Change(Apply, logging_availability_changed=True)
+        dialog.deleteLater()
 
     def _EndpointPower_Change(self, endpoint: str, value: int) -> None:
         if endpoint == "flight":
@@ -2301,7 +2314,7 @@ class MainWindow(QMainWindow):
         if not selected:
             return
         model, project, service = deepcopy(self._model), self._project_root, self._service
-        if not (model.ground_target.enabled and model.ground_target.pc_interface == 'usb_cdc'):
+        if model.ground_target.pc_interface != 'usb_cdc':
             # Preserve the established UART/legacy callback API.
             self.Task_Run(lambda context: service.CubeMxProject_Import(
                 Path(selected), model, risk_acknowledged=True, target="ground"),
@@ -2511,15 +2524,16 @@ class MainWindow(QMainWindow):
 
     def _WorkflowTransaction_Apply(self, configuration):
         def Apply(candidate):
-            for key in ('mission_process', 'mission_functions', 'algorithm_parameters', 'logging_streams'):
+            for key in ('mission_process', 'mission_functions', 'algorithm_parameters', 'logging_streams',
+                        'capability_source_overrides'):
                 setattr(candidate, key, deepcopy(getattr(configuration, key)))
-        self._ProjectConfiguration_Change(Apply)
+        self._ProjectConfiguration_Change(Apply, include_workflow_drafts=False)
 
     def _MissionProcessChanges_Apply(self):
         if not self._mission_process_pending:return
         candidate=self._pending_mission_process
         self._mission_process_pending=False
-        self._ProjectConfiguration_Change(lambda model:setattr(model,'mission_process',candidate))
+        return self._ProjectConfiguration_Change(lambda model:setattr(model,'mission_process',candidate))
 
     def _Functions_Queue(self,configuration):
         self._pending_functions=deepcopy(configuration)
@@ -2528,16 +2542,27 @@ class MainWindow(QMainWindow):
     def _FunctionsChanges_Apply(self):
         if self._pending_functions is None:return
         value=self._pending_functions;self._pending_functions=None
-        self._ProjectConfiguration_Change(lambda model:setattr(model,'mission_functions',value))
+        return self._ProjectConfiguration_Change(lambda model:self._FunctionsConfiguration_Update(model,value))
+
+    def _FunctionsConfiguration_Update(self, model, configuration):
+        from silverstar_fccg.project.mission_functions import FunctionsConfiguration_Apply
+        updated = FunctionsConfiguration_Apply(model, self._service.catalog, configuration)
+        # The surrounding project transaction reconciles the complete model.
+        model.capability_source_overrides = updated.capability_source_overrides
+        model.mission_functions = updated.mission_functions
 
     def _WorkflowDrafts_Commit(self):
         try:
-            self._MissionProcessChanges_Apply();self._FunctionsChanges_Apply()
+            if self._mission_process_pending and self._MissionProcessChanges_Apply() is None:
+                return False
+            if self._pending_functions is not None and self._FunctionsChanges_Apply() is None:
+                return False
             if self._pending_strategy_changes:self._StrategyChanges_Apply()
             if self._pending_mode_changes or self._pending_mode_parameter_changes:self._ModeChanges_Apply()
             functions=self.workflow_page.PendingFunctions_Collect()
             if functions is not None:
-                self._ProjectConfiguration_Change(lambda model:setattr(model,'mission_functions',functions))
+                if self._ProjectConfiguration_Change(lambda model:self._FunctionsConfiguration_Update(model,functions)) is None:
+                    return False
             value=self.workflow_page.Pending_Commit()
             if value is not None:
                 self._ProjectConfiguration_Change(lambda model:setattr(model,'mission_process',value))
@@ -2578,6 +2603,11 @@ class MainWindow(QMainWindow):
             from silverstar_fccg.project.mission_functions import Functions_Derive
             functions=Functions_Derive(candidate,self._service.catalog)
             function=next(row for row in functions['functions'] if row['instance_id']==identity)
+            references = [row['instance_id'] for row in functions['functions']
+                          if identity in row['depends_on'] or identity in row['input_bindings'].values()]
+            if references:
+                raise ValueError(self._translator.Text_Get('workflow.function.referenced',
+                    identity=identity, references=', '.join(references)))
             manifest=self._service.catalog.Component_Get(function['plugin_id'])
             if identity=='ins' or manifest.selection is None or manifest.selection.slot!='estimator':
                 raise ValueError(self._translator.Text_Get('workflow.function.system_owned'))
@@ -2587,20 +2617,32 @@ class MainWindow(QMainWindow):
         QTimer.singleShot(0,self,lambda:self._ProjectConfiguration_Change(change))
 
     def _ParameterProfile_Import(self,plugin_id):
-        if not self._WorkflowDrafts_Commit():return
         from silverstar_fccg.project.mission_functions import ParameterProfile_Read,ParameterProfile_Preview,ParameterProfile_Apply
-        path,_filter=QFileDialog.getOpenFileName(self,self._translator.Text_Get('workflow.function.import'),'', 'Algorithm parameters (*.ssparams *.json)')
+        path,_filter=QFileDialog.getOpenFileName(self,self._translator.Text_Get('workflow.function.import'),'',
+            'Algorithm parameters (*.ssparams *.ssparameters *.sstuning.json *.json);;TreeDiagram bundle (*.sstuning.json)')
         if not path:return
         try:
-            value=ParameterProfile_Read(path)
-            changes=ParameterProfile_Preview(self._model,self._service.catalog,plugin_id,value)
-            details='\n'.join(row['parameter_id']+': '+str(row['before'])+' → '+str(row['after'])+' '+row['unit'] for row in changes)
+            bundle = path.lower().endswith('.sstuning.json') or _filter.startswith('TreeDiagram')
+            if bundle:
+                from silverstar_fccg.project.tuning_bundle import TuningBundle_Read, TuningBundle_Preview, TuningBundle_Apply
+                value = TuningBundle_Read(path)
+                preview = TuningBundle_Preview(self._model, self._service.catalog, value)
+                changes = preview['changes']
+            else:
+                value=ParameterProfile_Read(path)
+                changes=ParameterProfile_Preview(self._model,self._service.catalog,plugin_id,value)
+            details='\n'.join(row['plugin_id']+' / '+row['parameter_id']+': '+str(row['before'])+' → '+str(row['after'])+' '+row['unit']
+                               + (' [shared]' if row['shared'] else '') for row in changes)
+            if bundle:
+                details += '\n\n' + self._translator.Text_Get('workflow.import.research_control')
+                details += '\n' + '\n'.join(preview['limitations'])
             answer=self._MessageBox_Exec(QMessageBox.Icon.Question,self._translator.Text_Get('workflow.import.preview'),
                 self._translator.Text_Get('workflow.import.changes',count=len(changes)),details=details,
                 buttons=QMessageBox.StandardButton.Apply | QMessageBox.StandardButton.Cancel,
                 default=QMessageBox.StandardButton.Cancel)
             if answer!=QMessageBox.StandardButton.Apply:return
-            updated=ParameterProfile_Apply(self._model,self._service.catalog,plugin_id,value)
+            updated = (TuningBundle_Apply(self._model,self._service.catalog,value) if bundle else
+                       ParameterProfile_Apply(self._model,self._service.catalog,plugin_id,value))
             self._ProjectConfiguration_Change(lambda model:setattr(model,'algorithm_parameters',updated.algorithm_parameters))
         except (OSError,ValueError,TypeError) as error:self._Error_Show(error)
 
@@ -2986,9 +3028,8 @@ class MainWindow(QMainWindow):
                 stage_id=getattr(found,'stage_id','')
                 if stage_id in self.workflow_page.stage_panel.cards:
                     self.workflow_page.stage_panel.Stage_Select(stage_id)
-                for editor in self.workflow_page.function_editors:
-                    editor.Reveal(found.function_id)
-                    if found.function_id in editor._sections:target=editor._sections[found.function_id]
+                self.workflow_page.coverage.Function_Select(found.function_id)
+                target=self.workflow_page.coverage
         elif code == "algorithm_parameters":
             matching=next((key for key in self.algorithm_parameters_page.editors
                 if key[0] in issue.message and key[1] in issue.message),None)
@@ -3178,7 +3219,6 @@ class MainWindow(QMainWindow):
             return
         try:
             candidate = ReleaseMigrationModel_Create(self._model)
-            candidate.ground_target = replace(candidate.ground_target, enabled=True)
             candidate = self._service.ProjectConfiguration_Reconcile(candidate).model
             ReleaseMigrationCopy_Save(self._model, candidate, Path(selected), self._legacy_source_bytes,
                                       self._project_root)
@@ -3600,12 +3640,7 @@ class MainWindow(QMainWindow):
         if scope == TargetScope.GROUND:
             apply(False)
             return
-        flight_model = (
-            replace(model, ground_target=replace(model.ground_target, enabled=False))
-            if scope == TargetScope.FLIGHT
-            and GroundTargetIssues_Get(model, self._service.catalog)
-            else model
-        )
+        flight_model = model
 
         def planned(plan: GenerationPlan) -> None:
             if self._GenerationPlan_ApplyAllowed(plan):
@@ -3662,6 +3697,7 @@ class MainWindow(QMainWindow):
             "power10_check": BuildAction.POWER10_CHECK,
             "static_analysis": BuildAction.STATIC_ANALYSIS,
             "artifact_check": BuildAction.ARTIFACT_CHECK,
+            "stack_report": BuildAction.STACK_REPORT,
         }
         action = actions.get(action_text)
         if action is None:
@@ -3758,7 +3794,7 @@ class MainWindow(QMainWindow):
                 **self._model.build.tool_paths, **ground_build.tool_paths})
         return root, model
 
-    def _TargetQualityResults_Refresh(self, model=None) -> None:
+    def _TargetQualityResults_Refresh(self, model=None, *, current_targets=None) -> None:
         displayed = self._model if model is None else model
         for target in ("flight", "ground"):
             records = ()
@@ -3773,7 +3809,13 @@ class MainWindow(QMainWindow):
                 records = self._service.QualityResults_Get(root)
                 runner = BuildRunner(WorkspacePolicy(root))
                 by_task = {record.task: record for record in records}
+                current = (current_targets[target] if current_targets is not None else
+                    ProjectTargetGenerated_IsCurrent(displayed, self._service.catalog, root, target))
                 for task in QUALITY_TASKS:
+                    if not current:
+                        if task in by_task:
+                            states[task] = 'stale'
+                        continue
                     try:
                         QualityInput_Require(root, target, task)
                         record = by_task.get(task)
@@ -3874,7 +3916,7 @@ class MainWindow(QMainWindow):
                 return
             self.build_page.Targets_Set(
                 flight_generated=(project / FLIGHT_DIRECTORY / 'Makefile').is_file(),
-                ground_enabled=model.ground_target.enabled,
+                ground_configured=model.ground_target.hardware.mode != "unselected",
                 ground_generated=result.output is not None, usb_candidate=True)
             states = result.states if result.output is not None else {
                 task: 'unavailable' for task in QUALITY_TASKS}
@@ -3929,16 +3971,24 @@ class MainWindow(QMainWindow):
         self._active_quality_action = action.value
         usb_model, usb_project = deepcopy(self._model), self._project_root
         def quality_run(context):
-            if UsbGroundBound_Is(usb_model):
-                outcomes = []
-                for target, root, model in inputs:
-                    context.Cancel_RaiseIfRequested()
-                    if target == 'ground':
-                        outcomes.append(UsbGroundQuality_Run(self._service, usb_model, usb_project, action, context))
-                    else:
-                        outcomes.extend(QualityBatch_Run(((target, root, model),), action, context).targets)
-                return QualityBatchResult(tuple(outcomes))
-            return QualityBatch_Run(tuple(inputs), action, context)
+            outcomes = []
+            for target, root, model in inputs:
+                context.Cancel_RaiseIfRequested()
+                if target == 'ground' and UsbGroundBound_Is(usb_model):
+                    outcomes.append(UsbGroundQuality_Run(self._service, usb_model, usb_project, action, context))
+                    continue
+                if not ProjectTargetGenerated_IsCurrent(usb_model, self._service.catalog, root, target):
+                    outcome = TargetQualityResult(target, root, model, None, '', 0.0,
+                        'Target inputs or plugin payload changed; regenerate this target before checking')
+                    context.Line_Report('FCCG_QUALITY|' + json.dumps(dict(target=target, kind='done',
+                        succeeded=False, error=outcome.error)))
+                else:
+                    outcome = QualityBatch_Run(((target, root, model),), action, context).targets[0]
+                    if not ProjectTargetGenerated_IsCurrent(usb_model, self._service.catalog, root, target):
+                        outcome = replace(outcome, input_sha256='',
+                            error='Target provenance changed during check; result is NOT PROVEN')
+                outcomes.append(outcome)
+            return QualityBatchResult(tuple(outcomes))
         def complete(batch):
             if self._UsbGroundRequest_Current(usb_model, usb_project):
                 self._QualityChecks_Complete(batch)
@@ -3996,7 +4046,7 @@ class MainWindow(QMainWindow):
                         outcome.root, outcome.model, result.output, result.return_code))
                 QualityResult_Save(outcome.root, task=result.action.value,
                     succeeded=outcome.succeeded, duration=outcome.duration,
-                    summary=self._QualitySummary_Get(result) + ("; " + outcome.error if outcome.error else ""),
+                    summary=self._QualitySummary_Get(result, outcome.root, outcome.target) + ("; " + outcome.error if outcome.error else ""),
                     input_sha256=outcome.input_sha256, command=result.command, details=details)
             except (OSError, ValueError) as error:
                 # A gate outcome without durable evidence is not displayed green.
@@ -4162,6 +4212,7 @@ class MainWindow(QMainWindow):
         if operation not in {"build", "clean"}:
             return
         action = BuildAction.BUILD if operation == "build" else BuildAction.CLEAN
+        authority_model = deepcopy(self._model)
         selected_model = deepcopy(self._model)
         if target == "ground":
             selected_model.build = selected_model.ground_target.build
@@ -4175,6 +4226,8 @@ class MainWindow(QMainWindow):
                         raise ValueError("Target build path is not a normal directory")
                     shutil.rmtree(build_root)
                 return BuildResult(action, ("clean", str(build_root)), 0, "Build directory cleaned")
+            if not ProjectTargetGenerated_IsCurrent(authority_model, self._service.catalog, target_root, target):
+                raise ValueError(self._translator.Text_Get('target.status.stale'))
             runner = BuildRunner(output_policy)
             def progress_report(progress: BuildProgress) -> None:
                 total = progress.total_steps + 1  # the actual artifact audit
@@ -4591,7 +4644,7 @@ class MainWindow(QMainWindow):
         self._QualityResult_Record(
             result.action,
             passed,
-            self._QualitySummary_Get(result),
+            self._QualitySummary_Get(result, self._project_root / FLIGHT_DIRECTORY if self._project_root else None),
         )
         if not passed:
             self.build_page.advanced_section.toggle_button.setChecked(True)
@@ -4755,6 +4808,7 @@ class MainWindow(QMainWindow):
             BuildAction.POWER10_CHECK,
             BuildAction.STATIC_ANALYSIS,
             BuildAction.ARTIFACT_CHECK,
+            BuildAction.STACK_REPORT,
         }:
             self._Error_Show(
                 self._translator.Text_Get(
@@ -4774,16 +4828,24 @@ class MainWindow(QMainWindow):
             BuildAction.POWER10_CHECK: "error.power10_check_failed_summary",
             BuildAction.STATIC_ANALYSIS: "error.static_analysis_failed_summary",
             BuildAction.ARTIFACT_CHECK: "error.artifact_check_failed_summary",
+            BuildAction.STACK_REPORT: "error.stack_report_failed_summary",
         }.get(action, "error.build_failed_summary")
 
     @staticmethod
-    def _QualitySummary_Get(result: BuildResult) -> str:
+    def _QualitySummary_Get(result: BuildResult, root: Path | None = None, target: str = 'flight') -> str:
+        if result.action == BuildAction.STACK_REPORT:
+            return (ArtifactStackReportSummary_Encode(result.output, root) if root else '') or 'stack_report_unverified'
         if result.action == BuildAction.POWER10_CHECK:
             review_state = "FAIL" if "POWER10_CONTRACT_REVIEW|FAIL|" in result.output else "NOT_PROVEN"
             return f"POWER10_CONTRACT_REVIEW|{review_state}|manual_acceptance_pending; " + (
                 "text_checks_passed" if Power10TextPassed_Is(result.output, result.return_code)
                 else "text_checks_failed")
         if result.action == BuildAction.ARTIFACT_CHECK:
+            report = ArtifactMemoryReportSummary_Encode(result.output, root, target) if root else ''
+            if report:
+                return report
+            if 'FIRMWARE_MEMORY_REPORT|' in result.output:
+                return 'memory_report_unverified'
             memory = ArtifactMemorySummary_Encode(result.output)
             if memory:
                 return memory
@@ -4812,6 +4874,7 @@ class MainWindow(QMainWindow):
             BuildAction.POWER10_CHECK,
             BuildAction.STATIC_ANALYSIS,
             BuildAction.ARTIFACT_CHECK,
+            BuildAction.STACK_REPORT,
         } or self._project_root is None:
             return
         duration = (
@@ -5208,6 +5271,10 @@ class MainWindow(QMainWindow):
 
     def Theme_Apply(self, theme: str) -> None:
         self._theme = theme if theme in {"light", "dark"} else "light"
+        # Every entry point (startup, settings restore, direct application and
+        # the combo itself) must present the same selected theme.
+        with QSignalBlocker(self.theme_combo):
+            self.theme_combo.setCurrentIndex(self.theme_combo.findData(self._theme))
         application = QApplication.instance()
         if application is not None:
             Theme_Apply(application, self._theme)

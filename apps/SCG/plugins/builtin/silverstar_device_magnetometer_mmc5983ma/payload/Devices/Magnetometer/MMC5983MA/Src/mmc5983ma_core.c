@@ -36,6 +36,9 @@ static Mmc5983maStepResult Mmc5983ma_Fail(Mmc5983maContext *context,
 static Mmc5983maStepResult Mmc5983ma_Publish(Mmc5983maContext *context,
     uint64_t now_us)
 {
+    /* A wrapped local acquisition sequence cannot prove native continuity. */
+    if (context->sequence == UINT32_MAX)
+    { return Mmc5983ma_Fail(context, Mmc5983maStepSequenceExhausted); }
     context->sample.sequence = ++context->sequence;
     context->last_sample_us = now_us;
     context->state = Mmc5983maStateWaitPeriod;

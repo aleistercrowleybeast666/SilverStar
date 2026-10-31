@@ -51,12 +51,15 @@ class ProjectValidationResult:
         return not any(issue.level == "error" for issue in self.issues)
 
 
-def MissionProcessIssues_Get(model: ProjectModel, *, editing: bool = False) -> tuple[ValidationIssue, ...]:
+def MissionProcessIssues_Get(model: ProjectModel, catalog=None, *, editing: bool = False) -> tuple[ValidationIssue, ...]:
     if model.mission_process is None:
         return ()
-    return (ValidationIssue('warning' if editing else 'error', 'MISSION_PROCESS_REFERENCE_ONLY',
-        'mission_process is desktop-reference only: no firmware phase-scheduling consumer is implemented. '
-        'The draft can be saved, but Flight generation must reject it instead of executing the legacy process.'),)
+    from silverstar_fccg.project.mission_process import MissionProcessFirmware_Require
+    try:
+        MissionProcessFirmware_Require(model, catalog)
+    except ValueError as exc:
+        return (ValidationIssue('warning' if editing else 'error', str(exc).split(':')[0], str(exc)),)
+    return ()
 
 
 def SensorInstallationIssues_Get(
@@ -817,7 +820,7 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
     issues.extend(SensorInstallationIssues_Get(model, catalog))
     from silverstar_fccg.project.telemetry import TelemetryProfile_Issues
     issues.extend(ValidationIssue('error', code, message) for code, message in TelemetryProfile_Issues(model, catalog))
-    issues.extend(MissionProcessIssues_Get(model))
+    issues.extend(MissionProcessIssues_Get(model, catalog))
     from silverstar_fccg.project.mission_functions import Functions_Issues
     issues.extend(ValidationIssue(row.level, row.code, row.function_id + ': ' + row.message)
                   for row in Functions_Issues(model, catalog))
@@ -1178,10 +1181,7 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
 
     issues.extend(
         ValidationIssue("error", issue.code, issue.message)
-        for issue in (
-            GroundTargetIssues_Get(model, catalog)
-            if model.ground_target.enabled else AirLinkIssues_Get(model, catalog)
-        )
+        for issue in AirLinkIssues_Get(model, catalog, target_scope="flight")
     )
     issues.extend(AlignmentConfigurationIssues_Get(model, catalog))
     from silverstar_fccg.project.release_policy import ReleaseCompatibilityIssues_Get

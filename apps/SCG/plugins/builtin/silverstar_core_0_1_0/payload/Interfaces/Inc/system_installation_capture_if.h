@@ -29,6 +29,8 @@ typedef struct
 } SystemInstallationCaptureProof;
 
 #if (SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U)
+SystemDeviceResult SystemInstallationCapture_StartClaim(uint8_t from_alignment,uint32_t *token);
+void SystemInstallationCapture_StartRelease(uint32_t token,uint8_t restore_alignment);
 SystemDeviceResult SystemInstallationCapture_OperationBegin(
     SystemInstallationOperation operation,uint8_t continuation);
 void SystemInstallationCapture_OperationEnd(SystemInstallationOperation operation);
@@ -43,6 +45,10 @@ uint8_t SystemInstallationCapture_CommandBlocked(void);
 void SystemInstallationCapture_ExecuteLine(const char *line, char *response,
     uint16_t capacity, uint64_t now_us);
 #else
+static inline SystemDeviceResult SystemInstallationCapture_StartClaim(uint8_t from_alignment,uint32_t *token)
+{(void)from_alignment;(void)token;return SYSTEM_DEVICE_OK;}
+static inline void SystemInstallationCapture_StartRelease(uint32_t token,uint8_t restore_alignment)
+{(void)token;(void)restore_alignment;}
 static inline SystemDeviceResult SystemInstallationCapture_OperationBegin(
     SystemInstallationOperation operation,uint8_t continuation)
 { (void)operation;(void)continuation;return SYSTEM_DEVICE_OK; }

@@ -91,7 +91,7 @@ SystemDeviceResult ProjectSx1278Resources_Get(uint8_t instance, ProjectSx1278Res
         root/"plugins/builtin/silverstar_platform_api/payload/Platform/Inc",
         root/"plugins/builtin/silverstar_core_ground_0_1_0/payload/Ground/Core/Inc",
         root/"plugins/builtin/silverstar_core_ground_0_1_0/payload/Ground/Protocol/Inc"]
-    (work/"ground_radio_config.h").write_text('#include "platform_gpio.h"\n#define GROUND_ACTIVITY_ENABLED 0U\n#define GROUND_ACTIVITY_TX_GPIO PLATFORM_GPIO_COUNT\n#define GROUND_ACTIVITY_RX_GPIO PLATFORM_GPIO_COUNT\n#define GROUND_ACTIVITY_TX_ACTIVE_HIGH 0U\n#define GROUND_ACTIVITY_RX_ACTIVE_HIGH 0U\n#define GROUND_ACTIVITY_PULSE_MS 40U\n', encoding="utf8")
+    (work/"ground_radio_config.h").write_text('#include "platform_gpio.h"\n#define GROUND_TM_S_ENABLED 0U\n#define GROUND_ACTIVITY_ENABLED 0U\n#define GROUND_ACTIVITY_TX_GPIO PLATFORM_GPIO_COUNT\n#define GROUND_ACTIVITY_RX_GPIO PLATFORM_GPIO_COUNT\n#define GROUND_ACTIVITY_TX_ACTIVE_HIGH 0U\n#define GROUND_ACTIVITY_RX_ACTIVE_HIGH 0U\n#define GROUND_ACTIVITY_PULSE_MS 40U\n', encoding="utf8")
     command = [compiler, "-std=c11", "-O2", *STRICT_WARNINGS,
         *("-I"+str(p) for p in includes), str(root/"tests/fixtures/sx1278_host/host.c"),
         str(radio/"Src/sx1278_chip.c"), str(radio/"Adapter/Src/sx1278_telemetry_adapter.c"),
@@ -113,7 +113,7 @@ SystemDeviceResult ProjectSx1278Resources_Get(uint8_t instance, ProjectSx1278Res
     "wanted_corrupt", "lifecycle_corrupt", "stop_during_tx_done",
     "unexpected_reset_rx", "unexpected_mode_tx", "health_time_epoch", "autonomous_tx_done",
     "negative_state_corrupt", "receipt_corrupt", "rx_length_corrupt", "tx_length_corrupt", "adapter_stop_pending",
-    "adapter_stop_before_start", "stop_status_error"])
+    "adapter_stop_before_start", "stop_status_error", "transmit_only", "receive_only", "mode_recovery", "mode_stop_start", "mode_during_tx"])
 def test_sx1278_host_scenarios(sx1278_host, scenario):
     executable, work, _, _ = sx1278_host
     result = subprocess.run([str(executable), scenario], capture_output=True, text=True, timeout=10)

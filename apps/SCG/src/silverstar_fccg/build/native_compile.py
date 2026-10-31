@@ -87,7 +87,7 @@ def NativeCompile_Run(args, *, device_facts=None, runtime_catalog=None, prepared
     snapshot_modules=list(dict.fromkeys(snapshot_modules))
     (output/"source-snapshot.json").write_text(json.dumps({
         "source_commit":subprocess.check_output(["git","-C",str(SCG),"rev-parse","HEAD"],text=True).strip(),
-        "dirty_diff":subprocess.check_output(["git","-C",str(SCG),"diff","--binary"],text=True),
+        "dirty_diff":subprocess.check_output(["git","-C",str(SCG),"diff","--binary"],text=True,encoding="utf-8"),
         "modules":{str(p.relative_to(SCG)):{"sha256":hashlib.sha256(p.read_bytes()).hexdigest(),
                   "source":p.read_text(encoding="utf-8")} for p in snapshot_modules},
         "input_sha256":original_hashes,"facts":facts_json},indent=2),encoding="utf-8")
@@ -359,7 +359,7 @@ uint8_t CDC_Transmit_FS(uint8_t *, uint16_t);
           "runtime_project":str(args.runtime_project.resolve()) if args.runtime_project is not None else None,
           "runtime_project_sha256":hashlib.sha256(args.runtime_project.read_bytes()).hexdigest() if args.runtime_project is not None and args.runtime_project.is_file() else None,
           "source_commit":subprocess.check_output(["git","-C",str(SCG),"rev-parse","HEAD"],text=True).strip(),
-          "auditable_dirty_diff":subprocess.check_output(["git","-C",str(SCG),"diff","--binary"],text=True),
+          "auditable_dirty_diff":subprocess.check_output(["git","-C",str(SCG),"diff","--binary"],text=True,encoding="utf-8"),
           "new_module_sha256":hashlib.sha256((SCG/"src/silverstar_fccg/hardware/native_classic_cdc.py").read_bytes()).hexdigest(),
           "validation_engine_path":str(Path(__file__).relative_to(SCG)),
           "validation_script_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),

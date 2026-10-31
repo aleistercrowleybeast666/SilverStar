@@ -397,6 +397,7 @@ static SystemDeviceResult SilverStarStorageService_ObjectPathBuild(
             prefix = "0:/system/preferences/pre";
             break;
         case PERSISTENT_STORAGE_OBJECT_MISSION_SNAPSHOT:
+            /* Mission objects retain their existing source-directory path. */
             if (SilverStarStorageService_MissionDirectoryBuild(
                     s_mission_id, object_path->directory_buffer) !=
                 SYSTEM_DEVICE_OK)
@@ -408,6 +409,11 @@ static SystemDeviceResult SilverStarStorageService_ObjectPathBuild(
             length = 23U;
             break;
         default:
+            if (kind == PERSISTENT_STORAGE_OBJECT_INSTALLATION_ACTIVE) {
+                object_path->directory = "0:/system/install";
+                prefix = "0:/system/install/active";
+                break;
+            }
             return SYSTEM_DEVICE_INVALID_ARGUMENT;
     }
     if (kind != PERSISTENT_STORAGE_OBJECT_MISSION_SNAPSHOT)

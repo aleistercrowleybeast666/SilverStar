@@ -12,6 +12,8 @@ from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.project.model import ProjectModel
 from silverstar_fccg.project.power10_report import Power10TextPassed_Is
 from silverstar_fccg.project.quality_inputs import QualityInputHash_Get
+from silverstar_fccg.project.artifact_stack import ArtifactStackReportSummary_Encode, ArtifactStackReportSummary_Decode
+from silverstar_fccg.project.artifact_memory import ArtifactMemoryReportSummary_Encode, ArtifactMemoryReportSummary_Decode
 
 
 @dataclass(frozen=True)
@@ -26,6 +28,16 @@ class TargetQualityResult:
 
     @property
     def succeeded(self) -> bool:
+        if (self.result and self.result.action == BuildAction.ARTIFACT_CHECK and
+                'FIRMWARE_MEMORY_REPORT|' in self.result.output):
+            report = ArtifactMemoryReportSummary_Decode(
+                ArtifactMemoryReportSummary_Encode(self.result.output, self.root, self.target))
+            if not report or report['errors']:
+                return False
+        if self.result and self.result.action == BuildAction.STACK_REPORT:
+            report = ArtifactStackReportSummary_Decode(ArtifactStackReportSummary_Encode(self.result.output, self.root))
+            if not report or not report['passes'] or report['target'] != self.target:
+                return False
         return bool(not self.error and self.result and self.result.succeeded and
                     (self.result.action != BuildAction.POWER10_CHECK or
                      Power10TextPassed_Is(self.result.output, self.result.return_code)))

@@ -24,6 +24,7 @@
 #include "system_health.h"
 #include "system_inertial.h"
 #include "system_lifecycle.h"
+#include "system_mission_process.h"
 #include "system_navigation_health.h"
 #include "system_sensor_status.h"
 #include "system_startup.h"
@@ -37,6 +38,11 @@
 #define TELEMETRY_START_RESPONSE_MAX_PER_CYCLE \
     SYSTEM_LIFECYCLE_QUEUE_DEPTH
 #define TELEMETRY_RX_MAX_FRAMES_PER_CYCLE 8U
+/* Periods retain their nominal anchors. A short auxiliary transaction may
+ * defer the next nominal deadline by at most 20 ms; the RF guard is enforced
+ * separately from actual completion, including delayed receipt observation. */
+#define TELEMETRY_TM_DEADLINE_TOLERANCE_US 20000ULL
+#define TELEMETRY_TM_TX_GUARD_US 4000ULL
 
 _Static_assert(SYSTEM_TELEMETRY_COMMAND_POLICY ==
                    AIR_COMMAND_POLICY_PREFLIGHT_ONLY ||
@@ -196,17 +202,24 @@ static uint64_t s_next_stream_us;
 #define TELEMETRY_TM_EVENT_TTL_US 30000000ULL
 static uint32_t s_tm_pending_id;
 static uint64_t s_tm_pending_since_us;
+static uint64_t s_tm_guard_until_us;
 static uint64_t s_tm_cutover_deadline_us;
 static uint64_t s_tm_next_position_us;
 static uint64_t s_tm_next_health_us;
 static uint8_t s_tm_pending_start_ack;
+static uint8_t s_tm_pending_start_event;
+static uint8_t s_tm_start_ack_attempts;
+static uint8_t s_tm_start_event_attempts;
 static uint8_t s_tm_start_ack_completed;
 static uint8_t s_tm_cutover_requested;
 static uint8_t s_tm_mode_transmit_only;
 static uint8_t s_tm_preflight_slot;
 static uint32_t s_tm_start_observed[3];
+static uint32_t s_tm_stage_observed;
 static uint64_t s_tm_next_ack_us;
-#define TELEMETRY_TM_ACK_PERIOD_US 1000000ULL
+#define TELEMETRY_TM_ACK_PERIOD_US SYSTEM_TELEMETRY_TM_ACK_PERIOD_US
+#define TELEMETRY_TM_BOUNDARY_ATTEMPTS 3U
+static void TelemetryService_BoundaryReceipt(SystemDeviceResult result, uint64_t now_us);
 
 static SystemDeviceResult TelemetryService_TrackedSend(const uint8_t *frame,
     uint16_t length, uint32_t *transaction_id)
@@ -214,7 +227,8 @@ static SystemDeviceResult TelemetryService_TrackedSend(const uint8_t *frame,
     SystemDeviceResult result;
     uint32_t id = 0U;
     if (transaction_id != NULL) { *transaction_id = 0U; }
-    if (s_tm_pending_id != 0U) { return SYSTEM_DEVICE_BUSY; }
+    if ((s_tm_pending_id != 0U) || (SystemTime_GetMonotonicUs() < s_tm_guard_until_us))
+    { return SYSTEM_DEVICE_BUSY; }
     result = SystemTelemetry_SendControl(frame, length, &id);
     if (result != SYSTEM_DEVICE_OK) { return result; }
     SILVERSTAR_ASSERT(id != 0U, SILVERSTAR_ASSERT_MODULE_MODULES,
@@ -223,7 +237,8 @@ static SystemDeviceResult TelemetryService_TrackedSend(const uint8_t *frame,
     s_tm_pending_since_us = SystemTime_GetMonotonicUs();
     s_tm_pending_start_ack = (uint8_t)((length == AIR_ACK_LEN) &&
         (SsTm_FrameTypeGet(frame) == AIR_TYPE_ACK) &&
-        (frame[10] == AIR_CMD_START_MISSION) && (frame[11] == AIR_ACK_RESULT_OK));
+        (frame[10] == AIR_CMD_START_MISSION) && (frame[11] == AIR_ACK_RESULT_OK) &&
+        (s_tm_start_ack_completed == 0U));
     if (transaction_id != NULL) { *transaction_id = id; }
     return SYSTEM_DEVICE_OK;
 }
@@ -239,11 +254,14 @@ static void TelemetryService_ReceiptPoll(uint64_t now_us)
     if (result == SYSTEM_DEVICE_OK)
     {
         s_diagnostics.completed_tx_count++;
+        s_tm_guard_until_us = now_us + TELEMETRY_TM_TX_GUARD_US;
         if (s_tm_pending_start_ack != 0U) { s_tm_start_ack_completed = 1U; }
     }
     else { s_diagnostics.failed_tx_count++; }
+    TelemetryService_BoundaryReceipt(result, now_us);
     s_tm_pending_id = 0U;
     s_tm_pending_start_ack = 0U;
+    s_tm_pending_start_event = 0U;
 }
 
 static void TelemetryService_ModeProcess(uint64_t now_us)
@@ -303,6 +321,38 @@ static uint8_t TelemetryService_AckQueueHasSpace(void)
 {
     return (uint8_t)(TelemetryService_AckQueueNext(s_ack_head) !=
                      s_ack_tail);
+}
+
+static void TelemetryService_BoundaryReceipt(SystemDeviceResult result, uint64_t now_us)
+{
+    if (s_tm_pending_start_ack != 0U)
+    {
+        SILVERSTAR_ASSERT(s_ack_tail != s_ack_head, SILVERSTAR_ASSERT_MODULE_MODULES,
+            SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+        if ((result == SYSTEM_DEVICE_OK) || (s_tm_start_ack_attempts >= TELEMETRY_TM_BOUNDARY_ATTEMPTS))
+        { s_ack_tail = TelemetryService_AckQueueNext(s_ack_tail); }
+    }
+    if (s_tm_pending_start_event != 0U)
+    {
+        TelemetryStatusEvent event = s_status_queue[s_status_tail];
+        SILVERSTAR_ASSERT((s_status_tail != s_status_head) && (event.status_id == AIR_STATUS_MISSION_START),
+            SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+        if (result == SYSTEM_DEVICE_OK)
+        {
+            s_status_tail = TelemetryService_QueueNext(s_status_tail);
+            event.repeats_remaining--;
+            event.next_send_us = now_us + SYSTEM_TELEMETRY_STATUS_REPEAT_PERIOD_US;
+            s_status_queue[s_status_head] = event;
+            s_status_head = TelemetryService_QueueNext(s_status_head);
+            s_tm_start_event_attempts = 0U;
+        }
+        else if (s_tm_start_event_attempts >= TELEMETRY_TM_BOUNDARY_ATTEMPTS)
+        {
+            s_status_tail = TelemetryService_QueueNext(s_status_tail);
+            s_diagnostics.status_event_drop_count++;
+            s_tm_start_event_attempts = 0U;
+        }
+    }
 }
 
 static uint8_t TelemetryService_AckCacheNext(uint8_t index)
@@ -369,8 +419,17 @@ static uint8_t TelemetryService_AckFrameQueue(const uint8_t *frame)
         s_diagnostics.ack_queue_failure_count++;
         return 0U;
     }
+    /* Leave the final START response one reserved slot. Ordinary retries
+     * retain their idempotence cache even when this bounded queue is full. */
+    if ((SYSTEM_TELEMETRY_TM_ENABLED != 0U) &&
+        (TelemetryService_AckQueueNext(next_head) == s_ack_tail) &&
+        !((frame[10] == AIR_CMD_START_MISSION) && (frame[11] == AIR_ACK_RESULT_OK)))
+    { s_diagnostics.ack_queue_failure_count++; return 0U; }
     (void)memcpy(s_ack_queue[s_ack_head].frame, frame, AIR_ACK_LEN);
     s_ack_head = next_head;
+    if ((SYSTEM_TELEMETRY_TM_ENABLED != 0U) && (s_tm_cutover_requested == 0U) &&
+        (frame[10] == AIR_CMD_START_MISSION) && (frame[11] == AIR_ACK_RESULT_OK))
+    { s_tm_cutover_requested = 1U; s_tm_cutover_deadline_us = SystemTime_GetMonotonicUs() + TELEMETRY_TM_RECEIPT_TIMEOUT_US; }
     return 1U;
 }
 
@@ -411,7 +470,7 @@ static uint8_t TelemetryService_CachedAckQueue(const AirCmdPayload *command)
     return 0U;
 }
 
-static uint8_t TelemetryService_StatusQueueAt(uint8_t status_id,
+static uint8_t TelemetryService_StatusQueueAt(uint16_t status_id,
                                               uint8_t arg0,
                                               uint8_t arg1,
                                               uint8_t repeat_count,
@@ -421,12 +480,15 @@ static uint8_t TelemetryService_StatusQueueAt(uint8_t status_id,
 
     SILVERSTAR_ASSERT_OBJECT(&s_diagnostics, TelemetryServiceDiagnostics,
         SILVERSTAR_ASSERT_MODULE_MODULES);
-    if (repeat_count == 0U) { return 0U; }
+    if ((repeat_count == 0U) || ((SYSTEM_TELEMETRY_TM_ENABLED == 0U) && (status_id > UINT8_MAX))) { return 0U; }
     if (next_head == s_status_tail)
     {
         s_diagnostics.status_event_drop_count++;
         return 0U;
     }
+    if ((SYSTEM_TELEMETRY_TM_ENABLED != 0U) && (status_id != AIR_STATUS_MISSION_START) &&
+        (TelemetryService_QueueNext(next_head) == s_status_tail))
+    { s_diagnostics.status_event_drop_count++; return 0U; }
     if (SYSTEM_TELEMETRY_TM_ENABLED != 0U)
     {
     (void)memset(&s_status_queue[s_status_head].wire_event, 0, sizeof(SsTmEvent));
@@ -442,7 +504,7 @@ static uint8_t TelemetryService_StatusQueueAt(uint8_t status_id,
     {
     (void)occurred_us;
     }
-    s_status_queue[s_status_head].status_id = status_id;
+    s_status_queue[s_status_head].status_id = (uint8_t)status_id;
     s_status_queue[s_status_head].arg0 = arg0;
     s_status_queue[s_status_head].arg1 = arg1;
     s_status_queue[s_status_head].repeats_remaining = repeat_count;
@@ -690,7 +752,6 @@ static void TelemetryService_MissionStartObserve(void)
             (diagnostic.valid == 0U) || (diagnostic.sequence == s_tm_start_observed[source])) { continue; }
         SILVERSTAR_ASSERT(diagnostic.response.source == (SystemStartSource)source,
             SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
-        s_tm_start_observed[source] = diagnostic.sequence;
         if (diagnostic.response.result == SYSTEM_LIFECYCLE_START_OK)
         {
             uint8_t slot = s_status_head;
@@ -698,7 +759,31 @@ static void TelemetryService_MissionStartObserve(void)
                 TELEMETRY_STATUS_REPEAT_COUNT, (uint32_t)(diagnostic.response.timestamp_us / 1000ULL),
                 diagnostic.response.timestamp_us) != 0U)
             { s_status_queue[slot].wire_event.transaction_id = (uint16_t)diagnostic.response.request_id; }
+            else { continue; }
         }
+        /* A full queue must not acknowledge an event that was never stored. */
+        s_tm_start_observed[source] = diagnostic.sequence;
+    }
+}
+
+static void TelemetryService_MissionStageObserve(void)
+{
+    /* A consumer cursor advances only after the immutable occurrence has been
+     * copied into our own bounded broadcast queue. No stage is inferred. */
+    for (uint8_t count = 0U; count < 2U; count++)
+    {
+        SystemMissionProcessEvent event;
+        uint8_t slot = s_status_head;
+        SystemMissionProcessResult result = SystemMissionProcess_EventGet(s_tm_stage_observed, &event);
+        if (result != SystemMissionProcessResult_Entered) { return; }
+        SILVERSTAR_ASSERT((event.sequence > s_tm_stage_observed) &&
+            ((event.event_code == SYSTEM_MISSION_PROCESS_EVENT_ENTER) ||
+             (event.event_code == SYSTEM_MISSION_PROCESS_EVENT_EXIT)),
+            SILVERSTAR_ASSERT_MODULE_MODULES, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+        if (TelemetryService_StatusQueueAt(event.event_code, 0U, 0U, TELEMETRY_STATUS_REPEAT_COUNT,
+            (uint32_t)(event.timestamp_us / 1000ULL), event.timestamp_us) == 0U) { return; }
+        s_status_queue[slot].wire_event.stage_id = event.stage_id_hash;
+        s_tm_stage_observed = event.sequence;
     }
 }
 
@@ -1350,13 +1435,35 @@ static void TelemetryService_PreflightStatusStateProcess(void)
     }
 }
 
+static void TelemetryService_StartAckSelect(void)
+{
+    uint8_t index = s_ack_tail;
+    if ((SYSTEM_TELEMETRY_TM_ENABLED == 0U) || (s_tm_start_ack_completed != 0U)) { return; }
+    for (uint8_t count = 0U; count < TELEMETRY_ACK_QUEUE_DEPTH; count++)
+    {
+        if (index == s_ack_head) { return; }
+        if ((s_ack_queue[index].frame[10] == AIR_CMD_START_MISSION) &&
+            (s_ack_queue[index].frame[11] == AIR_ACK_RESULT_OK))
+        {
+            TelemetryAckItem selected = s_ack_queue[index];
+            s_ack_queue[index] = s_ack_queue[s_ack_tail]; s_ack_queue[s_ack_tail] = selected;
+            return;
+        }
+        index = TelemetryService_AckQueueNext(index);
+    }
+}
+
 static uint8_t TelemetryService_AckSend(void)
 {
+    uint8_t final_start = 0U;
     if (s_ack_tail == s_ack_head) { return 0U; }
+    TelemetryService_StartAckSelect();
     if (SYSTEM_TELEMETRY_TM_ENABLED != 0U)
     {
-    uint8_t final_start = (uint8_t)((s_ack_queue[s_ack_tail].frame[10] == AIR_CMD_START_MISSION) &&
+    final_start = (uint8_t)((s_ack_queue[s_ack_tail].frame[10] == AIR_CMD_START_MISSION) &&
         (s_ack_queue[s_ack_tail].frame[11] == AIR_ACK_RESULT_OK) && (s_tm_start_ack_completed == 0U));
+    if ((final_start != 0U) && (SystemTime_GetMonotonicUs() >= s_tm_cutover_deadline_us))
+    { s_ack_tail = TelemetryService_AckQueueNext(s_ack_tail); s_diagnostics.ack_queue_failure_count++; return 0U; }
     if ((final_start == 0U) && (SystemTime_GetMonotonicUs() < s_tm_next_ack_us)) { return 0U; }
     if (SsTm_SequenceRefresh(s_ack_queue[s_ack_tail].frame, AIR_ACK_LEN) != AIR_BUILD_OK)
     { s_ack_tail = TelemetryService_AckQueueNext(s_ack_tail); return 0U; }
@@ -1366,7 +1473,8 @@ static uint8_t TelemetryService_AckSend(void)
     {
         return 1U;
     }
-    s_ack_tail = TelemetryService_AckQueueNext(s_ack_tail);
+    if (final_start != 0U) { s_tm_start_ack_attempts++; }
+    else { s_ack_tail = TelemetryService_AckQueueNext(s_ack_tail); }
     s_tm_next_ack_us = SystemTime_GetMonotonicUs() + TELEMETRY_TM_ACK_PERIOD_US;
     return 1U;
 }
@@ -1416,6 +1524,9 @@ static uint8_t TelemetryService_StatusSend(void)
             return 0U;
         }
         if (TelemetryService_ControlSend(frame, length, NULL) != SYSTEM_DEVICE_OK) { return 1U; }
+        if ((SYSTEM_TELEMETRY_TM_ENABLED != 0U) && (event.status_id == AIR_STATUS_MISSION_START) &&
+            (event.repeats_remaining == TELEMETRY_STATUS_REPEAT_COUNT))
+        { s_tm_pending_start_event = 1U; s_tm_start_event_attempts++; return 1U; }
         s_status_tail = TelemetryService_QueueNext(s_status_tail);
         event.repeats_remaining--;
         if (event.repeats_remaining != 0U)
@@ -1778,9 +1889,12 @@ static SystemDeviceResult TelemetryService_ProtocolInitialize(void)
     { return SYSTEM_DEVICE_NOT_READY; }
     mode_result = SystemTelemetry_ModeSet(SYSTEM_TELEMETRY_HALF_DUPLEX);
     if ((mode_result != SYSTEM_DEVICE_OK) && (mode_result != SYSTEM_DEVICE_NOT_READY)) { return mode_result; }
-    s_tm_pending_id = 0U; s_tm_pending_since_us = 0ULL;
+    s_tm_pending_id = 0U; s_tm_pending_since_us = 0ULL; s_tm_guard_until_us = 0ULL;
     s_tm_cutover_requested = 0U; s_tm_start_ack_completed = 0U;
     s_tm_pending_start_ack = 0U; s_tm_mode_transmit_only = 0U;
+    s_tm_pending_start_event = 0U; s_tm_start_ack_attempts = 0U; s_tm_start_event_attempts = 0U;
+    s_tm_next_ack_us = 0ULL; (void)memset(s_tm_start_observed, 0, sizeof(s_tm_start_observed));
+    s_tm_stage_observed = 0U;
     s_tm_next_position_us = 0ULL; s_tm_next_health_us = 0ULL;
     s_tm_preflight_slot = 0U;
     TelemetryTm_Init();
@@ -1855,6 +1969,28 @@ SystemDeviceResult TelemetryService_Init(void)
     return SYSTEM_DEVICE_OK;
 }
 
+static uint8_t TelemetryService_DeadlineFits(uint64_t now_us,
+                                           uint64_t deadline_us,
+                                           uint64_t occupancy_us)
+{
+    if (deadline_us <= now_us) { return 0U; }
+    uint64_t remaining_us = deadline_us - now_us;
+    return (remaining_us >= occupancy_us) ||
+        ((occupancy_us - remaining_us) <= TELEMETRY_TM_DEADLINE_TOLERANCE_US);
+}
+
+static uint8_t TelemetryService_AuxiliaryFits(uint64_t now_us, uint64_t occupancy_us)
+{
+    SystemLifecycleState state = SystemLifecycle_GetState();
+    if ((state != SYSTEM_STATE_FLIGHT) && (state != SYSTEM_STATE_RECOVERY)) { return 1U; }
+    /* A due stream was already attempted. If its input is unavailable, retain
+     * diagnostic streams instead of waiting forever for a nonexistent sample. */
+    if (s_next_stream_us <= now_us) { return 1U; }
+    if ((SYSTEM_TELEMETRY_TM_PROFILE != 0U) || (s_tm_mode_transmit_only == 0U))
+    { occupancy_us += SYSTEM_TELEMETRY_TM_RX_GRANT_US; }
+    return TelemetryService_DeadlineFits(now_us, s_next_stream_us, occupancy_us);
+}
+
 static void TelemetryService_AuxiliarySend(uint64_t now_us)
 {
     uint8_t frame[AIR_MAX_FRAME_LEN];
@@ -1865,6 +2001,7 @@ static void TelemetryService_AuxiliarySend(uint64_t now_us)
     if ((state == SYSTEM_STATE_LANDED) || (state == SYSTEM_STATE_POSTFLIGHT))
     { health_period = 5000000ULL; position_period = 1000000ULL; }
     if ((now_us >= s_tm_next_position_us) &&
+        (TelemetryService_AuxiliaryFits(now_us, SYSTEM_TELEMETRY_TM_POSITION_AIRTIME_US) != 0U) &&
         (TelemetryTm_PositionBuild(now_us, frame, sizeof(frame), &length) == AIR_BUILD_OK) &&
         (TelemetryService_StreamFrameSend(frame, length) == SYSTEM_DEVICE_OK))
     {
@@ -1873,6 +2010,7 @@ static void TelemetryService_AuxiliarySend(uint64_t now_us)
         return;
     }
     if ((now_us >= s_tm_next_health_us) &&
+        (TelemetryService_AuxiliaryFits(now_us, SYSTEM_TELEMETRY_TM_HEALTH_AIRTIME_US) != 0U) &&
         (TelemetryTm_HealthBuild(now_us, frame, sizeof(frame), &length) == AIR_BUILD_OK) &&
         (TelemetryService_StreamFrameSend(frame, length) == SYSTEM_DEVICE_OK))
     {
@@ -1881,12 +2019,56 @@ static void TelemetryService_AuxiliarySend(uint64_t now_us)
     }
 }
 
+static uint8_t TelemetryService_StartEventSend(void)
+{
+    uint8_t index = s_status_tail;
+    for (uint8_t count = 0U; count < TELEMETRY_STATUS_QUEUE_DEPTH; count++)
+    {
+        if (index == s_status_head) { return 0U; }
+        if ((s_status_queue[index].status_id == AIR_STATUS_MISSION_START) &&
+            (s_status_queue[index].repeats_remaining == TELEMETRY_STATUS_REPEAT_COUNT))
+        {
+            TelemetryStatusEvent selected = s_status_queue[index];
+            s_status_queue[index] = s_status_queue[s_status_tail]; s_status_queue[s_status_tail] = selected;
+            return TelemetryService_StatusSend();
+        }
+        index = TelemetryService_QueueNext(index);
+    }
+    return 0U;
+}
+
+static uint64_t TelemetryService_NextDeadlineGet(uint64_t now_us)
+{
+    uint64_t deadline = UINT64_MAX;
+    SystemLifecycleState state = SystemLifecycle_GetState();
+    /* Due streams have already been attempted. A missing/invalid sample is
+     * not a future RF reservation and must not suppress ordinary events. */
+    if (s_tm_next_position_us > now_us) { deadline = s_tm_next_position_us; }
+    if ((s_next_stream_us > now_us) && (s_next_stream_us < deadline) &&
+        ((state == SYSTEM_STATE_FLIGHT) || (state == SYSTEM_STATE_RECOVERY)))
+    { deadline = s_next_stream_us; }
+    if ((s_tm_next_health_us > now_us) && (s_tm_next_health_us < deadline))
+    { deadline = s_tm_next_health_us; }
+    return deadline;
+}
+
 static void TelemetryService_TmSchedule(uint64_t now_us)
 {
-    if (s_tm_pending_id != 0U) { return; }
-    if (TelemetryService_AckSend() != 0U) { return; }
+    if ((s_tm_pending_id != 0U) || (now_us < s_tm_guard_until_us)) { return; }
+    TelemetryService_StartAckSelect();
+    if ((TelemetryService_IsPreflightState() != 0U) ||
+        ((s_ack_tail != s_ack_head) && (s_tm_start_ack_completed == 0U) &&
+         (s_ack_queue[s_ack_tail].frame[10] == AIR_CMD_START_MISSION) &&
+         (s_ack_queue[s_ack_tail].frame[11] == AIR_ACK_RESULT_OK)))
+    { if (TelemetryService_AckSend() != 0U) { return; } }
+    if (TelemetryService_StartEventSend() != 0U) { return; }
     if (TelemetryService_IsPreflightState() == 0U)
     {
+        if (SystemMissionProcess_TelemetryActiveGet() == 0U)
+        {
+            if (TelemetryService_AckSend() != 0U) { return; }
+            (void)TelemetryService_StatusSend(); return;
+        }
         /* One tracked RF transaction at a time. Ordinary latest-value streams
          * precede bounded event repeats, so an event burst cannot starve them. */
         TelemetryService_StreamSend();
@@ -1895,16 +2077,15 @@ static void TelemetryService_TmSchedule(uint64_t now_us)
         if (s_tm_pending_id != 0U) { return; }
         /* Reserve the next latest-value deadline before spending slack on a
          * repeat. A finite event storm must not consume future periodic slots. */
-        uint64_t deadline = s_tm_next_position_us;
+        uint64_t deadline = TelemetryService_NextDeadlineGet(now_us);
         uint64_t occupancy = SYSTEM_TELEMETRY_TM_EVENT_AIRTIME_US;
-        SystemLifecycleState state = SystemLifecycle_GetState();
-        if ((s_next_stream_us < deadline) &&
-            ((state == SYSTEM_STATE_FLIGHT) || (state == SYSTEM_STATE_RECOVERY))) { deadline = s_next_stream_us; }
-        if (s_tm_next_health_us < deadline) { deadline = s_tm_next_health_us; }
         if ((SYSTEM_TELEMETRY_TM_PROFILE != 0U) || (s_tm_mode_transmit_only == 0U))
         { occupancy += SYSTEM_TELEMETRY_TM_RX_GRANT_US; }
-        if ((deadline > now_us) && ((deadline - now_us) >= occupancy))
-        { (void)TelemetryService_StatusSend(); }
+        if (TelemetryService_DeadlineFits(now_us, deadline, occupancy) != 0U)
+        {
+            if (TelemetryService_AckSend() != 0U) { return; }
+            (void)TelemetryService_StatusSend();
+        }
         return;
     }
     /* Bounded round-robin for handshake, snapshots and periodic preflight
@@ -1937,7 +2118,9 @@ void TelemetryService_Process(void)
     if (SYSTEM_TELEMETRY_TM_ENABLED != 0U)
     {
     SsTm_TimeSet(SystemTime_GetMonotonicUs());
-    TelemetryTm_Observe(SystemTime_GetMonotonicUs());
+    if ((TelemetryService_IsPreflightState() != 0U) ||
+        (SystemMissionProcess_TelemetryActiveGet() != 0U))
+    { TelemetryTm_Observe(SystemTime_GetMonotonicUs()); }
     TelemetryService_ReceiptPoll(SystemTime_GetMonotonicUs());
     }
     TelemetryService_CapabilityTxPoll();
@@ -1945,6 +2128,7 @@ void TelemetryService_Process(void)
     if (SYSTEM_TELEMETRY_TM_ENABLED != 0U)
     {
         TelemetryService_MissionStartObserve();
+        TelemetryService_MissionStageObserve();
         TelemetryService_ModeProcess(SystemTime_GetMonotonicUs());
     }
     TelemetryService_ReceiveProcess();

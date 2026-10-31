@@ -18,6 +18,16 @@
 #include "system_imu_if.h"
 #include "system_inertial.h"
 #include "system_lifecycle.h"
+#include "system_mission_process.h"
+
+uint8_t SystemMissionProcess_TelemetryActiveGet(void) { return 1U; }
+
+SystemMissionProcessResult SystemMissionProcess_EventGet(uint32_t after_sequence,
+    SystemMissionProcessEvent *event)
+{
+    (void)after_sequence; (void)event;
+    return SystemMissionProcessResult_Unavailable;
+}
 #include "system_navigation_health.h"
 #include "system_sensor_status.h"
 #include "system_startup.h"

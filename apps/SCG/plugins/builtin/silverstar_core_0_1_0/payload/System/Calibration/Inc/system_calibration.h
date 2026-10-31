@@ -83,6 +83,30 @@ typedef struct
     uint8_t ready;
 } SystemCalibrationImuCorrection;
 
+/* Stable configured endpoint identity, not a sensor-unique hardware ID.
+ * Boot/session/epoch are deliberately excluded. Axis mapping belongs to the
+ * configuration digest. Baselines contain provider-body-frame quantities. */
+typedef struct
+{
+    uint32_t configuration_digest;
+    uint32_t driver_hash;
+    uint32_t model_hash;
+    uint16_t descriptor_id;
+    uint16_t physical_device_id;
+    uint8_t instance_id;
+} SystemCalibrationBaselineIdentity;
+
+typedef enum
+{
+    SystemCalibrationBaselineResult_Ok = 0U,
+    SystemCalibrationBaselineResult_InvalidArgument,
+    SystemCalibrationBaselineResult_Unsupported,
+    SystemCalibrationBaselineResult_DependencyChanged,
+    SystemCalibrationBaselineResult_Busy,
+    SystemCalibrationBaselineResult_GenerationExhausted,
+    SystemCalibrationBaselineResult_NotReady
+} SystemCalibrationBaselineResult;
+
 typedef struct
 {
     ImuSixFaceMeasurements six_face_measurements;
@@ -94,6 +118,7 @@ typedef struct
     uint32_t state_sequence;
     uint32_t face_event_sequence;
     uint32_t diagnostic_sequence;
+    uint32_t baseline_generation; /* Nonzero means correction includes SSIC kind3 baseline. */
     SystemCalibrationMode mode;
     SystemCalibrationState state;
     SystemCalibrationFace current_face;
@@ -109,6 +134,23 @@ typedef struct
 void SystemCalibration_Init(void);
 void SystemCalibration_Process(void);
 void SystemCalibration_ImuSampleProcess(const SystemInertialSample *sample);
+/* Trusted maintenance/storage integration boundary; no candidate kind2 is
+ * accepted here. Caller must establish capture and solution qualification.
+ * Full absolute task calibration replaces a baseline; it is never stacked. */
+SYSTEM_WARN_UNUSED_RESULT SystemCalibrationBaselineResult
+SystemCalibration_BaselineApply(const SystemCalibrationBaselineIdentity *identity,
+    const SystemCalibrationImuCorrection *correction, uint32_t expected_generation,
+    uint32_t *applied_generation);
+/* The active installation transaction retains its private generation token
+ * through baseline publication and active-record publication. Ordinary CAL
+ * continuation cannot borrow or release this owner's resource. */
+SYSTEM_WARN_UNUSED_RESULT SystemCalibrationBaselineResult
+SystemCalibration_BaselineApplyOwned(const SystemCalibrationBaselineIdentity *identity,
+    const SystemCalibrationImuCorrection *correction, uint32_t expected_generation,
+    uint32_t *applied_generation, uint32_t active_owner_token);
+SYSTEM_WARN_UNUSED_RESULT SystemCalibrationBaselineResult
+SystemCalibration_BaselineGet(SystemCalibrationBaselineIdentity *identity,
+    SystemCalibrationImuCorrection *correction, uint32_t *generation);
 SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemCalibration_Start(
     SystemCalibrationMode mode);
 SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemCalibration_FaceCollect(

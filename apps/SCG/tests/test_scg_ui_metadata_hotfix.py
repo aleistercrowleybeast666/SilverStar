@@ -2,7 +2,6 @@ from dataclasses import replace
 import time
 import json
 import hashlib
-from uuid import uuid4
 import yaml
 
 import pytest
@@ -20,10 +19,11 @@ from test_f103_ground_reference import _GroundF103Model_Get
 
 @pytest.fixture
 def window(qapp, workspace_root, tmp_path):
-    # System Temp is outside the service policy on Windows. Keep settings private
-    # and inside the actual workspace without weakening PathPreferences checks.
-    settings_root = workspace_root / ".work" / "gui_settings" / uuid4().hex[:8]
-    current = MainWindow(SettingsStore(settings_root / "scg.ini"), service=FccgService(workspace_root))
+    # This test owns only its pytest temporary root. Keep real path validation
+    # while avoiding persistent UUID settings directories in the source tree.
+    service = FccgService(workspace_root)
+    service.policy = WorkspacePolicy(tmp_path)
+    current = MainWindow(SettingsStore(tmp_path / "gui_settings" / "scg.ini"), service=service)
     current._MessageBox_Exec = lambda *args, **kwargs: QMessageBox.StandardButton.Discard
     yield current
     current.close()
@@ -231,11 +231,15 @@ def test_ground_eide_tool_prefix_matches_make_override(workspace_root, prefix):
         assert target["toolchainConfigMap"]["GCC"]["options"]["global"]["toolPrefix"] == expected
 
 
-def test_algorithm_parameter_region_collapses_without_changing_values(window):
+def test_algorithm_advanced_region_collapses_without_changing_values(window):
+    from silverstar_fccg.ui.widgets import CollapsibleSection
     window._model = _GroundF103Model_Get(window._service.catalog)
     window._Project_Refresh()
     page = window.algorithm_parameters_page
-    section = page.parameters_section
+    def advanced_section():
+        return next(section for section in page.parameters_section.findChildren(CollapsibleSection)
+                    if section.toggle_button.text() == window._translator.Text_Get("algorithm_parameters.advanced"))
+    section = advanced_section()
     before = json.dumps(window._model.Dictionary_Get(), sort_keys=True)
     assert not section.Expanded_Is()
     assert section.body.isHidden()
@@ -243,19 +247,20 @@ def test_algorithm_parameter_region_collapses_without_changing_values(window):
     assert section.Expanded_Is()
     assert not section.body.isHidden()
     window.Language_Apply("en_US")
+    section = advanced_section()
     assert section.Expanded_Is()
-    assert section.toggle_button.text() == window._translator.Text_Get("navigation.parameters")
+    assert section.toggle_button.text() == window._translator.Text_Get("algorithm_parameters.advanced")
     assert section.toggle_button.objectName() == "collapsibleHeader"
     section.toggle_button.click()
     assert section.body.isHidden()
     assert json.dumps(window._model.Dictionary_Get(), sort_keys=True) == before
 
 
-def test_new_draft_enables_ground_without_changing_reference_or_existing_projects(workspace_root, tmp_path):
+def test_new_draft_has_editable_ground_and_migrates_old_disabled_configuration(workspace_root, tmp_path):
     from silverstar_fccg.project.model import ProjectModel_Parse
     service = FccgService(workspace_root)
     draft = service.ProjectDraft_Create("NewGroundDefault")
-    assert draft.ground_target.enabled
+    assert 'enabled' not in draft.Dictionary_Get()['ground_target']
     assert draft.ground_target.radio_plugin == "silverstar.device.telemetry.sx1281"
     assert draft.ground_target.module_variant == "e28_2g4m12sx"
     assert draft.ground_target.pc_interface == "uart"
@@ -264,23 +269,24 @@ def test_new_draft_enables_ground_without_changing_reference_or_existing_project
     service.ProjectRoot_Save(draft, draft_root, create_new=True)
     assert service.Project_Open(draft_root).ground_target == draft.ground_target
     assert not draft.ground_target.board and not draft.ground_target.mcu
-    assert not service.ReferenceProject_Create("Reference").ground_target.enabled
+    assert not service.ReferenceProject_Create("Reference").ground_target.mcu
     old = draft.Dictionary_Get()
+    old['format_version'] = 23
     old["ground_target"]["enabled"] = False
-    assert not ProjectModel_Parse(old).ground_target.enabled
+    assert ProjectModel_Parse(old).ground_target == draft.ground_target
 
 
-def test_flight_export_with_empty_enabled_ground_matches_disabled_ground(workspace_root, tmp_path):
+def test_flight_export_is_independent_of_ground_private_configuration(workspace_root, tmp_path):
     from silverstar_fccg.project.model import GroundTargetConfiguration
     service = FccgService(workspace_root)
     model = service.ReferenceProject_Create("FlightOnly")
-    model.ground_target = GroundTargetConfiguration(enabled=True)
+    model.ground_target = GroundTargetConfiguration()
     enabled_root = tmp_path / "enabled_ground"
     disabled_root = tmp_path / "disabled_ground"
     TargetGeneration_Apply(model, service.catalog, service.policy, enabled_root, TargetScope.FLIGHT)
-    assert model.ground_target.enabled
+    assert not model.ground_target.mcu
     assert not (enabled_root / "Ground_Station/Makefile").exists()
-    model.ground_target = replace(model.ground_target, enabled=False)
+    model.ground_target = replace(model.ground_target, baudrate=115200)
     TargetGeneration_Apply(model, service.catalog, service.policy, disabled_root, TargetScope.FLIGHT)
     def firmware_files(root):
         return {p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
@@ -294,11 +300,11 @@ def test_qt_flight_button_exports_with_enabled_unconfigured_ground(qapp, window,
     from silverstar_fccg.project.model import GroundTargetConfiguration
     from silverstar_fccg.project.air_link import GroundTargetIssues_Get
     window._model = window._service.ReferenceProject_Create("QtFlightOnly")
-    window._model.ground_target = GroundTargetConfiguration(enabled=True)
+    window._model.ground_target = GroundTargetConfiguration()
     window._project_root = tmp_path / "qt_flight_only"
     window._Project_Refresh()
     ground = window._model.ground_target
-    assert ground.enabled and not ground.mcu and not ground.radio_instances
+    assert not ground.mcu and not ground.radio_instances
     assert GroundTargetIssues_Get(window._model, window._service.catalog)
     assert window.air_link_page.fields["frequency_hz"].isEnabled()
     assert window.air_link_page.flight_tx_power.isEnabled()
@@ -310,10 +316,11 @@ def test_qt_flight_button_exports_with_enabled_unconfigured_ground(qapp, window,
         plans.append(plan)
         return original_plan(plan)
     monkeypatch.setattr(window, "_GenerationPlan_ApplyAllowed", observe_plan)
-    window.pages.setCurrentWidget(window.board_hardware_page)
+    window.pages.setCurrentWidget(window.build_page)
     window.show()
     qapp.processEvents()
     button = window.board_hardware_page.generate_button
+    assert window.build_page.target_action_layouts["flight"].indexOf(button) >= 0
     assert button.isEnabled() and button.isVisible()
     QTest.mouseClick(button, Qt.MouseButton.LeftButton)
     assert window._active_worker is not None
@@ -333,4 +340,4 @@ def test_qt_flight_button_exports_with_enabled_unconfigured_ground(qapp, window,
     # Flight-only generation must not materialize any Ground payload.
     assert not any(path.is_file() for path in (root / "Ground_Station").rglob("*"))
     descriptor = json.loads((root / "SilverStar.ssproject").read_text(encoding="utf8"))
-    assert descriptor["ground_target"]["enabled"] is True
+    assert 'enabled' not in descriptor['ground_target']

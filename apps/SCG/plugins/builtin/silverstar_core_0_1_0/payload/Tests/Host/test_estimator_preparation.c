@@ -5,6 +5,8 @@
 #include "../../APP/Src/estimator_task.c"
 #include "test_common.h"
 #include "system_gnss_quality.h"
+#include "project_device_instances.h"
+#include "system_navigation_backend.h"
 
 static uint64_t s_test_now = 1000000ULL;
 static uint8_t s_test_alignment_ready = 1U;
@@ -34,6 +36,20 @@ SystemDeviceResult SystemSourceSelector_ImuActiveInstanceGet(uint8_t *instance)
 { *instance = 0U; return SYSTEM_DEVICE_OK; }
 SystemDeviceResult SystemSourceSelector_GnssActiveInstanceGet(uint8_t *instance)
 { *instance = s_test_gnss_source; return SYSTEM_DEVICE_OK; }
+/* This preparation fixture has no magnetic endpoint or saved correction.
+ * The real augmented backend must preserve its unbound magnetic state. */
+SystemDeviceResult ProjectDeviceInstance_DescriptorGet(SystemDeviceClass device_class,
+    uint8_t instance_id, SystemDeviceDescriptor *descriptor)
+{
+    (void)device_class; (void)instance_id;
+    return (descriptor == NULL) ? SYSTEM_DEVICE_INVALID_ARGUMENT : SYSTEM_DEVICE_NOT_PRESENT;
+}
+SystemDeviceResult ProjectMagnetometerInstance_LatestSampleGet(
+    uint8_t instance_id, SystemMagnetometerSample *sample)
+{
+    (void)instance_id;
+    return (sample == NULL) ? SYSTEM_DEVICE_INVALID_ARGUMENT : SYSTEM_DEVICE_NOT_PRESENT;
+}
 void vTaskDelay(TickType_t ticks) { s_test_now += (uint64_t)ticks * 1000ULL; }
 
 static void Test_Collect(uint8_t gnss_available)
@@ -161,6 +177,13 @@ int main(void)
     EstimatorPreparationSnapshot preparation;
     EstimatorOutputSnapshot initial = {0};
     uint32_t generation;
+    if (SYSTEM_BUILD_AUGMENTED_ENABLED != 0U)
+    {
+        /* Unlike the KF6 path, this backend explicitly requires the real
+         * calibration service's initialized identity, even in this Host test. */
+        SystemCalibration_Init();
+        TEST_CHECK(SystemCalibration_IsReady() != 0U);
+    }
     TEST_CHECK(EstimatorBus_Init() == ESTIMATOR_BUS_RESULT_OK);
     TEST_CHECK(EstimatorTask_OriginsReset() == SYSTEM_DEVICE_OK);
     Test_Collect(0U);
@@ -177,13 +200,25 @@ int main(void)
         TEST_CHECK(EstimatorTask_FreezeOrigins() == SYSTEM_DEVICE_OK);
         TEST_CHECK(s_estimator.gnss_origin_valid == 0U);
         TEST_CHECK(s_estimator.gnss_fusion_enabled == 0U);
-        TEST_CHECK(EstimatorTask_PrepareNavigation() == SYSTEM_DEVICE_OK);
-        TEST_CHECK(EstimatorTask_PreparationGet(&preparation) == SYSTEM_DEVICE_OK);
-        TEST_CHECK(preparation.initialized == 1U && preparation.last_result == SYSTEM_DEVICE_OK);
-        TEST_CHECK(Estimator_GetLatestSnapshot(&initial) != 0U);
-        TEST_CHECK(initial.gnss_origin_valid == 0U && initial.baro_origin_valid == 1U);
-        if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
-        { TEST_CHECK((initial.health_flags & ESTIMATOR_HEALTH_GNSS_ORIGIN_UNAVAILABLE) != 0U); }
+        if (SYSTEM_BUILD_AUGMENTED_ENABLED != 0U)
+        {
+            /* The augmented backend requires a measured geodetic origin.
+             * Optional alignment does not manufacture that model input. */
+            TEST_CHECK(EstimatorTask_PrepareNavigation() == SYSTEM_DEVICE_NOT_READY);
+            TEST_CHECK(EstimatorTask_PreparationGet(&preparation) == SYSTEM_DEVICE_OK);
+            TEST_CHECK(preparation.initialized == 0U);
+            TEST_CHECK(Estimator_GetLatestSnapshot(&initial) == 0U);
+        }
+        else
+        {
+            TEST_CHECK(EstimatorTask_PrepareNavigation() == SYSTEM_DEVICE_OK);
+            TEST_CHECK(EstimatorTask_PreparationGet(&preparation) == SYSTEM_DEVICE_OK);
+            TEST_CHECK(preparation.initialized == 1U && preparation.last_result == SYSTEM_DEVICE_OK);
+            TEST_CHECK(Estimator_GetLatestSnapshot(&initial) != 0U);
+            TEST_CHECK(initial.gnss_origin_valid == 0U && initial.baro_origin_valid == 1U);
+            if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
+            { TEST_CHECK((initial.health_flags & ESTIMATOR_HEALTH_GNSS_ORIGIN_UNAVAILABLE) != 0U); }
+        }
     }
 #if (SYSTEM_BUILD_ESTIMATOR_ENABLED != 0U)
     {
@@ -279,5 +314,30 @@ int main(void)
     Test_GnssHealthVarianceScale();
     Test_GnssHealthProducerVariance();
 #endif
+    if (SYSTEM_BUILD_AUGMENTED_ENABLED != 0U)
+    {
+        EstimatorOutputSnapshot backend = {0};
+        s_test_lifecycle = SYSTEM_STATE_PREFLIGHT;
+        TEST_CHECK(EstimatorTask_OriginsReset() == SYSTEM_DEVICE_OK);
+        Test_Collect(1U);
+        TEST_CHECK(EstimatorTask_PrepareNavigation() == SYSTEM_DEVICE_OK);
+        TEST_CHECK(SystemNavigationBackend_SnapshotGet(&backend) == SYSTEM_DEVICE_OK);
+        TEST_CHECK(backend.baro_origin_valid == 1U && backend.baro_update_count == 0U);
+        TEST_CHECK(SystemNavigationBackend_Initialize(s_estimator.q_nb,
+            &s_estimator.frozen_gnss, 0.0f, 0U, preparation.generation, 0U) == SYSTEM_DEVICE_OK);
+        TEST_CHECK(SystemNavigationBackend_SnapshotGet(&backend) == SYSTEM_DEVICE_OK);
+        TEST_CHECK(backend.baro_origin_valid == 0U && backend.baro_update_count == 0U);
+        TEST_CHECK(SystemNavigationBackend_Initialize(s_estimator.q_nb,
+            &s_estimator.frozen_gnss, 0.0f, 2U, preparation.generation, 0U) == SYSTEM_DEVICE_INVALID_ARGUMENT);
+        TEST_CHECK(SystemNavigationBackend_SnapshotGet(&backend) == SYSTEM_DEVICE_NOT_READY);
+        TEST_CHECK(backend.initialized == 0U && backend.mission_running == 0U);
+        TEST_CHECK(SystemNavigationBackend_Initialize(s_estimator.q_nb,
+            &s_estimator.frozen_gnss, 0.0f, 1U, preparation.generation, 0U) == SYSTEM_DEVICE_OK);
+        TEST_CHECK(SystemNavigationBackend_SnapshotGet(&backend) == SYSTEM_DEVICE_OK);
+        TEST_CHECK(backend.baro_origin_valid == 1U && backend.baro_update_count == 0U);
+        SystemNavigationBackend_Reset();
+        TEST_CHECK(SystemNavigationBackend_SnapshotGet(&backend) == SYSTEM_DEVICE_NOT_READY);
+        TEST_CHECK(backend.initialized == 0U && backend.mission_running == 0U);
+    }
     return Test_Finish("estimator_preparation_actual");
 }

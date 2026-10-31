@@ -200,16 +200,16 @@ def test_indicator_group_and_protocol_names_are_localized(
             "maintenance",
             "logging",
         }
-        assert all(
-            combo.count() == 2
-            for combo in window.flight_configuration_page.protocol_combos.values()
-        )
+        assert {category: combo.count() for category, combo in
+                window.flight_configuration_page.protocol_combos.items()} == {
+                    "telemetry": 2, "maintenance": 3, "logging": 2}
+        assert window.flight_configuration_page.protocol_combos["telemetry"].isHidden()
         assert {
             category: combo.currentText()
             for category, combo in window.flight_configuration_page.protocol_combos.items()
         } == {
-            "telemetry": "AIR遥测协议 M0",
-            "maintenance": "串口维护协议 0.0",
+            "telemetry": "SS-TM-S 0.1",
+            "maintenance": "串口维护协议 0.1",
             "logging": "飞行日志格式 0.0",
         }
 
@@ -218,8 +218,8 @@ def test_indicator_group_and_protocol_names_are_localized(
             category: combo.currentText()
             for category, combo in window.flight_configuration_page.protocol_combos.items()
         } == {
-            "telemetry": "AIR Telemetry Protocol M0",
-            "maintenance": "Serial Maintenance Protocol 0.0",
+            "telemetry": "SS-TM-S 0.1",
+            "maintenance": "Serial Maintenance Protocol 0.1",
             "logging": "Flight Log Format 0.0",
         }
     finally:
@@ -249,7 +249,7 @@ def test_build_page_tool_roles_and_missing_tool_gates(tmp_path: Path, qapp) -> N
     page = window.build_page
     try:
         page.Targets_Set(
-            flight_generated=True, ground_enabled=False, ground_generated=False
+            flight_generated=True, ground_configured=False, ground_generated=False
         )
         assert not hasattr(page, "toolchain_status")
         assert not hasattr(page, "tool_path_combo")

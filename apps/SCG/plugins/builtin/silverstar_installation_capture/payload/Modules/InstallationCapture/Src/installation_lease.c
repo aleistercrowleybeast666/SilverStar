@@ -1,6 +1,7 @@
 #include "installation_capture.h"
 #include "system_installation_capture_if.h"
 #include "silverstar_assert.h"
+#include "system_installation_active_if.h"
 
 SystemDeviceResult SystemInstallationCapture_OperationBegin(
     SystemInstallationOperation operation,uint8_t continuation)
@@ -23,4 +24,17 @@ uint8_t SystemInstallationCapture_OperationHeld(SystemInstallationOperation oper
 {return InstallationCapture_OperationHeld((uint8_t)operation);}
 
 void SystemInstallationCapture_DependenciesChanged(void)
-{InstallationCapture_DependenciesChanged();}
+{InstallationCapture_DependenciesChanged();SystemInstallationActive_DependenciesChanged();}
+
+SystemDeviceResult SystemInstallationCapture_StartClaim(uint8_t from_alignment,uint32_t *token)
+{
+    InstallationCaptureResult result=InstallationCapture_StartClaim(from_alignment,token);
+    return result==InstallationCaptureResult_Ok?SYSTEM_DEVICE_OK:SYSTEM_DEVICE_BUSY;
+}
+
+void SystemInstallationCapture_StartRelease(uint32_t token,uint8_t restore_alignment)
+{
+    InstallationCaptureResult result=InstallationCapture_StartRelease(token,restore_alignment);
+    SILVERSTAR_ASSERT(result==InstallationCaptureResult_Ok||result==InstallationCaptureResult_Stale,
+        SILVERSTAR_ASSERT_MODULE_MODULES,SILVERSTAR_ASSERT_REASON_SEQUENCE_INVARIANT);
+}

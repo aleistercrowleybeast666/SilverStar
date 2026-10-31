@@ -92,7 +92,7 @@ def Architecture_Check(root: Path) -> dict:
         raise ValueError('wrong target role')
     family = metadata.get('radio_family')
     adapters = {'sx128x': 'Ground/Radio/Src/ground_radio_sx1281.c',
-                'nrf24': 'Ground/Radio/Src/ground_radio_nrf24.c'}
+                'sx127x': 'Ground/Radio/Src/ground_radio_sx1278.c'}
     if family not in adapters or adapters[family] not in graph['sources']:
         raise ValueError('selected backend adapter missing')
     for other, path in adapters.items():
@@ -100,33 +100,26 @@ def Architecture_Check(root: Path) -> dict:
             raise ValueError('unselected backend adapter present')
     air = (root / 'Generated/Inc/air_link_config.h').read_text(encoding='utf-8')
     resource = (root / 'Generated/Inc/project_resources.h').read_text(encoding='utf-8')
-    if family == 'nrf24':
-        required = ('Devices/Telemetry/NRF24L01P/Src/nrf24_device.c',
-                    'Devices/Telemetry/NRF24L01P/Src/nrf24_fragment.c')
-        if any(path not in graph['sources'] for path in required):
-            raise ValueError('NRF backend implementation missing')
+    if 'AIR_LINK_NRF24' in air or any('/NRF24' in path for path in graph['sources']):
+        raise ValueError('removed NRF implementation in active graph')
+    if 'Ground/Radio/Src/ground_radio_tm.c' not in graph['sources']:
+        raise ValueError('shared S-session direction policy missing')
+    if family == 'sx127x':
+        if 'Devices/Telemetry/SX1278/Src/sx1278_device.c' not in graph['sources']:
+            raise ValueError('SX1278 backend implementation missing')
         if any('/SX128' in path for path in graph['sources']):
-            raise ValueError('SX implementation in NRF graph')
-        if 'AIR_LINK_NRF24_CHANNEL' not in air or 'AIR_LINK_SX128' in air:
-            raise ValueError('NRF backend header mismatch')
-        for macro in ('PROJECT_NRF24_INSTANCE_COUNT', 'PROJECT_NRF24_INSTANCE_COUNT_MAX'):
+            raise ValueError('SX128 implementation in SX1278 graph')
+        for macro in ('PROJECT_SX1278_INSTANCE_COUNT', 'PROJECT_SX1278_INSTANCE_COUNT_MAX'):
             if not re.search(r'#define\s+' + macro + r'\s+1U\b', resource):
-                raise ValueError('NRF instance bound mismatch')
-        if any(' ' + field + ';' not in resource for field in ('spi', 'csn', 'ce', 'time')):
-            raise ValueError('NRF resource binding missing')
-        bindings = (root / 'Generated/Src/project_resources.c').read_text(encoding='utf-8')
-        rows = re.findall(r'\{\s*\.spi\s*=\s*([^,{}]+)\s*,\s*\.csn\s*=\s*([^,{}]+)\s*,\s*\.ce\s*=\s*([^,{}]+)\s*,\s*\.time\s*=\s*([^,{}]+)\s*\}', bindings)
-        if len(rows) != 1:
-            raise ValueError('NRF resource ownership collision or missing row')
-        indices = [ResourceIndex_Get(root, expression, kind) for expression, kind in zip(rows[0], ('spi', 'gpio', 'gpio', 'time'))]
-        if indices[1] == indices[2]:
-            raise ValueError('NRF resource ownership collision or missing row')
-        ground_header = (root / 'Generated/Inc/ground_radio_config.h').read_text(encoding='utf-8')
-        if not re.search(r'#define\s+GROUND_RADIO_BACKEND_NRF24\s+1U\b', ground_header):
-            raise ValueError('NRF metric capability dispatch missing')
-    else:
-        if 'AIR_LINK_NRF24' in air or any('/NRF24' in path for path in graph['sources']):
-            raise ValueError('NRF implementation in SX graph')
+                raise ValueError('SX1278 instance bound mismatch')
+        if any(' ' + field + ';' not in resource for field in ('spi','nss','reset','dio0','time','rx_en','tx_en')):
+            raise ValueError('SX1278 explicit front-end binding missing')
+        expected = {'FREQUENCY_HZ':'433000000UL','TX_POWER_DBM':'17','SPREADING_FACTOR':'7U',
+                    'BANDWIDTH_HZ':'125000UL','CODING_RATE_DENOMINATOR':'5U',
+                    'PREAMBLE_SYMBOLS':'16U','PACKET_MTU':'61U'}
+        for field,value in expected.items():
+            if not re.search(r'#define\s+AIR_LINK_' + field + r'\s+' + value + r'\b',air):
+                raise ValueError('SX1278 E32 fixed PHY mismatch: ' + field)
     print(f'PASS Ground declared source graph ({len(sources)} sources), ownership and startup')
     print('Critical-contract manual review, call graph, stack and MCU timing: NOT PROVEN')
     return graph

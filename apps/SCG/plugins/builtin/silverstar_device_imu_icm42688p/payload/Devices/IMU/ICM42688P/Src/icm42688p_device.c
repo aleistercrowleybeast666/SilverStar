@@ -1,6 +1,8 @@
 #include "icm42688p_device.h"
 
-/* https://invensense.tdk.com/wp-content/uploads/2021/06/DS-000347-ICM-42688-P-v1.5.pdf; raw 200 Hz, 50 Hz UI filter, no APEX/DMP. */
+/* TDK DS-000347 rev1.9 sections 12.6/12.7: clear INT_ASYNC_RESET and
+ * scale internal-clock FIFO ticks by 32/30. Raw 200 Hz; no APEX/DMP.
+ * Native output epochs remain distinct from physical measurement time. */
 static const SensorImuProfile s_profile =
 {
     .name = "ICM42688P",
@@ -16,11 +18,12 @@ static const SensorImuProfile s_profile =
     .temperature_scale_c = 1.0F / 132.48F, .temperature_offset_c = 25.0F,
     .fifo_count_register = 0x2EU, .fifo_data_register = 0x30U,
     .fifo_frame_length = 16U, .fifo_format = 2U, .fifo_capacity = 2048U,
-    .register_count = 12U,
+    .fifo_timestamp_32_over_30 = 1U, .register_count = 13U,
     .registers = {{0x76U, 0U, 7U}, {0x16U, 0x40U, 0xC0U},
         {0x4CU, 0x30U, 0xF0U}, {0x4DU, 1U, 7U},
         {0x4FU, 7U, 0xEFU}, {0x50U, 7U, 0x6FU},
-        {0x52U, 0x33U, 0xFFU}, {0x14U, 3U, 7U}, {0x65U, 8U, 8U}, {0x54U, 1U, 0x1FU}, {0x5FU, 0x0FU, 0x7FU}, {0x4EU, 0x0FU, 0x3FU}}
+        {0x52U, 0x33U, 0xFFU}, {0x14U, 3U, 7U}, {0x64U, 0U, 0x10U},
+        {0x65U, 8U, 8U}, {0x54U, 1U, 0x1FU}, {0x5FU, 0x0FU, 0x7FU}, {0x4EU, 0x0FU, 0x3FU}}
 };
 const SensorImuProfile *Icm42688P_ProfileGet(void)
 {

@@ -28,7 +28,7 @@ def _GroundF103Model_Get(catalog):
         for item in BoardResourceProvisions_Get(board)
     )
     model.ground_target = GroundTargetConfiguration(
-        enabled=True,
+        
         mcu="silverstar.mcu.stm32f103c8t6",
         board=board.component_id,
         hardware=HardwareConfiguration(

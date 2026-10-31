@@ -1,4 +1,5 @@
 from dataclasses import replace
+import json
 from PySide6.QtWidgets import QFormLayout, QLabel, QWidget
 
 from silverstar_fccg.core.i18n import Translator
@@ -51,7 +52,7 @@ def test_capability_source_editor_is_removed_on_reorder_and_language(qapp):
 
 def test_ground_uart_baud_tracks_bound_resource_and_legacy_project(builtin_catalog):
     model = ReferenceProject_Create("BaudSync", catalog=builtin_catalog)
-    model.ground_target = replace(model.ground_target, enabled=True,
+    model.ground_target = replace(model.ground_target, 
         board="silverstar.board.ground_station_0_5", pc_interface="uart",
         baudrate=9600, hardware=replace(model.ground_target.hardware, mode="board_plugin"))
     reopened = ProjectModel_Parse(model.Dictionary_Get())
@@ -74,7 +75,6 @@ def test_ground_pc_page_omits_baud_row_while_model_keeps_it(qapp, tmp_path,
     window = MainWindow(SettingsStore(tmp_path / "settings.ini"),
                         service=FccgService(workspace_root))
     window._GroundBoard_Change("silverstar.board.ground_station_0_5")
-    window._GroundTarget_Change("enabled", True)
     window._GroundTarget_Change("pc_interface", "uart")
     page = window.ground_target_page
     for language in ("zh_CN", "en_US"):
@@ -95,20 +95,25 @@ def test_old_disabled_ground_opens_as_configurable_target(qapp, tmp_path,
                                                            workspace_root):
     service = FccgService(workspace_root)
     old = service.ProjectDraft_Create("OldGround")
-    old.ground_target = replace(old.ground_target, enabled=False)
     root = tmp_path / "old_ground"
     service.ProjectRoot_Save(old, root, create_new=True)
+    project_file = root / 'SilverStar.ssproject'
+    legacy = json.loads(project_file.read_text(encoding='utf-8'))
+    legacy['format_version'] = 23
+    legacy['ground_target']['enabled'] = False
+    project_file.write_text(json.dumps(legacy), encoding='utf-8')
+    saved_bytes = project_file.read_bytes()
     window = MainWindow(SettingsStore(tmp_path / "settings.ini"), service=service)
     window._Project_Open(root)
-    assert window._model.ground_target.enabled
-    assert not service.Project_Open(root).ground_target.enabled
+    assert window._model.ground_target == old.ground_target
+    assert project_file.read_bytes() == saved_bytes
     window._GroundBoard_Change("silverstar.board.ground_station_0_5")
     assert window.ground_target_page.generate_button.isEnabled()
     result = TargetGeneration_Apply(window._model, service.catalog, service.policy,
                                     root, TargetScope.GROUND)
     assert result.targets == ("Ground_Station",)
     assert (root / "Ground_Station/Makefile").is_file()
-    assert service.Project_Open(root).ground_target.enabled
+    assert 'enabled' not in service.Project_Open(root).Dictionary_Get()['ground_target']
     window.close()
 
 
@@ -154,10 +159,9 @@ def test_telemetry_cards_share_details_and_remove_geometry(qapp, tmp_path, works
     window.resize(1280, 800)
     window.show()
     window._GroundBoard_Change("silverstar.board.ground_station_0_5")
-    window._GroundTarget_Change("enabled", True)
     window._GroundTarget_Change("radio_plugin", "silverstar.device.telemetry.sx1281")
     window._GroundTarget_Change("module_variant", "e28_2g4m12sx")
-    window.pages.setCurrentWidget(window.air_link_page)
+    window.pages.setCurrentWidget(window.hardware_workspace)
     qapp.processEvents()
     flight = window.devices_page.remove_buttons["telemetry0"]
     ground_editor = window.ground_target_page.radio_instances_editor
@@ -188,8 +192,10 @@ def test_telemetry_cards_share_details_and_remove_geometry(qapp, tmp_path, works
     assert not [widget for widget in window.devices_page.telemetry_group.findChildren(QWidget)
                 if widget.objectName() == "deviceCapabilitySummary_telemetry0"
                 and widget.isVisible()]
-    assert len([widget for widget in window.findChildren(QWidget)
-                if widget.objectName() == "protocolProfile_telemetry" and widget.isVisible()]) == 1
+    assert not [widget for widget in window.findChildren(QWidget)
+                if widget.objectName() == "protocolProfile_telemetry" and widget.isVisible()]
+    assert len([label for label in window.flight_configuration_page.telemetry_protocol_group.findChildren(QLabel)
+                if label.isVisible() and label.text() == window._translator.Text_Get('telemetry.single_s')]) == 1
     window._DeviceInstance_Add("telemetry")
     primary = window._model.ground_target
     radios = (GroundRadioConfiguration("radio0", primary.radio_plugin,
@@ -217,8 +223,10 @@ def test_telemetry_cards_share_details_and_remove_geometry(qapp, tmp_path, works
     visible_rows = [row for row in ground_editor.findChildren(QWidget)
                     if row.objectName() == "groundRadioRow_radio0" and row.isVisible()]
     assert len(visible_rows) == 1
-    assert len([widget for widget in window.findChildren(QWidget)
-                if widget.objectName() == "protocolProfile_telemetry" and widget.isVisible()]) == 1
+    assert not [widget for widget in window.findChildren(QWidget)
+                if widget.objectName() == "protocolProfile_telemetry" and widget.isVisible()]
+    assert len([label for label in window.flight_configuration_page.telemetry_protocol_group.findChildren(QLabel)
+                if label.isVisible() and label.text() == window._translator.Text_Get('telemetry.single_s')]) == 1
     window.close()
 
 
@@ -243,7 +251,7 @@ def test_memory_layout_legacy_is_read_only_only_for_older_projects(qapp, builtin
 
 def test_ground_led_intent_without_board_reports_missing_resource(builtin_catalog):
     model = ReferenceProject_Create("LedIntent", catalog=builtin_catalog)
-    ground = replace(model.ground_target, enabled=True, activity_led_enabled=True)
+    ground = replace(model.ground_target,  activity_led_enabled=True)
     assert "GROUND_LED_OUTPUT_UNBOUND" in {
         issue.code for issue in GroundActivityLedIssues_Get(ground)}
 
@@ -252,7 +260,7 @@ def test_ground_led_checkbox_stores_intent_without_board(qapp, tmp_path, workspa
     window = MainWindow(SettingsStore(tmp_path / "settings.ini"),
                         service=FccgService(workspace_root))
     ground = window._model.ground_target
-    window._model.ground_target = replace(ground, enabled=True, board="")
+    window._model.ground_target = replace(ground,  board="")
     window._Project_Refresh()
     checkbox = window.ground_target_page.activity_led_enabled
     assert checkbox.isEnabled() and not checkbox.isChecked()

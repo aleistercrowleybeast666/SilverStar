@@ -191,7 +191,9 @@ velocity_U_std  = max(sAcc_U * scale, velocity_floor) * gnss_velocity_vertical_s
 
 Device推荐值与可选User override在构建`SystemEstimatorProfile`时解析为明确最终数值；START沿用Lifecycle既有顺序冻结该Profile，飞行阶段只消费冻结结果。飞行日志格式0.0的`SYSTEM_CONFIG`继续写入最终生效的过程噪声、GNSS floor和气压标准差，不记录来源标签，也不改变Record布局。
 
-## 9. NIS门控与GNSS重捕获
+## 9. NIS门控与KF6 GNSS恢复融合
+
+`SYSTEM_ESTIMATOR_GNSS_REACQUIRE_ENABLE` 默认值为 1。当前 `navigation_kf_horizon.c` 和 replay owner 都真实调用分组恢复；`project/gnss_reacquisition.py` 的禁用门禁仅属于 ESKF15 v0.4.0 的另一项实验策略，不关闭 KF6。恢复融合不启动接收机重搜星，不重新获取预飞许可。
 
 - 3D soft 11.345，hard 16.266；
 - 2D soft 9.210，hard 13.816；
@@ -210,7 +212,7 @@ self_residual = (p_gnss[k] - p_gnss[k-1]) - predicted_delta_p
 
 E/N使用水平norm，U独立使用绝对值；容差同时包含hAcc/vAcc、sAcc、dt、用户floor与不确定度倍率。速度组使用`|delta_v| <= configured_max_acceleration * dt + accuracy_margin`，水平与垂直最大加速度分别配置，因此该判据允许探空火箭真实高动态，不是“静止半径窗口”，也不要求GNSS先同意已经失锁的KF预测。
 
-重捕获只降低对Prediction的信任，不改小GNSS报告R、不覆盖状态、不改变ENU原点。每个组按配置间隔执行有限次选择性膨胀：
+恢复融合首先通过有限次选择性协方差膨胀降低对预测的信任，不改小 GNSS 报告 R，也不改变 ENU 原点。当前 owning source 另有分组 reanchor：只有既往失联、恢复已激活、连续自一致至少 1 秒、有限膨胀次数用尽且间隔到期时，`NavigationKf_GnssGroupRecover` 才调用分组重定位，覆盖该组的位置或速度状态、重设其方差并清零该组交叉协方差。其他组及原点保留；输入有限性和协方差正定性失败走原有错误路径。不能再把当前实现概括为“不覆盖状态”。各组膨胀仍采用：
 
 ```text
 P' = D * P * D'
@@ -244,7 +246,7 @@ P' = D * P * D'
 
 当前用户配置为`SYSTEM_ALIGNMENT_GRAVITY_KNOWN_YAW`且known ENU yaw为0 deg（body +X水平投影指向East）。窗口质量、模式必需Interface和required source检查均属于公开Alignment判定，不得在START增加隐藏门槛。
 
-SystemCalibration独占Mission Calibration事务和Correction结果；SystemAlignment只在Calibration READY后通过通用source adapter调度初始姿态、GNSS原点和气压原点。总体状态为`IDLE/COLLECTING/CHECKING/READY/FAILED/STALE`，最终READY只按`(ready_mask & required_mask) == required_mask`判断，并受STALE锁存约束。当前`selected=ATTITUDE|GNSS|BARO`、`required=ATTITUDE|BARO`；因此GNSS无fix不阻止START并保持既有`NO_PREFLIGHT_ORIGIN`、START后不动态开启GNSS融合且不重建原点的策略，但BARO窗口未ready时不得提前通过Alignment。这里的“GNSS重捕获”只指已获准融合的KF量测组重新进入，不是重新获取预飞许可或重建原点。接口及维护语义见[`SYSTEM_CALIBRATION.md`](SYSTEM_CALIBRATION.md)、[`SYSTEM_ALIGNMENT.md`](SYSTEM_ALIGNMENT.md)和[`SYSTEM_INERTIAL.md`](SYSTEM_INERTIAL.md)。
+SystemCalibration独占Mission Calibration事务和Correction结果；SystemAlignment只在Calibration READY后通过通用source adapter调度初始姿态、GNSS原点和气压原点。总体状态为`IDLE/COLLECTING/CHECKING/READY/FAILED/STALE`，最终READY只按`(ready_mask & required_mask) == required_mask`判断，并受STALE锁存约束。当前`selected=ATTITUDE|GNSS|BARO`、`required=ATTITUDE|BARO`；因此GNSS无fix不阻止START并保持既有`NO_PREFLIGHT_ORIGIN`、START后不动态开启GNSS融合且不重建原点的策略，但BARO窗口未ready时不得提前通过Alignment。这里的“GNSS恢复融合”只指已获准融合的KF量测组重新进入，不是重新获取预飞许可或重建原点。接口及维护语义见[`SYSTEM_CALIBRATION.md`](SYSTEM_CALIBRATION.md)、[`SYSTEM_ALIGNMENT.md`](SYSTEM_ALIGNMENT.md)和[`SYSTEM_INERTIAL.md`](SYSTEM_INERTIAL.md)。
 
 ### 11.1 Calibration状态机
 

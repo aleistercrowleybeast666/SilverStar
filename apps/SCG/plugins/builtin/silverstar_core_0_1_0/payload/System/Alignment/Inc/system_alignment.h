@@ -236,6 +236,10 @@ SystemAlignment_CalibrationInvalidate(void);
 /* CAL Start/Reset may quiesce an existing ALIGN lease before claiming CAL.
  * The ALIGN action/lease checks and safe reset run in the owning module. */
 SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemAlignment_CalibrationYield(void);
+/* START borrows the collecting ALIGN token; completion returns it only when
+ * actual alignment state is still collecting and the lifecycle permits it. */
+SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemAlignment_StartLeaseBegin(uint32_t *token);
+void SystemAlignment_StartLeaseEnd(uint32_t token);
 SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemAlignment_PrepareMission(void);
 SYSTEM_WARN_UNUSED_RESULT SystemDeviceResult SystemAlignment_OriginsFreeze(void);
 void SystemAlignment_MissionPreparationAbort(void);

@@ -22,6 +22,7 @@ from silverstar_fccg.generator.log_decoder_profile import (
     LogDecoderProfileSource_Render,
 )
 from silverstar_fccg.generator.source_graph import SourceGraph
+from silverstar_fccg.project.mission_functions import Functions_Derive
 from silverstar_fccg.plugins.catalog import PluginCatalog
 from silverstar_fccg.plugins.manifest import PluginManifest
 from silverstar_fccg.project.algorithm_parameters import (
@@ -130,6 +131,10 @@ def _ProjectSemanticsWithoutLogging_Render(
         raise ValueError("Cannot generate unresolved protocol transport bindings")
     semantics = {
         "schema_id": "silverstar.project-semantics/1.2",
+        "mission_process": model.mission_process,
+        "mission_functions": Functions_Derive(model, catalog),
+        "mission_stage_events": {"enter_sslog": 48, "exit_sslog": 49, "enter_ss_tm": 256, "exit_ss_tm": 257,
+                                 "identity": "crc32-ieee-ascii-stage_id", "timestamp": "MCU transition microseconds"},
         "project": model.identity.name,
         "target": model.build.target_profile,
         "firmware_version": model.identity.firmware_version,
@@ -299,6 +304,7 @@ def GeneratedFiles_Render(
             indent=2, ensure_ascii=True) + "\n",
         "Generated/project_sources.mk": graph.MakeFragment_Render(),
         "Generated/memory_audit.py": (Path(__file__).resolve().parents[1] / "project/build_audit.py").read_text(encoding="utf-8"),
+        "Generated/memory_contract.json": _MemoryContract_Render(model, catalog, graph),
         "Generated/module.mk": _GeneratedModule_Render(model),
         "Generated/project_semantics.json": (
             decoder_profile.project_semantics_content
@@ -335,6 +341,8 @@ def GeneratedFiles_Render(
             ProjectMissionParametersSource_Render(model, catalog)
         ),
     }
+    from silverstar_fccg.generator.mission_process import MissionProcessFiles_Render
+    files.update(MissionProcessFiles_Render(model, catalog))
     if "silverstar.installation.capture" in model.ComponentIds_Get():
         files["Generated/Inc/project_installation_capture.h"] = _InstallationCaptureHeader_Render(model,catalog)
     if decoder_profile is not None:
@@ -368,6 +376,26 @@ def GeneratedFiles_Render(
     }
 
 
+def _MemoryContract_Render(model, catalog, graph):
+    """Freeze exact MCU capacity from its owning manifest into each project."""
+    from silverstar_fccg.project.generation_state import TargetGenerationReceipt_Get
+    mcu = catalog.Component_Get(model.mcu)
+    regions = deepcopy(mcu.metadata.get('memory_regions', []))
+    if not regions or any(type(row.get('bytes')) is not int or row['bytes'] <= 0
+                          or type(row.get('origin')) is not int for row in regions):
+        raise ValueError('Exact MCU memory region metadata is incomplete')
+    return json.dumps({
+        'schema': 'silverstar.memory-contract/1', 'target': 'flight',
+        'target_profile': model.build.target_profile, 'mcu': mcu.component_id,
+        'mcu_model': mcu.metadata['mcu_model'],
+        'mcu_manifest_sha256': mcu.ManifestSha256_Get(),
+        **TargetGenerationReceipt_Get(model, catalog, 'flight'),
+        'memory_layout': model.build.memory_layout, 'linker_script': graph.linker_script,
+        'mcu_flags': list(graph.mcu_flags), 'regions': regions,
+        'review_budget_bytes': {'RAM': 102400} if model.mcu == 'silverstar.mcu.stm32f407vet6' else {},
+    }, indent=2, sort_keys=True) + '\n'
+
+
 def MissionRadioProfileMacros_Render(model: ProjectModel) -> str:
     import struct
     from silverstar_fccg.project.radio_variants import FlightRadioConfiguration_Get
@@ -375,11 +403,14 @@ def MissionRadioProfileMacros_Render(model: ProjectModel) -> str:
     power = FlightRadioConfiguration_Get(model, active)[1] if active is not None else model.flight_tx_power_dbm
     link = model.air_link
     if link.radio_family == "nrf24":
-        from silverstar_fccg.project.nrf24 import Nrf24Link_Validate
-        config = Nrf24Link_Validate(link)
-        profile = bytes([1, 1, 14, 0, (link.frequency_hz - 2400000000) // 1000000,
-            {250: 0, 1000: 1, 2000: 2}[config["data_rate_kbps"]], power & 255]) + bytes.fromhex(config["address"]) + bytes([
-            config["retry_delay_us"] // 250 - 1, config["retry_count"], 2, 32, link.packet_mtu, 1])
+        raise ValueError("NRF24 active generation was removed; historical logs remain readable")
+    elif link.radio_family == "sx127x":
+        from silverstar_fccg.project.sx1278 import Sx1278Model_Validate
+        Sx1278Model_Validate(model)
+        # SSMS schema3 typed backend2/version1, exact module1=E32-400M20S.
+        profile = bytes([2, 1, 16, 0, 1]) + struct.pack("<IBIBHHb", link.frequency_hz,
+            link.spreading_factor, link.bandwidth_hz, int(link.coding_rate[-1]),
+            link.preamble_symbols, link.packet_mtu, power)
         schema = 3
     else:
         # Historical little-endian SX schema2 profile, exactly15 bytes.
@@ -392,8 +423,10 @@ def MissionRadioProfileMacros_Render(model: ProjectModel) -> str:
 
 def AirLinkHeader_Render(model: ProjectModel, *, target: str = "flight") -> str:
     if model.air_link.radio_family == "nrf24":
-        from silverstar_fccg.project.nrf24 import Nrf24Header_Render
-        return Nrf24Header_Render(model, target)
+        raise ValueError("NRF24 active generation was removed; select actual replacement hardware")
+    if model.air_link.radio_family == "sx127x":
+        from silverstar_fccg.project.sx1278 import Sx1278Header_Render
+        return Sx1278Header_Render(model, target)
     from silverstar_fccg.project.radio_variants import (
         RADIO_PLUGIN, FlightRadioConfiguration_Get, RadioInstanceMacros_Render,
     )
@@ -532,6 +565,7 @@ def _GeneratedModule_Render(model: ProjectModel) -> str:
     sources.extend((
         "Generated/Src/project_metadata.c",
         "Generated/Src/project_mission_parameters.c",
+        "Generated/Src/project_mission_process.c",
     ))
     source_lines = "\n".join(
         "  " + source + (" \\" if index < len(sources) - 1 else "")
@@ -891,9 +925,8 @@ def _FlightConfigHeader_Render(
 ) -> str:
     from silverstar_fccg.project.mission_functions import FunctionsGeneration_Require
     FunctionsGeneration_Require(model, catalog)
-    if model.mission_process is not None:
-        raise ValueError('mission_process_firmware_binding_unavailable: custom phases are desktop-reference only; '
-                         'firmware generation is refused rather than silently executing the legacy process')
+    from silverstar_fccg.project.mission_process import MissionProcessFirmware_Require
+    MissionProcessFirmware_Require(model, catalog)
     catalog = catalog.ProjectView_Get(model)
     magnetic_entries = _DeviceDescriptorEntries_Get(model, catalog)
     magnetic_rate, jy_magnetic_capture = _MagnetometerDescriptors_Validate(
@@ -919,12 +952,16 @@ def _FlightConfigHeader_Render(
         ),
     ]
     if model.protocols.get('telemetry') is not None and model.protocols['telemetry'].component == 'silverstar.protocol.telemetry.ss_tm':
-        from silverstar_telemetry.plan import LoraAirtimeUs_Compute
+        from silverstar_telemetry.plan import RadioAirtimeUs_Compute, TelemetryPlan_Get
         link = model.air_link
-        phy = dict(sf=link.spreading_factor, bandwidth_hz=link.bandwidth_hz,
+        phy = dict(radio_family=link.radio_family, sf=link.spreading_factor, bandwidth_hz=link.bandwidth_hz,
                    coding_rate=link.coding_rate, preamble=link.preamble_symbols)
-        definitions.extend((('SYSTEM_TELEMETRY_TM_EVENT_AIRTIME_US', str(LoraAirtimeUs_Compute(32, **phy) + 4000) + 'ULL'),
-                            ('SYSTEM_TELEMETRY_TM_RX_GRANT_US', str(max(120000, ((LoraAirtimeUs_Compute(64, **phy)+999)//1000)*1000+4000))+'ULL')))
+        plan = TelemetryPlan_Get('S', **phy)
+        definitions.extend((('SYSTEM_TELEMETRY_TM_EVENT_AIRTIME_US', str(RadioAirtimeUs_Compute(32, **phy) + 4000) + 'ULL'),
+                            ('SYSTEM_TELEMETRY_TM_POSITION_AIRTIME_US', str(RadioAirtimeUs_Compute(28, **phy) + 4000) + 'ULL'),
+                            ('SYSTEM_TELEMETRY_TM_HEALTH_AIRTIME_US', str(RadioAirtimeUs_Compute(16, **phy) + 4000) + 'ULL'),
+                            ('SYSTEM_TELEMETRY_TM_RX_GRANT_US', str(plan['half_duplex_rx_grant_us'])+'ULL'),
+                            ('SYSTEM_TELEMETRY_TM_ACK_PERIOD_US', '2000000ULL' if link.radio_family == 'sx127x' else '1000000ULL')))
     definitions.extend(_DeviceRuntimeDefaults_Get(model, catalog))
     from silverstar_fccg.generator.maintenance_uart import MaintenanceUart_Profile
     uart_profile = MaintenanceUart_Profile(model, catalog)
@@ -2029,6 +2066,10 @@ def LogDecoderProfile_Render(
         raise ValueError("Cannot generate unresolved protocol transport bindings")
     project_semantics = {
         "schema_id": "silverstar.project-semantics/1.2",
+        "mission_process": model.mission_process,
+        "mission_functions": Functions_Derive(model, catalog),
+        "mission_stage_events": {"enter_sslog": 48, "exit_sslog": 49, "enter_ss_tm": 256, "exit_ss_tm": 257,
+                                 "identity": "crc32-ieee-ascii-stage_id", "timestamp": "MCU transition microseconds"},
         "project": model.identity.name,
         "target": model.build.target_profile,
         "firmware_version": model.identity.firmware_version,
@@ -3002,6 +3043,9 @@ def _DeviceInstancesHeader_Render(
         raise ValueError("Device-instance facade header template markers changed")
     descriptors = _DeviceDescriptorEntries_Get(model, catalog)
     physical_definitions = _PhysicalDeviceDefinitions_Get(catalog, descriptors)
+    physical_count = len({str(entry['physical_device_id']) for entry in descriptors})
+    if physical_count > 32:
+        raise ValueError('Physical device count exceeds the descriptor registry capacity')
     physical_width = max(len(symbol) for symbol, _value in physical_definitions)
     physical_rows = "\n".join(
         f"#define {symbol:<{physical_width}} {value}U"
@@ -3038,6 +3082,7 @@ def _DeviceInstancesHeader_Render(
     )
     replacement = (
         physical_rows
+        + f"\n#define PROJECT_SELECTED_PHYSICAL_DEVICE_COUNT {max(1, physical_count)}U"
         + "\n\n"
         + descriptor_rows
         + "\n\n"
@@ -3939,13 +3984,14 @@ def _Eide_Render(
 ) -> str:
     reference = _EnvironmentTemplate_Read(environment, ".eide/eide.yml")
     cpu = next((flag.split("=", 1)[1] for flag in graph.mcu_flags if flag.startswith("-mcpu=")), None)
-    if cpu is None or re.fullmatch(r"cortex-m[0-9]+", cpu) is None:
+    if cpu is None or re.fullmatch(r"cortex-m(?:[0-9]+|0plus)", cpu) is None:
         raise ValueError("Flight EIDE requires an explicit supported Cortex-M CPU")
     fpu = next((flag.split("=", 1)[1] for flag in graph.mcu_flags if flag.startswith("-mfpu=")), None)
     abi = next((flag.split("=", 1)[1] for flag in graph.mcu_flags if flag.startswith("-mfloat-abi=")), None)
     if abi not in ("soft", "softfp", "hard"):
         raise ValueError("Flight EIDE requires an explicit float ABI")
-    reference = reference.replace("cpuType: Cortex-M4", "cpuType: Cortex-M" + cpu.removeprefix("cortex-m"))
+    cpu_name = "Cortex-M0+" if cpu == "cortex-m0plus" else "Cortex-M" + cpu.removeprefix("cortex-m")
+    reference = reference.replace("cpuType: Cortex-M4", "cpuType: " + cpu_name)
     reference = reference.replace("floatingPointHardware: single", "floatingPointHardware: " +
                                   ("none" if fpu is None else "single" if "sp" in fpu else "double"))
     reference = reference.replace("$float-abi-type: hard", "$float-abi-type: " + abi)

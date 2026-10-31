@@ -714,12 +714,12 @@
         "order": 23,
         "generated_symbol": "SYSTEM_ESTIMATOR_GNSS_REACQUIRE_OUTAGE_MS",
         "display_names": {
-          "zh_CN": "GNSS 恢复失联门槛",
-          "en_US": "GNSS reacquisition outage threshold"
+          "zh_CN": "KF6 GNSS 恢复融合失联门槛",
+          "en_US": "KF6 GNSS fusion recovery outage threshold"
         },
         "description": {
-          "zh_CN": "GNSS 恢复失联门槛；失联恢复不由连续 NIS 拒绝单独触发。",
-          "en_US": "GNSS reacquisition outage threshold; continuous NIS rejection alone never authorizes recovery."
+          "zh_CN": "KF6 已有的 GNSS 恢复融合默认启用；本项配置失联门槛，连续 NIS 拒绝不能单独触发。它不重启接收机、不重设原点，也不取得预飞许可。",
+          "en_US": "Existing KF6 GNSS fusion recovery is enabled by default. This threshold requires an outage; continuous NIS rejection alone is insufficient. It does not restart the receiver, reset the origin, or grant preflight readiness."
         }
       },
       {

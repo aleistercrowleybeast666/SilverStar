@@ -9,6 +9,7 @@ SerialWorker(QThread): open/read/write/close
 ProtocolWorker(QThread)
   → GSP parser
   → AIR parser
+  → SS-TM session / global sequence / event identity acceptance
   → immutable ProtocolEvent
   → Async JSONL queue (先持久化)
   → bounded UI mailbox
@@ -27,6 +28,23 @@ SerialWorker不访问Widget/协议；ProtocolWorker不访问Widget；MainWindow�
 
 ## 3. Session/Handshake
 Controller是Capability/command/session唯一状态所有者。第一次兼容Capability绑定会话；更新seq在未握手时替换pending Capability ACK。握手成功后迟到Capability只做诊断，不自动清空状态或rollover日志。新飞控会话通过明确断开/重连建立。
+
+上述 Controller 握手规则保留用于历史 AIR M0。SS-TM 的接收语义由后台
+`ReceivePipeline` 的 `TelemetrySession` 唯一判定，再通过不可变快照提供给
+Controller；UI 不在合并之后重新判定同一帧。日志的物理换算只使用当前已接纳
+boot 的合格 CAP。retired boot、重复或过期 CAP 仍归档原始包，不生成新的物理结论；
+新 boot 尚无 CAP 时保留 raw 数值并将物理量标未知。
+
+SS-TM 发送序号是全局 16 位序号。接收端使用全局展开位置和 256 帧有限乱序窗口，
+事件另按稳定 event_id 去重，CAP/HEALTH 等快照禁止旧值覆盖新值。连续主流中的稀疏
+CAP/EVENT 跨半圈与完整回绕不再误丢。若长断线后首个跳变超过半圈且缺少独立发送端
+证据，现有协议不能唯一判定回绕次数，接收端保守拒绝，不将其宣称为已解决的长断线重同步。
+
+每个解析帧具有独立 `ingress_ordinal`，不把同一串口 chunk 的共同时间戳当排序键。
+UI mailbox 合并时保留边界前的最后显示样本并按 ordinal 排序；原始数据和已接纳的
+mission/stage 事实在合并前归档。迟到的首次 START 绑定已有轨迹，不清空早期样本；
+迟到阶段事实不会覆盖时间更晚的已收事实。S 在当前 boot 观察到任务开始后保持被动，
+不拿任务相对时间与 CAP 的 boot 时间混算后重开上行。
 
 握手完成：匹配`ACK(CAPABILITY_ACK,OK)`或`PREFLIGHT_STATUS.capability_acked=1`恢复。Capability自身seq与PC命令seq严格区分。
 
@@ -47,6 +65,13 @@ AIR Link Details集中显示Capability RX、PC→GS request、serial writes、GS
 
 ## 7. Persistent vs live
 JSONL记录整个会话；EventHistory和实时曲线是有界GUI缓存。实时窗口裁剪不影响持久化。
+
+有效 WGS84 最后观测在后台接收线程原子保存至用户数据目录的
+`data/recovery-last-wgs84.json`。该文件是寻回显示缓存，不是原始飞行记录或控制输入。
+重启加载后明确显示历史来源；缓存只保存 wall-clock 保存时刻与当时样本年龄，
+不复用上次进程的 monotonic。wall-clock 回退时年龄显示未知。POSITION/HEALTH
+均更新有效链路接收年龄，保留点重发不会更新其测量新鲜度。WGS84 不要求确认 ENU
+原点；没有操作者实时位置时只提供坐标、地图和导出，不编造操作者距离/方向。
 
 ## 8. Thread safety
 长后处理/模拟/数据迁移在独立worker thread；UI线程只更新状态。所有退出/取消有界，不能遗留运行QThread对象。

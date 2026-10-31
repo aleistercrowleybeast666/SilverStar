@@ -26,7 +26,26 @@ $targetFacts = switch ($TargetProfile) {
     'SilverStar_H743ZI' { @{ Linker='STM32H743XX_FLASH.ld'; Sram=524288; Ccm=0 } }
     default { throw "Unsupported artifact target: $TargetProfile" }
 }
-$linkerPath = Join-Path $repoRoot $targetFacts.Linker
+$memoryContractPath = Join-Path $repoRoot 'Generated\memory_contract.json'
+if (-not (Test-Path -LiteralPath $memoryContractPath -PathType Leaf)) {
+    throw 'Exact MCU memory contract is missing; regenerate a fresh validation project.'
+}
+$memoryContract = Get-Content -Raw -LiteralPath $memoryContractPath | ConvertFrom-Json
+if (($memoryContract.schema -ne 'silverstar.memory-contract/1') -or
+    ($memoryContract.target_profile -ne $TargetProfile)) {
+    throw 'Generated memory contract does not match the requested target.'
+}
+$flashRegions = @($memoryContract.regions | Where-Object { $_.name -eq 'FLASH' })
+$ramRegions = @($memoryContract.regions | Where-Object { $_.name -eq 'RAM' })
+$ccmRegions = @($memoryContract.regions | Where-Object { $_.name -eq 'CCMRAM' })
+if (($flashRegions.Count -ne 1) -or ($flashRegions[0].bytes -le 0) -or
+    ($ramRegions.Count -ne 1) -or ($ramRegions[0].bytes -le 0) -or ($ccmRegions.Count -gt 1)) {
+    throw 'Exact MCU Flash capacity is unavailable or ambiguous.'
+}
+$targetFacts.Sram = [uint64]$ramRegions[0].bytes
+$targetFacts.Ccm = [uint64]0
+if ($ccmRegions.Count -eq 1) { $targetFacts.Ccm = [uint64]$ccmRegions[0].bytes }
+$linkerPath = Join-Path $repoRoot $memoryContract.linker_script
 $failures = New-Object 'System.Collections.Generic.List[string]'
 Write-Output 'FCCG_PROGRESS|ARTIFACT|PLAN|8'
 Write-Output 'FCCG_PROGRESS|ARTIFACT|BEGIN|1|8|ELF_MAP_BIN_HEX'
@@ -198,12 +217,11 @@ $ccmStart = [uint64]0x10000000
 $ccmLength = [uint64]$targetFacts.Ccm
 $mainSramStart = [uint64]0x20000000
 $mainSramLength = [uint64]$targetFacts.Sram
-$flashLength = [uint64](512 * 1024)
+$flashLength = [uint64]$flashRegions[0].bytes
 if ($TargetProfile -eq 'SilverStar_H743ZI') {
     Assert-ArtifactCondition -Condition ($MemoryLayout -eq 'legacy') `
         -Message 'H743 static profile currently supports its explicit AXI/DTCM linker layout only.'
     $mainSramStart = [uint64]0x24000000
-    $flashLength = [uint64](2 * 1024 * 1024)
     foreach ($name in @('.data', '.bss')) {
         Assert-ArtifactCondition -Condition $sections.ContainsKey($name) -Message ('H743 section missing: ' + $name)
         if ($sections.ContainsKey($name)) {
@@ -447,24 +465,28 @@ if (Test-Path -LiteralPath $linkerPath -PathType Leaf) {
 }
 
 Write-Output 'FCCG_PROGRESS|ARTIFACT|DONE|3|8|MAP'
-$flashSectionNames = @(
-    '.isr_vector', '.text', '.rodata', '.ARM.extab', '.ARM',
-    '.preinit_array', '.init_array', '.fini_array', '.data', '.ccmram_data'
-)
-$flashUsed = [uint64]0
-foreach ($name in $flashSectionNames) {
-    $flashUsed += Get-SectionSize -Sections $sections -Name $name
+$memoryReportPath = Join-Path $buildRoot 'memory-report.json'
+$memoryAuditPath = Join-Path $repoRoot 'Generated\memory_audit.py'
+$pythonCommand = if ($env:PYTHON) { $env:PYTHON } else { 'python' }
+& $pythonCommand $memoryAuditPath --elf $elfPath --map $mapPath --linker $linkerPath `
+    --contract $memoryContractPath --output $memoryReportPath
+Assert-ArtifactCondition -Condition ($LASTEXITCODE -eq 0) -Message 'Exact-bank ELF memory accounting failed.'
+if (-not (Test-Path -LiteralPath $memoryReportPath -PathType Leaf)) {
+    throw 'Current ELF memory report is unavailable.'
 }
-$mainSramUsed = (Get-SectionSize -Sections $sections -Name '.data') +
-    (Get-SectionSize -Sections $sections -Name '.dma_bss') +
-    (Get-SectionSize -Sections $sections -Name '.bss') +
-    (Get-SectionSize -Sections $sections -Name '._user_heap_stack')
-$ccmUsed = (Get-SectionSize -Sections $sections -Name '.ccmram_data') +
-    (Get-SectionSize -Sections $sections -Name '.ccmram_bss')
-if ($TargetProfile -eq 'SilverStar_H743ZI') {
-    # MSP resides in DTCM, separate from AXI data and static task stacks.
-    $mainSramUsed -= Get-SectionSize -Sections $sections -Name '._user_heap_stack'
+$memoryReport = Get-Content -Raw -LiteralPath $memoryReportPath | ConvertFrom-Json
+if (($memoryReport.artifacts.elf.sha256 -ne (ArtifactSha256_Get -Path $elfPath)) -or
+    ($memoryReport.artifacts.map.sha256 -ne (ArtifactSha256_Get -Path $mapPath)) -or
+    ($memoryReport.artifacts.contract.sha256 -ne (ArtifactSha256_Get -Path $memoryContractPath))) {
+    throw 'Memory report does not describe the current ELF, MAP and exact MCU contract.'
 }
+$flashUsage = @($memoryReport.regions | Where-Object { $_.name -eq 'FLASH' })[0]
+$ramUsage = @($memoryReport.regions | Where-Object { $_.name -eq 'RAM' })[0]
+$ccmUsage = @($memoryReport.regions | Where-Object { $_.name -eq 'CCMRAM' })
+$flashUsed = [uint64]$flashUsage.used_bytes
+$mainSramUsed = [uint64]$ramUsage.used_bytes
+$ccmUsed = [uint64]0
+if ($ccmUsage.Count -eq 1) { $ccmUsed = [uint64]$ccmUsage[0].used_bytes }
 
 Write-Output 'FCCG_PROGRESS|ARTIFACT|BEGIN|4|8|FLASH'
 Assert-ArtifactCondition -Condition ($flashUsed -le $flashLength) `

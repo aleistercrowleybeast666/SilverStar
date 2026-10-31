@@ -1,0 +1,363 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "silverstar.tuning-bundle/1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_id": {
+      "const": "silverstar.tuning-bundle/1"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "model_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "coordinates": {
+      "const": "ENU; body+Z; Hamilton-wxyz; q_nb"
+    },
+    "implementation_identity": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "profiles": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "schema_id": {
+            "const": "silverstar.function-parameters/1"
+          },
+          "schema_version": {
+            "const": 1
+          },
+          "plugin_id": {
+            "type": "string"
+          },
+          "plugin_version": {
+            "type": "string"
+          },
+          "manifest_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "parameter_schema": {
+            "const": "silverstar.algorithm-parameters/1.0"
+          },
+          "value_source": {
+            "const": "project_actual_input"
+          },
+          "parameters": {
+            "type": "array",
+            "maxItems": 128,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": [
+                    "number",
+                    "integer"
+                  ]
+                },
+                "unit": {
+                  "type": "string"
+                },
+                "representation": {
+                  "type": "string"
+                },
+                "storage_type": {
+                  "enum": [
+                    "float32",
+                    "int32"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "value",
+                "unit",
+                "representation",
+                "storage_type"
+              ]
+            }
+          }
+        },
+        "required": [
+          "schema_id",
+          "schema_version",
+          "plugin_id",
+          "plugin_version",
+          "manifest_sha256",
+          "parameter_schema",
+          "value_source",
+          "parameters"
+        ]
+      }
+    },
+    "control_research": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "schema_id": {
+              "const": "silverstar.control-research/1"
+            },
+            "kind": {
+              "const": "pid"
+            },
+            "deployable": {
+              "const": false
+            },
+            "parameters": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "kp": {
+                  "type": "number"
+                },
+                "ki": {
+                  "type": "number"
+                },
+                "kd": {
+                  "type": "number"
+                },
+                "derivative_tau_s": {
+                  "type": "number"
+                },
+                "integral_limit": {
+                  "type": "number"
+                },
+                "output_limit": {
+                  "type": "number"
+                },
+                "sample_period_s": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "kp",
+                "ki",
+                "kd",
+                "derivative_tau_s",
+                "integral_limit",
+                "output_limit",
+                "sample_period_s"
+              ]
+            },
+            "design": {
+              "type": "null"
+            }
+          },
+          "required": [
+            "schema_id",
+            "kind",
+            "deployable",
+            "parameters",
+            "design"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "schema_id": {
+              "const": "silverstar.control-research/1"
+            },
+            "kind": {
+              "const": "lqr"
+            },
+            "deployable": {
+              "const": false
+            },
+            "parameters": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "k_angle": {
+                  "type": "number"
+                },
+                "k_rate": {
+                  "type": "number"
+                },
+                "output_limit": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "k_angle",
+                "k_rate",
+                "output_limit"
+              ]
+            },
+            "design": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "a": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "b": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 1,
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "q": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "r": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 1,
+                  "items": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 1,
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "k": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 1,
+                  "items": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "dt_s": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "model_source": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512
+                },
+                "state_order": {
+                  "const": [
+                    "angle_error_rad",
+                    "angular_rate_radps"
+                  ]
+                },
+                "input_order": {
+                  "const": [
+                    "actuator_command"
+                  ]
+                },
+                "storage_order": {
+                  "const": "row_major"
+                },
+                "riccati_residual": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1e-08
+                },
+                "closed_loop_radius": {
+                  "type": "number",
+                  "minimum": 0,
+                  "exclusiveMaximum": 1
+                }
+              },
+              "required": [
+                "a",
+                "b",
+                "q",
+                "r",
+                "k",
+                "dt_s",
+                "model_source",
+                "state_order",
+                "input_order",
+                "storage_order",
+                "riccati_residual",
+                "closed_loop_radius"
+              ]
+            }
+          },
+          "required": [
+            "schema_id",
+            "kind",
+            "deployable",
+            "parameters",
+            "design"
+          ]
+        }
+      ]
+    },
+    "limitations": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "type": "string",
+        "maxLength": 512
+      }
+    },
+    "content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "required": [
+    "schema_id",
+    "schema_version",
+    "model_id",
+    "run_id",
+    "coordinates",
+    "implementation_identity",
+    "profiles",
+    "control_research",
+    "limitations",
+    "content_sha256"
+  ]
+}

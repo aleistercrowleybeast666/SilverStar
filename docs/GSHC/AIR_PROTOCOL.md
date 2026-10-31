@@ -1,6 +1,8 @@
 <!-- Compatibility content mirror; canonical current document lives in docs/public. -->
 当前公共权威入口：[AIR_PROTOCOL.md](../public/GSHC/AIR_PROTOCOL.md)。此旧路径保留内容镜像供既有文档契约读取者兼容；当前修改在公共文档维护。
 
+当前 0.1.3 新工程仅使用 SS-TM-S；本页以下 M0、H/NRF 扩展与历史发送策略只保留历史记录语义，不代表当前活动生成能力。请按公共入口及支持矩阵判断当前状态。
+
 # SilverStar AIR 应用层协议 M0
 
 产品显示身份为0.1.2；下文0.0.x是该接口/wire契约的来源版本，不是当前应用产品版本。AIR仍为M0，具体字段与兼容性按实际协议核对，不据产品版本重写旧数据。

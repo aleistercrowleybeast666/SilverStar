@@ -40,7 +40,7 @@ def test_stage_dialog_is_one_model_transaction(qapp, workspace_root):
     result = dialog.Configuration_Get()
     assert next(row for row in result.mission_process['stages'] if row['stage_id'] == 'coast')['name'] == 'Coast edited transactionally'
     assert model.Dictionary_Get() == before
-    assert result.mission_functions == Functions_Derive(model, service.catalog)
+    assert Functions_Derive(result, service.catalog) == Functions_Derive(model, service.catalog)
 
 
 def test_v2_inclusive_same_stage_and_cross_stage_do_not_restart(workspace_root):

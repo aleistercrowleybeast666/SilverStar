@@ -55,6 +55,8 @@ typedef struct {
     uint8_t state, reason, mode, stage, face, role;
     uint8_t queue_head, queue_count, active_part, consumer_active;
     uint8_t pending[2], native_seen[2], producer_stopped, cleanup_complete;
+    /* Deferred START-to-ALIGN ownership return uses existing reserved space. */
+    volatile uint32_t start_restore_token;
 } CaptureTransaction;
 typedef union { CaptureTransaction fields; uint8_t bytes[256]; } CaptureTransactionSpace;
 typedef struct { uint8_t body[2][154]; uint32_t pair; uint8_t committed; } CapturePair;

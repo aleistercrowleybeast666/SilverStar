@@ -49,7 +49,7 @@ def _GroundBoardProject_Get(catalog: PluginCatalog):
         for item in BoardResourceProvisions_Get(board)
     )
     model.ground_target = GroundTargetConfiguration(
-        enabled=True, mcu="silverstar.mcu.stm32f103c8t6", board=board.component_id,
+         mcu="silverstar.mcu.stm32f103c8t6", board=board.component_id,
         hardware=HardwareConfiguration(
             mode="board_plugin", source_kind=board.board.source_kind,
             mcu=inventory.mcu_part, inventory=inventory.Dictionary_Get(),
@@ -306,7 +306,7 @@ def test_ground_source_graph_excludes_flight_tasks_and_is_repeatable(
     ).read_text()
     assert "SILVERSTAR_AIR_LINK_ENABLED=1" in flight_sources
     flight_only_model = deepcopy(model)
-    flight_only_model.ground_target = replace(flight_only_model.ground_target, enabled=False)
+    flight_only_model.ground_target = replace(flight_only_model.ground_target)
     disabled = TargetGeneration_Apply(
         flight_only_model, builtin_catalog, WorkspacePolicy(workspace_root),
         tmp_path / "ground_disabled", TargetScope.FLIGHT,

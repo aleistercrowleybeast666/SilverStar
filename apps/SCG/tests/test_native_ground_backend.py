@@ -58,7 +58,7 @@ def test_backend_import_save_reload_render_normal_flow(bound, tmp_path_factory):
     output = tmp_path_factory.mktemp('o') / 'r'
     result = reloaded.NativeClassicCdcGroundCandidate_Export(loaded, output, device_facts=args['device_facts'])
     assert result.result == NativeGroundBackendResult.RenderedCandidate
-    receipt = json.loads(result.receipt.read_text())
+    receipt = json.loads(result.receipt.read_text(encoding="utf-8"))
     assert receipt['status'] == 'RENDERED_NOT_COMPILED'
     assert receipt['model_sha256'] == plan.model_sha256
     assert receipt['files_sha256'] == {p: hashlib.sha256((output / p).read_bytes()).hexdigest() for p in plan.files}
@@ -143,7 +143,7 @@ def test_existing_output_and_unsaved_project_not_overwritten(bound, tmp_path_fac
     (output / 'user.txt').write_text('retain me')
     with pytest.raises(CubeMxImportError, match='new unaliased output'):
         service.NativeClassicCdcGroundCandidate_Export(imported.model, output, device_facts=args['device_facts'])
-    assert (output / 'user.txt').read_text() == 'retain me'
+    assert (output / 'user.txt').read_text(encoding="utf-8") == 'retain me'
     unsaved = deepcopy(imported.model)
     unsaved.identity = replace(unsaved.identity, name=unsaved.identity.name + '-unsaved')
     fresh = tmp_path_factory.mktemp('o') / 'b'
@@ -170,7 +170,7 @@ def test_compile_failure_is_not_reported_as_candidate_success(bound, tmp_path_fa
     result = service.NativeClassicCdcGroundCandidate_Build(imported.model, project, output,
         device_facts=args['device_facts'])
     assert result.result == NativeGroundBackendResult.FailedCandidate
-    receipt = json.loads(result.receipt.read_text())
+    receipt = json.loads(result.receipt.read_text(encoding="utf-8"))
     assert receipt['failure'] == 'normal compiler unavailable'
     assert receipt['compile_receipt_sha256'] == hashlib.sha256((output / 'receipt.json').read_bytes()).hexdigest()
     assert receipt['status'] != NativeGroundBackendResult.CompiledCandidate
@@ -188,8 +188,8 @@ def test_real_backend_bound_build_receipt(bound, tmp_path_factory):
     result = service.NativeClassicCdcGroundCandidate_Build(loaded, project, output,
         device_facts=args['device_facts'])
     assert result.result == NativeGroundBackendResult.CompiledCandidate, result.detail
-    backend = json.loads(result.receipt.read_text())
-    compiler = json.loads((output / 'receipt.json').read_text())
+    backend = json.loads(result.receipt.read_text(encoding="utf-8"))
+    compiler = json.loads((output / 'receipt.json').read_text(encoding="utf-8"))
     assert backend['failure'] is None
     assert compiler['status'] == 'NATIVE_SOURCE_CPP_GAS_ARM_LINK_AND_ANALYZER_EXECUTED'
     assert compiler['validation_scope'] == 'PRIVATE_NATIVE_GROUND_RUNTIME_CANDIDATE'
@@ -197,7 +197,7 @@ def test_real_backend_bound_build_receipt(bound, tmp_path_factory):
     assert compiler['warning_diagnostics'] == []
     assert (output / 'build/native.elf').is_file()
     assert (output / 'build/analysis/native.elf').is_file()
-    assert json.loads((output / 'candidate_config.ssproject').read_text()) == loaded.Dictionary_Get()
+    assert json.loads((output / 'candidate_config.ssproject').read_text(encoding="utf-8")) == loaded.Dictionary_Get()
     assert backend['compile_receipt_sha256'] == hashlib.sha256((output / 'receipt.json').read_bytes()).hexdigest()
     assert 'NOT PROVEN' in backend['limits']
     index = os.environ.get('SILVERSTAR_NATIVE_BACKEND_BUILD_INDEX')

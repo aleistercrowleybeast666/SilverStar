@@ -20,7 +20,8 @@ from protocol.receive_pipeline import (
     protocol_event_log_records,
 )
 from services.logger import AsyncJsonlLogger
-from services.recovery_position import RecoveryPosition, RecoverySample
+from services.recovery_position import RecoveryPosition, RecoverySample, RecoveryObserveResult, RecoveryCacheResult
+from services.telemetry_session import TelemetryObserveResult
 
 
 @dataclass(frozen=True)
@@ -73,6 +74,7 @@ class ProtocolWorker(QThread):
         *,
         queue_capacity: int = PROTOCOL_INPUT_QUEUE_MAX_CHUNKS,
         ui_mailbox_capacity: int = 4096,
+        recovery_cache_path=None,
         parent=None,
     ) -> None:
         super().__init__(parent)
@@ -90,6 +92,7 @@ class ProtocolWorker(QThread):
         self._pipeline = ReceivePipeline(recovery_connection=self.session_generation)
         self._recovery_session = self.session_generation << 32
         self._recovery_position = RecoveryPosition()
+        self._recovery_cache_path = recovery_cache_path
         self._serial_rx_bytes = 0
         self._serial_rx_chunks = 0
         self._last_rx_monotonic_ns: int | None = None
@@ -112,19 +115,19 @@ class ProtocolWorker(QThread):
         with self._mailbox_lock:
             recovery_session = self._recovery_session
             recovery_sample = self._recovery_position.sample
-            while self._mailbox and len(selected) < limit:
-                selected.append(self._mailbox.popleft())
-
-            if len(selected) < limit and self._mailbox_latest:
-                latest = sorted(
-                    self._mailbox_latest.values(),
-                    key=lambda event: event.host_rx_monotonic_ns,
-                )
-                self._mailbox_latest.clear()
-                remaining = limit - len(selected)
-                selected.extend(latest[:remaining])
-                for event in latest[remaining:]:
-                    self._mailbox_latest[type(event.air_message)] = event
+            # Same serial chunk can contain every frame below with one host
+            # timestamp. Merge by the parser's per-frame ordinal, including
+            # across partial drains, so a late-data slot never crosses START.
+            while len(selected) < limit and (self._mailbox or self._mailbox_latest):
+                latest_key = min(self._mailbox_latest,
+                    key=lambda key: self._mailbox_latest[key].ingress_ordinal,
+                    default=None)
+                latest = self._mailbox_latest.get(latest_key)
+                if latest is not None and (not self._mailbox or
+                        latest.ingress_ordinal < self._mailbox[0].ingress_ordinal):
+                    selected.append(self._mailbox_latest.pop(latest_key))
+                else:
+                    selected.append(self._mailbox.popleft())
 
         if not selected:
             return None
@@ -228,6 +231,21 @@ class ProtocolWorker(QThread):
                             source="AIR M0 telemetry / physical identity unknown",
                             sequence=message.seq,
                         )
+                if not self._is_ui_coalescible(event) and self._mailbox_latest:
+                    # Freeze the last displayed sample on the old side of a
+                    # boundary before the next phase's data can replace its slot.
+                    for pending in sorted(self._mailbox_latest.values(), key=lambda item: item.ingress_ordinal):
+                        if len(self._mailbox) >= self.ui_mailbox_capacity:
+                            index = next((i for i, row in enumerate(self._mailbox)
+                                          if self._is_ui_coalescible(row)), None)
+                            if index is None:
+                                self._mailbox.popleft()
+                                self._warning = 'UI mailbox saturated; old display events were coalesced'
+                            else:
+                                del self._mailbox[index]
+                            self._ui_coalesced_events += 1
+                        self._mailbox.append(pending)
+                    self._mailbox_latest.clear()
                 if len(self._mailbox) < self.ui_mailbox_capacity:
                     self._mailbox.append(event)
                     continue
@@ -267,9 +285,19 @@ class ProtocolWorker(QThread):
         )
 
     def _persist_events(self, events: list[ProtocolEvent]) -> None:
+        position_changed = False
         for event in events:
             for record in protocol_event_log_records(event):
                 self.logger.write(record)
+            if event.tm_frame is not None and event.telemetry_result is TelemetryObserveResult.Accepted:
+                result = self._recovery_position.Absolute_Observe(event.tm_frame,
+                    event.host_rx_monotonic_ns, source='SS-TM ' + event.tm_frame.profile + ' / WGS84 GNSS',
+                    accepted=True)
+                position_changed |= result is RecoveryObserveResult.Accepted
+        if position_changed and self._recovery_cache_path is not None:
+            result = self._recovery_position.Cache_Save(self._recovery_cache_path)
+            if result is not RecoveryCacheResult.Saved:
+                self._queue_warning('Last WGS84 position cache could not be saved: ' + result.value)
 
     def diagnostics_snapshot(self) -> ProtocolWorkerDiagnostics:
         core = self._pipeline.diagnostics()

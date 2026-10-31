@@ -72,7 +72,7 @@ function HostContract_ExpectedDiagnosticGet {
 function HostContract_DiskioValidate {
     param([Parameter(Mandatory = $true)][string]$SourceGraph)
     $sources = [regex]::Matches($SourceGraph,
-        '(?m)^\s+(?:FATFS/Target/sd_diskio|Platform/STM32F1Flight/Src/sd_diskio_stm32f1flight)\.c\s*\\?\s*$')
+        '(?m)^\s+(?:(?:HardwareGenerated/STM32CubeMX/)?FATFS/Target/sd_diskio|Platform/STM32F1Flight/Src/sd_diskio_stm32f1flight)\.c\s*\\?\s*$')
     if ($sources.Count -ne 1) {
         throw 'Storage Host requires exactly one authoritative diskio source.'
     }

@@ -29,13 +29,13 @@ def test_ground_layout_and_power_ownership(window):
     window._Project_Refresh()
     page = window.ground_target_page
     row = page.radio_instances_editor.rows["radio0"]
-    assert page.enabled.isHidden()
-    assert window._model.ground_target.enabled
+    assert not hasattr(page, 'enabled')
+    assert 'enabled' not in window._model.Dictionary_Get()['ground_target']
     assert row["title"].text() == window._translator.Text_Get("device.instance.telemetry", index=0)
     ground = window._model.ground_target
     assert tuple(row["selection"].currentData()) == (ground.radio_plugin, ground.module_variant)
     assert row["tx_power_dbm"].parent() is page.radio_instances_editor.power_editor
-    assert page.radio_instances_editor.power_editor.parent() is window.air_link_page.air_link_group.body
+    assert page.radio_instances_editor.power_editor.parent() is window.hardware_workspace._target_sections["ground"].body
     assert window.air_link_page.ground_tx_power.isHidden()
     assert not window.air_link_page.air_link_group.Expanded_Is()
     assert page.radio_instances_editor.add_button.text() == window.devices_page.add_buttons["telemetry"].text()
@@ -149,26 +149,28 @@ def test_direct_selection_is_catalog_driven_and_atomic(qapp, window):
     assert not power.model().item(power.currentIndex()).isEnabled()
 
 
-def test_legacy_disabled_load_enables_target_without_losing_values(window):
+def test_legacy_disabled_load_preserves_target_without_losing_values(window):
     window._model = _GroundF103Model_Get(window._service.catalog)
-    window._model.ground_target = replace(window._model.ground_target, enabled=False)
-    restored = ProjectModel_Parse(window._model.Dictionary_Get())
+    legacy = window._model.Dictionary_Get()
+    legacy['format_version'] = 23
+    legacy['ground_target']['enabled'] = False
+    restored = ProjectModel_Parse(legacy)
     before = restored.ground_target
     window._model = restored
     window._Project_Refresh()
-    assert window._model.ground_target == replace(before, enabled=True)
+    assert window._model.ground_target == before
 
 
 def test_flight_scope_ignores_unconfigured_enabled_ground(builtin_catalog, workspace_root, tmp_path):
     model = ReferenceProject_Create("TelemetryFlightScope", catalog=builtin_catalog)
-    model.ground_target = GroundTargetConfiguration(enabled=True)
+    model.ground_target = GroundTargetConfiguration()
     assert GroundTargetIssues_Get(model, builtin_catalog)
     result = TargetGeneration_Apply(
         model, builtin_catalog, WorkspacePolicy(workspace_root), tmp_path / "flight", TargetScope.FLIGHT)
     assert result.targets == ("Flight_Controller",)
     assert (result.project_root / "Flight_Controller/Makefile").is_file()
     assert not (result.project_root / "Ground_Station/Makefile").exists()
-    assert ProjectModel_Parse(model.Dictionary_Get()).ground_target.enabled
+    assert ProjectModel_Parse(model.Dictionary_Get()).ground_target == model.ground_target
 
 
 def test_ground_scope_rejects_missing_resources_before_writes(builtin_catalog, workspace_root, tmp_path):

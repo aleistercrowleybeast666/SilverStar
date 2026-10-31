@@ -1,0 +1,23 @@
+{
+  "schema_id": "silverstar.mission-process/2",
+  "schema_version": 2,
+  "execution": "firmware_bounded",
+  "maximum_stages": 32,
+  "maximum_gap_ms": 60000,
+  "maximum_hold_ms": 3600000,
+  "root_fields": ["schema_version", "execution", "start_policy", "maximum_gap_ms", "stages"],
+  "stage_fields": ["stage_id", "name", "condition", "hold_ms", "action"],
+  "condition_fields": ["signal", "operator", "value", "unit"],
+  "signal_units": {"event": "event_id", "stage_elapsed_s": "s", "altitude_agl_m": "m", "vertical_velocity_mps": "m/s", "acceleration_g": "g"},
+  "actions": ["none", "record_marker", "request_recovery"],
+  "native_event_ids": ["ready", "start_accepted", "apogee_confirmed", "deployment_confirmed", "landed_confirmed", "recovery_complete"],
+  "event_availability": "Recovery events require a configured native request and its existing recovery producer; unsupported producers fail generation. Stage names never produce events.",
+  "acceleration": {"quantity": "calibrated canonical IMU specific-force magnitude", "standard_gravity_mps2": 9.80665, "minimum_g": 0, "maximum_g": 100},
+  "measurement_freshness_us": 100000,
+  "transition_semantics": "One transition per FlightTask step; strictly increasing acquisition identity for numeric holds; unavailable, nonfinite, future, stale, changed-source and changed-epoch inputs reset pending holds.",
+  "action_semantics": "At most one configured recovery stage calls the existing request owner; the existing output and lifecycle permissions remain authoritative. Each request is attempted once, never inferred complete or retried into a second actuation.",
+  "event_codes": {"SS_TM_STAGE_ENTER": 256, "SS_TM_STAGE_EXIT": 257, "SSLOG_STAGE_ENTER": 48, "SSLOG_STAGE_EXIT": 49},
+  "identity": "Unique nonzero CRC32 of each stable ASCII stage ID, checked before generation; schema and full configuration also retain their exact SHA-256 receipt.",
+  "legacy": "Schema 1 remains the desktop reference profile. An imported absent profile retains the legacy lifecycle; opening the GUI does not migrate it. A new project explicitly selects schema 2.",
+  "default": "ready then ascent on accepted START; no implicit coast, deployment or landed stage. Optional acceleration detection uses separate 200 ms holds at 2 g. Optional recovery requires an explicitly selected existing parachute target."
+}

@@ -64,17 +64,20 @@ def BoundaryIndex_Get(boundary, stage_ids):
     return {'system_prepare': -2, 'mission_start': -1, 'lifecycle_end': len(stage_ids)}[kind]
 
 
-def FunctionCoverage_Get(function, stage_ids):
+def FunctionCoverage_Get(function, stage_ids, process=None):
     """v1 entry-stop stays exclusive; v2 exit-stop includes the named stage."""
     start, stop = (BoundaryIndex_Get(function[key], stage_ids) for key in ('start', 'stop'))
     result = {}
     if start is None or stop is None or start >= stop:
         return result
     if function['start']['kind'] == 'mission_start':
-        # Display marker only. Initialization and runtime START stay independent.
-        if 'mission_start' not in stage_ids:
+        start_id = next((row['stage_id'] for row in (process or {}).get('stages', ())
+                         if row['condition'] == {'signal': 'event', 'operator': 'is',
+                                                  'value': 'start_accepted', 'unit': 'event_id'}),
+                        'mission_start')
+        if start_id not in stage_ids:
             return {stage_ids[stop]: 'stop'} if 0 <= stop < len(stage_ids) else {}
-        start = stage_ids.index('mission_start')
+        start = stage_ids.index(start_id)
     for index, identity in enumerate(stage_ids):
         if index == stop:
             result[identity] = 'stop'

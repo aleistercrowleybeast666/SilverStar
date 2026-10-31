@@ -1,18 +1,22 @@
-"""Bounded, declarative mission phases and a desktop-only reference interpreter.
+"""Bounded declarative mission profiles and an explicitly reference interpreter.
 
-No hardware operations or executable expressions. START is not a launch event.
+No executable expressions. START and launch combine only in an explicit profile.
 """
 from copy import deepcopy
 from enum import Enum
 import math
 import re
+import json
+from pathlib import Path
+import sys
 
 
 EVENTS = ('ready', 'start_accepted', 'launch_detected', 'burnout_detected',
           'apogee_confirmed', 'deployment_confirmed', 'landed_confirmed', 'recovery_complete')
-SIGNALS = {'event': 'event_id', 'stage_elapsed_s': 's', 'altitude_agl_m': 'm',
-           'vertical_velocity_mps': 'm/s'}
-ACTIONS = ('none', 'record_marker', 'request_recovery')
+_ROOT = Path(sys._MEIPASS) if getattr(sys, 'frozen', False) else Path(__file__).resolve().parents[1]
+FIRMWARE_CONTRACT = json.loads((_ROOT / 'contracts/mission_process_v2.json').read_text(encoding='utf8'))
+SIGNALS = FIRMWARE_CONTRACT['signal_units']
+ACTIONS = tuple(FIRMWARE_CONTRACT['actions'])
 
 
 class MissionProcessResult(str, Enum):
@@ -46,15 +50,47 @@ def MissionProcess_Default():
         for identity, name, event in definitions]}
 
 
+def MissionProcess_FirmwareDefault(acceleration_detection=False, recovery=False, recovery_target=''):
+    """An explicit executable template; START-as-launch is the product default.
+
+    The optional accelerometer template observes calibrated specific-force
+    magnitude, not gravity-subtracted navigation acceleration. Both thresholds
+    are 2 standard g. Renaming a phase never changes these conditions.
+    """
+    def Stage(identity, name, signal, value, operator='is', hold=0):
+        return {'stage_id': identity, 'name': name,
+                'condition': {'signal': signal, 'operator': operator,
+                              'value': value, 'unit': SIGNALS[signal]},
+                'hold_ms': hold, 'action': {'kind': 'record_marker', 'target': ''}}
+    stages = [Stage('ready', '就绪', 'event', 'ready')]
+    if acceleration_detection:
+        stages.extend([Stage('mission_start', '等待起飞', 'event', 'start_accepted'),
+                       Stage('ascent', '动力上升', 'acceleration_g', 2.0, '>=', 200),
+                       Stage('coast', '燃尽滑行', 'acceleration_g', 2.0, '<=', 200)])
+    else:
+        stages.append(Stage('ascent', '上升', 'event', 'start_accepted'))
+    if recovery:
+        if not re.fullmatch(r'[a-z][a-z0-9_]{0,63}', recovery_target):
+            raise ValueError('mission_process_target_missing: choose the configured parachute output')
+        deploy = Stage('deploy', '开伞请求', 'event', 'apogee_confirmed')
+        deploy['action'] = {'kind': 'request_recovery', 'target': recovery_target}
+        stages.extend([deploy, Stage('descent', '回收下降', 'event', 'deployment_confirmed'),
+                       Stage('landed', '已落地', 'event', 'landed_confirmed')])
+    return {'schema_version': 2, 'execution': 'firmware_bounded',
+            'start_policy': 'separate' if acceleration_detection else 'start_is_launch',
+            'maximum_gap_ms': 1000, 'stages': stages}
+
+
 def MissionProcess_Require(value, device_ids=None):
     _Keys_Require(value, ('schema_version', 'execution', 'start_policy', 'maximum_gap_ms', 'stages'))
-    if type(value['schema_version']) is not int or value['schema_version'] != 1 or value['execution'] != 'desktop_reference':
+    if (type(value['schema_version']) is not int or
+        (value['schema_version'], value['execution']) not in ((1, 'desktop_reference'), (2, 'firmware_bounded'))):
         raise ValueError('mission_process_version_or_execution')
     if value['start_policy'] not in ('separate', 'start_is_launch'):
         raise ValueError('mission_process_start_policy')
-    if type(value['maximum_gap_ms']) is not int or not 1 <= value['maximum_gap_ms'] <= 60000:
+    if type(value['maximum_gap_ms']) is not int or not 1 <= value['maximum_gap_ms'] <= FIRMWARE_CONTRACT['maximum_gap_ms']:
         raise ValueError('mission_process_sample_gap')
-    if type(value['stages']) is not list or not 1 <= len(value['stages']) <= 32:
+    if type(value['stages']) is not list or not 1 <= len(value['stages']) <= FIRMWARE_CONTRACT['maximum_stages']:
         raise ValueError('mission_process_stage_count')
     identities = set()
     for stage in value['stages']:
@@ -76,9 +112,11 @@ def MissionProcess_Require(value, device_ids=None):
             number = condition['value']
             if type(number) not in (float, int) or abs(number) > 1e7 or not math.isfinite(number):
                 raise ValueError('mission_process_number')
+            if signal == 'acceleration_g' and (value['schema_version'] < 2 or not 0 <= number <= 100):
+                raise ValueError('mission_process_acceleration_range_or_version')
             if condition['operator'] not in ('>=', '<=') or (signal == 'stage_elapsed_s' and (number < 0 or condition['operator'] != '>=')):
                 raise ValueError('mission_process_operator')
-        if type(stage['hold_ms']) is not int or not 0 <= stage['hold_ms'] <= 3600000:
+        if type(stage['hold_ms']) is not int or not 0 <= stage['hold_ms'] <= FIRMWARE_CONTRACT['maximum_hold_ms']:
             raise ValueError('mission_process_hold')
         action = stage['action']
         _Keys_Require(action, ('kind', 'target'))
@@ -116,14 +154,15 @@ class MissionProcessRunner:
         self.sequence = 0
 
     def Sample_Step(self, sample):
-        _Keys_Require(sample, ('time_us', 'valid', 'events', 'altitude_agl_m', 'vertical_velocity_mps'))
+        keys = ('time_us', 'valid', 'events', 'altitude_agl_m', 'vertical_velocity_mps')
+        _Keys_Require(sample, keys + (('acceleration_g',) if 'acceleration_g' in sample else ()))
         time_us = sample['time_us']
         if type(time_us) is not int or not 0 <= time_us < 2**64 or (self.last_time_us is not None and time_us <= self.last_time_us):
             raise ValueError('mission_process_time_not_monotonic')
         if type(sample['valid']) is not bool or type(sample['events']) is not list or len(sample['events']) > 32 or any(type(event) is not str or event not in EVENTS for event in sample['events']):
             raise ValueError('mission_process_sample')
-        for key in ('altitude_agl_m', 'vertical_velocity_mps'):
-            value = sample[key]
+        for key in ('altitude_agl_m', 'vertical_velocity_mps', 'acceleration_g'):
+            value = sample.get(key)
             if value is not None and (type(value) not in (int, float) or abs(value) > 1e7 or not math.isfinite(value)):
                 raise ValueError('mission_process_sample_number')
         # Validation above is transactional: rejected input never advances time.
@@ -138,7 +177,7 @@ class MissionProcessRunner:
             met = condition['value'] in sample['events']
         else:
             value = ((time_us - self.entered_us) / 1e6 if self.entered_us is not None else 0.0
-                     ) if condition['signal'] == 'stage_elapsed_s' else sample[condition['signal']]
+                     ) if condition['signal'] == 'stage_elapsed_s' else sample.get(condition['signal'])
             met = value is not None and (value >= condition['value'] if condition['operator'] == '>=' else value <= condition['value'])
         if not sample['valid'] or not met:
             self.hold_start_us = None

@@ -1321,6 +1321,27 @@ SystemDeviceResult SystemAlignment_PrepareMission(void)
     return SystemAlignment_Process();
 }
 
+SystemDeviceResult SystemAlignment_StartLeaseBegin(uint32_t *token)
+{
+    uint32_t primask=SystemAlignment_IrqLock();
+    SystemDeviceResult result;
+    if(s_action_active!=0U){SystemAlignment_IrqUnlock(primask);return SYSTEM_DEVICE_BUSY;}
+    result=SystemInstallationCapture_StartClaim((uint8_t)(s_collecting!=0U&&s_frozen==0U),token);
+    SystemAlignment_IrqUnlock(primask);return result;
+}
+
+void SystemAlignment_StartLeaseEnd(uint32_t token)
+{
+    uint32_t primask=SystemAlignment_IrqLock();
+    SystemLifecycleState state=SystemLifecycle_GetState();
+    uint8_t restore=(uint8_t)(s_collecting!=0U&&s_frozen==0U&&
+        (state==SYSTEM_STATE_PREFLIGHT||state==SYSTEM_STATE_READY));
+    /* Read-only Process may be in progress. No ALIGN state is changed here;
+     * ownership restoration is drained atomically before any later claim. */
+    SystemInstallationCapture_StartRelease(token,restore);
+    SystemAlignment_IrqUnlock(primask);
+}
+
 SystemDeviceResult SystemAlignment_OriginsFreeze(void)
 {
     SystemDeviceResult result = SystemAlignment_ActionBegin(0U);

@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "platform_time.h"
+#include "system_installation_capture_if.h"
 
 static uint8_t s_registers[64];
 static uint64_t s_now_us;
@@ -13,6 +14,21 @@ static uint8_t s_cs_high;
 static uint32_t s_i2c_reads;
 static uint32_t s_spi_reads;
 static uint8_t s_stall_mag;
+static uint32_t s_native_observations;
+
+void SystemInstallationCapture_MagObserve(const SystemMagnetometerSample *sample,
+    const SystemInstallationCaptureProof *proof, uint64_t now_us)
+{
+    assert(sample != NULL && proof != NULL);
+    assert(proof->every_native_frame == 1U && proof->raw_definition_known == 1U);
+    assert(proof->measurement_time_known == 0U && proof->uncertainty_us == UINT32_MAX);
+    assert(proof->epoch == 0U && proof->physical_body_units_known == 0U);
+    assert(sample->measurement_timestamp_trusted == 0U);
+    assert(sample->calibration_valid == 0U);
+    assert(sample->sequence == s_native_observations + 1U);
+    assert(now_us >= sample->receive_timestamp_us);
+    s_native_observations++;
+}
 
 static void TestMmc5983ma_RawSet(uint32_t index, uint32_t raw)
 {
@@ -33,6 +49,7 @@ static void TestMmc5983ma_Seed(void)
     s_cs_high = 1U;
     s_i2c_reads = 0U;
     s_spi_reads = 0U;
+    s_native_observations = 0U;
 }
 
 uint64_t PlatformTime_Us(void) { return s_now_us; }
@@ -139,6 +156,7 @@ static void TestMmc5983ma_Run(Mmc5983maAdapter *adapter)
         s_now_us += 1000U;
     }
     assert(result == SYSTEM_DEVICE_OK);
+    assert(s_native_observations == 1U); /* Before any LatestSampleGet. */
     assert(Mmc5983maAdapter_LatestSampleGet(adapter, &sample) ==
         SYSTEM_DEVICE_OK);
     assert(sample.raw[0] == 16384 && sample.raw[1] == -8192);
@@ -153,6 +171,17 @@ static void TestMmc5983ma_Run(Mmc5983maAdapter *adapter)
     assert(Mmc5983maAdapter_HealthGet(adapter, &health) ==
         SYSTEM_DEVICE_OK);
     assert(health.healthy == 0U);
+    for (tick = 0U; tick < 150U; tick++)
+    {
+        result = Mmc5983maAdapter_Process(adapter);
+        assert(result == SYSTEM_DEVICE_OK || result == SYSTEM_DEVICE_NOT_READY);
+        s_now_us += 1000U;
+    }
+    assert(s_native_observations == adapter->core.sequence);
+    assert(s_native_observations >= 3U); /* No consumer polling in this interval. */
+    for (tick = 0U; tick < 8U; tick++)
+    { assert(Mmc5983maAdapter_LatestSampleGet(adapter, &sample) == SYSTEM_DEVICE_OK); }
+    assert(s_native_observations == adapter->core.sequence); /* Reads never replay. */
 }
 
 static void TestMmc5983ma_Timeout(Mmc5983maAdapter *adapter)

@@ -59,7 +59,6 @@ class AirLinkPage(ScrollableLocalizedPage):
         super().__init__(translator, "page.telemetry_configuration", "page.telemetry_configuration.description")
         form = QFormLayout()
         self._air_form = form
-        self._nrf24_parameters = None
         self.fields: dict[str, object] = {}
         self._radio_choices: dict[str, tuple[tuple[str, str], ...]] = {}
         self._radio_technologies: set[str] = set()
@@ -160,23 +159,6 @@ class AirLinkPage(ScrollableLocalizedPage):
             lambda checked: self.configurationChanged.emit("crc_enabled", checked)
         )
         form.addRow(crc_label, self.crc)
-        self.nrf24_fields = {}
-        for name, key in (("data_rate_kbps", "field.nrf24_rate"), ("address", "field.nrf24_address"),
-                          ("retry_delay_us", "field.nrf24_delay"), ("retry_count", "field.nrf24_retries")):
-            label = QLabel()
-            self.Text_Register(label, key)
-            widget = QLineEdit() if name == "address" else QComboBox()
-            if isinstance(widget, QComboBox):
-                options = {"data_rate_kbps": (250, 1000, 2000), "retry_delay_us": range(500, 4001, 250), "retry_count": range(16)}[name]
-                for value in options:
-                    widget.addItem(str(value), value)
-                widget.currentIndexChanged.connect(lambda _index, field=name, combo=widget: self._Nrf24_Change(field, combo.currentData()))
-            else:
-                widget.setMaxLength(10)
-                widget.editingFinished.connect(lambda field=name, line=widget: self._Nrf24_Change(field, line.text()))
-            form.addRow(label, widget)
-            form.setRowVisible(widget, False)
-            self.nrf24_fields[name] = widget
         self.air_link_group = CollapsibleSection(translator.Text_Get("group.air_link"))
         self.air_link_group.BodyLayout_Set(form)
         self.root_layout.addWidget(self.air_link_group)
@@ -210,18 +192,6 @@ class AirLinkPage(ScrollableLocalizedPage):
         return tuple((titles.get(identity, identity), identity) for identity in sorted(values))
 
     def Configuration_Set(self, link, issues) -> None:
-        nrf24 = link.radio_family == "nrf24"
-        self._nrf24_parameters = dict(link.nrf24) if link.nrf24 else None
-        for name in ("spreading_factor", "bandwidth_hz", "coding_rate", "preamble_symbols", "header_mode", "iq_mode"):
-            self._air_form.setRowVisible(self.fields[name], not nrf24)
-        for name, widget in self.nrf24_fields.items():
-            self._air_form.setRowVisible(widget, nrf24)
-            with QSignalBlocker(widget):
-                value = (link.nrf24 or {}).get(name)
-                if isinstance(widget, QComboBox):
-                    widget.setCurrentIndex(widget.findData(value))
-                else:
-                    widget.setText(value or "")
         for name, widget in self.fields.items():
             widget.blockSignals(True)
             if isinstance(widget, QDoubleSpinBox):
@@ -254,28 +224,16 @@ class AirLinkPage(ScrollableLocalizedPage):
             if issues else self._translator.Text_Get("status.air_link_ready")
         )
 
-    def _Nrf24_Change(self, field, value):
-        if self._nrf24_parameters is None:
-            return
-        parameters = {**self._nrf24_parameters, field: value}
-        from silverstar_fccg.project.nrf24 import Nrf24Parameters_Validate
-        try:
-            Nrf24Parameters_Validate(parameters)
-        except ValueError as error:
-            self.status.setText(str(error))
-            return
-        self.configurationChanged.emit("nrf24", parameters)
-
-    def EndpointPowers_Set(self, flight_power: int, ground_power: int, ground_enabled: bool) -> None:
+    def EndpointPowers_Set(self, flight_power: int, ground_power: int, ground_available: bool) -> None:
         self.flight_tx_power.CommittedValue_Set(flight_power)
         self.ground_tx_power.CommittedValue_Set(ground_power)
-        self.ground_tx_power.setEnabled(ground_enabled and self._ground_power_available)
+        self.ground_tx_power.setEnabled(ground_available and self._ground_power_available)
 
     def RadioConstraints_Set(
         self, frequency_range_hz: tuple[int, int] | None,
         flight_powers_dbm: tuple[int, ...],
         ground_powers_dbm: tuple[int, ...],
-        ground_enabled: bool,
+        ground_available: bool,
     ) -> None:
         self._ground_power_available = bool(ground_powers_dbm)
         frequency = self.fields["frequency_hz"]
@@ -288,7 +246,7 @@ class AirLinkPage(ScrollableLocalizedPage):
             frequency.setEnabled(True)
         for widget, powers, enabled in (
             (self.flight_tx_power, flight_powers_dbm, True),
-            (self.ground_tx_power, ground_powers_dbm, ground_enabled),
+            (self.ground_tx_power, ground_powers_dbm, ground_available),
         ):
             if powers:
                 widget.setRange(min(powers), max(powers))
@@ -298,7 +256,6 @@ class AirLinkPage(ScrollableLocalizedPage):
 
 
 class GroundTargetPage(BoardHardwarePage):
-    enabledChanged = Signal(bool)
     configurationChanged = Signal(str, object)
     assignmentChanged = Signal(str, str)
     importRequested = Signal(bool)
@@ -309,11 +266,6 @@ class GroundTargetPage(BoardHardwarePage):
 
     def __init__(self, translator: Translator) -> None:
         super().__init__(translator, target="ground")
-        self.enabled = StandardCheckBox()
-        self.enabled.setObjectName("standardCheckBox")
-        self.Text_Register(self.enabled, "field.ground_generate_include")
-        self.enabled.toggled.connect(self.enabledChanged.emit)
-        self.root_layout.addWidget(self.enabled)
         self.board = self.board_combo
         self.hardware_summary = self.platform_values["part"]
         self.import_ioc = self.import_ioc_button
@@ -325,9 +277,6 @@ class GroundTargetPage(BoardHardwarePage):
         self.importDirectoryRequested.connect(lambda: self.importRequested.emit(True))
         self.exportRequested.connect(self.saveInstanceRequested.emit)
         radio_form = QFormLayout()
-        self.root_layout.removeWidget(self.enabled)
-        radio_form.addRow(self.enabled)
-        radio_form.setRowVisible(self.enabled, False)
         label = QLabel()
         self.Text_Register(label, "field.ground_radio")
         self.radio = StandardComboBox()
@@ -424,11 +373,9 @@ class GroundTargetPage(BoardHardwarePage):
         return candidates[0] if len(candidates) == 1 else None
 
     def Configuration_Set(self, ground, boards, radios, requirements, issues) -> None:
-        for widget in (self.enabled, self.board, self.radio, self.module, self.pc_interface,
+        for widget in (self.board, self.radio, self.module, self.pc_interface,
                        self.pc_resource):
             widget.blockSignals(True)
-        self.enabled.setChecked(ground.enabled)
-        self.generate_button.setEnabled(ground.enabled)
         self.save_instance.setEnabled(
             ground.hardware.mode == "custom"
             and bool(ground.hardware.snapshot_id)
@@ -539,7 +486,7 @@ class GroundTargetPage(BoardHardwarePage):
             f"{ground.build.make_command} · "
             f"{ground.build.toolchain_prefix}gcc · Ground_Station.code-workspace"
         )
-        for widget in (self.enabled, self.board, self.radio, self.module, self.pc_interface,
+        for widget in (self.board, self.radio, self.module, self.pc_interface,
                        self.pc_resource):
             widget.blockSignals(False)
         required = tuple(requirements.get("resources", ()))
@@ -556,9 +503,9 @@ class GroundTargetPage(BoardHardwarePage):
         issue_summary, issue_details = GroundIssues_PresentationGet(issues, self._translator)
         self.resource_scope_notice.setText("\n".join(filter(None, (
             self._translator.Text_Get("ground.resources_scope"),
-            issue_summary if ground.enabled and issues else "",
-            issue_details if ground.enabled and issues else ""))))
-        self.resource_scope_notice.setProperty("statusLevel", "warning" if ground.enabled and issues else "info")
+            issue_summary if issues else "",
+            issue_details if issues else ""))))
+        self.resource_scope_notice.setProperty("statusLevel", "warning" if issues else "info")
         led_issues = tuple(issue for issue in issues if issue.code.startswith("GROUND_LED_"))
         self.activity_led_notice.setVisible(bool(led_issues))
         self.activity_led_notice.setText(GroundIssues_PresentationGet(led_issues, self._translator)[1])
@@ -575,13 +522,8 @@ class GroundTargetPage(BoardHardwarePage):
                                           resources=", ".join(unused_resources))
                 if unused_resources else ""))))
         self.generate_button.setToolTip(self._translator.Text_Get(
-            "status.ground_disabled" if not ground.enabled else
             "status.ground_configuration_required" if issues else "status.ground_ready"))
-        runtime_pending = any(issue.code in {"GROUND_RADIO_RUNTIME_UNAVAILABLE", "GROUND_LED_RUNTIME_UNAVAILABLE"}
-                              for issue in issues)
-        multi_pending = len(ground.radio_instances) > 1 and bool(issues)
-        self.generate_button.setEnabled(ground.enabled and ground.hardware.mode != "unselected"
-                                        and not runtime_pending and not multi_pending)
+        self.generate_button.setEnabled(ground.hardware.mode != "unselected" and not issues)
         self.save_instance.setEnabled(
             ground.hardware.mode == "custom" and bool(ground.hardware.snapshot_id)
             and bool(ground.hardware.build_sources)
@@ -597,14 +539,13 @@ class GroundTargetPage(BoardHardwarePage):
             assignment = ground.resource_assignments.get(key, "")
             resource = available.get(assignment)
             errors = []
-            if ground.enabled:
-                if resource is None or resource.kind != kind:
-                    errors.append(f"{key}: required {kind} resource is unavailable ({assignment or 'unassigned'})")
-                if name in fixed and assignment != fixed[name]:
-                    errors.append(f"{key}: Ground PCB fixes this resource to {fixed[name]}")
-                errors.extend(issue.message for issue in issues
-                              if issue.code in {"GROUND_RADIO_RESOURCE_CONSTRAINT", "GROUND_RESOURCE_CONFLICT"}
-                              and re.search(r"(?<![A-Za-z0-9_])" + re.escape(key) + r"(?![A-Za-z0-9_])", issue.message))
+            if resource is None or resource.kind != kind:
+                errors.append(f"{key}: required {kind} resource is unavailable ({assignment or 'unassigned'})")
+            if name in fixed and assignment != fixed[name]:
+                errors.append(f"{key}: Ground PCB fixes this resource to {fixed[name]}")
+            errors.extend(issue.message for issue in issues
+                          if issue.code in {"GROUND_RADIO_RESOURCE_CONSTRAINT", "GROUND_RESOURCE_CONFLICT"}
+                          and re.search(r"(?<![A-Za-z0-9_])" + re.escape(key) + r"(?![A-Za-z0-9_])", issue.message))
             metadata = resource.metadata if resource is not None else {}
             views.append(ResourceRequirementView(
                 kind=kind, name=name, key=name, fixed=name in fixed,

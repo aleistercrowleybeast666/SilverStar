@@ -60,16 +60,17 @@ PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION = 20
 PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION = 21
 PROJECT_MISSION_PROCESS_FORMAT_VERSION = 22
 PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION = 23
+PROJECT_TARGET_SCOPE_FORMAT_VERSION = 24
 AlgorithmParameterInput = float | int | dict[str, Any]
 FEATURE_TIERS = ("full", "standard", "compact", "minimal")
 PROTOCOL_CATEGORIES = ("telemetry", "maintenance", "logging")
 DEFAULT_PROTOCOL_PROFILES = {
-    "telemetry": "air.m0",
+    "telemetry": "ss_tm.s.0_1",
     "maintenance": "maintenance.serial.0_1",
     "logging": "flight_log.0_0",
 }
 DEFAULT_PROTOCOL_COMPONENTS = {
-    "telemetry": "silverstar.protocol.telemetry.air_m0",
+    "telemetry": "silverstar.protocol.telemetry.ss_tm",
     "maintenance": "silverstar.protocol.maintenance.serial_0_0",
     "logging": "silverstar.protocol.logging.sslog_0_0",
 }
@@ -264,7 +265,7 @@ class HardwareConfiguration:
 
 @dataclass(frozen=True, slots=True)
 class AirLinkConfiguration:
-    protocol_profile: str = "air.m0"
+    protocol_profile: str = "ss_tm.s.0_1"
     radio_technology: str = "lora"
     radio_family: str = "sx128x"
     phy_mode: str = "lora"
@@ -292,7 +293,6 @@ class GroundRadioConfiguration:
 
 @dataclass(frozen=True, slots=True)
 class GroundTargetConfiguration:
-    enabled: bool = False
     mcu: str = ""
     board: str = ""
     hardware: HardwareConfiguration = field(default_factory=HardwareConfiguration)
@@ -390,7 +390,7 @@ class ProjectModel:
     sensor_installation: SensorInstallationConfiguration | None = None
     mission_process: dict | None = None
     mission_functions: dict | None = None
-    format_version: int = PROJECT_FORMAT_VERSION
+    format_version: int = PROJECT_TARGET_SCOPE_FORMAT_VERSION
 
     def ComponentIds_Get(self) -> tuple[str, ...]:
         ordered = [
@@ -439,25 +439,7 @@ class ProjectModel:
 
     def Dictionary_Get(self) -> dict[str, Any]:
         return {
-            "format_version": (PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION
-                if self.mission_functions is not None or self.format_version == PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION
-                else PROJECT_MISSION_PROCESS_FORMAT_VERSION
-                if self.mission_process is not None or any(item.mount_x_axis for item in self.device_instances) or self.format_version == PROJECT_MISSION_PROCESS_FORMAT_VERSION
-                else PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION
-                if self.format_version == PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION or
-                   (self.build.feature_tier in ("full", "standard") and
-                    (not self.build.magnetometer_enabled or not self.build.maintenance_log_export_enabled))
-                else PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION
-                if self.sensor_installation is not None or self.format_version == PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION
-                else PROJECT_NATIVE_USB_FORMAT_VERSION
-                if self.native_usb is not None or self.format_version == PROJECT_NATIVE_USB_FORMAT_VERSION
-                else PROJECT_NIS_INPUT_FORMAT_VERSION
-                if any(isinstance(v, dict) for params in self.algorithm_parameters.values() for v in params.values()) or self.format_version == PROJECT_NIS_INPUT_FORMAT_VERSION
-                else PROJECT_FEATURE_TIERS_FORMAT_VERSION
-                if self.build.feature_tier != "full" or self.feature_tier_presets
-                else PROJECT_RADIO_VARIANTS_FORMAT_VERSION
-                if any(instance.module_variant or instance.tx_power_dbm is not None for instance in self.device_instances)
-                else max(self.format_version, PROJECT_GROUND_RADIOS_FORMAT_VERSION) if self.ground_target.radio_instances else self.format_version),
+            "format_version": PROJECT_TARGET_SCOPE_FORMAT_VERSION,
             "project": {
                 "name": self.identity.name,
                 "firmware_version": self.identity.firmware_version,
@@ -560,7 +542,6 @@ class ProjectModel:
                          if key != "nrf24" or value is not None},
             "flight_tx_power_dbm": self.flight_tx_power_dbm,
             "ground_target": {
-                "enabled": self.ground_target.enabled,
                 "mcu": self.ground_target.mcu,
                 "board": self.ground_target.board,
                 "hardware": _Hardware_Dictionary(self.ground_target.hardware),
@@ -1821,7 +1802,7 @@ def _AirLink_Parse(value: Any) -> AirLinkConfiguration:
 def _GroundTarget_Parse(value: Any, *, radio_instances_allowed: bool = False) -> GroundTargetConfiguration:
     data = _Object_Require(value, "ground_target")
     expected = {
-        "enabled", "mcu", "board", "hardware", "radio_plugin", "module_variant",
+        "mcu", "board", "hardware", "radio_plugin", "module_variant",
         "resources", "pc_interface", "pc_resource", "baudrate", "build",
     }
     if radio_instances_allowed:
@@ -1830,8 +1811,6 @@ def _GroundTarget_Parse(value: Any, *, radio_instances_allowed: bool = False) ->
                        "rx_led_active_high", "activity_led_pulse_ms", "activity_led_enabled"}
     if not expected.issubset(data) or set(data) - (expected | {"tx_power_dbm"} | activity_fields):
         raise ProjectModelError("ground_target has missing or unknown fields")
-    if type(data["enabled"]) is not bool:
-        raise ProjectModelError("ground_target.enabled must be boolean")
     for key in ("mcu", "board", "radio_plugin", "module_variant", "pc_interface", "pc_resource"):
         if not isinstance(data[key], str):
             raise ProjectModelError(f"ground_target.{key} must be a string")
@@ -1900,7 +1879,7 @@ def _GroundTarget_Parse(value: Any, *, radio_instances_allowed: bool = False) ->
         if (selected.plugin, selected.module_variant, selected.tx_power_dbm) != (data["radio_plugin"], data["module_variant"], tx_power):
             raise ProjectModelError("Ground active radio snapshot does not match its configured instance")
     return GroundTargetConfiguration(
-        enabled=data["enabled"], mcu=data["mcu"], board=data["board"],
+        mcu=data["mcu"], board=data["board"],
         hardware=_Hardware_Parse(data["hardware"], board=data["board"]),
         radio_plugin=data["radio_plugin"], module_variant=data["module_variant"],
         resource_assignments=dict(resources), pc_interface=data["pc_interface"],
@@ -1953,6 +1932,23 @@ def _Provenance_Parse(value: Any) -> dict[str, dict[str, Any]]:
                 f"component_provenance.{component_id}.files is invalid"
             )
     return dict(provenance)
+
+
+def _ProjectTargetScope_Migrate(root: dict[str, Any]) -> dict[str, Any]:
+    """Version 24 removes a generation-request flag, preserving both targets.
+
+    The old flag never selected hardware. In particular a false value must not
+    discard an imported Ground snapshot or prevent a later Ground request.
+    """
+    if root['format_version'] == PROJECT_TARGET_SCOPE_FORMAT_VERSION:
+        return root
+    migrated = deepcopy(root)
+    ground = _Object_Require(migrated.get('ground_target'), 'ground_target')
+    if type(ground.get('enabled')) is not bool:
+        raise ProjectModelError('Legacy ground_target.enabled must be boolean')
+    del ground['enabled']
+    migrated['format_version'] = PROJECT_TARGET_SCOPE_FORMAT_VERSION
+    return migrated
 
 
 def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
@@ -2046,9 +2042,9 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
             *(f"unknown {name}" for name in sorted(unknown)),
         ]
         raise ProjectModelError("Project fields are invalid: " + ", ".join(details))
-    if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION, PROJECT_NIS_INPUT_FORMAT_VERSION, PROJECT_NATIVE_USB_FORMAT_VERSION, PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION, PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION, PROJECT_MISSION_PROCESS_FORMAT_VERSION, PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION):
+    if root.get("format_version") not in (PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION, PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION, PROJECT_NIS_INPUT_FORMAT_VERSION, PROJECT_NATIVE_USB_FORMAT_VERSION, PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION, PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION, PROJECT_MISSION_PROCESS_FORMAT_VERSION, PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION, PROJECT_TARGET_SCOPE_FORMAT_VERSION):
         raise ProjectModelError(
-            "Only project format_version 14 through 23 is supported"
+            "Only project format_version 14 through 24 is supported"
         )
     if (set(_Object_Require(root.get("build"), "build")) & {"magnetometer_enabled", "maintenance_log_export_enabled"}
             and root["format_version"] < PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION):
@@ -2133,6 +2129,7 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
     air_link = _AirLink_Parse(root.get("air_link"))
     if type(root["flight_tx_power_dbm"]) is not int:
         raise ProjectModelError("flight_tx_power_dbm must be integer")
+    root = _ProjectTargetScope_Migrate(root)
     ground_target = _GroundTarget_Parse(root.get("ground_target"),
         radio_instances_allowed=(root["format_version"] == PROJECT_GROUND_RADIOS_FORMAT_VERSION
             or root["format_version"] >= PROJECT_RADIO_VARIANTS_FORMAT_VERSION and

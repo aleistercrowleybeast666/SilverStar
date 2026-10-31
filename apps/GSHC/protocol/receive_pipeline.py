@@ -5,6 +5,7 @@ from dataclasses import asdict, dataclass
 from typing import Any
 
 from services.state_model import quat_to_euler_rpy
+from services.telemetry_session import TelemetrySession, TelemetryObserveResult, TelemetrySnapshot
 
 from .air import (
     AIR_PROFILE_COMPACT_V0,
@@ -63,6 +64,9 @@ class ProtocolEvent:
     packet_stats: dict[str, int | float | bool] | None = None
     recovery_session: int | None = None
     tm_frame: Any | None = None
+    ingress_ordinal: int = 0
+    telemetry_result: TelemetryObserveResult | None = None
+    telemetry_snapshot: TelemetrySnapshot | None = None
 
 
 @dataclass(frozen=True)
@@ -95,6 +99,8 @@ class ReceivePipeline:
         self._last_flight_time_ms: int | None = None
         self._received_flight_packets = 0
         self._estimated_lost_packets = 0
+        self._ingress_ordinal = 0
+        self._telemetry = TelemetrySession()
 
     def feed(self, data: bytes, host_rx_monotonic_ns: int | None = None) -> list[ProtocolEvent]:
         if not data:
@@ -103,6 +109,7 @@ class ReceivePipeline:
         events: list[ProtocolEvent] = []
 
         for frame in self.gsp_parser.feed(data):
+            self._ingress_ordinal += 1
             parsed_gsp = parse_gsp_frame(frame)
             if parsed_gsp is None and frame.msg_type in {
                 int(GspType.GS_STATUS),
@@ -149,7 +156,19 @@ class ReceivePipeline:
                         self.air_parse_errors += 1
                         air_error = str(exc)
 
-            if isinstance(air_message, AirCapabilityMessage):
+            telemetry_result = None
+            telemetry_snapshot = None
+            if tm_frame is not None:
+                previous_boot = self._telemetry.boot_session
+                telemetry_result = self._telemetry.Frame_Observe(tm_frame, rx_ns)
+                telemetry_snapshot = self._telemetry.Snapshot_Get()
+                if previous_boot != self._telemetry.boot_session:
+                    self.capability_context = None
+                    self.unsupported_profile_id = None
+                    self._mission_reset()
+            accepted = tm_frame is None or telemetry_result is TelemetryObserveResult.Accepted
+
+            if accepted and isinstance(air_message, AirCapabilityMessage):
                 if air_message.profile_supported:
                     self.capability_context = air_message
                     self.unsupported_profile_id = None
@@ -158,7 +177,7 @@ class ReceivePipeline:
                     self.unsupported_profile_id = air_message.air_profile_id
 
             if (
-                isinstance(air_message, AirStatusMessage)
+                accepted and isinstance(air_message, AirStatusMessage)
                 and air_message.status_id == int(AirStatusId.MISSION_START)
                 and not self._mission_tracking
             ):
@@ -169,7 +188,7 @@ class ReceivePipeline:
                     self._mission_reset(active=True)
                 packet_stats = self._flight_packet_track(air_message.time_ms)
 
-            context = self.capability_context
+            context = self.capability_context if accepted else None
             if isinstance(air_message, (AirPreflightStateMessage, AirFlightStateMessage)):
                 if context is not None and context.air_profile_id == AIR_PROFILE_COMPACT_V0:
                     try:
@@ -212,6 +231,9 @@ class ReceivePipeline:
                 packet_stats=packet_stats,
                 recovery_session=recovery_session,
                 tm_frame=tm_frame,
+                ingress_ordinal=self._ingress_ordinal,
+                telemetry_result=telemetry_result,
+                telemetry_snapshot=telemetry_snapshot,
             )
             events.append(event)
 
@@ -268,6 +290,7 @@ def _base_record(event: ProtocolEvent) -> dict[str, Any]:
         "ts": time.time(),
         "host_rx_monotonic_ns": event.host_rx_monotonic_ns,
         "host_processed_monotonic_ns": event.host_processed_monotonic_ns,
+        "ingress_ordinal": event.ingress_ordinal,
         "processing_lag_ms": (
             event.host_processed_monotonic_ns - event.host_rx_monotonic_ns
         )
@@ -402,7 +425,12 @@ def protocol_event_log_records(event: ProtocolEvent) -> list[dict[str, Any]]:
         records.append({**base, **radio_metadata, "layer": "SS_TM", "kind": "SS_TM_FRAME",
             "profile": tm.profile, "boot_session": tm.boot_session, "sequence": tm.sequence,
             "message_type": tm.message_type, "known_type": tm.known, "fields": tm.values,
-            "raw_hex": tm.raw.hex()})
+            "raw_hex": tm.raw.hex(),
+            "mission_key": event.telemetry_snapshot.current_mission_key if event.telemetry_snapshot else None,
+            "received_stage_id": event.telemetry_snapshot.last_stage_id if event.telemetry_snapshot else None,
+            "semantic_result": event.telemetry_result.value if event.telemetry_result is not None else None})
+        if event.telemetry_result is not TelemetryObserveResult.Accepted:
+            return records  # Rejected bytes remain archived without physical/state claims.
     message = event.air_message
     common = {
         **base,

@@ -16,6 +16,8 @@ uint32_t CapturePort_WordTake(volatile uint32_t *value)
 { return __atomic_exchange_n(value,0U,__ATOMIC_ACQUIRE); }
 uint32_t CapturePort_WordRead(const volatile uint32_t *value)
 { return __atomic_load_n(value,__ATOMIC_ACQUIRE); }
+uint8_t CapturePort_WordConsume(volatile uint32_t *value,uint32_t expected)
+{ return (uint8_t)__atomic_compare_exchange_n(value,&expected,0U,0,__ATOMIC_ACQ_REL,__ATOMIC_ACQUIRE); }
 uint8_t CapturePort_WordPublish(volatile uint32_t *value,uint32_t token)
 {
     uint32_t expected=0U;

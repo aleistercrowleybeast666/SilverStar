@@ -20,7 +20,7 @@
 | SSLOG | 当前 native 和 measurement records 保留 sample/receive 时间和量测值；decoder 实际参数包含三种 delay。完整 replay 诊断输出已由联合修改需求授权，编码和 FLP 对接仍待实现。 |
 
 **Time Synchronization != Delayed Measurement Replay。** 原有机制解决 MCU 单调时间、
-底层计数器回绕、任务/UTC 参照及样本时间传递；没有历史 x/P 恢复、OOSM 排序或重传播。
+底层计数器回绕、任务/UTC 参照及样本时间传递；这个时间服务本身不负责历史 x/P 恢复、OOSM 排序或重传播。当前 KF6 已由 `navigation_kf_replay.c` 和 `navigation_kf_horizon.c` 承担相应的有界历史状态处理，不能把时间服务的边界理解为估计器“没有历史回放”。
 本轮没有复制第二套 clock conversion、offset 或 wrap 系统。
 
 `SystemTime_MeasurementTimestampResolve` 位于原有 System Time 模块：

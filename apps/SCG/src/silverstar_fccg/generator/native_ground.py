@@ -12,6 +12,7 @@ import json
 import re
 import difflib
 from types import SimpleNamespace
+from pathlib import Path
 
 from silverstar_fccg.hardware.native_classic_cdc import NATIVE_PREFIX
 from silverstar_fccg.generator.native_hal import NativeC_FunctionSpanGet, NativeC_VisibleGet, NativeHalDerivatives_Render
@@ -105,7 +106,7 @@ def _Callback_Integrate(source: str, indexed: bool) -> str:
 def NativeGroundCandidate_Render(native_files, proof, inventory, model, catalog, *, hclk_hz):
     ground = model.ground_target
     radios = GroundRadioConfigurations_Get(ground)
-    if (not ground.enabled or ground.pc_interface != 'usb_cdc' or len(radios) != 1 or
+    if (ground.pc_interface != 'usb_cdc' or len(radios) != 1 or
             radios[0].plugin != 'silverstar.device.telemetry.sx1281' or
             radios[0].module_variant != 'e28_2g4m12sx' or model.air_link.radio_family != 'sx128x' or
             ground.tx_led_resource or ground.rx_led_resource or ground.activity_led_enabled is True):
@@ -153,7 +154,9 @@ def NativeGroundCandidate_Render(native_files, proof, inventory, model, catalog,
                 lambda match:match[0]+' hUsbDeviceFS.pClassDataCmsit[0] = '+match[1]+';',files[path].decode())
             if actual!=count:raise ValueError('Native indexed Host ABI fixture changed: '+name)
             files[path]=text.encode()
-    files.pop(core.metadata['ground_radio_backends']['nrf24'])
+    for family, path in core.metadata['ground_radio_backends'].items():
+        if family != 'sx128x':
+            files.pop(path, None)
     _PayloadFiles_Add(files,radio,skip_adapter=True)
     radio_original='Middlewares/Third_Party/SX1280lib/sx1280-hal.c'
     radio_derived='Middlewares/ReviewedNativeRadio/SX1280lib/sx1280-hal.c'
@@ -282,7 +285,10 @@ SystemDeviceResult ProjectSx1281Resources_Get(uint8_t instance,ProjectSx1281Reso
     files[callback_owned] = _Callback_Integrate(native_files[callback].decode('utf-8-sig'),indexed).encode()
     replacements[NATIVE_PREFIX+callback] = callback_owned
     control = None
-    if not indexed:
+    if indexed:
+        from silverstar_fccg.generator.native_control import NativeF407Control_Integrate
+        control = NativeF407Control_Integrate(files,native_files,proof,replacements,callback_owned,bulk)
+    else:
         from silverstar_fccg.generator.native_control import NativeF103Control_Integrate
         control = NativeF103Control_Integrate(files,native_files,proof,replacements,callback_owned,bulk)
     sources = [replacements.get(NATIVE_PREFIX+p,NATIVE_PREFIX+p) for p in proof['build']['sources']]
@@ -317,7 +323,7 @@ SystemDeviceResult ProjectSx1281Resources_Get(uint8_t instance,ProjectSx1281Reso
             'contract':'Main-owned timestamps sampled immediately before existing IRQ locks; state/queue guards retained; actual generated first-party driver remains in Devices and Power10 scope'}],
         'compiled_owned_sha256':{path:hashlib.sha256(files[path]).hexdigest() for path in graph['sources'] if path in files},
         'original_sha256':{path:hashlib.sha256(content).hexdigest() for path,content in native_files.items()},
-        'ep0_review':('NOT PROVEN: F103 shared control ordinary code integrated; independent safety review has NO PASSED OUTCOME' if control else 'NOT PROVEN: shared owner patch independent review blocked; no EP0 repair integrated'),
+        'ep0_review':('NOT PROVEN: bounded shared control code integrated; independent safety review has NO PASSED OUTCOME' if control else 'NOT PROVEN: shared owner patch independent review blocked; no EP0 repair integrated'),
         'usb_control':control,
         'critical_contract_review':'NOT PROVEN: private bulk propagation increment requires manual acceptance; complete EP0/async lifecycle, call graph, stack/WCET/hardware unavailable',
         'publication':'PRIVATE CANDIDATE ONLY; normal generation remains blocked'}
@@ -329,6 +335,24 @@ SystemDeviceResult ProjectSx1281Resources_Get(uint8_t instance,ProjectSx1281Reso
         records['timer_lifecycle']='Only stock HAL_Init then SystemClock_Config boot phases before PlatformTime_Init; later/masked/ISR InitTick rejected and latched, sole timer IRQ quiesced before boot reconfiguration'
     files['Generated/native_ground_contract.json'] = json.dumps(records,indent=2).encode()
     files['Generated/ground_source_graph.json'] = json.dumps(graph,indent=2).encode()
+    # Native import owns exact silicon facts, including every physical bank.
+    # Do not borrow a flight MCU manifest for this independent Ground candidate.
+    from silverstar_fccg.project import build_audit
+    from silverstar_fccg.project.generation_state import TargetGenerationInputHash_Get
+    facts = proof['device_facts']
+    memory_contract = {
+        'schema': 'silverstar.memory-contract/1', 'target': 'ground',
+        'target_profile': ground.build.target_profile, 'mcu_model': facts['part'],
+        'mcu_manifest_sha256': facts['evidence_sha256'],
+        'independent_device_facts': facts,
+        'generation_input_sha256': TargetGenerationInputHash_Get(model, 'ground'),
+        'memory_layout': ground.build.memory_layout, 'linker_script': graph['linker_script'],
+        'mcu_flags': graph['mcu_flags'], 'review_budget_bytes': {},
+        'regions': [{'name': row['name'], 'origin': row['origin'], 'bytes': row['length']}
+                    for row in facts['regions']],
+    }
+    files['Generated/memory_contract.json'] = (json.dumps(memory_contract, indent=2, sort_keys=True)+'\n').encode('utf-8')
+    files['Generated/memory_audit.py'] = Path(build_audit.__file__).read_bytes()
     make = _Makefile_Render(tuple(graph['sources']),tuple(graph['asm_sources']),tuple(graph['include_dirs']),
         tuple(graph['defines']),SimpleNamespace(**graph),ground.build.toolchain_prefix)
     make = make.replace('-Wl,--gc-sections,','-Wl,-u,_sbrk -Wl,--gc-sections,',1)

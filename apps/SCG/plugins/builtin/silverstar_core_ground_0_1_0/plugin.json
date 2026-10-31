@@ -26,7 +26,8 @@
       "Ground/Radio/Src/ground_radio_sx1281.c",
       "Ground/Radio/Src/ground_radio_activity.c",
       "Ground/Protocol/Src/gsp_min_protocol.c",
-      "Ground/Protocol/Src/protocol_crc16.c"
+      "Ground/Protocol/Src/protocol_crc16.c",
+      "Ground/Radio/Src/ground_radio_tm.c"
     ],
     "asm_sources": [],
     "include_dirs": [
@@ -50,7 +51,7 @@
     "ground_radio_instances_ready": true,
     "ground_radio_backends": {
       "sx128x": "Ground/Radio/Src/ground_radio_sx1281.c",
-      "nrf24": "Ground/Radio/Src/ground_radio_nrf24.c"
+      "sx127x": "Ground/Radio/Src/ground_radio_sx1278.c"
     }
   }
 }

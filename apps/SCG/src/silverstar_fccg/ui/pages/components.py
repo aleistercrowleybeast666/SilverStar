@@ -1954,6 +1954,10 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
             if widget is not None:
                 widget.hide()
                 widget.deleteLater()
+        old_telemetry = self.protocol_combos.get('telemetry')
+        if old_telemetry is not None:
+            old_telemetry.hide()
+            old_telemetry.deleteLater()
         self.protocol_combos.clear()
         ordered_categories = ("telemetry", "maintenance", "logging")
         for category in ordered_categories:
@@ -2026,6 +2030,22 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
                 self.telemetry_protocol_form if category == "telemetry"
                 else self.protocol_form
             )
+            if category == "telemetry":
+                # SS-TM-S is the only active protocol. Preserve a legacy
+                # identity visibly until the user explicitly migrates it.
+                combo.setParent(self.telemetry_protocol_group)
+                combo.hide()
+                summary = QLabel(self.telemetry_protocol_group)
+                summary.setWordWrap(True)
+                is_current = selection is not None and str(selection[1]) == 'ss_tm.s.0_1'
+                summary.setText(self._translator.Text_Get('telemetry.single_s') if is_current
+                    else self._translator.Text_Get('telemetry.migration_required', profile=str(selection)))
+                target_form.addRow(summary)
+                if not is_current:
+                    migrate = QPushButton(self._translator.Text_Get('telemetry.migrate_s'), self.telemetry_protocol_group)
+                    migrate.clicked.connect(lambda _checked=False, selected_combo=combo: self._TelemetryMigration_Request(selected_combo))
+                    target_form.addRow(migrate)
+                continue
             target_form.addRow(
                 QLabel(
                     self._translator.Text_Get(
@@ -2034,6 +2054,20 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
                 ),
                 editor,
             )
+
+    def _TelemetryMigration_Request(self, combo):
+        from PySide6.QtWidgets import QMessageBox
+        index = next((index for index in range(combo.count())
+                      if isinstance(combo.itemData(index), (tuple, list))
+                      and combo.itemData(index)[1] == 'ss_tm.s.0_1'), -1)
+        if index < 0:
+            return
+        answer = QMessageBox.question(self, self._translator.Text_Get('telemetry.migrate_s'),
+            self._translator.Text_Get('telemetry.migrate_s_confirm'),
+            QMessageBox.StandardButton.Apply | QMessageBox.StandardButton.Cancel,
+            QMessageBox.StandardButton.Cancel)
+        if answer == QMessageBox.StandardButton.Apply:
+            combo.setCurrentIndex(index)
 
     def _Protocol_Emit(
         self, category: str, combo: StandardComboBox

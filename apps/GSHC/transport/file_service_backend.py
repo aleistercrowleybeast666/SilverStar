@@ -152,9 +152,10 @@ class FileServiceSerialTransport:
         if type(deadline) not in (int,float) or not 0<deadline-time.monotonic()<=120:
             raise ValueError("INSTALLATION_DEADLINE")
         if cancel.is_set(): raise ExportCancelled("Installation exchange cancelled")
-        sid = args[0] if op in ("BEGIN","FACE","POLL","DO","STATUS") else None
-        rid = args[1] if op in ("BEGIN","FACE","POLL","DO") else None
-        cleanup = op=="DO" or (op=="POLL" and self._installation_pending==("DO",sid,rid))
+        context = args[0] if op == 'READ' or (op == 'STATUS' and args[-1] != 'STATE:0') else None
+        sid = args[0] if op in ("BEGIN","FACE","POLL","DO","UPLOAD","PUT") or (op=='STATUS' and context is None) else None
+        rid = args[1] if op in ("BEGIN","FACE","POLL","DO","UPLOAD","PUT") else None
+        cleanup = (op=="DO" and args[-1] in ('CANCEL','UPLOAD_CANCEL')) or (op=="POLL" and self._installation_pending==("DO",sid,rid))
         if self._sync_failed and not cleanup: raise OSError("INSTALLATION_RECONNECT_REQUIRED")
         if self._needs_sync: self._synchronize(cancel)
         if time.monotonic()>=deadline: raise TimeoutError("INSTALLATION_SYNC_DEADLINE")
@@ -184,7 +185,7 @@ class FileServiceSerialTransport:
                 else:
                     try: reply=Response_Decode(line,expected,sid,rid)
                     except ValueError: reply=None
-                    if reply is not None:
+                    if reply is not None and (context is None or reply.Field('context') == context):
                         if cancel.is_set(): raise ExportCancelled("Installation cancelled at matched reply")
                         if time.monotonic()>=deadline: raise TimeoutError("INSTALLATION_LATE_REPLY")
                         self._sync_failed=False

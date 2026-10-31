@@ -25,7 +25,7 @@
       },
       "additionalProperties": false
     },
-    "format_version": {"enum": [14, 15, 16, 17, 18, 19, 20, 21, 22, 23]},
+    "format_version": {"enum": [14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]},
     "sensor_installation": {"oneOf": [{"$ref": "#/$defs/sensorInstallation"}, {"$ref": "#/$defs/navigationInstallation"}]},
     "mission_process": {"$ref": "#/$defs/missionProcess"},
     "mission_functions": {"$ref": "#/$defs/missionFunctions"},
@@ -94,7 +94,7 @@
     },
     "ground_target": {
       "type": "object",
-      "required": ["enabled", "mcu", "board", "hardware", "radio_plugin", "module_variant", "resources", "pc_interface", "pc_resource", "baudrate", "tx_power_dbm", "build"],
+      "required": ["mcu", "board", "hardware", "radio_plugin", "module_variant", "resources", "pc_interface", "pc_resource", "baudrate", "tx_power_dbm", "build"],
       "properties": {
         "enabled": {"type": "boolean"},
         "mcu": {"type": "string"},
@@ -349,6 +349,9 @@
   },
   "additionalProperties": false,
   "allOf": [
+    {"if": {"properties": {"format_version": {"maximum": 23}}},
+     "then": {"properties": {"ground_target": {"required": ["enabled"]}}},
+     "else": {"properties": {"ground_target": {"not": {"required": ["enabled"]}}}}},
     {"if": {"properties": {"format_version": {"maximum": 22}}}, "then": {"not": {"required": ["mission_functions"]}}},
     {"if": {"properties": {"format_version": {"maximum": 21}}},
      "then": {"not": {"required": ["mission_process"]}, "properties": {"components": {"properties": {"devices": {"items": {"properties": {"mount_x_axis": {"const": ""}}}}}}}}},
@@ -428,13 +431,16 @@
       "type": "object", "additionalProperties": false,
       "required": ["schema_version", "execution", "start_policy", "maximum_gap_ms", "stages"],
       "properties": {
-        "schema_version": {"const": 1, "type": "integer"},
-        "execution": {"const": "desktop_reference"},
+        "schema_version": {"enum": [1, 2], "type": "integer"},
+        "execution": {"enum": ["desktop_reference", "firmware_bounded"]},
         "start_policy": {"enum": ["separate", "start_is_launch"]},
         "maximum_gap_ms": {"type": "integer", "minimum": 1, "maximum": 60000},
         "stages": {"type": "array", "minItems": 1, "maxItems": 32, "items": {"$ref": "#/$defs/missionStage"}}
       },
-      "allOf": [{"if": {"properties": {"start_policy": {"const": "start_is_launch"}}},
+      "allOf": [{"if": {"properties": {"schema_version": {"const": 1}}},
+        "then": {"properties": {"execution": {"const": "desktop_reference"}, "stages": {"items": {"properties": {"condition": {"properties": {"signal": {"not": {"const": "acceleration_g"}}}}}}}}},
+        "else": {"properties": {"execution": {"const": "firmware_bounded"}}}},
+        {"if": {"properties": {"start_policy": {"const": "start_is_launch"}}},
         "then": {"properties": {"stages": {"items": {
           "not": {"properties": {"stage_id": {"const": "mission_start"}}},
           "if": {"properties": {"stage_id": {"const": "ascent"}}},
@@ -448,6 +454,9 @@
         "stage_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,47}$"},
         "name": {"type": "string", "minLength": 1, "maxLength": 128, "pattern": "\\S", "not": {"pattern": "[\u0000-\u001f]"}},
         "condition": {"oneOf": [
+          {"type": "object", "additionalProperties": false, "required": ["signal", "operator", "value", "unit"],
+           "properties": {"signal": {"const": "acceleration_g"}, "operator": {"enum": [">=", "<="]}, "unit": {"const": "g"},
+            "value": {"type": "number", "minimum": 0, "maximum": 100}}},
           {"type": "object", "additionalProperties": false, "required": ["signal", "operator", "value", "unit"],
            "properties": {"signal": {"const": "event"}, "operator": {"const": "is"}, "unit": {"const": "event_id"},
             "value": {"enum": ["ready", "start_accepted", "launch_detected", "burnout_detected", "apogee_confirmed", "deployment_confirmed", "landed_confirmed", "recovery_complete"]}}},

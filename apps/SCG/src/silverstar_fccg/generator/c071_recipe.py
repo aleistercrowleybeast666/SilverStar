@@ -3,6 +3,7 @@
 Recipe provenance b66f142; independent USB safety review has no passed outcome.
 """
 from __future__ import annotations
+from pathlib import Path
 from silverstar_fccg.app.version import FirmwareIdentity_Resolve
 from silverstar_fccg.generator.multi_target import (
     AirLinkHeader_Render,
@@ -72,18 +73,19 @@ def C071Recipe_Render(
     mcu = catalog.Component_Get(ground.mcu)
     files: dict[str, bytes] = {}
     _PayloadFiles_Add(files, core)
-    nrf24 = model.air_link.radio_family == "nrf24"
+    _PayloadFiles_Add(files, radio, skip_adapter=True)
     backend_adapters = core.metadata.get("ground_radio_backends", {})
-    if set(backend_adapters) != {"sx128x", "nrf24"}:
+    if set(backend_adapters) != {"sx128x", "sx127x"}:
         raise ValueError("Ground core must declare both supported backend adapters")
     for path in backend_adapters.values():
-        if not isinstance(path, str) or not path.startswith("Ground/Radio/Src/") or ".." in path.split("/") or path not in files:
+        if not isinstance(path, str) or not path.startswith("Ground/Radio/Src/") or ".." in path.split("/"):
             raise ValueError("Ground backend adapter must be an owned declared payload")
     radio_adapter = backend_adapters[model.air_link.radio_family]
+    if radio_adapter not in files:
+        raise ValueError("Selected Ground backend adapter has no declared payload owner")
     for backend, path in backend_adapters.items():
         if backend != model.air_link.radio_family:
-            files.pop(path)
-    _PayloadFiles_Add(files, radio, skip_adapter=True)
+            files.pop(path, None)
     family = catalog.Component_Get(ground_model.mcu_family)
     platform_api = catalog.Component_Get("silverstar.platform.api")
     for owner in (platform_api, family, mcu):
@@ -167,11 +169,18 @@ def C071Recipe_Render(
     files["Generated/Src/pc_byte_stream.c"] = _PcAdapter_Render(model, family).encode("utf-8")
 
     base_graph = SourceGraph_Resolve(ground_model, catalog)
+    from silverstar_fccg.generator.render import _MemoryContract_Render
+    from silverstar_fccg.project.generation_state import TargetGenerationInputHash_Get, TargetGenerationReceipt_Get
+    from silverstar_fccg.project import build_audit
+    memory_contract = json.loads(_MemoryContract_Render(ground_model, catalog, base_graph))
+    memory_contract.update(**TargetGenerationReceipt_Get(model, catalog, 'ground'), review_budget_bytes={})
+    files['Generated/memory_contract.json'] = (json.dumps(memory_contract, indent=2, sort_keys=True) + '\n').encode('utf-8')
+    files['Generated/memory_audit.py'] = Path(build_audit.__file__).read_bytes()
     sources = tuple(dict.fromkeys([
         *(replacements.get(source, source) for source in base_graph.sources
           if not source.startswith(("Generated/", "FATFS/", "Middlewares/Third_Party/FatFs/"))
-          and "/Adapter/" not in source and (not nrf24 or source != backend_adapters["sx128x"])),
-        *([radio_adapter] if nrf24 else []),
+          and "/Adapter/" not in source and source not in backend_adapters.values()),
+        radio_adapter,
         "Common/Src/silverstar_assert.c", "Generated/Src/project_resources.c",
         "Generated/Src/platform_resources.c", "Generated/Src/pc_byte_stream.c",
         *(["Generated/Src/pc_usb_control.c"] if "Generated/Src/pc_usb_control.c" in files else []),
@@ -266,6 +275,7 @@ def C071Recipe_Render(
         "silverstar_version": __version__,
         "firmware_version": model.identity.firmware_version,
         "target_role": "ground_station",
+        **TargetGenerationReceipt_Get(model, catalog, 'ground'),
         "air_profile": model.air_link.protocol_profile,
         "radio_module": ground.module_variant,
         "radio_family": model.air_link.radio_family,
@@ -279,10 +289,6 @@ def C071Recipe_Render(
         "pc_interface": ground.pc_interface,
         "hardware_fingerprint": hardware_fingerprint,
     }
-    if nrf24:
-        metadata["phy"] = {"mode": "esb", **model.air_link.nrf24,
-            "physical_mtu": 32, "logical_mtu": model.air_link.packet_mtu,
-            "fragment_version": 1, "metrics_supported": False}
     files["Generated/ground_target_metadata.json"] = (
         json.dumps(metadata, indent=2, ensure_ascii=False) + "\n"
     ).encode("utf-8")

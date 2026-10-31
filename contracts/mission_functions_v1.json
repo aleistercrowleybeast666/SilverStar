@@ -10,10 +10,12 @@
     "lifecycle_end",
     "stage_exit"
   ],
-  "interval": "v1 retains entry-stop exclusive semantics; v2 stage_enter to stage_exit includes the final stage, including equal-stage intervals; arbitrary bounds remain reference-only",
+  "interval": "v1 retains entry-stop exclusive semantics; v2 stage_enter to stage_exit includes the final stage, including equal-stage intervals. Native recording and telemetry consume bounded ranges; navigation starts at accepted START and can stop once at a later boundary. Preparation remains fixed to its existing owner.",
   "once_semantics": "Request once per runtime instance; completion/failure must be reported explicitly, never inferred from a single invocation",
   "parameter_source": "Project algorithm_parameters and plugin actual-value contract; bindings do not copy parameters",
-  "backend": "Legacy adapter declarations preserve the installed manifest identities. Arbitrary stage bounds remain desktop-reference only.",
+  "backend": "Adapter declarations preserve installed manifest identities. Supported native ranges and dependencies are generated as fixed owner tables; unsupported schedules remain explicit generation errors.",
+  "input_authority": "FunctionsConfiguration_Apply transactionally reconciles user-selectable physical inputs through canonical capability_source_overrides and all related source groups. Function cards cannot create a second device-routing authority.",
+  "native_dependency_semantics": "Recording and telemetry may require INS and/or estimator output. Every dependency must cover the entire configured interval and be initialized, running, healthy and no older than 100 ms when the consumer reads it. Cached readiness expires even if FlightTask stops updating. Control ACKs, identity and stage events remain serviced.",
   "adapters": [
     {
       "plugin_id": "silverstar.algorithm.alignment.external_attitude_source",
@@ -30,7 +32,7 @@
       "initialization": "existing_system_prepare",
       "parameter_timing": "build_only",
       "completion": "explicit_plugin_complete_or_failure",
-      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "runtime_contract": "Fixed preflight lifecycle; no arbitrary phase scheduling. Completion and failure remain owned by the existing preparation service.",
       "supported_version": "0.1.0"
     },
     {
@@ -48,7 +50,7 @@
       "initialization": "existing_system_prepare",
       "parameter_timing": "build_only",
       "completion": "explicit_plugin_complete_or_failure",
-      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "runtime_contract": "Fixed preflight lifecycle; no arbitrary phase scheduling. Completion and failure remain owned by the existing preparation service.",
       "supported_version": "0.1.0"
     },
     {
@@ -66,7 +68,7 @@
       "initialization": "existing_system_prepare",
       "parameter_timing": "build_only",
       "completion": "explicit_plugin_complete_or_failure",
-      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "runtime_contract": "Fixed preflight lifecycle; no arbitrary phase scheduling. Completion and failure remain owned by the existing preparation service.",
       "supported_version": "0.1.0"
     },
     {
@@ -84,7 +86,7 @@
       "initialization": "existing_system_prepare",
       "parameter_timing": "build_only",
       "completion": "explicit_plugin_complete_or_failure",
-      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "runtime_contract": "Fixed preflight lifecycle; no arbitrary phase scheduling. Completion and failure remain owned by the existing preparation service.",
       "supported_version": "0.1.0"
     },
     {
@@ -102,7 +104,7 @@
       "initialization": "existing_system_prepare",
       "parameter_timing": "build_only",
       "completion": "explicit_plugin_complete_or_failure",
-      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "runtime_contract": "Fixed preflight lifecycle; no arbitrary phase scheduling. Completion and failure remain owned by the existing preparation service.",
       "supported_version": "0.1.0"
     },
     {
@@ -120,7 +122,7 @@
       "initialization": "existing_system_prepare",
       "parameter_timing": "build_only",
       "completion": "explicit_plugin_complete_or_failure",
-      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "runtime_contract": "Fixed preflight lifecycle; no arbitrary phase scheduling. Completion and failure remain owned by the existing preparation service.",
       "supported_version": "0.1.0"
     },
     {
@@ -138,7 +140,7 @@
       "initialization": "existing_system_prepare",
       "parameter_timing": "build_only",
       "completion": "explicit_plugin_complete_or_failure",
-      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "runtime_contract": "Fixed preflight lifecycle; no arbitrary phase scheduling. Completion and failure remain owned by the existing preparation service.",
       "supported_version": "0.1.0"
     },
     {
@@ -148,7 +150,7 @@
       "executions": [
         "continuous"
       ],
-      "support": "system_lifecycle",
+      "support": "accepted_start_bounded_stop",
       "singleton": true,
       "output": "navigation.estimate",
       "start": "mission_start",
@@ -156,7 +158,7 @@
       "initialization": "accepted_start_transaction",
       "parameter_timing": "build_only",
       "completion": "existing_system_lifecycle",
-      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "runtime_contract": "Initialization remains the accepted START transaction. A configured stage stop is sticky: the owning task invalidates output and drains queues without reinitializing during this mission.",
       "supported_version": "0.4.0"
     },
     {
@@ -166,7 +168,7 @@
       "executions": [
         "continuous"
       ],
-      "support": "system_lifecycle",
+      "support": "accepted_start_bounded_stop",
       "singleton": true,
       "output": "navigation.estimate",
       "start": "mission_start",
@@ -174,7 +176,7 @@
       "initialization": "accepted_start_transaction",
       "parameter_timing": "build_only",
       "completion": "existing_system_lifecycle",
-      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "runtime_contract": "Initialization remains the accepted START transaction. A configured stage stop is sticky: the owning task invalidates output and drains queues without reinitializing during this mission.",
       "supported_version": "0.3.0"
     },
     {
@@ -184,7 +186,7 @@
       "executions": [
         "continuous"
       ],
-      "support": "system_lifecycle",
+      "support": "accepted_start_bounded_stop",
       "singleton": true,
       "output": "navigation.estimate",
       "start": "mission_start",
@@ -192,7 +194,7 @@
       "initialization": "accepted_start_transaction",
       "parameter_timing": "build_only",
       "completion": "existing_system_lifecycle",
-      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "runtime_contract": "Initialization remains the accepted START transaction. A configured stage stop is sticky: the owning task invalidates output and drains queues without reinitializing during this mission.",
       "supported_version": "0.3.0"
     },
     {
@@ -202,7 +204,7 @@
       "executions": [
         "continuous"
       ],
-      "support": "system_lifecycle",
+      "support": "accepted_start_bounded_stop",
       "singleton": true,
       "output": "navigation.estimate",
       "start": "mission_start",
@@ -210,7 +212,7 @@
       "initialization": "accepted_start_transaction",
       "parameter_timing": "build_only",
       "completion": "existing_system_lifecycle",
-      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "runtime_contract": "Initialization remains the accepted START transaction. A configured stage stop is sticky: the owning task invalidates output and drains queues without reinitializing during this mission.",
       "supported_version": "0.3.0"
     },
     {
@@ -220,7 +222,7 @@
       "executions": [
         "continuous"
       ],
-      "support": "system_lifecycle",
+      "support": "accepted_start_bounded_stop",
       "singleton": true,
       "output": "navigation.estimate",
       "start": "mission_start",
@@ -228,7 +230,7 @@
       "initialization": "accepted_start_transaction",
       "parameter_timing": "build_only",
       "completion": "existing_system_lifecycle",
-      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "runtime_contract": "Initialization remains the accepted START transaction. A configured stage stop is sticky: the owning task invalidates output and drains queues without reinitializing during this mission.",
       "supported_version": "0.4.0"
     },
     {
@@ -238,7 +240,7 @@
       "executions": [
         "continuous"
       ],
-      "support": "system_lifecycle",
+      "support": "accepted_start_bounded_stop",
       "singleton": true,
       "output": "navigation.estimate",
       "start": "mission_start",
@@ -246,7 +248,7 @@
       "initialization": "accepted_start_transaction",
       "parameter_timing": "build_only",
       "completion": "existing_system_lifecycle",
-      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "runtime_contract": "Initialization remains the accepted START transaction. A configured stage stop is sticky: the owning task invalidates output and drains queues without reinitializing during this mission.",
       "supported_version": "0.2.0"
     },
     {
@@ -256,7 +258,7 @@
       "executions": [
         "continuous"
       ],
-      "support": "system_lifecycle",
+      "support": "accepted_start_bounded_stop",
       "singleton": true,
       "output": "navigation.pure_ins",
       "start": "mission_start",
@@ -264,7 +266,7 @@
       "initialization": "accepted_start_transaction",
       "parameter_timing": "build_only",
       "completion": "existing_system_lifecycle",
-      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "runtime_contract": "Initialization remains the accepted START transaction. A configured stage stop is sticky: the owning task invalidates output and drains queues without reinitializing during this mission.",
       "supported_version": "0.1.0"
     },
     {
@@ -292,7 +294,7 @@
       "executions": [
         "continuous"
       ],
-      "support": "system_lifecycle",
+      "support": "firmware_stage_bounded",
       "singleton": true,
       "output": "log.session",
       "start": "system_prepare",
@@ -300,7 +302,7 @@
       "initialization": "existing_system_prepare",
       "parameter_timing": "build_only",
       "completion": "existing_system_lifecycle",
-      "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "runtime_contract": "One bounded native interval for continuous samples; stage transitions, control responses, event and identity records remain available. No additional task or runtime callback registry.",
       "supported_version": "0.2.0"
     },
     {
@@ -319,6 +321,24 @@
       "parameter_timing": "build_only",
       "completion": "existing_system_lifecycle",
       "runtime_contract": "existing producer/lifecycle gates; no new task, callback registry or stage scheduler",
+      "supported_version": "0.1.0"
+    },
+    {
+      "plugin_id": "silverstar.protocol.telemetry.ss_tm",
+      "instance_id": "telemetry",
+      "category": "telemetry",
+      "executions": [
+        "continuous"
+      ],
+      "support": "firmware_stage_bounded",
+      "singleton": true,
+      "output": "telemetry.air",
+      "start": "system_prepare",
+      "stop": "lifecycle_end",
+      "initialization": "existing_system_prepare",
+      "parameter_timing": "build_only",
+      "completion": "existing_system_lifecycle",
+      "runtime_contract": "One bounded native interval for continuous samples; stage transitions, control responses, event and identity records remain available. No additional task or runtime callback registry.",
       "supported_version": "0.1.0"
     }
   ],

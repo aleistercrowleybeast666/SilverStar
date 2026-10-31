@@ -85,3 +85,73 @@ def NativeF103Control_Integrate(files,native,proof,replacements,callback_owned,b
     bulk['ep0']='Shared F103 control ordinary code integrated; independent safety review has NO PASSED OUTCOME; complete EP0/async lifecycle NOT PROVEN'
     files['HardwareGenerated/ReviewedNativeBulk/manifest.json']=json.dumps(bulk,indent=2).encode()
     return manifest
+
+
+def NativeF407Control_Integrate(files,native,proof,replacements,callback_owned,bulk):
+    """Compose the pinned indexed bulk owner with the bounded EP0 policy.
+
+    A fresh generated class/core is exercised before source admission; this
+    does not satisfy the independent review or hardware qualification gates.
+    """
+    callback=proof['cdc']['owners']['usbd_cdc_if.c']
+    temporary={NATIVE_PREFIX+p:b for p,b in native.items()}
+    temporary[NATIVE_PREFIX+callback]=files[callback_owned]
+    changed=NativeControl_Integrate(temporary,NATIVE_PREFIX+callback,native[callback],
+        library_prefix=NATIVE_PREFIX+'Middlewares/ST/STM32_USB_Device_Library/',
+        reviewed_prefix='HardwareGenerated/ReviewedNativeControl/')
+    NativeControl_Definitions_Validate(proof['build']['defines'])
+    manifest=json.loads(temporary['Generated/usb_control_manifest.json'])
+    if manifest['profile']!='classic-f407-indexed-v1':
+        raise ValueError('Indexed control composition requires the pinned F407 profile')
+    for name in ('usbd_cdc.c','usbd_core.c'):
+        original=proof['cdc']['owners'][name]
+        path=changed[NATIVE_PREFIX+original]
+        control_text=temporary[path].decode()
+        text=files[replacements[NATIVE_PREFIX+original]].decode()
+        include='#include "usbd_cdc.h"' if name=='usbd_cdc.c' else '#include "usbd_core.h"'
+        text=text.replace(include,include+'\n#include "pc_usb_control.h"',1)
+        functions=('USBD_CDC_Setup','USBD_CDC_EP0_RxReady') if name=='usbd_cdc.c' else (
+            'USBD_LL_SetupStage','USBD_LL_DataOutStage','USBD_LL_DataInStage')
+        for function in functions:
+            start,_opening,end=NativeC_FunctionSpanGet(control_text,function)
+            body=control_text[start:end]
+            if name=='usbd_core.c' and function!='USBD_LL_SetupStage':
+                stage='DataOut' if function=='USBD_LL_DataOutStage' else 'DataIn'
+                anchor='    /* Get the class index relative to this interface */'
+                if body.count(anchor)!=1:raise ValueError('Indexed bulk/control endpoint owner changed')
+                guard=('    if ((pdev == NULL) || (epnum != 1U)) { return USBD_FAIL; }\n'
+                    '    if ((pdev->classId != 0U) || (pdev->pClass[0] == NULL) || (pdev->pClass[0]->'+stage+' == NULL))\n'
+                    '    { if (pdev->dev_state == USBD_STATE_CONFIGURED) { NativeRuntime_TransportFaultRecord(); } return USBD_FAIL; }\n')
+                body=body.replace(anchor,guard+anchor,1)
+            text=_Replace(text,function,body)
+        if name=='usbd_cdc.c':
+            marker='  memset(hcdc, 0, sizeof(*hcdc));'
+            if text.count(marker)!=1:raise ValueError('Indexed control command initialization changed')
+            text=text.replace(marker,marker+'\n  hcdc->CmdOpCode = 0xFFU;',1)
+        else:
+            text=_Replace(text,'USBD_DeInit',"""USBD_StatusTypeDef USBD_DeInit(USBD_HandleTypeDef *pdev)
+{
+  USBD_StatusTypeDef result;
+  if (pdev == NULL) { return USBD_FAIL; }
+  result = USBD_Stop(pdev);
+  if (result != USBD_OK) { return result; }
+  return USBD_LL_DeInit(pdev);
+}""")
+        temporary[path]=text.encode()
+        entry=next(e for e in manifest['vendor_patches'] if e['derived_path']==path)
+        patch=''.join(difflib.unified_diff(native[original].decode().replace('\r\n','\n').splitlines(True),
+            text.splitlines(True),fromfile=entry['original_path'],tofile=path)).encode()
+        temporary[entry['patch_path']]=patch
+        entry['derived_sha256']=hashlib.sha256(temporary[path]).hexdigest()
+        entry['patch_sha256']=hashlib.sha256(patch).hexdigest()
+        bulk_entry=next(e for e in bulk['entries'] if e['original']==NATIVE_PREFIX+original)
+        bulk_entry.update(derived=path,derived_sha256=entry['derived_sha256'],
+            patch=entry['patch_path'],patch_sha256=entry['patch_sha256'])
+    manifest.update(independent_review='NO_PASSED_OUTCOME',formal_release=False,
+        bulk_composition='Pinned indexed bulk owner preserved; bounded EP0 and checked DeInit composition')
+    temporary['Generated/usb_control_manifest.json']=json.dumps(manifest,indent=2).encode()
+    files.update({p:b for p,b in temporary.items() if p.startswith(('Generated/','HardwareGenerated/ReviewedNativeControl/'))})
+    replacements.update(changed)
+    bulk['ep0']='Shared indexed F407 bounded control integrated; independent review has NO PASSED OUTCOME; full async lifecycle NOT PROVEN'
+    files['HardwareGenerated/ReviewedNativeBulk/manifest.json']=json.dumps(bulk,indent=2).encode()
+    return manifest

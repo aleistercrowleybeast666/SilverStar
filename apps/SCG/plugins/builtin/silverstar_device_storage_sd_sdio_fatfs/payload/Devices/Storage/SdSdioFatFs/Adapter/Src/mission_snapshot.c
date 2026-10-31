@@ -9,6 +9,7 @@
 #include "project_device_instances.h"
 #include "silverstar_assert.h"
 #include "system_calibration.h"
+#include "system_installation_active_if.h"
 #include "system_descriptor_if.h"
 #include "system_flight_recovery.h"
 #include "system_health.h"
@@ -20,7 +21,7 @@
 #include "system_storage_if.h"
 #include "system_user_config.h"
 
-#define MISSION_SNAPSHOT_SCHEMA MISSION_RADIO_SNAPSHOT_SCHEMA
+#define MISSION_SNAPSHOT_SCHEMA 4U
 #define MISSION_SNAPSHOT_DEVICE_CHUNK_COUNT 16U
 #define MISSION_SNAPSHOT_PARAMETER_CHUNK_COUNT 48U
 #define MISSION_SNAPSHOT_OBJECT_COUNT 6U
@@ -273,6 +274,32 @@ static SystemMissionSnapshotResult MissionSnapshot_MagSetWrite(
     return SystemMissionSnapshotResult_Ok;
 }
 
+/* Schema4 keeps the six-object atomic commit and reserves section7 for
+ * final status. The active record fits the existing shared storage scratch. */
+static SystemMissionSnapshotResult MissionSnapshot_InstallationWrite(
+    MissionSnapshotWriter *writer)
+{
+    uint32_t generation = 0U;
+    uint16_t index;
+    SystemInstallationActiveResult result;
+    SILVERSTAR_ASSERT_OBJECT(writer, MissionSnapshotWriter,
+        SILVERSTAR_ASSERT_MODULE_DEVICE);
+    SILVERSTAR_ASSERT(writer->length <= sizeof(s_payload),
+        SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_BUFFER_CAPACITY);
+    result = SystemInstallationActive_SnapshotGet(s_mag_data, &generation);
+    if (result == SystemInstallationActiveResult_NotPresent)
+    { MissionSnapshot_U8Write(writer, 0U); return SystemMissionSnapshotResult_Ok; }
+    if ((result != SystemInstallationActiveResult_Ok) || (generation == 0U))
+    { return SystemMissionSnapshotResult_NotReady; }
+    MissionSnapshot_U8Write(writer, 1U);
+    MissionSnapshot_U32Write(writer, generation);
+    for (index = 224U; index < SYSTEM_INSTALLATION_ACTIVE_BYTES; index++)
+    { MissionSnapshot_U8Write(writer, s_mag_data[index]); }
+    for (index = 0U; index < SYSTEM_INSTALLATION_ACTIVE_BYTES; index++)
+    { MissionSnapshot_U8Write(writer, s_mag_data[index]); }
+    return SystemMissionSnapshotResult_Ok;
+}
+
 static SystemMissionSnapshotResult MissionSnapshot_CalibrationWrite(
     uint8_t base, uint32_t *generation, uint32_t *hash,
     SystemMissionSnapshotStatus *status)
@@ -322,6 +349,8 @@ static SystemMissionSnapshotResult MissionSnapshot_CalibrationWrite(
     if (MissionSnapshot_MagSetWrite(&writer, status) !=
         SystemMissionSnapshotResult_Ok)
     { return SystemMissionSnapshotResult_StorageError; }
+    if (MissionSnapshot_InstallationWrite(&writer) != SystemMissionSnapshotResult_Ok)
+    { return SystemMissionSnapshotResult_NotReady; }
     return MissionSnapshot_SectionCommit(&writer, (uint8_t)(base + 6U),
         generation, hash);
 }
@@ -331,8 +360,9 @@ static void MissionSnapshot_AirProfileWrite(MissionSnapshotWriter *writer)
     static const uint8_t profile[MISSION_RADIO_PROFILE_BYTE_COUNT] =
         MISSION_RADIO_PROFILE_BYTES;
     uint8_t index;
-    /* Generator serializes the selected backend. SX schema2 remains byte-exact.
-     * No unused LoRa fields are manufactured for an NRF profile. */
+    /* Schema4 identifies the historical radio layout explicitly; the profile
+     * bytes remain exact for the selected physical backend. */
+    MissionSnapshot_U8Write(writer, MISSION_RADIO_SNAPSHOT_SCHEMA);
     for (index = 0U; index < MISSION_RADIO_PROFILE_BYTE_COUNT; index++)
     { MissionSnapshot_U8Write(writer, profile[index]); }
 }

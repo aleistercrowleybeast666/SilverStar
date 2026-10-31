@@ -1,4 +1,4 @@
-"""Shared mission instances, explicit legacy adapters and reference-only intervals."""
+"""Shared mission instances, canonical input routes and bounded native owners."""
 from copy import deepcopy
 from dataclasses import dataclass
 import json
@@ -75,6 +75,64 @@ def Functions_Update(model, catalog, functions):
     return result
 
 
+def FunctionsConfiguration_Apply(model, catalog, configuration):
+    """Commit edited inputs through the one project capability authority.
+
+    Unedited rows can retain old displayed inputs while another function edits
+    their shared source. Only explicit deltas conflict; all affected rows then
+    receive the reconciled source before validation and publication.
+    """
+    from silverstar_fccg.project.capabilities import CapabilityResolution_Resolve, Capability_UserSelectable_Is
+    from silverstar_fccg.project.configuration import ProjectConfiguration_Reconcile
+    result = deepcopy(model)
+    configuration = Functions_Require(configuration)
+    before = {row['instance_id']: row for row in Functions_Derive(model, catalog)['functions']}
+    canonical = {row['instance_id']: row for row in FunctionsCanonical_Get(model, catalog)['functions']}
+    changes = {}
+    for row in configuration['functions']:
+        expected = canonical.get(row['instance_id'])
+        if expected is None or row['plugin_id'] != expected['plugin_id']:
+            raise ValueError('FUNCTION_PLUGIN_NOT_SELECTED:' + row['instance_id'])
+        if set(row['input_bindings']) != set(expected['input_bindings']):
+            raise ValueError('FUNCTION_INPUT_KEYS:' + row['instance_id'])
+        original = before.get(row['instance_id'], expected)['input_bindings']
+        for capability, provider in row['input_bindings'].items():
+            if original.get(capability) == provider: continue
+            if not Capability_UserSelectable_Is(capability):
+                raise ValueError('FUNCTION_INPUT_OWNER:' + capability)
+            if capability in changes and changes[capability] != provider:
+                raise ValueError('FUNCTION_INPUT_CONFLICT:' + capability)
+            changes[capability] = provider
+    project_catalog = catalog.ProjectView_Get(result)
+    devices = {item.instance_id: item for item in result.device_instances}
+    requirements = {item.capability for item in CapabilityResolution_Resolve(result, catalog).requirements}
+    # A source group is one physical owner (e.g. accelerometer + gyro + proof).
+    # One explicit edit moves the whole active group; conflicting edits fail.
+    for component in result.ComponentIds_Get():
+        for group in project_catalog.Component_Get(component).metadata.get('capability_source_groups', []):
+            edited = {changes[key] for key in group if key in changes}
+            if len(edited) > 1: raise ValueError('FUNCTION_INPUT_SOURCE_GROUP_CONFLICT:' + ','.join(group))
+            if edited:
+                provider = next(iter(edited))
+                for capability in group:
+                    if capability in requirements: changes[capability] = provider
+    for capability, provider in changes.items():
+        if provider not in devices or capability not in project_catalog.InstanceComponent_Get(devices[provider]).provides:
+            raise ValueError('FUNCTION_INPUT_MISSING:' + capability + ':' + provider)
+        result.capability_source_overrides[capability] = provider
+    result.mission_functions = None
+    result = ProjectConfiguration_Reconcile(result, catalog).model
+    resolution = CapabilityResolution_Resolve(result, catalog)
+    if resolution.invalid_overrides or resolution.source_conflicts:
+        raise ValueError('FUNCTION_INPUT_CONFLICT:' + ';'.join((*resolution.invalid_overrides, *resolution.source_conflicts)))
+    authority = {row['instance_id']: row for row in FunctionsCanonical_Get(result, catalog)['functions']}
+    for row in configuration['functions']:
+        row['input_bindings'] = deepcopy(authority[row['instance_id']]['input_bindings'])
+    result.mission_functions = configuration
+    FunctionsGeneration_Require(result, catalog)
+    return result
+
+
 def FunctionsCanonical_Get(model, catalog):
     """Explicitly request the current authority's bindings, never overwrite a draft."""
     candidate = deepcopy(model)
@@ -123,6 +181,12 @@ def Functions_Issues(model, catalog):
     routes = resolution.routes
     def Add(function, code, message):
         issues.append(FunctionIssue(function['instance_id'], code, message))
+    def Bounds(function):
+        start, stop = (BoundaryIndex_Get(function[key], stage_ids) for key in ('start', 'stop'))
+        if model.mission_process is not None and function['start']['kind'] == 'mission_start':
+            start = next((i for i, stage in enumerate(model.mission_process['stages'])
+                if stage['condition'] == {'signal': 'event', 'operator': 'is', 'value': 'start_accepted', 'unit': 'event_id'}), start)
+        return start, stop
     for function in rows:
         declaration = declarations.get(function['plugin_id'])
         if declaration is None:
@@ -138,22 +202,41 @@ def Functions_Issues(model, catalog):
         outputs.add(function['output'])
         if function['execution'] not in declaration['executions'] or function['category'] != declaration['category'] or function['output'] != declaration['output']:
             Add(function, 'FUNCTION_DECLARATION_MISMATCH', 'Execution, category or output disagrees with plugin adapter')
-        start, stop = (BoundaryIndex_Get(function[key], stage_ids) for key in ('start','stop'))
+        start, stop = Bounds(function)
         if start is None or stop is None:
             Add(function, 'FUNCTION_STAGE_MISSING', 'A referenced stage boundary is missing')
         elif start >= stop:
             Add(function, 'FUNCTION_INTERVAL_INVALID', 'Start must precede stop; the interval is [start, stop)')
-        if function['start']['kind'] != declaration['start'] or function['stop']['kind'] != declaration['stop']:
+        native_interval = (model.mission_process is not None and model.mission_process['execution'] == 'firmware_bounded'
+                           and declaration['category'] in ('telemetry', 'recording'))
+        if (model.mission_process is not None and model.mission_process['execution'] == 'firmware_bounded'
+                and declaration['output'] in ('navigation.pure_ins', 'navigation.estimate')):
+            stages = model.mission_process['stages']
+            start_index = next((index for index, stage in enumerate(stages)
+                if stage['condition'] == {'signal': 'event', 'operator': 'is', 'value': 'start_accepted', 'unit': 'event_id'}
+                and stage['hold_ms'] == 0), None)
+            permitted_start = function['start']['kind'] == 'mission_start' or (
+                start_index is not None and function['start'] == {'kind': 'stage_enter', 'stage_id': stages[start_index]['stage_id']})
+            permitted_stop = function['stop']['kind'] in ('stage_enter', 'stage_exit', 'system_landed', 'lifecycle_end')
+            if not permitted_start:
+                Add(function, 'FUNCTION_START_OWNER', 'Navigation initialization belongs to the accepted START transaction; delayed reinitialization is unsupported')
+            if start_index is not None and stop is not None and stop <= start_index:
+                Add(function, 'FUNCTION_INTERVAL_INVALID', 'Navigation must stop after accepted START')
+            native_interval = permitted_start and permitted_stop
+        if not native_interval and (function['start']['kind'] != declaration['start'] or function['stop']['kind'] != declaration['stop']):
             Add(function, 'FUNCTION_REFERENCE_ONLY', 'Custom interval has no firmware scheduling consumer; desktop reference only')
         for dependency in function['depends_on']:
             if dependency not in by_id:
                 Add(function, 'FUNCTION_DEPENDENCY_MISSING', 'Missing dependency ' + dependency); continue
             upstream = by_id[dependency]
-            upstream_start, upstream_stop = (BoundaryIndex_Get(upstream[key], stage_ids) for key in ('start','stop'))
+            upstream_start, upstream_stop = Bounds(upstream)
             if None not in (start, stop, upstream_start, upstream_stop) and (upstream_start > start or upstream_stop < stop):
                 Add(function, 'FUNCTION_INPUT_INTERVAL', 'Dependency does not cover this function interval: ' + dependency)
         expected_dependencies = ['ins'] if function['instance_id'] == 'estimator' and 'ins' in by_id else []
-        if function['depends_on'] != expected_dependencies:
+        native_dependencies = (model.mission_process is not None and model.mission_process['execution'] == 'firmware_bounded'
+            and declaration['category'] in ('telemetry', 'recording')
+            and all(identity in ('ins', 'estimator') and identity in by_id for identity in function['depends_on']))
+        if not native_dependencies and function['depends_on'] != expected_dependencies:
             Add(function, 'FUNCTION_DEPENDENCY_REFERENCE_ONLY', 'Custom dependency scheduling has no firmware consumer')
         expected_inputs = {route.requirement.capability: route.provider.instance_id for route in routes
                            if route.requirement.consumer_component == function['plugin_id']}

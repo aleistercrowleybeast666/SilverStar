@@ -140,7 +140,10 @@ def test_project_dialogs_use_root_but_save_import_export_keep_project_path(tmp_p
     monkeypatch.setattr(QFileDialog, "getSaveFileName", save_file)
     selected_projects = []
     monkeypatch.setattr(window, "_Project_Open", selected_projects.append)
-    monkeypatch.setattr(window, "_Project_Write", saved.append)
+    # The save workflow now asks independently whether to include data/results;
+    # this test checks path ownership, with that explicit choice already made.
+    monkeypatch.setattr(window, "_SaveOptions_Select", lambda: False)
+    monkeypatch.setattr(window, "_Project_Write", lambda path, **kwargs: saved.append(path))
     try:
         window._ProjectDialog_Open()
         assert opened == [root]

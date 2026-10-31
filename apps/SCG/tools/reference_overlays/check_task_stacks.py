@@ -4896,6 +4896,79 @@ H743_INPUT_REVIEW_SHA256 = "47d8261e90ec7cc93eff68271b54e5c7c5400afc56ab10e42b68
 
 H743_INPUT_REVIEW_PATH = Path(__file__).with_name("h743_stack_inputs.json")
 
+ASTRA_INPUT_REVIEW_SHA256 = "8e0fd46211b5b37373c8daefb29655a4707763ea21dc15d4e9a92c58664ff94f"
+ASTRA_INPUT_REVIEW_PATH = Path(__file__).with_name("astra_stack_inputs.json")
+
+
+def AstraInputReview_Read():
+    """A sealed review record, never an automatically trusted observed graph."""
+    path = ASTRA_INPUT_REVIEW_PATH
+    if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != ASTRA_INPUT_REVIEW_SHA256:
+        raise ValueError("Unreviewed Astra compilation-input manifest")
+    review = json.loads(path.read_text(encoding="utf8"))
+    if review.get("schema") != "silverstar.astra-stack-inputs/1":
+        raise ValueError("Unsupported Astra compilation-input review")
+    return review
+
+
+def AstraInputCase_Get(root):
+    # Legacy candidates retain their original verifier. A candidate can only
+    # select one new case through the entire immutable build declaration set.
+    if not (root / "Makefile").is_file():
+        return None
+    declarations = {"Makefile", *(p.relative_to(root).as_posix() for p in root.rglob("*.mk")
+        if p.relative_to(root).parts[0] not in ("build", ".git", ".fccg"))}
+    actual = {name: H743InputHash_Get(root, name) for name in sorted(declarations)}
+    review = AstraInputReview_Read()
+    matches = [case for case in review["cases"] if case["build_declarations"] == actual]
+    if len(matches) > 1:
+        raise ValueError("Ambiguous Astra compilation-input review")
+    return (review, matches[0]) if matches else None
+
+
+def AstraCompilationInputs_Verify(root, sources, build, prefix="arm-none-eabi-"):
+    selected = AstraInputCase_Get(root)
+    if selected is None:
+        return None
+    review, case = selected
+    project = json.loads((root / "SilverStar.ssproject").read_text(encoding="utf8"))
+    if (build.name != case["configuration"] or
+            project["build"]["target_profile"] != case["target_profile"] or
+            Command_Read([prefix + "gcc", "--version"], root).splitlines()[0] != case["compiler"]):
+        raise ValueError("Unreviewed Astra compiler, target or configuration")
+    if sorted(sources) != case["sources"]:
+        raise ValueError("Changed complete Astra compiled source set")
+    whole = {p.relative_to(root).as_posix() for p in root.rglob("*")
+        if p.is_file() and p.suffix.lower() in (".h", ".inc", ".s", ".ld")
+        and p.relative_to(root).parts[0] not in ("build", ".git", ".fccg")}
+    if whole != set(case["header_assembly_linker_inputs"]):
+        raise ValueError("Changed Astra project header/assembly/linker input set")
+    actual = {}
+    for name in {*whole, *sources}:
+        actual[name] = H743InputHash_Get(root, name)
+        if actual[name] != case["file_hashes"].get(name):
+            raise ValueError("Changed complete Astra project input: " + name)
+    proofs = []
+    for source in sources:
+        dependency = build / Path(source).with_suffix(".d")
+        if not dependency.is_file():
+            raise ValueError("Missing Astra compiler dependency report: " + source)
+        dependencies = dependency.read_text(encoding="utf8").split(":", 1)[1].replace("\\\n", " ").split("\n", 1)[0].split()
+        pairs = []
+        for name in dependencies:
+            if name not in actual:
+                actual[name] = H743InputHash_Get(root, name)
+            if actual[name] != case["file_hashes"].get(name):
+                raise ValueError("Changed complete Astra compiled input: " + name)
+            pairs.append([name, actual[name]])
+        closure = BindingClosureHash_Get(source, actual[source], pairs)
+        if closure != case["compiled_input_closures"].get(source):
+            raise ValueError("Unreviewed paired Astra source/compiler input closure: " + source)
+        proofs.append({"source": source, "normalized_source_sha256": actual[source],
+            "dependencies": dependencies, "compiled_input_sha256": closure,
+            "review_revision": review["review_revision"], "review_case": case["name"]})
+    return proofs
+
 
 def H743InputHash_Get(root, relative):
     path = root / relative
@@ -4951,7 +5024,10 @@ def H743CompilationInputs_Verify(root, sources, build):
                        "review_revision": review["review_revision"]})
     return proofs
 
-def BindingSources_Verify(root, sources, build):
+def BindingSources_Verify(root, sources, build, prefix="arm-none-eabi-"):
+    astra = AstraCompilationInputs_Verify(root, sources, build, prefix)
+    if astra is not None:
+        return astra
     project = root / "SilverStar.ssproject"
     if project.is_file() and json.loads(project.read_text(encoding="utf8"))["build"]["target_profile"] == "SilverStar_H743ZI":
         return H743CompilationInputs_Verify(root, sources, build)
@@ -5035,7 +5111,9 @@ def BindingHeader_Verify(root, path):
         raise ValueError("Changed or missing reviewed callback compilation input: " + path)
     actual = BindingSourceHash_Get((root / path).read_text(encoding="utf-8"))
     if actual not in BindingSourceVersions_Get(path):
-        raise ValueError("Changed or missing reviewed callback compilation input: " + path)
+        selected = AstraInputCase_Get(root)
+        if selected is None or selected[1]["file_hashes"].get(path) != actual:
+            raise ValueError("Changed or missing reviewed callback compilation input: " + path)
     return actual
 
 def IndirectSites_Get(rows):
@@ -5419,7 +5497,7 @@ def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str =
     callback_bindings = MpuCallbackBindings_Resolve(
         root, sources, instructions, edges, indirect, nm, prefix, elf)
 
-    binding_source_proofs = BindingSources_Verify(root, sources, build)
+    binding_source_proofs = BindingSources_Verify(root, sources, build, prefix)
 
     def Closure_Get(name: str) -> set[str]:
         seen: set[str] = set()
@@ -5513,6 +5591,7 @@ def main() -> int:
     destination = root / Path(report["elf"]).parent / "stack-budget.json"
     destination.resolve().relative_to(root)
     destination.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    print("FIRMWARE_STACK_REPORT|" + str(destination.resolve()), flush=True)
     for row in report["tasks"]:
         print(f"{row['task']}: configured={row['configured_bytes']} estimate={row['worst_known_bytes']} margin={row['margin_bytes']}")
     print(json.dumps(report["checks"], indent=2))

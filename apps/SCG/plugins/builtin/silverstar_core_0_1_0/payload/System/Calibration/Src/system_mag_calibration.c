@@ -8,6 +8,7 @@
 #include "project_device_instances.h"
 #include "silverstar_assert.h"
 #include "system_installation_capture_if.h"
+#include "system_installation_active_if.h"
 
 #define SYSTEM_MAG_CAL_BODY_BYTES 80U
 #define SYSTEM_MAG_CAL_FLOAT_COUNT 16U
@@ -249,6 +250,7 @@ static void SystemMagCalibration_EntrySet(
     SystemMagCalibrationEntry *entry = &s_mag_calibration[instance_id];
     uint8_t row;
     uint8_t column;
+    SystemInstallationActive_DependenciesChanged();
     SILVERSTAR_ASSERT_OBJECT(packet, uint8_t, SILVERSTAR_ASSERT_MODULE_SYSTEM);
     SILVERSTAR_ASSERT_OBJECT(values, float, SILVERSTAR_ASSERT_MODULE_SYSTEM);
     for (row = 0U; row < 3U; row++)
@@ -313,7 +315,7 @@ uint8_t SystemMagCalibration_ReadyForMissionGet(void)
         { PlatformCritical_Exit(state); return 0U; }
     }
     PlatformCritical_Exit(state);
-    return 1U;
+    return SystemInstallationActive_ReadyForMissionGet();
 }
 
 uint32_t SystemMagCalibration_GenerationHashGet(void)
@@ -445,6 +447,7 @@ static SystemMagCalibrationResult SystemMagCalibration_ClearRequestOwned(
     if (((entry->status.active != 0U) || (entry->candidate_valid != 0U)) &&
         (SystemMagCalibration_IdentityMatches(entry, &descriptor) == 0U))
     { PlatformCritical_Exit(state); return SystemMagCalibrationResult_WrongDevice; }
+    SystemInstallationActive_DependenciesChanged();
     (void)memset(entry->candidate, 0, sizeof(entry->candidate));
     entry->candidate_valid = 1U;
     SystemMagCalibration_IdentitySet(entry, &descriptor);
@@ -781,6 +784,7 @@ SystemMagCalibrationResult SystemMagCalibration_SampleApply(
     SystemMagCalibrationResult result;
     PlatformCriticalState state;
     float corrected[3];
+    uint32_t parent_generation,parent_crc;
     if (sample == NULL)
     { return SystemMagCalibrationResult_InvalidArgument; }
     result = SystemMagCalibration_ProviderGet(instance_id, &descriptor);
@@ -806,10 +810,17 @@ SystemMagCalibrationResult SystemMagCalibration_SampleApply(
     if (SystemMagCalibration_IdentityMatches(&s_mag_calibration[instance_id], &descriptor) == 0U)
     { PlatformCritical_Exit(state); return SystemMagCalibrationResult_WrongDevice; }
     calibration = s_mag_calibration[instance_id].correction;
+    parent_generation=s_mag_calibration[instance_id].status.generation;
+    parent_crc=s_mag_calibration[instance_id].status.intrinsic_crc;
     PlatformCritical_Exit(state);
     result = SystemMagCalibration_VectorCorrect(&calibration,
         sample->magnetic_field_b_uT, corrected);
     if (result != SystemMagCalibrationResult_Ok) { return result; }
+    if (SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U) {
+        if (SystemInstallationActive_MagTransform(instance_id,parent_generation,parent_crc,
+                corrected,corrected)!=SystemInstallationActiveResult_Ok)
+        { return SystemMagCalibrationResult_NotReady; }
+    }
     /* Publish only after the complete vector passed numerical checks. The
      * sample is caller-owned; failures leave all its bytes unchanged. */
     (void)memcpy(sample->magnetic_field_b_uT, corrected, sizeof(corrected));

@@ -110,6 +110,7 @@ REFERENCE_REQUIRED_FILES = (
 PROTOCOL_SOURCE_PATHS = (
     "Protocol/Src/air_protocol.c",
     "System/Src/system_console.c",
+    "System/Src/system_console_dispatch.c",
     "Protocol/SSLOG/Src/sslog_protocol.c",
     "Protocol/SSLOG/Src/sslog_records.c",
 )
@@ -1007,7 +1008,7 @@ def _Components_Get(
         path
         for path in first_party
         if path.startswith(("APP/", "Common/", "Modules/", "System/"))
-        and path != "System/Src/system_console.c"
+        and path not in ("System/Src/system_console.c", "System/Src/system_console_dispatch.c")
     ]
     protocol_sources = {
         "telemetry": [
@@ -1044,7 +1045,24 @@ def _Components_Get(
             f"{core_source_relative}/payload/{relative}"
         )
         for relative in (
+            "System/Inc/system_console_dispatch.h",
+            "System/Src/system_console_dispatch.c",
+            "Tools/astra_stack_inputs.json",
             "System/User/system_user_config.h",
+            "Interfaces/Inc/system_installation_capture_if.h",
+            "System/Alignment/Inc/system_alignment.h",
+            "Tests/Host/installation_unit_lease_boundary.c",
+            "Tests/Host/installation_start_unit_boundary.c",
+            "Interfaces/Inc/system_installation_active_if.h",
+            "System/Calibration/Src/system_mag_calibration.c",
+            "Tests/Host/installation_baseline_fixture.h",
+            "Tests/Host/installation_capture_host_port.c",
+            "Tests/Host/installation_unit_boundary.c",
+            "Tests/Host/installation_calibration_unit_boundary.c",
+            "Tests/Host/installation_alignment_unit_boundary.c",
+            "Tests/Host/test_installation_active.c",
+            "Tests/Host/test_system_inertial.c",
+            "Tests/Host/optional_start_mag_inputs.c",
             "Tests/Host/test_algorithm_parameters.c",
             "Tests/Host/test_air_kf.c",
             "Tests/Host/test_kf6_outage.c",
@@ -2684,8 +2702,8 @@ def _Components_Get(
                     "id": "maintenance.serial.0_0", "version": "0.0",
                     "display_names": {"zh_CN": "串口维护协议 0.0", "en_US": "Serial Maintenance Protocol 0.0"},
                     "service": "maintenance_service", "slot": "maintenance_protocol",
-                    "codec_sources": ["System/Src/system_console.c"],
-                    "parser_sources": ["System/Src/system_console.c"],
+                    "codec_sources": ["System/Src/system_console.c", "System/Src/system_console_dispatch.c"],
+                    "parser_sources": ["System/Src/system_console.c", "System/Src/system_console_dispatch.c"],
                     "include_dirs": ["System/Inc", "Interfaces/Inc"], "defines": [],
                     "binding": "maintenance_console",
                     "transport_selection": "single",
@@ -2831,6 +2849,16 @@ def _Components_Get(
         # Recommendation metadata and timestamp contracts are package-owned.
         if component_id == core_id:
             owned_core = json.loads(builtin_manifest_path.read_text(encoding="utf-8"))
+            mission_owned = (
+                'System/Inc/system_mission_process.h',
+                'System/Src/system_mission_process.c',
+                'System/Src/system_mission_process_runtime.c',
+            )
+            for relative in mission_owned:
+                component['fccg_owned_files'][relative] = f'plugins/builtin/{slug}/payload/{relative}'
+                component['manifest']['metadata'].setdefault('source_origins', {})[relative] = 'fccg_mission_process'
+                if relative.endswith('.c') and relative not in component['manifest']['build']['sources']:
+                    component['manifest']['build']['sources'].append(relative)
             if "capability_source_groups" in owned_core.get("metadata", {}):
                 component["manifest"]["metadata"]["capability_source_groups"] = owned_core["metadata"]["capability_source_groups"]
             for relative in (

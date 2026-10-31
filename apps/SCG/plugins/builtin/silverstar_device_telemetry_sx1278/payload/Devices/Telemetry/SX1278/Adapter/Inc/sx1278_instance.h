@@ -6,6 +6,7 @@ const char *Sx1278TelemetryInstance_NameGet(uint8_t instance);
 SystemDeviceResult Sx1278TelemetryInstance_Init(uint8_t instance);
 SystemDeviceResult Sx1278TelemetryInstance_Start(uint8_t instance);
 SystemDeviceResult Sx1278TelemetryInstance_Stop(uint8_t instance);
+SystemDeviceResult Sx1278TelemetryInstance_ModeSet(uint8_t instance, SystemTelemetryMode mode);
 SystemDeviceResult Sx1278TelemetryInstance_Send(
     uint8_t instance, const uint8_t *data, uint16_t length);
 SystemDeviceResult Sx1278TelemetryInstance_SendControl(uint8_t instance,

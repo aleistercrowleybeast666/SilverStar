@@ -75,10 +75,12 @@
           "service": "maintenance_service",
           "slot": "maintenance_protocol",
           "codec_sources": [
-            "System/Src/system_console.c"
+            "System/Src/system_console.c",
+            "System/Src/system_console_dispatch.c"
           ],
           "parser_sources": [
-            "System/Src/system_console.c"
+            "System/Src/system_console.c",
+            "System/Src/system_console_dispatch.c"
           ],
           "include_dirs": [
             "System/Inc",
@@ -117,10 +119,12 @@
           "service": "maintenance_service",
           "slot": "maintenance_protocol",
           "codec_sources": [
-            "System/Src/system_console.c"
+            "System/Src/system_console.c",
+            "System/Src/system_console_dispatch.c"
           ],
           "parser_sources": [
-            "System/Src/system_console.c"
+            "System/Src/system_console.c",
+            "System/Src/system_console_dispatch.c"
           ],
           "include_dirs": [
             "System/Inc",

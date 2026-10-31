@@ -366,6 +366,11 @@ static void Test_DeactivateIsolation(uint8_t retired, PlatformResult gpio_result
     for (uint8_t instance = 0U; instance < TEST_INSTANCE_COUNT; instance++)
     {
         TEST_CHECK(Lora_Init(instance) == LORA_INIT_OK);
+        /* Init deliberately preserves the configured schedule across recovery.
+         * This isolation scenario needs two flight endpoints, independently of
+         * the preceding test which intentionally configures endpoint 1 Ground. */
+        TEST_CHECK(Lora_ScheduleRoleSet(instance, LoraScheduleRole_Flight) ==
+                   LoraScheduleRoleResult_Ok);
         TEST_CHECK(Lora_TxEnqueueTracked(instance, payload, sizeof(payload),
                                        &completed[instance]) == LORA_TX_ENQUEUE_OK);
         Lora_StartRx(instance);

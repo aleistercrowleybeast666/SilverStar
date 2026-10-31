@@ -493,6 +493,13 @@ SystemDeviceResult SystemFlightRecovery_Init(void)
     return SYSTEM_DEVICE_OK;
 }
 
+SystemDeviceResult SystemFlightRecovery_StageRecoveryRequest(uint32_t stage_id_hash)
+{
+    (void)stage_id_hash;
+    TEST_CHECK(0); /* Default recording-only process must never request recovery. */
+    return SYSTEM_DEVICE_NOT_READY;
+}
+
 SystemDeviceResult SystemFlightRecovery_Process(
     const SystemFlightRecoveryInput *input)
 {

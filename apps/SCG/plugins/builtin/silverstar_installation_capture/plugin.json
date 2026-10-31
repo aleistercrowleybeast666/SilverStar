@@ -23,6 +23,8 @@
       "Modules/InstallationCapture/Src/installation_capture.c",
       "Modules/InstallationCapture/Src/installation_lease.c",
       "Modules/InstallationCapture/Src/installation_store.c",
+      "Modules/InstallationCapture/Src/installation_active.c",
+      "Modules/InstallationCapture/Src/installation_active_wire.c",
       "Modules/InstallationCapture/Src/capture_port.c",
       "Modules/InstallationCapture/Src/capture_info.c",
       "Modules/InstallationCapture/Src/capture_primitives.c",

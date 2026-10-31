@@ -605,11 +605,13 @@ class FileTransferManager(QObject):
         self.job_busy = False
         self.transport_factory = FileServiceSerialTransport
         self.mag_active = False
+        self.installation_dialog = None
         from transport.magnetometer_transport import MaintenanceMagTransport
         from ui.magnetometer_dialog import MagCalibrationDialog
         self.mag_transport = MaintenanceMagTransport(self)
         self.mag_dialog = MagCalibrationDialog(self.mag_transport, controller.window.i18n, controller.window)
         controller.window.on_mag_calibration = self.open_magnetometer_calibration
+        controller.window.on_installation_calibration = self.Installation_Open
         controller.window.on_mag_retranslate = self.mag_dialog.retranslate
         from ui.log_export_dialog import LogExportDialog
         self.export_dialog=LogExportDialog(controller.window.i18n,controller.window)
@@ -637,14 +639,14 @@ class FileTransferManager(QObject):
 
     @property
     def busy(self) -> bool:
-        return self.worker is not None or self.job_busy or self.mag_active
+        return self.worker is not None or self.job_busy or self.mag_active or self.installation_dialog is not None
 
     def _tr(self, key: str, **params) -> str:
         return self.controller._tr(key, **params)
 
     def _available(self, *, maintenance=False, magnetic=False) -> bool:
         c = self.controller
-        occupied = self.worker is not None or self.job_busy or (self.mag_active and not magnetic)
+        occupied = self.worker is not None or self.job_busy or (self.mag_active and not magnetic) or self.installation_dialog is not None
         return not (occupied or c.state.mission_started or c.state.start_transaction_pending() or (not maintenance and (c.logger.session_active
                     or c.worker is not None or c.protocol_worker is not None))
                     or c.processing_thread is not None or c.simulation_thread is not None
@@ -653,6 +655,29 @@ class FileTransferManager(QObject):
     def open_magnetometer_calibration(self):
         self.mag_dialog.open_session()
         self.mag_dialog.raise_()
+
+    def Installation_Open(self):
+        if self.installation_dialog is not None:
+            self.installation_dialog.show(); self.installation_dialog.raise_(); return
+        if not self._available(maintenance=True) or self.owner is None or not self.owner.connected.is_set():
+            self._ErrorNotice_Show('请连接空闲的维护接口；安装标定与采集、文件传输和普通磁标定互斥。')
+            return
+        from ui.installation_dialog import InstallationDialog
+        dialog = InstallationDialog(self.owner, self.controller.data_dir, self.controller.window)
+        self.installation_dialog = dialog
+        dialog.sessionClosed.connect(self.Installation_Closed)
+        self.controller.window.set_data_tools_busy(True)
+        self.controller.window.maintenance_page.console.set_connection(True, True)
+        self.export_dialog.set_busy(True, 'installation')
+        dialog.show()
+
+    def Installation_Closed(self):
+        dialog = self.installation_dialog
+        self.installation_dialog = None
+        if dialog is not None: dialog.deleteLater()
+        self.controller.window.set_data_tools_busy(self.busy)
+        self.controller.window.maintenance_page.console.set_connection(self.controller.window._debug_connected, self.busy)
+        self.export_dialog.set_busy(self.busy)
 
     def mag_acquire(self):
         if self.mag_active or not self._available(maintenance=True):
@@ -692,7 +717,8 @@ class FileTransferManager(QObject):
             self._failed(Text(c.window.i18n, '所选波特率与已导入描述不一致，请核对维护 UART 参数。',
                               'Selected baud differs from imported descriptor; check maintenance UART parameters.'))
             return
-        owner = MaintenanceOwner(port, baud, transport_factory=self.transport_factory, parent=self, expected_uart=expected_uart)
+        owner = MaintenanceOwner(port, baud, transport_factory=self.transport_factory, parent=self,
+            expected_uart=expected_uart, installation_capture_enabled=True)
         from services.maintenance_trace import MaintenanceTrace
         owner.trace_factory = lambda: MaintenanceTrace(c.log_dir.parent/'diagnostics',port,baud)
         self.owner = owner
@@ -739,6 +765,7 @@ class FileTransferManager(QObject):
         self._Declaration_Refresh()
         window.set_debug_status("maintenance.serial_open" if connected else "maintenance.disconnected", detail)
         if not connected:
+            if self.installation_dialog is not None: self.installation_dialog.Close_Request()
             window._debug_service_supported = False
             window.maintenance_page.catalog.clear()
             self.catalog_records=[]
@@ -826,10 +853,14 @@ class FileTransferManager(QObject):
         self.job_busy = False
         self._pending_destination=None
         self._verified_files=[]
-        self.controller.window.set_data_tools_busy(self.worker is not None or self.mag_active)
+        self.controller.window.set_data_tools_busy(self.busy)
         self.controller.window.maintenance_page.cancel.setEnabled(self.worker is not None)
-        self.export_dialog.set_busy(self.mag_active)
-        self.controller.window.maintenance_page.console.set_connection(self.controller.window._debug_connected,False)
+        self.export_dialog.set_busy(self.busy)
+        # Read-only console queries remain serialized during MAG collection;
+        # installation capture reserves the complete console transaction.
+        self.controller.window.maintenance_page.console.set_connection(
+            self.controller.window._debug_connected,
+            self.worker is not None or self.installation_dialog is not None)
         self.mag_transport.pump()
 
     def _catalog_details(self,records):
@@ -1152,21 +1183,23 @@ class FileTransferManager(QObject):
 
     def shutdown(self) -> bool:
         self.stopping = True
+        installation_done = self.installation_dialog is None or self.installation_dialog.Close_Request()
         self.mag_dialog.request_close()
         self.disconnect_debug()
         worker = self.worker
         if worker is not None:
             worker.request_cancel()
         # Retain the QThread and its parent if an OS I/O call does not return.
-        return (worker is None or worker.wait(5000)) and (self.owner is None or
+        return installation_done and (worker is None or worker.wait(5000)) and (self.owner is None or
             self.owner.wait(5000) and self.owner.unreleased_transport is None) and self.mag_dialog.shutdown()
 
     def request_window_close(self) -> bool:
         self.export_dialog.close()
+        installation_done = self.installation_dialog is None or self.installation_dialog.Close_Request()
         mag_done = self.mag_dialog.request_close()
         self.disconnect_debug()
         if (self.worker is None or not self.worker.isRunning()) and (self.owner is None or
-                not self.owner.isRunning() and self.owner.unreleased_transport is None) and mag_done:
+                not self.owner.isRunning() and self.owner.unreleased_transport is None) and mag_done and installation_done:
             return True
         self.cancel()
         if self.dialog is not None:

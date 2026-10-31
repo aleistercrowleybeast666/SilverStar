@@ -6,11 +6,11 @@ The current development line is 0.1.3, with product identity read from root `VER
 
 ## 当前配置与版本
 
-现行开发版使用三个自由切换的配置工作区：硬件与通信、飞行流程、检查与生成。工程格式 14–23 保持各自兼容边界；共享功能编排字段 `mission_functions` 使用格式 23，阶段与已有安装扩展保持原身份。仅浏览旧工程不注入新字段或升级格式。产品版本不机械改写独立插件、协议、decoder 或已有用户工程身份。
+现行开发版使用三个自由切换的配置工作区：硬件与通信、任务流程、检查与生成。当前工程格式为 24；旧格式通过版本化迁移读取，原始文件在用户保存前保持不变。格式 24 移除地面端 `enabled` 字段，生成对象由显式 `TargetScope` 决定；共享功能和阶段保持各自稳定身份。产品版本不机械改写独立插件、协议、decoder 或已有用户工程身份。
 
-状态估计、控制/动作、记录和遥测通过同页阶段详情配置，actual values、单位、representation 和 shared_key 仍由既有插件/参数解析层拥有。新 `silverstar.mission-functions/1` 保存唯一功能实例、输入输出引用及显式边界；多阶段仅显示同一实例的开始、持续和停止关系。参数仍保存在 `algorithm_parameters`，不复制到胶囊。
+状态估计、控制/动作、记录和遥测在“唯一功能实例 × 阶段范围”主表中配置。点击名称或范围打开单实例属性；阶段胶囊只编辑条件与相关引用。子属性窗口修改父草稿，父窗口取消会一并撤销。actual values、单位、representation 和 shared_key 仍由既有插件/参数解析层拥有。`silverstar.mission-functions/1` 保存唯一功能实例、输入输出引用及显式边界；多阶段仅显示同一实例的开始、持续和停止关系。参数仍保存在 `algorithm_parameters`，不复制到胶囊。
 
-可精确映射到现有生命周期的适配保持原生成行为，包括系统准备、已接受 START 初始化与落地收尾。任意自定义阶段边界仍须明确标为参考编排，在缺少固件消费者时拒绝生成；不能移除旧 `mission_process_firmware_binding_unavailable` 来静默丢掉配置。GSHC/FLP 使用同一版本化声明读取，实际运行状态与原日志不能由桌面配置补造。
+`silverstar.mission-process/2` 使用有界原生阶段表和固件调度消费者，支持合法事件/加速度条件、共享功能区间及依赖。默认准备后由已接受 START 进入上升；燃尽、滑行和开伞按流程显式配置。旧参考编排必须经校验后显式迁移，未知条件或缺少消费者仍拒绝生成。既有准入、对准、校准和动作许可继续由各自 owner 决定。GSHC/FLP 使用同一版本化声明读取，实际运行状态与原日志不能由桌面配置补造。
 
 详细参数见[参数契约](ALGORITHM_PARAMETERS.md)，界面流程见[应用说明](APP_README.md)。
 
@@ -54,6 +54,7 @@ Physical Device Instance 与 plugin type 分离。一个物理设备可提供多
 - Verified Board插件保存固定logical→physical mapping。`.ioc`和generated defines只验证physical alias，CubeMX scan order不得重排`PLATFORM_GPIO_*`等逻辑ID。
 - Custom CubeMX由用户在Hardware Connection手动分配资源。
 - HardwareWorkspacePage 统一挂载 Flight/Ground 两套独立编辑器；板卡和完整 CubeMX 目录导入在首屏，硬件快照、路径、资源和目标构建参数不跨目标混用。Ground 不参与生成时仍保留其完整配置。
+- 两端板卡摘要之后紧接共享无线摘要及事务入口，设备和资源详情排在其后。共享无线草稿允许先后调整双方模块和公共 PHY，中间不兼容不会禁用下一步选择；Apply 对所有已配置端点统一校验并一次提交，Cancel 零写入。更换无线家族会撤销旧引脚绑定，要求显式重配。
 - MCU/Platform插件拥有Target Profile、HAL/CMSIS policy、CPU/FPU、memory、backend和resource-render ABI。
 
 ## 阶段工作区与运行边界
@@ -62,7 +63,7 @@ FlightWorkflowPage 拥有阶段选择和同页协调；MissionProcessPanel 编�
 
 区间采用开始包含、停止不包含的显式边界。改名保留 ID；插入阶段按边界自然覆盖；倒序、空区间、缺失边界、输出冲突及依赖问题由模型校验报告。跨阶段不重新初始化状态、协方差或历史，不新建任意回调注册体系或 RTOS 任务。函数参数档 `.ssparameters` 只修改明确算法的实际输入，身份、版本、manifest 摘要、单位和表示均须匹配，不替换硬件或任务。
 
-Logger 生命周期与记录功能区间不同：系统准备、必要诊断、START、尾段排空和最终关闭仍沿用现有消费者。当前普通记录策略继续使用 EVERY/DECIMATION/PERIODIC/EVENT/ONE_SHOT 原义；尚无固件消费者的自定义区间只可保存为参考草稿，不能声称已经过滤实际数据。详见[飞前日志](PREFLIGHT_LOGGING.md)。
+Logger 生命周期与记录功能区间不同：系统准备、必要诊断、START、尾段排空和最终关闭仍沿用现有消费者。当前普通记录策略继续使用 EVERY/DECIMATION/PERIODIC/EVENT/ONE_SHOT 原义；有界任务表已消费受支持的 recording/telemetry 区间和 INS/estimator 依赖。其他缺少固件消费者的声明仍拒绝生成。详见[飞前日志](PREFLIGHT_LOGGING.md)。
 
 ## 4. Protocol slots
 Telemetry、Maintenance、Logging是三个独立nullable槽。物理Device存在与协议是否启用相互独立；移除唯一transport会清空依赖协议，恢复Device不会偷偷重启协议。

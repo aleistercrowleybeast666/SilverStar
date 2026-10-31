@@ -9,7 +9,7 @@ from silverstar_fccg.project.reference import ReferenceProject_Create
 def test_ground_uart_capacity_uses_gsp_overhead_and_8n1(builtin_catalog) -> None:
     model = ReferenceProject_Create("Capacity", catalog=builtin_catalog)
     model.ground_target = replace(
-        model.ground_target, enabled=True, pc_interface="uart", baudrate=230400,
+        model.ground_target,  pc_interface="uart", baudrate=230400,
     )
     plan = GroundPcCapacity_Resolve(model)
     assert plan.serial_bytes_per_second == 23040
@@ -23,7 +23,7 @@ def test_ground_uart_capacity_uses_gsp_overhead_and_8n1(builtin_catalog) -> None
 def test_ground_usb_capacity_cannot_be_inferred_from_virtual_baud(builtin_catalog) -> None:
     model = ReferenceProject_Create("UsbCapacity", catalog=builtin_catalog)
     model.ground_target = replace(
-        model.ground_target, enabled=True, pc_interface="usb_cdc", baudrate=230400,
+        model.ground_target,  pc_interface="usb_cdc", baudrate=230400,
     )
     plan = GroundPcCapacity_Resolve(model)
     assert plan.serial_bytes_per_second is None

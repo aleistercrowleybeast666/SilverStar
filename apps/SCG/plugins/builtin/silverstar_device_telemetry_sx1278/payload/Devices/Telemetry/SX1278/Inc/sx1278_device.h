@@ -3,6 +3,13 @@
 
 #include "sx1278_chip.h"
 
+typedef enum
+{
+    Sx1278OperatingMode_HalfDuplex = 0,
+    Sx1278OperatingMode_TransmitOnly,
+    Sx1278OperatingMode_ReceiveOnly
+} Sx1278OperatingMode;
+
 typedef struct
 {
     uint64_t last_tx_us, last_rx_us;
@@ -23,6 +30,9 @@ Sx1278Result Sx1278_Stop(uint8_t instance);
 /* Busy until the Process owner confirms reset/RF-switch quiescence; Io
  * preserves a failed attempt. Continue the owner while a stop is pending. */
 Sx1278Result Sx1278_StopStatusGet(uint8_t instance);
+/* Latches a direction request. Busy means Process must finish the in-flight
+ * packet/physical transition. Desired policy survives stop/start and recovery. */
+Sx1278Result Sx1278_ModeSet(uint8_t instance, Sx1278OperatingMode mode);
 Sx1278Result Sx1278_Process(uint8_t instance);
 Sx1278Result Sx1278_Send(uint8_t instance, const uint8_t *data,
     uint16_t length, uint8_t control, uint32_t *transaction_id);

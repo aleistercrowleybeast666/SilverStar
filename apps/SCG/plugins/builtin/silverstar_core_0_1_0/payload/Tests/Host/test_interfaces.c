@@ -22,7 +22,8 @@ _Static_assert(offsetof(SystemInertialIncrement,
                "body delta-velocity layout changed");
 /* The existing ESKF selection appends two raw BODY half-samples. Memory
  * placement (legacy/auto) must not change either interface layout. */
-#if defined(SYSTEM_BUILD_ESKF15_ENABLED) && (SYSTEM_BUILD_ESKF15_ENABLED != 0U)
+#if (defined(SYSTEM_BUILD_ESKF15_ENABLED) && (SYSTEM_BUILD_ESKF15_ENABLED != 0U)) || \
+    (defined(SYSTEM_BUILD_AUGMENTED_ENABLED) && (SYSTEM_BUILD_AUGMENTED_ENABLED != 0U))
 _Static_assert(offsetof(SystemInertialIncrement, body_gyro_radps) == 40U,
                "ESKF body gyro layout changed");
 _Static_assert(sizeof(((SystemInertialIncrement *)0)->body_gyro_radps) == 24U,
@@ -33,8 +34,15 @@ _Static_assert(sizeof(((SystemInertialIncrement *)0)->body_accel_mps2) == 24U,
                "ESKF requires two three-axis acceleration half-samples");
 _Static_assert(offsetof(SystemInertialIncrement, quality_flags) == 88U,
                "ESKF quality flags layout changed");
+#if defined(SYSTEM_BUILD_AUGMENTED_ENABLED) && (SYSTEM_BUILD_AUGMENTED_ENABLED != 0U)
+_Static_assert(offsetof(SystemInertialIncrement, interval_start_timestamp_us) == 96U,
+               "Augmented estimator acquisition boundary layout changed");
+_Static_assert(sizeof(SystemInertialIncrement) == 104U,
+               "Augmented estimator inertial increment layout changed");
+#else
 _Static_assert(sizeof(SystemInertialIncrement) == 96U,
                "ESKF inertial increment layout changed");
+#endif
 #else
 _Static_assert(sizeof(SystemInertialIncrement) == 40U,
                "non-ESKF inertial increment layout changed");

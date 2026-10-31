@@ -69,3 +69,13 @@ void CapturePort_WordSet(volatile uint32_t *value,uint32_t token)
     *value=token;
     PlatformCritical_Exit(lock);
 }
+
+uint8_t CapturePort_WordConsume(volatile uint32_t *value,uint32_t expected)
+{
+    PlatformCriticalState lock=PlatformCritical_Enter();
+    uint8_t consumed=(uint8_t)(*value==expected);
+    if(consumed!=0U){*value=0U;}
+    PlatformCritical_Exit(lock);
+    __atomic_signal_fence(__ATOMIC_ACQUIRE);
+    return consumed;
+}

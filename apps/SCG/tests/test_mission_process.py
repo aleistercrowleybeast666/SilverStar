@@ -24,7 +24,10 @@ def _Sample(time, *events, valid=True, altitude=None, velocity=None):
 def test_published_contract_matches_runtime_and_portable_example(builtin_catalog):
     process=json.loads((ROOT/'contracts/mission_process_v1.json').read_text(encoding='utf-8'))
     implementation=runpy.run_path(str(ROOT/'tools/silverstar_mission_process.py'))
-    assert process['signal_units']==implementation['SIGNALS']
+    native=json.loads((ROOT/'contracts/mission_process_v2.json').read_text(encoding='utf-8'))
+    assert process['signal_units']=={key:value for key,value in implementation['SIGNALS'].items() if key!='acceleration_g'}
+    assert native['signal_units']==implementation['SIGNALS']
+    assert native==implementation['FIRMWARE_CONTRACT']
     assert tuple(process['event_ids'])==implementation['EVENTS']
     assert tuple(process['actions'])==implementation['ACTIONS']
     assert set(process['root_fields'])==set(MissionProcess_Default())
@@ -35,8 +38,11 @@ def test_published_contract_matches_runtime_and_portable_example(builtin_catalog
 
 def test_uncontrolled_reference_has_separate_start_predeployment_and_no_hardware_actions(tmp_path, builtin_catalog):
     model = ReferenceProject_Create(catalog=builtin_catalog)
+    assert model.mission_process['execution']=='firmware_bounded'
+    model.mission_process = None  # An explicitly imported absent profile stays legacy.
     legacy = model.Dictionary_Get()
-    assert legacy['format_version'] == 14
+    assert legacy['format_version'] == 24
+    assert ProjectModel_Parse(legacy).mission_process is None
     model.mission_process = MissionProcess_Default()
     deploy = next(row for row in model.mission_process['stages'] if row['stage_id']=='deploy')
     deploy['action'] = {'kind':'request_recovery','target':'parachute_pyro0'}
@@ -46,7 +52,7 @@ def test_uncontrolled_reference_has_separate_start_predeployment_and_no_hardware
         'action':{'kind':'none','target':''}}
     model.mission_process['stages'].insert(4,custom)
     data = model.Dictionary_Get()
-    assert data['format_version'] == 22
+    assert data['format_version'] == 24
     restored = ProjectModel_Parse(deepcopy(data))
     assert restored.Dictionary_Get() == data
     bad = deepcopy(data); bad['format_version'] = 21
@@ -55,7 +61,7 @@ def test_uncontrolled_reference_has_separate_start_predeployment_and_no_hardware
     profile = MissionProfile_Build(restored,builtin_catalog)
     path = tmp_path/'custom.ssmission'; MissionProfile_Write(path,profile)
     assert MissionProfile_Read(path) == profile and profile['schema_version'] == 2
-    with pytest.raises(ValueError,match='firmware_binding_unavailable'):
+    with pytest.raises(ValueError,match='MISSION_PROCESS_REFERENCE_ONLY'):
         _FlightConfigHeader_Render(restored,builtin_catalog)
     samples = [_Sample(0,'ready'),_Sample(1000000,'start_accepted'),_Sample(2000000,'launch_detected'),
         _Sample(3000000,'burnout_detected'),_Sample(4000000,'apogee_confirmed'),_Sample(4100000),

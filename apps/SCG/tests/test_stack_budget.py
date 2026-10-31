@@ -4,6 +4,7 @@ import json
 import os
 import importlib.util
 import zipfile
+import sys
 from pathlib import Path
 
 import pytest
@@ -72,6 +73,25 @@ def test_stack_budget_includes_library_preindexed_sp_and_context(tmp_path, monke
     serial = next(row for row in report["tasks"] if row["task"] == "Serial")
     assert serial["worst_known_bytes"] == 64 + 16 + 256
     assert serial["chain"][-1] == {"function": "library", "frame_bytes": 16}
+
+
+@pytest.mark.parametrize('diagnostic,frame,expected',[(False,64,0),(False,2000,1),(True,64,2)])
+def test_machine_report_marker_only_names_written_budget(tmp_path,monkeypatch,capsys,diagnostic,frame,expected):
+    root=_ElfFixture_Create(tmp_path,monkeypatch,frame=frame)
+    monkeypatch.setattr(sys,'argv',['check_task_stacks.py','--project',str(root),'--prefix','unused-']+
+        (['--diagnostic'] if diagnostic else []))
+    assert stacks.main()==expected
+    lines=capsys.readouterr().out.splitlines()
+    markers=[line for line in lines if line.startswith('FIRMWARE_STACK_REPORT|')]
+    if diagnostic:
+        assert markers==[]
+    else:
+        assert len(markers)==1
+        path=Path(markers[0].split('|',1)[1])
+        assert path.is_absolute() and path.name=='stack-budget.json'
+        report=json.loads(path.read_text(encoding='utf8'))
+        assert report['passes'] is (expected==0)
+        assert report['whole_program_stack_acceptance'].startswith('NOT PROVEN')
 
 
 def test_stack_budget_fails_insufficient_margin(tmp_path, monkeypatch):
@@ -196,9 +216,10 @@ def test_unknown_empty_source_is_not_reviewed(tmp_path):
 
 @pytest.mark.parametrize('mutation', ['patch', 'runtime'])
 def test_product_patch_binding_accepts_only_authorized_complete_header(tmp_path, mutation):
-    payload = Path(__file__).resolve().parents[1] / 'plugins/builtin/silverstar_core_0_1_0/payload'
     relative = 'System/User/system_user_config.h'
-    text = (payload / relative).read_text(encoding='utf-8')
+    # Keep the exact historical V28 review bytes after active owners evolve.
+    with zipfile.ZipFile(Path(__file__).parent / 'fixtures/stack_review_20261025.zip') as archive:
+        text = archive.read(relative).decode('utf8')
     # V28 reviews these complete source bytes, without granting a compiled
     # dependency closure or weakening either forbidden mutation below.
     # Both original forbidden mutations below remain rejected.
@@ -321,7 +342,12 @@ def test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input(tmp_
         owner = base / 'plugins/builtin/silverstar_flight_logic_cycle_reference/payload'
     else:
         owner = base / 'plugins/builtin/silverstar_core_0_1_0/payload'
-    text = (owner / relative).read_text(encoding='utf8')
+    if relative in ('FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c',
+                    'System/Src/system_console.c'):
+        with zipfile.ZipFile(base / 'tests/fixtures/stack_review_20261025.zip') as archive:
+            text = archive.read(relative).decode('utf8')
+    else:
+        text = (owner / relative).read_text(encoding='utf8')
     assert stacks.BindingSourceHash_Get(text) in stacks.BindingSourceVersions_Get(relative)
     path = tmp_path / relative
     path.parent.mkdir(parents=True)

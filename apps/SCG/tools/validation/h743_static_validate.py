@@ -103,7 +103,6 @@ def Scenario_Create(service, cube: Path, algorithm: str, imu_count: int, tools: 
         # Existing START source uses a test GPIO. No ignition load is connected.
         DeviceInstance("launch_ignition0", "silverstar.device.actuator.launch_ignition"),
     ]
-    model.ground_target = replace(model.ground_target, enabled=False)
     model.strategies["estimator"] = "silverstar.algorithm.estimator." + algorithm
     model.strategies["alignment"] = "silverstar.algorithm.alignment.gravity_known_yaw"
     model.strategies["landing"] = None

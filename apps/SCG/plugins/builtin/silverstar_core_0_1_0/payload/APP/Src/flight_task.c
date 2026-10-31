@@ -25,6 +25,7 @@
 #include "system_mag_calibration.h"
 #include "system_mag_calibration_storage_if.h"
 #include "system_flight_recovery.h"
+#include "system_mission_process.h"
 #include "system_health.h"
 #include "system_indicator.h"
 #include "system_inertial.h"
@@ -1069,6 +1070,7 @@ static void FlightTask_AbortStart(void)
 
 static void FlightTask_RuntimeInitialize(void)
 {
+    SystemMissionProcess_Init();
     SystemDeviceResult result = SystemFlightRecovery_Init();
 
     if ((result != SYSTEM_DEVICE_OK) &&
@@ -1215,6 +1217,7 @@ void AppTask_Flight(void *argument)
         {
             /* Action/result diagnostics are latched in the manager snapshot. */
         }
+        SystemMissionProcess_RuntimeProcess();
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
         FlightTask_PreflightEventsProcess();
         FlightTask_StartDiagnosticProcess();

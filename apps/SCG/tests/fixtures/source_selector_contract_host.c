@@ -215,6 +215,20 @@ int main(int argc, char **argv)
 {
     if (argc != 3) { return 2; }
     uint8_t kind = (uint8_t)(argv[1][0] - '0');
+    if (strcmp(argv[2], "async_stop_progress") == 0)
+    {
+        Test_StateReset(); s_telemetry_count = 1U;
+        TEST_CHECK(SystemTelemetry_Init() == SYSTEM_DEVICE_OK);
+        TEST_CHECK(SystemTelemetry_Start() == SYSTEM_DEVICE_OK);
+        s_telemetry_stop_result[0] = SYSTEM_DEVICE_BUSY;
+        TEST_CHECK(SystemTelemetry_Stop() == SYSTEM_DEVICE_BUSY);
+        uint32_t calls = s_telemetry_process_count[0];
+        for (uint8_t tick = 0U; tick < 8U; tick++) { SystemTelemetry_Process(); }
+        TEST_CHECK(s_telemetry_process_count[0] == calls + 8U);
+        TEST_CHECK(s_telemetry.cleanup_pending[0] != 0U);
+        TEST_CHECK(s_telemetry.started[0] == 0U);
+        return Test_Finish("async_stop_progress");
+    }
     if (kind == 0U)
     {
         Test_SwitchFault(argv[2]);

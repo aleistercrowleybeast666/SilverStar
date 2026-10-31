@@ -40,7 +40,7 @@ def GroundEnvironmentFiles_Render(model, catalog, graph, sources, includes, defi
     for target in document["targets"].values():
         target["cppPreprocessAttrs"]["defineList"] = list(defines)
         configuration = target["toolchainConfigMap"]["GCC"]
-        configuration["cpuType"] = "Cortex-M" + cpu.removeprefix("cortex-m")
+        configuration["cpuType"] = "Cortex-M0+" if cpu == "cortex-m0plus" else "Cortex-M" + cpu.removeprefix("cortex-m")
         configuration["floatingPointHardware"] = "none" if fpu is None else "single" if "sp" in fpu else "double"
         configuration["scatterFilePath"] = graph.linker_script
         options = configuration["options"]

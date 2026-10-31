@@ -21,7 +21,7 @@
 typedef enum
 {
     Sx1278State_Stopped = 0, Sx1278State_ResetLow, Sx1278State_ResetWait,
-    Sx1278State_Rx, Sx1278State_Tx, Sx1278State_Recovery
+    Sx1278State_Rx, Sx1278State_Tx, Sx1278State_Recovery, Sx1278State_Standby
 } Sx1278State;
 
 typedef struct
@@ -55,11 +55,13 @@ typedef struct
     uint32_t since_ms, next_id;
     uint8_t receipt_next, initialized, wanted, stop_pending, tx_expired;
     Sx1278State state;
+    Sx1278OperatingMode requested_mode, active_mode;
 } Sx1278Context;
 
 typedef struct
 {
     uint8_t wanted, stop_pending;
+    Sx1278OperatingMode mode;
 } Sx1278Requests;
 
 _Static_assert((PROJECT_SX1278_INSTANCE_COUNT == 1U) &&
@@ -169,9 +171,11 @@ static Sx1278Requests Sx1278_RequestsGet(void)
         (s_context.wanted <= 1U) && (s_context.stop_pending <= 1U) &&
         ((s_context.stop_result == Sx1278Result_Ok) || (s_context.stop_result == Sx1278Result_Busy) ||
          (s_context.stop_result == Sx1278Result_Io)) &&
-        ((uint32_t)s_context.state <= (uint32_t)Sx1278State_Recovery) &&
+        ((uint32_t)s_context.state <= (uint32_t)Sx1278State_Standby) &&
+        ((uint32_t)s_context.requested_mode <= (uint32_t)Sx1278OperatingMode_ReceiveOnly) &&
+        ((uint32_t)s_context.active_mode <= (uint32_t)Sx1278OperatingMode_ReceiveOnly) &&
         ((s_context.state == Sx1278State_Tx) == (s_context.tx.id != 0U)));
-    Sx1278Requests requests = {s_context.wanted, s_context.stop_pending};
+    Sx1278Requests requests = {s_context.wanted, s_context.stop_pending, s_context.requested_mode};
     if (valid == 0U) { s_context.stats.ready = 0U; s_published.ready = 0U; }
     SILVERSTAR_ASSERT(valid != 0U,
         SILVERSTAR_ASSERT_MODULE_DEVICE, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
@@ -266,17 +270,44 @@ Sx1278Result Sx1278_StopStatusGet(uint8_t instance)
     return result;
 }
 
+Sx1278Result Sx1278_ModeSet(uint8_t instance, Sx1278OperatingMode mode)
+{
+    Sx1278Result result;
+    uint32_t lock;
+    if ((instance != 0U) || ((uint32_t)mode > (uint32_t)Sx1278OperatingMode_ReceiveOnly))
+    { return Sx1278Result_Invalid; }
+    lock = PlatformCritical_Enter(); s_context.requested_mode = mode;
+    result = ((s_context.initialized == 0U) || (s_context.wanted == 0U) ||
+        ((s_context.active_mode == mode) && (s_context.state != Sx1278State_Tx))) ?
+        Sx1278Result_Ok : Sx1278Result_Busy;
+    if (mode == Sx1278OperatingMode_ReceiveOnly)
+    {
+        Sx1278Queue_Check(&s_context.control); Sx1278Queue_Check(&s_context.data);
+        s_context.stats.tx_dropped += s_context.control.count + s_context.data.count;
+        s_context.control.count = 0U; s_context.data.count = 0U;
+    }
+    PlatformCritical_Exit(lock); return result;
+}
+
 static Sx1278Result Sx1278_RxStart(void)
 {
+    uint32_t lock = PlatformCritical_Enter();
+    Sx1278OperatingMode mode = s_context.requested_mode;
+    PlatformCritical_Exit(lock);
     Sx1278Result result = Sx1278Chip_ModeSet(&s_context.chip, 1U);
-    if (result == Sx1278Result_Ok) { result = Sx1278Frontend_Set(1U, 0U); }
+    if (result == Sx1278Result_Ok)
+    { result = Sx1278Frontend_Set((uint8_t)(mode != Sx1278OperatingMode_TransmitOnly), 0U); }
     if (result == Sx1278Result_Ok) { result = Sx1278Chip_RegisterWrite(&s_context.chip, 0x40U, 0U); }
     if (result == Sx1278Result_Ok) { result = Sx1278Chip_RegisterWrite(&s_context.chip, 0x12U, 0xFFU); }
-    if (result == Sx1278Result_Ok) { result = Sx1278Chip_ModeSet(&s_context.chip, 5U); }
+    if ((result == Sx1278Result_Ok) && (mode != Sx1278OperatingMode_TransmitOnly))
+    { result = Sx1278Chip_ModeSet(&s_context.chip, 5U); }
     if (result == Sx1278Result_Ok)
     {
-        uint32_t lock = PlatformCritical_Enter();
-        s_context.state = Sx1278State_Rx; s_context.since_ms = PlatformTime_Ms();
+        lock = PlatformCritical_Enter();
+        s_context.state = (mode == Sx1278OperatingMode_TransmitOnly) ? Sx1278State_Standby : Sx1278State_Rx;
+        s_context.active_mode = mode; s_context.since_ms = PlatformTime_Ms();
+        if (mode == Sx1278OperatingMode_TransmitOnly)
+        { s_context.stats.rx_dropped += s_context.rx.count; s_context.rx.count = 0U; }
         /* Stop may have arrived during a bounded bus call. */
         s_context.stats.ready = (uint8_t)((s_context.wanted != 0U) && (s_context.stop_pending == 0U));
         PlatformCritical_Exit(lock);
@@ -379,7 +410,12 @@ static Sx1278Result Sx1278_TxStart(uint32_t now)
 
 static Sx1278Result Sx1278_TxScheduledStart(uint32_t now)
 {
-    if (((uint32_t)(now - s_context.since_ms) < SX1278_RX_YIELD_MS) || (Sx1278_TxTake() == 0U))
+    uint32_t lock = PlatformCritical_Enter();
+    Sx1278OperatingMode mode = s_context.requested_mode;
+    PlatformCritical_Exit(lock);
+    if ((mode == Sx1278OperatingMode_ReceiveOnly) ||
+        ((mode == Sx1278OperatingMode_HalfDuplex) && ((uint32_t)(now - s_context.since_ms) < SX1278_RX_YIELD_MS)) ||
+        (Sx1278_TxTake() == 0U))
     { return Sx1278Result_Empty; }
     if ((uint32_t)(now - s_context.tx.queued_ms) >= SX1278_QUEUE_TIMEOUT_MS)
     { s_context.tx_expired = 1U; return Sx1278Result_Timeout; }
@@ -456,6 +492,15 @@ static Sx1278Result Sx1278_StateProcess(uint32_t now)
         result = Sx1278Chip_Configure(&s_context.chip);
         return (result == Sx1278Result_Ok) ? Sx1278_RxStart() : result;
     }
+    else if (s_context.state == Sx1278State_Standby)
+    {
+        uint8_t mode;
+        result = Sx1278Chip_Read(&s_context.chip, 0x01U, &mode, 1U);
+        if (result != Sx1278Result_Ok) { return result; }
+        if (mode != 0x89U) { return Sx1278Result_Io; }
+        result = Sx1278_TxScheduledStart(now);
+        return (result == Sx1278Result_Empty) ? Sx1278Result_Ok : result;
+    }
     else if ((s_context.state == Sx1278State_Rx) || (s_context.state == Sx1278State_Tx))
     { return Sx1278_RunningProcess(now); }
     return Sx1278Result_Ok;
@@ -474,7 +519,11 @@ Sx1278Result Sx1278_Process(uint8_t instance)
     {
         result = Sx1278_StopProcess(); Sx1278_Publish(); return result;
     }
-    if (((s_context.state == Sx1278State_Rx) || (s_context.state == Sx1278State_Tx)) &&
+    if (((s_context.state == Sx1278State_Rx) || (s_context.state == Sx1278State_Standby)) &&
+        (s_context.active_mode != requests.mode))
+    { result = Sx1278_RxStart(); }
+    else if (((s_context.state == Sx1278State_Rx) || (s_context.state == Sx1278State_Tx) ||
+        (s_context.state == Sx1278State_Standby)) &&
         (Sx1278_QueueExpiredGet(now) != 0U))
     {
         if ((s_context.tx.id == 0U) && (Sx1278_TxTake() == 0U)) { result = Sx1278Result_Offline; }
@@ -508,6 +557,8 @@ Sx1278Result Sx1278_Send(uint8_t instance, const uint8_t *data,
     if ((instance != 0U) || (data == NULL) || (length == 0U) ||
         (length > SX1278_PACKET_CAPACITY) || (control > 1U)) { return Sx1278Result_Invalid; }
     lock = PlatformCritical_Enter();
+    if (s_context.requested_mode == Sx1278OperatingMode_ReceiveOnly)
+    { PlatformCritical_Exit(lock); return Sx1278Result_Offline; }
     if ((s_published.ready == 0U) || (s_context.wanted == 0U) || (s_context.stop_pending != 0U))
     { PlatformCritical_Exit(lock); return Sx1278Result_Offline; }
     queue = (control != 0U) ? &s_context.control : &s_context.data;

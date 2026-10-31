@@ -1,0 +1,117 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.algorithm.control.lqr",
+  "name": "LQR bounded mathematical core",
+  "type": "algorithm",
+  "class": "control",
+  "version": "0.1.0",
+  "description": "Host/target mathematical core; no actuator hardware driver or mission dispatcher claimed.",
+  "requires": {
+    "components": [],
+    "resources": [],
+    "capabilities": []
+  },
+  "resources": {
+    "provides": [],
+    "roles": [],
+    "conflicts": []
+  },
+  "provides": [
+    "algorithm.control.lqr.core"
+  ],
+  "build": {
+    "sources": [
+      "Algorithm/Control/LQR/Src/control_lqr.c",
+      "Algorithm/Control/LQR/Src/control_lqr_project.c"
+    ],
+    "asm_sources": [],
+    "include_dirs": [
+      "Algorithm/Control/LQR/Inc"
+    ],
+    "defines": []
+  },
+  "payload": {
+    "roots": [
+      "Algorithm/Control/LQR"
+    ]
+  },
+  "metadata": {
+    "maturity": "mathematical_core_only",
+    "deployment_ready": false,
+    "blocking_reasons": [
+      "No target actuator driver or mission adapter registered."
+    ],
+    "generated_interface": "ControlLqr_ProjectConfigGet; mathematical consumer, no dispatch"
+  },
+  "algorithm_parameters": {
+    "schema_id": "silverstar.algorithm-parameters/1.0",
+    "parameters": [
+      {
+        "id": "k_angle",
+        "type": "float",
+        "default": 1.0,
+        "unit": "1/rad",
+        "representation": "value",
+        "min": -1000.0,
+        "max": 1000.0,
+        "precision": 6,
+        "step": 0.01,
+        "group": "basic",
+        "order": 0,
+        "generated_symbol": "SYSTEM_CONTROL_LQR_K_ANGLE",
+        "display_names": {
+          "en_US": "k_angle",
+          "zh_CN": "k_angle"
+        },
+        "description": {
+          "en_US": "Actual scalar mathematical input; no hardware deployment claim.",
+          "zh_CN": "数学内核实际标量输入；不代表硬件部署资格。"
+        }
+      },
+      {
+        "id": "k_rate",
+        "type": "float",
+        "default": 1.0,
+        "unit": "s/rad",
+        "representation": "value",
+        "min": -1000.0,
+        "max": 1000.0,
+        "precision": 6,
+        "step": 0.01,
+        "group": "basic",
+        "order": 1,
+        "generated_symbol": "SYSTEM_CONTROL_LQR_K_RATE",
+        "display_names": {
+          "en_US": "k_rate",
+          "zh_CN": "k_rate"
+        },
+        "description": {
+          "en_US": "Actual scalar mathematical input; no hardware deployment claim.",
+          "zh_CN": "数学内核实际标量输入；不代表硬件部署资格。"
+        }
+      },
+      {
+        "id": "output_limit",
+        "type": "float",
+        "default": 0.3,
+        "unit": "1",
+        "representation": "value",
+        "min": 1e-06,
+        "max": 1000.0,
+        "precision": 6,
+        "step": 0.01,
+        "group": "basic",
+        "order": 2,
+        "generated_symbol": "SYSTEM_CONTROL_LQR_OUTPUT_LIMIT",
+        "display_names": {
+          "en_US": "output_limit",
+          "zh_CN": "output_limit"
+        },
+        "description": {
+          "en_US": "Actual scalar mathematical input; no hardware deployment claim.",
+          "zh_CN": "数学内核实际标量输入；不代表硬件部署资格。"
+        }
+      }
+    ]
+  }
+}

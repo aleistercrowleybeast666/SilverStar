@@ -26,7 +26,7 @@ def GroundRadiosConfiguration_Apply(ground, radios, active):
 
 def GroundRadiosRuntimeIssue_Get(ground, catalog):
     from silverstar_fccg.project.air_link import AirLinkIssue
-    if not ground.enabled or not ground.radio_instances:
+    if not ground.radio_instances:
         return None
     if len(ground.radio_instances) == 1 and ground.radio_instances[0].instance_id == "radio0":
         return None

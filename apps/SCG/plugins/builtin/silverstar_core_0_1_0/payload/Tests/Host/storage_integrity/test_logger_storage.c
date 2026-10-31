@@ -20,6 +20,7 @@
 #include "system_log_sink_if.h"
 #include "persistent_storage.h"
 #include "mission_radio_profile.h"
+#include "project_storage_binding.h"
 #include "air_link_config.h"
 #include "system_calibration.h"
 #include "system_flight_recovery.h"
@@ -621,8 +622,12 @@ static int Test_MagCalibrationPersistent(void)
     SystemMagCalibrationStatus status;
     s_mag_calibration_test_enabled = 1U;
     SystemMagCalibration_Init();
-    SystemMagCalibrationStorage_Service();
-    SystemMagCalibrationStorage_Service();
+    /* MAG enumeration plus optional active-record bootstrap are separate
+     * bounded Logger service steps. Test the real readiness publication. */
+    for (uint8_t step = 0U; step < 6U; step++) {
+        if (SystemMagCalibrationStorage_LoadCompleteGet() != 0U) { break; }
+        SystemMagCalibrationStorage_Service();
+    }
     CHECK(SystemMagCalibrationStorage_LoadCompleteGet() == 1U);
     CHECK(SystemMagCalibration_StatusGet(0U, &status) ==
         SystemMagCalibrationResult_Ok &&
@@ -655,6 +660,11 @@ static int Test_MagCalibrationPersistent(void)
         SystemMagCalibrationResult_Ok && status.saved == 1U);
     CHECK(SystemMagCalibration_ClearRequest(0U) == SystemMagCalibrationResult_Ok);
     CHECK(SystemMagCalibration_PendingRecordGet(&instance, tombstone, &request) == SystemMagCalibrationResult_Ok);
+    /* Finish the real Logger-owned clear transaction before simulating reboot.
+     * Resetting only MAG RAM while its lease is pending is not a cold boot. */
+    SystemMagCalibrationStorage_Service();
+    CHECK(SystemMagCalibration_StatusGet(0U, &status) == SystemMagCalibrationResult_Ok &&
+        status.save_pending == 0U && status.generation == generation + 1U);
     SystemMagCalibration_Init();
     CHECK(SystemMagCalibration_RecordLoad(0U, tombstone, sizeof(tombstone), generation + 1U) ==
         SystemMagCalibrationResult_Ok);
@@ -769,11 +779,7 @@ static int Test_PersistentObjects(void)
             &generation) == PERSISTENT_STORAGE_OK);
         CHECK(length >= 8U);
         CHECK(memcmp(snapshot_readback, "SSMS", 4U) == 0);
-        #if defined(AIR_LINK_NRF24_CHANNEL)
-        CHECK(snapshot_readback[4] == 3U);
-#else
-        CHECK(snapshot_readback[4] == 2U);
-#endif
+        CHECK(snapshot_readback[4] == 4U);
         CHECK(snapshot_readback[5] == section);
         if (section == 0U)
         {
@@ -781,18 +787,13 @@ static int Test_PersistentObjects(void)
             CHECK(length > 83U);
             MissionRadioProfile profile;
             CHECK(MissionRadioProfile_Read(snapshot_readback,length,&profile) == MissionRadioProfileResult_Ok);
-#if defined(AIR_LINK_NRF24_CHANNEL)
-            CHECK(profile.backend == MissionRadioBackend_Nrf24 && profile.schema == 3U);
-            CHECK(profile.length == 14U && profile.version == 1U);
-            CHECK(profile.bytes[0] == AIR_LINK_NRF24_CHANNEL && profile.bytes[11] == 32U);
-            CHECK(profile.bytes[12] == AIR_LINK_PACKET_MTU && profile.bytes[13] == 1U);
-            CHECK(snapshot_readback[85] == SYSTEM_ALIGNMENT_CONSTRAINT_COUNT);
-            CHECK(snapshot_readback[86] == SYSTEM_ALIGNMENT_EXTERNAL_YAW_AUTHORITATIVE);
-#else
-            CHECK(profile.backend == MissionRadioBackend_Sx128x && profile.schema == 2U && profile.length == 15U);
-            CHECK(snapshot_readback[82] == SYSTEM_ALIGNMENT_CONSTRAINT_COUNT);
-            CHECK(snapshot_readback[83] == SYSTEM_ALIGNMENT_EXTERNAL_YAW_AUTHORITATIVE);
-#endif
+            static const uint8_t expected_radio[] = MISSION_RADIO_PROFILE_BYTES;
+            const uint8_t prefix = (MISSION_RADIO_SNAPSHOT_SCHEMA == 2U) ? 0U : 4U;
+            CHECK(snapshot_readback[66] == MISSION_RADIO_SNAPSHOT_SCHEMA);
+            CHECK(profile.schema == 4U && profile.length == sizeof(expected_radio) - prefix);
+            CHECK(memcmp(profile.bytes, &expected_radio[prefix], profile.length) == 0);
+            CHECK(snapshot_readback[68U + sizeof(expected_radio)] == SYSTEM_ALIGNMENT_CONSTRAINT_COUNT);
+            CHECK(snapshot_readback[69U + sizeof(expected_radio)] == SYSTEM_ALIGNMENT_EXTERNAL_YAW_AUTHORITATIVE);
         }
     }
     CHECK(SystemMissionSnapshot_Create(&snapshot_status) ==

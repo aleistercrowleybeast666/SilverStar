@@ -31,7 +31,7 @@ def private_user_ground_descriptor(tmp_path):
 
 def test_saved_board_without_resources_recovers_declarative_defaults(builtin_catalog):
     model = ReferenceProject_Create('Recovery', catalog=builtin_catalog)
-    model.ground_target = replace(model.ground_target, enabled=True,
+    model.ground_target = replace(model.ground_target, 
         board='silverstar.board.ground_station_0_5',
         mcu='silverstar.mcu.stm32f103c8t6',
         radio_plugin='silverstar.device.telemetry.sx1281', module_variant='e28_2g4m12sx',
@@ -59,9 +59,8 @@ def test_saved_board_without_resources_recovers_declarative_defaults(builtin_cat
 
 
 def test_ground_selection_defaults_and_checkbox_visibility(qapp, tmp_path, workspace_root):
-    window = MainWindow(SettingsStore(workspace_root/'.work'/tmp_path.name/'settings.ini'), service=FccgService(workspace_root))
+    window = MainWindow(SettingsStore(tmp_path/'settings.ini'), service=FccgService(workspace_root))
     window._GroundBoard_Change('silverstar.board.ground_station_0_5')
-    window._GroundTarget_Change('enabled', True)
     window._GroundTarget_Change('radio_plugin', 'silverstar.device.telemetry.sx1281')
     window._GroundTarget_Change('module_variant', 'e28_2g4m12sx')
     window._GroundTarget_Change('pc_interface', 'uart')
@@ -70,11 +69,10 @@ def test_ground_selection_defaults_and_checkbox_visibility(qapp, tmp_path, works
     assert facts['cubemx'].text() == '6.15.0'
     assert facts['firmware_package'].text() == 'STM32Cube FW_F1 V1.8.7'
     assert 'silverstar.mcu.stm32f103c8t6' in facts['plugin'].text()
-    assert window.ground_target_page.enabled.objectName() == 'standardCheckBox'
+    assert not hasattr(window.ground_target_page, 'enabled')
     assert window.air_link_page.crc.objectName() == 'standardCheckBox'
     window._GroundTarget_Change('enabled', False)
-    assert window.ground_target_page.enabled.isHidden()
-    assert window._model.ground_target.enabled
+    assert 'enabled' not in window._model.Dictionary_Get()['ground_target']
     assert window.ground_target_page.generate_button.isEnabled()
     assert window.ground_target_page.status.text() == window._translator.Text_Get('status.ground_ready')
     assert 'PLATFORM_GPIO_4' in window.ground_target_page.status.toolTip()
@@ -85,7 +83,7 @@ def test_explicit_radio0_recovers_fixed_board_bindings_after_open(builtin_catalo
     model = ReferenceProject_Create('GroundRecovery', catalog=builtin_catalog)
     ground = model.ground_target
     from silverstar_fccg.project.model import GroundRadioConfiguration
-    model.ground_target = replace(ground, enabled=True,
+    model.ground_target = replace(ground, 
         board='silverstar.board.ground_station_0_5',
         mcu='silverstar.mcu.stm32f103c8t6',
         radio_plugin='silverstar.device.telemetry.sx1281',

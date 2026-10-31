@@ -15,7 +15,6 @@
 #include "system_imu_if.h"
 #include "system_magnetometer_if.h"
 #include "system_mag_calibration.h"
-#include "system_installation_capture_if.h"
 #include "system_telemetry_transport_if.h"
 #include "system_time.h"
 
@@ -1999,6 +1998,15 @@ void SystemTelemetry_Process(void)
 {
     if (SystemSourceSelector_TelemetryCleanupPending() != 0U)
     {
+        /* Stop can be an asynchronous request. Keep its sole bus owner
+         * advancing on every tick; backoff applies to confirmation/recovery,
+         * not to the device state machine that makes quiescence possible. */
+        for (uint8_t index = 0U; index < PROJECT_TELEMETRY_INSTANCE_COUNT_MAX; index++)
+        {
+            if (index >= s_telemetry.count) { break; }
+            if (s_telemetry.cleanup_pending[index] != 0U)
+            { (void)ProjectTelemetryInstance_Process(index); }
+        }
         (void)SystemSourceSelector_TelemetryRecoveryTry(0U);
         SystemSourceSelector_PendingEventsFlush();
         return;
@@ -2492,13 +2500,6 @@ SystemDeviceResult SystemMagnetometer_LatestSampleGet(
     sample->physical_device_id = descriptor.physical_device_id;
     sample->descriptor_id = descriptor.descriptor_id;
     sample->instance_id = active;
-    /* LatestSampleGet does not prove every-native-frame delivery. Preserve the
-     * uncorrected observation and explicitly refuse qualification with NULL. */
-    if (SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U)
-    {
-        SystemInstallationCapture_MagObserve(sample, NULL,
-            SystemTime_GetMonotonicUs());
-    }
     {
         SystemMagCalibrationResult calibration_result =
             SystemMagCalibration_SampleApply(active, sample);

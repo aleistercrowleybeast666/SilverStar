@@ -146,7 +146,8 @@ def test_ground_last_remove_clears_only_radio_and_add_creates_explicit_selection
     _Wait(qapp, lambda: not window._model.ground_target.radio_plugin)
     ground = window._model.ground_target
     assert not ground.radio_instances
-    assert ground.enabled == previous.enabled and ground.board == previous.board
+    assert ground.board == previous.board
+    assert 'enabled' not in window._model.Dictionary_Get()['ground_target']
     assert ground.hardware == previous.hardware and ground.pc_resource == previous.pc_resource
     assert ground.resource_assignments == {'other:keep': 'KEEP'}
     assert not editor.rows['radio0']['remove'].isEnabled()

@@ -48,7 +48,7 @@ def _GeneratedRuntime_Check(catalog, root, count, owner=0, led=False, disabled=F
         *("-I" + str(output / p) for p in includes), str(fixture),
         str(output / "Common/Src/silverstar_assert.c"),
         str(output / "Ground/Radio/Src/ground_radio_activity.c"),
-        str(output / "Ground/Radio/Src/ground_radio_sx1281.c"), "-o", str(executable)],
+        str(output / "Ground/Radio/Src/ground_radio_tm.c"), str(output / "Ground/Radio/Src/ground_radio_sx1281.c"), "-o", str(executable)],
         capture_output=True, text=True, timeout=60)
     assert compiled.returncode == 0, compiled.stdout + compiled.stderr
     scenarios = ["routing", "quiet"]

@@ -13,7 +13,7 @@ from silverstar_fccg.project.model import ProjectModel_Load
 
 
 QUALITY_TASKS = ("host_tests", "architecture_check", "power10_check",
-                 "static_analysis", "artifact_check")
+                 "static_analysis", "artifact_check", "stack_report")
 _OUTPUT_DIRECTORIES = {"build", ".git", "__pycache__", ".pytest_cache"}
 _RESULT_FILES = {".fccg/quality-results.json", ".fccg/power10-report.json"}
 
@@ -69,7 +69,7 @@ def QualityInputHash_Get(root: Path, target: str, task: str, command: tuple[str,
         tools.append("powershell")
     if task == "host_tests":
         tools.extend(item.partition("=")[2] for item in command if item.startswith("HOST_CC="))
-    if task in {"static_analysis", "artifact_check"}:
+    if task in {"static_analysis", "artifact_check", "stack_report"}:
         gcc_dirs = [item.partition("=")[2] for item in command if item.startswith("GCC_PATH=")]
         tools.append(str(Path(gcc_dirs[0]) / "arm-none-eabi-gcc.exe") if gcc_dirs else "arm-none-eabi-gcc")
     for tool in dict.fromkeys(tools):
@@ -90,7 +90,7 @@ def QualityInputHash_Get(root: Path, target: str, task: str, command: tuple[str,
             if policy.Path_Resolve(path, allow_root=False) != path.absolute():
                 raise ValueError(f"Quality input must not redirect through a link: {path}")
         dirs[:] = sorted(name for name in dirs if name not in _OUTPUT_DIRECTORIES
-                         or (name == "build" and task == "artifact_check" and include_artifacts))
+                         or (name == "build" and task in {"artifact_check", "stack_report"} and include_artifacts))
         for name in sorted(names):
             path = directory / name
             relative = path.relative_to(root).as_posix()
@@ -98,8 +98,12 @@ def QualityInputHash_Get(root: Path, target: str, task: str, command: tuple[str,
                 continue
             if name.endswith(".pyc"):
                 continue
-            if relative.startswith("build/") and path.suffix not in {".elf", ".bin", ".hex", ".map"}:
-                continue
+            if relative.startswith("build/"):
+                artifact_suffixes = {".elf", ".bin", ".hex", ".map"}
+                if task == "stack_report":
+                    artifact_suffixes.update((".su", ".d"))
+                if path.suffix not in artifact_suffixes and not (task == "stack_report" and name == "stack-budget.json"):
+                    continue
             checked = policy.Path_Resolve(relative, allow_root=False)
             with checked.open("rb") as stream:
                 file_digest = hashlib.file_digest(stream, "sha256").hexdigest()

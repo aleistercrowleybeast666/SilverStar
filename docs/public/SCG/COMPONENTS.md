@@ -51,7 +51,6 @@
 | `device` | `silverstar.device.sensor.input_voltage` | `0.1.0` | [plugin.json](../../../apps/SCG/plugins/builtin/silverstar_device_sensor_input_voltage/plugin.json) |
 | `device` | `silverstar.device.storage.sd_sdio_fatfs` | `0.1.0` | [plugin.json](../../../apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs/plugin.json) |
 | `device` | `silverstar.device.storage.sd_sdio_fatfs_f1` | `0.1.0` | [plugin.json](../../../apps/SCG/plugins/builtin/silverstar_device_storage_sd_sdio_fatfs_f1/plugin.json) |
-| `device` | `silverstar.device.telemetry.nrf24l01p` | `0.1.0` | [plugin.json](../../../apps/SCG/plugins/builtin/silverstar_device_telemetry_nrf24l01p/plugin.json) |
 | `device` | `silverstar.device.telemetry.sx1281` | `0.1.0` | [plugin.json](../../../apps/SCG/plugins/builtin/silverstar_device_telemetry_sx1281/plugin.json) |
 | `development_environment` | `silverstar.environment.vscode_eide_gcc` | `0.1.0` | [plugin.json](../../../apps/SCG/plugins/builtin/silverstar_environment_vscode_eide_gcc/plugin.json) |
 | `flight_logic` | `silverstar.flight_logic.cycle.reference` | `0.1.0` | [plugin.json](../../../apps/SCG/plugins/builtin/silverstar_flight_logic_cycle_reference/plugin.json) |

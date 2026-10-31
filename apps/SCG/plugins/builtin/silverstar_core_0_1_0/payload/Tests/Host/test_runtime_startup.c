@@ -96,9 +96,10 @@ TaskHandle_t xTaskCreateStatic(TaskFunction_t entry, const char *name,
     (void)entry; (void)words; (void)argument; (void)priority; (void)stack;
     TEST_CHECK(s_alignment_initialized != 0U);
     TEST_CHECK(SystemCalibration_IsReady() != 0U);
-    /* This can only succeed if production init initialized the indicator. */
+    /* Both replies require initialized state; an absent indicator stays absent. */
     TEST_CHECK(SystemIndicator_ModeSet(SYSTEM_INDICATOR_SYSTEM,
-        SYSTEM_INDICATOR_MODE_OFF) == SYSTEM_DEVICE_OK);
+        SYSTEM_INDICATOR_MODE_OFF) == ((SYSTEM_INDICATOR_SYSTEM_ENABLE != 0U) ?
+            SYSTEM_DEVICE_OK : SYSTEM_DEVICE_UNSUPPORTED));
     if (strcmp(name, "Serial") == 0) { s_serial_created++; }
     if (strcmp(name, "Telemetry") == 0) { s_telemetry_handle = control; }
     s_created++;
@@ -136,11 +137,12 @@ int main(void)
     TEST_CHECK(calibration.correction.accel_scale[0] == 1.0f);
     previous_sequence = calibration.start_sequence;
     SystemIndicator_Process();
-    TEST_CHECK(s_gpio_writes > 0U);
+    TEST_CHECK((SYSTEM_INDICATOR_SYSTEM_ENABLE != 0U) ?
+        (s_gpio_writes > 0U) : (s_gpio_writes == 0U));
     TEST_CHECK(s_gpio_level == 0U); /* SS0.5 active-low ON. */
     s_now_us = SYSTEM_INDICATOR_SLOW_HALF_PERIOD_US;
     SystemIndicator_Process();
-    TEST_CHECK(s_gpio_level == 1U);
+    TEST_CHECK(s_gpio_level == ((SYSTEM_INDICATOR_SYSTEM_ENABLE != 0U) ? 1U : 0U));
     TEST_CHECK(SystemCalibration_Reset() == SYSTEM_DEVICE_OK);
     TEST_CHECK(SystemCalibration_StatusGet(&calibration) == SYSTEM_DEVICE_OK);
     TEST_CHECK(calibration.ready == 1U);

@@ -170,6 +170,16 @@ static void TestMmc5983ma_MeasurementTimeouts(void)
 
 int main(void)
 {
+    TestMmc5983maBus bus;
+    Mmc5983maContext context;
+    Mmc5983maPort port;
+    TestMmc5983ma_Seed(&bus);
+    port = TestMmc5983ma_PortGet(&bus);
+    Mmc5983ma_Init(&context, &port);
+    context.sequence = UINT32_MAX;
+    context.state = Mmc5983maStatePollTemp;
+    assert(Mmc5983ma_Step(&context, 30001U) != Mmc5983maStepSampleReady);
+    assert(context.sequence == UINT32_MAX && context.state == Mmc5983maStateFailed);
     TestMmc5983ma_FreshVector();
     TestMmc5983ma_IdentityAndReadback();
     TestMmc5983ma_MeasurementTimeouts();

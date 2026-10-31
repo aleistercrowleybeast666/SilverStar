@@ -50,7 +50,7 @@ def test_ground_pc_settings_are_on_configuration_and_hardware_actions_remain(qap
         ground = window.ground_target_page
         assert config.isAncestorOf(ground.pc_interface)
         assert config.isAncestorOf(ground.pc_resource)
-        assert config.isAncestorOf(ground.enabled)
+        assert not hasattr(ground, 'enabled')
         assert ground.isAncestorOf(ground.board)
         assert ground.isAncestorOf(ground.import_ioc)
         assert ground.isAncestorOf(ground.save_instance)

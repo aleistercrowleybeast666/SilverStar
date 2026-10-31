@@ -42,8 +42,6 @@ def RadioVariant_Get(module_id: str, power_dbm: int) -> RadioVariantCapability:
 
 def FlightRadioConfiguration_Get(model, instance):
     """Missing per-instance fields retain the original active/global power contract."""
-    if instance.plugin == "silverstar.device.telemetry.nrf24l01p":
-        return instance.module_variant or "nrf24l01p", instance.tx_power_dbm if instance.tx_power_dbm is not None else 0
     module = instance.module_variant or LEGACY_MODULE
     power = instance.tx_power_dbm
     if power is None:
@@ -55,9 +53,9 @@ def FlightRadioConfiguration_Apply(model, instance_id: str, module_id: str, powe
     """GUI/backend edit contract: return a copy and retain unrelated instances."""
     from copy import deepcopy
     selected = model.DeviceInstance_Get(instance_id)
-    if selected is not None and selected.plugin == "silverstar.device.telemetry.nrf24l01p":
-        if module_id != "nrf24l01p" or type(power_dbm) is not int or power_dbm not in (-18, -12, -6, 0):
-            raise ValueError("NRF24 module or power is unsupported")
+    if selected is not None and selected.plugin == "silverstar.device.telemetry.sx1278":
+        from silverstar_fccg.project.sx1278 import Sx1278Module_Validate
+        Sx1278Module_Validate(module_id, power_dbm)
         candidate = deepcopy(model)
         candidate.device_instances = [replace(instance, module_variant=module_id, tx_power_dbm=power_dbm)
             if instance.instance_id == instance_id else instance for instance in candidate.device_instances]
@@ -75,11 +73,9 @@ def FlightRadioConfiguration_Apply(model, instance_id: str, module_id: str, powe
 
 
 def RadioManifest_Resolve(manifest, instance):
-    if manifest.component_id == "silverstar.device.telemetry.nrf24l01p":
-        if instance.module_variant not in ("", "nrf24l01p") or (
-                instance.tx_power_dbm is not None and
-                (type(instance.tx_power_dbm) is not int or instance.tx_power_dbm not in (-18, -12, -6, 0))):
-            raise ValueError("NRF24 module or power is unsupported")
+    if manifest.component_id == "silverstar.device.telemetry.sx1278":
+        from silverstar_fccg.project.sx1278 import Sx1278Module_Validate
+        Sx1278Module_Validate(instance.module_variant, instance.tx_power_dbm)
         return manifest
     if manifest.component_id != RADIO_PLUGIN:
         if instance.module_variant or instance.tx_power_dbm is not None:

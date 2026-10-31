@@ -104,11 +104,13 @@ def NativeUsbIndexedCore_Derive(original):
     { if (pdev->dev_state == USBD_STATE_CONFIGURED) { NativeRuntime_TransportFaultRecord(); } return USBD_FAIL; }
 '''+anchor,1)
         source=source[:a]+body+source[b:]
-    a,_o,b=NativeC_FunctionSpanGet(source,'USBD_Init');body=source[a:b]
+    a,opening,b=NativeC_FunctionSpanGet(source,'USBD_Init');body=source[a:b]
+    guard='\n  if ((pdev == NULL) || (pdev->pClassData != NULL) || (pdev->pClassDataCmsit[0] != NULL)) { return USBD_FAIL; }\n'
+    # Reject a retained class before the vendor initializer unlinks its cleanup owner.
+    body=body[:opening-a+1]+guard+body[opening-a+1:]
     anchor='  pdev->pConfDesc = NULL;'
     if body.count(anchor)!=1:raise ValueError('Native indexed initialization owner changed')
-    body=body.replace(anchor,'''  if ((pdev->pClassData != NULL) || (pdev->pClassDataCmsit[0] != NULL)) { return USBD_FAIL; }
-  pdev->classId = 0U;
+    body=body.replace(anchor,'''  pdev->classId = 0U;
   pdev->NumClasses = 0U;
 '''+anchor,1)
     source=source[:a]+body+source[b:]

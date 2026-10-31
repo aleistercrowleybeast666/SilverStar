@@ -86,6 +86,7 @@ $includeArgs = @(
     "-I$repoRoot\FlightLogic\Landing\BarometerImuWindow\Inc",
     "-I$repoRoot\Platform\Inc",
     "-I$repoRoot\Platform\STM32F4\Inc",
+    "-I$repoRoot\Platform\STM32H7\Inc",
     "-I$repoRoot\Platform\STM32F1Flight\Inc",
     "-I$repoRoot\Devices\IMU\JY901B\Inc",
     "-I$repoRoot\Devices\IMU\JY901B\Adapter\Inc",
@@ -108,6 +109,11 @@ function Invoke-HostCompiler {
         [Parameter(Mandatory = $true)][string[]]$CompilerArgs
     )
 
+    # Host jobs already run under one bounded runner. Declare one LTO worker
+    # explicitly instead of asking GCC to infer a missing Make jobserver.
+    $CompilerArgs = @($CompilerArgs | ForEach-Object {
+        if ($_ -eq '-flto') { '-flto=1' } else { $_ }
+    })
     $previousPreference = $ErrorActionPreference
     $ErrorActionPreference = 'Continue'
     try {
@@ -292,6 +298,52 @@ function Invoke-HostTest {
         return
     }
 
+    if ($Name -like 'flight_recovery_*') {
+        # The recovery fixture supplies its own synthetic deploy action.
+        $ExtraCompilerArgs = @(('-I' + $repoRoot + '\Tests\Host\Fixtures\MissionLegacy'),
+            '-DSYSTEM_SELECTED_MISSION_ACTION_PARACHUTE_DEPLOY_AVAILABLE=1U') + $ExtraCompilerArgs
+    }
+    if (@($Sources | Where-Object { ($_ -like '*system_log_policy.c') -or ($_ -like '*ins_task.c') -or ($_ -like '*estimator_task.c') -or ($_ -like '*flight_task.c') }).Count -gt 0) {
+        $Sources = @($Sources) + @(
+            "$repoRoot\System\Src\system_mission_process.c",
+            "$repoRoot\Generated\Src\project_mission_process.c")
+    }
+    if (@($Sources | Where-Object { $_ -like '*flight_task.c' }).Count -gt 0) {
+        $Sources = @($Sources) + @("$repoRoot\System\Src\system_mission_process_runtime.c")
+    }
+    if ($Name -match '^(system_calibration_|runtime_startup$|fault_hook$|calibration_build_gate_)') {
+        $Sources += "$repoRoot\Tests\Host\installation_alignment_unit_boundary.c"
+    }
+    # These legacy units do not link the descriptor/lifecycle owners. Their
+    # baseline-free fixture is explicit; the active integration links its own
+    # real CAL/lease/storage paths and must never receive this boundary.
+    if ($Name -match '^(system_alignment($|_)|system_calibration_|runtime_commands$|runtime_startup$|fault_hook$|calibration_build_gate_)') {
+        $Sources += "$repoRoot\Tests\Host\installation_calibration_unit_boundary.c"
+    }
+    if ($script:hostGraphDefinitions.Contains('SYSTEM_INSTALLATION_CAPTURE_ENABLED') -and
+        $Name -ne 'installation_active_integration') {
+        # These legacy units explicitly model no active installation record.
+        # The separate enabled integration job uses the actual owner/wire/CAL/
+        # Logger code; this boundary never substitutes for that evidence.
+        $Sources = @($Sources) + @("$repoRoot\Tests\Host\installation_unit_boundary.c")
+        if (@($Sources | Where-Object { $_ -like '*silverstar_flight_cycle.c' }).Count -gt 0 -and
+            @($Sources | Where-Object { $_ -like '*system_alignment.c' }).Count -eq 0) {
+            $Sources += "$repoRoot\Tests\Host\installation_start_unit_boundary.c"
+        }
+        if ($Name -like 'optional_gnss_start_*' -or $Name -eq 'lifecycle') {
+            $Sources += @("$repoRoot\Tests\Host\installation_capture_host_port.c",
+                "$repoRoot\Modules\InstallationCapture\Src\installation_capture.c",
+                "$repoRoot\Modules\InstallationCapture\Src\installation_lease.c",
+                "$repoRoot\Modules\InstallationCapture\Src\capture_primitives.c",
+                "$repoRoot\Modules\InstallationCapture\Src\capture_info.c",
+                "$repoRoot\ThirdParty\InstallationCapture\ryu\d2s.c")
+            $ExtraCompilerArgs += @("-I$repoRoot\Modules\InstallationCapture\Inc",
+                "-I$repoRoot\ThirdParty\InstallationCapture")
+            Write-Output "FCCG_HOST_SCOPE|$Name|actual_installation_lease_owner=1"
+        } else { $Sources += "$repoRoot\Tests\Host\installation_unit_lease_boundary.c" }
+        Write-Output "FCCG_HOST_SCOPE|$Name|installation_boundary=no_active_record|physical_sources=unqualified"
+    }
+    $Sources = @($Sources | Select-Object -Unique)
     $executable = Join-Path $outputDir ($Name + '.exe')
     $compilerArgs = @(
         '-std=c11', '-Wall', '-Wextra', '-Werror', '-pedantic', '-O2'
@@ -616,7 +668,16 @@ Invoke-HostTest -Name 'imu_sample_bus' -Sources @(
 )
 
 Invoke-HostTest -Name 'system_indicator' -ExtraCompilerArgs @(
+    '-DSYSTEM_INDICATOR_SYSTEM_ENABLE=1U',
     '-DSYSTEM_INDICATOR_GNSS_ENABLE=1U'
+) -Sources @(
+    "$repoRoot\Tests\Host\test_system_indicator.c",
+    "$repoRoot\System\Indicator\Src\system_indicator.c"
+)
+
+Invoke-HostTest -Name 'system_indicator_disabled' -ExtraCompilerArgs @(
+    '-DSYSTEM_INDICATOR_SYSTEM_ENABLE=0U',
+    '-DSYSTEM_INDICATOR_GNSS_ENABLE=0U'
 ) -Sources @(
     "$repoRoot\Tests\Host\test_system_indicator.c",
     "$repoRoot\System\Indicator\Src\system_indicator.c"
@@ -877,6 +938,7 @@ Invoke-ExpectedCompileFailure -Name 'capability_required_gnss_missing' `
     ) -Source $capabilitySource
 Invoke-ExpectedCompileFailure -Name 'capability_stillness_without_gyro' `
     -ExtraCompilerArgs @(
+        '-DSYSTEM_SELECTED_MISSION_ACTION_PARACHUTE_DEPLOY_AVAILABLE=1U',
         '-DSYSTEM_FLIGHT_LANDING_DETECTION_ENABLE=1U',
         '-DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_STILLNESS',
         '-DSYSTEM_SELECTED_IMU_GYRO_AVAILABLE=0U',
@@ -888,11 +950,13 @@ Invoke-ExpectedCompileFailure -Name 'capability_stillness_without_gyro' `
     ) -Source $capabilitySource
 Invoke-ExpectedCompileFailure -Name 'capability_tilt_without_propagation' `
     -ExtraCompilerArgs @(
+        '-DSYSTEM_SELECTED_MISSION_ACTION_PARACHUTE_DEPLOY_AVAILABLE=1U',
         '-DSYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK=SYSTEM_DEPLOY_TRIGGER_TILT',
         '-DSYSTEM_SELECTED_IMU_SOFTWARE_PROPAGATION_QUALIFIED=0U'
     ) -Source $capabilitySource
 Invoke-ExpectedCompileFailure -Name 'capability_delay_without_time' `
     -ExtraCompilerArgs @(
+        '-DSYSTEM_SELECTED_MISSION_ACTION_PARACHUTE_DEPLOY_AVAILABLE=1U',
         '-DSYSTEM_FLIGHT_DEPLOY_TRIGGER_MASK=SYSTEM_DEPLOY_TRIGGER_DELAY',
         '-DSYSTEM_BUILD_MISSION_MONOTONIC_TIME_AVAILABLE=0U'
     ) -Source $capabilitySource
@@ -1214,6 +1278,7 @@ $consoleSources = @(
     $hostPlatformMock,
     "$repoRoot\Common\Src\common_format.c",
     "$repoRoot\System\Src\system_console.c",
+    "$repoRoot\System\Src\system_console_dispatch.c",
     "$repoRoot\System\Src\system_log_file.c",
     "$repoRoot\Tests\Host\Fixtures\log_file_storage_stub.c",
     "$repoRoot\System\Calibration\Src\system_mag_calibration.c",
@@ -1235,6 +1300,7 @@ Invoke-HostTest -Name 'logfile_reply_capacity' -ExtraCompilerArgs @(
     "$repoRoot\Tests\Host\test_logfile_reply_capacity.c",
     "$repoRoot\Common\Src\common_format.c"
 )
+if (Test-Path -LiteralPath "$repoRoot\Platform\STM32F4\Src\platform_uart_stm32f4.c") {
 Invoke-HostTest -Name 'console_frames_actual' -ExtraCompilerArgs @(
     "-I$repoRoot\Tests\Host\console_frames\Inc",
     "-I$repoRoot\Platform\STM32F4\Src",
@@ -1248,6 +1314,10 @@ Invoke-HostTest -Name 'console_frames_actual' -ExtraCompilerArgs @(
     "$repoRoot\Devices\Console\UART\Src\console_uart_device.c",
     "$repoRoot\Devices\Console\UART\Adapter\Src\uart_console_adapter.c"
 )
+} else {
+    $script:hostNotApplicableCount++
+    Write-Output 'FCCG_HOST_NOT_APPLICABLE|console_frames_actual|STM32F4 UART implementation not selected; this model does not validate H7/F1 UART'
+}
 Invoke-HostTest -Name 'telemetry' -Sources @(
     "$repoRoot\Tests\Host\test_telemetry.c",
     "$repoRoot\Modules\Src\telemetry_service.c",
@@ -1321,6 +1391,27 @@ elseif ($preparationFusion -eq 'SYSTEM_FUSION_SF6') {
         "$repoRoot\Algorithm\Estimator\SF6\Src\navigation_sf6_backend.c"
     )
 }
+elseif ($preparationFusion -in @('SYSTEM_FUSION_ESKF20', 'SYSTEM_FUSION_INEKF15', 'SYSTEM_FUSION_INEKF20')) {
+    # Use the selected model's actual backend and graph-defined model identity.
+    # SYSTEM_BUILD_ESTIMATOR_ENABLED is the KF6 switch, not augmented readiness.
+    foreach ($definition in @(Get-Content -LiteralPath $projectSourcesPath |
+        Where-Object { $_ -match '^\s*SYSTEM_BUILD_AUGMENTED_(ENABLED|MODEL)=[0-9]+U\s*(?:\\)?\s*$' })) {
+        $preparationArgs += '-D' + $definition.Trim().TrimEnd('\').Trim()
+    }
+    $preparationArgs += "-I$repoRoot\Algorithm\Estimator\Augmented\Inc"
+    foreach ($source in @(Get-Content -LiteralPath $projectSourcesPath)) {
+        if ($source -match '^\s+(Algorithm/Estimator/Augmented/Src/[A-Za-z0-9_]+\.c)\s*(?:\\)?\s*$') {
+            $preparationSources += Join-Path $repoRoot $Matches[1]
+        }
+    }
+    $preparationSources += @(
+        "$repoRoot\System\Calibration\Src\system_calibration.c",
+        "$repoRoot\System\Calibration\Src\system_calibration_correction.c",
+        "$repoRoot\System\Calibration\Src\system_mag_calibration.c",
+        "$repoRoot\APP\Src\logger_bus.c",
+        "$repoRoot\Common\Src\common_spsc_queue.c"
+    )
+}
 Invoke-HostTest -Name 'estimator_preparation_actual' -ExtraCompilerArgs $preparationArgs `
     -Sources $preparationSources
 
@@ -1355,7 +1446,7 @@ foreach ($alignmentSource in @(Get-Content -LiteralPath $projectSourcesPath)) {
     }
 }
 $optionalStartSources = @($optionalStartSources | Select-Object -Unique)
-$optionalStartArgs = @($preparationArgs | Where-Object { $_ -notmatch 'SILVERSTAR_PROTOCOL_LOGGING_ENABLED|^-flto$' }) + @('-flto=2') + @("-I$repoRoot\Devices\Storage\SdSdioFatFs\Adapter\Inc")
+$optionalStartArgs = @($preparationArgs | Where-Object { $_ -notmatch 'SILVERSTAR_PROTOCOL_LOGGING_ENABLED|^-flto$' }) + @('-flto=1') + @("-I$repoRoot\Devices\Storage\SdSdioFatFs\Adapter\Inc")
 foreach ($alignmentDefine in @(Get-Content -LiteralPath $projectSourcesPath |
     Where-Object { $_ -match '^\s*SYSTEM_ALIGNMENT_BUILD_[A-Z_]+=[A-Z0-9_]+\s*(?:\\)?\s*$' })) {
     $optionalStartArgs += '-D' + $alignmentDefine.Trim().TrimEnd('\').Trim()
@@ -1502,6 +1593,26 @@ Invoke-HostTest -Name 'golden_sample' -Sources (@(
     "$repoRoot\Tests\Host\generate_golden_sample.c",
     "$repoRoot\Generated\Src\project_log_decoder_profile.c"
 ) + $sslogSources)
+
+# Complete owning installation transaction plus explicitly synthetic physical,
+# lifecycle and media facades; no macro disabling the selected plugin.
+if ($script:hostGraphDefinitions.Contains('SYSTEM_INSTALLATION_CAPTURE_ENABLED')) {
+    $activeIntegrationSources = @(
+        "$repoRoot\Tests\Host\test_installation_active.c",
+        "$repoRoot\Tests\Host\installation_capture_host_port.c",
+        "$repoRoot\System\Calibration\Src\system_calibration.c",
+        "$repoRoot\System\Calibration\Src\system_calibration_correction.c",
+        "$repoRoot\Algorithm\Calibration\Src\imu_six_face_calibration.c",
+        "$repoRoot\Modules\InstallationCapture\Src\capture_primitives.c",
+        "$repoRoot\Modules\InstallationCapture\Src\capture_info.c",
+        "$repoRoot\ThirdParty\InstallationCapture\ryu\d2s.c",
+        "$repoRoot\Common\Src\common_format.c")
+    Invoke-HostTest -Name 'installation_active_integration' -Sources $activeIntegrationSources -ExtraCompilerArgs @(
+        '-DSYSTEM_CALIBRATION_BUILD_PROCEDURE_MASK=6U',
+        "-I$repoRoot\Modules\InstallationCapture\Inc", "-I$repoRoot\Modules\InstallationCapture\Src",
+        "-I$repoRoot\ThirdParty\InstallationCapture", "-I$repoRoot\Devices\Storage\SdSdioFatFs\Adapter\Inc",
+        "-I$repoRoot\Devices\Storage\SdSdioFatFs\Adapter\Src")
+}
 
 $script:collectHostJobs = $false
 foreach ($contractJob in $script:hostJobs) {

@@ -44,7 +44,7 @@ def test_targets_remain_discoverable_and_configuration_is_read_only(qapp, worksp
     workspace = HardwareWorkspacePage(translator, devices, flight, ground, air)
     try:
         workspace.Configuration_Set(model)
-        assert not model.ground_target.enabled
+        assert 'enabled' not in model.Dictionary_Get()['ground_target']
         assert workspace.target_cards['flight'].isAncestorOf(flight.board_combo)
         assert workspace.target_cards['ground'].isAncestorOf(ground.board_combo)
         assert workspace.target_cards['ground'].isAncestorOf(ground.import_directory)
@@ -170,7 +170,7 @@ def test_actual_window_first_screen_contains_both_target_imports(qapp, workspace
 
 @pytest.mark.parametrize('width,language,theme,font_size', [
     (1440, 'zh_CN', 'light', 9), (1920, 'en_US', 'dark', 12)])
-def test_complete_target_columns_align_and_shared_link_follows_them(qapp, workspace_root, tmp_path,
+def test_target_columns_align_and_shared_link_precedes_details(qapp, workspace_root, tmp_path,
                                                                   width, language, theme, font_size):
     from PySide6.QtCore import QRect
     from PySide6.QtGui import QFont
@@ -196,7 +196,7 @@ def test_complete_target_columns_align_and_shared_link_follows_them(qapp, worksp
 
     try:
         flight_before = deepcopy(window._model.hardware)
-        window.ground_target_page.enabled.setChecked(True)
+        assert not hasattr(window.ground_target_page, 'enabled')
         combo = window.ground_target_page.board_combo
         combo.setCurrentIndex(combo.findData('silverstar.board.ground_station_0_5'))
         _Events_Flush(qapp)
@@ -225,8 +225,10 @@ def test_complete_target_columns_align_and_shared_link_follows_them(qapp, worksp
         assert abs(left.width() - right.width()) <= 1
         assert workspace._target_sections['flight'].isAncestorOf(window.devices_page.position_editors['imu0'])
         assert workspace._target_sections['ground'].isAncestorOf(window.ground_target_page.pc_interface)
-        assert Bounds(workspace.link_summary).top() > max(left.bottom(), right.bottom())
-        assert Bounds(window.air_link_page.air_link_group).top() > Bounds(workspace.link_summary).bottom()
+        assert Bounds(workspace.link_group).top() > max(Bounds(card).bottom() for card in workspace.target_cards.values())
+        assert Bounds(workspace.link_group).bottom() < min(left.top(), right.top())
+        assert workspace.link_button.isVisible()
+        assert not window.air_link_page.air_link_group.isVisible()
         assert all(window.navigation_list.visualItemRect(window.navigation_list.item(index)).height() >= 60
                    for index in range(3))
         for index in (1, 2, 0):

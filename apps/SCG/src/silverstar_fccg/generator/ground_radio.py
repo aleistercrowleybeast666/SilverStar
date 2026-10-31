@@ -13,10 +13,12 @@ def GroundRadioConfig_Render(ground, telemetry_profile="") -> str:
         raise ValueError("Ground requires 1–4 distinct radio instances")
     if ground.active_radio_instance not in identities:
         raise ValueError("Ground initial active radio is not configured")
-    nrf24 = radios[0].plugin == "silverstar.device.telemetry.nrf24l01p"
-    if nrf24:
-        if len(radios) != 1 or radios[0].module_variant != "nrf24l01p" or type(radios[0].tx_power_dbm) is not int or radios[0].tx_power_dbm not in (-18, -12, -6, 0):
-            raise ValueError("Ground NRF24 requires one paired module and documented power")
+    sx1278 = radios[0].plugin == "silverstar.device.telemetry.sx1278"
+    if sx1278:
+        from silverstar_fccg.project.sx1278 import Sx1278Module_Validate
+        if len(radios) != 1:
+            raise ValueError("E32-400M20S currently requires exactly one Ground radio")
+        Sx1278Module_Validate(radios[0].module_variant, radios[0].tx_power_dbm)
     else:
         if any(radio.plugin != "silverstar.device.telemetry.sx1281" for radio in radios):
             raise ValueError("Ground runtime requires a supported homogeneous radio family")
@@ -52,7 +54,6 @@ def GroundRadioConfig_Render(ground, telemetry_profile="") -> str:
     if values[0][0] == values[1][0] != 96 and values[0][1] != values[1][1]:
         raise ValueError("Shared TX/RX LED requires the same active polarity")
     owner = identities.index(ground.active_radio_instance)
-    backend = '#define GROUND_RADIO_BACKEND_NRF24 1U\n' if nrf24 else ''
     return f"""#ifndef __GROUND_RADIO_CONFIG_H
 #define __GROUND_RADIO_CONFIG_H
 #include "platform_gpio.h"
@@ -68,14 +69,14 @@ def GroundRadioConfig_Render(ground, telemetry_profile="") -> str:
 #define GROUND_ACTIVITY_TX_ACTIVE_HIGH {values[0][1]}U
 #define GROUND_ACTIVITY_RX_ACTIVE_HIGH {values[1][1]}U
 #define GROUND_ACTIVITY_PULSE_MS {pulse}U
-{backend}#endif /* __GROUND_RADIO_CONFIG_H */
+#endif /* __GROUND_RADIO_CONFIG_H */
 """
 
 
 def GroundRadioAirHeader_Render(ground, legacy_header: str) -> str:
     GroundRadioConfig_Render(ground)  # Validate values before inserting C tokens.
     radios = GroundRadioConfigurations_Get(ground)
-    if radios[0].plugin == "silverstar.device.telemetry.nrf24l01p":
+    if radios[0].plugin == "silverstar.device.telemetry.sx1278":
         return legacy_header
     variant_macros = RadioInstanceMacros_Render([(radio.module_variant, radio.tx_power_dbm) for radio in radios])
     legacy_header = legacy_header.replace("#endif /* __AIR_LINK_CONFIG_H */",

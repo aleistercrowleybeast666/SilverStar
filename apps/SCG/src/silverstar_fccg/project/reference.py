@@ -59,7 +59,7 @@ REFERENCE_COMPONENT_IDS = {
     "deployment": "silverstar.flight_logic.deployment.multi_trigger",
     "landing_common": "silverstar.flight_logic.landing.baro_imu_window",
     "landing": "silverstar.flight_logic.landing.baro_imu_window_strategy",
-    "protocol_telemetry": "silverstar.protocol.telemetry.air_m0",
+    "protocol_telemetry": "silverstar.protocol.telemetry.ss_tm",
     "protocol_maintenance": "silverstar.protocol.maintenance.serial_0_0",
     "protocol_logging": "silverstar.protocol.logging.sslog_0_0",
     "environment": "silverstar.environment.vscode_eide_gcc",
@@ -149,7 +149,7 @@ def ReferenceProject_Create(
             component=component_id,
             version=catalog.Component_Get(component_id).version,
             profile={
-                "telemetry": "air.m0",
+                "telemetry": "ss_tm.s.0_1",
                 "maintenance": "maintenance.serial.0_1",
                 "logging": "flight_log.0_0",
             }[category],
@@ -255,6 +255,8 @@ def ReferenceProject_Create(
         ),
         reference_provenance=dict(reference_provenance or {}),
     )
+    from silverstar_fccg.project.mission_process import MissionProcess_FirmwareDefault
+    model.mission_process = MissionProcess_FirmwareDefault()
     LoggingProfile_Reconcile(model, catalog)
     from silverstar_fccg.project.algorithm_parameters import (
         AlgorithmParameters_Reconcile,

@@ -1,6 +1,6 @@
 # SilverStar AIR 应用层协议 M0
 
-本文保留旧 M0 wire 定义。0.1.3 开发分支新增的 SS-TM-S/H 是独立协议，见[统一改造及迁移](../TELEMETRY_UNIFICATION_20261026.md)；不能套用本页长度解析新帧。
+本文保留旧 M0 wire 定义，供历史记录只读解码。当前 0.1.3 新工程仅使用 SS-TM-S；H 与 M0 工程须显式迁移，不能把本页长度用于新帧。协议来源与字节定义见[统一改造及迁移](../TELEMETRY_UNIFICATION_20261026.md)，当前支持状态见[支持矩阵](../SUPPORT_MATRIX.md)。下文日期与旧版本陈述属于历史协议说明。
 
 产品显示身份为0.1.2；下文0.0.x是该接口/wire契约的来源版本，不是当前应用产品版本。AIR仍为M0，具体字段与兼容性按实际协议核对，不据产品版本重写旧数据。
 
@@ -1096,7 +1096,9 @@ Ground GSP_ACK_OK confirms enqueue acceptance. It does not confirm Ground TX_DON
 Capability uses one outstanding transport token, with a four-second pending timeout. Only TX_DONE receipts enter the advertisement window; TX_TIMEOUT, lost receipts or expired pending work do not. The receipt age is wrap-safe transport milliseconds, and the service converts that age to its 64-bit monotonic microsecond clock epoch. Both the advertisement window and pending lifetime use that 64-bit clock; a complete 32-bit millisecond cycle cannot revive an expired advertisement or pending receipt. Internal 32-bit tokens encode an instance byte and a nonzero 24-bit counter; bounded allocation avoids the eight queued and one active tokens when that counter wraps. Reused completed tokens lose their old receipt. Untracked ACK/status completion never overwrites the latest tracked receipt. The API retains only the latest tracked receipt, so another caller must tolerate NOT_PRESENT; the service itself tracks only one Capability at a time. CPU-only Capability metadata uses the existing CPU-fast BSS target mapping; no wireless payload or DMA object moves with it.
 
 
-### NRF24L01+ transport extension (2026-10-06)
+### Historical NRF24L01+ transport extension (2026-10-06)
+
+This section describes recorded compatibility only. Active NRF24 generation and its backend were removed on the 0.1.3 development line; preserved bytes and enum IDs must not be reassigned.
 
 AIR M0 frame bytes, Capability handshake and CMD/ACK semantics remain unchanged.
 NRF physical payloads are at most32 bytes; version1 fragments are reassembled below AIR

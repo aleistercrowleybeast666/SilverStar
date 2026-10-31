@@ -1,7 +1,6 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "air_protocol.h"
 #include "project_device_instances.h"
 #include "system_alignment.h"
 #include "system_barometer_if.h"
@@ -13,6 +12,18 @@
 #include "system_navigation_profile.h"
 #include "system_sensor_status.h"
 #include "test_common.h"
+
+/* Frozen sensor-status wire values shared with historical AIR M0. This core
+ * test must also run when only SS-TM is selected and AIR is not generated. */
+enum
+{
+    AIR_SENSOR_SUMMARY_IMU_PRESENT = 1U << 0,
+    AIR_SENSOR_SUMMARY_GNSS_PRESENT = 1U << 1,
+    AIR_SENSOR_SUMMARY_AUX_SENSOR_PRESENT = 1U << 2,
+    AIR_SENSOR_SUMMARY_SNAPSHOT_SUPPORTED = 1U << 3,
+    AIR_ALIGNMENT_STATE_READY = 3U,
+    AIR_ALIGNMENT_STATE_FAILED = 4U
+};
 
 static SystemAlignmentSummary s_alignment;
 static SystemNavigationProfile s_navigation;

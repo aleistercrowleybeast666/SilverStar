@@ -22,7 +22,9 @@ def position(sequence=0, session=123, age=1000, flags=5, latitude=0):
 
 def receive(controller, raw, timestamp=1_000_000_000):
     wire = build_gsp_frame(int(GspType.AIR_RX), bytes((186, 20, len(raw))) + raw)
-    event, = ReceivePipeline().feed(wire, timestamp)
+    if not hasattr(controller, '_test_pipeline'):
+        controller._test_pipeline = ReceivePipeline()
+    event, = controller._test_pipeline.feed(wire, timestamp)
     assert not event.air_error
     controller._handle_air_message(event.air_message, event)
     return event

@@ -68,6 +68,7 @@ static void Mock_Init(MockBus *mock, SensorImu *imu, const SensorImuProfile *pro
     memset(mock, 0, sizeof(*mock));
     mock->profile = profile;
     mock->registers[profile->id_register] = profile->expected_id;
+    if (profile == Icm42688P_ProfileGet()) { mock->registers[0x64U] = 0x10U; }
     bus.context = mock;
     bus.read = Mock_Read;
     bus.write = Mock_Write;
@@ -107,6 +108,7 @@ static void Model_Test(const SensorImuProfile *profile)
     assert(SensorImu_AxisMapSet(&imu, mapping, 5U) == SENSOR_IMU_OK);
     epoch = Mock_Configure(&mock, &imu, 1U);
     assert(SensorImu_Verify(&imu) == SENSOR_IMU_OK);
+    if (profile == Icm42688P_ProfileGet()) { assert((mock.registers[0x64U] & 0x10U) == 0U); }
     mock.registers[profile->data_register + profile->accel_offset +
         ((profile->little_endian != 0U) ? 1U : 0U)] = 0x80U;
     if (profile->invalid_min_sample != 0U)
@@ -214,7 +216,9 @@ static void IcmFifo_Test(const SensorImuProfile *profile)
     mock.registers[0x2FU] = 48U;
     for (uint8_t i = 0U; i < 3U; i++)
     {
-        uint16_t tick = (uint16_t)(63000U + (uint32_t)i * 5000U);
+        uint32_t interval = profile == Icm42688P_ProfileGet() ?
+            (uint32_t)i * 150000U / 32U : (uint32_t)i * 5000U;
+        uint16_t tick = (uint16_t)(63000U + interval);
         mock.fifo[16U*i] = 0x68U;
         mock.fifo[16U*i+1U] = 0x7FU; mock.fifo[16U*i+2U] = 0xFFU;
         mock.fifo[16U*i+13U] = 2U;
@@ -225,9 +229,11 @@ static void IcmFifo_Test(const SensorImuProfile *profile)
     assert(count == 1U && sample[0].sample_timestamp_us == epoch-10000U);
     assert(sample[0].accel_raw[0] == 32767 && sample[0].temperature_c > 25.96F);
     mock.registers[0x2FU] = 32U;
-    /* The MCU polls 1 ms later; the physical sample is still exactly 5 ms newer. */
+    /* ICM42688P ticks are 30/32 us counts, not microseconds. Quantization
+     * alternates 4687/4688 ticks; retained rational phase prevents drift. */
     assert(SensorImu_DrainFifo(&imu, epoch+1000U, epoch+1000U, sample, 1U, &count) == SENSOR_IMU_OK);
-    assert(sample[0].sample_timestamp_us == epoch-5000U);
+    assert(sample[0].sample_timestamp_us == epoch -
+        (profile == Icm42688P_ProfileGet() ? 5001U : 5000U));
     mock.registers[0x2FU] = 16U;
     assert(SensorImu_DrainFifo(&imu, epoch+2000U, epoch+2000U, sample, 1U, &count) == SENSOR_IMU_OK);
     assert(sample[0].sample_timestamp_us == epoch);
@@ -317,6 +323,35 @@ static void MountMap_Test(void)
     puts("six right-handed mount maps transform acceleration and gyro PASS");
 }
 
+static void IcmClockScale_Test(void)
+{
+    MockBus mock; SensorImu imu; SensorImuSample sample[1];
+    uint8_t count; uint64_t epoch;
+    Mock_Init(&mock, &imu, Icm42688P_ProfileGet(), SENSOR_BUS_SPI);
+    epoch = Mock_Configure(&mock, &imu, 1U);
+    for (uint32_t index = 0U; index < 3000U; index++)
+    {
+        uint32_t native_delta = index * 9375U / 2U;
+        uint16_t tick = (uint16_t)(63000U + native_delta);
+        mock.fifo_cursor = 0U; mock.registers[0x2FU] = 16U;
+        mock.fifo[0] = 0x68U; mock.fifo[13] = 0U;
+        mock.fifo[14] = (uint8_t)(tick >> 8U); mock.fifo[15] = (uint8_t)tick;
+        assert(SensorImu_DrainFifo(&imu, epoch + (uint64_t)index * 5000U,
+            epoch + (uint64_t)index * 5000U + 100U, sample, 1U, &count) == SENSOR_IMU_OK);
+        assert(count == 1U);
+        assert(sample[0].sample_timestamp_us == epoch + (uint64_t)native_delta * 16U / 15U);
+        assert((sample[0].quality_flags & SENSOR_IMU_QUALITY_TIME_UNCERTAIN) != 0U);
+    }
+    imu.state = SENSOR_IMU_STOPPED;
+    epoch = Mock_Configure(&mock, &imu, 1U);
+    mock.fifo_cursor = 0U; mock.registers[0x2FU] = 16U;
+    mock.fifo[14] = 0U; mock.fifo[15] = 1U;
+    assert(SensorImu_DrainFifo(&imu, epoch, epoch + 100U, sample, 1U, &count) == SENSOR_IMU_OK);
+    assert(imu.fifo_pending[2] == 0U);
+    assert((sample[0].quality_flags & SENSOR_IMU_QUALITY_HISTORY_RESET) != 0U);
+    puts("ICM42688P native rational ticks/wrap/reset/unqualified time PASS");
+}
+
 int main(void)
 {
     const SensorImuProfile *profiles[8] = {Mpu6000_ProfileGet(), Mpu6050_ProfileGet(),
@@ -328,6 +363,7 @@ int main(void)
     StFifo_Test(Lsm6Dsv320X_ProfileGet());
     IcmFifo_Test(Icm42605_ProfileGet());
     IcmFifo_Test(Icm42688P_ProfileGet());
+    IcmClockScale_Test();
     HighG_Test();
     MountMap_Test();
     puts("sensor model mock suite PASS (HARDWARE_UNVERIFIED)");

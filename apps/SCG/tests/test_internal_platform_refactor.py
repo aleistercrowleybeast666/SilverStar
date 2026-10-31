@@ -1316,7 +1316,7 @@ def test_shared_spi_owners_remain_allowed_within_one_target(
     model.resource_assignments = {"radio0:bus": "BUS_A", "radio1:bus": "BUS_A"}
     assert ResourceAssignments_Resolve(model, catalog).valid
     # Ground resources are not part of this Flight target's owner set.
-    model.ground_target = replace(model.ground_target, enabled=True,
+    model.ground_target = replace(model.ground_target, 
                                  resource_assignments={"radio0:data": "BUS_A"})
     assert ResourceAssignments_Resolve(model, catalog).valid
 

@@ -82,8 +82,10 @@ def Request_Decode(body,*,allow_draft=False):
               "POLL": 2, "STATUS": 2, "READ": 3, "FACE": 3}
     if op not in counts or len(args) != counts[op]:
         raise ProtocolError(ProtocolResult.BadFormat, "OPERATION_ARGUMENTS")
-    if not allow_draft and (op not in ("CAPS","INFO","BEGIN","FACE","POLL","STATUS","DO")
-            or (op=="DO" and args[-1]!="CANCEL") or (op=="STATUS" and args[-1]!="STATE:0")):
+    if not allow_draft and (op not in ("CAPS","INFO","BEGIN","FACE","POLL","STATUS","DO","UPLOAD","PUT","READ")
+            or (op=="DO" and args[-1] not in ("CANCEL","UPLOAD_CANCEL","APPLY","SAVE"))
+            or (op=="STATUS" and args[-1] not in ("STATE:0","ACTIVE:0","SAVED:0"))
+            or (op=="UPLOAD" and not args[-1].startswith('228:'))):
         raise ProtocolError(ProtocolResult.BadFormat,"UNADOPTED_DRAFT_COMMAND")
     if op == "INFO":
         endpoints = args[0].split(":")

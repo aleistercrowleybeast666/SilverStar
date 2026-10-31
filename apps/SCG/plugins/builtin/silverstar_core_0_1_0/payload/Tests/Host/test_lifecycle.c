@@ -158,6 +158,14 @@ static void Test_StartTransaction(void)
     TEST_CHECK(SystemLifecycle_StartTransaction() ==
                SYSTEM_LIFECYCLE_START_LOCKED);
     TEST_CHECK(s_prepare_count == 1U);
+    TEST_CHECK(SystemLifecycle_EnterLanded() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemLifecycle_EnterReady() == SYSTEM_DEVICE_BAD_STATE);
+    TEST_CHECK(SystemLifecycle_GetState() == SYSTEM_STATE_LANDED);
+    TEST_CHECK(SystemLifecycle_EnterPostflight() == SYSTEM_DEVICE_OK);
+    TEST_CHECK(SystemLifecycle_EnterReady() == SYSTEM_DEVICE_BAD_STATE);
+    TEST_CHECK(SystemLifecycle_GetState() == SYSTEM_STATE_POSTFLIGHT);
+    TEST_CHECK(SystemLifecycle_StartTransaction() == SYSTEM_LIFECYCLE_START_LOCKED);
+    TEST_CHECK(s_prepare_count == 1U);
 }
 
 static void Test_Rollback(void)
@@ -182,6 +190,24 @@ static void Test_Rollback(void)
     TEST_CHECK(s_abort_count == 1U);
     TEST_CHECK(s_navigation_count == 0U);
     TEST_CHECK(s_mission_started == 0U);
+}
+
+static void Test_PrepareAndQueueRollback(void)
+{
+    Test_StateReset();
+    TEST_CHECK(SystemLifecycle_EnterReady() == SYSTEM_DEVICE_OK);
+    s_fail_stage=1U;s_prepare_result=SYSTEM_DEVICE_IO_ERROR;
+    TEST_CHECK(SystemLifecycle_StartTransaction()==SYSTEM_LIFECYCLE_START_PREPARE_FAILED);
+    /* Prepare failed before freeze/transaction publication: its existing
+     * contract retains READY and has no rollback event to fabricate. */
+    TEST_CHECK(s_abort_count==0U&&s_mission_started==0U&&s_origin_count==0U);
+    TEST_CHECK(SystemLifecycle_GetState()==SYSTEM_STATE_READY);
+    Test_StateReset();
+    TEST_CHECK(SystemLifecycle_EnterReady()==SYSTEM_DEVICE_OK);
+    s_fail_stage=4U;
+    TEST_CHECK(SystemLifecycle_StartTransaction()==SYSTEM_LIFECYCLE_START_QUEUE_FAILED);
+    TEST_CHECK(s_abort_count==1U&&s_mission_started==0U&&s_navigation_count==1U);
+    TEST_CHECK(SystemLifecycle_GetState()==SYSTEM_STATE_PREFLIGHT);
 }
 
 static void Test_RequestQueueAndFault(void)
@@ -346,6 +372,7 @@ int main(void)
 {
     Test_StartTransaction();
     Test_Rollback();
+    Test_PrepareAndQueueRollback();
     Test_RequestQueueAndFault();
     Test_StartReasonsAndPending();
     Test_MaintenanceStartExclusion();

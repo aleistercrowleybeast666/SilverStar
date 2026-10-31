@@ -79,6 +79,8 @@ InstallationCaptureResult InstallationCapture_ResourceRelease(uint8_t owner,uint
 /* Typed production coordinator. Roles 2..7 and 11 own reserved token slots.
  * Continuation is only used under the owning controller's existing action
  * lock. Async completion must validate its request/generation before End. */
+InstallationCaptureResult InstallationCapture_StartClaim(uint8_t from_alignment,uint32_t *token);
+InstallationCaptureResult InstallationCapture_StartRelease(uint32_t token,uint8_t restore_alignment);
 InstallationCaptureResult InstallationCapture_OperationBegin(uint8_t owner,uint8_t continuation);
 InstallationCaptureResult InstallationCapture_OperationEnd(uint8_t owner);
 uint8_t InstallationCapture_OperationHeld(uint8_t owner);

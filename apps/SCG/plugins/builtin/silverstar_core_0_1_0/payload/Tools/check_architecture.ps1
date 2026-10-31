@@ -393,27 +393,26 @@ $radioContextSource = 'Devices\Telemetry\SX1281\Src\sx1281_device.c'
 $radioSources = @('Devices/Telemetry/SX1281/Src/sx1281_device.c')
 try {
     $family = [string]$projectConfiguration.air_link.radio_family
-    Assert-ArchitectureCondition -Condition ($family -in @('sx128x', 'nrf24')) `
+    Assert-ArchitectureCondition -Condition ($family -in @('sx128x', 'sx127x')) `
         -Message 'Radio backend selection is missing or unsupported.'
     $selectedPlugin = 'silverstar.device.telemetry.sx1281'
     $airConfiguration = Get-ArchitectureRuntimeSource -Text (
         Get-Content -Raw -LiteralPath (Join-Path $repoRoot 'Generated\Inc\air_link_config.h'))
-    $nrfDeclarations = [regex]::Matches($airConfiguration,
-        '(?m)^\s*#\s*define\s+AIR_LINK_NRF24_CHANNEL\b[^\r\n]*$')
+    $e32Declarations = [regex]::Matches($airConfiguration,
+        '(?m)^\s*#\s*define\s+AIR_LINK_SPREADING_FACTOR\b[^\r\n]*$')
     $sxDeclarations = [regex]::Matches($airConfiguration,
         '(?m)^\s*#\s*define\s+AIR_LINK_SX128X_SF\b[^\r\n]*$')
     Assert-ArchitectureCondition -Condition (
-        (($family -eq 'nrf24') -and ($nrfDeclarations.Count -eq 1) -and ($sxDeclarations.Count -eq 0)) -or
-        (($family -eq 'sx128x') -and ($sxDeclarations.Count -eq 1) -and ($nrfDeclarations.Count -eq 0))) `
+        (($family -eq 'sx127x') -and ($e32Declarations.Count -eq 1) -and ($sxDeclarations.Count -eq 0)) -or
+        (($family -eq 'sx128x') -and ($sxDeclarations.Count -eq 1) -and ($e32Declarations.Count -eq 1))) `
         -Message 'Generated AIR header backend differs from saved radio family.'
-    if ($family -eq 'nrf24') {
-        $radioBackend = 'NRF24L01P'
-        $selectedPlugin = 'silverstar.device.telemetry.nrf24l01p'
-        $radioContextMacro = 'PROJECT_NRF24_INSTANCE_COUNT_MAX'
-        $radioContextSource = 'Devices\Telemetry\NRF24L01P\Src\nrf24_device.c'
-        $radioSources = @('Devices/Telemetry/NRF24L01P/Src/nrf24_device.c',
-            'Devices/Telemetry/NRF24L01P/Src/nrf24_fragment.c',
-            'Devices/Telemetry/NRF24L01P/Adapter/Src/nrf24_telemetry_adapter.c')
+    if ($family -eq 'sx127x') {
+        $radioBackend = 'SX1278'
+        $selectedPlugin = 'silverstar.device.telemetry.sx1278'
+        $radioContextMacro = 'PROJECT_SX1278_INSTANCE_COUNT_MAX'
+        $radioContextSource = 'Devices\Telemetry\SX1278\Src\sx1278_device.c'
+        $radioSources = @('Devices/Telemetry/SX1278/Src/sx1278_device.c',
+            'Devices/Telemetry/SX1278/Adapter/Src/sx1278_telemetry_adapter.c')
     }
     $savedRadios = @($projectConfiguration.components.devices | Where-Object {
         $_.plugin -like 'silverstar.device.telemetry.*' })
@@ -434,45 +433,47 @@ try {
             (Test-Path -LiteralPath (Join-Path $repoRoot $source) -PathType Leaf)) `
             -Message ('Selected radio driver is missing from the unique source graph: ' + $source)
     }
-    $otherBackend = if ($radioBackend -eq 'NRF24L01P') { 'SX1281' } else { 'NRF24L01P' }
+    $otherBackends = @('NRF24L01P', $(if ($radioBackend -eq 'SX1278') { 'SX1281' } else { 'SX1278' }))
+    foreach ($otherBackend in $otherBackends) {
     Assert-ArchitectureCondition -Condition (($graph -notmatch ('Devices/Telemetry/' + $otherBackend + '/')) -and
         (-not (Test-Path -LiteralPath (Join-Path $repoRoot ('Devices\Telemetry\' + $otherBackend))))) `
         -Message 'Unselected radio backend must not be present in the generated payload/source graph.'
-    if ($radioBackend -eq 'NRF24L01P') {
+    }
+    if ($radioBackend -eq 'SX1278') {
         Assert-PathAbsent -RelativePath 'Middlewares\Third_Party\SX1280lib'
         $owner = [string]$projectConfiguration.air_link.flight_radio_instance
         Assert-ArchitectureCondition -Condition (($savedRadios.Count -eq 1) -and
-            ($savedRadios[0].instance_id -eq $owner)) -Message 'NRF24 requires exactly one paired owner.'
-        foreach ($slot in @('radio_bus', 'radio_csn', 'radio_ce', 'time')) {
+            ($savedRadios[0].instance_id -eq $owner)) -Message 'SX1278 requires exactly one paired owner.'
+        foreach ($slot in @('radio_bus', 'radio_nss', 'radio_reset', 'radio_dio0', 'time', 'radio_rx_en', 'radio_tx_en')) {
             $binding = $projectConfiguration.resources.PSObject.Properties[$owner + ':' + $slot]
             Assert-ArchitectureCondition -Condition (($null -ne $binding) -and ($binding.Value -is [string]) -and
-                ($binding.Value.Length -gt 0)) -Message ('NRF24 resource binding is missing: ' + $slot)
+                ($binding.Value.Length -gt 0)) -Message ('SX1278 resource binding is missing: ' + $slot)
         }
-        Assert-ArchitectureCondition -Condition (
-            $projectConfiguration.resources.PSObject.Properties[$owner + ':radio_ce'].Value -ne
-            $projectConfiguration.resources.PSObject.Properties[$owner + ':radio_csn'].Value) `
-            -Message 'NRF24 CE and CSN must bind distinct GPIO outputs.'
-        foreach ($pattern in @('PROJECT_NRF24_INSTANCE_COUNT\s+1U', 'PROJECT_NRF24_INSTANCE_COUNT_MAX\s+1U',
-            'PlatformSpiId\s+spi\s*;', 'PlatformGpioId\s+csn\s*;', 'PlatformGpioId\s+ce\s*;',
-            'PlatformTimeId\s+time\s*;', '\bProjectNrf24Resources_Get\s*\(')) {
+        $pins = @('radio_nss','radio_reset','radio_dio0','radio_rx_en','radio_tx_en') | ForEach-Object {
+            [string]$projectConfiguration.resources.PSObject.Properties[$owner + ':' + $_].Value }
+        Assert-ArchitectureCondition -Condition ((@($pins | Sort-Object -Unique).Count) -eq 5) `
+            -Message 'SX1278 frontend, reset, NSS and DIO0 must bind distinct pins.'
+        foreach ($pattern in @('PROJECT_SX1278_INSTANCE_COUNT\s+1U', 'PROJECT_SX1278_INSTANCE_COUNT_MAX\s+1U',
+            'PlatformSpiId\s+spi\s*;', 'PlatformGpioId\s+nss\s*;', 'PlatformGpioId\s+reset\s*;', 'PlatformGpioId\s+dio0\s*;', 'PlatformGpioId\s+rx_en\s*;', 'PlatformGpioId\s+tx_en\s*;',
+            'PlatformTimeId\s+time\s*;', '\bProjectSx1278Resources_Get\s*\(')) {
             Assert-FileContainsPattern -RelativePath 'Generated\Inc\project_resources.h' -Pattern $pattern `
-                -Message ('NRF24 generated resource contract is missing: ' + $pattern)
+                -Message ('SX1278 generated resource contract is missing: ' + $pattern)
         }
         $publication = Get-Content -Raw -LiteralPath (Join-Path $repoRoot 'Generated\Src\project_resources.c')
         $radioPublications = [regex]::Matches($publication,
-            '(?ms)^static const ProjectNrf24Resources s_ProjectNrf24Resources\[PROJECT_NRF24_INSTANCE_COUNT\]\s*=\s*\{(.*?)^\};')
+            '(?ms)^static const ProjectSx1278Resources s_ProjectSx1278Resources\[PROJECT_SX1278_INSTANCE_COUNT\]\s*=\s*\{(.*?)^\};')
         Assert-ArchitectureCondition -Condition ($radioPublications.Count -eq 1) `
-            -Message 'NRF24 resource publication table ownership is not unique.'
+            -Message 'SX1278 resource publication table ownership is not unique.'
         if ($radioPublications.Count -eq 1) { $publication = $radioPublications[0].Groups[1].Value }
-        $memberSlots = @{ spi = 'radio_bus'; csn = 'radio_csn'; ce = 'radio_ce'; time = 'time' }
-        $memberTypes = @{ spi = 'Spi'; csn = 'Gpio'; ce = 'Gpio'; time = 'Time' }
-        foreach ($member in @('spi', 'csn', 'ce', 'time')) {
+        $memberSlots = @{ spi = 'radio_bus'; nss = 'radio_nss'; reset = 'radio_reset'; dio0 = 'radio_dio0'; time = 'time'; rx_en = 'radio_rx_en'; tx_en = 'radio_tx_en' }
+        $memberTypes = @{ spi = 'Spi'; nss = 'Gpio'; reset = 'Gpio'; dio0 = 'Gpio'; time = 'Time'; rx_en = 'Gpio'; tx_en = 'Gpio' }
+        foreach ($member in @('spi','nss','reset','dio0','time','rx_en','tx_en')) {
             $resourceId = [string]$projectConfiguration.resources.PSObject.Properties[$owner + ':' + $memberSlots[$member]].Value
             $expected = $resourceId
             if ($hardwareMode -eq 'custom') {
                 $rows = @($projectConfiguration.hardware.resources | Where-Object { $_.id -eq $resourceId })
                 Assert-ArchitectureCondition -Condition ($rows.Count -eq 1) `
-                    -Message ('NRF24 imported resource ownership is not unique: ' + $member)
+                    -Message ('SX1278 imported resource ownership is not unique: ' + $member)
                 if ($rows.Count -eq 1) { $expected = [string]$rows[0].metadata.c_id }
             }
             $kind = $memberTypes[$member]
@@ -480,7 +481,7 @@ try {
             $publicationMatches = [regex]::Matches($publication, '\.' + $member + '\s*=\s*(' + $expression + ')(?=\s*[,}])')
             Assert-ArchitectureCondition -Condition (($publicationMatches.Count -eq 1) -and
                 ($publicationMatches[0].Groups[1].Value -ceq $expected)) `
-                -Message ('NRF24 resource publication differs from saved ownership: ' + $member)
+                -Message ('SX1278 resource publication differs from saved ownership: ' + $member)
         }
     }
 }
@@ -605,8 +606,8 @@ if ($radioBackend -eq 'SX1281') {
         -Paths @('Devices\Telemetry\SX1281', 'Middlewares\Third_Party\SX1280lib') `
         -Pattern 'RegisterCallback|DioIrqHandler|\bRadio\s*\.|#include\s*[<"]radio\.h[>"]'
 } else {
-    Assert-NoArchitecturePattern -Name 'NRF24 runtime callback or indirect dispatch remains.' `
-        -Paths @('Devices\Telemetry\NRF24L01P') -SanitizeRuntimeCode `
+    Assert-NoArchitecturePattern -Name 'SX1278 runtime callback or indirect dispatch remains.' `
+        -Paths @('Devices\Telemetry\SX1278') -SanitizeRuntimeCode `
         -Pattern 'RegisterCallback|DioIrqHandler|\bRadio\s*\.|\(\s*\*\s*[A-Za-z_][A-Za-z0-9_]*\s*\)\s*\('
 }
 
@@ -660,6 +661,10 @@ $expectedGeneratedFiles = @(
     'Generated\Src\project_log_decoder_profile.c',
     'Generated\Src\project_metadata.c',
     'Generated\Src\project_mission_parameters.c',
+    'Generated\Inc\project_mission_process.h',
+    'Generated\Src\project_mission_process.c',
+    'Generated\mission_process.json',
+    'Generated\memory_contract.json',
     'Generated\Src\project_resources.c',
     'Generated\Inc\project_capability_routes.h',
     'Generated\Src\project_capability_routes.c',
@@ -996,7 +1001,7 @@ if ($makeExitCode -eq 0) {
         Where-Object { $_ -match '\.c$' } |
         ForEach-Object { $_ -replace '\\', '/' })
     $uniqueSources = @($selectedSources | Sort-Object -Unique)
-    foreach ($maintenanceSource in @('APP/Src/serial_task.c', 'System/Src/system_console.c')) {
+    foreach ($maintenanceSource in @('APP/Src/serial_task.c', 'System/Src/system_console.c', 'System/Src/system_console_dispatch.c')) {
         Assert-ArchitectureCondition `
             -Condition (($uniqueSources -contains $maintenanceSource) -eq $maintenanceEnabled) `
             -Message ("Maintenance source selection differs from validated configuration: " + $maintenanceSource)

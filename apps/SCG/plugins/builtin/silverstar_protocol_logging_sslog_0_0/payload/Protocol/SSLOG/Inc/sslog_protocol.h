@@ -66,6 +66,8 @@ typedef enum
     FLIGHT_LOG_EVENT_SENSOR_SOURCE_CHANGE,
     FLIGHT_LOG_EVENT_GNSS_POSITION_INTEGRITY_STATE_CHANGE,
     FLIGHT_LOG_EVENT_NAV_FUSION_STATE_CHANGE, /* 0x2F; live supervisor transitions only */
+    FLIGHT_LOG_EVENT_STAGE_ENTER, /* 0x30; arg0 stable stage hash, arg1 transition sequence */
+    FLIGHT_LOG_EVENT_STAGE_EXIT, /* 0x31; original MCU transition timestamp */
     FLIGHT_LOG_EVENT_ID_LIMIT /* exclusive bound; never serialized */
 } FlightLogEventId;
 

@@ -1,6 +1,7 @@
 #include "ss_tm_protocol.h"
 
 #include <limits.h>
+#include <math.h>
 #include <stddef.h>
 #include <string.h>
 #include "silverstar_assert.h"
@@ -164,6 +165,16 @@ static AirParseResult SsTm_LegacyBodyValidate(const uint8_t *frame, uint8_t type
     {
         if ((frame[15] != 1U) || (frame[9] != (uint8_t)(s_tm_profile + 1U))) { return AIR_PARSE_BAD_FIELD; }
     }
+    if (type == AIR_TYPE_FLIGHT_STATE)
+    {
+        for (uint8_t axis = 0U; axis < 6U; axis++)
+        {
+            uint32_t bits = (uint32_t)SsTm_Get(&frame[32U + 4U * axis], 4U);
+            float value;
+            (void)memcpy(&value, &bits, sizeof(value));
+            if (!isfinite(value)) { return AIR_PARSE_BAD_FIELD; }
+        }
+    }
     return LegacyAir_FrameValidate(legacy, size);
 }
 
@@ -309,6 +320,12 @@ AirBuildResult Air_FlightStateBuild(uint16_t seq, const AirFlightStatePayload *v
     uint8_t size = 0U;
     AirBuildResult result;
     (void)seq;
+    if (value == NULL) { return AIR_BUILD_BAD_PARAM; }
+    for (uint8_t axis = 0U; axis < 3U; axis++)
+    {
+        if (!isfinite(value->velocity_enu_mps[axis]) || !isfinite(value->position_enu_m[axis]))
+        { if (length != NULL) { *length = 0U; } return AIR_BUILD_BAD_PARAM; }
+    }
     result = LegacyAir_FlightStateBuild(0U, value, legacy, sizeof(legacy), &size);
     if (result != AIR_BUILD_OK) { return result; }
     return SsTm_Wrap(legacy, size, out, capacity, length);

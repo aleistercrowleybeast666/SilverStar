@@ -4,6 +4,13 @@
 /* Raw persistent-object input: no saved magnetic calibration in this fixture. */
 uint8_t ProjectMagnetometerInstance_CountGet(void) { return 1U; }
 
+SystemDeviceResult ProjectMagnetometerInstance_LatestSampleGet(
+    uint8_t instance_id, SystemMagnetometerSample *sample)
+{
+    if (sample == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    return (instance_id == 0U) ? SYSTEM_DEVICE_NOT_READY : SYSTEM_DEVICE_NOT_PRESENT;
+}
+
 /* Match the raw, enabled magnetic endpoint declared by this fixture. No saved
  * calibration is supplied and no installation qualification is invented. */
 SystemDeviceResult ProjectDeviceInstance_DescriptorGet(SystemDeviceClass device_class,
@@ -57,6 +64,11 @@ PersistentStorageResult PersistentStorage_ObjectWriteAtomic(PersistentStorageObj
 }
 void Test_MagStorageInputsLoad(void)
 {
-    SystemMagCalibrationStorage_Service();
-    SystemMagCalibrationStorage_Service();
+    /* Up to four MAG objects, completion publication, then the active record.
+     * Drive the real load service; never replace readiness with a fixture flag. */
+    for (uint8_t step = 0U; step < 6U; step++)
+    {
+        if (SystemMagCalibrationStorage_LoadCompleteGet() != 0U) { break; }
+        SystemMagCalibrationStorage_Service();
+    }
 }

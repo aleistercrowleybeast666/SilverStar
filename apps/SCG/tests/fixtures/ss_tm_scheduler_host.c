@@ -18,7 +18,11 @@ static UART_HandleTypeDef huart3 = {
 #define SystemTelemetry_Process Test_PreviousSystemProcess
 #define s_tx_count s_mock_tx_count
 #define Estimator_GetLatestSnapshot Test_PreviousEstimatorSnapshot
+#define SystemMissionProcess_EventGet Test_PreviousMissionEventGet
+#define SystemMissionProcess_TelemetryActiveGet Test_PreviousTelemetryActiveGet
 #include "test_telemetry.c"
+#undef SystemMissionProcess_EventGet
+#undef SystemMissionProcess_TelemetryActiveGet
 #undef Estimator_GetLatestSnapshot
 #undef main
 #undef SystemTelemetry_SendControl
@@ -63,12 +67,19 @@ void SX1280SendPayload(uint8_t instance, uint8_t *data, uint8_t length, TickTime
 static uint32_t s_simulated_tx_end_ms;
 static TestFrame s_over_air[1024];
 static uint8_t s_frame_completed[1024];
+static uint32_t s_frame_completed_ms[1024];
+static uint32_t s_frame_started_ms[1024];
 static uint16_t s_over_air_count;
 static uint8_t s_drop_start_ack;
+#include "host_sx1278_airtime.h"
+static uint8_t s_sx1278_airtime_model;
+static uint8_t s_phy_busy;
+static uint32_t s_phy_id, s_phy_started_ms, s_phy_done_ms;
 void SX1280SendPayload(uint8_t instance, uint8_t *data, uint8_t length, TickTime_t timeout)
 {
     (void)timeout;
     s_simulated_tx_end_ms = s_tick_ms + Lora_PacketAirtimeMs(instance, length);
+    s_frame_started_ms[s_over_air_count] = s_tick_ms;
     if ((s_drop_start_ack != 0U) && (length == AIR_ACK_LEN) &&
         (SsTm_FrameTypeGet(data) == 0x40U) && (data[10] == AIR_CMD_START_MISSION))
     { s_simulated_tx_end_ms = 0U; s_drop_start_ack = 0U; }
@@ -78,18 +89,51 @@ void SX1280SendPayload(uint8_t instance, uint8_t *data, uint8_t length, TickTime
     { memcpy(s_over_air[s_over_air_count].data, data, length);
       s_over_air[s_over_air_count++].length = length; }
 }
+static SystemDeviceResult Tm_PhySend(const uint8_t *data, uint16_t length, uint32_t *id)
+{
+    if ((length == 0U) || (length >= 62U) || (s_over_air_count >= 1024U))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    if (s_phy_busy != 0U) { return SYSTEM_DEVICE_BUSY; }
+    s_phy_busy = 1U; s_phy_id++; *id = s_phy_id; s_phy_started_ms = s_tick_ms;
+    /* The real driver starts an enqueued transaction in the next Process
+     * cycle. Both that handoff and TX_DONE observation use the 1 ms task tick. */
+    s_frame_started_ms[s_over_air_count] = s_tick_ms + 1U;
+    s_phy_done_ms = s_tick_ms + 1U + (s_host_sx1278_airtime_us[length] + 999U) / 1000U;
+    s_simulated_tx_end_ms = s_phy_done_ms;
+    memcpy(s_over_air[s_over_air_count].data, data, length);
+    s_over_air[s_over_air_count++].length = (uint8_t)length;
+    return SYSTEM_DEVICE_OK;
+}
 SystemDeviceResult SystemTelemetry_Send(const uint8_t *data, uint16_t length)
-{ return Sx1281TelemetryInstance_Send(0U, data, length); }
+{ uint32_t id; return (s_sx1278_airtime_model != 0U) ? Tm_PhySend(data,length,&id) : Sx1281TelemetryInstance_Send(0U, data, length); }
 SystemDeviceResult SystemTelemetry_Receive(uint8_t *data, uint16_t capacity, uint16_t *length)
 { return Sx1281TelemetryInstance_Receive(0U, data, capacity, length); }
-void SystemTelemetry_Process(void) { (void)Sx1281TelemetryInstance_Process(0U); }
+void SystemTelemetry_Process(void) { if (s_sx1278_airtime_model == 0U) { (void)Sx1281TelemetryInstance_Process(0U); } }
 #ifdef SYSTEM_TELEMETRY_TX_CONTROL_SUPPORTED
 SystemDeviceResult SystemTelemetry_SendControl(const uint8_t *data, uint16_t length, uint32_t *id)
-{ return Sx1281TelemetryInstance_SendControl(0U, data, length, id); }
+{ return (s_sx1278_airtime_model != 0U) ? Tm_PhySend(data,length,id) : Sx1281TelemetryInstance_SendControl(0U, data, length, id); }
 SystemDeviceResult SystemTelemetry_TxResultGet(uint32_t id, uint32_t *age_ms)
-{ return Sx1281TelemetryInstance_TxResultGet(0U, id, age_ms); }
+{
+    if (s_sx1278_airtime_model != 0U)
+    {
+        if (id != s_phy_id) { return SYSTEM_DEVICE_NOT_READY; }
+        *age_ms = s_tick_ms - s_phy_started_ms;
+        if (s_tick_ms < s_phy_done_ms) { return SYSTEM_DEVICE_BUSY; }
+        s_phy_busy = 0U; return SYSTEM_DEVICE_OK;
+    }
+    return Sx1281TelemetryInstance_TxResultGet(0U, id, age_ms);
+}
 #endif
 static uint8_t s_estimator_available = 1U;
+static SystemMissionProcessEvent s_test_stage_event;
+static uint8_t s_test_telemetry_active = 1U;
+uint8_t SystemMissionProcess_TelemetryActiveGet(void) { return s_test_telemetry_active; }
+SystemMissionProcessResult SystemMissionProcess_EventGet(uint32_t after_sequence,
+    SystemMissionProcessEvent *event)
+{
+    if (s_test_stage_event.sequence <= after_sequence) { return SystemMissionProcessResult_Unavailable; }
+    *event = s_test_stage_event; return SystemMissionProcessResult_Entered;
+}
 uint8_t Estimator_GetLatestSnapshot(EstimatorOutputSnapshot *snapshot)
 {
     if ((snapshot == NULL) || (s_estimator_available == 0U)) { return 0U; }
@@ -113,7 +157,7 @@ uint8_t Estimator_GetLatestSnapshot(EstimatorOutputSnapshot *snapshot)
 PlatformResult PlatformBootSession_Get(uint32_t *session)
 { *session = 0x12345678UL; return PLATFORM_OK; }
 SystemDeviceResult SystemTelemetry_ModeSet(SystemTelemetryMode mode)
-{ return Sx1281TelemetryInstance_ModeSet(0U, mode); }
+{ return (s_sx1278_airtime_model != 0U) ? SYSTEM_DEVICE_OK : Sx1281TelemetryInstance_ModeSet(0U, mode); }
 SystemDeviceResult SystemGnss_CapabilitiesGet(uint32_t *mask)
 { *mask = SYSTEM_GNSS_CAP_ELLIPSOID_HEIGHT; return SYSTEM_DEVICE_OK; }
 static SystemPowerSample s_power_sample;
@@ -138,6 +182,15 @@ SystemDeviceResult SystemLogSink_HealthGet(SystemLogSinkHealth *health)
 #undef SYSTEM_BUILD_POWER_IMPLEMENTATION_AVAILABLE
 #define SYSTEM_BUILD_POWER_IMPLEMENTATION_AVAILABLE 1U
 #include "telemetry_tm.c"
+static uint64_t s_test_event_airtime_us = SYSTEM_TELEMETRY_TM_EVENT_AIRTIME_US;
+static uint64_t s_test_position_airtime_us = SYSTEM_TELEMETRY_TM_POSITION_AIRTIME_US;
+static uint64_t s_test_health_airtime_us = SYSTEM_TELEMETRY_TM_HEALTH_AIRTIME_US;
+#undef SYSTEM_TELEMETRY_TM_EVENT_AIRTIME_US
+#define SYSTEM_TELEMETRY_TM_EVENT_AIRTIME_US s_test_event_airtime_us
+#undef SYSTEM_TELEMETRY_TM_POSITION_AIRTIME_US
+#define SYSTEM_TELEMETRY_TM_POSITION_AIRTIME_US s_test_position_airtime_us
+#undef SYSTEM_TELEMETRY_TM_HEALTH_AIRTIME_US
+#define SYSTEM_TELEMETRY_TM_HEALTH_AIRTIME_US s_test_health_airtime_us
 #include "telemetry_service.c"
 #ifdef SYSTEM_TELEMETRY_TX_CONTROL_SUPPORTED
 #define s_capability_sequence s_capability_tx.latest_sequence
@@ -171,6 +224,7 @@ static void Tm_ClockRun(uint32_t start, uint32_t end)
             s_simulated_tx_end_ms = 0U; s_raw_irq = IRQ_TX_DONE; s_dio1_pending = 1U;
             TEST_CHECK(s_over_air_count > 0U);
             s_frame_completed[s_over_air_count - 1U] = 1U;
+            s_frame_completed_ms[s_over_air_count - 1U] = ms;
         }
         TelemetryService_Process();
         TEST_CHECK(s_contexts[0].tx_count <= 1U);
@@ -185,11 +239,241 @@ static uint32_t Tm_Count(uint8_t type)
     return count;
 }
 
+static void Tm_StartDiagnosticSet(void)
+{
+    s_lifecycle_state = SYSTEM_STATE_FLIGHT;
+    s_tm_mock_diagnostics[0].valid = 1U;
+    s_tm_mock_diagnostics[0].sequence = 1U;
+    s_tm_mock_diagnostics[0].response.source = SYSTEM_START_SOURCE_AIR;
+    s_tm_mock_diagnostics[0].response.result = SYSTEM_LIFECYCLE_START_OK;
+    s_tm_mock_diagnostics[0].response.timestamp_us = 1000ULL;
+    s_tm_mock_diagnostics[0].response.request_id = 0xBEEFU;
+}
+
+static void Tm_StartOrderCheck(void)
+{
+    uint8_t ack_seen = 0U, event_seen = 0U, data_seen = 0U;
+    for (uint16_t index = 0U; index < s_over_air_count; index++)
+    {
+        const uint8_t *frame = s_over_air[index].data;
+        if (s_frame_completed[index] == 0U) { continue; }
+        uint8_t type = SsTm_FrameTypeGet(frame);
+        if ((type == 0x40U) && (frame[10] == AIR_CMD_START_MISSION)) { ack_seen = 1U; }
+        if ((type == 0x20U) && (frame[20] == AIR_STATUS_MISSION_START))
+        { TEST_CHECK(ack_seen != 0U); event_seen = 1U; }
+        if (type == 0x10U)
+        { TEST_CHECK(ack_seen != 0U && event_seen != 0U); data_seen = 1U; }
+    }
+    TEST_CHECK(ack_seen != 0U && event_seen != 0U && data_seen != 0U);
+}
+
+static uint32_t Tm_MaxGapReport(uint8_t type)
+{
+    uint32_t previous = 0U, maximum = 0U;
+    for (uint16_t index = 0U; index < s_over_air_count; index++)
+    {
+        if ((s_frame_completed[index] == 0U) || (SsTm_FrameTypeGet(s_over_air[index].data) != type)) { continue; }
+        uint32_t timestamp = s_frame_completed_ms[index];
+        if ((previous != 0U) && ((timestamp - previous) > maximum)) { maximum = timestamp - previous; }
+        if (previous == 0U) { printf("TX_DONE type=%u first_ms=%lu\n", (unsigned int)type, (unsigned long)timestamp); }
+        previous = timestamp;
+    }
+    printf("TX_DONE type=%u maximum_gap_ms=%lu last_ms=%lu\n", (unsigned int)type,
+        (unsigned long)maximum, (unsigned long)previous);
+    return maximum;
+}
+
+static int Tm_PreviousSchedulerScenario(const char *scenario)
+{
+    s_capability_state = TELEMETRY_CAPABILITY_ACKED;
+    s_gnss_state_known = 1U; s_gnss_position_usable = 0U;
+    s_navigation_preparation.algorithm_id = 1U;
+    s_navigation_preparation.initialized = 1U;
+    s_calibration_status_result = SYSTEM_DEVICE_OK;
+    s_alignment_status_result = SYSTEM_DEVICE_OK;
+    if (strcmp(scenario, "contended") == 0)
+    {
+        Test_CommandQueue(20U, AIR_CMD_NAV_SUBSCRIBE, 0x4E561234UL, 1U, 0U);
+        TEST_CHECK(Lora_RxQueuePush(0U, s_rx[s_rx_tail].data,
+            (uint8_t)s_rx[s_rx_tail].length, -60, 3) != 0U);
+        s_rx_tail = Test_Next(s_rx_tail, TEST_RX_DEPTH);
+        TelemetryService_ReceiveProcess();
+    }
+    s_lifecycle_state = SYSTEM_STATE_FLIGHT;
+    TelemetryService_PreflightDisable(); s_next_stream_us = 0ULL;
+    if (strcmp(scenario, "outside_mission") == 0)
+    {
+        const SystemLifecycleState states[] = {SYSTEM_STATE_PREFLIGHT,
+            SYSTEM_STATE_LANDED, SYSTEM_STATE_POSTFLIGHT, SYSTEM_STATE_FAULT};
+        for (uint8_t i = 0U; i < 4U; i++)
+        {
+            LoraTxPacket packet;
+            s_lifecycle_state = states[i]; Radio_Clock(1000U + 250U * i);
+            TelemetryService_StreamSend();
+            TEST_CHECK(s_contexts[0].tx_count == 0U);
+            TEST_CHECK(Lora_TxQueuePop(0U, &packet) == 0U);
+            TEST_CHECK(s_next_stream_us == 0ULL);
+        }
+        return Test_Finish(scenario);
+    }
+    if (strcmp(scenario, "unavailable") == 0) { s_estimator_available = 0U; }
+    if (strcmp(scenario, "no_imu") == 0) { s_imu_sample.valid_mask = 0U; }
+    if (strcmp(scenario, "recovery") == 0) { s_lifecycle_state = SYSTEM_STATE_RECOVERY; }
+    Tm_ClockRun(1U, (strcmp(scenario, "contended") == 0) ? 14005U : 1500U);
+    TEST_CHECK(Tm_Count(AIR_TYPE_NAV_HEALTH) == 0U);
+    TEST_CHECK(Tm_Count(AIR_TYPE_NAV_CAPABILITY) == 0U);
+    TEST_CHECK(Tm_Count(AIR_TYPE_NAV_PREPARATION) == 0U);
+    uint8_t unavailable = (uint8_t)((s_estimator_available == 0U) || (s_imu_sample.valid_mask == 0U));
+    TEST_CHECK((Tm_Count(0x10U) > 0U) == (unavailable == 0U));
+    if (strcmp(scenario, "contended") == 0)
+    {
+        for (uint16_t i = 0U; i < s_over_air_count; i++)
+        {
+            if ((s_frame_completed[i] == 0U) || (SsTm_FrameTypeGet(s_over_air[i].data) != 0x10U)) { continue; }
+            TEST_CHECK(s_over_air[i].length == 56U); printf("FLIGHT_HEX ");
+            for (uint8_t j = 0U; j < s_over_air[i].length; j++) { printf("%02x", s_over_air[i].data[j]); }
+            printf("\n");
+        }
+    }
+    return Test_Finish(scenario);
+}
+
 int main(int argc, char **argv)
 {
     if (argc != 2) { return 2; }
     Radio_Init();
     s_over_air_count = 0U;
+    if (strcmp(argv[1], "sx1278_no_samples") == 0)
+    {
+        s_sx1278_airtime_model = 1U;
+        s_test_event_airtime_us = s_host_sx1278_airtime_us[32] + 4000ULL;
+        s_test_position_airtime_us = s_host_sx1278_airtime_us[28] + 4000ULL;
+        s_test_health_airtime_us = s_host_sx1278_airtime_us[16] + 4000ULL;
+        s_lifecycle_state = SYSTEM_STATE_FLIGHT;
+        s_estimator_available = 0U; s_imu_sample.valid_mask = 0U;
+        TEST_CHECK(TelemetryService_StatusQueue(AIR_STATUS_LAUNCH, 0U, 0U, 3U) != 0U);
+        Tm_ClockRun(1U, 5000U);
+        printf("Unavailable samples: flight=%lu event=%lu position=%lu health=%lu\n",
+            (unsigned long)Tm_Count(0x10U), (unsigned long)Tm_Count(0x20U),
+            (unsigned long)Tm_Count(0x18U), (unsigned long)Tm_Count(0x19U));
+        TEST_CHECK(Tm_Count(0x10U) == 0U);
+        TEST_CHECK(Tm_Count(0x20U) == 3U);
+        TEST_CHECK((Tm_Count(0x18U) > 0U) && (Tm_Count(0x19U) > 0U));
+        (void)Tm_MaxGapReport(0x20U);
+        return Test_Finish(argv[1]);
+    }
+    if (strcmp(argv[1], "sx1278_airtime_events") == 0)
+    {
+        s_sx1278_airtime_model = 1U;
+        s_test_event_airtime_us = s_host_sx1278_airtime_us[32] + 4000ULL;
+        s_test_position_airtime_us = s_host_sx1278_airtime_us[28] + 4000ULL;
+        s_test_health_airtime_us = s_host_sx1278_airtime_us[16] + 4000ULL;
+        s_lifecycle_state = SYSTEM_STATE_FLIGHT;
+        for (uint8_t event = 0U; event < 5U; event++)
+        { TEST_CHECK(TelemetryService_StatusQueue(AIR_STATUS_LAUNCH, event, 0U, 3U) != 0U); }
+        Tm_ClockRun(1U, 15000U);
+        printf("SX1278 PHY model ordinary_events=%lu flight=%lu\n",
+            (unsigned long)Tm_Count(0x20U), (unsigned long)Tm_Count(0x10U));
+        TEST_CHECK(Tm_Count(0x20U) == 15U);
+        TEST_CHECK(Tm_MaxGapReport(0x10U) <= 250U);
+        for (uint16_t index = 1U; index < s_over_air_count; index++)
+        {
+            TEST_CHECK(s_frame_completed[index - 1U] != 0U);
+            TEST_CHECK(s_frame_started_ms[index] >= s_frame_completed_ms[index - 1U] + 4U);
+        }
+        uint32_t first_event[5] = {0U};
+        uint8_t unique_events = 0U;
+        for (uint16_t index = 0U; index < s_over_air_count; index++)
+        {
+            if ((s_frame_completed[index] != 0U) &&
+                (SsTm_FrameTypeGet(s_over_air[index].data) == 0x20U))
+            {
+                uint8_t arg = s_over_air[index].data[30];
+                TEST_CHECK(arg < 5U);
+                if (arg >= 5U) { continue; }
+                if (first_event[arg] == 0U)
+                { first_event[arg] = s_frame_completed_ms[index]; unique_events++; }
+                else { TEST_CHECK(unique_events == 5U); }
+            }
+        }
+        for (uint8_t event = 0U; event < 5U; event++)
+        {
+            printf("ordinary event %u first TX_DONE %lu ms\n", event, (unsigned long)first_event[event]);
+            TEST_CHECK((first_event[event] > 0U) && (first_event[event] <= 2500U));
+        }
+        (void)Tm_MaxGapReport(0x20U);
+        return Test_Finish(argv[1]);
+    }
+    if ((strcmp(argv[1], "contended") == 0) || (strcmp(argv[1], "no_navigation") == 0) ||
+        (strcmp(argv[1], "unavailable") == 0) || (strcmp(argv[1], "no_imu") == 0) ||
+        (strcmp(argv[1], "recovery") == 0) || (strcmp(argv[1], "outside_mission") == 0))
+    { return Tm_PreviousSchedulerScenario(argv[1]); }
+    if (strcmp(argv[1], "stage_scope") == 0)
+    {
+        s_lifecycle_state = SYSTEM_STATE_FLIGHT; s_test_telemetry_active = 0U;
+        TEST_CHECK(TelemetryService_StatusQueue(AIR_STATUS_LAUNCH, 0U, 0U, 3U) != 0U);
+        Tm_ClockRun(2U, 3000U);
+        TEST_CHECK(Tm_Count(0x10U) == 0U && Tm_Count(0x18U) == 0U && Tm_Count(0x19U) == 0U);
+        TEST_CHECK(Tm_Count(0x20U) == 3U);
+        s_test_telemetry_active = 1U; Tm_ClockRun(3001U, 6000U);
+        TEST_CHECK(Tm_Count(0x10U) >= 14U && Tm_Count(0x18U) >= 3U && Tm_Count(0x19U) >= 1U);
+        return Test_Finish(argv[1]);
+    }
+    if (strcmp(argv[1], "stage_event") == 0)
+    {
+        s_lifecycle_state = SYSTEM_STATE_FLIGHT;
+        s_test_stage_event.sequence=1U; s_test_stage_event.stage_id_hash=0x1234ABCDUL;
+        s_test_stage_event.timestamp_us=1234ULL; s_test_stage_event.event_code=SYSTEM_MISSION_PROCESS_EVENT_ENTER;
+        Tm_ClockRun(2U,4000U);
+        uint8_t found=0U;
+        for (uint16_t index=0U;index<s_over_air_count;index++)
+        {
+            const uint8_t *frame=s_over_air[index].data;
+            if ((s_frame_completed[index]!=0U) && (SsTm_FrameTypeGet(frame)==0x20U) && (frame[20]==0U) && (frame[21]==1U))
+            {
+                TEST_CHECK(Test_GetU32Le(&frame[12])==1234UL);
+                TEST_CHECK(Test_GetU32Le(&frame[22])==0x1234ABCDUL); found++;
+            }
+        }
+        TEST_CHECK(found==3U && s_tm_stage_observed==1U);
+        return Test_Finish(argv[1]);
+    }
+    if ((strcmp(argv[1], "start_order") == 0) || (strcmp(argv[1], "start_ack_backlog") == 0))
+    {
+        Radio_Clock(1U); Tm_StartDiagnosticSet();
+        if (strcmp(argv[1], "start_ack_backlog") == 0)
+        {
+            TEST_CHECK(TelemetryService_AckRawQueue(1U, AIR_CMD_PING, AIR_ACK_RESULT_OK, NULL) != 0U);
+            s_tm_next_ack_us = 9000000ULL;
+        }
+        TEST_CHECK(TelemetryService_AckRawQueue(0xBEEFU, AIR_CMD_START_MISSION, AIR_ACK_RESULT_OK, NULL) != 0U);
+        Tm_ClockRun(1U, 1800U); Tm_StartOrderCheck();
+        (void)Tm_MaxGapReport(0x40U); (void)Tm_MaxGapReport(0x20U);
+        TEST_CHECK(Tm_MaxGapReport(0x10U) <= 250U);
+        return Test_Finish(argv[1]);
+    }
+    if (strcmp(argv[1], "start_event_full") == 0)
+    {
+        Radio_Clock(1U); Tm_StartDiagnosticSet();
+        /* Simulate the ring having no free entry, without manufacturing an
+         * observation that the lifecycle has already acknowledged. */
+        for (uint8_t index = 0U; index < TELEMETRY_STATUS_QUEUE_DEPTH - 1U; index++)
+        { (void)TelemetryService_StatusQueue(AIR_STATUS_GNSS_POSITION, 0U, 0U, 3U); }
+        TelemetryService_MissionStartObserve();
+        uint8_t found = 0U;
+        for (uint8_t index = s_status_tail; index != s_status_head; index = TelemetryService_QueueNext(index))
+        { if (s_status_queue[index].status_id == AIR_STATUS_MISSION_START) { found = 1U; } }
+        TEST_CHECK(found != 0U || s_tm_start_observed[0] == 0U);
+        if (found == 0U)
+        {
+            s_status_tail = TelemetryService_QueueNext(s_status_tail);
+            TelemetryService_MissionStartObserve();
+            for (uint8_t index = s_status_tail; index != s_status_head; index = TelemetryService_QueueNext(index))
+            { if (s_status_queue[index].status_id == AIR_STATUS_MISSION_START) { found = 1U; } }
+        }
+        TEST_CHECK(found != 0U && s_tm_start_observed[0] == 1U);
+        return Test_Finish(argv[1]);
+    }
     if (strcmp(argv[1], "preflight") == 0)
     {
         s_lifecycle_state = SYSTEM_STATE_READY;
@@ -305,7 +589,7 @@ int main(int argc, char **argv)
         if (strcmp(argv[1], "burst") == 0)
         {
             for (uint8_t index = 0U; index < 12U; index++)
-            { TEST_CHECK(TelemetryService_StatusQueue(AIR_STATUS_MISSION_START, index, 0U, 3U) != 0U); }
+            { TEST_CHECK(TelemetryService_StatusQueue(AIR_STATUS_LAUNCH, index, 0U, 3U) != 0U); }
         }
         else if (strcmp(argv[1], "landed") == 0)
         { s_lifecycle_state = SYSTEM_STATE_LANDED; }
@@ -324,6 +608,9 @@ int main(int argc, char **argv)
             (unsigned long)Tm_Count(0x18U), (unsigned long)Tm_Count(0x19U), (unsigned long)Tm_Count(0x20U),
             (unsigned long)s_diagnostics.completed_tx_count, (unsigned long)s_diagnostics.failed_tx_count,
             (unsigned int)Lora_OperatingModeGet(0U), (unsigned int)s_contexts[0].tx_count);
+        TEST_CHECK(Tm_MaxGapReport(0x10U) <= 250U);
+        TEST_CHECK(Tm_MaxGapReport(0x18U) <= 1100U);
+        TEST_CHECK(Tm_MaxGapReport(0x19U) <= (strcmp(argv[1], "landed") == 0 ? 5100U : 2100U));
         if (strcmp(argv[1], "landed") == 0)
         { TEST_CHECK(Tm_Count(0x10U) == 0U); TEST_CHECK(Tm_Count(0x18U) >= 9U); TEST_CHECK(Tm_Count(0x19U) >= 2U); }
         else

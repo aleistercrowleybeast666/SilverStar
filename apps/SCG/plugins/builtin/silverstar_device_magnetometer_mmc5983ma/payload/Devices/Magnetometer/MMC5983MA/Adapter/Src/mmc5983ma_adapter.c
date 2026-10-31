@@ -1,4 +1,5 @@
 #include "mmc5983ma_adapter.h"
+#include "system_installation_capture_if.h"
 
 #include <stddef.h>
 #include <string.h>
@@ -141,6 +142,25 @@ SystemDeviceResult Mmc5983maAdapter_Stop(Mmc5983maAdapter *adapter)
     return SYSTEM_DEVICE_OK;
 }
 
+static void Mmc5983maAdapter_CapturePublish(const Mmc5983maAdapter *adapter)
+{
+    SystemMagnetometerSample sample;
+    const SystemInstallationCaptureProof proof = {
+        .epoch = 0U, .uncertainty_us = UINT32_MAX,
+        .every_native_frame = 1U, .measurement_time_known = 0U,
+        .raw_definition_known = 1U, .physical_body_units_known = 0U
+    };
+    /* This owner publishes once per completed native one-shot, before the
+     * Latest slot can be overwritten. Conversion latency, boot/reset epoch,
+     * endpoint identity and body mapping are NOT established by that fact. */
+    if (Mmc5983maAdapter_LatestSampleGet(adapter, &sample) != SYSTEM_DEVICE_OK)
+    {
+        SystemInstallationCapture_MagObserve(NULL, NULL, PlatformTime_Us());
+        return;
+    }
+    SystemInstallationCapture_MagObserve(&sample, &proof, PlatformTime_Us());
+}
+
 SystemDeviceResult Mmc5983maAdapter_Process(Mmc5983maAdapter *adapter)
 {
     Mmc5983maStepResult result;
@@ -157,6 +177,8 @@ SystemDeviceResult Mmc5983maAdapter_Process(Mmc5983maAdapter *adapter)
             adapter->core.sample.receive_timestamp_us;
         adapter->health.online = 1U;
         adapter->health.healthy = 1U;
+        if (SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U)
+        { Mmc5983maAdapter_CapturePublish(adapter); }
         return SYSTEM_DEVICE_OK;
     }
     if (result == Mmc5983maStepPending) { return SYSTEM_DEVICE_NOT_READY; }
