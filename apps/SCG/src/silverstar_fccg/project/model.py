@@ -79,6 +79,18 @@ LEGACY_PROTOCOL_PROFILE_IDS = {
     "maintenance.v0_0": "maintenance.serial.0_0",
     "sslog0": "flight_log.0_0",
 }
+# Migration defaults are frozen to the former bundle's wire identities. They
+# must not track defaults for newly created projects (currently SS-TM-S).
+LEGACY_PROTOCOL_PROFILES = {
+    "telemetry": "air.m0",
+    "maintenance": "maintenance.serial.0_0",
+    "logging": "flight_log.0_0",
+}
+LEGACY_PROTOCOL_COMPONENTS = {
+    "telemetry": "silverstar.protocol.telemetry.air_m0",
+    "maintenance": "silverstar.protocol.maintenance.serial_0_0",
+    "logging": "silverstar.protocol.logging.sslog_0_0",
+}
 DEFAULT_MODE_PARAMETERS = {
     "deployment": {
         "ApogeeVerticalVelocity": {
@@ -830,7 +842,7 @@ def _ProjectV4_Migrate(root: dict[str, Any]) -> dict[str, Any]:
 def _ProjectV5_Migrate(root: dict[str, Any]) -> dict[str, Any]:
     migrated = deepcopy(root)
     migrated["mode_parameters"] = deepcopy(DEFAULT_MODE_PARAMETERS)
-    migrated["protocol_profiles"] = dict(DEFAULT_PROTOCOL_PROFILES)
+    migrated["protocol_profiles"] = dict(LEGACY_PROTOCOL_PROFILES)
     hardware = _Object_Require(migrated.get("hardware"), "hardware")
     hardware["assignment_fingerprint"] = ""
     generated_glue = migrated.get("generated_glue", [])
@@ -882,9 +894,9 @@ def _ProjectV7_Migrate(root: dict[str, Any]) -> dict[str, Any]:
         migrated.pop("protocol_profiles", {}), "protocol_profiles"
     )
     protocols: dict[str, dict[str, str]] = {}
-    for category, component in DEFAULT_PROTOCOL_COMPONENTS.items():
+    for category, component in LEGACY_PROTOCOL_COMPONENTS.items():
         profile_value = legacy_profiles.get(
-            category, DEFAULT_PROTOCOL_PROFILES[category]
+            category, LEGACY_PROTOCOL_PROFILES[category]
         )
         if not isinstance(profile_value, str):
             raise ProjectModelError(
@@ -973,6 +985,42 @@ def _ProjectV10_Migrate(root: dict[str, Any]) -> dict[str, Any]:
     # Format 10 required all three selections, so preserving the objects is a
     # lossless migration.  Format 11 merely permits a slot to be null later.
     migrated["format_version"] = 11
+    return migrated
+
+
+def _ProjectV11_Migrate(root: dict[str, Any]) -> dict[str, Any]:
+    """Add the original format-12 parameter owner without changing selection."""
+    migrated = deepcopy(root)
+    migrated["algorithm_parameters"] = {}
+    if isinstance(migrated.get("generated_glue"), list):
+        migrated["generated_glue"] = list(dict.fromkeys([
+            *migrated["generated_glue"], "project_algorithm_parameters"]))
+    migrated["format_version"] = 12
+    return migrated
+
+
+def _ProjectV12_Migrate(root: dict[str, Any]) -> dict[str, Any]:
+    """Add link fields without selecting new hardware or wire format."""
+    migrated = deepcopy(root)
+    if "air_link" not in migrated:
+        protocols = _Object_Require(migrated.get("protocols"), "protocols")
+        telemetry = protocols.get("telemetry")
+        profile = _String_Require(telemetry, "profile") if isinstance(telemetry, dict) else "air.m0"
+        migrated["air_link"] = {
+            key: value for key, value in asdict(AirLinkConfiguration(protocol_profile=profile)).items()
+            if key != "nrf24"
+        }
+    if "ground_target" not in migrated:
+        # No Ground existed in this schema; importing an old file must not
+        # invent a board, pin assignment, native USB backend or enabled target.
+        migrated["ground_target"] = {
+            "enabled": False, "mcu": "", "board": "",
+            "hardware": _Hardware_Dictionary(HardwareConfiguration()),
+            "radio_plugin": "", "module_variant": "", "resources": {},
+            "pc_interface": "", "pc_resource": "", "baudrate": 230400,
+            "tx_power_dbm": 12, "build": _Build_Dictionary(BuildOptions()),
+        }
+    migrated["format_version"] = 13
     return migrated
 
 
@@ -1976,11 +2024,9 @@ def ProjectModel_Parse(data: dict[str, Any]) -> ProjectModel:
     if root.get("format_version") == 10:
         root = _ProjectV10_Migrate(root)
     if root.get("format_version") == 11:
-        root = deepcopy(root)
-        root["format_version"] = PROJECT_FORMAT_VERSION
-        root["algorithm_parameters"] = {}
-        if isinstance(root.get("generated_glue"), list):
-            root["generated_glue"] = list(dict.fromkeys([*root["generated_glue"], "project_algorithm_parameters"]))
+        root = _ProjectV11_Migrate(root)
+    if root.get("format_version") == 12:
+        root = _ProjectV12_Migrate(root)
     if root.get("format_version") == 13:
         root = deepcopy(root)
         root["format_version"] = PROJECT_FORMAT_VERSION

@@ -16,6 +16,8 @@ class MissionCoverageTable(QTableWidget):
         self.setObjectName('missionCoverage')
         self.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.setHorizontalScrollMode(QAbstractItemView.ScrollMode.ScrollPerPixel)
+        self.setVerticalScrollMode(QAbstractItemView.ScrollMode.ScrollPerPixel)
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.setAlternatingRowColors(True)
         self.verticalHeader().setVisible(False)

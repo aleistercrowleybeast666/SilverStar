@@ -125,7 +125,8 @@ def test_dependency_and_resource_conflicts_are_reported(builtin_catalog) -> None
 
 
 def test_source_graph_is_complete_and_has_one_truth(builtin_catalog) -> None:
-    graph = SourceGraph_Resolve(ReferenceProject_Create(), builtin_catalog)
+    model = ReferenceProject_Create()
+    graph = SourceGraph_Resolve(model, builtin_catalog)
     # Preserve the original 152-source expectation as a named baseline, then
     # account for six Src -> Adapter/Src moves and seven existing contributions.
     # Exact set equality catches missing/extra files even when their counts match.
@@ -136,8 +137,31 @@ def test_source_graph_is_complete_and_has_one_truth(builtin_catalog) -> None:
     assert len(historical) == 152 and len(relocations) == 6 and len(additions) == 7
     assert set(relocations) <= historical
     expected = (historical - set(relocations)) | set(relocations.values()) | additions
+    assert len(expected) == 159
+    delta = json.loads((Path(__file__).parent / "fixtures/reference_source_graph_s_workflow_delta.json").read_text(encoding="utf-8"))
+    assert len(delta["removals"]) == 1 and len(delta["additions"]) == 8
+    assert set(delta["removals"]) <= expected
+    assert not set(delta["additions"]) & expected
+    for source, record in delta["additions"].items():
+        if "payload_owner" in record:
+            owner = builtin_catalog.Component_Get(record["payload_owner"])
+            assert owner.component_id in model.ComponentIds_Get()
+            assert (owner.payload_root / source).is_file()
+            if "selection_owner" in record:
+                selection_owner = builtin_catalog.Component_Get(record["selection_owner"])
+                selection = model.protocols[selection_owner.protocol.category]
+                profile = next(item for item in selection_owner.protocol.profiles[selection_owner.protocol.category]
+                               if item.profile_id == selection.profile)
+                assert source in (*profile.codec_sources, *profile.parser_sources)
+            else:
+                assert source in owner.build.sources
+        else:
+            assert source == "Generated/Src/project_mission_process.c"
+            from silverstar_fccg.generator.mission_process import MissionProcessFiles_Render
+            assert source in MissionProcessFiles_Render(model, builtin_catalog)
+    expected = (expected - set(delta["removals"])) | set(delta["additions"])
     assert set(graph.sources) == expected
-    assert len(graph.sources) == len(expected) == 159
+    assert len(graph.sources) == len(expected) == 166
     assert "System/Src/system_device_startup.c" in graph.sources
     assert "Algorithm/Common/Src/navigation_quality.c" in graph.sources
     assert "System/Src/system_navigation_health.c" in graph.sources
@@ -170,6 +194,7 @@ def test_source_graph_is_complete_and_has_one_truth(builtin_catalog) -> None:
         "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c",
         "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c",
         "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c",
+        *delta["new_exclusions"],
     )
     assert graph.linker_script == "STM32F407XX_FLASH.ld"
     fragment = graph.MakeFragment_Render()

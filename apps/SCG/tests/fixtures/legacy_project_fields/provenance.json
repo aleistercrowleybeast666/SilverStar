@@ -1,0 +1,16 @@
+{
+  "scope": "synthetic legacy field projection; explicit identity boundary retained, not historical hardware data",
+  "schema_source_commit": "2763bb8f6a92973f21c33babd3a0f57a22cbc783",
+  "model_sha256": "91548e6cd289f02a310bb4a695dc851ea0be8b3c0b54505927b76ccebec4f2bf",
+  "base_fixture": "apps\\SCG\\tests\\fixtures\\radio_handshake.ssproject",
+  "base_fixture_sha256": "0331267c803050dd08a5671cff864a66201e93c81f9156c6fba65a1d7d7df4bc",
+  "fixtures": {
+    "v12.json": "9707a3984e9bb69fc8d9f81a37dcc0dabee795744f79a57cb6d644c835c0d75e",
+    "v2.json": "740bf4732691f135a8db61042af96d29faeade3bcbe5b1fa06f8f3c63fcb26b1",
+    "v3.json": "7fd566ad32acc89cd1a701e0ef4fc4fc2d2a3e0d85c0627b2cd9459e302f34e7",
+    "v4.json": "17e119bcbc69be00bda7f3a730b522425aa139b7e81eac46da3d14b72feadb72",
+    "v5.json": "5b2f1b57cee9930c73d2cff8c3b1d7b5f89ae72559e69e742135fa69c8fe5312",
+    "v6.json": "ab6a1924f41bfd90bba12a77050c00337ec3184844348575e79f775e21440331",
+    "v7.json": "953d6f0759643ceb6a8b7d4e6e54552b5196c8ee983ea0d4b3663565ba2ba94a"
+  }
+}

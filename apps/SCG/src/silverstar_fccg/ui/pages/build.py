@@ -102,6 +102,7 @@ class BuildPage(ScrollableLocalizedPage):
         self.target_status_labels: dict[str, QLabel] = {}
         self.target_summary_labels: dict[str, QLabel] = {}
         self.target_action_layouts = {}
+        self.target_more_sections = {}
         self.target_stack_values = {}
         self.target_stack_sections = {}
         self.target_stack_details = {}
@@ -134,9 +135,18 @@ class BuildPage(ScrollableLocalizedPage):
             target_layout.addWidget(stack_section)
             actions = QGridLayout()
             self.target_action_layouts[target] = actions
-            for index, (action_id, key) in enumerate(self._TARGET_ACTIONS, start=1):
-                actions.addWidget(self._ActionButton_Create(f"{target}_{action_id}", key), index // 3, index % 3)
+            secondary = CollapsibleSection(expanded=False)
+            self.Text_Register(secondary.toggle_button, 'workspace.checks.target_more')
+            secondary_actions = QGridLayout(secondary.body)
+            self.target_more_sections[target] = secondary
+            for action_id, key in self._TARGET_ACTIONS:
+                button = self._ActionButton_Create(f"{target}_{action_id}", key)
+                if action_id in ('build', 'artifact_check'):
+                    actions.addWidget(button, 0, 1 if action_id == 'build' else 2)
+                else:
+                    secondary_actions.addWidget(button, 0, secondary_actions.count())
             target_layout.addLayout(actions)
+            target_layout.addWidget(secondary)
             self.root_layout.addWidget(self.Group_Create(group_key, target_layout))
 
 

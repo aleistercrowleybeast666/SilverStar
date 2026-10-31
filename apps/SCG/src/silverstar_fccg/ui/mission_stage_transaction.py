@@ -107,6 +107,8 @@ class MissionStageTransactionDialog(QDialog):
             group_body.addWidget(editor); layout.addWidget(group)
             self.bindings.append(editor)
         for key, group in self.groups.items():
+            if key == 'condition' and function_id:
+                continue
             button = QPushButton(text('workflow.group.' + key), self)
             button.clicked.connect(lambda _checked=False, selected=group: self._Group_Reveal(selected))
             jump.addWidget(button)
@@ -171,10 +173,14 @@ class MissionStageTransactionDialog(QDialog):
                                        self._FunctionDialog_Open(identity, stage_id))
                 references_body.addWidget(button)
             layout.addWidget(references)
+        # Keep short/collapsed content at its natural height. Extra viewport
+        # space belongs below the forms, never between their controls.
+        layout.addStretch(1)
         self._Parameters_Filter()
         self.error = QLabel(self); self.error.setWordWrap(True); self.error.setObjectName("workflowError"); root.addWidget(self.error)
         buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel, self)
-        buttons.button(QDialogButtonBox.StandardButton.Ok).setText(text('workflow.transaction.apply'))
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText(
+            text('capsule.apply' if function_id else 'workflow.transaction.apply'))
         buttons.button(QDialogButtonBox.StandardButton.Ok).setObjectName('primaryButton')
         buttons.button(QDialogButtonBox.StandardButton.Cancel).setText(text('capsule.cancel'))
         buttons.accepted.connect(self.accept); buttons.rejected.connect(self.reject); root.addWidget(buttons)

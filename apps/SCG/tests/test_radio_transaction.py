@@ -79,3 +79,25 @@ def test_normal_shared_link_button_cancel_keeps_project(workspace_window, qapp):
                  lambda dialog: dialog.reject())
     assert window._model.Dictionary_Get() == before
     assert not errors
+
+
+@pytest.mark.parametrize('language', ['zh_CN', 'en_US'])
+def test_shared_link_labels_and_both_endpoints_fit_narrow_dialog(qapp, workspace_root, language):
+    from PySide6.QtWidgets import QFormLayout, QScrollArea
+    service = FccgService(workspace_root)
+    model = service.ReferenceProject_Create('radio layout')
+    dialog = RadioTransactionDialog(Translator(language), model, service.catalog)
+    dialog.resize(740, 640)
+    dialog.show()
+    qapp.processEvents()
+    scroll = dialog.findChild(QScrollArea)
+    assert scroll.widget().width() <= scroll.viewport().width()
+    for widget in dialog.editor.fields.values():
+        label = dialog.editor._air_form.labelForField(widget)
+        assert label is not None and label.text().strip()
+    for combo, power in dialog.endpoints.values():
+        for control in (combo, power):
+            position = control.mapTo(scroll.viewport(), control.rect().topLeft())
+            assert position.x() >= 0
+            assert position.x() + control.width() <= scroll.viewport().width()
+    dialog.reject()

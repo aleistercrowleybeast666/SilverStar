@@ -15,11 +15,12 @@ _KEY_CALLS = {
     "Placeholder_Register": 1,
     "Group_Create": 0,
 }
+_SOURCE_ROOT = Path(__file__).resolve().parents[1] / 'src/silverstar_fccg'
 
 
 def _LiteralTranslationKeys_Get() -> set[str]:
     keys: set[str] = set()
-    source_root = Path("src/silverstar_fccg")
+    source_root = _SOURCE_ROOT
     for path in source_root.rglob("*.py"):
         tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
         for node in ast.walk(tree):
@@ -35,7 +36,7 @@ def _LiteralTranslationKeys_Get() -> set[str]:
 
 
 def test_translation_catalogs_have_matching_keys() -> None:
-    root = Path("src/silverstar_fccg/i18n")
+    root = _SOURCE_ROOT / 'i18n'
     zh = json.loads((root / "zh_CN.json").read_text(encoding="utf-8"))
     en = json.loads((root / "en_US.json").read_text(encoding="utf-8"))
     assert set(zh) == set(en)

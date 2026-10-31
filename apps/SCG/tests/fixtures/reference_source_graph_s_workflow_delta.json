@@ -1,0 +1,53 @@
+{
+  "scope": "Reviewed default F407 source graph delta from the frozen 159-source baseline; S protocol and mission workflow integrated in 4f701b4a7822302dc0f4ac858549f7cc7fa4ba0e. H7 owner is not selected.",
+  "removals": {
+    "Protocol/Src/air_protocol.c": {
+      "payload_owner": "silverstar.protocol.telemetry.air_m0",
+      "reason": "New reference projects select ss_tm.s.0_1. AIR M0 remains readable historical compatibility but is not the active codec. The S plugin's symbol-prefixed legacy serializer is a distinct explicitly owned input."
+    }
+  },
+  "new_exclusions": {
+    "System/Src/system_log_file_disabled.c": "Default maintenance export is enabled; the disabled core stub must not compile beside the real service.",
+    "System/Calibration/Src/system_mag_calibration_disabled.c": "Default magnetometer support is enabled; its alternative disabled core implementation is excluded.",
+    "System/Src/system_mag_calibration_storage_disabled.c": "Default magnetometer storage support is enabled; its alternative disabled core implementation is excluded.",
+    "Protocol/Src/air_protocol.c": "Unselected AIR M0 profile payload is explicitly excluded from IDE and Make source selection."
+  },
+  "additions": {
+    "Generated/Src/project_mission_process.c": {
+      "generator_owner": "silverstar_fccg.generator.mission_process.MissionProcessFiles_Render",
+      "reason": "Selected mission draft materializes bounded stage/condition and function tables; source_graph and render declare the same generated file."
+    },
+    "Modules/Src/telemetry_tm.c": {
+      "payload_owner": "silverstar.core.0_1_0",
+      "selection_owner": "silverstar.protocol.telemetry.ss_tm",
+      "reason": "ss_tm.s.0_1 profile codec_sources selects the actual core telemetry adapter."
+    },
+    "Platform/STM32F4/Src/platform_boot_session_stm32f4.c": {
+      "payload_owner": "silverstar.mcu_family.stm32f4",
+      "reason": "F4 platform manifest build.sources owns the boot session provider required by S framing."
+    },
+    "Protocol/SS_TM/Legacy/ss_tm_legacy.c": {
+      "payload_owner": "silverstar.protocol.telemetry.ss_tm",
+      "selection_owner": "silverstar.protocol.telemetry.ss_tm",
+      "reason": "Explicit symbol-prefixed private payload serializer; not a second active AIR M0 protocol."
+    },
+    "Protocol/SS_TM/Src/ss_tm_protocol.c": {
+      "payload_owner": "silverstar.protocol.telemetry.ss_tm",
+      "selection_owner": "silverstar.protocol.telemetry.ss_tm",
+      "reason": "Current S wire codec/parser declared by selected protocol profile."
+    },
+    "System/Src/system_console_dispatch.c": {
+      "payload_owner": "silverstar.core.0_1_0",
+      "selection_owner": "silverstar.protocol.maintenance.serial_0_0",
+      "reason": "Selected maintenance 0.1 codec/parser declarations select bounded console command dispatch."
+    },
+    "System/Src/system_mission_process.c": {
+      "payload_owner": "silverstar.core.0_1_0",
+      "reason": "Core build.sources owns bounded mission stage/condition processing."
+    },
+    "System/Src/system_mission_process_runtime.c": {
+      "payload_owner": "silverstar.core.0_1_0",
+      "reason": "Core build.sources owns actual mission runtime consumers and lifecycle gates."
+    }
+  }
+}

@@ -3,7 +3,7 @@ from copy import deepcopy
 from dataclasses import replace
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import (QCheckBox, QComboBox, QDialog, QDialogButtonBox,
+from PySide6.QtWidgets import (QCheckBox, QDialog, QDialogButtonBox,
     QFormLayout, QGroupBox, QHBoxLayout, QLabel, QPushButton, QScrollArea,
     QVBoxLayout, QWidget)
 
@@ -12,6 +12,7 @@ from silverstar_fccg.project.radio_transaction import (
     RadioTransaction_Commit, RadioTransaction_EndpointSet, RadioTransaction_IssuesGet)
 from silverstar_fccg.project.radio_variants import FlightRadioConfiguration_Get
 from silverstar_fccg.ui.pages.targets import AirLinkPage
+from silverstar_fccg.ui.widgets import StandardComboBox
 
 
 class RadioTransactionDialog(QDialog):
@@ -32,6 +33,7 @@ class RadioTransactionDialog(QDialog):
         root.addWidget(description)
         scroll = QScrollArea(self)
         scroll.setWidgetResizable(True)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         content = QWidget(scroll)
         body = QVBoxLayout(content)
         scroll.setWidget(content)
@@ -42,7 +44,8 @@ class RadioTransactionDialog(QDialog):
         for endpoint in ('flight', 'ground'):
             group = QGroupBox(text('workspace.hardware.' + endpoint), content)
             form = QFormLayout(group)
-            combo, power = QComboBox(group), QComboBox(group)
+            form.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
+            combo, power = StandardComboBox(group), StandardComboBox(group)
             combo.addItem(text('radio.transaction.unselected'), None)
             for manifest in catalog.Type_Get('device'):
                 if manifest.radio is None:
@@ -65,7 +68,7 @@ class RadioTransactionDialog(QDialog):
             combo.currentIndexChanged.connect(lambda _index, selected=endpoint: self._Endpoint_Change(selected))
             power.currentIndexChanged.connect(lambda _index, selected=endpoint: self._Endpoint_Change(selected, refresh_power=False))
         preset_row = QHBoxLayout()
-        self.preset = QComboBox(content)
+        self.preset = StandardComboBox(content)
         self.preset.addItem('SX1281 · 2473 MHz / SF10 / BW800 / CR4/5', 'sx128x')
         self.preset.addItem('SX1278 · 433 MHz / SF7 / BW125 / CR4/5', 'sx127x')
         preview = QPushButton(text('radio.transaction.preset'), content)
@@ -77,6 +80,8 @@ class RadioTransactionDialog(QDialog):
         self.preset_note.setWordWrap(True)
         body.addWidget(self.preset_note)
         self.editor = AirLinkPage(translator)
+        self.editor.Language_Apply(translator)
+        self.editor._air_form.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
         self.editor.setParent(content)
         self.editor.RadioOptions_Set(tuple(item.radio for item in catalog.Type_Get('device') if item.radio))
         self.editor.fields['frequency_hz'].setRange(1, 6000)
@@ -96,6 +101,7 @@ class RadioTransactionDialog(QDialog):
         root.addWidget(self.error)
         buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel, self)
         buttons.button(QDialogButtonBox.StandardButton.Ok).setText(text('capsule.apply'))
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText(text('capsule.cancel'))
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
         root.addWidget(buttons)
@@ -140,9 +146,24 @@ class RadioTransactionDialog(QDialog):
             bandwidth_hz=125000 if family == 'sx127x' else 800000,
             coding_rate='4/5', preamble_symbols=16, header_mode='explicit',
             crc_enabled=True, iq_mode='normal', packet_mtu=61, nrf24=None)
+        labels = dict(radio_family='field.air_family', radio_technology='field.air_technology',
+            phy_mode='field.air_phy', frequency_hz='field.air_frequency', spreading_factor='field.air_sf',
+            bandwidth_hz='field.air_bandwidth', coding_rate='field.air_coding_rate',
+            preamble_symbols='field.air_preamble', header_mode='field.air_header',
+            crc_enabled='field.air_crc', iq_mode='field.air_iq', packet_mtu='field.air_mtu')
+        differences = []
+        for key, value in changes.items():
+            if key not in labels or value == getattr(self._draft.air_link, key):
+                continue
+            shown = str(value)
+            if key == 'frequency_hz':
+                shown = f'{value / 1000000:g} MHz'
+            elif key == 'bandwidth_hz':
+                shown = f'{value / 1000:g} kHz'
+            differences.append(self._translator.Text_Get(labels[key]) + ': ' + shown)
         self._draft.air_link = replace(self._draft.air_link, **changes)
         self.preset_note.setText(self._translator.Text_Get('radio.transaction.changed') + '\n' +
-            ', '.join(key + '=' + str(value) for key, value in changes.items() if key != 'nrf24'))
+                                 ' · '.join(differences))
         self._Refresh()
 
     def _Refresh(self):

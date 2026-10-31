@@ -251,7 +251,7 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
         assert [
             window.navigation_list.item(index).text()
             for index in range(window.navigation_list.count())
-        ] == ["硬件与通信", "飞行流程", "检查与生成"]
+        ] == ["硬件与通信", "任务流程", "检查与生成"]
         assert not hasattr(window.build_page, "configuration_combo")
         assert set(window.build_page.action_buttons) == {
             "flight_build", "flight_clean", "flight_open_vscode",
@@ -264,6 +264,7 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
             "power10_check",
             "static_analysis",
             "artifact_check",
+            "stack_report",
             "tool_install_guide",
         }
         assert not window.build_page.action_buttons["flight_open_vscode"].isEnabled()
@@ -288,7 +289,7 @@ def test_main_window_shell_navigation_theme_and_language(tmp_path: Path, qapp) -
             for index in range(window.navigation_list.count())
         ] == [
                 "Hardware & communication",
-                "Flight workflow",
+                "Mission workflow",
                 "Checks & generation",
             ]
         assert window.build_page.action_buttons["flight_build"].text() == "Build Firmware"
@@ -309,7 +310,7 @@ def test_ground_page_excludes_flight_board_and_owns_uart_binding(tmp_path: Path,
     window = _Window_Create(tmp_path, qapp)
     try:
         page = window.ground_target_page
-        page.enabled.setChecked(True)
+        assert not hasattr(page, 'enabled')
         assert page.board.findData("silverstar.board.silverstar_0_5") == -1
         assert page.board.currentData() == "__custom__"  # New Ground uses the custom hardware workflow.
         page.radio.setCurrentIndex(
@@ -317,7 +318,8 @@ def test_ground_page_excludes_flight_board_and_owns_uart_binding(tmp_path: Path,
         )
         page.module.setCurrentIndex(page.module.findData("e28_2g4m12sx"))
         page.pc_interface.setCurrentIndex(page.pc_interface.findData("uart"))
-        assert "GROUND_UART_UNBOUND" in page.status.text()
+        assert page.status.text()
+        assert "GROUND_UART_UNBOUND" in page.status.toolTip()
         frequency = window.air_link_page.fields["frequency_hz"]
         frequency.CommittedValue_Set(2473.0)
         frequency.lineEdit().setText("2400.000")
@@ -499,7 +501,8 @@ def test_devices_page_is_physical_and_capabilities_are_on_flight_page(
                   "src/silverstar_fccg/ui/pages/components.py").read_text(encoding="utf-8")
         assert "JY901B" not in source
         assert "BMI088" not in source
-        jy901b_summary = window.devices_page.findChild(
+        # The hardware workspace now owns the reparented physical detail form.
+        jy901b_summary = window.hardware_workspace.findChild(
             QLabel, "deviceCapabilitySummary_imu0"
         )
         assert jy901b_summary is not None
@@ -683,7 +686,10 @@ def test_official_repeated_device_rows_add_to_limit_and_remove_atomically(
             window.devices_page.add_buttons["imu"].click()
             qapp.processEvents()
             assert f"imu{expected_index}" in window.devices_page.device_combos
-        assert "imu" not in window.devices_page.add_buttons
+        assert not window.devices_page.add_buttons['imu'].isEnabled()
+        before = window._model.Dictionary_Get()
+        window.devices_page.add_buttons['imu'].click()
+        assert window._model.Dictionary_Get() == before
 
         window.devices_page.remove_buttons["imu0"].click()
         qapp.processEvents()
@@ -795,6 +801,7 @@ def test_target_build_controls_and_quality_actions_use_shared_worker(
         *,
         indeterminate=False,
         line_callback=None,
+        progress_range=(0.0, 1.0),
     ):
         invocations.append((function.__name__, indeterminate))
         return True
@@ -822,7 +829,7 @@ def test_target_build_controls_and_quality_actions_use_shared_worker(
     finally:
         window.close()
 
-    assert invocations == [("prepare_plan", False), ("build", False)]
+    assert invocations == [("prepare_plan", False), ("quality_run", False)]
 
 
 def test_hardware_prepare_plans_off_ui_thread_and_completes_safely(

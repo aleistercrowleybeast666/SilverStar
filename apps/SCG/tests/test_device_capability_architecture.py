@@ -33,7 +33,7 @@ from silverstar_fccg.project.logging import (
     ProtocolLogDefinitions_Get,
 )
 from silverstar_fccg.project.model import (
-    PROJECT_FORMAT_VERSION,
+    PROJECT_TARGET_SCOPE_FORMAT_VERSION,
     DeviceInstance,
     ProjectModel_Load,
     ProjectModelError,
@@ -314,115 +314,66 @@ def _MixedSingletonDeviceCatalog_Create(
     return catalog
 
 
+def _LegacyProject_Read(version: int) -> dict:
+    path = Path(__file__).parent / "fixtures" / "legacy_project_fields" / f"v{version}.json"
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def test_project_v2_legacy_device_shape_is_rejected() -> None:
-    data = ReferenceProject_Create("MigrateV2").Dictionary_Get()
-    instances = list(data["components"]["devices"])
-    instance_to_plugin = {
-        entry["instance_id"]: entry["plugin"] for entry in instances
-    }
-    data["format_version"] = 2
-    data["components"]["devices"] = [entry["plugin"] for entry in instances]
-    data["resources"] = {
-        (
-            f"{instance_to_plugin.get(owner, owner)}:{requirement}"
-            if separator
-            else key
-        ): resource
-        for key, resource in data["resources"].items()
-        for owner, separator, requirement in (key.partition(":"),)
-    }
-    data.pop("capability_sources")
-    data["generated_glue"].remove("project_capability_routes")
-
-    # The 0.1.0 project format requires explicit instance/interface/profile
-    # identities; a pre-release v2 positional device list must not be guessed.
+    # Positional devices contain no explicit interface/profile: never guess.
     with pytest.raises(ProjectModelError, match="device instance"):
-        ProjectModel_Parse(data)
+        ProjectModel_Parse(_LegacyProject_Read(2))
 
 
-def test_project_v3_migrates_without_capability_selections() -> None:
-    data = ReferenceProject_Create("MigrateV3").Dictionary_Get()
-    data["format_version"] = 3
-
+@pytest.mark.parametrize("version", range(3, 8))
+def test_legacy_project_migrates_without_selecting_new_hardware(version: int) -> None:
+    data = _LegacyProject_Read(version)
+    original = json.dumps(data, sort_keys=True)
     migrated = ProjectModel_Parse(data)
-
-    assert migrated.format_version == PROJECT_FORMAT_VERSION
-    assert "capability_selections" not in migrated.Dictionary_Get()
-
-
-def test_project_v4_removes_legacy_capability_and_build_choices() -> None:
-    data = ReferenceProject_Create("MigrateV4").Dictionary_Get()
-    data["format_version"] = 4
-    data["capability_selections"] = {"imu0": ["magnetometer.field"]}
-    data["build"]["configuration"] = "Release"
-
-    migrated = ProjectModel_Parse(data)
-
-    serialized = migrated.Dictionary_Get()
-    assert migrated.format_version == PROJECT_FORMAT_VERSION
-    assert "capability_selections" not in serialized
-    assert "configuration" not in serialized["build"]
-
-
-def test_project_v5_adds_mode_protocol_and_assignment_contracts() -> None:
-    data = ReferenceProject_Create("MigrateV5").Dictionary_Get()
-    data["format_version"] = 5
-    data.pop("mode_parameters")
-    data.pop("protocols")
-    data["components"]["protocol_bundles"] = [
-        "silverstar.protocol.reference_v0"
-    ]
-    data["hardware"].pop("assignment_fingerprint")
-    data["generated_glue"].remove("project_flight_config")
-
-    migrated = ProjectModel_Parse(data)
-
-    assert migrated.format_version == PROJECT_FORMAT_VERSION
-    assert migrated.mode_parameters["deployment"]["Delay"]["delay"] == 60.0
-    assert migrated.ProtocolProfiles_Get()["telemetry"] == "air.m0"
+    assert json.dumps(data, sort_keys=True) == original
+    assert migrated.format_version == PROJECT_TARGET_SCOPE_FORMAT_VERSION
+    assert migrated.ground_target.hardware.mode == "unselected"
+    assert migrated.ground_target.mcu == migrated.ground_target.radio_plugin == ""
+    assert migrated.air_link.protocol_profile == "air.m0"
+    assert migrated.ProtocolProfiles_Get() == {
+        "telemetry": "air.m0", "maintenance": "maintenance.serial.0_0", "logging": "flight_log.0_0"}
+    assert migrated.protocols["telemetry"].component == "silverstar.protocol.telemetry.air_m0"
+    assert migrated.mode_parameters["deployment"]["Delay"]["delay"] == (60.0 if version < 6 else 10.0)
     assert migrated.hardware.assignment_fingerprint == ""
     assert "project_flight_config" in migrated.generated_glue
+    assert "project_algorithm_parameters" in migrated.generated_glue
+    assert "capability_selections" not in migrated.Dictionary_Get()
+    assert "configuration" not in migrated.Dictionary_Get()["build"]
+    assert migrated.mission_process is None and migrated.mission_functions is None
+    # Both parse-save-parse and old alignment strategy migration are real paths.
+    assert ProjectModel_Parse(migrated.Dictionary_Get()).Dictionary_Get() == migrated.Dictionary_Get()
+    assert migrated.strategies["alignment"] == "silverstar.algorithm.alignment.vector_constraints"
+    if version < 7:
+        assert migrated.log_decoder_profile.relative_path == f"MigrateV{version}.ssdecoder"
+        assert migrated.log_decoder_profile.package_schema == "1.0"
+        assert migrated.log_decoder_profile.container_plugin_id == "silverstar.sslog.container/0.0"
+        assert migrated.log_decoder_profile.generation_profile_sha256 == ""
+        assert migrated.log_decoder_profile.package_sha256 == ""
+        assert "project_log_decoder_profile" in migrated.generated_glue
 
 
-def test_project_v6_adds_log_decoder_profile_reference() -> None:
-    data = ReferenceProject_Create("MigrateV6").Dictionary_Get()
-    data["format_version"] = 6
-    data.pop("log_decoder_profile")
-    data["generated_glue"].remove("project_log_decoder_profile")
-
+def test_legacy_format12_preserves_actual_algorithm_parameters() -> None:
+    data = _LegacyProject_Read(12)
     migrated = ProjectModel_Parse(data)
-
-    assert migrated.format_version == PROJECT_FORMAT_VERSION
-    assert migrated.log_decoder_profile.relative_path == "MigrateV6.ssdecoder"
-    assert migrated.log_decoder_profile.package_schema == "1.0"
-    assert migrated.log_decoder_profile.container_plugin_id == (
-        "silverstar.sslog.container/0.0"
-    )
-    assert migrated.log_decoder_profile.generation_profile_sha256 == ""
-    assert migrated.log_decoder_profile.package_sha256 == ""
-    assert "project_log_decoder_profile" in migrated.generated_glue
+    assert migrated.algorithm_parameters == data["algorithm_parameters"]
+    assert migrated.protocols["telemetry"].profile == data["protocols"]["telemetry"]["profile"]
+    assert migrated.air_link.protocol_profile == data["protocols"]["telemetry"]["profile"]
+    assert migrated.ground_target.hardware.mode == "unselected"
+    assert [row.kind for row in migrated.alignment.constraints] == ["gravity", "magnetic_field"]
+    assert ProjectModel_Parse(migrated.Dictionary_Get()).Dictionary_Get() == migrated.Dictionary_Get()
 
 
-def test_pre_release_protocol_profile_ids_migrate_to_public_ids() -> None:
-    data = ReferenceProject_Create("MigrateProtocolIds").Dictionary_Get()
-    data["format_version"] = 7
-    data.pop("protocols")
-    data["components"]["protocol_bundles"] = [
-        "silverstar.protocol.reference_v0"
-    ]
-    data["protocol_profiles"] = {
-        "telemetry": "air.compact.v0",
-        "maintenance": "maintenance.v0_0",
-        "logging": "sslog0",
-    }
-
-    migrated = ProjectModel_Parse(data)
-
-    assert migrated.ProtocolProfiles_Get() == {
-        "telemetry": "air.m0",
-        "maintenance": "maintenance.serial.0_0",
-        "logging": "flight_log.0_0",
-    }
+@pytest.mark.parametrize("version", [2, 3, 4, 5, 6, 7, 12])
+def test_legacy_project_rejects_injected_future_mission_schema(version: int) -> None:
+    data = _LegacyProject_Read(version)
+    data["mission_process"] = ReferenceProject_Create("Future").Dictionary_Get()["mission_process"]
+    with pytest.raises(ProjectModelError, match="mission_process requires project format_version 22"):
+        ProjectModel_Parse(data)
 
 
 def test_reference_capability_resolution_matches_physical_truth(
@@ -451,7 +402,6 @@ def test_reference_capability_resolution_matches_physical_truth(
         "attitude.external",
         "magnetometer.field",
         "magnetometer.physical_unit",
-        "barometer.altitude",
     }
     assert qualified == {
         "attitude.external.preflight_fallback_qualified",
@@ -460,9 +410,10 @@ def test_reference_capability_resolution_matches_physical_truth(
         "imu.software_alignment_qualified",
         "imu.software_propagation_qualified",
         "imu.landing_stillness_qualified",
-        "barometer.landing_window_qualified",
-        "barometer.alignment_origin_qualified",
     }
+    selected = builtin_catalog.ProjectView_Get(model).Component_Get(jy901b.component_id)
+    assert {"barometer.altitude", "barometer.landing_window_qualified",
+            "barometer.alignment_origin_qualified"}.issubset(selected.provides)
     assert set(jy901b.metadata["unqualified_capabilities"]) == {
         "magnetometer.absolute_vector_qualified",
         "attitude.external.authoritative_6axis_qualified",
@@ -949,7 +900,10 @@ def test_physical_names_and_protocol_versions_are_structured(
         protocol = builtin_catalog.Component_Get(component_id)
         assert protocol.protocol is not None
         assert protocol.protocol.category == category
-        assert protocol.protocol.maintenance_protocol_version == "0.0"
+        assert protocol.protocol.maintenance_protocol_version == ("0.1" if category == "maintenance" else "0.0")
+        if category == "maintenance":
+            assert {profile.profile_id for profile in protocol.protocol.profiles[category]} == {
+                "maintenance.serial.0_0", "maintenance.serial.0_1"}
         assert protocol.protocol.firmware_version == "0.1.0"
         assert protocol.protocol.documentation_version == "0.1.0"
 
