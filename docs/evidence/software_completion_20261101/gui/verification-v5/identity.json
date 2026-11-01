@@ -1,0 +1,25 @@
+{
+  "base_commit": "8b028f280ba01dce0efc697479ef99ec143f7456",
+  "command": [
+    "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\tests\\test_hardware_transaction.py",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\tests\\test_control_task_gui.py",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\tests\\test_hardware_workspace.py",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\tests\\test_radio_transaction.py",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\tests\\test_three_workspace_workflow.py",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\tests\\test_workflow_window_lifecycle.py",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\tests\\test_workflow_startup_windows.py",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\tests\\test_workflow_connections.py",
+    "-q",
+    "--basetemp=D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\gui\\verification-v5"
+  ],
+  "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\SCG\\src",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "scope": "GUI/domain software checks; no ARM build or hardware claim"
+}

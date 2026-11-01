@@ -1,0 +1,15 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+________ test_tail_branch_to_returning_function_cannot_prove_noreturn _________
+
+    def test_tail_branch_to_returning_function_cannot_prove_noreturn():
+        _, proof = Analyze(" 8000000: f000 b800 b.w 8000010 <callee>\n 8000010: 4770 bx lr\n",
+                           "08000000 g F .text 00000004 entry\n08000010 g F .text 00000002 callee\n")
+>       assert proof["tail_returns"] == ["callee"]
+               ^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'tail_returns'
+
+apps\SCG\tests\test_stack_arm.py:95: KeyError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_stack_arm.py::test_tail_branch_to_returning_function_cannot_prove_noreturn
+1 failed, 21 deselected in 0.71s

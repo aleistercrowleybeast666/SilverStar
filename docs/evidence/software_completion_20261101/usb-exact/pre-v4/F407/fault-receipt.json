@@ -1,0 +1,145 @@
+{
+  "part": "F407",
+  "model_sha256": "d41cfbdb56636abd7f6b49d41c2d46f09dab395fc2681359726da329fa9ddf5a",
+  "compiled_generated_sources_sha256": {
+    "HardwareGenerated/ReviewedNativeControl/Core/Src/usbd_core.c": "ba0a226af59adfd2fff3bb16d114ff028644619139b79ef3d5667b29a1b78ce0",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c": "5f1c211ed991e074589c82bc52571357a268f36776111d99a85539df53fd80f0",
+    "HardwareGenerated/ReviewedNativeControl/Core/Src/usbd_ioreq.c": "ae239d637b1ca58501592cdcea14d8a8b0f41b3ceeb8a53dc0504cd785abfb34",
+    "HardwareGenerated/ReviewedNativeControl/Class/CDC/Src/usbd_cdc.c": "16f843cc2509700d89e296089f68be9a727c96b30ff835e8ccf1cabf4aa4eefb",
+    "HardwareGenerated/ReviewedNativeControl/App/usbd_cdc_if.c": "cee91b0448bff478a823c24d1291c26af7bb45d31ff9b6e1fcb7e583a19eef8a",
+    "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.c": "97ba18339feec643ec4959fc2acabb97e226e1d6e36416089b2d1059794cee15",
+    "Generated/Src/pc_byte_stream.c": "668147a0f1255eed5967994a94e5d9a726faa035e31ac04e979a3faca5774586",
+    "Generated/Src/pc_usb_control.c": "cddecce29a12d09f06fc4d58e9a8240e8a15aede5fde9daf14c3ca50af624946",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h": "1588736a66291a09de7aa69a5945574566413fefb84c0a7896dc088d174086a9",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h": "a6c2dfc99fabefe4db7c4c145b4ab87d6b992e3fbd15cc65ecc1c7f9d2086f78",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h": "f8897c9b47f97b6ca78c72b857d20fb2a2b0d85091a2362799165cdfa863e3cc",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h": "8a2d44f0cc1c34c21eb75e01cec568b45b901678fba9ca2dc3b0c9a9f0364e7c",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h": "3ea35b19e264217c3bd1d433c75f4e093930ea83cdf63aa88aee77748a9fc7dc",
+    "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.h": "664e44912621ec1b9a2d602cda9ad5dd8c347da3c6efdcf10a5c9ba1674b8d39",
+    "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.h": "a4fbe168f224d3e2d8091b90df1115301247e1a6e16177bab101ca81aa70172d",
+    "Ground/Core/Inc/pc_byte_stream.h": "daa3b71a6d126630d9f350c571dd1101cc4db163afe43b29ba54b6327598a3b9",
+    "Ground/Protocol/Inc/gsp_min_protocol.h": "9f4ac85c63a0e69c474bddceef1fb39ebb28846c074d5a3e926aa799cfbd79c1",
+    "Generated/Inc/pc_usb_control.h": "c66fba9b7241727fb396faa99d0b21245ac373045dac6fc7929683edd13d952e",
+    "Generated/Inc/native_runtime.h": "4a449aa81269f9080aa4860d12f0cbb1371ec743203533b64b0320b106d343b5",
+    "Generated/Inc/native_clock.h": "c593bf6b734da6b8ccbe4d2b4803237769fe59a0619c8e501be57026c4f6243e",
+    "Platform/Inc/platform_types.h": "9eccf8476d8ebb58f251f9049de631651c6ae4e19a415d63579e703a6cfd8785"
+  },
+  "harness_sha256": "5135577559899714ccb9c4ba1aaf72f1f5aedb2547e05906db4b7423a56d0108",
+  "compile_command": [
+    "D:/msys64/ucrt64/bin\\gcc.EXE",
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror=implicit-function-declaration",
+    "-Werror=incompatible-pointer-types",
+    "-DUSBD_CLASS_BOS_ENABLED=0",
+    "-DUSBD_MAX_SUPPORTED_CLASS=1",
+    "-ID:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\usbd_core.c",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\usbd_ctlreq.c",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\usbd_ioreq.c",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\usbd_cdc.c",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\usbd_cdc_if.c",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\usbd_desc.c",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\pc_byte_stream.c",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\pc_usb_control.c",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.c",
+    "-o",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.exe"
+  ],
+  "compile_exit": 0,
+  "runs": [
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.exe",
+        "null_owner"
+      ],
+      "exit": 3221226505,
+      "stdout": "",
+      "stderr": "Assertion failed: d==&hUsbDeviceFS && (ep==0x80U || (ep==0U && (d->ep0_state==USBD_EP0_IDLE || allow_control_error!=0U))), file D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.c, line 49\n"
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.exe",
+        "foreign_owner"
+      ],
+      "exit": 3221226505,
+      "stdout": "",
+      "stderr": "Assertion failed: d==&hUsbDeviceFS && (ep==0x80U || (ep==0U && (d->ep0_state==USBD_EP0_IDLE || allow_control_error!=0U))), file D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.c, line 49\n"
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.exe",
+        "get_initial_failure"
+      ],
+      "exit": 3221226505,
+      "stdout": "",
+      "stderr": "Assertion failed: hUsbDeviceFS.ep0_state==USBD_EP0_STALL, file D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.c, line 198\n"
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.exe",
+        "set_initial_failure"
+      ],
+      "exit": 3221226505,
+      "stdout": "",
+      "stderr": "Assertion failed: hUsbDeviceFS.ep0_state==USBD_EP0_STALL, file D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.c, line 198\n"
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.exe",
+        "status_tx_failure"
+      ],
+      "exit": 3221226505,
+      "stdout": "",
+      "stderr": "Assertion failed: hUsbDeviceFS.ep0_state==USBD_EP0_STALL, file D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.c, line 198\n"
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.exe",
+        "status_rx_failure"
+      ],
+      "exit": 3221226505,
+      "stdout": "",
+      "stderr": "Assertion failed: hUsbDeviceFS.ep0_state==USBD_EP0_STALL, file D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.c, line 198\n"
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.exe",
+        "descriptor_continuation_failure"
+      ],
+      "exit": 3221226505,
+      "stdout": "",
+      "stderr": "Assertion failed: USBD_LL_DataInStage(&hUsbDeviceFS,0U,tx_ptr[0]+64U)==USBD_FAIL, file D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.c, line 250\n"
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.exe",
+        "descriptor_initial_failure"
+      ],
+      "exit": 3221226505,
+      "stdout": "",
+      "stderr": "Assertion failed: Request(0x80U,USB_REQ_GET_DESCRIPTOR,0x0100U,18U)==USBD_FAIL, file D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.c, line 255\n"
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.exe",
+        "descriptor_premature_rx_failure"
+      ],
+      "exit": 3221226505,
+      "stdout": "",
+      "stderr": "Assertion failed: USBD_LL_DataInStage(&hUsbDeviceFS,0U,tx_ptr[0]+64U)==USBD_FAIL, file D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.c, line 262\n"
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.exe",
+        "receive_continuation_helper_failure"
+      ],
+      "exit": 3221226505,
+      "stdout": "",
+      "stderr": "Assertion failed: USBD_CtlContinueRx(&hUsbDeviceFS,data,sizeof(data))==USBD_FAIL, file D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.c, line 268\n"
+    }
+  ],
+  "scope": "Actual exact native core/class/EP0 policy and IO helpers; Host LL ports; no hardware or formal release claim"
+}

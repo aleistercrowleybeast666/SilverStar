@@ -1,0 +1,266 @@
+{
+  "part": "f407",
+  "policy_present": true,
+  "source_sha256": {
+    "usbd_desc.c": "97ba18339feec643ec4959fc2acabb97e226e1d6e36416089b2d1059794cee15",
+    "usbd_cdc_if.c": "15b1769c9691ddf21afef8a98071352eb1eba8089240e8582ed2d5b5098da08c",
+    "usbd_core.c": "8820a2fe3fd274e89a0c57d3f1637bf507ebd7b01d121966fc2897e7a2468f7a",
+    "usbd_ctlreq.c": "5f1c211ed991e074589c82bc52571357a268f36776111d99a85539df53fd80f0",
+    "usbd_ioreq.c": "1caa710ce08bff5a728b4d29c45e15c32ea302d176af2ca8f334052def0a9568",
+    "usbd_cdc.c": "5d1ec70bec7955f7791ab1d94934f3ab11b1f83b71e2663322c8044f45123df1",
+    "usb_cdc_transport.c": "37684894e381072410182de742db02b2c7e49e2d6a18f3e707473cec08c9a9e8",
+    "usb_cdc_port.c": "f130a194292b29a23b42e7ab5ae48fa982e05cde084bed5911de762ee0fa8864",
+    "pc_usb_control.c": "4ece79faf40650b6272fdab1b4aaf30532ac9e63f7f0e3b07be8a94c81dfd8c1",
+    "usbd_cdc.h": "3ea35b19e264217c3bd1d433c75f4e093930ea83cdf63aa88aee77748a9fc7dc",
+    "usbd_core.h": "a6c2dfc99fabefe4db7c4c145b4ab87d6b992e3fbd15cc65ecc1c7f9d2086f78",
+    "usbd_def.h": "1588736a66291a09de7aa69a5945574566413fefb84c0a7896dc088d174086a9",
+    "usbd_ctlreq.h": "f8897c9b47f97b6ca78c72b857d20fb2a2b0d85091a2362799165cdfa863e3cc",
+    "usbd_cdc_if.h": "664e44912621ec1b9a2d602cda9ad5dd8c347da3c6efdcf10a5c9ba1674b8d39",
+    "usbd_desc.h": "a4fbe168f224d3e2d8091b90df1115301247e1a6e16177bab101ca81aa70172d",
+    "usbd_ioreq.h": "8a2d44f0cc1c34c21eb75e01cec568b45b901678fba9ca2dc3b0c9a9f0364e7c",
+    "native_no_heap.h": "b8b0b6f565f4b29b1f34ea6502fb6b635b154e41f75b849e7de64afda1d63465",
+    "pc_usb_control.h": "cc0384fbe5ef2d296c0def1b2ff8488f44924918c7a91576be8af04ea04e4c33",
+    "usb_cdc_port.h": "14d76f1e98f691d82181ae563534463f9962c7a12145931f06399fd3d083b343",
+    "usb_cdc_retire.h": "dd13f96485a610eb1fa389b5a727c0431305a9fca0a30bdee4665e0b874d0328",
+    "usb_cdc_transport.h": "225f99a7ff8520b5324615c22f868eb42bf78935093c5773a55710b6eae6c4ed"
+  },
+  "command": [
+    "D:/msys64/ucrt64/bin\\gcc.EXE",
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-fanalyzer",
+    "-Werror=implicit-function-declaration",
+    "-Werror=incompatible-pointer-types",
+    "-DUSBD_MAX_SUPPORTED_CLASS=1",
+    "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\usbd_desc.c",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\usbd_cdc_if.c",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\usbd_core.c",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\usbd_ctlreq.c",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\usbd_ioreq.c",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\usbd_cdc.c",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\usb_cdc_transport.c",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\usb_cdc_port.c",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\pc_usb_control.c",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.c",
+    "-o",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe"
+  ],
+  "compile_exit": 0,
+  "runs": [
+    {
+      "case": "normal",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "normal"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "boundaries",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "boundaries"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "null_owner",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "null_owner"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "foreign_owner",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "foreign_owner"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "get_initial_failure",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "get_initial_failure"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "set_initial_failure",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "set_initial_failure"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "status_tx_failure",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "status_tx_failure"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "status_rx_failure",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "status_rx_failure"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "descriptor_continuation_failure",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor_continuation_failure"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "descriptor_initial_failure",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor_initial_failure"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "descriptor_premature_rx_failure",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor_premature_rx_failure"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "receive_continuation_helper_failure",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "receive_continuation_helper_failure"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-getters-normal"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-zero-length"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-short-endpoint"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-trailing-invalid"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-total-over-capacity"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-truncated-tail"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-null-owner"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-foreign-owner"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-request-invalid"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\post1\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-null-length"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "harness_sha256": "8024904553d86b40bf572517fd6ae5e5c98da44cc9f0ea52d3f8aeee1896ec3a",
+  "scope": "Actual exported class/core/I/O/EP0/transport/port; Host LL and retirement hardware port. No hardware acceptance."
+}

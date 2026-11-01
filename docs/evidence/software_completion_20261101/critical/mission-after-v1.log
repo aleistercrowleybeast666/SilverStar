@@ -1,0 +1,293 @@
+normal/error output transaction PASS
+.normal/error output transaction PASS
+.bounded fail-stop before publication: event-count reason=3 PASS
+.bounded fail-stop before publication: active-count reason=3 PASS
+.bounded fail-stop before publication: navigation-count reason=3 PASS
+.bounded fail-stop before publication: active-terminated reason=5 PASS
+.bounded fail-stop before publication: event-future reason=7 PASS
+.bounded fail-stop before publication: event-order reason=7 PASS
+.bounded fail-stop before publication: ready-mask reason=2 PASS
+.bounded fail-stop before publication: mission-flag reason=5 PASS
+.....EEE.
+=================================== ERRORS ====================================
+_______ ERROR at setup of test_native_recovery_permission_owner[False] ________
+
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024AFFD3B620>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/cr...rStar/.work/0.1.3-software-completion-20261101/critical/post-mission-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_generated_owner(workspace_root, builtin_catalog, tmp_path_factory):
+        from silverstar_fccg.core.workspace import WorkspacePolicy
+        from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
+        from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        directory = tmp_path_factory.mktemp('native-generated-owner')
+>       TargetGeneration_Apply(model, builtin_catalog, WorkspacePolicy(workspace_root), directory, TargetScope.FLIGHT)
+
+apps\SCG\tests\test_mission_process_native.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\generator\multi_target.py:633: in TargetGeneration_Apply
+    plan = assembler.Plan(flight_model, flight_root)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\assembler.py:98: in Plan
+    return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Plan(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:116: in Plan
+    desired, _ownership = self._DesiredFiles_Get(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:433: in _DesiredFiles_Get
+    desired = GeneratedFiles_Render(render_model, self.catalog, graph)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='SilverStar_F407_Reference_Generated', firmware_version='0.1.3', build_targ...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024AFF97F390>
+graph = SourceGraph(sources=('APP/Src/device_task.c', 'APP/Src/app_tasks.c', 'APP/Src/estimator_barometer_pending.c', 'APP/Src...e_disabled.c', 'Protocol/Src/air_protocol.c'), linker_script='STM32F407XX_FLASH.ld', toolchain_prefix='arm-none-eabi-')
+
+    def GeneratedFiles_Render(
+        model: ProjectModel, catalog: PluginCatalog, graph: SourceGraph
+    ) -> dict[str, bytes]:
+        catalog = catalog.ProjectView_Get(model)
+        from silverstar_fccg.project.gnss_reacquisition import GnssReacquisitionActivation_Validate
+        GnssReacquisitionActivation_Validate(model, catalog)
+        logging_enabled = model.protocols.get("logging") is not None
+        decoder_profile = (
+            LogDecoderProfile_Render(model, catalog) if logging_enabled else None
+        )
+        files = {
+            ".fccg/version_identity.json": json.dumps(FirmwareIdentity_Resolve(
+                model.identity.firmware_version, test_identity=_TestBuildIdentity_Get(model)),
+                indent=2, ensure_ascii=True) + "\n",
+            "Generated/project_sources.mk": graph.MakeFragment_Render(),
+            "Generated/memory_audit.py": (Path(__file__).resolve().parents[1] / "project/build_audit.py").read_text(encoding="utf-8"),
+            "Generated/memory_contract.json": _MemoryContract_Render(model, catalog, graph),
+            "Generated/module.mk": _GeneratedModule_Render(model),
+            "Generated/project_semantics.json": (
+                decoder_profile.project_semantics_content
+                if decoder_profile is not None
+                else _ProjectSemanticsWithoutLogging_Render(model, catalog)
+            ),
+            "Generated/Inc/project_capability_routes.h": _CapabilityRoutesHeader_Render(),
+            "Generated/Inc/project_device_build_capabilities.h": _DeviceBuildCapabilitiesHeader_Render(model, catalog),
+            "Generated/Inc/project_algorithm_parameters.h": AlgorithmParametersHeader_Render(model, catalog),
+            "Generated/Inc/project_telemetry_protocol.h": _TelemetryProtocolHeader_Render(model).encode("utf-8"),
+            "Generated/Inc/project_flight_config.h": _FlightConfigHeader_Render(
+                model, catalog
+            ),
+            "Generated/Inc/air_link_config.h": AirLinkHeader_Render(model),
+            "Generated/Inc/project_device_instances.h": _DeviceInstancesHeader_Render(
+                model, catalog
+            ),
+            "Generated/Inc/project_resources.h": _ResourceHeader_Render(model, catalog),
+            "Generated/Inc/project_storage_binding.h": _StorageBindingHeader_Render(
+                model, catalog
+            ),
+            "Generated/Src/platform_resources.c": _PlatformResources_Render(model, catalog),
+            "Generated/Src/project_capability_routes.c": _CapabilityRoutesSource_Render(
+                model, catalog
+            ),
+            "Generated/Src/project_device_instances.c": _DeviceInstancesSource_Render(
+                model, catalog
+            ),
+            "Generated/Src/project_resources.c": _InstanceResourcesSource_Render(
+                model, catalog
+            ),
+            "Generated/Src/project_metadata.c": _MetadataSource_Render(model, catalog),
+            "Generated/Src/project_mission_parameters.c": (
+                ProjectMissionParametersSource_Render(model, catalog)
+            ),
+        }
+        from silverstar_fccg.generator.mission_process import MissionProcessFiles_Render
+        files.update(MissionProcessFiles_Render(model, catalog))
+>       from silverstar_fccg.generator.control_research import ControlResearchFiles_Render
+E       ModuleNotFoundError: No module named 'silverstar_fccg.generator.control_research'
+
+apps\SCG\src\silverstar_fccg\generator\render.py:346: ModuleNotFoundError
+________ ERROR at setup of test_native_recovery_permission_owner[True] ________
+
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024AFFD3B620>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/cr...rStar/.work/0.1.3-software-completion-20261101/critical/post-mission-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_generated_owner(workspace_root, builtin_catalog, tmp_path_factory):
+        from silverstar_fccg.core.workspace import WorkspacePolicy
+        from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
+        from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        directory = tmp_path_factory.mktemp('native-generated-owner')
+>       TargetGeneration_Apply(model, builtin_catalog, WorkspacePolicy(workspace_root), directory, TargetScope.FLIGHT)
+
+apps\SCG\tests\test_mission_process_native.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\generator\multi_target.py:633: in TargetGeneration_Apply
+    plan = assembler.Plan(flight_model, flight_root)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\assembler.py:98: in Plan
+    return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Plan(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:116: in Plan
+    desired, _ownership = self._DesiredFiles_Get(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:433: in _DesiredFiles_Get
+    desired = GeneratedFiles_Render(render_model, self.catalog, graph)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='SilverStar_F407_Reference_Generated', firmware_version='0.1.3', build_targ...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024AFF97F390>
+graph = SourceGraph(sources=('APP/Src/device_task.c', 'APP/Src/app_tasks.c', 'APP/Src/estimator_barometer_pending.c', 'APP/Src...e_disabled.c', 'Protocol/Src/air_protocol.c'), linker_script='STM32F407XX_FLASH.ld', toolchain_prefix='arm-none-eabi-')
+
+    def GeneratedFiles_Render(
+        model: ProjectModel, catalog: PluginCatalog, graph: SourceGraph
+    ) -> dict[str, bytes]:
+        catalog = catalog.ProjectView_Get(model)
+        from silverstar_fccg.project.gnss_reacquisition import GnssReacquisitionActivation_Validate
+        GnssReacquisitionActivation_Validate(model, catalog)
+        logging_enabled = model.protocols.get("logging") is not None
+        decoder_profile = (
+            LogDecoderProfile_Render(model, catalog) if logging_enabled else None
+        )
+        files = {
+            ".fccg/version_identity.json": json.dumps(FirmwareIdentity_Resolve(
+                model.identity.firmware_version, test_identity=_TestBuildIdentity_Get(model)),
+                indent=2, ensure_ascii=True) + "\n",
+            "Generated/project_sources.mk": graph.MakeFragment_Render(),
+            "Generated/memory_audit.py": (Path(__file__).resolve().parents[1] / "project/build_audit.py").read_text(encoding="utf-8"),
+            "Generated/memory_contract.json": _MemoryContract_Render(model, catalog, graph),
+            "Generated/module.mk": _GeneratedModule_Render(model),
+            "Generated/project_semantics.json": (
+                decoder_profile.project_semantics_content
+                if decoder_profile is not None
+                else _ProjectSemanticsWithoutLogging_Render(model, catalog)
+            ),
+            "Generated/Inc/project_capability_routes.h": _CapabilityRoutesHeader_Render(),
+            "Generated/Inc/project_device_build_capabilities.h": _DeviceBuildCapabilitiesHeader_Render(model, catalog),
+            "Generated/Inc/project_algorithm_parameters.h": AlgorithmParametersHeader_Render(model, catalog),
+            "Generated/Inc/project_telemetry_protocol.h": _TelemetryProtocolHeader_Render(model).encode("utf-8"),
+            "Generated/Inc/project_flight_config.h": _FlightConfigHeader_Render(
+                model, catalog
+            ),
+            "Generated/Inc/air_link_config.h": AirLinkHeader_Render(model),
+            "Generated/Inc/project_device_instances.h": _DeviceInstancesHeader_Render(
+                model, catalog
+            ),
+            "Generated/Inc/project_resources.h": _ResourceHeader_Render(model, catalog),
+            "Generated/Inc/project_storage_binding.h": _StorageBindingHeader_Render(
+                model, catalog
+            ),
+            "Generated/Src/platform_resources.c": _PlatformResources_Render(model, catalog),
+            "Generated/Src/project_capability_routes.c": _CapabilityRoutesSource_Render(
+                model, catalog
+            ),
+            "Generated/Src/project_device_instances.c": _DeviceInstancesSource_Render(
+                model, catalog
+            ),
+            "Generated/Src/project_resources.c": _InstanceResourcesSource_Render(
+                model, catalog
+            ),
+            "Generated/Src/project_metadata.c": _MetadataSource_Render(model, catalog),
+            "Generated/Src/project_mission_parameters.c": (
+                ProjectMissionParametersSource_Render(model, catalog)
+            ),
+        }
+        from silverstar_fccg.generator.mission_process import MissionProcessFiles_Render
+        files.update(MissionProcessFiles_Render(model, catalog))
+>       from silverstar_fccg.generator.control_research import ControlResearchFiles_Render
+E       ModuleNotFoundError: No module named 'silverstar_fccg.generator.control_research'
+
+apps\SCG\src\silverstar_fccg\generator\render.py:346: ModuleNotFoundError
+__ ERROR at setup of test_native_acceleration_uses_actual_corrected_provider __
+
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024AFFD3B620>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/cr...rStar/.work/0.1.3-software-completion-20261101/critical/post-mission-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_generated_owner(workspace_root, builtin_catalog, tmp_path_factory):
+        from silverstar_fccg.core.workspace import WorkspacePolicy
+        from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
+        from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        directory = tmp_path_factory.mktemp('native-generated-owner')
+>       TargetGeneration_Apply(model, builtin_catalog, WorkspacePolicy(workspace_root), directory, TargetScope.FLIGHT)
+
+apps\SCG\tests\test_mission_process_native.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\generator\multi_target.py:633: in TargetGeneration_Apply
+    plan = assembler.Plan(flight_model, flight_root)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\assembler.py:98: in Plan
+    return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Plan(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:116: in Plan
+    desired, _ownership = self._DesiredFiles_Get(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:433: in _DesiredFiles_Get
+    desired = GeneratedFiles_Render(render_model, self.catalog, graph)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='SilverStar_F407_Reference_Generated', firmware_version='0.1.3', build_targ...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000024AFF97F390>
+graph = SourceGraph(sources=('APP/Src/device_task.c', 'APP/Src/app_tasks.c', 'APP/Src/estimator_barometer_pending.c', 'APP/Src...e_disabled.c', 'Protocol/Src/air_protocol.c'), linker_script='STM32F407XX_FLASH.ld', toolchain_prefix='arm-none-eabi-')
+
+    def GeneratedFiles_Render(
+        model: ProjectModel, catalog: PluginCatalog, graph: SourceGraph
+    ) -> dict[str, bytes]:
+        catalog = catalog.ProjectView_Get(model)
+        from silverstar_fccg.project.gnss_reacquisition import GnssReacquisitionActivation_Validate
+        GnssReacquisitionActivation_Validate(model, catalog)
+        logging_enabled = model.protocols.get("logging") is not None
+        decoder_profile = (
+            LogDecoderProfile_Render(model, catalog) if logging_enabled else None
+        )
+        files = {
+            ".fccg/version_identity.json": json.dumps(FirmwareIdentity_Resolve(
+                model.identity.firmware_version, test_identity=_TestBuildIdentity_Get(model)),
+                indent=2, ensure_ascii=True) + "\n",
+            "Generated/project_sources.mk": graph.MakeFragment_Render(),
+            "Generated/memory_audit.py": (Path(__file__).resolve().parents[1] / "project/build_audit.py").read_text(encoding="utf-8"),
+            "Generated/memory_contract.json": _MemoryContract_Render(model, catalog, graph),
+            "Generated/module.mk": _GeneratedModule_Render(model),
+            "Generated/project_semantics.json": (
+                decoder_profile.project_semantics_content
+                if decoder_profile is not None
+                else _ProjectSemanticsWithoutLogging_Render(model, catalog)
+            ),
+            "Generated/Inc/project_capability_routes.h": _CapabilityRoutesHeader_Render(),
+            "Generated/Inc/project_device_build_capabilities.h": _DeviceBuildCapabilitiesHeader_Render(model, catalog),
+            "Generated/Inc/project_algorithm_parameters.h": AlgorithmParametersHeader_Render(model, catalog),
+            "Generated/Inc/project_telemetry_protocol.h": _TelemetryProtocolHeader_Render(model).encode("utf-8"),
+            "Generated/Inc/project_flight_config.h": _FlightConfigHeader_Render(
+                model, catalog
+            ),
+            "Generated/Inc/air_link_config.h": AirLinkHeader_Render(model),
+            "Generated/Inc/project_device_instances.h": _DeviceInstancesHeader_Render(
+                model, catalog
+            ),
+            "Generated/Inc/project_resources.h": _ResourceHeader_Render(model, catalog),
+            "Generated/Inc/project_storage_binding.h": _StorageBindingHeader_Render(
+                model, catalog
+            ),
+            "Generated/Src/platform_resources.c": _PlatformResources_Render(model, catalog),
+            "Generated/Src/project_capability_routes.c": _CapabilityRoutesSource_Render(
+                model, catalog
+            ),
+            "Generated/Src/project_device_instances.c": _DeviceInstancesSource_Render(
+                model, catalog
+            ),
+            "Generated/Src/project_resources.c": _InstanceResourcesSource_Render(
+                model, catalog
+            ),
+            "Generated/Src/project_metadata.c": _MetadataSource_Render(model, catalog),
+            "Generated/Src/project_mission_parameters.c": (
+                ProjectMissionParametersSource_Render(model, catalog)
+            ),
+        }
+        from silverstar_fccg.generator.mission_process import MissionProcessFiles_Render
+        files.update(MissionProcessFiles_Render(model, catalog))
+>       from silverstar_fccg.generator.control_research import ControlResearchFiles_Render
+E       ModuleNotFoundError: No module named 'silverstar_fccg.generator.control_research'
+
+apps\SCG\src\silverstar_fccg\generator\render.py:346: ModuleNotFoundError
+=========================== short test summary info ===========================
+ERROR apps\SCG\tests\test_mission_process_native.py::test_native_recovery_permission_owner[False]
+ERROR apps\SCG\tests\test_mission_process_native.py::test_native_recovery_permission_owner[True]
+ERROR apps\SCG\tests\test_mission_process_native.py::test_native_acceleration_uses_actual_corrected_provider
+15 passed, 3 errors in 20.87s

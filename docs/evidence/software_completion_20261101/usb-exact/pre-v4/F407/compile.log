@@ -1,0 +1,61 @@
+In file included from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_core.h:28,
+                 from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_core.c:20:
+D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_conf.h:150:9: warning: 'USBD_CLASS_BOS_ENABLED' redefined
+  150 |   */
+      |         ^                     
+<command-line>: note: this is the location of the previous definition
+In file included from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_def.h:28,
+                 from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_ctlreq.h:28,
+                 from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_ctlreq.c:20:
+D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_conf.h:150:9: warning: 'USBD_CLASS_BOS_ENABLED' redefined
+  150 |   */
+      |         ^                     
+<command-line>: note: this is the location of the previous definition
+In file included from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_def.h:28,
+                 from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_ioreq.h:28,
+                 from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_ioreq.c:20:
+D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_conf.h:150:9: warning: 'USBD_CLASS_BOS_ENABLED' redefined
+  150 |   */
+      |         ^                     
+<command-line>: note: this is the location of the previous definition
+In file included from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_def.h:28,
+                 from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_ioreq.h:28,
+                 from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_cdc.h:28,
+                 from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_cdc.c:59:
+D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_conf.h:150:9: warning: 'USBD_CLASS_BOS_ENABLED' redefined
+  150 |   */
+      |         ^                     
+<command-line>: note: this is the location of the previous definition
+In file included from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_def.h:28,
+                 from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_ioreq.h:28,
+                 from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_cdc.h:28,
+                 from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_cdc_if.h:31,
+                 from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_cdc_if.c:23:
+D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_conf.h:150:9: warning: 'USBD_CLASS_BOS_ENABLED' redefined
+  150 |   */
+      |         ^                     
+<command-line>: note: this is the location of the previous definition
+In file included from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_core.h:28,
+                 from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_desc.c:22:
+D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_conf.h:150:9: warning: 'USBD_CLASS_BOS_ENABLED' redefined
+  150 |   */
+      |         ^                     
+<command-line>: note: this is the location of the previous definition
+In file included from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\pc_byte_stream.c:7:
+D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_conf.h:150:9: warning: 'USBD_CLASS_BOS_ENABLED' redefined
+  150 |   */
+      |         ^                     
+<command-line>: note: this is the location of the previous definition
+In file included from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_def.h:28,
+                 from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\pc_usb_control.h:3,
+                 from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\pc_usb_control.c:2:
+D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_conf.h:150:9: warning: 'USBD_CLASS_BOS_ENABLED' redefined
+  150 |   */
+      |         ^                     
+<command-line>: note: this is the location of the previous definition
+In file included from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_core.h:28,
+                 from D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\normal.c:1:
+D:\python_software\SilverStar\.work\sc-261101-usb\pre-v4\test_exact_generated_control_f1\usbd_conf.h:150:9: warning: 'USBD_CLASS_BOS_ENABLED' redefined
+  150 |   */
+      |         ^                     
+<command-line>: note: this is the location of the previous definition

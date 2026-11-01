@@ -1,0 +1,526 @@
+Host compiler runtime directory: D:\msys64\ucrt64\bin
+Host compiler command: "D:\msys64\ucrt64\bin\gcc.exe" --version
+gcc.exe (Rev5, Built by MSYS2 project) 16.1.0
+Copyright (C) 2026 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Host compiler command: "D:\msys64\ucrt64\bin\gcc.exe" -dumpmachine
+x86_64-w64-mingw32
+record_catalog_sha256=93a2aad50022afce60e1994151ac83110d3bc4b4970ab935cde54601b4c64ca5
+project_semantics_sha256=d21994e63bc563d2dad4451869a930775b21e2e2ddf29ab6c815d145f464ce9a
+generation_profile_hash_128=d2afc3795be41a9a98964d74d7b85946
+SSLOG Record Catalog validation passed: records=43 payloads=43
+FCCG_HOST_NOT_APPLICABLE|attitude_alignment|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Alignment\GravityKnownYaw\Src\alignment_gravity_known_yaw.c, D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Alignment\GravityMagTriad\Src\attitude_triad.c
+FCCG_HOST_NOT_APPLICABLE|alignment_strategy_gravity_known_yaw|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Alignment\GravityKnownYaw\Src\alignment_gravity_known_yaw.c, D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Alignment\GravityKnownYaw\Src\alignment_strategy_binding.c
+FCCG_HOST_NOT_APPLICABLE|alignment_strategy_gravity_mag_triad|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Alignment\GravityMagTriad\Src\attitude_triad.c, D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Alignment\GravityMagTriad\Src\alignment_strategy_binding.c
+FCCG_HOST_NOT_APPLICABLE|alignment_strategy_hardware_quat6_known_yaw|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Alignment\HardwareQuat6AxisKnownYaw\Src\alignment_strategy_binding.c
+FCCG_HOST_NOT_APPLICABLE|alignment_strategy_hardware_quat9|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Alignment\HardwareQuat9Axis\Src\alignment_strategy_binding.c
+FCCG_HOST_FIXTURE|system_alignment|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_alignment_explicit_required_gnss|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_alignment_pure_ins|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_inertial|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|imu_sample_bus|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_calibration_default|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_calibration_system_axis_direction_x_positive|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_calibration_system_axis_direction_x_negative|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_calibration_system_axis_direction_y_positive|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_calibration_system_axis_direction_y_negative|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_calibration_system_axis_direction_z_positive|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_calibration_system_axis_direction_z_negative|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|runtime_commands|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|runtime_commands|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|runtime_startup|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|fault_hook|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|calibration_build_gate_0|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|calibration_build_gate_0|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|telemetry_build_mask_0|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|telemetry_build_mask_0|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|calibration_build_gate_2|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|calibration_build_gate_2|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|telemetry_build_mask_2|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|telemetry_build_mask_2|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|calibration_build_gate_4|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|calibration_build_gate_4|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|telemetry_build_mask_4|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|telemetry_build_mask_4|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|calibration_build_gate_6|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|calibration_build_gate_6|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|telemetry_build_mask_6|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|telemetry_build_mask_6|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_NOT_APPLICABLE|navigation_sf6|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Tests\Host\test_navigation_sf6.c, D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Estimator\SF6\Src\navigation_sf6.c
+FCCG_HOST_NOT_APPLICABLE|air_kf|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|source_selector|ordinary multiple-instance provider mock; production compact instance limit not exercised
+FCCG_HOST_FIXTURE|device_native_log|ordinary multiple-instance provider mock; production compact instance limit not exercised
+FCCG_HOST_FIXTURE|lifecycle|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|lifecycle_logging|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_startup|mock power provider supplied; production power selection unchanged
+FCCG_HOST_FIXTURE|system_startup_write_verify|mock power provider supplied; production power selection unchanged
+FCCG_HOST_FIXTURE|system_startup_async_no_explicit_verify|mock power provider supplied; production power selection unchanged
+FCCG_HOST_FIXTURE|system_startup_no_writes|mock power provider supplied; production power selection unchanged
+FCCG_HOST_FIXTURE|health|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|telemetry|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|telemetry|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|estimator_preparation_actual|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|optional_gnss_start_actual|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|optional_gnss_start_explicit_required|logical interfaces; physical epoch path not exercised
+Host scope explicitly selected: control_provenance_normal, control_provenance_queue_full, control_provenance_source, control_provenance_unknown
+FCCG_PROGRESS|HOST_TEST|PLAN|4
+FCCG_PROGRESS|HOST_TEST|BEGIN|1|4|control_provenance_normal
+Host test compile diagnostic: name=control_provenance_normal
+Host compiler path: D:\msys64\ucrt64\bin\gcc.exe
+Host compiler version: gcc.exe (Rev5, Built by MSYS2 project) 16.1.0
+Host compiler target: x86_64-w64-mingw32
+Host compiler return code: 1
+Host compiler arguments:
+  -std=c11
+  -Wall
+  -Wextra
+  -Werror
+  -pedantic
+  -O2
+  -DUSE_HAL_DRIVER
+  -DSTM32F407xx
+  -DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_VECTOR_CONSTRAINTS
+  -DSYSTEM_ALIGNMENT_BUILD_SOURCE=SYSTEM_ALIGNMENT_ATTITUDE_SOURCE_VECTOR_CONSTRAINTS
+  -DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_IMU=1U
+  -DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_MAGNETOMETER=SYSTEM_ALIGNMENT_USES_MAGNETIC_CONSTRAINT
+  -DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_HARDWARE_QUATERNION=0U
+  -DSYSTEM_ALIGNMENT_BUILD_GUARD_HARDWARE_QUATERNION=0U
+  -DSYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_KF6
+  -DSYSTEM_BUILD_ESTIMATOR_ENABLED=1U
+  -DSYSTEM_BUILD_MECHANIZATION_ALGORITHM=SYSTEM_MECHANIZATION_CONING2_SCULLING2
+  -DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_BARO_IMU_WINDOW
+  -DSYSTEM_TELEMETRY_TM_ENABLED=1U
+  -DSYSTEM_TELEMETRY_TM_PROFILE=0U
+  -DSILVERSTAR_AIR_LINK_ENABLED=1
+  -DTEST_EXPECT_ALIGNMENT_ALGORITHM=SYSTEM_ALIGNMENT_VECTOR_CONSTRAINTS
+  -ffunction-sections
+  -fdata-sections
+  -Wl,--gc-sections
+  -flto=1
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Devices\Storage\SdSdioFatFs\Adapter\Inc
+  -fanalyzer
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Targets\SilverStar_F407\Inc
+  -include
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Generated\Inc\project_flight_config.h
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Tests\Host
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\APP\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Common\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Calibration\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Alignment\Common\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Alignment\GravityKnownYaw\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Alignment\GravityMagTriad\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Alignment\VectorConstraints\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Alignment\ExternalAttitude\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\INS\Coning2Sculling2\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Estimator\KF6\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Estimator\SF6\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Common\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Modules\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Protocol\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Protocol\SSLOG\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Interfaces\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Alignment\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Calibration\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Indicator\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Inertial\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\User
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Targets\SilverStar_F407\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Board\SilverStar_0_5\Services\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Generated\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\FlightLogic\Deployment\MultiTrigger\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\FlightLogic\Landing\BarometerImuWindow\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Platform\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Platform\STM32F4\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Platform\STM32H7\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Platform\STM32F1Flight\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Devices\IMU\JY901B\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Devices\IMU\JY901B\Adapter\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Devices\GNSS\NEO_M9N\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Devices\GNSS\NEO_M9N\Adapter\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Devices\Telemetry\SX1281\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Devices\Telemetry\SX1281\Adapter\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Devices\SensorBus\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Devices\SensorBus\Adapter\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Devices\Barometer\BMP280\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Devices\Barometer\BMP280\Adapter\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Devices\Power\InputVoltage\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Devices\IMU\MPU6050\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Devices\IMU\MPU6050\Adapter\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Middlewares\Third_Party\SX1280lib
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Tests\Host\host_platform_mock.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\APP\Src\estimator_bus.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\APP\Src\estimator_barometer_pending.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Common\Src\attitude_frame.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Common\Src\geodesy_local.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Common\Src\navigation_quality.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\INS\Coning2Sculling2\Src\ins_mechanization.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Src\system_estimator_diagnostics.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Src\system_estimator_profile.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Src\system_navigation_profile.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Src\system_navigation_health.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Src\system_gnss_quality.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Src\system_barometer.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Estimator\KF6\Src\navigation_kf.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Estimator\KF6\Src\navigation_kf_replay.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Estimator\KF6\Src\navigation_integrity.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Tests\Host\optional_start_storage_inputs.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Tests\Host\optional_start_mag_inputs.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\APP\Src\flight_task.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\APP\Src\imu_sample_bus.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\APP\Src\logger_bus.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Common\Src\common_spsc_queue.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Alignment\Src\system_alignment.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Alignment\Src\system_alignment_source.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Calibration\Src\system_calibration.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Calibration\Src\system_calibration_correction.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Calibration\Src\system_mag_calibration.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Calibration\Src\imu_six_face_calibration.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Common\Src\common_format.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Src\system_time.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Src\system_health.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Src\system_capabilities.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Src\system_profile.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Src\system_log_policy.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Generated\Src\project_log_config.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Generated\Src\project_metadata.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\FlightLogic\FlightCycle\Src\silverstar_flight_cycle.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Protocol\SSLOG\Src\sslog_protocol.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Protocol\SSLOG\Src\sslog_records.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Alignment\Common\Src\attitude_alignment.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Alignment\Common\Src\attitude_preflight.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Alignment\Common\Src\vector_constraints.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Algorithm\Alignment\VectorConstraints\Src\alignment_strategy_binding.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Tests\Host\test_control_provenance.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Tests\Host\control_provenance_ins_inputs.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Src\system_mission_process.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Generated\Src\project_mission_process.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\System\Src\system_mission_process_runtime.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Common\Src\silverstar_assert.c
+  -lm
+  -o
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\build\FCCG\Host\Tests\control_provenance_normal.exe
+GCC stdout/stderr:
+D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/control/pytest-v4/control-research-pid0/Flight_Controller/APP/Src/ins_task.c: In function 'InsTask_AttitudeStatusDetailsSet':
+D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/control/pytest-v4/control-research-pid0/Flight_Controller/APP/Src/ins_task.c:1408:44: error: use of uninitialized value 'flags_26(D)->final_ready' [CWE-457] [-Werror=analyzer-use-of-uninitialized-value]
+ 1408 |     status->final_quaternion_frozen = flags->final_ready;
+      |                                            ^
+  'InsTask_AttitudeAlignmentStatusGet': events 1-5
+    │
+    │ 1442 | SystemDeviceResult InsTask_AttitudeAlignmentStatusGet(
+    │      |                    ^
+    │      |                    |
+    │      |                    (1) entry to 'InsTask_AttitudeAlignmentStatusGet'
+    │......
+    │ 1446 |     InsTaskAlignmentFlags flags;
+    │      |                           ~
+    │      |                           |
+    │      |                           (2) region created on stack here
+    │ 1447 | 
+    │ 1448 |     if (status == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    │      |        ~            
+    │      |        |
+    │      |        (3) following 'false' branch (when 'status_4(D)' is non-NULL)... ─>─┐
+    │      |                                                                            │
+    │      |                                                                            │
+    │      |┌───────────────────────────────────────────────────────────────────────────┘
+    │ 1449 |│    SILVERSTAR_ASSERT_OBJECT(status, SystemAlignmentAttitudeStatus,
+    │      |│    ~               
+    │      |│    |
+    │      |└───>(4) ...to here
+    │      |     (5) calling 'SilverStarAssert_ObjectCheck' from 'InsTask_AttitudeAlignmentStatusGet'
+    │
+    └──> 'SilverStarAssert_ObjectCheck': events 6-7
+           │
+           │D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Common\Src\silverstar_assert.c:51:6:
+           │   51 | void SilverStarAssert_ObjectCheck(const volatile void *object,
+           │      |      ^
+           │      |      |
+           │      |      (6) entry to 'SilverStarAssert_ObjectCheck'
+           │......
+           │   59 |     SilverStarAssert_Check((uint8_t)(object != NULL), module_id, file_name,
+           │      |     ~ 
+           │      |     |
+           │      |     (7) inlined call to 'SilverStarAssert_Check' from 'SilverStarAssert_ObjectCheck'
+           │
+           └──> 'SilverStarAssert_Check': event 8
+                  │
+                  │   45 |     if (condition == 0U)
+                  │      |        ^
+                  │      |        |
+                  │      |        (8) following 'false' branch (when 'object_3(D)' is non-NULL)... ─>─┐
+                  │      |                                                                            │
+                  │
+           <──────┘
+           │
+         'SilverStarAssert_ObjectCheck': events 9-11
+           │
+           │      |                                                                            │
+           │      |┌───────────────────────────────────────────────────────────────────────────┘
+           │   61 |│    address = (uintptr_t)object;
+           │      |│            ^
+           │      |│            |
+           │      |└───────────>(9) ...to here
+           │   62 |     SilverStarAssert_Check(
+           │   63 |         (uint8_t)((alignment != 0U) && ((address % alignment) == 0U)),
+           │      |                                     ~
+           │      |                                     |
+           │      |                                     (10) following 'true' branch... ─>─┐
+           │      |                                                                        │
+           │......
+           │      |                                                                        │
+           │      |┌───────────────────────────────────────────────────────────────────────┘
+           │   66 |│}
+           │      |│~            
+           │      |│|
+           │      |└(11) ...to here
+           │
+    <──────┘
+    │
+  'InsTask_AttitudeAlignmentStatusGet': events 12-15
+    │
+    │D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/control/pytest-v4/control-research-pid0/Flight_Controller/APP/Src/ins_task.c:1449:5:
+    │ 1449 |     SILVERSTAR_ASSERT_OBJECT(status, SystemAlignmentAttitudeStatus,
+    │      |     ^
+    │      |     |
+    │      |     (12) returning to 'InsTask_AttitudeAlignmentStatusGet' from 'SilverStarAssert_ObjectCheck'
+    │......
+    │ 1454 |     if (profile == NULL) { return SYSTEM_DEVICE_INTERNAL_ERROR; }
+    │      |        ~
+    │      |        |
+    │      |        (13) following 'false' branch (when 'profile_10' is non-NULL)... ─>─┐
+    │      |                                                                            │
+    │      |                                                                            │
+    │      |┌───────────────────────────────────────────────────────────────────────────┘
+    │ 1455 |│    InsTask_AttitudeStatusSnapshotGet(status, &flags);
+    │      |│    ~
+    │      |│    |
+    │      |└───>(14) ...to here
+    │      |     (15) calling 'InsTask_AttitudeStatusSnapshotGet' from 'InsTask_AttitudeAlignmentStatusGet'
+    │
+    └──> 'InsTask_AttitudeStatusSnapshotGet': events 16-18
+           │
+           │ 1309 | static void InsTask_AttitudeStatusSnapshotGet(
+           │      |             ^
+           │      |             |
+           │      |             (16) entry to 'InsTask_AttitudeStatusSnapshotGet'
+           │......
+           │ 1316 |     if ((status == NULL) || (flags == NULL))
+           │      |        ~     
+           │      |        |
+           │      |        (17) following 'true' branch... ─>─┐
+           │      |                                           │
+           │      |                                           │
+           │      |┌──────────────────────────────────────────┘
+           │ 1317 |│    {
+           │ 1318 |│        return;
+           │      |│        ~    
+           │      |│        |
+           │      |└───────>(18) ...to here
+           │
+    <──────┘
+    │
+  'InsTask_AttitudeAlignmentStatusGet': events 19-20
+    │
+    │ 1455 |     InsTask_AttitudeStatusSnapshotGet(status, &flags);
+    │      |     ^
+    │      |     |
+    │      |     (19) returning to 'InsTask_AttitudeAlignmentStatusGet' from 'InsTask_AttitudeStatusSnapshotGet'
+    │ 1456 |     status->algorithm = profile->alignment_algorithm;
+    │ 1457 |     InsTask_AttitudeSourceResolve(status, profile->alignment_algorithm,
+    │      |     ~
+    │      |     |
+    │      |     (20) calling 'InsTask_AttitudeSourceResolve' from 'InsTask_AttitudeAlignmentStatusGet'
+    │
+    └──> 'InsTask_AttitudeSourceResolve': events 21-22
+           │
+           │ 1358 | static void InsTask_AttitudeSourceResolve(
+           │      |             ^
+           │      |             |
+           │      |             (21) entry to 'InsTask_AttitudeSourceResolve'
+           │......
+           │ 1363 |     if ((status == NULL) || (flags == NULL)) { return; }
+           │      |        ~     
+           │      |        |
+           │      |        (22) following 'true' branch... ─>─┐
+           │      |                                           │
+           │
+         'InsTask_AttitudeSourceResolve': event 23
+           │
+           │      |                                           │
+           │      |┌──────────────────────────────────────────┘
+           │ 1363 |│    if ((status == NULL) || (flags == NULL)) { return; }
+           │      |│       ^
+           │      |│       |
+           │      |└──────>(23) ...to here
+           │
+    <──────┘
+    │
+  'InsTask_AttitudeAlignmentStatusGet': events 24-25
+    │
+    │ 1457 |     InsTask_AttitudeSourceResolve(status, profile->alignment_algorithm,
+    │      |     ^
+    │      |     |
+    │      |     (24) returning to 'InsTask_AttitudeAlignmentStatusGet' from 'InsTask_AttitudeSourceResolve'
+    │ 1458 |                                   &flags);
+    │ 1459 |     InsTask_AttitudeStatusDetailsSet(status, profile, &flags);
+    │      |     ~
+    │      |     |
+    │      |     (25) calling 'InsTask_AttitudeStatusDetailsSet' from 'InsTask_AttitudeAlignmentStatusGet'
+    │
+    └──> 'InsTask_AttitudeStatusDetailsSet': events 26-29
+           │
+           │ 1388 | static void InsTask_AttitudeStatusDetailsSet(
+           │      |             ^
+           │      |             |
+           │      |             (26) entry to 'InsTask_AttitudeStatusDetailsSet'
+           │......
+           │ 1395 |     if ((status == NULL) || (profile == NULL) || (flags == NULL)) { return; }
+           │      |        ~     
+           │      |        |
+           │      |        (27) following 'false' branch... ─>─┐
+           │      |                                            │
+           │      |                                            │
+           │      |┌───────────────────────────────────────────┘
+           │ 1396 |│    SILVERSTAR_ASSERT_OBJECT(status, SystemAlignmentAttitudeStatus,
+           │      |│    ~        
+           │      |│    |
+           │      |└───>(28) ...to here
+           │      |     (29) calling 'SilverStarAssert_ObjectCheck' from 'InsTask_AttitudeStatusDetailsSet'
+           │
+           └──> 'SilverStarAssert_ObjectCheck': events 30-31
+                  │
+                  │D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Common\Src\silverstar_assert.c:51:6:
+                  │   51 | void SilverStarAssert_ObjectCheck(const volatile void *object,
+                  │      |      ^
+                  │      |      |
+                  │      |      (30) entry to 'SilverStarAssert_ObjectCheck'
+                  │......
+                  │   59 |     SilverStarAssert_Check((uint8_t)(object != NULL), module_id, file_name,
+                  │      |     ~ 
+                  │      |     |
+                  │      |     (31) inlined call to 'SilverStarAssert_Check' from 'SilverStarAssert_ObjectCheck'
+                  │
+                  └──> 'SilverStarAssert_Check': event 32
+                         │
+                         │   45 |     if (condition == 0U)
+                         │      |        ^
+                         │      |        |
+                         │      |        (32) following 'false' branch (when 'object_3(D)' is non-NULL)... ─>─┐
+                         │      |                                                                             │
+                         │
+                  <──────┘
+                  │
+                'SilverStarAssert_ObjectCheck': events 33-35
+                  │
+                  │      |                                                                             │
+                  │      |┌────────────────────────────────────────────────────────────────────────────┘
+                  │   61 |│    address = (uintptr_t)object;
+                  │      |│            ^
+                  │      |│            |
+                  │      |└───────────>(33) ...to here
+                  │   62 |     SilverStarAssert_Check(
+                  │   63 |         (uint8_t)((alignment != 0U) && ((address % alignment) == 0U)),
+                  │      |                                     ~
+                  │      |                                     |
+                  │      |                                     (34) following 'true' branch... ─>─┐
+                  │      |                                                                        │
+                  │......
+                  │      |                                                                        │
+                  │      |┌───────────────────────────────────────────────────────────────────────┘
+                  │   66 |│}
+                  │      |│~            
+                  │      |│|
+                  │      |└(35) ...to here
+                  │
+           <──────┘
+           │
+         'InsTask_AttitudeStatusDetailsSet': events 36-37
+           │
+           │D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/control/pytest-v4/control-research-pid0/Flight_Controller/APP/Src/ins_task.c:1396:5:
+           │ 1396 |     SILVERSTAR_ASSERT_OBJECT(status, SystemAlignmentAttitudeStatus,
+           │      |     ^
+           │      |     |
+           │      |     (36) returning to 'InsTask_AttitudeStatusDetailsSet' from 'SilverStarAssert_ObjectCheck'
+           │ 1397 |         SILVERSTAR_ASSERT_MODULE_APP);
+           │ 1398 |     SILVERSTAR_ASSERT_OBJECT(profile, SystemNavigationProfile,
+           │      |     ~
+           │      |     |
+           │      |     (37) calling 'SilverStarAssert_ObjectCheck' from 'InsTask_AttitudeStatusDetailsSet'
+           │
+           └──> 'SilverStarAssert_ObjectCheck': events 38-39
+                  │
+                  │D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v4\control-research-pid0\Flight_Controller\Common\Src\silverstar_assert.c:51:6:
+                  │   51 | void SilverStarAssert_ObjectCheck(const volatile void *object,
+                  │      |      ^
+                  │      |      |
+                  │      |      (38) entry to 'SilverStarAssert_ObjectCheck'
+                  │......
+                  │   59 |     SilverStarAssert_Check((uint8_t)(object != NULL), module_id, file_name,
+                  │      |     ~ 
+                  │      |     |
+                  │      |     (39) inlined call to 'SilverStarAssert_Check' from 'SilverStarAssert_ObjectCheck'
+                  │
+                  └──> 'SilverStarAssert_Check': event 40
+                         │
+                         │   45 |     if (condition == 0U)
+                         │      |        ^
+                         │      |        |
+                         │      |        (40) following 'false' branch (when 'object_3(D)' is non-NULL)... ─>─┐
+                         │      |                                                                             │
+                         │
+                  <──────┘
+                  │
+                'SilverStarAssert_ObjectCheck': events 41-43
+                  │
+                  │      |                                                                             │
+                  │      |┌────────────────────────────────────────────────────────────────────────────┘
+                  │   61 |│    address = (uintptr_t)object;
+                  │      |│            ^
+                  │      |│            |
+                  │      |└───────────>(41) ...to here
+                  │   62 |     SilverStarAssert_Check(
+                  │   63 |         (uint8_t)((alignment != 0U) && ((address % alignment) == 0U)),
+                  │      |                                     ~
+                  │      |                                     |
+                  │      |                                     (42) following 'true' branch... ─>─┐
+                  │      |                                                                        │
+                  │......
+                  │      |                                                                        │
+                  │      |┌───────────────────────────────────────────────────────────────────────┘
+                  │   66 |│}
+                  │      |│~            
+                  │      |│|
+                  │      |└(43) ...to here
+                  │
+           <──────┘
+           │
+         'InsTask_AttitudeStatusDetailsSet': events 44-47
+           │
+           │D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/control/pytest-v4/control-research-pid0/Flight_Controller/APP/Src/ins_task.c:1398:5:
+           │ 1398 |     SILVERSTAR_ASSERT_OBJECT(profile, SystemNavigationProfile,
+           │      |     ^
+           │      |     |
+           │      |     (44) returning to 'InsTask_AttitudeStatusDetailsSet' from 'SilverStarAssert_ObjectCheck'
+           │......
+           │ 1402 |     if ((status->quaternion_valid != 0U) &&
+           │      |        ~
+           │      |        |
+           │      |        (45) following 'false' branch... ─>─┐
+           │      |                                            │
+           │......
+           │      |                                            │
+           │      |┌───────────────────────────────────────────┘
+           │ 1408 |│    status->final_quaternion_frozen = flags->final_ready;
+           │      |│                                           ~
+           │      |│                                           |
+           │      |└──────────────────────────────────────────>(46) ...to here
+           │      |                                            (47) ⚠️  use of uninitialized value 'flags_26(D)->final_ready' here
+           │
+lto1.exe: all warnings being treated as errors
+lto-wrapper.exe: fatal error: D:\msys64\ucrt64\bin\gcc.exe returned 1 exit status
+compilation terminated.
+D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: error: lto-wrapper failed
+collect2.exe: error: ld returned 1 exit status

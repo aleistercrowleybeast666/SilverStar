@@ -1,0 +1,54 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+______________ test_controller_has_declared_mission_adapter[pid] ______________
+
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000002AEFCEA8D70>
+kind = 'pid'
+
+    @pytest.mark.parametrize("kind", ("pid", "lqr"))
+    def test_controller_has_declared_mission_adapter(builtin_catalog, kind):
+>       function = Function_Create("silverstar.algorithm.control." + kind, builtin_catalog)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_control_research.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+plugin_id = 'silverstar.algorithm.control.pid'
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000002AEFCEA8D70>
+instance_id = None
+
+    def Function_Create(plugin_id, catalog, instance_id=None):
+        declaration = next((entry for entry in FunctionsCatalog_Get(catalog) if entry['plugin_id'] == plugin_id), None)
+>       if declaration is None: raise ValueError('mission_functions_plugin_unsupported:' + plugin_id)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: mission_functions_plugin_unsupported:silverstar.algorithm.control.pid
+
+apps\SCG\src\silverstar_fccg\project\mission_functions.py:44: ValueError
+______________ test_controller_has_declared_mission_adapter[lqr] ______________
+
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000002AEFCEA8D70>
+kind = 'lqr'
+
+    @pytest.mark.parametrize("kind", ("pid", "lqr"))
+    def test_controller_has_declared_mission_adapter(builtin_catalog, kind):
+>       function = Function_Create("silverstar.algorithm.control." + kind, builtin_catalog)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_control_research.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+plugin_id = 'silverstar.algorithm.control.lqr'
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000002AEFCEA8D70>
+instance_id = None
+
+    def Function_Create(plugin_id, catalog, instance_id=None):
+        declaration = next((entry for entry in FunctionsCatalog_Get(catalog) if entry['plugin_id'] == plugin_id), None)
+>       if declaration is None: raise ValueError('mission_functions_plugin_unsupported:' + plugin_id)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: mission_functions_plugin_unsupported:silverstar.algorithm.control.lqr
+
+apps\SCG\src\silverstar_fccg\project\mission_functions.py:44: ValueError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_control_research.py::test_controller_has_declared_mission_adapter[pid]
+FAILED apps\SCG\tests\test_control_research.py::test_controller_has_declared_mission_adapter[lqr]
+2 failed in 3.39s

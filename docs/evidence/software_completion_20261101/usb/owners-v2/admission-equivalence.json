@@ -1,0 +1,30 @@
+{
+  "scope": "Legal emitted kit, exact actual compiled source bytes/policies, flags and link inputs; no new ARM claim",
+  "source_validation": "NativeUsbGraph_Resolve and NativeUsbBuild_Run now reject malformed metadata before tools",
+  "rows": [
+    {
+      "part": "f103",
+      "kit_files_compared": 33,
+      "kit_bytes_identical": true,
+      "compiled_source_policy_and_bytes_identical": true,
+      "compile_flags_identical": true,
+      "link_symbols_assembly_and_linker_identical": true,
+      "compiled_source_count": 39,
+      "full_validator_graph_sha256": "865745eb30e3d2962390ea56ee055e753ff6a18109b42caeade5fbc19592480a",
+      "fresh_kit_manifest_sha256": "78da56b513c346bfe34042c815f3fa087aa2e7c09c0b2815ab3e2bf16451c6b6",
+      "input_preserved": true
+    },
+    {
+      "part": "f407",
+      "kit_files_compared": 35,
+      "kit_bytes_identical": true,
+      "compiled_source_policy_and_bytes_identical": true,
+      "compile_flags_identical": true,
+      "link_symbols_assembly_and_linker_identical": true,
+      "compiled_source_count": 48,
+      "full_validator_graph_sha256": "79ec1a23a84f05347caa6d9b9ce05c683232360705215abe8c329456ebcc6502",
+      "fresh_kit_manifest_sha256": "d0e6b98fdec1dc767bd817d003b2d3939dd8224d8542779398f8c676c5c7d571",
+      "input_preserved": true
+    }
+  ]
+}

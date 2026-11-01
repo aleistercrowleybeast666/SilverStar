@@ -1,0 +1,306 @@
+{
+  "mode": "Qt offscreen; not a desktop or hardware test",
+  "source_base": "8b028f280ba01dce0efc697479ef99ec143f7456",
+  "source_sha256": {
+    "apps/SCG/src/silverstar_fccg/app/service.py": "d721d836dae946988ef9f2c5cea95f01fead5a1fcae893f027919e874d573b94",
+    "apps/SCG/src/silverstar_fccg/i18n/en_US.json": "5a037ac1463d6dedee20cafb4ad197ff44886bb5d8c6ea5b8c98e3d8932ba0a5",
+    "apps/SCG/src/silverstar_fccg/i18n/zh_CN.json": "246ac2e0cdfe8904b119537bf9f41ff2e02737435900dc3eaad3d22cabf3a8de",
+    "apps/SCG/src/silverstar_fccg/ui/__init__.py": "74e1370ae289d0b24f8ce99ab1f1bf0c35e2d231dcf9f3695c51e613137aa634",
+    "apps/SCG/src/silverstar_fccg/ui/assets/check_white.svg": "479c15ae5a82a56504618fcf76e60f66c5c45953f3b5b8c2c1468f9cdc9c14da",
+    "apps/SCG/src/silverstar_fccg/ui/assets/spin_minus_dark.svg": "5851e5afc073434b25934058ab4a70383795597d07e9dd980758e8d83ae74382",
+    "apps/SCG/src/silverstar_fccg/ui/assets/spin_minus_light.svg": "b310754800f53999c00bd399abb7c25047a8b1e135b53b441fb9441feccfe906",
+    "apps/SCG/src/silverstar_fccg/ui/assets/spin_plus_dark.svg": "90011ca17c4695f469a719368217c89121b4a057d78a008f5c8d3b34004e8c52",
+    "apps/SCG/src/silverstar_fccg/ui/assets/spin_plus_light.svg": "163de9a17d898de3c66d6a7566c6da81f5f4023e74e21793464dbb9af4f79834",
+    "apps/SCG/src/silverstar_fccg/ui/committed_spin.py": "0abec6652f5d6776ed5adaf6761fdf4d8de87c045f726fb04f5def8de3077148",
+    "apps/SCG/src/silverstar_fccg/ui/device_initialization.py": "3d41d864d8a9023a4fe3b2352d9ec1d3a460496b8651b474ff0812a6ca62bb51",
+    "apps/SCG/src/silverstar_fccg/ui/dialogs/__init__.py": "2741377d887fc91bc5b94739b192936cfea4b332d823ad57cfd2251e71b693fd",
+    "apps/SCG/src/silverstar_fccg/ui/dialogs/new_project.py": "013a7ad72e2af9a815151d08a6595514a0d0afa900b46819923c1318cd89bac4",
+    "apps/SCG/src/silverstar_fccg/ui/function_bindings.py": "38def4a516fa747e2d41d10c151b103fdd5e18cc7da42350b29861617e3ce363",
+    "apps/SCG/src/silverstar_fccg/ui/fusion_timing_editor.py": "cc449bf82de48e0d257cb5c149518f9646c49d4a9edd67b9fb444025fc66a8d4",
+    "apps/SCG/src/silverstar_fccg/ui/ground_radio_instances.py": "65a72a85044ce3c767877cf75307a35fdff39a88d39024be3c68b4a14eeef141",
+    "apps/SCG/src/silverstar_fccg/ui/main_window.py": "1c9f40765f0e5857cfd36f5bfbc32c1d683a43161dda67a3134a50609c51b8d7",
+    "apps/SCG/src/silverstar_fccg/ui/message_box.py": "07c57aa9cebb270ad28c3305a70216b348b1a4e27d7014d6d76dd9a2387a7d74",
+    "apps/SCG/src/silverstar_fccg/ui/mission_coverage.py": "f7388170e17ecba76cbd2deb870052513c2f3039bd1b3645eaef237d257186b2",
+    "apps/SCG/src/silverstar_fccg/ui/mission_process_panel.py": "3fd68c25041b6ce4091a8006f71fde767ef0f44b4d69b17f84849bdb98686809",
+    "apps/SCG/src/silverstar_fccg/ui/mission_profile_panel.py": "35029d6f38a02058c37d6b39a300100217d7e58a9799f28d90502de1c1168a6f",
+    "apps/SCG/src/silverstar_fccg/ui/mission_stage_transaction.py": "a25d883efd220af7fba707374acb911e9424934a03774e49a164b0aca66137e2",
+    "apps/SCG/src/silverstar_fccg/ui/mission_template.py": "067f586e11b0fd6638d8b714a60907dc03d7f794c22b8024a869b64cf906cded",
+    "apps/SCG/src/silverstar_fccg/ui/nis_editor.py": "98837294685285c2dc1aab392d1179c0907a22eda1d8e886855a9b3c7f829745",
+    "apps/SCG/src/silverstar_fccg/ui/pages/__init__.py": "1ebd3ee9930aaae7e0db1ee71a5b2e5195a99baf3d7588f3217fccb435c73992",
+    "apps/SCG/src/silverstar_fccg/ui/pages/algorithm_parameters.py": "1cc0d7ebf88afee1408165dc06ca4b48dcd2bfe7663033de07dec4cb28713090",
+    "apps/SCG/src/silverstar_fccg/ui/pages/base.py": "a4262388929a3ad8b844bfc6c13c992dce6b04e0cd4e3a34ab848ecad7296514",
+    "apps/SCG/src/silverstar_fccg/ui/pages/build.py": "c1860d85653cd12bbcf68d8b0862c1e81d0640c07cb23b0aeaa215c9bc8768b2",
+    "apps/SCG/src/silverstar_fccg/ui/pages/components.py": "96073802d74a4878f2fab2de00b75cd8cb983de28380e2dd02609aa4326a18e7",
+    "apps/SCG/src/silverstar_fccg/ui/pages/flight_workflow.py": "25d0c9518fc171ca83e3229b3c5208483ad7b462310bb060cb4d36910f9719cf",
+    "apps/SCG/src/silverstar_fccg/ui/pages/hardware_workspace.py": "798d27abf453a2989bcd5be0260f95a87a9d7deeabf3e4d90a9deed8606e1ea0",
+    "apps/SCG/src/silverstar_fccg/ui/pages/native_usb.py": "d451c4146937933b5b83ba5436ac8e602644b18a6e4af015e478def48bdac111",
+    "apps/SCG/src/silverstar_fccg/ui/pages/navigation_alignment.py": "f5a7ac112bfa99084efad53c31c839e426f7d8364abdabb28ce40d083da28262",
+    "apps/SCG/src/silverstar_fccg/ui/pages/plugins.py": "cb94e2048b9034ac6c1d5864af9d7b81b4260c8d0425eba8beeb0f53af2719e2",
+    "apps/SCG/src/silverstar_fccg/ui/pages/targets.py": "fc695de7acc7cde8f3b42ff3257a66fe437900e9413e69c55f99a4a0db41b4a3",
+    "apps/SCG/src/silverstar_fccg/ui/radio_transaction.py": "d60340a1e16124374015605c1ec498cd1b05f1ae9f64b37410e376bc7916547e",
+    "apps/SCG/src/silverstar_fccg/ui/sensor_installation_editor.py": "9810b0c1c4c4e286884ab4bad98639efbc95808993e3e0a246e9799714e6920b",
+    "apps/SCG/src/silverstar_fccg/ui/sensor_layout_view.py": "098ce3e3c4983b5de03b3308235a68d6955a61b06859d59417bae01d2f2a48ab",
+    "apps/SCG/src/silverstar_fccg/ui/telemetry_card.py": "b6f0db41f790e373291795fb98fd72f5a5c515335bcfe24f6f116ac74fc5271e",
+    "apps/SCG/src/silverstar_fccg/ui/theme.py": "a049535e44d969063cbd7299b2eb737f64df123a6eedf85c7f3f61b793c8eea1",
+    "apps/SCG/src/silverstar_fccg/ui/touch_scroll.py": "7e5bf2e03f05b810e0921f217765c1d25c0e1336beb4e588e06b96c7c58b93a3",
+    "apps/SCG/src/silverstar_fccg/ui/widgets.py": "e072f4441f641a0699fba5f908a99c48a4c96874fc32904ac599c152f5a53687",
+    "apps/SCG/src/silverstar_fccg/ui/workers.py": "c2130ea4e1fcd86b62b7a28593c2a7f4006f25a3d9ac6bdc317a4672b4b8dfb3",
+    "apps/SCG/src/silverstar_fccg/ui/hardware_editing.py": "6d8ccd4ec390ebd60d9a6c938e6a2285980acff979e16b21e05b998088fac6d7",
+    "apps/SCG/src/silverstar_fccg/ui/hardware_transaction.py": "4f874e3ac313dec07385866662f39f7fc54c21b0fc28da18b8ab6c481119ad0f",
+    "apps/SCG/src/silverstar_fccg/project/target_readiness.py": "8d189a26d36adcb36c76a579aec67e298fa98958154d7dc5259fb5fb4a3b4fe8"
+  },
+  "ordinary_constructor": true,
+  "model_substituted": false,
+  "automatic_tool_discovery_suppressed": true,
+  "language": "en_US",
+  "theme": "dark",
+  "flight_generate_enabled": false,
+  "ground_generate_enabled": false,
+  "cancel_model_unchanged": true,
+  "surfaces": [
+    {
+      "name": "ordinary-hardware",
+      "logical_size": [
+        1200,
+        800
+      ],
+      "pixel_size": [
+        1800,
+        1200
+      ],
+      "scale": 1.5,
+      "buttons": []
+    },
+    {
+      "name": "ordinary-workflow",
+      "logical_size": [
+        1200,
+        800
+      ],
+      "pixel_size": [
+        1800,
+        1200
+      ],
+      "scale": 1.5,
+      "buttons": []
+    },
+    {
+      "name": "ordinary-build",
+      "logical_size": [
+        1200,
+        800
+      ],
+      "pixel_size": [
+        1800,
+        1200
+      ],
+      "scale": 1.5,
+      "buttons": []
+    },
+    {
+      "name": "flight-hardware",
+      "logical_size": [
+        960,
+        750
+      ],
+      "pixel_size": [
+        1440,
+        1125
+      ],
+      "scale": 1.5,
+      "buttons": [
+        {
+          "text": "Apply",
+          "visible": true,
+          "inside": true
+        },
+        {
+          "text": "Cancel",
+          "visible": true,
+          "inside": true
+        }
+      ]
+    },
+    {
+      "name": "flight-devices",
+      "logical_size": [
+        960,
+        750
+      ],
+      "pixel_size": [
+        1440,
+        1125
+      ],
+      "scale": 1.5,
+      "buttons": [
+        {
+          "text": "Apply",
+          "visible": true,
+          "inside": true
+        },
+        {
+          "text": "Cancel",
+          "visible": true,
+          "inside": true
+        }
+      ]
+    },
+    {
+      "name": "flight-resources",
+      "logical_size": [
+        960,
+        750
+      ],
+      "pixel_size": [
+        1440,
+        1125
+      ],
+      "scale": 1.5,
+      "buttons": [
+        {
+          "text": "Apply",
+          "visible": true,
+          "inside": true
+        },
+        {
+          "text": "Cancel",
+          "visible": true,
+          "inside": true
+        }
+      ]
+    },
+    {
+      "name": "ground-hardware",
+      "logical_size": [
+        960,
+        750
+      ],
+      "pixel_size": [
+        1440,
+        1125
+      ],
+      "scale": 1.5,
+      "buttons": [
+        {
+          "text": "Apply",
+          "visible": true,
+          "inside": true
+        },
+        {
+          "text": "Cancel",
+          "visible": true,
+          "inside": true
+        }
+      ]
+    },
+    {
+      "name": "ground-devices",
+      "logical_size": [
+        960,
+        750
+      ],
+      "pixel_size": [
+        1440,
+        1125
+      ],
+      "scale": 1.5,
+      "buttons": [
+        {
+          "text": "Apply",
+          "visible": true,
+          "inside": true
+        },
+        {
+          "text": "Cancel",
+          "visible": true,
+          "inside": true
+        }
+      ]
+    },
+    {
+      "name": "ground-resources",
+      "logical_size": [
+        960,
+        750
+      ],
+      "pixel_size": [
+        1440,
+        1125
+      ],
+      "scale": 1.5,
+      "buttons": [
+        {
+          "text": "Apply",
+          "visible": true,
+          "inside": true
+        },
+        {
+          "text": "Cancel",
+          "visible": true,
+          "inside": true
+        }
+      ]
+    },
+    {
+      "name": "ground-private-change",
+      "logical_size": [
+        960,
+        750
+      ],
+      "pixel_size": [
+        1440,
+        1125
+      ],
+      "scale": 1.5,
+      "buttons": [
+        {
+          "text": "Apply",
+          "visible": true,
+          "inside": true
+        },
+        {
+          "text": "Cancel",
+          "visible": true,
+          "inside": true
+        }
+      ]
+    },
+    {
+      "name": "shared-radio",
+      "logical_size": [
+        780,
+        680
+      ],
+      "pixel_size": [
+        1170,
+        1020
+      ],
+      "scale": 1.5,
+      "buttons": [
+        {
+          "text": "Apply",
+          "visible": true,
+          "inside": true
+        },
+        {
+          "text": "Cancel",
+          "visible": true,
+          "inside": true
+        }
+      ]
+    },
+    {
+      "name": "ordinary-hardware-compact",
+      "logical_size": [
+        900,
+        700
+      ],
+      "pixel_size": [
+        1350,
+        1050
+      ],
+      "scale": 1.5,
+      "buttons": []
+    }
+  ]
+}

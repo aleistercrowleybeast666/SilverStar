@@ -1,0 +1,68 @@
+[
+  {
+    "variant": "base",
+    "command": [
+      "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc.exe",
+      "-std=c11",
+      "-mcpu=cortex-m4",
+      "-mthumb",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-S",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc",
+      "-DSYSTEM_BUILD_ESKF15_ENABLED=0",
+      "-DSYSTEM_BUILD_AUGMENTED_ENABLED=0",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\control\\layout-probe\\layout.c",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\control\\layout-probe\\base.s"
+    ],
+    "exit": 0,
+    "assembly": "\t.cpu cortex-m4\n\t.arch armv7e-m\n\t.fpu softvfp\n\t.eabi_attribute 20, 1\n\t.eabi_attribute 21, 1\n\t.eabi_attribute 23, 3\n\t.eabi_attribute 24, 1\n\t.eabi_attribute 25, 1\n\t.eabi_attribute 26, 1\n\t.eabi_attribute 30, 6\n\t.eabi_attribute 34, 1\n\t.eabi_attribute 18, 4\n\t.file\t\"layout.c\"\n\t.text\n\t.global\tlayout\n\t.section\t.rodata\n\t.align\t2\n\t.type\tlayout, %object\n\t.size\tlayout, 16\nlayout:\n\t.word\t16\n\t.word\t12\n\t.word\t40\n\t.word\t56\n\t.ident\t\"GCC: (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623\"\n"
+  },
+  {
+    "variant": "eskf",
+    "command": [
+      "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc.exe",
+      "-std=c11",
+      "-mcpu=cortex-m4",
+      "-mthumb",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-S",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc",
+      "-DSYSTEM_BUILD_ESKF15_ENABLED=1",
+      "-DSYSTEM_BUILD_AUGMENTED_ENABLED=0",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\control\\layout-probe\\layout.c",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\control\\layout-probe\\eskf.s"
+    ],
+    "exit": 0,
+    "assembly": "\t.cpu cortex-m4\n\t.arch armv7e-m\n\t.fpu softvfp\n\t.eabi_attribute 20, 1\n\t.eabi_attribute 21, 1\n\t.eabi_attribute 23, 3\n\t.eabi_attribute 24, 1\n\t.eabi_attribute 25, 1\n\t.eabi_attribute 26, 1\n\t.eabi_attribute 30, 6\n\t.eabi_attribute 34, 1\n\t.eabi_attribute 18, 4\n\t.file\t\"layout.c\"\n\t.text\n\t.global\tlayout\n\t.section\t.rodata\n\t.align\t2\n\t.type\tlayout, %object\n\t.size\tlayout, 28\nlayout:\n\t.word\t16\n\t.word\t12\n\t.word\t40\n\t.word\t112\n\t.word\t56\n\t.word\t80\n\t.word\t104\n\t.ident\t\"GCC: (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623\"\n"
+  },
+  {
+    "variant": "augmented",
+    "command": [
+      "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-gcc.exe",
+      "-std=c11",
+      "-mcpu=cortex-m4",
+      "-mthumb",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-S",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc",
+      "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc",
+      "-DSYSTEM_BUILD_ESKF15_ENABLED=0",
+      "-DSYSTEM_BUILD_AUGMENTED_ENABLED=1",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\control\\layout-probe\\layout.c",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\control\\layout-probe\\augmented.s"
+    ],
+    "exit": 0,
+    "assembly": "\t.cpu cortex-m4\n\t.arch armv7e-m\n\t.fpu softvfp\n\t.eabi_attribute 20, 1\n\t.eabi_attribute 21, 1\n\t.eabi_attribute 23, 3\n\t.eabi_attribute 24, 1\n\t.eabi_attribute 25, 1\n\t.eabi_attribute 26, 1\n\t.eabi_attribute 30, 6\n\t.eabi_attribute 34, 1\n\t.eabi_attribute 18, 4\n\t.file\t\"layout.c\"\n\t.text\n\t.global\tlayout\n\t.section\t.rodata\n\t.align\t2\n\t.type\tlayout, %object\n\t.size\tlayout, 32\nlayout:\n\t.word\t16\n\t.word\t12\n\t.word\t40\n\t.word\t120\n\t.word\t56\n\t.word\t80\n\t.word\t104\n\t.word\t112\n\t.ident\t\"GCC: (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623\"\n"
+  }
+]

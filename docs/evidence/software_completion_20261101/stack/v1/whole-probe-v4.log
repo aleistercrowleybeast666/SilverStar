@@ -1,0 +1,2071 @@
+f407 Strict rejected Changed complete Astra project input: Generated/Src/project_metadata.c
+f407 Remaining set() set()
+{
+  "Device": [
+    1912,
+    [
+      "AppTask_Device",
+      "SystemStartup_ProcessDevices",
+      "SystemStartup_CommunicationProcess",
+      "SystemGnss_Process",
+      "ProjectGnssInstance_Process",
+      "NeoM9nGnssInstance_Process",
+      "NeoM9nGnssAdapter_Process",
+      "DebugLog_Print",
+      "CommonFormat_Print",
+      "CommonFormat_VPrint",
+      "CommonFormat_FixedCreate",
+      "CommonFormat_UnsignedCreate",
+      "__aeabi_uldivmod",
+      "__udivmoddi4"
+    ]
+  ],
+  "INS": [
+    2124,
+    [
+      "AppTask_Ins",
+      "InsTask_InputReject",
+      "InsTask_OutputPublish",
+      "InsTask_DiagnosticsPublish",
+      "Estimator_GetLatestSnapshot",
+      "SystemMissionProcess_EstimatorStoppedGet",
+      "SystemMissionProcess_NavigationStoppedGet",
+      "SilverStarAssert_Check",
+      "SilverStarAssert_Fail"
+    ]
+  ],
+  "Estimator": [
+    3084,
+    [
+      "AppTask_Estimator",
+      "Estimator_GnssUpdate",
+      "Estimator_ReplayInsert",
+      "NavigationReplay_Insert",
+      "NavigationFusion_EventApply",
+      "NavigationKf_UpdateGnssPositionGroups",
+      "NavigationKf_UpdateVector",
+      "NavigationKf_UpdateVector.part.0",
+      "NavigationKf_CholeskyInverse",
+      "SilverStarAssert_ObjectCheck",
+      "SilverStarAssert_Fail"
+    ]
+  ],
+  "Flight": [
+    3416,
+    [
+      "AppTask_Flight",
+      "SystemLifecycle_Process",
+      "SystemLifecycle_StartExecute",
+      "SystemLifecycleBackend_AbortStart",
+      "SystemAlignment_MissionPreparationAbort",
+      "SystemAlignment_Process",
+      "SystemAlignment_Process.part.0",
+      "SystemAlignmentBackend_GuardSampleGet",
+      "SystemInertial_LatestGet",
+      "SystemImu_LatestSampleGet",
+      "SystemSourceSelector_ImuFreshSelect",
+      "ProjectImuInstance_LatestSampleGet",
+      "Jy901bImuInstance_LatestSampleGet",
+      "Jy901bSample_QualityEvaluate",
+      "__aeabi_uldivmod",
+      "__udivmoddi4"
+    ]
+  ],
+  "Logger": [
+    1608,
+    [
+      "AppTask_Logger",
+      "LoggerTask_SnapshotMaintain",
+      "SystemMissionSnapshot_Create",
+      "MissionSnapshot_DevicesWrite",
+      "MissionSnapshot_SectionCommit",
+      "PersistentStorage_ObjectWriteAtomic",
+      "PersistentStorage_LatestGet",
+      "SystemStorage_ObjectSlotRead",
+      "f_open",
+      "dir_register",
+      "dir_find",
+      "dir_next",
+      "create_chain",
+      "put_fat.part.0",
+      "sync_window",
+      "disk_write",
+      "SD_write",
+      "SdDiskIo_CompletionWait",
+      "xQueueReceive",
+      "xTaskResumeAll",
+      "xTaskResumeAll.part.0",
+      "xTaskIncrementTick.part.0"
+    ]
+  ],
+  "Serial": [
+    4748,
+    [
+      "AppTask_Serial",
+      "SystemConsole_Process",
+      "SystemConsole_ExecuteLine",
+      "SystemConsole_CommandsExecute",
+      "SystemConsole_AlignmentStartExecute",
+      "SystemAlignment_Start",
+      "SystemAlignmentBackend_Reset",
+      "InsTask_AlignmentReset",
+      "InsTask_DiagnosticsPublish",
+      "Estimator_GetLatestSnapshot",
+      "SystemMissionProcess_EstimatorStoppedGet",
+      "SystemMissionProcess_NavigationStoppedGet",
+      "SilverStarAssert_Check",
+      "SilverStarAssert_Fail"
+    ]
+  ],
+  "Telemetry": [
+    1964,
+    [
+      "AppTask_Telemetry",
+      "TelemetryService_Process",
+      "TelemetryService_AuxiliarySend",
+      "TelemetryTm_HealthBuild",
+      "TelemetryTm_ServiceHealth",
+      "Estimator_GetLatestSnapshot",
+      "SystemMissionProcess_EstimatorStoppedGet",
+      "SystemMissionProcess_NavigationStoppedGet",
+      "SilverStarAssert_Check",
+      "SilverStarAssert_Fail"
+    ]
+  ],
+  "Idle": [
+    0,
+    [
+      "prvIdleTask"
+    ]
+  ],
+  "Reset": [
+    564,
+    [
+      "Reset_Handler",
+      "main",
+      "AppTasks_Init",
+      "SystemSourceSelector_PendingEventsFlush",
+      "SystemSourceSelector_EventWrite",
+      "LoggerBus_EventPush",
+      "LoggerBus_ConfiguredRecordPush",
+      "LoggerBus_RecordPush",
+      "CommonSpscQueue_Push",
+      "SilverStarAssert_ObjectCheck",
+      "SilverStarAssert_Fail"
+    ]
+  ],
+  "RTC_Alarm_IRQHandler": [
+    0,
+    [
+      "RTC_Alarm_IRQHandler"
+    ]
+  ],
+  "HASH_RNG_IRQHandler": [
+    0,
+    [
+      "HASH_RNG_IRQHandler"
+    ]
+  ],
+  "EXTI2_IRQHandler": [
+    0,
+    [
+      "EXTI2_IRQHandler"
+    ]
+  ],
+  "TIM8_CC_IRQHandler": [
+    0,
+    [
+      "TIM8_CC_IRQHandler"
+    ]
+  ],
+  "DebugMon_Handler": [
+    0,
+    [
+      "DebugMon_Handler"
+    ]
+  ],
+  "TIM1_CC_IRQHandler": [
+    0,
+    [
+      "TIM1_CC_IRQHandler"
+    ]
+  ],
+  "DMA2_Stream5_IRQHandler": [
+    0,
+    [
+      "DMA2_Stream5_IRQHandler"
+    ]
+  ],
+  "HardFault_Handler": [
+    0,
+    [
+      "HardFault_Handler"
+    ]
+  ],
+  "DMA1_Stream5_IRQHandler": [
+    180,
+    [
+      "DMA1_Stream5_IRQHandler",
+      "HAL_DMA_IRQHandler",
+      "UART_DMAAbortOnError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT"
+    ]
+  ],
+  "SysTick_Handler": [
+    64,
+    [
+      "SysTick_Handler",
+      "xPortSysTickHandler",
+      "xTaskIncrementTick",
+      "xTaskIncrementTick.part.0"
+    ]
+  ],
+  "PVD_IRQHandler": [
+    0,
+    [
+      "PVD_IRQHandler"
+    ]
+  ],
+  "SDIO_IRQHandler": [
+    104,
+    [
+      "SDIO_IRQHandler",
+      "HAL_SD_IRQHandler",
+      "HAL_SD_RxCpltCallback",
+      "BSP_SD_ReadCpltCallback",
+      "xQueueGenericSendFromISR",
+      "prvCopyDataToQueue.isra.0",
+      "memcpy"
+    ]
+  ],
+  "TAMP_STAMP_IRQHandler": [
+    0,
+    [
+      "TAMP_STAMP_IRQHandler"
+    ]
+  ],
+  "HAL_TIM_IRQHandler": [
+    16,
+    [
+      "HAL_TIM_IRQHandler",
+      "HAL_TIM_OC_DelayElapsedCallback"
+    ]
+  ],
+  "PendSV_Handler": [
+    96,
+    [
+      "PendSV_Handler",
+      "vTaskSwitchContext",
+      "vApplicationStackOverflowHook",
+      "SystemTaskStack_OverflowContextSet",
+      "SilverStarAssert_StackOverflowContextSet"
+    ]
+  ],
+  "NMI_Handler": [
+    0,
+    [
+      "NMI_Handler"
+    ]
+  ],
+  "CAN2_RX1_IRQHandler": [
+    0,
+    [
+      "CAN2_RX1_IRQHandler"
+    ]
+  ],
+  "EXTI3_IRQHandler": [
+    0,
+    [
+      "EXTI3_IRQHandler"
+    ]
+  ],
+  "TIM8_TRG_COM_TIM14_IRQHandler": [
+    0,
+    [
+      "TIM8_TRG_COM_TIM14_IRQHandler"
+    ]
+  ],
+  "HAL_GPIO_EXTI_IRQHandler": [
+    40,
+    [
+      "HAL_GPIO_EXTI_IRQHandler",
+      "HAL_GPIO_EXTI_Callback",
+      "PlatformStm32f4Resource_GpioGet"
+    ]
+  ],
+  "TIM1_UP_TIM10_IRQHandler": [
+    16,
+    [
+      "TIM1_UP_TIM10_IRQHandler",
+      "HAL_TIM_IRQHandler",
+      "HAL_TIM_OC_DelayElapsedCallback"
+    ]
+  ],
+  "TIM8_UP_TIM13_IRQHandler": [
+    0,
+    [
+      "TIM8_UP_TIM13_IRQHandler"
+    ]
+  ],
+  "I2C3_ER_IRQHandler": [
+    0,
+    [
+      "I2C3_ER_IRQHandler"
+    ]
+  ],
+  "HAL_UART_IRQHandler": [
+    172,
+    [
+      "HAL_UART_IRQHandler",
+      "UART_DMAAbortOnError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT"
+    ]
+  ],
+  "EXTI0_IRQHandler": [
+    0,
+    [
+      "EXTI0_IRQHandler"
+    ]
+  ],
+  "I2C2_EV_IRQHandler": [
+    0,
+    [
+      "I2C2_EV_IRQHandler"
+    ]
+  ],
+  "DMA1_Stream2_IRQHandler": [
+    0,
+    [
+      "DMA1_Stream2_IRQHandler"
+    ]
+  ],
+  "CAN1_RX0_IRQHandler": [
+    0,
+    [
+      "CAN1_RX0_IRQHandler"
+    ]
+  ],
+  "FPU_IRQHandler": [
+    0,
+    [
+      "FPU_IRQHandler"
+    ]
+  ],
+  "OTG_HS_WKUP_IRQHandler": [
+    0,
+    [
+      "OTG_HS_WKUP_IRQHandler"
+    ]
+  ],
+  "UsageFault_Handler": [
+    0,
+    [
+      "UsageFault_Handler"
+    ]
+  ],
+  "CAN2_SCE_IRQHandler": [
+    0,
+    [
+      "CAN2_SCE_IRQHandler"
+    ]
+  ],
+  "DMA2_Stream2_IRQHandler": [
+    180,
+    [
+      "DMA2_Stream2_IRQHandler",
+      "HAL_DMA_IRQHandler",
+      "UART_DMAAbortOnError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT"
+    ]
+  ],
+  "SPI1_IRQHandler": [
+    0,
+    [
+      "SPI1_IRQHandler"
+    ]
+  ],
+  "TIM6_DAC_IRQHandler": [
+    0,
+    [
+      "TIM6_DAC_IRQHandler"
+    ]
+  ],
+  "TIM1_BRK_TIM9_IRQHandler": [
+    0,
+    [
+      "TIM1_BRK_TIM9_IRQHandler"
+    ]
+  ],
+  "DCMI_IRQHandler": [
+    0,
+    [
+      "DCMI_IRQHandler"
+    ]
+  ],
+  "CAN2_RX0_IRQHandler": [
+    0,
+    [
+      "CAN2_RX0_IRQHandler"
+    ]
+  ],
+  "DMA2_Stream3_IRQHandler": [
+    180,
+    [
+      "DMA2_Stream3_IRQHandler",
+      "HAL_DMA_IRQHandler",
+      "UART_DMAAbortOnError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT"
+    ]
+  ],
+  "USART6_IRQHandler": [
+    0,
+    [
+      "USART6_IRQHandler"
+    ]
+  ],
+  "USART3_IRQHandler": [
+    172,
+    [
+      "USART3_IRQHandler",
+      "HAL_UART_IRQHandler",
+      "UART_DMAAbortOnError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT"
+    ]
+  ],
+  "Reset_Handler": [
+    564,
+    [
+      "Reset_Handler",
+      "main",
+      "AppTasks_Init",
+      "SystemSourceSelector_PendingEventsFlush",
+      "SystemSourceSelector_EventWrite",
+      "LoggerBus_EventPush",
+      "LoggerBus_ConfiguredRecordPush",
+      "LoggerBus_RecordPush",
+      "CommonSpscQueue_Push",
+      "SilverStarAssert_ObjectCheck",
+      "SilverStarAssert_Fail"
+    ]
+  ],
+  "CAN1_RX1_IRQHandler": [
+    0,
+    [
+      "CAN1_RX1_IRQHandler"
+    ]
+  ],
+  "UART5_IRQHandler": [
+    0,
+    [
+      "UART5_IRQHandler"
+    ]
+  ],
+  "DMA2_Stream0_IRQHandler": [
+    0,
+    [
+      "DMA2_Stream0_IRQHandler"
+    ]
+  ],
+  "TIM4_IRQHandler": [
+    0,
+    [
+      "TIM4_IRQHandler"
+    ]
+  ],
+  "I2C1_EV_IRQHandler": [
+    0,
+    [
+      "I2C1_EV_IRQHandler"
+    ]
+  ],
+  "DMA1_Stream6_IRQHandler": [
+    180,
+    [
+      "DMA1_Stream6_IRQHandler",
+      "HAL_DMA_IRQHandler",
+      "UART_DMAAbortOnError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT"
+    ]
+  ],
+  "HAL_SD_IRQHandler": [
+    104,
+    [
+      "HAL_SD_IRQHandler",
+      "HAL_SD_RxCpltCallback",
+      "BSP_SD_ReadCpltCallback",
+      "xQueueGenericSendFromISR",
+      "prvCopyDataToQueue.isra.0",
+      "memcpy"
+    ]
+  ],
+  "DMA1_Stream1_IRQHandler": [
+    180,
+    [
+      "DMA1_Stream1_IRQHandler",
+      "HAL_DMA_IRQHandler",
+      "UART_DMAAbortOnError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT"
+    ]
+  ],
+  "UART4_IRQHandler": [
+    0,
+    [
+      "UART4_IRQHandler"
+    ]
+  ],
+  "TIM3_IRQHandler": [
+    0,
+    [
+      "TIM3_IRQHandler"
+    ]
+  ],
+  "RCC_IRQHandler": [
+    0,
+    [
+      "RCC_IRQHandler"
+    ]
+  ],
+  "TIM8_BRK_TIM12_IRQHandler": [
+    0,
+    [
+      "TIM8_BRK_TIM12_IRQHandler"
+    ]
+  ],
+  "EXTI15_10_IRQHandler": [
+    0,
+    [
+      "EXTI15_10_IRQHandler"
+    ]
+  ],
+  "ADC_IRQHandler": [
+    0,
+    [
+      "ADC_IRQHandler"
+    ]
+  ],
+  "DMA1_Stream7_IRQHandler": [
+    0,
+    [
+      "DMA1_Stream7_IRQHandler"
+    ]
+  ],
+  "TIM7_IRQHandler": [
+    0,
+    [
+      "TIM7_IRQHandler"
+    ]
+  ],
+  "CAN2_TX_IRQHandler": [
+    0,
+    [
+      "CAN2_TX_IRQHandler"
+    ]
+  ],
+  "TIM5_IRQHandler": [
+    0,
+    [
+      "TIM5_IRQHandler"
+    ]
+  ],
+  "DMA2_Stream7_IRQHandler": [
+    180,
+    [
+      "DMA2_Stream7_IRQHandler",
+      "HAL_DMA_IRQHandler",
+      "UART_DMAAbortOnError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT"
+    ]
+  ],
+  "I2C3_EV_IRQHandler": [
+    0,
+    [
+      "I2C3_EV_IRQHandler"
+    ]
+  ],
+  "EXTI9_5_IRQHandler": [
+    48,
+    [
+      "EXTI9_5_IRQHandler",
+      "HAL_GPIO_EXTI_IRQHandler",
+      "HAL_GPIO_EXTI_Callback",
+      "PlatformStm32f4Resource_GpioGet"
+    ]
+  ],
+  "RTC_WKUP_IRQHandler": [
+    0,
+    [
+      "RTC_WKUP_IRQHandler"
+    ]
+  ],
+  "ETH_WKUP_IRQHandler": [
+    0,
+    [
+      "ETH_WKUP_IRQHandler"
+    ]
+  ],
+  "SPI2_IRQHandler": [
+    0,
+    [
+      "SPI2_IRQHandler"
+    ]
+  ],
+  "OTG_HS_EP1_IN_IRQHandler": [
+    0,
+    [
+      "OTG_HS_EP1_IN_IRQHandler"
+    ]
+  ],
+  "MemManage_Handler": [
+    0,
+    [
+      "MemManage_Handler"
+    ]
+  ],
+  "DMA1_Stream0_IRQHandler": [
+    0,
+    [
+      "DMA1_Stream0_IRQHandler"
+    ]
+  ],
+  "CAN1_TX_IRQHandler": [
+    0,
+    [
+      "CAN1_TX_IRQHandler"
+    ]
+  ],
+  "SVC_Handler": [
+    0,
+    [
+      "SVC_Handler"
+    ]
+  ],
+  "EXTI4_IRQHandler": [
+    0,
+    [
+      "EXTI4_IRQHandler"
+    ]
+  ],
+  "FSMC_IRQHandler": [
+    0,
+    [
+      "FSMC_IRQHandler"
+    ]
+  ],
+  "ETH_IRQHandler": [
+    0,
+    [
+      "ETH_IRQHandler"
+    ]
+  ],
+  "OTG_HS_EP1_OUT_IRQHandler": [
+    0,
+    [
+      "OTG_HS_EP1_OUT_IRQHandler"
+    ]
+  ],
+  "HAL_DMA_IRQHandler": [
+    180,
+    [
+      "HAL_DMA_IRQHandler",
+      "UART_DMAAbortOnError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT"
+    ]
+  ],
+  "WWDG_IRQHandler": [
+    0,
+    [
+      "WWDG_IRQHandler"
+    ]
+  ],
+  "TIM2_IRQHandler": [
+    0,
+    [
+      "TIM2_IRQHandler"
+    ]
+  ],
+  "OTG_FS_WKUP_IRQHandler": [
+    0,
+    [
+      "OTG_FS_WKUP_IRQHandler"
+    ]
+  ],
+  "TIM1_TRG_COM_TIM11_IRQHandler": [
+    0,
+    [
+      "TIM1_TRG_COM_TIM11_IRQHandler"
+    ]
+  ],
+  "OTG_HS_IRQHandler": [
+    0,
+    [
+      "OTG_HS_IRQHandler"
+    ]
+  ],
+  "EXTI1_IRQHandler": [
+    0,
+    [
+      "EXTI1_IRQHandler"
+    ]
+  ],
+  "USART2_IRQHandler": [
+    172,
+    [
+      "USART2_IRQHandler",
+      "HAL_UART_IRQHandler",
+      "UART_DMAAbortOnError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT"
+    ]
+  ],
+  "I2C2_ER_IRQHandler": [
+    0,
+    [
+      "I2C2_ER_IRQHandler"
+    ]
+  ],
+  "DMA2_Stream1_IRQHandler": [
+    0,
+    [
+      "DMA2_Stream1_IRQHandler"
+    ]
+  ],
+  "CAN1_SCE_IRQHandler": [
+    0,
+    [
+      "CAN1_SCE_IRQHandler"
+    ]
+  ],
+  "FLASH_IRQHandler": [
+    0,
+    [
+      "FLASH_IRQHandler"
+    ]
+  ],
+  "DMA2_Stream4_IRQHandler": [
+    0,
+    [
+      "DMA2_Stream4_IRQHandler"
+    ]
+  ],
+  "BusFault_Handler": [
+    0,
+    [
+      "BusFault_Handler"
+    ]
+  ],
+  "USART1_IRQHandler": [
+    172,
+    [
+      "USART1_IRQHandler",
+      "HAL_UART_IRQHandler",
+      "UART_DMAAbortOnError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT"
+    ]
+  ],
+  "OTG_FS_IRQHandler": [
+    0,
+    [
+      "OTG_FS_IRQHandler"
+    ]
+  ],
+  "SPI3_IRQHandler": [
+    0,
+    [
+      "SPI3_IRQHandler"
+    ]
+  ],
+  "DMA1_Stream4_IRQHandler": [
+    0,
+    [
+      "DMA1_Stream4_IRQHandler"
+    ]
+  ],
+  "I2C1_ER_IRQHandler": [
+    0,
+    [
+      "I2C1_ER_IRQHandler"
+    ]
+  ],
+  "DMA2_Stream6_IRQHandler": [
+    180,
+    [
+      "DMA2_Stream6_IRQHandler",
+      "HAL_DMA_IRQHandler",
+      "UART_DMAAbortOnError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT"
+    ]
+  ],
+  "DMA1_Stream3_IRQHandler": [
+    180,
+    [
+      "DMA1_Stream3_IRQHandler",
+      "HAL_DMA_IRQHandler",
+      "UART_DMAAbortOnError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT"
+    ]
+  ],
+  "Error_Handler": [
+    0,
+    [
+      "Error_Handler"
+    ]
+  ]
+}
+h743 Strict rejected Unreviewed H743 build declarations or configuration
+h743 Remaining set() set()
+{
+  "Device": [
+    1932,
+    [
+      "AppTask_Device",
+      "SystemStartup_ProcessDevices",
+      "SystemStartup_CommunicationProcess",
+      "SystemGnss_Process",
+      "ProjectGnssInstance_Process",
+      "NeoM9nGnssInstance_Process",
+      "NeoM9nGnssAdapter_Process",
+      "NeoM9nStartup_Tick",
+      "SystemDeviceStartup_Tick",
+      "NeoM9nStartup_ConfigVerify",
+      "NeoM9nStartup_ItemReadStep",
+      "GnssNeoM9n_ItemReadStart",
+      "Gnss_ValgetAsyncStart",
+      "Gnss_UbxFrameEnqueue.part.0.constprop.0",
+      "PlatformUart_WriteFrameAsync",
+      "PlatformUart_TxTryStart",
+      "HAL_UART_Transmit_DMA",
+      "HAL_DMA_Start_IT",
+      "DMA_SetConfig"
+    ]
+  ],
+  "INS": [
+    2140,
+    [
+      "AppTask_Ins",
+      "InsTask_InputReject",
+      "InsTask_OutputPublish",
+      "InsTask_DiagnosticsPublish",
+      "Estimator_GetLatestSnapshot",
+      "SystemMissionProcess_EstimatorStoppedGet",
+      "SystemMissionProcess_NavigationStoppedGet",
+      "SilverStarAssert_Check",
+      "SilverStarAssert_Fail"
+    ]
+  ],
+  "Estimator": [
+    3760,
+    [
+      "AppTask_Estimator",
+      "SystemNavigationBackend_Predict",
+      "Backend_GnssVector",
+      "NavigationReplay_Observe",
+      "Replay_Run",
+      "NavigationSession_UpdateMagnetic",
+      "Navigation_UpdateMagnetic",
+      "Update_Apply",
+      "Reset_Apply",
+      "Retraction_Apply",
+      "Rotation_Functions",
+      "sin",
+      "__ieee754_rem_pio2",
+      "__kernel_rem_pio2",
+      "floor"
+    ]
+  ],
+  "Flight": [
+    3128,
+    [
+      "AppTask_Flight",
+      "SystemLifecycle_Process",
+      "SystemLifecycle_StartExecute",
+      "SystemLifecycleBackend_AbortStart",
+      "SystemAlignment_MissionPreparationAbort",
+      "SystemAlignment_Process",
+      "SystemAlignment_Process.part.0",
+      "SystemAlignmentBackend_GuardSampleGet",
+      "SystemInertial_LatestGet",
+      "SystemImu_LatestSampleGet",
+      "SystemSourceSelector_ImuFreshSelect",
+      "ProjectImuInstance_HealthGet",
+      "Bmi088ImuInstance_HealthGet",
+      "SensorImuAdapter_HealthGet",
+      "PlatformTime_Us",
+      "__aeabi_uldivmod",
+      "__udivmoddi4"
+    ]
+  ],
+  "Logger": [
+    2128,
+    [
+      "AppTask_Logger",
+      "SystemLogFile_Process",
+      "SystemLogFileStorage_BlockRead",
+      "LogFileStorage_ReadBounded",
+      "LogFileStorage_ReadUnchanged",
+      "f_stat",
+      "follow_path",
+      "dir_find",
+      "dir_next",
+      "create_chain",
+      "put_fat.part.0",
+      "sync_window",
+      "disk_write",
+      "SD_write",
+      "SdDiskIo_CompletionWait",
+      "xQueueReceive",
+      "xTaskResumeAll",
+      "xTaskResumeAll.part.0",
+      "xTaskIncrementTick.part.0"
+    ]
+  ],
+  "Serial": [
+    4692,
+    [
+      "AppTask_Serial",
+      "SystemConsole_Process",
+      "SystemConsole_ExecuteLine",
+      "SystemConsole_CommandsExecute",
+      "SystemConsole_AlignmentStartExecute",
+      "SystemAlignment_Start",
+      "SystemAlignmentBackend_Reset",
+      "InsTask_AlignmentReset",
+      "InsTask_DiagnosticsPublish",
+      "Estimator_GetLatestSnapshot",
+      "SystemMissionProcess_EstimatorStoppedGet",
+      "SystemMissionProcess_NavigationStoppedGet",
+      "SilverStarAssert_Check",
+      "SilverStarAssert_Fail"
+    ]
+  ],
+  "Telemetry": [
+    1972,
+    [
+      "AppTask_Telemetry",
+      "TelemetryService_Process",
+      "TelemetryService_AuxiliarySend",
+      "TelemetryTm_HealthBuild",
+      "TelemetryTm_ServiceHealth",
+      "Estimator_GetLatestSnapshot",
+      "SystemMissionProcess_EstimatorStoppedGet",
+      "SystemMissionProcess_NavigationStoppedGet",
+      "SilverStarAssert_Check",
+      "SilverStarAssert_Fail"
+    ]
+  ],
+  "Idle": [
+    0,
+    [
+      "prvIdleTask"
+    ]
+  ],
+  "Reset": [
+    596,
+    [
+      "Reset_Handler",
+      "main",
+      "AppTasks_Init",
+      "SystemSourceSelector_PendingEventsFlush",
+      "SystemSourceSelector_EventWrite",
+      "LoggerBus_EventPush",
+      "LoggerBus_ConfiguredRecordPush",
+      "LoggerBus_RecordPush",
+      "CommonSpscQueue_Push",
+      "SilverStarAssert_ObjectCheck",
+      "SilverStarAssert_Fail"
+    ]
+  ],
+  "RTC_Alarm_IRQHandler": [
+    0,
+    [
+      "RTC_Alarm_IRQHandler"
+    ]
+  ],
+  "EXTI2_IRQHandler": [
+    0,
+    [
+      "EXTI2_IRQHandler"
+    ]
+  ],
+  "TIM8_CC_IRQHandler": [
+    0,
+    [
+      "TIM8_CC_IRQHandler"
+    ]
+  ],
+  "HRTIM1_Master_IRQHandler": [
+    0,
+    [
+      "HRTIM1_Master_IRQHandler"
+    ]
+  ],
+  "DebugMon_Handler": [
+    0,
+    [
+      "DebugMon_Handler"
+    ]
+  ],
+  "UART8_IRQHandler": [
+    0,
+    [
+      "UART8_IRQHandler"
+    ]
+  ],
+  "SPI4_IRQHandler": [
+    0,
+    [
+      "SPI4_IRQHandler"
+    ]
+  ],
+  "TIM1_CC_IRQHandler": [
+    0,
+    [
+      "TIM1_CC_IRQHandler"
+    ]
+  ],
+  "BDMA_Channel6_IRQHandler": [
+    0,
+    [
+      "BDMA_Channel6_IRQHandler"
+    ]
+  ],
+  "DMA2_Stream5_IRQHandler": [
+    0,
+    [
+      "DMA2_Stream5_IRQHandler"
+    ]
+  ],
+  "HardFault_Handler": [
+    0,
+    [
+      "HardFault_Handler"
+    ]
+  ],
+  "HRTIM1_FLT_IRQHandler": [
+    0,
+    [
+      "HRTIM1_FLT_IRQHandler"
+    ]
+  ],
+  "JPEG_IRQHandler": [
+    0,
+    [
+      "JPEG_IRQHandler"
+    ]
+  ],
+  "DMA1_Stream5_IRQHandler": [
+    0,
+    [
+      "DMA1_Stream5_IRQHandler"
+    ]
+  ],
+  "SysTick_Handler": [
+    64,
+    [
+      "SysTick_Handler",
+      "xPortSysTickHandler",
+      "xTaskIncrementTick",
+      "xTaskIncrementTick.part.0"
+    ]
+  ],
+  "BDMA_Channel1_IRQHandler": [
+    0,
+    [
+      "BDMA_Channel1_IRQHandler"
+    ]
+  ],
+  "HRTIM1_TIMD_IRQHandler": [
+    0,
+    [
+      "HRTIM1_TIMD_IRQHandler"
+    ]
+  ],
+  "TAMP_STAMP_IRQHandler": [
+    0,
+    [
+      "TAMP_STAMP_IRQHandler"
+    ]
+  ],
+  "PendSV_Handler": [
+    100,
+    [
+      "PendSV_Handler",
+      "vTaskSwitchContext",
+      "vApplicationStackOverflowHook",
+      "SystemTaskStack_OverflowContextSet",
+      "SilverStarAssert_StackOverflowContextSet"
+    ]
+  ],
+  "NMI_Handler": [
+    0,
+    [
+      "NMI_Handler"
+    ]
+  ],
+  "EXTI3_IRQHandler": [
+    0,
+    [
+      "EXTI3_IRQHandler"
+    ]
+  ],
+  "LPTIM4_IRQHandler": [
+    0,
+    [
+      "LPTIM4_IRQHandler"
+    ]
+  ],
+  "TIM8_TRG_COM_TIM14_IRQHandler": [
+    0,
+    [
+      "TIM8_TRG_COM_TIM14_IRQHandler"
+    ]
+  ],
+  "LPTIM2_IRQHandler": [
+    0,
+    [
+      "LPTIM2_IRQHandler"
+    ]
+  ],
+  "HAL_GPIO_EXTI_IRQHandler": [
+    40,
+    [
+      "HAL_GPIO_EXTI_IRQHandler",
+      "HAL_GPIO_EXTI_Callback",
+      "PlatformStm32h7Resource_GpioGet"
+    ]
+  ],
+  "DFSDM1_FLT1_IRQHandler": [
+    0,
+    [
+      "DFSDM1_FLT1_IRQHandler"
+    ]
+  ],
+  "DMAMUX2_OVR_IRQHandler": [
+    0,
+    [
+      "DMAMUX2_OVR_IRQHandler"
+    ]
+  ],
+  "TIM8_UP_TIM13_IRQHandler": [
+    0,
+    [
+      "TIM8_UP_TIM13_IRQHandler"
+    ]
+  ],
+  "I2C3_ER_IRQHandler": [
+    0,
+    [
+      "I2C3_ER_IRQHandler"
+    ]
+  ],
+  "DFSDM1_FLT2_IRQHandler": [
+    0,
+    [
+      "DFSDM1_FLT2_IRQHandler"
+    ]
+  ],
+  "HAL_UART_IRQHandler": [
+    252,
+    [
+      "HAL_UART_IRQHandler",
+      "HAL_DMA_Abort_IT",
+      "UART_DMAAbortOnError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT",
+      "DMA_SetConfig"
+    ]
+  ],
+  "MDMA_IRQHandler": [
+    0,
+    [
+      "MDMA_IRQHandler"
+    ]
+  ],
+  "LPTIM3_IRQHandler": [
+    0,
+    [
+      "LPTIM3_IRQHandler"
+    ]
+  ],
+  "HSEM1_IRQHandler": [
+    0,
+    [
+      "HSEM1_IRQHandler"
+    ]
+  ],
+  "EXTI0_IRQHandler": [
+    0,
+    [
+      "EXTI0_IRQHandler"
+    ]
+  ],
+  "I2C2_EV_IRQHandler": [
+    0,
+    [
+      "I2C2_EV_IRQHandler"
+    ]
+  ],
+  "DMA1_Stream2_IRQHandler": [
+    268,
+    [
+      "DMA1_Stream2_IRQHandler",
+      "HAL_DMA_IRQHandler",
+      "UART_DMAError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT",
+      "DMA_SetConfig"
+    ]
+  ],
+  "FPU_IRQHandler": [
+    0,
+    [
+      "FPU_IRQHandler"
+    ]
+  ],
+  "OTG_HS_WKUP_IRQHandler": [
+    0,
+    [
+      "OTG_HS_WKUP_IRQHandler"
+    ]
+  ],
+  "FDCAN1_IT1_IRQHandler": [
+    0,
+    [
+      "FDCAN1_IT1_IRQHandler"
+    ]
+  ],
+  "UsageFault_Handler": [
+    0,
+    [
+      "UsageFault_Handler"
+    ]
+  ],
+  "LTDC_ER_IRQHandler": [
+    0,
+    [
+      "LTDC_ER_IRQHandler"
+    ]
+  ],
+  "DMA2_Stream2_IRQHandler": [
+    0,
+    [
+      "DMA2_Stream2_IRQHandler"
+    ]
+  ],
+  "HRTIM1_TIME_IRQHandler": [
+    0,
+    [
+      "HRTIM1_TIME_IRQHandler"
+    ]
+  ],
+  "SPI1_IRQHandler": [
+    0,
+    [
+      "SPI1_IRQHandler"
+    ]
+  ],
+  "TIM6_DAC_IRQHandler": [
+    0,
+    [
+      "TIM6_DAC_IRQHandler"
+    ]
+  ],
+  "DCMI_IRQHandler": [
+    0,
+    [
+      "DCMI_IRQHandler"
+    ]
+  ],
+  "HRTIM1_TIMC_IRQHandler": [
+    0,
+    [
+      "HRTIM1_TIMC_IRQHandler"
+    ]
+  ],
+  "DMA2_Stream3_IRQHandler": [
+    0,
+    [
+      "DMA2_Stream3_IRQHandler"
+    ]
+  ],
+  "SAI2_IRQHandler": [
+    0,
+    [
+      "SAI2_IRQHandler"
+    ]
+  ],
+  "DFSDM1_FLT3_IRQHandler": [
+    0,
+    [
+      "DFSDM1_FLT3_IRQHandler"
+    ]
+  ],
+  "USART6_IRQHandler": [
+    0,
+    [
+      "USART6_IRQHandler"
+    ]
+  ],
+  "TIM17_IRQHandler": [
+    0,
+    [
+      "TIM17_IRQHandler"
+    ]
+  ],
+  "USART3_IRQHandler": [
+    0,
+    [
+      "USART3_IRQHandler"
+    ]
+  ],
+  "BDMA_Channel7_IRQHandler": [
+    0,
+    [
+      "BDMA_Channel7_IRQHandler"
+    ]
+  ],
+  "Reset_Handler": [
+    596,
+    [
+      "Reset_Handler",
+      "main",
+      "AppTasks_Init",
+      "SystemSourceSelector_PendingEventsFlush",
+      "SystemSourceSelector_EventWrite",
+      "LoggerBus_EventPush",
+      "LoggerBus_ConfiguredRecordPush",
+      "LoggerBus_RecordPush",
+      "CommonSpscQueue_Push",
+      "SilverStarAssert_ObjectCheck",
+      "SilverStarAssert_Fail"
+    ]
+  ],
+  "LPTIM5_IRQHandler": [
+    0,
+    [
+      "LPTIM5_IRQHandler"
+    ]
+  ],
+  "UART5_IRQHandler": [
+    0,
+    [
+      "UART5_IRQHandler"
+    ]
+  ],
+  "ADC3_IRQHandler": [
+    0,
+    [
+      "ADC3_IRQHandler"
+    ]
+  ],
+  "DMA2_Stream0_IRQHandler": [
+    0,
+    [
+      "DMA2_Stream0_IRQHandler"
+    ]
+  ],
+  "TIM4_IRQHandler": [
+    0,
+    [
+      "TIM4_IRQHandler"
+    ]
+  ],
+  "BDMA_Channel2_IRQHandler": [
+    0,
+    [
+      "BDMA_Channel2_IRQHandler"
+    ]
+  ],
+  "QUADSPI_IRQHandler": [
+    0,
+    [
+      "QUADSPI_IRQHandler"
+    ]
+  ],
+  "I2C1_EV_IRQHandler": [
+    0,
+    [
+      "I2C1_EV_IRQHandler"
+    ]
+  ],
+  "DMA1_Stream6_IRQHandler": [
+    0,
+    [
+      "DMA1_Stream6_IRQHandler"
+    ]
+  ],
+  "HAL_SD_IRQHandler": [
+    112,
+    [
+      "HAL_SD_IRQHandler",
+      "HAL_SD_ErrorCallback",
+      "BSP_SD_AbortCallback",
+      "xQueueGenericSendFromISR",
+      "prvCopyDataToQueue.isra.0",
+      "memcpy"
+    ]
+  ],
+  "DMAMUX1_OVR_IRQHandler": [
+    0,
+    [
+      "DMAMUX1_OVR_IRQHandler"
+    ]
+  ],
+  "DMA1_Stream1_IRQHandler": [
+    268,
+    [
+      "DMA1_Stream1_IRQHandler",
+      "HAL_DMA_IRQHandler",
+      "UART_DMAError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT",
+      "DMA_SetConfig"
+    ]
+  ],
+  "TIM16_IRQHandler": [
+    0,
+    [
+      "TIM16_IRQHandler"
+    ]
+  ],
+  "UART4_IRQHandler": [
+    0,
+    [
+      "UART4_IRQHandler"
+    ]
+  ],
+  "BDMA_Channel5_IRQHandler": [
+    0,
+    [
+      "BDMA_Channel5_IRQHandler"
+    ]
+  ],
+  "TIM3_IRQHandler": [
+    0,
+    [
+      "TIM3_IRQHandler"
+    ]
+  ],
+  "RCC_IRQHandler": [
+    0,
+    [
+      "RCC_IRQHandler"
+    ]
+  ],
+  "TIM8_BRK_TIM12_IRQHandler": [
+    0,
+    [
+      "TIM8_BRK_TIM12_IRQHandler"
+    ]
+  ],
+  "TIM1_TRG_COM_IRQHandler": [
+    0,
+    [
+      "TIM1_TRG_COM_IRQHandler"
+    ]
+  ],
+  "ECC_IRQHandler": [
+    0,
+    [
+      "ECC_IRQHandler"
+    ]
+  ],
+  "CEC_IRQHandler": [
+    0,
+    [
+      "CEC_IRQHandler"
+    ]
+  ],
+  "EXTI15_10_IRQHandler": [
+    0,
+    [
+      "EXTI15_10_IRQHandler"
+    ]
+  ],
+  "BDMA_Channel0_IRQHandler": [
+    0,
+    [
+      "BDMA_Channel0_IRQHandler"
+    ]
+  ],
+  "ADC_IRQHandler": [
+    0,
+    [
+      "ADC_IRQHandler"
+    ]
+  ],
+  "DMA1_Stream7_IRQHandler": [
+    0,
+    [
+      "DMA1_Stream7_IRQHandler"
+    ]
+  ],
+  "HRTIM1_TIMA_IRQHandler": [
+    0,
+    [
+      "HRTIM1_TIMA_IRQHandler"
+    ]
+  ],
+  "SPI5_IRQHandler": [
+    0,
+    [
+      "SPI5_IRQHandler"
+    ]
+  ],
+  "TIM7_IRQHandler": [
+    0,
+    [
+      "TIM7_IRQHandler"
+    ]
+  ],
+  "SDMMC1_IRQHandler": [
+    112,
+    [
+      "SDMMC1_IRQHandler",
+      "HAL_SD_IRQHandler",
+      "HAL_SD_ErrorCallback",
+      "BSP_SD_AbortCallback",
+      "xQueueGenericSendFromISR",
+      "prvCopyDataToQueue.isra.0",
+      "memcpy"
+    ]
+  ],
+  "TIM5_IRQHandler": [
+    0,
+    [
+      "TIM5_IRQHandler"
+    ]
+  ],
+  "DMA2_Stream7_IRQHandler": [
+    0,
+    [
+      "DMA2_Stream7_IRQHandler"
+    ]
+  ],
+  "TIM15_IRQHandler": [
+    0,
+    [
+      "TIM15_IRQHandler"
+    ]
+  ],
+  "PVD_AVD_IRQHandler": [
+    0,
+    [
+      "PVD_AVD_IRQHandler"
+    ]
+  ],
+  "I2C3_EV_IRQHandler": [
+    0,
+    [
+      "I2C3_EV_IRQHandler"
+    ]
+  ],
+  "EXTI9_5_IRQHandler": [
+    48,
+    [
+      "EXTI9_5_IRQHandler",
+      "HAL_GPIO_EXTI_IRQHandler",
+      "HAL_GPIO_EXTI_Callback",
+      "PlatformStm32h7Resource_GpioGet"
+    ]
+  ],
+  "RTC_WKUP_IRQHandler": [
+    0,
+    [
+      "RTC_WKUP_IRQHandler"
+    ]
+  ],
+  "LTDC_IRQHandler": [
+    0,
+    [
+      "LTDC_IRQHandler"
+    ]
+  ],
+  "SAI3_IRQHandler": [
+    0,
+    [
+      "SAI3_IRQHandler"
+    ]
+  ],
+  "ETH_WKUP_IRQHandler": [
+    0,
+    [
+      "ETH_WKUP_IRQHandler"
+    ]
+  ],
+  "SPDIF_RX_IRQHandler": [
+    0,
+    [
+      "SPDIF_RX_IRQHandler"
+    ]
+  ],
+  "SPI2_IRQHandler": [
+    0,
+    [
+      "SPI2_IRQHandler"
+    ]
+  ],
+  "OTG_HS_EP1_IN_IRQHandler": [
+    0,
+    [
+      "OTG_HS_EP1_IN_IRQHandler"
+    ]
+  ],
+  "MemManage_Handler": [
+    0,
+    [
+      "MemManage_Handler"
+    ]
+  ],
+  "DMA1_Stream0_IRQHandler": [
+    268,
+    [
+      "DMA1_Stream0_IRQHandler",
+      "HAL_DMA_IRQHandler",
+      "UART_DMAError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT",
+      "DMA_SetConfig"
+    ]
+  ],
+  "SVC_Handler": [
+    0,
+    [
+      "SVC_Handler"
+    ]
+  ],
+  "CRS_IRQHandler": [
+    0,
+    [
+      "CRS_IRQHandler"
+    ]
+  ],
+  "EXTI4_IRQHandler": [
+    0,
+    [
+      "EXTI4_IRQHandler"
+    ]
+  ],
+  "RNG_IRQHandler": [
+    0,
+    [
+      "RNG_IRQHandler"
+    ]
+  ],
+  "HRTIM1_TIMB_IRQHandler": [
+    0,
+    [
+      "HRTIM1_TIMB_IRQHandler"
+    ]
+  ],
+  "FDCAN2_IT1_IRQHandler": [
+    0,
+    [
+      "FDCAN2_IT1_IRQHandler"
+    ]
+  ],
+  "ETH_IRQHandler": [
+    0,
+    [
+      "ETH_IRQHandler"
+    ]
+  ],
+  "TIM1_UP_IRQHandler": [
+    0,
+    [
+      "TIM1_UP_IRQHandler"
+    ]
+  ],
+  "BDMA_Channel4_IRQHandler": [
+    0,
+    [
+      "BDMA_Channel4_IRQHandler"
+    ]
+  ],
+  "OTG_HS_EP1_OUT_IRQHandler": [
+    0,
+    [
+      "OTG_HS_EP1_OUT_IRQHandler"
+    ]
+  ],
+  "HAL_DMA_IRQHandler": [
+    268,
+    [
+      "HAL_DMA_IRQHandler",
+      "UART_DMAError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT",
+      "DMA_SetConfig"
+    ]
+  ],
+  "WWDG_IRQHandler": [
+    0,
+    [
+      "WWDG_IRQHandler"
+    ]
+  ],
+  "SPI6_IRQHandler": [
+    0,
+    [
+      "SPI6_IRQHandler"
+    ]
+  ],
+  "MDIOS_IRQHandler": [
+    0,
+    [
+      "MDIOS_IRQHandler"
+    ]
+  ],
+  "I2C4_EV_IRQHandler": [
+    0,
+    [
+      "I2C4_EV_IRQHandler"
+    ]
+  ],
+  "FDCAN2_IT0_IRQHandler": [
+    0,
+    [
+      "FDCAN2_IT0_IRQHandler"
+    ]
+  ],
+  "LPUART1_IRQHandler": [
+    0,
+    [
+      "LPUART1_IRQHandler"
+    ]
+  ],
+  "FDCAN1_IT0_IRQHandler": [
+    0,
+    [
+      "FDCAN1_IT0_IRQHandler"
+    ]
+  ],
+  "TIM2_IRQHandler": [
+    0,
+    [
+      "TIM2_IRQHandler"
+    ]
+  ],
+  "OTG_FS_WKUP_IRQHandler": [
+    0,
+    [
+      "OTG_FS_WKUP_IRQHandler"
+    ]
+  ],
+  "OTG_HS_IRQHandler": [
+    0,
+    [
+      "OTG_HS_IRQHandler"
+    ]
+  ],
+  "DMA2D_IRQHandler": [
+    0,
+    [
+      "DMA2D_IRQHandler"
+    ]
+  ],
+  "TIM1_BRK_IRQHandler": [
+    0,
+    [
+      "TIM1_BRK_IRQHandler"
+    ]
+  ],
+  "EXTI1_IRQHandler": [
+    0,
+    [
+      "EXTI1_IRQHandler"
+    ]
+  ],
+  "SDMMC2_IRQHandler": [
+    0,
+    [
+      "SDMMC2_IRQHandler"
+    ]
+  ],
+  "OTG_FS_EP1_OUT_IRQHandler": [
+    0,
+    [
+      "OTG_FS_EP1_OUT_IRQHandler"
+    ]
+  ],
+  "BDMA_Channel3_IRQHandler": [
+    0,
+    [
+      "BDMA_Channel3_IRQHandler"
+    ]
+  ],
+  "UART7_IRQHandler": [
+    0,
+    [
+      "UART7_IRQHandler"
+    ]
+  ],
+  "MDIOS_WKUP_IRQHandler": [
+    0,
+    [
+      "MDIOS_WKUP_IRQHandler"
+    ]
+  ],
+  "USART2_IRQHandler": [
+    252,
+    [
+      "USART2_IRQHandler",
+      "HAL_UART_IRQHandler",
+      "HAL_DMA_Abort_IT",
+      "UART_DMAAbortOnError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT",
+      "DMA_SetConfig"
+    ]
+  ],
+  "DFSDM1_FLT0_IRQHandler": [
+    0,
+    [
+      "DFSDM1_FLT0_IRQHandler"
+    ]
+  ],
+  "SAI4_IRQHandler": [
+    0,
+    [
+      "SAI4_IRQHandler"
+    ]
+  ],
+  "I2C2_ER_IRQHandler": [
+    0,
+    [
+      "I2C2_ER_IRQHandler"
+    ]
+  ],
+  "DMA2_Stream1_IRQHandler": [
+    0,
+    [
+      "DMA2_Stream1_IRQHandler"
+    ]
+  ],
+  "FLASH_IRQHandler": [
+    0,
+    [
+      "FLASH_IRQHandler"
+    ]
+  ],
+  "DMA2_Stream4_IRQHandler": [
+    0,
+    [
+      "DMA2_Stream4_IRQHandler"
+    ]
+  ],
+  "BusFault_Handler": [
+    0,
+    [
+      "BusFault_Handler"
+    ]
+  ],
+  "USART1_IRQHandler": [
+    252,
+    [
+      "USART1_IRQHandler",
+      "HAL_UART_IRQHandler",
+      "HAL_DMA_Abort_IT",
+      "UART_DMAAbortOnError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT",
+      "DMA_SetConfig"
+    ]
+  ],
+  "OTG_FS_IRQHandler": [
+    0,
+    [
+      "OTG_FS_IRQHandler"
+    ]
+  ],
+  "SPI3_IRQHandler": [
+    0,
+    [
+      "SPI3_IRQHandler"
+    ]
+  ],
+  "WAKEUP_PIN_IRQHandler": [
+    0,
+    [
+      "WAKEUP_PIN_IRQHandler"
+    ]
+  ],
+  "DMA1_Stream4_IRQHandler": [
+    0,
+    [
+      "DMA1_Stream4_IRQHandler"
+    ]
+  ],
+  "OTG_FS_EP1_IN_IRQHandler": [
+    0,
+    [
+      "OTG_FS_EP1_IN_IRQHandler"
+    ]
+  ],
+  "I2C1_ER_IRQHandler": [
+    0,
+    [
+      "I2C1_ER_IRQHandler"
+    ]
+  ],
+  "FMC_IRQHandler": [
+    0,
+    [
+      "FMC_IRQHandler"
+    ]
+  ],
+  "FDCAN_CAL_IRQHandler": [
+    0,
+    [
+      "FDCAN_CAL_IRQHandler"
+    ]
+  ],
+  "SWPMI1_IRQHandler": [
+    0,
+    [
+      "SWPMI1_IRQHandler"
+    ]
+  ],
+  "COMP1_IRQHandler": [
+    0,
+    [
+      "COMP1_IRQHandler"
+    ]
+  ],
+  "LPTIM1_IRQHandler": [
+    0,
+    [
+      "LPTIM1_IRQHandler"
+    ]
+  ],
+  "I2C4_ER_IRQHandler": [
+    0,
+    [
+      "I2C4_ER_IRQHandler"
+    ]
+  ],
+  "DMA2_Stream6_IRQHandler": [
+    0,
+    [
+      "DMA2_Stream6_IRQHandler"
+    ]
+  ],
+  "SAI1_IRQHandler": [
+    0,
+    [
+      "SAI1_IRQHandler"
+    ]
+  ],
+  "DMA1_Stream3_IRQHandler": [
+    268,
+    [
+      "DMA1_Stream3_IRQHandler",
+      "HAL_DMA_IRQHandler",
+      "UART_DMAError",
+      "HAL_UART_ErrorCallback",
+      "PlatformUart_ReceiveRestart",
+      "PlatformUart_RxStart",
+      "HAL_UARTEx_ReceiveToIdle_DMA",
+      "UART_Start_Receive_DMA",
+      "HAL_DMA_Start_IT",
+      "DMA_SetConfig"
+    ]
+  ],
+  "Error_Handler": [
+    0,
+    [
+      "Error_Handler"
+    ]
+  ]
+}

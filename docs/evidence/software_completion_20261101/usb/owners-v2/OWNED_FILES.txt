@@ -1,0 +1,13 @@
+apps/SCG/src/silverstar_fccg/app/usb_transport.py
+apps/SCG/src/silverstar_fccg/build/native_usb.py
+apps/SCG/src/silverstar_fccg/generator/usb_cdc_integration.py
+apps/SCG/src/silverstar_fccg/generator/native_usb_graph.py
+apps/SCG/src/silverstar_fccg/generator/ground_usb_control.py
+apps/SCG/src/silverstar_fccg/generator/native_control.py
+apps/SCG/tools/validation/usb_transport_validate.py
+apps/SCG/tests/test_usb_resource_owners.py
+apps/SCG/tests/usb_descriptor_cases.py
+apps/SCG/tests/test_usb_transport_integration.py
+apps/SCG/tests/test_usb_transport_control.py
+apps/SCG/tests/test_native_control_faults.py
+apps/SCG/docs/USB_CDC_TRANSPORT_20261013.md

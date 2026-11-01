@@ -1,0 +1,212 @@
+[
+  {
+    "label": "pid-preview",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "silverstar_fccg.project.tuning_bundle",
+      "preview",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\pid-base.ssproject",
+      "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\delivery\\actual-runs-v1\\pid.sstuning.json",
+      "--include-control-task"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit": 0,
+    "seconds": 3.365533799995319
+  },
+  {
+    "label": "pid-apply",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "silverstar_fccg.project.tuning_bundle",
+      "apply",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\pid-base.ssproject",
+      "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\delivery\\actual-runs-v1\\pid.sstuning.json",
+      "--include-control-task",
+      "--output",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\pid.ssproject"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit": 0,
+    "seconds": 3.9964860000036424
+  },
+  {
+    "label": "pid-consumer-compile",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "-O2",
+      "-fanalyzer",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\pid\\Flight_Controller\\Algorithm\\Control\\PID\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\pid\\Flight_Controller\\Generated\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\pid\\Flight_Controller\\APP\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\pid\\Flight_Controller\\Interfaces\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\pid\\Flight_Controller\\System\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\pid\\Flight_Controller\\Platform\\Inc",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\pid\\Flight_Controller\\Algorithm\\Control\\PID\\Src\\control_pid.c",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\pid\\Flight_Controller\\Algorithm\\Control\\PID\\Src\\control_pid_project.c",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\pid\\Flight_Controller\\Generated\\Src\\project_control_research.c",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\pid-consumer.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\pid-consumer.exe"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit": 0,
+    "seconds": 1.1921342999994522
+  },
+  {
+    "label": "pid-consumer-run",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\pid-consumer.exe"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit": 0,
+    "seconds": 0.16112460001022555
+  },
+  {
+    "label": "lqr-preview",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "silverstar_fccg.project.tuning_bundle",
+      "preview",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\lqr-base.ssproject",
+      "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\delivery\\actual-runs-v1\\lqr.sstuning.json",
+      "--include-control-task"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit": 0,
+    "seconds": 2.8282296000106726
+  },
+  {
+    "label": "lqr-apply",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "silverstar_fccg.project.tuning_bundle",
+      "apply",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\lqr-base.ssproject",
+      "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\delivery\\actual-runs-v1\\lqr.sstuning.json",
+      "--include-control-task",
+      "--output",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\lqr.ssproject"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit": 0,
+    "seconds": 2.9601459999976214
+  },
+  {
+    "label": "lqr-consumer-compile",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "-O2",
+      "-fanalyzer",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\lqr\\Flight_Controller\\Algorithm\\Control\\LQR\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\lqr\\Flight_Controller\\Generated\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\lqr\\Flight_Controller\\APP\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\lqr\\Flight_Controller\\Interfaces\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\lqr\\Flight_Controller\\System\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\lqr\\Flight_Controller\\Platform\\Inc",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\lqr\\Flight_Controller\\Algorithm\\Control\\LQR\\Src\\control_lqr.c",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\lqr\\Flight_Controller\\Algorithm\\Control\\LQR\\Src\\control_lqr_project.c",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\lqr\\Flight_Controller\\Generated\\Src\\project_control_research.c",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\lqr-consumer.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\lqr-consumer.exe"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit": 0,
+    "seconds": 1.1836627000011504
+  },
+  {
+    "label": "lqr-consumer-run",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\lqr-consumer.exe"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit": 0,
+    "seconds": 0.11170789999596309
+  },
+  {
+    "label": "underline-pid-preview",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "silverstar_fccg.project.tuning_bundle",
+      "preview",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\underline-pid-base.ssproject",
+      "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\delivery\\actual-runs-v1\\underline-pid.sstuning.json",
+      "--include-control-task"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit": 0,
+    "seconds": 2.457160500009195
+  },
+  {
+    "label": "underline-pid-apply",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "silverstar_fccg.project.tuning_bundle",
+      "apply",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\underline-pid-base.ssproject",
+      "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\delivery\\actual-runs-v1\\underline-pid.sstuning.json",
+      "--include-control-task",
+      "--output",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\underline-pid.ssproject"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit": 0,
+    "seconds": 3.0778431000071578
+  },
+  {
+    "label": "underline-pid-consumer-compile",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "-O2",
+      "-fanalyzer",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\underline-pid\\Flight_Controller\\Algorithm\\Control\\PID\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\underline-pid\\Flight_Controller\\Generated\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\underline-pid\\Flight_Controller\\APP\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\underline-pid\\Flight_Controller\\Interfaces\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\underline-pid\\Flight_Controller\\System\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\underline-pid\\Flight_Controller\\Platform\\Inc",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\underline-pid\\Flight_Controller\\Algorithm\\Control\\PID\\Src\\control_pid.c",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\underline-pid\\Flight_Controller\\Algorithm\\Control\\PID\\Src\\control_pid_project.c",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\underline-pid\\Flight_Controller\\Generated\\Src\\project_control_research.c",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\underline-pid-consumer.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\underline-pid-consumer.exe"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit": 0,
+    "seconds": 1.1836348999931943
+  },
+  {
+    "label": "underline-pid-consumer-run",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\underline-pid-consumer.exe"
+    ],
+    "cwd": "D:\\python_software\\SilverStar",
+    "exit": 0,
+    "seconds": 0.11803659998986404
+  }
+]

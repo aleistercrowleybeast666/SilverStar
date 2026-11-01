@@ -1,0 +1,71 @@
+{
+  "builds": [
+    [
+      "F103",
+      345,
+      55,
+      {
+        "architecture-check": 0,
+        "host-tests": 0,
+        "power10-check": 0,
+        "artifact-check": 0
+      }
+    ],
+    [
+      "F407",
+      399,
+      64,
+      {
+        "architecture-check": 0,
+        "host-tests": 0,
+        "power10-check": 0,
+        "artifact-check": 0
+      }
+    ],
+    [
+      "C071",
+      357,
+      57,
+      {
+        "architecture-check": 0,
+        "host-tests": 0,
+        "power10-check": 0,
+        "artifact-check": 0
+      }
+    ]
+  ],
+  "faults": [
+    [
+      "pre-fixture-fix",
+      "F103",
+      18,
+      10,
+      0
+    ],
+    [
+      "pre-fixture-fix",
+      "F407",
+      18,
+      20,
+      1
+    ],
+    [
+      "post-fixture-fix",
+      "F103",
+      18,
+      10,
+      0
+    ],
+    [
+      "post-fixture-fix",
+      "F407",
+      18,
+      20,
+      0
+    ]
+  ],
+  "subsequent_source_changes": [
+    "apps/SCG/src/silverstar_fccg/build/native_usb.py",
+    "apps/SCG/src/silverstar_fccg/generator/native_usb_graph.py"
+  ]
+}

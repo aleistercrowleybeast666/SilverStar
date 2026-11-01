@@ -1,0 +1,63 @@
+--- USB_DEVICE/Target/usbd_conf.c
++++ Native/USB_DEVICE/Target/usbd_conf.c
+@@ -23,7 +23,11 @@
+ #include "stm32f1xx_hal.h"
+ #include "usbd_def.h"
+ #include "usbd_core.h"
+-#include "usbd_cdc.h"
++#include "usbd_cdc.h"
++#include "usb_cdc_transport.h"
++#include "usb_cdc_retire.h"
++extern USBD_HandleTypeDef hUsbDeviceFS;
++_Static_assert(USE_HAL_PCD_REGISTER_CALLBACKS == 0U, "USB integration requires fixed callbacks");
+ 
+ /* USER CODE BEGIN Includes */
+ 
+@@ -130,7 +134,12 @@
+ void HAL_PCD_DataOutStageCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
+ #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
+ {
+-  USBD_LL_DataOutStage((USBD_HandleTypeDef*)hpcd->pData, epnum, hpcd->OUT_ep[epnum].xfer_buff);
++  if ((hpcd != &hpcd_USB_FS) || (hpcd->pData != &hUsbDeviceFS) || (epnum > 1U))
++  { hUsbDeviceFS.dev_state = USBD_STATE_DEFAULT; UsbCdc_LinkDown(); return; }
++  if (hUsbDeviceFS.pClass == NULL)
++  { hUsbDeviceFS.dev_state = USBD_STATE_DEFAULT; UsbCdc_LinkDown(); return; }
++  if (USBD_LL_DataOutStage(&hUsbDeviceFS, epnum, hpcd->OUT_ep[epnum].xfer_buff) != USBD_OK)
++  { hUsbDeviceFS.dev_state = USBD_STATE_DEFAULT; UsbCdc_LinkDown(); }
+ }
+ 
+ /**
+@@ -145,7 +154,12 @@
+ void HAL_PCD_DataInStageCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
+ #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
+ {
+-  USBD_LL_DataInStage((USBD_HandleTypeDef*)hpcd->pData, epnum, hpcd->IN_ep[epnum].xfer_buff);
++  if ((hpcd != &hpcd_USB_FS) || (hpcd->pData != &hUsbDeviceFS) || (epnum > 2U))
++  { hUsbDeviceFS.dev_state = USBD_STATE_DEFAULT; UsbCdc_LinkDown(); return; }
++  if (hUsbDeviceFS.pClass == NULL)
++  { hUsbDeviceFS.dev_state = USBD_STATE_DEFAULT; UsbCdc_LinkDown(); return; }
++  if (USBD_LL_DataInStage(&hUsbDeviceFS, epnum, hpcd->IN_ep[epnum].xfer_buff) != USBD_OK)
++  { hUsbDeviceFS.dev_state = USBD_STATE_DEFAULT; UsbCdc_LinkDown(); }
+ }
+ 
+ /**
+@@ -417,16 +431,9 @@
+   * @param  ep_addr: Endpoint number
+   * @retval USBD status
+   */
+-USBD_StatusTypeDef USBD_LL_CloseEP(USBD_HandleTypeDef *pdev, uint8_t ep_addr)
+-{
+-  HAL_StatusTypeDef hal_status = HAL_OK;
+-  USBD_StatusTypeDef usb_status = USBD_OK;
+-
+-  hal_status = HAL_PCD_EP_Close(pdev->pData, ep_addr);
+-
+-  usb_status =  USBD_Get_USB_Status(hal_status);
+-
+-  return usb_status;
++USBD_StatusTypeDef USBD_LL_CloseEP(USBD_HandleTypeDef *pdev, uint8_t ep_addr)
++{
++  return (UsbCdcRetire_Endpoint(pdev, ep_addr) == USB_CDC_OK) ? USBD_OK : USBD_FAIL;
+ }
+ 
+ /**

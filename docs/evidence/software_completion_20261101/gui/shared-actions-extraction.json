@@ -1,0 +1,113 @@
+{
+  "base": "8b028f280ba01dce0efc697479ef99ec143f7456",
+  "methods": [
+    {
+      "method": "_BoardPage_Refresh",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_OptionalResource_Change",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_FeatureTier_Change",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_DeviceInstance_Change",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_DeviceVariant_Change",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_Jy901bOrientation_Change",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_RawImuMount_Change",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_RawImuXAxis_Change",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_InstallationReference_Adopt",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_SensorPosition_Change",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_FlightRadioSelection_Change",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_FlightRadioPower_Change",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_DeviceInstance_Add",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_OtherDevice_Toggle",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_DeviceInstanceId_Next",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_BoardSelection_Change",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_CustomHardware_Select",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_TargetPages_Refresh",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_GroundRadios_Change",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_GroundActivityLed_Toggle",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_GroundTarget_Change",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_GroundBoard_Change",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_GroundAssignment_Change",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_Resources_AutoAssign",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_ResourceAssignment_Change",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_HardwareAssignments_Validate",
+      "ast_unchanged": true
+    },
+    {
+      "method": "_I2cExternalPullup_Change",
+      "ast_unchanged": true
+    }
+  ]
+}

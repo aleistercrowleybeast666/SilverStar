@@ -1,0 +1,158 @@
+D:\Codex_Work\2026-10-08\task\usb-validation\cube-f407-usb\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c: In function 'HAL_UART_Transmit':
+D:\Codex_Work\2026-10-08\task\usb-validation\cube-f407-usb\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c:1180:42: warning: dereference of NULL 'pdata16bits' [CWE-476] [-Wanalyzer-null-dereference]
+ 1180 |         huart->Instance->DR = (uint16_t)(*pdata16bits & 0x01FFU);
+      |                                          ^~~~~~~~~~~~
+  'HAL_UART_Transmit': events 1-4
+    |
+    | 1135 | HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, const uint8_t *pData, uint16_t Size, uint32_t Timeout)
+    |      |                   ^~~~~~~~~~~~~~~~~
+    |      |                   |
+    |      |                   (1) entry to 'HAL_UART_Transmit'
+    |......
+    | 1142 |   if (huart->gState == HAL_UART_STATE_READY)
+    |      |      ~             
+    |      |      |
+    |      |      (2) following 'true' branch...
+    | 1143 |   {
+    | 1144 |     if ((pData == NULL) || (Size == 0U))
+    |      |        ~           
+    |      |        |
+    |      |        (3) ...to here
+    |      |        (4) following 'false' branch...
+    |
+  'HAL_UART_Transmit': events 5-14
+    |
+    | 1149 |     huart->ErrorCode = HAL_UART_ERROR_NONE;
+    |......
+    | 1170 |     while (huart->TxXferCount > 0U)
+    |      |            ~~~~~~~~~~~~~~~~~~~~~~~
+    |      |                               |
+    |      |                               (6) following 'true' branch...
+    |      |                               (12) following 'true' branch...
+    | 1171 |     {
+    | 1172 |       if (UART_WaitOnFlagUntilTimeout(huart, UART_FLAG_TXE, RESET, tickstart, Timeout) != HAL_OK)
+    |      |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    |      |          ||
+    |      |          |(7) ...to here
+    |      |          |(13) ...to here
+    |      |          |(14) calling 'UART_WaitOnFlagUntilTimeout' from 'HAL_UART_Transmit'
+    |      |          (8) following 'false' branch...
+    |......
+    | 1178 |       if (pdata8bits == NULL)
+    |      |          ~            
+    |      |          |
+    |      |          (9) ...to here
+    |      |          (10) following 'false' branch (when 'pdata8bits' is non-NULL)...
+    |......
+    | 1185 |         huart->Instance->DR = (uint8_t)(*pdata8bits & 0xFFU);
+    |      |                                         ~~~~~~~~~~~
+    |      |                                         |
+    |      |                                         (11) ...to here
+    |
+    +--> 'UART_WaitOnFlagUntilTimeout': events 15-17
+           |
+           | 3212 | static HAL_StatusTypeDef UART_WaitOnFlagUntilTimeout(UART_HandleTypeDef *huart, uint32_t Flag, FlagStatus Status,
+           |      |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+           |      |                          |
+           |      |                          (15) entry to 'UART_WaitOnFlagUntilTimeout'
+           |......
+           | 3216 |   while ((__HAL_UART_GET_FLAG(huart, Flag) ? SET : RESET) == Status)
+           |      |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+           |      |                                                           |
+           |      |                                                           (16) following 'true' branch...
+           |......
+           | 3219 |     if (Timeout != HAL_MAX_DELAY)
+           |      |        ~                  
+           |      |        |
+           |      |        (17) ...to here
+           |
+    <------+
+    |
+  'HAL_UART_Transmit': events 18-23
+    |
+    | 1172 |       if (UART_WaitOnFlagUntilTimeout(huart, UART_FLAG_TXE, RESET, tickstart, Timeout) != HAL_OK)
+    |      |          ~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    |      |          ||
+    |      |          |(18) returning to 'HAL_UART_Transmit' from 'UART_WaitOnFlagUntilTimeout'
+    |      |          (19) following 'false' branch...
+    |......
+    | 1178 |       if (pdata8bits == NULL)
+    |      |          ~ 
+    |      |          |
+    |      |          (20) ...to here
+    |      |          (21) following 'true' branch (when 'pdata8bits' is NULL)...
+    | 1179 |       {
+    | 1180 |         huart->Instance->DR = (uint16_t)(*pdata16bits & 0x01FFU);
+    |      |                                          ~~~~~~~~~~~~
+    |      |                                          |
+    |      |                                          (22) ...to here
+    |      |                                          (23) dereference of NULL 'pdata16bits'
+    |
+D:\Codex_Work\2026-10-08\task\usb-validation\cube-f407-usb\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c: In function 'HAL_UARTEx_ReceiveToIdle':
+D:\Codex_Work\2026-10-08\task\usb-validation\cube-f407-usb\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c:1662:24: warning: dereference of NULL 'pdata16bits' [CWE-476] [-Wanalyzer-null-dereference]
+ 1662 |           *pdata16bits = (uint16_t)(huart->Instance->DR & (uint16_t)0x01FF);
+      |           ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  'HAL_UARTEx_ReceiveToIdle': events 1-3
+    |
+    | 1604 |   if (huart->RxState == HAL_UART_STATE_READY)
+    |      |      ^
+    |      |      |
+    |      |      (1) following 'true' branch...
+    | 1605 |   {
+    | 1606 |     if ((pData == NULL) || (Size == 0U))
+    |      |        ~
+    |      |        |
+    |      |        (2) ...to here
+    |      |        (3) following 'false' branch...
+    |
+  'HAL_UARTEx_ReceiveToIdle': events 4-5
+    |
+    | 1611 |     huart->ErrorCode = HAL_UART_ERROR_NONE;
+    |......
+    | 1638 |     while (huart->RxXferCount > 0U)
+    |      |            ~~~~~~~~~~~~~~~~~~~~~~~
+    |      |                               |
+    |      |                               (5) following 'true' branch...
+    |
+  'HAL_UARTEx_ReceiveToIdle': event 6
+    |
+    |D:\Codex_Work\2026-10-08\task\usb-validation\cube-f407-usb\Drivers\STM32F4xx_HAL_Driver\Inc/stm32f4xx_hal_uart.h:470:65:
+    |  470 | #define __HAL_UART_GET_FLAG(__HANDLE__, __FLAG__) (((__HANDLE__)->Instance->SR & (__FLAG__)) == (__FLAG__))
+    |      |                                                     ~~~~~~~~~~~~^~~~~~~~~~
+    |      |                                                                 |
+    |      |                                                                 (6) ...to here
+D:\Codex_Work\2026-10-08\task\usb-validation\cube-f407-usb\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c:1641:11: note: in expansion of macro '__HAL_UART_GET_FLAG'
+    | 1641 |       if (__HAL_UART_GET_FLAG(huart, UART_FLAG_IDLE))
+    |      |           ^~~~~~~~~~~~~~~~~~~
+    |
+  'HAL_UARTEx_ReceiveToIdle': event 7
+    |
+    | 1638 |     while (huart->RxXferCount > 0U)
+    |      |            ~~~~~~~~~~~~~~~~~~~^~~~
+    |      |                               |
+    |      |                               (7) following 'true' branch...
+    |
+  'HAL_UARTEx_ReceiveToIdle': event 8
+    |
+    |D:\Codex_Work\2026-10-08\task\usb-validation\cube-f407-usb\Drivers\STM32F4xx_HAL_Driver\Inc/stm32f4xx_hal_uart.h:470:65:
+    |  470 | #define __HAL_UART_GET_FLAG(__HANDLE__, __FLAG__) (((__HANDLE__)->Instance->SR & (__FLAG__)) == (__FLAG__))
+    |      |                                                     ~~~~~~~~~~~~^~~~~~~~~~
+    |      |                                                                 |
+    |      |                                                                 (8) ...to here
+D:\Codex_Work\2026-10-08\task\usb-validation\cube-f407-usb\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_uart.c:1641:11: note: in expansion of macro '__HAL_UART_GET_FLAG'
+    | 1641 |       if (__HAL_UART_GET_FLAG(huart, UART_FLAG_IDLE))
+    |      |           ^~~~~~~~~~~~~~~~~~~
+    |
+  'HAL_UARTEx_ReceiveToIdle': events 9-11
+    |
+    | 1660 |         if (pdata8bits == NULL)
+    |      |            ^
+    |      |            |
+    |      |            (9) following 'true' branch (when 'pdata8bits' is NULL)...
+    | 1661 |         {
+    | 1662 |           *pdata16bits = (uint16_t)(huart->Instance->DR & (uint16_t)0x01FF);
+    |      |           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    |      |                        |                           |
+    |      |                        |                           (10) ...to here
+    |      |                        (11) dereference of NULL 'pdata16bits'
+    |

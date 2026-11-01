@@ -1,0 +1,151 @@
+{
+  "cwd": "D:\\python_software\\SilverStar",
+  "python": {
+    "path": "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+    "version": "Python 3.14.0"
+  },
+  "tools": {
+    "gcc": {
+      "path": "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "exit": 0,
+      "version": "gcc.EXE (Rev5, Built by MSYS2 project) 16.1.0"
+    },
+    "arm-none-eabi-gcc": {
+      "path": "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-gcc.EXE",
+      "exit": 0,
+      "version": "arm-none-eabi-gcc.EXE (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623"
+    },
+    "mingw32-make": {
+      "path": "D:\\msys64\\ucrt64\\bin\\mingw32-make.EXE",
+      "exit": 0,
+      "version": "GNU Make 4.4.1"
+    }
+  },
+  "path_prefix": [
+    "D:/msys64/ucrt64/bin",
+    "D:/python_software/TreeDiagram/.venv/Scripts"
+  ],
+  "phases": [
+    {
+      "epoch": "pre-v4",
+      "environment": {
+        "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\SCG\\src",
+        "SILVERSTAR_NATIVE_CDC_REFERENCE_ROOT": "C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation"
+      },
+      "command": [
+        "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "apps/SCG/tests/test_native_control_faults.py",
+        "-q",
+        "--basetemp=.work/sc-261101-usb/pre-v4"
+      ],
+      "exit": 1,
+      "fixture_note": "test_native_control_faults.exact_control writes and binds its own fresh Ground model; no supplied backend configuration is used."
+    },
+    {
+      "epoch": "post-v2",
+      "environment": {
+        "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\SCG\\src",
+        "SILVERSTAR_NATIVE_CDC_REFERENCE_ROOT": "C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation"
+      },
+      "command": [
+        "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "apps/SCG/tests/test_native_control_faults.py",
+        "-q",
+        "--basetemp=.work/sc-261101-usb/post-v2"
+      ],
+      "exit": 0,
+      "fixture_note": "test_native_control_faults.exact_control writes and binds its own fresh Ground model; no supplied backend configuration is used."
+    },
+    {
+      "epoch": "headers-v1",
+      "environment": {
+        "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\SCG\\src",
+        "SILVERSTAR_NATIVE_CDC_REFERENCE_ROOT": "C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation",
+        "SILVERSTAR_NATIVE_BACKEND_CONFIG": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f0\\ground.ssproject",
+        "SILVERSTAR_C071_NATIVE": "C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST",
+        "SILVERSTAR_C071_COMPANION": "C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-formal-usb-worktree/apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini",
+        "SILVERSTAR_C071_SDK_HEADER": "C:/Users/chdxm/STM32Cube/Repository/STM32Cube_FW_C0_V1.4.1/Drivers/CMSIS/Device/ST/STM32C0xx/Include/stm32c071xx.h"
+      },
+      "command": [
+        "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "apps/SCG/tests/test_ground_type_headers.py",
+        "-q",
+        "--basetemp=.work/sc-261101-usb/headers-v1"
+      ],
+      "exit": 0
+    },
+    {
+      "epoch": "arm-v1",
+      "environment": {
+        "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\SCG\\src",
+        "SILVERSTAR_NATIVE_CDC_REFERENCE_ROOT": "C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation",
+        "SILVERSTAR_NATIVE_BACKEND_CONFIG": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f0\\ground.ssproject",
+        "SILVERSTAR_NATIVE_BACKEND_ARM": "1",
+        "SILVERSTAR_NATIVE_BACKEND_BUILD_INDEX": "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\usb-exact\\arm-v1-index.jsonl"
+      },
+      "command": [
+        "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "apps/SCG/tests/test_native_ground_backend.py",
+        "-k",
+        "real_backend_bound_build_receipt",
+        "-q",
+        "--basetemp=.work/sc-261101-usb/arm-v1"
+      ],
+      "exit": 1
+    },
+    {
+      "epoch": "arm-v2",
+      "environment": {
+        "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\SCG\\src",
+        "SILVERSTAR_NATIVE_CDC_REFERENCE_ROOT": "C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation",
+        "SILVERSTAR_NATIVE_BACKEND_CONFIG": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f0\\ground.ssproject",
+        "SILVERSTAR_NATIVE_BACKEND_ARM": "1",
+        "SILVERSTAR_NATIVE_BACKEND_BUILD_INDEX": "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\usb-exact\\arm-v2-index.jsonl"
+      },
+      "command": [
+        "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "apps/SCG/tests/test_native_ground_backend.py",
+        "-k",
+        "real_backend_bound_build_receipt",
+        "-q",
+        "--basetemp=.work/sc-261101-usb/arm-v2"
+      ],
+      "exit": 0
+    },
+    {
+      "epoch": "c071-v1",
+      "environment": {
+        "PYTHONPATH": "D:\\python_software\\SilverStar\\apps\\SCG\\src",
+        "SILVERSTAR_NATIVE_CDC_REFERENCE_ROOT": "C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation",
+        "SILVERSTAR_NATIVE_BACKEND_CONFIG": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f0\\ground.ssproject",
+        "SILVERSTAR_C071_NATIVE": "C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-cubemx-input/full-native-clean/C071FBP6_PCD_TEST",
+        "SILVERSTAR_C071_COMPANION": "C:/Users/chdxm/Documents/Codex/2026-10-08/task/c071-formal-usb-worktree/apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini",
+        "SILVERSTAR_C071_SDK_HEADER": "C:/Users/chdxm/STM32Cube/Repository/STM32Cube_FW_C0_V1.4.1/Drivers/CMSIS/Device/ST/STM32C0xx/Include/stm32c071xx.h",
+        "SILVERSTAR_USB_BACKEND_ARM": "1",
+        "SILVERSTAR_USB_BACKEND_BUILD_INDEX": "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\usb-exact\\c071-arm-v1-index.jsonl"
+      },
+      "command": [
+        "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "apps/SCG/tests/test_usb_ground_backend.py",
+        "-k",
+        "real_c071_unified_build",
+        "-q",
+        "--basetemp=.work/sc-261101-usb/c071-v1"
+      ],
+      "exit": 0
+    }
+  ],
+  "replay": "Use a new basetemp and new build-index output; existing evidence must not be overwritten."
+}

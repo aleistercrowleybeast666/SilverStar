@@ -1,0 +1,11 @@
+{
+  "ordinary_constructor_then_explicit_reference_fixture": true,
+  "fixture": "apps\\SCG\\tests\\fixtures\\tuning_bundle_v1\\kf6-pid.sstuning.json",
+  "offscreen": true,
+  "errors": [],
+  "logical_size": [
+    411,
+    123
+  ],
+  "cancel_model_unchanged": true
+}

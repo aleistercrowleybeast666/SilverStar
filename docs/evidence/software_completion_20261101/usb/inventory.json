@@ -1,0 +1,3320 @@
+[
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\arm-none-eabi-gcc-version.log",
+    "retained": "generic-before-v1/arm-none-eabi-gcc-version.log",
+    "sha256": "cd6a323ba7731af79782d022373a1bdd2ab3c9e4fd8e6fdbd367916316c6bc98",
+    "bytes": 290
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\commands.json",
+    "retained": "generic-before-v1/commands.json",
+    "sha256": "77ed3b2a321883e299648409a12177a0f9df470df76c6cc8cb9c8c6672333ef4",
+    "bytes": 551832
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-00-main.log",
+    "retained": "generic-before-v1/f103-analyzer-00-main.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-01-gpio.log",
+    "retained": "generic-before-v1/f103-analyzer-01-gpio.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-02-dma.log",
+    "retained": "generic-before-v1/f103-analyzer-02-dma.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-03-spi.log",
+    "retained": "generic-before-v1/f103-analyzer-03-spi.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-04-usart.log",
+    "retained": "generic-before-v1/f103-analyzer-04-usart.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-05-stm32f1xx_it.log",
+    "retained": "generic-before-v1/f103-analyzer-05-stm32f1xx_it.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-06-stm32f1xx_hal_msp.log",
+    "retained": "generic-before-v1/f103-analyzer-06-stm32f1xx_hal_msp.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-07-usb_device.log",
+    "retained": "generic-before-v1/f103-analyzer-07-usb_device.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-08-usbd_desc.log",
+    "retained": "generic-before-v1/f103-analyzer-08-usbd_desc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-09-usbd_cdc_if.log",
+    "retained": "generic-before-v1/f103-analyzer-09-usbd_cdc_if.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-10-usbd_conf.log",
+    "retained": "generic-before-v1/f103-analyzer-10-usbd_conf.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-11-stm32f1xx_hal_gpio_ex.log",
+    "retained": "generic-before-v1/f103-analyzer-11-stm32f1xx_hal_gpio_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-12-stm32f1xx_hal_pcd.log",
+    "retained": "generic-before-v1/f103-analyzer-12-stm32f1xx_hal_pcd.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-13-stm32f1xx_hal_pcd_ex.log",
+    "retained": "generic-before-v1/f103-analyzer-13-stm32f1xx_hal_pcd_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-14-stm32f1xx_ll_usb.log",
+    "retained": "generic-before-v1/f103-analyzer-14-stm32f1xx_ll_usb.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-15-stm32f1xx_hal.log",
+    "retained": "generic-before-v1/f103-analyzer-15-stm32f1xx_hal.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-16-stm32f1xx_hal_rcc.log",
+    "retained": "generic-before-v1/f103-analyzer-16-stm32f1xx_hal_rcc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-17-stm32f1xx_hal_rcc_ex.log",
+    "retained": "generic-before-v1/f103-analyzer-17-stm32f1xx_hal_rcc_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-18-stm32f1xx_hal_gpio.log",
+    "retained": "generic-before-v1/f103-analyzer-18-stm32f1xx_hal_gpio.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-19-stm32f1xx_hal_dma.log",
+    "retained": "generic-before-v1/f103-analyzer-19-stm32f1xx_hal_dma.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-20-stm32f1xx_hal_cortex.log",
+    "retained": "generic-before-v1/f103-analyzer-20-stm32f1xx_hal_cortex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-21-stm32f1xx_hal_pwr.log",
+    "retained": "generic-before-v1/f103-analyzer-21-stm32f1xx_hal_pwr.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-22-stm32f1xx_hal_flash.log",
+    "retained": "generic-before-v1/f103-analyzer-22-stm32f1xx_hal_flash.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-23-stm32f1xx_hal_flash_ex.log",
+    "retained": "generic-before-v1/f103-analyzer-23-stm32f1xx_hal_flash_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-24-stm32f1xx_hal_exti.log",
+    "retained": "generic-before-v1/f103-analyzer-24-stm32f1xx_hal_exti.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-25-stm32f1xx_hal_spi.log",
+    "retained": "generic-before-v1/f103-analyzer-25-stm32f1xx_hal_spi.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-26-stm32f1xx_hal_uart.log",
+    "retained": "generic-before-v1/f103-analyzer-26-stm32f1xx_hal_uart.log",
+    "sha256": "ed186468cfe01acf6dc166201df1dda4ab9e5611515d5602bac4b3a8833130c5",
+    "bytes": 8527
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-27-system_stm32f1xx.log",
+    "retained": "generic-before-v1/f103-analyzer-27-system_stm32f1xx.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-28-usbd_core.log",
+    "retained": "generic-before-v1/f103-analyzer-28-usbd_core.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-29-usbd_ctlreq.log",
+    "retained": "generic-before-v1/f103-analyzer-29-usbd_ctlreq.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-30-usbd_ioreq.log",
+    "retained": "generic-before-v1/f103-analyzer-30-usbd_ioreq.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-31-usbd_cdc.log",
+    "retained": "generic-before-v1/f103-analyzer-31-usbd_cdc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-32-sysmem.log",
+    "retained": "generic-before-v1/f103-analyzer-32-sysmem.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-33-syscalls.log",
+    "retained": "generic-before-v1/f103-analyzer-33-syscalls.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-34-usb_cdc_transport.log",
+    "retained": "generic-before-v1/f103-analyzer-34-usb_cdc_transport.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-35-usb_cdc_port.log",
+    "retained": "generic-before-v1/f103-analyzer-35-usb_cdc_port.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-36-usb_cdc_retire.log",
+    "retained": "generic-before-v1/f103-analyzer-36-usb_cdc_retire.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-37-silverstar_assert.log",
+    "retained": "generic-before-v1/f103-analyzer-37-silverstar_assert.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-asm.log",
+    "retained": "generic-before-v1/f103-analyzer-asm.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-attributes.log",
+    "retained": "generic-before-v1/f103-analyzer-attributes.log",
+    "sha256": "915962c3ba12ca01502ed05f81abd520cc017cd2e8354a25d30d807f3c91fd33",
+    "bytes": 376
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-link.log",
+    "retained": "generic-before-v1/f103-analyzer-link.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-size.log",
+    "retained": "generic-before-v1/f103-analyzer-size.log",
+    "sha256": "71b47ec2abcc708a0758e3a787bf842fdba8c2613d06b71e810b422947090c1f",
+    "bytes": 240
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-symbols.log",
+    "retained": "generic-before-v1/f103-analyzer-symbols.log",
+    "sha256": "2535d07264e96e3ffc4b81feb1a8657a9636e9f0c786b3c8af256e1a254d3daa",
+    "bytes": 9030
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-analyzer-vectors.log",
+    "retained": "generic-before-v1/f103-analyzer-vectors.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-locate-libc_nano.a.log",
+    "retained": "generic-before-v1/f103-locate-libc_nano.a.log",
+    "sha256": "2af07dd9505a7cfd56a143977f2d18d620ee0320c675e9abdc42d86da2b1718d",
+    "bytes": 126
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-locate-libgcc.a.log",
+    "retained": "generic-before-v1/f103-locate-libgcc.a.log",
+    "sha256": "b3f9b687e692bc50e5614e3ab0723094e9f29d467cbe356256e45583991ea7a2",
+    "bytes": 93
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-locate-libm.a.log",
+    "retained": "generic-before-v1/f103-locate-libm.a.log",
+    "sha256": "a7ceb43cd7cea42ad64014823a4e76950cdbe1b31343a4e9573b2cda045e9af8",
+    "bytes": 121
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-locate-libnosys.a.log",
+    "retained": "generic-before-v1/f103-locate-libnosys.a.log",
+    "sha256": "1de965454af28fbd86a5071bf8d8d3bff9349b6ff7044ad90f5fb53ea697ac80",
+    "bytes": 125
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-00-main.log",
+    "retained": "generic-before-v1/f103-normal-00-main.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-01-gpio.log",
+    "retained": "generic-before-v1/f103-normal-01-gpio.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-02-dma.log",
+    "retained": "generic-before-v1/f103-normal-02-dma.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-03-spi.log",
+    "retained": "generic-before-v1/f103-normal-03-spi.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-04-usart.log",
+    "retained": "generic-before-v1/f103-normal-04-usart.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-05-stm32f1xx_it.log",
+    "retained": "generic-before-v1/f103-normal-05-stm32f1xx_it.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-06-stm32f1xx_hal_msp.log",
+    "retained": "generic-before-v1/f103-normal-06-stm32f1xx_hal_msp.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-07-usb_device.log",
+    "retained": "generic-before-v1/f103-normal-07-usb_device.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-08-usbd_desc.log",
+    "retained": "generic-before-v1/f103-normal-08-usbd_desc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-09-usbd_cdc_if.log",
+    "retained": "generic-before-v1/f103-normal-09-usbd_cdc_if.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-10-usbd_conf.log",
+    "retained": "generic-before-v1/f103-normal-10-usbd_conf.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-11-stm32f1xx_hal_gpio_ex.log",
+    "retained": "generic-before-v1/f103-normal-11-stm32f1xx_hal_gpio_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-12-stm32f1xx_hal_pcd.log",
+    "retained": "generic-before-v1/f103-normal-12-stm32f1xx_hal_pcd.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-13-stm32f1xx_hal_pcd_ex.log",
+    "retained": "generic-before-v1/f103-normal-13-stm32f1xx_hal_pcd_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-14-stm32f1xx_ll_usb.log",
+    "retained": "generic-before-v1/f103-normal-14-stm32f1xx_ll_usb.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-15-stm32f1xx_hal.log",
+    "retained": "generic-before-v1/f103-normal-15-stm32f1xx_hal.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-16-stm32f1xx_hal_rcc.log",
+    "retained": "generic-before-v1/f103-normal-16-stm32f1xx_hal_rcc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-17-stm32f1xx_hal_rcc_ex.log",
+    "retained": "generic-before-v1/f103-normal-17-stm32f1xx_hal_rcc_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-18-stm32f1xx_hal_gpio.log",
+    "retained": "generic-before-v1/f103-normal-18-stm32f1xx_hal_gpio.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-19-stm32f1xx_hal_dma.log",
+    "retained": "generic-before-v1/f103-normal-19-stm32f1xx_hal_dma.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-20-stm32f1xx_hal_cortex.log",
+    "retained": "generic-before-v1/f103-normal-20-stm32f1xx_hal_cortex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-21-stm32f1xx_hal_pwr.log",
+    "retained": "generic-before-v1/f103-normal-21-stm32f1xx_hal_pwr.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-22-stm32f1xx_hal_flash.log",
+    "retained": "generic-before-v1/f103-normal-22-stm32f1xx_hal_flash.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-23-stm32f1xx_hal_flash_ex.log",
+    "retained": "generic-before-v1/f103-normal-23-stm32f1xx_hal_flash_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-24-stm32f1xx_hal_exti.log",
+    "retained": "generic-before-v1/f103-normal-24-stm32f1xx_hal_exti.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-25-stm32f1xx_hal_spi.log",
+    "retained": "generic-before-v1/f103-normal-25-stm32f1xx_hal_spi.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-26-stm32f1xx_hal_uart.log",
+    "retained": "generic-before-v1/f103-normal-26-stm32f1xx_hal_uart.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-27-system_stm32f1xx.log",
+    "retained": "generic-before-v1/f103-normal-27-system_stm32f1xx.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-28-usbd_core.log",
+    "retained": "generic-before-v1/f103-normal-28-usbd_core.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-29-usbd_ctlreq.log",
+    "retained": "generic-before-v1/f103-normal-29-usbd_ctlreq.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-30-usbd_ioreq.log",
+    "retained": "generic-before-v1/f103-normal-30-usbd_ioreq.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-31-usbd_cdc.log",
+    "retained": "generic-before-v1/f103-normal-31-usbd_cdc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-32-sysmem.log",
+    "retained": "generic-before-v1/f103-normal-32-sysmem.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-33-syscalls.log",
+    "retained": "generic-before-v1/f103-normal-33-syscalls.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-34-usb_cdc_transport.log",
+    "retained": "generic-before-v1/f103-normal-34-usb_cdc_transport.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-35-usb_cdc_port.log",
+    "retained": "generic-before-v1/f103-normal-35-usb_cdc_port.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-36-usb_cdc_retire.log",
+    "retained": "generic-before-v1/f103-normal-36-usb_cdc_retire.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-37-silverstar_assert.log",
+    "retained": "generic-before-v1/f103-normal-37-silverstar_assert.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-asm.log",
+    "retained": "generic-before-v1/f103-normal-asm.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-attributes.log",
+    "retained": "generic-before-v1/f103-normal-attributes.log",
+    "sha256": "915962c3ba12ca01502ed05f81abd520cc017cd2e8354a25d30d807f3c91fd33",
+    "bytes": 376
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-link.log",
+    "retained": "generic-before-v1/f103-normal-link.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-size.log",
+    "retained": "generic-before-v1/f103-normal-size.log",
+    "sha256": "28cc2119affc069f9e4aaf7b1e901f0e38c993b38f87a969dc0d3fc6719a39e0",
+    "bytes": 238
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-symbols.log",
+    "retained": "generic-before-v1/f103-normal-symbols.log",
+    "sha256": "2535d07264e96e3ffc4b81feb1a8657a9636e9f0c786b3c8af256e1a254d3daa",
+    "bytes": 9030
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-normal-vectors.log",
+    "retained": "generic-before-v1/f103-normal-vectors.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-power10.log",
+    "retained": "generic-before-v1/f103-power10.log",
+    "sha256": "6763ae5e73a62bb1145de891c78f72528a58ab8be7539e5d3b89d1103337bd25",
+    "bytes": 39055
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-preprocessed-12-stm32f1xx_hal_pcd.log",
+    "retained": "generic-before-v1/f103-preprocessed-12-stm32f1xx_hal_pcd.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-preprocessed-13-stm32f1xx_hal_pcd_ex.log",
+    "retained": "generic-before-v1/f103-preprocessed-13-stm32f1xx_hal_pcd_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f103-preprocessed-14-stm32f1xx_ll_usb.log",
+    "retained": "generic-before-v1/f103-preprocessed-14-stm32f1xx_ll_usb.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-00-main.log",
+    "retained": "generic-before-v1/f407-analyzer-00-main.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-01-gpio.log",
+    "retained": "generic-before-v1/f407-analyzer-01-gpio.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-02-adc.log",
+    "retained": "generic-before-v1/f407-analyzer-02-adc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-03-dma.log",
+    "retained": "generic-before-v1/f407-analyzer-03-dma.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-04-spi.log",
+    "retained": "generic-before-v1/f407-analyzer-04-spi.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-05-usart.log",
+    "retained": "generic-before-v1/f407-analyzer-05-usart.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-06-stm32f4xx_it.log",
+    "retained": "generic-before-v1/f407-analyzer-06-stm32f4xx_it.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-07-stm32f4xx_hal_msp.log",
+    "retained": "generic-before-v1/f407-analyzer-07-stm32f4xx_hal_msp.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-08-stm32f4xx_hal_timebase_tim.log",
+    "retained": "generic-before-v1/f407-analyzer-08-stm32f4xx_hal_timebase_tim.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-09-usb_device.log",
+    "retained": "generic-before-v1/f407-analyzer-09-usb_device.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-10-usbd_desc.log",
+    "retained": "generic-before-v1/f407-analyzer-10-usbd_desc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-11-usbd_cdc_if.log",
+    "retained": "generic-before-v1/f407-analyzer-11-usbd_cdc_if.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-12-usbd_conf.log",
+    "retained": "generic-before-v1/f407-analyzer-12-usbd_conf.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-13-stm32f4xx_hal_tim.log",
+    "retained": "generic-before-v1/f407-analyzer-13-stm32f4xx_hal_tim.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-14-stm32f4xx_hal_tim_ex.log",
+    "retained": "generic-before-v1/f407-analyzer-14-stm32f4xx_hal_tim_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-15-stm32f4xx_hal_pcd.log",
+    "retained": "generic-before-v1/f407-analyzer-15-stm32f4xx_hal_pcd.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-16-stm32f4xx_hal_pcd_ex.log",
+    "retained": "generic-before-v1/f407-analyzer-16-stm32f4xx_hal_pcd_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-17-stm32f4xx_ll_usb.log",
+    "retained": "generic-before-v1/f407-analyzer-17-stm32f4xx_ll_usb.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-18-stm32f4xx_hal_rcc.log",
+    "retained": "generic-before-v1/f407-analyzer-18-stm32f4xx_hal_rcc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-19-stm32f4xx_hal_rcc_ex.log",
+    "retained": "generic-before-v1/f407-analyzer-19-stm32f4xx_hal_rcc_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-20-stm32f4xx_hal_flash.log",
+    "retained": "generic-before-v1/f407-analyzer-20-stm32f4xx_hal_flash.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-21-stm32f4xx_hal_flash_ex.log",
+    "retained": "generic-before-v1/f407-analyzer-21-stm32f4xx_hal_flash_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-22-stm32f4xx_hal_flash_ramfunc.log",
+    "retained": "generic-before-v1/f407-analyzer-22-stm32f4xx_hal_flash_ramfunc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-23-stm32f4xx_hal_gpio.log",
+    "retained": "generic-before-v1/f407-analyzer-23-stm32f4xx_hal_gpio.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-24-stm32f4xx_hal_dma_ex.log",
+    "retained": "generic-before-v1/f407-analyzer-24-stm32f4xx_hal_dma_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-25-stm32f4xx_hal_dma.log",
+    "retained": "generic-before-v1/f407-analyzer-25-stm32f4xx_hal_dma.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-26-stm32f4xx_hal_pwr.log",
+    "retained": "generic-before-v1/f407-analyzer-26-stm32f4xx_hal_pwr.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-27-stm32f4xx_hal_pwr_ex.log",
+    "retained": "generic-before-v1/f407-analyzer-27-stm32f4xx_hal_pwr_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-28-stm32f4xx_hal_cortex.log",
+    "retained": "generic-before-v1/f407-analyzer-28-stm32f4xx_hal_cortex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-29-stm32f4xx_hal.log",
+    "retained": "generic-before-v1/f407-analyzer-29-stm32f4xx_hal.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-30-stm32f4xx_hal_exti.log",
+    "retained": "generic-before-v1/f407-analyzer-30-stm32f4xx_hal_exti.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-31-stm32f4xx_hal_adc.log",
+    "retained": "generic-before-v1/f407-analyzer-31-stm32f4xx_hal_adc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-32-stm32f4xx_hal_adc_ex.log",
+    "retained": "generic-before-v1/f407-analyzer-32-stm32f4xx_hal_adc_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-33-stm32f4xx_ll_adc.log",
+    "retained": "generic-before-v1/f407-analyzer-33-stm32f4xx_ll_adc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-34-stm32f4xx_hal_spi.log",
+    "retained": "generic-before-v1/f407-analyzer-34-stm32f4xx_hal_spi.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-35-stm32f4xx_hal_uart.log",
+    "retained": "generic-before-v1/f407-analyzer-35-stm32f4xx_hal_uart.log",
+    "sha256": "f364e476f6e9d290c54f42fdaa6f205a8f1f45065c6248dec558bb11d987a5ee",
+    "bytes": 8527
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-36-system_stm32f4xx.log",
+    "retained": "generic-before-v1/f407-analyzer-36-system_stm32f4xx.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-37-usbd_core.log",
+    "retained": "generic-before-v1/f407-analyzer-37-usbd_core.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-38-usbd_ctlreq.log",
+    "retained": "generic-before-v1/f407-analyzer-38-usbd_ctlreq.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-39-usbd_ioreq.log",
+    "retained": "generic-before-v1/f407-analyzer-39-usbd_ioreq.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-40-usbd_cdc.log",
+    "retained": "generic-before-v1/f407-analyzer-40-usbd_cdc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-41-sysmem.log",
+    "retained": "generic-before-v1/f407-analyzer-41-sysmem.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-42-syscalls.log",
+    "retained": "generic-before-v1/f407-analyzer-42-syscalls.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-43-usb_cdc_transport.log",
+    "retained": "generic-before-v1/f407-analyzer-43-usb_cdc_transport.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-44-usb_cdc_port.log",
+    "retained": "generic-before-v1/f407-analyzer-44-usb_cdc_port.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-45-usb_cdc_retire.log",
+    "retained": "generic-before-v1/f407-analyzer-45-usb_cdc_retire.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-46-silverstar_assert.log",
+    "retained": "generic-before-v1/f407-analyzer-46-silverstar_assert.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-asm.log",
+    "retained": "generic-before-v1/f407-analyzer-asm.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-attributes.log",
+    "retained": "generic-before-v1/f407-analyzer-attributes.log",
+    "sha256": "8599b35651442bea43fda5310f643b91722355e85fcb37b4181e210307f710db",
+    "bytes": 472
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-link.log",
+    "retained": "generic-before-v1/f407-analyzer-link.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-size.log",
+    "retained": "generic-before-v1/f407-analyzer-size.log",
+    "sha256": "e97f6589c2330d45a22eaf95b783a923b2b5ae40e59021a08ecdf929ed1dc435",
+    "bytes": 240
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-symbols.log",
+    "retained": "generic-before-v1/f407-analyzer-symbols.log",
+    "sha256": "240d8c3c126d54944dcac197a83e190e322656d4cd525b145dbc25fc1931c910",
+    "bytes": 11100
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-analyzer-vectors.log",
+    "retained": "generic-before-v1/f407-analyzer-vectors.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-locate-libc_nano.a.log",
+    "retained": "generic-before-v1/f407-locate-libc_nano.a.log",
+    "sha256": "62d810a2a6b90aff02b616a5376524738b928f0f88c4650b4a73d367e09a69ed",
+    "bytes": 130
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-locate-libgcc.a.log",
+    "retained": "generic-before-v1/f407-locate-libgcc.a.log",
+    "sha256": "c3264e20f8c1e4f1a6de11540c43c8255a8a74e7be58aebc14df0a2d62d83083",
+    "bytes": 97
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-locate-libm.a.log",
+    "retained": "generic-before-v1/f407-locate-libm.a.log",
+    "sha256": "a69fb8195435647a3e8e981aaefa566f9dd90d71f4aedfbfa2652a83cabe8d5b",
+    "bytes": 125
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-locate-libnosys.a.log",
+    "retained": "generic-before-v1/f407-locate-libnosys.a.log",
+    "sha256": "60a4600159de1e999a43690203f17c93dc67ff2cf8ff8b99d1d9c307d4c72431",
+    "bytes": 129
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-00-main.log",
+    "retained": "generic-before-v1/f407-normal-00-main.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-01-gpio.log",
+    "retained": "generic-before-v1/f407-normal-01-gpio.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-02-adc.log",
+    "retained": "generic-before-v1/f407-normal-02-adc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-03-dma.log",
+    "retained": "generic-before-v1/f407-normal-03-dma.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-04-spi.log",
+    "retained": "generic-before-v1/f407-normal-04-spi.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-05-usart.log",
+    "retained": "generic-before-v1/f407-normal-05-usart.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-06-stm32f4xx_it.log",
+    "retained": "generic-before-v1/f407-normal-06-stm32f4xx_it.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-07-stm32f4xx_hal_msp.log",
+    "retained": "generic-before-v1/f407-normal-07-stm32f4xx_hal_msp.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-08-stm32f4xx_hal_timebase_tim.log",
+    "retained": "generic-before-v1/f407-normal-08-stm32f4xx_hal_timebase_tim.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-09-usb_device.log",
+    "retained": "generic-before-v1/f407-normal-09-usb_device.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-10-usbd_desc.log",
+    "retained": "generic-before-v1/f407-normal-10-usbd_desc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-11-usbd_cdc_if.log",
+    "retained": "generic-before-v1/f407-normal-11-usbd_cdc_if.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-12-usbd_conf.log",
+    "retained": "generic-before-v1/f407-normal-12-usbd_conf.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-13-stm32f4xx_hal_tim.log",
+    "retained": "generic-before-v1/f407-normal-13-stm32f4xx_hal_tim.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-14-stm32f4xx_hal_tim_ex.log",
+    "retained": "generic-before-v1/f407-normal-14-stm32f4xx_hal_tim_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-15-stm32f4xx_hal_pcd.log",
+    "retained": "generic-before-v1/f407-normal-15-stm32f4xx_hal_pcd.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-16-stm32f4xx_hal_pcd_ex.log",
+    "retained": "generic-before-v1/f407-normal-16-stm32f4xx_hal_pcd_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-17-stm32f4xx_ll_usb.log",
+    "retained": "generic-before-v1/f407-normal-17-stm32f4xx_ll_usb.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-18-stm32f4xx_hal_rcc.log",
+    "retained": "generic-before-v1/f407-normal-18-stm32f4xx_hal_rcc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-19-stm32f4xx_hal_rcc_ex.log",
+    "retained": "generic-before-v1/f407-normal-19-stm32f4xx_hal_rcc_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-20-stm32f4xx_hal_flash.log",
+    "retained": "generic-before-v1/f407-normal-20-stm32f4xx_hal_flash.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-21-stm32f4xx_hal_flash_ex.log",
+    "retained": "generic-before-v1/f407-normal-21-stm32f4xx_hal_flash_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-22-stm32f4xx_hal_flash_ramfunc.log",
+    "retained": "generic-before-v1/f407-normal-22-stm32f4xx_hal_flash_ramfunc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-23-stm32f4xx_hal_gpio.log",
+    "retained": "generic-before-v1/f407-normal-23-stm32f4xx_hal_gpio.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-24-stm32f4xx_hal_dma_ex.log",
+    "retained": "generic-before-v1/f407-normal-24-stm32f4xx_hal_dma_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-25-stm32f4xx_hal_dma.log",
+    "retained": "generic-before-v1/f407-normal-25-stm32f4xx_hal_dma.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-26-stm32f4xx_hal_pwr.log",
+    "retained": "generic-before-v1/f407-normal-26-stm32f4xx_hal_pwr.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-27-stm32f4xx_hal_pwr_ex.log",
+    "retained": "generic-before-v1/f407-normal-27-stm32f4xx_hal_pwr_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-28-stm32f4xx_hal_cortex.log",
+    "retained": "generic-before-v1/f407-normal-28-stm32f4xx_hal_cortex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-29-stm32f4xx_hal.log",
+    "retained": "generic-before-v1/f407-normal-29-stm32f4xx_hal.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-30-stm32f4xx_hal_exti.log",
+    "retained": "generic-before-v1/f407-normal-30-stm32f4xx_hal_exti.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-31-stm32f4xx_hal_adc.log",
+    "retained": "generic-before-v1/f407-normal-31-stm32f4xx_hal_adc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-32-stm32f4xx_hal_adc_ex.log",
+    "retained": "generic-before-v1/f407-normal-32-stm32f4xx_hal_adc_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-33-stm32f4xx_ll_adc.log",
+    "retained": "generic-before-v1/f407-normal-33-stm32f4xx_ll_adc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-34-stm32f4xx_hal_spi.log",
+    "retained": "generic-before-v1/f407-normal-34-stm32f4xx_hal_spi.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-35-stm32f4xx_hal_uart.log",
+    "retained": "generic-before-v1/f407-normal-35-stm32f4xx_hal_uart.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-36-system_stm32f4xx.log",
+    "retained": "generic-before-v1/f407-normal-36-system_stm32f4xx.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-37-usbd_core.log",
+    "retained": "generic-before-v1/f407-normal-37-usbd_core.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-38-usbd_ctlreq.log",
+    "retained": "generic-before-v1/f407-normal-38-usbd_ctlreq.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-39-usbd_ioreq.log",
+    "retained": "generic-before-v1/f407-normal-39-usbd_ioreq.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-40-usbd_cdc.log",
+    "retained": "generic-before-v1/f407-normal-40-usbd_cdc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-41-sysmem.log",
+    "retained": "generic-before-v1/f407-normal-41-sysmem.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-42-syscalls.log",
+    "retained": "generic-before-v1/f407-normal-42-syscalls.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-43-usb_cdc_transport.log",
+    "retained": "generic-before-v1/f407-normal-43-usb_cdc_transport.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-44-usb_cdc_port.log",
+    "retained": "generic-before-v1/f407-normal-44-usb_cdc_port.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-45-usb_cdc_retire.log",
+    "retained": "generic-before-v1/f407-normal-45-usb_cdc_retire.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-46-silverstar_assert.log",
+    "retained": "generic-before-v1/f407-normal-46-silverstar_assert.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-asm.log",
+    "retained": "generic-before-v1/f407-normal-asm.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-attributes.log",
+    "retained": "generic-before-v1/f407-normal-attributes.log",
+    "sha256": "8599b35651442bea43fda5310f643b91722355e85fcb37b4181e210307f710db",
+    "bytes": 472
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-link.log",
+    "retained": "generic-before-v1/f407-normal-link.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-size.log",
+    "retained": "generic-before-v1/f407-normal-size.log",
+    "sha256": "b9da3ea22dac9a9e00d9a7c3071c5842474592cbe0d16d4841c84c3af0611d36",
+    "bytes": 238
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-symbols.log",
+    "retained": "generic-before-v1/f407-normal-symbols.log",
+    "sha256": "240d8c3c126d54944dcac197a83e190e322656d4cd525b145dbc25fc1931c910",
+    "bytes": 11100
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-normal-vectors.log",
+    "retained": "generic-before-v1/f407-normal-vectors.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-power10.log",
+    "retained": "generic-before-v1/f407-power10.log",
+    "sha256": "ae1c75822faa1f8e3e033ea678d039b1933d3df0d9338299431d9f64197d1021",
+    "bytes": 47981
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-preprocessed-15-stm32f4xx_hal_pcd.log",
+    "retained": "generic-before-v1/f407-preprocessed-15-stm32f4xx_hal_pcd.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-preprocessed-16-stm32f4xx_hal_pcd_ex.log",
+    "retained": "generic-before-v1/f407-preprocessed-16-stm32f4xx_hal_pcd_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\f407-preprocessed-17-stm32f4xx_ll_usb.log",
+    "retained": "generic-before-v1/f407-preprocessed-17-stm32f4xx_ll_usb.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\gcc-version.log",
+    "retained": "generic-before-v1/gcc-version.log",
+    "sha256": "d6334173e6c7d0b9aa942c21d117ef3c243b17c8697d007a2eb1ea6092d51d15",
+    "bytes": 249
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\host-tests.log",
+    "retained": "generic-before-v1/host-tests.log",
+    "sha256": "323f6d6fbfa494f289b97e441915484210c3323410b9563c3da298d98116ab06",
+    "bytes": 1555
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\inventory.json",
+    "retained": "generic-before-v1/inventory.json",
+    "sha256": "d5efa0808fa2a9429e514c41f621a9c322691de10d91281cf791157391cd92c8",
+    "bytes": 196898
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\python-version.log",
+    "retained": "generic-before-v1/python-version.log",
+    "sha256": "3c00433d6870b2f40b3bbc642b5cec6dc34ace27ad25b0c1a0bb075047ea33b8",
+    "bytes": 15
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\source-snapshot.json",
+    "retained": "generic-before-v1/source-snapshot.json",
+    "sha256": "ea34c67e59c9dcb05a4b185e740ef9714a08dbd9ecb32ff06fc701731988cae7",
+    "bytes": 292622
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\summary.json",
+    "retained": "generic-before-v1/summary.json",
+    "sha256": "730a82ae9be560f950b200209e4a8ed5262d239829b88ee0b0e5175a5b7b8f74",
+    "bytes": 7920
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\lifecycle-integration.json",
+    "retained": "generic-before-v1/f103/lifecycle-integration.json",
+    "sha256": "6f5ac27df267b35d6f00c82326ddbb3db84e2fb32ce0cff110f096762804b38b",
+    "bytes": 2386
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\kit-sha256.json",
+    "retained": "generic-before-v1/f103/kit-sha256.json",
+    "sha256": "7c03727a45d310af13e497dd92ac5159ba21ef15582afa5c0cb1eac52a6b739e",
+    "bytes": 2768
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\receipt.json",
+    "retained": "generic-before-v1/f103/receipt.json",
+    "sha256": "36f3a7eebbee4e60084d5a4f5a75ed9f71ff678c9323952a838e1a8b4586cab4",
+    "bytes": 3097
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\integration.json",
+    "retained": "generic-before-v1/f103/integration.json",
+    "sha256": "549cd82817edf5711900bd6778a24141a6681e5da80c1254b51b54abd9c10ed4",
+    "bytes": 19309
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\usb-adaptation.json",
+    "retained": "generic-before-v1/f103/usb-adaptation.json",
+    "sha256": "0cb55885de2a34ef00d44dac8a09429670c00fa78b554431dbb41cad6c69940d",
+    "bytes": 20639
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\assertion-owner.json",
+    "retained": "generic-before-v1/f103/assertion-owner.json",
+    "sha256": "e4852bf8f8c8866569b758d24de3641c9ecb8ea5f6988ad6ddda6d1121da37c0",
+    "bytes": 603
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\Makefile",
+    "retained": "generic-before-v1/f103/Makefile",
+    "sha256": "22cf57440a3d9f0cb424752d73f9ff28307f3a360ec15f00e3deddbadb9a707c",
+    "bytes": 9883
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\LICENSE-SilverStar.txt",
+    "retained": "generic-before-v1/f103/LICENSE-SilverStar.txt",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "bytes": 11358
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\Generated\\usb_transport_source_graph.json",
+    "retained": "generic-before-v1/f103/Generated/usb_transport_source_graph.json",
+    "sha256": "de3c2e559e966325be0f0dcb326719a075859413100905845d3f342e7ba9fd28",
+    "bytes": 25856
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\Native\\Core\\Src\\main.c",
+    "retained": "source-objects/6c3089655a72bce2dc53f82d9c2235e1684ce5ea2e9e1a877fc6ffcdff531ddd.c",
+    "sha256": "6c3089655a72bce2dc53f82d9c2235e1684ce5ea2e9e1a877fc6ffcdff531ddd",
+    "bytes": 5586
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\Native\\USB_DEVICE\\App\\usbd_cdc_if.c",
+    "retained": "source-objects/5a5c2834f0cddbee1686a7b25bd8b5b6d8aeb62e32aa3233c2a6c5facfb65c14.c",
+    "sha256": "5a5c2834f0cddbee1686a7b25bd8b5b6d8aeb62e32aa3233c2a6c5facfb65c14",
+    "bytes": 8661
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\Native\\USB_DEVICE\\Target\\usbd_conf.c",
+    "retained": "source-objects/d75d0929b149bbeb9591318eacc798fdb16773598d62fa6549944b54ce4d74e8.c",
+    "sha256": "d75d0929b149bbeb9591318eacc798fdb16773598d62fa6549944b54ce4d74e8",
+    "bytes": 19993
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Src\\usbd_core.c",
+    "retained": "source-objects/8cbf1460656f53e78f09bc4b7733364a3ceee5706732097ae12702946b4b886a.c",
+    "sha256": "8cbf1460656f53e78f09bc4b7733364a3ceee5706732097ae12702946b4b886a",
+    "bytes": 14993
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Class\\CDC\\Src\\usbd_cdc.c",
+    "retained": "source-objects/ec4aec57d27c2ee55b52024effd3caaa09615240fd864072825157279ce37078.c",
+    "sha256": "ec4aec57d27c2ee55b52024effd3caaa09615240fd864072825157279ce37078",
+    "bytes": 32147
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\Generated\\UsbTransport\\Src\\usb_cdc_transport.c",
+    "retained": "source-objects/37684894e381072410182de742db02b2c7e49e2d6a18f3e707473cec08c9a9e8.c",
+    "sha256": "37684894e381072410182de742db02b2c7e49e2d6a18f3e707473cec08c9a9e8",
+    "bytes": 6442
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\Generated\\UsbTransport\\Src\\usb_cdc_port.c",
+    "retained": "source-objects/b12f19a50b4e977bc16a7e1d8b631a21d972760255c32f785489629b776cb114.c",
+    "sha256": "b12f19a50b4e977bc16a7e1d8b631a21d972760255c32f785489629b776cb114",
+    "bytes": 1676
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\Generated\\UsbTransport\\Src\\usb_cdc_retire.c",
+    "retained": "source-objects/e77e95dcc100a19c41c6422ecd0f2efdf50e1f22737ea5254a1420c78caf9655.c",
+    "sha256": "e77e95dcc100a19c41c6422ecd0f2efdf50e1f22737ea5254a1420c78caf9655",
+    "bytes": 4024
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\Common\\Src\\silverstar_assert.c",
+    "retained": "source-objects/ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826.c",
+    "sha256": "ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826",
+    "bytes": 3454
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\Inc\\usb_cdc_port.h",
+    "retained": "source-objects/14d76f1e98f691d82181ae563534463f9962c7a12145931f06399fd3d083b343.h",
+    "sha256": "14d76f1e98f691d82181ae563534463f9962c7a12145931f06399fd3d083b343",
+    "bytes": 456
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\Inc\\usb_cdc_retire.h",
+    "retained": "source-objects/dd13f96485a610eb1fa389b5a727c0431305a9fca0a30bdee4665e0b874d0328.h",
+    "sha256": "dd13f96485a610eb1fa389b5a727c0431305a9fca0a30bdee4665e0b874d0328",
+    "bytes": 269
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\Inc\\usb_cdc_transport.h",
+    "retained": "source-objects/225f99a7ff8520b5324615c22f868eb42bf78935093c5773a55710b6eae6c4ed.h",
+    "sha256": "225f99a7ff8520b5324615c22f868eb42bf78935093c5773a55710b6eae6c4ed",
+    "bytes": 808
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\Native\\Core\\Src\\main.c.patch",
+    "retained": "source-objects/f639e85eb035db718991d2ff34fbc254349567ff04821da24cef5b05c33f4f71.patch",
+    "sha256": "f639e85eb035db718991d2ff34fbc254349567ff04821da24cef5b05c33f4f71",
+    "bytes": 651
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Class\\CDC\\Src\\usbd_cdc.c.patch",
+    "retained": "source-objects/16720c8f5bdb4885498a10dec033362485d703789192177f4cc78517d7503653.patch",
+    "sha256": "16720c8f5bdb4885498a10dec033362485d703789192177f4cc78517d7503653",
+    "bytes": 15665
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Src\\usbd_core.c.patch",
+    "retained": "source-objects/3e37a8658bac406030ddd46c0efed8904aa34eab4e44c253a113fd992b603aa2.patch",
+    "sha256": "3e37a8658bac406030ddd46c0efed8904aa34eab4e44c253a113fd992b603aa2",
+    "bytes": 8123
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\Native\\USB_DEVICE\\App\\usbd_cdc_if.c.patch",
+    "retained": "source-objects/27f073c236bd685940ad00a7aa207c93dbe7c759bb5735d4515d21c0557b3e7c.patch",
+    "sha256": "27f073c236bd685940ad00a7aa207c93dbe7c759bb5735d4515d21c0557b3e7c",
+    "bytes": 3204
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f103\\Native\\USB_DEVICE\\Target\\usbd_conf.c.patch",
+    "retained": "source-objects/4bdfee81b66678c31ffaeffb111b7f8689718467744df069e2266e6a2dd323e8.patch",
+    "sha256": "4bdfee81b66678c31ffaeffb111b7f8689718467744df069e2266e6a2dd323e8",
+    "bytes": 2437
+  },
+  {
+    "source": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\License.md",
+    "retained": "native-licenses/f103/License.md",
+    "sha256": "92282b534952354891151c90af2f935f311fb3b3be9deed1eae8410599443a39",
+    "bytes": 1662
+  },
+  {
+    "source": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Package_license.md",
+    "retained": "native-licenses/f103/Package_license.md",
+    "sha256": "5d0016458729aeb4501e604bb8fa8385e1b258b0113af3c6915532cfb945817b",
+    "bytes": 11754
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\lifecycle-integration.json",
+    "retained": "generic-before-v1/f407/lifecycle-integration.json",
+    "sha256": "8a544aa8383acee1e1447d0112f0370045c35f3737dbb5ad04ae9d50924c5e45",
+    "bytes": 2694
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\kit-sha256.json",
+    "retained": "generic-before-v1/f407/kit-sha256.json",
+    "sha256": "59850a16adeeefc36bf2befc7ed44a7f1af52a141268100fd70c2e5cd10200fd",
+    "bytes": 2994
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\receipt.json",
+    "retained": "generic-before-v1/f407/receipt.json",
+    "sha256": "e9bd6dbb3e60971cc2b7004cc79795a858ae016d1e2f06afb09283788a5bb126",
+    "bytes": 3909
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\integration.json",
+    "retained": "generic-before-v1/f407/integration.json",
+    "sha256": "ca16740ebaf5ee48baaaac3cccb5f49a6d44f6b67e3b0b342057d8b57b3b1899",
+    "bytes": 24016
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\usb-adaptation.json",
+    "retained": "generic-before-v1/f407/usb-adaptation.json",
+    "sha256": "8748b5b560f26ba6426e1349a79b0a4489e13eb73ec41403abf83492d4ddd91b",
+    "bytes": 25220
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\assertion-owner.json",
+    "retained": "generic-before-v1/f407/assertion-owner.json",
+    "sha256": "e4852bf8f8c8866569b758d24de3641c9ecb8ea5f6988ad6ddda6d1121da37c0",
+    "bytes": 603
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Makefile",
+    "retained": "generic-before-v1/f407/Makefile",
+    "sha256": "01ceee316797f88df75ff69a8ec6af376600985a1f9c6db5c11bf211e13a08f8",
+    "bytes": 11086
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\LICENSE-SilverStar.txt",
+    "retained": "generic-before-v1/f407/LICENSE-SilverStar.txt",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "bytes": 11358
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Generated\\usb_transport_source_graph.json",
+    "retained": "generic-before-v1/f407/Generated/usb_transport_source_graph.json",
+    "sha256": "56323da6fe5672e2666af08ff1f13f9b396e2710fdeb094f259bc177169d7d00",
+    "bytes": 31572
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\Core\\Src\\main.c",
+    "retained": "source-objects/1707d4693a24e42386c1c350ea677c4295efb2ff0eacbfe0ce5a4903d76a2f46.c",
+    "sha256": "1707d4693a24e42386c1c350ea677c4295efb2ff0eacbfe0ce5a4903d76a2f46",
+    "bytes": 6137
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\USB_DEVICE\\App\\usbd_cdc_if.c",
+    "retained": "source-objects/1d94a51da12e236d141519177b86771fe4e1be1c792fcee3781899c8dd24ef81.c",
+    "sha256": "1d94a51da12e236d141519177b86771fe4e1be1c792fcee3781899c8dd24ef81",
+    "bytes": 9451
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\USB_DEVICE\\Target\\usbd_conf.c",
+    "retained": "source-objects/ed4f90176f6ef095171472e18aceb3a68e2d46cbc23818f44f91e13ebadd2ddb.c",
+    "sha256": "ed4f90176f6ef095171472e18aceb3a68e2d46cbc23818f44f91e13ebadd2ddb",
+    "bytes": 20434
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Src\\usbd_core.c",
+    "retained": "source-objects/923a22795e4e37717aa83650e413205907ad2e28e362eab97137c91b1b1e03cc.c",
+    "sha256": "923a22795e4e37717aa83650e413205907ad2e28e362eab97137c91b1b1e03cc",
+    "bytes": 29750
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Class\\CDC\\Src\\usbd_cdc.c",
+    "retained": "source-objects/53db931b7900b9953ba11666b2d3d4660c65e849061b3bf7476b3f1487f95df9.c",
+    "sha256": "53db931b7900b9953ba11666b2d3d4660c65e849061b3bf7476b3f1487f95df9",
+    "bytes": 29533
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Generated\\UsbTransport\\Src\\usb_cdc_port.c",
+    "retained": "source-objects/f130a194292b29a23b42e7ab5ae48fa982e05cde084bed5911de762ee0fa8864.c",
+    "sha256": "f130a194292b29a23b42e7ab5ae48fa982e05cde084bed5911de762ee0fa8864",
+    "bytes": 1978
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Generated\\UsbTransport\\Src\\usb_cdc_retire.c",
+    "retained": "source-objects/bd94ccf288f6714d7172963d92aad6b483423a524231a826af3e1844cc605604.c",
+    "sha256": "bd94ccf288f6714d7172963d92aad6b483423a524231a826af3e1844cc605604",
+    "bytes": 4275
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\Core\\Src\\main.c.patch",
+    "retained": "source-objects/20dc80b3529a01b01c8757c8449ec88f83de2769df61a852d01c09b6b956c7ef.patch",
+    "sha256": "20dc80b3529a01b01c8757c8449ec88f83de2769df61a852d01c09b6b956c7ef",
+    "bytes": 651
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Class\\CDC\\Src\\usbd_cdc.c.patch",
+    "retained": "source-objects/9d14163ba2cf53e574a1baa3bf301b6a613ab3ca077910153ba8014207925ab9.patch",
+    "sha256": "9d14163ba2cf53e574a1baa3bf301b6a613ab3ca077910153ba8014207925ab9",
+    "bytes": 19505
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Src\\usbd_core.c.patch",
+    "retained": "source-objects/1e134052e54891ff7fa6301c6b3178d47ce89d6a3acb5abfb99a49528d1cefcd.patch",
+    "sha256": "1e134052e54891ff7fa6301c6b3178d47ce89d6a3acb5abfb99a49528d1cefcd",
+    "bytes": 8395
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\USB_DEVICE\\App\\usbd_cdc_if.c.patch",
+    "retained": "source-objects/44fe0ffc6caf90d72233ec98db099930bb1d2df368c5b74b52697ca762378c3a.patch",
+    "sha256": "44fe0ffc6caf90d72233ec98db099930bb1d2df368c5b74b52697ca762378c3a",
+    "bytes": 3153
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\USB_DEVICE\\Target\\usbd_conf.c.patch",
+    "retained": "source-objects/d5109ea74a6345aa5bbbac1ba7321d52a658939b95ec260672bfa7c5e9bc1c5b.patch",
+    "sha256": "d5109ea74a6345aa5bbbac1ba7321d52a658939b95ec260672bfa7c5e9bc1c5b",
+    "bytes": 2493
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\USB_DEVICE\\Target\\usbd_conf.h.patch",
+    "retained": "source-objects/5f31c8002f31b752f4741de55f5d6c7dd09b1be7e892e306e553c000749f7300.patch",
+    "sha256": "5f31c8002f31b752f4741de55f5d6c7dd09b1be7e892e306e553c000749f7300",
+    "bytes": 395
+  },
+  {
+    "source": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f407-usb\\Package_license.md",
+    "retained": "native-licenses/f407/Package_license.md",
+    "sha256": "2fe52ca80ec3d84064631a051a914b418aa65b9126ae5131ea323213a8be5aa2",
+    "bytes": 30874
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\arm-none-eabi-gcc-version.log",
+    "retained": "generic-after-v1/arm-none-eabi-gcc-version.log",
+    "sha256": "cd6a323ba7731af79782d022373a1bdd2ab3c9e4fd8e6fdbd367916316c6bc98",
+    "bytes": 290
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\commands.json",
+    "retained": "generic-after-v1/commands.json",
+    "sha256": "8ff5c3d20dec01e1aaf337bb14edee61609d9e8a65078f8244c86546124df3bb",
+    "bytes": 563545
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-00-main.log",
+    "retained": "generic-after-v1/f103-analyzer-00-main.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-01-gpio.log",
+    "retained": "generic-after-v1/f103-analyzer-01-gpio.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-02-dma.log",
+    "retained": "generic-after-v1/f103-analyzer-02-dma.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-03-spi.log",
+    "retained": "generic-after-v1/f103-analyzer-03-spi.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-04-usart.log",
+    "retained": "generic-after-v1/f103-analyzer-04-usart.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-05-stm32f1xx_it.log",
+    "retained": "generic-after-v1/f103-analyzer-05-stm32f1xx_it.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-06-stm32f1xx_hal_msp.log",
+    "retained": "generic-after-v1/f103-analyzer-06-stm32f1xx_hal_msp.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-07-usb_device.log",
+    "retained": "generic-after-v1/f103-analyzer-07-usb_device.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-08-usbd_desc.log",
+    "retained": "generic-after-v1/f103-analyzer-08-usbd_desc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-09-usbd_cdc_if.log",
+    "retained": "generic-after-v1/f103-analyzer-09-usbd_cdc_if.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-10-usbd_conf.log",
+    "retained": "generic-after-v1/f103-analyzer-10-usbd_conf.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-11-stm32f1xx_hal_gpio_ex.log",
+    "retained": "generic-after-v1/f103-analyzer-11-stm32f1xx_hal_gpio_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-12-stm32f1xx_hal_pcd.log",
+    "retained": "generic-after-v1/f103-analyzer-12-stm32f1xx_hal_pcd.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-13-stm32f1xx_hal_pcd_ex.log",
+    "retained": "generic-after-v1/f103-analyzer-13-stm32f1xx_hal_pcd_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-14-stm32f1xx_ll_usb.log",
+    "retained": "generic-after-v1/f103-analyzer-14-stm32f1xx_ll_usb.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-15-stm32f1xx_hal.log",
+    "retained": "generic-after-v1/f103-analyzer-15-stm32f1xx_hal.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-16-stm32f1xx_hal_rcc.log",
+    "retained": "generic-after-v1/f103-analyzer-16-stm32f1xx_hal_rcc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-17-stm32f1xx_hal_rcc_ex.log",
+    "retained": "generic-after-v1/f103-analyzer-17-stm32f1xx_hal_rcc_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-18-stm32f1xx_hal_gpio.log",
+    "retained": "generic-after-v1/f103-analyzer-18-stm32f1xx_hal_gpio.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-19-stm32f1xx_hal_dma.log",
+    "retained": "generic-after-v1/f103-analyzer-19-stm32f1xx_hal_dma.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-20-stm32f1xx_hal_cortex.log",
+    "retained": "generic-after-v1/f103-analyzer-20-stm32f1xx_hal_cortex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-21-stm32f1xx_hal_pwr.log",
+    "retained": "generic-after-v1/f103-analyzer-21-stm32f1xx_hal_pwr.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-22-stm32f1xx_hal_flash.log",
+    "retained": "generic-after-v1/f103-analyzer-22-stm32f1xx_hal_flash.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-23-stm32f1xx_hal_flash_ex.log",
+    "retained": "generic-after-v1/f103-analyzer-23-stm32f1xx_hal_flash_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-24-stm32f1xx_hal_exti.log",
+    "retained": "generic-after-v1/f103-analyzer-24-stm32f1xx_hal_exti.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-25-stm32f1xx_hal_spi.log",
+    "retained": "generic-after-v1/f103-analyzer-25-stm32f1xx_hal_spi.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-26-stm32f1xx_hal_uart.log",
+    "retained": "generic-after-v1/f103-analyzer-26-stm32f1xx_hal_uart.log",
+    "sha256": "ed186468cfe01acf6dc166201df1dda4ab9e5611515d5602bac4b3a8833130c5",
+    "bytes": 8527
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-27-system_stm32f1xx.log",
+    "retained": "generic-after-v1/f103-analyzer-27-system_stm32f1xx.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-28-usbd_core.log",
+    "retained": "generic-after-v1/f103-analyzer-28-usbd_core.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-29-usbd_ctlreq.log",
+    "retained": "generic-after-v1/f103-analyzer-29-usbd_ctlreq.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-30-usbd_ioreq.log",
+    "retained": "generic-after-v1/f103-analyzer-30-usbd_ioreq.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-31-usbd_cdc.log",
+    "retained": "generic-after-v1/f103-analyzer-31-usbd_cdc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-32-sysmem.log",
+    "retained": "generic-after-v1/f103-analyzer-32-sysmem.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-33-syscalls.log",
+    "retained": "generic-after-v1/f103-analyzer-33-syscalls.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-34-usb_cdc_transport.log",
+    "retained": "generic-after-v1/f103-analyzer-34-usb_cdc_transport.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-35-usb_cdc_port.log",
+    "retained": "generic-after-v1/f103-analyzer-35-usb_cdc_port.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-36-usb_cdc_retire.log",
+    "retained": "generic-after-v1/f103-analyzer-36-usb_cdc_retire.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-37-pc_usb_control.log",
+    "retained": "generic-after-v1/f103-analyzer-37-pc_usb_control.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-38-silverstar_assert.log",
+    "retained": "generic-after-v1/f103-analyzer-38-silverstar_assert.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-asm.log",
+    "retained": "generic-after-v1/f103-analyzer-asm.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-attributes.log",
+    "retained": "generic-after-v1/f103-analyzer-attributes.log",
+    "sha256": "915962c3ba12ca01502ed05f81abd520cc017cd2e8354a25d30d807f3c91fd33",
+    "bytes": 376
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-link.log",
+    "retained": "generic-after-v1/f103-analyzer-link.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-size.log",
+    "retained": "generic-after-v1/f103-analyzer-size.log",
+    "sha256": "c8d213a3311ca921bf5269b7722d749c0495ff3c6a11e2e49f9ab8543dbdf7b1",
+    "bytes": 239
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-symbols.log",
+    "retained": "generic-after-v1/f103-analyzer-symbols.log",
+    "sha256": "7795815328cee329a291b0460e04d3148fedbc9be815bef1fe551376c0ee3a04",
+    "bytes": 9332
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-analyzer-vectors.log",
+    "retained": "generic-after-v1/f103-analyzer-vectors.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-locate-libc_nano.a.log",
+    "retained": "generic-after-v1/f103-locate-libc_nano.a.log",
+    "sha256": "2af07dd9505a7cfd56a143977f2d18d620ee0320c675e9abdc42d86da2b1718d",
+    "bytes": 126
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-locate-libgcc.a.log",
+    "retained": "generic-after-v1/f103-locate-libgcc.a.log",
+    "sha256": "b3f9b687e692bc50e5614e3ab0723094e9f29d467cbe356256e45583991ea7a2",
+    "bytes": 93
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-locate-libm.a.log",
+    "retained": "generic-after-v1/f103-locate-libm.a.log",
+    "sha256": "a7ceb43cd7cea42ad64014823a4e76950cdbe1b31343a4e9573b2cda045e9af8",
+    "bytes": 121
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-locate-libnosys.a.log",
+    "retained": "generic-after-v1/f103-locate-libnosys.a.log",
+    "sha256": "1de965454af28fbd86a5071bf8d8d3bff9349b6ff7044ad90f5fb53ea697ac80",
+    "bytes": 125
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-00-main.log",
+    "retained": "generic-after-v1/f103-normal-00-main.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-01-gpio.log",
+    "retained": "generic-after-v1/f103-normal-01-gpio.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-02-dma.log",
+    "retained": "generic-after-v1/f103-normal-02-dma.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-03-spi.log",
+    "retained": "generic-after-v1/f103-normal-03-spi.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-04-usart.log",
+    "retained": "generic-after-v1/f103-normal-04-usart.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-05-stm32f1xx_it.log",
+    "retained": "generic-after-v1/f103-normal-05-stm32f1xx_it.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-06-stm32f1xx_hal_msp.log",
+    "retained": "generic-after-v1/f103-normal-06-stm32f1xx_hal_msp.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-07-usb_device.log",
+    "retained": "generic-after-v1/f103-normal-07-usb_device.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-08-usbd_desc.log",
+    "retained": "generic-after-v1/f103-normal-08-usbd_desc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-09-usbd_cdc_if.log",
+    "retained": "generic-after-v1/f103-normal-09-usbd_cdc_if.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-10-usbd_conf.log",
+    "retained": "generic-after-v1/f103-normal-10-usbd_conf.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-11-stm32f1xx_hal_gpio_ex.log",
+    "retained": "generic-after-v1/f103-normal-11-stm32f1xx_hal_gpio_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-12-stm32f1xx_hal_pcd.log",
+    "retained": "generic-after-v1/f103-normal-12-stm32f1xx_hal_pcd.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-13-stm32f1xx_hal_pcd_ex.log",
+    "retained": "generic-after-v1/f103-normal-13-stm32f1xx_hal_pcd_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-14-stm32f1xx_ll_usb.log",
+    "retained": "generic-after-v1/f103-normal-14-stm32f1xx_ll_usb.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-15-stm32f1xx_hal.log",
+    "retained": "generic-after-v1/f103-normal-15-stm32f1xx_hal.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-16-stm32f1xx_hal_rcc.log",
+    "retained": "generic-after-v1/f103-normal-16-stm32f1xx_hal_rcc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-17-stm32f1xx_hal_rcc_ex.log",
+    "retained": "generic-after-v1/f103-normal-17-stm32f1xx_hal_rcc_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-18-stm32f1xx_hal_gpio.log",
+    "retained": "generic-after-v1/f103-normal-18-stm32f1xx_hal_gpio.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-19-stm32f1xx_hal_dma.log",
+    "retained": "generic-after-v1/f103-normal-19-stm32f1xx_hal_dma.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-20-stm32f1xx_hal_cortex.log",
+    "retained": "generic-after-v1/f103-normal-20-stm32f1xx_hal_cortex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-21-stm32f1xx_hal_pwr.log",
+    "retained": "generic-after-v1/f103-normal-21-stm32f1xx_hal_pwr.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-22-stm32f1xx_hal_flash.log",
+    "retained": "generic-after-v1/f103-normal-22-stm32f1xx_hal_flash.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-23-stm32f1xx_hal_flash_ex.log",
+    "retained": "generic-after-v1/f103-normal-23-stm32f1xx_hal_flash_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-24-stm32f1xx_hal_exti.log",
+    "retained": "generic-after-v1/f103-normal-24-stm32f1xx_hal_exti.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-25-stm32f1xx_hal_spi.log",
+    "retained": "generic-after-v1/f103-normal-25-stm32f1xx_hal_spi.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-26-stm32f1xx_hal_uart.log",
+    "retained": "generic-after-v1/f103-normal-26-stm32f1xx_hal_uart.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-27-system_stm32f1xx.log",
+    "retained": "generic-after-v1/f103-normal-27-system_stm32f1xx.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-28-usbd_core.log",
+    "retained": "generic-after-v1/f103-normal-28-usbd_core.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-29-usbd_ctlreq.log",
+    "retained": "generic-after-v1/f103-normal-29-usbd_ctlreq.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-30-usbd_ioreq.log",
+    "retained": "generic-after-v1/f103-normal-30-usbd_ioreq.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-31-usbd_cdc.log",
+    "retained": "generic-after-v1/f103-normal-31-usbd_cdc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-32-sysmem.log",
+    "retained": "generic-after-v1/f103-normal-32-sysmem.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-33-syscalls.log",
+    "retained": "generic-after-v1/f103-normal-33-syscalls.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-34-usb_cdc_transport.log",
+    "retained": "generic-after-v1/f103-normal-34-usb_cdc_transport.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-35-usb_cdc_port.log",
+    "retained": "generic-after-v1/f103-normal-35-usb_cdc_port.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-36-usb_cdc_retire.log",
+    "retained": "generic-after-v1/f103-normal-36-usb_cdc_retire.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-37-pc_usb_control.log",
+    "retained": "generic-after-v1/f103-normal-37-pc_usb_control.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-38-silverstar_assert.log",
+    "retained": "generic-after-v1/f103-normal-38-silverstar_assert.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-asm.log",
+    "retained": "generic-after-v1/f103-normal-asm.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-attributes.log",
+    "retained": "generic-after-v1/f103-normal-attributes.log",
+    "sha256": "915962c3ba12ca01502ed05f81abd520cc017cd2e8354a25d30d807f3c91fd33",
+    "bytes": 376
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-link.log",
+    "retained": "generic-after-v1/f103-normal-link.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-size.log",
+    "retained": "generic-after-v1/f103-normal-size.log",
+    "sha256": "2a7cb2d0abb4a688f74153bb31b265fcbc07ec15365cbfd88f36fb908f6331fb",
+    "bytes": 237
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-symbols.log",
+    "retained": "generic-after-v1/f103-normal-symbols.log",
+    "sha256": "7795815328cee329a291b0460e04d3148fedbc9be815bef1fe551376c0ee3a04",
+    "bytes": 9332
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-normal-vectors.log",
+    "retained": "generic-after-v1/f103-normal-vectors.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-power10.log",
+    "retained": "generic-after-v1/f103-power10.log",
+    "sha256": "51de5271b5e54842fee51ddd842e9ac2440a0f6d46729966ee369a15cd0e15cb",
+    "bytes": 43482
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-preprocessed-12-stm32f1xx_hal_pcd.log",
+    "retained": "generic-after-v1/f103-preprocessed-12-stm32f1xx_hal_pcd.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-preprocessed-13-stm32f1xx_hal_pcd_ex.log",
+    "retained": "generic-after-v1/f103-preprocessed-13-stm32f1xx_hal_pcd_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f103-preprocessed-14-stm32f1xx_ll_usb.log",
+    "retained": "generic-after-v1/f103-preprocessed-14-stm32f1xx_ll_usb.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-00-main.log",
+    "retained": "generic-after-v1/f407-analyzer-00-main.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-01-gpio.log",
+    "retained": "generic-after-v1/f407-analyzer-01-gpio.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-02-adc.log",
+    "retained": "generic-after-v1/f407-analyzer-02-adc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-03-dma.log",
+    "retained": "generic-after-v1/f407-analyzer-03-dma.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-04-spi.log",
+    "retained": "generic-after-v1/f407-analyzer-04-spi.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-05-usart.log",
+    "retained": "generic-after-v1/f407-analyzer-05-usart.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-06-stm32f4xx_it.log",
+    "retained": "generic-after-v1/f407-analyzer-06-stm32f4xx_it.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-07-stm32f4xx_hal_msp.log",
+    "retained": "generic-after-v1/f407-analyzer-07-stm32f4xx_hal_msp.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-08-stm32f4xx_hal_timebase_tim.log",
+    "retained": "generic-after-v1/f407-analyzer-08-stm32f4xx_hal_timebase_tim.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-09-usb_device.log",
+    "retained": "generic-after-v1/f407-analyzer-09-usb_device.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-10-usbd_desc.log",
+    "retained": "generic-after-v1/f407-analyzer-10-usbd_desc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-11-usbd_cdc_if.log",
+    "retained": "generic-after-v1/f407-analyzer-11-usbd_cdc_if.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-12-usbd_conf.log",
+    "retained": "generic-after-v1/f407-analyzer-12-usbd_conf.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-13-stm32f4xx_hal_tim.log",
+    "retained": "generic-after-v1/f407-analyzer-13-stm32f4xx_hal_tim.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-14-stm32f4xx_hal_tim_ex.log",
+    "retained": "generic-after-v1/f407-analyzer-14-stm32f4xx_hal_tim_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-15-stm32f4xx_hal_pcd.log",
+    "retained": "generic-after-v1/f407-analyzer-15-stm32f4xx_hal_pcd.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-16-stm32f4xx_hal_pcd_ex.log",
+    "retained": "generic-after-v1/f407-analyzer-16-stm32f4xx_hal_pcd_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-17-stm32f4xx_ll_usb.log",
+    "retained": "generic-after-v1/f407-analyzer-17-stm32f4xx_ll_usb.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-18-stm32f4xx_hal_rcc.log",
+    "retained": "generic-after-v1/f407-analyzer-18-stm32f4xx_hal_rcc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-19-stm32f4xx_hal_rcc_ex.log",
+    "retained": "generic-after-v1/f407-analyzer-19-stm32f4xx_hal_rcc_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-20-stm32f4xx_hal_flash.log",
+    "retained": "generic-after-v1/f407-analyzer-20-stm32f4xx_hal_flash.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-21-stm32f4xx_hal_flash_ex.log",
+    "retained": "generic-after-v1/f407-analyzer-21-stm32f4xx_hal_flash_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-22-stm32f4xx_hal_flash_ramfunc.log",
+    "retained": "generic-after-v1/f407-analyzer-22-stm32f4xx_hal_flash_ramfunc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-23-stm32f4xx_hal_gpio.log",
+    "retained": "generic-after-v1/f407-analyzer-23-stm32f4xx_hal_gpio.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-24-stm32f4xx_hal_dma_ex.log",
+    "retained": "generic-after-v1/f407-analyzer-24-stm32f4xx_hal_dma_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-25-stm32f4xx_hal_dma.log",
+    "retained": "generic-after-v1/f407-analyzer-25-stm32f4xx_hal_dma.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-26-stm32f4xx_hal_pwr.log",
+    "retained": "generic-after-v1/f407-analyzer-26-stm32f4xx_hal_pwr.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-27-stm32f4xx_hal_pwr_ex.log",
+    "retained": "generic-after-v1/f407-analyzer-27-stm32f4xx_hal_pwr_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-28-stm32f4xx_hal_cortex.log",
+    "retained": "generic-after-v1/f407-analyzer-28-stm32f4xx_hal_cortex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-29-stm32f4xx_hal.log",
+    "retained": "generic-after-v1/f407-analyzer-29-stm32f4xx_hal.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-30-stm32f4xx_hal_exti.log",
+    "retained": "generic-after-v1/f407-analyzer-30-stm32f4xx_hal_exti.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-31-stm32f4xx_hal_adc.log",
+    "retained": "generic-after-v1/f407-analyzer-31-stm32f4xx_hal_adc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-32-stm32f4xx_hal_adc_ex.log",
+    "retained": "generic-after-v1/f407-analyzer-32-stm32f4xx_hal_adc_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-33-stm32f4xx_ll_adc.log",
+    "retained": "generic-after-v1/f407-analyzer-33-stm32f4xx_ll_adc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-34-stm32f4xx_hal_spi.log",
+    "retained": "generic-after-v1/f407-analyzer-34-stm32f4xx_hal_spi.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-35-stm32f4xx_hal_uart.log",
+    "retained": "generic-after-v1/f407-analyzer-35-stm32f4xx_hal_uart.log",
+    "sha256": "f364e476f6e9d290c54f42fdaa6f205a8f1f45065c6248dec558bb11d987a5ee",
+    "bytes": 8527
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-36-system_stm32f4xx.log",
+    "retained": "generic-after-v1/f407-analyzer-36-system_stm32f4xx.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-37-usbd_core.log",
+    "retained": "generic-after-v1/f407-analyzer-37-usbd_core.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-38-usbd_ctlreq.log",
+    "retained": "generic-after-v1/f407-analyzer-38-usbd_ctlreq.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-39-usbd_ioreq.log",
+    "retained": "generic-after-v1/f407-analyzer-39-usbd_ioreq.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-40-usbd_cdc.log",
+    "retained": "generic-after-v1/f407-analyzer-40-usbd_cdc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-41-sysmem.log",
+    "retained": "generic-after-v1/f407-analyzer-41-sysmem.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-42-syscalls.log",
+    "retained": "generic-after-v1/f407-analyzer-42-syscalls.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-43-usb_cdc_transport.log",
+    "retained": "generic-after-v1/f407-analyzer-43-usb_cdc_transport.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-44-usb_cdc_port.log",
+    "retained": "generic-after-v1/f407-analyzer-44-usb_cdc_port.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-45-usb_cdc_retire.log",
+    "retained": "generic-after-v1/f407-analyzer-45-usb_cdc_retire.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-46-pc_usb_control.log",
+    "retained": "generic-after-v1/f407-analyzer-46-pc_usb_control.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-47-silverstar_assert.log",
+    "retained": "generic-after-v1/f407-analyzer-47-silverstar_assert.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-asm.log",
+    "retained": "generic-after-v1/f407-analyzer-asm.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-attributes.log",
+    "retained": "generic-after-v1/f407-analyzer-attributes.log",
+    "sha256": "8599b35651442bea43fda5310f643b91722355e85fcb37b4181e210307f710db",
+    "bytes": 472
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-link.log",
+    "retained": "generic-after-v1/f407-analyzer-link.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-size.log",
+    "retained": "generic-after-v1/f407-analyzer-size.log",
+    "sha256": "6d044ca81aa6bf6cece451954afe6b89d9e9c30e7c4fa4206ac2d15e0ec62bc5",
+    "bytes": 239
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-symbols.log",
+    "retained": "generic-after-v1/f407-analyzer-symbols.log",
+    "sha256": "830a77d68c53172807cdd106ea2289887ba9c4b2b40667d73a1b9b351d8065ff",
+    "bytes": 11402
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-analyzer-vectors.log",
+    "retained": "generic-after-v1/f407-analyzer-vectors.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-locate-libc_nano.a.log",
+    "retained": "generic-after-v1/f407-locate-libc_nano.a.log",
+    "sha256": "62d810a2a6b90aff02b616a5376524738b928f0f88c4650b4a73d367e09a69ed",
+    "bytes": 130
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-locate-libgcc.a.log",
+    "retained": "generic-after-v1/f407-locate-libgcc.a.log",
+    "sha256": "c3264e20f8c1e4f1a6de11540c43c8255a8a74e7be58aebc14df0a2d62d83083",
+    "bytes": 97
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-locate-libm.a.log",
+    "retained": "generic-after-v1/f407-locate-libm.a.log",
+    "sha256": "a69fb8195435647a3e8e981aaefa566f9dd90d71f4aedfbfa2652a83cabe8d5b",
+    "bytes": 125
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-locate-libnosys.a.log",
+    "retained": "generic-after-v1/f407-locate-libnosys.a.log",
+    "sha256": "60a4600159de1e999a43690203f17c93dc67ff2cf8ff8b99d1d9c307d4c72431",
+    "bytes": 129
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-00-main.log",
+    "retained": "generic-after-v1/f407-normal-00-main.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-01-gpio.log",
+    "retained": "generic-after-v1/f407-normal-01-gpio.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-02-adc.log",
+    "retained": "generic-after-v1/f407-normal-02-adc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-03-dma.log",
+    "retained": "generic-after-v1/f407-normal-03-dma.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-04-spi.log",
+    "retained": "generic-after-v1/f407-normal-04-spi.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-05-usart.log",
+    "retained": "generic-after-v1/f407-normal-05-usart.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-06-stm32f4xx_it.log",
+    "retained": "generic-after-v1/f407-normal-06-stm32f4xx_it.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-07-stm32f4xx_hal_msp.log",
+    "retained": "generic-after-v1/f407-normal-07-stm32f4xx_hal_msp.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-08-stm32f4xx_hal_timebase_tim.log",
+    "retained": "generic-after-v1/f407-normal-08-stm32f4xx_hal_timebase_tim.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-09-usb_device.log",
+    "retained": "generic-after-v1/f407-normal-09-usb_device.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-10-usbd_desc.log",
+    "retained": "generic-after-v1/f407-normal-10-usbd_desc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-11-usbd_cdc_if.log",
+    "retained": "generic-after-v1/f407-normal-11-usbd_cdc_if.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-12-usbd_conf.log",
+    "retained": "generic-after-v1/f407-normal-12-usbd_conf.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-13-stm32f4xx_hal_tim.log",
+    "retained": "generic-after-v1/f407-normal-13-stm32f4xx_hal_tim.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-14-stm32f4xx_hal_tim_ex.log",
+    "retained": "generic-after-v1/f407-normal-14-stm32f4xx_hal_tim_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-15-stm32f4xx_hal_pcd.log",
+    "retained": "generic-after-v1/f407-normal-15-stm32f4xx_hal_pcd.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-16-stm32f4xx_hal_pcd_ex.log",
+    "retained": "generic-after-v1/f407-normal-16-stm32f4xx_hal_pcd_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-17-stm32f4xx_ll_usb.log",
+    "retained": "generic-after-v1/f407-normal-17-stm32f4xx_ll_usb.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-18-stm32f4xx_hal_rcc.log",
+    "retained": "generic-after-v1/f407-normal-18-stm32f4xx_hal_rcc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-19-stm32f4xx_hal_rcc_ex.log",
+    "retained": "generic-after-v1/f407-normal-19-stm32f4xx_hal_rcc_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-20-stm32f4xx_hal_flash.log",
+    "retained": "generic-after-v1/f407-normal-20-stm32f4xx_hal_flash.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-21-stm32f4xx_hal_flash_ex.log",
+    "retained": "generic-after-v1/f407-normal-21-stm32f4xx_hal_flash_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-22-stm32f4xx_hal_flash_ramfunc.log",
+    "retained": "generic-after-v1/f407-normal-22-stm32f4xx_hal_flash_ramfunc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-23-stm32f4xx_hal_gpio.log",
+    "retained": "generic-after-v1/f407-normal-23-stm32f4xx_hal_gpio.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-24-stm32f4xx_hal_dma_ex.log",
+    "retained": "generic-after-v1/f407-normal-24-stm32f4xx_hal_dma_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-25-stm32f4xx_hal_dma.log",
+    "retained": "generic-after-v1/f407-normal-25-stm32f4xx_hal_dma.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-26-stm32f4xx_hal_pwr.log",
+    "retained": "generic-after-v1/f407-normal-26-stm32f4xx_hal_pwr.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-27-stm32f4xx_hal_pwr_ex.log",
+    "retained": "generic-after-v1/f407-normal-27-stm32f4xx_hal_pwr_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-28-stm32f4xx_hal_cortex.log",
+    "retained": "generic-after-v1/f407-normal-28-stm32f4xx_hal_cortex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-29-stm32f4xx_hal.log",
+    "retained": "generic-after-v1/f407-normal-29-stm32f4xx_hal.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-30-stm32f4xx_hal_exti.log",
+    "retained": "generic-after-v1/f407-normal-30-stm32f4xx_hal_exti.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-31-stm32f4xx_hal_adc.log",
+    "retained": "generic-after-v1/f407-normal-31-stm32f4xx_hal_adc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-32-stm32f4xx_hal_adc_ex.log",
+    "retained": "generic-after-v1/f407-normal-32-stm32f4xx_hal_adc_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-33-stm32f4xx_ll_adc.log",
+    "retained": "generic-after-v1/f407-normal-33-stm32f4xx_ll_adc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-34-stm32f4xx_hal_spi.log",
+    "retained": "generic-after-v1/f407-normal-34-stm32f4xx_hal_spi.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-35-stm32f4xx_hal_uart.log",
+    "retained": "generic-after-v1/f407-normal-35-stm32f4xx_hal_uart.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-36-system_stm32f4xx.log",
+    "retained": "generic-after-v1/f407-normal-36-system_stm32f4xx.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-37-usbd_core.log",
+    "retained": "generic-after-v1/f407-normal-37-usbd_core.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-38-usbd_ctlreq.log",
+    "retained": "generic-after-v1/f407-normal-38-usbd_ctlreq.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-39-usbd_ioreq.log",
+    "retained": "generic-after-v1/f407-normal-39-usbd_ioreq.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-40-usbd_cdc.log",
+    "retained": "generic-after-v1/f407-normal-40-usbd_cdc.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-41-sysmem.log",
+    "retained": "generic-after-v1/f407-normal-41-sysmem.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-42-syscalls.log",
+    "retained": "generic-after-v1/f407-normal-42-syscalls.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-43-usb_cdc_transport.log",
+    "retained": "generic-after-v1/f407-normal-43-usb_cdc_transport.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-44-usb_cdc_port.log",
+    "retained": "generic-after-v1/f407-normal-44-usb_cdc_port.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-45-usb_cdc_retire.log",
+    "retained": "generic-after-v1/f407-normal-45-usb_cdc_retire.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-46-pc_usb_control.log",
+    "retained": "generic-after-v1/f407-normal-46-pc_usb_control.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-47-silverstar_assert.log",
+    "retained": "generic-after-v1/f407-normal-47-silverstar_assert.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-asm.log",
+    "retained": "generic-after-v1/f407-normal-asm.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-attributes.log",
+    "retained": "generic-after-v1/f407-normal-attributes.log",
+    "sha256": "8599b35651442bea43fda5310f643b91722355e85fcb37b4181e210307f710db",
+    "bytes": 472
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-link.log",
+    "retained": "generic-after-v1/f407-normal-link.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-size.log",
+    "retained": "generic-after-v1/f407-normal-size.log",
+    "sha256": "77e826ed32ab3307e2537252b8fb6cbb0fd53edbfe48feb5a05be10663587bf6",
+    "bytes": 237
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-symbols.log",
+    "retained": "generic-after-v1/f407-normal-symbols.log",
+    "sha256": "830a77d68c53172807cdd106ea2289887ba9c4b2b40667d73a1b9b351d8065ff",
+    "bytes": 11402
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-normal-vectors.log",
+    "retained": "generic-after-v1/f407-normal-vectors.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-power10.log",
+    "retained": "generic-after-v1/f407-power10.log",
+    "sha256": "48b10d59c0aecceb4fdff9533bd0caeba44d091feefbc82798042dbd9ed50924",
+    "bytes": 53284
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-preprocessed-15-stm32f4xx_hal_pcd.log",
+    "retained": "generic-after-v1/f407-preprocessed-15-stm32f4xx_hal_pcd.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-preprocessed-16-stm32f4xx_hal_pcd_ex.log",
+    "retained": "generic-after-v1/f407-preprocessed-16-stm32f4xx_hal_pcd_ex.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\f407-preprocessed-17-stm32f4xx_ll_usb.log",
+    "retained": "generic-after-v1/f407-preprocessed-17-stm32f4xx_ll_usb.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\gcc-version.log",
+    "retained": "generic-after-v1/gcc-version.log",
+    "sha256": "d6334173e6c7d0b9aa942c21d117ef3c243b17c8697d007a2eb1ea6092d51d15",
+    "bytes": 249
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\host-tests.log",
+    "retained": "generic-after-v1/host-tests.log",
+    "sha256": "856f37b1f1251e78fa6452d3d83f4c673c902e2c19e7b3ee33b650ad748ff58b",
+    "bytes": 1555
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\inventory.json",
+    "retained": "generic-after-v1/inventory.json",
+    "sha256": "6df97f2b931d22183bc84faed0dba851d4b414db96db761286dbff228ea50caa",
+    "bytes": 219862
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\python-version.log",
+    "retained": "generic-after-v1/python-version.log",
+    "sha256": "3c00433d6870b2f40b3bbc642b5cec6dc34ace27ad25b0c1a0bb075047ea33b8",
+    "bytes": 15
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\source-snapshot.json",
+    "retained": "generic-after-v1/source-snapshot.json",
+    "sha256": "0934254d0cae9b338090d769be77f499293dfae45b21bd3f83b137cab9678c72",
+    "bytes": 367867
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\summary.json",
+    "retained": "generic-after-v1/summary.json",
+    "sha256": "75e53ccf9319b6dccd303cefd70e5b890efa8140457544bd0e7701851dc26c62",
+    "bytes": 7916
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\lifecycle-integration.json",
+    "retained": "generic-after-v1/f103/lifecycle-integration.json",
+    "sha256": "e4a371bfa2c0688540d839c4dde3f7cf70988c82f8ce82acb8179f6643b56d1f",
+    "bytes": 3191
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\kit-sha256.json",
+    "retained": "generic-after-v1/f103/kit-sha256.json",
+    "sha256": "1cc1bd8990e957f6d21f32f6f6eebbf7fcd3d71c42b44b9717feead4d6784ddc",
+    "bytes": 3246
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\receipt.json",
+    "retained": "generic-after-v1/f103/receipt.json",
+    "sha256": "783a4a42a41c26217b780ac4ffc1c65a8329a169bee636e855a3094fb0dedf68",
+    "bytes": 3095
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\integration.json",
+    "retained": "generic-after-v1/f103/integration.json",
+    "sha256": "549cd82817edf5711900bd6778a24141a6681e5da80c1254b51b54abd9c10ed4",
+    "bytes": 19309
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\usb-adaptation.json",
+    "retained": "generic-after-v1/f103/usb-adaptation.json",
+    "sha256": "0cb55885de2a34ef00d44dac8a09429670c00fa78b554431dbb41cad6c69940d",
+    "bytes": 20639
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\assertion-owner.json",
+    "retained": "generic-after-v1/f103/assertion-owner.json",
+    "sha256": "e4852bf8f8c8866569b758d24de3641c9ecb8ea5f6988ad6ddda6d1121da37c0",
+    "bytes": 603
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\Makefile",
+    "retained": "generic-after-v1/f103/Makefile",
+    "sha256": "679f36ce84883688fa7206335cb3461b09aaf2f07cd06fd1a748e50220700630",
+    "bytes": 10077
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\LICENSE-SilverStar.txt",
+    "retained": "generic-after-v1/f103/LICENSE-SilverStar.txt",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "bytes": 11358
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\Generated\\usb_transport_source_graph.json",
+    "retained": "generic-after-v1/f103/Generated/usb_transport_source_graph.json",
+    "sha256": "c9fd92a9e6b2c79e9ef9114e15802b81eccbadb1e713b51dd94f1b34023a2b05",
+    "bytes": 26192
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\Native\\USB_DEVICE\\App\\usbd_cdc_if.c",
+    "retained": "source-objects/e87ee8b59f985d0ed88cd1a2b73d794a850e5a712e379e4f12491234d36a89a0.c",
+    "sha256": "e87ee8b59f985d0ed88cd1a2b73d794a850e5a712e379e4f12491234d36a89a0",
+    "bytes": 6511
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Src\\usbd_core.c",
+    "retained": "source-objects/d3041fb134338f36c3d42393798a1b714c881e03e2906921219cb26cc7da39ef.c",
+    "sha256": "d3041fb134338f36c3d42393798a1b714c881e03e2906921219cb26cc7da39ef",
+    "bytes": 15863
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Src\\usbd_ioreq.c",
+    "retained": "source-objects/af8fa69eb3524a1da65f8381561d97a5d110c9d5f6e85081bf435d70ac3468f5.c",
+    "sha256": "af8fa69eb3524a1da65f8381561d97a5d110c9d5f6e85081bf435d70ac3468f5",
+    "bytes": 5120
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Class\\CDC\\Src\\usbd_cdc.c",
+    "retained": "source-objects/52e508e5414fb51a44bd0e10b425ee0c6e0f2dff601dfc3c65d13ee349000704.c",
+    "sha256": "52e508e5414fb51a44bd0e10b425ee0c6e0f2dff601dfc3c65d13ee349000704",
+    "bytes": 30858
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\Generated\\UsbTransport\\Src\\pc_usb_control.c",
+    "retained": "source-objects/344f2ba0ddfd8c7805939cbffaa38ac48cbd1e14b21d8c72edb8c11bbc55d7fa.c",
+    "sha256": "344f2ba0ddfd8c7805939cbffaa38ac48cbd1e14b21d8c72edb8c11bbc55d7fa",
+    "bytes": 5269
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\Inc\\pc_usb_control.h",
+    "retained": "source-objects/ee8e55ad1baae8c3e3e425c12b4e6b667431e9c60db42ffd994f9ae2c853f977.h",
+    "sha256": "ee8e55ad1baae8c3e3e425c12b4e6b667431e9c60db42ffd994f9ae2c853f977",
+    "bytes": 501
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Class\\CDC\\Src\\usbd_cdc.c.patch",
+    "retained": "source-objects/2fc8ab715d3a9732510c038fab380c713ba22607320e993998c68319108214f7.patch",
+    "sha256": "2fc8ab715d3a9732510c038fab380c713ba22607320e993998c68319108214f7",
+    "bytes": 20470
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Src\\usbd_core.c.patch",
+    "retained": "source-objects/afd547fbbe4646c5c48cd0a114282908dced655155c2db01867f75cfd2edbe74.patch",
+    "sha256": "afd547fbbe4646c5c48cd0a114282908dced655155c2db01867f75cfd2edbe74",
+    "bytes": 15753
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Src\\usbd_ioreq.c.patch",
+    "retained": "source-objects/f7789b423660873169243cc1f027eb55d84baace84e55802824b31e702519753.patch",
+    "sha256": "f7789b423660873169243cc1f027eb55d84baace84e55802824b31e702519753",
+    "bytes": 10534
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\Native\\USB_DEVICE\\App\\usbd_cdc_if.c.patch",
+    "retained": "source-objects/864cd59a8a4bb6dcfab8f6f5a3b14ed9944efa7eaeedca44f36f8e0b6d10c4c4.patch",
+    "sha256": "864cd59a8a4bb6dcfab8f6f5a3b14ed9944efa7eaeedca44f36f8e0b6d10c4c4",
+    "bytes": 15657
+  },
+  {
+    "source": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\License.md",
+    "retained": "native-licenses/f103/License.md",
+    "sha256": "92282b534952354891151c90af2f935f311fb3b3be9deed1eae8410599443a39",
+    "bytes": 1662
+  },
+  {
+    "source": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Package_license.md",
+    "retained": "native-licenses/f103/Package_license.md",
+    "sha256": "5d0016458729aeb4501e604bb8fa8385e1b258b0113af3c6915532cfb945817b",
+    "bytes": 11754
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\lifecycle-integration.json",
+    "retained": "generic-after-v1/f407/lifecycle-integration.json",
+    "sha256": "2a8965b6c53242d8948438052dd395958fe3d07c310db1daff8333eb3b338bda",
+    "bytes": 3499
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\kit-sha256.json",
+    "retained": "generic-after-v1/f407/kit-sha256.json",
+    "sha256": "cd12d958bb7e78199d68b95fe948b621a7f45b22b577ffa3ab4a9ad24f863d05",
+    "bytes": 3472
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\receipt.json",
+    "retained": "generic-after-v1/f407/receipt.json",
+    "sha256": "6a0a1eadbbc79d6f74398dd614497e76a41bfbcf9972db1ff37d2775d7e18c42",
+    "bytes": 3907
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\integration.json",
+    "retained": "generic-after-v1/f407/integration.json",
+    "sha256": "ca16740ebaf5ee48baaaac3cccb5f49a6d44f6b67e3b0b342057d8b57b3b1899",
+    "bytes": 24016
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\usb-adaptation.json",
+    "retained": "generic-after-v1/f407/usb-adaptation.json",
+    "sha256": "8748b5b560f26ba6426e1349a79b0a4489e13eb73ec41403abf83492d4ddd91b",
+    "bytes": 25220
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\assertion-owner.json",
+    "retained": "generic-after-v1/f407/assertion-owner.json",
+    "sha256": "e4852bf8f8c8866569b758d24de3641c9ecb8ea5f6988ad6ddda6d1121da37c0",
+    "bytes": 603
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\Makefile",
+    "retained": "generic-after-v1/f407/Makefile",
+    "sha256": "48c6eb52522f3e2cc668bbc0a56e3dc6ac275b0568dbd0aa9b18be4f6c55a9ea",
+    "bytes": 11279
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\LICENSE-SilverStar.txt",
+    "retained": "generic-after-v1/f407/LICENSE-SilverStar.txt",
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "bytes": 11358
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\Generated\\usb_transport_source_graph.json",
+    "retained": "generic-after-v1/f407/Generated/usb_transport_source_graph.json",
+    "sha256": "3a0582a308ab87d6e8757717c6046ff5483daaf8806d0efe6bd6c048a5fab977",
+    "bytes": 31907
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\Native\\USB_DEVICE\\App\\usbd_cdc_if.c",
+    "retained": "source-objects/15b1769c9691ddf21afef8a98071352eb1eba8089240e8582ed2d5b5098da08c.c",
+    "sha256": "15b1769c9691ddf21afef8a98071352eb1eba8089240e8582ed2d5b5098da08c",
+    "bytes": 7276
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Src\\usbd_core.c",
+    "retained": "source-objects/83a8a59ffe5d3b1d54c44d8443866bf7ce8077bde9a03c8894f47afa3641ed22.c",
+    "sha256": "83a8a59ffe5d3b1d54c44d8443866bf7ce8077bde9a03c8894f47afa3641ed22",
+    "bytes": 30556
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Src\\usbd_ioreq.c",
+    "retained": "source-objects/1caa710ce08bff5a728b4d29c45e15c32ea302d176af2ca8f334052def0a9568.c",
+    "sha256": "1caa710ce08bff5a728b4d29c45e15c32ea302d176af2ca8f334052def0a9568",
+    "bytes": 5338
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Class\\CDC\\Src\\usbd_cdc.c",
+    "retained": "source-objects/98a5b1760ec4e29c803827ca5c74d7c3f7bf36765825c1d028230bbf00e31b5f.c",
+    "sha256": "98a5b1760ec4e29c803827ca5c74d7c3f7bf36765825c1d028230bbf00e31b5f",
+    "bytes": 28126
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\Generated\\UsbTransport\\Src\\pc_usb_control.c",
+    "retained": "source-objects/4ece79faf40650b6272fdab1b4aaf30532ac9e63f7f0e3b07be8a94c81dfd8c1.c",
+    "sha256": "4ece79faf40650b6272fdab1b4aaf30532ac9e63f7f0e3b07be8a94c81dfd8c1",
+    "bytes": 5318
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Class\\CDC\\Src\\usbd_cdc.c.patch",
+    "retained": "source-objects/2cb1dad344d31e8d310b2845e6fbcfc7dc051b7439252f206c4b24f99d187821.patch",
+    "sha256": "2cb1dad344d31e8d310b2845e6fbcfc7dc051b7439252f206c4b24f99d187821",
+    "bytes": 21833
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Src\\usbd_core.c.patch",
+    "retained": "source-objects/01f55caded860508579087d9d728605dfdb06dab6954343a311a496f73452223.patch",
+    "sha256": "01f55caded860508579087d9d728605dfdb06dab6954343a311a496f73452223",
+    "bytes": 12615
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Src\\usbd_ioreq.c.patch",
+    "retained": "source-objects/9adbffe6c255babb76eb84de8f06586c7fa63a935d9f45ae4132ef3e2f2608fb.patch",
+    "sha256": "9adbffe6c255babb76eb84de8f06586c7fa63a935d9f45ae4132ef3e2f2608fb",
+    "bytes": 2386
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\Native\\USB_DEVICE\\App\\usbd_cdc_if.c.patch",
+    "retained": "source-objects/3ed505978f49652da4bef6daeab547c423fee6bcfc81cd243ce4352d5c73cb65.patch",
+    "sha256": "3ed505978f49652da4bef6daeab547c423fee6bcfc81cd243ce4352d5c73cb65",
+    "bytes": 17262
+  },
+  {
+    "source": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f407-usb\\Package_license.md",
+    "retained": "native-licenses/f407/Package_license.md",
+    "sha256": "2fe52ca80ec3d84064631a051a914b418aa65b9126ae5131ea323213a8be5aa2",
+    "bytes": 30874
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb-generic-ep0-before-v1.log",
+    "retained": "generic-ep0-before-v1.log",
+    "sha256": "e92e49267e1b0c16659e19dc378ba4a3327fe873f0c684aca7dd9695ab264cad",
+    "bytes": 16166
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb-generic-ep0-before-v1.exit",
+    "retained": "generic-ep0-before-v1.exit",
+    "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "bytes": 3
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\compile.log",
+    "retained": "generic-ep0-before-v1/f103/compile.log",
+    "sha256": "1e6ba260781131075b010f7606f654c101d479a98678e2545275765a06d0da6d",
+    "bytes": 1390
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\control-receipt.json",
+    "retained": "generic-ep0-before-v1/f103/control-receipt.json",
+    "sha256": "cdbca6e9d7a158e0a4e7a93e4355c5719682b50e2dcff26b53f7d1f1f04ae510",
+    "bytes": 8250
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\control.c",
+    "retained": "generic-ep0-before-v1/f103/control.c",
+    "sha256": "0d55ad92085b0b0a3071431205648572671a0cc814e8e548910f3f601c33c371",
+    "bytes": 9308
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda1\\compile.log",
+    "retained": "generic-ep0-before-v1/f407/compile.log",
+    "sha256": "8172e27c42eeb05b485642276d3055b61f9ef009caeb4be6d0cef56100bbc3bf",
+    "bytes": 7706
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda1\\control-receipt.json",
+    "retained": "generic-ep0-before-v1/f407/control-receipt.json",
+    "sha256": "1b4ae0de0fc8a1ef09ea037e42ac264ddb5bf81c3beacf7b876fe5acc68ba153",
+    "bytes": 8251
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda1\\control.c",
+    "retained": "generic-ep0-before-v1/f407/control.c",
+    "sha256": "0d55ad92085b0b0a3071431205648572671a0cc814e8e548910f3f601c33c371",
+    "bytes": 9308
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb-generic-ep0-after-v1.log",
+    "retained": "generic-ep0-after-v1.log",
+    "sha256": "63c360edfef0947d310900322f3739bb2198c652bad87cd4a6fef4a8b4d574f6",
+    "bytes": 620
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb-generic-ep0-after-v1.exit",
+    "retained": "generic-ep0-after-v1.exit",
+    "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "bytes": 3
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-after-v1\\test_generic_actual_ep0_bounda0\\compile.log",
+    "retained": "generic-ep0-after-v1/f103/compile.log",
+    "sha256": "be7400786f8ff83647a6749cb9c06a52e849d57b33e0d3189163397691397a11",
+    "bytes": 486
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-after-v1\\test_generic_actual_ep0_bounda0\\control-receipt.json",
+    "retained": "generic-ep0-after-v1/f103/control-receipt.json",
+    "sha256": "630e346fd089f6a922ed58148dffc6d18621173b174a4305d2cb07573e213533",
+    "bytes": 8358
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-after-v1\\test_generic_actual_ep0_bounda0\\control.c",
+    "retained": "generic-ep0-after-v1/f103/control.c",
+    "sha256": "df746b28167481b6894588a5d2664c348f39aa8a6dfc3487a700a94e0267cb72",
+    "bytes": 12391
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-after-v1\\test_generic_actual_ep0_bounda1\\compile.log",
+    "retained": "generic-ep0-after-v1/f407/compile.log",
+    "sha256": "5224b4aa020789c2b4b9cd4b0aa4f3a6c9a8800ccfabe2536034a1921be658e1",
+    "bytes": 7625
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-after-v1\\test_generic_actual_ep0_bounda1\\control-receipt.json",
+    "retained": "generic-ep0-after-v1/f407/control-receipt.json",
+    "sha256": "cec71bd695993e421ed281c361b78e3b6e645dae4b96fed2840a2498a6163945",
+    "bytes": 8336
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-after-v1\\test_generic_actual_ep0_bounda1\\control.c",
+    "retained": "generic-ep0-after-v1/f407/control.c",
+    "sha256": "df746b28167481b6894588a5d2664c348f39aa8a6dfc3487a700a94e0267cb72",
+    "bytes": 12391
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb-generic-user-owner-v1.log",
+    "retained": "generic-user-owner-v1.log",
+    "sha256": "5f9bad21919303ec7aa8a652dc0ba723534958e14451888b5bb0ced31a80a136",
+    "bytes": 116
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb-generic-user-owner-v1.exit",
+    "retained": "generic-user-owner-v1.exit",
+    "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+    "bytes": 3
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb-generic-before-v1.log",
+    "retained": "generic-before-v1.log",
+    "sha256": "c2542149e059b57e4754ec7ff7cb0d55c4ab8a00987a4c344fa4374ec1bfdbb0",
+    "bytes": 6954
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb-generic-before-v1.exit",
+    "retained": "generic-before-v1.exit",
+    "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "bytes": 3
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb-generic-after-v1.log",
+    "retained": "generic-after-v1.log",
+    "sha256": "22f590f2d0ad0df3269c21393947f4715069a8930a2cf447f30fa849261e24a8",
+    "bytes": 7090
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb-generic-after-v1.exit",
+    "retained": "generic-after-v1.exit",
+    "sha256": "f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04",
+    "bytes": 3
+  }
+]

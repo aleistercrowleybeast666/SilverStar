@@ -1,0 +1,411 @@
+{
+  "format": "silverstar.usb.native-source-graph",
+  "version": 1,
+  "scope": "EXPERIMENTAL_NATIVE_USB_ONLY",
+  "source_sha256": "a6f4aa841b62181d9864a6d69de32846ea4bb11679b6129d683ef84ebe2239d7",
+  "sources": [
+    {
+      "input": "Core/Src/main.c",
+      "compiled": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Native\\Core\\Src\\main.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Core/Src/gpio.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Core\\Src\\gpio.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Core/Src/dma.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Core\\Src\\dma.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Core/Src/spi.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Core\\Src\\spi.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Core/Src/usart.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Core\\Src\\usart.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Core/Src/stm32f1xx_it.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Core\\Src\\stm32f1xx_it.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Core/Src/stm32f1xx_hal_msp.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Core\\Src\\stm32f1xx_hal_msp.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "USB_DEVICE/App/usb_device.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\USB_DEVICE\\App\\usb_device.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "USB_DEVICE/App/usbd_desc.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\USB_DEVICE\\App\\usbd_desc.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "USB_DEVICE/App/usbd_cdc_if.c",
+      "compiled": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Native\\USB_DEVICE\\App\\usbd_cdc_if.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "USB_DEVICE/Target/usbd_conf.c",
+      "compiled": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Native\\USB_DEVICE\\Target\\usbd_conf.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_gpio_ex.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_pcd.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_pcd_ex.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_ll_usb.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_rcc.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_rcc_ex.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_gpio.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_dma.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_cortex.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_pwr.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_flash.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_flash_ex.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_exti.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_spi.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\STM32F1xx_HAL_Driver\\Src\\stm32f1xx_hal_uart.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Core/Src/system_stm32f1xx.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Core\\Src\\system_stm32f1xx.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c",
+      "compiled": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Src\\usbd_core.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Src\\usbd_ctlreq.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c",
+      "compiled": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Src\\usbd_ioreq.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c",
+      "compiled": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Class\\CDC\\Src\\usbd_cdc.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Core/Src/sysmem.c",
+      "compiled": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Src\\native_no_heap.c",
+      "policy": "first_party"
+    },
+    {
+      "input": "Core/Src/syscalls.c",
+      "compiled": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Core\\Src\\syscalls.c",
+      "policy": "vendor"
+    },
+    {
+      "input": "Src/usb_cdc_transport.c",
+      "compiled": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Src\\usb_cdc_transport.c",
+      "policy": "first_party"
+    },
+    {
+      "input": "Src/usb_cdc_port.c",
+      "compiled": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Src\\usb_cdc_port.c",
+      "policy": "first_party"
+    },
+    {
+      "input": "Src/usb_cdc_retire.c",
+      "compiled": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Src\\usb_cdc_retire.c",
+      "policy": "first_party"
+    },
+    {
+      "input": "Src/pc_usb_control.c",
+      "compiled": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Src\\pc_usb_control.c",
+      "policy": "first_party"
+    },
+    {
+      "input": "Common/Src/silverstar_assert.c",
+      "compiled": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Common\\Src\\silverstar_assert.c",
+      "policy": "first_party"
+    }
+  ],
+  "assembly": [
+    "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\startup_stm32f103xb.s"
+  ],
+  "includes": [
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Inc",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Common\\Inc",
+    "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Core\\Inc",
+    "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\USB_DEVICE\\App",
+    "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\USB_DEVICE\\Target",
+    "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\STM32F1xx_HAL_Driver\\Inc",
+    "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\STM32F1xx_HAL_Driver\\Inc\\Legacy",
+    "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Inc",
+    "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Middlewares\\ST\\STM32_USB_Device_Library\\Class\\CDC\\Inc",
+    "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\CMSIS\\Device\\ST\\STM32F1xx\\Include",
+    "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\Drivers\\CMSIS\\Include"
+  ],
+  "defines": [
+    "-DUSE_HAL_DRIVER",
+    "-DSTM32F103xB"
+  ],
+  "mcu_flags": [
+    "-mcpu=cortex-m3",
+    "-mthumb",
+    "-mfloat-abi=soft"
+  ],
+  "core": "cortex-m3",
+  "fpu": "",
+  "independent_irq_slots": {
+    "USB_LP_CAN1_RX0_IRQHandler": 20
+  },
+  "linker": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb\\STM32F103XX_FLASH.ld",
+  "native_root": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb",
+  "native_files_sha256": {
+    "Core/Inc/dma.h": "7cf6f7450a29d26303cbba5a3ca8c6cb24a02635d6a5ba4d05141fdfc75c4c49",
+    "Core/Inc/gpio.h": "e2d62f964a0b7f238384ed6a20a181d09df9647240a268dc547acf5b35099f74",
+    "Core/Inc/main.h": "63dc7f2dba801c0ecc73ad04e5151247324300495b6618a95b6eb408997fc0c0",
+    "Core/Inc/spi.h": "7ee08a1f7b3c518b8f1a33e73ee2d18830c1336be9341e774e73f137984491d8",
+    "Core/Inc/stm32f1xx_hal_conf.h": "92f0e3c270b9a757eb3a6f8252bdcfe3d6d1dea141b992afc88707d67c0937fe",
+    "Core/Inc/stm32f1xx_it.h": "98dce6276a88862c2d728a1cc5608b718f718873ce7d1eeba5e5063b4521c6d2",
+    "Core/Inc/usart.h": "b57eee246dfa6d43d3188845b3f5a21ae2fff22ccfc58317d6e51a26e994cbbb",
+    "Core/Src/dma.c": "d01f597b35d1381bb4d246a2cab078f7786e62355d06c322cabbdecff5c84f35",
+    "Core/Src/gpio.c": "81b05b5afd16a3619b1a2d0d4a5a0e251fb194feff547cd7a141e3d22ad8e5ae",
+    "Core/Src/main.c": "ab58a3082c5b3f6ad7ecdbafbcf606e84ca50e72d98ac9976ecd8926b8e6950c",
+    "Core/Src/spi.c": "e1607b65e151f22d84b8485d518740992186990e502902a6e98cdaa09e7a0a1f",
+    "Core/Src/stm32f1xx_hal_msp.c": "0c660d42a5bdd0df9e096117351e75ff94a8fb2cf0ec996cac0f55c1355c3ab9",
+    "Core/Src/stm32f1xx_it.c": "7a9b0b452936d153b7c71b85a451c8b29575d2abdb54e173fb3ea5a0efdc3bb9",
+    "Core/Src/syscalls.c": "03c06c72eafb44b499814cf9234aba57dd830f345d9b8779b5d7090e78517600",
+    "Core/Src/sysmem.c": "ad20f7b1fa1e7c73330727747222cf2ffa3245ebf035230ee9a157545e79df95",
+    "Core/Src/system_stm32f1xx.c": "6f13b57054f33b4dcb8f3f23fa05b2942d9dca8abd9a2a08ecde6f99693505a5",
+    "Core/Src/usart.c": "c3963ae03d9139ad636694b3bc626a2469502f54785acbf7d6139edc1d4cd164",
+    "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h": "d9c7c613d9fea74220892b4fbc3e80617493acad82a04bafadab2b4a7198399c",
+    "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h": "05e93fa3ddefb2e83d762b9ca4de36e3bba9cd8e9690400fe9f2c11fc0a3cef5",
+    "Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h": "a54dfbb3480c672f532d472a6e84bcf34df6551771d2e9966c5a3503c676b6ab",
+    "Drivers/CMSIS/Device/ST/STM32F1xx/LICENSE.txt": "b616ef9c1ae02a5da902bc4a3efb48a8a3170308b30fc09bfda77ba712f49f95",
+    "Drivers/CMSIS/Include/cmsis_armcc.h": "57b8d88cd03152f60bf74de0149ec979ae20210d86ab06e837aa69c66f27d615",
+    "Drivers/CMSIS/Include/cmsis_armclang.h": "da29dbad3cf27f6c86437af6bd0b302e105210742ad7a602bea51b104f1661c9",
+    "Drivers/CMSIS/Include/cmsis_compiler.h": "cd3cbd1c771a5252827a14c75a12e7ed975f76b9fc1577d53a74ba0e7c1af6c3",
+    "Drivers/CMSIS/Include/cmsis_gcc.h": "8c16d51f7884a9fc07c5cbe6f2bcd24e5e092ddc519f71d36740c2d2e2ff6a27",
+    "Drivers/CMSIS/Include/cmsis_iccarm.h": "a600765888c69ee60cd2d01d77356902d4ae5fa98aa7e1d73703663c96b7f87a",
+    "Drivers/CMSIS/Include/cmsis_version.h": "280b9fc8739aefa878d47e68d7adbd4908a15f98ec193cdba1a4b514133f5c34",
+    "Drivers/CMSIS/Include/core_armv8mbl.h": "220d90f3f99126e656c31c32f099ff766b32cf487f7dd77388e4c9a78e1898c8",
+    "Drivers/CMSIS/Include/core_armv8mml.h": "825a8799d71f3fa29690b1597dfc2dfb660b103d44e20b8185f26b4f3b4ffdf0",
+    "Drivers/CMSIS/Include/core_cm0.h": "1beaa04c859225f75142d055e9c5dacfc9ac1d88c82934177f745b9c5f3f4094",
+    "Drivers/CMSIS/Include/core_cm0plus.h": "c953256e1c1b1cd6accbbfca5d47c09a9b0534f3147b125e17e59c0ae6c30ed7",
+    "Drivers/CMSIS/Include/core_cm1.h": "460281028a261740cd5ec86840bed01c480d70ba5b54a0f9938d4cefadfd486b",
+    "Drivers/CMSIS/Include/core_cm23.h": "6303efec943ca0f9eccdab8fc39200d6f95dc943d4051198e0d49f24395028a5",
+    "Drivers/CMSIS/Include/core_cm3.h": "368296087a925cf78133d27e0854d748605441915e0f4fece93f2f97eea68adb",
+    "Drivers/CMSIS/Include/core_cm33.h": "7f1b6a76b119e1e1680f756da897929f63d98133442c5115678af60adf20f1a8",
+    "Drivers/CMSIS/Include/core_cm4.h": "738dff259c25e68ed2529baf425315d8dae1af5dac6c11b66bfdef82e78e86c9",
+    "Drivers/CMSIS/Include/core_cm7.h": "6b75e3bef1eb81e0d3e2c311ad26fcdbac4cde2cd3462a62b81a23f6aec0e55f",
+    "Drivers/CMSIS/Include/core_sc000.h": "d1528d13fbf91da620ef977e99802d83ded093c0521c04cad128da23e3001524",
+    "Drivers/CMSIS/Include/core_sc300.h": "fa514ea0cf5327b0523c2bdfebfb76fd2e69f972e5f60fbfb94ade56b31c722b",
+    "Drivers/CMSIS/Include/mpu_armv7.h": "b0b6da4ec744b5f547a94e60e24b0a6ff6bb7307d3f81a83d0b7c3a64dc29326",
+    "Drivers/CMSIS/Include/mpu_armv8.h": "8280a1d4d3d25f60cdc05b84718cf504f02b7265fc3b7c5790cb29cd7dcf116c",
+    "Drivers/CMSIS/Include/tz_context.h": "7fcc21fc190f6fd970390e9caaa6a86d72fd10f9edf4efab36f12aecf1a8baa0",
+    "Drivers/CMSIS/LICENSE.txt": "e03ba41d7fab20700769fe4118bab50d800cb74f990353a05d2f5fff1c228363",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h": "583cd8373bde87cbf384a9153b7c8ba9c456139baebb248bffe7116c926e2286",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h": "cc3851d46bc92478fe355f8b1fedd013deaa70da5e8e4136ce5cbb2536519803",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_cortex.h": "11ef612e231958eb9f3d4f825cda6bed35bd482996ecbf51f34b5ee7d84371f7",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h": "377e7fc68715cfb6d09715e9d77bd5cee09e79f00479f502d3191016c3c388dd",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h": "22cbcbf02ef1867f0d9bbf28c600c9aeb71a7d221608449ae64cb48339687928",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma_ex.h": "1b09d5229c87587ab894fc3237182a7027b1672a20433b9659433fb978e459f3",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_exti.h": "745bd5b830259f613d116286a445d18c26677a72170117f2b35b7e0607fd563c",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash.h": "fc9d0c2df0c277cbcb37a5baca8e0b6f112e4c7e879dc753b62aa9095732fff5",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h": "6bdda70eea1f54de098cf7033091c1d367e40043e3e0759ec08700718d38ab35",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h": "3ae8ac366a2a55952fc4bada166e88f6d15fb884492048191f267f79ffa73d44",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio_ex.h": "769eb507539209ec99906cb586e60c760c96ffcede2754e5c43717404e3f18de",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd.h": "8f59dc170ba07d1466471742e39bde67b03db84bfb968a7e1152df5ac0b4ab72",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd_ex.h": "5d1c4892ffd05dff9ec40eb36dc528b9e4f6967c5abd8679348b9a930a30b0b0",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h": "1353dc09e32e7e6ec686b725b80981a9286c7e8b5383f8f4259f672470d481c3",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h": "8bf099bedb0c4fa035df81520f99e289464293b27e71d7e8759c8d5160ce8ac1",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc_ex.h": "ed9ac1b6349ed0989367a1daa82819390dcefec0f6cef6fa432e09b2c9ea0adc",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h": "261464a3f9e9ad0c8c6390eeec680f1bbf87cf5c72c80008ada16928070446e9",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h": "949edfcd2021d8c73c5eb36d5cc1fb995b6f7a19fc084121b340c7502d33c135",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_bus.h": "6680693a685a8ed0d09d9c6901328ac23bb207ecc9d68e9521b66cf09c8f75a8",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_cortex.h": "e46032e4e08ce856c204f91f28018dc4ac59f4b8ea24e3bf0f5a609a4ba7bb32",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_dma.h": "1a0eba87b8820b996098d1be8d09ab3df996845cf1c1fa5b536cbf6bce8fe16d",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_exti.h": "9f816072941e79763cbc048fe03bf803fd81bf0a0ade876d74a49be8620bfde5",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_gpio.h": "d2fe5810dc0640bfc6f10be30162425d6b0004444bc40cb5d62257b6f21338fe",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_pwr.h": "4e706bc7ad93abf9e67433d7c46abf777e74d9036fa03a16380348c118b8c998",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_rcc.h": "8f9653c499ac50a5d874c2606091b1a2fbed71aae7d25e70d9d518337d7922ed",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_spi.h": "aa8d53561d7617de21e1caf4de8a8ad8502b9a9a74e37b5366a81e984dffdf0f",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_system.h": "5506acce915aad3a1d0a93f17a07eb2c26c731808dc77c28014eef081c3824bb",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usart.h": "8684e487827c318256ba7ae36841bd2c7fa2438c0cc5c8aa36b555f607873e77",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usb.h": "2bd0a33a370a330a7187e71393097660c74093d29ae7a7389d9bab7cbcaaba8c",
+    "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_utils.h": "decb7156d26dc56db7ed76c06c71533ca579905b80824b178749a03a2f224a1b",
+    "Drivers/STM32F1xx_HAL_Driver/LICENSE.txt": "d5a162f3eaf2b7b6762f00700017cae5695ebbdce7932fead8316448baafd9c1",
+    "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c": "607343f969fce8d49111fe4d8d32001c9b289742408d0452ae49761034f39f01",
+    "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c": "21ccc3b54e45e62b278e7f32fd34533bb1e0f4105c7f47c9218ffa0801bfbddd",
+    "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c": "9ec6e91366c9b27c64b93c4d31fb4636dbc830b055ec501dc728c34eff6900da",
+    "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c": "6f201feccce8c53717098109bd4d2b4a0894ce4334cd1d6cdd8d15d5e69a8eb6",
+    "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c": "cddd2adcf578c7d63fd27f55a6ef88f50540a3b65927dfc411c192900c127bb1",
+    "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c": "5e0631a9ce807629cc24d26effb6dba3b0e4eeca10e9d46ae9d5dc40fa1989da",
+    "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c": "a2e12792c9d49eecdc567ab9fc1a49ed90723007f9579b702c28960dfd83e121",
+    "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c": "5ec9f22de1b3ee82e8437b3ba52725f8f031cf9075848582a0a297d4d1176450",
+    "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.c": "412e7819ef1900f3b33b550068c64e7f9679fe99793758a23e775712842c12a2",
+    "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.c": "036e3573f0d1a2dab6c5bd713333cde6a633afecb1df8d437bee081b02cd9a20",
+    "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c": "d7db81f800f7f41c942b485e2f3fe9a27f5b21def71830297ecb44f131d91e60",
+    "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c": "5c64b13347aa70dd970f803331d3e106e915e13e2bb029d27c673cfba7cd394c",
+    "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c": "2dc02facf7141e4a25ae5653287d7100adbc3847b8a25e3e00969927c2e727d5",
+    "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c": "74c20012ae5e579f6f720b941e66cae7b39ca47d80d873dc53d2274519795802",
+    "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c": "0baff878faf8551e43ad63959f04bae08d61ee94e686e56a56cd97d02535c4d9",
+    "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.c": "d4cb02a5d87452df94f8695e3ca7e10b20fb298113b0022c768e062d1a7c65c0",
+    "License.md": "92282b534952354891151c90af2f935f311fb3b3be9deed1eae8410599443a39",
+    "Makefile": "3e4623d60da22a4f6223f07d2529ea179789028b8750c3ea3c93062074b3a151",
+    "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h": "2bc428e2226229a206723d0441d37003a390ceea9acb7825b02dacf3afc05a1e",
+    "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c": "9bf6b6c49a7faab7bdc465dae5df52bcc878720bd354c8596b51e16d6e210ecb",
+    "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h": "5df2712273bfd522fd5164385acc22d6c2fb899b4dc6ed09823a3698e0963c5e",
+    "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h": "e0e1fd6d50790b5f82e633e3683908ace0f5e8339884648a013c6e0dfe27c0e4",
+    "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h": "1fb60258c3705a07f04c32d5b6229a8b8125f90fd72ee06959c098d94485dd05",
+    "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h": "b3c4df07bf76dd3371def96c9de53bb2db991f6cecc4601da890641f24376175",
+    "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c": "9696a4d61c9e05cd7989936792b15b88f9b7be567d2a927b4feeb0685f1a73a2",
+    "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c": "339046117dd385d4257508a2b240067b7624a4b6df3dd170b72d2cdac215ffa9",
+    "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c": "a89f4e80bb59bcd369fe412b12915ab4392bb110bb54f0b93dd521c43669dbc1",
+    "Package_license.md": "5d0016458729aeb4501e604bb8fa8385e1b258b0113af3c6915532cfb945817b",
+    "STM32F103XX_FLASH.ld": "06e84edb59f646ee70f086243b60280623b0077ac1a6e5a39b72799c4a3f967b",
+    "USB_DEVICE/App/usb_device.c": "35fc6fe328f3b683fed8a4f75fbd809ba486ccbba1699994f7eb94c35cdb884b",
+    "USB_DEVICE/App/usb_device.h": "679fbafd000780ab1c924d20ff45a079b7db2dce127f7ac2dd16cc8076310599",
+    "USB_DEVICE/App/usbd_cdc_if.c": "ae28e72d8a1f51db0c80c9ac3f6775c01023af39fd9f5b30ab239b0dfe6b663a",
+    "USB_DEVICE/App/usbd_cdc_if.h": "d45aedfed245c9ef0413a5942c64a2981375d391281fb873e0e84610774bf6ba",
+    "USB_DEVICE/App/usbd_desc.c": "f489492589fe4fbc9a98b340dd1c8c754e17a71b02ffca6ee7801a405a764107",
+    "USB_DEVICE/App/usbd_desc.h": "1e47de8ed0f3d14ac0e8b702dd29cfa96325bd31dc20786018afe40cfbf08069",
+    "USB_DEVICE/Target/usbd_conf.c": "effe29562b9d655026d6127a87a988af13d05744d5d6d70356faefe5004d0f87",
+    "USB_DEVICE/Target/usbd_conf.h": "04e182939c390d12a163d3d8c003f31202f3fdcdfd37aa09cf111dc5aaa285b5",
+    "cube-f103-usb.ioc": "352e9529bc6811bbf4013b30793fb29d5ac6723e97a5f015aeea9f40d60d5643",
+    "startup_stm32f103xb.s": "a9a5fc7ed5ff617527dd98b3092830f4d17ed4bf57c99eac2c53bdb514ce138c"
+  },
+  "replacements": {
+    "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Class\\CDC\\Src\\usbd_cdc.c",
+    "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Src\\usbd_core.c",
+    "USB_DEVICE/App/usbd_cdc_if.c": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Native\\USB_DEVICE\\App\\usbd_cdc_if.c",
+    "USB_DEVICE/Target/usbd_conf.c": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Native\\USB_DEVICE\\Target\\usbd_conf.c",
+    "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Src\\usbd_ioreq.c",
+    "Core/Src/main.c": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Native\\Core\\Src\\main.c",
+    "Core/Src/sysmem.c": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\workflow\\test_changed_output_blocks_com0\\derived\\Src\\native_no_heap.c"
+  },
+  "profile": {
+    "name": "cube-f103-usb",
+    "indexed": false,
+    "pcd": "hpcd_USB_FS",
+    "controller_contract": "pma-f1-single-v1",
+    "fingerprint": "a6f4aa841b62181d9864a6d69de32846ea4bb11679b6129d683ef84ebe2239d7",
+    "binding": "EXACT_REFERENCE"
+  },
+  "required_link_symbols": [
+    "_sbrk"
+  ],
+  "configuration_derivation": {
+    "status": "NATIVE_INITIALIZATION_UNCHANGED",
+    "owner": "USB_DEVICE/Target/usbd_conf.c",
+    "original_sha256": "effe29562b9d655026d6127a87a988af13d05744d5d6d70356faefe5004d0f87",
+    "derived_sha256": "d75d0929b149bbeb9591318eacc798fdb16773598d62fa6549944b54ce4d74e8",
+    "native": {
+      "scope": "SOURCE_DECLARATIONS_ONLY",
+      "owner": "USB_DEVICE/Target/usbd_conf.c",
+      "pcd_instances": [
+        {
+          "pcd": "hpcd_USB_FS",
+          "instance": "USB"
+        }
+      ],
+      "memory_mechanism": "PMA",
+      "fifo_calls": [],
+      "declared_fifo_words": null,
+      "findings": [],
+      "effective_geometry": "NOT_PROVEN_REQUIRES_RUNTIME_GUARD",
+      "clock_phy_irq": "NATIVE_OWNER_AND_BOARD_EVIDENCE_REQUIRED"
+    },
+    "derived": {
+      "scope": "SOURCE_DECLARATIONS_ONLY",
+      "owner": "USB_DEVICE/Target/usbd_conf.c",
+      "pcd_instances": [
+        {
+          "pcd": "hpcd_USB_FS",
+          "instance": "USB"
+        }
+      ],
+      "memory_mechanism": "PMA",
+      "fifo_calls": [],
+      "declared_fifo_words": null,
+      "findings": [],
+      "effective_geometry": "NOT_PROVEN_REQUIRES_RUNTIME_GUARD",
+      "clock_phy_irq": "NATIVE_OWNER_AND_BOARD_EVIDENCE_REQUIRED"
+    },
+    "hardware_acceptance": "NOT_PROVEN"
+  },
+  "critical_contracts": "NOT_PROVEN",
+  "hardware": "NOT_TESTED"
+}

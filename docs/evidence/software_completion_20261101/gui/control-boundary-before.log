@@ -1,0 +1,49 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________ test_control_task_preview_rejects_changed_mission_ranges ___________
+
+qapp = <PySide6.QtWidgets.QApplication(0x2143134b960) at 0x0000021435548F40>
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/gui/control-boundary-before/test_control_task_preview_reje0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021435494E90>
+
+    def test_control_task_preview_rejects_changed_mission_ranges(qapp, workspace_root, tmp_path, monkeypatch):
+        service = FccgService(workspace_root)
+        window = MainWindow(SettingsStore(tmp_path/'settings.ini'), service=service)
+        window._toolchain_checked = True
+        window._model = service.ReferenceProject_Create('preview isolation')
+        window._Project_Refresh()
+        fixture = Path(__file__).parent/'fixtures/tuning_bundle_v1/kf6-pid.sstuning.json'
+        monkeypatch.setattr(QFileDialog, 'getOpenFileName', lambda *_args:
+                            (str(fixture), 'TreeDiagram bundle (*.sstuning.json)'))
+        errors = []
+        window._Error_Show = lambda *args: errors.append(args)
+        def preview(*_args, **kwargs):
+            kwargs['check_box'].setChecked(True)
+            # Model a pending editor completion during the modal event loop. This
+            # is a real valid range, not a malformed fixture or artificial checksum.
+            functions = Functions_Derive(window._model, service.catalog)
+            telemetry = next(row for row in functions['functions'] if row['instance_id'] == 'telemetry')
+            telemetry['start'] = {'kind':'stage_enter', 'stage_id':'ascent'}
+            window._model.mission_functions = functions
+            return QMessageBox.StandardButton.Apply
+        window._MessageBox_Exec = preview
+        try:
+            window._ParameterProfile_Import('silverstar.algorithm.estimator.kf6')
+            functions = window._model.mission_functions['functions']
+>           assert next(row for row in functions if row['instance_id']=='telemetry')['start'] == {
+                'kind':'stage_enter', 'stage_id':'ascent'}
+E               AssertionError: assert {'kind': 'sys...stage_id': ''} == {'kind': 'sta...id': 'ascent'}
+E                 
+E                 Differing items:
+E                 {'kind': 'system_prepare'} != {'kind': 'stage_enter'}
+E                 {'stage_id': ''} != {'stage_id': 'ascent'}
+E                 Use -v to get more diff
+
+apps\SCG\tests\test_control_task_import_boundary.py:36: AssertionError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_control_task_import_boundary.py::test_control_task_preview_rejects_changed_mission_ranges
+1 failed in 8.66s

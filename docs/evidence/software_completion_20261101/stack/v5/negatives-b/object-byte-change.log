@@ -1,0 +1,14 @@
+FCCG_PROGRESS|STACK_REPORT|PLAN|1
+FCCG_PROGRESS|STACK_REPORT|BEGIN|1|1|ELF and stack budget
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v5\b\pid\Flight_Controller\Tools\check_task_stacks.py", line 5658, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v5\b\pid\Flight_Controller\Tools\check_task_stacks.py", line 5638, in main
+    report = StackReport_Build(root, arguments.config, arguments.prefix, arguments.memory_layout)
+  File "D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v5\b\pid\Flight_Controller\Tools\check_task_stacks.py", line 5349, in StackReport_Build
+    software_review = _review.Inputs_Verify(root, graph, config, prefix, Command_Read,
+        Path(__file__).with_name('software_stack_inputs.json'), SOFTWARE_REVIEW_SHA256)
+  File "D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v5\b\pid\Flight_Controller\Tools\stack_review.py", line 135, in Inputs_Verify
+    raise ValueError("Changed linked/compiler stack artifact: " + name)
+ValueError: Changed linked/compiler stack artifact: APP/Src/flight_task.o

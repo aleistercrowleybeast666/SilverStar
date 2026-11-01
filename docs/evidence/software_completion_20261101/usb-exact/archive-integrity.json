@@ -1,0 +1,27 @@
+[
+  {
+    "archive": "arm-v1-F103-artifacts.zip",
+    "zip_crc_ok": true,
+    "all_archived_hashes_match": true
+  },
+  {
+    "archive": "arm-v1-F407-artifacts.zip",
+    "zip_crc_ok": true,
+    "all_archived_hashes_match": true
+  },
+  {
+    "archive": "arm-v2-F103-artifacts.zip",
+    "zip_crc_ok": true,
+    "all_archived_hashes_match": true
+  },
+  {
+    "archive": "arm-v2-F407-artifacts.zip",
+    "zip_crc_ok": true,
+    "all_archived_hashes_match": true
+  },
+  {
+    "archive": "c071-v1-C071-artifacts.zip",
+    "zip_crc_ok": true,
+    "all_archived_hashes_match": true
+  }
+]

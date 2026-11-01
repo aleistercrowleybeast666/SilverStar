@@ -1,0 +1,169 @@
+{
+  "schema_id": "silverstar.algorithm-sdk/1",
+  "repository": "https://github.com/aleistercrowleybeast666/SilverStar",
+  "source_commit": "ad2da03c3b248d15d7cf8e1c3278781fb7cd3f79",
+  "source_state": "content-addressed working tree snapshot; commit alone is insufficient",
+  "files": {
+    "silverstar_algorithm_common/attitude_frame.c": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_common/payload/Algorithm/Common/Src/attitude_frame.c",
+      "sha256": "5357a6d087d64c94658c924249b6364bc6aee79ad4301c0b4b4a51e040a17b25",
+      "modified": false
+    },
+    "silverstar_algorithm_common/attitude_frame.h": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_common/payload/Algorithm/Common/Inc/attitude_frame.h",
+      "sha256": "a4bfa5772d2b007966842ad064168c1f091ca11cab5271bf42cad51e6dc3c36a",
+      "modified": false
+    },
+    "silverstar_algorithm_common/plugin.json": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_common/plugin.json",
+      "sha256": "e098a4812f5a0005b7c4465d11401b91ce98d31ac2791de64892929671827864",
+      "modified": false
+    },
+    "silverstar_algorithm_ins_coning2_sculling2/ins_mechanization.c": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_ins_coning2_sculling2/payload/Algorithm/INS/Coning2Sculling2/Src/ins_mechanization.c",
+      "sha256": "61045decd91bf70cc2d61ebaf2e45a701e8e13db5e2a4bf191706e68746b9880",
+      "modified": false
+    },
+    "silverstar_algorithm_ins_coning2_sculling2/ins_mechanization.h": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_ins_coning2_sculling2/payload/Algorithm/INS/Coning2Sculling2/Inc/ins_mechanization.h",
+      "sha256": "adc1e90465641029b1203b3fd746395df3350ebb878092338b1dfae48aac7ace",
+      "modified": false
+    },
+    "silverstar_algorithm_ins_coning2_sculling2/plugin.json": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_ins_coning2_sculling2/plugin.json",
+      "sha256": "eb3feaf055c8dc1e6e26d455b6ffd35d08be0f86a765d71f37102043696a4af0",
+      "modified": false
+    },
+    "silverstar_algorithm_estimator_kf6/navigation_kf.c": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_kf6/payload/Algorithm/Estimator/KF6/Src/navigation_kf.c",
+      "sha256": "eb27260dd8ae7043a147c1d35f61133a13620f28f14055860299f64f9888805c",
+      "modified": false
+    },
+    "silverstar_algorithm_estimator_kf6/navigation_kf.h": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_kf6/payload/Algorithm/Estimator/KF6/Inc/navigation_kf.h",
+      "sha256": "bc5b736e09e39b0e5caadf0139c68a46b9ec67e6f85a21c4c9982b23dabc15c9",
+      "modified": false
+    },
+    "silverstar_algorithm_estimator_kf6/plugin.json": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_kf6/plugin.json",
+      "sha256": "e0d75bfc19decfbdfc0098671cb679c4320952b0e49a74dedf1f9f43f567466c",
+      "modified": false
+    },
+    "silverstar_algorithm_estimator_sf6/navigation_sf6.c": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_sf6/payload/Algorithm/Estimator/SF6/Src/navigation_sf6.c",
+      "sha256": "3115c97a2aa98cdf5243c9759755d8ef03edfd35c9c51e138d6ca71f4f97b2af",
+      "modified": false
+    },
+    "silverstar_algorithm_estimator_sf6/navigation_sf6.h": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_sf6/payload/Algorithm/Estimator/SF6/Inc/navigation_sf6.h",
+      "sha256": "7ac0b7e6e9e92f336dbd428d1b6a8ab054391f48552864119c859b8f66a24bb5",
+      "modified": false
+    },
+    "silverstar_algorithm_estimator_sf6/plugin.json": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_sf6/plugin.json",
+      "sha256": "79c853a62740cb0137bd42c0dbed042d5806e80f14e8e4948edbee629b4ecbbc",
+      "modified": false
+    },
+    "silverstar_algorithm_estimator_eskf15/navigation_eskf.c": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf.c",
+      "sha256": "bd72b2869857d0c4c02fddd55c081cda505ddf73dd395f41420a3a3d0cb8111e",
+      "modified": false
+    },
+    "silverstar_algorithm_estimator_eskf15/navigation_eskf.h": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Inc/navigation_eskf.h",
+      "sha256": "54157e4d017d75ebb0df957630f036603ce6803dcb6fc99e68d0d037d546ddcd",
+      "modified": false
+    },
+    "silverstar_algorithm_estimator_eskf15/plugin.json": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/plugin.json",
+      "sha256": "dcf9f1695e95f2cac2c2786b31c61a7a2c8c0a5e2d3d7aa4fbd478a3f2d66796",
+      "modified": false
+    },
+    "silverstar_algorithm_augmented_common/navigation_bounded.c": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_augmented_common/payload/Algorithm/Estimator/Augmented/Src/navigation_bounded.c",
+      "sha256": "7d5591c3a87ce301099f10088ea8a20b5dee3092142821e6f58c1e97751f44b7",
+      "modified": false
+    },
+    "silverstar_algorithm_augmented_common/navigation_bounded.h": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_augmented_common/payload/Algorithm/Estimator/Augmented/Inc/navigation_bounded.h",
+      "sha256": "194ea399e852ed3593ae9cc10b39accb4caa9500fdc3a9188764a40caeaf07ee",
+      "modified": false
+    },
+    "silverstar_algorithm_augmented_common/plugin.json": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_augmented_common/plugin.json",
+      "sha256": "e846939e7c6a57148094ef60792d5e8f9d5b5d43b77049ffd66a6b61a89f32a6",
+      "modified": false
+    },
+    "silverstar_algorithm_estimator_eskf20/plugin.json": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf20/plugin.json",
+      "sha256": "a06b80e02156b98d3c247019ca0266bfe2f47e47f6452d7ab8b613833ed3ad95",
+      "modified": false
+    },
+    "silverstar_algorithm_estimator_inekf15/plugin.json": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_inekf15/plugin.json",
+      "sha256": "5caa5d40a6712ee08f08864b2503c44bb4e2d56be21b5740e4911055840c8c7f",
+      "modified": false
+    },
+    "silverstar_algorithm_estimator_inekf20/plugin.json": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_inekf20/plugin.json",
+      "sha256": "ec483cb9ba149671c44d935f46de22c44438d4bff0dc6796bdf36ff8553b0153",
+      "modified": false
+    },
+    "silverstar_algorithm_control_pid/control_pid.c": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_control_pid/payload/Algorithm/Control/PID/Src/control_pid.c",
+      "sha256": "a4f98b5c938022acca859567e72cd9d9e5f13b128f96aec2e43b8ff95156c37c",
+      "modified": false
+    },
+    "silverstar_algorithm_control_pid/control_pid.h": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_control_pid/payload/Algorithm/Control/PID/Inc/control_pid.h",
+      "sha256": "ccfb93c3d3482f6d7412ccb8c496822f6e23249e3dce4de1dcef37fd7c5ae0e5",
+      "modified": false
+    },
+    "silverstar_algorithm_control_pid/plugin.json": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_control_pid/plugin.json",
+      "sha256": "b3b99ec45ca7aec8eafc6aaf8954d60ed50309a57a604383e6999de058f12d31",
+      "modified": false
+    },
+    "silverstar_algorithm_control_lqr/control_lqr.c": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_control_lqr/payload/Algorithm/Control/LQR/Src/control_lqr.c",
+      "sha256": "93bed3be6176df9672cbf42c3f99831c164625978296dca1aa3f86f29a7c32c5",
+      "modified": false
+    },
+    "silverstar_algorithm_control_lqr/control_lqr.h": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_control_lqr/payload/Algorithm/Control/LQR/Inc/control_lqr.h",
+      "sha256": "31216be5da05329e2bd40fa3ba99d6308595aff1f44aecab71bccbbf691b55c4",
+      "modified": false
+    },
+    "silverstar_algorithm_control_lqr/plugin.json": {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_control_lqr/plugin.json",
+      "sha256": "8cd7344d27bc1c33c2fbcfdb905bc45a536d45c3a381e98653b058ca8a9e39d4",
+      "modified": false
+    },
+    "LICENSE": {
+      "source": "LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "modified": false
+    },
+    "tuning_bundle_v1.schema.json": {
+      "source": "contracts/tuning_bundle_v1.schema.json",
+      "sha256": "2cc8c87f6c9cd946fac97b911c776b3d1a9be2859ffe2e57e35d568e5539af9b",
+      "modified": false
+    },
+    "reference_config.h": {
+      "source": "apps/SCG/tests/fixtures/navigation_perf_config/system_user_config.h",
+      "sha256": "a5667ac200718acd1d65b8c003f98410a753629cfcb0bf180c98d4ef7a76ab34",
+      "modified": false
+    },
+    "silverstar_assert.h": {
+      "source": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Common/Inc/silverstar_assert.h",
+      "sha256": "aa35382c4395e5a71bc80a71944498c6aaefe4bf4fa65a63fa00bc2c67cb0452",
+      "modified": false
+    },
+    "silverstar_compiler.h": {
+      "source": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Common/Inc/silverstar_compiler.h",
+      "sha256": "3d66165f468e3e7263ebb6d72b6c217a042dd337be39e170ffb83487815ffd57",
+      "modified": false
+    }
+  },
+  "scope": "mathematical cores, explicit host configuration; no MCU/HAL/RTOS or flight qualification"
+}

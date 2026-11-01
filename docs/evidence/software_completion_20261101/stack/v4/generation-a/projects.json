@@ -1,0 +1,27 @@
+[
+  {
+    "replica": "a",
+    "name": "f407",
+    "project": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v4\\a\\f407\\Flight_Controller"
+  },
+  {
+    "replica": "a",
+    "name": "installation",
+    "project": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v4\\a\\installation\\Flight_Controller"
+  },
+  {
+    "replica": "a",
+    "name": "h743",
+    "project": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v4\\a\\h743\\Flight_Controller"
+  },
+  {
+    "replica": "a",
+    "name": "pid",
+    "project": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v4\\a\\pid\\Flight_Controller"
+  },
+  {
+    "replica": "a",
+    "name": "lqr",
+    "project": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v4\\a\\lqr\\Flight_Controller"
+  }
+]

@@ -1,0 +1,194 @@
+Window: "SilverStar SCG — 软件收尾最终验证", App: pythonw.exe.
+	0 窗口 (settable, string) SilverStar SCG — 软件收尾最终验证 Secondary Actions: Raise ID: QApplication.MainWindow
+		127 窗口 (settable, string) 地面站端 · 硬件选项… Secondary Actions: Raise ID: QApplication.hardwareTransaction_ground
+			128 标题栏 (settable, string) Value: 地面站端 · 硬件选项…
+				129 菜单栏 系统 ID: MenuBar
+					130 菜单项 系统
+				131 按钮 关闭
+			132 文本 此窗口中的修改只保留在草稿中；应用后更新工程。取消或 Esc 放弃本次修改。 ID: QApplication.hardwareTransaction_ground.QLabel
+			133 文本 ID: QApplication.hardwareTransaction_ground.QLabel
+			134 组 (settable, string) ID: QApplication.hardwareTransaction_ground.QTabWidget
+				135 窗格 (settable, string) ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget
+					136 组 (settable, string) ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea
+						137 组 (settable, string) ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport
+							138 组 (settable, string) ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget
+								139 组 (settable, string) 板卡选择 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox
+									140 文本 使用已有硬件 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									141 组合框 (settable, string) 板卡选择 Value: SSGS0.5 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.StandardComboBox
+									142 文本 硬件资源 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									143 文本 已自动配置 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.StatusPill
+								144 组 (settable, string) ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QWidget
+									145 按钮 (settable, string) 导入 CubeMX 工程 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QWidget.QPushButton
+								146 文本 已根据设备需求检查板卡兼容性并优先采用默认资源映射。 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.noticeLabel
+								147 组 (settable, string) 检测到的 MCU 与 Platform ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox
+									148 文本 硬件来源 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									149 文本 已知板卡（内置 CubeMX 快照） ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_source
+									150 文本 检测到的 MCU ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									151 文本 STM32F103C8T6 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_part
+									152 文本 MCU 系列 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									153 文本 STM32F1 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_family
+									154 文本 封装 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									155 文本 LQFP48 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_package
+									156 文本 内核 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									157 文本 STM32F103C8Tx ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_core
+									158 文本 CubeMX 版本 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									159 文本 6.15.0 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_cubemx
+									160 文本 STM32Cube 固件包 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									161 文本 STM32Cube FW_F1 V1.8.7 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_firmware_package
+									162 文本 HAL/CMSIS 来源策略 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									163 文本 plugin_payload_authoritative ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_source_policy
+									164 文本 HAL 时间基准 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									165 文本 SysTick / HAL_IncTick ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_timebase
+									166 文本 SDIO / FatFs ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									167 文本 未同时启用 SDIO 与 FatFs ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_storage
+									168 文本 I²C 清单 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									169 文本 未启用 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_i2c
+									170 文本 PWM 清单 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									171 文本 未启用 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_pwm
+									172 文本 CAN 清单 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									173 文本 未启用；仅识别初始化依赖，Device 消费仍为预留 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_can
+									174 文本 匹配的 Platform 插件 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									175 文本 STM32F103C8T6 (silverstar.mcu.stm32f103c8t6) ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_plugin
+									176 文本 匹配理由 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									177 文本 exact part; provider=stm32_cubemx; priority=100; specificity=1000; verification=supported ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_reason
+									178 文本 验证等级 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									179 文本 支持 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_verification
+								180 文本 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QLabel
+						181 组 (settable, string) ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_vcontainer
+							182 滚动条 (settable, float) Value: 0 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_vcontainer.QScrollBar
+				183 选项卡 (settable, string) 硬件与平台 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_tabbar
+					184 选项卡项目 (selectable, settable, string) 硬件与平台 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_tabbar
+					185 选项卡项目 (selectable, settable, string) 设备与接口 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_tabbar
+					186 选项卡项目 (selectable, settable, string) 资源与接线 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_tabbar
+			187 组 (settable, string) ID: QApplication.hardwareTransaction_ground.QDialogButtonBox
+				188 按钮 (settable, string) 应用 ID: QApplication.hardwareTransaction_ground.QDialogButtonBox.QPushButton
+				189 按钮 (settable, string) 取消 ID: QApplication.hardwareTransaction_ground.QDialogButtonBox.QPushButton
+		1 标题栏 (settable, string) Value: SilverStar SCG — 软件收尾最终验证
+			2 菜单栏 系统 ID: MenuBar
+				57 菜单项 系统
+			4 按钮 最小化
+			5 按钮 最大化
+			6 按钮 关闭
+		7 组 (settable, string) ID: QApplication.MainWindow.centralRoot
+			8 自定义 (settable, string) ID: QApplication.MainWindow.centralRoot.headerBar
+				9 文本 SilverStar 系统配置与生成 ID: QApplication.MainWindow.centralRoot.headerBar.headerTitle
+				10 文本 v0.1.3 ID: QApplication.MainWindow.centralRoot.headerBar.headerVersion
+				11 文本 辰星引力开发 ID: QApplication.MainWindow.centralRoot.headerBar.headerCredit
+				12 文本 当前工程： ID: QApplication.MainWindow.centralRoot.headerBar.headerControlLabel
+				13 文本 SilverStar ID: QApplication.MainWindow.centralRoot.headerBar.headerProjectValue
+				14 组 (settable, string) ID: QApplication.MainWindow.centralRoot.headerBar.QWidget
+					15 文本 界面语言 ID: QApplication.MainWindow.centralRoot.headerBar.QWidget.headerControlLabel
+					16 组合框 (settable, string) Value: 简体中文 ID: QApplication.MainWindow.centralRoot.headerBar.QWidget.headerLanguageCombo
+					17 文本 主题 ID: QApplication.MainWindow.centralRoot.headerBar.QWidget.headerControlLabel
+					18 组合框 (settable, string) Value: 浅色 ID: QApplication.MainWindow.centralRoot.headerBar.QWidget.headerThemeCombo
+			19 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget
+				20 自定义 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.sidebar
+					21 列表 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.sidebar.navigation
+						22 列表项目 (selectable, settable, string) 硬件与通信 ID: QApplication.MainWindow.centralRoot.QWidget.sidebar.navigation
+						23 列表项目 (selectable, settable, string) 任务流程 ID: QApplication.MainWindow.centralRoot.QWidget.sidebar.navigation
+						24 列表项目 (selectable, settable, string) 检查与生成 ID: QApplication.MainWindow.centralRoot.QWidget.sidebar.navigation
+				25 窗格 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget
+					105 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage
+						106 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea
+							107 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport
+								108 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget
+									109 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.PageHeader
+										110 文本 硬件与通信 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.PageHeader.pageTitle
+										111 文本 分别配置飞控端与地面站端；空地链路只有一份权威配置。匹配不代表已建立真实连接。 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.PageHeader.pageDescription
+									112 组 (settable, string) 无线链路 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox
+										113 文本 空地链路 · 2473 MHz 飞控：telemetry0: e28_2g4m12sx / 12 dBm 地面：radio0: e28_2g4m12sx / 12 dBm 仅为配置声明；实际连接与任务状态由 GSHC 获取。 SS-TM-S 0.1 · 预飞半双工；START 完成后单向下行 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										114 按钮 (settable, string) 配置共享无线链路 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QPushButton
+										115 文本 无线参数相容（仅配置检查） ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									116 组 (settable, string) 设备与资源概览 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox
+										117 文本 飞控端 设备/连接：imu0: JY901 gnss0: NEO-M9N telemetry0: E28-2G4M12SX（SX1281） 另 6 项 资源映射 0/24 项 · 待映射 22 项 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										118 按钮 (settable, string) 编辑飞控设备与接线 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QPushButton
+										119 文本 地面站端 设备/连接：PC uart radio0: e28_2g4m12sx / 12 dBm 资源映射 0/6 项 · 待映射 6 项 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										120 按钮 (settable, string) 编辑地面设备与接口 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QPushButton
+									121 组 (settable, string) 飞控端 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.hardwareTarget_flight
+										122 文本 待匹配 MCU: — 待选择 PCB 或导入完整 CubeMX 工程 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.hardwareTarget_flight.QLabel
+										123 按钮 (settable, string) 硬件选项… ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.hardwareTarget_flight.QPushButton
+									124 组 (settable, string) 地面站端 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.hardwareTarget_ground
+										125 文本 待匹配 MCU: — 待选择 PCB 或导入完整 CubeMX 工程 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.hardwareTarget_ground.QLabel
+										126 按钮 (settable, string) 硬件选项… ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.hardwareTarget_ground.QPushButton
+		48 状态栏 ID: QApplication.MainWindow.QStatusBar
+			49 缩略图 (settable, string) ID: QApplication.MainWindow.QStatusBar.QSizeGrip
+			50 文本 TOOLCHAIN DETECT 3 / 3：host gcc ID: QApplication.MainWindow.QStatusBar.QLabel
+			51 按钮 (disabled, settable, string) 导出审查清单 ID: QApplication.MainWindow.QStatusBar.QPushButton
+			52 按钮 (settable, string) 系统日志 ID: QApplication.MainWindow.QStatusBar.systemLogButton
+		53 菜单栏 (settable, string) ID: QApplication.MainWindow.QMenuBar
+			54 菜单项 (settable, string) 文件 ID: QApplication.MainWindow.QMenuBar.QAction
+			55 菜单项 (settable, string) 插件 ID: QApplication.MainWindow.QMenuBar.QAction
+			56 菜单项 (settable, string) 帮助 ID: QApplication.MainWindow.QMenuBar.QAction
+		127 窗口 (settable, string) 地面站端 · 硬件选项… Secondary Actions: Raise ID: QApplication.hardwareTransaction_ground
+			128 标题栏 (settable, string) Value: 地面站端 · 硬件选项…
+				129 菜单栏 系统 ID: MenuBar
+					130 菜单项 系统
+				131 按钮 关闭
+			132 文本 此窗口中的修改只保留在草稿中；应用后更新工程。取消或 Esc 放弃本次修改。 ID: QApplication.hardwareTransaction_ground.QLabel
+			133 文本 ID: QApplication.hardwareTransaction_ground.QLabel
+			134 组 (settable, string) ID: QApplication.hardwareTransaction_ground.QTabWidget
+				135 窗格 (settable, string) ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget
+					136 组 (settable, string) ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea
+						137 组 (settable, string) ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport
+							138 组 (settable, string) ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget
+								139 组 (settable, string) 板卡选择 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox
+									140 文本 使用已有硬件 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									141 组合框 (settable, string) 板卡选择 Value: SSGS0.5 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.StandardComboBox
+									142 文本 硬件资源 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									143 文本 已自动配置 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.StatusPill
+								144 组 (settable, string) ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QWidget
+									145 按钮 (settable, string) 导入 CubeMX 工程 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QWidget.QPushButton
+								146 文本 已根据设备需求检查板卡兼容性并优先采用默认资源映射。 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.noticeLabel
+								147 组 (settable, string) 检测到的 MCU 与 Platform ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox
+									148 文本 硬件来源 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									149 文本 已知板卡（内置 CubeMX 快照） ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_source
+									150 文本 检测到的 MCU ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									151 文本 STM32F103C8T6 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_part
+									152 文本 MCU 系列 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									153 文本 STM32F1 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_family
+									154 文本 封装 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									155 文本 LQFP48 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_package
+									156 文本 内核 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									157 文本 STM32F103C8Tx ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_core
+									158 文本 CubeMX 版本 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									159 文本 6.15.0 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_cubemx
+									160 文本 STM32Cube 固件包 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									161 文本 STM32Cube FW_F1 V1.8.7 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_firmware_package
+									162 文本 HAL/CMSIS 来源策略 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									163 文本 plugin_payload_authoritative ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_source_policy
+									164 文本 HAL 时间基准 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									165 文本 SysTick / HAL_IncTick ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_timebase
+									166 文本 SDIO / FatFs ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									167 文本 未同时启用 SDIO 与 FatFs ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_storage
+									168 文本 I²C 清单 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									169 文本 未启用 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_i2c
+									170 文本 PWM 清单 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									171 文本 未启用 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_pwm
+									172 文本 CAN 清单 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									173 文本 未启用；仅识别初始化依赖，Device 消费仍为预留 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_can
+									174 文本 匹配的 Platform 插件 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									175 文本 STM32F103C8T6 (silverstar.mcu.stm32f103c8t6) ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_plugin
+									176 文本 匹配理由 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									177 文本 exact part; provider=stm32_cubemx; priority=100; specificity=1000; verification=supported ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_reason
+									178 文本 验证等级 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									179 文本 支持 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.platform_verification
+								180 文本 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QLabel
+						181 组 (settable, string) ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_vcontainer
+							182 滚动条 (settable, float) Value: 0 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_vcontainer.QScrollBar
+				183 选项卡 (settable, string) 硬件与平台 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_tabbar
+					184 选项卡项目 (selectable, settable, string) 硬件与平台 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_tabbar
+					185 选项卡项目 (selectable, settable, string) 设备与接口 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_tabbar
+					186 选项卡项目 (selectable, settable, string) 资源与接线 ID: QApplication.hardwareTransaction_ground.QTabWidget.qt_tabwidget_tabbar
+			187 组 (settable, string) ID: QApplication.hardwareTransaction_ground.QDialogButtonBox
+				188 按钮 (settable, string) 应用 ID: QApplication.hardwareTransaction_ground.QDialogButtonBox.QPushButton
+				189 按钮 (settable, string) 取消 ID: QApplication.hardwareTransaction_ground.QDialogButtonBox.QPushButton
+
+Document text: ```
+SilverStar 系统配置与生成
+v0.1.3
+辰星引力开发
+当前工程：
+SilverStar
+界面语言
+主题
+```

@@ -1,0 +1,14 @@
+f407 Strict Changed complete Astra project input: Generated/Src/project_log_decoder_profile.c
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v1\probe_runtime.py", line 14, in <module>
+    proof=rt.HalCallbacks_Resolve(p,g,prefix,m.Command_Read,m.CallbackSlot_Get)
+  File "D:\python_software\SilverStar\apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_runtime.py", line 283, in HalCallbacks_Resolve
+    raise ValueError("Unbound actual HAL callback slot: " + caller + ":" + str(slot))
+ValueError: Unbound actual HAL callback slot: HAL_DMA_IRQHandler:68
+h743 Strict Unreviewed H743 build declarations or configuration
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v1\probe_runtime.py", line 14, in <module>
+    proof=rt.HalCallbacks_Resolve(p,g,prefix,m.Command_Read,m.CallbackSlot_Get)
+  File "D:\python_software\SilverStar\apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_runtime.py", line 283, in HalCallbacks_Resolve
+    raise ValueError("Unbound actual HAL callback slot: " + caller + ":" + str(slot))
+ValueError: Unbound actual HAL callback slot: HAL_DMA_IRQHandler:72

@@ -1,0 +1,19 @@
+f407 Strict rejected Changed complete Astra project input: Generated/Src/project_metadata.c
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v1\probe_whole.py", line 13, in <module>
+    proofs={'hal':rt.HalCallbacks_Resolve(p,g,prefix,m.Command_Read,m.CallbackSlot_Get),'port':rt.PortStackPointers_Resolve(p,g),'crt':rt.CrtCallbacks_Resolve(p,g,prefix,m.TableBytes_Get)}
+                                                                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_runtime.py", line 105, in PortStackPointers_Resolve
+    initial = SourceFunctions_Get(source).get("pxPortInitialiseStack", "")
+              ~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_runtime.py", line 253, in SourceFunctions_Get
+    raise ValueError("Ambiguous callback source definition: " + name)
+ValueError: Ambiguous callback source definition: __attribute__
+h743 Strict rejected Unreviewed H743 build declarations or configuration
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v1\probe_whole.py", line 13, in <module>
+    proofs={'hal':rt.HalCallbacks_Resolve(p,g,prefix,m.Command_Read,m.CallbackSlot_Get),'port':rt.PortStackPointers_Resolve(p,g),'crt':rt.CrtCallbacks_Resolve(p,g,prefix,m.TableBytes_Get)}
+                  ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_runtime.py", line 359, in HalCallbacks_Resolve
+    raise ValueError("Unbound actual HAL callback slot: " + caller + ":" + str(slot))
+ValueError: Unbound actual HAL callback slot: HAL_UART_IRQHandler:80

@@ -1,0 +1,25 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_owned_mission_contracts[termination-config-error] ____________
+
+mission_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-termination/mission-critical0/mission-contract.exe')
+scenario = 'termination-config-error'
+
+    @pytest.mark.parametrize("scenario", [
+        "normal", "config-error", "event-count", "active-count", "navigation-count",
+        "active-terminated", "event-future", "event-order", "ready-mask", "mission-flag",
+        "termination-config-error",
+    ])
+    def test_owned_mission_contracts(mission_contract_executable: Path, scenario: str) -> None:
+        result = subprocess.run([str(mission_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: Assertion failed: SystemMissionProcess_Step(&input) == SystemMissionProcessResult_Invalid, file D:\python_software\SilverStar\apps\SCG\tests\fixtures\mission_critical_contract_host.c, line 140
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\critical\\pre-term...valid, file D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\mission_critical_contract_host.c, line 140\n').returncode
+
+apps\SCG\tests\test_mission_critical_contracts.py:66: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_mission_critical_contracts.py::test_owned_mission_contracts[termination-config-error]
+1 failed, 12 deselected in 5.14s

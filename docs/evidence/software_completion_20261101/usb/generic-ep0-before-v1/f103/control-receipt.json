@@ -1,0 +1,174 @@
+{
+  "part": "f103",
+  "policy_present": false,
+  "source_sha256": {
+    "usbd_desc.c": "f489492589fe4fbc9a98b340dd1c8c754e17a71b02ffca6ee7801a405a764107",
+    "usbd_cdc_if.c": "5a5c2834f0cddbee1686a7b25bd8b5b6d8aeb62e32aa3233c2a6c5facfb65c14",
+    "usbd_core.c": "8cbf1460656f53e78f09bc4b7733364a3ceee5706732097ae12702946b4b886a",
+    "usbd_ctlreq.c": "339046117dd385d4257508a2b240067b7624a4b6df3dd170b72d2cdac215ffa9",
+    "usbd_ioreq.c": "a89f4e80bb59bcd369fe412b12915ab4392bb110bb54f0b93dd521c43669dbc1",
+    "usbd_cdc.c": "ec4aec57d27c2ee55b52024effd3caaa09615240fd864072825157279ce37078",
+    "usb_cdc_transport.c": "37684894e381072410182de742db02b2c7e49e2d6a18f3e707473cec08c9a9e8",
+    "usb_cdc_port.c": "b12f19a50b4e977bc16a7e1d8b631a21d972760255c32f785489629b776cb114",
+    "usbd_def.h": "1fb60258c3705a07f04c32d5b6229a8b8125f90fd72ee06959c098d94485dd05",
+    "usbd_ioreq.h": "b3c4df07bf76dd3371def96c9de53bb2db991f6cecc4601da890641f24376175",
+    "usbd_cdc_if.h": "d45aedfed245c9ef0413a5942c64a2981375d391281fb873e0e84610774bf6ba",
+    "usbd_desc.h": "1e47de8ed0f3d14ac0e8b702dd29cfa96325bd31dc20786018afe40cfbf08069",
+    "usbd_cdc.h": "2bc428e2226229a206723d0441d37003a390ceea9acb7825b02dacf3afc05a1e",
+    "usbd_ctlreq.h": "e0e1fd6d50790b5f82e633e3683908ace0f5e8339884648a013c6e0dfe27c0e4",
+    "usbd_core.h": "5df2712273bfd522fd5164385acc22d6c2fb899b4dc6ed09823a3698e0963c5e",
+    "usb_cdc_port.h": "14d76f1e98f691d82181ae563534463f9962c7a12145931f06399fd3d083b343",
+    "usb_cdc_retire.h": "dd13f96485a610eb1fa389b5a727c0431305a9fca0a30bdee4665e0b874d0328",
+    "usb_cdc_transport.h": "225f99a7ff8520b5324615c22f868eb42bf78935093c5773a55710b6eae6c4ed"
+  },
+  "command": [
+    "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+    "-DHOST_F103=1",
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-fanalyzer",
+    "-Werror=implicit-function-declaration",
+    "-Werror=incompatible-pointer-types",
+    "-DUSBD_CLASS_BOS_ENABLED=0",
+    "-DUSBD_MAX_SUPPORTED_CLASS=1",
+    "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\usbd_desc.c",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\usbd_cdc_if.c",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\usbd_core.c",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\usbd_ctlreq.c",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\usbd_ioreq.c",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\usbd_cdc.c",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\usb_cdc_transport.c",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\usb_cdc_port.c",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\control.c",
+    "-o",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\control.exe"
+  ],
+  "compile_exit": 0,
+  "runs": [
+    {
+      "case": "normal",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\control.exe",
+        "normal"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "boundaries",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\control.exe",
+        "boundaries"
+      ],
+      "exit": 3221226505,
+      "stdout": "",
+      "stderr": "Assertion failed: tx_size[0]==(n<7U?n:7U), file D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\control.c, line 158\n"
+    },
+    {
+      "case": "null_owner",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\control.exe",
+        "null_owner"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "foreign_owner",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\control.exe",
+        "foreign_owner"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "get_initial_failure",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\control.exe",
+        "get_initial_failure"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "set_initial_failure",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\control.exe",
+        "set_initial_failure"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "status_tx_failure",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\control.exe",
+        "status_tx_failure"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "status_rx_failure",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\control.exe",
+        "status_rx_failure"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "descriptor_continuation_failure",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\control.exe",
+        "descriptor_continuation_failure"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "descriptor_initial_failure",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\control.exe",
+        "descriptor_initial_failure"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "descriptor_premature_rx_failure",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\control.exe",
+        "descriptor_premature_rx_failure"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "receive_continuation_helper_failure",
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-ep0-before-v1\\test_generic_actual_ep0_bounda0\\control.exe",
+        "receive_continuation_helper_failure"
+      ],
+      "exit": 2,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "harness_sha256": "43cd41c7672b8e693fb3f48a89954cf4dee8964efdb4cb7e09e0f93731bbb807",
+  "scope": "Actual exported class/core/I/O/EP0/transport/port; Host LL and retirement hardware port. No hardware acceptance."
+}

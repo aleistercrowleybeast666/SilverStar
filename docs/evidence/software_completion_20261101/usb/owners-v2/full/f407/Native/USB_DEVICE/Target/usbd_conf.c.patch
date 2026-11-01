@@ -1,0 +1,142 @@
+--- USB_DEVICE/Target/usbd_conf.c
++++ Native/USB_DEVICE/Target/usbd_conf.c
+@@ -24,7 +24,11 @@
+ #include "usbd_def.h"
+ #include "usbd_core.h"
+ 
+-#include "usbd_cdc.h"
++#include "usbd_cdc.h"
++#include "usb_cdc_transport.h"
++#include "usb_cdc_retire.h"
++extern USBD_HandleTypeDef hUsbDeviceFS;
++_Static_assert(USE_HAL_PCD_REGISTER_CALLBACKS == 0U, "USB integration requires fixed callbacks");
+ 
+ /* USER CODE BEGIN Includes */
+ 
+@@ -150,7 +154,12 @@
+ void HAL_PCD_DataOutStageCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
+ #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
+ {
+-  USBD_LL_DataOutStage((USBD_HandleTypeDef*)hpcd->pData, epnum, hpcd->OUT_ep[epnum].xfer_buff);
++  if ((hpcd != &hpcd_USB_OTG_FS) || (hpcd->pData != &hUsbDeviceFS) || (epnum > 1U))
++  { hUsbDeviceFS.dev_state = USBD_STATE_DEFAULT; UsbCdc_LinkDown(); return; }
++  if ((hUsbDeviceFS.classId != 0U) || (hUsbDeviceFS.pClass[0] == NULL))
++  { hUsbDeviceFS.dev_state = USBD_STATE_DEFAULT; UsbCdc_LinkDown(); return; }
++  if (USBD_LL_DataOutStage(&hUsbDeviceFS, epnum, hpcd->OUT_ep[epnum].xfer_buff) != USBD_OK)
++  { hUsbDeviceFS.dev_state = USBD_STATE_DEFAULT; UsbCdc_LinkDown(); }
+ }
+ 
+ /**
+@@ -165,7 +174,12 @@
+ void HAL_PCD_DataInStageCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum)
+ #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
+ {
+-  USBD_LL_DataInStage((USBD_HandleTypeDef*)hpcd->pData, epnum, hpcd->IN_ep[epnum].xfer_buff);
++  if ((hpcd != &hpcd_USB_OTG_FS) || (hpcd->pData != &hUsbDeviceFS) || (epnum > 2U))
++  { hUsbDeviceFS.dev_state = USBD_STATE_DEFAULT; UsbCdc_LinkDown(); return; }
++  if ((hUsbDeviceFS.classId != 0U) || (hUsbDeviceFS.pClass[0] == NULL))
++  { hUsbDeviceFS.dev_state = USBD_STATE_DEFAULT; UsbCdc_LinkDown(); return; }
++  if (USBD_LL_DataInStage(&hUsbDeviceFS, epnum, hpcd->IN_ep[epnum].xfer_buff) != USBD_OK)
++  { hUsbDeviceFS.dev_state = USBD_STATE_DEFAULT; UsbCdc_LinkDown(); }
+ }
+ 
+ /**
+@@ -324,49 +338,35 @@
+   * @param  pdev: Device handle
+   * @retval USBD status
+   */
+-USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef *pdev)
+-{
+-  /* Init USB Ip. */
+-  if (pdev->id == DEVICE_FS) {
+-  /* Link the driver to the stack. */
+-  hpcd_USB_OTG_FS.pData = pdev;
+-  pdev->pData = &hpcd_USB_OTG_FS;
+-
+-  hpcd_USB_OTG_FS.Instance = USB_OTG_FS;
+-  hpcd_USB_OTG_FS.Init.dev_endpoints = 4;
+-  hpcd_USB_OTG_FS.Init.speed = PCD_SPEED_FULL;
+-  hpcd_USB_OTG_FS.Init.dma_enable = DISABLE;
+-  hpcd_USB_OTG_FS.Init.phy_itface = PCD_PHY_EMBEDDED;
+-  hpcd_USB_OTG_FS.Init.Sof_enable = DISABLE;
+-  hpcd_USB_OTG_FS.Init.low_power_enable = DISABLE;
+-  hpcd_USB_OTG_FS.Init.lpm_enable = DISABLE;
+-  hpcd_USB_OTG_FS.Init.vbus_sensing_enable = DISABLE;
+-  hpcd_USB_OTG_FS.Init.use_dedicated_ep1 = DISABLE;
+-  if (HAL_PCD_Init(&hpcd_USB_OTG_FS) != HAL_OK)
+-  {
+-    Error_Handler( );
+-  }
+-
+-#if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+-  /* Register USB PCD CallBacks */
+-  HAL_PCD_RegisterCallback(&hpcd_USB_OTG_FS, HAL_PCD_SOF_CB_ID, PCD_SOFCallback);
+-  HAL_PCD_RegisterCallback(&hpcd_USB_OTG_FS, HAL_PCD_SETUPSTAGE_CB_ID, PCD_SetupStageCallback);
+-  HAL_PCD_RegisterCallback(&hpcd_USB_OTG_FS, HAL_PCD_RESET_CB_ID, PCD_ResetCallback);
+-  HAL_PCD_RegisterCallback(&hpcd_USB_OTG_FS, HAL_PCD_SUSPEND_CB_ID, PCD_SuspendCallback);
+-  HAL_PCD_RegisterCallback(&hpcd_USB_OTG_FS, HAL_PCD_RESUME_CB_ID, PCD_ResumeCallback);
+-  HAL_PCD_RegisterCallback(&hpcd_USB_OTG_FS, HAL_PCD_CONNECT_CB_ID, PCD_ConnectCallback);
+-  HAL_PCD_RegisterCallback(&hpcd_USB_OTG_FS, HAL_PCD_DISCONNECT_CB_ID, PCD_DisconnectCallback);
+-
+-  HAL_PCD_RegisterDataOutStageCallback(&hpcd_USB_OTG_FS, PCD_DataOutStageCallback);
+-  HAL_PCD_RegisterDataInStageCallback(&hpcd_USB_OTG_FS, PCD_DataInStageCallback);
+-  HAL_PCD_RegisterIsoOutIncpltCallback(&hpcd_USB_OTG_FS, PCD_ISOOUTIncompleteCallback);
+-  HAL_PCD_RegisterIsoInIncpltCallback(&hpcd_USB_OTG_FS, PCD_ISOINIncompleteCallback);
+-#endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
+-  HAL_PCDEx_SetRxFiFo(&hpcd_USB_OTG_FS, 0x80);
+-  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 0, 0x40);
+-  HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 1, 0x80);
+-  }
+-  return USBD_OK;
++USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef *pdev)
++{
++  if ((pdev == NULL) || (pdev->id != DEVICE_FS)) { return USBD_FAIL; }
++  hpcd_USB_OTG_FS.pData = pdev;
++  pdev->pData = &hpcd_USB_OTG_FS;
++  hpcd_USB_OTG_FS.Instance = USB_OTG_FS;
++  hpcd_USB_OTG_FS.Init.dev_endpoints = 4U;
++  hpcd_USB_OTG_FS.Init.speed = PCD_SPEED_FULL;
++  hpcd_USB_OTG_FS.Init.dma_enable = DISABLE;
++  hpcd_USB_OTG_FS.Init.phy_itface = PCD_PHY_EMBEDDED;
++  hpcd_USB_OTG_FS.Init.Sof_enable = DISABLE;
++  hpcd_USB_OTG_FS.Init.low_power_enable = DISABLE;
++  hpcd_USB_OTG_FS.Init.lpm_enable = DISABLE;
++  hpcd_USB_OTG_FS.Init.vbus_sensing_enable = DISABLE;
++  hpcd_USB_OTG_FS.Init.use_dedicated_ep1 = DISABLE;
++  if (HAL_PCD_Init(&hpcd_USB_OTG_FS) != HAL_OK) { return USBD_FAIL; }
++  /* Fixed FS layout: RX=128, EP0=64, EP1=64, EP2=16 words, total 272/320.
++   * EP2 retains its CDC notification endpoint; no alias into EP1's FIFO. */
++  if ((HAL_PCDEx_SetRxFiFo(&hpcd_USB_OTG_FS, 128U) != HAL_OK) ||
++      (HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 0U, 64U) != HAL_OK) ||
++      (HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 1U, 64U) != HAL_OK) ||
++      (HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 2U, 16U) != HAL_OK))
++  {
++    pdev->dev_state = USBD_STATE_DEFAULT;
++    UsbCdc_LinkDown();
++    if (HAL_PCD_DeInit(&hpcd_USB_OTG_FS) != HAL_OK) { UsbCdc_LinkDown(); }
++    return USBD_FAIL;
++  }
++  return USBD_OK;
+ }
+ 
+ /**
+@@ -446,16 +446,9 @@
+   * @param  ep_addr: Endpoint number
+   * @retval USBD status
+   */
+-USBD_StatusTypeDef USBD_LL_CloseEP(USBD_HandleTypeDef *pdev, uint8_t ep_addr)
+-{
+-  HAL_StatusTypeDef hal_status = HAL_OK;
+-  USBD_StatusTypeDef usb_status = USBD_OK;
+-
+-  hal_status = HAL_PCD_EP_Close(pdev->pData, ep_addr);
+-
+-  usb_status =  USBD_Get_USB_Status(hal_status);
+-
+-  return usb_status;
++USBD_StatusTypeDef USBD_LL_CloseEP(USBD_HandleTypeDef *pdev, uint8_t ep_addr)
++{
++  return (UsbCdcRetire_Endpoint(pdev, ep_addr) == USB_CDC_OK) ? USBD_OK : USBD_FAIL;
+ }
+ 
+ /**

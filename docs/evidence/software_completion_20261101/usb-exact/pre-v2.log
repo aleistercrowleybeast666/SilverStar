@@ -1,0 +1,100 @@
+EE                                                                       [100%]
+=================================== ERRORS ====================================
+_________ ERROR at setup of test_exact_generated_control_faults[F103] _________
+
+request = <SubRequest 'exact_control' for <Function test_exact_generated_control_faults[F103]>>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb-exact/pre-v2/test_exact_generated_control_f0')
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/us...re/SilverStar/.work/0.1.3-software-completion-20261101/usb-exact/pre-v2'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001F531444D70>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F531F6C050>
+
+    @pytest.fixture(params=('F103', 'F407'))
+    def exact_control(request, tmp_path, tmp_path_factory, builtin_catalog, monkeypatch):
+        config = tmp_path / 'ground.ssproject'
+        config.write_text(json.dumps(_GroundBoardProject_Get(builtin_catalog).Dictionary_Get()), encoding='utf8')
+        monkeypatch.setenv('SILVERSTAR_NATIVE_BACKEND_CONFIG', str(config))
+>       return normal.first_batch.__wrapped__(SimpleNamespace(param=request.param), tmp_path, tmp_path_factory, builtin_catalog)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_native_control_faults.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\tests\test_usb_lifecycle_normal.py:380: in first_batch
+    service,imported,args,_=nb.bound.__wrapped__(native,tmp_path_factory,builtin_catalog)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\tests\test_native_ground_backend.py:30: in bound
+    result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+apps\SCG\src\silverstar_fccg\app\service.py:962: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+apps\SCG\src\silverstar_fccg\app\native_ground.py:121: in NativeGroundProject_Import
+    NativeGroundCandidate_Render(native, proof, inventory, candidate, catalog, hclk_hz=hclk_hz)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+native_files = {'.mxproject': b'[PreviousGenFiles]\r\nAdvancedFolderStructure=true\r\nHeaderFileListSize=11\r\nHeaderFiles#0=..\\Core...dencies\r\n#######################################\r\n-include $(wildcard $(BUILD_DIR)/*.d)\r\n\r\n# *** EOF ***', ...}
+proof = {'format_version': 2, 'input_kind': 'native_complete_classic_cdc', 'ioc_file': 'cube-f103-usb.ioc', 'device_facts': {'part': 'STM32F103C8T6', 'core': 'cortex-m3', 'device_macro': 'STM32F103xB', 'startup': 'startup_stm32f103xb.s', ...}, ...}
+inventory = HardwareInventory(mcu_part='STM32F103C8T6', mcu_name='STM32F103C(8-B)Tx', mcu_family='STM32F1', package='LQFP48', core...d_handle='', sd_instance='', card_detect_pin='', target_sources=(), errors=()), issues=(), sdio_shared_dma_bound=False)
+model = ProjectModel(identity=ProjectIdentity(name='Round2Targets', firmware_version='0.1.3', build_target='SilverStar_0_1_3')...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001F531444D70>
+hclk_hz = 72000000
+
+    def NativeGroundCandidate_Render(native_files, proof, inventory, model, catalog, *, hclk_hz):
+        ground = model.ground_target
+        radios = GroundRadioConfigurations_Get(ground)
+        if (ground.pc_interface != 'usb_cdc' or len(radios) != 1 or
+                radios[0].plugin != 'silverstar.device.telemetry.sx1281' or
+                radios[0].module_variant != 'e28_2g4m12sx' or model.air_link.radio_family != 'sx128x' or
+                ground.tx_led_resource or ground.rx_led_resource or ground.activity_led_enabled is True):
+>           raise ValueError('Private native candidate currently requires one bare SX1281/M12, FS CDC and no extra LEDs')
+E           ValueError: Private native candidate currently requires one bare SX1281/M12, FS CDC and no extra LEDs
+
+apps\SCG\src\silverstar_fccg\generator\native_ground.py:113: ValueError
+_________ ERROR at setup of test_exact_generated_control_faults[F407] _________
+
+request = <SubRequest 'exact_control' for <Function test_exact_generated_control_faults[F407]>>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb-exact/pre-v2/test_exact_generated_control_f1')
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/us...re/SilverStar/.work/0.1.3-software-completion-20261101/usb-exact/pre-v2'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001F531444D70>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F531903820>
+
+    @pytest.fixture(params=('F103', 'F407'))
+    def exact_control(request, tmp_path, tmp_path_factory, builtin_catalog, monkeypatch):
+        config = tmp_path / 'ground.ssproject'
+        config.write_text(json.dumps(_GroundBoardProject_Get(builtin_catalog).Dictionary_Get()), encoding='utf8')
+        monkeypatch.setenv('SILVERSTAR_NATIVE_BACKEND_CONFIG', str(config))
+>       return normal.first_batch.__wrapped__(SimpleNamespace(param=request.param), tmp_path, tmp_path_factory, builtin_catalog)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_native_control_faults.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\tests\test_usb_lifecycle_normal.py:380: in first_batch
+    service,imported,args,_=nb.bound.__wrapped__(native,tmp_path_factory,builtin_catalog)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\tests\test_native_ground_backend.py:30: in bound
+    result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+apps\SCG\src\silverstar_fccg\app\service.py:962: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+apps\SCG\src\silverstar_fccg\app\native_ground.py:121: in NativeGroundProject_Import
+    NativeGroundCandidate_Render(native, proof, inventory, candidate, catalog, hclk_hz=hclk_hz)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+native_files = {'.mxproject': b'[PreviousGenFiles]\r\nAdvancedFolderStructure=true\r\nHeaderFileListSize=12\r\nHeaderFiles#0=..\\Core...in the\nname of or to create a liability for the other in any way or for any purpose.\n\n</div>\n:::\n\n:::\n:::', ...}
+proof = {'format_version': 2, 'input_kind': 'native_complete_classic_cdc', 'ioc_file': 'cube-f407-usb.ioc', 'device_facts': {'part': 'STM32F407VET6', 'core': 'cortex-m4', 'device_macro': 'STM32F407xx', 'startup': 'startup_stm32f407xx.s', ...}, ...}
+inventory = HardwareInventory(mcu_part='STM32F407VET6', mcu_name='STM32F407V(E-G)Tx', mcu_family='STM32F4', package='LQFP100', cor...d_handle='', sd_instance='', card_detect_pin='', target_sources=(), errors=()), issues=(), sdio_shared_dma_bound=False)
+model = ProjectModel(identity=ProjectIdentity(name='Round2Targets', firmware_version='0.1.3', build_target='SilverStar_0_1_3')...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001F531444D70>
+hclk_hz = 168000000
+
+    def NativeGroundCandidate_Render(native_files, proof, inventory, model, catalog, *, hclk_hz):
+        ground = model.ground_target
+        radios = GroundRadioConfigurations_Get(ground)
+        if (ground.pc_interface != 'usb_cdc' or len(radios) != 1 or
+                radios[0].plugin != 'silverstar.device.telemetry.sx1281' or
+                radios[0].module_variant != 'e28_2g4m12sx' or model.air_link.radio_family != 'sx128x' or
+                ground.tx_led_resource or ground.rx_led_resource or ground.activity_led_enabled is True):
+>           raise ValueError('Private native candidate currently requires one bare SX1281/M12, FS CDC and no extra LEDs')
+E           ValueError: Private native candidate currently requires one bare SX1281/M12, FS CDC and no extra LEDs
+
+apps\SCG\src\silverstar_fccg\generator\native_ground.py:113: ValueError
+=========================== short test summary info ===========================
+ERROR apps\SCG\tests\test_native_control_faults.py::test_exact_generated_control_faults[F103]
+ERROR apps\SCG\tests\test_native_control_faults.py::test_exact_generated_control_faults[F407]
+2 errors in 19.63s

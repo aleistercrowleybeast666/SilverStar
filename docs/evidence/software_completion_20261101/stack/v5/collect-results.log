@@ -1,0 +1,42 @@
+{
+  "schema": "silverstar.software-stack-delivery/1",
+  "source_commit": "e7c42b7c4971fddb02c6d5c60864b50dffaa3f1a",
+  "source_state_at_collection": [
+    " M apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_interfaces.c",
+    " M apps/SCG/src/silverstar_fccg/app/usb_transport.py",
+    " M apps/SCG/src/silverstar_fccg/build/native_usb.py",
+    " M apps/SCG/src/silverstar_fccg/generator/ground_usb_control.py",
+    " M apps/SCG/src/silverstar_fccg/generator/native_control.py",
+    " M apps/SCG/src/silverstar_fccg/generator/native_usb_graph.py",
+    " M apps/SCG/src/silverstar_fccg/generator/usb_cdc_integration.py",
+    " M apps/SCG/tests/test_native_control_faults.py",
+    " M apps/SCG/tests/test_usb_transport_control.py",
+    " M apps/SCG/tests/test_usb_transport_integration.py",
+    " M apps/SCG/tools/validation/usb_transport_validate.py",
+    "?? apps/SCG/tests/test_usb_resource_owners.py",
+    "?? apps/SCG/tests/usb_descriptor_cases.py"
+  ],
+  "scope": "Five exact generated models, Release and Debug, fixed compiler installation and reviewed inputs; no universal project approval.",
+  "normal_arm_builds": 10,
+  "artifact_checks": 10,
+  "raw_independent_comparisons": 10,
+  "emitted_architecture_checks": 5,
+  "emitted_power10_text_checks": 5,
+  "real_arm_fanalyzer_builds": 5,
+  "strict_software_stack_checks": 10,
+  "negative_rejections": 7,
+  "negative_restored_positive": true,
+  "all_formal_build_and_gate_commands_exit_zero": true,
+  "whole_program_stack_acceptance": "SOFTWARE BOUND PASS",
+  "fixed_task_context_bytes": 256,
+  "fixed_minimum_spare_bytes": 256,
+  "f407_sram_review_budget_bytes": 102400,
+  "limits": [
+    "Exact cases only; changed parameters, model names, source/header/build/toolchain identities require separate review.",
+    "Power10 text exit zero is not complete rule or critical-contract acceptance.",
+    "Generic memory artifact report stack_proof stays NOT_PROVEN; separate matched-ELF strict stack reports establish this software bound.",
+    "No measured MCU stack high-water mark, WCET, interrupt latency, RF, electrical or flight qualification.",
+    "Full emitted Host results are recorded separately, including the initial B old-layout fixture failure.",
+    "An early gate-driver launch refused missing raw-byte-comparison prerequisite before running any gates; final-gates.log preserves that startup failure."
+  ]
+}

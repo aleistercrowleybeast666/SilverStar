@@ -1,0 +1,5 @@
+{
+  "completed": false,
+  "reason": "Native desktop testing reproduced tool discovery overwriting the target configuration blocker label. Interrupted this intermediate suite before fixing and repeating the complete group.",
+  "claim": "No full-suite PASS claimed."
+}

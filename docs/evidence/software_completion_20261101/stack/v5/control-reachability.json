@@ -1,0 +1,261 @@
+[
+  {
+    "name": "f407",
+    "configuration": "Release",
+    "contract": {
+      "sha256": "e9840af68516e7e40f0a0c10213bcf5e40f9843fbef966e4589f25c586b8df73",
+      "enabled": false,
+      "kind": null
+    },
+    "proof": {
+      "enabled": false,
+      "required_functions": [],
+      "reachable": true
+    },
+    "elf_sha256": "af918ce206858a9bef8fc7f6367006d6362cf48f252b5afae26d165c1a592198",
+    "flight_control_functions": []
+  },
+  {
+    "name": "f407",
+    "configuration": "Debug",
+    "contract": {
+      "sha256": "e9840af68516e7e40f0a0c10213bcf5e40f9843fbef966e4589f25c586b8df73",
+      "enabled": false,
+      "kind": null
+    },
+    "proof": {
+      "enabled": false,
+      "required_functions": [],
+      "reachable": true
+    },
+    "elf_sha256": "ebe277af26fc60230e2608fed76acbba9c2da6f53324d07bbd945377970c16dc",
+    "flight_control_functions": []
+  },
+  {
+    "name": "installation",
+    "configuration": "Release",
+    "contract": {
+      "sha256": "e9840af68516e7e40f0a0c10213bcf5e40f9843fbef966e4589f25c586b8df73",
+      "enabled": false,
+      "kind": null
+    },
+    "proof": {
+      "enabled": false,
+      "required_functions": [],
+      "reachable": true
+    },
+    "elf_sha256": "2b1dac933e1926d4b3783b7c122e84286157df1dd728c7ab07028b9ed2a8c1c6",
+    "flight_control_functions": []
+  },
+  {
+    "name": "installation",
+    "configuration": "Debug",
+    "contract": {
+      "sha256": "e9840af68516e7e40f0a0c10213bcf5e40f9843fbef966e4589f25c586b8df73",
+      "enabled": false,
+      "kind": null
+    },
+    "proof": {
+      "enabled": false,
+      "required_functions": [],
+      "reachable": true
+    },
+    "elf_sha256": "0f0c44b050cf746f5b6c5deed95f12d52d9cbd9ee22a4c81a322743e9b8eedf1",
+    "flight_control_functions": []
+  },
+  {
+    "name": "h743",
+    "configuration": "Release",
+    "contract": {
+      "sha256": "e9840af68516e7e40f0a0c10213bcf5e40f9843fbef966e4589f25c586b8df73",
+      "enabled": false,
+      "kind": null
+    },
+    "proof": {
+      "enabled": false,
+      "required_functions": [],
+      "reachable": true
+    },
+    "elf_sha256": "1d5bfe4abbfaa34bf7175a05789592807816422f0d9b5ef3c2733416d4127fed",
+    "flight_control_functions": []
+  },
+  {
+    "name": "h743",
+    "configuration": "Debug",
+    "contract": {
+      "sha256": "e9840af68516e7e40f0a0c10213bcf5e40f9843fbef966e4589f25c586b8df73",
+      "enabled": false,
+      "kind": null
+    },
+    "proof": {
+      "enabled": false,
+      "required_functions": [],
+      "reachable": true
+    },
+    "elf_sha256": "270c92d7c87ce22606fe843fe95023bc9558a4e41ee14ef93d04bb28c446e7ca",
+    "flight_control_functions": []
+  },
+  {
+    "name": "pid",
+    "configuration": "Debug",
+    "contract": {
+      "sha256": "9779c7f060171c987b4e7b81695479559acac0308792d7cefd257a0d3f0194ec",
+      "enabled": true,
+      "kind": "pid"
+    },
+    "proof": {
+      "enabled": true,
+      "kind": "pid",
+      "required_functions": [
+        "ControlPid_Step",
+        "ControlResearchBackend_Step",
+        "ControlResearch_Process"
+      ],
+      "reachable": true,
+      "period_us": 10000,
+      "contract_sha256": "9779c7f060171c987b4e7b81695479559acac0308792d7cefd257a0d3f0194ec"
+    },
+    "elf_sha256": "4360c5b564ed0dc1c187e516e87349bd38fea5fd2034b00d0b55cc85122d9cb3",
+    "flight_control_functions": [
+      "ControlPid_ConfigValid",
+      "ControlPid_Limit",
+      "ControlPid_ProjectConfigGet",
+      "ControlPid_Start",
+      "ControlPid_Step",
+      "ControlPid_Stop",
+      "ControlResearchBackend_Start",
+      "ControlResearchBackend_Step",
+      "ControlResearchBackend_Stop",
+      "ControlResearch_ActiveProcess",
+      "ControlResearch_ImuRead",
+      "ControlResearch_Init",
+      "ControlResearch_InputCheck",
+      "ControlResearch_InputRead",
+      "ControlResearch_Process",
+      "ControlResearch_ProvenanceEqual",
+      "ControlResearch_PublicationCheck",
+      "ControlResearch_Publish",
+      "ControlResearch_Revoke",
+      "ControlResearch_RuntimeProcess",
+      "ControlResearch_StateRequire",
+      "ControlResearch_Terminate"
+    ]
+  },
+  {
+    "name": "pid",
+    "configuration": "Release",
+    "contract": {
+      "sha256": "9779c7f060171c987b4e7b81695479559acac0308792d7cefd257a0d3f0194ec",
+      "enabled": true,
+      "kind": "pid"
+    },
+    "proof": {
+      "enabled": true,
+      "kind": "pid",
+      "required_functions": [
+        "ControlPid_Step",
+        "ControlResearchBackend_Step",
+        "ControlResearch_Process"
+      ],
+      "reachable": true,
+      "period_us": 10000,
+      "contract_sha256": "9779c7f060171c987b4e7b81695479559acac0308792d7cefd257a0d3f0194ec"
+    },
+    "elf_sha256": "df8eb6ff52cbf7c88fae46748af29c449ca943e902c9986b953ca8ce17d5b1fd",
+    "flight_control_functions": [
+      "ControlPid_ConfigValid",
+      "ControlPid_ProjectConfigGet",
+      "ControlPid_Start",
+      "ControlPid_Step",
+      "ControlPid_Stop",
+      "ControlResearchBackend_Start",
+      "ControlResearchBackend_Step",
+      "ControlResearchBackend_Stop",
+      "ControlResearch_Init",
+      "ControlResearch_InputRead",
+      "ControlResearch_Process",
+      "ControlResearch_PublicationCheck",
+      "ControlResearch_RuntimeProcess",
+      "ControlResearch_StateRequire",
+      "ControlResearch_Terminate"
+    ]
+  },
+  {
+    "name": "lqr",
+    "configuration": "Release",
+    "contract": {
+      "sha256": "ca4c1df032e4b1a6c077eff6cff2fe2852eb77c2bfb9d7bf7c739fbdd79a30c3",
+      "enabled": true,
+      "kind": "lqr"
+    },
+    "proof": {
+      "enabled": true,
+      "kind": "lqr",
+      "required_functions": [
+        "ControlLqr_Step",
+        "ControlResearchBackend_Step",
+        "ControlResearch_Process"
+      ],
+      "reachable": true,
+      "period_us": 10000,
+      "contract_sha256": "ca4c1df032e4b1a6c077eff6cff2fe2852eb77c2bfb9d7bf7c739fbdd79a30c3"
+    },
+    "elf_sha256": "9f598771f0bfc5865f06abc5479092c88c7614c827472e67c305d8ccb213f3b0",
+    "flight_control_functions": [
+      "ControlLqr_ProjectConfigGet",
+      "ControlLqr_Step",
+      "ControlResearchBackend_Start",
+      "ControlResearchBackend_Step",
+      "ControlResearchBackend_Stop",
+      "ControlResearch_Init",
+      "ControlResearch_InputRead",
+      "ControlResearch_Process",
+      "ControlResearch_PublicationCheck",
+      "ControlResearch_RuntimeProcess",
+      "ControlResearch_StateRequire",
+      "ControlResearch_Terminate"
+    ]
+  },
+  {
+    "name": "lqr",
+    "configuration": "Debug",
+    "contract": {
+      "sha256": "ca4c1df032e4b1a6c077eff6cff2fe2852eb77c2bfb9d7bf7c739fbdd79a30c3",
+      "enabled": true,
+      "kind": "lqr"
+    },
+    "proof": {
+      "enabled": true,
+      "kind": "lqr",
+      "required_functions": [
+        "ControlLqr_Step",
+        "ControlResearchBackend_Step",
+        "ControlResearch_Process"
+      ],
+      "reachable": true,
+      "period_us": 10000,
+      "contract_sha256": "ca4c1df032e4b1a6c077eff6cff2fe2852eb77c2bfb9d7bf7c739fbdd79a30c3"
+    },
+    "elf_sha256": "a7f367fbad7e1204fd18918bdb094fe45c54a3ecb7782ffe9e8f14b751f241fc",
+    "flight_control_functions": [
+      "ControlLqr_ProjectConfigGet",
+      "ControlLqr_Step",
+      "ControlResearchBackend_Start",
+      "ControlResearchBackend_Step",
+      "ControlResearchBackend_Stop",
+      "ControlResearch_ActiveProcess",
+      "ControlResearch_ImuRead",
+      "ControlResearch_Init",
+      "ControlResearch_InputCheck",
+      "ControlResearch_InputRead",
+      "ControlResearch_Process",
+      "ControlResearch_ProvenanceEqual",
+      "ControlResearch_PublicationCheck",
+      "ControlResearch_Publish",
+      "ControlResearch_Revoke",
+      "ControlResearch_RuntimeProcess",
+      "ControlResearch_StateRequire",
+      "ControlResearch_Terminate"
+    ]
+  }
+]

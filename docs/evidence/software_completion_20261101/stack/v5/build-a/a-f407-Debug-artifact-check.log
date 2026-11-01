@@ -1,0 +1,41 @@
+mingw32-make: Entering directory 'D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/stack/v5/a/f407/Flight_Controller'
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_maintenance_uart.ps1
+Maintenance UART source/IOC matched 230400/8N1; no source overwritten
+"FCCG_BUILD_ARTIFACT|ELF|build/FCCG/SilverStar_F407/Debug/SilverStar_0_1_3.elf"
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_firmware_artifact.ps1 -TargetProfile SilverStar_F407 -Config Debug 
+FCCG_PROGRESS|ARTIFACT|PLAN|8
+FCCG_PROGRESS|ARTIFACT|BEGIN|1|8|ELF_MAP_BIN_HEX
+FCCG_PROGRESS|ARTIFACT|DONE|1|8|ELF_MAP_BIN_HEX
+FCCG_PROGRESS|ARTIFACT|BEGIN|2|8|ELF
+FCCG_PROGRESS|ARTIFACT|DONE|2|8|ELF
+FCCG_PROGRESS|ARTIFACT|BEGIN|3|8|MAP
+FCCG_PROGRESS|ARTIFACT|DONE|3|8|MAP
+FIRMWARE_MEMORY_REPORT|D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v5\a\f407\Flight_Controller\build\FCCG\SilverStar_F407\Debug\memory-report.json
+FCCG_PROGRESS|ARTIFACT|BEGIN|4|8|FLASH
+FCCG_PROGRESS|ARTIFACT|DONE|4|8|FLASH
+FCCG_PROGRESS|ARTIFACT|BEGIN|5|8|MAIN_SRAM
+FCCG_PROGRESS|ARTIFACT|DONE|5|8|MAIN_SRAM
+FCCG_PROGRESS|ARTIFACT|BEGIN|6|8|CCMRAM
+FCCG_PROGRESS|ARTIFACT|DONE|6|8|CCMRAM
+FCCG_PROGRESS|ARTIFACT|BEGIN|7|8|heap
+SilverStar memory report:
+  FLASH     used=379628 remaining=144660 capacity=524288
+  main SRAM used=101812 remaining=29260 capacity=131072
+  CCMRAM    used=62640 remaining=2896 capacity=65536
+  heap      reserved=0 runtime_symbols=0
+FCCG_PROGRESS|ARTIFACT|DONE|7|8|heap
+FCCG_PROGRESS|ARTIFACT|BEGIN|8|8|summary
+  largest static objects:
+    s_replay                         bytes= 19304 address=0x20003210 main SRAM
+    s_logger_storage                 bytes= 16000 address=0x2000D088 main SRAM
+    s_estimator_logger_storage       bytes= 11520 address=0x2000A36C main SRAM
+    s_estimator                      bytes= 10944 address=0x10007CE8 CCMRAM
+    s_replay_storage                 bytes= 10368 address=0x1000CC30 CCMRAM
+    s_hal_contexts                   bytes=  8190 address=0x200144FC main SRAM
+    s_serial_stack                   bytes=  6144 address=0x10001000 CCMRAM
+    s_queue                          bytes=  5632 address=0x20007E28 main SRAM
+    s_aggregate_buffer               bytes=  4096 address=0x20000478 main SRAM
+    s_estimator_stack                bytes=  4096 address=0x10004400 CCMRAM
+SilverStar artifact check passed: target=SilverStar_F407 config=Debug elf_bytes=5106260 bin_bytes=379636 heap_symbols=0
+FCCG_PROGRESS|ARTIFACT|DONE|8|8|summary
+mingw32-make: Leaving directory 'D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/stack/v5/a/f407/Flight_Controller'

@@ -1,0 +1,3 @@
+f407 TargetGenerationResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/control/full-host-c/f407'), targets=('Flight_Controller',), file_hashes={})
+installation TargetGenerationResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/control/full-host-c/installation'), targets=('Flight_Controller',), file_hashes={})
+PASS: two fresh Host C projects, source snapshot unchanged

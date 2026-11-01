@@ -1,0 +1,4 @@
+F407: architecture-check: exit 0
+F407: host-tests: exit 0
+F407: power10-check: exit 0
+F407: artifact-check: exit 0

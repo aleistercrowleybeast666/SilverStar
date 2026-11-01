@@ -1,0 +1,3 @@
+D:\python_software\TreeDiagram\.venv\Scripts\python.exe Tools/check_native_ground.py
+PASS private native source graph, immutable originals, unique replacement owners and runtime binding
+Critical-contract manual review, EP0 admission, call graph, stack and MCU timing: NOT PROVEN

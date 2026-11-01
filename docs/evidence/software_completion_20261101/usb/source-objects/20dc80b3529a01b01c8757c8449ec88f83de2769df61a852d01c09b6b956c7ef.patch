@@ -1,0 +1,25 @@
+--- Core/Src/main.c
++++ Native/Core/Src/main.c
+@@ -26,7 +26,8 @@
+ #include "gpio.h"
+ 
+ /* Private includes ----------------------------------------------------------*/
+-/* USER CODE BEGIN Includes */
++/* USER CODE BEGIN Includes */
++#include "usb_cdc_transport.h"
+ 
+ /* USER CODE END Includes */
+ 
+@@ -106,7 +107,11 @@
+   {
+     /* USER CODE END WHILE */
+ 
+-    /* USER CODE BEGIN 3 */
++    /* USER CODE BEGIN 3 */
++    UsbCdcResult usb_result = UsbCdc_Service();
++    if ((usb_result != USB_CDC_OK) && (usb_result != USB_CDC_BUSY) &&
++        (usb_result != USB_CDC_OFFLINE)) { UsbCdc_LinkDown(); }
++
+   }
+   /* USER CODE END 3 */
+ }

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\docs\evidence\software_completion_20261101\control\capture_full_host_c.py", line 35, in <module>
+    assert len(reasons) == values['not_applicable']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

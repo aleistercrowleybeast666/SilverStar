@@ -1,0 +1,68 @@
+Window: "SilverStar SCG — 软件收尾验证", App: pythonw.exe.
+	0 窗口 (settable, string) SilverStar SCG — 软件收尾验证 Secondary Actions: Raise ID: QApplication.MainWindow
+		1 标题栏 (settable, string) Value: SilverStar SCG — 软件收尾验证
+			2 菜单栏 系统 ID: MenuBar
+				3 菜单项 系统
+			4 按钮 最小化
+			5 按钮 最大化
+			6 按钮 关闭
+		7 组 (settable, string) ID: QApplication.MainWindow.centralRoot
+			8 自定义 (settable, string) ID: QApplication.MainWindow.centralRoot.headerBar
+				9 文本 SilverStar 系统配置与生成 ID: QApplication.MainWindow.centralRoot.headerBar.headerTitle
+				10 文本 v0.1.3 ID: QApplication.MainWindow.centralRoot.headerBar.headerVersion
+				11 文本 辰星引力开发 ID: QApplication.MainWindow.centralRoot.headerBar.headerCredit
+				12 文本 当前工程： ID: QApplication.MainWindow.centralRoot.headerBar.headerControlLabel
+				13 文本 SilverStar ID: QApplication.MainWindow.centralRoot.headerBar.headerProjectValue
+				14 组 (settable, string) ID: QApplication.MainWindow.centralRoot.headerBar.QWidget
+					15 文本 界面语言 ID: QApplication.MainWindow.centralRoot.headerBar.QWidget.headerControlLabel
+					16 组合框 (settable, string) Value: 简体中文 ID: QApplication.MainWindow.centralRoot.headerBar.QWidget.headerLanguageCombo
+					17 文本 主题 ID: QApplication.MainWindow.centralRoot.headerBar.QWidget.headerControlLabel
+					18 组合框 (settable, string) Value: 浅色 ID: QApplication.MainWindow.centralRoot.headerBar.QWidget.headerThemeCombo
+			19 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget
+				20 自定义 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.sidebar
+					21 列表 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.sidebar.navigation
+						22 列表项目 (selectable, settable, string) 硬件与通信 ID: QApplication.MainWindow.centralRoot.QWidget.sidebar.navigation
+						23 列表项目 (selectable, settable, string) 任务流程 ID: QApplication.MainWindow.centralRoot.QWidget.sidebar.navigation
+						24 列表项目 (selectable, settable, string) 检查与生成 ID: QApplication.MainWindow.centralRoot.QWidget.sidebar.navigation
+				25 窗格 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget
+					26 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage
+						27 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea
+							28 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport
+								29 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget
+									30 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.PageHeader
+										31 文本 硬件与通信 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.PageHeader.pageTitle
+										32 文本 分别配置飞控端与地面站端；空地链路只有一份权威配置。匹配不代表已建立真实连接。 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.PageHeader.pageDescription
+									33 组 (settable, string) 无线链路 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox
+										34 文本 空地链路 · 2473 MHz 飞控：telemetry0: e28_2g4m12sx / 12 dBm 地面：radio0: e28_2g4m12sx / 12 dBm 仅为配置声明；实际连接与任务状态由 GSHC 获取。 SS-TM-S 0.1 · 预飞半双工；START 完成后单向下行 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										35 按钮 (settable, string) 配置共享无线链路 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QPushButton
+										36 文本 无线参数相容（仅配置检查） ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+									37 组 (settable, string) 设备与资源概览 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox
+										38 文本 飞控端 设备/连接：imu0: JY901 gnss0: NEO-M9N telemetry0: E28-2G4M12SX（SX1281） 另 6 项 资源映射 0 项 · 已发现资源 0 项 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										39 按钮 (settable, string) 编辑飞控设备与接线 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QPushButton
+										40 文本 地面站端 设备/连接：PC uart radio0: e28_2g4m12sx / 12 dBm 资源映射 0 项 · 已发现资源 0 项 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										41 按钮 (settable, string) 编辑地面设备与接口 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QPushButton
+									42 组 (settable, string) 飞控端 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.hardwareTarget_flight
+										43 文本 待匹配 MCU: — 待选择 PCB 或导入完整 CubeMX 工程 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.hardwareTarget_flight.QLabel
+										44 按钮 (settable, string) 硬件选项… ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.hardwareTarget_flight.QPushButton
+									45 组 (settable, string) 地面站端 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.hardwareTarget_ground
+										46 文本 待匹配 MCU: — 待选择 PCB 或导入完整 CubeMX 工程 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.hardwareTarget_ground.QLabel
+										47 按钮 (settable, string) 硬件选项… ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.HardwareWorkspacePage.QScrollArea.qt_scrollarea_viewport.QWidget.hardwareTarget_ground.QPushButton
+		48 状态栏 ID: QApplication.MainWindow.QStatusBar
+			49 缩略图 (settable, string) ID: QApplication.MainWindow.QStatusBar.QSizeGrip
+			50 文本 ID: QApplication.MainWindow.QStatusBar.QLabel
+			51 按钮 (disabled, settable, string) 导出审查清单 ID: QApplication.MainWindow.QStatusBar.QPushButton
+			52 按钮 (settable, string) 系统日志 ID: QApplication.MainWindow.QStatusBar.systemLogButton
+		53 菜单栏 (settable, string) ID: QApplication.MainWindow.QMenuBar
+			54 菜单项 (settable, string) 文件 ID: QApplication.MainWindow.QMenuBar.QAction
+			55 菜单项 (settable, string) 插件 ID: QApplication.MainWindow.QMenuBar.QAction
+			56 菜单项 (settable, string) 帮助 ID: QApplication.MainWindow.QMenuBar.QAction
+
+Document text: ```
+SilverStar 系统配置与生成
+v0.1.3
+辰星引力开发
+当前工程：
+SilverStar
+界面语言
+主题
+```

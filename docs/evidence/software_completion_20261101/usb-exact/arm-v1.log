@@ -1,0 +1,213 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_______________ test_real_backend_bound_build_receipt[f103-usb] _______________
+
+bound = (<silverstar_fccg.app.service.FccgService object at 0x000002007BD41160>, NativeGroundProjectImportResult(result=<Nativ...IO1')}, WindowsPath('D:/python_software/SilverStar/.work/sc-261101-usb/arm-v1/test_real_backend_bound_build_0/native'))
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/sc-261101-usb/arm-v1'), _trace=<plugg...p=WindowsPath('D:/python_software/SilverStar/.work/sc-261101-usb/arm-v1'), _retention_count=3, _retention_policy='all')
+
+    def test_real_backend_bound_build_receipt(bound, tmp_path_factory):
+        if os.environ.get('SILVERSTAR_NATIVE_BACKEND_ARM') != '1':
+            pytest.skip('Explicit real ARM/analyzer backend flow execution not requested')
+        assert shutil.which('arm-none-eabi-gcc')
+        service, imported, args, _root = bound
+        project = tmp_path_factory.mktemp('p')
+        service.ProjectRoot_Save(imported.model, project, create_new=True)
+        loaded = ProjectModel_Load(project / 'SilverStar.ssproject')
+        output = tmp_path_factory.mktemp('o') / 'b'
+        result = service.NativeClassicCdcGroundCandidate_Build(loaded, project, output,
+            device_facts=args['device_facts'])
+>       assert result.result == NativeGroundBackendResult.CompiledCandidate, result.detail
+E       AssertionError: native validation command failed; see D:\python_software\SilverStar\.work\sc-261101-usb\arm-v1\o0\b\commands.log
+E       assert <NativeGround...ledCandidate'> == <NativeGround...ledCandidate'>
+E         
+E         - CompiledCandidate
+E         ? ^^^^
+E         + FailedCandidate
+E         ? ^^
+
+apps\SCG\tests\test_native_ground_backend.py:190: AssertionError
+---------------------------- Captured stdout call -----------------------------
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+---------------------------- Captured stderr call -----------------------------
+warning: in the working copy of '.gitattributes', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Inc/estimator_task.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Interfaces/Inc/system_device_types.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Inc/system_mission_process.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_mission_process.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_mission_process_runtime.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/generator/usb_cdc_integration.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/project/mission_functions.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/project/tuning_bundle.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/ui/message_box.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_horizon_stack_binding.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_mission_process_native.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_project_domain.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_receipt_stack_binding.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.gitattributes', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Inc/estimator_task.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Interfaces/Inc/system_device_types.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Inc/system_mission_process.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_mission_process.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_mission_process_runtime.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/generator/usb_cdc_integration.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/project/mission_functions.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/project/tuning_bundle.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/ui/message_box.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_horizon_stack_binding.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_mission_process_native.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_project_domain.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_receipt_stack_binding.py', LF will be replaced by CRLF the next time Git touches it
+_______________ test_real_backend_bound_build_receipt[f407-usb] _______________
+
+bound = (<silverstar_fccg.app.service.FccgService object at 0x000002007C43C7D0>, NativeGroundProjectImportResult(result=<Nativ...IO1')}, WindowsPath('D:/python_software/SilverStar/.work/sc-261101-usb/arm-v1/test_real_backend_bound_build_1/native'))
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/sc-261101-usb/arm-v1'), _trace=<plugg...p=WindowsPath('D:/python_software/SilverStar/.work/sc-261101-usb/arm-v1'), _retention_count=3, _retention_policy='all')
+
+    def test_real_backend_bound_build_receipt(bound, tmp_path_factory):
+        if os.environ.get('SILVERSTAR_NATIVE_BACKEND_ARM') != '1':
+            pytest.skip('Explicit real ARM/analyzer backend flow execution not requested')
+        assert shutil.which('arm-none-eabi-gcc')
+        service, imported, args, _root = bound
+        project = tmp_path_factory.mktemp('p')
+        service.ProjectRoot_Save(imported.model, project, create_new=True)
+        loaded = ProjectModel_Load(project / 'SilverStar.ssproject')
+        output = tmp_path_factory.mktemp('o') / 'b'
+        result = service.NativeClassicCdcGroundCandidate_Build(loaded, project, output,
+            device_facts=args['device_facts'])
+>       assert result.result == NativeGroundBackendResult.CompiledCandidate, result.detail
+E       AssertionError: native validation command failed; see D:\python_software\SilverStar\.work\sc-261101-usb\arm-v1\o1\b\commands.log
+E       assert <NativeGround...ledCandidate'> == <NativeGround...ledCandidate'>
+E         
+E         - CompiledCandidate
+E         ? ^^^^
+E         + FailedCandidate
+E         ? ^^
+
+apps\SCG\tests\test_native_ground_backend.py:190: AssertionError
+---------------------------- Captured stdout call -----------------------------
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+PASS paired CPP/GAS dependencies, exact saved assembler inputs and selected compiler defaults: build
+---------------------------- Captured stderr call -----------------------------
+warning: in the working copy of '.gitattributes', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Inc/estimator_task.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Interfaces/Inc/system_device_types.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Inc/system_mission_process.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_mission_process.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_mission_process_runtime.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/generator/usb_cdc_integration.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/project/mission_functions.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/project/tuning_bundle.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/ui/message_box.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_horizon_stack_binding.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_mission_process_native.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_project_domain.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_receipt_stack_binding.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_usb_transport_integration.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tools/validation/usb_transport_validate.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.gitattributes', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Inc/estimator_task.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Interfaces/Inc/system_device_types.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Inc/system_mission_process.h', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_mission_process.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_mission_process_runtime.c', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/generator/usb_cdc_integration.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/project/mission_functions.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/project/tuning_bundle.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/src/silverstar_fccg/ui/message_box.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_horizon_stack_binding.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_mission_process_native.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_project_domain.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_receipt_stack_binding.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tests/test_usb_transport_integration.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'apps/SCG/tools/validation/usb_transport_validate.py', LF will be replaced by CRLF the next time Git touches it
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_native_ground_backend.py::test_real_backend_bound_build_receipt[f103-usb]
+FAILED apps\SCG\tests\test_native_ground_backend.py::test_real_backend_bound_build_receipt[f407-usb]
+2 failed, 26 deselected in 222.49s (0:03:42)

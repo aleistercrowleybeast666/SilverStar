@@ -1,0 +1,70 @@
+Release seconds 17.371248100011144 UNKNOWN_COUNT 4
+{
+  "Reset_Handler": [
+    [
+      134526176,
+      4,
+      "ldr.w",
+      "sp, [pc, #108]\t@ 804b550 <LoopFillZeroCcmBss+0x10>"
+    ]
+  ],
+  "prvPortStartFirstTask": [
+    [
+      134374122,
+      4,
+      "msr",
+      "MSP, r0"
+    ]
+  ],
+  "PendSV_Handler": [
+    [
+      134374234,
+      4,
+      "msr",
+      "PSP, r0"
+    ]
+  ],
+  "SVC_Handler": [
+    [
+      134374094,
+      4,
+      "msr",
+      "PSP, r0"
+    ]
+  ]
+}
+Debug seconds 29.698691999990842 UNKNOWN_COUNT 4
+{
+  "Reset_Handler": [
+    [
+      134547364,
+      4,
+      "ldr.w",
+      "sp, [pc, #108]\t@ 8050814 <LoopFillZeroCcmBss+0x10>"
+    ]
+  ],
+  "prvPortStartFirstTask": [
+    [
+      134380950,
+      4,
+      "msr",
+      "MSP, r0"
+    ]
+  ],
+  "PendSV_Handler": [
+    [
+      134381062,
+      4,
+      "msr",
+      "PSP, r0"
+    ]
+  ],
+  "SVC_Handler": [
+    [
+      134380922,
+      4,
+      "msr",
+      "PSP, r0"
+    ]
+  ]
+}

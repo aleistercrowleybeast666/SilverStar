@@ -1,0 +1,12 @@
+[
+  {
+    "kind": "QWidget",
+    "name": "",
+    "title": "",
+    "parent": "NoneType",
+    "visible": true,
+    "labels": [
+      "飞控 遥测 0 发射功率"
+    ]
+  }
+]

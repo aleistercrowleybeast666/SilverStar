@@ -1,0 +1,20 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_dwarf_constant_member_location_expression_is_checked_against_actual_bytes _
+
+    def test_dwarf_constant_member_location_expression_is_checked_against_actual_bytes():
+>       assert runtime.DwarfLocation_Read('2 byte block: 23 3c (DW_OP_plus_uconst: 60)') == 60
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'stack_runtime_unit' has no attribute 'DwarfLocation_Read'
+
+apps\SCG\tests\test_stack_runtime.py:46: AttributeError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_stack_runtime.py::test_dwarf_constant_member_location_expression_is_checked_against_actual_bytes
+1 failed, 5 deselected, 1 warning in 0.82s

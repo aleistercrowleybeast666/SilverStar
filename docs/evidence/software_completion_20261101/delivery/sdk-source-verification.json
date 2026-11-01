@@ -1,0 +1,166 @@
+{
+  "source_commit": "ad2da03c3b248d15d7cf8e1c3278781fb7cd3f79",
+  "comparison": "raw owner/SDK bytes equal; committed source equality under Git CRLF/LF normalization, both hashes retained",
+  "files": [
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_common/payload/Algorithm/Common/Src/attitude_frame.c",
+      "working_sha256": "5357a6d087d64c94658c924249b6364bc6aee79ad4301c0b4b4a51e040a17b25",
+      "committed_sha256": "407ae1bc41a066ca7c3525c989ab970d662cf460876a0847a0295b7b7dd068db"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_common/payload/Algorithm/Common/Inc/attitude_frame.h",
+      "working_sha256": "a4bfa5772d2b007966842ad064168c1f091ca11cab5271bf42cad51e6dc3c36a",
+      "committed_sha256": "35b9747126686a19dab2a7e08237ecd874aae86b13bf233cf102d5e25a172567"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_common/plugin.json",
+      "working_sha256": "e098a4812f5a0005b7c4465d11401b91ce98d31ac2791de64892929671827864",
+      "committed_sha256": "d7a9b2456ca606515ab55e1fc7ef017bd73ee0b6c71a812aab1b9c63571d303f"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_ins_coning2_sculling2/payload/Algorithm/INS/Coning2Sculling2/Src/ins_mechanization.c",
+      "working_sha256": "61045decd91bf70cc2d61ebaf2e45a701e8e13db5e2a4bf191706e68746b9880",
+      "committed_sha256": "8ef0c64721c02de63f747754744f8144754d6202fb571819e6d158e1d4e7ca9c"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_ins_coning2_sculling2/payload/Algorithm/INS/Coning2Sculling2/Inc/ins_mechanization.h",
+      "working_sha256": "adc1e90465641029b1203b3fd746395df3350ebb878092338b1dfae48aac7ace",
+      "committed_sha256": "2a4fee215e350587e3c6a7bbb41034415331891677f6212bf62c7b8abebdbcee"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_ins_coning2_sculling2/plugin.json",
+      "working_sha256": "eb3feaf055c8dc1e6e26d455b6ffd35d08be0f86a765d71f37102043696a4af0",
+      "committed_sha256": "453b71c0b83ce6c7c22517d3c080bffdae66df5f9d02a3b8106b494dfab30267"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_kf6/payload/Algorithm/Estimator/KF6/Src/navigation_kf.c",
+      "working_sha256": "eb27260dd8ae7043a147c1d35f61133a13620f28f14055860299f64f9888805c",
+      "committed_sha256": "245001c071d53a537c292b466befbbf24a3a70ca464f0609f193b46bdecd9e6f"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_kf6/payload/Algorithm/Estimator/KF6/Inc/navigation_kf.h",
+      "working_sha256": "bc5b736e09e39b0e5caadf0139c68a46b9ec67e6f85a21c4c9982b23dabc15c9",
+      "committed_sha256": "4d3d5b93f4439d763199ca4f970c2d7bd436cc09cc3a92842ad291b7cdc5e6ca"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_kf6/plugin.json",
+      "working_sha256": "e0d75bfc19decfbdfc0098671cb679c4320952b0e49a74dedf1f9f43f567466c",
+      "committed_sha256": "dae7a46cf7b4e5d7b1fb03db8b63128c8de6401dc8a6fd36a79eb0ca86a68ddc"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_sf6/payload/Algorithm/Estimator/SF6/Src/navigation_sf6.c",
+      "working_sha256": "3115c97a2aa98cdf5243c9759755d8ef03edfd35c9c51e138d6ca71f4f97b2af",
+      "committed_sha256": "7f0fd56ea6c9b4b43432ef70d4762234a730328a724ba4c3f8db3e996e5ced12"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_sf6/payload/Algorithm/Estimator/SF6/Inc/navigation_sf6.h",
+      "working_sha256": "7ac0b7e6e9e92f336dbd428d1b6a8ab054391f48552864119c859b8f66a24bb5",
+      "committed_sha256": "6bd1b7e848fddf43f3ad5d81628c02ad7c182636d3f5b9fe7e12268e3984b95f"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_sf6/plugin.json",
+      "working_sha256": "79c853a62740cb0137bd42c0dbed042d5806e80f14e8e4948edbee629b4ecbbc",
+      "committed_sha256": "18dcc4472eb6a03fc3aeee2eb03abc6500df4e3281e44adfcc3622f422d2219d"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Src/navigation_eskf.c",
+      "working_sha256": "bd72b2869857d0c4c02fddd55c081cda505ddf73dd395f41420a3a3d0cb8111e",
+      "committed_sha256": "57d3ec3ff092a9b0f9455aecf52a2dde238b74b23463733450e391763a840c6b"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/payload/Algorithm/Estimator/ESKF15/Inc/navigation_eskf.h",
+      "working_sha256": "54157e4d017d75ebb0df957630f036603ce6803dcb6fc99e68d0d037d546ddcd",
+      "committed_sha256": "62f8330a69150520578dda46067113a52e522a4ab12f22b484dc05742660025d"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf15/plugin.json",
+      "working_sha256": "dcf9f1695e95f2cac2c2786b31c61a7a2c8c0a5e2d3d7aa4fbd478a3f2d66796",
+      "committed_sha256": "fa80aa3ef0ad120a87f52512937cf4976c245632927fcfe59ae1416af4c249a2"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_augmented_common/payload/Algorithm/Estimator/Augmented/Src/navigation_bounded.c",
+      "working_sha256": "7d5591c3a87ce301099f10088ea8a20b5dee3092142821e6f58c1e97751f44b7",
+      "committed_sha256": "7d5591c3a87ce301099f10088ea8a20b5dee3092142821e6f58c1e97751f44b7"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_augmented_common/payload/Algorithm/Estimator/Augmented/Inc/navigation_bounded.h",
+      "working_sha256": "194ea399e852ed3593ae9cc10b39accb4caa9500fdc3a9188764a40caeaf07ee",
+      "committed_sha256": "194ea399e852ed3593ae9cc10b39accb4caa9500fdc3a9188764a40caeaf07ee"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_augmented_common/plugin.json",
+      "working_sha256": "e846939e7c6a57148094ef60792d5e8f9d5b5d43b77049ffd66a6b61a89f32a6",
+      "committed_sha256": "33a6713db2bd5fcd34d09c3cff1bf2bd6a326a4d33674d3ab17261cc023542e4"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_eskf20/plugin.json",
+      "working_sha256": "a06b80e02156b98d3c247019ca0266bfe2f47e47f6452d7ab8b613833ed3ad95",
+      "committed_sha256": "d1de6f4341774331639e50d943deee04548b76a9bc58dba27126756074a19795"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_inekf15/plugin.json",
+      "working_sha256": "5caa5d40a6712ee08f08864b2503c44bb4e2d56be21b5740e4911055840c8c7f",
+      "committed_sha256": "b7f36b2a7068421d8b56b592373da65d1765e644150850ec26a73f3af3ac7fee"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_estimator_inekf20/plugin.json",
+      "working_sha256": "ec483cb9ba149671c44d935f46de22c44438d4bff0dc6796bdf36ff8553b0153",
+      "committed_sha256": "135dc37fa2b0268c47cc7e957dcdc1e185b6f2302eacb3023e56962c28a9627a"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_control_pid/payload/Algorithm/Control/PID/Src/control_pid.c",
+      "working_sha256": "a4f98b5c938022acca859567e72cd9d9e5f13b128f96aec2e43b8ff95156c37c",
+      "committed_sha256": "a4f98b5c938022acca859567e72cd9d9e5f13b128f96aec2e43b8ff95156c37c"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_control_pid/payload/Algorithm/Control/PID/Inc/control_pid.h",
+      "working_sha256": "ccfb93c3d3482f6d7412ccb8c496822f6e23249e3dce4de1dcef37fd7c5ae0e5",
+      "committed_sha256": "ccfb93c3d3482f6d7412ccb8c496822f6e23249e3dce4de1dcef37fd7c5ae0e5"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_control_pid/plugin.json",
+      "working_sha256": "b3b99ec45ca7aec8eafc6aaf8954d60ed50309a57a604383e6999de058f12d31",
+      "committed_sha256": "d7a0b5b2e38c1ac8b9dcd57df23bcfe7c107b1864e70e0f8a7594428ef13fdf6"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_control_lqr/payload/Algorithm/Control/LQR/Src/control_lqr.c",
+      "working_sha256": "93bed3be6176df9672cbf42c3f99831c164625978296dca1aa3f86f29a7c32c5",
+      "committed_sha256": "93bed3be6176df9672cbf42c3f99831c164625978296dca1aa3f86f29a7c32c5"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_control_lqr/payload/Algorithm/Control/LQR/Inc/control_lqr.h",
+      "working_sha256": "31216be5da05329e2bd40fa3ba99d6308595aff1f44aecab71bccbbf691b55c4",
+      "committed_sha256": "31216be5da05329e2bd40fa3ba99d6308595aff1f44aecab71bccbbf691b55c4"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_algorithm_control_lqr/plugin.json",
+      "working_sha256": "8cd7344d27bc1c33c2fbcfdb905bc45a536d45c3a381e98653b058ca8a9e39d4",
+      "committed_sha256": "0829608121028e2b912b659897c34e2729a5416c4746a1f66d10c060556a233b"
+    },
+    {
+      "source": "LICENSE",
+      "working_sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "committed_sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "source": "contracts/tuning_bundle_v1.schema.json",
+      "working_sha256": "2cc8c87f6c9cd946fac97b911c776b3d1a9be2859ffe2e57e35d568e5539af9b",
+      "committed_sha256": "a3be546d21e89a13e4bc6045c6b08b56a5f348f89f03f57af7555b9f4055f121"
+    },
+    {
+      "source": "apps/SCG/tests/fixtures/navigation_perf_config/system_user_config.h",
+      "working_sha256": "a5667ac200718acd1d65b8c003f98410a753629cfcb0bf180c98d4ef7a76ab34",
+      "committed_sha256": "8d633e287b8c57eed85388b2c8447196b578bbc8abbfbc91a51d652d13098edd"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Common/Inc/silverstar_assert.h",
+      "working_sha256": "aa35382c4395e5a71bc80a71944498c6aaefe4bf4fa65a63fa00bc2c67cb0452",
+      "committed_sha256": "e7dbcb7168f71bb13b5bb3c05b596d8388ba50884507f40ae764920525d47615"
+    },
+    {
+      "source": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Common/Inc/silverstar_compiler.h",
+      "working_sha256": "3d66165f468e3e7263ebb6d72b6c217a042dd337be39e170ffb83487815ffd57",
+      "committed_sha256": "d9176d94ca250f5dbf257520163c51e773ad3345ce01705842b15349458d5f32"
+    }
+  ]
+}

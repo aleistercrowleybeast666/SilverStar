@@ -1,0 +1,243 @@
+{
+  "schema": "silverstar.software-stack-delivery/1",
+  "source_commit": "e7c42b7c4971fddb02c6d5c60864b50dffaa3f1a",
+  "source_state_at_collection": [
+    " M apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_interfaces.c",
+    " M apps/SCG/src/silverstar_fccg/app/usb_transport.py",
+    " M apps/SCG/src/silverstar_fccg/build/native_usb.py",
+    " M apps/SCG/src/silverstar_fccg/generator/ground_usb_control.py",
+    " M apps/SCG/src/silverstar_fccg/generator/native_control.py",
+    " M apps/SCG/src/silverstar_fccg/generator/native_usb_graph.py",
+    " M apps/SCG/src/silverstar_fccg/generator/usb_cdc_integration.py",
+    " M apps/SCG/tests/test_native_control_faults.py",
+    " M apps/SCG/tests/test_usb_transport_control.py",
+    " M apps/SCG/tests/test_usb_transport_integration.py",
+    " M apps/SCG/tools/validation/usb_transport_validate.py",
+    "?? apps/SCG/tests/test_usb_resource_owners.py",
+    "?? apps/SCG/tests/usb_descriptor_cases.py"
+  ],
+  "scope": "Five exact generated models, Release and Debug, fixed compiler installation and reviewed inputs; no universal project approval.",
+  "normal_arm_builds": 10,
+  "artifact_checks": 10,
+  "raw_independent_comparisons": 10,
+  "emitted_architecture_checks": 5,
+  "emitted_power10_text_checks": 5,
+  "real_arm_fanalyzer_builds": 5,
+  "strict_software_stack_checks": 10,
+  "negative_rejections": 7,
+  "negative_restored_positive": true,
+  "all_formal_build_and_gate_commands_exit_zero": true,
+  "whole_program_stack_acceptance": "SOFTWARE BOUND PASS",
+  "fixed_task_context_bytes": 256,
+  "fixed_minimum_spare_bytes": 256,
+  "f407_sram_review_budget_bytes": 102400,
+  "limits": [
+    "Exact cases only; changed parameters, model names, source/header/build/toolchain identities require separate review.",
+    "Power10 text exit zero is not complete rule or critical-contract acceptance.",
+    "Generic memory artifact report stack_proof stays NOT_PROVEN; separate matched-ELF strict stack reports establish this software bound.",
+    "No measured MCU stack high-water mark, WCET, interrupt latency, RF, electrical or flight qualification.",
+    "Full emitted Host results are recorded separately, including the initial B old-layout fixture failure.",
+    "An early gate-driver launch refused missing raw-byte-comparison prerequisite before running any gates; final-gates.log preserves that startup failure."
+  ],
+  "raw_byte_comparison": [
+    {
+      "case": "f407",
+      "configuration": "Release",
+      "artifacts_per_build": 510,
+      "changed": [],
+      "passes": true
+    },
+    {
+      "case": "f407",
+      "configuration": "Debug",
+      "artifacts_per_build": 510,
+      "changed": [],
+      "passes": true
+    },
+    {
+      "case": "installation",
+      "configuration": "Release",
+      "artifacts_per_build": 540,
+      "changed": [],
+      "passes": true
+    },
+    {
+      "case": "installation",
+      "configuration": "Debug",
+      "artifacts_per_build": 540,
+      "changed": [],
+      "passes": true
+    },
+    {
+      "case": "h743",
+      "configuration": "Release",
+      "artifacts_per_build": 546,
+      "changed": [],
+      "passes": true
+    },
+    {
+      "case": "h743",
+      "configuration": "Debug",
+      "artifacts_per_build": 546,
+      "changed": [],
+      "passes": true
+    },
+    {
+      "case": "pid",
+      "configuration": "Release",
+      "artifacts_per_build": 516,
+      "changed": [],
+      "passes": true
+    },
+    {
+      "case": "pid",
+      "configuration": "Debug",
+      "artifacts_per_build": 516,
+      "changed": [],
+      "passes": true
+    },
+    {
+      "case": "lqr",
+      "configuration": "Release",
+      "artifacts_per_build": 516,
+      "changed": [],
+      "passes": true
+    },
+    {
+      "case": "lqr",
+      "configuration": "Debug",
+      "artifacts_per_build": 516,
+      "changed": [],
+      "passes": true
+    }
+  ],
+  "reports": [
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\f407\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\memory-report.json",
+      "evidence": "reports-b\\f407-Release-memory-report.json",
+      "sha256": "027127aa27d0ad8ac5dc4847e55b653207cb4790561adbe749b6f40c514a8e81",
+      "bytes": 5380
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\f407\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\stack-budget.json",
+      "evidence": "reports-b\\f407-Release-stack-budget.json",
+      "sha256": "93f206acf4a25a47ea476574626873aec908397caed843bd9a7691cdc08ef0bb",
+      "bytes": 264527
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\f407\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Debug\\memory-report.json",
+      "evidence": "reports-b\\f407-Debug-memory-report.json",
+      "sha256": "b3355c0c477c77c91fd6407a3230fb97dafa91c88a18d2a7f7cfac990cc7f106",
+      "bytes": 5376
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\f407\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Debug\\stack-budget.json",
+      "evidence": "reports-b\\f407-Debug-stack-budget.json",
+      "sha256": "f7cef0966b78e6d92cd231629655bb08b6120615d2db1e3417e126364f6275ce",
+      "bytes": 272321
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\installation\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\memory-report.json",
+      "evidence": "reports-b\\installation-Release-memory-report.json",
+      "sha256": "5f17e3a45e715d5db9e989bb6eebd8bfe8c591600c75f53ea9ee37588cc43a4a",
+      "bytes": 5408
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\installation\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\stack-budget.json",
+      "evidence": "reports-b\\installation-Release-stack-budget.json",
+      "sha256": "1e160d39759cd9b88b6a15e33f3b2c47520b85103ced000a6e8fa9a3705c8d06",
+      "bytes": 269188
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\installation\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Debug\\memory-report.json",
+      "evidence": "reports-b\\installation-Debug-memory-report.json",
+      "sha256": "0a44e821b87219bce0138c767c593da26829f8ac902667dd074ee53dc5912210",
+      "bytes": 5402
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\installation\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Debug\\stack-budget.json",
+      "evidence": "reports-b\\installation-Debug-stack-budget.json",
+      "sha256": "e8153464a747e31396196408633ad6b1722088222d7ce3d0f2731378c34d4c91",
+      "bytes": 276320
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\h743\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\memory-report.json",
+      "evidence": "reports-b\\h743-Release-memory-report.json",
+      "sha256": "4ef28c920cfd07f836e7eaa8c2435b8d729a29fdc67bf197182a2bd981838e8a",
+      "bytes": 6775
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\h743\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Release\\stack-budget.json",
+      "evidence": "reports-b\\h743-Release-stack-budget.json",
+      "sha256": "5712ce44b54b305b205bea3081ab8423f2646f2740dec5dc250d52b9f7c7b41b",
+      "bytes": 724745
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\h743\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Debug\\memory-report.json",
+      "evidence": "reports-b\\h743-Debug-memory-report.json",
+      "sha256": "8076dec1d08b74dc24a5d8b1f42d603178c87f6e0bfbfa5443e755cb6fb95123",
+      "bytes": 6767
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\h743\\Flight_Controller\\build\\FCCG\\SilverStar_H743ZI\\Debug\\stack-budget.json",
+      "evidence": "reports-b\\h743-Debug-stack-budget.json",
+      "sha256": "21b1a51df7ef4729912e6935e7390c45d91bcaaceb100d860bf455d914d623bc",
+      "bytes": 735489
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\memory-report.json",
+      "evidence": "reports-b\\pid-Release-memory-report.json",
+      "sha256": "a086a0cea4c58172806949d8ca6f6735bbc8717af47d0decec93f67ab42cfcc5",
+      "bytes": 5378
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\stack-budget.json",
+      "evidence": "reports-b\\pid-Release-stack-budget.json",
+      "sha256": "2f62c88574f421be2f53182014f44b449d4934c49be8245b1cc97dffaa8b1fd0",
+      "bytes": 265191
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Debug\\memory-report.json",
+      "evidence": "reports-b\\pid-Debug-memory-report.json",
+      "sha256": "21a7e8dee6dbe5576112321eed9d2e73d41f35cadb1c5624d81d71c377fc15d8",
+      "bytes": 5374
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Debug\\stack-budget.json",
+      "evidence": "reports-b\\pid-Debug-stack-budget.json",
+      "sha256": "04e0016269f0820c9c8e044d433b01ecddbb511e99121c5b525107a82617de49",
+      "bytes": 272981
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\lqr\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\memory-report.json",
+      "evidence": "reports-b\\lqr-Release-memory-report.json",
+      "sha256": "0fe1665e31fc4f2aef5aef205fbed6adc1bb3d2df3659e0dda06c06b9b2646c3",
+      "bytes": 5378
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\lqr\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Release\\stack-budget.json",
+      "evidence": "reports-b\\lqr-Release-stack-budget.json",
+      "sha256": "718e9c9b7d03475600783e9319224c2252c1c3ecebccce6ec8b80e5cad24373a",
+      "bytes": 265191
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\lqr\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Debug\\memory-report.json",
+      "evidence": "reports-b\\lqr-Debug-memory-report.json",
+      "sha256": "298a65847d2bf55ab45099efd609598157ce456f8aa98e0322cf7997e07b0108",
+      "bytes": 5374
+    },
+    {
+      "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\lqr\\Flight_Controller\\build\\FCCG\\SilverStar_F407\\Debug\\stack-budget.json",
+      "evidence": "reports-b\\lqr-Debug-stack-budget.json",
+      "sha256": "6d2f05c15beea1280ed18c283163b1b2c3841373f42b4266cded4f5eed8db152",
+      "bytes": 272981
+    }
+  ],
+  "formal_stack_regression": {
+    "receipt": "formal-stack-regression.json",
+    "exit_code": 0,
+    "file_count": 14,
+    "seconds": 27.866,
+    "log_sha256": "f12c672f6a9a733d01f71563764796e069a05677762ea5ecb381b068a86bc110"
+  }
+}

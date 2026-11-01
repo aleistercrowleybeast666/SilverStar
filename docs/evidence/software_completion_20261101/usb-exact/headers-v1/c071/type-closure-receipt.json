@@ -1,0 +1,23 @@
+{
+  "route": "c071",
+  "command": [
+    "D:/msys64/ucrt64/bin\\gcc.EXE",
+    "-std=c11",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-pedantic",
+    "-fanalyzer",
+    "-ID:\\python_software\\SilverStar\\.work\\sc-261101-usb\\headers-v1\\test_ground_shared_type_header1",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\headers-v1\\test_ground_shared_type_header1\\type-closure.c",
+    "-o",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\headers-v1\\test_ground_shared_type_header1\\type-closure.exe"
+  ],
+  "compile_exit": 0,
+  "run_exit": 0,
+  "generated_headers_sha256": {
+    "Interfaces/Inc/system_device_types.h": "9bdaf1805b43c9148ad357bff0067c1938db8a2be26b5205dcfaa54790b86e4d",
+    "Interfaces/Inc/system_navigation_provenance.h": "d96d16e0e6e1ca5229e3cb0fff44f3537645259e9531329bc49d874162883f66",
+    "Common/Inc/silverstar_compiler.h": "3d66165f468e3e7263ebb6d72b6c217a042dd337be39e170ffb83487815ffd57"
+  }
+}

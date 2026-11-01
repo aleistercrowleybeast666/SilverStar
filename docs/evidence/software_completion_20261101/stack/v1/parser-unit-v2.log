@@ -1,0 +1,21 @@
+...........F............................................................ [ 94%]
+....                                                                     [100%]
+================================== FAILURES ===================================
+________ test_unknown_sp_write_never_acquires_zero_bound[msr MSP, r0] _________
+
+instruction = 'msr MSP, r0'
+
+    @pytest.mark.parametrize("instruction", ["add sp, r3", "mov sp, r3", "bic sp, sp, #7", "msr MSP, r0"])
+    def test_unknown_sp_write_never_acquires_zero_bound(instruction):
+        _, proof = Analyze(f" 8000000: f000 f000 {instruction}\n 8000004: 4770 bx lr\n",
+                           "08000000 g F .text 00000006 entry\n")
+>       assert proof["unknown_sp"] == [0x8000000]
+E       assert [] == [134217728]
+E         
+E         Right contains one more item: 134217728
+E         Use -v to get more diff
+
+apps\SCG\tests\test_stack_arm.py:79: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_stack_arm.py::test_unknown_sp_write_never_acquires_zero_bound[msr MSP, r0]
+1 failed, 75 passed in 3.10s

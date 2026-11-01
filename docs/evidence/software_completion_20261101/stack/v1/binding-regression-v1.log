@@ -1,0 +1,997 @@
+............FFFFFFF..................FFFFFFFFFFFF..FFFFFFFFFF........... [ 51%]
+.........................F.........................................      [100%]
+================================== FAILURES ===================================
+_________ test_sd_provider_counts_actual_dma_subtree[stm32f1_flight] __________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_sd_provider_counts_actual0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E0915BD910>
+family_name = 'stm32f1_flight'
+
+    @pytest.mark.parametrize("family_name", ["stm32f1_flight", "stm32f4"])
+    def test_sd_provider_counts_actual_dma_subtree(tmp_path, monkeypatch, family_name):
+>       report = stacks.StackReport_Build(_SdFixture(tmp_path,monkeypatch,family_name=family_name),"Release","fixture-")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_f1_sd_stack_binding.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5333: in StackReport_Build
+    graph = StackGraph_Load(root, config, prefix, memory_layout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5203: in StackGraph_Load
+    function_entries = _arm.Assembly_Parse(disassembly, symbol_table)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+disassembly = 'Disassembly of section .text:\n08000000 <AppTask_Device>:\n 8000000: 4770 bx lr\n08000100 <AppTask_Ins>:\n 8000100: 4...tatus>:\n 8000008: 4770 bx lr\n08000000 <SD_read>:\n 8000008: 4770 bx lr\n08000000 <SD_ioctl>:\n 8000008: 4770 bx lr\n'
+symbols = '08000000 g F .text 00000002 AppTask_Device\n08000100 g F .text 00000002 AppTask_Ins\n08000200 g F .text 00000002 AppT...tatus>:\n 8000008: 4770 bx lr\n08000000 <SD_read>:\n 8000008: 4770 bx lr\n08000000 <SD_ioctl>:\n 8000008: 4770 bx lr\n'
+
+    def Assembly_Parse(disassembly, symbols):
+        functions = {}
+        for line in symbols.splitlines():
+            match = re.match(r"^([0-9a-f]+)\s+.*?\bF\s+(\.\S+)\s+([0-9a-f]+)\s+(?:\.hidden\s+)?(\S+)\s*$", line)
+            if match:
+                address, section, size, name = int(match[1], 16), match[2], int(match[3], 16), match[4]
+                if name in functions and functions[name] != (address, size, section):
+                    raise ValueError("Ambiguous linked function name: " + name)
+                functions[name] = (address, size, section)
+        if not functions:
+            raise ValueError("Missing ELF FUNC symbol extents")
+        rows, memory = {}, {}
+        section = None
+        for line in disassembly.splitlines():
+            if match := re.match(r"Disassembly of section (\S+):", line):
+                section = match[1]
+            if match := re.match(r"^\s*([0-9a-f]+):\s+((?:(?:[0-9a-f]{8}|[0-9a-f]{4}|[0-9a-f]{2})\s+)+)(\S+)\s*(.*)", line):
+                address = int(match[1], 16)
+                raw = b"".join(int(word, 16).to_bytes(len(word) // 2, "little") for word in match[2].split())
+                memory.update({address + offset: value for offset, value in enumerate(raw)})
+                if match[3].startswith("."):
+                    continue  # Mapping-symbol literal pool, not an instruction.
+                value = (len(re.sub(r"\s", "", match[2])) // 2, match[3], match[4], section)
+                if address in rows and rows[address] != value:
+>                   raise ValueError("Ambiguous linked instruction address")
+E                   ValueError: Ambiguous linked instruction address
+
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_arm.py:123: ValueError
+_____________ test_sd_provider_counts_actual_dma_subtree[stm32f4] _____________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_sd_provider_counts_actual1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E0915BDC10>
+family_name = 'stm32f4'
+
+    @pytest.mark.parametrize("family_name", ["stm32f1_flight", "stm32f4"])
+    def test_sd_provider_counts_actual_dma_subtree(tmp_path, monkeypatch, family_name):
+>       report = stacks.StackReport_Build(_SdFixture(tmp_path,monkeypatch,family_name=family_name),"Release","fixture-")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_f1_sd_stack_binding.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5333: in StackReport_Build
+    graph = StackGraph_Load(root, config, prefix, memory_layout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5203: in StackGraph_Load
+    function_entries = _arm.Assembly_Parse(disassembly, symbol_table)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+disassembly = 'Disassembly of section .text:\n08000000 <AppTask_Device>:\n 8000000: 4770 bx lr\n08000100 <AppTask_Ins>:\n 8000100: 4...tatus>:\n 8000008: 4770 bx lr\n08000000 <SD_read>:\n 8000008: 4770 bx lr\n08000000 <SD_ioctl>:\n 8000008: 4770 bx lr\n'
+symbols = '08000000 g F .text 00000002 AppTask_Device\n08000100 g F .text 00000002 AppTask_Ins\n08000200 g F .text 00000002 AppT...tatus>:\n 8000008: 4770 bx lr\n08000000 <SD_read>:\n 8000008: 4770 bx lr\n08000000 <SD_ioctl>:\n 8000008: 4770 bx lr\n'
+
+    def Assembly_Parse(disassembly, symbols):
+        functions = {}
+        for line in symbols.splitlines():
+            match = re.match(r"^([0-9a-f]+)\s+.*?\bF\s+(\.\S+)\s+([0-9a-f]+)\s+(?:\.hidden\s+)?(\S+)\s*$", line)
+            if match:
+                address, section, size, name = int(match[1], 16), match[2], int(match[3], 16), match[4]
+                if name in functions and functions[name] != (address, size, section):
+                    raise ValueError("Ambiguous linked function name: " + name)
+                functions[name] = (address, size, section)
+        if not functions:
+            raise ValueError("Missing ELF FUNC symbol extents")
+        rows, memory = {}, {}
+        section = None
+        for line in disassembly.splitlines():
+            if match := re.match(r"Disassembly of section (\S+):", line):
+                section = match[1]
+            if match := re.match(r"^\s*([0-9a-f]+):\s+((?:(?:[0-9a-f]{8}|[0-9a-f]{4}|[0-9a-f]{2})\s+)+)(\S+)\s*(.*)", line):
+                address = int(match[1], 16)
+                raw = b"".join(int(word, 16).to_bytes(len(word) // 2, "little") for word in match[2].split())
+                memory.update({address + offset: value for offset, value in enumerate(raw)})
+                if match[3].startswith("."):
+                    continue  # Mapping-symbol literal pool, not an instruction.
+                value = (len(re.sub(r"\s", "", match[2])) // 2, match[3], match[4], section)
+                if address in rows and rows[address] != value:
+>                   raise ValueError("Ambiguous linked instruction address")
+E                   ValueError: Ambiguous linked instruction address
+
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_arm.py:123: ValueError
+_ test_sd_binding_fails_closed[registry-Changed reviewed F1 FatFs binding source] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_sd_binding_fails_closed_r0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091D4E6D0>
+mutation = 'registry', message = 'Changed reviewed F1 FatFs binding source'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("registry", "Changed reviewed F1 FatFs binding source"),
+        ("table", "Unreviewed selected SD_Driver callback table"),
+        ("alias", "Unreviewed F1 SD_Driver source reference"),
+        ("caller", "Unreviewed SD_Driver registration caller"),
+        ("pointers", "Linked F1 SD callback pointers differ"),
+    ])
+    def test_sd_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+>       with pytest.raises(ValueError,match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Changed reviewed F1 FatFs binding source'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_f1_sd_stack_binding.py:103: AssertionError
+_ test_sd_binding_fails_closed[table-Unreviewed selected SD_Driver callback table] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_sd_binding_fails_closed_t0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091D4E4C0>
+mutation = 'table', message = 'Unreviewed selected SD_Driver callback table'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("registry", "Changed reviewed F1 FatFs binding source"),
+        ("table", "Unreviewed selected SD_Driver callback table"),
+        ("alias", "Unreviewed F1 SD_Driver source reference"),
+        ("caller", "Unreviewed SD_Driver registration caller"),
+        ("pointers", "Linked F1 SD callback pointers differ"),
+    ])
+    def test_sd_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+>       with pytest.raises(ValueError,match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unreviewed selected SD_Driver callback table'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_f1_sd_stack_binding.py:103: AssertionError
+_ test_sd_binding_fails_closed[alias-Unreviewed F1 SD_Driver source reference] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_sd_binding_fails_closed_a0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091D53E30>
+mutation = 'alias', message = 'Unreviewed F1 SD_Driver source reference'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("registry", "Changed reviewed F1 FatFs binding source"),
+        ("table", "Unreviewed selected SD_Driver callback table"),
+        ("alias", "Unreviewed F1 SD_Driver source reference"),
+        ("caller", "Unreviewed SD_Driver registration caller"),
+        ("pointers", "Linked F1 SD callback pointers differ"),
+    ])
+    def test_sd_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+>       with pytest.raises(ValueError,match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unreviewed F1 SD_Driver source reference'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_f1_sd_stack_binding.py:103: AssertionError
+_ test_sd_binding_fails_closed[caller-Unreviewed SD_Driver registration caller] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_sd_binding_fails_closed_c0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091928410>
+mutation = 'caller', message = 'Unreviewed SD_Driver registration caller'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("registry", "Changed reviewed F1 FatFs binding source"),
+        ("table", "Unreviewed selected SD_Driver callback table"),
+        ("alias", "Unreviewed F1 SD_Driver source reference"),
+        ("caller", "Unreviewed SD_Driver registration caller"),
+        ("pointers", "Linked F1 SD callback pointers differ"),
+    ])
+    def test_sd_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+>       with pytest.raises(ValueError,match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unreviewed SD_Driver registration caller'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_f1_sd_stack_binding.py:103: AssertionError
+_ test_sd_binding_fails_closed[pointers-Linked F1 SD callback pointers differ] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_sd_binding_fails_closed_p0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091D5B260>
+mutation = 'pointers', message = 'Linked F1 SD callback pointers differ'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("registry", "Changed reviewed F1 FatFs binding source"),
+        ("table", "Unreviewed selected SD_Driver callback table"),
+        ("alias", "Unreviewed F1 SD_Driver source reference"),
+        ("caller", "Unreviewed SD_Driver registration caller"),
+        ("pointers", "Linked F1 SD callback pointers differ"),
+    ])
+    def test_sd_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+>       with pytest.raises(ValueError,match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Linked F1 SD callback pointers differ'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_f1_sd_stack_binding.py:103: AssertionError
+_______ test_stack_algorithm_and_all_nonbinding_policies_are_preserved ________
+
+    def test_stack_algorithm_and_all_nonbinding_policies_are_preserved():
+        manifest = json.loads((EVIDENCE / "manifest.json").read_text(encoding="utf8"))
+        assert manifest["all_nonbinding_policy_assignments_AST_equal"]
+        assert manifest["changed_registration_functions"] == [
+            "BindingSourceVersions_Get",
+            "BindingSources_Verify",
+        ]
+        assert "StackReport_Build" in manifest["unchanged_functions"]
+        with zipfile.ZipFile(EVIDENCE / "inputs_unique.zip") as archive:
+            before = ast.parse(archive.read("review/checker_before_v19.py"))
+        after = ast.parse(TOOL.read_text(encoding="utf8"))
+        functions = lambda tree: {
+            node.name: ast.dump(node, include_attributes=False)
+            for node in tree.body
+            if isinstance(node, ast.FunctionDef)
+        }
+        old_functions, new_functions = functions(before), functions(after)
+>       assert old_functions.keys() == new_functions.keys()
+E       AssertionError: assert dict_keys(['C...ild', 'main']) == dict_keys(['C...ild', 'main'])
+E         
+E         Use -v to get more diff
+
+apps\SCG\tests\test_horizon_stack_binding.py:159: AssertionError
+________ test_mpu_register_callbacks_include_platform_deadline_subtree ________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_register_callbacks_in0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091D87E70>
+
+    def test_mpu_register_callbacks_include_platform_deadline_subtree(tmp_path, monkeypatch):
+>       report = stacks.StackReport_Build(_MpuFixture(tmp_path, monkeypatch), "Release", "fixture-")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_mpu_stack_binding.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5333: in StackReport_Build
+    graph = StackGraph_Load(root, config, prefix, memory_layout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5203: in StackGraph_Load
+    function_entries = _arm.Assembly_Parse(disassembly, symbol_table)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+disassembly = 'Disassembly of section .text:\n08000000 <AppTask_Device>:\n 8000000: f000 f000 bl 8000000 <SensorImu_Verify>\n 800000...00000 <Mpu6050ImuInstance_Init>:\n 8000000: f000 f000 bl 8000000 <SensorImuAdapter_PrepareI2c>\n 800000c: 4770 bx lr\n'
+symbols = '08000000 g F .text 00000002 AppTask_Device\n08000100 g F .text 00000002 AppTask_Ins\n08000200 g F .text 00000002 AppT...00000 <Mpu6050ImuInstance_Init>:\n 8000000: f000 f000 bl 8000000 <SensorImuAdapter_PrepareI2c>\n 800000c: 4770 bx lr\n'
+
+    def Assembly_Parse(disassembly, symbols):
+        functions = {}
+        for line in symbols.splitlines():
+            match = re.match(r"^([0-9a-f]+)\s+.*?\bF\s+(\.\S+)\s+([0-9a-f]+)\s+(?:\.hidden\s+)?(\S+)\s*$", line)
+            if match:
+                address, section, size, name = int(match[1], 16), match[2], int(match[3], 16), match[4]
+                if name in functions and functions[name] != (address, size, section):
+                    raise ValueError("Ambiguous linked function name: " + name)
+                functions[name] = (address, size, section)
+        if not functions:
+            raise ValueError("Missing ELF FUNC symbol extents")
+        rows, memory = {}, {}
+        section = None
+        for line in disassembly.splitlines():
+            if match := re.match(r"Disassembly of section (\S+):", line):
+                section = match[1]
+            if match := re.match(r"^\s*([0-9a-f]+):\s+((?:(?:[0-9a-f]{8}|[0-9a-f]{4}|[0-9a-f]{2})\s+)+)(\S+)\s*(.*)", line):
+                address = int(match[1], 16)
+                raw = b"".join(int(word, 16).to_bytes(len(word) // 2, "little") for word in match[2].split())
+                memory.update({address + offset: value for offset, value in enumerate(raw)})
+                if match[3].startswith("."):
+                    continue  # Mapping-symbol literal pool, not an instruction.
+                value = (len(re.sub(r"\s", "", match[2])) // 2, match[3], match[4], section)
+                if address in rows and rows[address] != value:
+>                   raise ValueError("Ambiguous linked instruction address")
+E                   ValueError: Ambiguous linked instruction address
+
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_arm.py:123: ValueError
+_ test_mpu_binding_fails_closed[body-Changed reviewed callback binding body] __
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091D6D400>
+mutation = 'body', message = 'Changed reviewed callback binding body'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Changed reviewed callback binding body'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_mpu_stack_binding.py:128: AssertionError
+_ test_mpu_binding_fails_closed[getter-Changed immutable MPU profile getter] __
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091D6E350>
+mutation = 'getter', message = 'Changed immutable MPU profile getter'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Changed immutable MPU profile getter'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_mpu_stack_binding.py:128: AssertionError
+_ test_mpu_binding_fails_closed[profile-Unreviewed MPU optional profile callbacks] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091DAA270>
+mutation = 'profile', message = 'Unreviewed MPU optional profile callbacks'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unreviewed MPU optional profile callbacks'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_mpu_stack_binding.py:128: AssertionError
+_ test_mpu_binding_fails_closed[non_null-Linked MPU optional callbacks are not NULL] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091DA8440>
+mutation = 'non_null', message = 'Linked MPU optional callbacks are not NULL'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Linked MPU optional callbacks are not NULL'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_mpu_stack_binding.py:128: AssertionError
+_ test_mpu_binding_fails_closed[writable-MPU profile is not one linked read-only object] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091DA7CB0>
+mutation = 'writable'
+message = 'MPU profile is not one linked read-only object'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'MPU profile is not one linked read-only object'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_mpu_stack_binding.py:128: AssertionError
+_ test_mpu_binding_fails_closed[caller-Unreviewed linked SensorImu initialization provenance] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091DA9EF0>
+mutation = 'caller'
+message = 'Unreviewed linked SensorImu initialization provenance'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unreviewed linked SensorImu initialization provenance'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_mpu_stack_binding.py:128: AssertionError
+_ test_mpu_binding_fails_closed[extra_call-Extra indirect MPU callback instruction] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_6')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091DA4750>
+mutation = 'extra_call', message = 'Extra indirect MPU callback instruction'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Extra indirect MPU callback instruction'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_mpu_stack_binding.py:128: AssertionError
+_ test_mpu_binding_fails_closed[missing_target-Missing concrete MPU register callback] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_7')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091E55860>
+mutation = 'missing_target', message = 'Missing concrete MPU register callback'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Missing concrete MPU register callback'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_mpu_stack_binding.py:128: AssertionError
+______ test_mpu_binding_fails_closed[unknown_hal-Unresolved stack usage] ______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_8')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091DF4440>
+mutation = 'unknown_hal', message = 'Unresolved stack usage'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unresolved stack usage'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_mpu_stack_binding.py:128: AssertionError
+________ test_mpu_binding_fails_closed[recursion-Recursive stack path] ________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_9')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091DF6660>
+mutation = 'recursion', message = 'Recursive stack path'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Recursive stack path'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_mpu_stack_binding.py:128: AssertionError
+______ test_reviewed_inlined_and_separate_recovery_binding[False-False] _______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_reviewed_inlined_and_sepa0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091DF40C0>
+separate = False, gnss_only = False
+
+    @pytest.mark.parametrize("separate", [False, True])
+    @pytest.mark.parametrize("gnss_only", [False, True])
+    def test_reviewed_inlined_and_separate_recovery_binding(tmp_path, monkeypatch, separate, gnss_only):
+        root = _StartupFixture(tmp_path, monkeypatch, separate=separate, gnss_only=gnss_only)
+>       report = stacks.StackReport_Build(root, "Release", "fixture-")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_m9n_recovery_stack_binding.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5333: in StackReport_Build
+    graph = StackGraph_Load(root, config, prefix, memory_layout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5203: in StackGraph_Load
+    function_entries = _arm.Assembly_Parse(disassembly, symbol_table)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+disassembly = 'Disassembly of section .text:\n08000000 <AppTask_Device>:\n 8000000: f000 f000 bl 8000000 <NeoM9nStartup_Tick>\n 8000...000 f000 bl 8000000 <GnssNeoM9n_Process>\n 8000008: 4770 bx lr\n08000000 <GnssNeoM9n_Process>:\n 8000008: 4770 bx lr\n'
+symbols = '08000000 g F .text 00000002 AppTask_Device\n08000100 g F .text 00000002 AppTask_Ins\n08000200 g F .text 00000002 AppT...000 f000 bl 8000000 <GnssNeoM9n_Process>\n 8000008: 4770 bx lr\n08000000 <GnssNeoM9n_Process>:\n 8000008: 4770 bx lr\n'
+
+    def Assembly_Parse(disassembly, symbols):
+        functions = {}
+        for line in symbols.splitlines():
+            match = re.match(r"^([0-9a-f]+)\s+.*?\bF\s+(\.\S+)\s+([0-9a-f]+)\s+(?:\.hidden\s+)?(\S+)\s*$", line)
+            if match:
+                address, section, size, name = int(match[1], 16), match[2], int(match[3], 16), match[4]
+                if name in functions and functions[name] != (address, size, section):
+                    raise ValueError("Ambiguous linked function name: " + name)
+                functions[name] = (address, size, section)
+        if not functions:
+            raise ValueError("Missing ELF FUNC symbol extents")
+        rows, memory = {}, {}
+        section = None
+        for line in disassembly.splitlines():
+            if match := re.match(r"Disassembly of section (\S+):", line):
+                section = match[1]
+            if match := re.match(r"^\s*([0-9a-f]+):\s+((?:(?:[0-9a-f]{8}|[0-9a-f]{4}|[0-9a-f]{2})\s+)+)(\S+)\s*(.*)", line):
+                address = int(match[1], 16)
+                raw = b"".join(int(word, 16).to_bytes(len(word) // 2, "little") for word in match[2].split())
+                memory.update({address + offset: value for offset, value in enumerate(raw)})
+                if match[3].startswith("."):
+                    continue  # Mapping-symbol literal pool, not an instruction.
+                value = (len(re.sub(r"\s", "", match[2])) // 2, match[3], match[4], section)
+                if address in rows and rows[address] != value:
+>                   raise ValueError("Ambiguous linked instruction address")
+E                   ValueError: Ambiguous linked instruction address
+
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_arm.py:123: ValueError
+_______ test_reviewed_inlined_and_separate_recovery_binding[False-True] _______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_reviewed_inlined_and_sepa1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091E084B0>
+separate = True, gnss_only = False
+
+    @pytest.mark.parametrize("separate", [False, True])
+    @pytest.mark.parametrize("gnss_only", [False, True])
+    def test_reviewed_inlined_and_separate_recovery_binding(tmp_path, monkeypatch, separate, gnss_only):
+        root = _StartupFixture(tmp_path, monkeypatch, separate=separate, gnss_only=gnss_only)
+>       report = stacks.StackReport_Build(root, "Release", "fixture-")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_m9n_recovery_stack_binding.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5333: in StackReport_Build
+    graph = StackGraph_Load(root, config, prefix, memory_layout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5203: in StackGraph_Load
+    function_entries = _arm.Assembly_Parse(disassembly, symbol_table)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+disassembly = 'Disassembly of section .text:\n08000000 <AppTask_Device>:\n 8000000: f000 f000 bl 8000000 <NeoM9nStartup_Tick>\n 8000...000 f000 bl 8000000 <GnssNeoM9n_Process>\n 8000008: 4770 bx lr\n08000000 <GnssNeoM9n_Process>:\n 8000008: 4770 bx lr\n'
+symbols = '08000000 g F .text 00000002 AppTask_Device\n08000100 g F .text 00000002 AppTask_Ins\n08000200 g F .text 00000002 AppT...000 f000 bl 8000000 <GnssNeoM9n_Process>\n 8000008: 4770 bx lr\n08000000 <GnssNeoM9n_Process>:\n 8000008: 4770 bx lr\n'
+
+    def Assembly_Parse(disassembly, symbols):
+        functions = {}
+        for line in symbols.splitlines():
+            match = re.match(r"^([0-9a-f]+)\s+.*?\bF\s+(\.\S+)\s+([0-9a-f]+)\s+(?:\.hidden\s+)?(\S+)\s*$", line)
+            if match:
+                address, section, size, name = int(match[1], 16), match[2], int(match[3], 16), match[4]
+                if name in functions and functions[name] != (address, size, section):
+                    raise ValueError("Ambiguous linked function name: " + name)
+                functions[name] = (address, size, section)
+        if not functions:
+            raise ValueError("Missing ELF FUNC symbol extents")
+        rows, memory = {}, {}
+        section = None
+        for line in disassembly.splitlines():
+            if match := re.match(r"Disassembly of section (\S+):", line):
+                section = match[1]
+            if match := re.match(r"^\s*([0-9a-f]+):\s+((?:(?:[0-9a-f]{8}|[0-9a-f]{4}|[0-9a-f]{2})\s+)+)(\S+)\s*(.*)", line):
+                address = int(match[1], 16)
+                raw = b"".join(int(word, 16).to_bytes(len(word) // 2, "little") for word in match[2].split())
+                memory.update({address + offset: value for offset, value in enumerate(raw)})
+                if match[3].startswith("."):
+                    continue  # Mapping-symbol literal pool, not an instruction.
+                value = (len(re.sub(r"\s", "", match[2])) // 2, match[3], match[4], section)
+                if address in rows and rows[address] != value:
+>                   raise ValueError("Ambiguous linked instruction address")
+E                   ValueError: Ambiguous linked instruction address
+
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_arm.py:123: ValueError
+_______ test_reviewed_inlined_and_separate_recovery_binding[True-False] _______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_reviewed_inlined_and_sepa2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091DD5470>
+separate = False, gnss_only = True
+
+    @pytest.mark.parametrize("separate", [False, True])
+    @pytest.mark.parametrize("gnss_only", [False, True])
+    def test_reviewed_inlined_and_separate_recovery_binding(tmp_path, monkeypatch, separate, gnss_only):
+        root = _StartupFixture(tmp_path, monkeypatch, separate=separate, gnss_only=gnss_only)
+>       report = stacks.StackReport_Build(root, "Release", "fixture-")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_m9n_recovery_stack_binding.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5333: in StackReport_Build
+    graph = StackGraph_Load(root, config, prefix, memory_layout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5203: in StackGraph_Load
+    function_entries = _arm.Assembly_Parse(disassembly, symbol_table)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+disassembly = 'Disassembly of section .text:\n08000000 <AppTask_Device>:\n 8000000: f000 f000 bl 8000000 <NeoM9nStartup_Tick>\n 8000...000 f000 bl 8000000 <GnssNeoM9n_Process>\n 8000008: 4770 bx lr\n08000000 <GnssNeoM9n_Process>:\n 8000008: 4770 bx lr\n'
+symbols = '08000000 g F .text 00000002 AppTask_Device\n08000100 g F .text 00000002 AppTask_Ins\n08000200 g F .text 00000002 AppT...000 f000 bl 8000000 <GnssNeoM9n_Process>\n 8000008: 4770 bx lr\n08000000 <GnssNeoM9n_Process>:\n 8000008: 4770 bx lr\n'
+
+    def Assembly_Parse(disassembly, symbols):
+        functions = {}
+        for line in symbols.splitlines():
+            match = re.match(r"^([0-9a-f]+)\s+.*?\bF\s+(\.\S+)\s+([0-9a-f]+)\s+(?:\.hidden\s+)?(\S+)\s*$", line)
+            if match:
+                address, section, size, name = int(match[1], 16), match[2], int(match[3], 16), match[4]
+                if name in functions and functions[name] != (address, size, section):
+                    raise ValueError("Ambiguous linked function name: " + name)
+                functions[name] = (address, size, section)
+        if not functions:
+            raise ValueError("Missing ELF FUNC symbol extents")
+        rows, memory = {}, {}
+        section = None
+        for line in disassembly.splitlines():
+            if match := re.match(r"Disassembly of section (\S+):", line):
+                section = match[1]
+            if match := re.match(r"^\s*([0-9a-f]+):\s+((?:(?:[0-9a-f]{8}|[0-9a-f]{4}|[0-9a-f]{2})\s+)+)(\S+)\s*(.*)", line):
+                address = int(match[1], 16)
+                raw = b"".join(int(word, 16).to_bytes(len(word) // 2, "little") for word in match[2].split())
+                memory.update({address + offset: value for offset, value in enumerate(raw)})
+                if match[3].startswith("."):
+                    continue  # Mapping-symbol literal pool, not an instruction.
+                value = (len(re.sub(r"\s", "", match[2])) // 2, match[3], match[4], section)
+                if address in rows and rows[address] != value:
+>                   raise ValueError("Ambiguous linked instruction address")
+E                   ValueError: Ambiguous linked instruction address
+
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_arm.py:123: ValueError
+_______ test_reviewed_inlined_and_separate_recovery_binding[True-True] ________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_reviewed_inlined_and_sepa3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091DD35B0>
+separate = True, gnss_only = True
+
+    @pytest.mark.parametrize("separate", [False, True])
+    @pytest.mark.parametrize("gnss_only", [False, True])
+    def test_reviewed_inlined_and_separate_recovery_binding(tmp_path, monkeypatch, separate, gnss_only):
+        root = _StartupFixture(tmp_path, monkeypatch, separate=separate, gnss_only=gnss_only)
+>       report = stacks.StackReport_Build(root, "Release", "fixture-")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_m9n_recovery_stack_binding.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5333: in StackReport_Build
+    graph = StackGraph_Load(root, config, prefix, memory_layout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5203: in StackGraph_Load
+    function_entries = _arm.Assembly_Parse(disassembly, symbol_table)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+disassembly = 'Disassembly of section .text:\n08000000 <AppTask_Device>:\n 8000000: f000 f000 bl 8000000 <NeoM9nStartup_Tick>\n 8000...000 f000 bl 8000000 <GnssNeoM9n_Process>\n 8000008: 4770 bx lr\n08000000 <GnssNeoM9n_Process>:\n 8000008: 4770 bx lr\n'
+symbols = '08000000 g F .text 00000002 AppTask_Device\n08000100 g F .text 00000002 AppTask_Ins\n08000200 g F .text 00000002 AppT...000 f000 bl 8000000 <GnssNeoM9n_Process>\n 8000008: 4770 bx lr\n08000000 <GnssNeoM9n_Process>:\n 8000008: 4770 bx lr\n'
+
+    def Assembly_Parse(disassembly, symbols):
+        functions = {}
+        for line in symbols.splitlines():
+            match = re.match(r"^([0-9a-f]+)\s+.*?\bF\s+(\.\S+)\s+([0-9a-f]+)\s+(?:\.hidden\s+)?(\S+)\s*$", line)
+            if match:
+                address, section, size, name = int(match[1], 16), match[2], int(match[3], 16), match[4]
+                if name in functions and functions[name] != (address, size, section):
+                    raise ValueError("Ambiguous linked function name: " + name)
+                functions[name] = (address, size, section)
+        if not functions:
+            raise ValueError("Missing ELF FUNC symbol extents")
+        rows, memory = {}, {}
+        section = None
+        for line in disassembly.splitlines():
+            if match := re.match(r"Disassembly of section (\S+):", line):
+                section = match[1]
+            if match := re.match(r"^\s*([0-9a-f]+):\s+((?:(?:[0-9a-f]{8}|[0-9a-f]{4}|[0-9a-f]{2})\s+)+)(\S+)\s*(.*)", line):
+                address = int(match[1], 16)
+                raw = b"".join(int(word, 16).to_bytes(len(word) // 2, "little") for word in match[2].split())
+                memory.update({address + offset: value for offset, value in enumerate(raw)})
+                if match[3].startswith("."):
+                    continue  # Mapping-symbol literal pool, not an instruction.
+                value = (len(re.sub(r"\s", "", match[2])) // 2, match[3], match[4], section)
+                if address in rows and rows[address] != value:
+>                   raise ValueError("Ambiguous linked instruction address")
+E                   ValueError: Ambiguous linked instruction address
+
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_arm.py:123: ValueError
+_ test_recovery_binding_fails_closed[caller-Unreviewed device startup operation binding] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_recovery_binding_fails_cl0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091DD2660>
+mutation = 'caller', message = 'Unreviewed device startup operation binding'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("caller", "Unreviewed device startup operation binding"),
+        ("operations", "Unreviewed M9N recovery operation binding"),
+        ("provenance", "Unreviewed M9N recovery operation binding"),
+        ("table", "Unreviewed device startup operation table"),
+        ("recursion", "Recursive stack path"),
+        ("indirect", "Unresolved stack usage"),
+    ])
+    def test_recovery_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+        root = _StartupFixture(tmp_path, monkeypatch, mutation=mutation)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unreviewed device startup operation binding'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_m9n_recovery_stack_binding.py:134: AssertionError
+_ test_recovery_binding_fails_closed[operations-Unreviewed M9N recovery operation binding] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_recovery_binding_fails_cl1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091DC3620>
+mutation = 'operations', message = 'Unreviewed M9N recovery operation binding'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("caller", "Unreviewed device startup operation binding"),
+        ("operations", "Unreviewed M9N recovery operation binding"),
+        ("provenance", "Unreviewed M9N recovery operation binding"),
+        ("table", "Unreviewed device startup operation table"),
+        ("recursion", "Recursive stack path"),
+        ("indirect", "Unresolved stack usage"),
+    ])
+    def test_recovery_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+        root = _StartupFixture(tmp_path, monkeypatch, mutation=mutation)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unreviewed M9N recovery operation binding'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_m9n_recovery_stack_binding.py:134: AssertionError
+_ test_recovery_binding_fails_closed[provenance-Unreviewed M9N recovery operation binding] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_recovery_binding_fails_cl2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091E1A5F0>
+mutation = 'provenance', message = 'Unreviewed M9N recovery operation binding'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("caller", "Unreviewed device startup operation binding"),
+        ("operations", "Unreviewed M9N recovery operation binding"),
+        ("provenance", "Unreviewed M9N recovery operation binding"),
+        ("table", "Unreviewed device startup operation table"),
+        ("recursion", "Recursive stack path"),
+        ("indirect", "Unresolved stack usage"),
+    ])
+    def test_recovery_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+        root = _StartupFixture(tmp_path, monkeypatch, mutation=mutation)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unreviewed M9N recovery operation binding'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_m9n_recovery_stack_binding.py:134: AssertionError
+_ test_recovery_binding_fails_closed[table-Unreviewed device startup operation table] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_recovery_binding_fails_cl3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091E1A270>
+mutation = 'table', message = 'Unreviewed device startup operation table'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("caller", "Unreviewed device startup operation binding"),
+        ("operations", "Unreviewed M9N recovery operation binding"),
+        ("provenance", "Unreviewed M9N recovery operation binding"),
+        ("table", "Unreviewed device startup operation table"),
+        ("recursion", "Recursive stack path"),
+        ("indirect", "Unresolved stack usage"),
+    ])
+    def test_recovery_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+        root = _StartupFixture(tmp_path, monkeypatch, mutation=mutation)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unreviewed device startup operation table'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_m9n_recovery_stack_binding.py:134: AssertionError
+_____ test_recovery_binding_fails_closed[recursion-Recursive stack path] ______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_recovery_binding_fails_cl4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091E0CB40>
+mutation = 'recursion', message = 'Recursive stack path'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("caller", "Unreviewed device startup operation binding"),
+        ("operations", "Unreviewed M9N recovery operation binding"),
+        ("provenance", "Unreviewed M9N recovery operation binding"),
+        ("table", "Unreviewed device startup operation table"),
+        ("recursion", "Recursive stack path"),
+        ("indirect", "Unresolved stack usage"),
+    ])
+    def test_recovery_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+        root = _StartupFixture(tmp_path, monkeypatch, mutation=mutation)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Recursive stack path'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_m9n_recovery_stack_binding.py:134: AssertionError
+_____ test_recovery_binding_fails_closed[indirect-Unresolved stack usage] _____
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_recovery_binding_fails_cl5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E091E0C7C0>
+mutation = 'indirect', message = 'Unresolved stack usage'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("caller", "Unreviewed device startup operation binding"),
+        ("operations", "Unreviewed M9N recovery operation binding"),
+        ("provenance", "Unreviewed M9N recovery operation binding"),
+        ("table", "Unreviewed device startup operation table"),
+        ("recursion", "Recursive stack path"),
+        ("indirect", "Unresolved stack usage"),
+    ])
+    def test_recovery_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+        root = _StartupFixture(tmp_path, monkeypatch, mutation=mutation)
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unresolved stack usage'
+E         Actual message: 'Ambiguous linked instruction address'
+
+apps\SCG\tests\test_m9n_recovery_stack_binding.py:134: AssertionError
+_ test_no_other_checker_AST_policy_changed_and_no_new_indirect_site_is_admitted _
+
+    def test_no_other_checker_AST_policy_changed_and_no_new_indirect_site_is_admitted():
+        with zipfile.ZipFile(EVIDENCE / "inputs.zip") as archive:
+            before = ast.parse(archive.read("review/checker_before_v20.py"))
+            census = json.loads(archive.read("review/census.json"))
+        after = ast.parse(TOOL.read_text(encoding="utf8"))
+        assignments = {
+            "BINDING_SOURCE_RECEIPT_V20",
+            "BINDING_DEPENDENCIES_RECEIPT_V20",
+            "BINDING_COMPILED_INPUTS_RECEIPT_V20",
+            "BINDING_REVIEW_REVISION",
+            # v21 adds only exact reviewed integration tuples; this test still
+            # requires every older policy/registration and callback rule unchanged.
+            "BINDING_SOURCE_TF_INTEGRATION_V21",
+            "BINDING_DEPENDENCIES_TF_INTEGRATION_V21",
+            "BINDING_COMPILED_INPUTS_TF_INTEGRATION_V21",
+            # v22 registers the reviewed installation snapshot and paired compiler
+            # inputs. The historical rules and every earlier entry still compare.
+            "BINDING_SOURCE_INSTALLATION_V22",
+            "BINDING_DEPENDENCIES_INSTALLATION_V22",
+            "BINDING_COMPILED_INPUTS_INSTALLATION_V22",
+            # v23 changes one reviewed coordinator source and its paired inputs.
+            "BINDING_SOURCE_INSTALLATION_LIFECYCLE_V23",
+            "BINDING_COMPILED_INPUTS_INSTALLATION_LIFECYCLE_V23",
+            # Later maintenance reviews register exact source/compiler tuples only.
+            # Existing constants and every other checker function still compare.
+            "BINDING_SOURCE_LOGFILE_TRANSFER_V24",
+            "BINDING_COMPILED_INPUTS_LOGFILE_TRANSFER_V24",
+            "BINDING_SOURCE_BLOCK_TRANSFER_V25",
+            "BINDING_COMPILED_INPUTS_BLOCK_TRANSFER_V25",
+            "BINDING_SOURCE_OPTIONAL_RESOURCES_V26",
+            "BINDING_DEPENDENCIES_OPTIONAL_RESOURCES_V26",
+            "BINDING_COMPILED_INPUTS_OPTIONAL_RESOURCES_V26",
+            "BINDING_SOURCE_BATCH_UART_V27",
+            "BINDING_DEPENDENCIES_BATCH_UART_V27",
+            "BINDING_COMPILED_INPUTS_BATCH_UART_V27",
+        }
+        functions = {"BindingSourceVersions_Get", "BindingSources_Verify"}
+    
+        def preserved(tree):
+            return [
+                ast.dump(node, include_attributes=False)
+                for node in tree.body
+                if not (isinstance(node, ast.FunctionDef) and node.name in functions)
+                and not (
+                    isinstance(node, ast.Assign)
+                    and any(
+                        isinstance(target, ast.Name) and target.id in assignments
+                        for target in node.targets
+                    )
+                )
+            ]
+    
+>       assert preserved(before) == preserved(after)
+E       assert ["Expr(value=...'re')])", ...] == ["Expr(value=...son')])", ...]
+E         
+E         At index 4 diff: "Import(names=[alias(name='json')])" != "Import(names=[alias(name='importlib.util')])"
+E         Right contains 19 more items, first extra item: "Assign(targets=[Name(id='H743_INPUT_REVIEW_SHA256', ctx=Store())], value=Constant(value='47d8261e90ec7cc93eff68271b54e5c7c5400afc56ab10e42b6899907264ee3a'))"
+E         Use -v to get more diff
+
+apps\SCG\tests\test_receipt_stack_binding.py:168: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_f1_sd_stack_binding.py::test_sd_provider_counts_actual_dma_subtree[stm32f1_flight]
+FAILED apps\SCG\tests\test_f1_sd_stack_binding.py::test_sd_provider_counts_actual_dma_subtree[stm32f4]
+FAILED apps\SCG\tests\test_f1_sd_stack_binding.py::test_sd_binding_fails_closed[registry-Changed reviewed F1 FatFs binding source]
+FAILED apps\SCG\tests\test_f1_sd_stack_binding.py::test_sd_binding_fails_closed[table-Unreviewed selected SD_Driver callback table]
+FAILED apps\SCG\tests\test_f1_sd_stack_binding.py::test_sd_binding_fails_closed[alias-Unreviewed F1 SD_Driver source reference]
+FAILED apps\SCG\tests\test_f1_sd_stack_binding.py::test_sd_binding_fails_closed[caller-Unreviewed SD_Driver registration caller]
+FAILED apps\SCG\tests\test_f1_sd_stack_binding.py::test_sd_binding_fails_closed[pointers-Linked F1 SD callback pointers differ]
+FAILED apps\SCG\tests\test_horizon_stack_binding.py::test_stack_algorithm_and_all_nonbinding_policies_are_preserved
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_register_callbacks_include_platform_deadline_subtree
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[body-Changed reviewed callback binding body]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[getter-Changed immutable MPU profile getter]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[profile-Unreviewed MPU optional profile callbacks]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[non_null-Linked MPU optional callbacks are not NULL]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[writable-MPU profile is not one linked read-only object]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[caller-Unreviewed linked SensorImu initialization provenance]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[extra_call-Extra indirect MPU callback instruction]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[missing_target-Missing concrete MPU register callback]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[unknown_hal-Unresolved stack usage]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[recursion-Recursive stack path]
+FAILED apps\SCG\tests\test_m9n_recovery_stack_binding.py::test_reviewed_inlined_and_separate_recovery_binding[False-False]
+FAILED apps\SCG\tests\test_m9n_recovery_stack_binding.py::test_reviewed_inlined_and_separate_recovery_binding[False-True]
+FAILED apps\SCG\tests\test_m9n_recovery_stack_binding.py::test_reviewed_inlined_and_separate_recovery_binding[True-False]
+FAILED apps\SCG\tests\test_m9n_recovery_stack_binding.py::test_reviewed_inlined_and_separate_recovery_binding[True-True]
+FAILED apps\SCG\tests\test_m9n_recovery_stack_binding.py::test_recovery_binding_fails_closed[caller-Unreviewed device startup operation binding]
+FAILED apps\SCG\tests\test_m9n_recovery_stack_binding.py::test_recovery_binding_fails_closed[operations-Unreviewed M9N recovery operation binding]
+FAILED apps\SCG\tests\test_m9n_recovery_stack_binding.py::test_recovery_binding_fails_closed[provenance-Unreviewed M9N recovery operation binding]
+FAILED apps\SCG\tests\test_m9n_recovery_stack_binding.py::test_recovery_binding_fails_closed[table-Unreviewed device startup operation table]
+FAILED apps\SCG\tests\test_m9n_recovery_stack_binding.py::test_recovery_binding_fails_closed[recursion-Recursive stack path]
+FAILED apps\SCG\tests\test_m9n_recovery_stack_binding.py::test_recovery_binding_fails_closed[indirect-Unresolved stack usage]
+FAILED apps\SCG\tests\test_receipt_stack_binding.py::test_no_other_checker_AST_policy_changed_and_no_new_indirect_site_is_admitted
+30 failed, 109 passed in 23.89s

@@ -1,0 +1,122 @@
+[
+  {
+    "hwnd": 9441026,
+    "pid": 5272,
+    "title": "_q_titlebar",
+    "visible": false,
+    "rect": [
+      0,
+      0,
+      781,
+      38
+    ]
+  },
+  {
+    "hwnd": 12193418,
+    "pid": 5272,
+    "title": "_q_titlebar",
+    "visible": false,
+    "rect": [
+      0,
+      0,
+      974,
+      38
+    ]
+  },
+  {
+    "hwnd": 39586378,
+    "pid": 5272,
+    "title": "_q_titlebar",
+    "visible": false,
+    "rect": [
+      0,
+      0,
+      654,
+      38
+    ]
+  },
+  {
+    "hwnd": 17042084,
+    "pid": 5272,
+    "title": "pythonw",
+    "visible": true,
+    "rect": [
+      441,
+      138,
+      726,
+      208
+    ]
+  },
+  {
+    "hwnd": 14553102,
+    "pid": 5272,
+    "title": "_q_titlebar",
+    "visible": false,
+    "rect": [
+      0,
+      0,
+      654,
+      38
+    ]
+  },
+  {
+    "hwnd": 2885684,
+    "pid": 5272,
+    "title": "_q_titlebar",
+    "visible": false,
+    "rect": [
+      0,
+      0,
+      1474,
+      38
+    ]
+  },
+  {
+    "hwnd": 1116368,
+    "pid": 5272,
+    "title": "",
+    "visible": false,
+    "rect": [
+      26,
+      26,
+      1178,
+      618
+    ]
+  },
+  {
+    "hwnd": 3213070,
+    "pid": 5272,
+    "title": "",
+    "visible": false,
+    "rect": [
+      26,
+      26,
+      1178,
+      618
+    ]
+  },
+  {
+    "hwnd": 1182870,
+    "pid": 5272,
+    "title": "Default IME",
+    "visible": false,
+    "rect": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "hwnd": 2557872,
+    "pid": 5272,
+    "title": "MSCTFIME UI",
+    "visible": false,
+    "rect": [
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+]

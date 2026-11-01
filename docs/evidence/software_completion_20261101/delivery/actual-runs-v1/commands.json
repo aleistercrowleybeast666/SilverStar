@@ -1,0 +1,205 @@
+[
+  {
+    "label": "underline-export",
+    "command": [
+      "D:\\python_software\\Underline_RETLDC\\.venv\\Scripts\\python.exe",
+      "-m",
+      "underline_retldc.cli",
+      "export",
+      "D:\\python_software\\Underline_RETLDC\\tests\\fixtures\\motor_test_package\\v1\\synthetic_positive.retldc.json",
+      "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\underline.tdmotor.json"
+    ],
+    "cwd": "D:\\python_software\\Underline_RETLDC",
+    "exit": 0,
+    "seconds": 4.001842800003942
+  },
+  {
+    "label": "pid-example",
+    "command": [
+      "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "-m",
+      "treediagram",
+      "example",
+      "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\pid.json",
+      "--controller",
+      "pid",
+      "--control-period-us",
+      "10000"
+    ],
+    "cwd": "D:\\python_software\\TreeDiagram",
+    "exit": 0,
+    "seconds": 2.286871100004646
+  },
+  {
+    "label": "pid-check",
+    "command": [
+      "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "-m",
+      "treediagram",
+      "check",
+      "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\pid.json"
+    ],
+    "cwd": "D:\\python_software\\TreeDiagram",
+    "exit": 0,
+    "seconds": 2.350073599998723
+  },
+  {
+    "label": "pid-run",
+    "command": [
+      "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "-m",
+      "treediagram",
+      "run",
+      "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\pid.json",
+      "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\pid.tdrun.json"
+    ],
+    "cwd": "D:\\python_software\\TreeDiagram",
+    "exit": 0,
+    "seconds": 46.8887962000008
+  },
+  {
+    "label": "pid-export",
+    "command": [
+      "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "-m",
+      "treediagram",
+      "export-parameters",
+      "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\pid.tdrun.json",
+      "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\delivery\\actual-runs-v1\\pid.sstuning.json"
+    ],
+    "cwd": "D:\\python_software\\TreeDiagram",
+    "exit": 0,
+    "seconds": 21.947884199995315
+  },
+  {
+    "label": "lqr-example",
+    "command": [
+      "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "-m",
+      "treediagram",
+      "example",
+      "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\lqr.json",
+      "--controller",
+      "lqr",
+      "--control-period-us",
+      "10000"
+    ],
+    "cwd": "D:\\python_software\\TreeDiagram",
+    "exit": 0,
+    "seconds": 2.918704000010621
+  },
+  {
+    "label": "lqr-check",
+    "command": [
+      "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "-m",
+      "treediagram",
+      "check",
+      "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\lqr.json"
+    ],
+    "cwd": "D:\\python_software\\TreeDiagram",
+    "exit": 0,
+    "seconds": 2.9009751999983564
+  },
+  {
+    "label": "lqr-run",
+    "command": [
+      "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "-m",
+      "treediagram",
+      "run",
+      "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\lqr.json",
+      "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\lqr.tdrun.json"
+    ],
+    "cwd": "D:\\python_software\\TreeDiagram",
+    "exit": 0,
+    "seconds": 31.44911359999969
+  },
+  {
+    "label": "lqr-export",
+    "command": [
+      "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "-m",
+      "treediagram",
+      "export-parameters",
+      "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\lqr.tdrun.json",
+      "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\delivery\\actual-runs-v1\\lqr.sstuning.json"
+    ],
+    "cwd": "D:\\python_software\\TreeDiagram",
+    "exit": 0,
+    "seconds": 14.474939899999299
+  },
+  {
+    "label": "underline-pid-example",
+    "command": [
+      "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "-m",
+      "treediagram",
+      "example",
+      "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\underline-pid.json",
+      "--controller",
+      "pid",
+      "--control-period-us",
+      "10000"
+    ],
+    "cwd": "D:\\python_software\\TreeDiagram",
+    "exit": 0,
+    "seconds": 1.673768699998618
+  },
+  {
+    "label": "underline-pid-import",
+    "command": [
+      "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "-m",
+      "treediagram",
+      "import-motor",
+      "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\underline-pid.json",
+      "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\underline.tdmotor.json",
+      "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\underline-pid-imported.json"
+    ],
+    "cwd": "D:\\python_software\\TreeDiagram",
+    "exit": 0,
+    "seconds": 1.531868400008534
+  },
+  {
+    "label": "underline-pid-check",
+    "command": [
+      "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "-m",
+      "treediagram",
+      "check",
+      "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\underline-pid-imported.json"
+    ],
+    "cwd": "D:\\python_software\\TreeDiagram",
+    "exit": 0,
+    "seconds": 1.6652032999991206
+  },
+  {
+    "label": "underline-pid-run",
+    "command": [
+      "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "-m",
+      "treediagram",
+      "run",
+      "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\underline-pid-imported.json",
+      "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\underline-pid.tdrun.json"
+    ],
+    "cwd": "D:\\python_software\\TreeDiagram",
+    "exit": 0,
+    "seconds": 21.508484400008456
+  },
+  {
+    "label": "underline-pid-export",
+    "command": [
+      "D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "-m",
+      "treediagram",
+      "export-parameters",
+      "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\underline-pid.tdrun.json",
+      "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\delivery\\actual-runs-v1\\underline-pid.sstuning.json"
+    ],
+    "cwd": "D:\\python_software\\TreeDiagram",
+    "exit": 0,
+    "seconds": 2.872486399995978
+  }
+]

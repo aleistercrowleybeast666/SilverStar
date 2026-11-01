@@ -1,0 +1,17 @@
+.gitattributes (only exact software_stack_inputs.json and software_stack_review.md -text lines)
+apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_task_stacks.py
+apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/stack_arm.py
+apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/stack_runtime.py
+apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/stack_review.py
+apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_inputs.json
+apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_review.md
+apps/SCG/tests/test_stack_arm.py
+apps/SCG/tests/test_stack_runtime.py
+apps/SCG/tests/test_stack_review.py
+apps/SCG/tests/test_stack_budget.py
+apps/SCG/tests/test_f1_sd_stack_binding.py
+apps/SCG/tests/test_mpu_stack_binding.py
+apps/SCG/tests/test_m9n_recovery_stack_binding.py
+apps/SCG/tests/test_horizon_stack_binding.py
+apps/SCG/tests/test_receipt_stack_binding.py
+apps/SCG/tests/fixtures/stack_callback_v2/ (entire new frozen unit-fixture directory)

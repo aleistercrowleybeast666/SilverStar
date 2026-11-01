@@ -1,0 +1,91 @@
+...........F........FF...............                                    [100%]
+================================== FAILURES ===================================
+________ test_mpu_register_callbacks_include_platform_deadline_subtree ________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_register_callbacks_in0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000271D5501CC0>
+
+    def test_mpu_register_callbacks_include_platform_deadline_subtree(tmp_path, monkeypatch):
+>       report = stacks.StackReport_Build(_MpuFixture(tmp_path, monkeypatch), "Release", "fixture-")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_mpu_stack_binding.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5499: in StackReport_Build
+    callback_bindings = MpuCallbackBindings_Resolve(
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:192: in MpuCallbackBindings_Resolve
+    BindingHeader_Verify(root, path)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_register_callbacks_in0')
+path = 'Devices/SensorBus/Inc/sensor_imu.h'
+
+    def BindingHeader_Verify(root, path):
+        (root / path).resolve().relative_to(root.resolve())
+        if not (root / path).is_file():
+            raise ValueError("Changed or missing reviewed callback compilation input: " + path)
+        actual = BindingSourceHash_Get((root / path).read_text(encoding="utf-8"))
+        if actual not in BindingSourceVersions_Get(path):
+            selected = AstraInputCase_Get(root)
+            if selected is None or selected[1]["file_hashes"].get(path) != actual:
+>               raise ValueError("Changed or missing reviewed callback compilation input: " + path)
+E               ValueError: Changed or missing reviewed callback compilation input: Devices/SensorBus/Inc/sensor_imu.h
+
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py:5121: ValueError
+______ test_mpu_binding_fails_closed[unknown_hal-Unresolved stack usage] ______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_8')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000271D56B4F50>
+mutation = 'unknown_hal', message = 'Unresolved stack usage'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unresolved stack usage'
+E         Actual message: 'Changed or missing reviewed callback compilation input: Devices/SensorBus/Inc/sensor_imu.h'
+
+apps\SCG\tests\test_mpu_stack_binding.py:129: AssertionError
+________ test_mpu_binding_fails_closed[recursion-Recursive stack path] ________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_9')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000271D5699E10>
+mutation = 'recursion', message = 'Recursive stack path'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+>       with pytest.raises(ValueError, match=message):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Recursive stack path'
+E         Actual message: 'Changed or missing reviewed callback compilation input: Devices/SensorBus/Inc/sensor_imu.h'
+
+apps\SCG\tests\test_mpu_stack_binding.py:129: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_register_callbacks_include_platform_deadline_subtree
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[unknown_hal-Unresolved stack usage]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[recursion-Recursive stack path]
+3 failed, 34 passed in 4.65s

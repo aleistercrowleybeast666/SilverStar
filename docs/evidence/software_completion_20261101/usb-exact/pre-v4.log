@@ -1,0 +1,100 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+__________________ test_exact_generated_control_faults[F103] __________________
+
+exact_control = ('F103', NativeGroundCandidatePlan(model_sha256='9359692bb5a44d8cd0be99fa59af001ad08cade828e291aa1ace6645189cac65', sn... graph, stack/WCET/hardware unavailable', 'publication': 'PRIVATE CANDIDATE ONLY; normal generation remains blocked'}))
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/sc-261101-usb/pre-v4/test_exact_generated_control_f0')
+
+    def test_exact_generated_control_faults(exact_control, tmp_path):
+        normal.test_normal_stack_lifecycle_and_buffer_sessions(exact_control, tmp_path)
+        baseline = json.loads((tmp_path / 'lifecycle-receipt.json').read_text(encoding='utf8'))
+        source = (tmp_path / 'normal.c').read_text(encoding='utf8')
+        source = '#include "pc_usb_control.h"\n#include "usbd_ioreq.h"\n' + source
+        source = _Replace_Once(source, 'static unsigned fail_tx_once;',
+            'static unsigned fail_tx_once;\nstatic unsigned fail_ep0_tx_once,fail_ep0_rx_once,ep0_ll_calls;')
+        source = _Replace_Once(source, 'assert(d==&hUsbDeviceFS);tx_ptr',
+            'assert(d==&hUsbDeviceFS);if((ep&0x7FU)==0U){ep0_ll_calls++;if(fail_ep0_tx_once){fail_ep0_tx_once=0U;return USBD_FAIL;}}tx_ptr')
+        source = _Replace_Once(source, 'if(ep==0x01U && fail_prepare_once!=0U)',
+            'if(ep==0U){ep0_ll_calls++;if(fail_ep0_rx_once){fail_ep0_rx_once=0U;return USBD_FAIL;}}\n if(ep==0x01U && fail_prepare_once!=0U)')
+        source = _Replace_Once(source, 'int main(int argc,char **argv)', FAULTS + '\nint main(int argc,char **argv)')
+        source = _Replace_Once(source, ' if(strcmp(argv[1],"control-boundaries")==0)',
+            ' if(ControlFault(argv[1])){printf("PASS EP0 %s\\n",argv[1]);return 0;}\n if(strcmp(argv[1],"control-boundaries")==0)')
+        (tmp_path / 'fault.c').write_text(source, encoding='utf8')
+        command = [str(tmp_path / 'fault.c') if item.endswith('/normal.c') or item.endswith('\\normal.c') else
+                   str(tmp_path / 'fault.exe') if item.endswith('/normal.exe') or item.endswith('\\normal.exe') else item
+                   for item in baseline['command']]
+        compiled = subprocess.run(command, capture_output=True, text=True, timeout=120)
+        (tmp_path / 'fault-compile.log').write_text(compiled.stdout + compiled.stderr, encoding='utf8')
+        assert compiled.returncode == 0, compiled.stdout + compiled.stderr
+        runs = []
+        for scenario in ('null_owner', 'foreign_owner', 'get_initial_failure', 'set_initial_failure',
+                         'status_tx_failure', 'status_rx_failure', 'descriptor_continuation_failure',
+                         'descriptor_initial_failure', 'descriptor_premature_rx_failure',
+                         'receive_continuation_helper_failure'):
+            invocation = [str(tmp_path / 'fault.exe'), scenario]
+            result = subprocess.run(invocation, capture_output=True, text=True, timeout=20)
+            runs.append({'command': invocation, 'exit': result.returncode, 'stdout': result.stdout, 'stderr': result.stderr})
+        receipt = {'part': exact_control[0], 'model_sha256': baseline['model_sha256'],
+                   'compiled_generated_sources_sha256': baseline['compiled_generated_sources_sha256'],
+                   'harness_sha256': hashlib.sha256(source.encode()).hexdigest(),
+                   'compile_command': command, 'compile_exit': compiled.returncode, 'runs': runs,
+                   'scope': 'Actual exact native core/class/EP0 policy and IO helpers; Host LL ports; no hardware or formal release claim'}
+        (tmp_path / 'fault-receipt.json').write_text(json.dumps(receipt, indent=2), encoding='utf8')
+>       assert all(row['exit'] == 0 for row in runs), runs
+E       AssertionError: [{'command': ['D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f0\\fault.e...python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f0\\fault.c, line 198
+E         '}, ...]
+E       assert False
+E        +  where False = all(<generator object test_exact_generated_control_faults.<locals>.<genexpr> at 0x00000255ECB6EDC0>)
+
+apps\SCG\tests\test_native_control_faults.py:154: AssertionError
+__________________ test_exact_generated_control_faults[F407] __________________
+
+exact_control = ('F407', NativeGroundCandidatePlan(model_sha256='d41cfbdb56636abd7f6b49d41c2d46f09dab395fc2681359726da329fa9ddf5a', sn...tformTime_Init; later/masked/ISR InitTick rejected and latched, sole timer IRQ quiesced before boot reconfiguration'}))
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/sc-261101-usb/pre-v4/test_exact_generated_control_f1')
+
+    def test_exact_generated_control_faults(exact_control, tmp_path):
+        normal.test_normal_stack_lifecycle_and_buffer_sessions(exact_control, tmp_path)
+        baseline = json.loads((tmp_path / 'lifecycle-receipt.json').read_text(encoding='utf8'))
+        source = (tmp_path / 'normal.c').read_text(encoding='utf8')
+        source = '#include "pc_usb_control.h"\n#include "usbd_ioreq.h"\n' + source
+        source = _Replace_Once(source, 'static unsigned fail_tx_once;',
+            'static unsigned fail_tx_once;\nstatic unsigned fail_ep0_tx_once,fail_ep0_rx_once,ep0_ll_calls;')
+        source = _Replace_Once(source, 'assert(d==&hUsbDeviceFS);tx_ptr',
+            'assert(d==&hUsbDeviceFS);if((ep&0x7FU)==0U){ep0_ll_calls++;if(fail_ep0_tx_once){fail_ep0_tx_once=0U;return USBD_FAIL;}}tx_ptr')
+        source = _Replace_Once(source, 'if(ep==0x01U && fail_prepare_once!=0U)',
+            'if(ep==0U){ep0_ll_calls++;if(fail_ep0_rx_once){fail_ep0_rx_once=0U;return USBD_FAIL;}}\n if(ep==0x01U && fail_prepare_once!=0U)')
+        source = _Replace_Once(source, 'int main(int argc,char **argv)', FAULTS + '\nint main(int argc,char **argv)')
+        source = _Replace_Once(source, ' if(strcmp(argv[1],"control-boundaries")==0)',
+            ' if(ControlFault(argv[1])){printf("PASS EP0 %s\\n",argv[1]);return 0;}\n if(strcmp(argv[1],"control-boundaries")==0)')
+        (tmp_path / 'fault.c').write_text(source, encoding='utf8')
+        command = [str(tmp_path / 'fault.c') if item.endswith('/normal.c') or item.endswith('\\normal.c') else
+                   str(tmp_path / 'fault.exe') if item.endswith('/normal.exe') or item.endswith('\\normal.exe') else item
+                   for item in baseline['command']]
+        compiled = subprocess.run(command, capture_output=True, text=True, timeout=120)
+        (tmp_path / 'fault-compile.log').write_text(compiled.stdout + compiled.stderr, encoding='utf8')
+        assert compiled.returncode == 0, compiled.stdout + compiled.stderr
+        runs = []
+        for scenario in ('null_owner', 'foreign_owner', 'get_initial_failure', 'set_initial_failure',
+                         'status_tx_failure', 'status_rx_failure', 'descriptor_continuation_failure',
+                         'descriptor_initial_failure', 'descriptor_premature_rx_failure',
+                         'receive_continuation_helper_failure'):
+            invocation = [str(tmp_path / 'fault.exe'), scenario]
+            result = subprocess.run(invocation, capture_output=True, text=True, timeout=20)
+            runs.append({'command': invocation, 'exit': result.returncode, 'stdout': result.stdout, 'stderr': result.stderr})
+        receipt = {'part': exact_control[0], 'model_sha256': baseline['model_sha256'],
+                   'compiled_generated_sources_sha256': baseline['compiled_generated_sources_sha256'],
+                   'harness_sha256': hashlib.sha256(source.encode()).hexdigest(),
+                   'compile_command': command, 'compile_exit': compiled.returncode, 'runs': runs,
+                   'scope': 'Actual exact native core/class/EP0 policy and IO helpers; Host LL ports; no hardware or formal release claim'}
+        (tmp_path / 'fault-receipt.json').write_text(json.dumps(receipt, indent=2), encoding='utf8')
+>       assert all(row['exit'] == 0 for row in runs), runs
+E       AssertionError: [{'command': ['D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.e...python_software\\SilverStar\\.work\\sc-261101-usb\\pre-v4\\test_exact_generated_control_f1\\fault.c, line 198
+E         '}, ...]
+E       assert False
+E        +  where False = all(<generator object test_exact_generated_control_faults.<locals>.<genexpr> at 0x00000255ECCB9220>)
+
+apps\SCG\tests\test_native_control_faults.py:154: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_native_control_faults.py::test_exact_generated_control_faults[F103]
+FAILED apps\SCG\tests\test_native_control_faults.py::test_exact_generated_control_faults[F407]
+2 failed in 101.85s (0:01:41)

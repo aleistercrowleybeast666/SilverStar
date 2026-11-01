@@ -1,0 +1,162 @@
+{
+  "part": "F407",
+  "model_sha256": "d41cfbdb56636abd7f6b49d41c2d46f09dab395fc2681359726da329fa9ddf5a",
+  "compiled_generated_sources_sha256": {
+    "HardwareGenerated/ReviewedNativeControl/Core/Src/usbd_core.c": "cd4b73c04129f4ec588696a19267e324f7ee5db33d4466574382c491e89e3c9b",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c": "5f1c211ed991e074589c82bc52571357a268f36776111d99a85539df53fd80f0",
+    "HardwareGenerated/ReviewedNativeControl/Core/Src/usbd_ioreq.c": "1caa710ce08bff5a728b4d29c45e15c32ea302d176af2ca8f334052def0a9568",
+    "HardwareGenerated/ReviewedNativeControl/Class/CDC/Src/usbd_cdc.c": "16f843cc2509700d89e296089f68be9a727c96b30ff835e8ccf1cabf4aa4eefb",
+    "HardwareGenerated/ReviewedNativeControl/App/usbd_cdc_if.c": "cee91b0448bff478a823c24d1291c26af7bb45d31ff9b6e1fcb7e583a19eef8a",
+    "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.c": "97ba18339feec643ec4959fc2acabb97e226e1d6e36416089b2d1059794cee15",
+    "Generated/Src/pc_byte_stream.c": "668147a0f1255eed5967994a94e5d9a726faa035e31ac04e979a3faca5774586",
+    "Generated/Src/pc_usb_control.c": "4ece79faf40650b6272fdab1b4aaf30532ac9e63f7f0e3b07be8a94c81dfd8c1",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h": "1588736a66291a09de7aa69a5945574566413fefb84c0a7896dc088d174086a9",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h": "a6c2dfc99fabefe4db7c4c145b4ab87d6b992e3fbd15cc65ecc1c7f9d2086f78",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h": "f8897c9b47f97b6ca78c72b857d20fb2a2b0d85091a2362799165cdfa863e3cc",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h": "8a2d44f0cc1c34c21eb75e01cec568b45b901678fba9ca2dc3b0c9a9f0364e7c",
+    "HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h": "3ea35b19e264217c3bd1d433c75f4e093930ea83cdf63aa88aee77748a9fc7dc",
+    "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.h": "664e44912621ec1b9a2d602cda9ad5dd8c347da3c6efdcf10a5c9ba1674b8d39",
+    "HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_desc.h": "a4fbe168f224d3e2d8091b90df1115301247e1a6e16177bab101ca81aa70172d",
+    "Ground/Core/Inc/pc_byte_stream.h": "daa3b71a6d126630d9f350c571dd1101cc4db163afe43b29ba54b6327598a3b9",
+    "Ground/Protocol/Inc/gsp_min_protocol.h": "9f4ac85c63a0e69c474bddceef1fb39ebb28846c074d5a3e926aa799cfbd79c1",
+    "Generated/Inc/pc_usb_control.h": "ee8e55ad1baae8c3e3e425c12b4e6b667431e9c60db42ffd994f9ae2c853f977",
+    "Generated/Inc/native_runtime.h": "4a449aa81269f9080aa4860d12f0cbb1371ec743203533b64b0320b106d343b5",
+    "Generated/Inc/native_clock.h": "c593bf6b734da6b8ccbe4d2b4803237769fe59a0619c8e501be57026c4f6243e",
+    "Platform/Inc/platform_types.h": "9eccf8476d8ebb58f251f9049de631651c6ae4e19a415d63579e703a6cfd8785"
+  },
+  "command": [
+    "D:/msys64/ucrt64/bin\\gcc.EXE",
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror=implicit-function-declaration",
+    "-Werror=incompatible-pointer-types",
+    "-DUSBD_CLASS_BOS_ENABLED=0",
+    "-DUSBD_MAX_SUPPORTED_CLASS=1",
+    "-ID:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1\\usbd_core.c",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1\\usbd_ctlreq.c",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1\\usbd_ioreq.c",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1\\usbd_cdc.c",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1\\usbd_cdc_if.c",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1\\usbd_desc.c",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1\\pc_byte_stream.c",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1\\pc_usb_control.c",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1\\normal.c",
+    "-o",
+    "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1\\normal.exe"
+  ],
+  "compile_exit": 0,
+  "runs": [
+    {
+      "scenario": "control-boundaries",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "scenario": "complete-zlp",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "scenario": "unconfigure",
+      "exit": 0,
+      "stdout": "normal lifecycle unconfigure passed\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "reset",
+      "exit": 0,
+      "stdout": "normal lifecycle reset passed\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "disconnect",
+      "exit": 0,
+      "stdout": "normal lifecycle disconnect passed\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "stop",
+      "exit": 0,
+      "stdout": "normal lifecycle stop passed\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "deinit",
+      "exit": 0,
+      "stdout": "normal lifecycle deinit passed\n",
+      "stderr": ""
+    },
+    {
+      "scenario": "close-retry",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "scenario": "deinit-close-retry",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "scenario": "init-open",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "scenario": "init-prepare",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "scenario": "tx-failure",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "scenario": "rx-rearm",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "scenario": "reset-close-failure",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "scenario": "disconnect-close-failure",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "scenario": "suspend-resume",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "scenario": "suspend-reset",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "scenario": "suspend-disconnect",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "controller": "Host LL mock; native HAL/PMA/IRQ hardware is not executed"
+}

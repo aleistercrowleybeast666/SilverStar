@@ -1,0 +1,532 @@
+FFFFFFFFFFFFFFFF                                                         [100%]
+================================== FAILURES ===================================
+_ test_new_graph_metadata_cannot_change_link_or_compile_ownership[f103-symbol-string] _
+
+integrated = ('f103', WindowsPath('D:/Codex_Work/2026-10-08/task/usb-validation/cube-f103-usb'), {'cube-f103-usb.ioc': b'#MicroXplo...) { return USBD_FAIL; }\n    return (USBD_StatusTypeDef)interface->Control(command, s_control_rx, length);\n}\n', ...})
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb/owners-v2/metadata-pre/test_new_graph_metadata_cannot0')
+mutation = 'symbol-string'
+
+    @pytest.mark.parametrize('mutation', ('symbol-string', 'symbol-duplicate', 'symbol-comma',
+        'symbol-other', 'symbol-missing', 'heap-vendor-policy', 'other-first-party', 'heap-contract-missing'))
+    def test_new_graph_metadata_cannot_change_link_or_compile_ownership(integrated, tmp_path, mutation):
+        _part, root, _native, plan, _rendered = integrated
+        output = tmp_path / 'kit'
+        UsbTransport_Export(root, output, integrate=True)
+        path = output / 'lifecycle-integration.json'
+        manifest = json.loads(path.read_text())
+        if mutation.startswith('symbol-'):
+            manifest['heap_policy']['required_link_symbols'] = {
+                'symbol-string': '_sbrk', 'symbol-duplicate': ['_sbrk', '_sbrk'],
+                'symbol-comma': ['_sbrk,--defsym,unexpected=1'], 'symbol-other': ['main'],
+                'symbol-missing': [],
+            }[mutation]
+        elif mutation == 'heap-vendor-policy':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/sysmem.c'))['policy'] = 'vendor'
+        elif mutation == 'other-first-party':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/main.c'))['policy'] = 'first_party'
+        else:
+            del manifest['heap_policy']
+        path.write_text(json.dumps(manifest), encoding='utf8')
+>       with pytest.raises(ValueError, match='heap|policy|symbol'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_usb_resource_owners.py:88: Failed
+_ test_new_graph_metadata_cannot_change_link_or_compile_ownership[f103-symbol-duplicate] _
+
+integrated = ('f103', WindowsPath('D:/Codex_Work/2026-10-08/task/usb-validation/cube-f103-usb'), {'cube-f103-usb.ioc': b'#MicroXplo...) { return USBD_FAIL; }\n    return (USBD_StatusTypeDef)interface->Control(command, s_control_rx, length);\n}\n', ...})
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb/owners-v2/metadata-pre/test_new_graph_metadata_cannot1')
+mutation = 'symbol-duplicate'
+
+    @pytest.mark.parametrize('mutation', ('symbol-string', 'symbol-duplicate', 'symbol-comma',
+        'symbol-other', 'symbol-missing', 'heap-vendor-policy', 'other-first-party', 'heap-contract-missing'))
+    def test_new_graph_metadata_cannot_change_link_or_compile_ownership(integrated, tmp_path, mutation):
+        _part, root, _native, plan, _rendered = integrated
+        output = tmp_path / 'kit'
+        UsbTransport_Export(root, output, integrate=True)
+        path = output / 'lifecycle-integration.json'
+        manifest = json.loads(path.read_text())
+        if mutation.startswith('symbol-'):
+            manifest['heap_policy']['required_link_symbols'] = {
+                'symbol-string': '_sbrk', 'symbol-duplicate': ['_sbrk', '_sbrk'],
+                'symbol-comma': ['_sbrk,--defsym,unexpected=1'], 'symbol-other': ['main'],
+                'symbol-missing': [],
+            }[mutation]
+        elif mutation == 'heap-vendor-policy':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/sysmem.c'))['policy'] = 'vendor'
+        elif mutation == 'other-first-party':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/main.c'))['policy'] = 'first_party'
+        else:
+            del manifest['heap_policy']
+        path.write_text(json.dumps(manifest), encoding='utf8')
+>       with pytest.raises(ValueError, match='heap|policy|symbol'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_usb_resource_owners.py:88: Failed
+_ test_new_graph_metadata_cannot_change_link_or_compile_ownership[f103-symbol-comma] _
+
+integrated = ('f103', WindowsPath('D:/Codex_Work/2026-10-08/task/usb-validation/cube-f103-usb'), {'cube-f103-usb.ioc': b'#MicroXplo...) { return USBD_FAIL; }\n    return (USBD_StatusTypeDef)interface->Control(command, s_control_rx, length);\n}\n', ...})
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb/owners-v2/metadata-pre/test_new_graph_metadata_cannot2')
+mutation = 'symbol-comma'
+
+    @pytest.mark.parametrize('mutation', ('symbol-string', 'symbol-duplicate', 'symbol-comma',
+        'symbol-other', 'symbol-missing', 'heap-vendor-policy', 'other-first-party', 'heap-contract-missing'))
+    def test_new_graph_metadata_cannot_change_link_or_compile_ownership(integrated, tmp_path, mutation):
+        _part, root, _native, plan, _rendered = integrated
+        output = tmp_path / 'kit'
+        UsbTransport_Export(root, output, integrate=True)
+        path = output / 'lifecycle-integration.json'
+        manifest = json.loads(path.read_text())
+        if mutation.startswith('symbol-'):
+            manifest['heap_policy']['required_link_symbols'] = {
+                'symbol-string': '_sbrk', 'symbol-duplicate': ['_sbrk', '_sbrk'],
+                'symbol-comma': ['_sbrk,--defsym,unexpected=1'], 'symbol-other': ['main'],
+                'symbol-missing': [],
+            }[mutation]
+        elif mutation == 'heap-vendor-policy':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/sysmem.c'))['policy'] = 'vendor'
+        elif mutation == 'other-first-party':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/main.c'))['policy'] = 'first_party'
+        else:
+            del manifest['heap_policy']
+        path.write_text(json.dumps(manifest), encoding='utf8')
+>       with pytest.raises(ValueError, match='heap|policy|symbol'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_usb_resource_owners.py:88: Failed
+_ test_new_graph_metadata_cannot_change_link_or_compile_ownership[f103-symbol-other] _
+
+integrated = ('f103', WindowsPath('D:/Codex_Work/2026-10-08/task/usb-validation/cube-f103-usb'), {'cube-f103-usb.ioc': b'#MicroXplo...) { return USBD_FAIL; }\n    return (USBD_StatusTypeDef)interface->Control(command, s_control_rx, length);\n}\n', ...})
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb/owners-v2/metadata-pre/test_new_graph_metadata_cannot3')
+mutation = 'symbol-other'
+
+    @pytest.mark.parametrize('mutation', ('symbol-string', 'symbol-duplicate', 'symbol-comma',
+        'symbol-other', 'symbol-missing', 'heap-vendor-policy', 'other-first-party', 'heap-contract-missing'))
+    def test_new_graph_metadata_cannot_change_link_or_compile_ownership(integrated, tmp_path, mutation):
+        _part, root, _native, plan, _rendered = integrated
+        output = tmp_path / 'kit'
+        UsbTransport_Export(root, output, integrate=True)
+        path = output / 'lifecycle-integration.json'
+        manifest = json.loads(path.read_text())
+        if mutation.startswith('symbol-'):
+            manifest['heap_policy']['required_link_symbols'] = {
+                'symbol-string': '_sbrk', 'symbol-duplicate': ['_sbrk', '_sbrk'],
+                'symbol-comma': ['_sbrk,--defsym,unexpected=1'], 'symbol-other': ['main'],
+                'symbol-missing': [],
+            }[mutation]
+        elif mutation == 'heap-vendor-policy':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/sysmem.c'))['policy'] = 'vendor'
+        elif mutation == 'other-first-party':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/main.c'))['policy'] = 'first_party'
+        else:
+            del manifest['heap_policy']
+        path.write_text(json.dumps(manifest), encoding='utf8')
+>       with pytest.raises(ValueError, match='heap|policy|symbol'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_usb_resource_owners.py:88: Failed
+_ test_new_graph_metadata_cannot_change_link_or_compile_ownership[f103-symbol-missing] _
+
+integrated = ('f103', WindowsPath('D:/Codex_Work/2026-10-08/task/usb-validation/cube-f103-usb'), {'cube-f103-usb.ioc': b'#MicroXplo...) { return USBD_FAIL; }\n    return (USBD_StatusTypeDef)interface->Control(command, s_control_rx, length);\n}\n', ...})
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb/owners-v2/metadata-pre/test_new_graph_metadata_cannot4')
+mutation = 'symbol-missing'
+
+    @pytest.mark.parametrize('mutation', ('symbol-string', 'symbol-duplicate', 'symbol-comma',
+        'symbol-other', 'symbol-missing', 'heap-vendor-policy', 'other-first-party', 'heap-contract-missing'))
+    def test_new_graph_metadata_cannot_change_link_or_compile_ownership(integrated, tmp_path, mutation):
+        _part, root, _native, plan, _rendered = integrated
+        output = tmp_path / 'kit'
+        UsbTransport_Export(root, output, integrate=True)
+        path = output / 'lifecycle-integration.json'
+        manifest = json.loads(path.read_text())
+        if mutation.startswith('symbol-'):
+            manifest['heap_policy']['required_link_symbols'] = {
+                'symbol-string': '_sbrk', 'symbol-duplicate': ['_sbrk', '_sbrk'],
+                'symbol-comma': ['_sbrk,--defsym,unexpected=1'], 'symbol-other': ['main'],
+                'symbol-missing': [],
+            }[mutation]
+        elif mutation == 'heap-vendor-policy':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/sysmem.c'))['policy'] = 'vendor'
+        elif mutation == 'other-first-party':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/main.c'))['policy'] = 'first_party'
+        else:
+            del manifest['heap_policy']
+        path.write_text(json.dumps(manifest), encoding='utf8')
+>       with pytest.raises(ValueError, match='heap|policy|symbol'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_usb_resource_owners.py:88: Failed
+_ test_new_graph_metadata_cannot_change_link_or_compile_ownership[f103-heap-vendor-policy] _
+
+integrated = ('f103', WindowsPath('D:/Codex_Work/2026-10-08/task/usb-validation/cube-f103-usb'), {'cube-f103-usb.ioc': b'#MicroXplo...) { return USBD_FAIL; }\n    return (USBD_StatusTypeDef)interface->Control(command, s_control_rx, length);\n}\n', ...})
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb/owners-v2/metadata-pre/test_new_graph_metadata_cannot5')
+mutation = 'heap-vendor-policy'
+
+    @pytest.mark.parametrize('mutation', ('symbol-string', 'symbol-duplicate', 'symbol-comma',
+        'symbol-other', 'symbol-missing', 'heap-vendor-policy', 'other-first-party', 'heap-contract-missing'))
+    def test_new_graph_metadata_cannot_change_link_or_compile_ownership(integrated, tmp_path, mutation):
+        _part, root, _native, plan, _rendered = integrated
+        output = tmp_path / 'kit'
+        UsbTransport_Export(root, output, integrate=True)
+        path = output / 'lifecycle-integration.json'
+        manifest = json.loads(path.read_text())
+        if mutation.startswith('symbol-'):
+            manifest['heap_policy']['required_link_symbols'] = {
+                'symbol-string': '_sbrk', 'symbol-duplicate': ['_sbrk', '_sbrk'],
+                'symbol-comma': ['_sbrk,--defsym,unexpected=1'], 'symbol-other': ['main'],
+                'symbol-missing': [],
+            }[mutation]
+        elif mutation == 'heap-vendor-policy':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/sysmem.c'))['policy'] = 'vendor'
+        elif mutation == 'other-first-party':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/main.c'))['policy'] = 'first_party'
+        else:
+            del manifest['heap_policy']
+        path.write_text(json.dumps(manifest), encoding='utf8')
+>       with pytest.raises(ValueError, match='heap|policy|symbol'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_usb_resource_owners.py:88: Failed
+_ test_new_graph_metadata_cannot_change_link_or_compile_ownership[f103-other-first-party] _
+
+integrated = ('f103', WindowsPath('D:/Codex_Work/2026-10-08/task/usb-validation/cube-f103-usb'), {'cube-f103-usb.ioc': b'#MicroXplo...) { return USBD_FAIL; }\n    return (USBD_StatusTypeDef)interface->Control(command, s_control_rx, length);\n}\n', ...})
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb/owners-v2/metadata-pre/test_new_graph_metadata_cannot6')
+mutation = 'other-first-party'
+
+    @pytest.mark.parametrize('mutation', ('symbol-string', 'symbol-duplicate', 'symbol-comma',
+        'symbol-other', 'symbol-missing', 'heap-vendor-policy', 'other-first-party', 'heap-contract-missing'))
+    def test_new_graph_metadata_cannot_change_link_or_compile_ownership(integrated, tmp_path, mutation):
+        _part, root, _native, plan, _rendered = integrated
+        output = tmp_path / 'kit'
+        UsbTransport_Export(root, output, integrate=True)
+        path = output / 'lifecycle-integration.json'
+        manifest = json.loads(path.read_text())
+        if mutation.startswith('symbol-'):
+            manifest['heap_policy']['required_link_symbols'] = {
+                'symbol-string': '_sbrk', 'symbol-duplicate': ['_sbrk', '_sbrk'],
+                'symbol-comma': ['_sbrk,--defsym,unexpected=1'], 'symbol-other': ['main'],
+                'symbol-missing': [],
+            }[mutation]
+        elif mutation == 'heap-vendor-policy':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/sysmem.c'))['policy'] = 'vendor'
+        elif mutation == 'other-first-party':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/main.c'))['policy'] = 'first_party'
+        else:
+            del manifest['heap_policy']
+        path.write_text(json.dumps(manifest), encoding='utf8')
+>       with pytest.raises(ValueError, match='heap|policy|symbol'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_usb_resource_owners.py:88: Failed
+_ test_new_graph_metadata_cannot_change_link_or_compile_ownership[f103-heap-contract-missing] _
+
+integrated = ('f103', WindowsPath('D:/Codex_Work/2026-10-08/task/usb-validation/cube-f103-usb'), {'cube-f103-usb.ioc': b'#MicroXplo...) { return USBD_FAIL; }\n    return (USBD_StatusTypeDef)interface->Control(command, s_control_rx, length);\n}\n', ...})
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb/owners-v2/metadata-pre/test_new_graph_metadata_cannot7')
+mutation = 'heap-contract-missing'
+
+    @pytest.mark.parametrize('mutation', ('symbol-string', 'symbol-duplicate', 'symbol-comma',
+        'symbol-other', 'symbol-missing', 'heap-vendor-policy', 'other-first-party', 'heap-contract-missing'))
+    def test_new_graph_metadata_cannot_change_link_or_compile_ownership(integrated, tmp_path, mutation):
+        _part, root, _native, plan, _rendered = integrated
+        output = tmp_path / 'kit'
+        UsbTransport_Export(root, output, integrate=True)
+        path = output / 'lifecycle-integration.json'
+        manifest = json.loads(path.read_text())
+        if mutation.startswith('symbol-'):
+            manifest['heap_policy']['required_link_symbols'] = {
+                'symbol-string': '_sbrk', 'symbol-duplicate': ['_sbrk', '_sbrk'],
+                'symbol-comma': ['_sbrk,--defsym,unexpected=1'], 'symbol-other': ['main'],
+                'symbol-missing': [],
+            }[mutation]
+        elif mutation == 'heap-vendor-policy':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/sysmem.c'))['policy'] = 'vendor'
+        elif mutation == 'other-first-party':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/main.c'))['policy'] = 'first_party'
+        else:
+            del manifest['heap_policy']
+        path.write_text(json.dumps(manifest), encoding='utf8')
+>       with pytest.raises(ValueError, match='heap|policy|symbol'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_usb_resource_owners.py:88: Failed
+_ test_new_graph_metadata_cannot_change_link_or_compile_ownership[f407-symbol-string] _
+
+integrated = ('f407', WindowsPath('D:/Codex_Work/2026-10-08/task/usb-validation/cube-f407-usb'), {'cube-f407-usb.ioc': b'#MicroXplo...) { return USBD_FAIL; }\n    return (USBD_StatusTypeDef)interface->Control(command, s_control_rx, length);\n}\n', ...})
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb/owners-v2/metadata-pre/test_new_graph_metadata_cannot8')
+mutation = 'symbol-string'
+
+    @pytest.mark.parametrize('mutation', ('symbol-string', 'symbol-duplicate', 'symbol-comma',
+        'symbol-other', 'symbol-missing', 'heap-vendor-policy', 'other-first-party', 'heap-contract-missing'))
+    def test_new_graph_metadata_cannot_change_link_or_compile_ownership(integrated, tmp_path, mutation):
+        _part, root, _native, plan, _rendered = integrated
+        output = tmp_path / 'kit'
+        UsbTransport_Export(root, output, integrate=True)
+        path = output / 'lifecycle-integration.json'
+        manifest = json.loads(path.read_text())
+        if mutation.startswith('symbol-'):
+            manifest['heap_policy']['required_link_symbols'] = {
+                'symbol-string': '_sbrk', 'symbol-duplicate': ['_sbrk', '_sbrk'],
+                'symbol-comma': ['_sbrk,--defsym,unexpected=1'], 'symbol-other': ['main'],
+                'symbol-missing': [],
+            }[mutation]
+        elif mutation == 'heap-vendor-policy':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/sysmem.c'))['policy'] = 'vendor'
+        elif mutation == 'other-first-party':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/main.c'))['policy'] = 'first_party'
+        else:
+            del manifest['heap_policy']
+        path.write_text(json.dumps(manifest), encoding='utf8')
+>       with pytest.raises(ValueError, match='heap|policy|symbol'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_usb_resource_owners.py:88: Failed
+_ test_new_graph_metadata_cannot_change_link_or_compile_ownership[f407-symbol-duplicate] _
+
+integrated = ('f407', WindowsPath('D:/Codex_Work/2026-10-08/task/usb-validation/cube-f407-usb'), {'cube-f407-usb.ioc': b'#MicroXplo...) { return USBD_FAIL; }\n    return (USBD_StatusTypeDef)interface->Control(command, s_control_rx, length);\n}\n', ...})
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb/owners-v2/metadata-pre/test_new_graph_metadata_cannot9')
+mutation = 'symbol-duplicate'
+
+    @pytest.mark.parametrize('mutation', ('symbol-string', 'symbol-duplicate', 'symbol-comma',
+        'symbol-other', 'symbol-missing', 'heap-vendor-policy', 'other-first-party', 'heap-contract-missing'))
+    def test_new_graph_metadata_cannot_change_link_or_compile_ownership(integrated, tmp_path, mutation):
+        _part, root, _native, plan, _rendered = integrated
+        output = tmp_path / 'kit'
+        UsbTransport_Export(root, output, integrate=True)
+        path = output / 'lifecycle-integration.json'
+        manifest = json.loads(path.read_text())
+        if mutation.startswith('symbol-'):
+            manifest['heap_policy']['required_link_symbols'] = {
+                'symbol-string': '_sbrk', 'symbol-duplicate': ['_sbrk', '_sbrk'],
+                'symbol-comma': ['_sbrk,--defsym,unexpected=1'], 'symbol-other': ['main'],
+                'symbol-missing': [],
+            }[mutation]
+        elif mutation == 'heap-vendor-policy':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/sysmem.c'))['policy'] = 'vendor'
+        elif mutation == 'other-first-party':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/main.c'))['policy'] = 'first_party'
+        else:
+            del manifest['heap_policy']
+        path.write_text(json.dumps(manifest), encoding='utf8')
+>       with pytest.raises(ValueError, match='heap|policy|symbol'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_usb_resource_owners.py:88: Failed
+_ test_new_graph_metadata_cannot_change_link_or_compile_ownership[f407-symbol-comma] _
+
+integrated = ('f407', WindowsPath('D:/Codex_Work/2026-10-08/task/usb-validation/cube-f407-usb'), {'cube-f407-usb.ioc': b'#MicroXplo...) { return USBD_FAIL; }\n    return (USBD_StatusTypeDef)interface->Control(command, s_control_rx, length);\n}\n', ...})
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb/owners-v2/metadata-pre/test_new_graph_metadata_cannot10')
+mutation = 'symbol-comma'
+
+    @pytest.mark.parametrize('mutation', ('symbol-string', 'symbol-duplicate', 'symbol-comma',
+        'symbol-other', 'symbol-missing', 'heap-vendor-policy', 'other-first-party', 'heap-contract-missing'))
+    def test_new_graph_metadata_cannot_change_link_or_compile_ownership(integrated, tmp_path, mutation):
+        _part, root, _native, plan, _rendered = integrated
+        output = tmp_path / 'kit'
+        UsbTransport_Export(root, output, integrate=True)
+        path = output / 'lifecycle-integration.json'
+        manifest = json.loads(path.read_text())
+        if mutation.startswith('symbol-'):
+            manifest['heap_policy']['required_link_symbols'] = {
+                'symbol-string': '_sbrk', 'symbol-duplicate': ['_sbrk', '_sbrk'],
+                'symbol-comma': ['_sbrk,--defsym,unexpected=1'], 'symbol-other': ['main'],
+                'symbol-missing': [],
+            }[mutation]
+        elif mutation == 'heap-vendor-policy':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/sysmem.c'))['policy'] = 'vendor'
+        elif mutation == 'other-first-party':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/main.c'))['policy'] = 'first_party'
+        else:
+            del manifest['heap_policy']
+        path.write_text(json.dumps(manifest), encoding='utf8')
+>       with pytest.raises(ValueError, match='heap|policy|symbol'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_usb_resource_owners.py:88: Failed
+_ test_new_graph_metadata_cannot_change_link_or_compile_ownership[f407-symbol-other] _
+
+integrated = ('f407', WindowsPath('D:/Codex_Work/2026-10-08/task/usb-validation/cube-f407-usb'), {'cube-f407-usb.ioc': b'#MicroXplo...) { return USBD_FAIL; }\n    return (USBD_StatusTypeDef)interface->Control(command, s_control_rx, length);\n}\n', ...})
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb/owners-v2/metadata-pre/test_new_graph_metadata_cannot11')
+mutation = 'symbol-other'
+
+    @pytest.mark.parametrize('mutation', ('symbol-string', 'symbol-duplicate', 'symbol-comma',
+        'symbol-other', 'symbol-missing', 'heap-vendor-policy', 'other-first-party', 'heap-contract-missing'))
+    def test_new_graph_metadata_cannot_change_link_or_compile_ownership(integrated, tmp_path, mutation):
+        _part, root, _native, plan, _rendered = integrated
+        output = tmp_path / 'kit'
+        UsbTransport_Export(root, output, integrate=True)
+        path = output / 'lifecycle-integration.json'
+        manifest = json.loads(path.read_text())
+        if mutation.startswith('symbol-'):
+            manifest['heap_policy']['required_link_symbols'] = {
+                'symbol-string': '_sbrk', 'symbol-duplicate': ['_sbrk', '_sbrk'],
+                'symbol-comma': ['_sbrk,--defsym,unexpected=1'], 'symbol-other': ['main'],
+                'symbol-missing': [],
+            }[mutation]
+        elif mutation == 'heap-vendor-policy':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/sysmem.c'))['policy'] = 'vendor'
+        elif mutation == 'other-first-party':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/main.c'))['policy'] = 'first_party'
+        else:
+            del manifest['heap_policy']
+        path.write_text(json.dumps(manifest), encoding='utf8')
+>       with pytest.raises(ValueError, match='heap|policy|symbol'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_usb_resource_owners.py:88: Failed
+_ test_new_graph_metadata_cannot_change_link_or_compile_ownership[f407-symbol-missing] _
+
+integrated = ('f407', WindowsPath('D:/Codex_Work/2026-10-08/task/usb-validation/cube-f407-usb'), {'cube-f407-usb.ioc': b'#MicroXplo...) { return USBD_FAIL; }\n    return (USBD_StatusTypeDef)interface->Control(command, s_control_rx, length);\n}\n', ...})
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb/owners-v2/metadata-pre/test_new_graph_metadata_cannot12')
+mutation = 'symbol-missing'
+
+    @pytest.mark.parametrize('mutation', ('symbol-string', 'symbol-duplicate', 'symbol-comma',
+        'symbol-other', 'symbol-missing', 'heap-vendor-policy', 'other-first-party', 'heap-contract-missing'))
+    def test_new_graph_metadata_cannot_change_link_or_compile_ownership(integrated, tmp_path, mutation):
+        _part, root, _native, plan, _rendered = integrated
+        output = tmp_path / 'kit'
+        UsbTransport_Export(root, output, integrate=True)
+        path = output / 'lifecycle-integration.json'
+        manifest = json.loads(path.read_text())
+        if mutation.startswith('symbol-'):
+            manifest['heap_policy']['required_link_symbols'] = {
+                'symbol-string': '_sbrk', 'symbol-duplicate': ['_sbrk', '_sbrk'],
+                'symbol-comma': ['_sbrk,--defsym,unexpected=1'], 'symbol-other': ['main'],
+                'symbol-missing': [],
+            }[mutation]
+        elif mutation == 'heap-vendor-policy':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/sysmem.c'))['policy'] = 'vendor'
+        elif mutation == 'other-first-party':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/main.c'))['policy'] = 'first_party'
+        else:
+            del manifest['heap_policy']
+        path.write_text(json.dumps(manifest), encoding='utf8')
+>       with pytest.raises(ValueError, match='heap|policy|symbol'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_usb_resource_owners.py:88: Failed
+_ test_new_graph_metadata_cannot_change_link_or_compile_ownership[f407-heap-vendor-policy] _
+
+integrated = ('f407', WindowsPath('D:/Codex_Work/2026-10-08/task/usb-validation/cube-f407-usb'), {'cube-f407-usb.ioc': b'#MicroXplo...) { return USBD_FAIL; }\n    return (USBD_StatusTypeDef)interface->Control(command, s_control_rx, length);\n}\n', ...})
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb/owners-v2/metadata-pre/test_new_graph_metadata_cannot13')
+mutation = 'heap-vendor-policy'
+
+    @pytest.mark.parametrize('mutation', ('symbol-string', 'symbol-duplicate', 'symbol-comma',
+        'symbol-other', 'symbol-missing', 'heap-vendor-policy', 'other-first-party', 'heap-contract-missing'))
+    def test_new_graph_metadata_cannot_change_link_or_compile_ownership(integrated, tmp_path, mutation):
+        _part, root, _native, plan, _rendered = integrated
+        output = tmp_path / 'kit'
+        UsbTransport_Export(root, output, integrate=True)
+        path = output / 'lifecycle-integration.json'
+        manifest = json.loads(path.read_text())
+        if mutation.startswith('symbol-'):
+            manifest['heap_policy']['required_link_symbols'] = {
+                'symbol-string': '_sbrk', 'symbol-duplicate': ['_sbrk', '_sbrk'],
+                'symbol-comma': ['_sbrk,--defsym,unexpected=1'], 'symbol-other': ['main'],
+                'symbol-missing': [],
+            }[mutation]
+        elif mutation == 'heap-vendor-policy':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/sysmem.c'))['policy'] = 'vendor'
+        elif mutation == 'other-first-party':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/main.c'))['policy'] = 'first_party'
+        else:
+            del manifest['heap_policy']
+        path.write_text(json.dumps(manifest), encoding='utf8')
+>       with pytest.raises(ValueError, match='heap|policy|symbol'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_usb_resource_owners.py:88: Failed
+_ test_new_graph_metadata_cannot_change_link_or_compile_ownership[f407-other-first-party] _
+
+integrated = ('f407', WindowsPath('D:/Codex_Work/2026-10-08/task/usb-validation/cube-f407-usb'), {'cube-f407-usb.ioc': b'#MicroXplo...) { return USBD_FAIL; }\n    return (USBD_StatusTypeDef)interface->Control(command, s_control_rx, length);\n}\n', ...})
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb/owners-v2/metadata-pre/test_new_graph_metadata_cannot14')
+mutation = 'other-first-party'
+
+    @pytest.mark.parametrize('mutation', ('symbol-string', 'symbol-duplicate', 'symbol-comma',
+        'symbol-other', 'symbol-missing', 'heap-vendor-policy', 'other-first-party', 'heap-contract-missing'))
+    def test_new_graph_metadata_cannot_change_link_or_compile_ownership(integrated, tmp_path, mutation):
+        _part, root, _native, plan, _rendered = integrated
+        output = tmp_path / 'kit'
+        UsbTransport_Export(root, output, integrate=True)
+        path = output / 'lifecycle-integration.json'
+        manifest = json.loads(path.read_text())
+        if mutation.startswith('symbol-'):
+            manifest['heap_policy']['required_link_symbols'] = {
+                'symbol-string': '_sbrk', 'symbol-duplicate': ['_sbrk', '_sbrk'],
+                'symbol-comma': ['_sbrk,--defsym,unexpected=1'], 'symbol-other': ['main'],
+                'symbol-missing': [],
+            }[mutation]
+        elif mutation == 'heap-vendor-policy':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/sysmem.c'))['policy'] = 'vendor'
+        elif mutation == 'other-first-party':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/main.c'))['policy'] = 'first_party'
+        else:
+            del manifest['heap_policy']
+        path.write_text(json.dumps(manifest), encoding='utf8')
+>       with pytest.raises(ValueError, match='heap|policy|symbol'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_usb_resource_owners.py:88: Failed
+_ test_new_graph_metadata_cannot_change_link_or_compile_ownership[f407-heap-contract-missing] _
+
+integrated = ('f407', WindowsPath('D:/Codex_Work/2026-10-08/task/usb-validation/cube-f407-usb'), {'cube-f407-usb.ioc': b'#MicroXplo...) { return USBD_FAIL; }\n    return (USBD_StatusTypeDef)interface->Control(command, s_control_rx, length);\n}\n', ...})
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb/owners-v2/metadata-pre/test_new_graph_metadata_cannot15')
+mutation = 'heap-contract-missing'
+
+    @pytest.mark.parametrize('mutation', ('symbol-string', 'symbol-duplicate', 'symbol-comma',
+        'symbol-other', 'symbol-missing', 'heap-vendor-policy', 'other-first-party', 'heap-contract-missing'))
+    def test_new_graph_metadata_cannot_change_link_or_compile_ownership(integrated, tmp_path, mutation):
+        _part, root, _native, plan, _rendered = integrated
+        output = tmp_path / 'kit'
+        UsbTransport_Export(root, output, integrate=True)
+        path = output / 'lifecycle-integration.json'
+        manifest = json.loads(path.read_text())
+        if mutation.startswith('symbol-'):
+            manifest['heap_policy']['required_link_symbols'] = {
+                'symbol-string': '_sbrk', 'symbol-duplicate': ['_sbrk', '_sbrk'],
+                'symbol-comma': ['_sbrk,--defsym,unexpected=1'], 'symbol-other': ['main'],
+                'symbol-missing': [],
+            }[mutation]
+        elif mutation == 'heap-vendor-policy':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/sysmem.c'))['policy'] = 'vendor'
+        elif mutation == 'other-first-party':
+            next(row for row in manifest['replacements'] if row['original'].endswith('/main.c'))['policy'] = 'first_party'
+        else:
+            del manifest['heap_policy']
+        path.write_text(json.dumps(manifest), encoding='utf8')
+>       with pytest.raises(ValueError, match='heap|policy|symbol'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_usb_resource_owners.py:88: Failed
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_usb_resource_owners.py::test_new_graph_metadata_cannot_change_link_or_compile_ownership[f103-symbol-string]
+FAILED apps\SCG\tests\test_usb_resource_owners.py::test_new_graph_metadata_cannot_change_link_or_compile_ownership[f103-symbol-duplicate]
+FAILED apps\SCG\tests\test_usb_resource_owners.py::test_new_graph_metadata_cannot_change_link_or_compile_ownership[f103-symbol-comma]
+FAILED apps\SCG\tests\test_usb_resource_owners.py::test_new_graph_metadata_cannot_change_link_or_compile_ownership[f103-symbol-other]
+FAILED apps\SCG\tests\test_usb_resource_owners.py::test_new_graph_metadata_cannot_change_link_or_compile_ownership[f103-symbol-missing]
+FAILED apps\SCG\tests\test_usb_resource_owners.py::test_new_graph_metadata_cannot_change_link_or_compile_ownership[f103-heap-vendor-policy]
+FAILED apps\SCG\tests\test_usb_resource_owners.py::test_new_graph_metadata_cannot_change_link_or_compile_ownership[f103-other-first-party]
+FAILED apps\SCG\tests\test_usb_resource_owners.py::test_new_graph_metadata_cannot_change_link_or_compile_ownership[f103-heap-contract-missing]
+FAILED apps\SCG\tests\test_usb_resource_owners.py::test_new_graph_metadata_cannot_change_link_or_compile_ownership[f407-symbol-string]
+FAILED apps\SCG\tests\test_usb_resource_owners.py::test_new_graph_metadata_cannot_change_link_or_compile_ownership[f407-symbol-duplicate]
+FAILED apps\SCG\tests\test_usb_resource_owners.py::test_new_graph_metadata_cannot_change_link_or_compile_ownership[f407-symbol-comma]
+FAILED apps\SCG\tests\test_usb_resource_owners.py::test_new_graph_metadata_cannot_change_link_or_compile_ownership[f407-symbol-other]
+FAILED apps\SCG\tests\test_usb_resource_owners.py::test_new_graph_metadata_cannot_change_link_or_compile_ownership[f407-symbol-missing]
+FAILED apps\SCG\tests\test_usb_resource_owners.py::test_new_graph_metadata_cannot_change_link_or_compile_ownership[f407-heap-vendor-policy]
+FAILED apps\SCG\tests\test_usb_resource_owners.py::test_new_graph_metadata_cannot_change_link_or_compile_ownership[f407-other-first-party]
+FAILED apps\SCG\tests\test_usb_resource_owners.py::test_new_graph_metadata_cannot_change_link_or_compile_ownership[f407-heap-contract-missing]
+16 failed, 8 deselected in 150.14s (0:02:30)

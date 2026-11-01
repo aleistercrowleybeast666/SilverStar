@@ -1,0 +1,23 @@
+{
+  "paths": [
+    "README_ZH.md",
+    "summary.json",
+    "OWNED_FILES.txt",
+    "source-snapshot.json",
+    "final-admission-source-snapshot.json",
+    "admission-equivalence.json",
+    "pre.log",
+    "pre/test_generic_actual_ep0_bounda1/descriptor-pre-receipt.json",
+    "post2.log",
+    "full/host-tests.log",
+    "full/summary.json",
+    "full/f103-power10.log",
+    "full/f407-power10.log",
+    "full/f103-analyzer-26-stm32f1xx_hal_uart.log",
+    "full/f407-analyzer-35-stm32f4xx_hal_uart.log",
+    "metadata-pre.log",
+    "admission-final.log",
+    "workflow-final.log"
+  ],
+  "note": "Preserve directory hierarchy; other complete commands, generated-source maps and ELF/map remain in the committed SilverStar evidence directory."
+}

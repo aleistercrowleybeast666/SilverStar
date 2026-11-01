@@ -1,0 +1,18 @@
+f407 Strict Linked startup initializer does not bind its reviewed table
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v1\probe_runtime.py", line 14, in <module>
+    proof=rt.HalCallbacks_Resolve(p,g,prefix,m.Command_Read,m.CallbackSlot_Get)
+  File "D:\python_software\SilverStar\apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_runtime.py", line 93, in HalCallbacks_Resolve
+    definitions = SourceFunctions_Get(text)
+  File "D:\python_software\SilverStar\apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_runtime.py", line 69, in SourceFunctions_Get
+    raise ValueError("Ambiguous callback source definition: " + name)
+ValueError: Ambiguous callback source definition: if
+h743 Strict Linked startup initializer does not bind its reviewed table
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v1\probe_runtime.py", line 14, in <module>
+    proof=rt.HalCallbacks_Resolve(p,g,prefix,m.Command_Read,m.CallbackSlot_Get)
+  File "D:\python_software\SilverStar\apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_runtime.py", line 93, in HalCallbacks_Resolve
+    definitions = SourceFunctions_Get(text)
+  File "D:\python_software\SilverStar\apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_runtime.py", line 69, in SourceFunctions_Get
+    raise ValueError("Ambiguous callback source definition: " + name)
+ValueError: Ambiguous callback source definition: if

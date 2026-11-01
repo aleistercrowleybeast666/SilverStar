@@ -1,0 +1,71 @@
+{
+  "runs": [
+    {
+      "case": "pid",
+      "design": "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\pid.json",
+      "design_sha256": "acc4963461d537b5b9055041cb51239f3cab84d29e80ea72324a99ef252d5e61",
+      "run": "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\pid.tdrun.json",
+      "run_sha256": "38c9152f5cc29b29396b4b9e0ffa5b8dc8921d5e639b934ce73a9846091a9d39",
+      "run_id": "fa9c6fd7-b0fa-43bc-9203-df91abc01941",
+      "input_digest": "149d52fcfda28926d63cf675a50cf4c72284c818c39b5c1c5dc3ac999f4936f3",
+      "summary": {
+        "maximum_altitude_m": 117.17783731303099,
+        "duration_s": 10.865547,
+        "landed": true,
+        "total_impulse_ns": 109.875,
+        "hardware_validation": "not performed"
+      },
+      "rows": 545,
+      "bundle": "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\delivery\\actual-runs-v1\\pid.sstuning.json",
+      "bundle_sha256": "bb0132a1ab7ce2251f0f01fed17337605fd1c5c9f4aa71c122dfee1aaab70655",
+      "implementation_identity": "e17276cb778bcabc318fe004468d4abc2fb61e544c505d606ceebe20101b7c1a"
+    },
+    {
+      "case": "lqr",
+      "design": "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\lqr.json",
+      "design_sha256": "2ca6747512cccc94192856dda5e5d67377507857b546930f828155713f60956a",
+      "run": "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\lqr.tdrun.json",
+      "run_sha256": "f868a0e751e35cf8a2f646553e3e8656e0412228b4240481475ea835b4275ac3",
+      "run_id": "ad61c63a-2528-45e4-a02e-bb626a7e5781",
+      "input_digest": "8d3b76f6c936dab44b6c43f184c1d69f814765a5603b0a948a553663bad27932",
+      "summary": {
+        "maximum_altitude_m": 117.24946811574239,
+        "duration_s": 10.866688,
+        "landed": true,
+        "total_impulse_ns": 109.875,
+        "hardware_validation": "not performed"
+      },
+      "rows": 545,
+      "bundle": "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\delivery\\actual-runs-v1\\lqr.sstuning.json",
+      "bundle_sha256": "d7d67b19e29329a1a9f8eda9d160a7f89f85239cb9bb8725a237a064a4c88052",
+      "implementation_identity": "e17276cb778bcabc318fe004468d4abc2fb61e544c505d606ceebe20101b7c1a"
+    },
+    {
+      "case": "underline-pid",
+      "design": "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\underline-pid-imported.json",
+      "design_sha256": "030d343712a0f07758c7bf1291dbc2b36b534de35dcb9d84c0488dc8fc6f3078",
+      "run": "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\underline-pid.tdrun.json",
+      "run_sha256": "a8e72baa9a6cbbf778b44053cf03d62e12cc61dccb5f9f6178a6b48f487461c6",
+      "run_id": "dd3a07a6-f30b-4591-8860-1f335c8702a3",
+      "input_digest": "fb7ff9ddc48cd47c7426422184ecdd33690a19ab07abd21c6b230cd30f865a0d",
+      "summary": {
+        "maximum_altitude_m": 382.98332639176743,
+        "duration_s": 18.0,
+        "landed": false,
+        "total_impulse_ns": 200.00000000000003,
+        "hardware_validation": "not performed"
+      },
+      "rows": 901,
+      "bundle": "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\delivery\\actual-runs-v1\\underline-pid.sstuning.json",
+      "bundle_sha256": "f9fd841fecd19447fca19a3bd21faf8d435151b75b32d5825dd9071d7dfaaa7b",
+      "implementation_identity": "e17276cb778bcabc318fe004468d4abc2fb61e544c505d606ceebe20101b7c1a"
+    }
+  ],
+  "motor": {
+    "path": "D:\\python_software\\TreeDiagram\\.qa\\software-completion-20261101\\research-runs-v1\\underline.tdmotor.json",
+    "sha256": "66c6232d0ccec6ceaabdec9186e9059a2f16dc9eeedea0c94221f06a8ceaed96",
+    "content_sha256": "a633f4c77247df2dcc958227670540c6c6b4dc5dceabd8e297ef50b94e636b5c",
+    "source": "D:\\python_software\\Underline_RETLDC\\tests\\fixtures\\motor_test_package\\v1\\synthetic_positive.retldc.json",
+    "scope": "synthetic fixture; no measured engine/flight qualification"
+  }
+}

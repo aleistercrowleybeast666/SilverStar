@@ -1,0 +1,53 @@
+{
+  "profile": {
+    "name": "cube-f103-usb",
+    "indexed": false,
+    "pcd": "hpcd_USB_FS",
+    "controller_contract": "pma-f1-single-v1",
+    "fingerprint": "a6f4aa841b62181d9864a6d69de32846ea4bb11679b6129d683ef84ebe2239d7",
+    "binding": "EXACT_REFERENCE"
+  },
+  "scope": "CLASSIC_CALLBACKS_CONNECTED_HARDWARE_NOT_PROVEN",
+  "replacements": [
+    {
+      "original": "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c",
+      "derived": "Native/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c",
+      "original_sha256": "9bf6b6c49a7faab7bdc465dae5df52bcc878720bd354c8596b51e16d6e210ecb",
+      "derived_sha256": "ec4aec57d27c2ee55b52024effd3caaa09615240fd864072825157279ce37078"
+    },
+    {
+      "original": "Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c",
+      "derived": "Native/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c",
+      "original_sha256": "9696a4d61c9e05cd7989936792b15b88f9b7be567d2a927b4feeb0685f1a73a2",
+      "derived_sha256": "8cbf1460656f53e78f09bc4b7733364a3ceee5706732097ae12702946b4b886a"
+    },
+    {
+      "original": "USB_DEVICE/App/usbd_cdc_if.c",
+      "derived": "Native/USB_DEVICE/App/usbd_cdc_if.c",
+      "original_sha256": "ae28e72d8a1f51db0c80c9ac3f6775c01023af39fd9f5b30ab239b0dfe6b663a",
+      "derived_sha256": "5a5c2834f0cddbee1686a7b25bd8b5b6d8aeb62e32aa3233c2a6c5facfb65c14"
+    },
+    {
+      "original": "USB_DEVICE/Target/usbd_conf.c",
+      "derived": "Native/USB_DEVICE/Target/usbd_conf.c",
+      "original_sha256": "effe29562b9d655026d6127a87a988af13d05744d5d6d70356faefe5004d0f87",
+      "derived_sha256": "d75d0929b149bbeb9591318eacc798fdb16773598d62fa6549944b54ce4d74e8"
+    },
+    {
+      "original": "Core/Src/main.c",
+      "derived": "Native/Core/Src/main.c",
+      "original_sha256": "ab58a3082c5b3f6ad7ecdbafbcf606e84ca50e72d98ac9976ecd8926b8e6950c",
+      "derived_sha256": "6c3089655a72bce2dc53f82d9c2235e1684ce5ea2e9e1a877fc6ffcdff531ddd"
+    }
+  ],
+  "additional_sources": [
+    "Src/usb_cdc_transport.c",
+    "Src/usb_cdc_port.c",
+    "Src/usb_cdc_retire.c"
+  ],
+  "limits": [
+    "Suspend invalidates session; resume stays offline until bus reset/reconfiguration.",
+    "EP0 policy, HAL LL error propagation, complete critical contracts and physical cancellation NOT PROVEN.",
+    "Native clock/PMA/FIFO/startup unchanged. No MCU-family admission."
+  ]
+}

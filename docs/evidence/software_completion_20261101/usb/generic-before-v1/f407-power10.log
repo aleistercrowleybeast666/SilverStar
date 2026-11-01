@@ -1,0 +1,375 @@
+FCCG_PROGRESS|POWER10|PLAN|11
+FCCG_PROGRESS|POWER10|BEGIN|1|11|Common\Src\silverstar_assert.c
+POWER10_SOURCE|Common\Src\silverstar_assert.c|ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826
+FCCG_PROGRESS|POWER10|DONE|1|11|Common\Src\silverstar_assert.c
+FCCG_PROGRESS|POWER10|BEGIN|2|11|Generated\UsbTransport\Src\usb_cdc_port.c
+POWER10_SOURCE|Generated\UsbTransport\Src\usb_cdc_port.c|f130a194292b29a23b42e7ab5ae48fa982e05cde084bed5911de762ee0fa8864
+FCCG_PROGRESS|POWER10|DONE|2|11|Generated\UsbTransport\Src\usb_cdc_port.c
+FCCG_PROGRESS|POWER10|BEGIN|3|11|Generated\UsbTransport\Src\usb_cdc_retire.c
+POWER10_SOURCE|Generated\UsbTransport\Src\usb_cdc_retire.c|bd94ccf288f6714d7172963d92aad6b483423a524231a826af3e1844cc605604
+FCCG_PROGRESS|POWER10|DONE|3|11|Generated\UsbTransport\Src\usb_cdc_retire.c
+FCCG_PROGRESS|POWER10|BEGIN|4|11|Generated\UsbTransport\Src\usb_cdc_transport.c
+POWER10_SOURCE|Generated\UsbTransport\Src\usb_cdc_transport.c|37684894e381072410182de742db02b2c7e49e2d6a18f3e707473cec08c9a9e8
+FCCG_PROGRESS|POWER10|DONE|4|11|Generated\UsbTransport\Src\usb_cdc_transport.c
+FCCG_PROGRESS|POWER10|BEGIN|5|11|Generated\UsbVendorReview\Core\Src\main.c
+POWER10_SOURCE|Generated\UsbVendorReview\Core\Src\main.c|1707d4693a24e42386c1c350ea677c4295efb2ff0eacbfe0ce5a4903d76a2f46
+FCCG_PROGRESS|POWER10|DONE|5|11|Generated\UsbVendorReview\Core\Src\main.c
+FCCG_PROGRESS|POWER10|BEGIN|6|11|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c
+POWER10_SOURCE|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|53db931b7900b9953ba11666b2d3d4660c65e849061b3bf7476b3f1487f95df9
+FCCG_PROGRESS|POWER10|DONE|6|11|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c
+FCCG_PROGRESS|POWER10|BEGIN|7|11|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c
+POWER10_SOURCE|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|923a22795e4e37717aa83650e413205907ad2e28e362eab97137c91b1b1e03cc
+FCCG_PROGRESS|POWER10|DONE|7|11|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c
+FCCG_PROGRESS|POWER10|BEGIN|8|11|Generated\UsbVendorReview\USB_DEVICE\App\usbd_cdc_if.c
+POWER10_SOURCE|Generated\UsbVendorReview\USB_DEVICE\App\usbd_cdc_if.c|1d94a51da12e236d141519177b86771fe4e1be1c792fcee3781899c8dd24ef81
+FCCG_PROGRESS|POWER10|DONE|8|11|Generated\UsbVendorReview\USB_DEVICE\App\usbd_cdc_if.c
+FCCG_PROGRESS|POWER10|BEGIN|9|11|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c
+POWER10_SOURCE|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|ed4f90176f6ef095171472e18aceb3a68e2d46cbc23818f44f91e13ebadd2ddb
+FCCG_PROGRESS|POWER10|DONE|9|11|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c
+FCCG_PROGRESS|POWER10|BEGIN|10|11|function_rules
+POWER10_RULE5_FUNCTION|Ground|Common\Src\silverstar_assert.c|7|SilverStarAssert_TaskNameCopy|13|0
+POWER10_FUNCTION_SCOPE|Ground|Common\Src\silverstar_assert.c|7|22|SilverStarAssert_TaskNameCopy
+POWER10_RULE5_RECOMMENDATION|Common\Src\silverstar_assert.c|7|SilverStarAssert_TaskNameCopy|13|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Common\Src\silverstar_assert.c|24|SilverStarAssert_StackOverflowContextSet|14|0
+POWER10_FUNCTION_SCOPE|Ground|Common\Src\silverstar_assert.c|24|37|SilverStarAssert_StackOverflowContextSet
+POWER10_RULE5_RECOMMENDATION|Common\Src\silverstar_assert.c|24|SilverStarAssert_StackOverflowContextSet|14|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Common\Src\silverstar_assert.c|39|SilverStarAssert_Check|11|0
+POWER10_FUNCTION_SCOPE|Ground|Common\Src\silverstar_assert.c|39|49|SilverStarAssert_Check
+POWER10_RULE5_RECOMMENDATION|Common\Src\silverstar_assert.c|39|SilverStarAssert_Check|11|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Common\Src\silverstar_assert.c|51|SilverStarAssert_ObjectCheck|15|0
+POWER10_FUNCTION_SCOPE|Ground|Common\Src\silverstar_assert.c|51|66|SilverStarAssert_ObjectCheck
+POWER10_RULE5_RECOMMENDATION|Common\Src\silverstar_assert.c|51|SilverStarAssert_ObjectCheck|15|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Common\Src\silverstar_assert.c|68|SilverStarAssert_Fail|20|0
+POWER10_FUNCTION_SCOPE|Ground|Common\Src\silverstar_assert.c|68|88|SilverStarAssert_Fail
+POWER10_RULE5_RECOMMENDATION|Common\Src\silverstar_assert.c|68|SilverStarAssert_Fail|20|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Common\Src\silverstar_assert.c|90|SilverStarAssert_FaultedGet|4|0
+POWER10_FUNCTION_SCOPE|Ground|Common\Src\silverstar_assert.c|90|93|SilverStarAssert_FaultedGet
+POWER10_RULE5_FUNCTION|Ground|Common\Src\silverstar_assert.c|95|SilverStarAssert_FaultRecordGet|6|0
+POWER10_FUNCTION_SCOPE|Ground|Common\Src\silverstar_assert.c|95|100|SilverStarAssert_FaultRecordGet
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_port.c|11|UsbCdcPort_Lock|7|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_port.c|11|17|UsbCdcPort_Lock
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_port.c|19|UsbCdcPort_Unlock|5|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_port.c|19|23|UsbCdcPort_Unlock
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_port.c|25|UsbCdcPort_TxState|11|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_port.c|25|35|UsbCdcPort_TxState
+POWER10_RULE5_RECOMMENDATION|Generated\UsbTransport\Src\usb_cdc_port.c|25|UsbCdcPort_TxState|11|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_port.c|37|UsbCdcPort_Submit|10|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_port.c|37|47|UsbCdcPort_Submit
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_port.c|49|UsbCdcPort_Rearm|11|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_port.c|49|60|UsbCdcPort_Rearm
+POWER10_RULE5_RECOMMENDATION|Generated\UsbTransport\Src\usb_cdc_port.c|49|UsbCdcPort_Rearm|11|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_retire.c|12|UsbCdcRetire_MemoryCheck|23|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_retire.c|12|34|UsbCdcRetire_MemoryCheck
+POWER10_RULE5_RECOMMENDATION|Generated\UsbTransport\Src\usb_cdc_retire.c|12|UsbCdcRetire_MemoryCheck|23|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_retire.c|36|UsbCdcRetire_ConfigurationCheck|11|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_retire.c|36|46|UsbCdcRetire_ConfigurationCheck
+POWER10_RULE5_RECOMMENDATION|Generated\UsbTransport\Src\usb_cdc_retire.c|36|UsbCdcRetire_ConfigurationCheck|11|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_retire.c|50|UsbCdcRetire_HardwareFinish|26|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_retire.c|50|77|UsbCdcRetire_HardwareFinish
+POWER10_RULE5_RECOMMENDATION|Generated\UsbTransport\Src\usb_cdc_retire.c|50|UsbCdcRetire_HardwareFinish|26|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_retire.c|79|UsbCdcRetire_Endpoint|21|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_retire.c|79|101|UsbCdcRetire_Endpoint
+POWER10_RULE5_RECOMMENDATION|Generated\UsbTransport\Src\usb_cdc_retire.c|79|UsbCdcRetire_Endpoint|21|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|19|UsbCdc_Check|20|4
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|19|38|UsbCdc_Check
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|40|UsbCdc_Invalidate|10|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|40|50|UsbCdc_Invalidate
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|52|UsbCdc_LinkDown|7|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|52|58|UsbCdc_LinkDown
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|60|UsbCdc_Quiesced|12|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|60|72|UsbCdc_Quiesced
+POWER10_RULE5_RECOMMENDATION|Generated\UsbTransport\Src\usb_cdc_transport.c|60|UsbCdc_Quiesced|12|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|74|UsbCdc_Configure|14|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|74|88|UsbCdc_Configure
+POWER10_RULE5_RECOMMENDATION|Generated\UsbTransport\Src\usb_cdc_transport.c|74|UsbCdc_Configure|14|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|90|UsbCdc_Receive|23|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|90|112|UsbCdc_Receive
+POWER10_RULE5_RECOMMENDATION|Generated\UsbTransport\Src\usb_cdc_transport.c|90|UsbCdc_Receive|23|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|114|UsbCdc_Read|24|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|114|137|UsbCdc_Read
+POWER10_RULE5_RECOMMENDATION|Generated\UsbTransport\Src\usb_cdc_transport.c|114|UsbCdc_Read|24|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|139|UsbCdc_Write|22|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|139|160|UsbCdc_Write
+POWER10_RULE5_RECOMMENDATION|Generated\UsbTransport\Src\usb_cdc_transport.c|139|UsbCdc_Write|22|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|162|UsbCdc_TxService|16|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|162|177|UsbCdc_TxService
+POWER10_RULE5_RECOMMENDATION|Generated\UsbTransport\Src\usb_cdc_transport.c|162|UsbCdc_TxService|16|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|179|UsbCdc_Service|26|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|179|204|UsbCdc_Service
+POWER10_RULE5_RECOMMENDATION|Generated\UsbTransport\Src\usb_cdc_transport.c|179|UsbCdc_Service|26|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|206|UsbCdc_SessionGet|7|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbTransport\Src\usb_cdc_transport.c|206|212|UsbCdc_SessionGet
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Core\Src\main.c|70|main|17|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Core\Src\main.c|70|117|main
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Core\Src\main.c|70|main|17|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Core\Src\main.c|123|SystemClock_Config|29|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Core\Src\main.c|123|162|SystemClock_Config
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Core\Src\main.c|123|SystemClock_Config|29|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Core\Src\main.c|176|HAL_TIM_PeriodElapsedCallback|7|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Core\Src\main.c|176|188|HAL_TIM_PeriodElapsedCallback
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Core\Src\main.c|194|Error_Handler|7|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Core\Src\main.c|194|203|Error_Handler
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Core\Src\main.c|212|assert_failed|3|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Core\Src\main.c|212|218|assert_failed
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|287|NativeCdc_Fault|6|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|287|292|NativeCdc_Fault
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|294|NativeCdc_InitAbort|6|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|294|300|NativeCdc_InitAbort
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|302|NativeCdc_Open|9|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|302|310|NativeCdc_Open
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|312|USBD_CDC_Init|30|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|312|343|USBD_CDC_Init
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|312|USBD_CDC_Init|30|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|352|USBD_CDC_DeInit|38|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|352|392|USBD_CDC_DeInit
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|352|USBD_CDC_DeInit|38|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|401|USBD_CDC_Setup|85|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|401|496|USBD_CDC_Setup
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|401|USBD_CDC_Setup|85|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|505|USBD_CDC_DataIn|35|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|505|540|USBD_CDC_DataIn
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|505|USBD_CDC_DataIn|35|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|549|USBD_CDC_DataOut|23|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|549|572|USBD_CDC_DataOut
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|549|USBD_CDC_DataOut|23|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|580|USBD_CDC_EP0_RxReady|16|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|580|598|USBD_CDC_EP0_RxReady
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|580|USBD_CDC_EP0_RxReady|16|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|606|USBD_CDC_GetFSCfgDesc|20|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|606|629|USBD_CDC_GetFSCfgDesc
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|606|USBD_CDC_GetFSCfgDesc|20|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|637|USBD_CDC_GetHSCfgDesc|20|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|637|660|USBD_CDC_GetHSCfgDesc
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|637|USBD_CDC_GetHSCfgDesc|20|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|668|USBD_CDC_GetOtherSpeedCfgDesc|20|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|668|691|USBD_CDC_GetOtherSpeedCfgDesc
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|668|USBD_CDC_GetOtherSpeedCfgDesc|20|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|699|USBD_CDC_GetDeviceQualifierDescriptor|5|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|699|704|USBD_CDC_GetDeviceQualifierDescriptor
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|712|USBD_CDC_RegisterInterface|10|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|712|723|USBD_CDC_RegisterInterface
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|734|USBD_CDC_SetTxBuffer|13|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|734|748|USBD_CDC_SetTxBuffer
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|734|USBD_CDC_SetTxBuffer|13|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|756|USBD_CDC_SetRxBuffer|11|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|756|767|USBD_CDC_SetRxBuffer
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|756|USBD_CDC_SetRxBuffer|11|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|777|USBD_CDC_TransmitPacket|24|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|777|803|USBD_CDC_TransmitPacket
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|777|USBD_CDC_TransmitPacket|24|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|811|USBD_CDC_ReceivePacket|19|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|811|830|USBD_CDC_ReceivePacket
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c|811|USBD_CDC_ReceivePacket|19|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|96|USBD_Init|32|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|96|149|USBD_Init
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|96|USBD_Init|32|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|157|USBD_DeInit|6|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|157|162|USBD_DeInit
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|171|USBD_RegisterClass|20|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|171|203|USBD_RegisterClass
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|171|USBD_RegisterClass|20|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|215|USBD_RegisterClassComposite|29|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|215|258|USBD_RegisterClassComposite
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|215|USBD_RegisterClassComposite|29|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|266|USBD_UnRegisterClassComposite|43|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|266|329|USBD_UnRegisterClassComposite
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|266|USBD_UnRegisterClassComposite|43|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|339|USBD_RegisterDevStateCallback|5|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|339|344|USBD_RegisterDevStateCallback
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|353|USBD_Start|5|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|353|361|USBD_Start
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|369|USBD_Stop|19|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|369|389|USBD_Stop
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|369|USBD_Stop|19|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|397|USBD_RunTestMode|8|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|397|412|USBD_RunTestMode
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|422|USBD_SetClassConfig|13|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|422|435|USBD_SetClassConfig
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|422|USBD_SetClassConfig|13|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|444|USBD_ClrClassConfig|7|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|444|450|USBD_ClrClassConfig
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|460|USBD_LL_SetupStage|23|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|460|490|USBD_LL_SetupStage
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|460|USBD_LL_SetupStage|23|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|500|USBD_LL_DataOutStage|74|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|500|591|USBD_LL_DataOutStage
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|500|USBD_LL_DataOutStage|74|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|601|USBD_LL_DataInStage|74|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|601|689|USBD_LL_DataInStage
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|601|USBD_LL_DataInStage|74|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|697|USBD_LL_Reset|48|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|697|764|USBD_LL_Reset
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|697|USBD_LL_Reset|48|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|772|USBD_LL_SetSpeed|6|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|772|778|USBD_LL_SetSpeed
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|786|USBD_LL_Suspend|11|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|786|799|USBD_LL_Suspend
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|786|USBD_LL_Suspend|11|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|807|USBD_LL_Resume|8|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|807|815|USBD_LL_Resume
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|823|USBD_LL_SOF|28|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|823|857|USBD_LL_SOF
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|823|USBD_LL_SOF|28|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|866|USBD_LL_IsoINIncomplete|16|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|866|883|USBD_LL_IsoINIncomplete
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|866|USBD_LL_IsoINIncomplete|16|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|892|USBD_LL_IsoOUTIncomplete|16|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|892|909|USBD_LL_IsoOUTIncomplete
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|892|USBD_LL_IsoOUTIncomplete|16|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|917|USBD_LL_DevConnected|5|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|917|923|USBD_LL_DevConnected
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|931|USBD_LL_DevDisconnected|32|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|931|974|USBD_LL_DevDisconnected
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|931|USBD_LL_DevDisconnected|32|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|983|USBD_CoreFindIF|23|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|983|1014|USBD_CoreFindIF
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|983|USBD_CoreFindIF|23|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|1023|USBD_CoreFindEP|23|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|1023|1054|USBD_CoreFindEP
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|1023|USBD_CoreFindEP|23|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|1066|USBD_CoreGetEPAdd|14|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|1066|1083|USBD_CoreGetEPAdd
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|1066|USBD_CoreGetEPAdd|14|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|1094|USBD_GetEpDesc|28|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|1094|1126|USBD_GetEpDesc
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|1094|USBD_GetEpDesc|28|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|1135|USBD_GetNextDesc|7|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c|1135|1143|USBD_GetNextDesc
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\App\usbd_cdc_if.c|154|CDC_Init_FS|10|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\App\usbd_cdc_if.c|154|163|CDC_Init_FS
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\App\usbd_cdc_if.c|169|CDC_DeInit_FS|5|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\App\usbd_cdc_if.c|169|174|CDC_DeInit_FS
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\App\usbd_cdc_if.c|183|CDC_Control_FS|27|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\App\usbd_cdc_if.c|183|247|CDC_Control_FS
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\USB_DEVICE\App\usbd_cdc_if.c|183|CDC_Control_FS|27|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\App\usbd_cdc_if.c|264|CDC_Receive_FS|7|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\App\usbd_cdc_if.c|264|271|CDC_Receive_FS
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\App\usbd_cdc_if.c|284|CDC_Transmit_FS|6|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\App\usbd_cdc_if.c|284|289|CDC_Transmit_FS
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\App\usbd_cdc_if.c|303|CDC_TransmitCplt_FS|8|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\App\usbd_cdc_if.c|303|312|CDC_TransmitCplt_FS
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|73|HAL_PCD_MspInit|17|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|73|104|HAL_PCD_MspInit
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|73|HAL_PCD_MspInit|17|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|106|HAL_PCD_MspDeInit|9|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|106|129|HAL_PCD_MspDeInit
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|137|PCD_SetupStageCallback|5|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|137|143|PCD_SetupStageCallback
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|152|PCD_DataOutStageCallback|10|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|152|163|PCD_DataOutStageCallback
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|172|PCD_DataInStageCallback|10|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|172|183|PCD_DataInStageCallback
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|191|PCD_SOFCallback|5|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|191|197|PCD_SOFCallback
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|205|PCD_ResetCallback|19|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|205|229|PCD_ResetCallback
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|205|PCD_ResetCallback|19|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|238|PCD_SuspendCallback|10|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|238|254|PCD_SuspendCallback
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|263|PCD_ResumeCallback|5|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|263|272|PCD_ResumeCallback
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|281|PCD_ISOOUTIncompleteCallback|5|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|281|287|PCD_ISOOUTIncompleteCallback
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|296|PCD_ISOINIncompleteCallback|5|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|296|302|PCD_ISOINIncompleteCallback
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|310|PCD_ConnectCallback|5|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|310|316|PCD_ConnectCallback
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|324|PCD_DisconnectCallback|5|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|324|330|PCD_DisconnectCallback
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|341|USBD_LL_Init|36|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|341|384|USBD_LL_Init
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|341|USBD_LL_Init|36|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|391|USBD_LL_DeInit|8|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|391|401|USBD_LL_DeInit
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|408|USBD_LL_Start|8|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|408|418|USBD_LL_Start
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|425|USBD_LL_Stop|8|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|425|435|USBD_LL_Stop
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|445|USBD_LL_OpenEP|8|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|445|455|USBD_LL_OpenEP
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|463|USBD_LL_CloseEP|4|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|463|466|USBD_LL_CloseEP
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|474|USBD_LL_FlushEP|8|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|474|484|USBD_LL_FlushEP
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|492|USBD_LL_StallEP|8|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|492|502|USBD_LL_StallEP
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|510|USBD_LL_ClearStallEP|8|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|510|520|USBD_LL_ClearStallEP
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|528|USBD_LL_IsStallEP|12|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|528|540|USBD_LL_IsStallEP
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|528|USBD_LL_IsStallEP|12|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|548|USBD_LL_SetUSBAddress|8|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|548|558|USBD_LL_SetUSBAddress
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|568|USBD_LL_Transmit|8|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|568|578|USBD_LL_Transmit
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|588|USBD_LL_PrepareReceive|8|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|588|598|USBD_LL_PrepareReceive
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|606|USBD_LL_GetRxDataSize|4|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|606|609|USBD_LL_GetRxDataSize
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|618|USBD_LL_SetTestMode|6|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|618|624|USBD_LL_SetTestMode
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|632|USBD_static_malloc|5|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|632|636|USBD_static_malloc
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|643|USBD_static_free|3|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|643|646|USBD_static_free
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|653|USBD_LL_Delay|4|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|653|656|USBD_LL_Delay
+POWER10_RULE5_FUNCTION|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|663|USBD_Get_USB_Status|23|0
+POWER10_FUNCTION_SCOPE|Ground|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|663|686|USBD_Get_USB_Status
+POWER10_RULE5_RECOMMENDATION|Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c|663|USBD_Get_USB_Status|23|zero_runtime_candidates|nonblocking|manual_review_required
+POWER10_RULE5|Ground|files=9|functions=116|eligible_assertions=4|average=0.034483|informational|policy=fprime_inspired_c|semantic_review=required
+POWER10_CONTRACT_REVIEW|NOT_PROVEN|manual_acceptance_pending
+FCCG_PROGRESS|POWER10|DONE|10|11|function_rules
+FCCG_PROGRESS|POWER10|BEGIN|11|11|build_policy
+Power of Ten check FAILED (10 failures).
+- finite while/do loop violation:
+  Generated\UsbVendorReview\Core\Src\main.c:106: while (1)
+  Generated\UsbVendorReview\Core\Src\main.c:199: while (1)
+- first-party C conditional compilation violation:
+  Generated\UsbVendorReview\Core\Src\main.c:204: #ifdef USE_FULL_ASSERT
+- first-party C conditional compilation violation:
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c:111: #ifndef USE_USBD_COMPOSITE
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c:118: #ifndef USE_USBD_COMPOSITE
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c:156: #ifdef USE_USBD_COMPOSITE
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c:169: #ifndef USE_USBD_COMPOSITE
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c:182: #if (USBD_SELF_POWERED == 1U)
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c:599: #ifndef USE_USBD_COMPOSITE
+- finite while/do loop violation:
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:1105: while (ptr < desc->wTotalLength)
+- first-party C conditional compilation violation:
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:26: #ifdef USE_USBD_COMPOSITE
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:106: #if (USBD_DEBUG_LEVEL > 1U)
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:112: #ifdef USE_USBD_COMPOSITE
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:177: #if (USBD_DEBUG_LEVEL > 1U)
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:187: #ifdef USE_USB_HS
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:205: #ifdef USE_USBD_COMPOSITE
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:240: #if (USBD_DEBUG_LEVEL > 1U)
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:250: #ifdef USE_USB_HS
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:287: #if (USBD_DEBUG_LEVEL > 1U)
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:332: #if (USBD_USER_REGISTER_CALLBACK == 1U)
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:355: #ifdef USE_USBD_COMPOSITE
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:399: #ifdef USBD_HS_TESTMODE_ENABLE
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:715: #ifdef USE_USBD_COMPOSITE
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:828: #ifdef USE_USBD_COMPOSITE
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:945: #ifdef USE_USBD_COMPOSITE
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:985: #ifdef USE_USBD_COMPOSITE
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:1025: #ifdef USE_USBD_COMPOSITE
+  Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:1056: #ifdef USE_USBD_COMPOSITE
+- first-party C conditional compilation violation:
+  Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c:136: #if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+  Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c:151: #if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+  Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c:171: #if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+  Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c:190: #if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+  Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c:204: #if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+  Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c:237: #if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+  Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c:262: #if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+  Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c:280: #if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+  Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c:295: #if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+  Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c:309: #if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+  Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c:323: #if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+  Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c:364: #if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
+  Generated\UsbVendorReview\USB_DEVICE\Target\usbd_conf.c:611: #ifdef USBD_HS_TESTMODE_ENABLE
+- Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c:401: function USBD_CDC_Setup has 85 non-comment code lines (maximum 60)
+- Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:500: function USBD_LL_DataOutStage has 74 non-comment code lines (maximum 60)
+- Generated\UsbVendorReview\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c:601: function USBD_LL_DataInStage has 74 non-comment code lines (maximum 60)
+- A heap-support sysmem.c source is present in the build graph.

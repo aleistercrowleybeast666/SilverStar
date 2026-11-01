@@ -1,0 +1,66 @@
+{
+  "project": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\arm-v2\\o1\\b",
+  "part": "F407",
+  "emitted_inputs_sha256": {
+    "Makefile": "a8a4bee36102df54701df47d92aa18348969aefb5c7f997c0ab3a9077c2b27f4",
+    "Tools/check_power_of_ten.ps1": "a4aca423ec1df7a1ea273f80ddc8c9f0baaac5b9d4bac6481d1386c9a1312fac",
+    "Generated/ground_source_graph.json": "d3913fc4402b8291f470eee853c6b58d2adc88f70634e2798568ccba1109111d",
+    "Tools/check_c071_candidate.py": "9bcf0257370aae393d2fb1980856887143c6d468135501ca7628c228eeca116e",
+    "Tools/check_ground.py": "b26ece5e198deb61c0a80d8b20c5742b13999e83ef1847ddb322678d0672b510",
+    "Tools/check_native_ground.py": "d9c4ee572c62469160cb8c95024c2cd12ba0c96e696dbd87f67b2a2ec3b1aa73",
+    "Tools/check_native_probe.py": "e89f9a2efe38ee9f86434f56e18463c48894453f09e3b330ac70b8f08fcf094d",
+    "Tools/ground_artifact_contract.py": "f530008831c5f7599f728aa0c2fead9f8dc7c328044658892f95da300f739134",
+    "Tools/ground_c071_contract.py": "9a410dcf83164a39267115627b7bb7afa030ddfd652cd9445e26885b0f9b4259",
+    "Tools/native_machine_contract.py": "10dbb135a85f99479ae39119be777ebd192151ad48b20af54a549229e3832a1e"
+  },
+  "runs": [
+    {
+      "gate": "architecture-check",
+      "command": [
+        "D:/msys64/ucrt64/bin\\mingw32-make.EXE",
+        "-j2",
+        "architecture-check",
+        "PYTHON=D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+        "HOST_CC=D:/msys64/ucrt64/bin\\gcc.EXE"
+      ],
+      "exit": 0,
+      "log_sha256": "cd1fc288f433f274242d349346f05e13fd2dafee8220788e83abb9e73f738ef6"
+    },
+    {
+      "gate": "host-tests",
+      "command": [
+        "D:/msys64/ucrt64/bin\\mingw32-make.EXE",
+        "-j2",
+        "host-tests",
+        "PYTHON=D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+        "HOST_CC=D:/msys64/ucrt64/bin\\gcc.EXE"
+      ],
+      "exit": 0,
+      "log_sha256": "ec3687035f6172c8a4549831f6a1fbce4e33ed3468ef8b66411053cd0201fcbb"
+    },
+    {
+      "gate": "power10-check",
+      "command": [
+        "D:/msys64/ucrt64/bin\\mingw32-make.EXE",
+        "-j2",
+        "power10-check",
+        "PYTHON=D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+        "HOST_CC=D:/msys64/ucrt64/bin\\gcc.EXE"
+      ],
+      "exit": 0,
+      "log_sha256": "6355e67b27787f022b5f005f3e3546a513711df6ac44c88a6dc097bb8fe1bdcc"
+    },
+    {
+      "gate": "artifact-check",
+      "command": [
+        "D:/msys64/ucrt64/bin\\mingw32-make.EXE",
+        "-j2",
+        "artifact-check",
+        "PYTHON=D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+        "HOST_CC=D:/msys64/ucrt64/bin\\gcc.EXE"
+      ],
+      "exit": 0,
+      "log_sha256": "dbdaa7234cec1a471e9ce5ffbc90238b3136100ba9bc2319b9acfeebfc2176a7"
+    }
+  ]
+}

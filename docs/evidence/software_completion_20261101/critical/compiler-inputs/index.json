@@ -1,0 +1,94 @@
+[
+  {
+    "run": "pre-mission-v3",
+    "receipt": "pre-mission-v3-mission-critical0.json",
+    "input_objects": {
+      "apps/SCG/tests/fixtures/mission_critical_contract_host.c": "objects/1887c38c0ce0984fe067df8731649ba8e28690bd082a7eb8558c2fd570080676.c",
+      "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_mission_process.c": "objects/363d9d1c95540acc8a3f6114e7dcf59fc5fdc9118668de3cda80206f8f369113.c",
+      "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Inc/system_mission_process.h": "objects/39436fc7e90fabe641acf9f346404c2a0c19ce272f10e34a6509ac054cac05d0.h",
+      "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Common/Src/silverstar_assert.c": "objects/ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826.c"
+    },
+    "executable_sha256": "a34d4ac8d74bb0fb9be6a463e4de30c624412fcb9b39028ac8cfca66aa423b84",
+    "executable_bytes": 151715
+  },
+  {
+    "run": "pre-runtime-v2",
+    "receipt": "pre-runtime-v2-mission-runtime-contract0.json",
+    "input_objects": {
+      "apps/SCG/tests/fixtures/mission_runtime_contract_host.c": "objects/a071129382366e08a788880d862403837d788443c1b67fb40b5ec97cb9b3a6cb.c",
+      ".work/0.1.3-software-completion-20261101/critical/pre-runtime-v2/native-generated-owner0/Flight_Controller/System/Src/system_mission_process_runtime.c": "objects/1a6216629b86d9f19180cfb8c60471bdd2b3c8f425f4fdc29b053bcd3082beb5.c"
+    },
+    "executable_sha256": "e56c18615d655f722f7c3c5d7b92417635a25d8d81dcdb92cea4bc611e7d37e4",
+    "executable_bytes": 147490
+  },
+  {
+    "run": "pre-termination",
+    "receipt": "pre-termination-mission-critical0.json",
+    "input_objects": {
+      "apps/SCG/tests/fixtures/mission_critical_contract_host.c": "objects/8cc94b2d9bc360c958cbcbd50da43eba13d805e5d668776c13d0a20d7e9ea672.c",
+      "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_mission_process.c": "objects/3ce01c86cc9ff3d17d5604728a3046422693d374eebfeaf754225e5638e1d135.c",
+      "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Inc/system_mission_process.h": "objects/753fba2f237bbfb5722e3e5c26bc3c83c28653f542504fd2a20dd64c10ad33b2.h",
+      "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Common/Src/silverstar_assert.c": "objects/ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826.c"
+    },
+    "executable_sha256": "c65dd1704b3aea9b2e332f34540c847f3b2c293cd715353f3be69c41c925481d",
+    "executable_bytes": 154975
+  },
+  {
+    "run": "post-mission-v3",
+    "receipt": "post-mission-v3-mission-critical0.json",
+    "input_objects": {
+      "apps/SCG/tests/fixtures/mission_critical_contract_host.c": "objects/8cc94b2d9bc360c958cbcbd50da43eba13d805e5d668776c13d0a20d7e9ea672.c",
+      "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_mission_process.c": "objects/b58db4e4736ad39b11bed93042f5c7469d0fb5fb62207f5f3cf0d8884e22b4df.c",
+      "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Inc/system_mission_process.h": "objects/753fba2f237bbfb5722e3e5c26bc3c83c28653f542504fd2a20dd64c10ad33b2.h",
+      "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Common/Src/silverstar_assert.c": "objects/ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826.c"
+    },
+    "executable_sha256": "6c10ca866b3ebe6923bc55a7cfcf4251f79d15a8fa125391a8e42553e243b5de",
+    "executable_bytes": 154975
+  },
+  {
+    "run": "post-mission-v3",
+    "receipt": "post-mission-v3-mission-critical1.json",
+    "input_objects": {
+      "apps/SCG/tests/fixtures/mission_critical_contract_host.c": "objects/8cc94b2d9bc360c958cbcbd50da43eba13d805e5d668776c13d0a20d7e9ea672.c",
+      "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_mission_process.c": "objects/b58db4e4736ad39b11bed93042f5c7469d0fb5fb62207f5f3cf0d8884e22b4df.c",
+      "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Inc/system_mission_process.h": "objects/753fba2f237bbfb5722e3e5c26bc3c83c28653f542504fd2a20dd64c10ad33b2.h",
+      "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Common/Src/silverstar_assert.c": "objects/ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826.c"
+    },
+    "executable_sha256": "89ce9df9143f5e5deb65e5d4246202b0b75b243b9e3758a708215fac4002e4f8",
+    "executable_bytes": 156546
+  },
+  {
+    "run": "post-combined-v2",
+    "receipt": "post-combined-v2-mission-critical0.json",
+    "input_objects": {
+      "apps/SCG/tests/fixtures/mission_critical_contract_host.c": "objects/8cc94b2d9bc360c958cbcbd50da43eba13d805e5d668776c13d0a20d7e9ea672.c",
+      "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_mission_process.c": "objects/b58db4e4736ad39b11bed93042f5c7469d0fb5fb62207f5f3cf0d8884e22b4df.c",
+      "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Inc/system_mission_process.h": "objects/753fba2f237bbfb5722e3e5c26bc3c83c28653f542504fd2a20dd64c10ad33b2.h",
+      "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Common/Src/silverstar_assert.c": "objects/ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826.c"
+    },
+    "executable_sha256": "e058258caa481e4092efe21cfe9513d96546bcc735f4db92bcba2a8d9d5cff1c",
+    "executable_bytes": 154975
+  },
+  {
+    "run": "post-combined-v2",
+    "receipt": "post-combined-v2-mission-critical1.json",
+    "input_objects": {
+      "apps/SCG/tests/fixtures/mission_critical_contract_host.c": "objects/8cc94b2d9bc360c958cbcbd50da43eba13d805e5d668776c13d0a20d7e9ea672.c",
+      "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Src/system_mission_process.c": "objects/b58db4e4736ad39b11bed93042f5c7469d0fb5fb62207f5f3cf0d8884e22b4df.c",
+      "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Inc/system_mission_process.h": "objects/753fba2f237bbfb5722e3e5c26bc3c83c28653f542504fd2a20dd64c10ad33b2.h",
+      "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Common/Src/silverstar_assert.c": "objects/ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826.c"
+    },
+    "executable_sha256": "88f7b9d8d29f6b6bff4bb440da4cca8735ef001093636d340aa24024d62f6765",
+    "executable_bytes": 156546
+  },
+  {
+    "run": "post-combined-v2",
+    "receipt": "post-combined-v2-mission-runtime-contract0.json",
+    "input_objects": {
+      "apps/SCG/tests/fixtures/mission_runtime_contract_host.c": "objects/a071129382366e08a788880d862403837d788443c1b67fb40b5ec97cb9b3a6cb.c",
+      ".work/0.1.3-software-completion-20261101/critical/post-combined-v2/native-generated-owner0/Flight_Controller/System/Src/system_mission_process_runtime.c": "objects/9cd2d26431be702f62a19ea707c1815c3467164fa18ff86ea2106d28fe4970cd.c"
+    },
+    "executable_sha256": "53b28e03bc21fe57636c92d0a6bb770ab637b15528f301b92cc542ef57dede37",
+    "executable_bytes": 147490
+  }
+]

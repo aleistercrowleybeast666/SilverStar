@@ -1,0 +1,20 @@
+{
+  "source_commit": "e7c42b7c4971fddb02c6d5c60864b50dffaa3f1a",
+  "status": "auditable dirty source; includes reviewed USB owner changes",
+  "files_sha256": {
+    "apps/SCG/src/silverstar_fccg/app/usb_transport.py": "d36899fead176dec62f29a32019fe45861ca05f44bf1e8a80192183006c40482",
+    "apps/SCG/src/silverstar_fccg/build/native_usb.py": "f0489ca50ff4ad31415a3bad929c92438136bd2d11acbe579d49411c5dfbd424",
+    "apps/SCG/src/silverstar_fccg/generator/usb_cdc_integration.py": "6c9cd288fba476e72ad726984ed26d7dd32b1012b19579c06aae11f91aacf187",
+    "apps/SCG/src/silverstar_fccg/generator/native_usb_graph.py": "b405f280f19c1d21f115c37549c8ef38052ff1b1b0b7da350c75ce00fff1fbbe",
+    "apps/SCG/src/silverstar_fccg/generator/ground_usb_control.py": "7ce657f80efa15a1f62548abafbc2501b7e9a0c78dc90884dcbac760c84dfed5",
+    "apps/SCG/src/silverstar_fccg/generator/native_control.py": "995c2811a7d0670ce207ed23a82904cfae2d350109009ed2934832636a595e2d",
+    "apps/SCG/tools/validation/usb_transport_validate.py": "876685315425c696fbe09dbaab5df8142696043947ce3e3ea2eeae7ce04eab60",
+    "apps/SCG/tests/test_usb_resource_owners.py": "200720f1720a5e138521402d595c36041c072b5b5c483add6c6c756acc4889de",
+    "apps/SCG/tests/usb_descriptor_cases.py": "9a0e76949d94de2dadc18ece2d640f2f6ed9d99f775ce1c60d6112ba3ab27b12",
+    "apps/SCG/tests/test_usb_transport_integration.py": "7fc97978a386f0eeb3f050e59592b0ee1a1a21b4784472c605b75124aebc0fb7",
+    "apps/SCG/tests/test_usb_transport_control.py": "092ee52695b25e160858918b2b0a2a2ecc148a9e753c9c6e7cd60ca358bd1ff1",
+    "apps/SCG/tests/test_native_control_faults.py": "a3409536bd0beeaa68e7c378d997889c431474d93c1be9cd59043e1e561bfbbf",
+    "apps/SCG/docs/USB_CDC_TRANSPORT_20261013.md": "fd970c7167e3ef3e39204febeb03d699b53d3f4b6d45348f187a6eb286c83cff"
+  },
+  "post2": "97 passed, 6 capability skips / 108.16s; validator subsequently delegates native compile graph/policies to product NativeUsbGraph_Resolve"
+}

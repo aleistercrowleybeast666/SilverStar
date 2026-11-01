@@ -1,0 +1,19 @@
+mingw32-make: Entering directory 'D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/stack/v2/analysis/installation/Flight_Controller'
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_architecture.ps1
+FCCG_PROGRESS|ARCHITECTURE|PLAN|6
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|1|6|source_graph
+FCCG_PROGRESS|ARCHITECTURE|DONE|1|6|source_graph
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|2|6|directory_boundaries
+FCCG_PROGRESS|ARCHITECTURE|DONE|2|6|directory_boundaries
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|3|6|eide_consistency
+FCCG_PROGRESS|ARCHITECTURE|DONE|3|6|eide_consistency
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|4|6|freertos
+FCCG_PROGRESS|ARCHITECTURE|DONE|4|6|freertos
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|5|6|protocol
+FCCG architecture note: generated source omits installed-plugin documentation; maintenance Markdown was audited during reference import.
+FCCG_PROGRESS|ARCHITECTURE|DONE|5|6|protocol
+FCCG_PROGRESS|ARCHITECTURE|BEGIN|6|6|summary
+SilverStar architecture check failed: checks=370 failures=1
+FAIL: Generated contains files outside the reviewed thin-glue set: Generated/control_research.json, Generated/Inc/air_link_config.h, Generated/Inc/project_algorithm_parameters.h, Generated/Inc/project_capability_routes.h, Generated/Inc/project_device_build_capabilities.h, Generated/Inc/project_device_instances.h, Generated/Inc/project_flight_config.h, Generated/Inc/project_installation_capture.h, Generated/Inc/project_log_config.h, Generated/Inc/project_log_decoder_profile.h, Generated/Inc/project_mission_process.h, Generated/Inc/project_resources.h, Generated/Inc/project_storage_binding.h, Generated/Inc/project_telemetry_protocol.h, Generated/memory_audit.py, Generated/memory_contract.json, Generated/mission_process.json, Generated/module.mk, Generated/project_semantics.json, Generated/project_sources.mk, Generated/Src/platform_resources.c, Generated/Src/project_capability_routes.c, Generated/Src/project_control_research.c, Generated/Src/project_device_instances.c, Generated/Src/project_log_config.c, Generated/Src/project_log_decoder_profile.c, Generated/Src/project_metadata.c, Generated/Src/project_mission_parameters.c, Generated/Src/project_mission_process.c, Generated/Src/project_resources.c
+mingw32-make: *** [Makefile:224: architecture-check] Error 1
+mingw32-make: Leaving directory 'D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/stack/v2/analysis/installation/Flight_Controller'

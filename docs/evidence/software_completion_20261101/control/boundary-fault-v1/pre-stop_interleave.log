@@ -1,0 +1,1 @@
+Assertion failed: result != ControlResearchResult_Ok && result != ControlResearchResult_Waiting && s_faults, file D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Tests\Host\test_control_research.c, line 211

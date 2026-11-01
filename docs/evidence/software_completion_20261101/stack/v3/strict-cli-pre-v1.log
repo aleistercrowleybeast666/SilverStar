@@ -1,0 +1,42 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____ test_strict_cli_refuses_task_only_pass_without_whole_program_proof ______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_strict_cli_refuses_task_o0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C769033230>
+
+    def test_strict_cli_refuses_task_only_pass_without_whole_program_proof(tmp_path, monkeypatch):
+        import importlib.util
+        import sys
+        path = Path(__file__).resolve().parents[1] / 'plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_task_stacks.py'
+        spec = importlib.util.spec_from_file_location('strict_stack_cli_negative', path)
+        checker = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(checker)
+        monkeypatch.setattr(sys, 'argv', ['checker', '--project', str(tmp_path)])
+        monkeypatch.setattr(checker, 'StackReport_Build', lambda *args: {
+            'elf': 'firmware.elf', 'tasks': [], 'checks': {'task_only': True}, 'passes': True,
+            'whole_program_stack_acceptance': 'NOT PROVEN: missing MSP/ISR proof'})
+>       assert checker.main() == 2
+E       AssertionError: assert 0 == 2
+E        +  where 0 = <function main at 0x000001C76956D0C0>()
+E        +    where <function main at 0x000001C76956D0C0> = <module 'strict_stack_cli_negative' from 'D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tools\\check_task_stacks.py'>.main
+
+apps\SCG\tests\test_stack_budget.py:521: AssertionError
+---------------------------- Captured stdout call -----------------------------
+FCCG_PROGRESS|STACK_REPORT|PLAN|1
+FCCG_PROGRESS|STACK_REPORT|BEGIN|1|1|ELF and stack budget
+FIRMWARE_STACK_REPORT|D:\python_software\SilverStar\.work\pytest\test_strict_cli_refuses_task_o0\stack-budget.json
+{
+  "task_only": true
+}
+FCCG_PROGRESS|STACK_REPORT|DONE|1|1|ELF and stack budget
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_stack_budget.py::test_strict_cli_refuses_task_only_pass_without_whole_program_proof
+1 failed, 58 deselected, 1 warning in 2.72s

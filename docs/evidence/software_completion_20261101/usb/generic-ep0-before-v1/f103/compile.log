@@ -1,0 +1,11 @@
+D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\usb\generic-ep0-before-v1\test_generic_actual_ep0_bounda0\usbd_cdc_if.c: In function 'CDC_Control_FS':
+D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\usb\generic-ep0-before-v1\test_generic_actual_ep0_bounda0\usbd_cdc_if.c:181:52: warning: unused parameter 'pbuf' [-Wunused-parameter]
+  181 | static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
+      |                                           ~~~~~~~~~^~~~
+D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\usb\generic-ep0-before-v1\test_generic_actual_ep0_bounda0\usbd_cdc_if.c:181:67: warning: unused parameter 'length' [-Wunused-parameter]
+  181 | static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
+      |                                                          ~~~~~~~~~^~~~~~
+D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\usb\generic-ep0-before-v1\test_generic_actual_ep0_bounda0\usbd_ctlreq.c: In function 'USBD_CtlError':
+D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\usb\generic-ep0-before-v1\test_generic_actual_ep0_bounda0\usbd_ctlreq.c:853:42: warning: unused parameter 'req' [-Wunused-parameter]
+  853 |                    USBD_SetupReqTypedef *req)
+      |                    ~~~~~~~~~~~~~~~~~~~~~~^~~

@@ -1,0 +1,16 @@
+FCCG_PROGRESS|STACK_REPORT|PLAN|1
+FCCG_PROGRESS|STACK_REPORT|BEGIN|1|1|ELF and stack budget
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v5\b\pid\Flight_Controller\Tools\check_task_stacks.py", line 5658, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v5\b\pid\Flight_Controller\Tools\check_task_stacks.py", line 5638, in main
+    report = StackReport_Build(root, arguments.config, arguments.prefix, arguments.memory_layout)
+  File "D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v5\b\pid\Flight_Controller\Tools\check_task_stacks.py", line 5584, in StackReport_Build
+    runtime_proofs['control_task'] = _runtime.ControlTask_Verify(root, graph,
+                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+        software_review['case']['runtime_contract']['control_task'], Closure_Get)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v5\b\pid\Flight_Controller\Tools\stack_runtime.py", line 460, in ControlTask_Verify
+    raise ValueError('Changed reviewed control task contract')
+ValueError: Changed reviewed control task contract

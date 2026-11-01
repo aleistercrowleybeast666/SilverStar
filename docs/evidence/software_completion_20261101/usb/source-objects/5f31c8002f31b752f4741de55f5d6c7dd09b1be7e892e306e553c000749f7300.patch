@@ -1,0 +1,13 @@
+--- USB_DEVICE/Target/usbd_conf.h
++++ Native/USB_DEVICE/Target/usbd_conf.h
+@@ -71,7 +71,9 @@
+ /*---------- -----------*/
+ #define USBD_DEBUG_LEVEL     0U
+ /*---------- -----------*/
+-#define USBD_LPM_ENABLED     0U
++#define USBD_LPM_ENABLED     0U
++#define USBD_CLASS_BOS_ENABLED 0U
++#define USBD_USER_REGISTER_CALLBACK 0U
+ /*---------- -----------*/
+ #define USBD_SELF_POWERED     1U
+ 

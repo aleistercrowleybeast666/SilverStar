@@ -1,0 +1,194 @@
+[
+  {
+    "part": "F103",
+    "project": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\d2\\f103\\b",
+    "gate": "architecture-check",
+    "command": [
+      "D:/msys64/ucrt64/bin\\mingw32-make.EXE",
+      "-j2",
+      "architecture-check",
+      "PYTHON=D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "HOST_CC=D:/msys64/ucrt64/bin\\gcc.EXE"
+    ],
+    "exit_code": 0,
+    "seconds": 2.2907193999999436,
+    "log": "gates/F103/architecture-check.log",
+    "log_sha256": "7f0cbf5b3b71cf1fbaf9cc1a7a0b1bf65d8549e3a8870d6769a57ad06192d09d"
+  },
+  {
+    "part": "F103",
+    "project": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\d2\\f103\\b",
+    "gate": "host-tests",
+    "command": [
+      "D:/msys64/ucrt64/bin\\mingw32-make.EXE",
+      "-j2",
+      "host-tests",
+      "PYTHON=D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "HOST_CC=D:/msys64/ucrt64/bin\\gcc.EXE"
+    ],
+    "exit_code": 0,
+    "seconds": 10.409346300002653,
+    "log": "gates/F103/host-tests.log",
+    "log_sha256": "55c864300daeb4c95e92c677bccc350cb2d2a28870d32b31afa87d433bbd133e"
+  },
+  {
+    "part": "F103",
+    "project": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\d2\\f103\\b",
+    "gate": "power10-check",
+    "command": [
+      "D:/msys64/ucrt64/bin\\mingw32-make.EXE",
+      "-j2",
+      "power10-check",
+      "PYTHON=D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "HOST_CC=D:/msys64/ucrt64/bin\\gcc.EXE"
+    ],
+    "exit_code": 0,
+    "seconds": 3.773853999999119,
+    "log": "gates/F103/power10-check.log",
+    "log_sha256": "d8c06354719e506d781d31b57aafae35a32e6159476200b25055408b63fda64d"
+  },
+  {
+    "part": "F103",
+    "project": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\d2\\f103\\b",
+    "gate": "artifact-check",
+    "command": [
+      "D:/msys64/ucrt64/bin\\mingw32-make.EXE",
+      "-j2",
+      "artifact-check",
+      "PYTHON=D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "HOST_CC=D:/msys64/ucrt64/bin\\gcc.EXE"
+    ],
+    "exit_code": 0,
+    "seconds": 10.974938600003952,
+    "log": "gates/F103/artifact-check.log",
+    "log_sha256": "91127226fad1a7b73f32476bb223254901df892d876a297ef557b6b76da79528"
+  },
+  {
+    "part": "F407",
+    "project": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\d2\\f407\\b",
+    "gate": "architecture-check",
+    "command": [
+      "D:/msys64/ucrt64/bin\\mingw32-make.EXE",
+      "-j2",
+      "architecture-check",
+      "PYTHON=D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "HOST_CC=D:/msys64/ucrt64/bin\\gcc.EXE"
+    ],
+    "exit_code": 0,
+    "seconds": 2.5759735999890836,
+    "log": "gates/F407/architecture-check.log",
+    "log_sha256": "7f0cbf5b3b71cf1fbaf9cc1a7a0b1bf65d8549e3a8870d6769a57ad06192d09d"
+  },
+  {
+    "part": "F407",
+    "project": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\d2\\f407\\b",
+    "gate": "host-tests",
+    "command": [
+      "D:/msys64/ucrt64/bin\\mingw32-make.EXE",
+      "-j2",
+      "host-tests",
+      "PYTHON=D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "HOST_CC=D:/msys64/ucrt64/bin\\gcc.EXE"
+    ],
+    "exit_code": 0,
+    "seconds": 10.820929399997112,
+    "log": "gates/F407/host-tests.log",
+    "log_sha256": "126f3f2026d1e9f7e73540660ef2be07ff79498121fc49a0050812bd6c259a31"
+  },
+  {
+    "part": "F407",
+    "project": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\d2\\f407\\b",
+    "gate": "power10-check",
+    "command": [
+      "D:/msys64/ucrt64/bin\\mingw32-make.EXE",
+      "-j2",
+      "power10-check",
+      "PYTHON=D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "HOST_CC=D:/msys64/ucrt64/bin\\gcc.EXE"
+    ],
+    "exit_code": 0,
+    "seconds": 3.7408663999958662,
+    "log": "gates/F407/power10-check.log",
+    "log_sha256": "2add8496300dd9e359d5eb85ffbd59cb5925fb67fb2d2c81acb984d48aab9578"
+  },
+  {
+    "part": "F407",
+    "project": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\d2\\f407\\b",
+    "gate": "artifact-check",
+    "command": [
+      "D:/msys64/ucrt64/bin\\mingw32-make.EXE",
+      "-j2",
+      "artifact-check",
+      "PYTHON=D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "HOST_CC=D:/msys64/ucrt64/bin\\gcc.EXE"
+    ],
+    "exit_code": 0,
+    "seconds": 12.020839100005105,
+    "log": "gates/F407/artifact-check.log",
+    "log_sha256": "b94224621886a4fee273ea0a147d35918a58cf80897e851aa908a6b7877ef62d"
+  },
+  {
+    "part": "C071",
+    "project": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\d2\\c071\\b",
+    "gate": "architecture-check",
+    "command": [
+      "D:/msys64/ucrt64/bin\\mingw32-make.EXE",
+      "-j2",
+      "architecture-check",
+      "PYTHON=D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "HOST_CC=D:/msys64/ucrt64/bin\\gcc.EXE"
+    ],
+    "exit_code": 0,
+    "seconds": 2.0998600000020815,
+    "log": "gates/C071/architecture-check.log",
+    "log_sha256": "e92466d5c38b2d50f050bc7e7ff533191156d0c04963ed9fb40ea8034825ea38"
+  },
+  {
+    "part": "C071",
+    "project": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\d2\\c071\\b",
+    "gate": "host-tests",
+    "command": [
+      "D:/msys64/ucrt64/bin\\mingw32-make.EXE",
+      "-j2",
+      "host-tests",
+      "PYTHON=D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "HOST_CC=D:/msys64/ucrt64/bin\\gcc.EXE"
+    ],
+    "exit_code": 0,
+    "seconds": 9.876207199995406,
+    "log": "gates/C071/host-tests.log",
+    "log_sha256": "c1694e4c3ca69d39fa2db9633086f9cb79ed31beb9108a82f49d13ff67d2381c"
+  },
+  {
+    "part": "C071",
+    "project": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\d2\\c071\\b",
+    "gate": "power10-check",
+    "command": [
+      "D:/msys64/ucrt64/bin\\mingw32-make.EXE",
+      "-j2",
+      "power10-check",
+      "PYTHON=D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "HOST_CC=D:/msys64/ucrt64/bin\\gcc.EXE"
+    ],
+    "exit_code": 0,
+    "seconds": 3.641848699990078,
+    "log": "gates/C071/power10-check.log",
+    "log_sha256": "d5689f1f4fabf00b24d586b9351b86a15ee8f5f226402c5fb5c9995bdeb1e86a"
+  },
+  {
+    "part": "C071",
+    "project": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\d2\\c071\\b",
+    "gate": "artifact-check",
+    "command": [
+      "D:/msys64/ucrt64/bin\\mingw32-make.EXE",
+      "-j2",
+      "artifact-check",
+      "PYTHON=D:\\python_software\\TreeDiagram\\.venv\\Scripts\\python.exe",
+      "HOST_CC=D:/msys64/ucrt64/bin\\gcc.EXE"
+    ],
+    "exit_code": 0,
+    "seconds": 12.36288999998942,
+    "log": "gates/C071/artifact-check.log",
+    "log_sha256": "36067f69aabeaef27b2518daedd729a1c8d27c80422acf79ad59e9ff1d83e864"
+  }
+]

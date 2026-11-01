@@ -1,0 +1,4 @@
+C071: architecture-check: exit 0
+C071: host-tests: exit 0
+C071: power10-check: exit 0
+C071: artifact-check: exit 0

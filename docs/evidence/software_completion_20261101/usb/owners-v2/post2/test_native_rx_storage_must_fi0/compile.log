@@ -1,0 +1,4 @@
+D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\usb\owners-v2\post2\test_native_rx_storage_must_fi0\storage.c: In function 'CDC_Init_FS':
+D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\usb\owners-v2\post2\test_native_rx_storage_must_fi0\storage.c:14:3: error: static assertion failed: "native CDC RX buffer must fit the armed packet"
+   14 |   _Static_assert(sizeof(UserRxBufferFS) >= USB_CDC_PACKET_SIZE,
+      |   ^~~~~~~~~~~~~~

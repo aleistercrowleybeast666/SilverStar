@@ -1,0 +1,4 @@
+D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\usb\owners-v2\post1\test_generic_actual_ep0_bounda0\usbd_ctlreq.c: In function 'USBD_CtlError':
+D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\usb\owners-v2\post1\test_generic_actual_ep0_bounda0\usbd_ctlreq.c:853:42: warning: unused parameter 'req' [-Wunused-parameter]
+  853 |                    USBD_SetupReqTypedef *req)
+      |                    ~~~~~~~~~~~~~~~~~~~~~~^~~

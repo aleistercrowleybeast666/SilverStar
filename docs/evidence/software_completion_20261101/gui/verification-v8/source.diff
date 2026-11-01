@@ -1,0 +1,2048 @@
+diff --git a/apps/SCG/plugins/builtin/silverstar_algorithm_control_lqr/plugin.json b/apps/SCG/plugins/builtin/silverstar_algorithm_control_lqr/plugin.json
+index 63cdb334..d5d7d338 100644
+--- a/apps/SCG/plugins/builtin/silverstar_algorithm_control_lqr/plugin.json
++++ b/apps/SCG/plugins/builtin/silverstar_algorithm_control_lqr/plugin.json
+@@ -5,7 +5,7 @@
+   "type": "algorithm",
+   "class": "control",
+   "version": "0.1.0",
+-  "description": "Host/target mathematical core; no actuator hardware driver or mission dispatcher claimed.",
++  "description": "Bounded mathematical core with an explicit 10 ms research mission adapter; no electrical actuator driver.",
+   "requires": {
+     "components": [],
+     "resources": [],
+@@ -36,12 +36,13 @@
+     ]
+   },
+   "metadata": {
+-    "maturity": "mathematical_core_only",
++    "maturity": "research_core_and_explicit_task",
+     "deployment_ready": false,
+     "blocking_reasons": [
+-      "No target actuator driver or mission adapter registered."
++      "Research sink has no electrical actuator driver or hardware timing qualification."
+     ],
+-    "generated_interface": "ControlLqr_ProjectConfigGet; mathematical consumer, no dispatch"
++    "generated_interface": "ControlLqr_ProjectConfigGet; opt-in ControlResearch runtime with a bounded memory sink",
++    "research_task_contract": "silverstar.control-research-runtime/1"
+   },
+   "algorithm_parameters": {
+     "schema_id": "silverstar.algorithm-parameters/1.0",
+diff --git a/apps/SCG/plugins/builtin/silverstar_algorithm_control_pid/plugin.json b/apps/SCG/plugins/builtin/silverstar_algorithm_control_pid/plugin.json
+index 32f85cab..5eecada9 100644
+--- a/apps/SCG/plugins/builtin/silverstar_algorithm_control_pid/plugin.json
++++ b/apps/SCG/plugins/builtin/silverstar_algorithm_control_pid/plugin.json
+@@ -5,7 +5,7 @@
+   "type": "algorithm",
+   "class": "control",
+   "version": "0.1.0",
+-  "description": "Host/target mathematical core; no actuator hardware driver or mission dispatcher claimed.",
++  "description": "Bounded mathematical core with an explicit 10 ms research mission adapter; no electrical actuator driver.",
+   "requires": {
+     "components": [],
+     "resources": [],
+@@ -36,12 +36,13 @@
+     ]
+   },
+   "metadata": {
+-    "maturity": "mathematical_core_only",
++    "maturity": "research_core_and_explicit_task",
+     "deployment_ready": false,
+     "blocking_reasons": [
+-      "No target actuator driver or mission adapter registered."
++      "Research sink has no electrical actuator driver or hardware timing qualification."
+     ],
+-    "generated_interface": "ControlPid_ProjectConfigGet; mathematical consumer, no dispatch"
++    "generated_interface": "ControlPid_ProjectConfigGet; opt-in ControlResearch runtime with a bounded memory sink",
++    "research_task_contract": "silverstar.control-research-runtime/1"
+   },
+   "algorithm_parameters": {
+     "schema_id": "silverstar.algorithm-parameters/1.0",
+diff --git a/apps/SCG/plugins/builtin/silverstar_core_0_1_0/plugin.json b/apps/SCG/plugins/builtin/silverstar_core_0_1_0/plugin.json
+index 4d8934de..bf434f0e 100644
+--- a/apps/SCG/plugins/builtin/silverstar_core_0_1_0/plugin.json
++++ b/apps/SCG/plugins/builtin/silverstar_core_0_1_0/plugin.json
+@@ -29,6 +29,8 @@
+       "APP/Src/estimator_bus.c",
+       "APP/Src/estimator_task.c",
+       "APP/Src/flight_task.c",
++      "APP/Src/control_research.c",
++      "APP/Src/control_research_runtime.c",
+       "APP/Src/imu_sample_bus.c",
+       "APP/Src/ins_task.c",
+       "Common/Src/common_format.c",
+diff --git a/apps/SCG/src/silverstar_fccg/app/service.py b/apps/SCG/src/silverstar_fccg/app/service.py
+index 110ce122..8b22fd11 100644
+--- a/apps/SCG/src/silverstar_fccg/app/service.py
++++ b/apps/SCG/src/silverstar_fccg/app/service.py
+@@ -215,6 +215,20 @@ class FccgService:
+         policy = self._OutputPolicy_Get(project_root)
+         return ProjectReadiness_Inspect(model, policy.root, self.catalog)
+ 
++    def TargetReadiness_Get(self, model: ProjectModel, target: str):
++        """Inspect configuration without generating, reconciling or writing it."""
++        from silverstar_fccg.project.target_readiness import TargetReadiness_Get
++        from silverstar_fccg.project.air_link import AirLinkIssue
++        result = TargetReadiness_Get(model, self.catalog, target)
++        hardware = model.hardware if target == 'flight' else model.ground_target.hardware
++        if hardware.mode == 'custom' and hardware.snapshot_id:
++            try:
++                self.hardware_importer.SnapshotRoot_Get(hardware.snapshot_id)
++            except (ValueError, FccgError, OSError):
++                result = replace(result, issues=(*result.issues, AirLinkIssue(
++                    'TARGET_SNAPSHOT_UNAVAILABLE', 'Imported hardware snapshot is unavailable; reimport the complete project.')))
++        return result
++
+     def Project_EnsureBuildable(
+         self,
+         model: ProjectModel,
+diff --git a/apps/SCG/src/silverstar_fccg/generator/mission_process.py b/apps/SCG/src/silverstar_fccg/generator/mission_process.py
+index 9bf9bb3b..d2c17831 100644
+--- a/apps/SCG/src/silverstar_fccg/generator/mission_process.py
++++ b/apps/SCG/src/silverstar_fccg/generator/mission_process.py
+@@ -19,7 +19,8 @@ def MissionProcessFiles_Render(model, catalog):
+     ranges = []
+     dependency_mask = 0
+     for field, identity in (('category', 'telemetry'), ('category', 'recording'),
+-                            ('output', 'navigation.pure_ins'), ('output', 'navigation.estimate')):
++                            ('output', 'navigation.pure_ins'), ('output', 'navigation.estimate'),
++                            ('output', 'control.research.command')):
+         function = next((row for row in functions if row[field] == identity), None)
+         values = []
+         for key, default in (('start', 'system_prepare'), ('stop', 'lifecycle_end')):
+@@ -38,6 +39,7 @@ def MissionProcessFiles_Render(model, catalog):
+               f'#define PROJECT_MISSION_PHASE_AUTHORITY {int(model.mission_process is not None)}U\n'
+               f'#define PROJECT_MISSION_RECOVERY_STAGE_HASH {recovery_hash}UL\n'
+               f'#define PROJECT_MISSION_FUNCTION_DEPENDENCIES {dependency_mask}U\n'
++              f'#define PROJECT_MISSION_CONTROL_ENABLED {int(any(row["output"] == "control.research.command" for row in functions))}U\n'
+               '#endif /* __PROJECT_MISSION_PROCESS_H */\n')
+     rows = []
+     for stage, identity in zip(stages, hashes):
+@@ -52,9 +54,9 @@ def MissionProcessFiles_Render(model, catalog):
+               '{\n    if ((stage == NULL) || (index >= PROJECT_MISSION_STAGE_COUNT))\n'
+               '    { return SystemMissionProcessResult_Invalid; }\n'
+               '    *stage = s_stages[index];\n    return SystemMissionProcessResult_Entered;\n}\n')
+-    source += ('\nstatic const SystemMissionFunctionConfig s_functions[4] =\n{\n' + '\n'.join(ranges) + '\n};\n'
++    source += ('\nstatic const SystemMissionFunctionConfig s_functions[5] =\n{\n' + '\n'.join(ranges) + '\n};\n'
+                'SystemMissionProcessResult ProjectMissionFunction_ConfigGet(uint8_t index, SystemMissionFunctionConfig *config)\n'
+-               '{\n    if ((config == NULL) || (index >= 4U)) { return SystemMissionProcessResult_Invalid; }\n'
++               '{\n    if ((config == NULL) || (index >= 5U)) { return SystemMissionProcessResult_Invalid; }\n'
+                '    *config = s_functions[index];\n    return SystemMissionProcessResult_Entered;\n}\n')
+     document = {'schema': 'silverstar.mission-process-generated/1', 'process': process,
+                 'stage_id_hash_algorithm': 'crc32-ieee-ascii',
+diff --git a/apps/SCG/src/silverstar_fccg/generator/render.py b/apps/SCG/src/silverstar_fccg/generator/render.py
+index d77cd55c..d69487e5 100644
+--- a/apps/SCG/src/silverstar_fccg/generator/render.py
++++ b/apps/SCG/src/silverstar_fccg/generator/render.py
+@@ -343,6 +343,8 @@ def GeneratedFiles_Render(
+     }
+     from silverstar_fccg.generator.mission_process import MissionProcessFiles_Render
+     files.update(MissionProcessFiles_Render(model, catalog))
++    from silverstar_fccg.generator.control_research import ControlResearchFiles_Render
++    files.update(ControlResearchFiles_Render(model, catalog))
+     if "silverstar.installation.capture" in model.ComponentIds_Get():
+         files["Generated/Inc/project_installation_capture.h"] = _InstallationCaptureHeader_Render(model,catalog)
+     if decoder_profile is not None:
+@@ -566,6 +568,7 @@ def _GeneratedModule_Render(model: ProjectModel) -> str:
+         "Generated/Src/project_metadata.c",
+         "Generated/Src/project_mission_parameters.c",
+         "Generated/Src/project_mission_process.c",
++        "Generated/Src/project_control_research.c",
+     ))
+     source_lines = "\n".join(
+         "  " + source + (" \\" if index < len(sources) - 1 else "")
+diff --git a/apps/SCG/src/silverstar_fccg/generator/source_graph.py b/apps/SCG/src/silverstar_fccg/generator/source_graph.py
+index 9e85c094..301daeab 100644
+--- a/apps/SCG/src/silverstar_fccg/generator/source_graph.py
++++ b/apps/SCG/src/silverstar_fccg/generator/source_graph.py
+@@ -486,6 +486,7 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
+         "Generated/Src/project_metadata.c",
+         "Generated/Src/project_mission_parameters.c",
+         "Generated/Src/project_mission_process.c",
++        "Generated/Src/project_control_research.c",
+     ]
+     # EIDE must compile the same selected transport union as Make, even when
+     # inactive variant payloads share the selected device's source directory.
+diff --git a/apps/SCG/src/silverstar_fccg/i18n/en_US.json b/apps/SCG/src/silverstar_fccg/i18n/en_US.json
+index 9e0128b9..50472a09 100644
+--- a/apps/SCG/src/silverstar_fccg/i18n/en_US.json
++++ b/apps/SCG/src/silverstar_fccg/i18n/en_US.json
+@@ -1295,5 +1295,23 @@
+   "workflow.stage_references": "Functions referenced by this stage (one shared owner each)",
+   "workflow.stage_only_hint": "Edit stage conditions and references here. Function editors modify this private draft; cancelling this stage discards all child edits.",
+   "workflow.stage_function_count": "{count} shared functions",
+-  "workflow.import.research_control": "Only matched scalar algorithm profiles are applied. PID/LQR control records are research data: no target mission/actuator consumer is connected, and they are not deployed."
++  "workflow.import.research_control": "By default only existing algorithm parameters are applied. A control design does not enable a task automatically. The optional bounded research task writes to memory and has no hardware actuator output.",
++  "hardware.editor.configure": "Hardware options…",
++  "hardware.editor.hardware": "Hardware & platform",
++  "hardware.editor.devices": "Devices & interfaces",
++  "hardware.editor.resources": "Resources & wiring",
++  "hardware.editor.devices_resources": "Devices & resources",
++  "hardware.editor.private_hint": "Changes stay in this private draft until Apply. Cancel or Esc discards them.",
++  "hardware.editor.pending_import": "Pending import: {path}\nApply reads the project and creates its snapshot; Cancel does not import it.",
++  "hardware.editor.import_required": "Select a PCB or import a complete CubeMX project",
++  "hardware.editor.resources_summary": "{assigned} resource mappings · {available} discovered resources",
++  "hardware.editor.stale": "The project changed; the outdated hardware draft was not applied.",
++  "target.generation.ready": "Configuration checks passed · generation can be requested",
++  "target.generation.blocked": "Configuration incomplete · generation unavailable",
++  "hardware.editor.link_compatible": "Radio parameters compatible (configuration check only)",
++  "workflow.import.control_task": "Add a 10 ms control research task (memory output, no actuator driver)",
++  "workflow.import.control_unavailable": "This control design cannot enable the research task",
++  "workflow.import.control_values": "The following control parameters apply only when the research task is selected:",
++  "workflow.import.control_changes": "Modify {count} algorithm parameters and their shared values. Selecting the option also adds or updates the control research task; hardware configuration is retained.",
++  "workflow.import.stale": "The project changed during preview; no parameters or task were imported. Open the preview again."
+ }
+diff --git a/apps/SCG/src/silverstar_fccg/i18n/zh_CN.json b/apps/SCG/src/silverstar_fccg/i18n/zh_CN.json
+index 66390454..fe8489d9 100644
+--- a/apps/SCG/src/silverstar_fccg/i18n/zh_CN.json
++++ b/apps/SCG/src/silverstar_fccg/i18n/zh_CN.json
+@@ -1295,5 +1295,23 @@
+   "workflow.stage_references": "本阶段相关功能（属性保存在唯一共享实例）",
+   "workflow.stage_only_hint": "此窗口只编辑阶段条件与引用。点击功能可在当前草稿中编辑；取消阶段窗口会撤销所有子窗口修改。",
+   "workflow.stage_function_count": "{count} 项共享功能",
+-  "workflow.import.research_control": "仅应用已匹配的标量算法参数。PID/LQR 控制记录为研究数据：尚无目标任务/执行机构消费者，不会部署到固件。"
++  "workflow.import.research_control": "默认只应用已有算法的参数；控制设计不会自动启用任务。显式选项仅启用有界研究任务，输出保存在内存中，不连接硬件执行器。",
++  "hardware.editor.configure": "硬件选项…",
++  "hardware.editor.hardware": "硬件与平台",
++  "hardware.editor.devices": "设备与接口",
++  "hardware.editor.resources": "资源与接线",
++  "hardware.editor.devices_resources": "设备与资源概览",
++  "hardware.editor.private_hint": "此窗口中的修改只保留在草稿中；应用后更新工程。取消或 Esc 放弃本次修改。",
++  "hardware.editor.pending_import": "待导入：{path}\n应用时读取工程并创建导入快照；取消不会导入。",
++  "hardware.editor.import_required": "待选择 PCB 或导入完整 CubeMX 工程",
++  "hardware.editor.resources_summary": "资源映射 {assigned} 项 · 已发现资源 {available} 项",
++  "hardware.editor.stale": "工程已变化，未应用过期的硬件草稿。",
++  "target.generation.ready": "配置检查通过 · 可请求生成",
++  "target.generation.blocked": "配置待完成 · 暂不可生成",
++  "hardware.editor.link_compatible": "无线参数相容（仅配置检查）",
++  "workflow.import.control_task": "添加 10 ms 控制研究任务（内存输出，无执行器驱动）",
++  "workflow.import.control_unavailable": "此控制设计不能启用研究任务",
++  "workflow.import.control_values": "仅在勾选研究任务时应用以下控制参数：",
++  "workflow.import.control_changes": "将修改 {count} 个算法参数，共享参数同步唯一配置。勾选下方选项还会加入或更新控制研究任务；硬件配置不变。",
++  "workflow.import.stale": "工程已在预览期间变化；未导入参数或任务，请重新打开预览。"
+ }
+diff --git a/apps/SCG/src/silverstar_fccg/project/mission_functions.py b/apps/SCG/src/silverstar_fccg/project/mission_functions.py
+index 8dc42b0c..fb0c38b8 100644
+--- a/apps/SCG/src/silverstar_fccg/project/mission_functions.py
++++ b/apps/SCG/src/silverstar_fccg/project/mission_functions.py
+@@ -46,7 +46,7 @@ def Function_Create(plugin_id, catalog, instance_id=None):
+         'category': declaration['category'], 'execution': declaration['executions'][0],
+         'start': {'kind': declaration['start'], 'stage_id': ''},
+         'stop': {'kind': declaration['stop'], 'stage_id': ''},
+-        'depends_on': [], 'input_bindings': {}, 'output': declaration['output']}
++        'depends_on': list(declaration.get('depends_on', [])), 'input_bindings': {}, 'output': declaration['output']}
+ 
+ 
+ def Functions_Derive(model, catalog):
+@@ -55,6 +55,7 @@ def Functions_Derive(model, catalog):
+     functions = []
+     for declaration in FunctionsCatalog_Get(catalog):
+         if declaration['plugin_id'] not in selected: continue
++        if declaration.get('opt_in', False): continue
+         if declaration['instance_id'] == 'calibration' and not model.modes.get('calibration'): continue
+         function = Function_Create(declaration['plugin_id'], catalog)
+         functions.append(function)
+@@ -137,7 +138,12 @@ def FunctionsCanonical_Get(model, catalog):
+     """Explicitly request the current authority's bindings, never overwrite a draft."""
+     candidate = deepcopy(model)
+     candidate.mission_functions = None
+-    return Functions_Derive(candidate,catalog)
++    result = Functions_Derive(candidate,catalog)
++    declarations = {row['plugin_id']: row for row in FunctionsCatalog_Get(catalog)}
++    for row in (model.mission_functions or {}).get('functions', []):
++        if declarations.get(row['plugin_id'], {}).get('opt_in', False) and row['plugin_id'] in model.ComponentIds_Get():
++            result['functions'].append(Function_Create(row['plugin_id'], catalog))
++    return result
+ 
+ 
+ def FunctionsStrategies_Synchronize(previous, candidate, catalog):
+@@ -209,6 +215,14 @@ def Functions_Issues(model, catalog):
+             Add(function, 'FUNCTION_INTERVAL_INVALID', 'Start must precede stop; the interval is [start, stop)')
+         native_interval = (model.mission_process is not None and model.mission_process['execution'] == 'firmware_bounded'
+                            and declaration['category'] in ('telemetry', 'recording'))
++        if declaration.get('support') == 'explicit_research_task':
++            native_interval = (model.mission_process is not None and model.mission_process['execution'] == 'firmware_bounded'
++                and function['start']['kind'] in ('mission_start', 'stage_enter')
++                and function['stop']['kind'] in ('stage_enter', 'stage_exit', 'system_landed', 'lifecycle_end'))
++            if not native_interval:
++                Add(function, 'FUNCTION_CONTROL_SCOPE', 'Research control requires a bounded mission interval after accepted START')
++            if function['instance_id'] != 'controller' or function['depends_on'] != ['estimator']:
++                Add(function, 'FUNCTION_CONTROL_DEPENDENCY', 'One controller instance must depend on the canonical estimator')
+         if (model.mission_process is not None and model.mission_process['execution'] == 'firmware_bounded'
+                 and declaration['output'] in ('navigation.pure_ins', 'navigation.estimate')):
+             stages = model.mission_process['stages']
+@@ -232,7 +246,8 @@ def Functions_Issues(model, catalog):
+             upstream_start, upstream_stop = Bounds(upstream)
+             if None not in (start, stop, upstream_start, upstream_stop) and (upstream_start > start or upstream_stop < stop):
+                 Add(function, 'FUNCTION_INPUT_INTERVAL', 'Dependency does not cover this function interval: ' + dependency)
+-        expected_dependencies = ['ins'] if function['instance_id'] == 'estimator' and 'ins' in by_id else []
++        expected_dependencies = (['estimator'] if declaration.get('support') == 'explicit_research_task' else
++            ['ins'] if function['instance_id'] == 'estimator' and 'ins' in by_id else [])
+         native_dependencies = (model.mission_process is not None and model.mission_process['execution'] == 'firmware_bounded'
+             and declaration['category'] in ('telemetry', 'recording')
+             and all(identity in ('ins', 'estimator') and identity in by_id for identity in function['depends_on']))
+@@ -249,6 +264,7 @@ def Functions_Issues(model, catalog):
+                 Add(function, 'FUNCTION_INPUT_MISSING', 'Input binding is unavailable: ' + capability + ':' + identity)
+     for declaration in declarations.values():
+         if declaration['plugin_id'] in selected and declaration['plugin_id'] not in plugins:
++            if declaration.get('opt_in', False): continue
+             if declaration['instance_id'] == 'calibration' and not model.modes.get('calibration'): continue
+             issues.append(FunctionIssue(declaration['instance_id'], 'FUNCTION_SELECTED_UNBOUND',
+                 'Selected plugin is missing its shared function instance: ' + declaration['plugin_id']))
+@@ -319,6 +335,8 @@ def FunctionsGeneration_Require(model, catalog):
+     issues = Functions_Issues(model, catalog)
+     if issues:
+         raise ValueError('; '.join(f'{row.code}:{row.function_id}: {row.message}' for row in issues))
++    from silverstar_fccg.project.control_research import ControlResearchBinding_Require
++    ControlResearchBinding_Require(model, catalog)
+ 
+ 
+ def ParameterProfile_Build(model, catalog, plugin_id):
+diff --git a/apps/SCG/src/silverstar_fccg/project/tuning_bundle.py b/apps/SCG/src/silverstar_fccg/project/tuning_bundle.py
+index 0838afea..b737d4b7 100644
+--- a/apps/SCG/src/silverstar_fccg/project/tuning_bundle.py
++++ b/apps/SCG/src/silverstar_fccg/project/tuning_bundle.py
+@@ -244,6 +244,19 @@ def TuningBundle_ControlCoreAttach(model, catalog, value: dict):
+     return candidate
+ 
+ 
++def TuningBundle_ControlTaskAttach(model, catalog, value: dict):
++    """Explicit 10 ms task opt-in; the output is an unelectrified research sink."""
++    from silverstar_fccg.project.control_research import ControlResearch_Attach
++    bundle = TuningBundle_Validate(value)
++    control = bundle['control_research']
++    if control is None:
++        raise ParameterProfileError('tuning_bundle_no_control')
++    period = control['parameters']['sample_period_s'] if control['kind'] == 'pid' else control['design']['dt_s']
++    if not math.isclose(period, .01, rel_tol=0, abs_tol=1e-9):
++        raise ParameterProfileError('tuning_bundle_task_period_requires_10_ms')
++    return ControlResearch_Attach(TuningBundle_ControlCoreAttach(model, catalog, bundle), catalog)
++
++
+ def TuningBundle_Cli() -> int:
+     import argparse
+     from silverstar_fccg.core.workspace import WorkspacePolicy
+@@ -255,8 +268,11 @@ def TuningBundle_Cli() -> int:
+     parser.add_argument("bundle", type=Path)
+     parser.add_argument("--catalog", type=Path, default=Path(__file__).resolve().parents[3] / "plugins/builtin")
+     parser.add_argument("--output", type=Path, help="Required for Apply; writes this explicit project path atomically")
+-    parser.add_argument("--include-control-core", action="store_true",
++    control_group = parser.add_mutually_exclusive_group()
++    control_group.add_argument("--include-control-core", action="store_true",
+         help="Explicit mathematical build interface only; does not register a mission/actuator driver")
++    control_group.add_argument("--include-control-task", action="store_true",
++        help="Explicit 10 ms research mission task with bounded memory sink; no electrical output or deployment qualification")
+     args = parser.parse_args()
+     if args.action == "apply" and args.output is None:
+         parser.error("apply requires --output; preview never writes")
+@@ -273,8 +289,15 @@ def TuningBundle_Cli() -> int:
+                 "before": model.algorithm_parameters.get(owner_id),
+                 "after": control_candidate.algorithm_parameters[owner_id],
+                 "compile_mathematical_interface": True, "runtime_dispatch": False}
++        if args.include_control_task:
++            control_candidate = TuningBundle_ControlTaskAttach(model, catalog, bundle)
++            preview['control_task_preview'] = {'runtime_dispatch': True, 'period_us': 10000,
++                'sink': 'bounded_latest_research_snapshot', 'electrical_output': False, 'deployable': False,
++                'function': next(row for row in control_candidate.mission_functions['functions']
++                                 if row['output'] == 'control.research.command')}
+         if args.action == "apply":
+-            candidate = (TuningBundle_ControlCoreAttach(model, catalog, bundle)
++            candidate = (TuningBundle_ControlTaskAttach(model, catalog, bundle) if args.include_control_task else
++                TuningBundle_ControlCoreAttach(model, catalog, bundle)
+                 if args.include_control_core else TuningBundle_Apply(model, catalog, bundle))
+             output = args.output.resolve()
+             ProjectModel_Save(candidate, output, WorkspacePolicy(output.parent))
+diff --git a/apps/SCG/src/silverstar_fccg/ui/main_window.py b/apps/SCG/src/silverstar_fccg/ui/main_window.py
+index f3181fde..feecfd2c 100644
+--- a/apps/SCG/src/silverstar_fccg/ui/main_window.py
++++ b/apps/SCG/src/silverstar_fccg/ui/main_window.py
+@@ -206,7 +206,10 @@ class _WorkspaceLaunchResult:
+         return self.succeeded
+ 
+ 
+-class MainWindow(QMainWindow):
++from silverstar_fccg.ui.hardware_editing import HardwareEditingActions
++
++
++class MainWindow(HardwareEditingActions, QMainWindow):
+     PAGE_CODES = ("workspace.hardware.title", "workspace.workflow.title", "page.build")
+ 
+     def __init__(
+@@ -397,11 +400,12 @@ class MainWindow(QMainWindow):
+         self.workflow_page = FlightWorkflowPage(self._translator,self.flight_configuration_page,
+             self.algorithm_parameters_page)
+         self.build_page.TargetEditors_Attach(self.board_hardware_page,self.ground_target_page)
+-        # One protocol owner, beside the single shared link on page one.
++        # One shared-link transaction owns protocol edits. Keep the old presenter
++        # internal, rather than accidentally inserting a nested widget at row 0.
+         protocol_group = self.flight_configuration_page.telemetry_protocol_group
+         self.workflow_page.recording.body.layout().removeWidget(protocol_group)
+-        self.hardware_workspace.root_layout.insertWidget(
+-            self.hardware_workspace.root_layout.indexOf(self.hardware_workspace.link_summary) + 1, protocol_group)
++        protocol_group.setParent(self.hardware_workspace)
++        protocol_group.hide()
+ 
+         self._page_widgets = (self.hardware_workspace,self.workflow_page,self.build_page)
+         for page in self._page_widgets:
+@@ -536,6 +540,7 @@ class MainWindow(QMainWindow):
+         self.air_link_page.configurationChanged.connect(self._AirLink_Change)
+         self.air_link_page.endpointPowerChanged.connect(self._EndpointPower_Change)
+         self.hardware_workspace.linkEditRequested.connect(self._AirLinkTransaction_Open)
++        self.hardware_workspace.targetEditRequested.connect(self._HardwareTransaction_Open)
+         self.ground_target_page.configurationChanged.connect(self._GroundTarget_Change)
+         self.ground_target_page.activityLedToggled.connect(self._GroundActivityLed_Toggle)
+         self.ground_target_page.assignmentChanged.connect(self._GroundAssignment_Change)
+@@ -960,6 +965,7 @@ class MainWindow(QMainWindow):
+             self.legacy_migration_button.setVisible(bool(ReleaseCompatibilityIssues_Get(display.model)))
+             self._BoardPage_Refresh(display)
+             self._TargetPages_Refresh(display.model)
++            self._TargetReadiness_Refresh(display.model)
+             self.hardware_workspace.Configuration_Set(display.model)
+             self.build_page.TargetConfiguration_Set(display.model)
+             from silverstar_fccg.project.validation import Project_Validate
+@@ -972,35 +978,29 @@ class MainWindow(QMainWindow):
+         self._project_display_state = display
+         self._project_display_snapshot = display.model.Dictionary_Get()
+ 
+-    def _BoardPage_Refresh(self, display: _ProjectDisplayState) -> None:
+-        model = display.model
+-        custom_selected = model.hardware.mode == "custom"
+-        self.board_hardware_page.Boards_Set(
+-            display.boards,
+-            model.board,
+-            custom_available=bool(display.hardware_provider),
+-            custom_selected=custom_selected,
+-            custom_ready=custom_selected and bool(model.hardware.snapshot_id),
+-            prepared=(
+-                self._project_root is not None
+-                and self._service.Project_HardwarePrepared_Is(
+-                    model, self._project_root
+-                )
+-            ),
+-            hardware_mode=model.hardware.mode,
+-            assignment_confirmed=bool(
+-                model.hardware.assignment_fingerprint
+-            ),
+-        )
+-        self.board_hardware_page.Platform_Set(display.platform_match)
+-        self.board_hardware_page.Resources_Set(
+-            display.resources,
+-            display.resources_valid,
+-            hardware_selected=model.hardware.mode != "unselected",
+-        )
+-        self.board_hardware_page.I2cPullupEvidence_Set(
+-            display.i2c_pullup_evidence
+-        )
++
++    def _TargetReadiness_Refresh(self, model=None):
++        model = model or self._model
++        readiness = {target: self._service.TargetReadiness_Get(model, target)
++                     for target in ('flight', 'ground')}
++        for target, page in (('flight', self.board_hardware_page),
++                             ('ground', self.ground_target_page)):
++            result = readiness[target]
++            page.generate_button.setEnabled(result.ready and self._active_worker is None)
++            page.generate_button.setToolTip(
++                self._translator.Text_Get('target.generation.ready') if result.ready else
++                '\n'.join(issue.message for issue in result.issues))
++            if not result.ready and not (target == 'ground' and UsbGroundBound_Is(model)):
++                label = self.build_page.target_status_labels[target]
++                label.setText(self._translator.Text_Get('target.generation.blocked'))
++                label.setToolTip('\n'.join(issue.message for issue in result.issues))
++        # Native USB remains its separately labeled private candidate workflow.
++        if UsbGroundBound_Is(model):
++            issue = UsbGroundReimportIssue_Get(model)
++            self.ground_target_page.generate_button.setEnabled(
++                not issue and self._active_worker is None)
++            self.ground_target_page.generate_button.setToolTip(issue or RELEASE_NOTICE)
++        self.hardware_workspace.Readiness_Set(readiness)
+ 
+     def _LoggingViews_Get(
+         self,
+@@ -1195,35 +1195,7 @@ class MainWindow(QMainWindow):
+             model.build = replace(model.build, memory_layout=layout)
+         self._ProjectConfiguration_Change(mutate)
+ 
+-    def _OptionalResource_Change(self, name: str, enabled: bool) -> None:
+-        if name not in ("magnetometer_enabled", "maintenance_log_export_enabled"):
+-            return
+-        def mutate(model: ProjectModel) -> None:
+-            model.build = replace(model.build, **{name: enabled})
+-        self._ProjectConfiguration_Change(mutate)
+ 
+-    def _FeatureTier_Change(self, tier: str) -> None:
+-        notes = []
+-        def mutate(model: ProjectModel) -> None:
+-            notes.extend(FeatureTier_Apply(model, tier, self._service.catalog))
+-            choice = self._logging_transport_choice
+-            if (tier == "compact" and model.protocols.get("logging") is None and choice is not None
+-                    and self._selection_restore_project == (self._project_root, self._model.identity.name)):
+-                availability = ProtocolProfileAvailabilities_Get(model, self._service.catalog).get(
+-                    ("logging", choice.component, choice.profile))
+-                if availability is not None and availability.available:
+-                    model.protocols["logging"] = deepcopy(choice)
+-                    if self._logging_transport_streams is not None:
+-                        model.logging_streams = deepcopy(self._logging_transport_streams)
+-                    notes.append("logging:restored_transport_choice")
+-        result = self._ProjectConfiguration_Change(mutate)
+-        if result is not None:
+-            text = self._translator.Text_Get("feature_tier.changed",
+-                tier=self._translator.Text_Get("feature_tier." + tier))
+-            if notes:
+-                text += " " + self._translator.Text_Get("feature_tier.saved_choices") + " " + "; ".join(notes)
+-            self.devices_page.FeatureTier_NoticeSet(text)
+-            self.status_label.setText(text)
+ 
+     @BoardInventory_ReadScope()
+     def _ProjectConfiguration_Change(
+@@ -1359,301 +1331,16 @@ class MainWindow(QMainWindow):
+         )
+         self._HeaderProject_Refresh()
+ 
+-    def _DeviceInstance_Change(self, instance_id: str, component_id: str) -> None:
+-        if self._displaying_model:
+-            return
+-        def change(candidate: ProjectModel) -> None:
+-            existing = candidate.DeviceInstance_Get(instance_id)
+-            if component_id:
+-                replacement = DeviceInstance(instance_id, component_id)
+-                if (existing is not None and
+-                        self._service.Plugin_Get(existing.plugin).component_class ==
+-                        self._service.Plugin_Get(component_id).component_class):
+-                    # Model/interface replacement at the same physical instance
+-                    # does not silently discard its measured structural position.
+-                    replacement = replace(replacement, position_body_m=existing.position_body_m)
+-                if existing is None:
+-                    candidate.device_instances.append(replacement)
+-                else:
+-                    candidate.device_instances = [
+-                        replacement if item.instance_id == instance_id else item
+-                        for item in candidate.device_instances
+-                    ]
+-            else:
+-                candidate.device_instances = [
+-                    item
+-                    for item in candidate.device_instances
+-                    if item.instance_id != instance_id
+-                ]
+-                if candidate.air_link.flight_radio_instance == instance_id:
+-                    remaining = next((item.instance_id for item in candidate.device_instances
+-                                      if self._service.Plugin_Get(item.plugin).component_class == "telemetry"),
+-                                     "telemetry0")
+-                    candidate.air_link = replace(candidate.air_link, flight_radio_instance=remaining)
+ 
+-        self._ProjectConfiguration_Change(
+-            change, logging_availability_changed=True
+-        )
+ 
+-    def _DeviceVariant_Change(
+-        self, instance_id: str, interface: str, profile: str
+-    ) -> None:
+-        if self._displaying_model:
+-            return
+ 
+-        def change(candidate: ProjectModel) -> None:
+-            candidate.device_instances = [
+-                replace(instance, interface=interface, profile=profile)
+-                if instance.instance_id == instance_id else instance
+-                for instance in candidate.device_instances
+-            ]
+-            candidate.resource_assignments = {
+-                key: value for key, value in candidate.resource_assignments.items()
+-                if not key.startswith(instance_id + ":")
+-            }
+ 
+-        self._ProjectConfiguration_Change(
+-            change, logging_availability_changed=True
+-        )
+ 
+-    def _Jy901bOrientation_Change(self, instance_id: str, orientation: str) -> None:
+-        if self._displaying_model or orientation not in ("horizontal", "vertical"):
+-            return
+ 
+-        def change(candidate: ProjectModel) -> None:
+-            candidate.device_instances = [
+-                replace(instance, installation_orientation=orientation)
+-                if instance.instance_id == instance_id and
+-                instance.plugin == "silverstar.device.imu.jy901b" else instance
+-                for instance in candidate.device_instances
+-            ]
+ 
+-        self._ProjectConfiguration_Change(change)
+ 
+-    def _RawImuMount_Change(self, instance_id: str, nose_axis: str) -> None:
+-        from silverstar_fccg.project.model import RAW_IMU_NOSE_AXIS_MAPS
+-        if self._displaying_model or nose_axis not in RAW_IMU_NOSE_AXIS_MAPS:
+-            return
+ 
+-        def change(candidate: ProjectModel) -> None:
+-            from silverstar_fccg.project.model import RawImuAxisMap_Get
+-            existing = candidate.DeviceInstance_Get(instance_id)
+-            x_axis = existing.mount_x_axis if existing is not None else ''
+-            try:
+-                RawImuAxisMap_Get(nose_axis, x_axis)
+-            except ValueError:
+-                x_axis = ''  # The user changed the nose direction; show the legacy mapping explicitly.
+-            candidate.device_instances = [
+-                replace(instance, mount_nose_axis=nose_axis, mount_x_axis=x_axis)
+-                if instance.instance_id == instance_id and
+-                instance.plugin in RAW_IMU_MOUNT_PLUGINS else instance
+-                for instance in candidate.device_instances
+-            ]
+-
+-        self._ProjectConfiguration_Change(change)
+ 
+-    def _RawImuXAxis_Change(self, instance_id: str, x_axis: str) -> None:
+-        def change(candidate):
+-            from silverstar_fccg.project.model import RawImuAxisMap_Get
+-            existing = candidate.DeviceInstance_Get(instance_id)
+-            if existing is None or existing.plugin not in RAW_IMU_MOUNT_PLUGINS:
+-                raise ValueError('Raw IMU instance is not configured')
+-            RawImuAxisMap_Get(existing.mount_nose_axis, x_axis)
+-            candidate.device_instances = [replace(item, mount_x_axis=x_axis)
+-                if item.instance_id == instance_id else item for item in candidate.device_instances]
+-        QTimer.singleShot(0, self, lambda: self._ProjectConfiguration_Change(change))
+-
+-    def _InstallationReference_Adopt(self):
+-        from silverstar_fccg.project.sensor_installation import SensorInstallationConfiguration
+-        QTimer.singleShot(0, self, lambda: self._ProjectConfiguration_Change(
+-            lambda candidate: setattr(candidate, 'sensor_installation', SensorInstallationConfiguration(schema_version=2))))
+-
+-    def _SensorPosition_Change(self, instance_id: str, position: tuple | None) -> None:
+-        from silverstar_fccg.project.sensor_installation import (
+-            SensorInstallationConfiguration, SensorPosition,
+-        )
+-        if self._displaying_model:
+-            return
+-        def change(candidate: ProjectModel) -> None:
+-            existing = candidate.DeviceInstance_Get(instance_id)
+-            if (existing is None or self._service.Plugin_Get(existing.plugin).component_class
+-                    not in ("imu", "gnss")):
+-                raise ValueError("Installation position requires an IMU/GNSS instance")
+-            candidate.sensor_installation = (candidate.sensor_installation or
+-                                              SensorInstallationConfiguration())
+-            candidate.device_instances = [
+-                replace(item, position_body_m=SensorPosition(*position) if position is not None else None)
+-                if item.instance_id == instance_id else item for item in candidate.device_instances
+-            ]
+-        self._ProjectConfiguration_Change(change)
+-
+-    def _FlightRadioSelection_Change(self, identity: str, plugin: str, module: str) -> None:
+-        if not plugin or plugin not in {RADIO_PLUGIN, "silverstar.device.telemetry.sx1278"}:
+-            self._DeviceInstance_Change(identity, plugin)
+-            return
+-        manifest = self._service.catalog.Component_Get(plugin)
+-        powers = tuple(manifest.radio.modules.get(module, {}).get("supported_tx_powers_dbm", ()))
+-        if not powers:
+-            self._Error_Show("Selected radio module has no supported output power")
+-            return
+-        def change(candidate):
+-            existing = candidate.DeviceInstance_Get(identity)
+-            if existing is None:
+-                candidate.device_instances.append(DeviceInstance(identity, plugin))
+-            elif existing.plugin != plugin:
+-                candidate.device_instances = [
+-                    DeviceInstance(identity, plugin) if item.instance_id == identity else item
+-                    for item in candidate.device_instances]
+-                candidate.resource_assignments = {key: value
+-                    for key, value in candidate.resource_assignments.items()
+-                    if not key.startswith(identity + ":")}
+-            edited = FlightRadioConfiguration_Apply(candidate, identity, module, powers[0])
+-            candidate.device_instances = edited.device_instances
+-            candidate.resource_assignments = edited.resource_assignments
+-            if candidate.DeviceInstance_Get(candidate.air_link.flight_radio_instance) is None:
+-                candidate.air_link = replace(candidate.air_link, flight_radio_instance=identity)
+-        self._ProjectConfiguration_Change(change, logging_availability_changed=True)
+-
+-    def _FlightRadioPower_Change(self, identity: str, value: int) -> None:
+-        def change(candidate):
+-            instance = candidate.DeviceInstance_Get(identity)
+-            if instance is None:
+-                raise ValueError("Flight radio instance is unavailable")
+-            module, _power = FlightRadioConfiguration_Get(candidate, instance)
+-            edited = FlightRadioConfiguration_Apply(candidate, identity, module, value)
+-            candidate.device_instances = edited.device_instances
+-            candidate.resource_assignments = edited.resource_assignments
+-        self._ProjectConfiguration_Change(change)
+-
+-    def _DeviceInstance_Add(self, component_class: str) -> None:
+-        candidates = sorted(
+-            (
+-                component
+-                for component in self._component_views
+-                if component.component_type == ComponentType.DEVICE
+-                and component.component_class == component_class
+-                and not component.options.get("internal", False)
+-            ),
+-            key=lambda item: item.name,
+-        )
+-        if not candidates:
+-            return
+-        selected = [
+-            instance
+-            for instance in self._model.device_instances
+-            if self._service.Plugin_Get(instance.plugin).component_class
+-            == component_class
+-        ]
+-        class_max = max(
+-            (component.class_max or component.project_max for component in candidates),
+-            default=1,
+-        )
+-        from silverstar_fccg.project.feature_tiers import FeatureTier_DeviceClassLimitGet
+-        class_max = FeatureTier_DeviceClassLimitGet(self._model.build.feature_tier, component_class,
+-            str(candidates[0].options.get("device_category", "")), class_max,
+-            self._model.build.magnetometer_enabled)
+-        if len(selected) >= class_max:
+-            return
+-        plugin_counts: dict[str, int] = {}
+-        for instance in selected:
+-            plugin_counts[instance.plugin] = plugin_counts.get(instance.plugin, 0) + 1
+-        available_candidates = [
+-            component
+-            for component in candidates
+-            if plugin_counts.get(component.component_id, 0)
+-            < (component.plugin_max or component.project_max)
+-        ]
+-        if not available_candidates:
+-            return
+-        selected_plugins = {instance.plugin for instance in selected}
+-        preferred = next(
+-            (component for component in available_candidates
+-             if component.component_id in selected_plugins),
+-            available_candidates[0],
+-        )
+-        instance_id = self._DeviceInstanceId_Next(component_class)
+-        template = None
+-        if component_class == "telemetry":
+-            template = next((item for item in selected
+-                             if item.instance_id == self._model.air_link.flight_radio_instance),
+-                            selected[0] if selected else None)
+-        self._ProjectConfiguration_Change(
+-            lambda candidate: candidate.device_instances.append(
+-                replace(template, instance_id=instance_id) if template is not None
+-                and template.plugin == preferred.component_id else DeviceInstance(instance_id, preferred.component_id)
+-            ),
+-            logging_availability_changed=True,
+-        )
+-
+-    def _OtherDevice_Toggle(self, component_id: str, selected: bool) -> None:
+-        manifest = self._service.Plugin_Get(component_id)
+-        def change(candidate: ProjectModel) -> None:
+-            if selected:
+-                if any(
+-                    instance.plugin == component_id
+-                    for instance in candidate.device_instances
+-                ):
+-                    return
+-                previous_availability = ModeOptionAvailabilities_Get(
+-                    candidate, self._service.catalog
+-                )
+-                preferred_instance_id = str(
+-                    manifest.metadata.get("default_instance_id", "")
+-                )
+-                used_instance_ids = {
+-                    instance.instance_id
+-                    for instance in candidate.device_instances
+-                }
+-                instance_id = (
+-                    preferred_instance_id
+-                    if preferred_instance_id
+-                    and preferred_instance_id not in used_instance_ids
+-                    else self._DeviceInstanceId_Next(
+-                        manifest.component_class or "sensor",
+-                        model=candidate,
+-                    )
+-                )
+-                candidate.device_instances.append(
+-                    DeviceInstance(instance_id, component_id)
+-                )
+-                availability = ModeOptionAvailabilities_Get(
+-                    candidate, self._service.catalog
+-                )
+-                for base_component_id in candidate.base_components:
+-                    selection = self._service.Plugin_Get(
+-                        base_component_id
+-                    ).selection
+-                    if (
+-                        selection is None
+-                        or selection.kind.value != "mode"
+-                        or candidate.modes.get(selection.slot)
+-                    ):
+-                        continue
+-                    restored = [
+-                        option
+-                        for option in selection.default
+-                        if (
+-                            availability.get((selection.slot, option))
+-                            is not None
+-                            and availability[(selection.slot, option)].available
+-                            and not previous_availability.get(
+-                                (selection.slot, option),
+-                                availability[(selection.slot, option)],
+-                            ).available
+-                        )
+-                    ]
+-                    if restored:
+-                        candidate.modes[selection.slot] = restored
+-            else:
+-                candidate.device_instances = [
+-                    instance
+-                    for instance in candidate.device_instances
+-                    if instance.plugin != component_id
+-                ]
+-
+-        self._ProjectConfiguration_Change(
+-            change, logging_availability_changed=True
+-        )
+ 
+     def _CapabilitySource_Change(self, capability: str, instance_id: str) -> None:
+         def change(candidate: ProjectModel) -> None:
+@@ -1680,56 +1367,8 @@ class MainWindow(QMainWindow):
+ 
+         self._ProjectConfiguration_Change(change)
+ 
+-    def _DeviceInstanceId_Next(
+-        self, component_class: str, *, model: ProjectModel | None = None
+-    ) -> str:
+-        prefix = "maintenance" if component_class == "console" else component_class
+-        prefix = prefix.replace(".", "_").replace("-", "_") or "device"
+-        selected_model = model or self._model
+-        used = {instance.instance_id for instance in selected_model.device_instances}
+-        for index in range(64):
+-            candidate = f"{prefix}{index}"
+-            if candidate not in used:
+-                return candidate
+-        raise FccgError(
+-            "error.device_instance_limit",
+-            {"device": component_class},
+-            f"No free instance id for device class {component_class}",
+-        )
+ 
+-    def _BoardSelection_Change(self, board_id: str) -> None:
+-        board = self._service.Plugin_Get(board_id)
+-        def change(candidate: ProjectModel) -> None:
+-            candidate.board = board_id
+-            candidate.hardware = HardwareConfiguration(
+-                mode="board_plugin",
+-                source_kind=(
+-                    board.board.source_kind if board.board else "third_party"
+-                ),
+-            )
+-            candidate.resource_assignments = {}
+ 
+-        self._ProjectConfiguration_Change(
+-            change, logging_availability_changed=True
+-        )
+-
+-    def _CustomHardware_Select(self) -> None:
+-        provider = self._service.HardwareProviderForMcu_Get(self._model.mcu)
+-        if not provider:
+-            self._Error_Show(self._translator.Text_Get("board.no_provider"))
+-            return
+-        def change(candidate: ProjectModel) -> None:
+-            candidate.board = ""
+-            candidate.hardware = HardwareConfiguration(
+-                mode="custom",
+-                source_kind="manual_import",
+-                provider=provider,
+-            )
+-            candidate.resource_assignments = {}
+-
+-        self._ProjectConfiguration_Change(
+-            change, logging_availability_changed=True
+-        )
+ 
+     def _HardwarePrepare_Request(self) -> None:
+         if self._model.hardware.mode == "custom":
+@@ -1927,176 +1566,6 @@ class MainWindow(QMainWindow):
+             )
+         )
+ 
+-    def _TargetPages_Refresh(self, model: ProjectModel) -> None:
+-        radios = []
+-        module_availability = {}
+-        radio_contracts = tuple(
+-            manifest.radio for manifest in self._service.catalog.Type_Get("device")
+-            if manifest.radio is not None
+-        )
+-        self.air_link_page.RadioOptions_Set(radio_contracts)
+-        for candidate in self._service.catalog.Type_Get("device"):
+-            if candidate.radio is None:
+-                continue
+-            for module_id in candidate.radio.modules:
+-                module_issues = RadioCandidateIssues_Get(
+-                    model.air_link, candidate.radio, module_id, "Ground")
+-                if model.air_link.packet_mtu > 61:
+-                    module_issues = (*module_issues,
+-                                     "AIR_LINK_MTU_TOO_SMALL: Ground GSP bridge permits 61 bytes")
+-                module_availability[(candidate.component_id, module_id)] = (
+-                    not module_issues, "; ".join(
+-                        f"{issue.code}: {issue.message}" if hasattr(issue, "code") else issue
+-                        for issue in module_issues))
+-            selected_module = (
+-                model.ground_target.module_variant
+-                if candidate.component_id == model.ground_target.radio_plugin else ""
+-            )
+-            issues = RadioCandidateIssues_Get(
+-                model.air_link, candidate.radio, selected_module, "Ground",
+-            )
+-            if model.air_link.packet_mtu > 61:
+-                issues = (*issues, "AIR_LINK_MTU_TOO_SMALL: Ground GSP bridge permits 61 bytes")
+-            technology = "LoRa" if candidate.radio.technology == "lora" else "Packet Radio / Other"
+-            radios.append((
+-                f"{technology} · {candidate.DisplayName_Get(self._translator.language)}",
+-                candidate.component_id,
+-                not issues,
+-                "; ".join(
+-                    f"{issue.code}: {issue.message}" if hasattr(issue, "code") else issue
+-                    for issue in issues
+-                ),
+-            ))
+-        boards = tuple(
+-            (manifest.DisplayName_Get(self._translator.language), manifest.component_id)
+-            for manifest in self._service.catalog.Type_Get("board")
+-            if manifest.board is not None
+-            and (manifest.metadata.get("target_role") == "ground_station" or manifest.component_class == "ground_station_board")
+-            and any(identity in {item.component_id for item in self._service.catalog.Type_Get("mcu")}
+-                    for identity in manifest.board.compatible_mcus)
+-            and (manifest.board.verified or manifest.source == "installed")
+-        )
+-        selected = model.ground_target.radio_plugin
+-        try:
+-            manifest = self._service.catalog.Component_Get(selected) if selected else None
+-        except ValueError:
+-            manifest = None
+-        if manifest is not None:
+-            try:
+-                manifest = RadioManifest_Resolve(manifest, DeviceInstance(
+-                    model.ground_target.active_radio_instance, selected,
+-                    module_variant=model.ground_target.module_variant,
+-                    tx_power_dbm=model.ground_target.tx_power_dbm))
+-            except ValueError:
+-                pass
+-        requirements = {
+-            "module_availability": module_availability,
+-            "radio_contracts": {candidate.component_id: candidate.radio
+-                                for candidate in self._service.catalog.Type_Get("device")
+-                                if candidate.radio is not None},
+-            "radio_chipsets": {
+-                candidate.component_id: candidate.physical_device.chipset
+-                for candidate in self._service.catalog.Type_Get("device")
+-                if candidate.radio is not None and candidate.physical_device is not None
+-            },
+-            "fixed_resources": {
+-                role.key.removeprefix("telemetry:"): role.default
+-                for board in self._service.catalog.Type_Get("board")
+-                if board.component_id == model.ground_target.board
+-                and model.ground_target.hardware.mode == "board_plugin"
+-                for role in board.resource_roles
+-                if role.fixed and role.key.startswith("telemetry:")
+-            },
+-            "modules": tuple(
+-                (str(item.get("display_name", item.get("model", identity))), identity)
+-                for identity, item in (manifest.radio.modules.items()
+-                                       if manifest is not None and manifest.radio is not None else ())
+-            ),
+-            "resources": tuple(
+-                (requirement.name, requirement.kind)
+-                for requirement in (manifest.resource_requirements if manifest is not None else ())
+-                if requirement.required
+-            ),
+-        }
+-        if model.ground_target.radio_instances:
+-            resources = []
+-            for radio in GroundRadioConfigurations_Get(model.ground_target):
+-                try:
+-                    instance_manifest = self._service.catalog.Component_Get(radio.plugin)
+-                    instance_manifest = RadioManifest_Resolve(instance_manifest, DeviceInstance(
+-                        radio.instance_id, radio.plugin, module_variant=radio.module_variant,
+-                        tx_power_dbm=radio.tx_power_dbm))
+-                except ValueError:
+-                    continue
+-                resources.extend((f"{radio.instance_id}:{requirement.name}", requirement.kind)
+-                                 for requirement in instance_manifest.resource_requirements if requirement.required)
+-            requirements["resources"] = tuple(resources)
+-            requirements["fixed_resources"] = {"radio0:" + key: value
+-                                               for key, value in requirements["fixed_resources"].items()}
+-        if UsbGroundBound_Is(model):
+-            # The private runtime uses its own exact role ABI. Display those
+-            # imported fixed bindings rather than inventing legacy plugin roles.
+-            kinds = {'spi': 'spi', 'nss': 'gpio_output', 'reset': 'gpio_output',
+-                     'busy': 'gpio_input', 'dio1': 'gpio_interrupt'}
+-            requirements['resources'] = tuple((key, kinds.get(key.rsplit(':', 1)[-1], 'unsupported'))
+-                                              for key in model.ground_target.resource_assignments)
+-            requirements['fixed_resources'] = dict(model.ground_target.resource_assignments)
+-        flight_instance = model.DeviceInstance_Get(model.air_link.flight_radio_instance)
+-        try:
+-            flight_manifest = (
+-                self._service.catalog.Component_Get(flight_instance.plugin)
+-                if flight_instance is not None else None
+-            )
+-        except ValueError:
+-            flight_manifest = None
+-        flight_module_id, flight_power = (FlightRadioConfiguration_Get(model, flight_instance)
+-                                        if flight_instance is not None and flight_instance.plugin in {RADIO_PLUGIN, "silverstar.device.telemetry.sx1278"}
+-                                        else ("", model.flight_tx_power_dbm))
+-        flight_module = (flight_manifest.radio.modules.get(flight_module_id)
+-                         if flight_manifest is not None and flight_manifest.radio is not None else None)
+-        ground_module = (
+-            manifest.radio.modules.get(model.ground_target.module_variant)
+-            if manifest is not None and manifest.radio is not None else None
+-        )
+-        active_modules = [item for item in (
+-            flight_module,
+-            ground_module,
+-        ) if item is not None]
+-        frequency_range = None
+-        if active_modules and flight_module is not None:
+-            low = max(item["validated_frequency_min_hz"] for item in active_modules)
+-            high = min(item["validated_frequency_max_hz"] for item in active_modules)
+-            if low <= high:
+-                frequency_range = (low, high)
+-        self.air_link_page.RadioConstraints_Set(
+-            frequency_range,
+-            tuple(flight_module["supported_tx_powers_dbm"]) if flight_module else (),
+-            tuple(ground_module["supported_tx_powers_dbm"]) if ground_module else (),
+-            ground_module is not None,
+-        )
+-        from silverstar_fccg.project.radio_transaction import RadioTransaction_IssuesGet
+-        self.air_link_page.Configuration_Set(
+-            model.air_link, RadioTransaction_IssuesGet(model, self._service.catalog)
+-        )
+-        self.air_link_page.EndpointPowers_Set(
+-            flight_power, model.ground_target.tx_power_dbm,
+-            ground_module is not None,
+-        )
+-        self.ground_target_page.Configuration_Set(
+-            model.ground_target, boards, tuple(radios), requirements,
+-            GroundTargetIssues_Get(model, self._service.catalog),
+-        )
+-        ground = model.ground_target
+-        platform = self._service.PlatformMatchView_Get(
+-            replace(model, mcu=ground.mcu, board=ground.board,
+-                    hardware=ground.hardware), self._translator.language)
+-        if ground.hardware.inventory.get("timebase", {}).get("kind") == "systick":
+-            platform = replace(platform, timebase_status="SysTick / HAL_IncTick")
+-        self.ground_target_page.Platform_Set(platform)
+-        if UsbGroundBound_Is(model):
+-            issue = UsbGroundReimportIssue_Get(model)
+-            self.ground_target_page.generate_button.setEnabled(not issue)
+-            self.ground_target_page.generate_button.setToolTip(issue or RELEASE_NOTICE)
+ 
+     def _AirLink_Change(self, field: str, value: object) -> None:
+         if field == "radio_family" and value == "sx128x":
+@@ -2109,6 +1578,61 @@ class MainWindow(QMainWindow):
+             )
+         )
+ 
++    def _HardwareTransaction_Open(self, target, section='hardware'):
++        if self._active_worker is not None or not self._WorkflowDrafts_Commit():
++            return
++        from dataclasses import fields
++        from silverstar_fccg.ui.hardware_transaction import HardwareTransactionDialog
++        original = deepcopy(self._model.Dictionary_Get())
++        project = self._project_root
++        dialog = HardwareTransactionDialog(self._translator, self._model, self._service,
++                                           target, section, self)
++        if dialog.exec() != QDialog.DialogCode.Accepted:
++            dialog.deleteLater()
++            return
++        candidate, import_path = dialog.Configuration_Get(), dialog.ImportPath_Get()
++        dialog.deleteLater()
++        def publish(configuration):
++            if self._project_root != project or self._model.Dictionary_Get() != original:
++                self._Error_Show(self._translator.Text_Get('hardware.editor.stale'))
++                return
++            def apply(current):
++                for field in fields(configuration):
++                    setattr(current, field.name, deepcopy(getattr(configuration, field.name)))
++            self._ProjectConfiguration_Change(apply, logging_availability_changed=True,
++                                              include_workflow_drafts=False)
++
++        if not import_path:
++            publish(candidate)
++            return
++
++        def imported(result):
++            if isinstance(result, NativeGroundProjectImportResult):
++                if self._project_root != project or self._model.Dictionary_Get() != original:
++                    self._Error_Show(self._translator.Text_Get('hardware.editor.stale'))
++                    return
++                self._GroundCubeMxImport_Complete(result)
++                return
++            if target == 'flight':
++                candidate.board = ''
++                candidate.hardware = result.hardware
++                candidate.resource_assignments = {}
++            else:
++                from silverstar_fccg.hardware.platform import DetectedMcuFacts_FromInventory, PlatformMatch_Resolve
++                match = PlatformMatch_Resolve(DetectedMcuFacts_FromInventory(
++                    result.inventory, vendor='STM32', provider='stm32_cubemx'), self._service.catalog)
++                candidate.ground_target = replace(candidate.ground_target,
++                    mcu=match.selected.component_id, board='', hardware=result.hardware,
++                    resource_assignments={}, pc_resource='')
++            publish(candidate)
++
++        def importing(context):
++            if target == 'ground' and candidate.ground_target.pc_interface == 'usb_cdc':
++                return UsbGroundFlow_Import(self._service, Path(import_path), candidate, context)
++            return self._service.CubeMxProject_Import(Path(import_path), candidate,
++                risk_acknowledged=True, target=target)
++        self.Task_Run(importing, imported)
++
+     def _AirLinkTransaction_Open(self):
+         from silverstar_fccg.ui.radio_transaction import RadioTransactionDialog
+         dialog = RadioTransactionDialog(self._translator, self._model, self._service.catalog, self)
+@@ -2128,162 +1652,10 @@ class MainWindow(QMainWindow):
+         elif endpoint == "ground":
+             self._GroundTarget_Change("tx_power_dbm", value)
+ 
+-    def _GroundRadios_Change(self, radios, active: str) -> None:
+-        def change(candidate: ProjectModel) -> None:
+-            ground = candidate.ground_target
+-            if radios:
+-                updated = GroundRadiosConfiguration_Apply(ground, radios, active)
+-                previous = {radio.instance_id: radio for radio in GroundRadioConfigurations_Get(ground)}
+-                obsolete = set()
+-                for radio in radios:
+-                    old = previous.get(radio.instance_id)
+-                    if old is None or (old.plugin, old.module_variant) == (radio.plugin, radio.module_variant):
+-                        continue
+-                    manifest = self._service.catalog.Component_Get(radio.plugin)
+-                    resolved = RadioManifest_Resolve(manifest, DeviceInstance(
+-                        radio.instance_id, radio.plugin, module_variant=radio.module_variant,
+-                        tx_power_dbm=radio.tx_power_dbm))
+-                    names = {requirement.name for requirement in resolved.resource_requirements}
+-                    obsolete.update(radio.instance_id + ":" + requirement.name
+-                                    for requirement in manifest.resource_requirements
+-                                    if requirement.name not in names)
+-                candidate.ground_target = replace(updated, resource_assignments={
+-                    key: value for key, value in updated.resource_assignments.items() if key not in obsolete})
+-                return
+-            removed = {radio.instance_id for radio in GroundRadioConfigurations_Get(ground)}
+-            # Clearing the final selection uses the existing empty legacy state.
+-            # Hardware, AIR settings, PC and unrelated assignments remain owned.
+-            candidate.ground_target = replace(ground, radio_instances=(),
+-                active_radio_instance="radio0", radio_plugin="", module_variant="",
+-                resource_assignments={key: value for key, value in ground.resource_assignments.items()
+-                                      if key.split(":", 1)[0] not in removed})
+-        self._ProjectConfiguration_Change(change)
+ 
+-    def _GroundActivityLed_Toggle(self, enabled: bool) -> None:
+-        def change(candidate: ProjectModel) -> None:
+-            ground = candidate.ground_target
+-            if enabled:
+-                if ground.tx_led_resource or ground.rx_led_resource:
+-                    candidate.ground_target = replace(ground, activity_led_enabled=True)
+-                    return
+-                binding = self.ground_target_page.ActivityLedCandidate_Get(ground)
+-                if binding is None:
+-                    candidate.ground_target = replace(ground, activity_led_enabled=True)
+-                    return
+-                resource, active_high = binding
+-                candidate.ground_target = replace(
+-                    ground, tx_led_resource=resource, rx_led_resource=resource,
+-                    tx_led_active_high=active_high, rx_led_active_high=active_high,
+-                    activity_led_enabled=True,
+-                )
+-            else:
+-                candidate.ground_target = replace(ground, activity_led_enabled=False)
+-        self._ProjectConfiguration_Change(change)
+ 
+-    def _GroundTarget_Change(self, field: str, value: object) -> None:
+-        if field == "enabled" and value is False:
+-            # Current GUI offers both targets; only generation scope is optional.
+-            # Do not enable stored/legacy models during a display refresh.
+-            self._Project_Refresh()
+-            return
+-        if field == "board":
+-            self._GroundBoard_Change(str(value or ""))
+-            return
+-        def change(candidate: ProjectModel) -> None:
+-            ground = candidate.ground_target
+-            updates = {field: value}
+-            if field == "radio_plugin" and value != ground.radio_plugin:
+-                radio = self._service.catalog.Component_Get(str(value)) if value else None
+-                modules = radio.radio.modules if radio is not None and radio.radio is not None else {}
+-                # Flight also adopts the only declared module. Multiple choices
+-                # remain explicit; shared AIR settings and power are preserved.
+-                updates["module_variant"] = next(iter(modules)) if len(modules) == 1 else ""
+-                updates["resource_assignments"] = {}
+-            if field == "pc_interface" and value != ground.pc_interface:
+-                updates["pc_resource"] = ""
+-            if ground.radio_instances and field in {"radio_plugin", "module_variant", "tx_power_dbm"}:
+-                selected_fields = {"plugin" if key == "radio_plugin" else key: selected
+-                                   for key, selected in updates.items()
+-                                   if key in {"radio_plugin", "module_variant", "tx_power_dbm"}}
+-                radios = tuple(replace(radio, **selected_fields)
+-                               if radio.instance_id == ground.active_radio_instance else radio
+-                               for radio in ground.radio_instances)
+-                candidate.ground_target = GroundRadiosConfiguration_Apply(ground, radios, ground.active_radio_instance)
+-            else:
+-                candidate.ground_target = replace(ground, **updates)
+-        self._ProjectConfiguration_Change(change)
+ 
+-    def _GroundBoard_Change(self, board_id: str) -> None:
+-        if not board_id:
+-            self._ProjectConfiguration_Change(
+-                lambda candidate: setattr(
+-                    candidate, "ground_target", replace(
+-                        candidate.ground_target, board="", mcu="",
+-                        hardware=HardwareConfiguration(
+-                            mode="custom", source_kind="manual_import",
+-                            provider="silverstar.hardware_provider.stm32_cubemx",
+-                        ), resource_assignments={}, pc_resource="",
+-                    )
+-                )
+-            )
+-            return
+-        from silverstar_fccg.project.resources import (
+-            BoardHardwareInventory_Get,
+-            BoardResourceProvisions_Get,
+-        )
+ 
+-        board = self._service.catalog.Component_Get(board_id)
+-        if board.metadata.get("target_role") != "ground_station" and board.component_class != "ground_station_board":
+-            self._Error_Show("PCB target mismatch: select a Ground Station board")
+-            return
+-        inventory = BoardHardwareInventory_Get(board)
+-        if board.board is None or inventory is None:
+-            self._Error_Show("Ground board has no CubeMX hardware inventory")
+-            return
+-        mcu = next(
+-            (component_id for component_id in board.board.compatible_mcus
+-             if component_id in {item.component_id for item in self._service.catalog.Type_Get("mcu")}),
+-            "",
+-        )
+-        if not mcu:
+-            self._Error_Show("Ground board has no installed MCU platform")
+-            return
+-        hardware = HardwareConfiguration(
+-            mode="board_plugin", source_kind=board.board.source_kind,
+-            mcu=inventory.mcu_part, source_label=board.DisplayName_Get(
+-                self._translator.language
+-            ),
+-            inventory=inventory.Dictionary_Get(),
+-            resources=tuple(
+-                HardwareResource(item.resource_id, item.kind, item.metadata)
+-                for item in BoardResourceProvisions_Get(board)
+-            ),
+-            source_digest=str(board.metadata.get("reference", {}).get("snapshot_digest", "")),
+-        )
+-        def change(candidate: ProjectModel) -> None:
+-            ground = replace(candidate.ground_target, board=board_id, mcu=mcu,
+-                             hardware=hardware, resource_assignments={}, pc_resource="")
+-            if GroundActivityLedEnabled_Get(ground) and not (ground.tx_led_resource or ground.rx_led_resource):
+-                binding = self.ground_target_page.ActivityLedCandidate_Get(ground)
+-                if binding is not None:
+-                    resource, active_high = binding
+-                    ground = replace(ground, tx_led_resource=resource, rx_led_resource=resource,
+-                                     tx_led_active_high=active_high, rx_led_active_high=active_high)
+-            candidate.ground_target = ground
+-        self._ProjectConfiguration_Change(change)
+-
+-    def _GroundAssignment_Change(self, requirement: str, resource: str) -> None:
+-        def change(candidate: ProjectModel) -> None:
+-            assignments = dict(candidate.ground_target.resource_assignments)
+-            key = requirement if ":" in requirement else f"radio0:{requirement}"
+-            if resource:
+-                assignments[key] = resource
+-            else:
+-                assignments.pop(key, None)
+-            candidate.ground_target = replace(
+-                candidate.ground_target, resource_assignments=assignments
+-            )
+-        self._ProjectConfiguration_Change(change)
+ 
+     def _GroundExistingHardware_Request(self) -> None:
+         combo = self.ground_target_page.board_combo
+@@ -2397,98 +1769,9 @@ class MainWindow(QMainWindow):
+         )
+         self._Project_Refresh()
+ 
+-    def _Resources_AutoAssign(self, *, silent: bool = False) -> None:
+-        if self._model.hardware.mode != "custom":
+-            return
+-        result = self._ProjectConfiguration_Change(lambda _candidate: None)
+-        if not silent and result is not None:
+-            self.status_label.setText(
+-                self._translator.Text_Get(
+-                    "status.resources_assigned"
+-                    if result.resource_resolution.valid
+-                    else "status.resources_incomplete",
+-                    count=len(result.resource_resolution.errors),
+-                )
+-            )
+-
+-    def _ResourceAssignment_Change(self, key: str, resource_id: str) -> None:
+-        if self._model.hardware.mode != "custom":
+-            return
+-
+-        def change(candidate: ProjectModel) -> None:
+-            if resource_id:
+-                candidate.resource_assignments[key] = resource_id
+-            else:
+-                candidate.resource_assignments.pop(key, None)
+-
+-        self._ProjectConfiguration_Change(change)
+-
+-    def _HardwareAssignments_Validate(self) -> None:
+-        if self._model.hardware.mode != "custom":
+-            return
+-        result = ResourceAssignments_Resolve(
+-            self._model, self._service.catalog, auto_assign=False
+-        )
+-        if not result.valid:
+-            self._Project_Refresh()
+-            self._Error_Show(
+-                self._translator.Text_Get(
+-                    "error.manual_hardware_validation_failed",
+-                    count=len(result.errors),
+-                ),
+-                "\n".join(result.errors),
+-            )
+-            return
+-
+-        def confirm(candidate: ProjectModel) -> None:
+-            candidate.hardware = replace(
+-                candidate.hardware,
+-                assignment_fingerprint=HardwareAssignmentFingerprint_Get(
+-                    candidate, self._service.catalog
+-                ),
+-            )
+ 
+-        applied = self._ProjectConfiguration_Change(
+-            confirm,
+-            status_key="status.manual_assignment_confirmed",
+-        )
+-        if applied is not None:
+-            self.status_label.setText(
+-                self._translator.Text_Get(
+-                    "status.manual_assignment_confirmed"
+-                )
+-            )
+ 
+-    def _I2cExternalPullup_Change(
+-        self, resource_id: str, confirmed: bool
+-    ) -> None:
+-        if self._displaying_model or self._model.hardware.mode != "custom":
+-            return
+ 
+-        def change(candidate: ProjectModel) -> None:
+-            bindings = {
+-                key: dict(value)
+-                for key, value in (
+-                    candidate.hardware.i2c_external_pullup_confirmations.items()
+-                )
+-            }
+-            if (
+-                confirmed
+-                and candidate.hardware.source_digest
+-                and candidate.hardware.snapshot_id
+-            ):
+-                bindings[resource_id] = {
+-                    "source_digest": candidate.hardware.source_digest,
+-                    "snapshot_id": candidate.hardware.snapshot_id,
+-                }
+-            else:
+-                bindings.pop(resource_id, None)
+-            candidate.hardware = replace(
+-                candidate.hardware,
+-                i2c_external_pullup_confirmations=bindings,
+-            )
+-
+-        self._ProjectConfiguration_Change(change)
+ 
+     def _Strategy_Change(self, slot: str, component_id: object) -> None:
+         if slot == "alignment":
+@@ -2618,10 +1901,14 @@ class MainWindow(QMainWindow):
+ 
+     def _ParameterProfile_Import(self,plugin_id):
+         from silverstar_fccg.project.mission_functions import ParameterProfile_Read,ParameterProfile_Preview,ParameterProfile_Apply
++        if not self._WorkflowDrafts_Commit():return
+         path,_filter=QFileDialog.getOpenFileName(self,self._translator.Text_Get('workflow.function.import'),'',
+             'Algorithm parameters (*.ssparams *.ssparameters *.sstuning.json *.json);;TreeDiagram bundle (*.sstuning.json)')
+         if not path:return
+         try:
++            preview_model = deepcopy(self._model.Dictionary_Get())
++            control_option = None
++            control_candidate = None
+             bundle = path.lower().endswith('.sstuning.json') or _filter.startswith('TreeDiagram')
+             if bundle:
+                 from silverstar_fccg.project.tuning_bundle import TuningBundle_Read, TuningBundle_Preview, TuningBundle_Apply
+@@ -2636,14 +1923,40 @@ class MainWindow(QMainWindow):
+             if bundle:
+                 details += '\n\n' + self._translator.Text_Get('workflow.import.research_control')
+                 details += '\n' + '\n'.join(preview['limitations'])
++                if value.get('control_research') is not None:
++                    from PySide6.QtWidgets import QCheckBox
++                    from silverstar_fccg.project.tuning_bundle import TuningBundle_ControlTaskAttach
++                    control_option = QCheckBox(self._translator.Text_Get('workflow.import.control_task'), self)
++                    control_option.setObjectName('includeControlResearchTask')
++                    control_option.setChecked(False)
++                    try:
++                        control_candidate = TuningBundle_ControlTaskAttach(self._model, self._service.catalog, value)
++                    except ValueError as error:
++                        control_option.setEnabled(False)
++                        control_option.setToolTip(str(error))
++                        details += '\n' + self._translator.Text_Get('workflow.import.control_unavailable') + ': ' + str(error)
++                    else:
++                        details += '\n\n' + self._translator.Text_Get('workflow.import.control_values')
++                        details += '\n' + '\n'.join(name + ': ' + str(number)
++                            for name, number in value['control_research']['parameters'].items())
+             answer=self._MessageBox_Exec(QMessageBox.Icon.Question,self._translator.Text_Get('workflow.import.preview'),
+-                self._translator.Text_Get('workflow.import.changes',count=len(changes)),details=details,
++                self._translator.Text_Get('workflow.import.control_changes' if control_option is not None
++                    else 'workflow.import.changes',count=len(changes)),details=details,
+                 buttons=QMessageBox.StandardButton.Apply | QMessageBox.StandardButton.Cancel,
+-                default=QMessageBox.StandardButton.Cancel)
++                default=QMessageBox.StandardButton.Cancel, check_box=control_option)
+             if answer!=QMessageBox.StandardButton.Apply:return
+-            updated = (TuningBundle_Apply(self._model,self._service.catalog,value) if bundle else
++            if self._model.Dictionary_Get() != preview_model:
++                raise ValueError(self._translator.Text_Get('workflow.import.stale'))
++            include_control = control_option is not None and control_option.isChecked() and control_candidate is not None
++            updated = (control_candidate if include_control else
++                       TuningBundle_Apply(self._model,self._service.catalog,value) if bundle else
+                        ParameterProfile_Apply(self._model,self._service.catalog,plugin_id,value))
+-            self._ProjectConfiguration_Change(lambda model:setattr(model,'algorithm_parameters',updated.algorithm_parameters))
++            def apply(model):
++                model.algorithm_parameters = deepcopy(updated.algorithm_parameters)
++                if include_control:
++                    model.base_components = deepcopy(updated.base_components)
++                    model.mission_functions = deepcopy(updated.mission_functions)
++            self._ProjectConfiguration_Change(apply)
+         except (OSError,ValueError,TypeError) as error:self._Error_Show(error)
+ 
+     def _ParameterProfile_Export(self,plugin_id):
+@@ -3053,7 +2366,10 @@ class MainWindow(QMainWindow):
+                            if page is target or page.isAncestorOf(target)),
+                           self.PAGE_CODES.index("page.build"))
+         self.navigation_list.setCurrentRow(page_index)
+-        if page_index==0:self.hardware_workspace.Reveal(target)
++        if page_index==0 and self.hardware_workspace.Reveal(target):
++            # A private modal may refresh or replace the original hidden editor.
++            # Do not retain or style its stale widget after the transaction.
++            return
+         elif page_index==1:self.workflow_page.Reveal(target)
+         target.setProperty("validationIssue", True)
+         target.style().unpolish(target)
+@@ -3552,6 +2868,9 @@ class MainWindow(QMainWindow):
+             for result in results
+         )
+         self.build_page.Tools_Set(views)
++        # Tool discovery updates build availability, but it does not make an
++        # unconfigured target ready or erase its configuration blockers.
++        self._TargetReadiness_Refresh()
+ 
+     def _ToolchainBrowse(self, tool_id: str) -> bool:
+         tool_name = self._translator.Text_Get(f"tool.{tool_id}")
+@@ -3592,6 +2911,14 @@ class MainWindow(QMainWindow):
+             self._Error_Show(self._translator.Text_Get("alignment.confirm_before_generation"))
+             return
+         self._ProjectModel_Sync()
++        requested = ('flight', 'ground') if action_text == 'generate_all' else (
++            'ground' if action_text == 'generate_ground' else 'flight',)
++        issues = tuple(issue for target in requested
++                       for issue in self._service.TargetReadiness_Get(self._model, target).issues)
++        if issues:
++            self._Error_Show(self._translator.Text_Get('target.generation.blocked'),
++                             '\n'.join(issue.message for issue in issues))
++            return
+         if self._project_root is None:
+             selected = QFileDialog.getExistingDirectory(
+                 self, self._translator.Text_Get("dialog.select_project_root")
+@@ -5166,6 +4493,7 @@ class MainWindow(QMainWindow):
+         self._action_enabled_snapshot = {}
+         for control in controls:
+             control.setEnabled(snapshot.get(control, True))
++        self._TargetReadiness_Refresh()
+ 
+     def resizeEvent(self, event) -> None:
+         super().resizeEvent(event)
+@@ -5317,9 +4645,10 @@ class MainWindow(QMainWindow):
+         default: QMessageBox.StandardButton = QMessageBox.StandardButton.NoButton,
+         *,
+         details: str = "",
++        check_box=None,
+     ) -> QMessageBox.StandardButton:
+         box = self._MessageBox_Create(
+-            icon, title, text, buttons, default, details=details
++            icon, title, text, buttons, default, details=details, check_box=check_box
+         )
+         return QMessageBox.StandardButton(box.exec())
+ 
+@@ -5332,6 +4661,7 @@ class MainWindow(QMainWindow):
+         default: QMessageBox.StandardButton = QMessageBox.StandardButton.NoButton,
+         *,
+         details: str = "",
++        check_box=None,
+     ) -> QMessageBox:
+         box = QMessageBox(self)
+         box.setIcon(icon)
+@@ -5342,6 +4672,8 @@ class MainWindow(QMainWindow):
+             box.setDefaultButton(default)
+         if details:
+             box.setDetailedText(details)
++        if check_box is not None:
++            box.setCheckBox(check_box)
+         MessageBoxButtons_Localize(box, self._translator)
+         return box
+ 
+diff --git a/apps/SCG/src/silverstar_fccg/ui/message_box.py b/apps/SCG/src/silverstar_fccg/ui/message_box.py
+index 7cf46b47..3efa9e5a 100644
+--- a/apps/SCG/src/silverstar_fccg/ui/message_box.py
++++ b/apps/SCG/src/silverstar_fccg/ui/message_box.py
+@@ -13,6 +13,7 @@ def MessageBoxButtons_Localize(
+         (QMessageBox.StandardButton.Yes, "action.yes"),
+         (QMessageBox.StandardButton.No, "action.no"),
+         (QMessageBox.StandardButton.Cancel, "action.cancel"),
++        (QMessageBox.StandardButton.Apply, "capsule.apply"),
+     ):
+         button = box.button(standard)
+         if button is not None:
+diff --git a/apps/SCG/src/silverstar_fccg/ui/pages/hardware_workspace.py b/apps/SCG/src/silverstar_fccg/ui/pages/hardware_workspace.py
+index d2005d71..dca4b8f7 100644
+--- a/apps/SCG/src/silverstar_fccg/ui/pages/hardware_workspace.py
++++ b/apps/SCG/src/silverstar_fccg/ui/pages/hardware_workspace.py
+@@ -13,6 +13,7 @@ from silverstar_fccg.ui.widgets import CollapsibleSection
+ 
+ class HardwareWorkspacePage(ScrollableLocalizedPage):
+     linkEditRequested = Signal()
++    targetEditRequested = Signal(str, str)
+     def __init__(self, translator, devices_page, board_hardware_page, ground_target_page, air_link_page):
+         super().__init__(translator, 'workspace.hardware.title', 'workspace.hardware.description')
+         for page in (devices_page, board_hardware_page, ground_target_page, air_link_page):
+@@ -24,6 +25,10 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
+         self.ground_target_page = ground_target_page
+         self.air_link_page = air_link_page
+         self._model = None
++        self._readiness = {}
++        self._editor_bin = QWidget(self)
++        self._editor_bin.hide()
++        editor_layout = QVBoxLayout(self._editor_bin)
+         self._scroll = self.findChild(QScrollArea)
+         self._scroll.viewport().installEventFilter(self)
+         self._columns = 0
+@@ -50,28 +55,28 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
+             summary.setWordWrap(True)
+             summary.setTextFormat(Qt.TextFormat.PlainText)
+             summary.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+-            body.addWidget(summary, 2, 0)
++            body.addWidget(summary, 0, 0)
+             device_summary = QLabel()
+             device_summary.setWordWrap(True)
+             device_summary.setTextFormat(Qt.TextFormat.PlainText)
+             device_summary.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+-            body.addWidget(device_summary, 3, 0)
++            device_summary.setParent(self._editor_bin)
+             self.device_summaries[target] = device_summary
+             # A long English status must wrap inside its target, rather than
+             # increase the scroll content width beyond the visible viewport.
+             page.hardware_status.setWordWrap(True)
+             page.selection_group.layout().setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
+             page.root_layout.removeWidget(page.selection_group)
+-            body.addWidget(page.selection_group, 0, 0)
++            editor_layout.addWidget(page.selection_group)
+             page.root_layout.removeWidget(page.custom_widget)
+-            body.addWidget(page.custom_widget, 1, 0)
++            editor_layout.addWidget(page.custom_widget)
+             page.root_layout.removeWidget(page.provider_notice)
+             option = QWidget()
+-            body.addWidget(option, 4, 0)
++            option.setParent(self._editor_bin)
+             button = QPushButton()
+-            button.clicked.connect(lambda _checked=False, selected=target: self.Reveal(self._target_sections[selected]))
+-            body.addWidget(button, 5, 0)
+-            self._header_rows[target] = (page.selection_group, page.custom_widget, summary, device_summary, option, button)
++            button.clicked.connect(lambda _checked=False, selected=target: self.targetEditRequested.emit(selected, "hardware"))
++            body.addWidget(button, 1, 0)
++            self._header_rows[target] = (summary, button)
+             self.target_cards[target] = card
+             self.target_summaries[target] = summary
+             self.target_buttons[target] = button
+@@ -84,13 +89,28 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
+         self.link_button = QPushButton(self.link_group)
+         self.link_button.clicked.connect(self.linkEditRequested)
+         link_body.addWidget(self.link_button)
+-        link_body.addWidget(air_link_page.status)
++        self.link_status = QLabel(self.link_group)
++        self.link_status.setWordWrap(True)
++        link_body.addWidget(self.link_status)
++        self.root_layout.addWidget(self.link_group)
++        self.device_group = QGroupBox(self)
++        device_layout = QGridLayout(self.device_group)
++        self.device_buttons = {}
++        for column, target in enumerate(('flight', 'ground')):
++            device_layout.addWidget(self.device_summaries[target], 0, column)
++            button = QPushButton(self.device_group)
++            button.clicked.connect(lambda _checked=False, selected=target:
++                                   self.targetEditRequested.emit(selected, 'devices'))
++            device_layout.addWidget(button, 1, column)
++            self.device_buttons[target] = button
++        self.root_layout.addWidget(self.device_group)
+         self._target_sections = {}
+         for target in ('flight', 'ground'):
+             section = self._Section_Create('workspace.hardware.' + target + '.devices', expanded=True)
+             section.setObjectName('hardwareDevices_' + target)
+             self._sections[target + '.devices'] = section
+             self._target_sections[target] = section
++            editor_layout.addWidget(section)
+         flight_body = self._target_sections['flight'].body.layout()
+         installation = self._Section_Create('workspace.hardware.installation')
+         self._Widget_Attach(devices_page.root_layout, devices_page.global_configuration_group, installation.body.layout())
+@@ -153,28 +173,13 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
+         return section
+ 
+     def _Targets_Layout(self):
+-        # At the supported 900px main-window width the workspace has ~695px.
+-        # Keep both real board/import entries above the fold at that width.
+         columns = 2 if self.width() >= 620 else 1
+-        details_columns = 2 if self.width() >= 1120 else 1
+-        available = (self.width() - 36 - (columns - 1) * 10) / columns
+-        direction = (QBoxLayout.Direction.TopToBottom if available < 360
+-                     else QBoxLayout.Direction.LeftToRight)
+-        for owner in (self.board_hardware_page, self.ground_target_page):
+-            owner.custom_widget.layout().setDirection(direction)
+-        if columns != self._columns or details_columns != self._details_columns:
+-            self._columns, self._details_columns = columns, details_columns
+-            for widget in (*self.target_cards.values(), self.link_group, *self._target_sections.values()):
++        if columns != self._columns:
++            self._columns = columns
++            for widget in self.target_cards.values():
+                 self.target_grid.removeWidget(widget)
+             for index, card in enumerate(self.target_cards.values()):
+                 self.target_grid.addWidget(card, index // columns, index % columns)
+-            first_detail_row = 1 if columns == 2 else 2
+-            self.target_grid.addWidget(self.link_group, first_detail_row, 0, 1, columns)
+-            first_detail_row += 1
+-            for index, section in enumerate(self._target_sections.values()):
+-                self.target_grid.addWidget(section, first_detail_row + index // details_columns,
+-                                           index % details_columns, 1, columns // details_columns,
+-                                           Qt.AlignmentFlag.AlignTop)
+             self.target_grid.setColumnStretch(0, 1)
+             self.target_grid.setColumnStretch(1, 1 if columns == 2 else 0)
+         self._HeaderRows_Queue()
+@@ -187,7 +192,7 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
+     def _HeaderRows_Align(self):
+         """Align equivalent rows using current font, wrapping and real width."""
+         self._header_sync_pending = False
+-        for row in range(6):
++        for row in range(2):
+             heights = []
+             for target, widgets in self._header_rows.items():
+                 margins = self._header_layouts[target].contentsMargins()
+@@ -226,10 +231,19 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
+         for target, hardware, board in (('flight', flight, model.board), ('ground', ground.hardware, ground.board)):
+             owner = self.board_hardware_page if target == 'flight' else self.ground_target_page
+             part = hardware.mcu or str(hardware.inventory.get('mcu_part', '')) or '—'
+-            self.target_summaries[target].setText(text('workspace.hardware.target_summary',
+-                board=hardware.source_label or board or text('workspace.hardware.pending'),
+-                mcu=part, source=hardware.source_kind or hardware.mode,
+-                status=owner.hardware_status.text() or text('workspace.hardware.pending')))
++            readiness = self._readiness.get(target)
++            state = text('target.generation.ready') if readiness and readiness.ready else text('target.generation.blocked')
++            if hardware.mode == 'custom' and not hardware.snapshot_id:
++                state = text('hardware.editor.import_required')
++            board_label = hardware.source_label
++            if not board_label and board:
++                combo = owner.board_combo
++                index = combo.findData(board)
++                board_label = combo.itemText(index) if index >= 0 else text('board.custom_hardware')
++            self.target_summaries[target].setText(
++                (board_label or text('workspace.hardware.pending')) + '\nMCU: ' + part + '\n' + state)
++            self.target_summaries[target].setToolTip('\n'.join(
++                issue.message for issue in readiness.issues) if readiness else '')
+         flight_radios = [item for item in model.device_instances
+                          if item.instance_id in self.devices_page._radio_configurations]
+         flight_text = ', '.join(item.instance_id + ': ' +
+@@ -249,11 +263,13 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
+                 plan = TelemetryPlan_Get('S' if profile == 'ss_tm.s.0_1' else 'H',
+                     sf=model.air_link.spreading_factor, bandwidth_hz=model.air_link.bandwidth_hz,
+                     coding_rate=model.air_link.coding_rate, preamble=model.air_link.preamble_symbols)
+-                summary += '\n' + text('telemetry.budget', tx=f"{plan['tx_fraction']*100:.2f}",
+-                                        scheduler=f"{plan['scheduler_fraction']*100:.2f}")
++                self.link_summary.setToolTip(text('telemetry.budget', tx=f"{plan['tx_fraction']*100:.2f}",
++                                        scheduler=f"{plan['scheduler_fraction']*100:.2f}"))
+             except ValueError as error:
+                 summary += '\n' + str(error)
+         self.link_summary.setText(self.link_summary.text() + '\n' + summary)
++        self.link_status.setText(self.air_link_page.status.text() if
++            getattr(self.air_link_page, 'configuration_issues', ()) else text('hardware.editor.link_compatible'))
+ 
+         selected = set(model.ComponentIds_Get())
+         devices = [item.instance_id + ': ' + item.name + (' / ' + item.interface if item.interface else '')
+@@ -280,7 +296,11 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
+                        for row in rows[:3]]
+             if len(rows) > 3:
+                 visible.append(self._translator.Text_Get('workspace.hardware.more', count=len(rows)-3))
+-            label.setText(self._translator.Text_Get('workspace.hardware.device_summary', devices='\n'.join(visible) or '—'))
++            hardware = self._model.hardware if target == 'flight' else self._model.ground_target.hardware
++            mappings = self._model.resource_assignments if target == 'flight' else self._model.ground_target.resource_assignments
++            label.setText(self._translator.Text_Get('workspace.hardware.' + target) + '\n' +
++                self._translator.Text_Get('workspace.hardware.device_summary', devices='\n'.join(visible) or '—') + '\n' +
++                self._translator.Text_Get('hardware.editor.resources_summary', assigned=len(mappings), available=len(hardware.resources)))
+             label.setToolTip('\n'.join(rows))
+         self._HeaderRows_Queue()
+ 
+@@ -294,34 +314,40 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
+             if key in self._sections and type(value) is bool:
+                 self._sections[key].toggle_button.setChecked(value)
+ 
++    def Readiness_Set(self, readiness):
++        self._readiness = readiness
++
+     def Reveal(self, widget):
+-        owners = {self.devices_page: self._target_sections['flight'],
+-                  self.board_hardware_page: self.target_cards['flight'],
+-                  self.ground_target_page: self.target_cards['ground'],
+-                  self.air_link_page: self.link_summary}
+-        widget = owners.get(widget, widget)
+-        if widget is None or not self.isAncestorOf(widget):
+-            return False
+-        current = widget
+-        while current is not None and current is not self:
+-            if isinstance(current, CollapsibleSection):
+-                current.toggle_button.setChecked(True)
+-            current = current.parentWidget()
+-        scroll = self.findChild(QScrollArea)
+-        if scroll is not None:
+-            scroll.ensureWidgetVisible(widget, 18, 18)
+-        widget.setFocus(Qt.FocusReason.OtherFocusReason)
+-        return True
++        if widget is self.air_link_page or widget is self.link_summary:
++            self.linkEditRequested.emit()
++            return True
++        for target, page in (('flight', self.board_hardware_page), ('ground', self.ground_target_page)):
++            if widget is None:
++                continue
++            if widget is page or page.selection_group.isAncestorOf(widget) or page.platform_group.isAncestorOf(widget):
++                section = 'hardware'
++            elif widget is page.advanced_section or page.advanced_section.isAncestorOf(widget):
++                section = 'resources'
++            elif widget is self._target_sections[target] or self._target_sections[target].isAncestorOf(widget) or (
++                    target == 'flight' and widget is self.devices_page):
++                section = 'devices'
++            else:
++                continue
++            self.targetEditRequested.emit(target, section)
++            return True
++        return False
+ 
+     def Language_Apply(self, translator):
+         super().Language_Apply(translator)
+         for page in (self.devices_page, self.board_hardware_page, self.ground_target_page, self.air_link_page):
+             page.Language_Apply(translator)
+         self.link_group.setTitle(translator.Text_Get('group.air_link'))
++        self.device_group.setTitle(translator.Text_Get('hardware.editor.devices_resources'))
+         self.link_button.setText(translator.Text_Get('radio.transaction.title'))
+         for target, card in self.target_cards.items():
+             card.setTitle(translator.Text_Get('workspace.hardware.' + target))
+-            self.target_buttons[target].setText(translator.Text_Get('workspace.hardware.' + target + '.edit'))
++            self.target_buttons[target].setText(translator.Text_Get('hardware.editor.configure'))
++            self.device_buttons[target].setText(translator.Text_Get('workspace.hardware.' + target + '.edit'))
+         for section in self._sections.values():
+             key = section.property('workspaceTitleKey')
+             if key:
+diff --git a/apps/SCG/src/silverstar_fccg/ui/pages/targets.py b/apps/SCG/src/silverstar_fccg/ui/pages/targets.py
+index bce88735..344094ee 100644
+--- a/apps/SCG/src/silverstar_fccg/ui/pages/targets.py
++++ b/apps/SCG/src/silverstar_fccg/ui/pages/targets.py
+@@ -192,6 +192,7 @@ class AirLinkPage(ScrollableLocalizedPage):
+         return tuple((titles.get(identity, identity), identity) for identity in sorted(values))
+ 
+     def Configuration_Set(self, link, issues) -> None:
++        self.configuration_issues = tuple(issues)
+         for name, widget in self.fields.items():
+             widget.blockSignals(True)
+             if isinstance(widget, QDoubleSpinBox):
+diff --git a/apps/SCG/tests/estimator_health_support.py b/apps/SCG/tests/estimator_health_support.py
+index 2a910361..0e4f90f3 100644
+--- a/apps/SCG/tests/estimator_health_support.py
++++ b/apps/SCG/tests/estimator_health_support.py
+@@ -51,6 +51,7 @@ def health_run(project: Path, output: Path, fixture: Path) -> dict:
+     source+='''
+ static EstimatorRuntime s_estimator;
+ static EstimatorOutputSnapshot s_snapshot, s_published_snapshot;
++static uint8_t s_control_input_invalid;
+ static NavigationReplayContext s_replay;
+ static NavigationReplayStorage s_replay_storage;
+ static NavigationCurrentContext s_current_fusion;
+@@ -88,7 +89,8 @@ extern uint8_t Estimator_HorizonCycle(uint64_t);
+     source+='#include "system_lifecycle.h"\n'
+     # Lifecycle type must precede its stub.
+     source=source.replace('#include "system_user_config.h"','#include "system_lifecycle.h"\n#include "system_user_config.h"')
+-    names=['EstimatorTask_IrqLock','EstimatorTask_IrqUnlock','EstimatorTask_SnapshotCommit','Estimator_OperationNext',
++    names=['EstimatorTask_IrqLock','EstimatorTask_IrqUnlock','EstimatorTask_SnapshotCommit',
++           'Estimator_ControlProvenanceRevoke','Estimator_OperationNext',
+            'Estimator_FusionFaultGet','Estimator_CurrentResultConvert','Estimator_FusionReset',
+            'Estimator_CoreHealthFlagsMap','Estimator_FaultSnapshotPublish','Estimator_ReplayFaultStop',
+            'Estimator_SnapshotPublish','Estimator_AccelerationPublish','Estimator_PredictionApply','Estimator_KfPredictionApply',
+diff --git a/apps/SCG/tests/test_hardware_workspace.py b/apps/SCG/tests/test_hardware_workspace.py
+index ed846312..183757be 100644
+--- a/apps/SCG/tests/test_hardware_workspace.py
++++ b/apps/SCG/tests/test_hardware_workspace.py
+@@ -45,9 +45,9 @@ def test_targets_remain_discoverable_and_configuration_is_read_only(qapp, worksp
+     try:
+         workspace.Configuration_Set(model)
+         assert 'enabled' not in model.Dictionary_Get()['ground_target']
+-        assert workspace.target_cards['flight'].isAncestorOf(flight.board_combo)
+-        assert workspace.target_cards['ground'].isAncestorOf(ground.board_combo)
+-        assert workspace.target_cards['ground'].isAncestorOf(ground.import_directory)
++        assert workspace._editor_bin.isAncestorOf(flight.board_combo)
++        assert workspace._editor_bin.isAncestorOf(ground.board_combo)
++        assert workspace._editor_bin.isAncestorOf(ground.import_directory)
+         assert workspace._target_sections['flight'].isAncestorOf(devices.telemetry_group)
+         assert workspace._target_sections['ground'].isAncestorOf(ground.pc_interface)
+         assert workspace._target_sections['ground'].isAncestorOf(ground.radio_instances_editor)
+@@ -60,9 +60,9 @@ def test_targets_remain_discoverable_and_configuration_is_read_only(qapp, worksp
+                 Theme_Apply(qapp, theme)
+                 for width in (900, 1280):
+                     workspace.resize(width, 1000); workspace.show(); _Events_Flush(qapp)
+-                    assert ground.board_combo.isVisible()
+-                    assert ground.import_directory.isVisible()
+-                    assert flight.import_directory_button.isVisible()
++                    assert not ground.board_combo.isVisible()
++                    assert not ground.import_directory.isVisible()
++                    assert not flight.import_directory_button.isVisible()
+                     assert workspace.target_cards['ground'].geometry().bottom() < 950
+                     assert workspace.target_cards['flight'].geometry().right() <= width
+         assert model.Dictionary_Get() == before
+@@ -78,10 +78,13 @@ def test_problem_reveal_opens_exact_target_details_and_preserves_fold_state(qapp
+         workspace.resize(1000, 900); workspace.show(); _Events_Flush(qapp)
+         workspace._target_sections['ground'].toggle_button.setChecked(False)
+         state = workspace.ExpandedState_Get()
++        requests = QSignalSpy(workspace.targetEditRequested)
+         assert workspace.Reveal(ground.platform_values['part'])
+         _Events_Flush(qapp)
+-        assert workspace._target_sections['ground'].Expanded_Is()
+-        assert workspace._sections['ground.platform'].Expanded_Is()
++        assert requests.count() == 1
++        assert requests.at(0) == ['ground', 'hardware']
++        assert not workspace._target_sections['ground'].Expanded_Is()
++        assert not workspace._sections['ground.platform'].Expanded_Is()
+         assert not workspace._sections['flight.platform'].Expanded_Is()
+         workspace.ExpandedState_Set(state)
+         assert workspace.ExpandedState_Get() == state
+@@ -119,7 +122,7 @@ def test_checks_uses_original_separate_generation_commands(qapp, workspace_root)
+ 
+ @pytest.mark.parametrize('width', [900, 1024])
+ @pytest.mark.parametrize('language,theme', [('zh_CN','light'), ('en_US','dark')])
+-def test_actual_window_first_screen_contains_both_target_imports(qapp, workspace_root, tmp_path, width, language, theme):
++def test_actual_window_first_screen_contains_both_target_options(qapp, workspace_root, tmp_path, width, language, theme):
+     from PySide6.QtCore import QRect
+     from PySide6.QtGui import QFont
+     from PySide6.QtWidgets import QMessageBox, QScrollArea
+@@ -143,8 +146,8 @@ def test_actual_window_first_screen_contains_both_target_imports(qapp, workspace
+         assert window.width() == width
+         workspace = window.hardware_workspace
+         viewport = workspace.findChild(QScrollArea).viewport()
+-        for owner in (window.board_hardware_page, window.ground_target_page):
+-            for control in (owner.board_combo, owner.import_directory_button):
++        for target in ('flight', 'ground'):
++            for control in (workspace.target_buttons[target],):
+                 bounds = QRect(control.mapTo(viewport, control.rect().topLeft()), control.size())
+                 assert viewport.rect().contains(bounds), (control.objectName(), bounds, viewport.rect())
+         assert workspace.findChild(QScrollArea).widget().width() <= viewport.width()
+@@ -158,7 +161,7 @@ def test_actual_window_first_screen_contains_both_target_imports(qapp, workspace
+         rows = workspace._device_rows['flight']
+         assert len(rows) == len(set(rows))
+         assert len(rows) == len(window._model.device_instances)
+-        assert len(workspace.device_summaries['flight'].text().splitlines()) <= 4
++        assert len(workspace.device_summaries['flight'].text().splitlines()) <= 6
+         assert workspace.device_summaries['flight'].toolTip() == '\n'.join(rows)
+         assert window._model.Dictionary_Get() == before
+         assert window.grab().save(str(tmp_path/f'hardware_{language}_{theme}_{width}.png'))
+@@ -212,21 +215,22 @@ def test_target_columns_align_and_shared_link_precedes_details(qapp, workspace_r
+         _Events_Flush(qapp)
+         workspace = window.hardware_workspace
+         for flight_control, ground_control in (
+-            (window.board_hardware_page.board_combo, window.ground_target_page.board_combo),
+-            (window.board_hardware_page.import_directory_button, window.ground_target_page.import_directory_button),
++            (workspace.target_summaries['flight'], workspace.target_summaries['ground']),
+             (workspace.target_buttons['flight'], workspace.target_buttons['ground']),
+         ):
+             left, right = Bounds(flight_control), Bounds(ground_control)
+             assert abs(left.top() - right.top()) <= 1
+             assert abs(left.height() - right.height()) <= 1
+-        left, right = (Bounds(workspace._target_sections[target]) for target in ('flight','ground'))
++        left, right = (Bounds(workspace.target_cards[target]) for target in ('flight','ground'))
+         assert left.top() == right.top()
+         assert left.right() < right.left()
+         assert abs(left.width() - right.width()) <= 1
+         assert workspace._target_sections['flight'].isAncestorOf(window.devices_page.position_editors['imu0'])
+         assert workspace._target_sections['ground'].isAncestorOf(window.ground_target_page.pc_interface)
+         assert Bounds(workspace.link_group).top() > max(Bounds(card).bottom() for card in workspace.target_cards.values())
+-        assert Bounds(workspace.link_group).bottom() < min(left.top(), right.top())
++        assert Bounds(workspace.link_group).bottom() < Bounds(workspace.device_group).top()
++        assert not workspace._target_sections['flight'].isVisible()
++        assert not workspace._target_sections['ground'].isVisible()
+         assert workspace.link_button.isVisible()
+         assert not window.air_link_page.air_link_group.isVisible()
+         assert all(window.navigation_list.visualItemRect(window.navigation_list.item(index)).height() >= 60
+diff --git a/apps/SCG/tests/test_mission_process_native.py b/apps/SCG/tests/test_mission_process_native.py
+index 2b472eb8..079a0c7b 100644
+--- a/apps/SCG/tests/test_mission_process_native.py
++++ b/apps/SCG/tests/test_mission_process_native.py
+@@ -170,3 +170,40 @@ def test_native_dependency_gates_on_actual_owner_ready_mask(builtin_catalog, tmp
+     assert result.returncode == 0, result.stdout + result.stderr
+     result = subprocess.run([str(executable)], capture_output=True, text=True, timeout=15)
+     assert result.returncode == 0, result.stdout + result.stderr
++
++
++@pytest.fixture(scope='module')
++def mission_runtime_contract_executable(native_generated_owner, tmp_path_factory):
++    root, graph = native_generated_owner
++    build = tmp_path_factory.mktemp('mission-runtime-contract')
++    command = [shutil.which('gcc'), '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror',
++               '-pedantic', '-fanalyzer', '-I', str(root / 'Tests/Host'),
++               '-I', str(root / 'System/Src'),
++               '-include', str(root / 'Generated/Inc/project_flight_config.h')]
++    for directory in graph.include_dirs:
++        command.extend(['-I', str(root / directory)])
++    command.extend('-D' + value for value in graph.defines)
++    source = Path(__file__).parent / 'fixtures/mission_runtime_contract_host.c'
++    executable = build / 'runtime-contract.exe'
++    command.extend([str(source), '-lm', '-o', str(executable)])
++    result = subprocess.run(command, capture_output=True, text=True, timeout=90)
++    import hashlib
++    (build / 'compiler-receipt.json').write_text(json.dumps({
++        'command': command, 'exit_code': result.returncode,
++        'stdout': result.stdout, 'stderr': result.stderr,
++        'sources': {str(path): hashlib.sha256(path.read_bytes()).hexdigest() for path in
++                    (source, root / 'System/Src/system_mission_process_runtime.c')},
++    }, indent=2), encoding='utf-8')
++    assert result.returncode == 0, result.stdout + result.stderr
++    return executable
++
++
++@pytest.mark.parametrize('scenario', [
++    'normal', 'no-events', 'events-invalid', 'action-error', 'log-events-invalid',
++    'log-bad-param', 'log-full', 'log-busy', 'log-not-ready', 'step-invalid',
++])
++def test_native_runtime_error_contract(mission_runtime_contract_executable, scenario):
++    result = subprocess.run([str(mission_runtime_contract_executable), scenario],
++                            capture_output=True, text=True, timeout=10)
++    assert result.returncode == 0, result.stdout + result.stderr
++    assert 'PASS' in result.stdout
+diff --git a/apps/SCG/tests/test_stack_budget.py b/apps/SCG/tests/test_stack_budget.py
+index 8e879b93..a1c93bc4 100644
+--- a/apps/SCG/tests/test_stack_budget.py
++++ b/apps/SCG/tests/test_stack_budget.py
+@@ -2,6 +2,7 @@ from __future__ import annotations
+ 
+ import json
+ import os
++import re
+ import importlib.util
+ import zipfile
+ import sys
+@@ -40,16 +41,27 @@ def _ElfFixture_Create(tmp_path: Path, monkeypatch, *, serial="", frame=64):
+               "SystemAlignment_Process", "library"]
+     edges = {"main": "AppTasks_Init", "AppTasks_Init": "SystemIndicator_Init",
+              "AppTask_Flight": "SystemAlignment_Process", "AppTask_Serial": "library"}
+-    disassembly = ""
++    addresses = {name: 0x08000000 + index * 0x100 for index, name in enumerate(names)}
++    disassembly = "Disassembly of section .text:\n"
++    symbol_table = ""
+     for name in names:
+-        disassembly += f"08000000 <{name}>:\n"
++        start = addresses[name]
++        cursor = start
++        disassembly += f"{start:08x} <{name}>:\n"
+         if name in edges:
+-            disassembly += f" 8000000: f000 f000 bl 8000000 <{edges[name]}>\n"
++            disassembly += f" {cursor:x}: f000 f000 bl {addresses[edges[name]]:x} <{edges[name]}>\n"
++            cursor += 4
+         if name == "library":
+-            disassembly += " 8000004: e96d ce04 strd ip, lr, [sp, #-16]!\n"
+-        if name == "AppTask_Serial":
+-            disassembly += serial
+-        disassembly += " 8000008: 4770 bx lr\n"
++            disassembly += f" {cursor:x}: e96d ce04 strd ip, lr, [sp, #-16]!\n"
++            cursor += 4
++        if name == "AppTask_Serial" and serial:
++            instruction = serial.strip().split(":", 1)[1].strip()
++            instruction = instruction.replace("8000000 <AppTask_Serial>", f"{start:x} <AppTask_Serial>")
++            disassembly += f" {cursor:x}: {instruction}\n"
++            machine = re.match(r"((?:[0-9a-f]{4,8}\s+)+)", instruction)[1]
++            cursor += len(re.sub(r"\s", "", machine)) // 2
++        disassembly += f" {cursor:x}: 4770 bx lr\n"
++        symbol_table += f"{start:08x} g F .text {cursor + 2 - start:08x} {name}\n"
+     (build / "test.su").write_text("".join(
+         f"fixture.c:1:1:{name}\t{frame}\tstatic\n" for name in names if name != "library"
+     ), encoding="utf-8")
+@@ -57,7 +69,7 @@ def _ElfFixture_Create(tmp_path: Path, monkeypatch, *, serial="", frame=64):
+     nm = "".join(f"10000000 00001000 b {symbol}\n" for _, symbol in stacks.TASKS.values())
+     def read(command, root):
+         if "objdump" in command[0]:
+-            return disassembly
++            return symbol_table if "-t" in command else disassembly
+         if "nm" in command[0]:
+             return nm
+         return "Arm GNU test fixture"
+@@ -137,6 +149,17 @@ def test_stack_budget_rejects_unknown_indirect_and_recursion(tmp_path, monkeypat
+         stacks.StackReport_Build(root, "Release", "unused-")
+ 
+ 
++@pytest.mark.parametrize("instruction", [
++    " 8000004: 4798 blxne r3\n",
++    " 8000004: 469f mov pc, r3\n",
++    " 8000004: f8d3 f000 ldr.w pc, [r3]\n",
++])
++def test_stack_budget_rejects_all_register_indirect_call_forms(tmp_path, monkeypatch, instruction):
++    root = _ElfFixture_Create(tmp_path, monkeypatch, serial=instruction)
++    with pytest.raises(ValueError, match="Unresolved stack usage"):
++        stacks.StackReport_Build(root, "Release", "unused-")
++
++
+ def test_diagnostic_never_grants_acceptance_even_with_closed_direct_paths(tmp_path, monkeypatch):
+     root = _ElfFixture_Create(tmp_path, monkeypatch)
+     report = stacks.StackDiagnostic_Build(root, "Release", "unused-")
+diff --git a/contracts/mission_functions_v1.json b/contracts/mission_functions_v1.json
+index 44482ee8..7c425d24 100644
+--- a/contracts/mission_functions_v1.json
++++ b/contracts/mission_functions_v1.json
+@@ -17,6 +17,42 @@
+   "input_authority": "FunctionsConfiguration_Apply transactionally reconciles user-selectable physical inputs through canonical capability_source_overrides and all related source groups. Function cards cannot create a second device-routing authority.",
+   "native_dependency_semantics": "Recording and telemetry may require INS and/or estimator output. Every dependency must cover the entire configured interval and be initialized, running, healthy and no older than 100 ms when the consumer reads it. Cached readiness expires even if FlightTask stops updating. Control ACKs, identity and stage events remain serviced.",
+   "adapters": [
++    {
++      "plugin_id": "silverstar.algorithm.control.pid",
++      "instance_id": "controller",
++      "category": "control",
++      "executions": ["continuous"],
++      "support": "explicit_research_task",
++      "singleton": true,
++      "opt_in": true,
++      "output": "control.research.command",
++      "start": "mission_start",
++      "stop": "system_landed",
++      "depends_on": ["estimator"],
++      "initialization": "once_at_configured_active_boundary",
++      "parameter_timing": "build_only",
++      "completion": "sticky_stop_or_failure",
++      "runtime_contract": "silverstar.control-research-runtime/1: FlightTask static 10 ms research sink, no electrical actuator output or deployment qualification.",
++      "supported_version": "0.1.0"
++    },
++    {
++      "plugin_id": "silverstar.algorithm.control.lqr",
++      "instance_id": "controller",
++      "category": "control",
++      "executions": ["continuous"],
++      "support": "explicit_research_task",
++      "singleton": true,
++      "opt_in": true,
++      "output": "control.research.command",
++      "start": "mission_start",
++      "stop": "system_landed",
++      "depends_on": ["estimator"],
++      "initialization": "once_at_configured_active_boundary",
++      "parameter_timing": "build_only",
++      "completion": "sticky_stop_or_failure",
++      "runtime_contract": "silverstar.control-research-runtime/1: FlightTask static 10 ms research sink, no electrical actuator output or deployment qualification.",
++      "supported_version": "0.1.0"
++    },
+     {
+       "plugin_id": "silverstar.algorithm.alignment.external_attitude_source",
+       "instance_id": "alignment",

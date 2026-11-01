@@ -1,0 +1,25 @@
+{
+  "source_commit": "e7c42b7c4971fddb02c6d5c60864b50dffaa3f1a",
+  "status": "auditable final admission epoch; target bytes proven identical by admission-equivalence.json",
+  "files_sha256": {
+    "apps/SCG/src/silverstar_fccg/app/usb_transport.py": "d36899fead176dec62f29a32019fe45861ca05f44bf1e8a80192183006c40482",
+    "apps/SCG/src/silverstar_fccg/build/native_usb.py": "a184463cb839d2be6fbe8107f638aaa57bfacef24d798d8388c056e5a3cfb87a",
+    "apps/SCG/src/silverstar_fccg/generator/usb_cdc_integration.py": "6c9cd288fba476e72ad726984ed26d7dd32b1012b19579c06aae11f91aacf187",
+    "apps/SCG/src/silverstar_fccg/generator/native_usb_graph.py": "fd6ab868d038adb26d223bfe033f7205a6f87eff4cc9dea8e587904aad4052ff",
+    "apps/SCG/src/silverstar_fccg/generator/ground_usb_control.py": "7ce657f80efa15a1f62548abafbc2501b7e9a0c78dc90884dcbac760c84dfed5",
+    "apps/SCG/src/silverstar_fccg/generator/native_control.py": "995c2811a7d0670ce207ed23a82904cfae2d350109009ed2934832636a595e2d",
+    "apps/SCG/tools/validation/usb_transport_validate.py": "876685315425c696fbe09dbaab5df8142696043947ce3e3ea2eeae7ce04eab60",
+    "apps/SCG/tests/test_usb_resource_owners.py": "18fe8e38bc0cbfc193a9005a9c4d51d07a3d4f3f8e78ae4e9a45358081176aeb",
+    "apps/SCG/tests/usb_descriptor_cases.py": "1661bea0316e4046a1e29874039e8960d094a0ca085d918dec1ecce9540fad5c",
+    "apps/SCG/tests/test_usb_transport_integration.py": "7fc97978a386f0eeb3f050e59592b0ee1a1a21b4784472c605b75124aebc0fb7",
+    "apps/SCG/tests/test_usb_transport_control.py": "092ee52695b25e160858918b2b0a2a2ecc148a9e753c9c6e7cd60ca358bd1ff1",
+    "apps/SCG/tests/test_native_control_faults.py": "a3409536bd0beeaa68e7c378d997889c431474d93c1be9cd59043e1e561bfbbf",
+    "apps/SCG/docs/USB_CDC_TRANSPORT_20261013.md": "fd970c7167e3ef3e39204febeb03d699b53d3f4b6d45348f187a6eb286c83cff"
+  },
+  "changed_since_full": [
+    "apps/SCG/src/silverstar_fccg/build/native_usb.py",
+    "apps/SCG/src/silverstar_fccg/generator/native_usb_graph.py",
+    "apps/SCG/tests/test_usb_resource_owners.py",
+    "apps/SCG/tests/usb_descriptor_cases.py"
+  ]
+}

@@ -1,0 +1,1448 @@
+{
+  "not_acceptance": true,
+  "proofs": {
+    "hal": [
+      {
+        "caller": "HAL_DMA_IRQHandler",
+        "address": "0x801d074",
+        "abi_slot": 60,
+        "field": "XferCpltCallback",
+        "targets": [
+          "SD_DMAReceiveCplt",
+          "SD_DMATransmitCplt",
+          "UART_DMAReceiveCplt",
+          "UART_DMATransmitCplt"
+        ],
+        "null_assignments": [
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_DeInit"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_UnRegisterCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_UnRegisterCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_TransmitReceive_DMA"
+          }
+        ],
+        "null_only": false,
+        "assignments": [
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_Transmit_DMA",
+            "field": "XferCpltCallback",
+            "target": "UART_DMATransmitCplt"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "UART_Start_Receive_DMA",
+            "field": "XferCpltCallback",
+            "target": "UART_DMAReceiveCplt"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+            "function": "HAL_SD_ReadBlocks_DMA",
+            "field": "XferCpltCallback",
+            "target": "SD_DMAReceiveCplt"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+            "function": "HAL_SD_WriteBlocks_DMA",
+            "field": "XferCpltCallback",
+            "target": "SD_DMATransmitCplt"
+          }
+        ]
+      },
+      {
+        "caller": "HAL_DMA_IRQHandler",
+        "address": "0x801d074",
+        "abi_slot": 68,
+        "field": "XferM1CpltCallback",
+        "targets": [],
+        "null_assignments": [
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_DeInit"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_UnRegisterCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_UnRegisterCallback"
+          }
+        ],
+        "null_only": true,
+        "assignments": []
+      },
+      {
+        "caller": "HAL_DMA_IRQHandler",
+        "address": "0x801d0c2",
+        "abi_slot": 76,
+        "field": "XferErrorCallback",
+        "targets": [
+          "SD_DMAError",
+          "UART_DMAError"
+        ],
+        "null_assignments": [
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_DeInit"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_UnRegisterCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_UnRegisterCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_TransmitReceive_DMA"
+          }
+        ],
+        "null_only": false,
+        "assignments": [
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_Transmit_DMA",
+            "field": "XferErrorCallback",
+            "target": "UART_DMAError"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "UART_Start_Receive_DMA",
+            "field": "XferErrorCallback",
+            "target": "UART_DMAError"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+            "function": "HAL_SD_ReadBlocks_DMA",
+            "field": "XferErrorCallback",
+            "target": "SD_DMAError"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+            "function": "HAL_SD_WriteBlocks_DMA",
+            "field": "XferErrorCallback",
+            "target": "SD_DMAError"
+          }
+        ]
+      },
+      {
+        "caller": "HAL_DMA_IRQHandler",
+        "address": "0x801d0e8",
+        "abi_slot": 64,
+        "field": "XferHalfCpltCallback",
+        "targets": [
+          "UART_DMARxHalfCplt",
+          "UART_DMATxHalfCplt"
+        ],
+        "null_assignments": [
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_DeInit"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_UnRegisterCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_UnRegisterCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_TransmitReceive_DMA"
+          }
+        ],
+        "null_only": false,
+        "assignments": [
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_Transmit_DMA",
+            "field": "XferHalfCpltCallback",
+            "target": "UART_DMATxHalfCplt"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "UART_Start_Receive_DMA",
+            "field": "XferHalfCpltCallback",
+            "target": "UART_DMARxHalfCplt"
+          }
+        ]
+      },
+      {
+        "caller": "HAL_DMA_IRQHandler",
+        "address": "0x801d0e8",
+        "abi_slot": 72,
+        "field": "XferM1HalfCpltCallback",
+        "targets": [],
+        "null_assignments": [
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_DeInit"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_UnRegisterCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_UnRegisterCallback"
+          }
+        ],
+        "null_only": true,
+        "assignments": []
+      },
+      {
+        "caller": "HAL_DMA_IRQHandler",
+        "address": "0x801d164",
+        "abi_slot": 80,
+        "field": "XferAbortCallback",
+        "targets": [
+          "SD_DMARxAbort",
+          "SD_DMATxAbort",
+          "UART_DMAAbortOnError"
+        ],
+        "null_assignments": [
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_DeInit"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_UnRegisterCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_UnRegisterCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_Transmit_DMA"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_Abort"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_Abort"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_AbortTransmit"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_AbortReceive"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_Abort_IT"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_Abort_IT"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_Abort_IT"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_Abort_IT"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "UART_Start_Receive_DMA"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "UART_DMATxAbortCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "UART_DMARxAbortCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_Transmit_DMA"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_Receive_DMA"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_TransmitReceive_DMA"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_TransmitReceive_DMA"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_Abort"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_Abort"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_Abort_IT"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_Abort_IT"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_Abort_IT"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_Abort_IT"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "SPI_DMATxAbortCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "SPI_DMARxAbortCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+            "function": "HAL_SD_ReadBlocks_DMA"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+            "function": "HAL_SD_WriteBlocks_DMA"
+          }
+        ],
+        "null_only": false,
+        "assignments": [
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_IRQHandler",
+            "field": "XferAbortCallback",
+            "target": "UART_DMAAbortOnError"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+            "function": "HAL_SD_IRQHandler",
+            "field": "XferAbortCallback",
+            "target": "SD_DMATxAbort"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+            "function": "HAL_SD_IRQHandler",
+            "field": "XferAbortCallback",
+            "target": "SD_DMARxAbort"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+            "function": "HAL_SD_Abort_IT",
+            "field": "XferAbortCallback",
+            "target": "SD_DMATxAbort"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+            "function": "HAL_SD_Abort_IT",
+            "field": "XferAbortCallback",
+            "target": "SD_DMARxAbort"
+          }
+        ]
+      },
+      {
+        "caller": "HAL_UART_IRQHandler",
+        "address": "0x801da58",
+        "abi_slot": 80,
+        "field": "XferAbortCallback",
+        "targets": [
+          "SD_DMARxAbort",
+          "SD_DMATxAbort",
+          "UART_DMAAbortOnError"
+        ],
+        "null_assignments": [
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_DeInit"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_UnRegisterCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+            "function": "HAL_DMA_UnRegisterCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_Transmit_DMA"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_Abort"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_Abort"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_AbortTransmit"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_AbortReceive"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_Abort_IT"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_Abort_IT"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_Abort_IT"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_Abort_IT"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "UART_Start_Receive_DMA"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "UART_DMATxAbortCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "UART_DMARxAbortCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_Transmit_DMA"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_Receive_DMA"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_TransmitReceive_DMA"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_TransmitReceive_DMA"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_Abort"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_Abort"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_Abort_IT"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_Abort_IT"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_Abort_IT"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "HAL_SPI_Abort_IT"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "SPI_DMATxAbortCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+            "function": "SPI_DMARxAbortCallback"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+            "function": "HAL_SD_ReadBlocks_DMA"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+            "function": "HAL_SD_WriteBlocks_DMA"
+          }
+        ],
+        "null_only": false,
+        "assignments": [
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+            "function": "HAL_UART_IRQHandler",
+            "field": "XferAbortCallback",
+            "target": "UART_DMAAbortOnError"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+            "function": "HAL_SD_IRQHandler",
+            "field": "XferAbortCallback",
+            "target": "SD_DMATxAbort"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+            "function": "HAL_SD_IRQHandler",
+            "field": "XferAbortCallback",
+            "target": "SD_DMARxAbort"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+            "function": "HAL_SD_Abort_IT",
+            "field": "XferAbortCallback",
+            "target": "SD_DMATxAbort"
+          },
+          {
+            "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+            "function": "HAL_SD_Abort_IT",
+            "field": "XferAbortCallback",
+            "target": "SD_DMARxAbort"
+          }
+        ]
+      }
+    ],
+    "port": {
+      "port_source": "ThirdParty/FreeRTOS-Kernel/portable/GCC/ARM_CM4F/port.c",
+      "port_sha256": "7fd7815cad4ceea4794fc75703aaee051ebdea5be4d8f6317d9593bd1bf763d2",
+      "task_context_software_bytes": 100,
+      "PendSV_MSP_local_bytes": 8,
+      "scheduler_handoff": "VTOR initial MSP reset, SVC restores controlled task EXC_RETURN 0xfffffffd/PSP",
+      "boot_stack_top": "0x20020000",
+      "pxCurrentTCB": "0x20013024"
+    },
+    "crt": [
+      {
+        "caller": "deregister_tm_clones",
+        "linked_weak_pointer": 0,
+        "guard": "PC-relative NULL load, CBZ to BX LR; no guard bypass"
+      },
+      {
+        "caller": "register_tm_clones",
+        "linked_weak_pointer": 0,
+        "guard": "PC-relative NULL load, CBZ to BX LR; no guard bypass"
+      },
+      {
+        "caller": "__libc_init_array",
+        "array": "__preinit_array",
+        "start": "0x80569c0",
+        "end": "0x80569c0",
+        "entries": 0,
+        "targets": [],
+        "bytes_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "caller": "__libc_init_array",
+        "array": "__init_array",
+        "start": "0x80569c0",
+        "end": "0x80569c4",
+        "entries": 1,
+        "targets": [
+          "frame_dummy"
+        ],
+        "bytes_sha256": "b9f15a9ec01fa520b9b996f40c1190ed350b204b77eab3979c6626b1eceeece1"
+      }
+    ]
+  },
+  "budgets": {
+    "Device": [
+      1912,
+      [
+        "AppTask_Device",
+        "SystemStartup_ProcessDevices",
+        "SystemStartup_CommunicationProcess",
+        "SystemGnss_Process",
+        "ProjectGnssInstance_Process",
+        "NeoM9nGnssInstance_Process",
+        "NeoM9nGnssAdapter_Process",
+        "DebugLog_Print",
+        "CommonFormat_Print",
+        "CommonFormat_VPrint",
+        "CommonFormat_FixedCreate",
+        "CommonFormat_UnsignedCreate",
+        "__aeabi_uldivmod",
+        "__udivmoddi4"
+      ]
+    ],
+    "INS": [
+      2124,
+      [
+        "AppTask_Ins",
+        "InsTask_InputReject",
+        "InsTask_OutputPublish",
+        "InsTask_DiagnosticsPublish",
+        "Estimator_GetLatestSnapshot",
+        "SystemMissionProcess_EstimatorStoppedGet",
+        "SystemMissionProcess_NavigationStoppedGet",
+        "SilverStarAssert_Check",
+        "SilverStarAssert_Fail"
+      ]
+    ],
+    "Estimator": [
+      3084,
+      [
+        "AppTask_Estimator",
+        "Estimator_GnssUpdate",
+        "Estimator_ReplayInsert",
+        "NavigationReplay_Insert",
+        "NavigationFusion_EventApply",
+        "NavigationKf_UpdateGnssPositionGroups",
+        "NavigationKf_UpdateVector",
+        "NavigationKf_UpdateVector.part.0",
+        "NavigationKf_CholeskyInverse",
+        "SilverStarAssert_ObjectCheck",
+        "SilverStarAssert_Fail"
+      ]
+    ],
+    "Flight": [
+      3416,
+      [
+        "AppTask_Flight",
+        "SystemLifecycle_Process",
+        "SystemLifecycle_StartExecute",
+        "SystemLifecycleBackend_AbortStart",
+        "SystemAlignment_MissionPreparationAbort",
+        "SystemAlignment_Process",
+        "SystemAlignment_Process.part.0",
+        "SystemAlignmentBackend_GuardSampleGet",
+        "SystemInertial_LatestGet",
+        "SystemImu_LatestSampleGet",
+        "SystemSourceSelector_ImuFreshSelect",
+        "ProjectImuInstance_LatestSampleGet",
+        "Jy901bImuInstance_LatestSampleGet",
+        "Jy901bSample_QualityEvaluate",
+        "__aeabi_uldivmod",
+        "__udivmoddi4"
+      ]
+    ],
+    "Logger": [
+      1608,
+      [
+        "AppTask_Logger",
+        "LoggerTask_SnapshotMaintain",
+        "SystemMissionSnapshot_Create",
+        "MissionSnapshot_DevicesWrite",
+        "MissionSnapshot_SectionCommit",
+        "PersistentStorage_ObjectWriteAtomic",
+        "PersistentStorage_LatestGet",
+        "SystemStorage_ObjectSlotRead",
+        "f_open",
+        "dir_register",
+        "dir_find",
+        "dir_next",
+        "create_chain",
+        "put_fat.part.0",
+        "sync_window",
+        "disk_write",
+        "SD_write",
+        "SdDiskIo_CompletionWait",
+        "xQueueReceive",
+        "xTaskResumeAll",
+        "xTaskResumeAll.part.0",
+        "xTaskIncrementTick.part.0"
+      ]
+    ],
+    "Serial": [
+      4748,
+      [
+        "AppTask_Serial",
+        "SystemConsole_Process",
+        "SystemConsole_ExecuteLine",
+        "SystemConsole_CommandsExecute",
+        "SystemConsole_AlignmentStartExecute",
+        "SystemAlignment_Start",
+        "SystemAlignmentBackend_Reset",
+        "InsTask_AlignmentReset",
+        "InsTask_DiagnosticsPublish",
+        "Estimator_GetLatestSnapshot",
+        "SystemMissionProcess_EstimatorStoppedGet",
+        "SystemMissionProcess_NavigationStoppedGet",
+        "SilverStarAssert_Check",
+        "SilverStarAssert_Fail"
+      ]
+    ],
+    "Telemetry": [
+      1964,
+      [
+        "AppTask_Telemetry",
+        "TelemetryService_Process",
+        "TelemetryService_AuxiliarySend",
+        "TelemetryTm_HealthBuild",
+        "TelemetryTm_ServiceHealth",
+        "Estimator_GetLatestSnapshot",
+        "SystemMissionProcess_EstimatorStoppedGet",
+        "SystemMissionProcess_NavigationStoppedGet",
+        "SilverStarAssert_Check",
+        "SilverStarAssert_Fail"
+      ]
+    ],
+    "Idle": [
+      0,
+      [
+        "prvIdleTask"
+      ]
+    ],
+    "Reset": [
+      564,
+      [
+        "Reset_Handler",
+        "main",
+        "AppTasks_Init",
+        "SystemSourceSelector_PendingEventsFlush",
+        "SystemSourceSelector_EventWrite",
+        "LoggerBus_EventPush",
+        "LoggerBus_ConfiguredRecordPush",
+        "LoggerBus_RecordPush",
+        "CommonSpscQueue_Push",
+        "SilverStarAssert_ObjectCheck",
+        "SilverStarAssert_Fail"
+      ]
+    ],
+    "RTC_Alarm_IRQHandler": [
+      0,
+      [
+        "RTC_Alarm_IRQHandler"
+      ]
+    ],
+    "HASH_RNG_IRQHandler": [
+      0,
+      [
+        "HASH_RNG_IRQHandler"
+      ]
+    ],
+    "EXTI2_IRQHandler": [
+      0,
+      [
+        "EXTI2_IRQHandler"
+      ]
+    ],
+    "TIM8_CC_IRQHandler": [
+      0,
+      [
+        "TIM8_CC_IRQHandler"
+      ]
+    ],
+    "DebugMon_Handler": [
+      0,
+      [
+        "DebugMon_Handler"
+      ]
+    ],
+    "TIM1_CC_IRQHandler": [
+      0,
+      [
+        "TIM1_CC_IRQHandler"
+      ]
+    ],
+    "DMA2_Stream5_IRQHandler": [
+      0,
+      [
+        "DMA2_Stream5_IRQHandler"
+      ]
+    ],
+    "HardFault_Handler": [
+      0,
+      [
+        "HardFault_Handler"
+      ]
+    ],
+    "DMA1_Stream5_IRQHandler": [
+      180,
+      [
+        "DMA1_Stream5_IRQHandler",
+        "HAL_DMA_IRQHandler",
+        "UART_DMAAbortOnError",
+        "HAL_UART_ErrorCallback",
+        "PlatformUart_ReceiveRestart",
+        "PlatformUart_RxStart",
+        "HAL_UARTEx_ReceiveToIdle_DMA",
+        "UART_Start_Receive_DMA",
+        "HAL_DMA_Start_IT"
+      ]
+    ],
+    "SysTick_Handler": [
+      64,
+      [
+        "SysTick_Handler",
+        "xPortSysTickHandler",
+        "xTaskIncrementTick",
+        "xTaskIncrementTick.part.0"
+      ]
+    ],
+    "PVD_IRQHandler": [
+      0,
+      [
+        "PVD_IRQHandler"
+      ]
+    ],
+    "SDIO_IRQHandler": [
+      104,
+      [
+        "SDIO_IRQHandler",
+        "HAL_SD_IRQHandler",
+        "HAL_SD_RxCpltCallback",
+        "BSP_SD_ReadCpltCallback",
+        "xQueueGenericSendFromISR",
+        "prvCopyDataToQueue.isra.0",
+        "memcpy"
+      ]
+    ],
+    "TAMP_STAMP_IRQHandler": [
+      0,
+      [
+        "TAMP_STAMP_IRQHandler"
+      ]
+    ],
+    "HAL_TIM_IRQHandler": [
+      16,
+      [
+        "HAL_TIM_IRQHandler",
+        "HAL_TIM_OC_DelayElapsedCallback"
+      ]
+    ],
+    "PendSV_Handler": [
+      96,
+      [
+        "PendSV_Handler",
+        "vTaskSwitchContext",
+        "vApplicationStackOverflowHook",
+        "SystemTaskStack_OverflowContextSet",
+        "SilverStarAssert_StackOverflowContextSet"
+      ]
+    ],
+    "NMI_Handler": [
+      0,
+      [
+        "NMI_Handler"
+      ]
+    ],
+    "CAN2_RX1_IRQHandler": [
+      0,
+      [
+        "CAN2_RX1_IRQHandler"
+      ]
+    ],
+    "EXTI3_IRQHandler": [
+      0,
+      [
+        "EXTI3_IRQHandler"
+      ]
+    ],
+    "TIM8_TRG_COM_TIM14_IRQHandler": [
+      0,
+      [
+        "TIM8_TRG_COM_TIM14_IRQHandler"
+      ]
+    ],
+    "HAL_GPIO_EXTI_IRQHandler": [
+      40,
+      [
+        "HAL_GPIO_EXTI_IRQHandler",
+        "HAL_GPIO_EXTI_Callback",
+        "PlatformStm32f4Resource_GpioGet"
+      ]
+    ],
+    "TIM1_UP_TIM10_IRQHandler": [
+      16,
+      [
+        "TIM1_UP_TIM10_IRQHandler",
+        "HAL_TIM_IRQHandler",
+        "HAL_TIM_OC_DelayElapsedCallback"
+      ]
+    ],
+    "TIM8_UP_TIM13_IRQHandler": [
+      0,
+      [
+        "TIM8_UP_TIM13_IRQHandler"
+      ]
+    ],
+    "I2C3_ER_IRQHandler": [
+      0,
+      [
+        "I2C3_ER_IRQHandler"
+      ]
+    ],
+    "HAL_UART_IRQHandler": [
+      172,
+      [
+        "HAL_UART_IRQHandler",
+        "UART_DMAAbortOnError",
+        "HAL_UART_ErrorCallback",
+        "PlatformUart_ReceiveRestart",
+        "PlatformUart_RxStart",
+        "HAL_UARTEx_ReceiveToIdle_DMA",
+        "UART_Start_Receive_DMA",
+        "HAL_DMA_Start_IT"
+      ]
+    ],
+    "EXTI0_IRQHandler": [
+      0,
+      [
+        "EXTI0_IRQHandler"
+      ]
+    ],
+    "I2C2_EV_IRQHandler": [
+      0,
+      [
+        "I2C2_EV_IRQHandler"
+      ]
+    ],
+    "DMA1_Stream2_IRQHandler": [
+      0,
+      [
+        "DMA1_Stream2_IRQHandler"
+      ]
+    ],
+    "CAN1_RX0_IRQHandler": [
+      0,
+      [
+        "CAN1_RX0_IRQHandler"
+      ]
+    ],
+    "FPU_IRQHandler": [
+      0,
+      [
+        "FPU_IRQHandler"
+      ]
+    ],
+    "OTG_HS_WKUP_IRQHandler": [
+      0,
+      [
+        "OTG_HS_WKUP_IRQHandler"
+      ]
+    ],
+    "UsageFault_Handler": [
+      0,
+      [
+        "UsageFault_Handler"
+      ]
+    ],
+    "CAN2_SCE_IRQHandler": [
+      0,
+      [
+        "CAN2_SCE_IRQHandler"
+      ]
+    ],
+    "DMA2_Stream2_IRQHandler": [
+      180,
+      [
+        "DMA2_Stream2_IRQHandler",
+        "HAL_DMA_IRQHandler",
+        "UART_DMAAbortOnError",
+        "HAL_UART_ErrorCallback",
+        "PlatformUart_ReceiveRestart",
+        "PlatformUart_RxStart",
+        "HAL_UARTEx_ReceiveToIdle_DMA",
+        "UART_Start_Receive_DMA",
+        "HAL_DMA_Start_IT"
+      ]
+    ],
+    "SPI1_IRQHandler": [
+      0,
+      [
+        "SPI1_IRQHandler"
+      ]
+    ],
+    "TIM6_DAC_IRQHandler": [
+      0,
+      [
+        "TIM6_DAC_IRQHandler"
+      ]
+    ],
+    "TIM1_BRK_TIM9_IRQHandler": [
+      0,
+      [
+        "TIM1_BRK_TIM9_IRQHandler"
+      ]
+    ],
+    "DCMI_IRQHandler": [
+      0,
+      [
+        "DCMI_IRQHandler"
+      ]
+    ],
+    "CAN2_RX0_IRQHandler": [
+      0,
+      [
+        "CAN2_RX0_IRQHandler"
+      ]
+    ],
+    "DMA2_Stream3_IRQHandler": [
+      180,
+      [
+        "DMA2_Stream3_IRQHandler",
+        "HAL_DMA_IRQHandler",
+        "UART_DMAAbortOnError",
+        "HAL_UART_ErrorCallback",
+        "PlatformUart_ReceiveRestart",
+        "PlatformUart_RxStart",
+        "HAL_UARTEx_ReceiveToIdle_DMA",
+        "UART_Start_Receive_DMA",
+        "HAL_DMA_Start_IT"
+      ]
+    ],
+    "USART6_IRQHandler": [
+      0,
+      [
+        "USART6_IRQHandler"
+      ]
+    ],
+    "USART3_IRQHandler": [
+      172,
+      [
+        "USART3_IRQHandler",
+        "HAL_UART_IRQHandler",
+        "UART_DMAAbortOnError",
+        "HAL_UART_ErrorCallback",
+        "PlatformUart_ReceiveRestart",
+        "PlatformUart_RxStart",
+        "HAL_UARTEx_ReceiveToIdle_DMA",
+        "UART_Start_Receive_DMA",
+        "HAL_DMA_Start_IT"
+      ]
+    ],
+    "Reset_Handler": [
+      564,
+      [
+        "Reset_Handler",
+        "main",
+        "AppTasks_Init",
+        "SystemSourceSelector_PendingEventsFlush",
+        "SystemSourceSelector_EventWrite",
+        "LoggerBus_EventPush",
+        "LoggerBus_ConfiguredRecordPush",
+        "LoggerBus_RecordPush",
+        "CommonSpscQueue_Push",
+        "SilverStarAssert_ObjectCheck",
+        "SilverStarAssert_Fail"
+      ]
+    ],
+    "CAN1_RX1_IRQHandler": [
+      0,
+      [
+        "CAN1_RX1_IRQHandler"
+      ]
+    ],
+    "UART5_IRQHandler": [
+      0,
+      [
+        "UART5_IRQHandler"
+      ]
+    ],
+    "DMA2_Stream0_IRQHandler": [
+      0,
+      [
+        "DMA2_Stream0_IRQHandler"
+      ]
+    ],
+    "TIM4_IRQHandler": [
+      0,
+      [
+        "TIM4_IRQHandler"
+      ]
+    ],
+    "I2C1_EV_IRQHandler": [
+      0,
+      [
+        "I2C1_EV_IRQHandler"
+      ]
+    ],
+    "DMA1_Stream6_IRQHandler": [
+      180,
+      [
+        "DMA1_Stream6_IRQHandler",
+        "HAL_DMA_IRQHandler",
+        "UART_DMAAbortOnError",
+        "HAL_UART_ErrorCallback",
+        "PlatformUart_ReceiveRestart",
+        "PlatformUart_RxStart",
+        "HAL_UARTEx_ReceiveToIdle_DMA",
+        "UART_Start_Receive_DMA",
+        "HAL_DMA_Start_IT"
+      ]
+    ],
+    "HAL_SD_IRQHandler": [
+      104,
+      [
+        "HAL_SD_IRQHandler",
+        "HAL_SD_RxCpltCallback",
+        "BSP_SD_ReadCpltCallback",
+        "xQueueGenericSendFromISR",
+        "prvCopyDataToQueue.isra.0",
+        "memcpy"
+      ]
+    ],
+    "DMA1_Stream1_IRQHandler": [
+      180,
+      [
+        "DMA1_Stream1_IRQHandler",
+        "HAL_DMA_IRQHandler",
+        "UART_DMAAbortOnError",
+        "HAL_UART_ErrorCallback",
+        "PlatformUart_ReceiveRestart",
+        "PlatformUart_RxStart",
+        "HAL_UARTEx_ReceiveToIdle_DMA",
+        "UART_Start_Receive_DMA",
+        "HAL_DMA_Start_IT"
+      ]
+    ],
+    "UART4_IRQHandler": [
+      0,
+      [
+        "UART4_IRQHandler"
+      ]
+    ],
+    "TIM3_IRQHandler": [
+      0,
+      [
+        "TIM3_IRQHandler"
+      ]
+    ],
+    "RCC_IRQHandler": [
+      0,
+      [
+        "RCC_IRQHandler"
+      ]
+    ],
+    "TIM8_BRK_TIM12_IRQHandler": [
+      0,
+      [
+        "TIM8_BRK_TIM12_IRQHandler"
+      ]
+    ],
+    "EXTI15_10_IRQHandler": [
+      0,
+      [
+        "EXTI15_10_IRQHandler"
+      ]
+    ],
+    "ADC_IRQHandler": [
+      0,
+      [
+        "ADC_IRQHandler"
+      ]
+    ],
+    "DMA1_Stream7_IRQHandler": [
+      0,
+      [
+        "DMA1_Stream7_IRQHandler"
+      ]
+    ],
+    "TIM7_IRQHandler": [
+      0,
+      [
+        "TIM7_IRQHandler"
+      ]
+    ],
+    "CAN2_TX_IRQHandler": [
+      0,
+      [
+        "CAN2_TX_IRQHandler"
+      ]
+    ],
+    "TIM5_IRQHandler": [
+      0,
+      [
+        "TIM5_IRQHandler"
+      ]
+    ],
+    "DMA2_Stream7_IRQHandler": [
+      180,
+      [
+        "DMA2_Stream7_IRQHandler",
+        "HAL_DMA_IRQHandler",
+        "UART_DMAAbortOnError",
+        "HAL_UART_ErrorCallback",
+        "PlatformUart_ReceiveRestart",
+        "PlatformUart_RxStart",
+        "HAL_UARTEx_ReceiveToIdle_DMA",
+        "UART_Start_Receive_DMA",
+        "HAL_DMA_Start_IT"
+      ]
+    ],
+    "I2C3_EV_IRQHandler": [
+      0,
+      [
+        "I2C3_EV_IRQHandler"
+      ]
+    ],
+    "EXTI9_5_IRQHandler": [
+      48,
+      [
+        "EXTI9_5_IRQHandler",
+        "HAL_GPIO_EXTI_IRQHandler",
+        "HAL_GPIO_EXTI_Callback",
+        "PlatformStm32f4Resource_GpioGet"
+      ]
+    ],
+    "RTC_WKUP_IRQHandler": [
+      0,
+      [
+        "RTC_WKUP_IRQHandler"
+      ]
+    ],
+    "ETH_WKUP_IRQHandler": [
+      0,
+      [
+        "ETH_WKUP_IRQHandler"
+      ]
+    ],
+    "SPI2_IRQHandler": [
+      0,
+      [
+        "SPI2_IRQHandler"
+      ]
+    ],
+    "OTG_HS_EP1_IN_IRQHandler": [
+      0,
+      [
+        "OTG_HS_EP1_IN_IRQHandler"
+      ]
+    ],
+    "MemManage_Handler": [
+      0,
+      [
+        "MemManage_Handler"
+      ]
+    ],
+    "DMA1_Stream0_IRQHandler": [
+      0,
+      [
+        "DMA1_Stream0_IRQHandler"
+      ]
+    ],
+    "CAN1_TX_IRQHandler": [
+      0,
+      [
+        "CAN1_TX_IRQHandler"
+      ]
+    ],
+    "SVC_Handler": [
+      0,
+      [
+        "SVC_Handler"
+      ]
+    ],
+    "EXTI4_IRQHandler": [
+      0,
+      [
+        "EXTI4_IRQHandler"
+      ]
+    ],
+    "FSMC_IRQHandler": [
+      0,
+      [
+        "FSMC_IRQHandler"
+      ]
+    ],
+    "ETH_IRQHandler": [
+      0,
+      [
+        "ETH_IRQHandler"
+      ]
+    ],
+    "OTG_HS_EP1_OUT_IRQHandler": [
+      0,
+      [
+        "OTG_HS_EP1_OUT_IRQHandler"
+      ]
+    ],
+    "HAL_DMA_IRQHandler": [
+      180,
+      [
+        "HAL_DMA_IRQHandler",
+        "UART_DMAAbortOnError",
+        "HAL_UART_ErrorCallback",
+        "PlatformUart_ReceiveRestart",
+        "PlatformUart_RxStart",
+        "HAL_UARTEx_ReceiveToIdle_DMA",
+        "UART_Start_Receive_DMA",
+        "HAL_DMA_Start_IT"
+      ]
+    ],
+    "WWDG_IRQHandler": [
+      0,
+      [
+        "WWDG_IRQHandler"
+      ]
+    ],
+    "TIM2_IRQHandler": [
+      0,
+      [
+        "TIM2_IRQHandler"
+      ]
+    ],
+    "OTG_FS_WKUP_IRQHandler": [
+      0,
+      [
+        "OTG_FS_WKUP_IRQHandler"
+      ]
+    ],
+    "TIM1_TRG_COM_TIM11_IRQHandler": [
+      0,
+      [
+        "TIM1_TRG_COM_TIM11_IRQHandler"
+      ]
+    ],
+    "OTG_HS_IRQHandler": [
+      0,
+      [
+        "OTG_HS_IRQHandler"
+      ]
+    ],
+    "EXTI1_IRQHandler": [
+      0,
+      [
+        "EXTI1_IRQHandler"
+      ]
+    ],
+    "USART2_IRQHandler": [
+      172,
+      [
+        "USART2_IRQHandler",
+        "HAL_UART_IRQHandler",
+        "UART_DMAAbortOnError",
+        "HAL_UART_ErrorCallback",
+        "PlatformUart_ReceiveRestart",
+        "PlatformUart_RxStart",
+        "HAL_UARTEx_ReceiveToIdle_DMA",
+        "UART_Start_Receive_DMA",
+        "HAL_DMA_Start_IT"
+      ]
+    ],
+    "I2C2_ER_IRQHandler": [
+      0,
+      [
+        "I2C2_ER_IRQHandler"
+      ]
+    ],
+    "DMA2_Stream1_IRQHandler": [
+      0,
+      [
+        "DMA2_Stream1_IRQHandler"
+      ]
+    ],
+    "CAN1_SCE_IRQHandler": [
+      0,
+      [
+        "CAN1_SCE_IRQHandler"
+      ]
+    ],
+    "FLASH_IRQHandler": [
+      0,
+      [
+        "FLASH_IRQHandler"
+      ]
+    ],
+    "DMA2_Stream4_IRQHandler": [
+      0,
+      [
+        "DMA2_Stream4_IRQHandler"
+      ]
+    ],
+    "BusFault_Handler": [
+      0,
+      [
+        "BusFault_Handler"
+      ]
+    ],
+    "USART1_IRQHandler": [
+      172,
+      [
+        "USART1_IRQHandler",
+        "HAL_UART_IRQHandler",
+        "UART_DMAAbortOnError",
+        "HAL_UART_ErrorCallback",
+        "PlatformUart_ReceiveRestart",
+        "PlatformUart_RxStart",
+        "HAL_UARTEx_ReceiveToIdle_DMA",
+        "UART_Start_Receive_DMA",
+        "HAL_DMA_Start_IT"
+      ]
+    ],
+    "OTG_FS_IRQHandler": [
+      0,
+      [
+        "OTG_FS_IRQHandler"
+      ]
+    ],
+    "SPI3_IRQHandler": [
+      0,
+      [
+        "SPI3_IRQHandler"
+      ]
+    ],
+    "DMA1_Stream4_IRQHandler": [
+      0,
+      [
+        "DMA1_Stream4_IRQHandler"
+      ]
+    ],
+    "I2C1_ER_IRQHandler": [
+      0,
+      [
+        "I2C1_ER_IRQHandler"
+      ]
+    ],
+    "DMA2_Stream6_IRQHandler": [
+      180,
+      [
+        "DMA2_Stream6_IRQHandler",
+        "HAL_DMA_IRQHandler",
+        "UART_DMAAbortOnError",
+        "HAL_UART_ErrorCallback",
+        "PlatformUart_ReceiveRestart",
+        "PlatformUart_RxStart",
+        "HAL_UARTEx_ReceiveToIdle_DMA",
+        "UART_Start_Receive_DMA",
+        "HAL_DMA_Start_IT"
+      ]
+    ],
+    "DMA1_Stream3_IRQHandler": [
+      180,
+      [
+        "DMA1_Stream3_IRQHandler",
+        "HAL_DMA_IRQHandler",
+        "UART_DMAAbortOnError",
+        "HAL_UART_ErrorCallback",
+        "PlatformUart_ReceiveRestart",
+        "PlatformUart_RxStart",
+        "HAL_UARTEx_ReceiveToIdle_DMA",
+        "UART_Start_Receive_DMA",
+        "HAL_DMA_Start_IT"
+      ]
+    ],
+    "Error_Handler": [
+      0,
+      [
+        "Error_Handler"
+      ]
+    ]
+  }
+}

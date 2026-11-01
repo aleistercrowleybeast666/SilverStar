@@ -1,0 +1,97 @@
+[
+  {
+    "name": "f407",
+    "configuration": "Release",
+    "target": "architecture-check",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\f407\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "architecture-check"
+    ],
+    "exit_code": 0,
+    "seconds": 24.27,
+    "log": "f407-Release-architecture-check.log",
+    "log_sha256": "6623b73a9bc3ccd6e2bb99f94bd54deab972bf37a9fcbefa22df4fd441711cf0"
+  },
+  {
+    "name": "f407",
+    "configuration": "Release",
+    "target": "power10-check",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\f407\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "power10-check"
+    ],
+    "exit_code": 0,
+    "seconds": 28.288,
+    "log": "f407-Release-power10-check.log",
+    "log_sha256": "5740ddd3ac4f9592944889234341101935a51cc5ce624716a57d42a84f1ba6c0"
+  },
+  {
+    "name": "f407",
+    "configuration": "Release",
+    "target": "static-analysis",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\f407\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "static-analysis"
+    ],
+    "exit_code": 0,
+    "seconds": 182.068,
+    "log": "f407-Release-static-analysis.log",
+    "log_sha256": "ed5627cb1911cb297126d1360121e9a38e79796d076d65d16e29ddba3c7fb726"
+  },
+  {
+    "name": "f407",
+    "configuration": "Release",
+    "target": "stack-report",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\f407\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "stack-report"
+    ],
+    "exit_code": 0,
+    "seconds": 41.589,
+    "log": "f407-Release-stack-report.log",
+    "log_sha256": "64582aefd4832d99c0ec9a9b1a2ab32c86c268628419d394353e1183a8a834ac"
+  },
+  {
+    "name": "f407",
+    "configuration": "Debug",
+    "target": "stack-report",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\f407\\Flight_Controller",
+      "-j4",
+      "CONFIG=Debug",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "stack-report"
+    ],
+    "exit_code": 0,
+    "seconds": 25.612,
+    "log": "f407-Debug-stack-report.log",
+    "log_sha256": "c739b035ebd7434fbddc0de7ed1f222c7dbde1dc4c65072122285653a55c4b3a"
+  }
+]

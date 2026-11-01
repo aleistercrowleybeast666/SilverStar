@@ -1,0 +1,40 @@
+{
+  "compiler": "gcc.EXE (Rev5, Built by MSYS2 project) 16.1.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "command": [
+    "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-pedantic",
+    "-fanalyzer",
+    "-DSILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT=9U",
+    "-ID:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\critical\\gpio-after-v2\\test_gpio_backend_capacity_and0",
+    "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Platform\\STM32F4\\Src",
+    "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Platform\\STM32F4\\Inc",
+    "-ID:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\critical\\gpio-after-v2\\test_gpio_backend_capacity_and0\\gpio.c",
+    "-o",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\critical\\gpio-after-v2\\test_gpio_backend_capacity_and0\\gpio.exe"
+  ],
+  "compile_exit": 0,
+  "sources": {
+    "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Platform\\STM32F4\\Src\\platform_gpio_stm32f4.c": "f5ac3f0b617420964363a82307e96dbc17cb6a266d7660ffde181bb2860fb360",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\critical\\gpio-after-v2\\test_gpio_backend_capacity_and0\\gpio.c": "6b28484d691b7e2d46e0a8eb968c266d764290d52f27e727b96bb107cccc403e",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\critical\\gpio-after-v2\\test_gpio_backend_capacity_and0\\stm32f4xx_hal.h": "982f98ec9a7ec203eec586c7922fe58900761a48de26c6d7e9d160d9abe18e51",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_mcu_family_stm32f4\\payload\\Platform\\STM32F4\\Inc\\platform_stm32f4_resources.h": "b87acfbd074ddf5b73cf1bf5d83711358a76168dcc7d5f25f6e9cf315cf133d8",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_adc.h": "5038d93afcdfef7cd808b3a4a5580c9109f630126d30f9aaee3b8ab7bd176a02",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_boot_session.h": "838f442fbcffcffe5eb0f687eb33534e2cb26d9855aff3fd45b597d2b3891d50",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_can.h": "b5b8aff2b064068d8edf49c21ed36e452ab55da14c1d6c4248fa8ca3329190d9",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_critical.h": "77f0d7141c4cf906171cf6c0019130949385d6e51e1ed9475c4ee50140157875",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_gpio.h": "a2d382188da0b09a2362f7d7c123262cf6a414cef950cb185f72f4469e022d8d",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_i2c.h": "e59180913673babc6b3b216b8e16676ee078fb26d8c69d62ddd5ade0db774de0",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_memory.h": "138e3073e9885025f3435418398601ee840da17d81f2019574e892df941b6d13",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_pwm.h": "27e954b8d283a5a96bd00094926d8efe3a577aec982079aea13c45bc60991cc2",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_spi.h": "ad6b1451f284a892e819c6768907414b4d2cb56701fddf42928045c2e5968b75",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_time.h": "b9839aea07741c962d836b6ddec066805bdcca17a0e7f7532449ca74dcde25ac",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_types.h": "9eccf8476d8ebb58f251f9049de631651c6ae4e19a415d63579e703a6cfd8785",
+    "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_uart.h": "0dc6cb85829afe8193bd04e5efc04d503516356c3ee707245d2f00f5f815d09b"
+  }
+}

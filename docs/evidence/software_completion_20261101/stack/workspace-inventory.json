@@ -1,0 +1,52 @@
+{
+  "schema": "silverstar.task-workspace-inventory/1",
+  "task_root": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack",
+  "entries": [
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v1",
+      "owner": "algorithm_sdk",
+      "purpose": "Pre-fix parser and existing-candidate diagnostics",
+      "formal_evidence": "docs/evidence/software_completion_20261101/stack/v1",
+      "cleanup_performed": false,
+      "cleanup_requires_separate_verified_file_inventory": true
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v2",
+      "owner": "algorithm_sdk",
+      "purpose": "Three analysis builds before final source and memory corrections",
+      "formal_evidence": "docs/evidence/software_completion_20261101/stack/v2",
+      "cleanup_performed": false,
+      "cleanup_requires_separate_verified_file_inventory": true
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v3",
+      "owner": "algorithm_sdk",
+      "purpose": "Independent analysis builds before final control unit interface",
+      "formal_evidence": "docs/evidence/software_completion_20261101/stack/v3",
+      "cleanup_performed": false,
+      "cleanup_requires_separate_verified_file_inventory": true
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v4",
+      "owner": "algorithm_sdk",
+      "purpose": "Source-drift rejected generation, no ARM build",
+      "formal_evidence": "docs/evidence/software_completion_20261101/stack/v4",
+      "cleanup_performed": false,
+      "cleanup_requires_separate_verified_file_inventory": true
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5",
+      "owner": "algorithm_sdk",
+      "purpose": "Final five-model A/B normal generations and real builds",
+      "formal_evidence": "docs/evidence/software_completion_20261101/stack/v5",
+      "cleanup_performed": false,
+      "cleanup_requires_separate_verified_file_inventory": true
+    }
+  ],
+  "preserved_read_only_input": "D:\\python_software\\SilverStar\\.work\\h7_20261025\\verified_release\\CubeMX_StaticInput",
+  "notes": [
+    "No old workspace content was deleted.",
+    "Source fixtures, user inputs, logs, decoder packages, formal evidence and frozen releases are never cleanup targets.",
+    "This directory-level purpose inventory is not authorization for recursive cleanup."
+  ]
+}

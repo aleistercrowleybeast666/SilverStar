@@ -1,0 +1,6 @@
+b f407 TargetGenerationResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/stack/v5/b/f407'), targets=('Flight_Controller',), file_hashes={})
+b installation TargetGenerationResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/stack/v5/b/installation'), targets=('Flight_Controller',), file_hashes={})
+b h743 TargetGenerationResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/stack/v5/b/h743'), targets=('Flight_Controller',), file_hashes={})
+b pid TargetGenerationResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/stack/v5/b/pid'), targets=('Flight_Controller',), file_hashes={})
+b lqr TargetGenerationResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/stack/v5/b/lqr'), targets=('Flight_Controller',), file_hashes={})
+PASS: five final-source normal fresh projects; compiler source snapshot unchanged

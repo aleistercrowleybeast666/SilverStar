@@ -1,0 +1,620 @@
+...........FFFFFFFFFFFFF.............                                    [100%]
+================================== FAILURES ===================================
+________ test_mpu_register_callbacks_include_platform_deadline_subtree ________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_register_callbacks_in0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000221E92B5CC0>
+
+    def test_mpu_register_callbacks_include_platform_deadline_subtree(tmp_path, monkeypatch):
+>       report = stacks.StackReport_Build(_MpuFixture(tmp_path, monkeypatch), "Release", "fixture-")
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_mpu_stack_binding.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\tests\test_mpu_stack_binding.py:18: in _MpuFixture
+    recorded = json.loads((fixture / "manifest.json").read_text(encoding="utf8"))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:792: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/tests/fixtures/stack_callback_v2/manifest.json')
+mode = 'r', buffering = -1, encoding = 'utf8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\stack_callback_v2\\manifest.json'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:776: FileNotFoundError
+_ test_mpu_binding_fails_closed[body-Changed reviewed callback binding body] __
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000221E94E1190>
+mutation = 'body', message = 'Changed reviewed callback binding body'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+        with pytest.raises(ValueError, match=message):
+>           stacks.StackReport_Build(_MpuFixture(tmp_path, monkeypatch, mutation), "Release", "fixture-")
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_mpu_stack_binding.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\tests\test_mpu_stack_binding.py:18: in _MpuFixture
+    recorded = json.loads((fixture / "manifest.json").read_text(encoding="utf8"))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:792: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/tests/fixtures/stack_callback_v2/manifest.json')
+mode = 'r', buffering = -1, encoding = 'utf8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\stack_callback_v2\\manifest.json'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:776: FileNotFoundError
+_ test_mpu_binding_fails_closed[getter-Changed immutable MPU profile getter] __
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000221E94E10D0>
+mutation = 'getter', message = 'Changed immutable MPU profile getter'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+        with pytest.raises(ValueError, match=message):
+>           stacks.StackReport_Build(_MpuFixture(tmp_path, monkeypatch, mutation), "Release", "fixture-")
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_mpu_stack_binding.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\tests\test_mpu_stack_binding.py:18: in _MpuFixture
+    recorded = json.loads((fixture / "manifest.json").read_text(encoding="utf8"))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:792: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/tests/fixtures/stack_callback_v2/manifest.json')
+mode = 'r', buffering = -1, encoding = 'utf8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\stack_callback_v2\\manifest.json'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:776: FileNotFoundError
+_ test_mpu_binding_fails_closed[profile-Unreviewed MPU optional profile callbacks] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000221E9605F40>
+mutation = 'profile', message = 'Unreviewed MPU optional profile callbacks'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+        with pytest.raises(ValueError, match=message):
+>           stacks.StackReport_Build(_MpuFixture(tmp_path, monkeypatch, mutation), "Release", "fixture-")
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_mpu_stack_binding.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\tests\test_mpu_stack_binding.py:18: in _MpuFixture
+    recorded = json.loads((fixture / "manifest.json").read_text(encoding="utf8"))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:792: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/tests/fixtures/stack_callback_v2/manifest.json')
+mode = 'r', buffering = -1, encoding = 'utf8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\stack_callback_v2\\manifest.json'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:776: FileNotFoundError
+_ test_mpu_binding_fails_closed[non_null-Linked MPU optional callbacks are not NULL] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000221E9606410>
+mutation = 'non_null', message = 'Linked MPU optional callbacks are not NULL'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+        with pytest.raises(ValueError, match=message):
+>           stacks.StackReport_Build(_MpuFixture(tmp_path, monkeypatch, mutation), "Release", "fixture-")
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_mpu_stack_binding.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\tests\test_mpu_stack_binding.py:18: in _MpuFixture
+    recorded = json.loads((fixture / "manifest.json").read_text(encoding="utf8"))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:792: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/tests/fixtures/stack_callback_v2/manifest.json')
+mode = 'r', buffering = -1, encoding = 'utf8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\stack_callback_v2\\manifest.json'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:776: FileNotFoundError
+_ test_mpu_binding_fails_closed[writable-MPU profile is not one linked read-only object] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000221E962B250>
+mutation = 'writable'
+message = 'MPU profile is not one linked read-only object'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+        with pytest.raises(ValueError, match=message):
+>           stacks.StackReport_Build(_MpuFixture(tmp_path, monkeypatch, mutation), "Release", "fixture-")
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_mpu_stack_binding.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\tests\test_mpu_stack_binding.py:18: in _MpuFixture
+    recorded = json.loads((fixture / "manifest.json").read_text(encoding="utf8"))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:792: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/tests/fixtures/stack_callback_v2/manifest.json')
+mode = 'r', buffering = -1, encoding = 'utf8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\stack_callback_v2\\manifest.json'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:776: FileNotFoundError
+_ test_mpu_binding_fails_closed[caller-Unreviewed linked SensorImu initialization provenance] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_5')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000221E962B750>
+mutation = 'caller'
+message = 'Unreviewed linked SensorImu initialization provenance'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+        with pytest.raises(ValueError, match=message):
+>           stacks.StackReport_Build(_MpuFixture(tmp_path, monkeypatch, mutation), "Release", "fixture-")
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_mpu_stack_binding.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\tests\test_mpu_stack_binding.py:18: in _MpuFixture
+    recorded = json.loads((fixture / "manifest.json").read_text(encoding="utf8"))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:792: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/tests/fixtures/stack_callback_v2/manifest.json')
+mode = 'r', buffering = -1, encoding = 'utf8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\stack_callback_v2\\manifest.json'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:776: FileNotFoundError
+_ test_mpu_binding_fails_closed[extra_call-Extra indirect MPU callback instruction] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_6')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000221E95CF4A0>
+mutation = 'extra_call', message = 'Extra indirect MPU callback instruction'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+        with pytest.raises(ValueError, match=message):
+>           stacks.StackReport_Build(_MpuFixture(tmp_path, monkeypatch, mutation), "Release", "fixture-")
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_mpu_stack_binding.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\tests\test_mpu_stack_binding.py:18: in _MpuFixture
+    recorded = json.loads((fixture / "manifest.json").read_text(encoding="utf8"))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:792: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/tests/fixtures/stack_callback_v2/manifest.json')
+mode = 'r', buffering = -1, encoding = 'utf8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\stack_callback_v2\\manifest.json'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:776: FileNotFoundError
+_ test_mpu_binding_fails_closed[missing_target-Missing concrete MPU register callback] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_7')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000221E9B8EF50>
+mutation = 'missing_target', message = 'Missing concrete MPU register callback'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+        with pytest.raises(ValueError, match=message):
+>           stacks.StackReport_Build(_MpuFixture(tmp_path, monkeypatch, mutation), "Release", "fixture-")
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_mpu_stack_binding.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\tests\test_mpu_stack_binding.py:18: in _MpuFixture
+    recorded = json.loads((fixture / "manifest.json").read_text(encoding="utf8"))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:792: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/tests/fixtures/stack_callback_v2/manifest.json')
+mode = 'r', buffering = -1, encoding = 'utf8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\stack_callback_v2\\manifest.json'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:776: FileNotFoundError
+______ test_mpu_binding_fails_closed[unknown_hal-Unresolved stack usage] ______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_8')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000221E9632B50>
+mutation = 'unknown_hal', message = 'Unresolved stack usage'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+        with pytest.raises(ValueError, match=message):
+>           stacks.StackReport_Build(_MpuFixture(tmp_path, monkeypatch, mutation), "Release", "fixture-")
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_mpu_stack_binding.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\tests\test_mpu_stack_binding.py:18: in _MpuFixture
+    recorded = json.loads((fixture / "manifest.json").read_text(encoding="utf8"))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:792: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/tests/fixtures/stack_callback_v2/manifest.json')
+mode = 'r', buffering = -1, encoding = 'utf8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\stack_callback_v2\\manifest.json'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:776: FileNotFoundError
+________ test_mpu_binding_fails_closed[recursion-Recursive stack path] ________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_binding_fails_closed_9')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000221E970E510>
+mutation = 'recursion', message = 'Recursive stack path'
+
+    @pytest.mark.parametrize("mutation,message", [
+        ("body", "Changed reviewed callback binding body"),
+        ("getter", "Changed immutable MPU profile getter"),
+        ("profile", "Unreviewed MPU optional profile callbacks"),
+        ("non_null", "Linked MPU optional callbacks are not NULL"),
+        ("writable", "MPU profile is not one linked read-only object"),
+        ("caller", "Unreviewed linked SensorImu initialization provenance"),
+        ("extra_call", "Extra indirect MPU callback instruction"),
+        ("missing_target", "Missing concrete MPU register callback"),
+        ("unknown_hal", "Unresolved stack usage"),
+        ("recursion", "Recursive stack path"),
+    ])
+    def test_mpu_binding_fails_closed(tmp_path, monkeypatch, mutation, message):
+        with pytest.raises(ValueError, match=message):
+>           stacks.StackReport_Build(_MpuFixture(tmp_path, monkeypatch, mutation), "Release", "fixture-")
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_mpu_stack_binding.py:135: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\tests\test_mpu_stack_binding.py:18: in _MpuFixture
+    recorded = json.loads((fixture / "manifest.json").read_text(encoding="utf8"))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:792: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/tests/fixtures/stack_callback_v2/manifest.json')
+mode = 'r', buffering = -1, encoding = 'utf8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\stack_callback_v2\\manifest.json'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:776: FileNotFoundError
+____________ test_mpu_parent_counterexamples_rejected[runtime_bus] ____________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_parent_counterexample0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000221E970EE40>
+mutation = 'runtime_bus'
+
+    @pytest.mark.parametrize("mutation", ["runtime_bus", "runtime_profile"])
+    def test_mpu_parent_counterexamples_rejected(tmp_path, monkeypatch, mutation):
+        with pytest.raises(ValueError):
+>           stacks.StackReport_Build(_MpuFixture(tmp_path, monkeypatch, mutation), "Release", "fixture-")
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_mpu_stack_binding.py:140: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\tests\test_mpu_stack_binding.py:18: in _MpuFixture
+    recorded = json.loads((fixture / "manifest.json").read_text(encoding="utf8"))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:792: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/tests/fixtures/stack_callback_v2/manifest.json')
+mode = 'r', buffering = -1, encoding = 'utf8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\stack_callback_v2\\manifest.json'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:776: FileNotFoundError
+__________ test_mpu_parent_counterexamples_rejected[runtime_profile] __________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_mpu_parent_counterexample1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000221E970F230>
+mutation = 'runtime_profile'
+
+    @pytest.mark.parametrize("mutation", ["runtime_bus", "runtime_profile"])
+    def test_mpu_parent_counterexamples_rejected(tmp_path, monkeypatch, mutation):
+        with pytest.raises(ValueError):
+>           stacks.StackReport_Build(_MpuFixture(tmp_path, monkeypatch, mutation), "Release", "fixture-")
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_mpu_stack_binding.py:140: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\tests\test_mpu_stack_binding.py:18: in _MpuFixture
+    recorded = json.loads((fixture / "manifest.json").read_text(encoding="utf8"))
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:792: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/python_software/SilverStar/apps/SCG/tests/fixtures/stack_callback_v2/manifest.json')
+mode = 'r', buffering = -1, encoding = 'utf8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\stack_callback_v2\\manifest.json'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:776: FileNotFoundError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_register_callbacks_include_platform_deadline_subtree
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[body-Changed reviewed callback binding body]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[getter-Changed immutable MPU profile getter]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[profile-Unreviewed MPU optional profile callbacks]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[non_null-Linked MPU optional callbacks are not NULL]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[writable-MPU profile is not one linked read-only object]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[caller-Unreviewed linked SensorImu initialization provenance]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[extra_call-Extra indirect MPU callback instruction]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[missing_target-Missing concrete MPU register callback]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[unknown_hal-Unresolved stack usage]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_binding_fails_closed[recursion-Recursive stack path]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_parent_counterexamples_rejected[runtime_bus]
+FAILED apps\SCG\tests\test_mpu_stack_binding.py::test_mpu_parent_counterexamples_rejected[runtime_profile]
+13 failed, 24 passed in 5.95s

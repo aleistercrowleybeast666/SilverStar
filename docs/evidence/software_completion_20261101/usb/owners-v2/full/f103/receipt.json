@@ -1,0 +1,74 @@
+{
+  "graph_sha256": "865745eb30e3d2962390ea56ee055e753ff6a18109b42caeade5fbc19592480a",
+  "part": "f103",
+  "builds": [
+    {
+      "mode": "normal",
+      "elf": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\full\\native\\f103\\build\\normal\\usb-transport-integrated.elf",
+      "sha256": "52e531b65cbb11793b6002a7926f7fe0f2c6876396964e7813722a6b875d0bcb",
+      "status": "COMPILED_LINKED"
+    },
+    {
+      "mode": "analyzer",
+      "elf": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\full\\native\\f103\\build\\analyzer\\usb-transport-integrated.elf",
+      "sha256": "52e531b65cbb11793b6002a7926f7fe0f2c6876396964e7813722a6b875d0bcb",
+      "status": "COMPILED_LINKED_ANALYZER_EXECUTED"
+    }
+  ],
+  "critical_contracts": "NOT_PROVEN",
+  "stack_wcet_hardware": "NOT_PROVEN",
+  "warning_logs": [
+    "f103-analyzer-26-stm32f1xx_hal_uart.log"
+  ],
+  "linked_library_files": {
+    "D:\\Arm GNU Toolchain\\14.3 rel1\\arm-none-eabi\\lib\\thumb\\v7-m\\nofp\\libc_nano.a": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5",
+    "D:\\Arm GNU Toolchain\\14.3 rel1\\arm-none-eabi\\lib\\thumb\\v7-m\\nofp\\libm.a": "61452e5f4d6b838d9c68305e9f11ad4e199794b171bd5c34271182410d6004d7",
+    "D:\\Arm GNU Toolchain\\14.3 rel1\\arm-none-eabi\\lib\\thumb\\v7-m\\nofp\\libnosys.a": "40639ce705158bd2a8deefca9efdaa4b026d39c7cf5c4aca37ca2c24595f320d",
+    "D:\\Arm GNU Toolchain\\14.3 rel1\\lib\\gcc\\arm-none-eabi\\14.3.1\\thumb\\v7-m\\nofp\\libgcc.a": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+  },
+  "native_root": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb",
+  "native_configuration": {
+    "scope": "SOURCE_DECLARATIONS_ONLY",
+    "owner": "USB_DEVICE/Target/usbd_conf.c",
+    "pcd_instances": [
+      {
+        "pcd": "hpcd_USB_FS",
+        "instance": "USB"
+      }
+    ],
+    "memory_mechanism": "PMA",
+    "fifo_calls": [],
+    "declared_fifo_words": null,
+    "findings": [],
+    "effective_geometry": "NOT_PROVEN_REQUIRES_RUNTIME_GUARD",
+    "clock_phy_irq": "NATIVE_OWNER_AND_BOARD_EVIDENCE_REQUIRED"
+  },
+  "configuration_findings": [],
+  "controller_contract": {
+    "id": "pma-f1-single-v1",
+    "stack": "ST_USB_DEVICE_CDC",
+    "class_abi": "legacy",
+    "controller": "STM32_USB_PMA",
+    "memory": "SINGLE_BUFFER_PMA",
+    "capacity_bytes": 512,
+    "table_base": 0,
+    "usb_speed": "FULL",
+    "packet_size": 64,
+    "cpu_copy_only": true,
+    "scheduler": "MAIN_PLUS_USB_IRQ",
+    "runtime_guard": "UsbCdcRetire_ConfigurationCheck",
+    "compiler": {
+      "core": "cortex-m3",
+      "fpu": "",
+      "float_abi": "soft",
+      "independent_irq_slots": {
+        "USB_LP_CAN1_RX0_IRQHandler": 20
+      }
+    },
+    "scope": "REVIEWED_COMPONENT_ADAPTER_NOT_FAMILY_ADMISSION",
+    "hardware_acceptance": "NOT_PROVEN"
+  },
+  "power10": "FAIL",
+  "gate_sha256": "a4aca423ec1df7a1ea273f80ddc8c9f0baaac5b9d4bac6481d1386c9a1312fac",
+  "input_preserved": true
+}

@@ -1,0 +1,212 @@
+FFFFFFFFFF                                                               [100%]
+================================== FAILURES ===================================
+_________________ test_native_runtime_error_contract[normal] __________________
+
+mission_runtime_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-runtime/mission-runtime-contract0/runtime-contract.exe')
+scenario = 'normal'
+
+    
+    
+    @pytest.mark.parametrize('scenario', [
+        'normal', 'no-events', 'events-invalid', 'action-error', 'log-events-invalid',
+        'log-bad-param', 'log-full', 'log-busy', 'log-not-ready', 'step-invalid',
+    ])
+    def test_native_runtime_error_contract(mission_runtime_contract_executable, scenario):
+        result = subprocess.run([str(mission_runtime_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+                                     ^^^^^^^^^^
+E       NameError: name 'executable' is not defined
+
+apps\SCG\tests\test_mission_process_native.py:208: NameError
+________________ test_native_runtime_error_contract[no-events] ________________
+
+mission_runtime_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-runtime/mission-runtime-contract0/runtime-contract.exe')
+scenario = 'no-events'
+
+    
+    
+    @pytest.mark.parametrize('scenario', [
+        'normal', 'no-events', 'events-invalid', 'action-error', 'log-events-invalid',
+        'log-bad-param', 'log-full', 'log-busy', 'log-not-ready', 'step-invalid',
+    ])
+    def test_native_runtime_error_contract(mission_runtime_contract_executable, scenario):
+        result = subprocess.run([str(mission_runtime_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+                                     ^^^^^^^^^^
+E       NameError: name 'executable' is not defined
+
+apps\SCG\tests\test_mission_process_native.py:208: NameError
+_____________ test_native_runtime_error_contract[events-invalid] ______________
+
+mission_runtime_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-runtime/mission-runtime-contract0/runtime-contract.exe')
+scenario = 'events-invalid'
+
+    
+    
+    @pytest.mark.parametrize('scenario', [
+        'normal', 'no-events', 'events-invalid', 'action-error', 'log-events-invalid',
+        'log-bad-param', 'log-full', 'log-busy', 'log-not-ready', 'step-invalid',
+    ])
+    def test_native_runtime_error_contract(mission_runtime_contract_executable, scenario):
+>       result = subprocess.run([str(mission_runtime_contract_executable), scenario],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                capture_output=True, text=True, timeout=10)
+E       AssertionError: Assertion failed: s_fault == 0x4D504143UL && s_actions == 0U && s_log_attempts == 0U && s_action_sequence == 0U, file D:\python_software\SilverStar\apps\SCG\tests\fixtures\mission_runtime_contract_host.c, line 82
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\critical\\pre-runt...e == 0U, file D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\mission_runtime_contract_host.c, line 82\n').returncode
+
+apps\SCG\tests\test_mission_process_native.py:206: AssertionError
+______________ test_native_runtime_error_contract[action-error] _______________
+
+mission_runtime_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-runtime/mission-runtime-contract0/runtime-contract.exe')
+scenario = 'action-error'
+
+    
+    
+    @pytest.mark.parametrize('scenario', [
+        'normal', 'no-events', 'events-invalid', 'action-error', 'log-events-invalid',
+        'log-bad-param', 'log-full', 'log-busy', 'log-not-ready', 'step-invalid',
+    ])
+    def test_native_runtime_error_contract(mission_runtime_contract_executable, scenario):
+>       result = subprocess.run([str(mission_runtime_contract_executable), scenario],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                capture_output=True, text=True, timeout=10)
+E       AssertionError: Assertion failed: s_fault == 0x4D504143UL && s_actions == 1U && s_log_attempts == 0U && s_action_sequence == 0U, file D:\python_software\SilverStar\apps\SCG\tests\fixtures\mission_runtime_contract_host.c, line 84
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\critical\\pre-runt...e == 0U, file D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\mission_runtime_contract_host.c, line 84\n').returncode
+
+apps\SCG\tests\test_mission_process_native.py:206: AssertionError
+___________ test_native_runtime_error_contract[log-events-invalid] ____________
+
+mission_runtime_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-runtime/mission-runtime-contract0/runtime-contract.exe')
+scenario = 'log-events-invalid'
+
+    
+    
+    @pytest.mark.parametrize('scenario', [
+        'normal', 'no-events', 'events-invalid', 'action-error', 'log-events-invalid',
+        'log-bad-param', 'log-full', 'log-busy', 'log-not-ready', 'step-invalid',
+    ])
+    def test_native_runtime_error_contract(mission_runtime_contract_executable, scenario):
+>       result = subprocess.run([str(mission_runtime_contract_executable), scenario],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                capture_output=True, text=True, timeout=10)
+E       AssertionError: Assertion failed: s_fault == 0x4D504C47UL && s_log_attempts == 0U && s_log_sequence == 0U, file D:\python_software\SilverStar\apps\SCG\tests\fixtures\mission_runtime_contract_host.c, line 86
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\critical\\pre-runt...e == 0U, file D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\mission_runtime_contract_host.c, line 86\n').returncode
+
+apps\SCG\tests\test_mission_process_native.py:206: AssertionError
+______________ test_native_runtime_error_contract[log-bad-param] ______________
+
+mission_runtime_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-runtime/mission-runtime-contract0/runtime-contract.exe')
+scenario = 'log-bad-param'
+
+    
+    
+    @pytest.mark.parametrize('scenario', [
+        'normal', 'no-events', 'events-invalid', 'action-error', 'log-events-invalid',
+        'log-bad-param', 'log-full', 'log-busy', 'log-not-ready', 'step-invalid',
+    ])
+    def test_native_runtime_error_contract(mission_runtime_contract_executable, scenario):
+>       result = subprocess.run([str(mission_runtime_contract_executable), scenario],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                capture_output=True, text=True, timeout=10)
+E       AssertionError: Assertion failed: s_fault == 0x4D504C47UL && s_log_attempts == 1U && s_log_sequence == 0U, file D:\python_software\SilverStar\apps\SCG\tests\fixtures\mission_runtime_contract_host.c, line 88
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\critical\\pre-runt...e == 0U, file D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\mission_runtime_contract_host.c, line 88\n').returncode
+
+apps\SCG\tests\test_mission_process_native.py:206: AssertionError
+________________ test_native_runtime_error_contract[log-full] _________________
+
+mission_runtime_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-runtime/mission-runtime-contract0/runtime-contract.exe')
+scenario = 'log-full'
+
+    
+    
+    @pytest.mark.parametrize('scenario', [
+        'normal', 'no-events', 'events-invalid', 'action-error', 'log-events-invalid',
+        'log-bad-param', 'log-full', 'log-busy', 'log-not-ready', 'step-invalid',
+    ])
+    def test_native_runtime_error_contract(mission_runtime_contract_executable, scenario):
+        result = subprocess.run([str(mission_runtime_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+                                     ^^^^^^^^^^
+E       NameError: name 'executable' is not defined
+
+apps\SCG\tests\test_mission_process_native.py:208: NameError
+________________ test_native_runtime_error_contract[log-busy] _________________
+
+mission_runtime_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-runtime/mission-runtime-contract0/runtime-contract.exe')
+scenario = 'log-busy'
+
+    
+    
+    @pytest.mark.parametrize('scenario', [
+        'normal', 'no-events', 'events-invalid', 'action-error', 'log-events-invalid',
+        'log-bad-param', 'log-full', 'log-busy', 'log-not-ready', 'step-invalid',
+    ])
+    def test_native_runtime_error_contract(mission_runtime_contract_executable, scenario):
+        result = subprocess.run([str(mission_runtime_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+                                     ^^^^^^^^^^
+E       NameError: name 'executable' is not defined
+
+apps\SCG\tests\test_mission_process_native.py:208: NameError
+______________ test_native_runtime_error_contract[log-not-ready] ______________
+
+mission_runtime_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-runtime/mission-runtime-contract0/runtime-contract.exe')
+scenario = 'log-not-ready'
+
+    
+    
+    @pytest.mark.parametrize('scenario', [
+        'normal', 'no-events', 'events-invalid', 'action-error', 'log-events-invalid',
+        'log-bad-param', 'log-full', 'log-busy', 'log-not-ready', 'step-invalid',
+    ])
+    def test_native_runtime_error_contract(mission_runtime_contract_executable, scenario):
+        result = subprocess.run([str(mission_runtime_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+                                     ^^^^^^^^^^
+E       NameError: name 'executable' is not defined
+
+apps\SCG\tests\test_mission_process_native.py:208: NameError
+______________ test_native_runtime_error_contract[step-invalid] _______________
+
+mission_runtime_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-runtime/mission-runtime-contract0/runtime-contract.exe')
+scenario = 'step-invalid'
+
+    
+    
+    @pytest.mark.parametrize('scenario', [
+        'normal', 'no-events', 'events-invalid', 'action-error', 'log-events-invalid',
+        'log-bad-param', 'log-full', 'log-busy', 'log-not-ready', 'step-invalid',
+    ])
+    def test_native_runtime_error_contract(mission_runtime_contract_executable, scenario):
+        result = subprocess.run([str(mission_runtime_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+                                     ^^^^^^^^^^
+E       NameError: name 'executable' is not defined
+
+apps\SCG\tests\test_mission_process_native.py:208: NameError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[normal]
+FAILED apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[no-events]
+FAILED apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[events-invalid]
+FAILED apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[action-error]
+FAILED apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[log-events-invalid]
+FAILED apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[log-bad-param]
+FAILED apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[log-full]
+FAILED apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[log-busy]
+FAILED apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[log-not-ready]
+FAILED apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[step-invalid]
+10 failed, 8 deselected in 40.69s

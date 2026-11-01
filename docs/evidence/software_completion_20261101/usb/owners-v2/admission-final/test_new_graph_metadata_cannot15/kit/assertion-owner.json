@@ -1,0 +1,10 @@
+{
+  "owner": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload",
+  "license": "repository LICENSE (Apache-2.0); native input licenses remain independent",
+  "files_sha256": {
+    "Common/Inc/silverstar_assert.h": "aa35382c4395e5a71bc80a71944498c6aaefe4bf4fa65a63fa00bc2c67cb0452",
+    "Common/Inc/silverstar_compiler.h": "3d66165f468e3e7263ebb6d72b6c217a042dd337be39e170ffb83487815ffd57",
+    "Common/Src/silverstar_assert.c": "ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826",
+    "LICENSE-SilverStar.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  }
+}

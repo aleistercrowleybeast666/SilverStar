@@ -1,0 +1,199 @@
+{
+  "base_commit": "ad2da03c3b248d15d7cf8e1c3278781fb7cd3f79",
+  "source_identity": "auditable dirty owner bytes, not a clean commit assertion",
+  "generator_sha256": "99c9536ee7ebf778f664e4bd6cccd6dcfc6c5eda63aef90bfd41e0d9e351e98d",
+  "scratch": ".work/sc-261101-usb (short task alias; normal Windows path-length guard retained)",
+  "task": ".work/0.1.3-software-completion-20261101/usb-exact",
+  "records": [
+    {
+      "epoch": "pre-v4",
+      "part": "F103",
+      "preserved_sha256": {
+        "fault-receipt.json": "d29dca9e4ee74ab93d8b9ec3facc9494c233bc90113dfc5bb4aaa7cc590ca37a",
+        "lifecycle-receipt.json": "259c65fa03b1293e1e526855bb2ae5bef0083a16815deaa00e7f1fd92ee18d94",
+        "fault-compile.log": "62cb6dcc040fa1c225ccf8aece43aa6becf0400036d5cf863ecc6612fd39dff3",
+        "compile.log": "62cb6dcc040fa1c225ccf8aece43aa6becf0400036d5cf863ecc6612fd39dff3",
+        "fault.c": "4e45f122c3ece6d51f232955fc24d06ca51801f97e5588dd887efd9ad0592a5c",
+        "pc_usb_control.c": "104efcc3f50bd4d6c17d1737cea2512e2480481b7b378e77b5450e792c3fd97f",
+        "pc_usb_control.h": "c66fba9b7241727fb396faa99d0b21245ac373045dac6fc7929683edd13d952e",
+        "usbd_core.c": "be411e20447ea6416d49db25c008693daf7b68e820e09c54519b9b7c711b0846",
+        "usbd_ioreq.c": "1073d83e2665b8305ad3cea056b66b3f6d3274dc526b72a49472dd6373898f48"
+      }
+    },
+    {
+      "epoch": "pre-v4",
+      "part": "F407",
+      "preserved_sha256": {
+        "fault-receipt.json": "75fba8a51d77271023afcb31bc1fcbc8363dab43313c7c13454d2e6e2244c340",
+        "lifecycle-receipt.json": "24d14c47b392debd3e1f56667b923333ae18d78739669d7770379bf976f711ae",
+        "fault-compile.log": "c3dd93e98195fa670cd605bdcfb7065045551a21ba9443e2a96e8c45b789cb5e",
+        "compile.log": "e939d10892d180d8e76995a710565aebde4ba354c5a2dd97f5129f7859c42c48",
+        "fault.c": "4e45f122c3ece6d51f232955fc24d06ca51801f97e5588dd887efd9ad0592a5c",
+        "pc_usb_control.c": "cddecce29a12d09f06fc4d58e9a8240e8a15aede5fde9daf14c3ca50af624946",
+        "pc_usb_control.h": "c66fba9b7241727fb396faa99d0b21245ac373045dac6fc7929683edd13d952e",
+        "usbd_core.c": "ba0a226af59adfd2fff3bb16d114ff028644619139b79ef3d5667b29a1b78ce0",
+        "usbd_ioreq.c": "ae239d637b1ca58501592cdcea14d8a8b0f41b3ceeb8a53dc0504cd785abfb34"
+      }
+    },
+    {
+      "epoch": "post-v2",
+      "part": "F103",
+      "preserved_sha256": {
+        "fault-receipt.json": "e843a78d8ace9d3a0375ef38de9e391ec88ca28208607d57f2abd866ec198c2f",
+        "lifecycle-receipt.json": "a87538a747a8ef633f70643c578ec8bc655020b0643767a42c516f3070c470c7",
+        "fault-compile.log": "7b3bbf5d2c5807396ad7e68349050d126428e6ff9558ff5da6266ae664cdc95d",
+        "compile.log": "7b3bbf5d2c5807396ad7e68349050d126428e6ff9558ff5da6266ae664cdc95d",
+        "fault.c": "4e45f122c3ece6d51f232955fc24d06ca51801f97e5588dd887efd9ad0592a5c",
+        "pc_usb_control.c": "344f2ba0ddfd8c7805939cbffaa38ac48cbd1e14b21d8c72edb8c11bbc55d7fa",
+        "pc_usb_control.h": "ee8e55ad1baae8c3e3e425c12b4e6b667431e9c60db42ffd994f9ae2c853f977",
+        "usbd_core.c": "90e508a1d90bdc2d40733dae6d2ca89d3d6da74ccf71e264c61e25483f707e36",
+        "usbd_ioreq.c": "af8fa69eb3524a1da65f8381561d97a5d110c9d5f6e85081bf435d70ac3468f5"
+      },
+      "analyzer": [
+        {
+          "command": [
+            "D:/msys64/ucrt64/bin\\gcc.EXE",
+            "-DHOST_F103=1",
+            "-DUSBD_CLASS_BOS_ENABLED=0",
+            "-std=c11",
+            "-O2",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-pedantic",
+            "-fanalyzer",
+            "-DUSBD_MAX_SUPPORTED_CLASS=1",
+            "-ID:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f0",
+            "-c",
+            "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f0\\pc_usb_control.c",
+            "-o",
+            "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f0\\pc_usb_control.c.o"
+          ],
+          "exit": 0,
+          "object_sha256": "acbd8e36371a15ffb88090e4c5c53a44e6737e9002f114d911cbd9f07afdcff4"
+        },
+        {
+          "command": [
+            "D:/msys64/ucrt64/bin\\gcc.EXE",
+            "-DHOST_F103=1",
+            "-DUSBD_CLASS_BOS_ENABLED=0",
+            "-std=c11",
+            "-O2",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-pedantic",
+            "-fanalyzer",
+            "-DUSBD_MAX_SUPPORTED_CLASS=1",
+            "-ID:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f0",
+            "-c",
+            "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f0\\usbd_core.c",
+            "-o",
+            "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f0\\usbd_core.c.o"
+          ],
+          "exit": 0,
+          "object_sha256": "ac8a24aff41ed18cf7e242a2f8f3414b1644e9f9e8711d7b81c76beccc92861f"
+        },
+        {
+          "command": [
+            "D:/msys64/ucrt64/bin\\gcc.EXE",
+            "-DHOST_F103=1",
+            "-DUSBD_CLASS_BOS_ENABLED=0",
+            "-std=c11",
+            "-O2",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-pedantic",
+            "-fanalyzer",
+            "-DUSBD_MAX_SUPPORTED_CLASS=1",
+            "-ID:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f0",
+            "-c",
+            "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f0\\usbd_ioreq.c",
+            "-o",
+            "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f0\\usbd_ioreq.c.o"
+          ],
+          "exit": 0,
+          "object_sha256": "a934727c7fdc450a6fa4fee5079afd34cb9c30c4986003d2007395f4906cf60d"
+        }
+      ]
+    },
+    {
+      "epoch": "post-v2",
+      "part": "F407",
+      "preserved_sha256": {
+        "fault-receipt.json": "8c2cd53b81c268ef478661f2fd335e434f8d824652ec6b7e9490e5f00754084b",
+        "lifecycle-receipt.json": "ef099d8f636f7df1587f3e36931a088539b08e672958636e13e623f91dc47449",
+        "fault-compile.log": "0a187c67c4b2030a5c0cd4364031dbf50c1c183b9406fec2b0fac0d8a4ee8bc9",
+        "compile.log": "f19f1de72b58ee07ae0d767943efa7f5a50558fa88049eef5bc3835f9faa6315",
+        "fault.c": "4e45f122c3ece6d51f232955fc24d06ca51801f97e5588dd887efd9ad0592a5c",
+        "pc_usb_control.c": "4ece79faf40650b6272fdab1b4aaf30532ac9e63f7f0e3b07be8a94c81dfd8c1",
+        "pc_usb_control.h": "ee8e55ad1baae8c3e3e425c12b4e6b667431e9c60db42ffd994f9ae2c853f977",
+        "usbd_core.c": "cd4b73c04129f4ec588696a19267e324f7ee5db33d4466574382c491e89e3c9b",
+        "usbd_ioreq.c": "1caa710ce08bff5a728b4d29c45e15c32ea302d176af2ca8f334052def0a9568"
+      },
+      "analyzer": [
+        {
+          "command": [
+            "D:/msys64/ucrt64/bin\\gcc.EXE",
+            "-std=c11",
+            "-O2",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-pedantic",
+            "-fanalyzer",
+            "-DUSBD_MAX_SUPPORTED_CLASS=1",
+            "-ID:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1",
+            "-c",
+            "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1\\pc_usb_control.c",
+            "-o",
+            "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1\\pc_usb_control.c.o"
+          ],
+          "exit": 0,
+          "object_sha256": "cf2233517d127ddcf71c6ba0d9e58248d19f2fe1f6b99926db441d6101fe1285"
+        },
+        {
+          "command": [
+            "D:/msys64/ucrt64/bin\\gcc.EXE",
+            "-std=c11",
+            "-O2",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-pedantic",
+            "-fanalyzer",
+            "-DUSBD_MAX_SUPPORTED_CLASS=1",
+            "-ID:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1",
+            "-c",
+            "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1\\usbd_core.c",
+            "-o",
+            "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1\\usbd_core.c.o"
+          ],
+          "exit": 0,
+          "object_sha256": "7e2de36c21e84191bd01a2b6de9d667a325b4b5839e87dfdb882565c11cf7b24"
+        },
+        {
+          "command": [
+            "D:/msys64/ucrt64/bin\\gcc.EXE",
+            "-std=c11",
+            "-O2",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-pedantic",
+            "-fanalyzer",
+            "-DUSBD_MAX_SUPPORTED_CLASS=1",
+            "-ID:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1",
+            "-c",
+            "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1\\usbd_ioreq.c",
+            "-o",
+            "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\post-v2\\test_exact_generated_control_f1\\usbd_ioreq.c.o"
+          ],
+          "exit": 0,
+          "object_sha256": "0f45f2bad489f7c69acf87e9ad803d6273031ac1cc1419c9e95902d63a0da058"
+        }
+      ]
+    }
+  ]
+}

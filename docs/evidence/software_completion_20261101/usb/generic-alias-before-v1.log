@@ -1,0 +1,40 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_____________ test_control_policy_rejects_build_owner_alias[f103] _____________
+
+integrated = ('f103', WindowsPath('D:/Codex_Work/2026-10-08/task/usb-validation/cube-f103-usb'), {'cube-f103-usb.ioc': b'#MicroXplo...) { return USBD_FAIL; }\n    return (USBD_StatusTypeDef)interface->Control(command, s_control_rx, length);\n}\n', ...})
+
+    def test_control_policy_rejects_build_owner_alias(integrated):
+        _part, _root, native, plan, _rendered = integrated
+        changed = dict(native)
+        makefile = changed['Makefile'].decode('utf-8-sig')
+        assert makefile.count('-DUSE_HAL_DRIVER') == 1
+        changed['Makefile'] = makefile.replace('-DUSE_HAL_DRIVER',
+            '-DUSE_HAL_DRIVER -DCDC_Control_FS=UserControl').encode()
+        before = dict(changed)
+>       with pytest.raises(ValueError, match='interface/function owner build aliases'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_usb_transport_integration.py:69: Failed
+_____________ test_control_policy_rejects_build_owner_alias[f407] _____________
+
+integrated = ('f407', WindowsPath('D:/Codex_Work/2026-10-08/task/usb-validation/cube-f407-usb'), {'cube-f407-usb.ioc': b'#MicroXplo...) { return USBD_FAIL; }\n    return (USBD_StatusTypeDef)interface->Control(command, s_control_rx, length);\n}\n', ...})
+
+    def test_control_policy_rejects_build_owner_alias(integrated):
+        _part, _root, native, plan, _rendered = integrated
+        changed = dict(native)
+        makefile = changed['Makefile'].decode('utf-8-sig')
+        assert makefile.count('-DUSE_HAL_DRIVER') == 1
+        changed['Makefile'] = makefile.replace('-DUSE_HAL_DRIVER',
+            '-DUSE_HAL_DRIVER -DCDC_Control_FS=UserControl').encode()
+        before = dict(changed)
+>       with pytest.raises(ValueError, match='interface/function owner build aliases'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_usb_transport_integration.py:69: Failed
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_usb_transport_integration.py::test_control_policy_rejects_build_owner_alias[f103]
+FAILED apps\SCG\tests\test_usb_transport_integration.py::test_control_policy_rejects_build_owner_alias[f407]
+2 failed, 90 deselected in 11.87s

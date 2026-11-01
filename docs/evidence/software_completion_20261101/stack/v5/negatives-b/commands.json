@@ -1,0 +1,190 @@
+[
+  {
+    "name": "baseline",
+    "command": [
+      "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller\\Tools\\check_task_stacks.py",
+      "--project",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller",
+      "--config",
+      "Release",
+      "--prefix",
+      "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-"
+    ],
+    "exit_code": 0,
+    "seconds": 13.735,
+    "log": "baseline.log",
+    "log_sha256": "09dc0c57b1d8c23f8ced8cf9faf607cfae0f08886bd7c2568d9a930151775f4c"
+  },
+  {
+    "name": "header-change",
+    "command": [
+      "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller\\Tools\\check_task_stacks.py",
+      "--project",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller",
+      "--config",
+      "Release",
+      "--prefix",
+      "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-"
+    ],
+    "exit_code": 1,
+    "seconds": 8.103,
+    "log": "header-change.log",
+    "log_sha256": "f9ee5ff9b33bc1cceb635985c8f332e016c7199b3374c7207966480e16bfdd4d",
+    "path": "APP/Inc/control_research.h",
+    "original_sha256": "8c3b32147497e7a43c31b5636d82a38a0f94967f2cacd50d89e2e5e3e42dad7f",
+    "changed_sha256": "56d14cd50ef576c1c6a5dddb48c990fe8745436f34f9ad6349c07bf338f526bc",
+    "restored_sha256": "8c3b32147497e7a43c31b5636d82a38a0f94967f2cacd50d89e2e5e3e42dad7f",
+    "restored": true
+  },
+  {
+    "name": "lower-stack-frame",
+    "command": [
+      "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller\\Tools\\check_task_stacks.py",
+      "--project",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller",
+      "--config",
+      "Release",
+      "--prefix",
+      "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-"
+    ],
+    "exit_code": 1,
+    "seconds": 10.195,
+    "log": "lower-stack-frame.log",
+    "log_sha256": "63f43dbf5c87b7c2f7df6325f54dae695744e8788c24bd313a5d73167a0b895b",
+    "path": "build/FCCG/SilverStar_F407/Release/APP/Src/flight_task.su",
+    "original_sha256": "1b3bd2680b14e834db1567f78dd8927ff8b74a725d99eefdf4aedc8defc6f0d0",
+    "changed_sha256": "4b3a17ec907005e686f1a69c9e099686ff3cd2ec526a5a12ad60d912a4560ba0",
+    "restored_sha256": "1b3bd2680b14e834db1567f78dd8927ff8b74a725d99eefdf4aedc8defc6f0d0",
+    "restored": true
+  },
+  {
+    "name": "object-byte-change",
+    "command": [
+      "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller\\Tools\\check_task_stacks.py",
+      "--project",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller",
+      "--config",
+      "Release",
+      "--prefix",
+      "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-"
+    ],
+    "exit_code": 1,
+    "seconds": 15.037,
+    "log": "object-byte-change.log",
+    "log_sha256": "fba33475650ff25a13116413e3f5b5fa7aeb1a7d34bae2c3620002c67ccfbb8b",
+    "path": "build/FCCG/SilverStar_F407/Release/APP/Src/flight_task.o",
+    "original_sha256": "e0d107965da0bd2546720e1caee0560feacb42571261131d69d2c5f677053add",
+    "changed_sha256": "1fe50c771c6140475147bc8188bc47a7dd690b267af1691ba74bf837dd0c3073",
+    "restored_sha256": "e0d107965da0bd2546720e1caee0560feacb42571261131d69d2c5f677053add",
+    "restored": true
+  },
+  {
+    "name": "missing-manifest",
+    "command": [
+      "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller\\Tools\\check_task_stacks.py",
+      "--project",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller",
+      "--config",
+      "Release",
+      "--prefix",
+      "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-"
+    ],
+    "exit_code": 1,
+    "seconds": 12.513,
+    "log": "missing-manifest.log",
+    "log_sha256": "9d628db0870891695782a77951703a9fda2ccb033574774a5a32255365d338cd",
+    "path": "Tools/software_stack_inputs.json",
+    "original_sha256": "f690aa010de40dbd68d5e7a79c789495836d499a55fa54c671e328d95891f7af",
+    "changed_sha256": null,
+    "restored_sha256": "f690aa010de40dbd68d5e7a79c789495836d499a55fa54c671e328d95891f7af",
+    "restored": true
+  },
+  {
+    "name": "changed-manifest",
+    "command": [
+      "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller\\Tools\\check_task_stacks.py",
+      "--project",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller",
+      "--config",
+      "Release",
+      "--prefix",
+      "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-"
+    ],
+    "exit_code": 1,
+    "seconds": 10.907,
+    "log": "changed-manifest.log",
+    "log_sha256": "9d628db0870891695782a77951703a9fda2ccb033574774a5a32255365d338cd",
+    "path": "Tools/software_stack_inputs.json",
+    "original_sha256": "f690aa010de40dbd68d5e7a79c789495836d499a55fa54c671e328d95891f7af",
+    "changed_sha256": "261174acde6f728e0d425058137aeddf83ededeb6c1bb8b8367c4177150b9a22",
+    "restored_sha256": "f690aa010de40dbd68d5e7a79c789495836d499a55fa54c671e328d95891f7af",
+    "restored": true
+  },
+  {
+    "name": "changed-review-document",
+    "command": [
+      "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller\\Tools\\check_task_stacks.py",
+      "--project",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller",
+      "--config",
+      "Release",
+      "--prefix",
+      "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-"
+    ],
+    "exit_code": 1,
+    "seconds": 15.505,
+    "log": "changed-review-document.log",
+    "log_sha256": "8b57773a2a5022812b0d155993e7f4c87418c369f483f5a75343cffd65192359",
+    "path": "Tools/software_stack_review.md",
+    "original_sha256": "b00e56a9d129360b7d9a74c077f44baa606eccecdf27c41aeac1320655ef9b8d",
+    "changed_sha256": "ae45e06824a883dd79df6a954880bab2a8d5de0954704fb37c751704c5711696",
+    "restored_sha256": "b00e56a9d129360b7d9a74c077f44baa606eccecdf27c41aeac1320655ef9b8d",
+    "restored": true
+  },
+  {
+    "name": "control-metadata-change",
+    "command": [
+      "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller\\Tools\\check_task_stacks.py",
+      "--project",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller",
+      "--config",
+      "Release",
+      "--prefix",
+      "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-"
+    ],
+    "exit_code": 1,
+    "seconds": 24.351,
+    "log": "control-metadata-change.log",
+    "log_sha256": "93248b3810c45fcbcae6b5cd5d19abbbb9328b498b2d8797be8c2a9d4e4daa2f",
+    "path": "Generated/control_research.json",
+    "original_sha256": "9779c7f060171c987b4e7b81695479559acac0308792d7cefd257a0d3f0194ec",
+    "changed_sha256": "4b85eaacbf8f4a18c71a1758000be8c646a498385b470655b5647b7de1a7f6fd",
+    "restored_sha256": "9779c7f060171c987b4e7b81695479559acac0308792d7cefd257a0d3f0194ec",
+    "restored": true
+  },
+  {
+    "name": "restored-positive",
+    "command": [
+      "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller\\Tools\\check_task_stacks.py",
+      "--project",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\b\\pid\\Flight_Controller",
+      "--config",
+      "Release",
+      "--prefix",
+      "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-"
+    ],
+    "exit_code": 0,
+    "seconds": 17.181,
+    "log": "restored-positive.log",
+    "log_sha256": "09dc0c57b1d8c23f8ced8cf9faf607cfae0f08886bd7c2568d9a930151775f4c"
+  }
+]

@@ -1,0 +1,140 @@
+.E                                                                       [100%]
+=================================== ERRORS ====================================
+_________ ERROR at setup of test_exact_generated_control_faults[F407] _________
+
+request = <SubRequest 'exact_control' for <Function test_exact_generated_control_faults[F407]>>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/sc-261101-usb/post-v1/test_exact_generated_control_f1')
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/sc-261101-usb/post-v1'), _trace=<plug...=WindowsPath('D:/python_software/SilverStar/.work/sc-261101-usb/post-v1'), _retention_count=3, _retention_policy='all')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000019327034D70>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019327517950>
+
+    @pytest.fixture(params=('F103', 'F407'))
+    def exact_control(request, tmp_path, tmp_path_factory, builtin_catalog, monkeypatch):
+        config = tmp_path / 'ground.ssproject'
+        model = _GroundBoardProject_Get(builtin_catalog)
+        model.ground_target = replace(model.ground_target, pc_interface='usb_cdc', pc_resource='',
+            tx_led_resource='', rx_led_resource='', activity_led_enabled=False)
+        model.air_link = replace(model.air_link, radio_family='sx128x', frequency_hz=2473000000, bandwidth_hz=800000)
+        config.write_text(json.dumps(model.Dictionary_Get()), encoding='utf8')
+        monkeypatch.setenv('SILVERSTAR_NATIVE_BACKEND_CONFIG', str(config))
+>       return normal.first_batch.__wrapped__(SimpleNamespace(param=request.param), tmp_path, tmp_path_factory, builtin_catalog)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_native_control_faults.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\tests\test_usb_lifecycle_normal.py:380: in first_batch
+    service,imported,args,_=nb.bound.__wrapped__(native,tmp_path_factory,builtin_catalog)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\tests\test_native_ground_backend.py:30: in bound
+    result = service.NativeClassicCdcGroundProject_Import(root, model, **args,
+apps\SCG\src\silverstar_fccg\app\service.py:962: in NativeClassicCdcGroundProject_Import
+    return NativeGroundProject_Import(self.hardware_importer, self.catalog,
+apps\SCG\src\silverstar_fccg\app\native_ground.py:121: in NativeGroundProject_Import
+    NativeGroundCandidate_Render(native, proof, inventory, candidate, catalog, hclk_hz=hclk_hz)
+apps\SCG\src\silverstar_fccg\generator\native_ground.py:290: in NativeGroundCandidate_Render
+    control = NativeF407Control_Integrate(files,native_files,proof,replacements,callback_owned,bulk)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\native_control.py:99: in NativeF407Control_Integrate
+    changed=NativeControl_Integrate(temporary,NATIVE_PREFIX+callback,native[callback],
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+files = {'HardwareGenerated/NativeClassicCdc/.mxproject': b'[PreviousGenFiles]\r\nAdvancedFolderStructure=true\r\nHeaderFileLi...in the\nname of or to create a liability for the other in any way or for any purpose.\n\n</div>\n:::\n\n:::\n:::', ...}
+callback_path = 'HardwareGenerated/NativeClassicCdc/USB_DEVICE/App/usbd_cdc_if.c'
+original_callback = b'/* USER CODE BEGIN Header */\r\n/**\r\n  ***************************************************************************...\r\n/* USER CODE END PRIVATE_FUNCTIONS_IMPLEMENTATION */\r\n\r\n/**\r\n  * @}\r\n  */\r\n\r\n/**\r\n  * @}\r\n  */\r\n'
+library_prefix = 'HardwareGenerated/NativeClassicCdc/Middlewares/ST/STM32_USB_Device_Library/'
+reviewed_prefix = 'HardwareGenerated/ReviewedNativeControl/'
+
+    def NativeControl_Integrate(files, callback_path, original_callback, *, library_prefix=LIB, reviewed_prefix=REVIEWED):
+        LIB=library_prefix
+        REVIEWED=reviewed_prefix
+        hashes = {path: _Sha(files.get(LIB + path, b'')) for path in next(iter(PROFILES.values()))}
+        matches = [name for name, expected in PROFILES.items() if hashes == expected]
+        if len(matches) != 1:
+            raise ValueError('USB EP0 repair refuses unreviewed class/core/I/O byte identity; native files retained')
+        profile = matches[0]
+        indexed = profile == 'classic-f407-indexed-v1'
+        if any(re.search(rb'(?m)^\s*#\s*define\s+USE_USBD_COMPOSITE\b', data)
+               for path, data in files.items() if path.endswith('.h')):
+            raise ValueError('USB EP0 repair supports one classic FS CDC, not composite ownership')
+        source = files[callback_path].decode('utf-8-sig').replace('\r\n', '\n')
+        control = _Function_Get(source, 'CDC_Control_FS')
+        body = control[control.index('{')+1:control.rindex('}')]
+        body = _OwnerTokens_Get(body)
+        empty = '''switch(cmd){case CDC_SEND_ENCAPSULATED_COMMAND:break;case CDC_GET_ENCAPSULATED_RESPONSE:break;
+    case CDC_SET_COMM_FEATURE:break;case CDC_GET_COMM_FEATURE:break;case CDC_CLEAR_COMM_FEATURE:break;
+    case CDC_SET_LINE_CODING:break;case CDC_GET_LINE_CODING:break;case CDC_SET_CONTROL_LINE_STATE:break;
+    case CDC_SEND_BREAK:break;default:break;}return(USBD_OK);'''
+        if re.sub(r'\s+', '', body) != re.sub(r'\s+', '', empty):
+            raise ValueError('USB EP0 repair refuses nonempty or unfamiliar user CDC_Control_FS; preserve user policy')
+        _CallbackOwner_Validate(source, indexed)
+        aliases = r'(?m)^\s*#\s*(?:define|undef)\s+(?:' + '|'.join(OWNER_BINDINGS) + r')\b'
+        for path, content in files.items():
+            if path.endswith('.h'):
+                clean = _OwnerTokens_Get(content.decode('utf-8-sig'))
+                if re.search(aliases, clean):
+                    raise ValueError('USB EP0 repair refuses owner aliases in header: ' + path)
+        replacements = {}
+        records = []
+        for relative in hashes:
+            if not relative.endswith('.c'): continue
+            path = LIB + relative
+            original = files[path]
+            text = original.decode().replace('\r\n', '\n')
+            text = text.replace('#include "usbd_cdc.h"', '#include "usbd_cdc.h"\n#include "pc_usb_control.h"', 1) if relative.startswith('Class/') else text.replace('#include "usbd_core.h"', '#include "usbd_core.h"\n#include "pc_usb_control.h"', 1)
+            if relative.endswith('usbd_cdc.c'):
+                if not indexed:
+                    # Old F1 Init leaves command fields in reused class memory.
+                    # Reset them before its actual interface Init/reconfiguration.
+                    marker = '    hcdc = (USBD_CDC_HandleTypeDef *) pdev->pClassData;'
+                    if text.count(marker) != 1: raise ValueError('unreviewed F1 class initialization')
+                    text = text.replace(marker,marker+'\n    hcdc->CmdOpCode = 0xFFU;\n    hcdc->CmdLength = 0U;',1)
+                setup = _Function_Get(text, 'USBD_CDC_Setup')
+                setup, count = re.subn(r'case USB_REQ_TYPE_CLASS\s*:\n.*?\n\s*break;',
+                    'case USB_REQ_TYPE_CLASS:\n      return (uint8_t)PcUsbControl_Setup(pdev, req);', setup, count=1, flags=re.S)
+                if count != 1: raise ValueError('unreviewed CDC Setup class branch')
+                setup = setup.replace('  uint16_t len;\n', '')
+                if not indexed: setup = setup.replace('  USBD_CDC_HandleTypeDef   *hcdc = (USBD_CDC_HandleTypeDef *) pdev->pClassData;\n', '')
+                text = _Function_Replace(text, 'USBD_CDC_Setup', setup)
+                text = _Function_Replace(text, 'USBD_CDC_EP0_RxReady', 'static uint8_t USBD_CDC_EP0_RxReady(USBD_HandleTypeDef *pdev)\n{\n  return (uint8_t)PcUsbControl_RxReady(pdev);\n}')
+            elif relative.endswith('usbd_core.c'):
+                marker = '  pdev->ep0_data_len = pdev->request.wLength;'
+                text = text.replace(marker, marker + '''
+      PcUsbControl_Cancel(pdev);
+      if ((pdev->request.bmRequest & USB_REQ_TYPE_MASK) == USB_REQ_TYPE_CLASS)
+      { return PcUsbControl_Dispatch(pdev); }''', 1)
+                if indexed:
+                    start = text.index('        if (idx < USBD_MAX_SUPPORTED_CLASS)', text.index('USBD_StatusTypeDef USBD_LL_DataOutStage'))
+                    end = text.index('        (void)USBD_CtlSendStatus(pdev);', start) + len('        (void)USBD_CtlSendStatus(pdev);')
+                    replacement = '''        ret = USBD_FAIL;
+            if ((idx < USBD_MAX_SUPPORTED_CLASS) && (pdev->dev_state == USBD_STATE_CONFIGURED) &&
+                (pdev->pClass[idx] != NULL) && (pdev->pClass[idx]->EP0_RxReady != NULL))
+            { pdev->classId = idx; ret = (USBD_StatusTypeDef)pdev->pClass[idx]->EP0_RxReady(pdev); }
+            if (ret != USBD_OK) { USBD_CtlError(pdev, &pdev->request); return ret; }
+            ret = USBD_CtlSendStatus(pdev);
+            if (ret != USBD_OK) { USBD_CtlError(pdev, &pdev->request); return ret; }'''
+                else:
+                    start = text.index('        if ((pdev->pClass->EP0_RxReady != NULL)', text.index('USBD_StatusTypeDef USBD_LL_DataOutStage'))
+                    end = text.index('        USBD_CtlSendStatus(pdev);', start) + len('        USBD_CtlSendStatus(pdev);')
+                    replacement = '''        if ((pdev->dev_state != USBD_STATE_CONFIGURED) || (pdev->pClass == NULL) ||
+                (pdev->pClass->EP0_RxReady == NULL) || (pdev->pClass->EP0_RxReady(pdev) != USBD_OK))
+            { USBD_CtlError(pdev, &pdev->request); return USBD_FAIL; }
+            USBD_StatusTypeDef status = USBD_CtlSendStatus(pdev);
+            if (status != USBD_OK) { USBD_CtlError(pdev, &pdev->request); }
+            return status;'''
+                text = text[:start] + replacement + text[end:]
+                text, count = re.subn(r'(?:\(void\))?USBD_CtlReceiveStatus\(pdev\);',
+                    'if (USBD_CtlReceiveStatus(pdev) != USBD_OK)\n          { USBD_CtlError(pdev, &pdev->request); return USBD_FAIL; }', text)
+                if count != 1: raise ValueError('unreviewed EP0 status receive call')
+                # A refused EP0 operation retires the transfer before any late ISR
+                # callback can advance it. Raw standard-request void helpers can
+                # discard return codes, so Setup also checks this explicit state.
+                text = text.replace('USBD_CtlError(pdev, &pdev->request);', 'PcUsbControl_Abort(pdev);')
+                setup = _Function_Get(text, 'USBD_LL_SetupStage')
+                if setup.count('  return USBD_OK;') != 1:
+>                   raise ValueError('unreviewed standard Setup result owner')
+E                   ValueError: unreviewed standard Setup result owner
+
+apps\SCG\src\silverstar_fccg\generator\ground_usb_control.py:298: ValueError
+=========================== short test summary info ===========================
+ERROR apps\SCG\tests\test_native_control_faults.py::test_exact_generated_control_faults[F407]
+1 passed, 1 error in 20.48s

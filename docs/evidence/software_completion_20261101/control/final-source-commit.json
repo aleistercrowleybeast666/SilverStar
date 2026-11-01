@@ -1,0 +1,307 @@
+{
+  "source_commit": "e7c42b7c4971fddb02c6d5c60864b50dffaa3f1a",
+  "owned_files": [
+    {
+      "path": "contracts/mission_functions_v1.json",
+      "worktree_sha256": "5a53e865b8eac6a094f0cba949ff163e7772a98693d20881a6a9c903537e52bb",
+      "commit_blob_sha256": "2fa2a3a692db4295ca6ba2c83e2b9a3a46f80fe96e7262c28bbc8b5f37d50e14",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_algorithm_control_pid/plugin.json",
+      "worktree_sha256": "b3b99ec45ca7aec8eafc6aaf8954d60ed50309a57a604383e6999de058f12d31",
+      "commit_blob_sha256": "d7a0b5b2e38c1ac8b9dcd57df23bcfe7c107b1864e70e0f8a7594428ef13fdf6",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_algorithm_control_lqr/plugin.json",
+      "worktree_sha256": "8cd7344d27bc1c33c2fbcfdb905bc45a536d45c3a381e98653b058ca8a9e39d4",
+      "commit_blob_sha256": "0829608121028e2b912b659897c34e2729a5416c4746a1f66d10c060556a233b",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/plugin.json",
+      "worktree_sha256": "4784850a31cf93453627d5b541beb2b7fbbf801718114f76d9a28bccd640d33e",
+      "commit_blob_sha256": "ea74fd132bc0fe3e13c1280dede32e3fabbfcef7ef7339d2f91efc02fe40c14c",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Inc/control_research.h",
+      "worktree_sha256": "8c3b32147497e7a43c31b5636d82a38a0f94967f2cacd50d89e2e5e3e42dad7f",
+      "commit_blob_sha256": "8c3b32147497e7a43c31b5636d82a38a0f94967f2cacd50d89e2e5e3e42dad7f",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Inc/estimator_task.h",
+      "worktree_sha256": "c53877cadd1a4d7d59e58a49f070dc653ff23a8d796efbb2874eb6e1ce6ca9d3",
+      "commit_blob_sha256": "c53877cadd1a4d7d59e58a49f070dc653ff23a8d796efbb2874eb6e1ce6ca9d3",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/control_research.c",
+      "worktree_sha256": "f44e1a66f42cac9f88ac611d65755be185ef721085b4422d4548f5c992804663",
+      "commit_blob_sha256": "f44e1a66f42cac9f88ac611d65755be185ef721085b4422d4548f5c992804663",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/control_research_runtime.c",
+      "worktree_sha256": "b06a48929c0401217ce7aa7496c4c5752944a5b3138195e1d5c5b9a61535901b",
+      "commit_blob_sha256": "b06a48929c0401217ce7aa7496c4c5752944a5b3138195e1d5c5b9a61535901b",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/estimator_task.c",
+      "worktree_sha256": "1dbb706342cd3c972452fdd7b0a72d15bfa497f4e3597f24bae7e9e75a8772d8",
+      "commit_blob_sha256": "31a6893cb53f0ab71d168c95bd2fa5254f175664db4326e2afa8601685b107d5",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/flight_task.c",
+      "worktree_sha256": "8875c0987db3d03186c414be7888b751102a029ba0bcad3198354f46a7c75315",
+      "commit_blob_sha256": "fa9375acd66e95b664c062a6f465becd543ed1a49dc53bc0b57f15d0078ac861",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/ins_task.c",
+      "worktree_sha256": "899fe48fa6e8e58c795fe2c2db85d4ec6b5d59316a4276344465360903118a84",
+      "commit_blob_sha256": "61bc700d0a024509255ce10e1621f04cde5e0d864c2fa74f75d65f84104eae85",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Interfaces/Inc/system_device_types.h",
+      "worktree_sha256": "9bdaf1805b43c9148ad357bff0067c1938db8a2be26b5205dcfaa54790b86e4d",
+      "commit_blob_sha256": "9bdaf1805b43c9148ad357bff0067c1938db8a2be26b5205dcfaa54790b86e4d",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Interfaces/Inc/system_navigation_provenance.h",
+      "worktree_sha256": "d96d16e0e6e1ca5229e3cb0fff44f3537645259e9531329bc49d874162883f66",
+      "commit_blob_sha256": "d96d16e0e6e1ca5229e3cb0fff44f3537645259e9531329bc49d874162883f66",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Inertial/Inc/system_inertial_types.h",
+      "worktree_sha256": "c23036d30e0f16ce9acc5051cef811c8580b8918cc7671b9d19615705ca47978",
+      "commit_blob_sha256": "6a8f7467c8b921ef9f9971f7450f2878d1288d6c2429e8515b74f14fed883e5b",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/System/Inertial/Src/system_inertial.c",
+      "worktree_sha256": "b55ad2d8db2999394a9e832e26f22b20227afb83752210611762c3564ff541dd",
+      "commit_blob_sha256": "618315d42c98b80f1289ee6789e3dd92e405c6663a7e5085ce49e19bebe60726",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/Fixtures/MissionLegacy/project_mission_process.h",
+      "worktree_sha256": "99c63d18735d5abb0e3ec7f69189a753d579a96d1c512ca2ec693ef3e8a2edef",
+      "commit_blob_sha256": "68675de4afa789e3362d0e8b6b52803c572a0111a98d51e6e1911c6cb0f325d8",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/Fixtures/ControlResearch/project_mission_process.h",
+      "worktree_sha256": "03586eeccebdda6a22ee7b18194eead6ba608941a558bd006ee07c22aedf254a",
+      "commit_blob_sha256": "03586eeccebdda6a22ee7b18194eead6ba608941a558bd006ee07c22aedf254a",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/Fixtures/ControlResearch/project_mission_process.c",
+      "worktree_sha256": "4283ce248cbb26f49ec41a02ebd168cb4e1c7dc6f9b2a6869677d41be5a84498",
+      "commit_blob_sha256": "4283ce248cbb26f49ec41a02ebd168cb4e1c7dc6f9b2a6869677d41be5a84498",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/Fixtures/ControlDisabled/project_mission_process.h",
+      "worktree_sha256": "a726aac241b12ab550b4a38fd97f177526622e7484b737126c62a4cc06fda7c5",
+      "commit_blob_sha256": "a726aac241b12ab550b4a38fd97f177526622e7484b737126c62a4cc06fda7c5",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/control_provenance_bus.c",
+      "worktree_sha256": "6f11479801f7b6ab31f43bdaf7e1c7eb2b6475820b206cf9cd09d390ad527035",
+      "commit_blob_sha256": "6f11479801f7b6ab31f43bdaf7e1c7eb2b6475820b206cf9cd09d390ad527035",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/control_provenance_ins_inputs.c",
+      "worktree_sha256": "f63b4aa15993c759474597a1f698262a2739438217239b8a9b11cc56ee9d0f56",
+      "commit_blob_sha256": "f63b4aa15993c759474597a1f698262a2739438217239b8a9b11cc56ee9d0f56",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/control_research_unavailable_navigation.c",
+      "worktree_sha256": "015276e915e72443d040e3ba01e36b9d080c14054c4d940ad64089da13a4f718",
+      "commit_blob_sha256": "015276e915e72443d040e3ba01e36b9d080c14054c4d940ad64089da13a4f718",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_control_provenance.c",
+      "worktree_sha256": "3e7ac47baef391373e13a49721da702f80c7e106831b06df382bbe2fca281ec5",
+      "commit_blob_sha256": "3e7ac47baef391373e13a49721da702f80c7e106831b06df382bbe2fca281ec5",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_control_research.c",
+      "worktree_sha256": "91ea303f9a0fdbaa22772df0d2c5d3c0308c25a80384ed701a2059d22c40e25b",
+      "commit_blob_sha256": "91ea303f9a0fdbaa22772df0d2c5d3c0308c25a80384ed701a2059d22c40e25b",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/run_tests.ps1",
+      "worktree_sha256": "663ef3768fcf638ec2432e4991dc498acfa83c18821cf6c27ec354396df5a5f9",
+      "commit_blob_sha256": "d9b373a33ccdea816a79baae139587cf7d0425dd99e702f4d22885a1568fe2f8",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_optional_gnss_start.c",
+      "worktree_sha256": "f71d88718d40a94ee7adc8954da4d4b0590b3bcae63ed154729bb84793d5dd91",
+      "commit_blob_sha256": "71d6fa1de09eb45069704d46958f0401d0f3a97b5ce5882543679d5aa06f4198",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_system_inertial.c",
+      "worktree_sha256": "9d31e573406af101f6f8cef1d2d160f9546a0bacb263f24296ab1e47d152287e",
+      "commit_blob_sha256": "b80b87bd9e4f552f7bf46fc09edc62fe5d7f28e90ec5fbbc7de5f0c9ec2eb5bd",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/control_research.py",
+      "worktree_sha256": "170f2064332b23f1e3d60accd71d032146c7a1d260dcf1554892fb984a179db8",
+      "commit_blob_sha256": "170f2064332b23f1e3d60accd71d032146c7a1d260dcf1554892fb984a179db8",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/mission_process.py",
+      "worktree_sha256": "c50a2e587e8d4c76c349dcbc8df5516b94fc0573866dcf18f2f4f99cfa301497",
+      "commit_blob_sha256": "a670f3ab7fe49bc63e766b93ce746715d3bd22abe464627bac361c069e5e251f",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/render.py",
+      "worktree_sha256": "6e362dc227c6f6138a4051de9473877eb5b0fff0ea7908d9415f108850514435",
+      "commit_blob_sha256": "3384096b5bffc476928d0ab0d33f5710617b08059491302aea3ca0ce1aba2469",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/source_graph.py",
+      "worktree_sha256": "80a7682b7ce056d89152e0a01874ebe53d9e3a0fd3bcf60a5f98476bf6417dae",
+      "commit_blob_sha256": "bfc93262008f2cb74add8c95465a8842f808223069ac8d96337cc19b6d170c61",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/project/control_research.py",
+      "worktree_sha256": "a4dc7507bae8079511673c5405611f56244885c7aba985fe09a0068d6bb6f6fe",
+      "commit_blob_sha256": "a4dc7507bae8079511673c5405611f56244885c7aba985fe09a0068d6bb6f6fe",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/project/mission_functions.py",
+      "worktree_sha256": "2a518ec715a5dbf3f53c0ef0d35cd63b864a68fc45eca1fe938b1992d3047605",
+      "commit_blob_sha256": "2a518ec715a5dbf3f53c0ef0d35cd63b864a68fc45eca1fe938b1992d3047605",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/project/tuning_bundle.py",
+      "worktree_sha256": "4e217ec7b74cf5f7d2c6e03a7a2f88fc5f4b25df4f81d1261a368dbfb3880b80",
+      "commit_blob_sha256": "4e217ec7b74cf5f7d2c6e03a7a2f88fc5f4b25df4f81d1261a368dbfb3880b80",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/tests/estimator_health_support.py",
+      "worktree_sha256": "9a729eb914833f3f260a7efd53ae22cea4d646ecc5292a35ccd50e6658a08cba",
+      "commit_blob_sha256": "1926f3a1c998f238677b01a46dfee6e284f9f8912e1207abe48524e021cb2a45",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/tests/test_control_research.py",
+      "worktree_sha256": "3a9f22ba7cb18f2c9a075824cf4b6f25311e60296c792cbefdc4c80318a91110",
+      "commit_blob_sha256": "3a9f22ba7cb18f2c9a075824cf4b6f25311e60296c792cbefdc4c80318a91110",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/ground_usb_control.py",
+      "worktree_sha256": "99c9536ee7ebf778f664e4bd6cccd6dcfc6c5eda63aef90bfd41e0d9e351e98d",
+      "commit_blob_sha256": "26030e22bcce0d13d45bc2848a04aeab812bb54f2f3f3c5a39adf32c31a00f62",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/native_ground.py",
+      "worktree_sha256": "76de656acb2e9b55a989e2c100f5d19292a70cd74836162bd69f4b88358ee369",
+      "commit_blob_sha256": "d5952f4bef2d93de0356de8784d861ed8f9d065720bdc2a0d580efd026de3ce0",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/multi_target.py",
+      "worktree_sha256": "f8d47736e1eb674173927737965f0a0f4a189396bbf03bd7ab450e6c8cdad5d0",
+      "commit_blob_sha256": "8e9599da32a4867e4b0afd107e1979e9480a4fdd0a1f09e754c4ff4939116ffd",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/c071_recipe.py",
+      "worktree_sha256": "d507af633ca155f6d2b0f28e03c346c661a73a8bdca118d0adf9420253a1364a",
+      "commit_blob_sha256": "7c5ccd868b11175686d367eb1ec95804d3ab727d7490f4348c2ce81472de6b53",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/app/native_ground.py",
+      "worktree_sha256": "bf5d375caa9025745250896eac3c82e6eaf312f7b3ae6d2ecb0c5b46d5d17a21",
+      "commit_blob_sha256": "8de0349bf1cb37d113843b2d41180938edab58e749e68a86dea0da541caebd6a",
+      "identical_raw_bytes": false,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/tests/test_native_control_faults.py",
+      "worktree_sha256": "c638aa0ea8e0e3ff2cecc66de3c8994b6335947bacdf6334a61f29244ef20ea9",
+      "commit_blob_sha256": "c638aa0ea8e0e3ff2cecc66de3c8994b6335947bacdf6334a61f29244ef20ea9",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    },
+    {
+      "path": "apps/SCG/tests/test_ground_type_headers.py",
+      "worktree_sha256": "c425cd47cbc9557a48ca75429ecfb683d9af334405423e271df4812bf976e2ea",
+      "commit_blob_sha256": "c425cd47cbc9557a48ca75429ecfb683d9af334405423e271df4812bf976e2ea",
+      "identical_raw_bytes": true,
+      "identical_after_line_ending_normalization": true
+    }
+  ],
+  "note": "Source owner bytes unchanged from executed receipts; any Git text line-ending normalization is reported explicitly."
+}

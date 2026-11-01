@@ -1,0 +1,18 @@
+{
+  "ordinary_constructor_then_explicit_reference_fixture": true,
+  "fixture": "apps/SCG/tests/fixtures/tuning_bundle_v1/kf6-pid.sstuning.json",
+  "fixture_sha256": "5186baef85ba262d390bba6c1189722689a8edb23e32a479dd9623bb002ee68e",
+  "offscreen": true,
+  "errors": [],
+  "logical_size": [
+    411,
+    123
+  ],
+  "buttons": [
+    "取消",
+    "显示详情",
+    "应用"
+  ],
+  "cancel_model_unchanged": true,
+  "main_window_sha256": "63a41e5dce15a112ac2fecf9b7678ed1402ae9e4e49baa6760bd067e26ef394d"
+}

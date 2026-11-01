@@ -1,0 +1,15 @@
+{
+  "scope": "Windows native MainWindow with ordinary default model and isolated SettingsStore; Computer Use sky API",
+  "launcher": "launch_native_review.py",
+  "observations": [
+    "First page shows Flight and Ground summaries before shared wireless; options open a modal with hardware/devices/resources tabs.",
+    "After automatic toolchain detection completed (all three tools found; detect button enabled, no cancel-task control), both generate buttons remained disabled.",
+    "Found defect: toolchain result rendering replaced both blocked-reason labels with Not generated. Reported to GUI owner for correction and regression.",
+    "Ground draft changed from custom hardware to SSGS0.5 with STM32F103C8T6. Main summary remained unconfigured before Apply.",
+    "Escape closed the draft and the main Ground summary remained unconfigured. No project save was requested.",
+    "Found defect: closing main window left a visible orphan power editor and Python process; QApplication.aboutToQuit did not fire. No final-model equality claim can be made from this native run. GUI owner reproduced and identified the unparented editor.",
+    "Computer Use JavaScript session was reset at the user's request; further work resumed through code and command-line tools.",
+    "After the GUI owner captured orphan evidence, a guarded cleanup attempted to match process 5272 to parent 23092 and this launcher. The match failed or the process was already absent, so no process was stopped. The preexisting user SCG process was not targeted."
+  ],
+  "status": "Two real desktop defects found; initial run is not final GUI acceptance. Follow-up evidence must use the fixed source."
+}

@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\docs\evidence\software_completion_20261101\stack\v5\final_gates.py", line 48, in <module>
+    compared = json.loads((HERE / 'build-b/raw-byte-comparison.json').read_text(encoding='utf8'))
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 792, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py", line 776, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\stack\\v5\\build-b\\raw-byte-comparison.json'

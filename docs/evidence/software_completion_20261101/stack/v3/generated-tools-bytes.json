@@ -1,0 +1,74 @@
+[
+  {
+    "project": ".work\\0.1.3-software-completion-20261101\\stack\\v3\\a\\f407\\Flight_Controller",
+    "files": {
+      "check_task_stacks.py": "533a735f6ca96cb384539124988f9135e17e2d68449b02e030f896369923f2f3",
+      "stack_arm.py": "0c5bcf13b1f6a4ac75de3d6403c0dc4ebb314791ac44e34652d48b9ceab55846",
+      "stack_runtime.py": "24eb20f668139332af374753348a0f5ca8629beb30bc840438d5d20a4c37a0fb",
+      "stack_review.py": "21238fceb96ed797111711551d9732593938a57b750269ed0321a7ba8414c7a4",
+      "software_stack_inputs.json": "f44517c004cd3fa5bcc112d9b72759f861f8d0622130e5064b14a9ef9225bab5",
+      "software_stack_review.md": "2e9e1820663303859e420c1c30f0bfabab3bcc59dc76aaf2a4dc43cffdb61f20"
+    },
+    "matches_owner": true
+  },
+  {
+    "project": ".work\\0.1.3-software-completion-20261101\\stack\\v3\\a\\h743\\Flight_Controller",
+    "files": {
+      "check_task_stacks.py": "533a735f6ca96cb384539124988f9135e17e2d68449b02e030f896369923f2f3",
+      "stack_arm.py": "0c5bcf13b1f6a4ac75de3d6403c0dc4ebb314791ac44e34652d48b9ceab55846",
+      "stack_runtime.py": "24eb20f668139332af374753348a0f5ca8629beb30bc840438d5d20a4c37a0fb",
+      "stack_review.py": "21238fceb96ed797111711551d9732593938a57b750269ed0321a7ba8414c7a4",
+      "software_stack_inputs.json": "f44517c004cd3fa5bcc112d9b72759f861f8d0622130e5064b14a9ef9225bab5",
+      "software_stack_review.md": "2e9e1820663303859e420c1c30f0bfabab3bcc59dc76aaf2a4dc43cffdb61f20"
+    },
+    "matches_owner": true
+  },
+  {
+    "project": ".work\\0.1.3-software-completion-20261101\\stack\\v3\\a\\installation\\Flight_Controller",
+    "files": {
+      "check_task_stacks.py": "533a735f6ca96cb384539124988f9135e17e2d68449b02e030f896369923f2f3",
+      "stack_arm.py": "0c5bcf13b1f6a4ac75de3d6403c0dc4ebb314791ac44e34652d48b9ceab55846",
+      "stack_runtime.py": "24eb20f668139332af374753348a0f5ca8629beb30bc840438d5d20a4c37a0fb",
+      "stack_review.py": "21238fceb96ed797111711551d9732593938a57b750269ed0321a7ba8414c7a4",
+      "software_stack_inputs.json": "f44517c004cd3fa5bcc112d9b72759f861f8d0622130e5064b14a9ef9225bab5",
+      "software_stack_review.md": "2e9e1820663303859e420c1c30f0bfabab3bcc59dc76aaf2a4dc43cffdb61f20"
+    },
+    "matches_owner": true
+  },
+  {
+    "project": ".work\\0.1.3-software-completion-20261101\\stack\\v3\\b\\f407\\Flight_Controller",
+    "files": {
+      "check_task_stacks.py": "533a735f6ca96cb384539124988f9135e17e2d68449b02e030f896369923f2f3",
+      "stack_arm.py": "0c5bcf13b1f6a4ac75de3d6403c0dc4ebb314791ac44e34652d48b9ceab55846",
+      "stack_runtime.py": "24eb20f668139332af374753348a0f5ca8629beb30bc840438d5d20a4c37a0fb",
+      "stack_review.py": "21238fceb96ed797111711551d9732593938a57b750269ed0321a7ba8414c7a4",
+      "software_stack_inputs.json": "f44517c004cd3fa5bcc112d9b72759f861f8d0622130e5064b14a9ef9225bab5",
+      "software_stack_review.md": "2e9e1820663303859e420c1c30f0bfabab3bcc59dc76aaf2a4dc43cffdb61f20"
+    },
+    "matches_owner": true
+  },
+  {
+    "project": ".work\\0.1.3-software-completion-20261101\\stack\\v3\\b\\h743\\Flight_Controller",
+    "files": {
+      "check_task_stacks.py": "533a735f6ca96cb384539124988f9135e17e2d68449b02e030f896369923f2f3",
+      "stack_arm.py": "0c5bcf13b1f6a4ac75de3d6403c0dc4ebb314791ac44e34652d48b9ceab55846",
+      "stack_runtime.py": "24eb20f668139332af374753348a0f5ca8629beb30bc840438d5d20a4c37a0fb",
+      "stack_review.py": "21238fceb96ed797111711551d9732593938a57b750269ed0321a7ba8414c7a4",
+      "software_stack_inputs.json": "f44517c004cd3fa5bcc112d9b72759f861f8d0622130e5064b14a9ef9225bab5",
+      "software_stack_review.md": "2e9e1820663303859e420c1c30f0bfabab3bcc59dc76aaf2a4dc43cffdb61f20"
+    },
+    "matches_owner": true
+  },
+  {
+    "project": ".work\\0.1.3-software-completion-20261101\\stack\\v3\\b\\installation\\Flight_Controller",
+    "files": {
+      "check_task_stacks.py": "533a735f6ca96cb384539124988f9135e17e2d68449b02e030f896369923f2f3",
+      "stack_arm.py": "0c5bcf13b1f6a4ac75de3d6403c0dc4ebb314791ac44e34652d48b9ceab55846",
+      "stack_runtime.py": "24eb20f668139332af374753348a0f5ca8629beb30bc840438d5d20a4c37a0fb",
+      "stack_review.py": "21238fceb96ed797111711551d9732593938a57b750269ed0321a7ba8414c7a4",
+      "software_stack_inputs.json": "f44517c004cd3fa5bcc112d9b72759f861f8d0622130e5064b14a9ef9225bab5",
+      "software_stack_review.md": "2e9e1820663303859e420c1c30f0bfabab3bcc59dc76aaf2a4dc43cffdb61f20"
+    },
+    "matches_owner": true
+  }
+]

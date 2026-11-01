@@ -1,0 +1,20 @@
+BEGIN f407
+TIME 5.898630399999092
+UNBOUNDED {'PendSV_Handler', 'SVC_Handler', 'prvPortStartFirstTask', 'Reset_Handler'}
+INDIRECT {'HAL_DMA_IRQHandler', 'disk_read', 'disk_ioctl', 'disk_write', 'disk_initialize', 'disk_status', 'HAL_UART_IRQHandler', 'deregister_tm_clones', '__libc_init_array', 'prvPortStartFirstTask', 'SystemDeviceStartup_Tick', 'register_tm_clones'}
+RESET {'main', '__libc_init_array', 'SystemInit'}
+DSUB 12
+PendSV_Handler [('0x80254c2', 'msr', 'PSP, r0')]
+Reset_Handler [('0x804a624', 'ldr.w', 'sp, [pc, #108]\t@ 804a694 <LoopFillZeroCcmBss+0x10>')]
+SVC_Handler [('0x8025436', 'msr', 'PSP, r0')]
+prvPortStartFirstTask [('0x8025452', 'msr', 'MSP, r0')]
+BEGIN h743
+TIME 8.867626100007328
+UNBOUNDED {'PendSV_Handler', 'SVC_Handler', 'prvPortStartFirstTask', 'Reset_Handler'}
+INDIRECT {'HAL_DMA_IRQHandler', 'SensorImu_ProcessConfigure', 'disk_read', 'disk_ioctl', 'SensorImu_Verify', 'SensorImu_Read', 'disk_initialize', 'disk_status', 'SensorRegister_Read', 'HAL_UART_IRQHandler', 'deregister_tm_clones', '__libc_init_array', 'prvPortStartFirstTask', 'disk_write', 'SystemDeviceStartup_Tick', 'HAL_DMA_Abort_IT', 'register_tm_clones', 'SensorRegister_Write'}
+RESET {'main', '__libc_init_array', 'ExitRun0Mode', 'SystemInit'}
+DSUB 12
+PendSV_Handler [('0x802521a', 'msr', 'PSP, r0')]
+Reset_Handler [('0x804e844', 'ldr.w', 'sp, [pc, #56]\t@ 804e880 <LoopFillZerobss+0xe>')]
+SVC_Handler [('0x802518a', 'msr', 'PSP, r0')]
+prvPortStartFirstTask [('0x80251a6', 'msr', 'MSP, r0')]

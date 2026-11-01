@@ -1,0 +1,14 @@
+[
+  {
+    "ProcessId": 23092,
+    "ParentProcessId": 14172,
+    "ExecutablePath": "D:\\python_software\\SilverStar\\.venv\\Scripts\\pythonw.exe",
+    "CommandLine": "\"D:\\python_software\\SilverStar\\.venv\\Scripts\\pythonw.exe\" docs/evidence/software_completion_20261101/gui/launch_native_review.py"
+  },
+  {
+    "ProcessId": 5272,
+    "ParentProcessId": 23092,
+    "ExecutablePath": "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\pythonw.exe",
+    "CommandLine": "\"D:\\python_software\\SilverStar\\.venv\\Scripts\\pythonw.exe\" docs/evidence/software_completion_20261101/gui/launch_native_review.py"
+  }
+]

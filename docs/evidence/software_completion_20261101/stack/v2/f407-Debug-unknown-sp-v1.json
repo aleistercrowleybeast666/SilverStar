@@ -1,0 +1,34 @@
+{
+  "Reset_Handler": [
+    [
+      134547364,
+      4,
+      "ldr.w",
+      "sp, [pc, #108]\t@ 8050814 <LoopFillZeroCcmBss+0x10>"
+    ]
+  ],
+  "prvPortStartFirstTask": [
+    [
+      134380950,
+      4,
+      "msr",
+      "MSP, r0"
+    ]
+  ],
+  "PendSV_Handler": [
+    [
+      134381062,
+      4,
+      "msr",
+      "PSP, r0"
+    ]
+  ],
+  "SVC_Handler": [
+    [
+      134380922,
+      4,
+      "msr",
+      "PSP, r0"
+    ]
+  ]
+}

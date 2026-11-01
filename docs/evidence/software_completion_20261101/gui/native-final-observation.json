@@ -1,0 +1,28 @@
+{
+  "scope": "Windows native MainWindow with ordinary default model and isolated SettingsStore; Computer Use sky API; final frozen GUI source",
+  "launcher": "launch_native_review_final.py",
+  "launcher_pid": 23452,
+  "observations": [
+    "First page shows Flight and Ground hardware summary cards before shared wireless and device/resource summaries.",
+    "After the automatic toolchain task finished, all three tools were found, detect button was enabled and cancel-task control was absent. Both target generate buttons remained disabled and both labels retained Configuration incomplete / cannot generate.",
+    "Opened Ground hardware options, used its actual board dropdown to select SSGS0.5, and observed STM32F103C8T6 in the draft while the main Ground summary remained unconfigured.",
+    "Escape cancelled the draft. Alt+F4 closed the main window normally; no Python/SCG windows remained in the immediate returned window list.",
+    "The QApplication.aboutToQuit callback produced final-model.json. Its bytes equal initial-model.json exactly, demonstrating that navigation and cancelled edits did not change the project.",
+    "The launcher process was no longer running after normal close. No process termination was required.",
+    "Computer Use JavaScript kernel was immediately reset after the final window check, following the user's instruction to exit when mouse use is finished."
+  ],
+  "initial_model_sha256": "dc5dea0755012d8597fd384a190eff489824bc090cf85e653836f73dab0d6b16",
+  "final_model_sha256": "dc5dea0755012d8597fd384a190eff489824bc090cf85e653836f73dab0d6b16",
+  "project_bytes_unchanged": true,
+  "normal_exit": true,
+  "evidence": [
+    "native-final-overview.png",
+    "native-final-overview.txt",
+    "native-final-build-idle.txt",
+    "native-final-ground-draft.png",
+    "native-final-ground-draft.txt",
+    "native-final-cancelled.txt",
+    "native-final-windows-after.json"
+  ],
+  "limitations": "This manual run covers initial admission, overview, Ground draft cancellation and normal exit. Apply, Flight draft, stale asynchronous imports, migration and control-preview boundaries have separate automated evidence; this is not a claim of all desktop configurations or hardware generation validation."
+}

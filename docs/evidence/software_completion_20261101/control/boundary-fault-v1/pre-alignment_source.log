@@ -1,0 +1,2 @@
+FAIL D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\boundary-fault-v1\test_control_provenance.c:53: output.attitude_provenance.valid == 0U
+control_alignment_source_history_actual: 117 checks, 1 failures

@@ -1,0 +1,185 @@
+{
+  "status": "A reviewed and fixed; independent B delivery acceptance pending",
+  "manifest_sha256": "f690aa010de40dbd68d5e7a79c789495836d499a55fa54c671e328d95891f7af",
+  "review_document_sha256": "b00e56a9d129360b7d9a74c077f44baa606eccecdf27c41aeac1320655ef9b8d",
+  "cases": [
+    {
+      "case": "f407-Release",
+      "elf_sha256": "af918ce206858a9bef8fc7f6367006d6362cf48f252b5afae26d165c1a592198",
+      "sources": 169,
+      "source_inputs": 505,
+      "compiled_artifacts": 510,
+      "toolchain_inputs": 1878,
+      "msp_margin": 372,
+      "minimum_task_margin": 256,
+      "control": {
+        "enabled": false,
+        "required_functions": [],
+        "reachable": true
+      }
+    },
+    {
+      "case": "f407-Debug",
+      "elf_sha256": "ebe277af26fc60230e2608fed76acbba9c2da6f53324d07bbd945377970c16dc",
+      "sources": 169,
+      "source_inputs": 505,
+      "compiled_artifacts": 510,
+      "toolchain_inputs": 1878,
+      "msp_margin": 372,
+      "minimum_task_margin": 256,
+      "control": {
+        "enabled": false,
+        "required_functions": [],
+        "reachable": true
+      }
+    },
+    {
+      "case": "installation-Release",
+      "elf_sha256": "2b1dac933e1926d4b3783b7c122e84286157df1dd728c7ab07028b9ed2a8c1c6",
+      "sources": 179,
+      "source_inputs": 526,
+      "compiled_artifacts": 540,
+      "toolchain_inputs": 1878,
+      "msp_margin": 372,
+      "minimum_task_margin": 256,
+      "control": {
+        "enabled": false,
+        "required_functions": [],
+        "reachable": true
+      }
+    },
+    {
+      "case": "installation-Debug",
+      "elf_sha256": "0f0c44b050cf746f5b6c5deed95f12d52d9cbd9ee22a4c81a322743e9b8eedf1",
+      "sources": 179,
+      "source_inputs": 526,
+      "compiled_artifacts": 540,
+      "toolchain_inputs": 1878,
+      "msp_margin": 372,
+      "minimum_task_margin": 256,
+      "control": {
+        "enabled": false,
+        "required_functions": [],
+        "reachable": true
+      }
+    },
+    {
+      "case": "h743-Release",
+      "elf_sha256": "1d5bfe4abbfaa34bf7175a05789592807816422f0d9b5ef3c2733416d4127fed",
+      "sources": 181,
+      "source_inputs": 601,
+      "compiled_artifacts": 546,
+      "toolchain_inputs": 1878,
+      "msp_margin": 1364,
+      "minimum_task_margin": 256,
+      "control": {
+        "enabled": false,
+        "required_functions": [],
+        "reachable": true
+      }
+    },
+    {
+      "case": "h743-Debug",
+      "elf_sha256": "270c92d7c87ce22606fe843fe95023bc9558a4e41ee14ef93d04bb28c446e7ca",
+      "sources": 181,
+      "source_inputs": 601,
+      "compiled_artifacts": 546,
+      "toolchain_inputs": 1878,
+      "msp_margin": 2900,
+      "minimum_task_margin": 256,
+      "control": {
+        "enabled": false,
+        "required_functions": [],
+        "reachable": true
+      }
+    },
+    {
+      "case": "pid-Release",
+      "elf_sha256": "df8eb6ff52cbf7c88fae46748af29c449ca943e902c9986b953ca8ce17d5b1fd",
+      "sources": 171,
+      "source_inputs": 509,
+      "compiled_artifacts": 516,
+      "toolchain_inputs": 1878,
+      "msp_margin": 372,
+      "minimum_task_margin": 256,
+      "control": {
+        "enabled": true,
+        "kind": "pid",
+        "required_functions": [
+          "ControlPid_Step",
+          "ControlResearchBackend_Step",
+          "ControlResearch_Process"
+        ],
+        "reachable": true,
+        "period_us": 10000,
+        "contract_sha256": "9779c7f060171c987b4e7b81695479559acac0308792d7cefd257a0d3f0194ec"
+      }
+    },
+    {
+      "case": "pid-Debug",
+      "elf_sha256": "4360c5b564ed0dc1c187e516e87349bd38fea5fd2034b00d0b55cc85122d9cb3",
+      "sources": 171,
+      "source_inputs": 509,
+      "compiled_artifacts": 516,
+      "toolchain_inputs": 1878,
+      "msp_margin": 372,
+      "minimum_task_margin": 256,
+      "control": {
+        "enabled": true,
+        "kind": "pid",
+        "required_functions": [
+          "ControlPid_Step",
+          "ControlResearchBackend_Step",
+          "ControlResearch_Process"
+        ],
+        "reachable": true,
+        "period_us": 10000,
+        "contract_sha256": "9779c7f060171c987b4e7b81695479559acac0308792d7cefd257a0d3f0194ec"
+      }
+    },
+    {
+      "case": "lqr-Release",
+      "elf_sha256": "9f598771f0bfc5865f06abc5479092c88c7614c827472e67c305d8ccb213f3b0",
+      "sources": 171,
+      "source_inputs": 509,
+      "compiled_artifacts": 516,
+      "toolchain_inputs": 1878,
+      "msp_margin": 372,
+      "minimum_task_margin": 256,
+      "control": {
+        "enabled": true,
+        "kind": "lqr",
+        "required_functions": [
+          "ControlLqr_Step",
+          "ControlResearchBackend_Step",
+          "ControlResearch_Process"
+        ],
+        "reachable": true,
+        "period_us": 10000,
+        "contract_sha256": "ca4c1df032e4b1a6c077eff6cff2fe2852eb77c2bfb9d7bf7c739fbdd79a30c3"
+      }
+    },
+    {
+      "case": "lqr-Debug",
+      "elf_sha256": "a7f367fbad7e1204fd18918bdb094fe45c54a3ecb7782ffe9e8f14b751f241fc",
+      "sources": 171,
+      "source_inputs": 509,
+      "compiled_artifacts": 516,
+      "toolchain_inputs": 1878,
+      "msp_margin": 372,
+      "minimum_task_margin": 256,
+      "control": {
+        "enabled": true,
+        "kind": "lqr",
+        "required_functions": [
+          "ControlLqr_Step",
+          "ControlResearchBackend_Step",
+          "ControlResearch_Process"
+        ],
+        "reachable": true,
+        "period_us": 10000,
+        "contract_sha256": "ca4c1df032e4b1a6c077eff6cff2fe2852eb77c2bfb9d7bf7c739fbdd79a30c3"
+      }
+    }
+  ]
+}

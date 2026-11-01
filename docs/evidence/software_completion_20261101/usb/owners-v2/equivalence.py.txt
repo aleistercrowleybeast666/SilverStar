@@ -1,0 +1,59 @@
+"""Prove legal target inputs stay byte-identical after metadata-only rejection."""
+
+import hashlib
+import json
+from pathlib import Path
+
+from silverstar_fccg.app.usb_transport import UsbTransport_Export
+from silverstar_fccg.build.native_usb import _SYMBOLS
+from silverstar_fccg.generator.native_usb_graph import NativeUsbGraph_Resolve
+
+
+ROOT = Path('D:/python_software/SilverStar')
+WORK = ROOT / '.work/0.1.3-software-completion-20261101/usb/owners-v2'
+NATIVE = Path('D:/Codex_Work/2026-10-08/task/usb-validation')
+EVIDENCE = ROOT / 'docs/evidence/software_completion_20261101/usb/owners-v2'
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def sources(graph):
+    return sorted((Path(row['input']).name, row['policy'], digest(Path(row['compiled'])))
+                  for row in graph['sources'])
+
+
+rows = []
+for part in ('f103', 'f407'):
+    old = WORK / 'full/native' / part
+    fresh = WORK / ('equivalent-' + part)
+    plan = UsbTransport_Export(NATIVE / ('cube-' + part + '-usb'), fresh, integrate=True)
+    original_inventory = json.loads((old / 'kit-sha256.json').read_text())
+    new_inventory = json.loads((fresh / 'kit-sha256.json').read_text())
+    assert original_inventory == new_inventory
+    assert all(digest(old / name) == identity == digest(fresh / name)
+               for name, identity in new_inventory.items())
+    final_graph = NativeUsbGraph_Resolve(plan, NATIVE / ('cube-' + part + '-usb'), fresh)
+    compiled_graph = json.loads((old / 'Generated/usb_transport_source_graph.json').read_text())
+    assert sources(final_graph) == sources(compiled_graph)
+    assert final_graph['mcu_flags'] == compiled_graph['mcu_flags']
+    assert final_graph['defines'] == compiled_graph['defines']
+    assert final_graph['assembly'] == compiled_graph['assembly']
+    assert final_graph['linker'] == compiled_graph['linker']
+    assert [*_SYMBOLS, *final_graph['required_link_symbols']] == compiled_graph['required_symbols']
+    row = {'part': part, 'kit_files_compared': len(new_inventory), 'kit_bytes_identical': True,
+           'compiled_source_policy_and_bytes_identical': True, 'compile_flags_identical': True,
+           'link_symbols_assembly_and_linker_identical': True,
+           'compiled_source_count': len(final_graph['sources']),
+           'full_validator_graph_sha256': digest(old / 'Generated/usb_transport_source_graph.json'),
+           'fresh_kit_manifest_sha256': digest(fresh / 'kit-sha256.json'),
+           'input_preserved': True}
+    rows.append(row)
+    print(part, row['kit_files_compared'], 'kit files; identical compiled inputs')
+
+(EVIDENCE / 'admission-equivalence.json').write_text(json.dumps({
+    'scope': 'Legal emitted kit, exact actual compiled source bytes/policies, flags and link inputs; no new ARM claim',
+    'source_validation': 'NativeUsbGraph_Resolve and NativeUsbBuild_Run now reject malformed metadata before tools',
+    'rows': rows,
+}, indent=2), encoding='utf8')

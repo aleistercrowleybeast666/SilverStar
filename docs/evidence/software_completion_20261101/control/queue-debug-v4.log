@@ -1,0 +1,14 @@
+0  lto-wrapper.exe: warning: using serial compilation of 2 LTRANS jobs
+lto-wrapper.exe: note: see the '-flto' option documentation for more information
+
+1 DEBUG got=1 initialized=1 running=1 valid=0 health=0 latch=0 time=0
+
+DEBUG got=1 initialized=1 running=1 valid=0 health=800 latch=1 time=6495000
+
+DEBUG got=0 initialized=0 running=1 valid=0 health=888 latch=1 time=7125000
+
+FAIL D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\queue-debug.c:79: got != 0U && output.attitude_provenance.valid == 0U
+
+control_provenance_fault_actual: 124 checks, 1 failures
+
+ 

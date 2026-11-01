@@ -1,0 +1,60 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+______ test_legacy_copy_action_stays_visible_and_cancel_preserves_model _______
+
+qapp = <PySide6.QtWidgets.QApplication(0x237b8cbc4c0) at 0x00000237BCDB5900>
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/gui/overview-actions-before/test_legacy_copy_action_stays_0')
+
+    def test_legacy_copy_action_stays_visible_and_cancel_preserves_model(qapp, workspace_root, tmp_path):
+        service=FccgService(workspace_root)
+        window=MainWindow(SettingsStore(tmp_path/'settings.ini'), service=service)
+        window._model=_Legacy_Create(service)
+        window._Project_Refresh()
+        window.show();qapp.processEvents()
+        before=deepcopy(window._model.Dictionary_Get())
+        boxes=[]
+        window._MessageBox_Exec=lambda *args,**kwargs: boxes.append(args) or QMessageBox.StandardButton.Cancel
+        try:
+>           assert window.legacy_migration_button.isVisible()
+E           assert False
+E            +  where False = <built-in method isVisible of PySide6.QtWidgets.QPushButton object at 0x00000237BD422B40>()
+E            +    where <built-in method isVisible of PySide6.QtWidgets.QPushButton object at 0x00000237BD422B40> = <PySide6.QtWidgets.QPushButton(0x237b915f860) at 0x00000237BD422B40>.isVisible
+E            +      where <PySide6.QtWidgets.QPushButton(0x237b915f860) at 0x00000237BD422B40> = <silverstar_fccg.ui.main_window.MainWindow(0x237b8be6580) at 0x00000237BD2C3400>.legacy_migration_button
+
+apps\SCG\tests\test_hardware_overview_actions.py:28: AssertionError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+____ test_imported_hardware_save_is_on_main_card_and_not_in_private_draft _____
+
+qapp = <PySide6.QtWidgets.QApplication(0x237b8cbc4c0) at 0x00000237BCDB5900>
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/gui/overview-actions-before/test_imported_hardware_save_is0')
+
+    def test_imported_hardware_save_is_on_main_card_and_not_in_private_draft(qapp,workspace_root,tmp_path):
+        service=FccgService(workspace_root)
+        service.hardware_importer=CubeMxImporter(WorkspacePolicy(tmp_path))
+        imported=service.hardware_importer.Project_Import(workspace_root/'tests/fixtures/cubemx_minimal',
+            expected_mcu='STM32F407VET6',risk_acknowledged=True)
+        window=MainWindow(SettingsStore(tmp_path/'settings.ini'),service=service)
+        window._model.board=''
+        window._model.hardware=imported.hardware
+        window._Project_Refresh()
+        window.show();qapp.processEvents()
+        calls=[]
+        window._BoardInstanceSave_Request=calls.append
+        try:
+            button=window.board_hardware_page.export_button
+>           assert button.isEnabled() and button.isVisible()
+E           assert (True and False)
+E            +  where True = <built-in method isEnabled of PySide6.QtWidgets.QPushButton object at 0x00000237C0A656C0>()
+E            +    where <built-in method isEnabled of PySide6.QtWidgets.QPushButton object at 0x00000237C0A656C0> = <PySide6.QtWidgets.QPushButton(0x237bc230320) at 0x00000237C0A656C0>.isEnabled
+E            +  and   False = <built-in method isVisible of PySide6.QtWidgets.QPushButton object at 0x00000237C0A656C0>()
+E            +    where <built-in method isVisible of PySide6.QtWidgets.QPushButton object at 0x00000237C0A656C0> = <PySide6.QtWidgets.QPushButton(0x237bc230320) at 0x00000237C0A656C0>.isVisible
+
+apps\SCG\tests\test_hardware_overview_actions.py:51: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_hardware_overview_actions.py::test_legacy_copy_action_stays_visible_and_cancel_preserves_model
+FAILED apps\SCG\tests\test_hardware_overview_actions.py::test_imported_hardware_save_is_on_main_card_and_not_in_private_draft
+2 failed in 30.74s

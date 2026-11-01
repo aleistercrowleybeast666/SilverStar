@@ -1,0 +1,249 @@
+{
+  "id": "8d1e60f9-aaaa-4512-9126-bb7f11255658",
+  "name": "离线单级探空箭 · 合成试车",
+  "parts": [
+    {
+      "id": "body",
+      "name": "箭体",
+      "kind": "tube",
+      "parent_id": null,
+      "position_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mass_kg": 1.0,
+      "length_m": 1.0,
+      "radius_m": 0.04,
+      "inner_radius_m": 0.037,
+      "inertia_kg_m2": null,
+      "mass_basis": "own_part",
+      "provenance": "user input"
+    },
+    {
+      "id": "nose",
+      "name": "头锥",
+      "kind": "nose",
+      "parent_id": "body",
+      "position_m": [
+        0.0,
+        0.0,
+        0.6
+      ],
+      "rotation_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mass_kg": 0.15,
+      "length_m": 0.2,
+      "radius_m": 0.04,
+      "inner_radius_m": 0.0,
+      "inertia_kg_m2": null,
+      "mass_basis": "own_part",
+      "provenance": "user input"
+    },
+    {
+      "id": "fins",
+      "name": "尾翼组等效质量",
+      "kind": "fins",
+      "parent_id": "body",
+      "position_m": [
+        0.0,
+        0.0,
+        -0.4
+      ],
+      "rotation_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mass_kg": 0.1,
+      "length_m": 0.15,
+      "radius_m": 0.09,
+      "inner_radius_m": 0.0,
+      "inertia_kg_m2": null,
+      "mass_basis": "own_part",
+      "provenance": "user input"
+    },
+    {
+      "id": "avionics",
+      "name": "航电集中质量",
+      "kind": "mass",
+      "parent_id": "body",
+      "position_m": [
+        0.0,
+        0.0,
+        0.15
+      ],
+      "rotation_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mass_kg": 0.25,
+      "length_m": 0.1,
+      "radius_m": 0.02,
+      "inner_radius_m": 0.0,
+      "inertia_kg_m2": null,
+      "mass_basis": "own_part",
+      "provenance": "user input"
+    }
+  ],
+  "motor": {
+    "time_s": [
+      0.0,
+      0.05,
+      0.25,
+      1.0,
+      1.8,
+      2.0
+    ],
+    "thrust_n": [
+      0.0,
+      50.0,
+      70.0,
+      65.0,
+      40.0,
+      0.0
+    ],
+    "propellant_mass_kg": 0.3,
+    "dry_mass_kg": 0.2,
+    "position_m": [
+      0.0,
+      0.0,
+      -0.45
+    ],
+    "length_m": 0.2,
+    "radius_m": 0.025,
+    "ignition_s": 0.0,
+    "mass_model": "impulse_fraction_uniform_cylinder",
+    "gimbal_capable": true,
+    "source": {
+      "origin": "synthetic",
+      "calibration": "not applicable"
+    },
+    "rotation_bm_wxyz": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "scenario": {
+    "duration_s": 18.0,
+    "step_us": 5000,
+    "output_us": 20000,
+    "seed": 42,
+    "rail_length_m": 1.0,
+    "launch_tilt_deg": 3.0,
+    "wind_enu_mps": [
+      2.0,
+      0.0,
+      0.0
+    ],
+    "wind_shear_per_s": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "wind_gust_mps": 0.0,
+    "gravity_mps2": 9.80665,
+    "reference_area_m2": 0.005027,
+    "reference_length_m": 1.2,
+    "drag_coefficient": 0.45,
+    "normal_slope_per_rad": 2.0,
+    "damping_coefficient": 0.1,
+    "cp_body_m": [
+      0.0,
+      0.0,
+      -0.25
+    ],
+    "aero_max_angle_deg": 20.0,
+    "aero_max_mach": 0.7,
+    "aero_provenance": "explicit user engineering coefficient approximation"
+  },
+  "sensors": {
+    "imu_us": 10000,
+    "imu_delay_us": 0,
+    "gnss_us": 200000,
+    "gnss_delay_us": 100000,
+    "auxiliary_us": 100000,
+    "auxiliary_delay_us": 10000,
+    "pressure_std_pa": 1.0,
+    "magnetic_std_t": 5e-08,
+    "accel_noise_std_mps2": 0.03,
+    "gyro_noise_std_radps": 0.0005,
+    "accel_bias_mps2": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "gyro_bias_radps": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "position_std_m": 0.4,
+    "velocity_std_mps": 0.08,
+    "accel_limit_mps2": 156.9064,
+    "gyro_limit_radps": 10.0,
+    "quantization_mps2": 0.0001,
+    "rotation_bs_wxyz": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "outage_start_s": 5.0,
+    "outage_end_s": 7.0
+  },
+  "control": {
+    "estimator": "kf6",
+    "controller": "lqr",
+    "actuator": "gimbal",
+    "period_us": 10000,
+    "start_phase": "powered",
+    "end_phase": "coast",
+    "kp": 1.5,
+    "ki": 0.15,
+    "kd": 0.35,
+    "torque_limit_nm": 0.4,
+    "angle_limit_rad": 0.12,
+    "rate_limit_radps": 2.0,
+    "response_s": 0.03,
+    "wheel_inertia_kg_m2": 0.0002,
+    "wheel_speed_limit_radps": 500.0,
+    "rcs_force_n": 1.0,
+    "rcs_propellant_kg": 0.015,
+    "rcs_isp_s": 50.0,
+    "minimum_pulse_s": 0.04,
+    "lqr_q_angle": 5.0,
+    "lqr_q_rate": 1.0,
+    "lqr_r": 1.0,
+    "actuator_position_m": [
+      0.0,
+      0.0,
+      -0.45
+    ],
+    "fin_area_m2": 0.003,
+    "fin_slope_per_rad": 2.0
+  },
+  "assumptions": [
+    "示例装配与气动系数为软件参考；发动机证据与工程近似分别保留。",
+    "推进剂按冲量比例消耗，均匀圆柱分布。",
+    "小攻角亚声速工程气动，超出适用域记录诊断。",
+    "刚体、局部平地；无回收伞、级间分离和流体晃动。"
+  ],
+  "import_issues": [],
+  "schema": "treediagram.design/1"
+}

@@ -1,0 +1,1 @@
+Assertion failed: UsbCdcRetire_ConfigurationCheck(&hUsbDeviceFS)==USB_CDC_OK, file D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\usb\owners-v2\pre\usb-native-init-f4070\test.c, line 180

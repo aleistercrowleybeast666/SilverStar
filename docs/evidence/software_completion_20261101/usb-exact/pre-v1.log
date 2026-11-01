@@ -1,0 +1,34 @@
+EE                                                                       [100%]
+=================================== ERRORS ====================================
+_________ ERROR at setup of test_exact_generated_control_faults[F103] _________
+
+self = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb-exact/pre-v1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] ϵͳ�Ҳ���ָ����·����: 'D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb-exact\\pre-v1'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+_________ ERROR at setup of test_exact_generated_control_faults[F407] _________
+
+self = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/usb-exact/pre-v1')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 3] ϵͳ�Ҳ���ָ����·����: 'D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb-exact\\pre-v1'
+
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\pathlib\__init__.py:1016: FileNotFoundError
+=========================== short test summary info ===========================
+ERROR apps\SCG\tests\test_native_control_faults.py::test_exact_generated_control_faults[F103]
+ERROR apps\SCG\tests\test_native_control_faults.py::test_exact_generated_control_faults[F407]
+2 errors in 30.62s

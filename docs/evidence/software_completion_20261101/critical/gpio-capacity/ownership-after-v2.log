@@ -1,0 +1,71 @@
+.E                                                                       [100%]
+=================================== ERRORS ====================================
+_______ ERROR at setup of test_runtime_generation_includes_stack_report _______
+
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/cr...ar/.work/0.1.3-software-completion-20261101/critical/ownership-after-v2'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="module")
+    def runtime_project(tmp_path_factory):
+        root = Path(__file__).resolve().parents[1]
+        project = tmp_path_factory.mktemp("runtime")
+        service = FccgService(root)
+        model = service.ReferenceProject_Create("RuntimeRegression")
+>       service.Project_Save(model, project, confirm_dangerous=True)
+
+apps\SCG\tests\test_runtime_safety.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\app\service.py:205: in Project_Save
+    return self.Project_EnsureBuildable(
+apps\SCG\src\silverstar_fccg\app\service.py:279: in Project_EnsureBuildable
+    result = assembler.Apply(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:342: in Apply
+    return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Apply(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:357: in Apply
+    expected = self.Plan(model, plan.project_root)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\assembler.py:116: in Plan
+    desired, _ownership = self._DesiredFiles_Get(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:436: in _DesiredFiles_Get
+    desired.update(MetadataFiles_Render(render_model, self.catalog, graph,
+apps\SCG\src\silverstar_fccg\generator\render.py:487: in MetadataFiles_Render
+    LogDecoderProfile_Render(render_model, catalog)
+apps\SCG\src\silverstar_fccg\generator\render.py:2277: in LogDecoderProfile_Render
+    "metadata_declarations": _LogMetadataDeclarations_Get(model, catalog, metadata),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:2021: in _LogMetadataDeclarations_Get
+    timing = FusionTimingDeclaration_Get(model, catalog)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='RuntimeRegression', firmware_version='0.1.3', build_target='SilverStar_0_1...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001FF293BB9D0>
+
+    def FusionTimingDeclaration_Get(model, catalog):
+        owner = _Owner_Get(model, catalog)
+        if owner is None:
+            return None
+        actual = next(row for row in AlgorithmParameters_Resolve(model, catalog)
+                      if row["component"] == owner)
+        mode = next(row["value"] for row in actual["parameters"]
+                    if row["id"] == "fusion_timing_mode")
+        if type(mode) is not int or mode not in (0, 1, 2):
+            raise ValueError("Fusion timing actual must be integer 0, 1 or 2")
+        from silverstar_fccg.generator.render import ComponentProvenance_Get
+        for component in _Components_Get(model, catalog):
+            upstream = ComponentProvenance_Get(catalog, component)["files"]
+            declared = model.component_provenance.get(component)
+            if declared is not None and declared.get("files") != upstream:
+>               raise ValueError("Fusion timing payload identity NOT PROVEN: preserved provenance")
+E               ValueError: Fusion timing payload identity NOT PROVEN: preserved provenance
+
+apps\SCG\src\silverstar_fccg\generator\fusion_timing.py:55: ValueError
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+ERROR apps\SCG\tests\test_runtime_safety.py::test_runtime_generation_includes_stack_report
+1 passed, 1 warning, 1 error in 13.36s

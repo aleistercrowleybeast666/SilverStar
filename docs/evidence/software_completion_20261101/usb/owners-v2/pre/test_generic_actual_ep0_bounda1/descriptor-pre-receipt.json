@@ -1,0 +1,117 @@
+{
+  "scope": "pre-fix compiled executable from pre test; replay after timeout recorder bytes/str fix only",
+  "binary_sha256": "09aa5ecbfac36bd69601295668b99172dc2963ba3ac82318c856bfa6511e680c",
+  "source_sha256": {
+    "control.c": "0eed0e6891ccbcf6e5e4baa4bedbad8cae9097c67f5f973403e0669fc694bf54",
+    "pc_usb_control.c": "4ece79faf40650b6272fdab1b4aaf30532ac9e63f7f0e3b07be8a94c81dfd8c1",
+    "usbd_cdc.c": "98a5b1760ec4e29c803827ca5c74d7c3f7bf36765825c1d028230bbf00e31b5f",
+    "usbd_cdc_if.c": "15b1769c9691ddf21afef8a98071352eb1eba8089240e8582ed2d5b5098da08c",
+    "usbd_core.c": "83a8a59ffe5d3b1d54c44d8443866bf7ce8077bde9a03c8894f47afa3641ed22",
+    "usbd_ctlreq.c": "5f1c211ed991e074589c82bc52571357a268f36776111d99a85539df53fd80f0",
+    "usbd_desc.c": "97ba18339feec643ec4959fc2acabb97e226e1d6e36416089b2d1059794cee15",
+    "usbd_ioreq.c": "1caa710ce08bff5a728b4d29c45e15c32ea302d176af2ca8f334052def0a9568",
+    "usb_cdc_port.c": "f130a194292b29a23b42e7ab5ae48fa982e05cde084bed5911de762ee0fa8864",
+    "usb_cdc_transport.c": "37684894e381072410182de742db02b2c7e49e2d6a18f3e707473cec08c9a9e8"
+  },
+  "runs": [
+    {
+      "command": [
+        ".work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\pre\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-getters-normal"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        ".work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\pre\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-zero-length"
+      ],
+      "exit": "TIMEOUT",
+      "timeout_seconds": 2,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        ".work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\pre\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-short-endpoint"
+      ],
+      "exit": "TIMEOUT",
+      "timeout_seconds": 2,
+      "stdout": "",
+      "stderr": "Assertion failed: USBD_GetEpDesc(descriptor, !strcmp(scenario,\"descriptor-short-endpoint\")?CDC_IN_EP:CDC_CMD_EP)==NULL, file D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\pre\\test_generic_actual_ep0_bounda1\\control.c, line 301\n"
+    },
+    {
+      "command": [
+        ".work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\pre\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-trailing-invalid"
+      ],
+      "exit": "TIMEOUT",
+      "timeout_seconds": 2,
+      "stdout": "",
+      "stderr": "Assertion failed: USBD_GetEpDesc(descriptor, !strcmp(scenario,\"descriptor-short-endpoint\")?CDC_IN_EP:CDC_CMD_EP)==NULL, file D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\pre\\test_generic_actual_ep0_bounda1\\control.c, line 301\n"
+    },
+    {
+      "command": [
+        ".work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\pre\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-total-over-capacity"
+      ],
+      "exit": "TIMEOUT",
+      "timeout_seconds": 2,
+      "stdout": "",
+      "stderr": "Assertion failed: USBD_GetEpDesc(descriptor,CDC_CMD_EP)==NULL, file D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\pre\\test_generic_actual_ep0_bounda1\\control.c, line 295\n"
+    },
+    {
+      "command": [
+        ".work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\pre\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-truncated-tail"
+      ],
+      "exit": "TIMEOUT",
+      "timeout_seconds": 2,
+      "stdout": "",
+      "stderr": "Assertion failed: USBD_GetEpDesc(descriptor,CDC_CMD_EP)==NULL, file D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\pre\\test_generic_actual_ep0_bounda1\\control.c, line 298\n"
+    },
+    {
+      "command": [
+        ".work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\pre\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-null-owner"
+      ],
+      "exit": "TIMEOUT",
+      "timeout_seconds": 2,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        ".work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\pre\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-foreign-owner"
+      ],
+      "exit": "TIMEOUT",
+      "timeout_seconds": 2,
+      "stdout": "",
+      "stderr": "Assertion failed: USBD_GetEpDesc(other,CDC_IN_EP)==NULL, file D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\pre\\test_generic_actual_ep0_bounda1\\control.c, line 290\n"
+    },
+    {
+      "command": [
+        ".work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\pre\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-request-invalid"
+      ],
+      "exit": "TIMEOUT",
+      "timeout_seconds": 2,
+      "stdout": "",
+      "stderr": "Assertion failed: USBD_CDC.GetHSConfigDescriptor(&length)==descriptor && length==0U, file D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\pre\\test_generic_actual_ep0_bounda1\\control.c, line 307\n"
+    },
+    {
+      "command": [
+        ".work\\0.1.3-software-completion-20261101\\usb\\owners-v2\\pre\\test_generic_actual_ep0_bounda1\\control.exe",
+        "descriptor-null-length"
+      ],
+      "exit": "TIMEOUT",
+      "timeout_seconds": 2,
+      "stdout": "",
+      "stderr": ""
+    }
+  ]
+}

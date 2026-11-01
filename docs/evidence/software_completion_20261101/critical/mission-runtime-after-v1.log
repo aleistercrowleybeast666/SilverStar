@@ -1,0 +1,823 @@
+.................EEE.EEEEEEEEEE                                          [100%]
+=================================== ERRORS ====================================
+_______ ERROR at setup of test_native_recovery_permission_owner[False] ________
+
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000209390041A0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/cr...Star/.work/0.1.3-software-completion-20261101/critical/post-combined-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_generated_owner(workspace_root, builtin_catalog, tmp_path_factory):
+        from silverstar_fccg.core.workspace import WorkspacePolicy
+        from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
+        from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        directory = tmp_path_factory.mktemp('native-generated-owner')
+>       TargetGeneration_Apply(model, builtin_catalog, WorkspacePolicy(workspace_root), directory, TargetScope.FLIGHT)
+
+apps\SCG\tests\test_mission_process_native.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\generator\multi_target.py:636: in TargetGeneration_Apply
+    assembler.Apply(flight_model, plan, confirm_dangerous=confirm_dangerous,
+apps\SCG\src\silverstar_fccg\generator\assembler.py:342: in Apply
+    return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Apply(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:357: in Apply
+    expected = self.Plan(model, plan.project_root)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\assembler.py:116: in Plan
+    desired, _ownership = self._DesiredFiles_Get(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:433: in _DesiredFiles_Get
+    desired = GeneratedFiles_Render(render_model, self.catalog, graph)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:299: in GeneratedFiles_Render
+    LogDecoderProfile_Render(model, catalog) if logging_enabled else None
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:2250: in LogDecoderProfile_Render
+    "metadata_declarations": _LogMetadataDeclarations_Get(model, catalog, metadata),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:1994: in _LogMetadataDeclarations_Get
+    timing = FusionTimingDeclaration_Get(model, catalog)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='SilverStar_F407_Reference_Generated', firmware_version='0.1.3', build_targ...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000020938B0B9D0>
+
+    def FusionTimingDeclaration_Get(model, catalog):
+        owner = _Owner_Get(model, catalog)
+        if owner is None:
+            return None
+        actual = next(row for row in AlgorithmParameters_Resolve(model, catalog)
+                      if row["component"] == owner)
+        mode = next(row["value"] for row in actual["parameters"]
+                    if row["id"] == "fusion_timing_mode")
+        if type(mode) is not int or mode not in (0, 1, 2):
+            raise ValueError("Fusion timing actual must be integer 0, 1 or 2")
+        from silverstar_fccg.generator.render import ComponentProvenance_Get
+        for component in _Components_Get(model, catalog):
+            upstream = ComponentProvenance_Get(catalog, component)["files"]
+            declared = model.component_provenance.get(component)
+            if declared is not None and declared.get("files") != upstream:
+>               raise ValueError("Fusion timing payload identity NOT PROVEN: preserved provenance")
+E               ValueError: Fusion timing payload identity NOT PROVEN: preserved provenance
+
+apps\SCG\src\silverstar_fccg\generator\fusion_timing.py:55: ValueError
+________ ERROR at setup of test_native_recovery_permission_owner[True] ________
+
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000209390041A0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/cr...Star/.work/0.1.3-software-completion-20261101/critical/post-combined-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_generated_owner(workspace_root, builtin_catalog, tmp_path_factory):
+        from silverstar_fccg.core.workspace import WorkspacePolicy
+        from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
+        from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        directory = tmp_path_factory.mktemp('native-generated-owner')
+>       TargetGeneration_Apply(model, builtin_catalog, WorkspacePolicy(workspace_root), directory, TargetScope.FLIGHT)
+
+apps\SCG\tests\test_mission_process_native.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\generator\multi_target.py:636: in TargetGeneration_Apply
+    assembler.Apply(flight_model, plan, confirm_dangerous=confirm_dangerous,
+apps\SCG\src\silverstar_fccg\generator\assembler.py:342: in Apply
+    return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Apply(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:357: in Apply
+    expected = self.Plan(model, plan.project_root)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\assembler.py:116: in Plan
+    desired, _ownership = self._DesiredFiles_Get(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:433: in _DesiredFiles_Get
+    desired = GeneratedFiles_Render(render_model, self.catalog, graph)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:299: in GeneratedFiles_Render
+    LogDecoderProfile_Render(model, catalog) if logging_enabled else None
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:2250: in LogDecoderProfile_Render
+    "metadata_declarations": _LogMetadataDeclarations_Get(model, catalog, metadata),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:1994: in _LogMetadataDeclarations_Get
+    timing = FusionTimingDeclaration_Get(model, catalog)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='SilverStar_F407_Reference_Generated', firmware_version='0.1.3', build_targ...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000020938B0B9D0>
+
+    def FusionTimingDeclaration_Get(model, catalog):
+        owner = _Owner_Get(model, catalog)
+        if owner is None:
+            return None
+        actual = next(row for row in AlgorithmParameters_Resolve(model, catalog)
+                      if row["component"] == owner)
+        mode = next(row["value"] for row in actual["parameters"]
+                    if row["id"] == "fusion_timing_mode")
+        if type(mode) is not int or mode not in (0, 1, 2):
+            raise ValueError("Fusion timing actual must be integer 0, 1 or 2")
+        from silverstar_fccg.generator.render import ComponentProvenance_Get
+        for component in _Components_Get(model, catalog):
+            upstream = ComponentProvenance_Get(catalog, component)["files"]
+            declared = model.component_provenance.get(component)
+            if declared is not None and declared.get("files") != upstream:
+>               raise ValueError("Fusion timing payload identity NOT PROVEN: preserved provenance")
+E               ValueError: Fusion timing payload identity NOT PROVEN: preserved provenance
+
+apps\SCG\src\silverstar_fccg\generator\fusion_timing.py:55: ValueError
+__ ERROR at setup of test_native_acceleration_uses_actual_corrected_provider __
+
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000209390041A0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/cr...Star/.work/0.1.3-software-completion-20261101/critical/post-combined-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_generated_owner(workspace_root, builtin_catalog, tmp_path_factory):
+        from silverstar_fccg.core.workspace import WorkspacePolicy
+        from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
+        from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        directory = tmp_path_factory.mktemp('native-generated-owner')
+>       TargetGeneration_Apply(model, builtin_catalog, WorkspacePolicy(workspace_root), directory, TargetScope.FLIGHT)
+
+apps\SCG\tests\test_mission_process_native.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\generator\multi_target.py:636: in TargetGeneration_Apply
+    assembler.Apply(flight_model, plan, confirm_dangerous=confirm_dangerous,
+apps\SCG\src\silverstar_fccg\generator\assembler.py:342: in Apply
+    return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Apply(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:357: in Apply
+    expected = self.Plan(model, plan.project_root)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\assembler.py:116: in Plan
+    desired, _ownership = self._DesiredFiles_Get(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:433: in _DesiredFiles_Get
+    desired = GeneratedFiles_Render(render_model, self.catalog, graph)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:299: in GeneratedFiles_Render
+    LogDecoderProfile_Render(model, catalog) if logging_enabled else None
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:2250: in LogDecoderProfile_Render
+    "metadata_declarations": _LogMetadataDeclarations_Get(model, catalog, metadata),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:1994: in _LogMetadataDeclarations_Get
+    timing = FusionTimingDeclaration_Get(model, catalog)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='SilverStar_F407_Reference_Generated', firmware_version='0.1.3', build_targ...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000020938B0B9D0>
+
+    def FusionTimingDeclaration_Get(model, catalog):
+        owner = _Owner_Get(model, catalog)
+        if owner is None:
+            return None
+        actual = next(row for row in AlgorithmParameters_Resolve(model, catalog)
+                      if row["component"] == owner)
+        mode = next(row["value"] for row in actual["parameters"]
+                    if row["id"] == "fusion_timing_mode")
+        if type(mode) is not int or mode not in (0, 1, 2):
+            raise ValueError("Fusion timing actual must be integer 0, 1 or 2")
+        from silverstar_fccg.generator.render import ComponentProvenance_Get
+        for component in _Components_Get(model, catalog):
+            upstream = ComponentProvenance_Get(catalog, component)["files"]
+            declared = model.component_provenance.get(component)
+            if declared is not None and declared.get("files") != upstream:
+>               raise ValueError("Fusion timing payload identity NOT PROVEN: preserved provenance")
+E               ValueError: Fusion timing payload identity NOT PROVEN: preserved provenance
+
+apps\SCG\src\silverstar_fccg\generator\fusion_timing.py:55: ValueError
+________ ERROR at setup of test_native_runtime_error_contract[normal] _________
+
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000209390041A0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/cr...Star/.work/0.1.3-software-completion-20261101/critical/post-combined-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_generated_owner(workspace_root, builtin_catalog, tmp_path_factory):
+        from silverstar_fccg.core.workspace import WorkspacePolicy
+        from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
+        from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        directory = tmp_path_factory.mktemp('native-generated-owner')
+>       TargetGeneration_Apply(model, builtin_catalog, WorkspacePolicy(workspace_root), directory, TargetScope.FLIGHT)
+
+apps\SCG\tests\test_mission_process_native.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\generator\multi_target.py:636: in TargetGeneration_Apply
+    assembler.Apply(flight_model, plan, confirm_dangerous=confirm_dangerous,
+apps\SCG\src\silverstar_fccg\generator\assembler.py:342: in Apply
+    return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Apply(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:357: in Apply
+    expected = self.Plan(model, plan.project_root)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\assembler.py:116: in Plan
+    desired, _ownership = self._DesiredFiles_Get(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:433: in _DesiredFiles_Get
+    desired = GeneratedFiles_Render(render_model, self.catalog, graph)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:299: in GeneratedFiles_Render
+    LogDecoderProfile_Render(model, catalog) if logging_enabled else None
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:2250: in LogDecoderProfile_Render
+    "metadata_declarations": _LogMetadataDeclarations_Get(model, catalog, metadata),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:1994: in _LogMetadataDeclarations_Get
+    timing = FusionTimingDeclaration_Get(model, catalog)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='SilverStar_F407_Reference_Generated', firmware_version='0.1.3', build_targ...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000020938B0B9D0>
+
+    def FusionTimingDeclaration_Get(model, catalog):
+        owner = _Owner_Get(model, catalog)
+        if owner is None:
+            return None
+        actual = next(row for row in AlgorithmParameters_Resolve(model, catalog)
+                      if row["component"] == owner)
+        mode = next(row["value"] for row in actual["parameters"]
+                    if row["id"] == "fusion_timing_mode")
+        if type(mode) is not int or mode not in (0, 1, 2):
+            raise ValueError("Fusion timing actual must be integer 0, 1 or 2")
+        from silverstar_fccg.generator.render import ComponentProvenance_Get
+        for component in _Components_Get(model, catalog):
+            upstream = ComponentProvenance_Get(catalog, component)["files"]
+            declared = model.component_provenance.get(component)
+            if declared is not None and declared.get("files") != upstream:
+>               raise ValueError("Fusion timing payload identity NOT PROVEN: preserved provenance")
+E               ValueError: Fusion timing payload identity NOT PROVEN: preserved provenance
+
+apps\SCG\src\silverstar_fccg\generator\fusion_timing.py:55: ValueError
+_______ ERROR at setup of test_native_runtime_error_contract[no-events] _______
+
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000209390041A0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/cr...Star/.work/0.1.3-software-completion-20261101/critical/post-combined-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_generated_owner(workspace_root, builtin_catalog, tmp_path_factory):
+        from silverstar_fccg.core.workspace import WorkspacePolicy
+        from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
+        from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        directory = tmp_path_factory.mktemp('native-generated-owner')
+>       TargetGeneration_Apply(model, builtin_catalog, WorkspacePolicy(workspace_root), directory, TargetScope.FLIGHT)
+
+apps\SCG\tests\test_mission_process_native.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\generator\multi_target.py:636: in TargetGeneration_Apply
+    assembler.Apply(flight_model, plan, confirm_dangerous=confirm_dangerous,
+apps\SCG\src\silverstar_fccg\generator\assembler.py:342: in Apply
+    return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Apply(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:357: in Apply
+    expected = self.Plan(model, plan.project_root)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\assembler.py:116: in Plan
+    desired, _ownership = self._DesiredFiles_Get(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:433: in _DesiredFiles_Get
+    desired = GeneratedFiles_Render(render_model, self.catalog, graph)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:299: in GeneratedFiles_Render
+    LogDecoderProfile_Render(model, catalog) if logging_enabled else None
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:2250: in LogDecoderProfile_Render
+    "metadata_declarations": _LogMetadataDeclarations_Get(model, catalog, metadata),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:1994: in _LogMetadataDeclarations_Get
+    timing = FusionTimingDeclaration_Get(model, catalog)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='SilverStar_F407_Reference_Generated', firmware_version='0.1.3', build_targ...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000020938B0B9D0>
+
+    def FusionTimingDeclaration_Get(model, catalog):
+        owner = _Owner_Get(model, catalog)
+        if owner is None:
+            return None
+        actual = next(row for row in AlgorithmParameters_Resolve(model, catalog)
+                      if row["component"] == owner)
+        mode = next(row["value"] for row in actual["parameters"]
+                    if row["id"] == "fusion_timing_mode")
+        if type(mode) is not int or mode not in (0, 1, 2):
+            raise ValueError("Fusion timing actual must be integer 0, 1 or 2")
+        from silverstar_fccg.generator.render import ComponentProvenance_Get
+        for component in _Components_Get(model, catalog):
+            upstream = ComponentProvenance_Get(catalog, component)["files"]
+            declared = model.component_provenance.get(component)
+            if declared is not None and declared.get("files") != upstream:
+>               raise ValueError("Fusion timing payload identity NOT PROVEN: preserved provenance")
+E               ValueError: Fusion timing payload identity NOT PROVEN: preserved provenance
+
+apps\SCG\src\silverstar_fccg\generator\fusion_timing.py:55: ValueError
+____ ERROR at setup of test_native_runtime_error_contract[events-invalid] _____
+
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000209390041A0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/cr...Star/.work/0.1.3-software-completion-20261101/critical/post-combined-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_generated_owner(workspace_root, builtin_catalog, tmp_path_factory):
+        from silverstar_fccg.core.workspace import WorkspacePolicy
+        from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
+        from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        directory = tmp_path_factory.mktemp('native-generated-owner')
+>       TargetGeneration_Apply(model, builtin_catalog, WorkspacePolicy(workspace_root), directory, TargetScope.FLIGHT)
+
+apps\SCG\tests\test_mission_process_native.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\generator\multi_target.py:636: in TargetGeneration_Apply
+    assembler.Apply(flight_model, plan, confirm_dangerous=confirm_dangerous,
+apps\SCG\src\silverstar_fccg\generator\assembler.py:342: in Apply
+    return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Apply(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:357: in Apply
+    expected = self.Plan(model, plan.project_root)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\assembler.py:116: in Plan
+    desired, _ownership = self._DesiredFiles_Get(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:433: in _DesiredFiles_Get
+    desired = GeneratedFiles_Render(render_model, self.catalog, graph)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:299: in GeneratedFiles_Render
+    LogDecoderProfile_Render(model, catalog) if logging_enabled else None
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:2250: in LogDecoderProfile_Render
+    "metadata_declarations": _LogMetadataDeclarations_Get(model, catalog, metadata),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:1994: in _LogMetadataDeclarations_Get
+    timing = FusionTimingDeclaration_Get(model, catalog)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='SilverStar_F407_Reference_Generated', firmware_version='0.1.3', build_targ...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000020938B0B9D0>
+
+    def FusionTimingDeclaration_Get(model, catalog):
+        owner = _Owner_Get(model, catalog)
+        if owner is None:
+            return None
+        actual = next(row for row in AlgorithmParameters_Resolve(model, catalog)
+                      if row["component"] == owner)
+        mode = next(row["value"] for row in actual["parameters"]
+                    if row["id"] == "fusion_timing_mode")
+        if type(mode) is not int or mode not in (0, 1, 2):
+            raise ValueError("Fusion timing actual must be integer 0, 1 or 2")
+        from silverstar_fccg.generator.render import ComponentProvenance_Get
+        for component in _Components_Get(model, catalog):
+            upstream = ComponentProvenance_Get(catalog, component)["files"]
+            declared = model.component_provenance.get(component)
+            if declared is not None and declared.get("files") != upstream:
+>               raise ValueError("Fusion timing payload identity NOT PROVEN: preserved provenance")
+E               ValueError: Fusion timing payload identity NOT PROVEN: preserved provenance
+
+apps\SCG\src\silverstar_fccg\generator\fusion_timing.py:55: ValueError
+_____ ERROR at setup of test_native_runtime_error_contract[action-error] ______
+
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000209390041A0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/cr...Star/.work/0.1.3-software-completion-20261101/critical/post-combined-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_generated_owner(workspace_root, builtin_catalog, tmp_path_factory):
+        from silverstar_fccg.core.workspace import WorkspacePolicy
+        from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
+        from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        directory = tmp_path_factory.mktemp('native-generated-owner')
+>       TargetGeneration_Apply(model, builtin_catalog, WorkspacePolicy(workspace_root), directory, TargetScope.FLIGHT)
+
+apps\SCG\tests\test_mission_process_native.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\generator\multi_target.py:636: in TargetGeneration_Apply
+    assembler.Apply(flight_model, plan, confirm_dangerous=confirm_dangerous,
+apps\SCG\src\silverstar_fccg\generator\assembler.py:342: in Apply
+    return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Apply(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:357: in Apply
+    expected = self.Plan(model, plan.project_root)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\assembler.py:116: in Plan
+    desired, _ownership = self._DesiredFiles_Get(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:433: in _DesiredFiles_Get
+    desired = GeneratedFiles_Render(render_model, self.catalog, graph)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:299: in GeneratedFiles_Render
+    LogDecoderProfile_Render(model, catalog) if logging_enabled else None
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:2250: in LogDecoderProfile_Render
+    "metadata_declarations": _LogMetadataDeclarations_Get(model, catalog, metadata),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:1994: in _LogMetadataDeclarations_Get
+    timing = FusionTimingDeclaration_Get(model, catalog)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='SilverStar_F407_Reference_Generated', firmware_version='0.1.3', build_targ...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000020938B0B9D0>
+
+    def FusionTimingDeclaration_Get(model, catalog):
+        owner = _Owner_Get(model, catalog)
+        if owner is None:
+            return None
+        actual = next(row for row in AlgorithmParameters_Resolve(model, catalog)
+                      if row["component"] == owner)
+        mode = next(row["value"] for row in actual["parameters"]
+                    if row["id"] == "fusion_timing_mode")
+        if type(mode) is not int or mode not in (0, 1, 2):
+            raise ValueError("Fusion timing actual must be integer 0, 1 or 2")
+        from silverstar_fccg.generator.render import ComponentProvenance_Get
+        for component in _Components_Get(model, catalog):
+            upstream = ComponentProvenance_Get(catalog, component)["files"]
+            declared = model.component_provenance.get(component)
+            if declared is not None and declared.get("files") != upstream:
+>               raise ValueError("Fusion timing payload identity NOT PROVEN: preserved provenance")
+E               ValueError: Fusion timing payload identity NOT PROVEN: preserved provenance
+
+apps\SCG\src\silverstar_fccg\generator\fusion_timing.py:55: ValueError
+__ ERROR at setup of test_native_runtime_error_contract[log-events-invalid] ___
+
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000209390041A0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/cr...Star/.work/0.1.3-software-completion-20261101/critical/post-combined-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_generated_owner(workspace_root, builtin_catalog, tmp_path_factory):
+        from silverstar_fccg.core.workspace import WorkspacePolicy
+        from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
+        from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        directory = tmp_path_factory.mktemp('native-generated-owner')
+>       TargetGeneration_Apply(model, builtin_catalog, WorkspacePolicy(workspace_root), directory, TargetScope.FLIGHT)
+
+apps\SCG\tests\test_mission_process_native.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\generator\multi_target.py:636: in TargetGeneration_Apply
+    assembler.Apply(flight_model, plan, confirm_dangerous=confirm_dangerous,
+apps\SCG\src\silverstar_fccg\generator\assembler.py:342: in Apply
+    return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Apply(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:357: in Apply
+    expected = self.Plan(model, plan.project_root)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\assembler.py:116: in Plan
+    desired, _ownership = self._DesiredFiles_Get(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:433: in _DesiredFiles_Get
+    desired = GeneratedFiles_Render(render_model, self.catalog, graph)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:299: in GeneratedFiles_Render
+    LogDecoderProfile_Render(model, catalog) if logging_enabled else None
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:2250: in LogDecoderProfile_Render
+    "metadata_declarations": _LogMetadataDeclarations_Get(model, catalog, metadata),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:1994: in _LogMetadataDeclarations_Get
+    timing = FusionTimingDeclaration_Get(model, catalog)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='SilverStar_F407_Reference_Generated', firmware_version='0.1.3', build_targ...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000020938B0B9D0>
+
+    def FusionTimingDeclaration_Get(model, catalog):
+        owner = _Owner_Get(model, catalog)
+        if owner is None:
+            return None
+        actual = next(row for row in AlgorithmParameters_Resolve(model, catalog)
+                      if row["component"] == owner)
+        mode = next(row["value"] for row in actual["parameters"]
+                    if row["id"] == "fusion_timing_mode")
+        if type(mode) is not int or mode not in (0, 1, 2):
+            raise ValueError("Fusion timing actual must be integer 0, 1 or 2")
+        from silverstar_fccg.generator.render import ComponentProvenance_Get
+        for component in _Components_Get(model, catalog):
+            upstream = ComponentProvenance_Get(catalog, component)["files"]
+            declared = model.component_provenance.get(component)
+            if declared is not None and declared.get("files") != upstream:
+>               raise ValueError("Fusion timing payload identity NOT PROVEN: preserved provenance")
+E               ValueError: Fusion timing payload identity NOT PROVEN: preserved provenance
+
+apps\SCG\src\silverstar_fccg\generator\fusion_timing.py:55: ValueError
+_____ ERROR at setup of test_native_runtime_error_contract[log-bad-param] _____
+
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000209390041A0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/cr...Star/.work/0.1.3-software-completion-20261101/critical/post-combined-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_generated_owner(workspace_root, builtin_catalog, tmp_path_factory):
+        from silverstar_fccg.core.workspace import WorkspacePolicy
+        from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
+        from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        directory = tmp_path_factory.mktemp('native-generated-owner')
+>       TargetGeneration_Apply(model, builtin_catalog, WorkspacePolicy(workspace_root), directory, TargetScope.FLIGHT)
+
+apps\SCG\tests\test_mission_process_native.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\generator\multi_target.py:636: in TargetGeneration_Apply
+    assembler.Apply(flight_model, plan, confirm_dangerous=confirm_dangerous,
+apps\SCG\src\silverstar_fccg\generator\assembler.py:342: in Apply
+    return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Apply(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:357: in Apply
+    expected = self.Plan(model, plan.project_root)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\assembler.py:116: in Plan
+    desired, _ownership = self._DesiredFiles_Get(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:433: in _DesiredFiles_Get
+    desired = GeneratedFiles_Render(render_model, self.catalog, graph)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:299: in GeneratedFiles_Render
+    LogDecoderProfile_Render(model, catalog) if logging_enabled else None
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:2250: in LogDecoderProfile_Render
+    "metadata_declarations": _LogMetadataDeclarations_Get(model, catalog, metadata),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:1994: in _LogMetadataDeclarations_Get
+    timing = FusionTimingDeclaration_Get(model, catalog)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='SilverStar_F407_Reference_Generated', firmware_version='0.1.3', build_targ...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000020938B0B9D0>
+
+    def FusionTimingDeclaration_Get(model, catalog):
+        owner = _Owner_Get(model, catalog)
+        if owner is None:
+            return None
+        actual = next(row for row in AlgorithmParameters_Resolve(model, catalog)
+                      if row["component"] == owner)
+        mode = next(row["value"] for row in actual["parameters"]
+                    if row["id"] == "fusion_timing_mode")
+        if type(mode) is not int or mode not in (0, 1, 2):
+            raise ValueError("Fusion timing actual must be integer 0, 1 or 2")
+        from silverstar_fccg.generator.render import ComponentProvenance_Get
+        for component in _Components_Get(model, catalog):
+            upstream = ComponentProvenance_Get(catalog, component)["files"]
+            declared = model.component_provenance.get(component)
+            if declared is not None and declared.get("files") != upstream:
+>               raise ValueError("Fusion timing payload identity NOT PROVEN: preserved provenance")
+E               ValueError: Fusion timing payload identity NOT PROVEN: preserved provenance
+
+apps\SCG\src\silverstar_fccg\generator\fusion_timing.py:55: ValueError
+_______ ERROR at setup of test_native_runtime_error_contract[log-full] ________
+
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000209390041A0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/cr...Star/.work/0.1.3-software-completion-20261101/critical/post-combined-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_generated_owner(workspace_root, builtin_catalog, tmp_path_factory):
+        from silverstar_fccg.core.workspace import WorkspacePolicy
+        from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
+        from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        directory = tmp_path_factory.mktemp('native-generated-owner')
+>       TargetGeneration_Apply(model, builtin_catalog, WorkspacePolicy(workspace_root), directory, TargetScope.FLIGHT)
+
+apps\SCG\tests\test_mission_process_native.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\generator\multi_target.py:636: in TargetGeneration_Apply
+    assembler.Apply(flight_model, plan, confirm_dangerous=confirm_dangerous,
+apps\SCG\src\silverstar_fccg\generator\assembler.py:342: in Apply
+    return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Apply(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:357: in Apply
+    expected = self.Plan(model, plan.project_root)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\assembler.py:116: in Plan
+    desired, _ownership = self._DesiredFiles_Get(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:433: in _DesiredFiles_Get
+    desired = GeneratedFiles_Render(render_model, self.catalog, graph)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:299: in GeneratedFiles_Render
+    LogDecoderProfile_Render(model, catalog) if logging_enabled else None
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:2250: in LogDecoderProfile_Render
+    "metadata_declarations": _LogMetadataDeclarations_Get(model, catalog, metadata),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:1994: in _LogMetadataDeclarations_Get
+    timing = FusionTimingDeclaration_Get(model, catalog)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='SilverStar_F407_Reference_Generated', firmware_version='0.1.3', build_targ...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000020938B0B9D0>
+
+    def FusionTimingDeclaration_Get(model, catalog):
+        owner = _Owner_Get(model, catalog)
+        if owner is None:
+            return None
+        actual = next(row for row in AlgorithmParameters_Resolve(model, catalog)
+                      if row["component"] == owner)
+        mode = next(row["value"] for row in actual["parameters"]
+                    if row["id"] == "fusion_timing_mode")
+        if type(mode) is not int or mode not in (0, 1, 2):
+            raise ValueError("Fusion timing actual must be integer 0, 1 or 2")
+        from silverstar_fccg.generator.render import ComponentProvenance_Get
+        for component in _Components_Get(model, catalog):
+            upstream = ComponentProvenance_Get(catalog, component)["files"]
+            declared = model.component_provenance.get(component)
+            if declared is not None and declared.get("files") != upstream:
+>               raise ValueError("Fusion timing payload identity NOT PROVEN: preserved provenance")
+E               ValueError: Fusion timing payload identity NOT PROVEN: preserved provenance
+
+apps\SCG\src\silverstar_fccg\generator\fusion_timing.py:55: ValueError
+_______ ERROR at setup of test_native_runtime_error_contract[log-busy] ________
+
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000209390041A0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/cr...Star/.work/0.1.3-software-completion-20261101/critical/post-combined-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_generated_owner(workspace_root, builtin_catalog, tmp_path_factory):
+        from silverstar_fccg.core.workspace import WorkspacePolicy
+        from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
+        from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        directory = tmp_path_factory.mktemp('native-generated-owner')
+>       TargetGeneration_Apply(model, builtin_catalog, WorkspacePolicy(workspace_root), directory, TargetScope.FLIGHT)
+
+apps\SCG\tests\test_mission_process_native.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\generator\multi_target.py:636: in TargetGeneration_Apply
+    assembler.Apply(flight_model, plan, confirm_dangerous=confirm_dangerous,
+apps\SCG\src\silverstar_fccg\generator\assembler.py:342: in Apply
+    return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Apply(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:357: in Apply
+    expected = self.Plan(model, plan.project_root)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\assembler.py:116: in Plan
+    desired, _ownership = self._DesiredFiles_Get(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:433: in _DesiredFiles_Get
+    desired = GeneratedFiles_Render(render_model, self.catalog, graph)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:299: in GeneratedFiles_Render
+    LogDecoderProfile_Render(model, catalog) if logging_enabled else None
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:2250: in LogDecoderProfile_Render
+    "metadata_declarations": _LogMetadataDeclarations_Get(model, catalog, metadata),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:1994: in _LogMetadataDeclarations_Get
+    timing = FusionTimingDeclaration_Get(model, catalog)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='SilverStar_F407_Reference_Generated', firmware_version='0.1.3', build_targ...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000020938B0B9D0>
+
+    def FusionTimingDeclaration_Get(model, catalog):
+        owner = _Owner_Get(model, catalog)
+        if owner is None:
+            return None
+        actual = next(row for row in AlgorithmParameters_Resolve(model, catalog)
+                      if row["component"] == owner)
+        mode = next(row["value"] for row in actual["parameters"]
+                    if row["id"] == "fusion_timing_mode")
+        if type(mode) is not int or mode not in (0, 1, 2):
+            raise ValueError("Fusion timing actual must be integer 0, 1 or 2")
+        from silverstar_fccg.generator.render import ComponentProvenance_Get
+        for component in _Components_Get(model, catalog):
+            upstream = ComponentProvenance_Get(catalog, component)["files"]
+            declared = model.component_provenance.get(component)
+            if declared is not None and declared.get("files") != upstream:
+>               raise ValueError("Fusion timing payload identity NOT PROVEN: preserved provenance")
+E               ValueError: Fusion timing payload identity NOT PROVEN: preserved provenance
+
+apps\SCG\src\silverstar_fccg\generator\fusion_timing.py:55: ValueError
+_____ ERROR at setup of test_native_runtime_error_contract[log-not-ready] _____
+
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000209390041A0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/cr...Star/.work/0.1.3-software-completion-20261101/critical/post-combined-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_generated_owner(workspace_root, builtin_catalog, tmp_path_factory):
+        from silverstar_fccg.core.workspace import WorkspacePolicy
+        from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
+        from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        directory = tmp_path_factory.mktemp('native-generated-owner')
+>       TargetGeneration_Apply(model, builtin_catalog, WorkspacePolicy(workspace_root), directory, TargetScope.FLIGHT)
+
+apps\SCG\tests\test_mission_process_native.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\generator\multi_target.py:636: in TargetGeneration_Apply
+    assembler.Apply(flight_model, plan, confirm_dangerous=confirm_dangerous,
+apps\SCG\src\silverstar_fccg\generator\assembler.py:342: in Apply
+    return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Apply(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:357: in Apply
+    expected = self.Plan(model, plan.project_root)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\assembler.py:116: in Plan
+    desired, _ownership = self._DesiredFiles_Get(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:433: in _DesiredFiles_Get
+    desired = GeneratedFiles_Render(render_model, self.catalog, graph)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:299: in GeneratedFiles_Render
+    LogDecoderProfile_Render(model, catalog) if logging_enabled else None
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:2250: in LogDecoderProfile_Render
+    "metadata_declarations": _LogMetadataDeclarations_Get(model, catalog, metadata),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:1994: in _LogMetadataDeclarations_Get
+    timing = FusionTimingDeclaration_Get(model, catalog)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='SilverStar_F407_Reference_Generated', firmware_version='0.1.3', build_targ...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000020938B0B9D0>
+
+    def FusionTimingDeclaration_Get(model, catalog):
+        owner = _Owner_Get(model, catalog)
+        if owner is None:
+            return None
+        actual = next(row for row in AlgorithmParameters_Resolve(model, catalog)
+                      if row["component"] == owner)
+        mode = next(row["value"] for row in actual["parameters"]
+                    if row["id"] == "fusion_timing_mode")
+        if type(mode) is not int or mode not in (0, 1, 2):
+            raise ValueError("Fusion timing actual must be integer 0, 1 or 2")
+        from silverstar_fccg.generator.render import ComponentProvenance_Get
+        for component in _Components_Get(model, catalog):
+            upstream = ComponentProvenance_Get(catalog, component)["files"]
+            declared = model.component_provenance.get(component)
+            if declared is not None and declared.get("files") != upstream:
+>               raise ValueError("Fusion timing payload identity NOT PROVEN: preserved provenance")
+E               ValueError: Fusion timing payload identity NOT PROVEN: preserved provenance
+
+apps\SCG\src\silverstar_fccg\generator\fusion_timing.py:55: ValueError
+_____ ERROR at setup of test_native_runtime_error_contract[step-invalid] ______
+
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000209390041A0>
+tmp_path_factory = TempPathFactory(_given_basetemp=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/cr...Star/.work/0.1.3-software-completion-20261101/critical/post-combined-v1'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope='module')
+    def native_generated_owner(workspace_root, builtin_catalog, tmp_path_factory):
+        from silverstar_fccg.core.workspace import WorkspacePolicy
+        from silverstar_fccg.generator.multi_target import TargetGeneration_Apply, TargetScope
+        from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        directory = tmp_path_factory.mktemp('native-generated-owner')
+>       TargetGeneration_Apply(model, builtin_catalog, WorkspacePolicy(workspace_root), directory, TargetScope.FLIGHT)
+
+apps\SCG\tests\test_mission_process_native.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\generator\multi_target.py:636: in TargetGeneration_Apply
+    assembler.Apply(flight_model, plan, confirm_dangerous=confirm_dangerous,
+apps\SCG\src\silverstar_fccg\generator\assembler.py:342: in Apply
+    return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Apply(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:357: in Apply
+    expected = self.Plan(model, plan.project_root)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\assembler.py:116: in Plan
+    desired, _ownership = self._DesiredFiles_Get(
+apps\SCG\src\silverstar_fccg\generator\assembler.py:433: in _DesiredFiles_Get
+    desired = GeneratedFiles_Render(render_model, self.catalog, graph)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:299: in GeneratedFiles_Render
+    LogDecoderProfile_Render(model, catalog) if logging_enabled else None
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:2250: in LogDecoderProfile_Render
+    "metadata_declarations": _LogMetadataDeclarations_Get(model, catalog, metadata),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\generator\render.py:1994: in _LogMetadataDeclarations_Get
+    timing = FusionTimingDeclaration_Get(model, catalog)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+model = ProjectModel(identity=ProjectIdentity(name='SilverStar_F407_Reference_Generated', firmware_version='0.1.3', build_targ...nt_id'}, 'hold_ms': 0, 'action': {'kind': 'record_marker', 'target': ''}}]}, mission_functions=None, format_version=24)
+catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x0000020938B0B9D0>
+
+    def FusionTimingDeclaration_Get(model, catalog):
+        owner = _Owner_Get(model, catalog)
+        if owner is None:
+            return None
+        actual = next(row for row in AlgorithmParameters_Resolve(model, catalog)
+                      if row["component"] == owner)
+        mode = next(row["value"] for row in actual["parameters"]
+                    if row["id"] == "fusion_timing_mode")
+        if type(mode) is not int or mode not in (0, 1, 2):
+            raise ValueError("Fusion timing actual must be integer 0, 1 or 2")
+        from silverstar_fccg.generator.render import ComponentProvenance_Get
+        for component in _Components_Get(model, catalog):
+            upstream = ComponentProvenance_Get(catalog, component)["files"]
+            declared = model.component_provenance.get(component)
+            if declared is not None and declared.get("files") != upstream:
+>               raise ValueError("Fusion timing payload identity NOT PROVEN: preserved provenance")
+E               ValueError: Fusion timing payload identity NOT PROVEN: preserved provenance
+
+apps\SCG\src\silverstar_fccg\generator\fusion_timing.py:55: ValueError
+=========================== short test summary info ===========================
+ERROR apps\SCG\tests\test_mission_process_native.py::test_native_recovery_permission_owner[False]
+ERROR apps\SCG\tests\test_mission_process_native.py::test_native_recovery_permission_owner[True]
+ERROR apps\SCG\tests\test_mission_process_native.py::test_native_acceleration_uses_actual_corrected_provider
+ERROR apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[normal]
+ERROR apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[no-events]
+ERROR apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[events-invalid]
+ERROR apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[action-error]
+ERROR apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[log-events-invalid]
+ERROR apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[log-bad-param]
+ERROR apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[log-full]
+ERROR apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[log-busy]
+ERROR apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[log-not-ready]
+ERROR apps\SCG\tests\test_mission_process_native.py::test_native_runtime_error_contract[step-invalid]
+18 passed, 13 errors in 29.25s

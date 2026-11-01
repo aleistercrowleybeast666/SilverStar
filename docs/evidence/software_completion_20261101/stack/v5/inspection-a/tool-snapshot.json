@@ -1,0 +1,18 @@
+{
+  "before": {
+    "check_task_stacks.py": "8a64b9f0d07b6473e3b46d79afd6aaca41b1126e887eb2e5a22f946479f1d723",
+    "stack_arm.py": "0c5bcf13b1f6a4ac75de3d6403c0dc4ebb314791ac44e34652d48b9ceab55846",
+    "stack_runtime.py": "257af8a8af41af030947d195f318f4697a94ff0d880a9d1ff231612cceeaf27e",
+    "stack_review.py": "21238fceb96ed797111711551d9732593938a57b750269ed0321a7ba8414c7a4",
+    "software_stack_inputs.json": "f44517c004cd3fa5bcc112d9b72759f861f8d0622130e5064b14a9ef9225bab5",
+    "software_stack_review.md": "63f70ae5849c635e96e51f06fbffa86dc2c8f2f3d6895ef0b59c1393b130a676"
+  },
+  "after": {
+    "check_task_stacks.py": "8a64b9f0d07b6473e3b46d79afd6aaca41b1126e887eb2e5a22f946479f1d723",
+    "stack_arm.py": "0c5bcf13b1f6a4ac75de3d6403c0dc4ebb314791ac44e34652d48b9ceab55846",
+    "stack_runtime.py": "257af8a8af41af030947d195f318f4697a94ff0d880a9d1ff231612cceeaf27e",
+    "stack_review.py": "21238fceb96ed797111711551d9732593938a57b750269ed0321a7ba8414c7a4",
+    "software_stack_inputs.json": "f44517c004cd3fa5bcc112d9b72759f861f8d0622130e5064b14a9ef9225bab5",
+    "software_stack_review.md": "63f70ae5849c635e96e51f06fbffa86dc2c8f2f3d6895ef0b59c1393b130a676"
+  }
+}

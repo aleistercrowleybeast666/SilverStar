@@ -1,0 +1,36 @@
+{
+  "f407": {
+    "candidate": ".work/0.1.3-treediagram-20261101/silverstar/firmware-v1/f407/Flight_Controller",
+    "analysis_head": "8b028f280ba01dce0efc697479ef99ec143f7456",
+    "strict_rejection": "Changed complete Astra project input: Generated/Src/project_metadata.c",
+    "reachable_unresolved_indirect": {
+      "main": [],
+      "Device": [],
+      "INS": [],
+      "Estimator": [],
+      "Flight": [],
+      "Logger": [],
+      "Serial": [],
+      "Telemetry": [],
+      "Idle": []
+    },
+    "duplicate_disassembly_names": {}
+  },
+  "h743": {
+    "candidate": ".work/0.1.3-treediagram-20261101/h7-storage-v6/final/Flight_Controller",
+    "analysis_head": "8b028f280ba01dce0efc697479ef99ec143f7456",
+    "strict_rejection": "Unreviewed H743 build declarations or configuration",
+    "reachable_unresolved_indirect": {
+      "main": [],
+      "Device": [],
+      "INS": [],
+      "Estimator": [],
+      "Flight": [],
+      "Logger": [],
+      "Serial": [],
+      "Telemetry": [],
+      "Idle": []
+    },
+    "duplicate_disassembly_names": {}
+  }
+}

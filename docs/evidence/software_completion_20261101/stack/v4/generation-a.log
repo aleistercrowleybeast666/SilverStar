@@ -1,0 +1,9 @@
+a f407 TargetGenerationResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/stack/v4/a/f407'), targets=('Flight_Controller',), file_hashes={})
+a installation TargetGenerationResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/stack/v4/a/installation'), targets=('Flight_Controller',), file_hashes={})
+a h743 TargetGenerationResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/stack/v4/a/h743'), targets=('Flight_Controller',), file_hashes={})
+a pid TargetGenerationResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/stack/v4/a/pid'), targets=('Flight_Controller',), file_hashes={})
+a lqr TargetGenerationResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/stack/v4/a/lqr'), targets=('Flight_Controller',), file_hashes={})
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\docs\evidence\software_completion_20261101\stack\v4\generate_candidates.py", line 71, in <module>
+    raise RuntimeError('Source changed during generation: ' + repr(changed))
+RuntimeError: Source changed during generation: ['apps/SCG/src/silverstar_fccg/generator/ground_usb_control.py']

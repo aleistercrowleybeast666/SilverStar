@@ -1,0 +1,32 @@
+F....                                                                    [100%]
+================================== FAILURES ===================================
+_ test_hal_callback_scanner_without_manual_object_contract_cannot_accept_any_null_assignment _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_hal_callback_scanner_with0')
+
+    def test_hal_callback_scanner_without_manual_object_contract_cannot_accept_any_null_assignment(tmp_path):
+        # A NULL write in an unrelated/unlinked function is not evidence that an
+        # actual interrupt handle was initialized, or that no aggregate copy exists.
+        with pytest.raises(ValueError, match="reviewed HAL handle/object contract"):
+>           runtime.HalCallbacks_Resolve(tmp_path, {"indirect": {"HAL_DMA_IRQHandler"}}, "unused-", None, None)
+
+apps\SCG\tests\test_stack_runtime.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+root = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_hal_callback_scanner_with0')
+graph = {'indirect': {'HAL_DMA_IRQHandler'}}, prefix = 'unused-'
+command_read = None, callback_slot = None
+
+    def HalCallbacks_Resolve(root, graph, prefix, command_read, callback_slot):
+        callers = {name for name in ("HAL_DMA_IRQHandler", "HAL_DMA_Abort_IT", "HAL_UART_IRQHandler")
+                   if name in graph["indirect"]}
+        if not callers:
+            return []
+>       dwarf = command_read([prefix + "readelf", "--debug-dump=info", str(graph["elf"])], root)
+                                                                           ^^^^^^^^^^^^
+E       KeyError: 'elf'
+
+apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_runtime.py:315: KeyError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_stack_runtime.py::test_hal_callback_scanner_without_manual_object_contract_cannot_accept_any_null_assignment
+1 failed, 4 passed in 3.05s

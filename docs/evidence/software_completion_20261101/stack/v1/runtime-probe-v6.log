@@ -1,0 +1,536 @@
+f407 Strict Changed complete Astra project input: Generated/Src/project_metadata.c
+f407 [
+  {
+    "caller": "HAL_DMA_IRQHandler",
+    "address": "0x801d074",
+    "abi_slot": 60,
+    "field": "XferCpltCallback",
+    "targets": [
+      "SD_DMAReceiveCplt",
+      "SD_DMATransmitCplt",
+      "UART_DMAReceiveCplt",
+      "UART_DMATransmitCplt"
+    ],
+    "null_assignments": [
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_DeInit"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_UnRegisterCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_UnRegisterCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_TransmitReceive_DMA"
+      }
+    ],
+    "null_only": false,
+    "assignments": [
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_Transmit_DMA",
+        "field": "XferCpltCallback",
+        "target": "UART_DMATransmitCplt"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "UART_Start_Receive_DMA",
+        "field": "XferCpltCallback",
+        "target": "UART_DMAReceiveCplt"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+        "function": "HAL_SD_ReadBlocks_DMA",
+        "field": "XferCpltCallback",
+        "target": "SD_DMAReceiveCplt"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+        "function": "HAL_SD_WriteBlocks_DMA",
+        "field": "XferCpltCallback",
+        "target": "SD_DMATransmitCplt"
+      }
+    ]
+  },
+  {
+    "caller": "HAL_DMA_IRQHandler",
+    "address": "0x801d074",
+    "abi_slot": 68,
+    "field": "XferM1CpltCallback",
+    "targets": [],
+    "null_assignments": [
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_DeInit"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_UnRegisterCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_UnRegisterCallback"
+      }
+    ],
+    "null_only": true,
+    "assignments": []
+  },
+  {
+    "caller": "HAL_DMA_IRQHandler",
+    "address": "0x801d0c2",
+    "abi_slot": 76,
+    "field": "XferErrorCallback",
+    "targets": [
+      "SD_DMAError",
+      "UART_DMAError"
+    ],
+    "null_assignments": [
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_DeInit"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_UnRegisterCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_UnRegisterCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_TransmitReceive_DMA"
+      }
+    ],
+    "null_only": false,
+    "assignments": [
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_Transmit_DMA",
+        "field": "XferErrorCallback",
+        "target": "UART_DMAError"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "UART_Start_Receive_DMA",
+        "field": "XferErrorCallback",
+        "target": "UART_DMAError"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+        "function": "HAL_SD_ReadBlocks_DMA",
+        "field": "XferErrorCallback",
+        "target": "SD_DMAError"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+        "function": "HAL_SD_WriteBlocks_DMA",
+        "field": "XferErrorCallback",
+        "target": "SD_DMAError"
+      }
+    ]
+  },
+  {
+    "caller": "HAL_DMA_IRQHandler",
+    "address": "0x801d0e8",
+    "abi_slot": 64,
+    "field": "XferHalfCpltCallback",
+    "targets": [
+      "UART_DMARxHalfCplt",
+      "UART_DMATxHalfCplt"
+    ],
+    "null_assignments": [
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_DeInit"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_UnRegisterCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_UnRegisterCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_TransmitReceive_DMA"
+      }
+    ],
+    "null_only": false,
+    "assignments": [
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_Transmit_DMA",
+        "field": "XferHalfCpltCallback",
+        "target": "UART_DMATxHalfCplt"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "UART_Start_Receive_DMA",
+        "field": "XferHalfCpltCallback",
+        "target": "UART_DMARxHalfCplt"
+      }
+    ]
+  },
+  {
+    "caller": "HAL_DMA_IRQHandler",
+    "address": "0x801d0e8",
+    "abi_slot": 72,
+    "field": "XferM1HalfCpltCallback",
+    "targets": [],
+    "null_assignments": [
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_DeInit"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_UnRegisterCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_UnRegisterCallback"
+      }
+    ],
+    "null_only": true,
+    "assignments": []
+  },
+  {
+    "caller": "HAL_DMA_IRQHandler",
+    "address": "0x801d164",
+    "abi_slot": 80,
+    "field": "XferAbortCallback",
+    "targets": [
+      "SD_DMARxAbort",
+      "SD_DMATxAbort",
+      "UART_DMAAbortOnError"
+    ],
+    "null_assignments": [
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_DeInit"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_UnRegisterCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_UnRegisterCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_Transmit_DMA"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_Abort"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_Abort"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_AbortTransmit"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_AbortReceive"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_Abort_IT"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_Abort_IT"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_Abort_IT"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_Abort_IT"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "UART_Start_Receive_DMA"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "UART_DMATxAbortCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "UART_DMARxAbortCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_Transmit_DMA"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_Receive_DMA"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_TransmitReceive_DMA"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_TransmitReceive_DMA"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_Abort"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_Abort"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_Abort_IT"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_Abort_IT"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_Abort_IT"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_Abort_IT"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "SPI_DMATxAbortCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "SPI_DMARxAbortCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+        "function": "HAL_SD_ReadBlocks_DMA"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+        "function": "HAL_SD_WriteBlocks_DMA"
+      }
+    ],
+    "null_only": false,
+    "assignments": [
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_IRQHandler",
+        "field": "XferAbortCallback",
+        "target": "UART_DMAAbortOnError"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+        "function": "HAL_SD_IRQHandler",
+        "field": "XferAbortCallback",
+        "target": "SD_DMATxAbort"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+        "function": "HAL_SD_IRQHandler",
+        "field": "XferAbortCallback",
+        "target": "SD_DMARxAbort"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+        "function": "HAL_SD_Abort_IT",
+        "field": "XferAbortCallback",
+        "target": "SD_DMATxAbort"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+        "function": "HAL_SD_Abort_IT",
+        "field": "XferAbortCallback",
+        "target": "SD_DMARxAbort"
+      }
+    ]
+  },
+  {
+    "caller": "HAL_UART_IRQHandler",
+    "address": "0x801da58",
+    "abi_slot": 80,
+    "field": "XferAbortCallback",
+    "targets": [
+      "SD_DMARxAbort",
+      "SD_DMATxAbort",
+      "UART_DMAAbortOnError"
+    ],
+    "null_assignments": [
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_DeInit"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_UnRegisterCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c",
+        "function": "HAL_DMA_UnRegisterCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_Transmit_DMA"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_Abort"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_Abort"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_AbortTransmit"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_AbortReceive"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_Abort_IT"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_Abort_IT"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_Abort_IT"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_Abort_IT"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "UART_Start_Receive_DMA"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "UART_DMATxAbortCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "UART_DMARxAbortCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_Transmit_DMA"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_Receive_DMA"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_TransmitReceive_DMA"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_TransmitReceive_DMA"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_Abort"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_Abort"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_Abort_IT"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_Abort_IT"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_Abort_IT"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "HAL_SPI_Abort_IT"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "SPI_DMATxAbortCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c",
+        "function": "SPI_DMARxAbortCallback"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+        "function": "HAL_SD_ReadBlocks_DMA"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+        "function": "HAL_SD_WriteBlocks_DMA"
+      }
+    ],
+    "null_only": false,
+    "assignments": [
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c",
+        "function": "HAL_UART_IRQHandler",
+        "field": "XferAbortCallback",
+        "target": "UART_DMAAbortOnError"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+        "function": "HAL_SD_IRQHandler",
+        "field": "XferAbortCallback",
+        "target": "SD_DMATxAbort"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+        "function": "HAL_SD_IRQHandler",
+        "field": "XferAbortCallback",
+        "target": "SD_DMARxAbort"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+        "function": "HAL_SD_Abort_IT",
+        "field": "XferAbortCallback",
+        "target": "SD_DMATxAbort"
+      },
+      {
+        "source": "Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sd.c",
+        "function": "HAL_SD_Abort_IT",
+        "field": "XferAbortCallback",
+        "target": "SD_DMARxAbort"
+      }
+    ]
+  }
+]
+Remaining {'register_tm_clones', '__libc_init_array', 'deregister_tm_clones', 'prvPortStartFirstTask'}
+h743 Strict Unreviewed H743 build declarations or configuration
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v1\probe_runtime.py", line 14, in <module>
+    proof=rt.HalCallbacks_Resolve(p,g,prefix,m.Command_Read,m.CallbackSlot_Get)
+  File "D:\python_software\SilverStar\apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_runtime.py", line 285, in HalCallbacks_Resolve
+    raise ValueError("Unbound actual HAL callback slot: " + caller + ":" + str(slot))
+ValueError: Unbound actual HAL callback slot: HAL_UART_IRQHandler:80

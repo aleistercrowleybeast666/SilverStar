@@ -1,0 +1,58 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_____________ test_task_is_explicit_and_preserves_core_only[pid] ______________
+
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001E87F2A4D70>
+kind = 'pid'
+
+    @pytest.mark.parametrize('kind', ('pid', 'lqr'))
+    def test_task_is_explicit_and_preserves_core_only(builtin_catalog, kind):
+        from silverstar_fccg.generator.control_research import ControlResearchFiles_Render
+        from silverstar_fccg.project.mission_functions import Functions_Derive
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        bundle = TuningBundle_Read(FIXTURES / f'kf6-{kind}.sstuning.json')
+        core = TuningBundle_ControlCoreAttach(model, builtin_catalog, bundle)
+        assert not any(row['instance_id'] == 'controller' for row in Functions_Derive(core, builtin_catalog)['functions'])
+        before = deepcopy(core.Dictionary_Get())
+        disabled = json.loads(ControlResearchFiles_Render(core, builtin_catalog)['Generated/control_research.json'])
+        assert disabled['enabled'] is False
+        task = TuningBundle_ControlTaskAttach(core, builtin_catalog, bundle)
+        assert core.Dictionary_Get() == before
+        enabled = json.loads(ControlResearchFiles_Render(task, builtin_catalog)['Generated/control_research.json'])
+        assert enabled['enabled'] and not enabled['deployable'] and not enabled['electrical_output']
+>       assert enabled['output'] == {'quantity': 'requested_body_y_torque', 'axis': 'body-Y',
+               ^^^^^^^^^^^^^^^^^
+            'unit': 'N*m', 'nm_per_core_output_unit': 1.0, 'maximum_absolute_torque_nm': 1.0}
+E       KeyError: 'output'
+
+apps\SCG\tests\test_control_research.py:55: KeyError
+_____________ test_task_is_explicit_and_preserves_core_only[lqr] ______________
+
+builtin_catalog = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x000001E87F2A4D70>
+kind = 'lqr'
+
+    @pytest.mark.parametrize('kind', ('pid', 'lqr'))
+    def test_task_is_explicit_and_preserves_core_only(builtin_catalog, kind):
+        from silverstar_fccg.generator.control_research import ControlResearchFiles_Render
+        from silverstar_fccg.project.mission_functions import Functions_Derive
+        model = ReferenceProject_Create(catalog=builtin_catalog)
+        bundle = TuningBundle_Read(FIXTURES / f'kf6-{kind}.sstuning.json')
+        core = TuningBundle_ControlCoreAttach(model, builtin_catalog, bundle)
+        assert not any(row['instance_id'] == 'controller' for row in Functions_Derive(core, builtin_catalog)['functions'])
+        before = deepcopy(core.Dictionary_Get())
+        disabled = json.loads(ControlResearchFiles_Render(core, builtin_catalog)['Generated/control_research.json'])
+        assert disabled['enabled'] is False
+        task = TuningBundle_ControlTaskAttach(core, builtin_catalog, bundle)
+        assert core.Dictionary_Get() == before
+        enabled = json.loads(ControlResearchFiles_Render(task, builtin_catalog)['Generated/control_research.json'])
+        assert enabled['enabled'] and not enabled['deployable'] and not enabled['electrical_output']
+>       assert enabled['output'] == {'quantity': 'requested_body_y_torque', 'axis': 'body-Y',
+               ^^^^^^^^^^^^^^^^^
+            'unit': 'N*m', 'nm_per_core_output_unit': 1.0, 'maximum_absolute_torque_nm': 1.0}
+E       KeyError: 'output'
+
+apps\SCG\tests\test_control_research.py:55: KeyError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_control_research.py::test_task_is_explicit_and_preserves_core_only[pid]
+FAILED apps\SCG\tests\test_control_research.py::test_task_is_explicit_and_preserves_core_only[lqr]
+2 failed, 57 deselected in 17.04s

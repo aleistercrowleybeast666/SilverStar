@@ -1,0 +1,53 @@
+........................................................................ [ 28%]
+........................................................................ [ 57%]
+.......F................................................................ [ 85%]
+....................................                                     [100%]
+================================== FAILURES ===================================
+______ test_machine_report_marker_only_names_written_budget[False-64-0] _______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_machine_report_marker_onl0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002086AF922E0>
+capsys = <_pytest.capture.CaptureFixture object at 0x000002086B1B7230>
+diagnostic = False, frame = 64, expected = 0
+
+    @pytest.mark.parametrize('diagnostic,frame,expected',[(False,64,0),(False,2000,1),(True,64,2)])
+    def test_machine_report_marker_only_names_written_budget(tmp_path,monkeypatch,capsys,diagnostic,frame,expected):
+        root=_ElfFixture_Create(tmp_path,monkeypatch,frame=frame)
+        monkeypatch.setattr(sys,'argv',['check_task_stacks.py','--project',str(root),'--prefix','unused-']+
+            (['--diagnostic'] if diagnostic else []))
+>       assert stacks.main()==expected
+E       assert 2 == 0
+E        +  where 2 = <function main at 0x000002086AE0C670>()
+E        +    where <function main at 0x000002086AE0C670> = stacks.main
+
+apps\SCG\tests\test_stack_budget.py:130: AssertionError
+---------------------------- Captured stdout call -----------------------------
+FCCG_PROGRESS|STACK_REPORT|PLAN|1
+FCCG_PROGRESS|STACK_REPORT|BEGIN|1|1|ELF and stack budget
+FIRMWARE_STACK_REPORT|D:\python_software\SilverStar\.work\pytest\test_machine_report_marker_onl0\build\FCCG\SilverStar_F407\Release\stack-budget.json
+Device: configured=4096 estimate=320 margin=3776
+INS: configured=4096 estimate=320 margin=3776
+Estimator: configured=4096 estimate=320 margin=3776
+Flight: configured=4096 estimate=384 margin=3712
+Logger: configured=4096 estimate=320 margin=3776
+Serial: configured=4096 estimate=336 margin=3760
+Telemetry: configured=4096 estimate=320 margin=3776
+Idle: configured=4096 estimate=320 margin=3776
+{
+  "indicator_in_production_init": true,
+  "alignment_start_deferred": true,
+  "flight_processes_alignment": true,
+  "communication_does_not_process_alignment": true,
+  "all_enabled_tasks_budgeted": true
+}
+NOT PROVEN: MSP/main/ISR nesting and hardware margins require separate evidence
+============================== warnings summary ===============================
+C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464
+  C:\Users\chdxm\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\config\__init__.py:1464: PytestConfigWarning: Unknown config option: cache_dir
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_stack_budget.py::test_machine_report_marker_only_names_written_budget[False-64-0]
+1 failed, 251 passed, 1 warning in 27.76s

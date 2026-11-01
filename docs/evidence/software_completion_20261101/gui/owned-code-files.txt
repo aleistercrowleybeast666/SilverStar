@@ -1,0 +1,16 @@
+apps/SCG/src/silverstar_fccg/app/service.py
+apps/SCG/src/silverstar_fccg/project/target_readiness.py
+apps/SCG/src/silverstar_fccg/i18n/en_US.json
+apps/SCG/src/silverstar_fccg/i18n/zh_CN.json
+apps/SCG/src/silverstar_fccg/ui/main_window.py
+apps/SCG/src/silverstar_fccg/ui/hardware_editing.py
+apps/SCG/src/silverstar_fccg/ui/hardware_transaction.py
+apps/SCG/src/silverstar_fccg/ui/message_box.py
+apps/SCG/src/silverstar_fccg/ui/pages/hardware_workspace.py
+apps/SCG/src/silverstar_fccg/ui/pages/targets.py
+apps/SCG/tests/test_hardware_workspace.py
+apps/SCG/tests/test_hardware_transaction.py
+apps/SCG/tests/test_hardware_overview_actions.py
+apps/SCG/tests/test_control_task_gui.py
+apps/SCG/tests/test_control_task_import_boundary.py
+apps/SCG/tests/fixtures/hardware_dialog_lifecycle.py

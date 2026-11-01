@@ -1,0 +1,218 @@
+[
+  {
+    "name": "f407",
+    "configuration": "Release",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v2\\analysis\\f407\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "all"
+    ],
+    "exit_code": 0,
+    "seconds": 114.036,
+    "log": "f407-Release-all.log",
+    "log_sha256": "426f0653a38ed751e97852c306c559060f4860ed3a8738396e74573fadd9626e"
+  },
+  {
+    "name": "f407",
+    "configuration": "Release",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v2\\analysis\\f407\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "artifact-check"
+    ],
+    "exit_code": 0,
+    "seconds": 7.109,
+    "log": "f407-Release-artifact-check.log",
+    "log_sha256": "db44159d4e4a76cfd9420ed9a5957edce0b8acd981805893b3229cf1ffb1c03d"
+  },
+  {
+    "name": "f407",
+    "configuration": "Debug",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v2\\analysis\\f407\\Flight_Controller",
+      "-j4",
+      "CONFIG=Debug",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "all"
+    ],
+    "exit_code": 0,
+    "seconds": 114.279,
+    "log": "f407-Debug-all.log",
+    "log_sha256": "953064f5b46a1a29fcef0783d9298234de70fdca20454feb0cc6b1aa087e95de"
+  },
+  {
+    "name": "f407",
+    "configuration": "Debug",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v2\\analysis\\f407\\Flight_Controller",
+      "-j4",
+      "CONFIG=Debug",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "artifact-check"
+    ],
+    "exit_code": 0,
+    "seconds": 7.209,
+    "log": "f407-Debug-artifact-check.log",
+    "log_sha256": "2262443788a0d698960ea80a6e722b011bee9b700314b2c7cd5e5417366424a8"
+  },
+  {
+    "name": "installation",
+    "configuration": "Release",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v2\\analysis\\installation\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "all"
+    ],
+    "exit_code": 0,
+    "seconds": 129.716,
+    "log": "installation-Release-all.log",
+    "log_sha256": "453e64d5bf0395a89210ac017e183e673e056b53914bce4c37cef2004ac133b1"
+  },
+  {
+    "name": "installation",
+    "configuration": "Release",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v2\\analysis\\installation\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "artifact-check"
+    ],
+    "exit_code": 0,
+    "seconds": 8.005,
+    "log": "installation-Release-artifact-check.log",
+    "log_sha256": "37e9963b839263b1c4e679490e4ef04714ebddd1365c8d011496129dceeb3796"
+  },
+  {
+    "name": "installation",
+    "configuration": "Debug",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v2\\analysis\\installation\\Flight_Controller",
+      "-j4",
+      "CONFIG=Debug",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "all"
+    ],
+    "exit_code": 0,
+    "seconds": 129.111,
+    "log": "installation-Debug-all.log",
+    "log_sha256": "cb1f42a8776149aedfdb272c8abb7bb3893cdb66898e6275dfb994867a689eab"
+  },
+  {
+    "name": "installation",
+    "configuration": "Debug",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v2\\analysis\\installation\\Flight_Controller",
+      "-j4",
+      "CONFIG=Debug",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "artifact-check"
+    ],
+    "exit_code": 2,
+    "seconds": 8.569,
+    "log": "installation-Debug-artifact-check.log",
+    "log_sha256": "820d5bf8225703eb7015ac36d4041a5c7716e7c8caaa22f16d0732207e1f0e8b"
+  },
+  {
+    "name": "h743",
+    "configuration": "Release",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v2\\analysis\\h743\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "all"
+    ],
+    "exit_code": 0,
+    "seconds": 124.985,
+    "log": "h743-Release-all.log",
+    "log_sha256": "d9230785cf0feab59f5d3f6aaa130465d7b1cbdbb491f57b2aeef065b1a456f1"
+  },
+  {
+    "name": "h743",
+    "configuration": "Release",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v2\\analysis\\h743\\Flight_Controller",
+      "-j4",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "artifact-check"
+    ],
+    "exit_code": 0,
+    "seconds": 7.529,
+    "log": "h743-Release-artifact-check.log",
+    "log_sha256": "3a0ea26c905ecc4f71b446f3f809baa39aa90c6a912fa3cc6b1a1372baa73192"
+  },
+  {
+    "name": "h743",
+    "configuration": "Debug",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v2\\analysis\\h743\\Flight_Controller",
+      "-j4",
+      "CONFIG=Debug",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "all"
+    ],
+    "exit_code": 0,
+    "seconds": 125.776,
+    "log": "h743-Debug-all.log",
+    "log_sha256": "f3150558eaf513c0778a926d99fe2532ba0959cc5262de8e02ff601d6d4861ff"
+  },
+  {
+    "name": "h743",
+    "configuration": "Debug",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v2\\analysis\\h743\\Flight_Controller",
+      "-j4",
+      "CONFIG=Debug",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "artifact-check"
+    ],
+    "exit_code": 0,
+    "seconds": 7.823,
+    "log": "h743-Debug-artifact-check.log",
+    "log_sha256": "295505f2f28848dbde086befc95cec384cca387fac39b1fb77c8a204fc31a294"
+  }
+]

@@ -1,0 +1,92 @@
+[
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\Core\\Src\\main.c",
+    "retained": "source-objects/1707d4693a24e42386c1c350ea677c4295efb2ff0eacbfe0ce5a4903d76a2f46.c",
+    "sha256": "1707d4693a24e42386c1c350ea677c4295efb2ff0eacbfe0ce5a4903d76a2f46"
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\USB_DEVICE\\App\\usbd_cdc_if.c",
+    "retained": "source-objects/1d94a51da12e236d141519177b86771fe4e1be1c792fcee3781899c8dd24ef81.c",
+    "sha256": "1d94a51da12e236d141519177b86771fe4e1be1c792fcee3781899c8dd24ef81"
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\USB_DEVICE\\Target\\usbd_conf.c",
+    "retained": "source-objects/ed4f90176f6ef095171472e18aceb3a68e2d46cbc23818f44f91e13ebadd2ddb.c",
+    "sha256": "ed4f90176f6ef095171472e18aceb3a68e2d46cbc23818f44f91e13ebadd2ddb"
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Src\\usbd_core.c",
+    "retained": "source-objects/923a22795e4e37717aa83650e413205907ad2e28e362eab97137c91b1b1e03cc.c",
+    "sha256": "923a22795e4e37717aa83650e413205907ad2e28e362eab97137c91b1b1e03cc"
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Class\\CDC\\Src\\usbd_cdc.c",
+    "retained": "source-objects/53db931b7900b9953ba11666b2d3d4660c65e849061b3bf7476b3f1487f95df9.c",
+    "sha256": "53db931b7900b9953ba11666b2d3d4660c65e849061b3bf7476b3f1487f95df9"
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Generated\\UsbTransport\\Src\\usb_cdc_transport.c",
+    "retained": "source-objects/37684894e381072410182de742db02b2c7e49e2d6a18f3e707473cec08c9a9e8.c",
+    "sha256": "37684894e381072410182de742db02b2c7e49e2d6a18f3e707473cec08c9a9e8"
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Generated\\UsbTransport\\Src\\usb_cdc_port.c",
+    "retained": "source-objects/f130a194292b29a23b42e7ab5ae48fa982e05cde084bed5911de762ee0fa8864.c",
+    "sha256": "f130a194292b29a23b42e7ab5ae48fa982e05cde084bed5911de762ee0fa8864"
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Generated\\UsbTransport\\Src\\usb_cdc_retire.c",
+    "retained": "source-objects/bd94ccf288f6714d7172963d92aad6b483423a524231a826af3e1844cc605604.c",
+    "sha256": "bd94ccf288f6714d7172963d92aad6b483423a524231a826af3e1844cc605604"
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Common\\Src\\silverstar_assert.c",
+    "retained": "source-objects/ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826.c",
+    "sha256": "ff99090f3ac355dcb16eef31d062abb45f534180fad4282ccce8055219f6d826"
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Inc\\usb_cdc_port.h",
+    "retained": "source-objects/14d76f1e98f691d82181ae563534463f9962c7a12145931f06399fd3d083b343.h",
+    "sha256": "14d76f1e98f691d82181ae563534463f9962c7a12145931f06399fd3d083b343"
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Inc\\usb_cdc_retire.h",
+    "retained": "source-objects/dd13f96485a610eb1fa389b5a727c0431305a9fca0a30bdee4665e0b874d0328.h",
+    "sha256": "dd13f96485a610eb1fa389b5a727c0431305a9fca0a30bdee4665e0b874d0328"
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Inc\\usb_cdc_transport.h",
+    "retained": "source-objects/225f99a7ff8520b5324615c22f868eb42bf78935093c5773a55710b6eae6c4ed.h",
+    "sha256": "225f99a7ff8520b5324615c22f868eb42bf78935093c5773a55710b6eae6c4ed"
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\Core\\Src\\main.c.patch",
+    "retained": "source-objects/20dc80b3529a01b01c8757c8449ec88f83de2769df61a852d01c09b6b956c7ef.patch",
+    "sha256": "20dc80b3529a01b01c8757c8449ec88f83de2769df61a852d01c09b6b956c7ef"
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Class\\CDC\\Src\\usbd_cdc.c.patch",
+    "retained": "source-objects/9d14163ba2cf53e574a1baa3bf301b6a613ab3ca077910153ba8014207925ab9.patch",
+    "sha256": "9d14163ba2cf53e574a1baa3bf301b6a613ab3ca077910153ba8014207925ab9"
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\Middlewares\\ST\\STM32_USB_Device_Library\\Core\\Src\\usbd_core.c.patch",
+    "retained": "source-objects/1e134052e54891ff7fa6301c6b3178d47ce89d6a3acb5abfb99a49528d1cefcd.patch",
+    "sha256": "1e134052e54891ff7fa6301c6b3178d47ce89d6a3acb5abfb99a49528d1cefcd"
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\USB_DEVICE\\App\\usbd_cdc_if.c.patch",
+    "retained": "source-objects/44fe0ffc6caf90d72233ec98db099930bb1d2df368c5b74b52697ca762378c3a.patch",
+    "sha256": "44fe0ffc6caf90d72233ec98db099930bb1d2df368c5b74b52697ca762378c3a"
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\USB_DEVICE\\Target\\usbd_conf.c.patch",
+    "retained": "source-objects/d5109ea74a6345aa5bbbac1ba7321d52a658939b95ec260672bfa7c5e9bc1c5b.patch",
+    "sha256": "d5109ea74a6345aa5bbbac1ba7321d52a658939b95ec260672bfa7c5e9bc1c5b"
+  },
+  {
+    "source": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-before-v1\\native\\f407\\Native\\USB_DEVICE\\Target\\usbd_conf.h.patch",
+    "retained": "source-objects/5f31c8002f31b752f4741de55f5d6c7dd09b1be7e892e306e553c000749f7300.patch",
+    "sha256": "5f31c8002f31b752f4741de55f5d6c7dd09b1be7e892e306e553c000749f7300"
+  }
+]

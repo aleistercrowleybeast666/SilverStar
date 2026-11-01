@@ -1,0 +1,185 @@
+normal/error output transaction PASS
+.FFFFFFFFF
+================================== FAILURES ===================================
+_________________ test_owned_mission_contracts[config-error] __________________
+
+mission_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-mission-v3/mission-critical0/mission-contract.exe')
+scenario = 'config-error'
+
+    @pytest.mark.parametrize("scenario", [
+        "normal", "config-error", "event-count", "active-count", "navigation-count",
+        "active-terminated", "event-future", "event-order", "ready-mask", "mission-flag",
+    ])
+    def test_owned_mission_contracts(mission_contract_executable: Path, scenario: str) -> None:
+        result = subprocess.run([str(mission_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: Assertion failed: memcmp(&s_event, &s_event_before, sizeof(s_event)) == 0, file D:\python_software\SilverStar\apps\SCG\tests\fixtures\mission_critical_contract_host.c, line 75
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\critical\\pre-miss...) == 0, file D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\mission_critical_contract_host.c, line 75\n').returncode
+
+apps\SCG\tests\test_mission_critical_contracts.py:56: AssertionError
+__________________ test_owned_mission_contracts[event-count] __________________
+
+mission_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-mission-v3/mission-critical0/mission-contract.exe')
+scenario = 'event-count'
+
+    @pytest.mark.parametrize("scenario", [
+        "normal", "config-error", "event-count", "active-count", "navigation-count",
+        "active-terminated", "event-future", "event-order", "ready-mask", "mission-flag",
+    ])
+    def test_owned_mission_contracts(mission_contract_executable: Path, scenario: str) -> None:
+        result = subprocess.run([str(mission_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: UNSAFE: event-count returned without the internal-state fault
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\critical\\pre-miss...xe', 'event-count'], returncode=1, stdout='', stderr='UNSAFE: event-count returned without the internal-state fault\n').returncode
+
+apps\SCG\tests\test_mission_critical_contracts.py:56: AssertionError
+_________________ test_owned_mission_contracts[active-count] __________________
+
+mission_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-mission-v3/mission-critical0/mission-contract.exe')
+scenario = 'active-count'
+
+    @pytest.mark.parametrize("scenario", [
+        "normal", "config-error", "event-count", "active-count", "navigation-count",
+        "active-terminated", "event-future", "event-order", "ready-mask", "mission-flag",
+    ])
+    def test_owned_mission_contracts(mission_contract_executable: Path, scenario: str) -> None:
+        result = subprocess.run([str(mission_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: UNSAFE: active-count returned without the internal-state fault
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\critical\\pre-miss...', 'active-count'], returncode=1, stdout='', stderr='UNSAFE: active-count returned without the internal-state fault\n').returncode
+
+apps\SCG\tests\test_mission_critical_contracts.py:56: AssertionError
+_______________ test_owned_mission_contracts[navigation-count] ________________
+
+mission_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-mission-v3/mission-critical0/mission-contract.exe')
+scenario = 'navigation-count'
+
+    @pytest.mark.parametrize("scenario", [
+        "normal", "config-error", "event-count", "active-count", "navigation-count",
+        "active-terminated", "event-future", "event-order", "ready-mask", "mission-flag",
+    ])
+    def test_owned_mission_contracts(mission_contract_executable: Path, scenario: str) -> None:
+        result = subprocess.run([str(mission_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: UNSAFE: navigation-count returned without the internal-state fault
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\critical\\pre-miss...gation-count'], returncode=1, stdout='', stderr='UNSAFE: navigation-count returned without the internal-state fault\n').returncode
+
+apps\SCG\tests\test_mission_critical_contracts.py:56: AssertionError
+_______________ test_owned_mission_contracts[active-terminated] _______________
+
+mission_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-mission-v3/mission-critical0/mission-contract.exe')
+scenario = 'active-terminated'
+
+    @pytest.mark.parametrize("scenario", [
+        "normal", "config-error", "event-count", "active-count", "navigation-count",
+        "active-terminated", "event-future", "event-order", "ready-mask", "mission-flag",
+    ])
+    def test_owned_mission_contracts(mission_contract_executable: Path, scenario: str) -> None:
+        result = subprocess.run([str(mission_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: UNSAFE: active-terminated returned without the internal-state fault
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\critical\\pre-miss...-terminated'], returncode=1, stdout='', stderr='UNSAFE: active-terminated returned without the internal-state fault\n').returncode
+
+apps\SCG\tests\test_mission_critical_contracts.py:56: AssertionError
+_________________ test_owned_mission_contracts[event-future] __________________
+
+mission_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-mission-v3/mission-critical0/mission-contract.exe')
+scenario = 'event-future'
+
+    @pytest.mark.parametrize("scenario", [
+        "normal", "config-error", "event-count", "active-count", "navigation-count",
+        "active-terminated", "event-future", "event-order", "ready-mask", "mission-flag",
+    ])
+    def test_owned_mission_contracts(mission_contract_executable: Path, scenario: str) -> None:
+        result = subprocess.run([str(mission_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: UNSAFE: event-future returned without the internal-state fault
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\critical\\pre-miss...', 'event-future'], returncode=1, stdout='', stderr='UNSAFE: event-future returned without the internal-state fault\n').returncode
+
+apps\SCG\tests\test_mission_critical_contracts.py:56: AssertionError
+__________________ test_owned_mission_contracts[event-order] __________________
+
+mission_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-mission-v3/mission-critical0/mission-contract.exe')
+scenario = 'event-order'
+
+    @pytest.mark.parametrize("scenario", [
+        "normal", "config-error", "event-count", "active-count", "navigation-count",
+        "active-terminated", "event-future", "event-order", "ready-mask", "mission-flag",
+    ])
+    def test_owned_mission_contracts(mission_contract_executable: Path, scenario: str) -> None:
+        result = subprocess.run([str(mission_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: UNSAFE: event-order returned without the internal-state fault
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\critical\\pre-miss...xe', 'event-order'], returncode=1, stdout='', stderr='UNSAFE: event-order returned without the internal-state fault\n').returncode
+
+apps\SCG\tests\test_mission_critical_contracts.py:56: AssertionError
+__________________ test_owned_mission_contracts[ready-mask] ___________________
+
+mission_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-mission-v3/mission-critical0/mission-contract.exe')
+scenario = 'ready-mask'
+
+    @pytest.mark.parametrize("scenario", [
+        "normal", "config-error", "event-count", "active-count", "navigation-count",
+        "active-terminated", "event-future", "event-order", "ready-mask", "mission-flag",
+    ])
+    def test_owned_mission_contracts(mission_contract_executable: Path, scenario: str) -> None:
+        result = subprocess.run([str(mission_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: UNSAFE: ready-mask returned without the internal-state fault
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\critical\\pre-miss....exe', 'ready-mask'], returncode=1, stdout='', stderr='UNSAFE: ready-mask returned without the internal-state fault\n').returncode
+
+apps\SCG\tests\test_mission_critical_contracts.py:56: AssertionError
+_________________ test_owned_mission_contracts[mission-flag] __________________
+
+mission_contract_executable = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/critical/pre-mission-v3/mission-critical0/mission-contract.exe')
+scenario = 'mission-flag'
+
+    @pytest.mark.parametrize("scenario", [
+        "normal", "config-error", "event-count", "active-count", "navigation-count",
+        "active-terminated", "event-future", "event-order", "ready-mask", "mission-flag",
+    ])
+    def test_owned_mission_contracts(mission_contract_executable: Path, scenario: str) -> None:
+        result = subprocess.run([str(mission_contract_executable), scenario],
+                                capture_output=True, text=True, timeout=10)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: UNSAFE: mission-flag returned without the internal-state fault
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\critical\\pre-miss...', 'mission-flag'], returncode=1, stdout='', stderr='UNSAFE: mission-flag returned without the internal-state fault\n').returncode
+
+apps\SCG\tests\test_mission_critical_contracts.py:56: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_mission_critical_contracts.py::test_owned_mission_contracts[config-error]
+FAILED apps\SCG\tests\test_mission_critical_contracts.py::test_owned_mission_contracts[event-count]
+FAILED apps\SCG\tests\test_mission_critical_contracts.py::test_owned_mission_contracts[active-count]
+FAILED apps\SCG\tests\test_mission_critical_contracts.py::test_owned_mission_contracts[navigation-count]
+FAILED apps\SCG\tests\test_mission_critical_contracts.py::test_owned_mission_contracts[active-terminated]
+FAILED apps\SCG\tests\test_mission_critical_contracts.py::test_owned_mission_contracts[event-future]
+FAILED apps\SCG\tests\test_mission_critical_contracts.py::test_owned_mission_contracts[event-order]
+FAILED apps\SCG\tests\test_mission_critical_contracts.py::test_owned_mission_contracts[ready-mask]
+FAILED apps\SCG\tests\test_mission_critical_contracts.py::test_owned_mission_contracts[mission-flag]
+9 failed, 1 passed in 5.97s

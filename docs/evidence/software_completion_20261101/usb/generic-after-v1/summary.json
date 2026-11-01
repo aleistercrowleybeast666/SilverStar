@@ -1,0 +1,178 @@
+{
+  "baseline": false,
+  "receipts": [
+    {
+      "graph_sha256": "c9fd92a9e6b2c79e9ef9114e15802b81eccbadb1e713b51dd94f1b34023a2b05",
+      "part": "f103",
+      "builds": [
+        {
+          "mode": "normal",
+          "elf": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\build\\normal\\usb-transport-integrated.elf",
+          "sha256": "f6cf9901f3c6e2d7f59c1ddbe30d94d9025b540aff1d8864dfc17badd9f14498",
+          "status": "COMPILED_LINKED"
+        },
+        {
+          "mode": "analyzer",
+          "elf": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f103\\build\\analyzer\\usb-transport-integrated.elf",
+          "sha256": "f6cf9901f3c6e2d7f59c1ddbe30d94d9025b540aff1d8864dfc17badd9f14498",
+          "status": "COMPILED_LINKED_ANALYZER_EXECUTED"
+        }
+      ],
+      "critical_contracts": "NOT_PROVEN",
+      "stack_wcet_hardware": "NOT_PROVEN",
+      "warning_logs": [
+        "f103-analyzer-26-stm32f1xx_hal_uart.log"
+      ],
+      "linked_library_files": {
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\arm-none-eabi\\lib\\thumb\\v7-m\\nofp\\libc_nano.a": "bca6a8654de0b04cb18a637a41185112d9ae443ca2206e8811fbd5535fad14b5",
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\arm-none-eabi\\lib\\thumb\\v7-m\\nofp\\libm.a": "61452e5f4d6b838d9c68305e9f11ad4e199794b171bd5c34271182410d6004d7",
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\arm-none-eabi\\lib\\thumb\\v7-m\\nofp\\libnosys.a": "40639ce705158bd2a8deefca9efdaa4b026d39c7cf5c4aca37ca2c24595f320d",
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\lib\\gcc\\arm-none-eabi\\14.3.1\\thumb\\v7-m\\nofp\\libgcc.a": "4f9e9a25e29ea8dee804e8f65baa64a777f8f55c69fe3524780b02f1e9bc5ac8"
+      },
+      "native_root": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f103-usb",
+      "native_configuration": {
+        "scope": "SOURCE_DECLARATIONS_ONLY",
+        "owner": "USB_DEVICE/Target/usbd_conf.c",
+        "pcd_instances": [
+          {
+            "pcd": "hpcd_USB_FS",
+            "instance": "USB"
+          }
+        ],
+        "memory_mechanism": "PMA",
+        "fifo_calls": [],
+        "declared_fifo_words": null,
+        "findings": [],
+        "effective_geometry": "NOT_PROVEN_REQUIRES_RUNTIME_GUARD",
+        "clock_phy_irq": "NATIVE_OWNER_AND_BOARD_EVIDENCE_REQUIRED"
+      },
+      "configuration_findings": [],
+      "controller_contract": {
+        "id": "pma-f1-single-v1",
+        "stack": "ST_USB_DEVICE_CDC",
+        "class_abi": "legacy",
+        "controller": "STM32_USB_PMA",
+        "memory": "SINGLE_BUFFER_PMA",
+        "capacity_bytes": 512,
+        "table_base": 0,
+        "usb_speed": "FULL",
+        "packet_size": 64,
+        "cpu_copy_only": true,
+        "scheduler": "MAIN_PLUS_USB_IRQ",
+        "runtime_guard": "UsbCdcRetire_ConfigurationCheck",
+        "compiler": {
+          "core": "cortex-m3",
+          "fpu": "",
+          "float_abi": "soft",
+          "independent_irq_slots": {
+            "USB_LP_CAN1_RX0_IRQHandler": 20
+          }
+        },
+        "scope": "REVIEWED_COMPONENT_ADAPTER_NOT_FAMILY_ADMISSION",
+        "hardware_acceptance": "NOT_PROVEN"
+      },
+      "power10": "FAIL",
+      "gate_sha256": "a4aca423ec1df7a1ea273f80ddc8c9f0baaac5b9d4bac6481d1386c9a1312fac",
+      "input_preserved": true
+    },
+    {
+      "graph_sha256": "3a0582a308ab87d6e8757717c6046ff5483daaf8806d0efe6bd6c048a5fab977",
+      "part": "f407",
+      "builds": [
+        {
+          "mode": "normal",
+          "elf": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\build\\normal\\usb-transport-integrated.elf",
+          "sha256": "6b5aee9d312f93faa1843ddaeedca7decdb1ea5271dc9c07fbd45a1e5e34f6a7",
+          "status": "COMPILED_LINKED"
+        },
+        {
+          "mode": "analyzer",
+          "elf": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\usb\\generic-after-v1\\native\\f407\\build\\analyzer\\usb-transport-integrated.elf",
+          "sha256": "6b5aee9d312f93faa1843ddaeedca7decdb1ea5271dc9c07fbd45a1e5e34f6a7",
+          "status": "COMPILED_LINKED_ANALYZER_EXECUTED"
+        }
+      ],
+      "critical_contracts": "NOT_PROVEN",
+      "stack_wcet_hardware": "NOT_PROVEN",
+      "warning_logs": [
+        "f407-analyzer-35-stm32f4xx_hal_uart.log"
+      ],
+      "linked_library_files": {
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\arm-none-eabi\\lib\\thumb\\v7e-m+fp\\hard\\libc_nano.a": "d2eef531e4b927f5391d20155f1e5b0c3a68fdb1e6db271c1e4b6e3f15c2cc0b",
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\arm-none-eabi\\lib\\thumb\\v7e-m+fp\\hard\\libm.a": "50831fb18c89e02ea50756324b8d60dc1683574c2a0c9e324e3f95cafcace24e",
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\arm-none-eabi\\lib\\thumb\\v7e-m+fp\\hard\\libnosys.a": "50d33e3fc4000a98856721226f833428bb9fbc1cff74296a361306e6049cd39f",
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\lib\\gcc\\arm-none-eabi\\14.3.1\\thumb\\v7e-m+fp\\hard\\libgcc.a": "c5a56def10dcb12a0477e49d2a7af84049124132094738f2ef50c2fb5c4ae92d"
+      },
+      "native_root": "D:\\Codex_Work\\2026-10-08\\task\\usb-validation\\cube-f407-usb",
+      "native_configuration": {
+        "scope": "SOURCE_DECLARATIONS_ONLY",
+        "owner": "USB_DEVICE/Target/usbd_conf.c",
+        "pcd_instances": [
+          {
+            "pcd": "hpcd_USB_OTG_FS",
+            "instance": "USB_OTG_FS"
+          }
+        ],
+        "memory_mechanism": "OTG_FIFO",
+        "fifo_calls": [
+          {
+            "operation": "HAL_PCDEx_SetRxFiFo",
+            "pcd": "&hpcd_USB_OTG_FS",
+            "endpoint": null,
+            "literal_words": 128
+          },
+          {
+            "operation": "HAL_PCDEx_SetTxFiFo",
+            "pcd": "&hpcd_USB_OTG_FS",
+            "endpoint": 0,
+            "literal_words": 64
+          },
+          {
+            "operation": "HAL_PCDEx_SetTxFiFo",
+            "pcd": "&hpcd_USB_OTG_FS",
+            "endpoint": 1,
+            "literal_words": 128
+          }
+        ],
+        "declared_fifo_words": null,
+        "findings": [
+          "NATIVE_TX_FIFO_EP2_NOT_EXPLICIT: CDC notification allocation requires review",
+          "NATIVE_FIFO_DECLARATION_INCOMPLETE_OR_NONLITERAL"
+        ],
+        "effective_geometry": "NOT_PROVEN_REQUIRES_RUNTIME_GUARD",
+        "clock_phy_irq": "NATIVE_OWNER_AND_BOARD_EVIDENCE_REQUIRED"
+      },
+      "configuration_findings": [
+        "NATIVE_TX_FIFO_EP2_NOT_EXPLICIT: CDC notification allocation requires review",
+        "NATIVE_FIFO_DECLARATION_INCOMPLETE_OR_NONLITERAL"
+      ],
+      "controller_contract": {
+        "id": "otg-fs-f4-cpu-v1",
+        "stack": "ST_USB_DEVICE_CDC",
+        "class_abi": "indexed",
+        "controller": "STM32_OTG_FS",
+        "memory": "SHARED_RX_AND_PER_IN_TX_FIFO",
+        "capacity_from": "USB_OTG_FS_TOTAL_FIFO_SIZE",
+        "usb_speed": "FULL",
+        "packet_size": 64,
+        "cpu_copy_only": true,
+        "scheduler": "MAIN_PLUS_USB_IRQ",
+        "runtime_guard": "UsbCdcRetire_ConfigurationCheck",
+        "compiler": {
+          "core": "cortex-m4",
+          "fpu": "fpv4-sp-d16",
+          "float_abi": "hard",
+          "independent_irq_slots": {
+            "OTG_FS_IRQHandler": 67
+          }
+        },
+        "scope": "REVIEWED_COMPONENT_ADAPTER_NOT_FAMILY_ADMISSION",
+        "hardware_acceptance": "NOT_PROVEN"
+      },
+      "power10": "FAIL",
+      "gate_sha256": "a4aca423ec1df7a1ea273f80ddc8c9f0baaac5b9d4bac6481d1386c9a1312fac",
+      "input_preserved": true
+    }
+  ],
+  "limits": "Host models plus exact integrated ARM builds only. Vendor callbacks, EP0, physical cancellation, clock/IRQ timing, stack and hardware acceptance NOT PROVEN."
+}

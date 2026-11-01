@@ -1,0 +1,152 @@
+[
+  {
+    "name": "installation",
+    "target": "architecture-check",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\a\\installation\\Flight_Controller",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "architecture-check"
+    ],
+    "exit_code": 0,
+    "seconds": 65.28637830000662,
+    "log": "installation-architecture-check.log"
+  },
+  {
+    "name": "installation",
+    "target": "power10-check",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\a\\installation\\Flight_Controller",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "power10-check"
+    ],
+    "exit_code": 0,
+    "seconds": 72.77825940000184,
+    "log": "installation-power10-check.log"
+  },
+  {
+    "name": "f407",
+    "target": "architecture-check",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\a\\f407\\Flight_Controller",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "architecture-check"
+    ],
+    "exit_code": 0,
+    "seconds": 70.69731689999753,
+    "log": "f407-architecture-check.log"
+  },
+  {
+    "name": "f407",
+    "target": "power10-check",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\a\\f407\\Flight_Controller",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "power10-check"
+    ],
+    "exit_code": 0,
+    "seconds": 70.59353659999033,
+    "log": "f407-power10-check.log"
+  },
+  {
+    "name": "h743",
+    "target": "architecture-check",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\a\\h743\\Flight_Controller",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "architecture-check"
+    ],
+    "exit_code": 0,
+    "seconds": 59.85100749999401,
+    "log": "h743-architecture-check.log"
+  },
+  {
+    "name": "h743",
+    "target": "power10-check",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\a\\h743\\Flight_Controller",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "power10-check"
+    ],
+    "exit_code": 0,
+    "seconds": 58.37001769999915,
+    "log": "h743-power10-check.log"
+  },
+  {
+    "name": "pid",
+    "target": "architecture-check",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\a\\pid\\Flight_Controller",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "architecture-check"
+    ],
+    "exit_code": 0,
+    "seconds": 59.0747027000034,
+    "log": "pid-architecture-check.log"
+  },
+  {
+    "name": "pid",
+    "target": "power10-check",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\a\\pid\\Flight_Controller",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "power10-check"
+    ],
+    "exit_code": 0,
+    "seconds": 58.50164539999969,
+    "log": "pid-power10-check.log"
+  },
+  {
+    "name": "lqr",
+    "target": "architecture-check",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\a\\lqr\\Flight_Controller",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "architecture-check"
+    ],
+    "exit_code": 0,
+    "seconds": 52.105872300002375,
+    "log": "lqr-architecture-check.log"
+  },
+  {
+    "name": "lqr",
+    "target": "power10-check",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\stack\\v5\\a\\lqr\\Flight_Controller",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "power10-check"
+    ],
+    "exit_code": 0,
+    "seconds": 61.32180970000627,
+    "log": "lqr-power10-check.log"
+  }
+]

@@ -1,0 +1,29 @@
+{
+  "command": [
+    "D:/python_software/TreeDiagram/.venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "apps/SCG/tests/test_native_control_faults.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\fd3"
+  ],
+  "exit_code": 0,
+  "seconds": 33.60644859999593,
+  "before": {
+    "apps/SCG/src/silverstar_fccg/generator/ground_usb_control.py": "7ce657f80efa15a1f62548abafbc2501b7e9a0c78dc90884dcbac760c84dfed5",
+    "apps/SCG/src/silverstar_fccg/generator/native_control.py": "995c2811a7d0670ce207ed23a82904cfae2d350109009ed2934832636a595e2d",
+    "apps/SCG/tests/test_native_control_faults.py": "a3409536bd0beeaa68e7c378d997889c431474d93c1be9cd59043e1e561bfbbf",
+    "apps/SCG/tests/usb_descriptor_cases.py": "1661bea0316e4046a1e29874039e8960d094a0ca085d918dec1ecce9540fad5c"
+  },
+  "after": {
+    "apps/SCG/src/silverstar_fccg/generator/ground_usb_control.py": "7ce657f80efa15a1f62548abafbc2501b7e9a0c78dc90884dcbac760c84dfed5",
+    "apps/SCG/src/silverstar_fccg/generator/native_control.py": "995c2811a7d0670ce207ed23a82904cfae2d350109009ed2934832636a595e2d",
+    "apps/SCG/tests/test_native_control_faults.py": "a3409536bd0beeaa68e7c378d997889c431474d93c1be9cd59043e1e561bfbbf",
+    "apps/SCG/tests/usb_descriptor_cases.py": "1661bea0316e4046a1e29874039e8960d094a0ca085d918dec1ecce9540fad5c"
+  },
+  "log_sha256": "5900b365bf2d1c6bc48b5352f134d30a8b3951bfeff33b1888c108bc21cce147",
+  "native_reference": "C:/Users/chdxm/Documents/Codex/2026-10-08/task/usb-validation",
+  "basetemp": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\fd3"
+}

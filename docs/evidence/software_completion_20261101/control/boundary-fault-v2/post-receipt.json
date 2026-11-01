@@ -1,0 +1,26 @@
+{
+  "phase": "post",
+  "git_head": "8b028f280ba01dce0efc697479ef99ec143f7456",
+  "scope": "same frozen v5 support, same tests; only isolated control/INS owner replaced",
+  "sources": {
+    "control_research": "7176dc7c8045cc158618c4a90e27f38610dc7d2397089cc00511bc74b2864265",
+    "ins_task": "899fe48fa6e8e58c795fe2c2db85d4ec6b5d59316a4276344465360903118a84",
+    "control_provenance_bus.c": "a37e774d27c9a9c260f5a73c33775e83bc90d889125dc3b99afdaf7b43877f4e",
+    "control_provenance_ins_inputs.c": "dbe52818022155d406aa223a2d228f3f9d2dadb925214de8807871dd437973f1",
+    "post-control_provenance_ins_inputs.c": "1898ff1dede137570207b0d05b3f2923bc876d978d8e64b22978493e611aba2e",
+    "post-control_research.c": "7176dc7c8045cc158618c4a90e27f38610dc7d2397089cc00511bc74b2864265",
+    "post-ins_task.c": "899fe48fa6e8e58c795fe2c2db85d4ec6b5d59316a4276344465360903118a84",
+    "post-test_control_research.c": "717a624d7c0735018d1a6a6a69c956c2c6c90b3b39509669a82b9ad9dc34f354",
+    "pre-control_provenance_ins_inputs.c": "1aa4bc6fc46c96664c4b00d8d1e0f6500740c9c38b9d82da6363e6287c768c44",
+    "pre-control_research.c": "b3b563272e0fc29f85c569e6f95013d0f9d275635429716aa841ed1880f1cc6b",
+    "pre-ins_task.c": "c4e0ee8df0b0b01286bf1ffdc82386d32287e6bea97eb3ceea119bb292e09300",
+    "pre-test_control_research.c": "efc315bedd8e674f446ed48757944b74a484c6bcef1200b26c8006635ec5a460",
+    "test_control_provenance.c": "055267cf7482324b721bb34653377784339a320ef7ef74a6eb87c65b4cf34be7",
+    "test_control_research.c": "af068b26d3c4c5c6e02986ea565e9ea14b41ac6937fd1440a0c641dc01407168"
+  },
+  "outcomes": {
+    "stop_interleave": 0,
+    "schedule_interleave": 0,
+    "alignment_source": 0
+  }
+}

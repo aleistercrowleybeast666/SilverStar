@@ -1,0 +1,43 @@
+mingw32-make: Entering directory 'D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/stack/v5/a/h743/Flight_Controller'
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_maintenance_uart.ps1
+Maintenance UART source/IOC matched 921600/8N1; no source overwritten
+"FCCG_BUILD_ARTIFACT|ELF|build/FCCG/SilverStar_H743ZI/Debug/SilverStar_0_1_3.elf"
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_firmware_artifact.ps1 -TargetProfile SilverStar_H743ZI -Config Debug 
+FCCG_PROGRESS|ARTIFACT|PLAN|8
+FCCG_PROGRESS|ARTIFACT|BEGIN|1|8|ELF_MAP_BIN_HEX
+FCCG_PROGRESS|ARTIFACT|DONE|1|8|ELF_MAP_BIN_HEX
+FCCG_PROGRESS|ARTIFACT|BEGIN|2|8|ELF
+FCCG_PROGRESS|ARTIFACT|DONE|2|8|ELF
+FCCG_PROGRESS|ARTIFACT|BEGIN|3|8|MAP
+FCCG_PROGRESS|ARTIFACT|DONE|3|8|MAP
+FIRMWARE_MEMORY_REPORT|D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v5\a\h743\Flight_Controller\build\FCCG\SilverStar_H743ZI\Debug\memory-report.json
+FCCG_PROGRESS|ARTIFACT|BEGIN|4|8|FLASH
+FCCG_PROGRESS|ARTIFACT|DONE|4|8|FLASH
+FCCG_PROGRESS|ARTIFACT|BEGIN|5|8|MAIN_SRAM
+FCCG_PROGRESS|ARTIFACT|DONE|5|8|MAIN_SRAM
+FCCG_PROGRESS|ARTIFACT|BEGIN|6|8|CCMRAM
+FCCG_PROGRESS|ARTIFACT|DONE|6|8|CCMRAM
+FCCG_PROGRESS|ARTIFACT|BEGIN|7|8|heap
+SilverStar memory report:
+  FLASH     used=390780 remaining=1706372 capacity=2097152
+  main SRAM used=220560 remaining=303728 capacity=524288
+  CCMRAM    used=0 remaining=0 capacity=0
+  DTCM MSP  reserved=8192 capacity=131072; main/ISR stack margin NOT PROVEN
+  H743 uses a separate physical AXI budget; F407 historical 100 KiB logging budget does not apply.
+  heap      reserved=0 runtime_symbols=0
+FCCG_PROGRESS|ARTIFACT|DONE|7|8|heap
+FCCG_PROGRESS|ARTIFACT|BEGIN|8|8|summary
+  largest static objects:
+    s_replay_work                    bytes= 42200 address=0x24020A58 main SRAM
+    s_replay                         bytes= 32488 address=0x2402C1F0 main SRAM
+    s_logger_storage                 bytes= 16000 address=0x240141F8 main SRAM
+    s_estimator_logger_storage       bytes= 11520 address=0x240114DC main SRAM
+    s_estimator                      bytes= 10232 address=0x24009748 main SRAM
+    s_hal_contexts                   bytes=  8190 address=0x2401D3C4 main SRAM
+    s_queue                          bytes=  7680 address=0x240075B0 main SRAM
+    s_alignment_strategy             bytes=  6280 address=0x2400D918 main SRAM
+    s_serial_stack                   bytes=  6144 address=0x24001590 main SRAM
+    s_estimator_stack                bytes=  5120 address=0x24004A74 main SRAM
+SilverStar artifact check passed: target=SilverStar_H743ZI config=Debug elf_bytes=5899468 bin_bytes=390788 heap_symbols=0
+FCCG_PROGRESS|ARTIFACT|DONE|8|8|summary
+mingw32-make: Leaving directory 'D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/stack/v5/a/h743/Flight_Controller'

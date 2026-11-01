@@ -1,0 +1,10 @@
+f407 Release {'enabled': False, 'required_functions': [], 'reachable': True}
+f407 Debug {'enabled': False, 'required_functions': [], 'reachable': True}
+installation Release {'enabled': False, 'required_functions': [], 'reachable': True}
+installation Debug {'enabled': False, 'required_functions': [], 'reachable': True}
+h743 Release {'enabled': False, 'required_functions': [], 'reachable': True}
+h743 Debug {'enabled': False, 'required_functions': [], 'reachable': True}
+pid Debug {'enabled': True, 'kind': 'pid', 'required_functions': ['ControlPid_Step', 'ControlResearchBackend_Step', 'ControlResearch_Process'], 'reachable': True, 'period_us': 10000, 'contract_sha256': '9779c7f060171c987b4e7b81695479559acac0308792d7cefd257a0d3f0194ec'}
+pid Release {'enabled': True, 'kind': 'pid', 'required_functions': ['ControlPid_Step', 'ControlResearchBackend_Step', 'ControlResearch_Process'], 'reachable': True, 'period_us': 10000, 'contract_sha256': '9779c7f060171c987b4e7b81695479559acac0308792d7cefd257a0d3f0194ec'}
+lqr Release {'enabled': True, 'kind': 'lqr', 'required_functions': ['ControlLqr_Step', 'ControlResearchBackend_Step', 'ControlResearch_Process'], 'reachable': True, 'period_us': 10000, 'contract_sha256': 'ca4c1df032e4b1a6c077eff6cff2fe2852eb77c2bfb9d7bf7c739fbdd79a30c3'}
+lqr Debug {'enabled': True, 'kind': 'lqr', 'required_functions': ['ControlLqr_Step', 'ControlResearchBackend_Step', 'ControlResearch_Process'], 'reachable': True, 'period_us': 10000, 'contract_sha256': 'ca4c1df032e4b1a6c077eff6cff2fe2852eb77c2bfb9d7bf7c739fbdd79a30c3'}

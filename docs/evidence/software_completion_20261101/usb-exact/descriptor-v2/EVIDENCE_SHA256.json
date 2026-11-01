@@ -1,0 +1,208 @@
+{
+  "schema": "silverstar.evidence-file-inventory/1",
+  "scope": "Private USB descriptor-v2 actual build/Host/gate evidence only; excludes this inventory and ignored Python caches.",
+  "file_count": 40,
+  "total_bytes": 4495013,
+  "files": [
+    {
+      "path": "build-results.json",
+      "bytes": 1723,
+      "sha256": "ce2821182cd8e0ab70232ac91e9587146a3b0517fe63da5eecdb1ceb83e93163"
+    },
+    {
+      "path": "C071-artifacts.zip",
+      "bytes": 1077807,
+      "sha256": "8fdef867713d2d8a34d54abf430705469432300c24027d22bca3ec689856a696"
+    },
+    {
+      "path": "capture.exit",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "capture.log",
+      "bytes": 1125,
+      "sha256": "666c68ed7ac16c4de4712078545abcd7b502f6d569de13b95c6121cd49c36cec"
+    },
+    {
+      "path": "capture.py",
+      "bytes": 6937,
+      "sha256": "15dcc8f73eadb27b132d852fff820ee3e3e2f8275783ae75e8e21ead56115c61"
+    },
+    {
+      "path": "closure-comparison.json",
+      "bytes": 177734,
+      "sha256": "43eceb1a4ca72b5b421c327f40059bac7ea6eee7e6f773898c66f6e65e8d77d9"
+    },
+    {
+      "path": "compiled-closure-comparison-v2.json",
+      "bytes": 177650,
+      "sha256": "21de39bcab40a7db7f02e4bf58e6caf8ec77b11e143e195e33acdafa67355c3d"
+    },
+    {
+      "path": "compiled-closure-comparison.json",
+      "bytes": 330973,
+      "sha256": "7b7c561b471d8122f4a956cc4411fa8639eaec7d61056ef3149c2afb56be35c5"
+    },
+    {
+      "path": "F103-artifacts.zip",
+      "bytes": 561632,
+      "sha256": "73654123a27efc3cf8f77f3aa129b9b590c45ef0995380cd5d3ec238305feba4"
+    },
+    {
+      "path": "F407-artifacts.zip",
+      "bytes": 606997,
+      "sha256": "e66577934bac1ff483260f6296afdd68ac19ec74fcb07f3366c76f1913523f6e"
+    },
+    {
+      "path": "faults-command.json",
+      "bytes": 1648,
+      "sha256": "af3d30af6f89dab027b92de4cddf9254d761c7797cb8918edf517801ec2e39af"
+    },
+    {
+      "path": "faults-post-command.json",
+      "bytes": 1647,
+      "sha256": "b07856e319f94475a92df7537c22d0a5613ee1a6696c5083ec3d8484e50e9481"
+    },
+    {
+      "path": "faults-post.log",
+      "bytes": 610,
+      "sha256": "5900b365bf2d1c6bc48b5352f134d30a8b3951bfeff33b1888c108bc21cce147"
+    },
+    {
+      "path": "faults.log",
+      "bytes": 5543,
+      "sha256": "7a3256a6a64f56fc0adeeac28f9b67b4b5f6e6e69bfffc7dd56b17b9766c6ff1"
+    },
+    {
+      "path": "gate-commands.json",
+      "bytes": 6904,
+      "sha256": "374264bbc4032115a93e334e04d19258c66712f1857e6238a4c91b994a9f219a"
+    },
+    {
+      "path": "gates/C071/architecture-check.log",
+      "bytes": 171,
+      "sha256": "e92466d5c38b2d50f050bc7e7ff533191156d0c04963ed9fb40ea8034825ea38"
+    },
+    {
+      "path": "gates/C071/artifact-check.log",
+      "bytes": 28619,
+      "sha256": "36067f69aabeaef27b2518daedd729a1c8d27c80422acf79ad59e9ff1d83e864"
+    },
+    {
+      "path": "gates/C071/host-tests.log",
+      "bytes": 12635,
+      "sha256": "c1694e4c3ca69d39fa2db9633086f9cb79ed31beb9108a82f49d13ff67d2381c"
+    },
+    {
+      "path": "gates/C071/power10-check.log",
+      "bytes": 60751,
+      "sha256": "d5689f1f4fabf00b24d586b9351b86a15ee8f5f226402c5fb5c9995bdeb1e86a"
+    },
+    {
+      "path": "gates/F103/architecture-check.log",
+      "bytes": 282,
+      "sha256": "7f0cbf5b3b71cf1fbaf9cc1a7a0b1bf65d8549e3a8870d6769a57ad06192d09d"
+    },
+    {
+      "path": "gates/F103/artifact-check.log",
+      "bytes": 27529,
+      "sha256": "91127226fad1a7b73f32476bb223254901df892d876a297ef557b6b76da79528"
+    },
+    {
+      "path": "gates/F103/host-tests.log",
+      "bytes": 11975,
+      "sha256": "55c864300daeb4c95e92c677bccc350cb2d2a28870d32b31afa87d433bbd133e"
+    },
+    {
+      "path": "gates/F103/power10-check.log",
+      "bytes": 52748,
+      "sha256": "d8c06354719e506d781d31b57aafae35a32e6159476200b25055408b63fda64d"
+    },
+    {
+      "path": "gates/F407/architecture-check.log",
+      "bytes": 282,
+      "sha256": "7f0cbf5b3b71cf1fbaf9cc1a7a0b1bf65d8549e3a8870d6769a57ad06192d09d"
+    },
+    {
+      "path": "gates/F407/artifact-check.log",
+      "bytes": 32392,
+      "sha256": "b94224621886a4fee273ea0a147d35918a58cf80897e851aa908a6b7877ef62d"
+    },
+    {
+      "path": "gates/F407/host-tests.log",
+      "bytes": 11975,
+      "sha256": "126f3f2026d1e9f7e73540660ef2be07ff79498121fc49a0050812bd6c259a31"
+    },
+    {
+      "path": "gates/F407/power10-check.log",
+      "bytes": 53334,
+      "sha256": "2add8496300dd9e359d5eb85ffbd59cb5925fb67fb2d2c81acb984d48aab9578"
+    },
+    {
+      "path": "gates.exit",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "gates.log",
+      "bytes": 273,
+      "sha256": "43bbe21ec4cc64ee3c6c801aa38ec64981eea2793f0c27c9001cc4d1d4f4719c"
+    },
+    {
+      "path": "generation-source-snapshot.json",
+      "bytes": 722761,
+      "sha256": "b9c8a3668842e5d5cfebd6ca85cabfe7966f0df287db1139b0b559ff777df3ba"
+    },
+    {
+      "path": "post-fixture-fix-F103-host.zip",
+      "bytes": 55112,
+      "sha256": "6e9bfe0b59047132a17a59454c3477b95a33910ad8b21ea4fb8ad43609a9e42b"
+    },
+    {
+      "path": "post-fixture-fix-F407-host.zip",
+      "bytes": 61455,
+      "sha256": "2d10b2bdbefd46cdf1debfc802b389e0dd6996bb040423454e02b59da0fc26da"
+    },
+    {
+      "path": "pre-fixture-fix-F103-host.zip",
+      "bytes": 55112,
+      "sha256": "2d2de584ef8736f7f366444d987394cd1724547f2f3fb2c3f467509500b3b2a4"
+    },
+    {
+      "path": "pre-fixture-fix-F407-host.zip",
+      "bytes": 61557,
+      "sha256": "5d6796168e678c3194d71f328501025061c7df02035d9175157141db6c5ba097"
+    },
+    {
+      "path": "README_ZH.md",
+      "bytes": 6210,
+      "sha256": "fab7951ece35a227f260af5cd328421538beddff4646e4aeaaf44b63facf15ed"
+    },
+    {
+      "path": "receipt.json",
+      "bytes": 221864,
+      "sha256": "cf67ec72739954c1077962017d15a1ee223b87da4225ac2b0e62703b28ac1430"
+    },
+    {
+      "path": "run_gates.py",
+      "bytes": 2892,
+      "sha256": "49b9d362792e7c681d09ad1fc9c626b4b85ad6a614f0b8b0263d0ef79c5daf3a"
+    },
+    {
+      "path": "validate.exit",
+      "bytes": 3,
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354"
+    },
+    {
+      "path": "validate.log",
+      "bytes": 48175,
+      "sha256": "c26d064f294f81f0074134aeafe0ce3ea7f8c9540f27dc24386aeff9c1660a0e"
+    },
+    {
+      "path": "validate.py",
+      "bytes": 7970,
+      "sha256": "fb2e54d7995b31a290944c0aa8c6b6454be66f5b1eaf9576882a62c431ddfc50"
+    }
+  ]
+}

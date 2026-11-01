@@ -1,0 +1,16 @@
+{
+  "source_head": "e4b909c05c6887d54a977f973a19378970d0aabc",
+  "repository_authored_markdown_links_missing": [],
+  "original_vendor_document_optional_assets_not_archived": [
+    {
+      "file": "docs/evidence/software_completion_20261101/usb/native-licenses/f103/Package_license.md",
+      "reference": "_htmresc/st_logo_2020.png"
+    },
+    {
+      "file": "docs/evidence/software_completion_20261101/usb/native-licenses/f407/Package_license.md",
+      "reference": "_htmresc/st_logo_2020.png"
+    }
+  ],
+  "note": "Original ST license text remains byte-exact. The absent original decorative logos are not build or proof inputs. No source/fixture/license text was rewritten to hide the links.",
+  "preserved_worktree_status_before_evidence_commit": " M AGENTS.md\n?? docs/evidence/astra_0_1_3_20261027/\n?? docs/evidence/cleanup_20261028/\n?? docs/evidence/software_completion_20261101/\n?? work_build_candidates_20261006.csv\n?? work_inventory_20261006.txt\n?? work_subtree_classification_20261006.csv\n"
+}

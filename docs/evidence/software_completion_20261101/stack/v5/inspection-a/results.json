@@ -1,0 +1,82 @@
+[
+  {
+    "case": [
+      "f407",
+      "Release"
+    ],
+    "output": "f407-Release.json",
+    "captured": true
+  },
+  {
+    "case": [
+      "f407",
+      "Debug"
+    ],
+    "output": "f407-Debug.json",
+    "captured": true
+  },
+  {
+    "case": [
+      "installation",
+      "Release"
+    ],
+    "output": "installation-Release.json",
+    "captured": true
+  },
+  {
+    "case": [
+      "installation",
+      "Debug"
+    ],
+    "output": "installation-Debug.json",
+    "captured": true
+  },
+  {
+    "case": [
+      "h743",
+      "Release"
+    ],
+    "output": "h743-Release.json",
+    "captured": true
+  },
+  {
+    "case": [
+      "h743",
+      "Debug"
+    ],
+    "output": "h743-Debug.json",
+    "captured": true
+  },
+  {
+    "case": [
+      "pid",
+      "Release"
+    ],
+    "output": "pid-Release.json",
+    "captured": true
+  },
+  {
+    "case": [
+      "pid",
+      "Debug"
+    ],
+    "output": "pid-Debug.json",
+    "captured": true
+  },
+  {
+    "case": [
+      "lqr",
+      "Release"
+    ],
+    "output": "lqr-Release.json",
+    "captured": true
+  },
+  {
+    "case": [
+      "lqr",
+      "Debug"
+    ],
+    "output": "lqr-Debug.json",
+    "captured": true
+  }
+]

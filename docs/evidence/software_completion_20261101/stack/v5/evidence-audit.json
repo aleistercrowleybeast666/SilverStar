@@ -1,0 +1,31 @@
+{
+  "schema": "silverstar.evidence-audit/1",
+  "source_commit": "e7c42b7c4971fddb02c6d5c60864b50dffaa3f1a",
+  "command_receipts": [
+    {
+      "receipt": "build-a/commands.json",
+      "rows": 20,
+      "log_hashes_verified": true
+    },
+    {
+      "receipt": "build-b/commands.json",
+      "rows": 20,
+      "log_hashes_verified": true
+    },
+    {
+      "receipt": "gates-b/commands.json",
+      "rows": 25,
+      "log_hashes_verified": true
+    },
+    {
+      "receipt": "negatives-b/commands.json",
+      "rows": 9,
+      "log_hashes_verified": true
+    }
+  ],
+  "preserved_report_hashes": 20,
+  "normal_generation_b_source_unchanged": true,
+  "delivery_relative_links_verified": 19,
+  "formal_regression_log_hash_verified": true,
+  "scope": "Receipt/log/report integrity; raw A/B compilation comparison and negative per-file restoration remain separately recorded."
+}

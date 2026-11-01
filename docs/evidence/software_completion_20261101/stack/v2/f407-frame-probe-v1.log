@@ -1,0 +1,44 @@
+Release seconds 16.880486099995323 UNKNOWN_COUNT 4
+{
+  "prvPortStartFirstTask": [
+    [
+      134374122,
+      4,
+      "msr",
+      "MSP, r0"
+    ]
+  ],
+  "PendSV_Handler": [
+    [
+      134374234,
+      4,
+      "msr",
+      "PSP, r0"
+    ]
+  ],
+  "Reset_Handler": [
+    [
+      134526176,
+      4,
+      "ldr.w",
+      "sp, [pc, #108]\t@ 804b550 <LoopFillZeroCcmBss+0x10>"
+    ]
+  ],
+  "SVC_Handler": [
+    [
+      134374094,
+      4,
+      "msr",
+      "PSP, r0"
+    ]
+  ]
+}
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v2\probe_frames.py", line 7, in <module>
+    start=time.monotonic();g=m.StackGraph_Load(p,cfg,'D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-')
+                             ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py", line 5203, in StackGraph_Load
+    function_entries = _arm.Assembly_Parse(disassembly, symbol_table)
+  File "D:\python_software\SilverStar\apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\stack_arm.py", line 107, in Assembly_Parse
+    raise ValueError("Ambiguous linked function name: " + name)
+ValueError: Ambiguous linked function name: SystemStartup_DeviceResultIsSuccessful

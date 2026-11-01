@@ -1,0 +1,171 @@
+{
+  "base_commit": "ad2da03c3b248d15d7cf8e1c3278781fb7cd3f79",
+  "source_identity": "Exact archived dirty source snapshots and artifacts; no clean-commit claim",
+  "final_owned_sources_sha256": {
+    "apps/SCG/src/silverstar_fccg/generator/ground_usb_control.py": "99c9536ee7ebf778f664e4bd6cccd6dcfc6c5eda63aef90bfd41e0d9e351e98d",
+    "apps/SCG/src/silverstar_fccg/generator/native_ground.py": "76de656acb2e9b55a989e2c100f5d19292a70cd74836162bd69f4b88358ee369",
+    "apps/SCG/src/silverstar_fccg/generator/multi_target.py": "f8d47736e1eb674173927737965f0a0f4a189396bbf03bd7ab450e6c8cdad5d0",
+    "apps/SCG/src/silverstar_fccg/generator/c071_recipe.py": "d507af633ca155f6d2b0f28e03c346c661a73a8bdca118d0adf9420253a1364a",
+    "apps/SCG/src/silverstar_fccg/app/native_ground.py": "bf5d375caa9025745250896eac3c82e6eaf312f7b3ae6d2ecb0c5b46d5d17a21",
+    "apps/SCG/tests/test_native_control_faults.py": "c638aa0ea8e0e3ff2cecc66de3c8994b6335947bacdf6334a61f29244ef20ea9",
+    "apps/SCG/tests/test_ground_type_headers.py": "c425cd47cbc9557a48ca75429ecfb683d9af334405423e271df4812bf976e2ea"
+  },
+  "runs": [
+    {
+      "epoch": "arm-v1",
+      "part": "F103",
+      "project": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\arm-v1\\o0\\b",
+      "status": "FailedCandidate",
+      "failure": "native validation command failed; see D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\arm-v1\\o0\\b\\commands.log",
+      "limits": "PRIVATE CANDIDATE ONLY; formal generation BLOCKED. NOT PROVEN: complete EP0/async lifecycle, manual critical contracts, whole-program stack/WCET and physical timing/hardware. F103 shared control ordinary integration only; independent USB safety review has no passed outcome. F407 shared EP0 repair not integrated.",
+      "compiler_status": "FAILED",
+      "warning_diagnostics": [],
+      "archive": "arm-v1-F103-artifacts.zip",
+      "archive_sha256": "6f4e39b1f005345fa6d00b64dd1921a88e2e7fcb8fea7bbd768ab0207f62f455",
+      "archived_files_sha256": {
+        "receipt.json": "b39562cf623d7504de159f2c55b874e427b3acb11028b929baebe2ddb0e4083d",
+        "backend-receipt.json": "eb905131ad2dfb0cf0e99bc08b6c06c86c1d3a2f4376291397ae5d79721df28c",
+        "source-snapshot.json": "bfdde22f555798456cc48c20d968f421291a387865255d57743d2ea58d0586e9",
+        "commands.log": "bf1a9aba823fa50ed2716a33cc003a04ff726ea4a2bed5b942c75213bd84a252",
+        "candidate_config.ssproject": "a6d61f6e006ec56817eeec66edc1ab03babc988ae50cf131c6e6158390ea0828",
+        "Makefile": "e79d0b38e503c6fef251d18be4f5075dc997103ad3794655daba0717a3ad5e1d",
+        "Generated/ground_source_graph.json": "ab7074ceef2014952298c92eb7110f9871bd7735bda468b77d0c2fd151fe637f",
+        "Tools/check_power_of_ten.ps1": "a4aca423ec1df7a1ea273f80ddc8c9f0baaac5b9d4bac6481d1386c9a1312fac"
+      }
+    },
+    {
+      "epoch": "arm-v1",
+      "part": "F407",
+      "project": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\arm-v1\\o1\\b",
+      "status": "FailedCandidate",
+      "failure": "native validation command failed; see D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\arm-v1\\o1\\b\\commands.log",
+      "limits": "PRIVATE CANDIDATE ONLY; formal generation BLOCKED. NOT PROVEN: complete EP0/async lifecycle, manual critical contracts, whole-program stack/WCET and physical timing/hardware. F103 shared control ordinary integration only; independent USB safety review has no passed outcome. F407 shared EP0 repair not integrated.",
+      "compiler_status": "FAILED",
+      "warning_diagnostics": [],
+      "archive": "arm-v1-F407-artifacts.zip",
+      "archive_sha256": "f40d9de8368f89f2d13915db8ddcff3f67aab558c282d80e767dd77bd4b62467",
+      "archived_files_sha256": {
+        "receipt.json": "f1ae11eb58379aaf5d72a1ce32cbfb7a91d0f4080c4222393bd8c66fa055ec9e",
+        "backend-receipt.json": "1c5aea29fed27646779fe415195a2536fc0fdd562fcee7f26b3c3206fc3d40ea",
+        "source-snapshot.json": "e748d67a5ccf3f0af964091e628faf48905fe36fe04fc87840d2b96103756769",
+        "commands.log": "462335514c7a7d652eef0e63ee7fee47f7a4973d632b3e01846e24851b7a93c9",
+        "candidate_config.ssproject": "4f46f653bf67b409b7bb46d776d941f7fb9200acd8c13d08ffb16d60c1bb1848",
+        "Makefile": "a8a4bee36102df54701df47d92aa18348969aefb5c7f997c0ab3a9077c2b27f4",
+        "Generated/ground_source_graph.json": "d3913fc4402b8291f470eee853c6b58d2adc88f70634e2798568ccba1109111d",
+        "Tools/check_power_of_ten.ps1": "a4aca423ec1df7a1ea273f80ddc8c9f0baaac5b9d4bac6481d1386c9a1312fac"
+      }
+    },
+    {
+      "epoch": "arm-v2",
+      "part": "F103",
+      "project": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\arm-v2\\o0\\b",
+      "status": "CompiledCandidate",
+      "failure": null,
+      "limits": "PRIVATE CANDIDATE ONLY; formal generation BLOCKED. NOT PROVEN: complete EP0/async lifecycle, manual critical contracts, whole-program stack/WCET and physical timing/hardware. F103/F407 bounded shared EP0 policy is integrated; limited software regression is recorded separately and does not establish complete independent USB safety acceptance.",
+      "compiler_status": "NATIVE_SOURCE_CPP_GAS_ARM_LINK_AND_ANALYZER_EXECUTED",
+      "warning_diagnostics": [],
+      "archive": "arm-v2-F103-artifacts.zip",
+      "archive_sha256": "e6c2dbf283ecdbf4774a70baa43bf02bf331448a978bf76f384368e827e71047",
+      "archived_files_sha256": {
+        "receipt.json": "60f021849791ad5a2ad7cadf87a17d3c7ea982bb81208b61806c9dea932c1811",
+        "backend-receipt.json": "426ab6a3708904c8b4f64d4402282ca9c3cd78e30b627906be26aa19f9db112d",
+        "source-snapshot.json": "f556a08e46516a8091649e404f5631bb0bba732eedc1768f02e96e43ff5134a9",
+        "commands.log": "27a4fcb8bd0685b878e6da6c1d5ef9c417d5fca4082ec28f4d91bf28224b405f",
+        "candidate_config.ssproject": "98ca1dccdb2aa499c74f770ac6cdefb579d0e213f73f23399455b1f6014ff2c1",
+        "Makefile": "e79d0b38e503c6fef251d18be4f5075dc997103ad3794655daba0717a3ad5e1d",
+        "Generated/ground_source_graph.json": "ab7074ceef2014952298c92eb7110f9871bd7735bda468b77d0c2fd151fe637f",
+        "Tools/check_power_of_ten.ps1": "a4aca423ec1df7a1ea273f80ddc8c9f0baaac5b9d4bac6481d1386c9a1312fac",
+        "build/ground.elf": "59e01ccaf99822d22070e772714da5ee9d27a391f3c6a573e494a85853caf7dd",
+        "build/ground.map": "f1faba1d66c088bbe07bf499818f0418384945a46e8e66a1e3423bc9f65032f5",
+        "build/memory-report.json": "1e8f39ffa85492186996d0993bfa635a1645fc0a5321c100c2475d690845ffd7",
+        "build/native-artifact-report.json": "10ceaa5e09e24ab930b67994dd773210acfe4c7bb18b11f35209d815f25b0945",
+        "build/native.elf": "59e01ccaf99822d22070e772714da5ee9d27a391f3c6a573e494a85853caf7dd",
+        "build/native.map": "e140d57b7abffbf69aabf708909243f4c0e0c1e98a7bce90525d6687a19f3f9e",
+        "build/analysis/native.elf": "59e01ccaf99822d22070e772714da5ee9d27a391f3c6a573e494a85853caf7dd",
+        "build/analysis/native.map": "fde4fdcad00d2f9add15d27992bbff7dc9bc4e32815df19c822f68d06c2cd022"
+      },
+      "emitted_gate_exits": {
+        "architecture-check": 0,
+        "host-tests": 0,
+        "power10-check": 0,
+        "artifact-check": 0
+      },
+      "checks_receipt_sha256": "22b2d25d94d0e39892c033e1781ae7895fe7215d6766c90e9f41b6fb06606004"
+    },
+    {
+      "epoch": "arm-v2",
+      "part": "F407",
+      "project": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\arm-v2\\o1\\b",
+      "status": "CompiledCandidate",
+      "failure": null,
+      "limits": "PRIVATE CANDIDATE ONLY; formal generation BLOCKED. NOT PROVEN: complete EP0/async lifecycle, manual critical contracts, whole-program stack/WCET and physical timing/hardware. F103/F407 bounded shared EP0 policy is integrated; limited software regression is recorded separately and does not establish complete independent USB safety acceptance.",
+      "compiler_status": "NATIVE_SOURCE_CPP_GAS_ARM_LINK_AND_ANALYZER_EXECUTED",
+      "warning_diagnostics": [],
+      "archive": "arm-v2-F407-artifacts.zip",
+      "archive_sha256": "46b743e935c2b0feef53dbea1bc08eaaab9e7418c26ad005a5c2b54e2b033b03",
+      "archived_files_sha256": {
+        "receipt.json": "24c343fa8e0544341d4929241ee9c7d17e96fabaf03aa1a9302715fbba23a3f4",
+        "backend-receipt.json": "db8d1d40e601c5e3486891f00fa9e49f799624ecb0569841b6aca04039a74c56",
+        "source-snapshot.json": "a36f3d24333ea0b0a40e04f8264298e74acd4ff174ec088b135f2e02b454b91a",
+        "commands.log": "01ca6378631d8591d3c273c184b6269058c8f62c88aa536619339b027a662762",
+        "candidate_config.ssproject": "cb86f18a66191844e85b522d419b4f2886b5e1a328281501ce1d517fa0847492",
+        "Makefile": "a8a4bee36102df54701df47d92aa18348969aefb5c7f997c0ab3a9077c2b27f4",
+        "Generated/ground_source_graph.json": "d3913fc4402b8291f470eee853c6b58d2adc88f70634e2798568ccba1109111d",
+        "Tools/check_power_of_ten.ps1": "a4aca423ec1df7a1ea273f80ddc8c9f0baaac5b9d4bac6481d1386c9a1312fac",
+        "build/ground.elf": "7a059c28c9c054af522161ab89bfd189b0337cb9cde999c3b91fbdecabd9696a",
+        "build/ground.map": "71ad7d405932e74b32c4416578199aa402f1b8327b161039759aa3028c2af326",
+        "build/memory-report.json": "dc0607e2707faea8b49ed102e1fe9c67671cceea78150c3a8c78dfa51b1da252",
+        "build/native-artifact-report.json": "075916656b67ab56a90499e9b6e2a84831541411d90b17967f0aa67f6a908af6",
+        "build/native.elf": "7a059c28c9c054af522161ab89bfd189b0337cb9cde999c3b91fbdecabd9696a",
+        "build/native.map": "9eb798e4f301d4cdd8d61351d82f5ad14cb2fb142b023ae247032de4633d5936",
+        "build/analysis/native.elf": "7a059c28c9c054af522161ab89bfd189b0337cb9cde999c3b91fbdecabd9696a",
+        "build/analysis/native.map": "2e4cf98000753e0d7f839d0fe0679c5cf170533e5aab877a72438dec3e27c555"
+      },
+      "emitted_gate_exits": {
+        "architecture-check": 0,
+        "host-tests": 0,
+        "power10-check": 0,
+        "artifact-check": 0
+      },
+      "checks_receipt_sha256": "b2f0934befb683fbb008af7c02833d2ae3ee9d6ddbebe50dd7aac75d341f8e1f"
+    },
+    {
+      "epoch": "c071-v1",
+      "part": "C071",
+      "project": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\c071-v1\\o0\\b",
+      "status": "CompiledCandidate",
+      "failure": null,
+      "limits": "PRIVATE C071 native PCD plus pinned classic CDC companion Ground candidate. Formal USB release BLOCKED: b66 independent review has no passed outcome and must not be retried or bypassed. Full EP0/async lifecycle, critical contracts, stack/WCET and hardware NOT PROVEN.",
+      "compiler_status": "NATIVE_SOURCE_CPP_GAS_ARM_LINK_AND_ANALYZER_EXECUTED",
+      "warning_diagnostics": [],
+      "archive": "c071-v1-C071-artifacts.zip",
+      "archive_sha256": "017b79db94d5e24f14eea065f7d550c1ee2ce2da7e96d06e0789502bc0cb503a",
+      "archived_files_sha256": {
+        "receipt.json": "011d9a98327d5e9255717591bd86b0601c314dffe039db98b86460d4eca477f0",
+        "backend-receipt.json": "c2b9e30e161f1885365d5465ae86d8a25cd7592d0f521e90d25a0c212718383e",
+        "source-snapshot.json": "dff6e91aab8d016e745d290af7b1152fbb6bc8713186f3a9a3e655c0257fb965",
+        "commands.log": "e29e496bdc01f4ab14e534ac56270e2162f7f7b5abaa5445ae9bb385538405e2",
+        "candidate_config.ssproject": "fd67c64fb9448d5a66ad6bf7dd221d047a4f15937c9eeee733dad18710c7908b",
+        "Makefile": "82a16e370cbae4e97e22b6a53bcb07ac8dc3d06b79386a14836f8f9c9241d19a",
+        "Generated/ground_source_graph.json": "3f8a92ed702eddfd4735b11f273baecb64552936b6ecac992019993604f65ec1",
+        "Tools/check_power_of_ten.ps1": "a4aca423ec1df7a1ea273f80ddc8c9f0baaac5b9d4bac6481d1386c9a1312fac",
+        "build/ground.elf": "8b5e09dfecef8d80eb66b05fbc7ee88c4e72c47591fd7cfb996cd3ddd00ddc68",
+        "build/ground.map": "600b1507de4fe082c854cfdda13546ac9e6b4a740172d5f9f8beed0a21655e38",
+        "build/memory-report.json": "c7ee5bb78814e0a02cc60ccd30ac6445fdf2b40c1a16f1b618666ef00228a4fb",
+        "build/native-artifact-report.json": "30e292660a8eb31cf291a406ad4009e434aef9a95d4fc8e8d60b85dea539db7f",
+        "build/native.elf": "8b5e09dfecef8d80eb66b05fbc7ee88c4e72c47591fd7cfb996cd3ddd00ddc68",
+        "build/native.map": "30ddfdb376955738c9cdccf3f8dbafe31e400a73429f3ff406fc4de3da2a818e",
+        "build/analysis/native.elf": "8b5e09dfecef8d80eb66b05fbc7ee88c4e72c47591fd7cfb996cd3ddd00ddc68",
+        "build/analysis/native.map": "11a9070a0d986babd307681555ae8a49ea5853a596c10f616fa901346cc698a0"
+      },
+      "emitted_gate_exits": {
+        "architecture-check": 0,
+        "host-tests": 0,
+        "power10-check": 0,
+        "artifact-check": 0
+      },
+      "checks_receipt_sha256": "97730704766870a187628fe936d2999a6323ae43bd6b7894f1b7a56816c8e8ec"
+    }
+  ],
+  "hardware": "No USB connection, flash, physical radio, actuator or motion operation"
+}

@@ -1,0 +1,7 @@
+{
+  "not_acceptance": true,
+  "name": "f407",
+  "configuration": "Debug",
+  "strict_rejection": "Changed compiled callback dependency graph: APP/Src/device_task.c",
+  "error": "Traceback (most recent call last):\n  File \"D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\stack\\v2\\probe_runtime.py\", line 39, in Probe_Run\n    'hal_diagnostic': runtime.HalCallbacks_Resolve(root, graph, PREFIX, checker.Command_Read,\n                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                                                  checker.CallbackSlot_Get, diagnostic=True),\n                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tools\\stack_runtime.py\", line 321, in HalCallbacks_Resolve\n    members = DwarfMembers_Get(dwarf, type_names)\n  File \"D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tools\\stack_runtime.py\", line 224, in DwarfMembers_Get\n    raise ValueError(\"Unreviewed DWARF member location\")\nValueError: Unreviewed DWARF member location\n"
+}

@@ -1,0 +1,5 @@
+{
+  "scope": "actual CLI transaction, decoder and generated C backend; full task/ARM/stack separate",
+  "underline_pid_model_equals_pid": true,
+  "rebuild": "Fresh ReferenceProject_Create with project name SoftwareCompletion_PID/LQR; actual bundle through TuningBundle_ControlTaskAttach. Never reuse stale component provenance."
+}

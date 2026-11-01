@@ -1,0 +1,91 @@
+Window: "SilverStar SCG — 软件收尾最终验证", App: pythonw.exe.
+	0 窗口 (settable, string) SilverStar SCG — 软件收尾最终验证 Secondary Actions: Raise ID: QApplication.MainWindow
+		1 标题栏 (settable, string) Value: SilverStar SCG — 软件收尾最终验证
+			2 菜单栏 系统 ID: MenuBar
+				57 菜单项 系统
+			4 按钮 最小化
+			5 按钮 最大化
+			6 按钮 关闭
+		7 组 (settable, string) ID: QApplication.MainWindow.centralRoot
+			8 自定义 (settable, string) ID: QApplication.MainWindow.centralRoot.headerBar
+				9 文本 SilverStar 系统配置与生成 ID: QApplication.MainWindow.centralRoot.headerBar.headerTitle
+				10 文本 v0.1.3 ID: QApplication.MainWindow.centralRoot.headerBar.headerVersion
+				11 文本 辰星引力开发 ID: QApplication.MainWindow.centralRoot.headerBar.headerCredit
+				12 文本 当前工程： ID: QApplication.MainWindow.centralRoot.headerBar.headerControlLabel
+				13 文本 SilverStar ID: QApplication.MainWindow.centralRoot.headerBar.headerProjectValue
+				14 组 (settable, string) ID: QApplication.MainWindow.centralRoot.headerBar.QWidget
+					15 文本 界面语言 ID: QApplication.MainWindow.centralRoot.headerBar.QWidget.headerControlLabel
+					16 组合框 (settable, string) Value: 简体中文 ID: QApplication.MainWindow.centralRoot.headerBar.QWidget.headerLanguageCombo
+					17 文本 主题 ID: QApplication.MainWindow.centralRoot.headerBar.QWidget.headerControlLabel
+					18 组合框 (settable, string) Value: 浅色 ID: QApplication.MainWindow.centralRoot.headerBar.QWidget.headerThemeCombo
+			19 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget
+				20 自定义 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.sidebar
+					21 列表 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.sidebar.navigation
+						22 列表项目 (selectable, settable, string) 硬件与通信 ID: QApplication.MainWindow.centralRoot.QWidget.sidebar.navigation
+						23 列表项目 (selectable, settable, string) 任务流程 ID: QApplication.MainWindow.centralRoot.QWidget.sidebar.navigation
+						24 列表项目 (selectable, settable, string) 检查与生成 ID: QApplication.MainWindow.centralRoot.QWidget.sidebar.navigation
+				25 窗格 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget
+					58 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage
+						59 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea
+							60 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport
+								61 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget
+									62 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.PageHeader
+										63 文本 检查与生成 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.PageHeader.pageTitle
+										64 文本 检测工具链，并分别构建、清理和检查飞控与地面站工程。 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.PageHeader.pageDescription
+									65 文本 当前配置：28 项错误、1 项提示。目标独立校验；未选的地面目标不会阻挡飞控独立生成。 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QLabel
+									66 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.CollapsibleSection
+										67 复选框 (settable, string) 问题列表 · 点击定位 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.CollapsibleSection.collapsibleHeader
+									68 组 (settable, string) 飞控 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox
+										69 文本 配置待完成 · 暂不可生成 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										70 文本 — · MCU — · 请求固件版本 0.1.3 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										71 文本 内存 · 不可用 / 没有有效生成输入或检测入口 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										72 文本 任务栈 · 不可用 / 没有有效生成输入或检测入口 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										73 按钮 (disabled, settable, string) 构建固件 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QPushButton
+										74 按钮 (disabled, settable, string) 查看 ELF ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QPushButton
+										75 组 (settable, string) 飞控 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.CollapsibleSection
+											76 复选框 (settable, string) 工程文件与清理 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.CollapsibleSection.collapsibleHeader
+										77 按钮 (disabled, settable, string) 生成 / 更新飞控工程 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.primaryButton
+									78 组 (settable, string) 地面站 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox
+										79 文本 配置待完成 · 暂不可生成 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										80 文本 — · MCU — · 请求固件版本 0.1.3 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										81 文本 内存 · 不可用 / 没有有效生成输入或检测入口 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										82 文本 任务栈 · 未勾选 / 本次未检测 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										83 按钮 (disabled, settable, string) 构建固件 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QPushButton
+										84 按钮 (disabled, settable, string) 查看 ELF ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QPushButton
+										85 组 (settable, string) 地面站 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.CollapsibleSection
+											86 复选框 (settable, string) 工程文件与清理 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.CollapsibleSection.collapsibleHeader
+										87 按钮 (disabled, settable, string) 生成 / 更新地面站工程 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.primaryButton
+									88 组 (settable, string) 工具链 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox
+										89 文本 固件构建环境 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.sectionLabel
+										90 文本 Arm GNU 工具链 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										91 文本 arm-none-eabi-gcc.exe (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623 · 已找到 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.statusPill
+										92 文本 GNU Make ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										93 文本 GNU Make 4.4.1 · 已找到 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.statusPill
+										94 文本 主机测试环境 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.sectionLabel
+										95 文本 主机 GCC ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										96 文本 gcc.exe (Rev5, Built by MSYS2 project) 16.1.0 · 已找到 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.statusPill
+									97 按钮 (settable, string) 检测工具链 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QPushButton
+									98 按钮 (settable, string) 安装说明 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QPushButton
+									99 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.CollapsibleSection
+										100 复选框 (settable, string) 高级配置与专项检查 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.CollapsibleSection.collapsibleHeader
+							101 组 (settable, string) ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_vcontainer
+								102 滚动条 (settable, float) Value: 0 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_vcontainer.QScrollBar
+		48 状态栏 ID: QApplication.MainWindow.QStatusBar
+			49 缩略图 (settable, string) ID: QApplication.MainWindow.QStatusBar.QSizeGrip
+			50 文本 TOOLCHAIN DETECT 3 / 3：host gcc ID: QApplication.MainWindow.QStatusBar.QLabel
+			51 按钮 (disabled, settable, string) 导出审查清单 ID: QApplication.MainWindow.QStatusBar.QPushButton
+			52 按钮 (settable, string) 系统日志 ID: QApplication.MainWindow.QStatusBar.systemLogButton
+		53 菜单栏 (settable, string) ID: QApplication.MainWindow.QMenuBar
+			54 菜单项 (settable, string) 文件 ID: QApplication.MainWindow.QMenuBar.QAction
+			55 菜单项 (settable, string) 插件 ID: QApplication.MainWindow.QMenuBar.QAction
+			56 菜单项 (settable, string) 帮助 ID: QApplication.MainWindow.QMenuBar.QAction
+
+Document text: ```
+SilverStar 系统配置与生成
+v0.1.3
+辰星引力开发
+当前工程：
+SilverStar
+界面语言
+主题
+```

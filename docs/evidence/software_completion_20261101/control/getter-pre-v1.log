@@ -1,0 +1,76 @@
+FFFF                                                                     [100%]
+================================== FAILURES ===================================
+___________ test_generated_task_normal_and_faults[pid-corrupt_sink] ___________
+
+generated_control = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/control/getter-pre-v1/control-research-pid0/Flight_Controller/control-research.exe')
+scenario = 'corrupt_sink'
+
+    @pytest.mark.parametrize('scenario', ('normal', 'late_ok', 'overrun', 'stale', 'future', 'duplicate',
+        'source', 'generation', 'epoch', 'unknown', 'nan', 'nonplanar', 'health', 'calibration_race',
+        'stop', 'clock', 'startup_timeout', 'cached_expiry', 'corrupt_state', 'corrupt_backend', 'sequence_exhausted', 'corrupt_sink', 'read_fault'))
+    def test_generated_task_normal_and_faults(generated_control, scenario):
+        result = subprocess.run([str(generated_control), scenario], capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: Assertion failed: memcmp(&s_fault_output, &s_fault_before, sizeof(s_fault_output)) == 0, file D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\getter-pre-v1\control-research-pid0\Flight_Controller\Tests\Host\test_control_research.c, line 151
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\control\\getter-pr...1\\control\\getter-pre-v1\\control-research-pid0\\Flight_Controller\\Tests\\Host\\test_control_research.c, line 151\n').returncode
+
+apps\SCG\tests\test_control_research.py:107: AssertionError
+____________ test_generated_task_normal_and_faults[pid-read_fault] ____________
+
+generated_control = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/control/getter-pre-v1/control-research-pid0/Flight_Controller/control-research.exe')
+scenario = 'read_fault'
+
+    @pytest.mark.parametrize('scenario', ('normal', 'late_ok', 'overrun', 'stale', 'future', 'duplicate',
+        'source', 'generation', 'epoch', 'unknown', 'nan', 'nonplanar', 'health', 'calibration_race',
+        'stop', 'clock', 'startup_timeout', 'cached_expiry', 'corrupt_state', 'corrupt_backend', 'sequence_exhausted', 'corrupt_sink', 'read_fault'))
+    def test_generated_task_normal_and_faults(generated_control, scenario):
+        result = subprocess.run([str(generated_control), scenario], capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: Assertion failed: result != ControlResearchResult_Ok && !snapshot.ready && !snapshot.command, file D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\getter-pre-v1\control-research-pid0\Flight_Controller\Tests\Host\test_control_research.c, line 121
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\control\\getter-pr...1\\control\\getter-pre-v1\\control-research-pid0\\Flight_Controller\\Tests\\Host\\test_control_research.c, line 121\n').returncode
+
+apps\SCG\tests\test_control_research.py:107: AssertionError
+___________ test_generated_task_normal_and_faults[lqr-corrupt_sink] ___________
+
+generated_control = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/control/getter-pre-v1/control-research-lqr0/Flight_Controller/control-research.exe')
+scenario = 'corrupt_sink'
+
+    @pytest.mark.parametrize('scenario', ('normal', 'late_ok', 'overrun', 'stale', 'future', 'duplicate',
+        'source', 'generation', 'epoch', 'unknown', 'nan', 'nonplanar', 'health', 'calibration_race',
+        'stop', 'clock', 'startup_timeout', 'cached_expiry', 'corrupt_state', 'corrupt_backend', 'sequence_exhausted', 'corrupt_sink', 'read_fault'))
+    def test_generated_task_normal_and_faults(generated_control, scenario):
+        result = subprocess.run([str(generated_control), scenario], capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: Assertion failed: memcmp(&s_fault_output, &s_fault_before, sizeof(s_fault_output)) == 0, file D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\getter-pre-v1\control-research-lqr0\Flight_Controller\Tests\Host\test_control_research.c, line 151
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\control\\getter-pr...1\\control\\getter-pre-v1\\control-research-lqr0\\Flight_Controller\\Tests\\Host\\test_control_research.c, line 151\n').returncode
+
+apps\SCG\tests\test_control_research.py:107: AssertionError
+____________ test_generated_task_normal_and_faults[lqr-read_fault] ____________
+
+generated_control = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/control/getter-pre-v1/control-research-lqr0/Flight_Controller/control-research.exe')
+scenario = 'read_fault'
+
+    @pytest.mark.parametrize('scenario', ('normal', 'late_ok', 'overrun', 'stale', 'future', 'duplicate',
+        'source', 'generation', 'epoch', 'unknown', 'nan', 'nonplanar', 'health', 'calibration_race',
+        'stop', 'clock', 'startup_timeout', 'cached_expiry', 'corrupt_state', 'corrupt_backend', 'sequence_exhausted', 'corrupt_sink', 'read_fault'))
+    def test_generated_task_normal_and_faults(generated_control, scenario):
+        result = subprocess.run([str(generated_control), scenario], capture_output=True, text=True, timeout=20)
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: Assertion failed: result != ControlResearchResult_Ok && !snapshot.ready && !snapshot.command, file D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\getter-pre-v1\control-research-lqr0\Flight_Controller\Tests\Host\test_control_research.c, line 121
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\control\\getter-pr...1\\control\\getter-pre-v1\\control-research-lqr0\\Flight_Controller\\Tests\\Host\\test_control_research.c, line 121\n').returncode
+
+apps\SCG\tests\test_control_research.py:107: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_control_research.py::test_generated_task_normal_and_faults[pid-corrupt_sink]
+FAILED apps\SCG\tests\test_control_research.py::test_generated_task_normal_and_faults[pid-read_fault]
+FAILED apps\SCG\tests\test_control_research.py::test_generated_task_normal_and_faults[lqr-corrupt_sink]
+FAILED apps\SCG\tests\test_control_research.py::test_generated_task_normal_and_faults[lqr-read_fault]
+4 failed, 47 deselected in 62.64s (0:01:02)

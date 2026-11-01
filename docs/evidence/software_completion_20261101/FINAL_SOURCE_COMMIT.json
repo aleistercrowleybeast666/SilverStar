@@ -1,0 +1,104 @@
+{
+  "commit": "e4b909c05c6887d54a977f973a19378970d0aabc",
+  "scope": "The final 14 source/test/product-doc changes; test receipts keep their actual earlier dirty-source identities. Git normal EOL filtering is recorded separately.",
+  "files": [
+    {
+      "path": "apps/SCG/docs/USB_CDC_TRANSPORT_20261013.md",
+      "working_sha256": "fd970c7167e3ef3e39204febeb03d699b53d3f4b6d45348f187a6eb286c83cff",
+      "git_blob_content_sha256": "fd970c7167e3ef3e39204febeb03d699b53d3f4b6d45348f187a6eb286c83cff",
+      "raw_equal": true,
+      "only_checkout_crlf_difference": false
+    },
+    {
+      "path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tests/Host/test_interfaces.c",
+      "working_sha256": "cceebe76f5c8618f35ce3522d1186110274ffb880756a87fc574deac7c235600",
+      "git_blob_content_sha256": "cf93bb4c3139815bae03e0daae0fae53c3e1d78f6645eb4babb9d12dbe3ff40b",
+      "raw_equal": false,
+      "only_checkout_crlf_difference": true
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/app/usb_transport.py",
+      "working_sha256": "d36899fead176dec62f29a32019fe45861ca05f44bf1e8a80192183006c40482",
+      "git_blob_content_sha256": "d36899fead176dec62f29a32019fe45861ca05f44bf1e8a80192183006c40482",
+      "raw_equal": true,
+      "only_checkout_crlf_difference": false
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/build/native_usb.py",
+      "working_sha256": "a184463cb839d2be6fbe8107f638aaa57bfacef24d798d8388c056e5a3cfb87a",
+      "git_blob_content_sha256": "a184463cb839d2be6fbe8107f638aaa57bfacef24d798d8388c056e5a3cfb87a",
+      "raw_equal": true,
+      "only_checkout_crlf_difference": false
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/ground_usb_control.py",
+      "working_sha256": "7ce657f80efa15a1f62548abafbc2501b7e9a0c78dc90884dcbac760c84dfed5",
+      "git_blob_content_sha256": "167a625980cd8b417d103f0a1e21f9eac0956ef48401b34d53d5ba8818a452dd",
+      "raw_equal": false,
+      "only_checkout_crlf_difference": true
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/native_control.py",
+      "working_sha256": "995c2811a7d0670ce207ed23a82904cfae2d350109009ed2934832636a595e2d",
+      "git_blob_content_sha256": "5aae944d36d09f3ca248e024048859577599d3aa923bd6374fd9695c2b086c11",
+      "raw_equal": false,
+      "only_checkout_crlf_difference": true
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/native_usb_graph.py",
+      "working_sha256": "fd6ab868d038adb26d223bfe033f7205a6f87eff4cc9dea8e587904aad4052ff",
+      "git_blob_content_sha256": "fd6ab868d038adb26d223bfe033f7205a6f87eff4cc9dea8e587904aad4052ff",
+      "raw_equal": true,
+      "only_checkout_crlf_difference": false
+    },
+    {
+      "path": "apps/SCG/src/silverstar_fccg/generator/usb_cdc_integration.py",
+      "working_sha256": "6c9cd288fba476e72ad726984ed26d7dd32b1012b19579c06aae11f91aacf187",
+      "git_blob_content_sha256": "6c9cd288fba476e72ad726984ed26d7dd32b1012b19579c06aae11f91aacf187",
+      "raw_equal": true,
+      "only_checkout_crlf_difference": false
+    },
+    {
+      "path": "apps/SCG/tests/test_native_control_faults.py",
+      "working_sha256": "a3409536bd0beeaa68e7c378d997889c431474d93c1be9cd59043e1e561bfbbf",
+      "git_blob_content_sha256": "a3409536bd0beeaa68e7c378d997889c431474d93c1be9cd59043e1e561bfbbf",
+      "raw_equal": true,
+      "only_checkout_crlf_difference": false
+    },
+    {
+      "path": "apps/SCG/tests/test_usb_resource_owners.py",
+      "working_sha256": "18fe8e38bc0cbfc193a9005a9c4d51d07a3d4f3f8e78ae4e9a45358081176aeb",
+      "git_blob_content_sha256": "18fe8e38bc0cbfc193a9005a9c4d51d07a3d4f3f8e78ae4e9a45358081176aeb",
+      "raw_equal": true,
+      "only_checkout_crlf_difference": false
+    },
+    {
+      "path": "apps/SCG/tests/test_usb_transport_control.py",
+      "working_sha256": "092ee52695b25e160858918b2b0a2a2ecc148a9e753c9c6e7cd60ca358bd1ff1",
+      "git_blob_content_sha256": "092ee52695b25e160858918b2b0a2a2ecc148a9e753c9c6e7cd60ca358bd1ff1",
+      "raw_equal": true,
+      "only_checkout_crlf_difference": false
+    },
+    {
+      "path": "apps/SCG/tests/test_usb_transport_integration.py",
+      "working_sha256": "7fc97978a386f0eeb3f050e59592b0ee1a1a21b4784472c605b75124aebc0fb7",
+      "git_blob_content_sha256": "7fc97978a386f0eeb3f050e59592b0ee1a1a21b4784472c605b75124aebc0fb7",
+      "raw_equal": true,
+      "only_checkout_crlf_difference": false
+    },
+    {
+      "path": "apps/SCG/tests/usb_descriptor_cases.py",
+      "working_sha256": "1661bea0316e4046a1e29874039e8960d094a0ca085d918dec1ecce9540fad5c",
+      "git_blob_content_sha256": "1661bea0316e4046a1e29874039e8960d094a0ca085d918dec1ecce9540fad5c",
+      "raw_equal": true,
+      "only_checkout_crlf_difference": false
+    },
+    {
+      "path": "apps/SCG/tools/validation/usb_transport_validate.py",
+      "working_sha256": "876685315425c696fbe09dbaab5df8142696043947ce3e3ea2eeae7ce04eab60",
+      "git_blob_content_sha256": "876685315425c696fbe09dbaab5df8142696043947ce3e3ea2eeae7ce04eab60",
+      "raw_equal": true,
+      "only_checkout_crlf_difference": false
+    }
+  ]
+}

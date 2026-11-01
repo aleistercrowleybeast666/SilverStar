@@ -1,0 +1,182 @@
+Host compiler runtime directory: D:\msys64\ucrt64\bin
+Host compiler command: "D:\msys64\ucrt64\bin\gcc.exe" --version
+gcc.exe (Rev5, Built by MSYS2 project) 16.1.0
+Copyright (C) 2026 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Host compiler command: "D:\msys64\ucrt64\bin\gcc.exe" -dumpmachine
+x86_64-w64-mingw32
+record_catalog_sha256=93a2aad50022afce60e1994151ac83110d3bc4b4970ab935cde54601b4c64ca5
+project_semantics_sha256=d21994e63bc563d2dad4451869a930775b21e2e2ddf29ab6c815d145f464ce9a
+generation_profile_hash_128=d2afc3795be41a9a98964d74d7b85946
+SSLOG Record Catalog validation passed: records=43 payloads=43
+FCCG_HOST_FIXTURE|control_provenance_normal|actual INS/KF6/queue; logical sensor ports; physical epoch path not exercised
+FCCG_HOST_FIXTURE|control_provenance_queue_full|actual INS/KF6/queue; logical sensor ports; physical epoch path not exercised
+FCCG_HOST_FIXTURE|control_provenance_source|actual INS/KF6/queue; logical sensor ports; physical epoch path not exercised
+FCCG_HOST_FIXTURE|control_provenance_unknown|actual INS/KF6/queue; logical sensor ports; physical epoch path not exercised
+FCCG_HOST_FIXTURE|control_provenance_queue_full_boundary|actual INS/KF6/queue; logical sensor ports; physical epoch path not exercised
+FCCG_HOST_FIXTURE|control_provenance_queue_not_ready|actual INS/KF6/queue; logical sensor ports; physical epoch path not exercised
+FCCG_HOST_FIXTURE|control_research|actual backend/runtime; synthetic mission table and logical input ports; no electrical output
+FCCG_HOST_NOT_APPLICABLE|attitude_alignment|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Algorithm\Alignment\GravityKnownYaw\Src\alignment_gravity_known_yaw.c, D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Algorithm\Alignment\GravityMagTriad\Src\attitude_triad.c
+FCCG_HOST_NOT_APPLICABLE|alignment_strategy_gravity_known_yaw|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Algorithm\Alignment\GravityKnownYaw\Src\alignment_gravity_known_yaw.c, D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Algorithm\Alignment\GravityKnownYaw\Src\alignment_strategy_binding.c
+FCCG_HOST_NOT_APPLICABLE|alignment_strategy_gravity_mag_triad|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Algorithm\Alignment\GravityMagTriad\Src\attitude_triad.c, D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Algorithm\Alignment\GravityMagTriad\Src\alignment_strategy_binding.c
+FCCG_HOST_NOT_APPLICABLE|alignment_strategy_hardware_quat6_known_yaw|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Algorithm\Alignment\HardwareQuat6AxisKnownYaw\Src\alignment_strategy_binding.c
+FCCG_HOST_NOT_APPLICABLE|alignment_strategy_hardware_quat9|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Algorithm\Alignment\HardwareQuat9Axis\Src\alignment_strategy_binding.c
+FCCG_HOST_FIXTURE|system_alignment|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_alignment_explicit_required_gnss|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_alignment_pure_ins|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_inertial|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|imu_sample_bus|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_calibration_default|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_calibration_system_axis_direction_x_positive|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_calibration_system_axis_direction_x_negative|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_calibration_system_axis_direction_y_positive|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_calibration_system_axis_direction_y_negative|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_calibration_system_axis_direction_z_positive|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_calibration_system_axis_direction_z_negative|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|runtime_commands|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|runtime_commands|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|runtime_startup|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|fault_hook|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|calibration_build_gate_0|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|calibration_build_gate_0|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|telemetry_build_mask_0|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|telemetry_build_mask_0|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|calibration_build_gate_2|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|calibration_build_gate_2|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|telemetry_build_mask_2|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|telemetry_build_mask_2|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|calibration_build_gate_4|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|calibration_build_gate_4|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|telemetry_build_mask_4|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|telemetry_build_mask_4|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|calibration_build_gate_6|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|calibration_build_gate_6|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|telemetry_build_mask_6|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|telemetry_build_mask_6|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_NOT_APPLICABLE|navigation_sf6|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Tests\Host\test_navigation_sf6.c, D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Algorithm\Estimator\SF6\Src\navigation_sf6.c
+FCCG_HOST_NOT_APPLICABLE|air_kf|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|source_selector|ordinary multiple-instance provider mock; production compact instance limit not exercised
+FCCG_HOST_FIXTURE|device_native_log|ordinary multiple-instance provider mock; production compact instance limit not exercised
+FCCG_HOST_FIXTURE|lifecycle|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|lifecycle_logging|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|system_startup|mock power provider supplied; production power selection unchanged
+FCCG_HOST_FIXTURE|system_startup_write_verify|mock power provider supplied; production power selection unchanged
+FCCG_HOST_FIXTURE|system_startup_async_no_explicit_verify|mock power provider supplied; production power selection unchanged
+FCCG_HOST_FIXTURE|system_startup_no_writes|mock power provider supplied; production power selection unchanged
+FCCG_HOST_FIXTURE|health|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|telemetry|logical interfaces; physical epoch path not exercised
+FCCG_HOST_NOT_APPLICABLE|telemetry|unselected inputs: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Protocol\Src\air_protocol.c
+FCCG_HOST_FIXTURE|estimator_preparation_actual|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|optional_gnss_start_actual|logical interfaces; physical epoch path not exercised
+FCCG_HOST_FIXTURE|optional_gnss_start_explicit_required|logical interfaces; physical epoch path not exercised
+Host scope explicitly selected: lifecycle_logging, control_research
+FCCG_PROGRESS|HOST_TEST|PLAN|2
+FCCG_PROGRESS|HOST_TEST|BEGIN|1|2|lifecycle_logging
+Host test compile diagnostic: name=lifecycle_logging
+Host compiler path: D:\msys64\ucrt64\bin\gcc.exe
+Host compiler version: gcc.exe (Rev5, Built by MSYS2 project) 16.1.0
+Host compiler target: x86_64-w64-mingw32
+Host compiler return code: 1
+Host compiler arguments:
+  -std=c11
+  -Wall
+  -Wextra
+  -Werror
+  -pedantic
+  -O2
+  -DUSE_HAL_DRIVER
+  -DSTM32F407xx
+  -DSYSTEM_ALIGNMENT_BUILD_ALGORITHM=SYSTEM_ALIGNMENT_VECTOR_CONSTRAINTS
+  -DSYSTEM_ALIGNMENT_BUILD_SOURCE=SYSTEM_ALIGNMENT_ATTITUDE_SOURCE_VECTOR_CONSTRAINTS
+  -DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_IMU=1U
+  -DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_MAGNETOMETER=SYSTEM_ALIGNMENT_USES_MAGNETIC_CONSTRAINT
+  -DSYSTEM_ALIGNMENT_BUILD_CAPABILITY_HARDWARE_QUATERNION=0U
+  -DSYSTEM_ALIGNMENT_BUILD_GUARD_HARDWARE_QUATERNION=0U
+  -DSYSTEM_BUILD_FUSION_ALGORITHM=SYSTEM_FUSION_KF6
+  -DSYSTEM_BUILD_ESTIMATOR_ENABLED=1U
+  -DSYSTEM_BUILD_MECHANIZATION_ALGORITHM=SYSTEM_MECHANIZATION_CONING2_SCULLING2
+  -DSYSTEM_BUILD_LANDING_MODE=SYSTEM_LANDING_MODE_BARO_IMU_WINDOW
+  -DSYSTEM_TELEMETRY_TM_ENABLED=1U
+  -DSYSTEM_TELEMETRY_TM_PROFILE=0U
+  -DSILVERSTAR_AIR_LINK_ENABLED=1
+  -DSYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED=0U
+  -DTEST_EXPECT_ALIGNMENT_ALGORITHM=SYSTEM_ALIGNMENT_VECTOR_CONSTRAINTS
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Targets\SilverStar_F407\Inc
+  -include
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Generated\Inc\project_flight_config.h
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Tests\Host
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\APP\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Algorithm\Common\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Algorithm\Calibration\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Algorithm\Alignment\Common\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Algorithm\Alignment\GravityKnownYaw\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Algorithm\Alignment\GravityMagTriad\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Algorithm\Alignment\VectorConstraints\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Algorithm\Alignment\ExternalAttitude\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Algorithm\INS\Coning2Sculling2\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Algorithm\Estimator\KF6\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Algorithm\Estimator\SF6\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Common\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Modules\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Protocol\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Protocol\SSLOG\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Interfaces\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\System\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\System\Alignment\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\System\Calibration\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\System\Indicator\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\System\Inertial\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\System\User
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Targets\SilverStar_F407\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Board\SilverStar_0_5\Services\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Generated\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\FlightLogic\Deployment\MultiTrigger\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\FlightLogic\Landing\BarometerImuWindow\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Platform\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Platform\STM32F4\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Platform\STM32H7\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Platform\STM32F1Flight\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Devices\IMU\JY901B\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Devices\IMU\JY901B\Adapter\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Devices\GNSS\NEO_M9N\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Devices\GNSS\NEO_M9N\Adapter\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Devices\Telemetry\SX1281\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Devices\Telemetry\SX1281\Adapter\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Devices\SensorBus\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Devices\SensorBus\Adapter\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Devices\Barometer\BMP280\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Devices\Barometer\BMP280\Adapter\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Devices\Power\InputVoltage\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Devices\IMU\MPU6050\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Devices\IMU\MPU6050\Adapter\Inc
+  -ID:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Middlewares\Third_Party\SX1280lib
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Tests\Host\test_lifecycle_logging.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Tests\Host\Fixtures\source_selector_lock_stub.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Tests\Host\host_platform_mock.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\APP\Src\flight_task.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\APP\Src\logger_task.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\System\Src\system_log_file.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Common\Src\common_format.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Tests\Host\Fixtures\log_file_storage_stub.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\FlightLogic\FlightCycle\Src\silverstar_flight_cycle.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\System\Src\system_navigation_health.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\System\Alignment\Src\system_alignment.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\System\Src\system_mission_process.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Generated\Src\project_mission_process.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\System\Src\system_mission_process_runtime.c
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Common\Src\silverstar_assert.c
+  -lm
+  -o
+  D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\build\FCCG\Host\Tests\lifecycle_logging.exe
+GCC stdout/stderr:
+D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccnpoD99.o:flight_task.c:(.text+0x71b): undefined reference to `ControlResearch_Init'
+D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.1.0/../../../../x86_64-w64-mingw32/bin/ld.exe: C:\Users\chdxm\AppData\Local\Temp\ccnpoD99.o:flight_task.c:(.text+0xa20): undefined reference to `ControlResearch_RuntimeProcess'
+collect2.exe: error: ld returned 1 exit status
+Exception: D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\control\pytest-v5\control-research-pid0\Flight_Controller\Tests\Host\run_tests.ps1:357
+Line |
+ 357 |          throw "Host test compile failed: $Name"
+     |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Host test compile failed: lifecycle_logging
+

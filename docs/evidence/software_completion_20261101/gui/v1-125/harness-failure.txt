@@ -1,0 +1,1 @@
+Capture v1 failed: its main-window traversal incorrectly included hidden PluginManagerDialog button boxes. No product failure claimed. v2 limits visible dialog geometry acceptance to the captured QDialog surface.

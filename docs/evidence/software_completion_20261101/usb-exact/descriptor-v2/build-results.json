@@ -1,0 +1,26 @@
+[
+  {
+    "part": "F103",
+    "action": "real_normal_and_analyzer_arm_build",
+    "output": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\d2\\f103\\b",
+    "result": "CompiledCandidate",
+    "detail": "PRIVATE CANDIDATE ONLY; formal generation BLOCKED. NOT PROVEN: complete EP0/async lifecycle, manual critical contracts, whole-program stack/WCET and physical timing/hardware. F103/F407 bounded shared EP0 policy is integrated; limited software regression is recorded separately and does not establish complete independent USB safety acceptance.",
+    "new_arm_executed": true
+  },
+  {
+    "part": "F407",
+    "action": "real_normal_and_analyzer_arm_build",
+    "output": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\d2\\f407\\b",
+    "result": "CompiledCandidate",
+    "detail": "PRIVATE CANDIDATE ONLY; formal generation BLOCKED. NOT PROVEN: complete EP0/async lifecycle, manual critical contracts, whole-program stack/WCET and physical timing/hardware. F103/F407 bounded shared EP0 policy is integrated; limited software regression is recorded separately and does not establish complete independent USB safety acceptance.",
+    "new_arm_executed": true
+  },
+  {
+    "part": "C071",
+    "action": "real_normal_and_analyzer_arm_build",
+    "output": "D:\\python_software\\SilverStar\\.work\\sc-261101-usb\\d2\\c071\\b",
+    "result": "CompiledCandidate",
+    "detail": "PRIVATE C071 native PCD plus pinned classic CDC companion Ground candidate. Formal USB release BLOCKED: b66 independent review has no passed outcome and must not be retried or bypassed. Full EP0/async lifecycle, critical contracts, stack/WCET and hardware NOT PROVEN.",
+    "new_arm_executed": true
+  }
+]

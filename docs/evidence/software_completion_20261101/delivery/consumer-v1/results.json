@@ -1,0 +1,2464 @@
+[
+  {
+    "case": "pid",
+    "bundle": "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\delivery\\actual-runs-v1\\pid.sstuning.json",
+    "bundle_sha256": "bb0132a1ab7ce2251f0f01fed17337605fd1c5c9f4aa71c122dfee1aaab70655",
+    "project": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\pid\\Flight_Controller",
+    "model": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\pid.ssproject",
+    "generation": "TargetGenerationResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/delivery/consumer-v1/pid'), targets=('Flight_Controller',), file_hashes={})",
+    "decoder": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\pid\\SoftwareCompletion_PID.ssdecoder",
+    "decoder_sha256": "ebc136332d595e177cacaf4bf4368f649c61f84bfaf20464b653d34e3885863e",
+    "contract": {
+      "schema_id": "silverstar.control-research-runtime/1",
+      "enabled": true,
+      "binding": {
+        "instance_id": "controller",
+        "plugin_id": "silverstar.algorithm.control.pid",
+        "category": "control",
+        "execution": "continuous",
+        "start": {
+          "kind": "mission_start",
+          "stage_id": ""
+        },
+        "stop": {
+          "kind": "system_landed",
+          "stage_id": ""
+        },
+        "depends_on": [
+          "estimator"
+        ],
+        "input_bindings": {},
+        "output": "control.research.command"
+      },
+      "kind": "pid",
+      "period_us": 10000,
+      "maximum_lateness_us": 2000,
+      "maximum_input_age_us": 20000,
+      "maximum_input_skew_us": 10000,
+      "input": "ENU body+Z Hamilton wxyz q_nb; atan2(axis_x,axis_z) rad and calibrated body-Y gyro rad/s",
+      "domain": "planar body-Y small-angle: |pitch|<=0.35 rad; |qx|,|qz|<=0.01; |rate|<=20 rad/s",
+      "reference_rad": 0,
+      "sink": "one bounded latest body-Y torque request snapshot; no actuator driver",
+      "output": {
+        "quantity": "requested_body_y_torque",
+        "axis": "body-Y",
+        "unit": "N*m",
+        "nm_per_core_output_unit": 1.0,
+        "maximum_absolute_torque_nm": 1.0
+      },
+      "electrical_output": false,
+      "deployable": false,
+      "failure": "withdraw publication, stop once, latch failure, ordinary lifecycle FAULT; no restart in mission",
+      "timing": "nominal discrete 10 ms, <=2 ms polling lateness; no catch-up execution; hardware WCET unproven"
+    },
+    "consumer_sha256": "b5903f86ac16e79520568200343de566d8bd09225045520d8e12befd07aa4cf2",
+    "expected_nm": -0.01501499954611063,
+    "actual_nm": -0.0150149995,
+    "parameters": [
+      {
+        "owner": "silverstar.algorithm.ins.coning2_sculling2",
+        "id": "gravity_mps2",
+        "input": 9.806650161743164,
+        "target": 9.806650161743164,
+        "decoder": {
+          "description": "Navigation gravity subtraction only; calibration, alignment and sensor conversion retain their separate platform gravity.",
+          "id": "gravity_mps2",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 9.806650161743164
+        },
+        "symbol": "SYSTEM_INS_GRAVITY_MPS2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.ins.coning2_sculling2",
+        "id": "mechanization_aggregation",
+        "input": 2,
+        "target": 2,
+        "decoder": {
+          "description": "One propagates each real IMU interval; two aggregate adjacent intervals for second-order coning/sculling. No synthetic IMU samples are created.",
+          "id": "mechanization_aggregation",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "samples",
+          "value": 2
+        },
+        "symbol": "SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gravity_mps2",
+        "input": 9.806650161743164,
+        "target": 9.806650161743164,
+        "decoder": {
+          "description": "Navigation gravity subtraction only; calibration, alignment and sensor conversion retain their separate platform gravity.",
+          "id": "gravity_mps2",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 9.806650161743164
+        },
+        "symbol": "SYSTEM_KF_GRAVITY_MPS2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "p0_position_e",
+        "input": 4.0,
+        "target": 4.0,
+        "decoder": {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_position_e",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2",
+          "value": 4.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_P0_POSITION_E_VARIANCE_M2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "p0_position_n",
+        "input": 4.0,
+        "target": 4.0,
+        "decoder": {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_position_n",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2",
+          "value": 4.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_P0_POSITION_N_VARIANCE_M2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "p0_position_u",
+        "input": 9.0,
+        "target": 9.0,
+        "decoder": {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_position_u",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2",
+          "value": 9.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_P0_POSITION_U_VARIANCE_M2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "p0_velocity_e",
+        "input": 0.25,
+        "target": 0.25,
+        "decoder": {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_velocity_e",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2/s^2",
+          "value": 0.25
+        },
+        "symbol": "SYSTEM_ESTIMATOR_P0_VELOCITY_E_VARIANCE_M2PS2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "p0_velocity_n",
+        "input": 0.25,
+        "target": 0.25,
+        "decoder": {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_velocity_n",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2/s^2",
+          "value": 0.25
+        },
+        "symbol": "SYSTEM_ESTIMATOR_P0_VELOCITY_N_VARIANCE_M2PS2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "p0_velocity_u",
+        "input": 0.25,
+        "target": 0.25,
+        "decoder": {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_velocity_u",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2/s^2",
+          "value": 0.25
+        },
+        "symbol": "SYSTEM_ESTIMATOR_P0_VELOCITY_U_VARIANCE_M2PS2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "process_accel_std_e",
+        "input": 1.5,
+        "target": 1.5,
+        "decoder": {
+          "description": "Per-axis acceleration sigma in m/s^2. Revision 2 maps each original prediction increment H to white-acceleration density q=sigma^2*H; observation fragments share H. Changing original sampling/aggregation changes this equivalence.",
+          "id": "process_accel_std_e",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 1.5
+        },
+        "symbol": "SYSTEM_ESTIMATOR_PROCESS_ACCEL_E_STD_MPS2_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "process_accel_std_n",
+        "input": 1.5,
+        "target": 1.5,
+        "decoder": {
+          "description": "Per-axis acceleration sigma in m/s^2. Revision 2 maps each original prediction increment H to white-acceleration density q=sigma^2*H; observation fragments share H. Changing original sampling/aggregation changes this equivalence.",
+          "id": "process_accel_std_n",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 1.5
+        },
+        "symbol": "SYSTEM_ESTIMATOR_PROCESS_ACCEL_N_STD_MPS2_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "process_accel_std_u",
+        "input": 2.0,
+        "target": 2.0,
+        "decoder": {
+          "description": "Per-axis acceleration sigma in m/s^2. Revision 2 maps each original prediction increment H to white-acceleration density q=sigma^2*H; observation fragments share H. Changing original sampling/aggregation changes this equivalence.",
+          "id": "process_accel_std_u",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 2.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_PROCESS_ACCEL_U_STD_MPS2_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_position_std_horizontal",
+        "input": 1.5,
+        "target": 1.5,
+        "decoder": {
+          "description": "Actual sigma floor, not fixed R. Existing sigma=max(receiver sigma * 1.25, floor); R=sigma squared. Horizontal E/N share one floor; velocity E/N/U share one floor.",
+          "id": "gnss_position_std_horizontal",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 1.5
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_HORIZONTAL_STD_FLOOR_M_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_position_std_vertical",
+        "input": 2.5,
+        "target": 2.5,
+        "decoder": {
+          "description": "Actual sigma floor, not fixed R. Existing sigma=max(receiver sigma * 1.25, floor); R=sigma squared. Horizontal E/N share one floor; velocity E/N/U share one floor.",
+          "id": "gnss_position_std_vertical",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 2.5
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_VERTICAL_STD_FLOOR_M_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_velocity_std",
+        "input": 0.15000000596046448,
+        "target": 0.15000000596046448,
+        "decoder": {
+          "description": "Actual sigma floor, not fixed R. Existing sigma=max(receiver sigma * 1.25, floor); R=sigma squared. Horizontal E/N share one floor; velocity E/N/U share one floor.",
+          "id": "gnss_velocity_std",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m/s",
+          "value": 0.15000000596046448
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_VELOCITY_STD_FLOOR_MPS_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "baro_std_m",
+        "input": 2.5,
+        "target": 2.5,
+        "decoder": {
+          "description": "Configured altitude sigma; R = sigma squared. Provider recommendations never clamp this value.",
+          "id": "baro_std_m",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 2.5
+        },
+        "symbol": "SYSTEM_ESTIMATOR_BAROMETER_ALTITUDE_STD_M_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_1d_soft",
+        "input": 6.635000228881836,
+        "target": 6.635000228881836,
+        "decoder": {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_1d_soft",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 6.635000228881836
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_1D_SOFT_THRESHOLD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_1d_hard",
+        "input": 10.82800006866455,
+        "target": 10.82800006866455,
+        "decoder": {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_1d_hard",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 10.82800006866455
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_1D_HARD_THRESHOLD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_2d_soft",
+        "input": 9.210000038146973,
+        "target": 9.210000038146973,
+        "decoder": {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_2d_soft",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 9.210000038146973
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_2D_SOFT_THRESHOLD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_2d_hard",
+        "input": 13.815999984741211,
+        "target": 13.815999984741211,
+        "decoder": {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_2d_hard",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 13.815999984741211
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_2D_HARD_THRESHOLD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_3d_soft",
+        "input": 11.345000267028809,
+        "target": 11.345000267028809,
+        "decoder": {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_3d_soft",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 11.345000267028809
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_3D_SOFT_THRESHOLD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_3d_hard",
+        "input": 16.266000747680664,
+        "target": 16.266000747680664,
+        "decoder": {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_3d_hard",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 16.266000747680664
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_3D_HARD_THRESHOLD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_max_r_scale",
+        "input": 10.0,
+        "target": 10.0,
+        "decoder": {
+          "description": "Actual dimensionless cap already used by soft gating; not a multiplier of a hidden default.",
+          "id": "nis_max_r_scale",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 10.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_MAX_R_SCALE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_velocity_vertical_scale",
+        "input": 1.75,
+        "target": 1.75,
+        "decoder": {
+          "description": "GNSS vertical velocity standard deviation scale; continuous NIS rejection alone never authorizes recovery.",
+          "id": "gnss_velocity_vertical_scale",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 1.75
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_VELOCITY_VERTICAL_SCALE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_reacquire_outage_ms",
+        "input": 300,
+        "target": 300,
+        "decoder": {
+          "description": "Existing KF6 GNSS fusion recovery is enabled by default. This threshold requires an outage; continuous NIS rejection alone is insufficient. It does not restart the receiver, reset the origin, or grant preflight readiness.",
+          "id": "gnss_reacquire_outage_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 300
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_REACQUIRE_OUTAGE_MS",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_position_measurement_delay_ms",
+        "input": 0,
+        "target": 0,
+        "decoder": {
+          "description": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+          "id": "gnss_position_measurement_delay_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_POSITION_MEASUREMENT_DELAY_MS",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_velocity_measurement_delay_ms",
+        "input": 270,
+        "target": 270,
+        "decoder": {
+          "description": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+          "id": "gnss_velocity_measurement_delay_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 270
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_VELOCITY_MEASUREMENT_DELAY_MS",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "baro_measurement_delay_ms",
+        "input": 0,
+        "target": 0,
+        "decoder": {
+          "description": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+          "id": "baro_measurement_delay_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_BARO_MEASUREMENT_DELAY_MS",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_enable",
+        "input": 1,
+        "target": 1,
+        "decoder": {
+          "description": "Enable GNSS position self-check. Actual onboard value.",
+          "id": "gnss_integrity_enable",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "1",
+          "value": 1
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_ENABLE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_max_gap_ms",
+        "input": 120,
+        "target": 120,
+        "decoder": {
+          "description": "Maximum evidence sample gap. Actual onboard value.",
+          "id": "gnss_integrity_max_gap_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 120
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_MAX_GAP_MS",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_error_threshold_m",
+        "input": 10.0,
+        "target": 10.0,
+        "decoder": {
+          "description": "Error threshold for GNSS-native horizontal position/velocity closure.",
+          "id": "gnss_integrity_error_threshold_m",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 10.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_ERROR_THRESHOLD_M",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_recovery_threshold_m",
+        "input": 4.0,
+        "target": 4.0,
+        "decoder": {
+          "description": "Retired in quality revision 3: saved legacy value only, not executed. Revision 2 logs retain their original meaning.",
+          "id": "gnss_integrity_recovery_threshold_m",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 4.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_RECOVERY_THRESHOLD_M",
+        "lifecycle": "legacy_read_only"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_suspect_duration_ms",
+        "input": 2000,
+        "target": 2000,
+        "decoder": {
+          "description": "Retired in quality revision 3: saved legacy value only, not executed. Revision 2 logs retain their original meaning.",
+          "id": "gnss_integrity_suspect_duration_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 2000
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_SUSPECT_DURATION_MS",
+        "lifecycle": "legacy_read_only"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_reject_duration_ms",
+        "input": 5000,
+        "target": 5000,
+        "decoder": {
+          "description": "Retired in quality revision 3: saved legacy value only, not executed. Revision 2 logs retain their original meaning.",
+          "id": "gnss_integrity_reject_duration_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 5000
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_REJECT_DURATION_MS",
+        "lifecycle": "legacy_read_only"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_recovery_duration_ms",
+        "input": 8000,
+        "target": 8000,
+        "decoder": {
+          "description": "Retired in quality revision 3: saved legacy value only, not executed. Revision 2 logs retain their original meaning.",
+          "id": "gnss_integrity_recovery_duration_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 8000
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_RECOVERY_DURATION_MS",
+        "lifecycle": "legacy_read_only"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_position_r_scale",
+        "input": 4.0,
+        "target": 4.0,
+        "decoder": {
+          "description": "Revision 3 bounds continuous closure-error weighting in [1, this value]. Values above 4 are rejected; legacy values are never clamped.",
+          "id": "gnss_integrity_position_r_scale",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 4.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_POSITION_R_SCALE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_hacc_max_m",
+        "input": 6.0,
+        "target": 6.0,
+        "decoder": {
+          "description": "Retired in quality revision 3: saved legacy value only, not executed. Revision 2 logs retain their original meaning.",
+          "id": "gnss_integrity_hacc_max_m",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 6.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_HACC_MAX_M",
+        "lifecycle": "legacy_read_only"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_sacc_max_mps",
+        "input": 1.2,
+        "target": 1.2000000476837158,
+        "decoder": {
+          "description": "Retired in quality revision 3: saved legacy value only, not executed. Revision 2 logs retain their original meaning.",
+          "id": "gnss_integrity_sacc_max_mps",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m/s",
+          "value": 1.2000000476837158
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_SACC_MAX_MPS",
+        "lifecycle": "legacy_read_only"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_soft_enabled",
+        "input": 1,
+        "target": 1,
+        "decoder": {
+          "description": "Explicit gate switch (0 disabled, 1 enabled); finite thresholds remain unchanged.",
+          "id": "nis_soft_enabled",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "1",
+          "value": 1
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_SOFT_ENABLED",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_hard_enabled",
+        "input": 1,
+        "target": 1,
+        "decoder": {
+          "description": "Explicit gate switch (0 disabled, 1 enabled); finite thresholds remain unchanged.",
+          "id": "nis_hard_enabled",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "1",
+          "value": 1
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_HARD_ENABLED",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "fusion_timing_mode",
+        "input": 1,
+        "target": 1,
+        "decoder": {
+          "description": "Mode 2 is experimental: a delayed primary plus an independent complete present state/covariance predictor. Exact replay requires horizon request/status and original body/step/initial-state streams. Hardware timing and flight qualification are unproven.",
+          "id": "fusion_timing_mode",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "1",
+          "value": 1
+        },
+        "symbol": "SYSTEM_FUSION_TIMING_MODE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "fusion_horizon_ms",
+        "input": 300,
+        "target": 300,
+        "decoder": {
+          "description": "Used only by timing mode 2. The primary runs behind input present; an independent complete state and covariance predictor supplies present output. Configured rates and fixed queue capacity must be reviewed.",
+          "id": "fusion_horizon_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 300
+        },
+        "symbol": "SYSTEM_FUSION_HORIZON_MS",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.control.pid",
+        "id": "kp",
+        "input": 1.5,
+        "target": 1.5,
+        "decoder": {
+          "description": "Actual scalar mathematical input; no hardware deployment claim.",
+          "id": "kp",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 1.5
+        },
+        "symbol": "SYSTEM_CONTROL_PID_KP",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.control.pid",
+        "id": "ki",
+        "input": 0.15000000596046448,
+        "target": 0.15000000596046448,
+        "decoder": {
+          "description": "Actual scalar mathematical input; no hardware deployment claim.",
+          "id": "ki",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1/s",
+          "value": 0.15000000596046448
+        },
+        "symbol": "SYSTEM_CONTROL_PID_KI",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.control.pid",
+        "id": "kd",
+        "input": 0.3499999940395355,
+        "target": 0.3499999940395355,
+        "decoder": {
+          "description": "Actual scalar mathematical input; no hardware deployment claim.",
+          "id": "kd",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "s",
+          "value": 0.3499999940395355
+        },
+        "symbol": "SYSTEM_CONTROL_PID_KD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.control.pid",
+        "id": "derivative_tau_s",
+        "input": 0.019999999552965164,
+        "target": 0.019999999552965164,
+        "decoder": {
+          "description": "Actual scalar mathematical input; no hardware deployment claim.",
+          "id": "derivative_tau_s",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "s",
+          "value": 0.019999999552965164
+        },
+        "symbol": "SYSTEM_CONTROL_PID_DERIVATIVE_TAU_S",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.control.pid",
+        "id": "integral_limit",
+        "input": 0.20000000298023224,
+        "target": 0.20000000298023224,
+        "decoder": {
+          "description": "Actual scalar mathematical input; no hardware deployment claim.",
+          "id": "integral_limit",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 0.20000000298023224
+        },
+        "symbol": "SYSTEM_CONTROL_PID_INTEGRAL_LIMIT",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.control.pid",
+        "id": "output_limit",
+        "input": 0.4000000059604645,
+        "target": 0.4000000059604645,
+        "decoder": {
+          "description": "Actual scalar mathematical input; no hardware deployment claim.",
+          "id": "output_limit",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 0.4000000059604645
+        },
+        "symbol": "SYSTEM_CONTROL_PID_OUTPUT_LIMIT",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.control.pid",
+        "id": "sample_period_s",
+        "input": 0.009999999776482582,
+        "target": 0.009999999776482582,
+        "decoder": {
+          "description": "Actual scalar mathematical input; no hardware deployment claim.",
+          "id": "sample_period_s",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "s",
+          "value": 0.009999999776482582
+        },
+        "symbol": "SYSTEM_CONTROL_PID_SAMPLE_PERIOD_S",
+        "lifecycle": "active"
+      }
+    ]
+  },
+  {
+    "case": "lqr",
+    "bundle": "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\delivery\\actual-runs-v1\\lqr.sstuning.json",
+    "bundle_sha256": "d7d67b19e29329a1a9f8eda9d160a7f89f85239cb9bb8725a237a064a4c88052",
+    "project": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\lqr\\Flight_Controller",
+    "model": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\lqr.ssproject",
+    "generation": "TargetGenerationResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/delivery/consumer-v1/lqr'), targets=('Flight_Controller',), file_hashes={})",
+    "decoder": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\lqr\\SoftwareCompletion_LQR.ssdecoder",
+    "decoder_sha256": "310655b973ed298dc5e0c02feb697d130f4161b8d2e19e47d7a1bc7d3470f0bd",
+    "contract": {
+      "schema_id": "silverstar.control-research-runtime/1",
+      "enabled": true,
+      "binding": {
+        "instance_id": "controller",
+        "plugin_id": "silverstar.algorithm.control.lqr",
+        "category": "control",
+        "execution": "continuous",
+        "start": {
+          "kind": "mission_start",
+          "stage_id": ""
+        },
+        "stop": {
+          "kind": "system_landed",
+          "stage_id": ""
+        },
+        "depends_on": [
+          "estimator"
+        ],
+        "input_bindings": {},
+        "output": "control.research.command"
+      },
+      "kind": "lqr",
+      "period_us": 10000,
+      "maximum_lateness_us": 2000,
+      "maximum_input_age_us": 20000,
+      "maximum_input_skew_us": 10000,
+      "input": "ENU body+Z Hamilton wxyz q_nb; atan2(axis_x,axis_z) rad and calibrated body-Y gyro rad/s",
+      "domain": "planar body-Y small-angle: |pitch|<=0.35 rad; |qx|,|qz|<=0.01; |rate|<=20 rad/s",
+      "reference_rad": 0,
+      "sink": "one bounded latest body-Y torque request snapshot; no actuator driver",
+      "output": {
+        "quantity": "requested_body_y_torque",
+        "axis": "body-Y",
+        "unit": "N*m",
+        "nm_per_core_output_unit": 1.0,
+        "maximum_absolute_torque_nm": 1.0
+      },
+      "electrical_output": false,
+      "deployable": false,
+      "failure": "withdraw publication, stop once, latch failure, ordinary lifecycle FAULT; no restart in mission",
+      "timing": "nominal discrete 10 ms, <=2 ms polling lateness; no catch-up execution; hardware WCET unproven"
+    },
+    "consumer_sha256": "e68ec8516b71867878b3050fdf8bdad58b4a02fbd7206c8390c8372823775d75",
+    "expected_nm": -0.024589240550994873,
+    "actual_nm": -0.0245892406,
+    "parameters": [
+      {
+        "owner": "silverstar.algorithm.ins.coning2_sculling2",
+        "id": "gravity_mps2",
+        "input": 9.806650161743164,
+        "target": 9.806650161743164,
+        "decoder": {
+          "description": "Navigation gravity subtraction only; calibration, alignment and sensor conversion retain their separate platform gravity.",
+          "id": "gravity_mps2",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 9.806650161743164
+        },
+        "symbol": "SYSTEM_INS_GRAVITY_MPS2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.ins.coning2_sculling2",
+        "id": "mechanization_aggregation",
+        "input": 2,
+        "target": 2,
+        "decoder": {
+          "description": "One propagates each real IMU interval; two aggregate adjacent intervals for second-order coning/sculling. No synthetic IMU samples are created.",
+          "id": "mechanization_aggregation",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "samples",
+          "value": 2
+        },
+        "symbol": "SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gravity_mps2",
+        "input": 9.806650161743164,
+        "target": 9.806650161743164,
+        "decoder": {
+          "description": "Navigation gravity subtraction only; calibration, alignment and sensor conversion retain their separate platform gravity.",
+          "id": "gravity_mps2",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 9.806650161743164
+        },
+        "symbol": "SYSTEM_KF_GRAVITY_MPS2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "p0_position_e",
+        "input": 4.0,
+        "target": 4.0,
+        "decoder": {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_position_e",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2",
+          "value": 4.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_P0_POSITION_E_VARIANCE_M2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "p0_position_n",
+        "input": 4.0,
+        "target": 4.0,
+        "decoder": {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_position_n",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2",
+          "value": 4.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_P0_POSITION_N_VARIANCE_M2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "p0_position_u",
+        "input": 9.0,
+        "target": 9.0,
+        "decoder": {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_position_u",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2",
+          "value": 9.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_P0_POSITION_U_VARIANCE_M2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "p0_velocity_e",
+        "input": 0.25,
+        "target": 0.25,
+        "decoder": {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_velocity_e",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2/s^2",
+          "value": 0.25
+        },
+        "symbol": "SYSTEM_ESTIMATOR_P0_VELOCITY_E_VARIANCE_M2PS2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "p0_velocity_n",
+        "input": 0.25,
+        "target": 0.25,
+        "decoder": {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_velocity_n",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2/s^2",
+          "value": 0.25
+        },
+        "symbol": "SYSTEM_ESTIMATOR_P0_VELOCITY_N_VARIANCE_M2PS2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "p0_velocity_u",
+        "input": 0.25,
+        "target": 0.25,
+        "decoder": {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_velocity_u",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2/s^2",
+          "value": 0.25
+        },
+        "symbol": "SYSTEM_ESTIMATOR_P0_VELOCITY_U_VARIANCE_M2PS2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "process_accel_std_e",
+        "input": 1.5,
+        "target": 1.5,
+        "decoder": {
+          "description": "Per-axis acceleration sigma in m/s^2. Revision 2 maps each original prediction increment H to white-acceleration density q=sigma^2*H; observation fragments share H. Changing original sampling/aggregation changes this equivalence.",
+          "id": "process_accel_std_e",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 1.5
+        },
+        "symbol": "SYSTEM_ESTIMATOR_PROCESS_ACCEL_E_STD_MPS2_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "process_accel_std_n",
+        "input": 1.5,
+        "target": 1.5,
+        "decoder": {
+          "description": "Per-axis acceleration sigma in m/s^2. Revision 2 maps each original prediction increment H to white-acceleration density q=sigma^2*H; observation fragments share H. Changing original sampling/aggregation changes this equivalence.",
+          "id": "process_accel_std_n",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 1.5
+        },
+        "symbol": "SYSTEM_ESTIMATOR_PROCESS_ACCEL_N_STD_MPS2_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "process_accel_std_u",
+        "input": 2.0,
+        "target": 2.0,
+        "decoder": {
+          "description": "Per-axis acceleration sigma in m/s^2. Revision 2 maps each original prediction increment H to white-acceleration density q=sigma^2*H; observation fragments share H. Changing original sampling/aggregation changes this equivalence.",
+          "id": "process_accel_std_u",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 2.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_PROCESS_ACCEL_U_STD_MPS2_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_position_std_horizontal",
+        "input": 1.5,
+        "target": 1.5,
+        "decoder": {
+          "description": "Actual sigma floor, not fixed R. Existing sigma=max(receiver sigma * 1.25, floor); R=sigma squared. Horizontal E/N share one floor; velocity E/N/U share one floor.",
+          "id": "gnss_position_std_horizontal",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 1.5
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_HORIZONTAL_STD_FLOOR_M_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_position_std_vertical",
+        "input": 2.5,
+        "target": 2.5,
+        "decoder": {
+          "description": "Actual sigma floor, not fixed R. Existing sigma=max(receiver sigma * 1.25, floor); R=sigma squared. Horizontal E/N share one floor; velocity E/N/U share one floor.",
+          "id": "gnss_position_std_vertical",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 2.5
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_VERTICAL_STD_FLOOR_M_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_velocity_std",
+        "input": 0.15000000596046448,
+        "target": 0.15000000596046448,
+        "decoder": {
+          "description": "Actual sigma floor, not fixed R. Existing sigma=max(receiver sigma * 1.25, floor); R=sigma squared. Horizontal E/N share one floor; velocity E/N/U share one floor.",
+          "id": "gnss_velocity_std",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m/s",
+          "value": 0.15000000596046448
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_VELOCITY_STD_FLOOR_MPS_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "baro_std_m",
+        "input": 2.5,
+        "target": 2.5,
+        "decoder": {
+          "description": "Configured altitude sigma; R = sigma squared. Provider recommendations never clamp this value.",
+          "id": "baro_std_m",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 2.5
+        },
+        "symbol": "SYSTEM_ESTIMATOR_BAROMETER_ALTITUDE_STD_M_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_1d_soft",
+        "input": 6.635000228881836,
+        "target": 6.635000228881836,
+        "decoder": {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_1d_soft",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 6.635000228881836
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_1D_SOFT_THRESHOLD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_1d_hard",
+        "input": 10.82800006866455,
+        "target": 10.82800006866455,
+        "decoder": {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_1d_hard",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 10.82800006866455
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_1D_HARD_THRESHOLD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_2d_soft",
+        "input": 9.210000038146973,
+        "target": 9.210000038146973,
+        "decoder": {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_2d_soft",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 9.210000038146973
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_2D_SOFT_THRESHOLD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_2d_hard",
+        "input": 13.815999984741211,
+        "target": 13.815999984741211,
+        "decoder": {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_2d_hard",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 13.815999984741211
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_2D_HARD_THRESHOLD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_3d_soft",
+        "input": 11.345000267028809,
+        "target": 11.345000267028809,
+        "decoder": {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_3d_soft",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 11.345000267028809
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_3D_SOFT_THRESHOLD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_3d_hard",
+        "input": 16.266000747680664,
+        "target": 16.266000747680664,
+        "decoder": {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_3d_hard",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 16.266000747680664
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_3D_HARD_THRESHOLD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_max_r_scale",
+        "input": 10.0,
+        "target": 10.0,
+        "decoder": {
+          "description": "Actual dimensionless cap already used by soft gating; not a multiplier of a hidden default.",
+          "id": "nis_max_r_scale",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 10.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_MAX_R_SCALE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_velocity_vertical_scale",
+        "input": 1.75,
+        "target": 1.75,
+        "decoder": {
+          "description": "GNSS vertical velocity standard deviation scale; continuous NIS rejection alone never authorizes recovery.",
+          "id": "gnss_velocity_vertical_scale",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 1.75
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_VELOCITY_VERTICAL_SCALE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_reacquire_outage_ms",
+        "input": 300,
+        "target": 300,
+        "decoder": {
+          "description": "Existing KF6 GNSS fusion recovery is enabled by default. This threshold requires an outage; continuous NIS rejection alone is insufficient. It does not restart the receiver, reset the origin, or grant preflight readiness.",
+          "id": "gnss_reacquire_outage_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 300
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_REACQUIRE_OUTAGE_MS",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_position_measurement_delay_ms",
+        "input": 0,
+        "target": 0,
+        "decoder": {
+          "description": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+          "id": "gnss_position_measurement_delay_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_POSITION_MEASUREMENT_DELAY_MS",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_velocity_measurement_delay_ms",
+        "input": 270,
+        "target": 270,
+        "decoder": {
+          "description": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+          "id": "gnss_velocity_measurement_delay_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 270
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_VELOCITY_MEASUREMENT_DELAY_MS",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "baro_measurement_delay_ms",
+        "input": 0,
+        "target": 0,
+        "decoder": {
+          "description": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+          "id": "baro_measurement_delay_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_BARO_MEASUREMENT_DELAY_MS",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_enable",
+        "input": 1,
+        "target": 1,
+        "decoder": {
+          "description": "Enable GNSS position self-check. Actual onboard value.",
+          "id": "gnss_integrity_enable",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "1",
+          "value": 1
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_ENABLE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_max_gap_ms",
+        "input": 120,
+        "target": 120,
+        "decoder": {
+          "description": "Maximum evidence sample gap. Actual onboard value.",
+          "id": "gnss_integrity_max_gap_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 120
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_MAX_GAP_MS",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_error_threshold_m",
+        "input": 10.0,
+        "target": 10.0,
+        "decoder": {
+          "description": "Error threshold for GNSS-native horizontal position/velocity closure.",
+          "id": "gnss_integrity_error_threshold_m",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 10.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_ERROR_THRESHOLD_M",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_recovery_threshold_m",
+        "input": 4.0,
+        "target": 4.0,
+        "decoder": {
+          "description": "Retired in quality revision 3: saved legacy value only, not executed. Revision 2 logs retain their original meaning.",
+          "id": "gnss_integrity_recovery_threshold_m",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 4.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_RECOVERY_THRESHOLD_M",
+        "lifecycle": "legacy_read_only"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_suspect_duration_ms",
+        "input": 2000,
+        "target": 2000,
+        "decoder": {
+          "description": "Retired in quality revision 3: saved legacy value only, not executed. Revision 2 logs retain their original meaning.",
+          "id": "gnss_integrity_suspect_duration_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 2000
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_SUSPECT_DURATION_MS",
+        "lifecycle": "legacy_read_only"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_reject_duration_ms",
+        "input": 5000,
+        "target": 5000,
+        "decoder": {
+          "description": "Retired in quality revision 3: saved legacy value only, not executed. Revision 2 logs retain their original meaning.",
+          "id": "gnss_integrity_reject_duration_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 5000
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_REJECT_DURATION_MS",
+        "lifecycle": "legacy_read_only"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_recovery_duration_ms",
+        "input": 8000,
+        "target": 8000,
+        "decoder": {
+          "description": "Retired in quality revision 3: saved legacy value only, not executed. Revision 2 logs retain their original meaning.",
+          "id": "gnss_integrity_recovery_duration_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 8000
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_RECOVERY_DURATION_MS",
+        "lifecycle": "legacy_read_only"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_position_r_scale",
+        "input": 4.0,
+        "target": 4.0,
+        "decoder": {
+          "description": "Revision 3 bounds continuous closure-error weighting in [1, this value]. Values above 4 are rejected; legacy values are never clamped.",
+          "id": "gnss_integrity_position_r_scale",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 4.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_POSITION_R_SCALE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_hacc_max_m",
+        "input": 6.0,
+        "target": 6.0,
+        "decoder": {
+          "description": "Retired in quality revision 3: saved legacy value only, not executed. Revision 2 logs retain their original meaning.",
+          "id": "gnss_integrity_hacc_max_m",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 6.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_HACC_MAX_M",
+        "lifecycle": "legacy_read_only"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_sacc_max_mps",
+        "input": 1.2,
+        "target": 1.2000000476837158,
+        "decoder": {
+          "description": "Retired in quality revision 3: saved legacy value only, not executed. Revision 2 logs retain their original meaning.",
+          "id": "gnss_integrity_sacc_max_mps",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m/s",
+          "value": 1.2000000476837158
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_SACC_MAX_MPS",
+        "lifecycle": "legacy_read_only"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_soft_enabled",
+        "input": 1,
+        "target": 1,
+        "decoder": {
+          "description": "Explicit gate switch (0 disabled, 1 enabled); finite thresholds remain unchanged.",
+          "id": "nis_soft_enabled",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "1",
+          "value": 1
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_SOFT_ENABLED",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_hard_enabled",
+        "input": 1,
+        "target": 1,
+        "decoder": {
+          "description": "Explicit gate switch (0 disabled, 1 enabled); finite thresholds remain unchanged.",
+          "id": "nis_hard_enabled",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "1",
+          "value": 1
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_HARD_ENABLED",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "fusion_timing_mode",
+        "input": 1,
+        "target": 1,
+        "decoder": {
+          "description": "Mode 2 is experimental: a delayed primary plus an independent complete present state/covariance predictor. Exact replay requires horizon request/status and original body/step/initial-state streams. Hardware timing and flight qualification are unproven.",
+          "id": "fusion_timing_mode",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "1",
+          "value": 1
+        },
+        "symbol": "SYSTEM_FUSION_TIMING_MODE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "fusion_horizon_ms",
+        "input": 300,
+        "target": 300,
+        "decoder": {
+          "description": "Used only by timing mode 2. The primary runs behind input present; an independent complete state and covariance predictor supplies present output. Configured rates and fixed queue capacity must be reviewed.",
+          "id": "fusion_horizon_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 300
+        },
+        "symbol": "SYSTEM_FUSION_HORIZON_MS",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.control.lqr",
+        "id": "k_angle",
+        "input": 2.1726808547973633,
+        "target": 2.1726808547973633,
+        "decoder": {
+          "description": "Actual scalar mathematical input; no hardware deployment claim.",
+          "id": "k_angle",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1/rad",
+          "value": 2.1726808547973633
+        },
+        "symbol": "SYSTEM_CONTROL_LQR_K_ANGLE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.control.lqr",
+        "id": "k_rate",
+        "input": 1.4312163591384888,
+        "target": 1.4312163591384888,
+        "decoder": {
+          "description": "Actual scalar mathematical input; no hardware deployment claim.",
+          "id": "k_rate",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "s/rad",
+          "value": 1.4312163591384888
+        },
+        "symbol": "SYSTEM_CONTROL_LQR_K_RATE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.control.lqr",
+        "id": "output_limit",
+        "input": 0.4000000059604645,
+        "target": 0.4000000059604645,
+        "decoder": {
+          "description": "Actual scalar mathematical input; no hardware deployment claim.",
+          "id": "output_limit",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 0.4000000059604645
+        },
+        "symbol": "SYSTEM_CONTROL_LQR_OUTPUT_LIMIT",
+        "lifecycle": "active"
+      }
+    ]
+  },
+  {
+    "case": "underline-pid",
+    "bundle": "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\delivery\\actual-runs-v1\\underline-pid.sstuning.json",
+    "bundle_sha256": "f9fd841fecd19447fca19a3bd21faf8d435151b75b32d5825dd9071d7dfaaa7b",
+    "project": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\underline-pid\\Flight_Controller",
+    "model": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\underline-pid.ssproject",
+    "generation": "TargetGenerationResult(project_root=WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/delivery/consumer-v1/underline-pid'), targets=('Flight_Controller',), file_hashes={})",
+    "decoder": "D:\\python_software\\SilverStar\\.work\\0.1.3-software-completion-20261101\\delivery\\consumer-v1\\underline-pid\\SoftwareCompletion_PID.ssdecoder",
+    "decoder_sha256": "ebc136332d595e177cacaf4bf4368f649c61f84bfaf20464b653d34e3885863e",
+    "contract": {
+      "schema_id": "silverstar.control-research-runtime/1",
+      "enabled": true,
+      "binding": {
+        "instance_id": "controller",
+        "plugin_id": "silverstar.algorithm.control.pid",
+        "category": "control",
+        "execution": "continuous",
+        "start": {
+          "kind": "mission_start",
+          "stage_id": ""
+        },
+        "stop": {
+          "kind": "system_landed",
+          "stage_id": ""
+        },
+        "depends_on": [
+          "estimator"
+        ],
+        "input_bindings": {},
+        "output": "control.research.command"
+      },
+      "kind": "pid",
+      "period_us": 10000,
+      "maximum_lateness_us": 2000,
+      "maximum_input_age_us": 20000,
+      "maximum_input_skew_us": 10000,
+      "input": "ENU body+Z Hamilton wxyz q_nb; atan2(axis_x,axis_z) rad and calibrated body-Y gyro rad/s",
+      "domain": "planar body-Y small-angle: |pitch|<=0.35 rad; |qx|,|qz|<=0.01; |rate|<=20 rad/s",
+      "reference_rad": 0,
+      "sink": "one bounded latest body-Y torque request snapshot; no actuator driver",
+      "output": {
+        "quantity": "requested_body_y_torque",
+        "axis": "body-Y",
+        "unit": "N*m",
+        "nm_per_core_output_unit": 1.0,
+        "maximum_absolute_torque_nm": 1.0
+      },
+      "electrical_output": false,
+      "deployable": false,
+      "failure": "withdraw publication, stop once, latch failure, ordinary lifecycle FAULT; no restart in mission",
+      "timing": "nominal discrete 10 ms, <=2 ms polling lateness; no catch-up execution; hardware WCET unproven"
+    },
+    "consumer_sha256": "41839eace6789e052f834a34c08779f47aac6be7dc87904c39a98d437cb06211",
+    "expected_nm": -0.01501499954611063,
+    "actual_nm": -0.0150149995,
+    "parameters": [
+      {
+        "owner": "silverstar.algorithm.ins.coning2_sculling2",
+        "id": "gravity_mps2",
+        "input": 9.806650161743164,
+        "target": 9.806650161743164,
+        "decoder": {
+          "description": "Navigation gravity subtraction only; calibration, alignment and sensor conversion retain their separate platform gravity.",
+          "id": "gravity_mps2",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 9.806650161743164
+        },
+        "symbol": "SYSTEM_INS_GRAVITY_MPS2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.ins.coning2_sculling2",
+        "id": "mechanization_aggregation",
+        "input": 2,
+        "target": 2,
+        "decoder": {
+          "description": "One propagates each real IMU interval; two aggregate adjacent intervals for second-order coning/sculling. No synthetic IMU samples are created.",
+          "id": "mechanization_aggregation",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "samples",
+          "value": 2
+        },
+        "symbol": "SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gravity_mps2",
+        "input": 9.806650161743164,
+        "target": 9.806650161743164,
+        "decoder": {
+          "description": "Navigation gravity subtraction only; calibration, alignment and sensor conversion retain their separate platform gravity.",
+          "id": "gravity_mps2",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 9.806650161743164
+        },
+        "symbol": "SYSTEM_KF_GRAVITY_MPS2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "p0_position_e",
+        "input": 4.0,
+        "target": 4.0,
+        "decoder": {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_position_e",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2",
+          "value": 4.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_P0_POSITION_E_VARIANCE_M2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "p0_position_n",
+        "input": 4.0,
+        "target": 4.0,
+        "decoder": {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_position_n",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2",
+          "value": 4.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_P0_POSITION_N_VARIANCE_M2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "p0_position_u",
+        "input": 9.0,
+        "target": 9.0,
+        "decoder": {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_position_u",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2",
+          "value": 9.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_P0_POSITION_U_VARIANCE_M2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "p0_velocity_e",
+        "input": 0.25,
+        "target": 0.25,
+        "decoder": {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_velocity_e",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2/s^2",
+          "value": 0.25
+        },
+        "symbol": "SYSTEM_ESTIMATOR_P0_VELOCITY_E_VARIANCE_M2PS2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "p0_velocity_n",
+        "input": 0.25,
+        "target": 0.25,
+        "decoder": {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_velocity_n",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2/s^2",
+          "value": 0.25
+        },
+        "symbol": "SYSTEM_ESTIMATOR_P0_VELOCITY_N_VARIANCE_M2PS2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "p0_velocity_u",
+        "input": 0.25,
+        "target": 0.25,
+        "decoder": {
+          "description": "Initial covariance diagonal floor; GNSS-derived uncertainty may increase P0. No squaring of this value.",
+          "id": "p0_velocity_u",
+          "representation": "covariance_diagonal",
+          "storage_type": "float32",
+          "unit": "m^2/s^2",
+          "value": 0.25
+        },
+        "symbol": "SYSTEM_ESTIMATOR_P0_VELOCITY_U_VARIANCE_M2PS2",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "process_accel_std_e",
+        "input": 1.5,
+        "target": 1.5,
+        "decoder": {
+          "description": "Per-axis acceleration sigma in m/s^2. Revision 2 maps each original prediction increment H to white-acceleration density q=sigma^2*H; observation fragments share H. Changing original sampling/aggregation changes this equivalence.",
+          "id": "process_accel_std_e",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 1.5
+        },
+        "symbol": "SYSTEM_ESTIMATOR_PROCESS_ACCEL_E_STD_MPS2_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "process_accel_std_n",
+        "input": 1.5,
+        "target": 1.5,
+        "decoder": {
+          "description": "Per-axis acceleration sigma in m/s^2. Revision 2 maps each original prediction increment H to white-acceleration density q=sigma^2*H; observation fragments share H. Changing original sampling/aggregation changes this equivalence.",
+          "id": "process_accel_std_n",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 1.5
+        },
+        "symbol": "SYSTEM_ESTIMATOR_PROCESS_ACCEL_N_STD_MPS2_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "process_accel_std_u",
+        "input": 2.0,
+        "target": 2.0,
+        "decoder": {
+          "description": "Per-axis acceleration sigma in m/s^2. Revision 2 maps each original prediction increment H to white-acceleration density q=sigma^2*H; observation fragments share H. Changing original sampling/aggregation changes this equivalence.",
+          "id": "process_accel_std_u",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m/s^2",
+          "value": 2.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_PROCESS_ACCEL_U_STD_MPS2_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_position_std_horizontal",
+        "input": 1.5,
+        "target": 1.5,
+        "decoder": {
+          "description": "Actual sigma floor, not fixed R. Existing sigma=max(receiver sigma * 1.25, floor); R=sigma squared. Horizontal E/N share one floor; velocity E/N/U share one floor.",
+          "id": "gnss_position_std_horizontal",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 1.5
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_HORIZONTAL_STD_FLOOR_M_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_position_std_vertical",
+        "input": 2.5,
+        "target": 2.5,
+        "decoder": {
+          "description": "Actual sigma floor, not fixed R. Existing sigma=max(receiver sigma * 1.25, floor); R=sigma squared. Horizontal E/N share one floor; velocity E/N/U share one floor.",
+          "id": "gnss_position_std_vertical",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 2.5
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_VERTICAL_STD_FLOOR_M_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_velocity_std",
+        "input": 0.15000000596046448,
+        "target": 0.15000000596046448,
+        "decoder": {
+          "description": "Actual sigma floor, not fixed R. Existing sigma=max(receiver sigma * 1.25, floor); R=sigma squared. Horizontal E/N share one floor; velocity E/N/U share one floor.",
+          "id": "gnss_velocity_std",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m/s",
+          "value": 0.15000000596046448
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_VELOCITY_STD_FLOOR_MPS_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "baro_std_m",
+        "input": 2.5,
+        "target": 2.5,
+        "decoder": {
+          "description": "Configured altitude sigma; R = sigma squared. Provider recommendations never clamp this value.",
+          "id": "baro_std_m",
+          "representation": "sigma",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 2.5
+        },
+        "symbol": "SYSTEM_ESTIMATOR_BAROMETER_ALTITUDE_STD_M_OVERRIDE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_1d_soft",
+        "input": 6.635000228881836,
+        "target": 6.635000228881836,
+        "decoder": {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_1d_soft",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 6.635000228881836
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_1D_SOFT_THRESHOLD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_1d_hard",
+        "input": 10.82800006866455,
+        "target": 10.82800006866455,
+        "decoder": {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_1d_hard",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 10.82800006866455
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_1D_HARD_THRESHOLD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_2d_soft",
+        "input": 9.210000038146973,
+        "target": 9.210000038146973,
+        "decoder": {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_2d_soft",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 9.210000038146973
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_2D_SOFT_THRESHOLD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_2d_hard",
+        "input": 13.815999984741211,
+        "target": 13.815999984741211,
+        "decoder": {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_2d_hard",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 13.815999984741211
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_2D_HARD_THRESHOLD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_3d_soft",
+        "input": 11.345000267028809,
+        "target": 11.345000267028809,
+        "decoder": {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_3d_soft",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 11.345000267028809
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_3D_SOFT_THRESHOLD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_3d_hard",
+        "input": 16.266000747680664,
+        "target": 16.266000747680664,
+        "decoder": {
+          "description": "Dimensionless actual NIS threshold. Hard must exceed soft after float32 rounding.",
+          "id": "nis_3d_hard",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 16.266000747680664
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_3D_HARD_THRESHOLD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_max_r_scale",
+        "input": 10.0,
+        "target": 10.0,
+        "decoder": {
+          "description": "Actual dimensionless cap already used by soft gating; not a multiplier of a hidden default.",
+          "id": "nis_max_r_scale",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 10.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_MAX_R_SCALE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_velocity_vertical_scale",
+        "input": 1.75,
+        "target": 1.75,
+        "decoder": {
+          "description": "GNSS vertical velocity standard deviation scale; continuous NIS rejection alone never authorizes recovery.",
+          "id": "gnss_velocity_vertical_scale",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 1.75
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_VELOCITY_VERTICAL_SCALE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_reacquire_outage_ms",
+        "input": 300,
+        "target": 300,
+        "decoder": {
+          "description": "Existing KF6 GNSS fusion recovery is enabled by default. This threshold requires an outage; continuous NIS rejection alone is insufficient. It does not restart the receiver, reset the origin, or grant preflight readiness.",
+          "id": "gnss_reacquire_outage_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 300
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_REACQUIRE_OUTAGE_MS",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_position_measurement_delay_ms",
+        "input": 0,
+        "target": 0,
+        "decoder": {
+          "description": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+          "id": "gnss_position_measurement_delay_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_POSITION_MEASUREMENT_DELAY_MS",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_velocity_measurement_delay_ms",
+        "input": 270,
+        "target": 270,
+        "decoder": {
+          "description": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+          "id": "gnss_velocity_measurement_delay_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 270
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_VELOCITY_MEASUREMENT_DELAY_MS",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "baro_measurement_delay_ms",
+        "input": 0,
+        "target": 0,
+        "decoder": {
+          "description": "Experimental fixed-lag delay. Receive-only timestamp fallback; trusted MCU sample epochs bypass this delay. Hard maximum reserves history scheduling margin.",
+          "id": "baro_measurement_delay_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_BARO_MEASUREMENT_DELAY_MS",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_enable",
+        "input": 1,
+        "target": 1,
+        "decoder": {
+          "description": "Enable GNSS position self-check. Actual onboard value.",
+          "id": "gnss_integrity_enable",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "1",
+          "value": 1
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_ENABLE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_max_gap_ms",
+        "input": 120,
+        "target": 120,
+        "decoder": {
+          "description": "Maximum evidence sample gap. Actual onboard value.",
+          "id": "gnss_integrity_max_gap_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 120
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_MAX_GAP_MS",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_error_threshold_m",
+        "input": 10.0,
+        "target": 10.0,
+        "decoder": {
+          "description": "Error threshold for GNSS-native horizontal position/velocity closure.",
+          "id": "gnss_integrity_error_threshold_m",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 10.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_ERROR_THRESHOLD_M",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_recovery_threshold_m",
+        "input": 4.0,
+        "target": 4.0,
+        "decoder": {
+          "description": "Retired in quality revision 3: saved legacy value only, not executed. Revision 2 logs retain their original meaning.",
+          "id": "gnss_integrity_recovery_threshold_m",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 4.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_RECOVERY_THRESHOLD_M",
+        "lifecycle": "legacy_read_only"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_suspect_duration_ms",
+        "input": 2000,
+        "target": 2000,
+        "decoder": {
+          "description": "Retired in quality revision 3: saved legacy value only, not executed. Revision 2 logs retain their original meaning.",
+          "id": "gnss_integrity_suspect_duration_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 2000
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_SUSPECT_DURATION_MS",
+        "lifecycle": "legacy_read_only"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_reject_duration_ms",
+        "input": 5000,
+        "target": 5000,
+        "decoder": {
+          "description": "Retired in quality revision 3: saved legacy value only, not executed. Revision 2 logs retain their original meaning.",
+          "id": "gnss_integrity_reject_duration_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 5000
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_REJECT_DURATION_MS",
+        "lifecycle": "legacy_read_only"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_recovery_duration_ms",
+        "input": 8000,
+        "target": 8000,
+        "decoder": {
+          "description": "Retired in quality revision 3: saved legacy value only, not executed. Revision 2 logs retain their original meaning.",
+          "id": "gnss_integrity_recovery_duration_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 8000
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_RECOVERY_DURATION_MS",
+        "lifecycle": "legacy_read_only"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_position_r_scale",
+        "input": 4.0,
+        "target": 4.0,
+        "decoder": {
+          "description": "Revision 3 bounds continuous closure-error weighting in [1, this value]. Values above 4 are rejected; legacy values are never clamped.",
+          "id": "gnss_integrity_position_r_scale",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 4.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_POSITION_R_SCALE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_hacc_max_m",
+        "input": 6.0,
+        "target": 6.0,
+        "decoder": {
+          "description": "Retired in quality revision 3: saved legacy value only, not executed. Revision 2 logs retain their original meaning.",
+          "id": "gnss_integrity_hacc_max_m",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m",
+          "value": 6.0
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_HACC_MAX_M",
+        "lifecycle": "legacy_read_only"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "gnss_integrity_sacc_max_mps",
+        "input": 1.2,
+        "target": 1.2000000476837158,
+        "decoder": {
+          "description": "Retired in quality revision 3: saved legacy value only, not executed. Revision 2 logs retain their original meaning.",
+          "id": "gnss_integrity_sacc_max_mps",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "m/s",
+          "value": 1.2000000476837158
+        },
+        "symbol": "SYSTEM_ESTIMATOR_GNSS_INTEGRITY_SACC_MAX_MPS",
+        "lifecycle": "legacy_read_only"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_soft_enabled",
+        "input": 1,
+        "target": 1,
+        "decoder": {
+          "description": "Explicit gate switch (0 disabled, 1 enabled); finite thresholds remain unchanged.",
+          "id": "nis_soft_enabled",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "1",
+          "value": 1
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_SOFT_ENABLED",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "nis_hard_enabled",
+        "input": 1,
+        "target": 1,
+        "decoder": {
+          "description": "Explicit gate switch (0 disabled, 1 enabled); finite thresholds remain unchanged.",
+          "id": "nis_hard_enabled",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "1",
+          "value": 1
+        },
+        "symbol": "SYSTEM_ESTIMATOR_NIS_HARD_ENABLED",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "fusion_timing_mode",
+        "input": 1,
+        "target": 1,
+        "decoder": {
+          "description": "Mode 2 is experimental: a delayed primary plus an independent complete present state/covariance predictor. Exact replay requires horizon request/status and original body/step/initial-state streams. Hardware timing and flight qualification are unproven.",
+          "id": "fusion_timing_mode",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "1",
+          "value": 1
+        },
+        "symbol": "SYSTEM_FUSION_TIMING_MODE",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.estimator.kf6",
+        "id": "fusion_horizon_ms",
+        "input": 300,
+        "target": 300,
+        "decoder": {
+          "description": "Used only by timing mode 2. The primary runs behind input present; an independent complete state and covariance predictor supplies present output. Configured rates and fixed queue capacity must be reviewed.",
+          "id": "fusion_horizon_ms",
+          "representation": "value",
+          "storage_type": "int32",
+          "unit": "ms",
+          "value": 300
+        },
+        "symbol": "SYSTEM_FUSION_HORIZON_MS",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.control.pid",
+        "id": "kp",
+        "input": 1.5,
+        "target": 1.5,
+        "decoder": {
+          "description": "Actual scalar mathematical input; no hardware deployment claim.",
+          "id": "kp",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 1.5
+        },
+        "symbol": "SYSTEM_CONTROL_PID_KP",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.control.pid",
+        "id": "ki",
+        "input": 0.15000000596046448,
+        "target": 0.15000000596046448,
+        "decoder": {
+          "description": "Actual scalar mathematical input; no hardware deployment claim.",
+          "id": "ki",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1/s",
+          "value": 0.15000000596046448
+        },
+        "symbol": "SYSTEM_CONTROL_PID_KI",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.control.pid",
+        "id": "kd",
+        "input": 0.3499999940395355,
+        "target": 0.3499999940395355,
+        "decoder": {
+          "description": "Actual scalar mathematical input; no hardware deployment claim.",
+          "id": "kd",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "s",
+          "value": 0.3499999940395355
+        },
+        "symbol": "SYSTEM_CONTROL_PID_KD",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.control.pid",
+        "id": "derivative_tau_s",
+        "input": 0.019999999552965164,
+        "target": 0.019999999552965164,
+        "decoder": {
+          "description": "Actual scalar mathematical input; no hardware deployment claim.",
+          "id": "derivative_tau_s",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "s",
+          "value": 0.019999999552965164
+        },
+        "symbol": "SYSTEM_CONTROL_PID_DERIVATIVE_TAU_S",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.control.pid",
+        "id": "integral_limit",
+        "input": 0.20000000298023224,
+        "target": 0.20000000298023224,
+        "decoder": {
+          "description": "Actual scalar mathematical input; no hardware deployment claim.",
+          "id": "integral_limit",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 0.20000000298023224
+        },
+        "symbol": "SYSTEM_CONTROL_PID_INTEGRAL_LIMIT",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.control.pid",
+        "id": "output_limit",
+        "input": 0.4000000059604645,
+        "target": 0.4000000059604645,
+        "decoder": {
+          "description": "Actual scalar mathematical input; no hardware deployment claim.",
+          "id": "output_limit",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "1",
+          "value": 0.4000000059604645
+        },
+        "symbol": "SYSTEM_CONTROL_PID_OUTPUT_LIMIT",
+        "lifecycle": "active"
+      },
+      {
+        "owner": "silverstar.algorithm.control.pid",
+        "id": "sample_period_s",
+        "input": 0.009999999776482582,
+        "target": 0.009999999776482582,
+        "decoder": {
+          "description": "Actual scalar mathematical input; no hardware deployment claim.",
+          "id": "sample_period_s",
+          "representation": "value",
+          "storage_type": "float32",
+          "unit": "s",
+          "value": 0.009999999776482582
+        },
+        "symbol": "SYSTEM_CONTROL_PID_SAMPLE_PERIOD_S",
+        "lifecycle": "active"
+      }
+    ]
+  }
+]

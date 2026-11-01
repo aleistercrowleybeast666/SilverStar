@@ -1,0 +1,202 @@
+..F.F.F..                                                                [100%]
+================================== FAILURES ===================================
+_ test_private_hardware_edits_cancel_without_model_settings_or_cache_write[cancel-flight] _
+
+self = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000212D6E58F30>
+component_id = 'silverstar.board.flight_controller_0_3'
+
+    def Component_Get(self, component_id: str) -> PluginManifest:
+        try:
+>           return self._components[component_id]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'silverstar.board.flight_controller_0_3'
+
+apps\SCG\src\silverstar_fccg\plugins\catalog.py:422: KeyError
+
+The above exception was the direct cause of the following exception:
+
+qapp = <PySide6.QtWidgets.QApplication(0x212d249c350) at 0x00000212D65CFB40>
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/gui/pytest-v1/test_private_hardware_edits_ca0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000212D65BDE00>
+target = 'flight', cancel = 'cancel'
+
+    @pytest.mark.parametrize('target', ('flight', 'ground'))
+    @pytest.mark.parametrize('cancel', ('cancel', 'escape', 'close'))
+    def test_private_hardware_edits_cancel_without_model_settings_or_cache_write(qapp, workspace_root, tmp_path, monkeypatch, target, cancel):
+        service = FccgService(workspace_root)
+        model = service.ProjectDraft_Create('private')
+        before = deepcopy(model.Dictionary_Get())
+        settings = tmp_path/'settings.ini'; settings.write_bytes(b'[existing]\nkeep=true\n')
+        cache = tmp_path/'cache'; cache.mkdir(); (cache/'keep.bin').write_bytes(b'original')
+        files = {path: path.read_bytes() for path in tmp_path.rglob('*') if path.is_file()}
+        monkeypatch.setattr(service, 'CubeMxProject_Import', lambda *_args, **_kwargs: pytest.fail('import before Apply'))
+        monkeypatch.setattr(QFileDialog, 'getExistingDirectory', lambda *_args: str(tmp_path/'not-imported'))
+        dialog = HardwareTransactionDialog(Translator('zh_CN'), model, service, target)
+        assert not dialog.findChildren(QMainWindow)
+        dialog.show(); qapp.processEvents()
+        dialog._Import_Select(True)
+        if target == 'flight':
+>           dialog.controller._BoardSelection_Change('silverstar.board.flight_controller_0_3')
+
+apps\SCG\tests\test_hardware_transaction.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\ui\hardware_editing.py:400: in _BoardSelection_Change
+    board = self._service.Plugin_Get(board_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\app\service.py:587: in Plugin_Get
+    return self.catalog.Component_Get(component_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000212D6E58F30>
+component_id = 'silverstar.board.flight_controller_0_3'
+
+    def Component_Get(self, component_id: str) -> PluginManifest:
+        try:
+            return self._components[component_id]
+        except KeyError as error:
+>           raise PluginCatalogError(f"Unknown component: {component_id}") from error
+E           silverstar_fccg.plugins.catalog.PluginCatalogError: Unknown component: silverstar.board.flight_controller_0_3
+
+apps\SCG\src\silverstar_fccg\plugins\catalog.py:424: PluginCatalogError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: This plugin does not support propagateSizeHints()
+QtWarningMsg: This plugin does not support propagateSizeHints()
+QtWarningMsg: This plugin does not support propagateSizeHints()
+QtWarningMsg: This plugin does not support propagateSizeHints()
+_ test_private_hardware_edits_cancel_without_model_settings_or_cache_write[escape-flight] _
+
+self = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000212DA121550>
+component_id = 'silverstar.board.flight_controller_0_3'
+
+    def Component_Get(self, component_id: str) -> PluginManifest:
+        try:
+>           return self._components[component_id]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'silverstar.board.flight_controller_0_3'
+
+apps\SCG\src\silverstar_fccg\plugins\catalog.py:422: KeyError
+
+The above exception was the direct cause of the following exception:
+
+qapp = <PySide6.QtWidgets.QApplication(0x212d249c350) at 0x00000212D65CFB40>
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/gui/pytest-v1/test_private_hardware_edits_ca2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000212D6E5A580>
+target = 'flight', cancel = 'escape'
+
+    @pytest.mark.parametrize('target', ('flight', 'ground'))
+    @pytest.mark.parametrize('cancel', ('cancel', 'escape', 'close'))
+    def test_private_hardware_edits_cancel_without_model_settings_or_cache_write(qapp, workspace_root, tmp_path, monkeypatch, target, cancel):
+        service = FccgService(workspace_root)
+        model = service.ProjectDraft_Create('private')
+        before = deepcopy(model.Dictionary_Get())
+        settings = tmp_path/'settings.ini'; settings.write_bytes(b'[existing]\nkeep=true\n')
+        cache = tmp_path/'cache'; cache.mkdir(); (cache/'keep.bin').write_bytes(b'original')
+        files = {path: path.read_bytes() for path in tmp_path.rglob('*') if path.is_file()}
+        monkeypatch.setattr(service, 'CubeMxProject_Import', lambda *_args, **_kwargs: pytest.fail('import before Apply'))
+        monkeypatch.setattr(QFileDialog, 'getExistingDirectory', lambda *_args: str(tmp_path/'not-imported'))
+        dialog = HardwareTransactionDialog(Translator('zh_CN'), model, service, target)
+        assert not dialog.findChildren(QMainWindow)
+        dialog.show(); qapp.processEvents()
+        dialog._Import_Select(True)
+        if target == 'flight':
+>           dialog.controller._BoardSelection_Change('silverstar.board.flight_controller_0_3')
+
+apps\SCG\tests\test_hardware_transaction.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\ui\hardware_editing.py:400: in _BoardSelection_Change
+    board = self._service.Plugin_Get(board_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\app\service.py:587: in Plugin_Get
+    return self.catalog.Component_Get(component_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000212DA121550>
+component_id = 'silverstar.board.flight_controller_0_3'
+
+    def Component_Get(self, component_id: str) -> PluginManifest:
+        try:
+            return self._components[component_id]
+        except KeyError as error:
+>           raise PluginCatalogError(f"Unknown component: {component_id}") from error
+E           silverstar_fccg.plugins.catalog.PluginCatalogError: Unknown component: silverstar.board.flight_controller_0_3
+
+apps\SCG\src\silverstar_fccg\plugins\catalog.py:424: PluginCatalogError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: This plugin does not support propagateSizeHints()
+QtWarningMsg: This plugin does not support propagateSizeHints()
+QtWarningMsg: This plugin does not support propagateSizeHints()
+QtWarningMsg: This plugin does not support propagateSizeHints()
+_ test_private_hardware_edits_cancel_without_model_settings_or_cache_write[close-flight] _
+
+self = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000212DA85A8E0>
+component_id = 'silverstar.board.flight_controller_0_3'
+
+    def Component_Get(self, component_id: str) -> PluginManifest:
+        try:
+>           return self._components[component_id]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'silverstar.board.flight_controller_0_3'
+
+apps\SCG\src\silverstar_fccg\plugins\catalog.py:422: KeyError
+
+The above exception was the direct cause of the following exception:
+
+qapp = <PySide6.QtWidgets.QApplication(0x212d249c350) at 0x00000212D65CFB40>
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/gui/pytest-v1/test_private_hardware_edits_ca4')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000212DAC75850>
+target = 'flight', cancel = 'close'
+
+    @pytest.mark.parametrize('target', ('flight', 'ground'))
+    @pytest.mark.parametrize('cancel', ('cancel', 'escape', 'close'))
+    def test_private_hardware_edits_cancel_without_model_settings_or_cache_write(qapp, workspace_root, tmp_path, monkeypatch, target, cancel):
+        service = FccgService(workspace_root)
+        model = service.ProjectDraft_Create('private')
+        before = deepcopy(model.Dictionary_Get())
+        settings = tmp_path/'settings.ini'; settings.write_bytes(b'[existing]\nkeep=true\n')
+        cache = tmp_path/'cache'; cache.mkdir(); (cache/'keep.bin').write_bytes(b'original')
+        files = {path: path.read_bytes() for path in tmp_path.rglob('*') if path.is_file()}
+        monkeypatch.setattr(service, 'CubeMxProject_Import', lambda *_args, **_kwargs: pytest.fail('import before Apply'))
+        monkeypatch.setattr(QFileDialog, 'getExistingDirectory', lambda *_args: str(tmp_path/'not-imported'))
+        dialog = HardwareTransactionDialog(Translator('zh_CN'), model, service, target)
+        assert not dialog.findChildren(QMainWindow)
+        dialog.show(); qapp.processEvents()
+        dialog._Import_Select(True)
+        if target == 'flight':
+>           dialog.controller._BoardSelection_Change('silverstar.board.flight_controller_0_3')
+
+apps\SCG\tests\test_hardware_transaction.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\SCG\src\silverstar_fccg\ui\hardware_editing.py:400: in _BoardSelection_Change
+    board = self._service.Plugin_Get(board_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\SCG\src\silverstar_fccg\app\service.py:587: in Plugin_Get
+    return self.catalog.Component_Get(component_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <silverstar_fccg.plugins.catalog.PluginCatalog object at 0x00000212DA85A8E0>
+component_id = 'silverstar.board.flight_controller_0_3'
+
+    def Component_Get(self, component_id: str) -> PluginManifest:
+        try:
+            return self._components[component_id]
+        except KeyError as error:
+>           raise PluginCatalogError(f"Unknown component: {component_id}") from error
+E           silverstar_fccg.plugins.catalog.PluginCatalogError: Unknown component: silverstar.board.flight_controller_0_3
+
+apps\SCG\src\silverstar_fccg\plugins\catalog.py:424: PluginCatalogError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: This plugin does not support propagateSizeHints()
+QtWarningMsg: This plugin does not support propagateSizeHints()
+QtWarningMsg: This plugin does not support propagateSizeHints()
+QtWarningMsg: This plugin does not support propagateSizeHints()
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_hardware_transaction.py::test_private_hardware_edits_cancel_without_model_settings_or_cache_write[cancel-flight]
+FAILED apps\SCG\tests\test_hardware_transaction.py::test_private_hardware_edits_cancel_without_model_settings_or_cache_write[escape-flight]
+FAILED apps\SCG\tests\test_hardware_transaction.py::test_private_hardware_edits_cancel_without_model_settings_or_cache_write[close-flight]
+3 failed, 6 passed in 27.69s

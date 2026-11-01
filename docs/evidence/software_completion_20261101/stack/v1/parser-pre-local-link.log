@@ -1,0 +1,35 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_________ test_local_link_subroutine_is_not_function_entry_recursion __________
+
+    def test_local_link_subroutine_is_not_function_entry_recursion():
+        _, proof = Analyze("""
+     8000000: b500 push {lr}
+     8000002: f000 f000 bl 8000010 <entry+0x10>
+     8000006: b084 sub sp, #16
+     8000008: b004 add sp, #16
+     800000a: bd00 pop {pc}
+     8000010: b401 push {r0}
+     8000012: bc01 pop {r0}
+     8000014: 4770 bx lr
+    """, "08000000 g F .text 00000016 entry\n")
+>       assert proof["edges"] == set()
+E       AssertionError: assert {'entry'} == set()
+E         
+E         Extra items in the left set:
+E         'entry'
+E         Use -v to get more diff
+
+apps\SCG\tests\test_stack_arm.py:78: AssertionError
+____ test_recursive_local_link_subroutine_is_rejected_even_with_zero_frame ____
+
+    def test_recursive_local_link_subroutine_is_rejected_even_with_zero_frame():
+>       with pytest.raises(ValueError, match="Recursive local linked subroutine"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_stack_arm.py:83: Failed
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_stack_arm.py::test_local_link_subroutine_is_not_function_entry_recursion
+FAILED apps\SCG\tests\test_stack_arm.py::test_recursive_local_link_subroutine_is_rejected_even_with_zero_frame
+2 failed, 19 deselected in 0.74s

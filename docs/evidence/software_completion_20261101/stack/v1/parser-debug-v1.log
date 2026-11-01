@@ -1,0 +1,14 @@
+BEGIN f407
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v1\probe_debug.py", line 9, in <module>
+    g=m.StackGraph_Load(root/relative,'Debug','D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-')
+  File "D:\python_software\SilverStar\apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py", line 5174, in StackGraph_Load
+    raise ValueError("Expected exactly one linked ELF in the selected configuration")
+ValueError: Expected exactly one linked ELF in the selected configuration
+BEGIN h743
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v1\probe_debug.py", line 9, in <module>
+    g=m.StackGraph_Load(root/relative,'Debug','D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-')
+  File "D:\python_software\SilverStar\apps\SCG\plugins\builtin\silverstar_core_0_1_0\payload\Tools\check_task_stacks.py", line 5174, in StackGraph_Load
+    raise ValueError("Expected exactly one linked ELF in the selected configuration")
+ValueError: Expected exactly one linked ELF in the selected configuration

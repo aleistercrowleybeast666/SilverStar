@@ -1,0 +1,10 @@
+{
+  "pre": {
+    "queue_full_boundary": 1,
+    "queue_not_ready": 1
+  },
+  "post": {
+    "queue_full_boundary": 0,
+    "queue_not_ready": 0
+  }
+}

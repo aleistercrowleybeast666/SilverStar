@@ -1,0 +1,86 @@
+"""Retain this task's logs, selected generated sources, and actual linked artifacts."""
+
+import hashlib
+import json
+from pathlib import Path
+import shutil
+
+
+ROOT = Path('D:/python_software/SilverStar')
+WORK = ROOT / '.work/0.1.3-software-completion-20261101/usb/owners-v2'
+EVIDENCE = ROOT / 'docs/evidence/software_completion_20261101/usb/owners-v2'
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def copy(source, destination):
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(source, destination)
+    assert digest(source) == digest(destination)
+
+
+def retain_sources(directory, paths):
+    rows = []
+    for source in sorted(set(paths)):
+        identity = digest(source)
+        destination = EVIDENCE / 'source-objects' / (identity + source.suffix)
+        if destination.exists():
+            assert digest(destination) == identity
+        else:
+            copy(source, destination)
+        rows.append({'source': str(source), 'sha256': identity,
+                     'retained': destination.relative_to(EVIDENCE).as_posix()})
+    destination = EVIDENCE / directory / 'source-map.json'
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text(json.dumps(rows, indent=2), encoding='utf8')
+
+
+for source in WORK.iterdir():
+    if source.is_file() and source.suffix in {'.log', '.exit', '.md'}:
+        copy(source, EVIDENCE / source.name)
+
+for phase in ('pre', 'post1', 'post2', 'workflow', 'metadata-pre', 'admission-final', 'workflow-final'):
+    directory = WORK / phase
+    sources = []
+    for source in directory.rglob('*'):
+        if not source.is_file():
+            continue
+        if source.suffix in {'.log', '.json'}:
+            copy(source, EVIDENCE / phase / source.relative_to(directory))
+        elif source.suffix in {'.c', '.h', '.patch'}:
+            sources.append(source)
+    retain_sources(phase, sources)
+
+full = WORK / 'full'
+assert (full / 'summary.json').is_file(), 'Full validator has not finished'
+assert (WORK / 'full.exit').is_file(), 'Full validator process has not exited'
+for source in full.iterdir():
+    if source.is_file():
+        copy(source, EVIDENCE / 'full' / source.name)
+for part in ('f103', 'f407'):
+    directory = full / 'native' / part
+    sources = []
+    for source in directory.rglob('*'):
+        if not source.is_file():
+            continue
+        relative = source.relative_to(directory)
+        if source.suffix in {'.json', '.patch', '.elf', '.map', '.su', '.bin'} or source.name in {
+            'Makefile', 'README.txt', 'LICENSE-SilverStar.txt', 'owning-template-Makefile.txt'
+        }:
+            copy(source, EVIDENCE / 'full' / part / relative)
+        if source.suffix in {'.c', '.h', '.patch'}:
+            sources.append(source)
+    retain_sources('full/' + part, sources)
+
+copy(Path(__file__), EVIDENCE / 'archive.py.txt')
+copy(WORK / 'equivalence.py', EVIDENCE / 'equivalence.py.txt')
+(EVIDENCE / 'archive-replay.json').write_text(json.dumps({
+    'original_run_path': str(Path(__file__)), 'sha256': digest(Path(__file__)),
+    'retained': 'archive.py.txt', 'purpose': 'raw one-time execution snapshot, not a production entry point',
+}, indent=2), encoding='utf8')
+files = {path.relative_to(EVIDENCE).as_posix(): digest(path)
+         for path in EVIDENCE.rglob('*') if path.is_file() and path.name != 'evidence-manifest.json'}
+(EVIDENCE / 'evidence-manifest.json').write_text(json.dumps(files, indent=2), encoding='utf8')
+print('retained', len(files), 'files;', sum(path.stat().st_size for path in EVIDENCE.rglob('*') if path.is_file()), 'bytes')

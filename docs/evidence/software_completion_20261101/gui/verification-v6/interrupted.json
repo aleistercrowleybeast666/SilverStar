@@ -1,0 +1,5 @@
+{
+  "completed": false,
+  "reason": "Native desktop and independent Qt reproduction confirmed a parentless radio-power editor from the inactive target prevents QApplication exit after Cancel. Intermediate suite interrupted to fix ownership and add real subprocess lifecycle coverage.",
+  "claim": "No full-suite PASS claimed."
+}

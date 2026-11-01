@@ -1,0 +1,27 @@
+mingw32-make: Entering directory 'D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/stack/v5/b/h743/Flight_Controller'
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_maintenance_uart.ps1
+Maintenance UART source/IOC matched 921600/8N1; no source overwritten
+"FCCG_BUILD_ARTIFACT|ELF|build/FCCG/SilverStar_H743ZI/Debug/SilverStar_0_1_3.elf"
+python Tools/check_task_stacks.py --config Debug --memory-layout legacy --prefix "D:\Arm GNU Toolchain\14.3 rel1\bin/arm-none-eabi-"
+FCCG_PROGRESS|STACK_REPORT|PLAN|1
+FCCG_PROGRESS|STACK_REPORT|BEGIN|1|1|ELF and stack budget
+FIRMWARE_STACK_REPORT|D:\python_software\SilverStar\.work\0.1.3-software-completion-20261101\stack\v5\b\h743\Flight_Controller\build\FCCG\SilverStar_H743ZI\Debug\stack-budget.json
+Device: configured=2560 estimate=1664 margin=896
+INS: configured=3072 estimate=2268 margin=804
+Estimator: configured=5120 estimate=3472 margin=1648
+Flight: configured=4096 estimate=2164 margin=1932
+Logger: configured=3072 estimate=2016 margin=1056
+Serial: configured=6144 estimate=3116 margin=3028
+Telemetry: configured=4096 estimate=2012 margin=2084
+Idle: configured=512 estimate=256 margin=256
+{
+  "indicator_in_production_init": true,
+  "alignment_start_deferred": true,
+  "flight_processes_alignment": true,
+  "communication_does_not_process_alignment": true,
+  "all_enabled_tasks_budgeted": true
+}
+SOFTWARE BOUND PASS
+MSP/main/ISR: configured=8192 estimate=5292 margin=2900
+FCCG_PROGRESS|STACK_REPORT|DONE|1|1|ELF and stack budget
+mingw32-make: Leaving directory 'D:/python_software/SilverStar/.work/0.1.3-software-completion-20261101/stack/v5/b/h743/Flight_Controller'

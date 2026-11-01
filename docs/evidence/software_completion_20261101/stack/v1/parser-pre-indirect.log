@@ -1,0 +1,61 @@
+FFF                                                                      [100%]
+================================== FAILURES ===================================
+_ test_stack_budget_rejects_all_register_indirect_call_forms[ 8000004: 4798 blxne r3\n] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_stack_budget_rejects_all_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002241A6769E0>
+instruction = ' 8000004: 4798 blxne r3\n'
+
+    @pytest.mark.parametrize("instruction", [
+        " 8000004: 4798 blxne r3\n",
+        " 8000004: 469f mov pc, r3\n",
+        " 8000004: f8d3 f000 ldr.w pc, [r3]\n",
+    ])
+    def test_stack_budget_rejects_all_register_indirect_call_forms(tmp_path, monkeypatch, instruction):
+        root = _ElfFixture_Create(tmp_path, monkeypatch, serial=instruction)
+>       with pytest.raises(ValueError, match="Unresolved stack usage"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_stack_budget.py:147: Failed
+_ test_stack_budget_rejects_all_register_indirect_call_forms[ 8000004: 469f mov pc, r3\n] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_stack_budget_rejects_all_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002241A6763F0>
+instruction = ' 8000004: 469f mov pc, r3\n'
+
+    @pytest.mark.parametrize("instruction", [
+        " 8000004: 4798 blxne r3\n",
+        " 8000004: 469f mov pc, r3\n",
+        " 8000004: f8d3 f000 ldr.w pc, [r3]\n",
+    ])
+    def test_stack_budget_rejects_all_register_indirect_call_forms(tmp_path, monkeypatch, instruction):
+        root = _ElfFixture_Create(tmp_path, monkeypatch, serial=instruction)
+>       with pytest.raises(ValueError, match="Unresolved stack usage"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_stack_budget.py:147: Failed
+_ test_stack_budget_rejects_all_register_indirect_call_forms[ 8000004: f8d3 f000 ldr.w pc, [r3]\n] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/pytest/test_stack_budget_rejects_all_2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002241AB0C170>
+instruction = ' 8000004: f8d3 f000 ldr.w pc, [r3]\n'
+
+    @pytest.mark.parametrize("instruction", [
+        " 8000004: 4798 blxne r3\n",
+        " 8000004: 469f mov pc, r3\n",
+        " 8000004: f8d3 f000 ldr.w pc, [r3]\n",
+    ])
+    def test_stack_budget_rejects_all_register_indirect_call_forms(tmp_path, monkeypatch, instruction):
+        root = _ElfFixture_Create(tmp_path, monkeypatch, serial=instruction)
+>       with pytest.raises(ValueError, match="Unresolved stack usage"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+apps\SCG\tests\test_stack_budget.py:147: Failed
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_stack_budget.py::test_stack_budget_rejects_all_register_indirect_call_forms[ 8000004: 4798 blxne r3\n]
+FAILED apps\SCG\tests\test_stack_budget.py::test_stack_budget_rejects_all_register_indirect_call_forms[ 8000004: 469f mov pc, r3\n]
+FAILED apps\SCG\tests\test_stack_budget.py::test_stack_budget_rejects_all_register_indirect_call_forms[ 8000004: f8d3 f000 ldr.w pc, [r3]\n]
+3 failed, 54 deselected in 2.89s

@@ -1,0 +1,14 @@
+BEGIN f407
+TIME 22.393407800002024
+UNBOUNDED {'Reset_Handler'}
+INDIRECT {'__libc_init_array', 'IMU_Poll', 'disk_read', 'LegacyAir_FrameValidate.part.0', 'disk_status', 'Estimator_MeasurementResultConvert', 'GnssNeoM9n_Process', 'SystemLifecycle_AttitudeReasonGet', 'SilverStarAssert_Fail', 'disk_initialize', 'register_tm_clones', 'SystemDeviceStartup_Tick', 'disk_ioctl', 'prvPortStartFirstTask', 'deregister_tm_clones', 'disk_write', 'SystemSensorStatus_DescriptorsRefresh', 'HAL_DMA_IRQHandler', 'HAL_UART_IRQHandler', 'SilverStarAssert_ObjectCheck', 'HAL_DMA_Init'}
+RESET {'SystemInit', '__libc_init_array', 'main'}
+DSUB 12
+Reset_Handler [('0x804a624', 'ldr.w', 'sp, [pc, #108]\t@ 804a694 <LoopFillZeroCcmBss+0x10>')]
+BEGIN h743
+TIME 13.290397699995083
+UNBOUNDED {'Reset_Handler'}
+INDIRECT {'SensorRegister_Write', '__libc_init_array', 'SensorImu_Verify', 'disk_read', 'LegacyAir_FrameValidate.part.0', 'disk_status', 'GnssNeoM9n_Process', 'UART_SetConfig', 'SilverStarAssert_Fail', 'disk_initialize', 'register_tm_clones', 'SensorImu_Read', 'SystemDeviceStartup_Tick', 'disk_ioctl', 'SensorRegister_Read', 'HAL_DMA_Abort_IT', 'SilverStarAssert_Check', 'prvPortStartFirstTask', 'deregister_tm_clones', 'disk_write', 'SystemSensorStatus_DescriptorsRefresh', 'HAL_DMA_IRQHandler', 'HAL_UART_IRQHandler', 'SilverStarAssert_ObjectCheck', 'SensorImu_ProcessConfigure', 'HAL_DMA_Init'}
+RESET {'SystemInit', '__libc_init_array', 'ExitRun0Mode', 'main'}
+DSUB 12
+Reset_Handler [('0x804e844', 'ldr.w', 'sp, [pc, #56]\t@ 804e880 <LoopFillZerobss+0xe>')]
