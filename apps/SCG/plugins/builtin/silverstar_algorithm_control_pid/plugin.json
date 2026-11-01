@@ -5,7 +5,7 @@
   "type": "algorithm",
   "class": "control",
   "version": "0.1.0",
-  "description": "Host/target mathematical core; no actuator hardware driver or mission dispatcher claimed.",
+  "description": "Bounded mathematical core with an explicit 10 ms research mission adapter; no electrical actuator driver.",
   "requires": {
     "components": [],
     "resources": [],
@@ -36,12 +36,20 @@
     ]
   },
   "metadata": {
-    "maturity": "mathematical_core_only",
+    "maturity": "research_core_and_explicit_task",
     "deployment_ready": false,
     "blocking_reasons": [
-      "No target actuator driver or mission adapter registered."
+      "Research sink has no electrical actuator driver or hardware timing qualification."
     ],
-    "generated_interface": "ControlPid_ProjectConfigGet; mathematical consumer, no dispatch"
+    "generated_interface": "ControlPid_ProjectConfigGet; opt-in ControlResearch runtime with a bounded memory sink",
+    "research_task_contract": "silverstar.control-research-runtime/1",
+    "research_task_output": {
+      "quantity": "requested_body_y_torque",
+      "axis": "body-Y",
+      "unit": "N*m",
+      "nm_per_core_output_unit": 1.0,
+      "maximum_absolute_torque_nm": 1.0
+    }
   },
   "algorithm_parameters": {
     "schema_id": "silverstar.algorithm-parameters/1.0",
