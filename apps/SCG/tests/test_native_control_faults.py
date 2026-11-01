@@ -9,6 +9,7 @@ from types import SimpleNamespace
 import pytest
 
 import test_usb_lifecycle_normal as normal
+from usb_descriptor_cases import DESCRIPTOR_FAULTS, DescriptorCases_Run
 from test_round2_targets import _GroundBoardProject_Get
 
 
@@ -127,9 +128,13 @@ def test_exact_generated_control_faults(exact_control, tmp_path):
         'assert(d==&hUsbDeviceFS);if((ep&0x7FU)==0U){ep0_ll_calls++;if(fail_ep0_tx_once){fail_ep0_tx_once=0U;return USBD_FAIL;}}tx_ptr')
     source = _Replace_Once(source, 'if(ep==0x01U && fail_prepare_once!=0U)',
         'if(ep==0U){ep0_ll_calls++;if(fail_ep0_rx_once){fail_ep0_rx_once=0U;return USBD_FAIL;}}\n if(ep==0x01U && fail_prepare_once!=0U)')
-    source = _Replace_Once(source, 'int main(int argc,char **argv)', FAULTS + '\nint main(int argc,char **argv)')
+    descriptor = DESCRIPTOR_FAULTS if exact_control[0] == 'F407' else ''
+    source = _Replace_Once(source, 'int main(int argc,char **argv)', FAULTS + descriptor + '\nint main(int argc,char **argv)')
     source = _Replace_Once(source, ' if(strcmp(argv[1],"control-boundaries")==0)',
         ' if(ControlFault(argv[1])){printf("PASS EP0 %s\\n",argv[1]);return 0;}\n if(strcmp(argv[1],"control-boundaries")==0)')
+    if descriptor:
+        source = _Replace_Once(source, ' if(ControlFault(argv[1]))',
+            ' if(DescriptorFault(argv[1])){return 0;}\n if(ControlFault(argv[1]))')
     (tmp_path / 'fault.c').write_text(source, encoding='utf8')
     command = [str(tmp_path / 'fault.c') if item.endswith('/normal.c') or item.endswith('\\normal.c') else
                str(tmp_path / 'fault.exe') if item.endswith('/normal.exe') or item.endswith('\\normal.exe') else item
@@ -145,6 +150,8 @@ def test_exact_generated_control_faults(exact_control, tmp_path):
         invocation = [str(tmp_path / 'fault.exe'), scenario]
         result = subprocess.run(invocation, capture_output=True, text=True, timeout=20)
         runs.append({'command': invocation, 'exit': result.returncode, 'stdout': result.stdout, 'stderr': result.stderr})
+    if descriptor:
+        runs += DescriptorCases_Run(tmp_path / 'fault.exe')
     receipt = {'part': exact_control[0], 'model_sha256': baseline['model_sha256'],
                'compiled_generated_sources_sha256': baseline['compiled_generated_sources_sha256'],
                'harness_sha256': hashlib.sha256(source.encode()).hexdigest(),

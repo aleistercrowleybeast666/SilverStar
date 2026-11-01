@@ -13,7 +13,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from silverstar_fccg.core.task import TaskContext
-from silverstar_fccg.generator.native_usb_graph import NativeUsbDigest_Get
+from silverstar_fccg.generator.native_usb_graph import NativeUsbDigest_Get, NativeUsbHeapSymbols_Validate
 from silverstar_fccg.hardware.native_machine_contract import (
     NativeArmAttributes_Validate,
     NativeIndependentVectors_Validate,
@@ -105,6 +105,7 @@ def _Command_Run(command: list[str], directory: Path, context: TaskContext, rows
 def NativeUsbBuild_Run(graph: dict, output: Path, compiler: Path, context: TaskContext,
                        *, analyzer: bool = False, verify_inputs=None) -> tuple[Path, dict]:
     """Retain failures/cancellation; a receipt never certifies firmware acceptance."""
+    required_symbols = [*_SYMBOLS, *NativeUsbHeapSymbols_Validate(graph.get('required_link_symbols', []))]
     directory = output / ("analysis-" if analyzer else "compile-")
     directory = directory.with_name(directory.name + uuid4().hex)
     directory.mkdir()
@@ -158,7 +159,7 @@ def NativeUsbBuild_Run(graph: dict, output: Path, compiler: Path, context: TaskC
             run([compiler, *flags, *graph["defines"], "-x", "assembler-with-cpp", "-c", source, "-o", obj])
             objects.append(obj)
         elf = directory / "usb-native.elf"
-        run([compiler, *objects, *flags, *("-Wl,-u," + s for s in _SYMBOLS),
+        run([compiler, *objects, *flags, *("-Wl,-u," + s for s in required_symbols),
             "-Wl,--gc-sections,-Map=" + str(elf.with_suffix(".map")), "-T" + graph["linker"],
             "-specs=nano.specs", "-lc", "-lm", "-lnosys", "-o", elf])
         def tool(name):
@@ -166,7 +167,7 @@ def NativeUsbBuild_Run(graph: dict, output: Path, compiler: Path, context: TaskC
         attributes = run([tool("readelf"), "-A", elf])
         NativeArmAttributes_Validate(attributes, core=graph["core"], fpu=graph["fpu"], hard_float=bool(graph["fpu"]))
         symbols = run([tool("nm"), "-n", elf])
-        if any(" " + symbol + "\n" not in symbols for symbol in _SYMBOLS):
+        if any(" " + symbol + "\n" not in symbols for symbol in required_symbols):
             raise ValueError("Native USB linked transport symbol is missing")
         vectors = directory / "vectors.bin"
         run([tool("objcopy"), "--dump-section", ".isr_vector=" + str(vectors), elf])

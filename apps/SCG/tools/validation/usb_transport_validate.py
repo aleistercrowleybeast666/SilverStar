@@ -32,6 +32,7 @@ def Integrated_Validate(reference, output, run, *, baseline=False, f407_referenc
     """
     from silverstar_fccg.app.usb_transport import UsbTransport_Export, UsbTransport_Plan, _Project_Read
     from silverstar_fccg.generator.multi_target import _Makefile_Render
+    from silverstar_fccg.generator.native_usb_graph import NativeUsbGraph_Resolve
     from silverstar_fccg.hardware.native_machine_contract import (
         NativeArmAttributes_Validate, NativeIndependentVectors_Validate)
     from silverstar_fccg.hardware.usb_transport_profiles import CONTROLLER_CONTRACTS
@@ -76,10 +77,13 @@ def Integrated_Validate(reference, output, run, *, baseline=False, f407_referenc
         if build["cpu"] != ["-mcpu=" + core]:
             raise ValueError("reviewed compiler CPU differs from native inventory")
         replacements = {entry["original"]: entry["derived"] for entry in manifest["replacements"]}
+        product_graph = NativeUsbGraph_Resolve(plan, native, root) if not baseline else None
+        product_sources = {entry['input']: entry for entry in product_graph['sources']} if product_graph else {}
+        required_symbols = [*symbols_required, *(product_graph['required_link_symbols'] if product_graph else [])]
         sources = []
         for source in build["sources"]:
-            sources.append({"input": source, "compiled": str(root / replacements[source]) if source in replacements
-                            else str(native / source), "policy": "vendor"})
+            sources.append(dict(product_sources[source]) if product_graph else
+                {"input": source, "compiled": str(native / source), "policy": "vendor"})
         for source in manifest["additional_sources"]:
             dest = root / "Generated/UsbTransport" / source
             dest.parent.mkdir(parents=True, exist_ok=True)
@@ -101,7 +105,7 @@ def Integrated_Validate(reference, output, run, *, baseline=False, f407_referenc
         graph = {"scope": "UNMODIFIED_NATIVE_BASELINE" if baseline else "USB_ONLY_NATIVE_CALLBACK_REPLACEMENTS_NOT_GROUND_ADMISSION",
             "sources": sources, "assembly": [str(native / p) for p in build["asm_sources"]],
             "includes": list(map(str, includes)), "defines": defines, "mcu_flags": flags,
-            "linker": str(native / build["linker_script"][0]), "required_symbols": symbols_required,
+            "linker": str(native / build["linker_script"][0]), "required_symbols": required_symbols,
             "independent_irq_slots": slots, "input_hashes": plan.files_sha256,
             "profile": manifest["profile"], "critical_contracts": "NOT_PROVEN"}
         graph['controller_contract'] = contract
@@ -169,7 +173,7 @@ def Integrated_Validate(reference, output, run, *, baseline=False, f407_referenc
                 objects.append(str(obj))
             elf = build_dir / "usb-transport-integrated.elf"
             link = run(part + "-" + mode + "-link", ["arm-none-eabi-gcc", *objects, *flags,
-                *("-Wl,-u," + name for name in symbols_required),
+                *("-Wl,-u," + name for name in required_symbols),
                 "-Wl,--gc-sections,-Map=" + str(elf.with_suffix(".map")), "-T" + graph["linker"],
                 "-specs=nano.specs", "-lc", "-lm", "-lnosys", "-o", str(elf)], root)
             if re.search(r"\bwarning:", link):
@@ -177,7 +181,7 @@ def Integrated_Validate(reference, output, run, *, baseline=False, f407_referenc
             attributes = run(part + "-" + mode + "-attributes", ["arm-none-eabi-readelf", "-A", str(elf)], root)
             NativeArmAttributes_Validate(attributes, core=core, fpu=fpu, hard_float=bool(fpu))
             symbols = run(part + "-" + mode + "-symbols", ["arm-none-eabi-nm", "-n", str(elf)], root)
-            assert all(" " + symbol + "\n" in symbols for symbol in symbols_required)
+            assert all(" " + symbol + "\n" in symbols for symbol in required_symbols)
             vector = build_dir / "vectors.bin"
             run(part + "-" + mode + "-vectors", ["arm-none-eabi-objcopy", "--dump-section", ".isr_vector=" + str(vector), str(elf)], root)
             NativeIndependentVectors_Validate(vector.read_bytes(), symbols, slots)
@@ -382,6 +386,8 @@ def main():
         "src/silverstar_fccg/hardware/usb_transport_capabilities.py", "src/silverstar_fccg/hardware/usb_transport_profiles.py",
         "src/silverstar_fccg/generator/native_usb_data.py", "src/silverstar_fccg/generator/native_usb_indexed.py",
         "src/silverstar_fccg/generator/native_hal.py", "src/silverstar_fccg/generator/multi_target.py",
+        "src/silverstar_fccg/generator/native_no_heap.py", "src/silverstar_fccg/generator/native_usb_graph.py",
+        "src/silverstar_fccg/build/native_usb.py", "src/silverstar_fccg/generator/native_control.py",
         "src/silverstar_fccg/generator/ground_usb_control.py", "src/silverstar_fccg/generator/ground_c071_usb.py",
         "src/silverstar_fccg/hardware/native_machine_contract.py",
         "plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_power_of_ten.ps1",
@@ -404,6 +410,8 @@ def main():
         str(SCG / "tests/test_usb_transport.py"), str(SCG / "tests/test_ground_usb_cdc_ring.py"),
         str(SCG / "tests/test_usb_transport_capabilities.py"), str(SCG / "tests/test_usb_transport_integration.py"),
         str(SCG / "tests/test_usb_transport_control.py"),
+        str(SCG / "tests/test_usb_resource_owners.py"),
+        str(SCG / "tests/test_native_no_heap.py"),
         "-p", "no:cacheprovider", "--basetemp=" + str(output / "host"), "-q"])
     if args.host_only:
         print("Host/export checks complete; no target build requested in this run", flush=True)

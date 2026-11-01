@@ -20,31 +20,51 @@ _Static_assert(offsetof(SystemInertialIncrement,
 _Static_assert(offsetof(SystemInertialIncrement,
                         delta_velocity_b_sculling_corrected) == 28U,
                "body delta-velocity layout changed");
-/* The existing ESKF selection appends two raw BODY half-samples. Memory
- * placement (legacy/auto) must not change either interface layout. */
+/* Full-width admitted-input history follows the existing 40-byte prefix.
+ * The ARM layout probe records these exact values for all three selections. */
+_Static_assert(offsetof(SystemInertialIncrement, provenance) == 40U,
+               "inertial provenance layout changed");
+_Static_assert(sizeof(SystemNavigationProvenance) == 16U,
+               "provenance storage must preserve all generations and source bits");
+_Static_assert(sizeof(((SystemNavigationProvenance *)0)->calibration_generation) == 4U,
+               "calibration generation must remain 32 bits");
+_Static_assert(sizeof(((SystemNavigationProvenance *)0)->sensor_epoch) == 4U,
+               "sensor epoch must remain 32 bits");
+_Static_assert(sizeof(((SystemNavigationProvenance *)0)->source_instance) == 4U,
+               "source identity must remain 32 bits");
+_Static_assert(offsetof(SystemNavigationProvenance, calibration_generation) == 0U,
+               "provenance calibration layout changed");
+_Static_assert(offsetof(SystemNavigationProvenance, sensor_epoch) == 4U,
+               "provenance epoch layout changed");
+_Static_assert(offsetof(SystemNavigationProvenance, source_instance) == 8U,
+               "provenance source layout changed");
+_Static_assert(offsetof(SystemNavigationProvenance, valid) == 12U,
+               "provenance validity layout changed");
+/* ESKF appends two raw BODY half-samples after provenance. Memory placement
+ * (legacy/auto) must not change any of these interface layouts. */
 #if (defined(SYSTEM_BUILD_ESKF15_ENABLED) && (SYSTEM_BUILD_ESKF15_ENABLED != 0U)) || \
     (defined(SYSTEM_BUILD_AUGMENTED_ENABLED) && (SYSTEM_BUILD_AUGMENTED_ENABLED != 0U))
-_Static_assert(offsetof(SystemInertialIncrement, body_gyro_radps) == 40U,
+_Static_assert(offsetof(SystemInertialIncrement, body_gyro_radps) == 56U,
                "ESKF body gyro layout changed");
 _Static_assert(sizeof(((SystemInertialIncrement *)0)->body_gyro_radps) == 24U,
                "ESKF requires two three-axis gyro half-samples");
-_Static_assert(offsetof(SystemInertialIncrement, body_accel_mps2) == 64U,
+_Static_assert(offsetof(SystemInertialIncrement, body_accel_mps2) == 80U,
                "ESKF body acceleration layout changed");
 _Static_assert(sizeof(((SystemInertialIncrement *)0)->body_accel_mps2) == 24U,
                "ESKF requires two three-axis acceleration half-samples");
-_Static_assert(offsetof(SystemInertialIncrement, quality_flags) == 88U,
+_Static_assert(offsetof(SystemInertialIncrement, quality_flags) == 104U,
                "ESKF quality flags layout changed");
 #if defined(SYSTEM_BUILD_AUGMENTED_ENABLED) && (SYSTEM_BUILD_AUGMENTED_ENABLED != 0U)
-_Static_assert(offsetof(SystemInertialIncrement, interval_start_timestamp_us) == 96U,
+_Static_assert(offsetof(SystemInertialIncrement, interval_start_timestamp_us) == 112U,
                "Augmented estimator acquisition boundary layout changed");
-_Static_assert(sizeof(SystemInertialIncrement) == 104U,
+_Static_assert(sizeof(SystemInertialIncrement) == 120U,
                "Augmented estimator inertial increment layout changed");
 #else
-_Static_assert(sizeof(SystemInertialIncrement) == 96U,
+_Static_assert(sizeof(SystemInertialIncrement) == 112U,
                "ESKF inertial increment layout changed");
 #endif
 #else
-_Static_assert(sizeof(SystemInertialIncrement) == 40U,
+_Static_assert(sizeof(SystemInertialIncrement) == 56U,
                "non-ESKF inertial increment layout changed");
 #endif
 
@@ -64,6 +84,7 @@ int main(void)
     SystemInertialIncrement increment = {0};
     SystemPowerSample power = {0};
 
+    TEST_CHECK(increment.provenance.valid == 0U);
     increment.timestamp_us = 100U;
     increment.sequence = 4U;
     increment.dt_s = 0.01f;

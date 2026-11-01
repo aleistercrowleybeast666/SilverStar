@@ -112,10 +112,18 @@ def NativeF407Control_Integrate(files,native,proof,replacements,callback_owned,b
         text=text.replace(include,include+'\n#include "pc_usb_control.h"',1)
         functions=('USBD_CDC_Setup','USBD_CDC_EP0_RxReady') if name=='usbd_cdc.c' else (
             'USBD_LL_SetupStage','USBD_LL_DataOutStage','USBD_LL_DataInStage')
+        if name=='usbd_cdc.c':
+            functions += ('USBD_CDC_GetFSCfgDesc','USBD_CDC_GetHSCfgDesc','USBD_CDC_GetOtherSpeedCfgDesc')
+            start,_opening,end=NativeC_FunctionSpanGet(control_text,'PcUsbControl_DescriptorCapacityGet')
+            text += '\n' + control_text[start:end]
+            text = text.replace('#include "pc_usb_control.h"',
+                '#include "pc_usb_control.h"\nextern USBD_HandleTypeDef hUsbDeviceFS;',1)
+        else:
+            functions += ('USBD_GetEpDesc',)
         for function in functions:
             start,_opening,end=NativeC_FunctionSpanGet(control_text,function)
             body=control_text[start:end]
-            if name=='usbd_core.c' and function!='USBD_LL_SetupStage':
+            if name=='usbd_core.c' and function in ('USBD_LL_DataOutStage','USBD_LL_DataInStage'):
                 stage='DataOut' if function=='USBD_LL_DataOutStage' else 'DataIn'
                 anchor='    /* Get the class index relative to this interface */'
                 if body.count(anchor)!=1:raise ValueError('Indexed bulk/control endpoint owner changed')

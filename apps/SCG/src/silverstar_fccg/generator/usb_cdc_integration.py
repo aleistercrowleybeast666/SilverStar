@@ -234,13 +234,24 @@ def _Control_Compose(files: dict[str, bytes], owners: dict[str, str],
         library_prefix=library, reviewed_prefix='ControlComposition/')
     derived['usbd_cdc_if.c'] = temporary[replacements[callback]].decode()
     derived['usbd_ioreq.c'] = temporary[replacements[owners['usbd_ioreq.c']]].decode()
+    profile_indexed = json.loads(temporary['Generated/usb_control_manifest.json'])['profile'] == 'classic-f407-indexed-v1'
     for name, functions in (
             ('usbd_cdc.c', ('USBD_CDC_Setup', 'USBD_CDC_EP0_RxReady')),
             ('usbd_core.c', ('USBD_LL_SetupStage', 'USBD_LL_DataOutStage', 'USBD_LL_DataInStage'))):
         control = temporary[replacements[owners[name]]].decode()
         text = derived[name]
+        if profile_indexed:
+            if name == 'usbd_cdc.c':
+                functions += ('USBD_CDC_GetFSCfgDesc', 'USBD_CDC_GetHSCfgDesc', 'USBD_CDC_GetOtherSpeedCfgDesc')
+                start, _opening, end = NativeC_FunctionSpanGet(control, 'PcUsbControl_DescriptorCapacityGet')
+                text += '\n' + control[start:end]
+            else:
+                functions += ('USBD_GetEpDesc',)
         include = '#include "usbd_cdc.h"' if name == 'usbd_cdc.c' else '#include "usbd_core.h"'
         text = text.replace(include, include + '\n#include "pc_usb_control.h"', 1)
+        if profile_indexed and name == 'usbd_cdc.c':
+            text = text.replace('#include "pc_usb_control.h"',
+                '#include "pc_usb_control.h"\nextern USBD_HandleTypeDef hUsbDeviceFS;', 1)
         for function in functions:
             start, _opening, end = NativeC_FunctionSpanGet(control, function)
             replacement = control[start:end]
@@ -251,7 +262,7 @@ def _Control_Compose(files: dict[str, bytes], owners: dict[str, str],
                 control_first, control_last = _Ep0Block_Span(replacement)
                 replacement = bulk[:first] + replacement[control_first:control_last] + bulk[last:]
             text = _Replace(text, function, replacement)
-            if name == 'usbd_core.c':
+            if name == 'usbd_core.c' and function != 'USBD_GetEpDesc':
                 text = _Insert(text, function, '  if (pdev != &hUsbDeviceFS) { return USBD_FAIL; }')
         if name == 'usbd_cdc.c':
             marker = '  memset(hcdc, 0, sizeof(*hcdc));'
@@ -264,8 +275,8 @@ def _Control_Compose(files: dict[str, bytes], owners: dict[str, str],
 
 
 def _Ll_Derive(original: bytes, indexed: bool, pcd: str) -> str:
-    # Keep native clock/PMA/FIFO setup; do not import the older private F407
-    # derivative's changed FIFO layout into a generic transport kit.
+    # Only the byte-exact reviewed F407 LL owner receives the existing fixed
+    # initializer. All other user LL configuration remains authoritative.
     source = original.decode('utf-8-sig')
     class_guard = ('(hUsbDeviceFS.classId != 0U) || (hUsbDeviceFS.pClass[0] == NULL)'
         if indexed else 'hUsbDeviceFS.pClass == NULL')
@@ -291,8 +302,13 @@ def _Ll_Derive(original: bytes, indexed: bool, pcd: str) -> str:
     source = source.replace('#include "usb_cdc_retire.h"', '#include "usb_cdc_retire.h"\n'
         'extern USBD_HandleTypeDef hUsbDeviceFS;\n'
         '_Static_assert(USE_HAL_PCD_REGISTER_CALLBACKS == 0U, "USB integration requires fixed callbacks");', 1)
-    # Existing CubeMX wrappers propagate HAL returns. Preserve their signatures.
-    # LL init remains vendor-owned; faults in PMA/FIFO/init are not certified.
+    from silverstar_fccg.generator.native_usb_indexed import LL_SHA, NativeUsbIndexedLl_Derive
+    if indexed and pcd == 'hpcd_USB_OTG_FS' and hashlib.sha256(original).hexdigest() == LL_SHA:
+        reviewed = NativeUsbIndexedLl_Derive(original).decode()
+        start, _opening, end = NativeC_FunctionSpanGet(reviewed, 'USBD_LL_Init')
+        initializer = reviewed[start:end].replace('PcByteStream_OnUsbReset()', 'UsbCdc_LinkDown()').replace(
+            'NativeRuntime_TransportFaultRecord()', 'UsbCdc_LinkDown()')
+        source = _Replace(source, 'USBD_LL_Init', initializer)
     return source
 
 
@@ -502,14 +518,58 @@ def UsbCdcIntegration_Render(files: dict[str, bytes], owners: dict[str, str]) ->
         entries.append({'original': original, 'derived': destination,
             'original_sha256': hashlib.sha256(files[original]).hexdigest(),
             'derived_sha256': hashlib.sha256(rendered[destination]).hexdigest()})
+    from silverstar_fccg.generator.native_no_heap import NativeNoHeap_FilesRender
+    from silverstar_fccg.hardware.usb_transport_capabilities import UsbBuild_Inspect, UsbNativeConfiguration_Describe
+    build, reasons = UsbBuild_Inspect(files)
+    if reasons:
+        raise ValueError('Unresolved no-heap source inventory: ' + ', '.join(reasons))
+    heap_sources = [path for path in build['sources'] if PurePosixPath(path).name == 'sysmem.c']
+    if len(heap_sources) > 1:
+        raise ValueError('Native USB requires a unique heap ABI owner')
+    heap_policy = {'allocation': 'NO_SYSMEM_OWNER', 'other_allocation': 'NOT_PROVEN', 'required_link_symbols': []}
+    if heap_sources:
+        original = heap_sources[0]
+        heap_files = NativeNoHeap_FilesRender(files[original])
+        rendered.update({path.removeprefix('Generated/'): body for path, body in heap_files.items()})
+        destination = 'Src/native_no_heap.c'
+        patch = ''.join(difflib.unified_diff(files[original].decode('utf-8-sig').splitlines(True),
+            rendered[destination].decode().splitlines(True), fromfile=original, tofile=destination)).encode()
+        rendered[destination + '.patch'] = patch
+        entry = {'original': original, 'derived': destination, 'policy': 'first_party',
+            'original_sha256': hashlib.sha256(files[original]).hexdigest(),
+            'derived_sha256': hashlib.sha256(rendered[destination]).hexdigest(),
+            'patch': destination + '.patch', 'patch_sha256': hashlib.sha256(patch).hexdigest()}
+        entries.append(entry)
+        heap_policy = {**entry, 'owner': 'native_no_heap.NativeNoHeap_FilesRender',
+            'allocation': 'REJECT_ALL_REQUESTS', 'required_link_symbols': ['_sbrk']}
+    native_configuration = UsbNativeConfiguration_Describe(files, owners)
+    derived_configuration = UsbNativeConfiguration_Describe(
+        {**files, owners['usbd_conf.c']: derived['usbd_conf.c'].encode()}, owners)
+    init_changed = _FunctionText_Get(files[owners['usbd_conf.c']].decode('utf-8-sig'), 'USBD_LL_Init') != _FunctionText_Get(
+        derived['usbd_conf.c'], 'USBD_LL_Init')
     rendered['lifecycle-integration.json'] = json.dumps({'profile': profile,
         'scope': 'CLASSIC_CALLBACKS_CONNECTED_HARDWARE_NOT_PROVEN', 'replacements': entries,
         'additional_sources': ['Src/usb_cdc_transport.c', 'Src/usb_cdc_port.c', 'Src/usb_cdc_retire.c',
                                'Src/pc_usb_control.c'],
+        'heap_policy': heap_policy,
+        'configuration_derivation': {
+            'status': 'REVIEWED_EXACT_F407_FIFO' if init_changed else 'NATIVE_INITIALIZATION_UNCHANGED',
+            'owner': owners['usbd_conf.c'],
+            'original_sha256': hashlib.sha256(files[owners['usbd_conf.c']]).hexdigest(),
+            'derived_sha256': hashlib.sha256(derived['usbd_conf.c'].encode()).hexdigest(),
+            'native': native_configuration, 'derived': derived_configuration,
+            'hardware_acceptance': 'NOT_PROVEN'},
         'control_policy': {'owner': 'ground_usb_control.NativeControl_Integrate',
             'scope': 'single classic FS CDC interface 0; bounded metadata and checked LL failure retirement',
             'owned_files_sha256': {path: hashlib.sha256(body).hexdigest() for path, body in control_files.items()}},
         'limits': ['Suspend invalidates session; resume stays offline until bus reset/reconfiguration.',
             'Complete critical contracts, arbitrary standard requests and physical cancellation NOT PROVEN.',
-            'Native clock/PMA/FIFO/startup unchanged. No MCU-family admission.']}, indent=2).encode()
+            'Native clock/PMA/startup unchanged. Only byte-exact reviewed F407 FIFO initialization is derived.',
+            'Original configuration facts remain in configuration_derivation.native; derived geometry still needs runtime guard.',
+            'No MCU-family admission.']}, indent=2).encode()
     return rendered
+
+
+def _FunctionText_Get(source: str, name: str) -> str:
+    start, _opening, end = NativeC_FunctionSpanGet(source, name)
+    return source[start:end]

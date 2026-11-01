@@ -32,6 +32,27 @@ records the inspected source bytes and all kit file hashes. The normal Ground
 GUI/target admission is unchanged; this explicit backend/CLI is the experimental
 generic entry point.
 
+With `--integrate`, the separate kit also declares byte-bound source replacements;
+compile each listed replacement instead of its original. The input project is
+still read-only. The reviewed F407 LL source alone receives the existing fixed
+128/64/64/16-word RX/EP0/EP1/EP2 initialization, with checked HAL returns; other
+user LL configurations remain unchanged. `configuration_derivation` preserves
+both the original declaration facts and the derived declaration facts. Neither
+is a measurement of hardware registers; the runtime geometry guard still applies.
+An exact recognized `sysmem.c` is replaced by the existing rejecting `_sbrk` ABI,
+compiled as first-party code and force-linked. All requests, including zero and
+negative sizes, return failure. Unknown heap owners are refused for that
+replacement, never silently edited. Absence of `sysmem.c` is not proof that the
+remaining native graph has no other allocator.
+
+The indexed F407 control derivative obtains descriptor capacity from the actual
+class-owned object identity, rejects malformed complete chains and preserves all
+three existing configuration getters. Each getter validates all endpoint records
+before changing any packet size/interval field. On a malformed descriptor it
+publishes zero length and software STALL while preserving a valid backing pointer
+for the native standard-request code. This is a bounded software failure path,
+not a complete USB critical-contract acceptance.
+
 | Input capability | Kit decision | Remaining conditions |
 | --- | --- | --- |
 | Complete traditional ST USB Device, single FS CDC, legacy class handle | Experimental adapter | Explicit lifecycle/RX hooks, one serialized owner, real build and hardware checks |

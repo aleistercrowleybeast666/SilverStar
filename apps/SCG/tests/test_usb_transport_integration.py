@@ -95,11 +95,12 @@ def test_component_profile_preserves_unrelated_project_and_clock_text(integrated
     changed = dict(native)
     owner = plan.owners['main.c']
     changed[owner] = b'/* independent user project note */\n' + changed[owner]
+    conf = plan.owners['usbd_conf.c']
+    changed[conf] = b'/* user LL configuration must stay authoritative */\n' + changed[conf]
     profile = UsbIntegrationProfile_Get(changed)
     assert profile['binding'] == 'REVIEWED_COMPONENTS_AND_HOOK_REGIONS'
     rendered = UsbCdcIntegration_Render(changed, plan.owners)
     assert rendered['Native/' + owner].startswith(b'/* independent user project note */')
-    conf = plan.owners['usbd_conf.c']
     assert _Function_Get(rendered['Native/' + conf].decode(), 'USBD_LL_Init') == _Function_Get(
         native[conf].decode('utf-8-sig'), 'USBD_LL_Init')
     assert _Function_Get(rendered['Native/' + owner].decode(), 'SystemClock_Config') == _Function_Get(
@@ -517,8 +518,9 @@ int main(int argc,char **argv)
  if(strcmp(argv[1],"readback")==0) { bad_readback=1U; }
  if(strncmp(argv[1],"call-",5)==0) { fail_call=(unsigned)strtoul(argv[1]+5,NULL,10); }
  uint8_t result=USBD_LL_Init(&hUsbDeviceFS);
- if(result!=USBD_OK) { assert(fail_call && calls==fail_call);return 0; }
+ if(result!=USBD_OK) { assert((fail_init && calls==0U) || (fail_call && calls==fail_call));return 0; }
  assert(result==USBD_OK);
+ if(strcmp(argv[1],"require-valid-layout")==0) { assert(UsbCdcRetire_ConfigurationCheck(&hUsbDeviceFS)==USB_CDC_OK);return 0; }
  if(strcmp(argv[1],"valid-layout")==0) { @VALID@ assert(UsbCdcRetire_ConfigurationCheck(&hUsbDeviceFS)==USB_CDC_OK);return 0; }
  if(strcmp(argv[1],"overlap")==0) { @VALID@ @OVERLAP@ assert(UsbCdcRetire_ConfigurationCheck(&hUsbDeviceFS)!=USB_CDC_OK);return 0; }
  if(strcmp(argv[1],"table-base")==0) { regs.BTABLE=64U;assert(UsbCdcRetire_ConfigurationCheck(&hUsbDeviceFS)!=USB_CDC_OK && link_down>0U);return 0; }

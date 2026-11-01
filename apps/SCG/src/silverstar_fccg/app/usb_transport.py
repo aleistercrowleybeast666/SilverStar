@@ -282,7 +282,12 @@ def UsbTransport_Export(input_path: str | Path, output_path: str | Path, *, inte
             "files_sha256": {p: hashlib.sha256(b).hexdigest() for p, b in assertion_files.items()},
         }, indent=2).encode()
         rendered["integration.json"] = json.dumps(asdict(plan), indent=2).encode()
-        rendered["usb-adaptation.json"] = json.dumps(UsbAdaptation_Describe(plan, integrated=integrate), indent=2).encode()
+        adaptation = UsbAdaptation_Describe(plan, integrated=integrate)
+        if integrate:
+            manifest = json.loads(integrated['lifecycle-integration.json'])
+            adaptation['configuration_derivation'] = manifest['configuration_derivation']
+            adaptation['heap_policy'] = manifest['heap_policy']
+        rendered["usb-adaptation.json"] = json.dumps(adaptation, indent=2).encode()
         rendered["README.txt"] = (
             "Experimental integration kit, not a ready firmware. Native project unchanged.\n"
             "See apps/SCG/docs/USB_CDC_TRANSPORT_20261013.md for all hook contracts.\n"
@@ -304,7 +309,10 @@ def UsbTransport_Export(input_path: str | Path, output_path: str | Path, *, inte
             rendered["README.txt"] += (
                 "\nOPT-IN SOURCE-BOUND INTEGRATION: lifecycle-integration.json lists exact replacements.\n"
                 "Compile each Native derivative instead of its original, never both; add all additional_sources.\n"
-                "CubeMX clock/PMA/FIFO/initialization/startup remain authoritative. Input project is unchanged.\n"
+                "Input project is unchanged. Original configuration is preserved in configuration_derivation.native.\n"
+                "Only the byte-exact reviewed F407 LL initializer gets fixed RX/EP0/EP1/EP2 FIFO geometry.\n"
+                "Other user FIFO/PMA/clock/startup configuration is not rewritten. See configuration_derivation.\n"
+                "A recognized sysmem source is replaced by the rejecting no-heap ABI; force-link its required symbols.\n"
                 "Configuration is checked before class initialization; invalid PMA/FIFO layout blocks online state.\n"
                 "Do not use the plain UsbCdc_Attach fragment alone for an integrated build.\n"
                 "Suspend invalidates the session; resume stays offline until reset/reconfiguration.\n"

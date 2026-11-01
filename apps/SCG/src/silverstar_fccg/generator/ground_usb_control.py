@@ -208,6 +208,75 @@ def NativeControl_Definitions_Validate(defines):
         raise ValueError('USB EP0 repair refuses composite or interface/function owner build aliases')
 
 
+DESCRIPTOR_CAPACITY = '''uint16_t PcUsbControl_DescriptorCapacityGet(const uint8_t *descriptor)
+{
+  _Static_assert(sizeof(USBD_CDC_CfgDesc) == PC_USB_CONFIGURATION_DESC_CAPACITY,
+      "Reviewed single CDC descriptor object capacity");
+  return (descriptor == USBD_CDC_CfgDesc) ? (uint16_t)sizeof(USBD_CDC_CfgDesc) : 0U;
+}
+'''
+
+DESCRIPTOR_WALKER = '''void *USBD_GetEpDesc(uint8_t *pConfDesc, uint8_t EpAddr)
+{
+  uint16_t capacity = PcUsbControl_DescriptorCapacityGet(pConfDesc);
+  uint32_t total;
+  uint32_t offset;
+  uint8_t *found = NULL;
+  /* Object identity establishes capacity before reading even the header. */
+  if (capacity < USB_LEN_CFG_DESC) { return NULL; }
+  total = (uint32_t)pConfDesc[2] | ((uint32_t)pConfDesc[3] << 8U);
+  if ((pConfDesc[0] != USB_LEN_CFG_DESC) || (total > capacity) ||
+      (total < USB_LEN_CFG_DESC) ||
+      ((pConfDesc[1] != USB_DESC_TYPE_CONFIGURATION) &&
+       (pConfDesc[1] != USB_DESC_TYPE_OTHER_SPEED_CONFIGURATION))) { return NULL; }
+  offset = USB_LEN_CFG_DESC;
+  for (uint32_t step = 0U; step < PC_USB_CONFIGURATION_DESC_CAPACITY; step++)
+  {
+    uint32_t length;
+    if (offset == total) { return found; }
+    if ((total - offset) < 2U) { return NULL; }
+    length = pConfDesc[offset];
+    if ((length < 2U) || (length > (total - offset))) { return NULL; }
+    if (pConfDesc[offset + 1U] == USB_DESC_TYPE_ENDPOINT)
+    {
+      if (length < USB_LEN_EP_DESC) { return NULL; }
+      if (pConfDesc[offset + 2U] == EpAddr)
+      {
+        if (found != NULL) { return NULL; }
+        found = &pConfDesc[offset];
+      }
+    }
+    /* Validate the whole chain, including records after the requested endpoint. */
+    offset += length;
+  }
+  return NULL;
+}'''
+
+
+def NativeControl_DescriptorClassDerive(text):
+    """Bind the parser to the real object and make all three getters atomic."""
+    for name in ('USBD_CDC_GetFSCfgDesc', 'USBD_CDC_GetHSCfgDesc', 'USBD_CDC_GetOtherSpeedCfgDesc'):
+        function = _Function_Get(text, name)
+        opening = function.index('{') + 1
+        function = function[:opening] + '''
+  if (length == NULL) { return NULL; }
+  *length = 0U;
+''' + function[opening:]
+        marker = '  if (pEpCmdDesc != NULL)'
+        if function.count(marker) != 1:
+            raise ValueError('Unreviewed descriptor getter endpoint owner')
+        function = function.replace(marker, '''  if ((pEpCmdDesc == NULL) || (pEpOutDesc == NULL) || (pEpInDesc == NULL))
+  {
+    PcUsbControl_Abort(&hUsbDeviceFS);
+    /* Native ctlreq writes pbuf[1] before testing length: retain a valid object,
+     * publish zero bytes, and keep software STALL visible to Setup. */
+    return USBD_CDC_CfgDesc;
+  }
+''' + marker, 1)
+        text = _Function_Replace(text, name, function)
+    return text + '\n' + DESCRIPTOR_CAPACITY
+
+
 def NativeControl_Integrate(files, callback_path, original_callback, *, library_prefix=LIB, reviewed_prefix=REVIEWED):
     LIB=library_prefix
     REVIEWED=reviewed_prefix
@@ -260,7 +329,13 @@ case CDC_SEND_BREAK:break;default:break;}return(USBD_OK);'''
             if not indexed: setup = setup.replace('  USBD_CDC_HandleTypeDef   *hcdc = (USBD_CDC_HandleTypeDef *) pdev->pClassData;\n', '')
             text = _Function_Replace(text, 'USBD_CDC_Setup', setup)
             text = _Function_Replace(text, 'USBD_CDC_EP0_RxReady', 'static uint8_t USBD_CDC_EP0_RxReady(USBD_HandleTypeDef *pdev)\n{\n  return (uint8_t)PcUsbControl_RxReady(pdev);\n}')
+            if indexed:
+                text = text.replace('#include "pc_usb_control.h"',
+                    '#include "pc_usb_control.h"\nextern USBD_HandleTypeDef hUsbDeviceFS;', 1)
+                text = NativeControl_DescriptorClassDerive(text)
         elif relative.endswith('usbd_core.c'):
+            if indexed:
+                text = _Function_Replace(text, 'USBD_GetEpDesc', DESCRIPTOR_WALKER)
             marker = '  pdev->ep0_data_len = pdev->request.wLength;'
             text = text.replace(marker, marker + '''
   PcUsbControl_Cancel(pdev);
@@ -339,7 +414,12 @@ case CDC_SEND_BREAK:break;default:break;}return(USBD_OK);'''
     files[callback_patch] = ''.join(difflib.unified_diff(original_callback.decode('utf-8-sig').replace('\r\n', '\n').splitlines(True), source.splitlines(True), fromfile=callback_path, tofile=callback_owned)).encode()
     replacements[callback_path] = callback_owned
     policy = POLICY.replace('@GUARD@', '(device->classId != 0U) ||' if indexed else '').replace('@USER@', 'device->pUserData[0]' if indexed else 'device->pUserData').replace('@DATA@', 'device->pClassDataCmsit[0]' if indexed else 'device->pClassData').replace('@CLASS@', '(device->pClass[0])' if indexed else '(device->pClass)')
-    files['Generated/Inc/pc_usb_control.h'] = HEADER.encode()
+    header = HEADER
+    if indexed:
+        header = header.replace('#include "usbd_def.h"', '#include "usbd_def.h"\n'
+            'enum { PC_USB_CONFIGURATION_DESC_CAPACITY = 67U };\n'
+            'uint16_t PcUsbControl_DescriptorCapacityGet(const uint8_t *descriptor);', 1)
+    files['Generated/Inc/pc_usb_control.h'] = header.encode()
     files['Generated/Src/pc_usb_control.c'] = policy.encode()
     manifest = {'profile':profile,'scope':'single classic FS CDC interface 0; experimental software repair',
         'owner':'SilverStar Ground EP0 integration', 'reason':'fresh bounded GET; validate SET actual count; propagate callback/LL failure',

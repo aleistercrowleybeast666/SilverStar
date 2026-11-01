@@ -15,6 +15,7 @@ import pytest
 
 import test_usb_lifecycle_normal as normal
 from test_native_control_faults import FAULTS, _Replace_Once
+from usb_descriptor_cases import DESCRIPTOR_FAULTS, DescriptorCases_Run
 from silverstar_fccg.app.usb_transport import UsbTransport_Export, _Project_Read
 
 
@@ -78,7 +79,7 @@ def test_generic_actual_ep0_boundaries_and_faults(part, tmp_path):
         'if(ep==0U){ep0_ll_calls++;if(fail_ep0_rx_once){fail_ep0_rx_once=0U;return USBD_FAIL;}}\n if(ep==0x01U && fail_prepare_once!=0U)')
     policy = 'pc_usb_control.c' in compiled
     fault_source = '#include "pc_usb_control.h"\n#include "usbd_ioreq.h"\n' + FAULTS if policy else ''
-    source += RETIRE_PORT + fault_source + r'''
+    source += RETIRE_PORT + fault_source + (DESCRIPTOR_FAULTS if part == 'f407' else '') + r'''
 int main(int argc,char **argv)
 {
  assert(argc==2);
@@ -89,9 +90,11 @@ int main(int argc,char **argv)
  if(strcmp(argv[1],"normal")==0){ControlNormal();return 0;}
  if(strcmp(argv[1],"boundaries")==0){ControlBoundaries();return 0;}
  @FAULT_CALL@
+ @DESCRIPTOR_CALL@
  return 2;
 }
-'''.replace('@FAULT_CALL@', 'if(ControlFault(argv[1])){return 0;}' if policy else '/* Pre-fix kit has no bounded EP0 policy. */')
+'''.replace('@FAULT_CALL@', 'if(ControlFault(argv[1])){return 0;}' if policy else '/* Pre-fix kit has no bounded EP0 policy. */').replace(
+        '@DESCRIPTOR_CALL@', 'if(DescriptorFault(argv[1])){return 0;}' if part == 'f407' else '')
     descriptor = re.search(r'USBD_DescriptorsTypeDef\s+(\w+)\s*=', compiled['usbd_desc.c'].decode())[1]
     source = source.replace('FS_Desc', descriptor)
     (tmp_path / 'control.c').write_text(source, encoding='utf8')
@@ -114,6 +117,8 @@ int main(int argc,char **argv)
         result = subprocess.run(invocation, capture_output=True, text=True, timeout=20)
         runs.append({'case': case, 'command': invocation, 'exit': result.returncode,
                      'stdout': result.stdout, 'stderr': result.stderr})
+    if part == 'f407':
+        runs += DescriptorCases_Run(tmp_path / 'control.exe')
     receipt = {'part': part, 'policy_present': policy, 'source_sha256': used,
                'command': command, 'compile_exit': 0, 'runs': runs,
                'harness_sha256': hashlib.sha256(source.encode()).hexdigest(),
