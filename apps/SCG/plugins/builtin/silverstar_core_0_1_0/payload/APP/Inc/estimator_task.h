@@ -10,6 +10,7 @@
 /* New flags append without reinterpreting existing bits. */
 #define ESTIMATOR_HEALTH_MAGNETIC_UNAVAILABLE (1U << 9)
 #define ESTIMATOR_HEALTH_TIMING_UNQUALIFIED (1U << 10)
+#define ESTIMATOR_HEALTH_INPUT_PROVENANCE_INVALID (1U << 11)
 
 #define ESTIMATOR_HEALTH_NONE                       0U
 #define ESTIMATOR_HEALTH_PREDICTION_QUEUE_OVERFLOW (1U << 0)
@@ -40,6 +41,8 @@ typedef struct
 {
     uint64_t timestamp_us;
     uint32_t update_sequence;
+    /* Valid only after successful propagation of source-proven admitted work. */
+    SystemNavigationProvenance attitude_provenance;
 
     float position_enu_m[3];
     float velocity_enu_mps[3];
@@ -128,6 +131,11 @@ SystemDeviceResult EstimatorTask_PreparationGet(EstimatorPreparationSnapshot *sn
 SystemDeviceResult EstimatorTask_FreezeOrigins(void);
 SystemDeviceResult EstimatorTask_InitializeMission(void);
 void EstimatorTask_AbortMission(void);
+/* INS queue loss/source discontinuity invalidates research attitude evidence
+ * immediately and for the rest of this mission, including already queued work. */
+void EstimatorTask_ControlInputInvalidate(void);
+SystemDeviceResult EstimatorTask_ControlProvenanceCheck(const SystemNavigationProvenance *provenance,
+    uint64_t timestamp_us, uint32_t sequence);
 void EstimatorTask_RollbackMissionStart(void);
 uint8_t Estimator_GetInitialStateSnapshot(
     EstimatorInitialStateSnapshot *snapshot);

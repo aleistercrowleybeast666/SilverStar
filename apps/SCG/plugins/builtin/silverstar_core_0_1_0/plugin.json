@@ -29,6 +29,8 @@
       "APP/Src/estimator_bus.c",
       "APP/Src/estimator_task.c",
       "APP/Src/flight_task.c",
+      "APP/Src/control_research.c",
+      "APP/Src/control_research_runtime.c",
       "APP/Src/imu_sample_bus.c",
       "APP/Src/ins_task.c",
       "Common/Src/common_format.c",

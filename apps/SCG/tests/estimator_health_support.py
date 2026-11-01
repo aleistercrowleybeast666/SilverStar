@@ -51,6 +51,7 @@ def health_run(project: Path, output: Path, fixture: Path) -> dict:
     source+='''
 static EstimatorRuntime s_estimator;
 static EstimatorOutputSnapshot s_snapshot, s_published_snapshot;
+static uint8_t s_control_input_invalid;
 static NavigationReplayContext s_replay;
 static NavigationReplayStorage s_replay_storage;
 static NavigationCurrentContext s_current_fusion;
@@ -88,7 +89,8 @@ extern uint8_t Estimator_HorizonCycle(uint64_t);
     source+='#include "system_lifecycle.h"\n'
     # Lifecycle type must precede its stub.
     source=source.replace('#include "system_user_config.h"','#include "system_lifecycle.h"\n#include "system_user_config.h"')
-    names=['EstimatorTask_IrqLock','EstimatorTask_IrqUnlock','EstimatorTask_SnapshotCommit','Estimator_OperationNext',
+    names=['EstimatorTask_IrqLock','EstimatorTask_IrqUnlock','EstimatorTask_SnapshotCommit',
+           'Estimator_ControlProvenanceRevoke','Estimator_OperationNext',
            'Estimator_FusionFaultGet','Estimator_CurrentResultConvert','Estimator_FusionReset',
            'Estimator_CoreHealthFlagsMap','Estimator_FaultSnapshotPublish','Estimator_ReplayFaultStop',
            'Estimator_SnapshotPublish','Estimator_AccelerationPublish','Estimator_PredictionApply','Estimator_KfPredictionApply',

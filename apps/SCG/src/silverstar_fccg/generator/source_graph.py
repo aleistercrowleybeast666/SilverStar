@@ -486,6 +486,7 @@ def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGr
         "Generated/Src/project_metadata.c",
         "Generated/Src/project_mission_parameters.c",
         "Generated/Src/project_mission_process.c",
+        "Generated/Src/project_control_research.c",
     ]
     # EIDE must compile the same selected transport union as Make, even when
     # inactive variant payloads share the selected device's source directory.

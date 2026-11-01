@@ -3,7 +3,7 @@ import re
 from pathlib import Path
 
 import pytest
-from test_stack_budget import stacks, _ElfFixture_Create, _DependencyFixture_Write
+from test_stack_budget import stacks, _ElfFixture_Create, _DependencyFixture_Write, _AssemblyFixture_Extend
 
 
 def _SdFixture(root, monkeypatch, mutation=None, family_name="stm32f1_flight"):
@@ -70,12 +70,14 @@ def _SdFixture(root, monkeypatch, mutation=None, family_name="stm32f1_flight"):
     raw = b"".join((address | 1).to_bytes(4,"little") for address in addresses.values())
     if mutation == "pointers":
         raw = b"\0" * 20
+    assembly, symbols, _ = _AssemblyFixture_Extend(original_read(["objdump", "-d"], root), extra,
+        {"AppTask_Logger": "disk_write"}, addresses)
     def read(command, cwd):
         if "objdump" in command[0] and "-s" in command:
             return "file format elf32-littlearm\n 20000000 " + " ".join(raw[i:i+4].hex() for i in range(0,16,4)) + "\n 20000010 " + raw[16:].hex() + "\n"
         text = original_read(command, cwd)
         if "objdump" in command[0]:
-            return text.replace("08000000 <AppTask_Logger>:\n", "08000000 <AppTask_Logger>:\n 8000000: f000 f000 bl 8000000 <disk_write>\n") + extra
+            return symbols if "-t" in command else assembly
         if "nm" in command[0]:
             return text + "20000000 00000014 " + ("R" if f4 else "D") + " SD_Driver\n" + "".join(f"{addr:08x} 00000020 t {name}\n" for name,addr in addresses.items())
         return text

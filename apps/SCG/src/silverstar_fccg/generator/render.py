@@ -343,6 +343,8 @@ def GeneratedFiles_Render(
     }
     from silverstar_fccg.generator.mission_process import MissionProcessFiles_Render
     files.update(MissionProcessFiles_Render(model, catalog))
+    from silverstar_fccg.generator.control_research import ControlResearchFiles_Render
+    files.update(ControlResearchFiles_Render(model, catalog))
     if "silverstar.installation.capture" in model.ComponentIds_Get():
         files["Generated/Inc/project_installation_capture.h"] = _InstallationCaptureHeader_Render(model,catalog)
     if decoder_profile is not None:
@@ -566,6 +568,7 @@ def _GeneratedModule_Render(model: ProjectModel) -> str:
         "Generated/Src/project_metadata.c",
         "Generated/Src/project_mission_parameters.c",
         "Generated/Src/project_mission_process.c",
+        "Generated/Src/project_control_research.c",
     ))
     source_lines = "\n".join(
         "  " + source + (" \\" if index < len(sources) - 1 else "")
@@ -1004,7 +1007,10 @@ def _FlightConfigHeader_Render(
                 "gnss.position" in catalog.InstanceComponent_Get(instance).provides
                 for instance in model.device_instances) else "1U"),
         ))
-    if model.hardware.mode == "custom" and model.mcu_family in (
+    if model.mcu_family == "silverstar.mcu_family.stm32f4":
+        definitions.append(("SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT",
+                            f"{_PlatformGpioContextCount_Get(model, catalog)}U"))
+    elif model.hardware.mode == "custom" and model.mcu_family in (
             "silverstar.mcu_family.stm32f1_flight", "silverstar.mcu_family.stm32h7"):
         gpio_indices = [int(resource.metadata["logical_index"])
                         for resource in model.hardware.resources
@@ -1527,6 +1533,30 @@ def _StorageBindingHeader_Render(
 {MissionRadioProfileMacros_Render(model)}
 #endif /* __PROJECT_STORAGE_BINDING_H */
 """
+
+
+def _PlatformGpioContextCount_Get(model: ProjectModel, catalog: PluginCatalog) -> int:
+    """Bound RAM by every declared GPIO, including unselected and sparse IDs."""
+    collections = (_CustomPlatformResources_Get(model, set())
+                   if model.hardware.mode == "custom"
+                   else _BoardPlatformResources_Get(catalog.Component_Get(model.board), set()))
+    indices = []
+    for entry in collections.get("gpios", []):
+        if entry.get("binding_origin") == VERIFIED_BOARD_BINDING_ORIGIN:
+            index = entry.get("fixed_logical_index")
+        elif "logical_index" in entry:
+            index = entry["logical_index"]
+        else:
+            # Legacy plugins can use an opaque C enum: preserve all interface
+            # slots unless the actual published enum determines its value.
+            match = re.fullmatch(r"PLATFORM_GPIO_([0-8])", str(entry.get("c_id", "")))
+            if match is None:
+                return 96
+            index = int(match.group(1))
+        if not isinstance(index, int) or isinstance(index, bool) or not 0 <= index < 96:
+            raise ValueError("F4 GPIO binding exceeds the platform logical slots")
+        indices.append(index)
+    return max(indices, default=0) + 1
 
 
 def _PlatformUartConfigDefines_Render(model: ProjectModel, catalog: PluginCatalog) -> str:
@@ -3671,10 +3701,12 @@ SECTION_FLAGS := -fdata-sections -ffunction-sections
 INCLUDE_FLAGS := $(addprefix -I,$(C_INCLUDES))
 DEFINE_FLAGS := $(addprefix -D,$(C_DEFS))
 FORCED_INCLUDE_FLAGS := $(addprefix -include ,$(TARGET_FORCED_INCLUDES))
+# Keep complete debug information reproducible across fresh output directories.
+SOURCE_PATH_FLAGS := -ffile-prefix-map="$(CURDIR)"=.
 
-ASFLAGS := $(MCU) $(INCLUDE_FLAGS) $(OPT) $(DEBUG_FLAGS) -Wall $(SECTION_FLAGS)
+ASFLAGS := $(MCU) $(INCLUDE_FLAGS) $(OPT) $(DEBUG_FLAGS) -Wall $(SECTION_FLAGS) $(SOURCE_PATH_FLAGS)
 CFLAGS := $(MCU) $(DEFINE_FLAGS) $(INCLUDE_FLAGS) $(OPT) $(DEBUG_FLAGS) \\
-          $(FORCED_INCLUDE_FLAGS) -std=c11 $(SECTION_FLAGS) -MMD -MP -fstack-usage
+          $(FORCED_INCLUDE_FLAGS) -std=c11 $(SECTION_FLAGS) $(SOURCE_PATH_FLAGS) -MMD -MP -fstack-usage
 ifeq ($(LISTING),1)
 LISTING_FLAGS = -Wa,-a,-ad,-alms=$(BUILD_ROOT)/$*.lst
 else

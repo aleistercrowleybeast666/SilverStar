@@ -83,37 +83,50 @@ static void SystemMissionProcess_EventsRead(SystemMissionProcessInput *input)
     input->terminated = (uint8_t)((state == SYSTEM_STATE_POSTFLIGHT) || (state == SYSTEM_STATE_FAULT));
 }
 
-static void SystemMissionProcess_ActionsProcess(void)
+static SystemMissionProcessResult SystemMissionProcess_ActionsProcess(void)
 {
     SystemMissionProcessEvent event;
     uint8_t count;
     for (count = 0U; count < 2U; count++)
     {
-        if (SystemMissionProcess_EventGet(s_action_sequence, &event) != SystemMissionProcessResult_Entered) { break; }
+        SystemMissionProcessResult read = SystemMissionProcess_EventGet(s_action_sequence, &event);
+        if (read == SystemMissionProcessResult_Unavailable) { break; }
+        if (read != SystemMissionProcessResult_Entered) { return SystemMissionProcessResult_Invalid; }
         if ((event.event_code == SYSTEM_MISSION_PROCESS_EVENT_ENTER) &&
             (event.stage_id_hash == PROJECT_MISSION_RECOVERY_STAGE_HASH))
         {
             SystemDeviceResult result = SystemFlightRecovery_StageRecoveryRequest(event.stage_id_hash);
             if ((result != SYSTEM_DEVICE_OK) && (result != SYSTEM_DEVICE_ALREADY_MATCHED))
-            { SystemLifecycle_EnterFault(0x4D504143UL); return; }
+            { return SystemMissionProcessResult_Invalid; }
         }
         s_action_sequence = event.sequence;
     }
+    return SystemMissionProcessResult_Complete;
 }
 
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
-static void SystemMissionProcess_LogProcess(void)
+static SystemMissionProcessResult SystemMissionProcess_LogProcess(void)
 {
     SystemMissionProcessEvent event;
     uint8_t count;
     for (count = 0U; count < 2U; count++)
     {
-        if (SystemMissionProcess_EventGet(s_log_sequence, &event) != SystemMissionProcessResult_Entered) { break; }
+        SystemMissionProcessResult read = SystemMissionProcess_EventGet(s_log_sequence, &event);
+        LoggerBusResult push;
+        if (read == SystemMissionProcessResult_Unavailable) { break; }
+        if (read != SystemMissionProcessResult_Entered) { return SystemMissionProcessResult_Invalid; }
         FlightLogEventId code = (event.event_code == SYSTEM_MISSION_PROCESS_EVENT_ENTER) ?
             FLIGHT_LOG_EVENT_STAGE_ENTER : FLIGHT_LOG_EVENT_STAGE_EXIT;
-        if (LoggerBus_EventPush(event.timestamp_us, code, event.stage_id_hash, event.sequence) != LOGGER_BUS_RESULT_OK) { break; }
+        push = LoggerBus_EventPush(event.timestamp_us, code, event.stage_id_hash, event.sequence);
+        /* Capacity/temporary lifecycle rejection retains the same event for a
+         * later bounded retry. A broken event/configuration contract is not an
+         * empty stream and must not be silently retried forever. */
+        if ((push == LOGGER_BUS_RESULT_FULL) || (push == LOGGER_BUS_RESULT_BUSY) ||
+            (push == LOGGER_BUS_RESULT_BAD_STATE)) { break; }
+        if (push != LOGGER_BUS_RESULT_OK) { return SystemMissionProcessResult_Invalid; }
         s_log_sequence = event.sequence;
     }
+    return SystemMissionProcessResult_Complete;
 }
 #endif
 
@@ -131,8 +144,10 @@ void SystemMissionProcess_RuntimeProcess(void)
     result = SystemMissionProcess_Step(&input);
     if (result == SystemMissionProcessResult_Invalid)
     { SystemLifecycle_EnterFault(0x4D505243UL); return; }
-    SystemMissionProcess_ActionsProcess();
+    if (SystemMissionProcess_ActionsProcess() == SystemMissionProcessResult_Invalid)
+    { SystemLifecycle_EnterFault(0x4D504143UL); return; }
 #if (SILVERSTAR_PROTOCOL_LOGGING_ENABLED != 0U)
-    SystemMissionProcess_LogProcess();
+    if (SystemMissionProcess_LogProcess() == SystemMissionProcessResult_Invalid)
+    { SystemLifecycle_EnterFault(0x4D504C47UL); }
 #endif
 }

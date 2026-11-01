@@ -1,0 +1,45 @@
+{
+  "purpose": "Synthetic callback-binding unit test inputs. Header ABI is the already reviewed V2 header; remaining bodies are frozen pre-task test inputs. This is not a compiled firmware fixture or current project admission.",
+  "files": {
+    "Devices/SensorBus/Src/sensor_imu.c": {
+      "source_commit": "34bbd38b",
+      "source": "apps/SCG/plugins/builtin/silverstar_sensor_register_bus/payload/Devices/SensorBus/Src/sensor_imu.c",
+      "sha256": "7526e305b6a047aa3a2d1db18b2c8d69165fb21cc43698022c5c0c9b96e0d9f4"
+    },
+    "Devices/SensorBus/Src/sensor_register_bus.c": {
+      "source_commit": "8b028f2",
+      "source": "apps/SCG/plugins/builtin/silverstar_sensor_register_bus/payload/Devices/SensorBus/Src/sensor_register_bus.c",
+      "sha256": "e39bdd2e172d3911a0d2c40849d20e26cd2510fc42a56154c2649c3f0423313c"
+    },
+    "Devices/SensorBus/Adapter/Src/sensor_imu_adapter.c": {
+      "source_commit": "8b028f2",
+      "source": "apps/SCG/plugins/builtin/silverstar_sensor_register_bus/payload/Devices/SensorBus/Adapter/Src/sensor_imu_adapter.c",
+      "sha256": "b477e1565cd8a7286e540497734936488104028a7af4b1da46e9ee76de9e41bd"
+    },
+    "Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c": {
+      "source_commit": "8b028f2",
+      "source": "apps/SCG/plugins/builtin/silverstar_device_imu_mpu6050/payload/Devices/IMU/MPU6050/Adapter/Src/mpu6050_instance.c",
+      "sha256": "c3b492c44a5d98fc53da74e6b3f9479c82a6bda9f7a4e4739324f3e50d14ed1b"
+    },
+    "Devices/IMU/MPU6050/Src/mpu6050_device.c": {
+      "source_commit": "8b028f2",
+      "source": "apps/SCG/plugins/builtin/silverstar_device_imu_mpu6050/payload/Devices/IMU/MPU6050/Src/mpu6050_device.c",
+      "sha256": "df5c31341ad973c6a4604217bdaa6abd0b925b0aa1029aacc70ab462b47170ab"
+    },
+    "Devices/SensorBus/Inc/sensor_imu.h": {
+      "source_commit": "34bbd38b",
+      "source": "apps/SCG/plugins/builtin/silverstar_sensor_register_bus/payload/Devices/SensorBus/Inc/sensor_imu.h",
+      "sha256": "22ff44a7b987d7a8f184f02dbd87dfff90dc6e8149e075ee15cdd0d6fe9f8dbe"
+    },
+    "Devices/SensorBus/Inc/sensor_register_bus.h": {
+      "source_commit": "8b028f2",
+      "source": "apps/SCG/plugins/builtin/silverstar_sensor_register_bus/payload/Devices/SensorBus/Inc/sensor_register_bus.h",
+      "sha256": "9ea60d3ce1b36c932fe4e73d180cc1fd2bbba0f172639b4cbda4edea440f2e47"
+    },
+    "Devices/SensorBus/Adapter/Inc/sensor_imu_adapter.h": {
+      "source_commit": "8b028f2",
+      "source": "apps/SCG/plugins/builtin/silverstar_sensor_register_bus/payload/Devices/SensorBus/Adapter/Inc/sensor_imu_adapter.h",
+      "sha256": "112b6d603c070f5901c1574fad1c11d4166fe6e367ce380af3df55fbd0392253"
+    }
+  }
+}

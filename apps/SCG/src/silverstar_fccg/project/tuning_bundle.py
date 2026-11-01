@@ -177,7 +177,7 @@ def TuningBundle_Preview(model, catalog, value: dict) -> dict:
                     "before": deepcopy(before), "after": deepcopy(after),
                     "unit": parameter.unit, "shared": bool(parameter.shared_key)})
     return {"changes": changes, "control_deployable": False,
-        "control_status": "research only; no target mission/actuator consumer",
+        "control_status": "research only; optional 10 ms mission task, body-Y torque in N*m at 1 N*m/core-output unit; memory sink, no electrical actuator driver",
         "limitations": bundle["limitations"]}
 
 
@@ -244,6 +244,19 @@ def TuningBundle_ControlCoreAttach(model, catalog, value: dict):
     return candidate
 
 
+def TuningBundle_ControlTaskAttach(model, catalog, value: dict):
+    """Explicit 10 ms task opt-in; the output is an unelectrified research sink."""
+    from silverstar_fccg.project.control_research import ControlResearch_Attach
+    bundle = TuningBundle_Validate(value)
+    control = bundle['control_research']
+    if control is None:
+        raise ParameterProfileError('tuning_bundle_no_control')
+    period = control['parameters']['sample_period_s'] if control['kind'] == 'pid' else control['design']['dt_s']
+    if not math.isclose(period, .01, rel_tol=0, abs_tol=1e-9):
+        raise ParameterProfileError('tuning_bundle_task_period_requires_10_ms')
+    return ControlResearch_Attach(TuningBundle_ControlCoreAttach(model, catalog, bundle), catalog)
+
+
 def TuningBundle_Cli() -> int:
     import argparse
     from silverstar_fccg.core.workspace import WorkspacePolicy
@@ -255,8 +268,11 @@ def TuningBundle_Cli() -> int:
     parser.add_argument("bundle", type=Path)
     parser.add_argument("--catalog", type=Path, default=Path(__file__).resolve().parents[3] / "plugins/builtin")
     parser.add_argument("--output", type=Path, help="Required for Apply; writes this explicit project path atomically")
-    parser.add_argument("--include-control-core", action="store_true",
+    control_group = parser.add_mutually_exclusive_group()
+    control_group.add_argument("--include-control-core", action="store_true",
         help="Explicit mathematical build interface only; does not register a mission/actuator driver")
+    control_group.add_argument("--include-control-task", action="store_true",
+        help="Explicit 10 ms research mission task with bounded memory sink; no electrical output or deployment qualification")
     args = parser.parse_args()
     if args.action == "apply" and args.output is None:
         parser.error("apply requires --output; preview never writes")
@@ -273,8 +289,17 @@ def TuningBundle_Cli() -> int:
                 "before": model.algorithm_parameters.get(owner_id),
                 "after": control_candidate.algorithm_parameters[owner_id],
                 "compile_mathematical_interface": True, "runtime_dispatch": False}
+        if args.include_control_task:
+            control_candidate = TuningBundle_ControlTaskAttach(model, catalog, bundle)
+            preview['control_task_preview'] = {'runtime_dispatch': True, 'period_us': 10000,
+                'sink': 'bounded_latest_research_snapshot', 'output_unit': 'N*m', 'output_axis': 'body-Y',
+                'nm_per_core_output_unit': 1.0, 'maximum_absolute_torque_nm': 1.0,
+                'electrical_output': False, 'deployable': False,
+                'function': next(row for row in control_candidate.mission_functions['functions']
+                                 if row['output'] == 'control.research.command')}
         if args.action == "apply":
-            candidate = (TuningBundle_ControlCoreAttach(model, catalog, bundle)
+            candidate = (TuningBundle_ControlTaskAttach(model, catalog, bundle) if args.include_control_task else
+                TuningBundle_ControlCoreAttach(model, catalog, bundle)
                 if args.include_control_core else TuningBundle_Apply(model, catalog, bundle))
             output = args.output.resolve()
             ProjectModel_Save(candidate, output, WorkspacePolicy(output.parent))

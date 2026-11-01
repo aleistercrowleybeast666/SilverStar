@@ -20,6 +20,8 @@ typedef struct
     float temperature_c;
     uint32_t valid_mask;
     uint32_t quality_flags; /* Device evidence, preserved without changing raw values. */
+    uint8_t canonical_source_instance; /* Captured with the actual provider read. */
+    uint8_t canonical_source_valid; /* Explicitly unknown before source selection. */
 #if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
     uint32_t source_id;
     uint32_t config_epoch;

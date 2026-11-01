@@ -86,7 +86,7 @@ SystemDeviceResult SystemStorage_MissionIdGet(uint32_t *mission_id) { *mission_i
 SystemDeviceResult SystemLogSink_HealthGet(SystemLogSinkHealth *health)
 { memset(health, 0, sizeof(*health)); health->initialized = 1U; health->session_active = 1U; health->healthy = s_storage_ready; return SYSTEM_DEVICE_OK; }
 SystemDeviceResult SystemInertial_LatestGet(SystemInertialSample *sample)
-{ memset(sample, 0, sizeof(*sample)); sample->sample_timestamp_us = s_test_now; sample->receive_timestamp_us = s_test_now; sample->sequence = (uint32_t)(s_test_now / 50000ULL); sample->accel_b_mps2[2] = SYSTEM_LOCAL_GRAVITY_MPS2; sample->valid_mask = SYSTEM_INERTIAL_VALID_ACCEL | SYSTEM_INERTIAL_VALID_GYRO; return SYSTEM_DEVICE_OK; }
+{ memset(sample, 0, sizeof(*sample)); sample->sample_timestamp_us = s_test_now; sample->receive_timestamp_us = s_test_now; sample->sequence = (uint32_t)(s_test_now / 50000ULL); sample->accel_b_mps2[2] = SYSTEM_LOCAL_GRAVITY_MPS2; sample->valid_mask = SYSTEM_INERTIAL_VALID_ACCEL | SYSTEM_INERTIAL_VALID_GYRO; sample->canonical_source_valid = 1U; return SYSTEM_DEVICE_OK; }
 
 static void Test_Collect(uint8_t gnss_available)
 {

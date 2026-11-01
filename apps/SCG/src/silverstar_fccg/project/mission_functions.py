@@ -46,7 +46,7 @@ def Function_Create(plugin_id, catalog, instance_id=None):
         'category': declaration['category'], 'execution': declaration['executions'][0],
         'start': {'kind': declaration['start'], 'stage_id': ''},
         'stop': {'kind': declaration['stop'], 'stage_id': ''},
-        'depends_on': [], 'input_bindings': {}, 'output': declaration['output']}
+        'depends_on': list(declaration.get('depends_on', [])), 'input_bindings': {}, 'output': declaration['output']}
 
 
 def Functions_Derive(model, catalog):
@@ -55,6 +55,7 @@ def Functions_Derive(model, catalog):
     functions = []
     for declaration in FunctionsCatalog_Get(catalog):
         if declaration['plugin_id'] not in selected: continue
+        if declaration.get('opt_in', False): continue
         if declaration['instance_id'] == 'calibration' and not model.modes.get('calibration'): continue
         function = Function_Create(declaration['plugin_id'], catalog)
         functions.append(function)
@@ -137,7 +138,12 @@ def FunctionsCanonical_Get(model, catalog):
     """Explicitly request the current authority's bindings, never overwrite a draft."""
     candidate = deepcopy(model)
     candidate.mission_functions = None
-    return Functions_Derive(candidate,catalog)
+    result = Functions_Derive(candidate,catalog)
+    declarations = {row['plugin_id']: row for row in FunctionsCatalog_Get(catalog)}
+    for row in (model.mission_functions or {}).get('functions', []):
+        if declarations.get(row['plugin_id'], {}).get('opt_in', False) and row['plugin_id'] in model.ComponentIds_Get():
+            result['functions'].append(Function_Create(row['plugin_id'], catalog))
+    return result
 
 
 def FunctionsStrategies_Synchronize(previous, candidate, catalog):
@@ -209,6 +215,14 @@ def Functions_Issues(model, catalog):
             Add(function, 'FUNCTION_INTERVAL_INVALID', 'Start must precede stop; the interval is [start, stop)')
         native_interval = (model.mission_process is not None and model.mission_process['execution'] == 'firmware_bounded'
                            and declaration['category'] in ('telemetry', 'recording'))
+        if declaration.get('support') == 'explicit_research_task':
+            native_interval = (model.mission_process is not None and model.mission_process['execution'] == 'firmware_bounded'
+                and function['start']['kind'] in ('mission_start', 'stage_enter')
+                and function['stop']['kind'] in ('stage_enter', 'stage_exit', 'system_landed', 'lifecycle_end'))
+            if not native_interval:
+                Add(function, 'FUNCTION_CONTROL_SCOPE', 'Research control requires a bounded mission interval after accepted START')
+            if function['instance_id'] != 'controller' or function['depends_on'] != ['estimator']:
+                Add(function, 'FUNCTION_CONTROL_DEPENDENCY', 'One controller instance must depend on the canonical estimator')
         if (model.mission_process is not None and model.mission_process['execution'] == 'firmware_bounded'
                 and declaration['output'] in ('navigation.pure_ins', 'navigation.estimate')):
             stages = model.mission_process['stages']
@@ -232,7 +246,8 @@ def Functions_Issues(model, catalog):
             upstream_start, upstream_stop = Bounds(upstream)
             if None not in (start, stop, upstream_start, upstream_stop) and (upstream_start > start or upstream_stop < stop):
                 Add(function, 'FUNCTION_INPUT_INTERVAL', 'Dependency does not cover this function interval: ' + dependency)
-        expected_dependencies = ['ins'] if function['instance_id'] == 'estimator' and 'ins' in by_id else []
+        expected_dependencies = (['estimator'] if declaration.get('support') == 'explicit_research_task' else
+            ['ins'] if function['instance_id'] == 'estimator' and 'ins' in by_id else [])
         native_dependencies = (model.mission_process is not None and model.mission_process['execution'] == 'firmware_bounded'
             and declaration['category'] in ('telemetry', 'recording')
             and all(identity in ('ins', 'estimator') and identity in by_id for identity in function['depends_on']))
@@ -249,6 +264,7 @@ def Functions_Issues(model, catalog):
                 Add(function, 'FUNCTION_INPUT_MISSING', 'Input binding is unavailable: ' + capability + ':' + identity)
     for declaration in declarations.values():
         if declaration['plugin_id'] in selected and declaration['plugin_id'] not in plugins:
+            if declaration.get('opt_in', False): continue
             if declaration['instance_id'] == 'calibration' and not model.modes.get('calibration'): continue
             issues.append(FunctionIssue(declaration['instance_id'], 'FUNCTION_SELECTED_UNBOUND',
                 'Selected plugin is missing its shared function instance: ' + declaration['plugin_id']))
@@ -319,6 +335,8 @@ def FunctionsGeneration_Require(model, catalog):
     issues = Functions_Issues(model, catalog)
     if issues:
         raise ValueError('; '.join(f'{row.code}:{row.function_id}: {row.message}' for row in issues))
+    from silverstar_fccg.project.control_research import ControlResearchBinding_Require
+    ControlResearchBinding_Require(model, catalog)
 
 
 def ParameterProfile_Build(model, catalog, plugin_id):

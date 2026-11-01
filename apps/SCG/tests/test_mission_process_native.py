@@ -170,3 +170,40 @@ def test_native_dependency_gates_on_actual_owner_ready_mask(builtin_catalog, tmp
     assert result.returncode == 0, result.stdout + result.stderr
     result = subprocess.run([str(executable)], capture_output=True, text=True, timeout=15)
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+@pytest.fixture(scope='module')
+def mission_runtime_contract_executable(native_generated_owner, tmp_path_factory):
+    root, graph = native_generated_owner
+    build = tmp_path_factory.mktemp('mission-runtime-contract')
+    command = [shutil.which('gcc'), '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror',
+               '-pedantic', '-fanalyzer', '-I', str(root / 'Tests/Host'),
+               '-I', str(root / 'System/Src'),
+               '-include', str(root / 'Generated/Inc/project_flight_config.h')]
+    for directory in graph.include_dirs:
+        command.extend(['-I', str(root / directory)])
+    command.extend('-D' + value for value in graph.defines)
+    source = Path(__file__).parent / 'fixtures/mission_runtime_contract_host.c'
+    executable = build / 'runtime-contract.exe'
+    command.extend([str(source), '-lm', '-o', str(executable)])
+    result = subprocess.run(command, capture_output=True, text=True, timeout=90)
+    import hashlib
+    (build / 'compiler-receipt.json').write_text(json.dumps({
+        'command': command, 'exit_code': result.returncode,
+        'stdout': result.stdout, 'stderr': result.stderr,
+        'sources': {str(path): hashlib.sha256(path.read_bytes()).hexdigest() for path in
+                    (source, root / 'System/Src/system_mission_process_runtime.c')},
+    }, indent=2), encoding='utf-8')
+    assert result.returncode == 0, result.stdout + result.stderr
+    return executable
+
+
+@pytest.mark.parametrize('scenario', [
+    'normal', 'no-events', 'events-invalid', 'action-error', 'log-events-invalid',
+    'log-bad-param', 'log-full', 'log-busy', 'log-not-ready', 'step-invalid',
+])
+def test_native_runtime_error_contract(mission_runtime_contract_executable, scenario):
+    result = subprocess.run([str(mission_runtime_contract_executable), scenario],
+                            capture_output=True, text=True, timeout=10)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert 'PASS' in result.stdout

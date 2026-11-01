@@ -19,7 +19,8 @@ def MissionProcessFiles_Render(model, catalog):
     ranges = []
     dependency_mask = 0
     for field, identity in (('category', 'telemetry'), ('category', 'recording'),
-                            ('output', 'navigation.pure_ins'), ('output', 'navigation.estimate')):
+                            ('output', 'navigation.pure_ins'), ('output', 'navigation.estimate'),
+                            ('output', 'control.research.command')):
         function = next((row for row in functions if row[field] == identity), None)
         values = []
         for key, default in (('start', 'system_prepare'), ('stop', 'lifecycle_end')):
@@ -38,6 +39,7 @@ def MissionProcessFiles_Render(model, catalog):
               f'#define PROJECT_MISSION_PHASE_AUTHORITY {int(model.mission_process is not None)}U\n'
               f'#define PROJECT_MISSION_RECOVERY_STAGE_HASH {recovery_hash}UL\n'
               f'#define PROJECT_MISSION_FUNCTION_DEPENDENCIES {dependency_mask}U\n'
+              f'#define PROJECT_MISSION_CONTROL_ENABLED {int(any(row["output"] == "control.research.command" for row in functions))}U\n'
               '#endif /* __PROJECT_MISSION_PROCESS_H */\n')
     rows = []
     for stage, identity in zip(stages, hashes):
@@ -52,9 +54,9 @@ def MissionProcessFiles_Render(model, catalog):
               '{\n    if ((stage == NULL) || (index >= PROJECT_MISSION_STAGE_COUNT))\n'
               '    { return SystemMissionProcessResult_Invalid; }\n'
               '    *stage = s_stages[index];\n    return SystemMissionProcessResult_Entered;\n}\n')
-    source += ('\nstatic const SystemMissionFunctionConfig s_functions[4] =\n{\n' + '\n'.join(ranges) + '\n};\n'
+    source += ('\nstatic const SystemMissionFunctionConfig s_functions[5] =\n{\n' + '\n'.join(ranges) + '\n};\n'
                'SystemMissionProcessResult ProjectMissionFunction_ConfigGet(uint8_t index, SystemMissionFunctionConfig *config)\n'
-               '{\n    if ((config == NULL) || (index >= 4U)) { return SystemMissionProcessResult_Invalid; }\n'
+               '{\n    if ((config == NULL) || (index >= 5U)) { return SystemMissionProcessResult_Invalid; }\n'
                '    *config = s_functions[index];\n    return SystemMissionProcessResult_Entered;\n}\n')
     document = {'schema': 'silverstar.mission-process-generated/1', 'process': process,
                 'stage_id_hash_algorithm': 'crc32-ieee-ascii',

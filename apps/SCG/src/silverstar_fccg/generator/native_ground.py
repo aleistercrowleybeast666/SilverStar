@@ -175,7 +175,8 @@ def NativeGroundCandidate_Render(native_files, proof, inventory, model, catalog,
     _PayloadFiles_Add(files,api)
     flight_core = catalog.Component_Get(model.core)
     for path in ('Common/Inc/silverstar_assert.h','Common/Inc/silverstar_compiler.h','Common/Src/silverstar_assert.c',
-                 'Interfaces/Inc/system_device_types.h','Tools/check_power_of_ten.ps1'):
+                 'Interfaces/Inc/system_device_types.h','Interfaces/Inc/system_navigation_provenance.h',
+                 'Tools/check_power_of_ten.ps1'):
         files[path] = (flight_core.payload_root/path).read_bytes()
     files.update(NativeClock_FilesRender(hclk_hz=hclk_hz))
     if indexed:files['Generated/Src/native_clock_port.c']=NativeClockTimPort_Render()

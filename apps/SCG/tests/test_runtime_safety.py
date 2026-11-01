@@ -122,7 +122,24 @@ def test_runtime_sources_survive_reference_import(monkeypatch, workspace_root):
         assert (workspace_root / core["fccg_owned_files"][relative]).is_file()
     assert "OS/FreeRTOS/freertos_hooks.c" in components[
         "silverstar.os.freertos_11_3_0"]["fccg_owned_files"]
-    assert core["overlay_files"]["Tools/check_task_stacks.py"] == "check_task_stacks.py"
+    for relative in (
+        "Tools/check_task_stacks.py", "Tools/stack_arm.py", "Tools/stack_runtime.py",
+        "Tools/stack_review.py", "Tools/software_stack_inputs.json", "Tools/software_stack_review.md", "Tools/h743_stack_inputs.json",
+        "APP/Inc/control_research.h", "APP/Src/control_research.c",
+        "APP/Src/control_research_runtime.c", "Interfaces/Inc/system_navigation_provenance.h",
+        "Tests/Host/test_control_research.c", "Tests/Host/test_control_provenance.c",
+    ):
+        expected = "plugins/builtin/silverstar_core_0_1_0/payload/" + relative
+        assert core["fccg_owned_files"][relative] == expected
+        assert (workspace_root / expected).is_file()
+        assert relative not in core["overlay_files"]
+        assert relative not in core["reference_files"]
+        if relative.startswith("APP/Src/"):
+            assert relative in core["manifest"]["build"]["sources"]
+    mcu = components["silverstar.mcu.stm32f407vet6"]
+    for relative in ("Platform/STM32F4/Src/platform_gpio_stm32f4.c", "STM32F407XX_FLASH.ld"):
+        assert (workspace_root / mcu["fccg_owned_files"][relative]).is_file()
+        assert relative not in mcu["overlay_files"]
 
 
 def test_imported_documentation_replay_is_idempotent(tmp_path, workspace_root):
@@ -146,8 +163,10 @@ def test_runtime_generation_includes_stack_report(runtime_project, workspace_roo
     makefile = (project / "Makefile").read_text(encoding="utf-8")
     assert "-fstack-usage" in makefile
     assert "stack-report: all" in makefile
-    assert (project / "Tools/check_task_stacks.py").read_bytes() == (
-        workspace_root / "tools/reference_overlays/check_task_stacks.py").read_bytes()
+    for name in ("check_task_stacks.py", "stack_arm.py", "stack_runtime.py",
+                 "stack_review.py", "software_stack_inputs.json", "software_stack_review.md", "h743_stack_inputs.json"):
+        assert (project / "Tools" / name).read_bytes() == (
+            workspace_root / "plugins/builtin/silverstar_core_0_1_0/payload/Tools" / name).read_bytes()
 
 
 @pytest.mark.parametrize("extra", ("all: stack-report\n", "all:\n\tpython generate.py\n"))

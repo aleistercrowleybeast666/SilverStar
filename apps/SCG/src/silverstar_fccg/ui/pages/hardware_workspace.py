@@ -13,6 +13,7 @@ from silverstar_fccg.ui.widgets import CollapsibleSection
 
 class HardwareWorkspacePage(ScrollableLocalizedPage):
     linkEditRequested = Signal()
+    targetEditRequested = Signal(str, str)
     def __init__(self, translator, devices_page, board_hardware_page, ground_target_page, air_link_page):
         super().__init__(translator, 'workspace.hardware.title', 'workspace.hardware.description')
         for page in (devices_page, board_hardware_page, ground_target_page, air_link_page):
@@ -24,6 +25,10 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
         self.ground_target_page = ground_target_page
         self.air_link_page = air_link_page
         self._model = None
+        self._readiness = {}
+        self._editor_bin = QWidget(self)
+        self._editor_bin.hide()
+        editor_layout = QVBoxLayout(self._editor_bin)
         self._scroll = self.findChild(QScrollArea)
         self._scroll.viewport().installEventFilter(self)
         self._columns = 0
@@ -50,28 +55,32 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
             summary.setWordWrap(True)
             summary.setTextFormat(Qt.TextFormat.PlainText)
             summary.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
-            body.addWidget(summary, 2, 0)
+            body.addWidget(summary, 0, 0)
             device_summary = QLabel()
             device_summary.setWordWrap(True)
             device_summary.setTextFormat(Qt.TextFormat.PlainText)
             device_summary.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
-            body.addWidget(device_summary, 3, 0)
+            device_summary.setParent(self._editor_bin)
             self.device_summaries[target] = device_summary
             # A long English status must wrap inside its target, rather than
             # increase the scroll content width beyond the visible viewport.
             page.hardware_status.setWordWrap(True)
             page.selection_group.layout().setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
             page.root_layout.removeWidget(page.selection_group)
-            body.addWidget(page.selection_group, 0, 0)
+            editor_layout.addWidget(page.selection_group)
             page.root_layout.removeWidget(page.custom_widget)
-            body.addWidget(page.custom_widget, 1, 0)
+            editor_layout.addWidget(page.custom_widget)
             page.root_layout.removeWidget(page.provider_notice)
             option = QWidget()
-            body.addWidget(option, 4, 0)
+            option.setParent(self._editor_bin)
             button = QPushButton()
-            button.clicked.connect(lambda _checked=False, selected=target: self.Reveal(self._target_sections[selected]))
-            body.addWidget(button, 5, 0)
-            self._header_rows[target] = (page.selection_group, page.custom_widget, summary, device_summary, option, button)
+            button.clicked.connect(lambda _checked=False, selected=target: self.targetEditRequested.emit(selected, "hardware"))
+            body.addWidget(button, 1, 0)
+            # Persistent export acts on the accepted live model, never a draft.
+            page.custom_widget.layout().removeWidget(page.export_button)
+            body.addWidget(page.export_button, 2, 0)
+            page.export_button.hide()
+            self._header_rows[target] = (summary, button, page.export_button)
             self.target_cards[target] = card
             self.target_summaries[target] = summary
             self.target_buttons[target] = button
@@ -84,13 +93,28 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
         self.link_button = QPushButton(self.link_group)
         self.link_button.clicked.connect(self.linkEditRequested)
         link_body.addWidget(self.link_button)
-        link_body.addWidget(air_link_page.status)
+        self.link_status = QLabel(self.link_group)
+        self.link_status.setWordWrap(True)
+        link_body.addWidget(self.link_status)
+        self.root_layout.addWidget(self.link_group)
+        self.device_group = QGroupBox(self)
+        device_layout = QGridLayout(self.device_group)
+        self.device_buttons = {}
+        for column, target in enumerate(('flight', 'ground')):
+            device_layout.addWidget(self.device_summaries[target], 0, column)
+            button = QPushButton(self.device_group)
+            button.clicked.connect(lambda _checked=False, selected=target:
+                                   self.targetEditRequested.emit(selected, 'devices'))
+            device_layout.addWidget(button, 1, column)
+            self.device_buttons[target] = button
+        self.root_layout.addWidget(self.device_group)
         self._target_sections = {}
         for target in ('flight', 'ground'):
             section = self._Section_Create('workspace.hardware.' + target + '.devices', expanded=True)
             section.setObjectName('hardwareDevices_' + target)
             self._sections[target + '.devices'] = section
             self._target_sections[target] = section
+            editor_layout.addWidget(section)
         flight_body = self._target_sections['flight'].body.layout()
         installation = self._Section_Create('workspace.hardware.installation')
         self._Widget_Attach(devices_page.root_layout, devices_page.global_configuration_group, installation.body.layout())
@@ -153,28 +177,13 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
         return section
 
     def _Targets_Layout(self):
-        # At the supported 900px main-window width the workspace has ~695px.
-        # Keep both real board/import entries above the fold at that width.
         columns = 2 if self.width() >= 620 else 1
-        details_columns = 2 if self.width() >= 1120 else 1
-        available = (self.width() - 36 - (columns - 1) * 10) / columns
-        direction = (QBoxLayout.Direction.TopToBottom if available < 360
-                     else QBoxLayout.Direction.LeftToRight)
-        for owner in (self.board_hardware_page, self.ground_target_page):
-            owner.custom_widget.layout().setDirection(direction)
-        if columns != self._columns or details_columns != self._details_columns:
-            self._columns, self._details_columns = columns, details_columns
-            for widget in (*self.target_cards.values(), self.link_group, *self._target_sections.values()):
+        if columns != self._columns:
+            self._columns = columns
+            for widget in self.target_cards.values():
                 self.target_grid.removeWidget(widget)
             for index, card in enumerate(self.target_cards.values()):
                 self.target_grid.addWidget(card, index // columns, index % columns)
-            first_detail_row = 1 if columns == 2 else 2
-            self.target_grid.addWidget(self.link_group, first_detail_row, 0, 1, columns)
-            first_detail_row += 1
-            for index, section in enumerate(self._target_sections.values()):
-                self.target_grid.addWidget(section, first_detail_row + index // details_columns,
-                                           index % details_columns, 1, columns // details_columns,
-                                           Qt.AlignmentFlag.AlignTop)
             self.target_grid.setColumnStretch(0, 1)
             self.target_grid.setColumnStretch(1, 1 if columns == 2 else 0)
         self._HeaderRows_Queue()
@@ -187,13 +196,14 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
     def _HeaderRows_Align(self):
         """Align equivalent rows using current font, wrapping and real width."""
         self._header_sync_pending = False
-        for row in range(6):
+        for row in range(3):
             heights = []
             for target, widgets in self._header_rows.items():
                 margins = self._header_layouts[target].contentsMargins()
                 width = self.target_cards[target].contentsRect().width() - margins.left() - margins.right()
                 widget = widgets[row]
-                height = widget.heightForWidth(max(1, width)) if widget.hasHeightForWidth() else widget.sizeHint().height()
+                height = (0 if widget.isHidden() else widget.heightForWidth(max(1, width))
+                          if widget.hasHeightForWidth() else widget.sizeHint().height())
                 heights.append(max(0, height))
             for layout in self._header_layouts.values():
                 if layout.rowMinimumHeight(row) != max(heights):
@@ -225,11 +235,22 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
         ground = model.ground_target
         for target, hardware, board in (('flight', flight, model.board), ('ground', ground.hardware, ground.board)):
             owner = self.board_hardware_page if target == 'flight' else self.ground_target_page
-            part = hardware.mcu or str(hardware.inventory.get('mcu_part', '')) or '—'
-            self.target_summaries[target].setText(text('workspace.hardware.target_summary',
-                board=hardware.source_label or board or text('workspace.hardware.pending'),
-                mcu=part, source=hardware.source_kind or hardware.mode,
-                status=owner.hardware_status.text() or text('workspace.hardware.pending')))
+            part = (hardware.mcu or str(hardware.inventory.get('mcu_part', ''))
+                    or owner._platform.detected_part or '—')
+            owner.export_button.setVisible(hardware.mode == 'custom' and bool(hardware.snapshot_id))
+            readiness = self._readiness.get(target)
+            state = text('target.generation.ready') if readiness and readiness.ready else text('target.generation.blocked')
+            if hardware.mode == 'custom' and not hardware.snapshot_id:
+                state = text('hardware.editor.import_required')
+            board_label = hardware.source_label
+            if not board_label and board:
+                combo = owner.board_combo
+                index = combo.findData(board)
+                board_label = combo.itemText(index) if index >= 0 else text('board.custom_hardware')
+            self.target_summaries[target].setText(
+                (board_label or text('workspace.hardware.pending')) + '\nMCU: ' + part + '\n' + state)
+            self.target_summaries[target].setToolTip('\n'.join(
+                issue.message for issue in readiness.issues) if readiness else '')
         flight_radios = [item for item in model.device_instances
                          if item.instance_id in self.devices_page._radio_configurations]
         flight_text = ', '.join(item.instance_id + ': ' +
@@ -249,11 +270,13 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
                 plan = TelemetryPlan_Get('S' if profile == 'ss_tm.s.0_1' else 'H',
                     sf=model.air_link.spreading_factor, bandwidth_hz=model.air_link.bandwidth_hz,
                     coding_rate=model.air_link.coding_rate, preamble=model.air_link.preamble_symbols)
-                summary += '\n' + text('telemetry.budget', tx=f"{plan['tx_fraction']*100:.2f}",
-                                        scheduler=f"{plan['scheduler_fraction']*100:.2f}")
+                self.link_summary.setToolTip(text('telemetry.budget', tx=f"{plan['tx_fraction']*100:.2f}",
+                                        scheduler=f"{plan['scheduler_fraction']*100:.2f}"))
             except ValueError as error:
                 summary += '\n' + str(error)
         self.link_summary.setText(self.link_summary.text() + '\n' + summary)
+        self.link_status.setText(self.air_link_page.status.text() if
+            getattr(self.air_link_page, 'configuration_issues', ()) else text('hardware.editor.link_compatible'))
 
         selected = set(model.ComponentIds_Get())
         devices = [item.instance_id + ': ' + item.name + (' / ' + item.interface if item.interface else '')
@@ -280,7 +303,14 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
                        for row in rows[:3]]
             if len(rows) > 3:
                 visible.append(self._translator.Text_Get('workspace.hardware.more', count=len(rows)-3))
-            label.setText(self._translator.Text_Get('workspace.hardware.device_summary', devices='\n'.join(visible) or '—'))
+            owner = self.board_hardware_page if target == 'flight' else self.ground_target_page
+            resources = owner._resources
+            assigned = sum(bool(row.assignment) for row in resources)
+            missing = sum(row.required and not row.assignment for row in resources)
+            label.setText(self._translator.Text_Get('workspace.hardware.' + target) + '\n' +
+                self._translator.Text_Get('workspace.hardware.device_summary', devices='\n'.join(visible) or '—') + '\n' +
+                self._translator.Text_Get('hardware.editor.resources_summary', assigned=assigned,
+                    total=len(resources), missing=missing))
             label.setToolTip('\n'.join(rows))
         self._HeaderRows_Queue()
 
@@ -294,34 +324,40 @@ class HardwareWorkspacePage(ScrollableLocalizedPage):
             if key in self._sections and type(value) is bool:
                 self._sections[key].toggle_button.setChecked(value)
 
+    def Readiness_Set(self, readiness):
+        self._readiness = readiness
+
     def Reveal(self, widget):
-        owners = {self.devices_page: self._target_sections['flight'],
-                  self.board_hardware_page: self.target_cards['flight'],
-                  self.ground_target_page: self.target_cards['ground'],
-                  self.air_link_page: self.link_summary}
-        widget = owners.get(widget, widget)
-        if widget is None or not self.isAncestorOf(widget):
-            return False
-        current = widget
-        while current is not None and current is not self:
-            if isinstance(current, CollapsibleSection):
-                current.toggle_button.setChecked(True)
-            current = current.parentWidget()
-        scroll = self.findChild(QScrollArea)
-        if scroll is not None:
-            scroll.ensureWidgetVisible(widget, 18, 18)
-        widget.setFocus(Qt.FocusReason.OtherFocusReason)
-        return True
+        if widget is self.air_link_page or widget is self.link_summary:
+            self.linkEditRequested.emit()
+            return True
+        for target, page in (('flight', self.board_hardware_page), ('ground', self.ground_target_page)):
+            if widget is None:
+                continue
+            if widget is page or page.selection_group.isAncestorOf(widget) or page.platform_group.isAncestorOf(widget):
+                section = 'hardware'
+            elif widget is page.advanced_section or page.advanced_section.isAncestorOf(widget):
+                section = 'resources'
+            elif widget is self._target_sections[target] or self._target_sections[target].isAncestorOf(widget) or (
+                    target == 'flight' and widget is self.devices_page):
+                section = 'devices'
+            else:
+                continue
+            self.targetEditRequested.emit(target, section)
+            return True
+        return False
 
     def Language_Apply(self, translator):
         super().Language_Apply(translator)
         for page in (self.devices_page, self.board_hardware_page, self.ground_target_page, self.air_link_page):
             page.Language_Apply(translator)
         self.link_group.setTitle(translator.Text_Get('group.air_link'))
+        self.device_group.setTitle(translator.Text_Get('hardware.editor.devices_resources'))
         self.link_button.setText(translator.Text_Get('radio.transaction.title'))
         for target, card in self.target_cards.items():
             card.setTitle(translator.Text_Get('workspace.hardware.' + target))
-            self.target_buttons[target].setText(translator.Text_Get('workspace.hardware.' + target + '.edit'))
+            self.target_buttons[target].setText(translator.Text_Get('hardware.editor.configure'))
+            self.device_buttons[target].setText(translator.Text_Get('workspace.hardware.' + target + '.edit'))
         for section in self._sections.values():
             key = section.property('workspaceTitleKey')
             if key:

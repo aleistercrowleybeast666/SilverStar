@@ -45,6 +45,32 @@ def test_edited_hook_never_receives_automatic_patches(integrated):
         UsbIntegrationProfile_Get(changed)
 
 
+def test_control_policy_preserves_nonempty_user_callback(integrated):
+    _part, _root, native, plan, _rendered = integrated
+    changed = dict(native)
+    owner = plan.owners['usbd_cdc_if.c']
+    source = changed[owner].decode('utf-8-sig')
+    start, opening, end = NativeC_FunctionSpanGet(source, 'CDC_Control_FS')
+    changed[owner] = (source[:opening + 1] + '\n  return USBD_FAIL;\n}' + source[end:]).encode()
+    before = dict(changed)
+    with pytest.raises(ValueError, match='nonempty or unfamiliar user CDC_Control_FS'):
+        UsbCdcIntegration_Render(changed, plan.owners)
+    assert changed == before
+
+
+def test_control_policy_rejects_build_owner_alias(integrated):
+    _part, _root, native, plan, _rendered = integrated
+    changed = dict(native)
+    makefile = changed['Makefile'].decode('utf-8-sig')
+    assert makefile.count('-DUSE_HAL_DRIVER') == 1
+    changed['Makefile'] = makefile.replace('-DUSE_HAL_DRIVER',
+        '-DUSE_HAL_DRIVER -DCDC_Control_FS=UserControl').encode()
+    before = dict(changed)
+    with pytest.raises(ValueError, match='interface/function owner build aliases'):
+        UsbCdcIntegration_Render(changed, plan.owners)
+    assert changed == before
+
+
 def test_edited_hal_interface_requires_component_review(integrated):
     part, _root, native, _plan, _rendered = integrated
     changed = dict(native)
@@ -157,7 +183,7 @@ struct USBD_Handle {
  uint8_t dev_state,dev_old_state,dev_speed,dev_config,dev_remote_wakeup,dev_test_mode,ep0_state,classId;
  Endpoint ep_in[16],ep_out[16];
 };
-typedef struct { uint32_t TxState,RxState,TxLength,RxLength; uint8_t *TxBuffer,*RxBuffer; } USBD_CDC_HandleTypeDef;
+typedef struct { uint32_t TxState,RxState,TxLength,RxLength; uint8_t *TxBuffer,*RxBuffer; uint8_t CmdOpCode,CmdLength; } USBD_CDC_HandleTypeDef;
 typedef struct { int8_t (*Init)(void);int8_t (*DeInit)(void);int8_t (*Receive)(uint8_t *,uint32_t *);int8_t (*TransmitCplt)(uint8_t *,uint32_t *,uint8_t); } USBD_CDC_ItfTypeDef;
 typedef struct { uint8_t *xfer_buff; uint32_t xfer_len,xfer_count,maxpacket; uint16_t pmaadress;uint8_t doublebuffer; } PCD_EPTypeDef;
 typedef struct { uint32_t GINTSTS,GRXFSIZ,DIEPTXF0_HNPTXFSIZ,DIEPTXF[4],BTABLE; } GlobalRegs;

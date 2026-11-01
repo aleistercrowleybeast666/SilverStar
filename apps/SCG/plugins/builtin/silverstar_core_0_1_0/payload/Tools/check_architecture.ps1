@@ -664,6 +664,8 @@ $expectedGeneratedFiles = @(
     'Generated\Inc\project_mission_process.h',
     'Generated\Src\project_mission_process.c',
     'Generated\mission_process.json',
+    'Generated\Src\project_control_research.c',
+    'Generated\control_research.json',
     'Generated\memory_contract.json',
     'Generated\Src\project_resources.c',
     'Generated\Inc\project_capability_routes.h',

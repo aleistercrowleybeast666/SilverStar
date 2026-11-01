@@ -32,6 +32,7 @@
 #include "system_magnetometer_if.h"
 #include "system_mission_process.h"
 #include "system_navigation_profile.h"
+#include "system_user_alignment_config.h"
 #include "system_time.h"
 
 #define INS_MAX_SAMPLES_PER_CYCLE 64U
@@ -43,16 +44,18 @@ typedef struct
     uint8_t calibration_ready;
 } InsTaskAlignmentFlags;
 
-static union
+static PLATFORM_CPU_FAST_BSS union
 {
     InsInertialContext inertial;
     InsMechanizationContext pure_ins;
 } s_navigation_input;
-static AttitudePreflightContext s_preflight_attitude;
+static PLATFORM_CPU_FAST_BSS AttitudePreflightContext s_preflight_attitude;
 static PLATFORM_CPU_FAST_BSS AlignmentStrategyContext s_alignment_strategy;
-static InsAlignmentSnapshot s_alignment_snapshot;
-static InsOutputSnapshot s_output;
-static InsOutputSnapshot s_published_output;
+static PLATFORM_CPU_FAST_BSS InsAlignmentSnapshot s_alignment_snapshot;
+static PLATFORM_CPU_FAST_BSS InsOutputSnapshot s_output;
+static PLATFORM_CPU_FAST_BSS InsOutputSnapshot s_published_output;
+static PLATFORM_CPU_FAST_BSS SystemNavigationProvenance s_prediction_provenance;
+static PLATFORM_CPU_FAST_BSS uint8_t s_provenance_seen;
 static uint32_t s_increment_sequence;
 static SystemAlignmentAttitudeSource s_alignment_source;
 static uint8_t s_alignment_invalid_sample_seen;
@@ -539,6 +542,12 @@ static void InsTask_AlignmentReadyFinalize(
     {
         magnetic_field = output->magnetic_field_mean_b_uT;
     }
+    /* This proof covers admitted corrected inertial data, not independent
+     * quaternion or magnetic providers whose history is not represented. */
+    if ((SYSTEM_ALIGNMENT_BUILD_SOURCE == SYSTEM_ALIGNMENT_ATTITUDE_SOURCE_HARDWARE_QUATERNION) ||
+        (SYSTEM_ALIGNMENT_BUILD_SOURCE == SYSTEM_ALIGNMENT_ATTITUDE_SOURCE_GRAVITY_MAG_TRIAD) ||
+        (SYSTEM_ALIGNMENT_USES_MAGNETIC_CONSTRAINT != 0U))
+    { s_prediction_provenance.valid = 0U; }
     (void)InsTask_AlignmentFinalize(
         profile, imu_sample, output, output->q_nb,
         output->acceleration_mean_b_mps2,
@@ -546,6 +555,8 @@ static void InsTask_AlignmentReadyFinalize(
         (SystemHardwareQuaternionMode)output->hardware_mode,
         output->hardware_mode_verified);
 }
+
+static void InsTask_ProvenanceObserve(const InsImuSample *sample, uint32_t generation);
 
 static void InsTask_AlignmentProcess(const InsImuSample *imu_sample)
 {
@@ -575,6 +586,7 @@ static void InsTask_AlignmentProcess(const InsImuSample *imu_sample)
         return;
     }
     InsTask_IrqUnlock(primask);
+    uint32_t generation = SystemCalibration_GenerationGet();
     profile = SystemNavigationProfile_Get();
     if ((profile == NULL) ||
         (InsTask_SampleCorrect(imu_sample, &corrected_sample) == 0U))
@@ -586,6 +598,7 @@ static void InsTask_AlignmentProcess(const InsImuSample *imu_sample)
         return;
     }
     InsTask_AlignmentConfigGet(profile, &config);
+    InsTask_ProvenanceObserve(imu_sample, generation);
     InsTask_AlignmentSampleBuild(&corrected_sample, &sample);
     InsTask_AlignmentSourceSet(
         (SystemAlignmentAttitudeSource)SYSTEM_ALIGNMENT_BUILD_SOURCE, 1U);
@@ -749,6 +762,8 @@ static void InsTask_BodyPairBuild(const InsAlgorithmSample *last)
     }
 }
 
+static void InsTask_InputReject(const InsImuSample *sample, uint32_t flags);
+
 static void InsTask_InertialOutputsPublish(
     const InsImuSample *imu_sample,
     const InsState *state)
@@ -770,6 +785,7 @@ static void InsTask_InertialOutputsPublish(
     { SystemNavigationBackend_IntervalStartSet(&increment, state->interval_start_timestamp_us); }
     increment.sequence = ++s_increment_sequence;
     increment.dt_s = state->dt_s;
+    increment.provenance = s_prediction_provenance;
     if ((SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15) || ((SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF20) || (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_INEKF15) || (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_INEKF20)))
     {
         SystemNavigationBackend_BodyInputFill(&increment, &s_eskf_gyro_pair[0][0],
@@ -804,9 +820,10 @@ static void InsTask_InertialOutputsPublish(
                                           imu_sample->valid_mask,
                                           &increment_record);
 #endif
-    (void)EstimatorBus_PredictionPush(&increment);
     if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
     {
+        if (EstimatorBus_PredictionPush(&increment) != ESTIMATOR_BUS_RESULT_OK)
+        { InsTask_InputReject(imu_sample, INS_HEALTH_INVALID_SAMPLE | INS_HEALTH_SAMPLE_GAP); return; }
         InsTask_DiagnosticsPublish();
     }
 }
@@ -848,6 +865,9 @@ static void InsTask_InputReject(const InsImuSample *sample, uint32_t flags)
     /* Keep last successful numbers/timestamp, but never advertise stale READY.
      * A missing interval follows the existing mission health latch policy. */
     s_input_fault_latched = 1U;
+    s_prediction_provenance.valid = 0U;
+    s_provenance_seen = 1U;
+    EstimatorTask_ControlInputInvalidate();
     s_output.ins_valid = 0U;
     s_output.health_flags |= flags;
     InsTask_IrqUnlock(lock);
@@ -871,6 +891,31 @@ static void InsTask_InputReject(const InsImuSample *sample, uint32_t flags)
 #endif
 }
 
+static void InsTask_ProvenanceObserve(const InsImuSample *sample, uint32_t generation)
+{
+    SystemNavigationProvenance candidate = {0};
+    candidate.source_instance = sample->canonical_source_instance;
+    candidate.sensor_epoch = SystemInertialSample_EpochGet(sample);
+    candidate.calibration_generation = generation;
+    candidate.valid = (uint8_t)((sample->canonical_source_valid == 1U) && (generation != 0U) &&
+        (SystemCalibration_IsReady() != 0U) &&
+        (generation == SystemCalibration_GenerationGet()));
+    if ((SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U) &&
+        ((candidate.sensor_epoch == 0U) || (SystemImuEpoch_SampleIsCurrent(
+            SystemInertialSample_SourceGet(sample), candidate.sensor_epoch) == 0U)))
+    { candidate.valid = 0U; }
+    if (s_provenance_seen == 0U)
+    { s_prediction_provenance = candidate; s_provenance_seen = 1U; }
+    else if ((candidate.valid != 1U) ||
+        (candidate.source_instance != s_prediction_provenance.source_instance) ||
+        (candidate.sensor_epoch != s_prediction_provenance.sensor_epoch) ||
+        (candidate.calibration_generation != s_prediction_provenance.calibration_generation))
+    {
+        s_prediction_provenance.valid = 0U;
+        if (s_mission_running != 0U) { EstimatorTask_ControlInputInvalidate(); }
+    }
+}
+
 static void InsTask_Propagate(const InsImuSample *imu_sample)
 {
     InsAlgorithmSample algorithm_sample;
@@ -882,8 +927,10 @@ static void InsTask_Propagate(const InsImuSample *imu_sample)
     SystemNavigationHealth_ImuQualityRecord(imu_sample->quality_flags);
     if ((imu_sample->quality_flags & 0x72U) != 0U)
     { InsTask_InputReject(imu_sample, INS_HEALTH_INVALID_SAMPLE); return; }
+    uint32_t generation = SystemCalibration_GenerationGet();
     if (InsTask_SampleCorrect(imu_sample, &algorithm_sample) == 0U)
     { InsTask_InputReject(imu_sample, INS_HEALTH_INVALID_SAMPLE); return; }
+    InsTask_ProvenanceObserve(imu_sample, generation);
     if (SYSTEM_FUSION_ALGORITHM != SYSTEM_FUSION_NONE)
     {
         if (((SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF15) || ((SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_ESKF20) || (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_INEKF15) || (SYSTEM_FUSION_ALGORITHM == SYSTEM_FUSION_INEKF20))) &&
@@ -1096,6 +1143,8 @@ SystemDeviceResult InsTask_PrepareNavigation(const float q_nb[4])
 SystemDeviceResult InsTask_InitializeMission(void)
 {
     float initial_q_nb[4];
+    uint32_t generation = SystemCalibration_GenerationGet();
+    SystemInertialSample source_sample;
 
     SILVERSTAR_ASSERT_OBJECT(&s_navigation_input.pure_ins, InsMechanizationContext,
         SILVERSTAR_ASSERT_MODULE_APP);
@@ -1115,6 +1164,16 @@ SystemDeviceResult InsTask_InitializeMission(void)
         return SYSTEM_DEVICE_INTERNAL_ERROR;
     }
     s_increment_sequence = 0U;
+    /* Preserve the actual alignment window's history. A current sample may
+     * invalidate that history, but can never grant an earlier attitude proof. */
+    if (s_provenance_seen == 0U) { s_prediction_provenance.valid = 0U; }
+    s_provenance_seen = 1U;
+    if (SystemInertial_LatestGet(&source_sample) == SYSTEM_DEVICE_OK)
+    { InsTask_ProvenanceObserve(&source_sample, generation); }
+    else { s_prediction_provenance.valid = 0U; }
+    /* Missing startup provenance cannot be repaired by a later, different
+     * input. Existing alignment/calibration START owners remain authoritative. */
+    s_provenance_seen = 1U;
     s_input_fault_latched = 0U;
     s_mission_running = 1U;
     s_output.ins_valid = 0U;
@@ -1241,6 +1300,8 @@ SystemDeviceResult InsTask_AlignmentReset(void)
     primask = InsTask_IrqLock();
     AttitudePreflight_Init(&s_preflight_attitude);
     AlignmentStrategy_Init(&s_alignment_strategy);
+    (void)memset(&s_prediction_provenance, 0, sizeof(s_prediction_provenance));
+    s_provenance_seen = 0U;
     (void)memset(&s_alignment_snapshot, 0, sizeof(s_alignment_snapshot));
     s_alignment_invalid_sample_seen = 0U;
     s_attitude_source_available = 0U;
@@ -1401,7 +1462,8 @@ SystemDeviceResult InsTask_AttitudeAlignmentStatusGet(
     SystemAlignmentAttitudeStatus *status)
 {
     const SystemNavigationProfile *profile;
-    InsTaskAlignmentFlags flags;
+    /* A refused snapshot must remain explicitly unready. */
+    InsTaskAlignmentFlags flags = {0};
 
     if (status == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     SILVERSTAR_ASSERT_OBJECT(status, SystemAlignmentAttitudeStatus,

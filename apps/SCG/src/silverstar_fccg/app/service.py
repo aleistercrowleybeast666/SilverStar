@@ -215,6 +215,20 @@ class FccgService:
         policy = self._OutputPolicy_Get(project_root)
         return ProjectReadiness_Inspect(model, policy.root, self.catalog)
 
+    def TargetReadiness_Get(self, model: ProjectModel, target: str):
+        """Inspect configuration without generating, reconciling or writing it."""
+        from silverstar_fccg.project.target_readiness import TargetReadiness_Get
+        from silverstar_fccg.project.air_link import AirLinkIssue
+        result = TargetReadiness_Get(model, self.catalog, target)
+        hardware = model.hardware if target == 'flight' else model.ground_target.hardware
+        if hardware.mode == 'custom' and hardware.snapshot_id:
+            try:
+                self.hardware_importer.SnapshotRoot_Get(hardware.snapshot_id)
+            except (ValueError, FccgError, OSError):
+                result = replace(result, issues=(*result.issues, AirLinkIssue(
+                    'TARGET_SNAPSHOT_UNAVAILABLE', 'Imported hardware snapshot is unavailable; reimport the complete project.')))
+        return result
+
     def Project_EnsureBuildable(
         self,
         model: ProjectModel,

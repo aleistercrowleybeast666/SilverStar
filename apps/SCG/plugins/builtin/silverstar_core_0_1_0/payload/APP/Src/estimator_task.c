@@ -433,6 +433,7 @@ static uint32_t Estimator_OperationNext(void)
 #endif
 static SYSTEM_NAVIGATION_OUTPUT_BSS EstimatorOutputSnapshot s_snapshot;
 static SYSTEM_NAVIGATION_OUTPUT_BSS EstimatorOutputSnapshot s_published_snapshot;
+static SYSTEM_NAVIGATION_OUTPUT_BSS uint8_t s_control_input_invalid;
 static volatile uint8_t s_origin_collection_busy;
 static EstimatorPreparationSnapshot s_preparation = {1U, 0U, SYSTEM_FUSION_ALGORITHM, SYSTEM_DEVICE_NOT_READY};
 
@@ -450,13 +451,56 @@ static void EstimatorTask_SnapshotCommit(void)
 {
     uint32_t primask = EstimatorTask_IrqLock();
 
+    if (s_control_input_invalid != 0U) { s_snapshot.health_flags |= ESTIMATOR_HEALTH_INPUT_PROVENANCE_INVALID; }
     s_published_snapshot = s_snapshot;
     if (SystemMissionProcess_EstimatorStoppedGet() != 0U)
     {
         s_published_snapshot.initialized = 0U;
         s_published_snapshot.mission_running = 0U;
     }
+    if ((s_control_input_invalid != 0U) || (s_published_snapshot.initialized != 1U) || (s_published_snapshot.mission_running != 1U) ||
+        (s_published_snapshot.health_flags != ESTIMATOR_HEALTH_NONE))
+    { s_published_snapshot.attitude_provenance.valid = 0U; }
     EstimatorTask_IrqUnlock(primask);
+}
+
+static void Estimator_ControlProvenanceRevoke(void)
+{
+    uint32_t lock = EstimatorTask_IrqLock();
+    s_snapshot.attitude_provenance.valid = 0U;
+    s_published_snapshot.attitude_provenance.valid = 0U;
+    EstimatorTask_IrqUnlock(lock);
+}
+
+void EstimatorTask_ControlInputInvalidate(void)
+{
+    uint32_t lock = EstimatorTask_IrqLock();
+    s_control_input_invalid = 1U;
+    s_snapshot.health_flags |= ESTIMATOR_HEALTH_INPUT_PROVENANCE_INVALID;
+    s_published_snapshot.health_flags |= ESTIMATOR_HEALTH_INPUT_PROVENANCE_INVALID;
+    s_snapshot.attitude_provenance.valid = 0U;
+    s_published_snapshot.attitude_provenance.valid = 0U;
+    EstimatorTask_IrqUnlock(lock);
+}
+
+SystemDeviceResult EstimatorTask_ControlProvenanceCheck(const SystemNavigationProvenance *provenance,
+    uint64_t timestamp_us, uint32_t sequence)
+{
+    if ((provenance == NULL) || (provenance->valid != 1U) ||
+        (provenance->calibration_generation == 0U) || (timestamp_us == 0U) || (sequence == 0U))
+    { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    uint32_t lock = EstimatorTask_IrqLock();
+    uint8_t ready = (uint8_t)((s_control_input_invalid == 0U) &&
+        (s_published_snapshot.initialized == 1U) && (s_published_snapshot.mission_running == 1U) &&
+        (s_published_snapshot.health_flags == ESTIMATOR_HEALTH_NONE) &&
+        (s_published_snapshot.attitude_provenance.valid == 1U) &&
+        (s_published_snapshot.timestamp_us >= timestamp_us) && (s_published_snapshot.update_sequence >= sequence) &&
+        (s_published_snapshot.attitude_provenance.source_instance == provenance->source_instance) &&
+        (s_published_snapshot.attitude_provenance.sensor_epoch == provenance->sensor_epoch) &&
+        (s_published_snapshot.attitude_provenance.calibration_generation == provenance->calibration_generation) &&
+        (SystemMissionProcess_EstimatorStoppedGet() == 0U));
+    EstimatorTask_IrqUnlock(lock);
+    return ready ? SYSTEM_DEVICE_OK : SYSTEM_DEVICE_NOT_READY;
 }
 
 static float Estimator_Max(float lhs, float rhs)
@@ -3077,6 +3121,7 @@ static void Estimator_FaultSnapshotPublish(void)
     s_snapshot = s_published_snapshot;
     s_snapshot.health_flags |= health;
     s_snapshot.initialized = 0U;
+    s_snapshot.attitude_provenance.valid = 0U;
     if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON)
     { s_estimator.mission_running = 0U; s_snapshot.mission_running = 0U; }
     s_published_snapshot = s_snapshot;
@@ -3950,6 +3995,9 @@ static uint8_t Estimator_KfPredictionApply(
 static void Estimator_BackendPredictionProcess(const SystemInertialIncrement *prediction)
 {
     SystemDeviceResult result = SystemNavigationBackend_Predict(prediction, &s_snapshot);
+    s_snapshot.attitude_provenance.valid = 0U;
+    if ((result == SYSTEM_DEVICE_OK) && (s_snapshot.timestamp_us == prediction->timestamp_us))
+    { s_snapshot.attitude_provenance = prediction->provenance; }
     if (result != SYSTEM_DEVICE_OK)
     { s_snapshot.health_flags |= ESTIMATOR_HEALTH_KF_NUMERIC_ERROR; }
     /* Current ESKF's terminal fault certificate clears both snapshot lifecycle
@@ -4001,7 +4049,7 @@ static void Estimator_PredictionProcess(
         ((s_snapshot.health_flags & ESTIMATOR_HEALTH_KF_NUMERIC_ERROR) != 0U))
     { return; }
     if (Estimator_KfPredictionApply(prediction, delta_velocity_enu_mps) == 0U)
-    { return; }
+    { Estimator_ControlProvenanceRevoke(); return; }
     Estimator_AccelerationPublish(delta_velocity_enu_mps, prediction->dt_s);
     s_snapshot.measurement_attempt_mask = 0U;
     s_snapshot.position_update_result = SYSTEM_ESTIMATOR_MEAS_REJECTED_INVALID;
@@ -4012,18 +4060,19 @@ static void Estimator_PredictionProcess(
     s_snapshot.velocity_r_scale = 1.0f;
     s_snapshot.baro_r_scale = 1.0f;
     if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON)
-    { if (!Estimator_HorizonCycle(prediction->timestamp_us)) { return; } }
+    { if (!Estimator_HorizonCycle(prediction->timestamp_us)) { Estimator_ControlProvenanceRevoke(); return; } }
     else
     {
         Estimator_GnssUpdate(prediction->timestamp_us);
-        if (Estimator_ReplayFaultStop() != 0U) { return; }
+        if (Estimator_ReplayFaultStop() != 0U) { Estimator_ControlProvenanceRevoke(); return; }
         Estimator_BarometerUpdate(prediction->timestamp_us);
-        if (Estimator_ReplayFaultStop() != 0U) { return; }
+        if (Estimator_ReplayFaultStop() != 0U) { Estimator_ControlProvenanceRevoke(); return; }
     }
     if ((SystemNavigationHealth_DegradedGet(prediction->timestamp_us) != 0U) ||
         ((SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON) && s_horizon_fusion.warmup))
     { s_snapshot.health_flags |= ESTIMATOR_HEALTH_FUSION_TIMEOUT; }
     else { s_snapshot.health_flags &= ~ESTIMATOR_HEALTH_FUSION_TIMEOUT; }
+    s_snapshot.attitude_provenance = prediction->provenance;
     Estimator_SnapshotPublish(prediction->timestamp_us);
     if (SYSTEM_FUSION_TIMING_MODE == SYSTEM_FUSION_TIMING_HORIZON)
     { Estimator_HorizonStatusLog(prediction->timestamp_us,s_horizon_fusion.warmup ? NAV_KF_HORIZON_WARMUP : NAV_KF_HORIZON_OK); }
@@ -4529,7 +4578,19 @@ static SystemDeviceResult Estimator_InitializeNavigation(uint8_t activate)
 
 SystemDeviceResult EstimatorTask_InitializeMission(void)
 {
-    return Estimator_InitializeNavigation(1U);
+    uint8_t was_running = s_estimator.mission_running;
+    SystemDeviceResult result = Estimator_InitializeNavigation(1U);
+    if ((result == SYSTEM_DEVICE_OK) && (was_running == 0U))
+    {
+        uint32_t lock = EstimatorTask_IrqLock();
+        s_control_input_invalid = 0U;
+        s_snapshot.health_flags &= ~ESTIMATOR_HEALTH_INPUT_PROVENANCE_INVALID;
+        s_published_snapshot.health_flags &= ~ESTIMATOR_HEALTH_INPUT_PROVENANCE_INVALID;
+        s_snapshot.attitude_provenance.valid = 0U;
+        s_published_snapshot.attitude_provenance.valid = 0U;
+        EstimatorTask_IrqUnlock(lock);
+    }
+    return result;
 }
 
 SystemDeviceResult EstimatorTask_PreparationGet(EstimatorPreparationSnapshot *snapshot)
@@ -4644,6 +4705,7 @@ void EstimatorTask_RollbackMissionStart(void)
 
 void EstimatorTask_AbortMission(void)
 {
+    Estimator_ControlProvenanceRevoke();
 #if (SYSTEM_BUILD_NAVIGATION_BACKEND_ENABLED != 0U)
     if (Estimator_NavigationBackendSelected() != 0U) { SystemNavigationBackend_Reset(); }
 #endif
@@ -4735,6 +4797,7 @@ uint8_t Estimator_GetLatestSnapshot(EstimatorOutputSnapshot *snapshot)
     {
         published.initialized = 0U;
         published.mission_running = 0U;
+        published.attitude_provenance.valid = 0U;
     }
     EstimatorTask_IrqUnlock(primask);
     *snapshot = published;

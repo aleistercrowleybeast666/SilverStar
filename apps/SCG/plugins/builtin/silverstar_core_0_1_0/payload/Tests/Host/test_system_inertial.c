@@ -9,6 +9,9 @@ uint64_t SystemTime_GetMonotonicUs(void) { return 0U; }
 
 static SystemImuSample s_device_sample;
 
+SystemDeviceResult SystemSourceSelector_ImuActiveInstanceGet(uint8_t *instance_id)
+{ *instance_id = 2U; return SYSTEM_DEVICE_OK; }
+
 static SystemDeviceResult Test_LatestGet(SystemImuSample *sample)
 {
     if (sample == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
@@ -69,6 +72,7 @@ int main(void)
     TEST_CHECK(SystemInertial_Init() == SYSTEM_DEVICE_OK);
     TEST_CHECK(SystemInertial_LatestGet(&latest) == SYSTEM_DEVICE_OK);
     TEST_CHECK(SystemInertial_NextGet(&next) == SYSTEM_DEVICE_OK);
+    TEST_CHECK(latest.canonical_source_valid == 1U && latest.canonical_source_instance == 2U);
     TEST_CHECK(latest.sample_timestamp_us ==
                s_device_sample.sample_timestamp_us);
     TEST_CHECK(latest.receive_timestamp_us ==

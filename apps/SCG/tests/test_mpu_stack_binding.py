@@ -1,10 +1,11 @@
 """Binding negatives use injected ELF output; actual ARM reports are separate."""
 import json
 import re
+import hashlib
 from pathlib import Path
 
 import pytest
-from test_stack_budget import stacks, _ElfFixture_Create, _DependencyFixture_Write
+from test_stack_budget import stacks, _ElfFixture_Create, _DependencyFixture_Write, _AssemblyFixture_Extend
 
 
 def _MpuFixture(root, monkeypatch, mutation=None):
@@ -13,6 +14,8 @@ def _MpuFixture(root, monkeypatch, mutation=None):
     builtin = Path(__file__).resolve().parents[1] / "plugins/builtin"
     bus = builtin / "silverstar_sensor_register_bus/payload"
     mpu = builtin / "silverstar_device_imu_mpu6050/payload"
+    fixture = Path(__file__).parent / "fixtures/stack_callback_v2"
+    recorded = json.loads((fixture / "manifest.json").read_text(encoding="utf8"))
     paths = [
         "Devices/SensorBus/Src/sensor_imu.c",
         "Devices/SensorBus/Src/sensor_register_bus.c",
@@ -21,7 +24,9 @@ def _MpuFixture(root, monkeypatch, mutation=None):
         "Devices/IMU/MPU6050/Src/mpu6050_device.c",
     ]
     for path in paths + ["Devices/SensorBus/Inc/sensor_imu.h", "Devices/SensorBus/Inc/sensor_register_bus.h", "Devices/SensorBus/Adapter/Inc/sensor_imu_adapter.h"]:
-        text = ((mpu if "/MPU6050/" in path else bus) / path).read_text(encoding="utf8")
+        raw = (fixture / path).read_bytes()
+        assert hashlib.sha256(raw).hexdigest() == recorded["files"][path]["sha256"]
+        text = raw.decode("utf8")
         if mutation in ("runtime_bus", "runtime_profile") and path.endswith("mpu6050_instance.c"):
             write = "driver.bus.read = UnknownCallback" if mutation == "runtime_bus" else "driver.profile = other"
             text = text.replace("s_contexts[instance].owner_active = 1U;", "s_contexts[instance]." + write + "; s_contexts[instance].owner_active = 1U;")
@@ -87,6 +92,8 @@ def _MpuFixture(root, monkeypatch, mutation=None):
     with (build / "test.su").open("a", encoding="utf8") as stream:
         for name in edges:
             stream.write("fixture.c:1:1:" + name + "\t" + str(frames.get(name,16)) + "\tstatic\n")
+    assembly, symbols, _ = _AssemblyFixture_Extend(original_read(["objdump", "-d"], root), extra,
+        {"AppTask_Device": "SensorImu_Verify"})
     def read(command, cwd):
         if "objdump" in command[0] and "-s" in command:
             pointer = "01000000" if mutation == "non_null" else "00000000"
@@ -95,8 +102,7 @@ def _MpuFixture(root, monkeypatch, mutation=None):
                 " 8001010 " + pointer + " 00000000 00000000\n")
         text = original_read(command, cwd)
         if "objdump" in command[0]:
-            return text.replace("08000000 <AppTask_Device>:\n",
-                "08000000 <AppTask_Device>:\n 8000000: f000 f000 bl 8000000 <SensorImu_Verify>\n") + extra
+            return symbols if "-t" in command else assembly
         if "nm" in command[0]:
             return text + "08001000 00000060 " + ("d" if mutation == "writable" else "r") + " s_profile\n"
         return text

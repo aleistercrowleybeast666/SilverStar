@@ -18,6 +18,15 @@ typedef enum
     SystemMissionProcessResult_Unavailable
 } SystemMissionProcessResult;
 
+typedef enum
+{
+    SystemMissionControlWindowResult_Disabled = 0,
+    SystemMissionControlWindowResult_Waiting,
+    SystemMissionControlWindowResult_Active,
+    SystemMissionControlWindowResult_Stopped,
+    SystemMissionControlWindowResult_Invalid
+} SystemMissionControlWindowResult;
+
 typedef struct
 {
     uint64_t timestamp_us;
@@ -77,6 +86,9 @@ uint8_t SystemMissionProcess_LoggingActiveGet(void);
  * stop permissions are false before START; they never request reinitialization. */
 uint8_t SystemMissionProcess_InsStoppedGet(void);
 uint8_t SystemMissionProcess_EstimatorStoppedGet(void);
+/* Fixed research-controller owner: stage window only. The adapter separately
+ * validates input freshness/provenance and latches terminal stop or failure. */
+SystemMissionControlWindowResult SystemMissionProcess_ControlWindowGet(void);
 uint8_t ProjectMissionStage_CountGet(void);
 SystemMissionProcessResult ProjectMissionStage_ConfigGet(uint8_t index, SystemMissionStageConfig *config);
 SystemMissionProcessResult ProjectMissionFunction_ConfigGet(uint8_t index, SystemMissionFunctionConfig *config);

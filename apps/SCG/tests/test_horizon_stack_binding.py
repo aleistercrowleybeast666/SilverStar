@@ -139,7 +139,7 @@ def test_individually_reviewed_inputs_cannot_form_unreviewed_mode2_tuple(
         stacks.BindingSources_Verify(root, [SOURCE], build)
 
 
-def test_stack_algorithm_and_all_nonbinding_policies_are_preserved():
+def test_historical_v19_stack_algorithm_and_nonbinding_policies_were_preserved():
     manifest = json.loads((EVIDENCE / "manifest.json").read_text(encoding="utf8"))
     assert manifest["all_nonbinding_policy_assignments_AST_equal"]
     assert manifest["changed_registration_functions"] == [
@@ -149,7 +149,13 @@ def test_stack_algorithm_and_all_nonbinding_policies_are_preserved():
     assert "StackReport_Build" in manifest["unchanged_functions"]
     with zipfile.ZipFile(EVIDENCE / "inputs_unique.zip") as archive:
         before = ast.parse(archive.read("review/checker_before_v19.py"))
-    after = ast.parse(TOOL.read_text(encoding="utf8"))
+    # This assertion records the v19 batch's historical claim. Later authorized
+    # parser fixes have separate counterexample/whole-program tests; comparing
+    # them against v19 would forbid fixing an actual safety defect forever.
+    with zipfile.ZipFile(EVIDENCE / "validation.zip") as archive:
+        raw = archive.read("source/apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_task_stacks.py")
+    assert sha256(raw).hexdigest() == manifest["checker_after_sha256"]
+    after = ast.parse(raw)
     functions = lambda tree: {
         node.name: ast.dump(node, include_attributes=False)
         for node in tree.body

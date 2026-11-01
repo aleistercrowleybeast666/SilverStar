@@ -266,3 +266,39 @@ ready. P0 is not squared; noise density and measurement sigma are squared exactl
 at their calculation sites. The velocity delay candidate of 270 ms is configurable and
 does not assert a measured receiver hardware delay. Residual biases are applied to saved
 body input during every replay, so changing them affects subsequent propagation.
+
+## TreeDiagram control research task
+
+The `silverstar.tuning-bundle/1` importer previews a complete bundle before changing
+the project. Ordinary import applies compatible scalar algorithm parameters only.
+The explicit `--include-control-core` option also selects the PID or LQR mathematical
+core. The separate `--include-control-task` option attaches that core to the existing
+FlightTask and requires a control period of exactly 10000 µs. GUI preview exposes
+the same task option, initially unchecked. Cancel and stale-preview rejection leave
+the live project unchanged; a bundle never grants hardware READY.
+
+The task uses one fixed mission function owner and bounded scheduling, with no new
+RTOS task or callback registry. It retains controller state across its continuous
+phase range and permanently revokes output when that range ends or a fault occurs.
+It rejects late execution, stale or mismatched sensor/navigation provenance, and
+invalid numerical inputs before publishing a successful snapshot. Historical 20 ms
+bundles remain valid for core-only use, but cannot enable this 10 ms scheduler.
+
+The current adapter is a body-Y planar, small-angle research interface. It maps one
+core output unit to 1 N·m and publishes `requested_body_y_torque_nm`, bounded to at
+most ±1 N·m. The generated `control_research.json` records this mapping, the actual
+period, `electrical_output=false` and `deployable=false`. No servo, motor or valve
+driver consumes this snapshot. The generic PID/LQR core parameter declarations keep
+their original units; the physical interpretation belongs to this explicit adapter.
+
+```powershell
+python -m silverstar_fccg.project.tuning_bundle preview base.ssproject run.sstuning.json --include-control-task
+python -m silverstar_fccg.project.tuning_bundle apply base.ssproject run.sstuning.json --include-control-task --output research.ssproject
+```
+
+The source contract lives in `project/control_research.py`, `generator/control_research.py`
+and the owning core payload's `APP/Src/control_research*.c`. The new source-provenance
+token follows the sample that actually entered INS and the estimator, rather than
+reading the currently selected source and attributing it to an older attitude.
+Software tests and target builds establish their recorded scope; electrical behavior,
+timing under real interrupt load and hardware/flight qualification require separate evidence.

@@ -3,7 +3,7 @@ from pathlib import Path
 import re
 
 import pytest
-from test_stack_budget import stacks, _ElfFixture_Create, _DependencyFixture_Write
+from test_stack_budget import stacks, _ElfFixture_Create, _DependencyFixture_Write, _AssemblyFixture_Extend
 
 
 def _StartupFixture(root, monkeypatch, *, separate=False, mutation=None, gnss_only=False):
@@ -91,6 +91,8 @@ def _StartupFixture(root, monkeypatch, *, separate=False, mutation=None, gnss_on
     with su.open("a", encoding="utf8") as stream:
         frames = {"NeoM9nStartup_SamplePoll": 112, "GnssNeoM9n_Process": 344}
         stream.write("".join("fixture.c:1:1:" + name + "\t" + str(frames.get(name,16)) + "\tstatic\n" for name in edges))
+    assembly, symbols, _ = _AssemblyFixture_Extend(original_read(["objdump", "-d"], root), extra,
+        {"AppTask_Device": "NeoM9nStartup_Tick"}, addresses)
     def read(command, cwd):
         if "objdump" in command[0] and "-s" in command:
             address = int(next(arg.split("=")[1] for arg in command if arg.startswith("--start-address=")),16)
@@ -102,9 +104,7 @@ def _StartupFixture(root, monkeypatch, *, separate=False, mutation=None, gnss_on
         if "nm" in command[0]:
             return text + "".join(f"{address:08x} 0000001c r s_operations\n" for address in table_addresses.values()) + "".join(f"{address:08x} 00000020 t {name}\n" for name,address in addresses.items())
         if "objdump" in command[0]:
-            text = text.replace("08000000 <AppTask_Device>:\n",
-                "08000000 <AppTask_Device>:\n 8000000: f000 f000 bl 8000000 <NeoM9nStartup_Tick>\n")
-            return text + extra
+            return symbols if "-t" in command else assembly
         return text
     monkeypatch.setattr(stacks, "Command_Read", read)
     return root

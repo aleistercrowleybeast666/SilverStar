@@ -147,6 +147,8 @@ typedef struct
     uint8_t rx_active;
 } SystemDeviceIoDiagnostics;
 
+#include "system_navigation_provenance.h"
+
 typedef struct
 {
     uint64_t timestamp_us;
@@ -154,6 +156,7 @@ typedef struct
     float dt_s;
     float delta_theta_b_corrected[3];
     float delta_velocity_b_sculling_corrected[3];
+    SystemNavigationProvenance provenance; /* Actual complete corrected interval. */
 #if (defined(SYSTEM_BUILD_ESKF15_ENABLED) && (SYSTEM_BUILD_ESKF15_ENABLED != 0U)) || \
     (defined(SYSTEM_BUILD_AUGMENTED_ENABLED) && (SYSTEM_BUILD_AUGMENTED_ENABLED != 0U))
     float body_gyro_radps[2][3];

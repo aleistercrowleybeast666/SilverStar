@@ -8,6 +8,7 @@
 #include "system_time.h"
 #include "silverstar_assert.h"
 #include "system_user_inertial_config.h"
+#include "system_source_selector.h"
 
 static uint8_t s_initialized;
 
@@ -35,10 +36,24 @@ static void SystemInertial_DeviceSampleCopy(
     destination->temperature_c = source->temperature_c;
     destination->valid_mask = source->valid_mask;
     destination->quality_flags = source->quality_flags;
+    destination->canonical_source_instance = 0U;
+    destination->canonical_source_valid = 0U;
     if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
     {
         SystemInertialSample_EpochSet(destination,
             SystemImuSample_SourceGet(source), SystemImuSample_EpochGet(source));
+    }
+}
+
+static void SystemInertial_SourceConfirm(uint8_t before, SystemDeviceResult before_result,
+    SystemInertialSample *sample)
+{
+    uint8_t after = 0U;
+    if ((before_result == SYSTEM_DEVICE_OK) &&
+        (SystemSourceSelector_ImuActiveInstanceGet(&after) == SYSTEM_DEVICE_OK) && (before == after))
+    {
+        sample->canonical_source_instance = before;
+        sample->canonical_source_valid = 1U;
     }
 }
 
@@ -61,6 +76,7 @@ SystemDeviceResult SystemInertial_LatestGet(SystemInertialSample *sample)
 {
     SystemImuSample device_sample;
     SystemDeviceResult result;
+    uint8_t source = 0U;
 
     if (sample == NULL)
     {
@@ -70,12 +86,14 @@ SystemDeviceResult SystemInertial_LatestGet(SystemInertialSample *sample)
     {
         return SYSTEM_DEVICE_NOT_READY;
     }
+    SystemDeviceResult source_result = SystemSourceSelector_ImuActiveInstanceGet(&source);
     result = SystemImu_LatestSampleGet(&device_sample);
     if (result != SYSTEM_DEVICE_OK)
     {
         return result;
     }
     SystemInertial_DeviceSampleCopy(&device_sample, sample);
+    SystemInertial_SourceConfirm(source, source_result, sample);
     if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
     {
         if (SystemImuEpoch_SampleIsCurrent(SystemInertialSample_SourceGet(sample),
@@ -88,6 +106,7 @@ SystemDeviceResult SystemInertial_NextGet(SystemInertialSample *sample)
 {
     SystemImuSample device_sample;
     SystemDeviceResult result;
+    uint8_t source = 0U;
 
     if (sample == NULL)
     {
@@ -97,6 +116,7 @@ SystemDeviceResult SystemInertial_NextGet(SystemInertialSample *sample)
     {
         return SYSTEM_DEVICE_NOT_READY;
     }
+    SystemDeviceResult source_result = SystemSourceSelector_ImuActiveInstanceGet(&source);
     result = SystemImu_NextSampleGet(&device_sample);
     if (result != SYSTEM_DEVICE_OK)
     {
@@ -111,6 +131,7 @@ SystemDeviceResult SystemInertial_NextGet(SystemInertialSample *sample)
             SystemTime_GetMonotonicUs());
     }
     SystemInertial_DeviceSampleCopy(&device_sample, sample);
+    SystemInertial_SourceConfirm(source, source_result, sample);
     if (SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED != 0U)
     {
         if (SystemImuEpoch_SampleIsCurrent(SystemInertialSample_SourceGet(sample),

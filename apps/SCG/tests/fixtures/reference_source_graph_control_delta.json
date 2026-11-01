@@ -1,0 +1,17 @@
+{
+  "scope": "2026-11-01 explicit controller integration after the frozen 166-source S/mission baseline. Default reference has no enabled controller; its backend is a real Disabled implementation. No source exclusions are added.",
+  "additions": {
+    "APP/Src/control_research.c": {
+      "payload_owner": "silverstar.core.0_1_0",
+      "reason": "Fixed bounded research state machine and snapshot permission; invoked from the existing FlightTask, without a new task or callback registry."
+    },
+    "APP/Src/control_research_runtime.c": {
+      "payload_owner": "silverstar.core.0_1_0",
+      "reason": "Actual corrected inertial/estimator provenance input and publication checks."
+    },
+    "Generated/Src/project_control_research.c": {
+      "generator_owner": "silverstar_fccg.generator.control_research.ControlResearchFiles_Render",
+      "reason": "Static backend selection. The default reference emits Disabled; an explicit selected PID/LQR task emits its direct calls."
+    }
+  }
+}

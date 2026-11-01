@@ -382,9 +382,11 @@ def main():
         "src/silverstar_fccg/hardware/usb_transport_capabilities.py", "src/silverstar_fccg/hardware/usb_transport_profiles.py",
         "src/silverstar_fccg/generator/native_usb_data.py", "src/silverstar_fccg/generator/native_usb_indexed.py",
         "src/silverstar_fccg/generator/native_hal.py", "src/silverstar_fccg/generator/multi_target.py",
+        "src/silverstar_fccg/generator/ground_usb_control.py", "src/silverstar_fccg/generator/ground_c071_usb.py",
         "src/silverstar_fccg/hardware/native_machine_contract.py",
         "plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_power_of_ten.ps1",
         "tests/test_usb_transport.py", "tests/test_usb_transport_capabilities.py", "tests/test_usb_transport_integration.py",
+        "tests/test_usb_transport_control.py", "tests/test_native_control_faults.py", "tests/test_usb_lifecycle_normal.py",
         "tests/test_ground_usb_cdc_ring.py", "tools/validation/usb_transport_validate.py")]
     snapshot = {"source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPO, text=True).strip(),
         "source_files": {str(p.relative_to(REPO)): {"sha256": hashlib.sha256(p.read_bytes()).hexdigest(),
@@ -401,6 +403,7 @@ def main():
     run("host-tests", [sys.executable, "-B", str(runner),
         str(SCG / "tests/test_usb_transport.py"), str(SCG / "tests/test_ground_usb_cdc_ring.py"),
         str(SCG / "tests/test_usb_transport_capabilities.py"), str(SCG / "tests/test_usb_transport_integration.py"),
+        str(SCG / "tests/test_usb_transport_control.py"),
         "-p", "no:cacheprovider", "--basetemp=" + str(output / "host"), "-q"])
     if args.host_only:
         print("Host/export checks complete; no target build requested in this run", flush=True)

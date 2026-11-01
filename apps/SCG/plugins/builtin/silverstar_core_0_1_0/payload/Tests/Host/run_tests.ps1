@@ -114,6 +114,11 @@ function Invoke-HostCompiler {
     $CompilerArgs = @($CompilerArgs | ForEach-Object {
         if ($_ -eq '-flto') { '-flto=1' } else { $_ }
     })
+    if (@($CompilerArgs | Where-Object { $_ -like '-flto=*' }).Count -gt 0) {
+        # One serial LTRANS partition matches this bounded runner and avoids
+        # creating multiple partitions that GCC then warns it cannot parallelize.
+        $CompilerArgs += '-flto-partition=one'
+    }
     $previousPreference = $ErrorActionPreference
     $ErrorActionPreference = 'Continue'
     try {
@@ -309,7 +314,21 @@ function Invoke-HostTest {
             "$repoRoot\Generated\Src\project_mission_process.c")
     }
     if (@($Sources | Where-Object { $_ -like '*flight_task.c' }).Count -gt 0) {
-        $Sources = @($Sources) + @("$repoRoot\System\Src\system_mission_process_runtime.c")
+        $Sources = @($Sources) + @("$repoRoot\System\Src\system_mission_process_runtime.c",
+            "$repoRoot\APP\Src\control_research.c", "$repoRoot\APP\Src\control_research_runtime.c",
+            "$repoRoot\Generated\Src\project_control_research.c")
+        foreach ($kind in @('pid', 'lqr')) {
+            $algorithmRoot = Join-Path $repoRoot ('Algorithm\Control\' + $kind.ToUpperInvariant())
+            if (Test-Path -LiteralPath $algorithmRoot -PathType Container) {
+                $Sources += @("$algorithmRoot\Src\control_$kind.c", "$algorithmRoot\Src\control_${kind}_project.c")
+                $ExtraCompilerArgs += "-I$algorithmRoot\Inc"
+            }
+        }
+    }
+    if ($Name -eq 'lifecycle_logging') {
+        $Sources += "$repoRoot\Tests\Host\control_research_unavailable_navigation.c"
+        $ExtraCompilerArgs = @("-I$repoRoot\Tests\Host\Fixtures\ControlDisabled") + $ExtraCompilerArgs
+        Write-Output 'FCCG_HOST_SCOPE|lifecycle_logging|actual FlightTask and disabled controller adapter; existing navigation port unavailable; not enabled-controller evidence'
     }
     if ($Name -match '^(system_calibration_|runtime_startup$|fault_hook$|calibration_build_gate_)') {
         $Sources += "$repoRoot\Tests\Host\installation_alignment_unit_boundary.c"
@@ -1453,6 +1472,41 @@ foreach ($alignmentDefine in @(Get-Content -LiteralPath $projectSourcesPath |
 }
 Invoke-HostTest -Name 'optional_gnss_start_actual' -ExtraCompilerArgs $optionalStartArgs `
     -Sources $optionalStartSources
+if ($preparationFusion -eq 'SYSTEM_FUSION_KF6') {
+    $controlProvenanceSources = @($optionalStartSources | Where-Object {
+        $_ -notmatch '(test_optional_gnss_start|optional_start_ins_inputs|estimator_bus)\.c$'
+    }) + @("$repoRoot\Tests\Host\test_control_provenance.c",
+        "$repoRoot\Tests\Host\control_provenance_bus.c",
+        "$repoRoot\Tests\Host\control_provenance_ins_inputs.c")
+    Write-Output 'FCCG_HOST_FIXTURE|control_provenance|actual INS/KF6/queue; logical sensor ports; physical epoch path not exercised'
+    Invoke-HostTest -Name 'control_provenance' -ExtraCompilerArgs ($optionalStartArgs + @('-fanalyzer', '-DSYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED=0U')) `
+        -Sources $controlProvenanceSources -RunArguments @('normal', 'queue_full', 'source', 'unknown', 'queue_full_boundary', 'queue_not_ready', 'alignment_source')
+}
+$controlContractPath = Join-Path $repoRoot 'Generated\control_research.json'
+$controlContract = Get-Content -LiteralPath $controlContractPath -Raw | ConvertFrom-Json
+if ($controlContract.enabled) {
+    if ($controlContract.kind -notin @('pid', 'lqr')) { throw 'Invalid selected research controller kind' }
+    $controlKind = [string]$controlContract.kind
+    $controlUpper = $controlKind.ToUpperInvariant()
+    Write-Output 'FCCG_HOST_FIXTURE|control_research|actual backend/runtime; synthetic mission table and logical input ports; no electrical output'
+    Invoke-HostTest -Name 'control_research' -ExtraCompilerArgs @('-fanalyzer',
+        '-ffunction-sections', '-fdata-sections', '-Wl,--gc-sections',
+        '-DSYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED=0U',
+        "-I$repoRoot\Tests\Host\Fixtures\ControlResearch",
+        "-I$repoRoot\Algorithm\Control\$controlUpper\Inc") -Sources @(
+        "$repoRoot\Tests\Host\test_control_research.c",
+        "$repoRoot\APP\Src\control_research_runtime.c",
+        "$repoRoot\System\Src\system_mission_process.c",
+        "$repoRoot\Tests\Host\Fixtures\ControlResearch\project_mission_process.c",
+        "$repoRoot\Generated\Src\project_control_research.c",
+        "$repoRoot\System\Calibration\Src\system_calibration_correction.c",
+        "$repoRoot\Algorithm\Control\$controlUpper\Src\control_$controlKind.c",
+        "$repoRoot\Algorithm\Control\$controlUpper\Src\control_${controlKind}_project.c") `
+        -RunArguments @('normal', 'late_ok', 'overrun', 'stale', 'future', 'duplicate',
+        'source', 'generation', 'epoch', 'unknown', 'nan', 'nonplanar', 'health',
+        'calibration_race', 'stop', 'clock', 'startup_timeout', 'cached_expiry',
+        'read_fault', 'compute_overrun', 'cached_source_revoked', 'stop_interleave', 'schedule_interleave', 'torque_units')
+}
 Invoke-HostTest -Name 'optional_gnss_start_explicit_required' `
     -ExtraCompilerArgs ($optionalStartArgs + @(
         '-DSYSTEM_USER_ALIGNMENT_SELECTED_MASK=7U',

@@ -13,6 +13,7 @@ def MessageBoxButtons_Localize(
         (QMessageBox.StandardButton.Yes, "action.yes"),
         (QMessageBox.StandardButton.No, "action.no"),
         (QMessageBox.StandardButton.Cancel, "action.cancel"),
+        (QMessageBox.StandardButton.Apply, "capsule.apply"),
     ):
         button = box.button(standard)
         if button is not None:

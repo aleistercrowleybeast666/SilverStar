@@ -45,9 +45,9 @@ def test_targets_remain_discoverable_and_configuration_is_read_only(qapp, worksp
     try:
         workspace.Configuration_Set(model)
         assert 'enabled' not in model.Dictionary_Get()['ground_target']
-        assert workspace.target_cards['flight'].isAncestorOf(flight.board_combo)
-        assert workspace.target_cards['ground'].isAncestorOf(ground.board_combo)
-        assert workspace.target_cards['ground'].isAncestorOf(ground.import_directory)
+        assert workspace._editor_bin.isAncestorOf(flight.board_combo)
+        assert workspace._editor_bin.isAncestorOf(ground.board_combo)
+        assert workspace._editor_bin.isAncestorOf(ground.import_directory)
         assert workspace._target_sections['flight'].isAncestorOf(devices.telemetry_group)
         assert workspace._target_sections['ground'].isAncestorOf(ground.pc_interface)
         assert workspace._target_sections['ground'].isAncestorOf(ground.radio_instances_editor)
@@ -60,9 +60,9 @@ def test_targets_remain_discoverable_and_configuration_is_read_only(qapp, worksp
                 Theme_Apply(qapp, theme)
                 for width in (900, 1280):
                     workspace.resize(width, 1000); workspace.show(); _Events_Flush(qapp)
-                    assert ground.board_combo.isVisible()
-                    assert ground.import_directory.isVisible()
-                    assert flight.import_directory_button.isVisible()
+                    assert not ground.board_combo.isVisible()
+                    assert not ground.import_directory.isVisible()
+                    assert not flight.import_directory_button.isVisible()
                     assert workspace.target_cards['ground'].geometry().bottom() < 950
                     assert workspace.target_cards['flight'].geometry().right() <= width
         assert model.Dictionary_Get() == before
@@ -78,10 +78,13 @@ def test_problem_reveal_opens_exact_target_details_and_preserves_fold_state(qapp
         workspace.resize(1000, 900); workspace.show(); _Events_Flush(qapp)
         workspace._target_sections['ground'].toggle_button.setChecked(False)
         state = workspace.ExpandedState_Get()
+        requests = QSignalSpy(workspace.targetEditRequested)
         assert workspace.Reveal(ground.platform_values['part'])
         _Events_Flush(qapp)
-        assert workspace._target_sections['ground'].Expanded_Is()
-        assert workspace._sections['ground.platform'].Expanded_Is()
+        assert requests.count() == 1
+        assert requests.at(0) == ['ground', 'hardware']
+        assert not workspace._target_sections['ground'].Expanded_Is()
+        assert not workspace._sections['ground.platform'].Expanded_Is()
         assert not workspace._sections['flight.platform'].Expanded_Is()
         workspace.ExpandedState_Set(state)
         assert workspace.ExpandedState_Get() == state
@@ -119,7 +122,7 @@ def test_checks_uses_original_separate_generation_commands(qapp, workspace_root)
 
 @pytest.mark.parametrize('width', [900, 1024])
 @pytest.mark.parametrize('language,theme', [('zh_CN','light'), ('en_US','dark')])
-def test_actual_window_first_screen_contains_both_target_imports(qapp, workspace_root, tmp_path, width, language, theme):
+def test_actual_window_first_screen_contains_both_target_options(qapp, workspace_root, tmp_path, width, language, theme):
     from PySide6.QtCore import QRect
     from PySide6.QtGui import QFont
     from PySide6.QtWidgets import QMessageBox, QScrollArea
@@ -143,8 +146,8 @@ def test_actual_window_first_screen_contains_both_target_imports(qapp, workspace
         assert window.width() == width
         workspace = window.hardware_workspace
         viewport = workspace.findChild(QScrollArea).viewport()
-        for owner in (window.board_hardware_page, window.ground_target_page):
-            for control in (owner.board_combo, owner.import_directory_button):
+        for target in ('flight', 'ground'):
+            for control in (workspace.target_buttons[target],):
                 bounds = QRect(control.mapTo(viewport, control.rect().topLeft()), control.size())
                 assert viewport.rect().contains(bounds), (control.objectName(), bounds, viewport.rect())
         assert workspace.findChild(QScrollArea).widget().width() <= viewport.width()
@@ -158,7 +161,7 @@ def test_actual_window_first_screen_contains_both_target_imports(qapp, workspace
         rows = workspace._device_rows['flight']
         assert len(rows) == len(set(rows))
         assert len(rows) == len(window._model.device_instances)
-        assert len(workspace.device_summaries['flight'].text().splitlines()) <= 4
+        assert len(workspace.device_summaries['flight'].text().splitlines()) <= 6
         assert workspace.device_summaries['flight'].toolTip() == '\n'.join(rows)
         assert window._model.Dictionary_Get() == before
         assert window.grab().save(str(tmp_path/f'hardware_{language}_{theme}_{width}.png'))
@@ -212,21 +215,22 @@ def test_target_columns_align_and_shared_link_precedes_details(qapp, workspace_r
         _Events_Flush(qapp)
         workspace = window.hardware_workspace
         for flight_control, ground_control in (
-            (window.board_hardware_page.board_combo, window.ground_target_page.board_combo),
-            (window.board_hardware_page.import_directory_button, window.ground_target_page.import_directory_button),
+            (workspace.target_summaries['flight'], workspace.target_summaries['ground']),
             (workspace.target_buttons['flight'], workspace.target_buttons['ground']),
         ):
             left, right = Bounds(flight_control), Bounds(ground_control)
             assert abs(left.top() - right.top()) <= 1
             assert abs(left.height() - right.height()) <= 1
-        left, right = (Bounds(workspace._target_sections[target]) for target in ('flight','ground'))
+        left, right = (Bounds(workspace.target_cards[target]) for target in ('flight','ground'))
         assert left.top() == right.top()
         assert left.right() < right.left()
         assert abs(left.width() - right.width()) <= 1
         assert workspace._target_sections['flight'].isAncestorOf(window.devices_page.position_editors['imu0'])
         assert workspace._target_sections['ground'].isAncestorOf(window.ground_target_page.pc_interface)
         assert Bounds(workspace.link_group).top() > max(Bounds(card).bottom() for card in workspace.target_cards.values())
-        assert Bounds(workspace.link_group).bottom() < min(left.top(), right.top())
+        assert Bounds(workspace.link_group).bottom() < Bounds(workspace.device_group).top()
+        assert not workspace._target_sections['flight'].isVisible()
+        assert not workspace._target_sections['ground'].isVisible()
         assert workspace.link_button.isVisible()
         assert not window.air_link_page.air_link_group.isVisible()
         assert all(window.navigation_list.visualItemRect(window.navigation_list.item(index)).height() >= 60

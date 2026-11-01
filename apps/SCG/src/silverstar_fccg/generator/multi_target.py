@@ -411,6 +411,7 @@ def GroundFiles_Render(
     for relative in (
         "Common/Inc/silverstar_assert.h", "Common/Inc/silverstar_compiler.h",
         "Common/Src/silverstar_assert.c", "Interfaces/Inc/system_device_types.h",
+        "Interfaces/Inc/system_navigation_provenance.h",
         "Tools/check_power_of_ten.ps1",
     ):
         files[relative] = (flight_core.payload_root / relative).read_bytes()

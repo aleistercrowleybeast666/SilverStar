@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import importlib.util
 import zipfile
 import sys
@@ -23,6 +24,41 @@ def _DependencyFixture_Write(path, source, monkeypatch):
         monkeypatch.setitem(stacks.BINDING_DEPENDENCIES_V2, source, [hashlib.sha256(source.encode()).hexdigest()])
 
 
+def _AssemblyFixture_Extend(base, extra, connections=None, fixed_addresses=None):
+    """Give historical callback fixtures a consistent ELF FUNC/address model.
+
+    Their source/table mutation expectations remain unchanged. This is only a
+    synthetic tool-output builder; actual ARM ELF validation is separate.
+    """
+    blocks = {}
+    for text in (base, extra):
+        name = None
+        for line in text.splitlines():
+            if match := re.match(r"^([0-9a-f]+) <([^>]+)>:", line):
+                name = match[2]
+                blocks[name] = []
+            elif name and (match := re.match(r"\s*[0-9a-f]+:\s+((?:(?:[0-9a-f]{8}|[0-9a-f]{4})\s+)+)(\S+)\s*(.*)", line)):
+                blocks[name].append((match[1].strip(), match[2], match[3]))
+    addresses = {name: 0x08010000 + index * 0x100 for index, name in enumerate(blocks)}
+    addresses.update(fixed_addresses or {})
+    for name, target in (connections or {}).items():
+        blocks[name].insert(0, ("f000 f000", "bl", f"0 <{target}>"))
+    assembly, symbols = "Disassembly of section .text:\n", ""
+    for name, rows in blocks.items():
+        start = cursor = addresses[name]
+        assembly += f"{start:08x} <{name}>:\n"
+        # Literals are data after the return, not executed fake instructions.
+        rows = [row for row in rows if not row[1].startswith(".")] + [row for row in rows if row[1].startswith(".")]
+        for machine, op, args in rows:
+            if target := re.search(r"([0-9a-f]+)\s+<([^>+]+)(?:\+([^>]+))?>", args):
+                if target[2] in addresses:
+                    args = args[:target.start()] + f"{addresses[target[2]] + (int(target[3], 0) if target[3] else 0):x} <{target[2]}>" + args[target.end():]
+            assembly += f" {cursor:x}: {machine} {op} {args}\n"
+            cursor += len(re.sub(r"\s", "", machine)) // 2
+        symbols += f"{start:08x} g F .text {cursor - start:08x} {name}\n"
+    return assembly, symbols, addresses
+
+
 def _ElfFixture_Create(tmp_path: Path, monkeypatch, *, serial="", frame=64):
     (tmp_path / "test.c").write_text("", encoding="utf8")
     # Explicit fixture-only reviewed empty source, not a production exemption.
@@ -40,16 +76,27 @@ def _ElfFixture_Create(tmp_path: Path, monkeypatch, *, serial="", frame=64):
               "SystemAlignment_Process", "library"]
     edges = {"main": "AppTasks_Init", "AppTasks_Init": "SystemIndicator_Init",
              "AppTask_Flight": "SystemAlignment_Process", "AppTask_Serial": "library"}
-    disassembly = ""
+    addresses = {name: 0x08000000 + index * 0x100 for index, name in enumerate(names)}
+    disassembly = "Disassembly of section .text:\n"
+    symbol_table = ""
     for name in names:
-        disassembly += f"08000000 <{name}>:\n"
+        start = addresses[name]
+        cursor = start
+        disassembly += f"{start:08x} <{name}>:\n"
         if name in edges:
-            disassembly += f" 8000000: f000 f000 bl 8000000 <{edges[name]}>\n"
+            disassembly += f" {cursor:x}: f000 f000 bl {addresses[edges[name]]:x} <{edges[name]}>\n"
+            cursor += 4
         if name == "library":
-            disassembly += " 8000004: e96d ce04 strd ip, lr, [sp, #-16]!\n"
-        if name == "AppTask_Serial":
-            disassembly += serial
-        disassembly += " 8000008: 4770 bx lr\n"
+            disassembly += f" {cursor:x}: e96d ce04 strd ip, lr, [sp, #-16]!\n"
+            cursor += 4
+        if name == "AppTask_Serial" and serial:
+            instruction = serial.strip().split(":", 1)[1].strip()
+            instruction = instruction.replace("8000000 <AppTask_Serial>", f"{start:x} <AppTask_Serial>")
+            disassembly += f" {cursor:x}: {instruction}\n"
+            machine = re.match(r"((?:[0-9a-f]{4,8}\s+)+)", instruction)[1]
+            cursor += len(re.sub(r"\s", "", machine)) // 2
+        disassembly += f" {cursor:x}: 4770 bx lr\n"
+        symbol_table += f"{start:08x} g F .text {cursor + 2 - start:08x} {name}\n"
     (build / "test.su").write_text("".join(
         f"fixture.c:1:1:{name}\t{frame}\tstatic\n" for name in names if name != "library"
     ), encoding="utf-8")
@@ -57,7 +104,7 @@ def _ElfFixture_Create(tmp_path: Path, monkeypatch, *, serial="", frame=64):
     nm = "".join(f"10000000 00001000 b {symbol}\n" for _, symbol in stacks.TASKS.values())
     def read(command, root):
         if "objdump" in command[0]:
-            return disassembly
+            return symbol_table if "-t" in command else disassembly
         if "nm" in command[0]:
             return nm
         return "Arm GNU test fixture"
@@ -75,7 +122,7 @@ def test_stack_budget_includes_library_preindexed_sp_and_context(tmp_path, monke
     assert serial["chain"][-1] == {"function": "library", "frame_bytes": 16}
 
 
-@pytest.mark.parametrize('diagnostic,frame,expected',[(False,64,0),(False,2000,1),(True,64,2)])
+@pytest.mark.parametrize('diagnostic,frame,expected',[(False,64,2),(False,2000,1),(True,64,2)])
 def test_machine_report_marker_only_names_written_budget(tmp_path,monkeypatch,capsys,diagnostic,frame,expected):
     root=_ElfFixture_Create(tmp_path,monkeypatch,frame=frame)
     monkeypatch.setattr(sys,'argv',['check_task_stacks.py','--project',str(root),'--prefix','unused-']+
@@ -90,7 +137,9 @@ def test_machine_report_marker_only_names_written_budget(tmp_path,monkeypatch,ca
         path=Path(markers[0].split('|',1)[1])
         assert path.is_absolute() and path.name=='stack-budget.json'
         report=json.loads(path.read_text(encoding='utf8'))
-        assert report['passes'] is (expected==0)
+        # This legacy fixture proves task-only arithmetic. Its unchanged
+        # positive task result cannot grant strict MSP/ISR acceptance.
+        assert report['passes'] is (frame==64)
         assert report['whole_program_stack_acceptance'].startswith('NOT PROVEN')
 
 
@@ -135,6 +184,39 @@ def test_stack_budget_rejects_unknown_indirect_and_recursion(tmp_path, monkeypat
     root = _ElfFixture_Create(tmp_path, monkeypatch, serial=instruction)
     with pytest.raises(ValueError, match=error):
         stacks.StackReport_Build(root, "Release", "unused-")
+
+
+@pytest.mark.parametrize("instruction", [
+    " 8000004: 4798 blxne r3\n",
+    " 8000004: 469f mov pc, r3\n",
+    " 8000004: f8d3 f000 ldr.w pc, [r3]\n",
+])
+def test_stack_budget_rejects_all_register_indirect_call_forms(tmp_path, monkeypatch, instruction):
+    root = _ElfFixture_Create(tmp_path, monkeypatch, serial=instruction)
+    with pytest.raises(ValueError, match="Unresolved stack usage"):
+        stacks.StackReport_Build(root, "Release", "unused-")
+
+
+def test_returning_tail_call_in_initializer_does_not_hide_task_business_loop(tmp_path, monkeypatch):
+    root = _ElfFixture_Create(tmp_path, monkeypatch)
+    original = stacks.Command_Read
+    base = original(["objdump", "-d"], root)
+    base = re.sub(r"(<AppTask_Ins>:\n)", r"\1 8000000: f000 f000 bl 0 <LoopWork>\n", base)
+    extra = ("08000000 <Initialize>:\n 8000000: f000 b800 b.w 0 <library>\n"
+             "08000000 <LoopWork>:\n 8000000: 4770 bx lr\n")
+    assembly, symbols, _ = _AssemblyFixture_Extend(base, extra, {"AppTask_Ins": "Initialize"})
+    su = root / "build/FCCG/SilverStar_F407/Release/test.su"
+    with su.open("a", encoding="utf8") as stream:
+        stream.write("fixture.c:1:1:Initialize\t16\tstatic\nfixture.c:1:1:LoopWork\t512\tstatic\n")
+    def Read(command, cwd):
+        if "objdump" in command[0]:
+            return symbols if "-t" in command else assembly
+        return original(command, cwd)
+    monkeypatch.setattr(stacks, "Command_Read", Read)
+    report = stacks.StackReport_Build(root, "Release", "fixture-")
+    task = next(row for row in report["tasks"] if row["task"] == "INS")
+    assert task["call_chain_bytes"] == 64 + 512
+    assert task["chain"][-1]["function"] == "LoopWork"
 
 
 def test_diagnostic_never_grants_acceptance_even_with_closed_direct_paths(tmp_path, monkeypatch):
@@ -427,3 +509,16 @@ def test_logfile_review_rejects_mixing_individually_known_compiler_inputs(tmp_pa
     assert stacks.BindingHeader_Verify(tmp_path, header) == second_hash
     with pytest.raises(ValueError, match="Changed paired source/compiler input closure"):
         stacks.BindingSources_Verify(tmp_path, [source], build)
+def test_strict_cli_refuses_task_only_pass_without_whole_program_proof(tmp_path, monkeypatch):
+    import importlib.util
+    import sys
+    path = Path(__file__).resolve().parents[1] / 'plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_task_stacks.py'
+    spec = importlib.util.spec_from_file_location('strict_stack_cli_negative', path)
+    checker = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(checker)
+    monkeypatch.setattr(sys, 'argv', ['checker', '--project', str(tmp_path)])
+    monkeypatch.setattr(checker, 'StackReport_Build', lambda *args: {
+        'elf': 'firmware.elf', 'tasks': [], 'checks': {'task_only': True}, 'passes': True,
+        'whole_program_stack_acceptance': 'NOT PROVEN: missing MSP/ISR proof'})
+    assert checker.main() == 2
+

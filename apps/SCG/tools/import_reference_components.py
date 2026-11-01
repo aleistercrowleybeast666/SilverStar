@@ -45,6 +45,8 @@ RUNTIME_SAFETY_CORE_FILES = (
     "Tests/Host/test_runtime_startup.c", "Tests/Host/test_runtime_commands.c",
     "Tests/Host/test_fault_hook.c", "Tests/Host/test_calibration_build_gate.c",
     "Tools/check_task_stacks.py", "Tools/check_architecture.ps1",
+    "Tools/stack_arm.py", "Tools/stack_runtime.py", "Tools/stack_review.py",
+    "Tools/software_stack_inputs.json", "Tools/software_stack_review.md", "Tools/h743_stack_inputs.json",
 )
 
 STM32CUBE_F4_PACKAGE = "STM32Cube_FW_F4_V1.28.3"
@@ -1048,6 +1050,13 @@ def _Components_Get(
             "System/Inc/system_console_dispatch.h",
             "System/Src/system_console_dispatch.c",
             "Tools/astra_stack_inputs.json",
+            "Tools/h743_stack_inputs.json",
+            "Tools/check_task_stacks.py",
+            "Tools/stack_arm.py",
+            "Tools/stack_runtime.py",
+            "Tools/stack_review.py",
+            "Tools/software_stack_inputs.json",
+            "Tools/software_stack_review.md",
             "System/User/system_user_config.h",
             "Interfaces/Inc/system_installation_capture_if.h",
             "System/Alignment/Inc/system_alignment.h",
@@ -1271,7 +1280,6 @@ def _Components_Get(
                 "VALIDATION.md",
             ],
             fccg_owned_files=core_fccg_owned_files,
-            overlay_files={"Tools/check_task_stacks.py": "check_task_stacks.py"},
             fccg_owned_docs={
                 relative: f"{core_source_relative}/docs/{relative}"
                 for relative in (
@@ -1321,11 +1329,22 @@ def _Components_Get(
                 "Targets/SilverStar_F407/Inc/mission_action_output_build_capabilities.h": "target/mission_action_output_build_capabilities.h",
             },
             vendor_files={path: path for path in STM32CUBE_F4_VENDOR_HASHES},
+            fccg_owned_files={
+                "Platform/STM32F4/Src/platform_gpio_stm32f4.c": (
+                    "plugins/builtin/silverstar_mcu_family_stm32f4/payload/"
+                    "Platform/STM32F4/Src/platform_gpio_stm32f4.c"),
+                "STM32F407XX_FLASH.ld": (
+                    "plugins/builtin/silverstar_mcu_stm32f407vet6/payload/STM32F407XX_FLASH.ld"),
+            },
             docs=["docs/details/PLATFORM_INTERFACE.md", "docs/details/BUILD_AND_TARGETS.md"],
         )
     )
 
     provisions, _legacy_platform_resources = _PlatformResources_Get()
+    components[-1]["manifest"]["metadata"]["source_origins"].update({
+        "Platform/STM32F4/Src/platform_gpio_stm32f4.c": "fccg_generated_gpio_capacity",
+        "STM32F407XX_FLASH.ld": "fccg_reviewed_main_exception_stack",
+    })
     components.append(
         _Component(
             board_id,
@@ -2859,6 +2878,18 @@ def _Components_Get(
                 component['manifest']['metadata'].setdefault('source_origins', {})[relative] = 'fccg_mission_process'
                 if relative.endswith('.c') and relative not in component['manifest']['build']['sources']:
                     component['manifest']['build']['sources'].append(relative)
+            # These files have one current owner in the declarative core package.
+            # Reference firmware must not replace them or omit their build entries.
+            for relative in (
+                "APP/Inc/control_research.h",
+                "APP/Src/control_research.c",
+                "APP/Src/control_research_runtime.c",
+                "Interfaces/Inc/system_navigation_provenance.h",
+            ):
+                component["fccg_owned_files"][relative] = f"plugins/builtin/{slug}/payload/{relative}"
+                component["manifest"]["metadata"].setdefault("source_origins", {})[relative] = "fccg_control_research"
+                if relative.endswith(".c") and relative not in component["manifest"]["build"]["sources"]:
+                    component["manifest"]["build"]["sources"].append(relative)
             if "capability_source_groups" in owned_core.get("metadata", {}):
                 component["manifest"]["metadata"]["capability_source_groups"] = owned_core["metadata"]["capability_source_groups"]
             for relative in (

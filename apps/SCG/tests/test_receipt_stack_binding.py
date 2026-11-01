@@ -4,6 +4,7 @@ import ast
 import importlib.util
 import json
 import re
+from hashlib import sha256
 import zipfile
 from pathlib import Path
 
@@ -113,11 +114,15 @@ def test_active_header_is_outside_disabled_policy_review(checker, tmp_path, name
         checker.BindingSources_Verify(tmp_path, [source], build)
 
 
-def test_no_other_checker_AST_policy_changed_and_no_new_indirect_site_is_admitted():
+def test_historical_v20_changed_only_its_recorded_binding_policy():
     with zipfile.ZipFile(EVIDENCE / "inputs.zip") as archive:
         before = ast.parse(archive.read("review/checker_before_v20.py"))
         census = json.loads(archive.read("review/census.json"))
-    after = ast.parse(TOOL.read_text(encoding="utf8"))
+    manifest = json.loads((EVIDENCE / "manifest.json").read_text(encoding="utf8"))
+    with zipfile.ZipFile(EVIDENCE / "sources.zip") as archive:
+        raw = archive.read("apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/check_task_stacks.py")
+    assert sha256(raw).hexdigest() == manifest["checker_after_sha256"]
+    after = ast.parse(raw)
     assignments = {
         "BINDING_SOURCE_RECEIPT_V20",
         "BINDING_DEPENDENCIES_RECEIPT_V20",

@@ -160,8 +160,26 @@ def test_source_graph_is_complete_and_has_one_truth(builtin_catalog) -> None:
             from silverstar_fccg.generator.mission_process import MissionProcessFiles_Render
             assert source in MissionProcessFiles_Render(model, builtin_catalog)
     expected = (expected - set(delta["removals"])) | set(delta["additions"])
+    assert len(expected) == 166
+    control_delta = json.loads((Path(__file__).parent /
+        "fixtures/reference_source_graph_control_delta.json").read_text(encoding="utf-8"))
+    assert len(control_delta["additions"]) == 3
+    assert not set(control_delta["additions"]) & expected
+    for source, record in control_delta["additions"].items():
+        if "payload_owner" in record:
+            owner = builtin_catalog.Component_Get(record["payload_owner"])
+            assert owner.component_id in model.ComponentIds_Get()
+            assert source in owner.build.sources
+            assert (owner.payload_root / source).is_file()
+        else:
+            from silverstar_fccg.generator.control_research import ControlResearchFiles_Render
+            generated = ControlResearchFiles_Render(model, builtin_catalog)
+            assert source == "Generated/Src/project_control_research.c"
+            assert source in generated
+            assert json.loads(generated["Generated/control_research.json"])["enabled"] is False
+    expected |= set(control_delta["additions"])
     assert set(graph.sources) == expected
-    assert len(graph.sources) == len(expected) == 166
+    assert len(graph.sources) == len(expected) == 169
     assert "System/Src/system_device_startup.c" in graph.sources
     assert "Algorithm/Common/Src/navigation_quality.c" in graph.sources
     assert "System/Src/system_navigation_health.c" in graph.sources

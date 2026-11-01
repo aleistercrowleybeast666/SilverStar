@@ -36,6 +36,51 @@ static PLATFORM_CPU_FAST_BSS SystemMissionProcessState s_process;
 /* References are constant-eliminated when no data function has dependencies. */
 static PLATFORM_CPU_FAST_BSS uint64_t s_ready_timestamp_us[2];
 
+/* The caller holds the IRQ lock. Reject corrupted owned state before readers
+ * publish an event or a permission; a later FlightTask poll is not a guard. */
+static void SystemMissionProcess_StateValidate(void)
+{
+    SILVERSTAR_ASSERT(s_process.entered <= PROJECT_MISSION_STAGE_COUNT,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT((s_process.holding <= 1U) && (s_process.terminated <= 1U) &&
+        (s_process.time_known <= 1U) && (s_process.acceleration_known <= 1U) &&
+        (s_process.navigation_known <= 1U) && (s_process.mission_started <= 1U) &&
+        (s_process.landed <= 1U),
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    SILVERSTAR_ASSERT((s_process.ready_function_mask & (uint8_t)~0x0CU) == 0U,
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    SILVERSTAR_ASSERT(((s_process.entered == 0U) || (s_process.time_known != 0U)) &&
+        ((s_process.terminated == 0U) || (s_process.terminal_us == s_process.last_us)),
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
+}
+
+static void SystemMissionProcess_FunctionValidate(const SystemMissionFunctionConfig *config)
+{
+    SILVERSTAR_ASSERT((config->start_kind <= 5U) && (config->stop_kind <= 5U) &&
+        ((config->dependency_mask & (uint8_t)~0x0CU) == 0U),
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    SILVERSTAR_ASSERT((((config->start_kind != 2U) && (config->start_kind != 3U)) ||
+        (config->start_index < PROJECT_MISSION_STAGE_COUNT)) &&
+        (((config->stop_kind != 2U) && (config->stop_kind != 3U)) ||
+        (config->stop_index < PROJECT_MISSION_STAGE_COUNT)),
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+}
+
+/* Validate only the history entries used by this read, under the same lock. */
+static void SystemMissionProcess_EventTimeValidate(uint32_t index)
+{
+    uint64_t time = s_process.entered_us[index];
+    SILVERSTAR_ASSERT((time <= s_process.last_us) && ((index == 0U) ||
+        (time > s_process.entered_us[index - 1U])),
+        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
+    if (index + 1U < s_process.entered)
+    {
+        SILVERSTAR_ASSERT((s_process.entered_us[index + 1U] > time) &&
+            (s_process.entered_us[index + 1U] <= s_process.last_us),
+            SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_TIME_INVARIANT);
+    }
+}
+
 void SystemMissionProcess_Init(void)
 {
     uint32_t lock = PlatformCritical_Enter();
@@ -141,10 +186,13 @@ static SystemMissionProcessResult SystemMissionProcess_Terminate(const SystemMis
 {
     SystemMissionStageConfig stage;
     SystemMissionProcessResult result = SystemMissionProcessResult_Complete;
-    if ((s_process.entered < PROJECT_MISSION_STAGE_COUNT) &&
-        (ProjectMissionStage_ConfigGet(s_process.entered, &stage) == SystemMissionProcessResult_Entered) &&
-        (stage.signal == 0U) && ((input->events & stage.event_mask) != 0U))
-    { result = SystemMissionProcess_Transition(input, &stage); }
+    if (s_process.entered < PROJECT_MISSION_STAGE_COUNT)
+    {
+        if (ProjectMissionStage_ConfigGet(s_process.entered, &stage) != SystemMissionProcessResult_Entered)
+        { result = SystemMissionProcessResult_Invalid; }
+        else if ((stage.signal == 0U) && ((input->events & stage.event_mask) != 0U))
+        { result = SystemMissionProcess_Transition(input, &stage); }
+    }
     uint32_t lock = PlatformCritical_Enter();
     s_process.terminal_us = input->now_us;
     s_process.terminated = 1U;
@@ -158,18 +206,17 @@ SystemMissionProcessResult SystemMissionProcess_Step(const SystemMissionProcessI
     if ((input == NULL) || (input->mission_started > 1U) || (input->terminated > 1U) ||
         ((input->ready_function_mask & (uint8_t)~0x0CU) != 0U))
     { return SystemMissionProcessResult_Invalid; }
-    SILVERSTAR_ASSERT(s_process.entered <= PROJECT_MISSION_STAGE_COUNT,
-        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
-    SILVERSTAR_ASSERT((s_process.holding <= 1U) && (s_process.terminated <= 1U),
-        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+    uint32_t validation_lock = PlatformCritical_Enter();
+    SystemMissionProcess_StateValidate();
+    PlatformCritical_Exit(validation_lock);
     if (s_process.terminated != 0U) { return SystemMissionProcessResult_Complete; }
     if ((s_process.time_known != 0U) && (input->now_us <= s_process.last_us))
     { return SystemMissionProcessResult_Invalid; }
     if ((s_process.time_known != 0U) &&
         (input->now_us - s_process.last_us > PROJECT_MISSION_MAXIMUM_GAP_US))
     { s_process.holding = 0U; }
-    s_process.last_us = input->now_us; s_process.time_known = 1U;
     uint32_t state_lock = PlatformCritical_Enter();
+    s_process.last_us = input->now_us; s_process.time_known = 1U;
     s_process.mission_started = input->mission_started;
     s_process.landed |= (uint8_t)((input->events & (1UL << 6)) != 0U);
     s_process.ready_function_mask = input->ready_function_mask;
@@ -202,15 +249,17 @@ SystemMissionProcessResult SystemMissionProcess_EventGet(uint32_t after_sequence
     uint32_t lock;
     if ((event == NULL) || (after_sequence >= 2U * PROJECT_MISSION_STAGE_COUNT))
     { return SystemMissionProcessResult_Unavailable; }
+    if (ProjectMissionStage_ConfigGet((uint8_t)index, &stage) != SystemMissionProcessResult_Entered)
+    { return SystemMissionProcessResult_Invalid; }
     lock = PlatformCritical_Enter();
+    SystemMissionProcess_StateValidate();
     if ((index >= s_process.entered) || (((sequence % 2U) == 0U) &&
         (index + 1U >= s_process.entered) && (s_process.terminated == 0U)))
     { PlatformCritical_Exit(lock); return SystemMissionProcessResult_Unavailable; }
+    SystemMissionProcess_EventTimeValidate(index);
     event->timestamp_us = ((sequence % 2U) != 0U) ? s_process.entered_us[index] :
         (index + 1U < s_process.entered) ? s_process.entered_us[index + 1U] : s_process.terminal_us;
     PlatformCritical_Exit(lock);
-    if (ProjectMissionStage_ConfigGet((uint8_t)index, &stage) != SystemMissionProcessResult_Entered)
-    { return SystemMissionProcessResult_Invalid; }
     event->stage_index = (uint8_t)index; event->stage_id_hash = stage.stage_id_hash;
     event->sequence = sequence;
     event->event_code = ((sequence % 2U) != 0U) ? SYSTEM_MISSION_PROCESS_EVENT_ENTER : SYSTEM_MISSION_PROCESS_EVENT_EXIT;
@@ -254,6 +303,7 @@ static uint8_t SystemMissionProcess_DependenciesReady(uint8_t mask, uint64_t now
         }
         if (ProjectMissionFunction_ConfigGet(index, &dependency) != SystemMissionProcessResult_Entered)
         { return 0U; }
+        SystemMissionProcess_FunctionValidate(&dependency);
         if ((SystemMissionProcess_BoundaryReached(dependency.start_kind, dependency.start_index) == 0U) ||
             (SystemMissionProcess_BoundaryReached(dependency.stop_kind, dependency.stop_index) != 0U))
         { return 0U; }
@@ -267,11 +317,11 @@ static uint8_t SystemMissionProcess_FunctionActiveGet(uint8_t index)
     uint8_t active;
     uint64_t now_us = 0U;
     if (ProjectMissionFunction_ConfigGet(index, &config) != SystemMissionProcessResult_Entered) { return 0U; }
-    SILVERSTAR_ASSERT((config.start_kind <= 5U) && (config.stop_kind <= 5U),
-        SILVERSTAR_ASSERT_MODULE_SYSTEM, SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    SystemMissionProcess_FunctionValidate(&config);
     if ((PROJECT_MISSION_FUNCTION_DEPENDENCIES != 0U) && (config.dependency_mask != 0U))
     { now_us = SystemTime_GetMonotonicUs(); }
     uint32_t lock = PlatformCritical_Enter();
+    SystemMissionProcess_StateValidate();
     active = (uint8_t)((SystemMissionProcess_BoundaryReached(config.start_kind, config.start_index) != 0U) &&
         (SystemMissionProcess_BoundaryReached(config.stop_kind, config.stop_index) == 0U) &&
         (SystemMissionProcess_DependenciesReady(config.dependency_mask, now_us) != 0U));
@@ -290,9 +340,9 @@ static uint8_t SystemMissionProcess_NavigationStoppedGet(uint8_t index)
     SystemMissionFunctionConfig config;
     uint8_t stopped;
     if (ProjectMissionFunction_ConfigGet(index, &config) != SystemMissionProcessResult_Entered) { return 1U; }
-    SILVERSTAR_ASSERT(config.stop_kind <= 5U, SILVERSTAR_ASSERT_MODULE_SYSTEM,
-        SILVERSTAR_ASSERT_REASON_ENUM_RANGE);
+    SystemMissionProcess_FunctionValidate(&config);
     uint32_t lock = PlatformCritical_Enter();
+    SystemMissionProcess_StateValidate();
     stopped = (uint8_t)((s_process.terminated != 0U) ||
         (SystemMissionProcess_BoundaryReached(config.stop_kind, config.stop_index) != 0U));
     PlatformCritical_Exit(lock);
@@ -304,3 +354,25 @@ uint8_t SystemMissionProcess_InsStoppedGet(void)
 
 uint8_t SystemMissionProcess_EstimatorStoppedGet(void)
 { return SystemMissionProcess_NavigationStoppedGet(3U); }
+
+SystemMissionControlWindowResult SystemMissionProcess_ControlWindowGet(void)
+{
+    SystemMissionFunctionConfig config;
+    SystemMissionControlWindowResult result = SystemMissionControlWindowResult_Waiting;
+    uint32_t lock;
+    if (PROJECT_MISSION_CONTROL_ENABLED == 0U)
+    { return SystemMissionControlWindowResult_Disabled; }
+    if (ProjectMissionFunction_ConfigGet(4U, &config) != SystemMissionProcessResult_Entered)
+    { return SystemMissionControlWindowResult_Invalid; }
+    SystemMissionProcess_FunctionValidate(&config);
+    lock = PlatformCritical_Enter();
+    SystemMissionProcess_StateValidate();
+    if ((s_process.terminated != 0U) ||
+        (SystemMissionProcess_BoundaryReached(config.stop_kind, config.stop_index) != 0U))
+    { result = SystemMissionControlWindowResult_Stopped; }
+    else if ((s_process.mission_started != 0U) &&
+        (SystemMissionProcess_BoundaryReached(config.start_kind, config.start_index) != 0U))
+    { result = SystemMissionControlWindowResult_Active; }
+    PlatformCritical_Exit(lock);
+    return result;
+}

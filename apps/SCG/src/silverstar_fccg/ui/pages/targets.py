@@ -192,6 +192,7 @@ class AirLinkPage(ScrollableLocalizedPage):
         return tuple((titles.get(identity, identity), identity) for identity in sorted(values))
 
     def Configuration_Set(self, link, issues) -> None:
+        self.configuration_issues = tuple(issues)
         for name, widget in self.fields.items():
             widget.blockSignals(True)
             if isinstance(widget, QDoubleSpinBox):

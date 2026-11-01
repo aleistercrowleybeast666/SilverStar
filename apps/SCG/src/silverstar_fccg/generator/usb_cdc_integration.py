@@ -1,7 +1,8 @@
 """Opt-in source-bound classic CDC integration; never edits the native input.
 
 Bulk derivatives reuse the existing checked vendor transformations, then bind
-the independent transport. Complete EP0 behavior remains NOT PROVEN.
+the independent transport. Bounded EP0 policy shares the exact native owner;
+complete USB and hardware acceptance remain separate obligations.
 """
 from __future__ import annotations
 
@@ -205,6 +206,63 @@ def _Interface_Derive(original: bytes) -> str:
     return source
 
 
+def _Ep0Block_Span(function: str) -> tuple[int, int]:
+    marker = 'if (epnum == 0U)'
+    if function.count(marker) != 1:
+        raise ValueError('Unreviewed core EP0 branch owner')
+    opening = function.index('{', function.index(marker) + len(marker))
+    prefix = 'void Ep0_Block(void)\n'
+    _start, _body, end = NativeC_FunctionSpanGet(prefix + function[opening:], 'Ep0_Block')
+    return opening, opening + end - len(prefix)
+
+
+def _Control_Compose(files: dict[str, bytes], owners: dict[str, str],
+                     derived: dict[str, str]) -> dict[str, bytes]:
+    """Share one checked control owner while retaining the generic bulk bodies."""
+    from silverstar_fccg.generator.ground_usb_control import (
+        NativeControl_Integrate, NativeControl_Definitions_Validate)
+    from silverstar_fccg.hardware.usb_transport_capabilities import UsbBuild_Inspect
+    build, reasons = UsbBuild_Inspect(files)
+    if reasons:
+        raise ValueError('Unresolved control-policy build inventory: ' + ', '.join(reasons))
+    NativeControl_Definitions_Validate(value.removeprefix('-D') for value in build['defines'])
+    callback = owners['usbd_cdc_if.c']
+    library = owners['usbd_core.c'].removesuffix('Core/Src/usbd_core.c')
+    temporary = dict(files)
+    temporary[callback] = derived['usbd_cdc_if.c'].encode()
+    replacements = NativeControl_Integrate(temporary, callback, files[callback],
+        library_prefix=library, reviewed_prefix='ControlComposition/')
+    derived['usbd_cdc_if.c'] = temporary[replacements[callback]].decode()
+    derived['usbd_ioreq.c'] = temporary[replacements[owners['usbd_ioreq.c']]].decode()
+    for name, functions in (
+            ('usbd_cdc.c', ('USBD_CDC_Setup', 'USBD_CDC_EP0_RxReady')),
+            ('usbd_core.c', ('USBD_LL_SetupStage', 'USBD_LL_DataOutStage', 'USBD_LL_DataInStage'))):
+        control = temporary[replacements[owners[name]]].decode()
+        text = derived[name]
+        include = '#include "usbd_cdc.h"' if name == 'usbd_cdc.c' else '#include "usbd_core.h"'
+        text = text.replace(include, include + '\n#include "pc_usb_control.h"', 1)
+        for function in functions:
+            start, _opening, end = NativeC_FunctionSpanGet(control, function)
+            replacement = control[start:end]
+            if function in ('USBD_LL_DataOutStage', 'USBD_LL_DataInStage'):
+                bulk_start, _opening, bulk_end = NativeC_FunctionSpanGet(text, function)
+                bulk = text[bulk_start:bulk_end]
+                first, last = _Ep0Block_Span(bulk)
+                control_first, control_last = _Ep0Block_Span(replacement)
+                replacement = bulk[:first] + replacement[control_first:control_last] + bulk[last:]
+            text = _Replace(text, function, replacement)
+            if name == 'usbd_core.c':
+                text = _Insert(text, function, '  if (pdev != &hUsbDeviceFS) { return USBD_FAIL; }')
+        if name == 'usbd_cdc.c':
+            marker = '  memset(hcdc, 0, sizeof(*hcdc));'
+            if text.count(marker) != 1:
+                raise ValueError('Unreviewed generic CDC command initialization')
+            text = text.replace(marker, marker + '\n  hcdc->CmdOpCode = 0xFFU;', 1)
+        derived[name] = text
+    return {'Inc/pc_usb_control.h': temporary['Generated/Inc/pc_usb_control.h'],
+            'Src/pc_usb_control.c': temporary['Generated/Src/pc_usb_control.c']}
+
+
 def _Ll_Derive(original: bytes, indexed: bool, pcd: str) -> str:
     # Keep native clock/PMA/FIFO setup; do not import the older private F407
     # derivative's changed FIFO layout into a generic transport kit.
@@ -320,6 +378,7 @@ def UsbCdcIntegration_Render(files: dict[str, bytes], owners: dict[str, str]) ->
         'usbd_cdc_if.c': _Interface_Derive(files[owners['usbd_cdc_if.c']]),
         'usbd_conf.c': _Ll_Derive(files[owners['usbd_conf.c']], indexed, pcd),
     }
+    control_files = _Control_Compose(files, owners, derived)
     main = files[owners['main.c']].decode('utf-8-sig')
     anchor = '/* USER CODE BEGIN Includes */'
     main = main.replace(anchor, anchor + '\n#include "usb_cdc_transport.h"', 1)
@@ -431,6 +490,7 @@ def UsbCdcIntegration_Render(files: dict[str, bytes], owners: dict[str, str]) ->
     rendered = {'Inc/usb_cdc_retire.h': RETIRE_HEADER.encode(),
         'Src/usb_cdc_retire.c': RETIRE_SOURCE.replace('@CLEAR@', clear).replace('@CONFIG@', memory).replace(
             '@INSTANCE@', 'USB_OTG_FS' if indexed else 'USB').replace('@PCD@', pcd).encode()}
+    rendered.update(control_files)
     entries = []
     for name, text in derived.items():
         original = owners[name]
@@ -444,8 +504,12 @@ def UsbCdcIntegration_Render(files: dict[str, bytes], owners: dict[str, str]) ->
             'derived_sha256': hashlib.sha256(rendered[destination]).hexdigest()})
     rendered['lifecycle-integration.json'] = json.dumps({'profile': profile,
         'scope': 'CLASSIC_CALLBACKS_CONNECTED_HARDWARE_NOT_PROVEN', 'replacements': entries,
-        'additional_sources': ['Src/usb_cdc_transport.c', 'Src/usb_cdc_port.c', 'Src/usb_cdc_retire.c'],
+        'additional_sources': ['Src/usb_cdc_transport.c', 'Src/usb_cdc_port.c', 'Src/usb_cdc_retire.c',
+                               'Src/pc_usb_control.c'],
+        'control_policy': {'owner': 'ground_usb_control.NativeControl_Integrate',
+            'scope': 'single classic FS CDC interface 0; bounded metadata and checked LL failure retirement',
+            'owned_files_sha256': {path: hashlib.sha256(body).hexdigest() for path, body in control_files.items()}},
         'limits': ['Suspend invalidates session; resume stays offline until bus reset/reconfiguration.',
-            'EP0 policy, HAL LL error propagation, complete critical contracts and physical cancellation NOT PROVEN.',
+            'Complete critical contracts, arbitrary standard requests and physical cancellation NOT PROVEN.',
             'Native clock/PMA/FIFO/startup unchanged. No MCU-family admission.']}, indent=2).encode()
     return rendered

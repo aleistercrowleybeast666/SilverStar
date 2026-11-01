@@ -31,7 +31,8 @@ from silverstar_fccg.project.model import ProjectModel, ProjectModel_Load
 BINDING_KEY = "native_ground_backend"
 LIMITS = ("PRIVATE CANDIDATE ONLY; formal generation BLOCKED. NOT PROVEN: "
           "complete EP0/async lifecycle, manual critical contracts, whole-program "
-          "stack/WCET and physical timing/hardware. F103 shared control ordinary integration only; independent USB safety review has no passed outcome. F407 shared EP0 repair not integrated.")
+          "stack/WCET and physical timing/hardware. F103/F407 bounded shared EP0 policy is integrated; "
+          "limited software regression is recorded separately and does not establish complete independent USB safety acceptance.")
 PROFILES = {
     "STM32F103C8T6": ("f103-systick-classic-v1", 72_000_000, "cortex-m3", ""),
     "STM32F407VET6": ("f407-tim1-indexed-v1", 168_000_000, "cortex-m4", "fpv4-sp-d16"),

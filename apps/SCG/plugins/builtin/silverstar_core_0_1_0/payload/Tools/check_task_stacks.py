@@ -2,8 +2,8 @@
 
 No LTO is used by the generated Make project. Inline frames are already in .su.
 All direct calls and cross-function branches are conservatively nested, including
-tail calls (overestimates). Linked library frames without .su use the sum of all
-constant stack decrements/pushes in disassembly, also an overestimate. Unknown
+tail calls (overestimates). Linked library frames without .su use a bounded
+machine-code stack/control-flow analysis. Unknown
 indirect calls, dynamic frames, recursion and unaccounted SP writes fail closed.
 This is a worst-known static budget, not a hardware high-water measurement.
 """
@@ -11,10 +11,22 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import re
 import subprocess
 from pathlib import Path
+
+_arm_spec = importlib.util.spec_from_file_location("silverstar_stack_arm", Path(__file__).with_name("stack_arm.py"))
+_arm = importlib.util.module_from_spec(_arm_spec)
+_arm_spec.loader.exec_module(_arm)
+_review_spec = importlib.util.spec_from_file_location("silverstar_stack_review", Path(__file__).with_name("stack_review.py"))
+_review = importlib.util.module_from_spec(_review_spec)
+_review_spec.loader.exec_module(_review)
+_runtime_spec = importlib.util.spec_from_file_location("silverstar_stack_runtime", Path(__file__).with_name("stack_runtime.py"))
+_runtime = importlib.util.module_from_spec(_runtime_spec)
+_runtime_spec.loader.exec_module(_runtime)
+SOFTWARE_REVIEW_SHA256 = "f690aa010de40dbd68d5e7a79c789495836d499a55fa54c671e328d95891f7af"
 
 TASKS = {
     "Device": ("AppTask_Device", "s_device_stack"),
@@ -5105,7 +5117,12 @@ def BindingSources_Verify(root, sources, build, prefix="arm-none-eabi-"):
                        "dependencies": dependencies, "compiled_input_sha256": closure})
     return proofs
 
-def BindingHeader_Verify(root, path):
+def BindingHeader_Verify(root, path, software_review=None):
+    if software_review is not None:
+        digest = _review.FileHash_Get(_review.InputPath_Get(root, path), source=True)
+        if software_review['case']['source_inputs'].get(path) != digest:
+            raise ValueError('Changed complete software header closure: ' + path)
+        return digest
     (root / path).resolve().relative_to(root.resolve())
     if not (root / path).is_file():
         raise ValueError("Changed or missing reviewed callback compilation input: " + path)
@@ -5118,7 +5135,7 @@ def BindingHeader_Verify(root, path):
 
 def IndirectSites_Get(rows):
     return [(op, args) for op, args in rows
-            if (op == "blx" and "<" not in args) or (op.startswith("bx") and args.strip() != "lr")]
+            if _arm.Instruction_IsIndirect(op, args)]
 
 
 def CallbackSlot_Get(rows, index):
@@ -5169,6 +5186,7 @@ def StackGraph_Load(root: Path, config: str, prefix: str, memory_layout: str = "
         raise ValueError("Expected exactly one linked ELF in the selected configuration")
     elf = elfs[0]
     disassembly = Command_Read([prefix + "objdump", "-d", str(elf)], root)
+    symbol_table = Command_Read([prefix + "objdump", "-t", str(elf)], root)
     nm = Command_Read([prefix + "nm", "-S", "--defined-only", str(elf)], root)
     sizes = {parts[3]: int(parts[1], 16) for line in nm.splitlines()
              if len(parts := line.split()) == 4}
@@ -5194,50 +5212,49 @@ def StackGraph_Load(root: Path, config: str, prefix: str, memory_layout: str = "
             frames[name] = max(frames.get(name, 0), int(count))
             if kind not in ("static", "dynamic,bounded"):
                 unbounded.add(name)
-    instructions: dict[str, list[tuple[str, str]]] = {}
-    for line in disassembly.splitlines():
-        if match := re.match(r"^[0-9a-f]+ <([^>]+)>:", line):
-            name = match[1]
-            instructions[name] = []
-        elif match := re.match(r"^\s*[0-9a-f]+:\s+(?:[0-9a-f]{4,8}\s+)+(\S+)\s*(.*)", line):
-            instructions[name].append((match[1], match[2]))
-
+    function_entries = _arm.Assembly_Parse(disassembly, symbol_table)
+    instructions = {name: [(row[2], row[3]) for row in entry["rows"]] + entry["literals"]
+                    for name, entry in function_entries.items()}
     edges: dict[str, set[str]] = {}
     indirect: set[str] = set()
     library_frames: dict[str, int] = {}
-    for name, rows in instructions.items():
-        edges[name] = set()
-        frame = 0
-        for op, args in rows:
-            if (
-                (op.startswith("b") or op in ("cbz", "cbnz"))
-                and (match := re.search(r"<([^>+]+)(?:\+[^>]+)?>", args))
-                and (match[1] != name or op in ("bl", "bl.w", "blx"))
-                and match[1] in instructions
-            ):
-                edges[name].add(match[1])
-            if (op == "blx" and "<" not in args) or (op.startswith("bx") and args.strip() != "lr"):
-                indirect.add(name)
-            if name in frames:
-                continue
-            if op.startswith(("push", "stmdb")) and "{" in args:
-                frame += RegisterBytes_Get(args[args.index("{"):], 4)
-            elif op.startswith("vpush"):
-                frame += RegisterBytes_Get(args, 8 if "d" in args else 4)
-            elif op.startswith("sub") and re.match(r"sp,\s*(?:sp,\s*)?#", args):
-                frame += int(re.search(r"#(0x[0-9a-f]+|\d+)", args)[1], 0)
-            elif re.search(r"\[sp,\s*#-(0x[0-9a-f]+|\d+)\]!", args):
-                frame += int(re.search(r"#-(0x[0-9a-f]+|\d+)", args)[1], 0)
-            elif re.search(r"\[sp[^\]]*\]!", args) or re.match(r"sp,", args) and op.startswith(("sub", "mov", "bic")):
-                unbounded.add(name)
-        if name not in frames:
-            frames[name] = frame
-            library_frames[name] = frame
+    assembly_proofs = {name: _arm.Function_Analyze(name, entry, function_entries)
+                       for name, entry in function_entries.items()}
+    # Establish non-returning machine-code paths, starting with actual UDF or
+    # closed loops. A call to such a path does not fall through into a literal
+    # pool. This is derived from the ELF, never from a name allowlist.
+    no_return = set()
+    while True:
+        proven = {name for name, proof in assembly_proofs.items()
+                  if not proof["returns"] and not proof["tail_returns"] and not proof["indirect"]}
+        added = proven - no_return
+        if not added:
+            break
+        no_return.update(added)
+        affected = {name for name, proof in assembly_proofs.items() if proof["edges"] & added}
+        for name in affected:
+            assembly_proofs[name] = _arm.Function_Analyze(name, function_entries[name], function_entries, no_return)
+    for name, entry in function_entries.items():
+        proof = assembly_proofs[name]
+        edges[name] = proof["edges"]
+        if proof["indirect"]:
+            indirect.add(name)
+        if proof["unknown_sp"]:
+            unbounded.add(name)
+        reported_name = entry["symbol_name"]
+        if reported_name in unbounded:
+            unbounded.add(name)
+        if reported_name not in frames:
+            library_frames[name] = proof["frame_bytes"]
+        # Compiler frame reports and linked SP operations must agree on a safe
+        # upper bound; naked/inline assembly cannot silently earn a zero frame.
+        frames[name] = max(frames.get(reported_name, 0), proof["frame_bytes"])
 
     return {"build": build, "elf": elf, "nm": nm, "sizes": sizes,
             "sources": sources, "su_paths": su_paths, "instructions": instructions,
             "frames": frames, "edges": edges, "indirect": indirect,
-            "unbounded": unbounded, "library_frames": library_frames}
+            "unbounded": unbounded, "library_frames": library_frames,
+            "function_entries": function_entries, "assembly_proofs": assembly_proofs}
 
 
 def StackDiagnostic_Build(root: Path, config: str, prefix: str, memory_layout: str = "legacy") -> dict:
@@ -5329,6 +5346,8 @@ def StartupCallbackSites_Resolve(instructions, edges, indirect, startup_tables, 
 
 def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str = "legacy") -> dict:
     graph = StackGraph_Load(root, config, prefix, memory_layout)
+    software_review = _review.Inputs_Verify(root, graph, config, prefix, Command_Read,
+        Path(__file__).with_name('software_stack_inputs.json'), SOFTWARE_REVIEW_SHA256)
     build, elf, nm = graph["build"], graph["elf"], graph["nm"]
     sizes, sources, su_paths = graph["sizes"], graph["sources"], graph["su_paths"]
     instructions, frames, edges = graph["instructions"], graph["frames"], graph["edges"]
@@ -5380,7 +5399,7 @@ def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str =
                     "Middlewares/Third_Party/FatFs/src/ff_gen_drv.c": "0fc75735ced23deb5ba70713ec41bb75883a886deaa2bbabb7589e2305925bb3",
                     "Middlewares/Third_Party/FatFs/src/diskio.c": "77ac8b08957b2c7b3e4f9401c37727c87a660ed589f0ce9e6520faf6ab91a574",
                 }
-            BindingHeader_Verify(root, "Middlewares/Third_Party/FatFs/src/ff_gen_drv.h")
+            BindingHeader_Verify(root, "Middlewares/Third_Party/FatFs/src/ff_gen_drv.h", software_review)
             for path, expected in reviewed_fatfs.items():
                 if path not in sources:
                     raise ValueError("Missing selected F1 FatFs binding source")
@@ -5451,7 +5470,7 @@ def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str =
                              repr(sorted(startup_callers)))
         if "System/Src/system_device_startup.c" not in sources:
             raise ValueError("Missing complete reviewed startup controller source")
-        BindingHeader_Verify(root, "System/Inc/system_device_startup.h")
+        BindingHeader_Verify(root, "System/Inc/system_device_startup.h", software_review)
         callbacks: set[str] = set()
         startup_tables = []
         for source_name in selected_startup_sources:
@@ -5497,7 +5516,17 @@ def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str =
     callback_bindings = MpuCallbackBindings_Resolve(
         root, sources, instructions, edges, indirect, nm, prefix, elf)
 
-    binding_source_proofs = BindingSources_Verify(root, sources, build, prefix)
+    runtime_proofs = None
+    if software_review is None:
+        binding_source_proofs = BindingSources_Verify(root, sources, build, prefix)
+    else:
+        binding_source_proofs = software_review['source_proofs']
+        runtime_proofs = {
+            'hal': _runtime.HalCallbacks_Resolve(root, graph, prefix, Command_Read, CallbackSlot_Get,
+                       review=software_review['case']['runtime_contract']['hal']),
+            'port': _runtime.PortStackPointers_Resolve(root, graph),
+            'crt': _runtime.CrtCallbacks_Resolve(root, graph, prefix, TableBytes_Get),
+        }
 
     def Closure_Get(name: str) -> set[str]:
         seen: set[str] = set()
@@ -5550,9 +5579,23 @@ def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str =
         } == {TASKS[row["task"]][0] for row in tasks},
     }
     reachable = set().union(*(Closure_Get(TASKS[row["task"]][0]) for row in tasks))
+    whole_program = None
+    if software_review is not None:
+        runtime_proofs['control_task'] = _runtime.ControlTask_Verify(root, graph,
+            software_review['case']['runtime_contract']['control_task'], Closure_Get)
+        whole_program = _runtime.WholeProgram_Build(root, graph,
+            software_review['case']['runtime_contract']['exceptions'], prefix,
+            TableBytes_Get, Budget_Get, MIN_MARGIN_BYTES)
+        reachable.update(Closure_Get('Reset_Handler'))
+        for vector in whole_program['vectors']:
+            for target in vector['targets']:
+                reachable.update(Closure_Get(target))
     return {"schema": "silverstar.stack-budget/1", "configuration": config,
             "elf": str(elf.relative_to(root)), "elf_sha256": hashlib.sha256(elf.read_bytes()).hexdigest(),
             "checker_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            "analysis_tools_sha256": {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
+                for name in ('stack_arm.py', 'stack_runtime.py', 'stack_review.py',
+                             'software_stack_inputs.json', 'software_stack_review.md')},
             "compiler": Command_Read([prefix + "gcc", "--version"], root).splitlines()[0],
             "su_files": len(su_paths), "minimum_margin_bytes": MIN_MARGIN_BYTES,
             "callback_bindings": callback_bindings,
@@ -5560,11 +5603,16 @@ def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str =
             "binding_review_revision": binding_source_proofs[0].get("review_revision", BINDING_REVIEW_REVISION) if binding_source_proofs else BINDING_REVIEW_REVISION,
             "binding_source_proofs": binding_source_proofs,
             "callback_site_bindings": callback_site_bindings,
-            "whole_program_stack_acceptance": "NOT PROVEN: MSP/main/ISR nesting and hardware margins require separate evidence",
+            "whole_program_stack_acceptance": ('SOFTWARE BOUND PASS' if whole_program and whole_program['passes'] and
+                all(checks.values()) and all(row['passes'] for row in tasks)
+                else 'SOFTWARE BOUND FAIL' if whole_program else
+                'NOT PROVEN: MSP/main/ISR nesting and hardware margins require separate evidence'),
+            "main_msp_exceptions": whole_program, "runtime_proofs": runtime_proofs,
             "method": __doc__, "checks": checks, "tasks": tasks,
             "library_frames": {name: count for name, count in sorted(library_frames.items()) if name in reachable},
             "hardware_high_water_marks": "not measured; collect target task high-water marks before hardware acceptance",
-            "passes": all(checks.values()) and all(row["passes"] for row in tasks)}
+            "passes": all(checks.values()) and all(row["passes"] for row in tasks) and
+                (whole_program is None or whole_program['passes'])}
 
 
 def main() -> int:
@@ -5596,6 +5644,11 @@ def main() -> int:
         print(f"{row['task']}: configured={row['configured_bytes']} estimate={row['worst_known_bytes']} margin={row['margin_bytes']}")
     print(json.dumps(report["checks"], indent=2))
     if report["passes"]:
+        print(report['whole_program_stack_acceptance'])
+        if report['whole_program_stack_acceptance'] != 'SOFTWARE BOUND PASS':
+            return 2
+        msp = report['main_msp_exceptions']
+        print(f"MSP/main/ISR: configured={msp['configured_bytes']} estimate={msp['worst_known_bytes']} margin={msp['margin_bytes']}")
         print("FCCG_PROGRESS|STACK_REPORT|DONE|1|1|ELF and stack budget")
         return 0
     return 1

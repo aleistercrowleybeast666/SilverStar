@@ -34,6 +34,7 @@ HEADER = '''#ifndef PC_USB_CONTROL_H
 #include "usbd_def.h"
 int8_t PcUsbControl_Control(uint8_t command, uint8_t *data, uint16_t length);
 void PcUsbControl_Cancel(USBD_HandleTypeDef *device);
+void PcUsbControl_Abort(USBD_HandleTypeDef *device);
 USBD_StatusTypeDef PcUsbControl_Dispatch(USBD_HandleTypeDef *device);
 USBD_StatusTypeDef PcUsbControl_Setup(USBD_HandleTypeDef *device, USBD_SetupReqTypedef *request);
 USBD_StatusTypeDef PcUsbControl_RxReady(USBD_HandleTypeDef *device);
@@ -83,16 +84,30 @@ void PcUsbControl_Cancel(USBD_HandleTypeDef *device)
     USBD_CDC_HandleTypeDef *cdc = ClassData_Get(device);
     if (cdc != NULL) { cdc->CmdOpCode = 0xFFU; cdc->CmdLength = 0U; }
 }
+void PcUsbControl_Abort(USBD_HandleTypeDef *device)
+{
+    if (device != &hUsbDeviceFS) { return; }
+    PcUsbControl_Cancel(device);
+    device->ep0_state = USBD_EP0_STALL;
+    device->ep0_data_len = 0U;
+    device->ep_in[0].total_length = 0U;
+    device->ep_in[0].rem_length = 0U;
+    device->ep_out[0].total_length = 0U;
+    device->ep_out[0].rem_length = 0U;
+    /* Software retirement precedes LL stall; hardware success is not assumed. */
+    USBD_CtlError(device, &device->request);
+}
 USBD_StatusTypeDef PcUsbControl_Dispatch(USBD_HandleTypeDef *device)
 {
     USBD_StatusTypeDef result = USBD_FAIL;
+    if (device != &hUsbDeviceFS) { return USBD_FAIL; }
     if ((ClassData_Get(device) != NULL) && (@CLASS@ == &USBD_CDC))
     {
         result = (USBD_StatusTypeDef)@CLASS@->Setup(device, &device->request);
     }
     if ((result == USBD_OK) && (device->request.wLength == 0U))
     { result = USBD_CtlSendStatus(device); }
-    if (result != USBD_OK) { USBD_CtlError(device, &device->request); }
+    if (result != USBD_OK) { PcUsbControl_Abort(device); }
     return result;
 }
 USBD_StatusTypeDef PcUsbControl_Setup(USBD_HandleTypeDef *device, USBD_SetupReqTypedef *request)
@@ -274,10 +289,31 @@ case CDC_SEND_BREAK:break;default:break;}return(USBD_OK);'''
             text, count = re.subn(r'(?:\(void\))?USBD_CtlReceiveStatus\(pdev\);',
                 'if (USBD_CtlReceiveStatus(pdev) != USBD_OK)\n          { USBD_CtlError(pdev, &pdev->request); return USBD_FAIL; }', text)
             if count != 1: raise ValueError('unreviewed EP0 status receive call')
+            # A refused EP0 operation retires the transfer before any late ISR
+            # callback can advance it. Raw standard-request void helpers can
+            # discard return codes, so Setup also checks this explicit state.
+            text = text.replace('USBD_CtlError(pdev, &pdev->request);', 'PcUsbControl_Abort(pdev);')
+            setup = _Function_Get(text, 'USBD_LL_SetupStage')
+            setup_return = 'ret' if indexed else 'USBD_OK'
+            if setup.count('  return ' + setup_return + ';') != 1:
+                raise ValueError('unreviewed standard Setup result owner')
+            setup = setup.replace('  return ' + setup_return + ';',
+                '  return (pdev->ep0_state == USBD_EP0_STALL) ? USBD_FAIL : ' + setup_return + ';')
+            text = _Function_Replace(text, 'USBD_LL_SetupStage', setup)
+            for name, expected in [('USBD_CtlContinueRx', 1), ('USBD_CtlContinueSendData', 2),
+                                   ('USBD_LL_PrepareReceive', 2)]:
+                text, count = re.subn(r'(?:\(void\))?' + name + r'\(([^;]+)\);',
+                    r'if (' + name + r'(\1) != USBD_OK)\n'
+                    r'        { PcUsbControl_Abort(pdev); return USBD_FAIL; }', text)
+                if count != expected:
+                    raise ValueError('unreviewed EP0 continuation owner: ' + name)
         else:
-            for name, ll in [('USBD_CtlSendData', 'USBD_LL_Transmit'), ('USBD_CtlPrepareRx', 'USBD_LL_PrepareReceive'), ('USBD_CtlSendStatus', 'USBD_LL_Transmit'), ('USBD_CtlReceiveStatus', 'USBD_LL_PrepareReceive')]:
+            text = text.replace('#include "usbd_ioreq.h"', '#include "usbd_ioreq.h"\n#include "pc_usb_control.h"', 1)
+            for name, ll in [('USBD_CtlSendData', 'USBD_LL_Transmit'), ('USBD_CtlPrepareRx', 'USBD_LL_PrepareReceive'), ('USBD_CtlSendStatus', 'USBD_LL_Transmit'), ('USBD_CtlReceiveStatus', 'USBD_LL_PrepareReceive'), ('USBD_CtlContinueSendData', 'USBD_LL_Transmit'), ('USBD_CtlContinueRx', 'USBD_LL_PrepareReceive')]:
                 function = _Function_Get(text, name)
-                function, count = re.subn(r'(?:\(void\))?'+ll+r'\(([^;]+)\);\s*return USBD_OK;', r'return '+ll+r'(\1);', function)
+                function, count = re.subn(r'(?:\(void\))?'+ll+r'\(([^;]+)\);\s*return USBD_OK;',
+                    r'USBD_StatusTypeDef result = '+ll+r'(\1);\n'
+                    r'  if (result != USBD_OK) { PcUsbControl_Abort(pdev); }\n  return result;', function)
                 if count != 1: raise ValueError('unreviewed EP0 LL result: '+name)
                 text = _Function_Replace(text, name, function)
         derived = REVIEWED + relative
