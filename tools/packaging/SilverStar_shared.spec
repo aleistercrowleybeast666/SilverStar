@@ -133,3 +133,6 @@ runtime_inputs = sorted({(kind, destination, str(source))
     for destination, source, _type in entries if source})
 Path(os.environ["SILVERSTAR_PACKAGE_EVIDENCE"]).joinpath("resolved-runtime-inputs.json").write_text(
     json.dumps(runtime_inputs, ensure_ascii=False), encoding="utf-8")
+Path(os.environ["SILVERSTAR_PACKAGE_EVIDENCE"]).joinpath("first-party-resources.json").write_text(
+    json.dumps({"head": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repository, text=True).strip(),
+                "resources": sorted(resource_files)}), encoding="utf-8")

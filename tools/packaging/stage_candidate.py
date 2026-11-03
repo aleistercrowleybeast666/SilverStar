@@ -69,6 +69,37 @@ def stage(bundle: Path, evidence: Path, witness: Path, output: Path):
     entries = json.loads(
         (evidence / "resolved-runtime-inputs.json").read_text(encoding="utf8")
     )
+    build = json.loads(
+        (evidence / "first-party-resources.json").read_text(encoding="utf8")
+    )
+    head = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+    ).strip()
+    if head != build["head"]:
+        raise ValueError("Build receipt and candidate source commit differ")
+    subprocess.run(
+        [
+            "git",
+            "diff",
+            "--quiet",
+            "HEAD",
+            "--",
+            "apps/SCG",
+            "apps/FLP",
+            "apps/GSHC",
+            "tools/packaging",
+            "contracts",
+            "docs/public",
+        ],
+        cwd=ROOT,
+        check=True,
+    )
+    for name in build["resources"]:
+        collected = bundle / "_internal" / name
+        if not collected.is_file() or digest(collected) != digest(ROOT / name):
+            raise ValueError(
+                f"First-party resource differs from its working source: {name}"
+            )
     for kind, destination, _source in entries:
         if (
             kind in ("binary", "data")
@@ -208,9 +239,6 @@ def stage(bundle: Path, evidence: Path, witness: Path, output: Path):
             target = bundle / name
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, target)
-    head = subprocess.check_output(
-        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
-    ).strip()
     (bundle / "README.md").write_text(
         """# SilverStar Windows 发布候选
 
@@ -251,6 +279,7 @@ Qt/PySide 与应用动态链接，对应源码与构建信息见 [Qt](https://co
             "bytes": output.stat().st_size,
             "bundle": str(bundle),
             "runtime_input_count": len(entries),
+            "verified_first_party_resources": len(build["resources"]),
             "executable_sha256": {
                 n: inventory[n] for n in ("SCG.exe", "GSHC.exe", "FLP.exe")
             },

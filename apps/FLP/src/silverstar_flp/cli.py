@@ -152,6 +152,7 @@ def _Command_Inspect(options: argparse.Namespace) -> int:
             semantic_context.ToDict() if semantic_context is not None else None
         ),
         "header": dict(dataset.header),
+        "mission_snapshot": dataset.metadata.get("mission_snapshot"),
         "diagnostics": dataset.diagnostics.to_dict(),
         "data_quality": (
             dataset.data_quality.ToDict()
