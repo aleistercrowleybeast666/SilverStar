@@ -53,3 +53,22 @@ def test_saved_gnss_profile_readback_and_render(part,builtin_catalog,tmp_path):
         loaded=ProjectModel_Load(file)
         assert dict(_DeviceRuntimeDefaults_Get(loaded,builtin_catalog))['SYSTEM_GNSS_DYNAMIC_MODEL']=='SYSTEM_GNSS_DYNAMIC_MODEL_'+expected
         assert file.read_bytes()==original
+
+def test_mixed_saved_gnss_models_are_not_broadcast_over_one_another(builtin_catalog, tmp_path):
+    from dataclasses import replace
+    from silverstar_fccg.project.model import ProjectModel_Load
+    from silverstar_fccg.project.reference import ReferenceProject_Create
+    from silverstar_fccg.project.validation import Project_Validate
+
+    model = ReferenceProject_Create("TwoReceivers", catalog=builtin_catalog)
+    first = next(item for item in model.device_instances if item.plugin.startswith("silverstar.device.gnss."))
+    model.device_instances.append(replace(first, instance_id="portable_bench", interface="uart", profile="portable_ground_test"))
+    path = tmp_path / "mixed.ssproject"
+    path.write_text(json.dumps(model.Dictionary_Get()), encoding="utf8")
+    original = path.read_bytes()
+    loaded = ProjectModel_Load(path)
+    issues = [i for i in Project_Validate(loaded, builtin_catalog).issues if i.code == "GNSS_BOOT_MODEL_CONFLICT"]
+    assert len(issues) == 1
+    for value in (first.instance_id, "portable_bench", "AIRBORNE_4G", "PORTABLE"):
+        assert value in issues[0].message
+    assert path.read_bytes() == original

@@ -45,3 +45,5 @@
 
 ## 8. 链路停止时
 打开“飞控 AIR 链路→详情”，依次检查Capability RX、PC AIR_TX request、serial write、GSP ACK、GS TX/RX/CRC、AIR ACK、PREFLIGHT_STATUS、RSSI/SNR和最近AIR年龄。GS仍发而AIR完全停止时，优先检查飞控HardFault/assert/stack overflow/runtime fault record。
+
+磁力计本体校准新增了 RAM、持久保存和启动加载的区别。具体操作、读回字段和可选实时旋转见[磁力计校准与安装旋转](../SCG/MAG_ROTATION_AND_GNSS.md)。
