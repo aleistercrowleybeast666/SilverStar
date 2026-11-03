@@ -63,6 +63,10 @@ void LoggerBus_Reset(void);
 LoggerBusResult LoggerBus_EventPush(
     uint64_t timestamp_us, FlightLogEventId event_id,
     uint32_t arg0, uint32_t arg1);
+/* Experimental installation transitions require an actually queued event.
+ * A suppressed or disabled EVENT stream cannot acknowledge adoption. */
+LoggerBusResult LoggerBus_RotationEventPush(uint64_t timestamp_us, FlightLogEventId event_id,
+    uint32_t arg0, uint32_t arg1);
 LoggerBusResult LoggerBus_StatsPush(
     uint64_t timestamp_us, const FlightLogStatsRecord *record);
 LoggerBusResult LoggerBus_EstimatorPush(

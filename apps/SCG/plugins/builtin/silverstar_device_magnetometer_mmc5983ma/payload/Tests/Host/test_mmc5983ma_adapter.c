@@ -16,6 +16,16 @@ static uint32_t s_spi_reads;
 static uint8_t s_stall_mag;
 static uint32_t s_native_observations;
 
+void SystemInstallationCapture_ProviderMag(const SystemMagnetometerSample *sample,
+    uint64_t trigger, uint64_t available)
+{
+    if (sample != NULL)
+    {
+        assert(trigger < sample->sample_timestamp_us && sample->sample_timestamp_us <= available);
+        assert(sample->valid_mask & SYSTEM_MAG_VALID_RAW);
+    }
+}
+
 void SystemInstallationCapture_MagObserve(const SystemMagnetometerSample *sample,
     const SystemInstallationCaptureProof *proof, uint64_t now_us)
 {

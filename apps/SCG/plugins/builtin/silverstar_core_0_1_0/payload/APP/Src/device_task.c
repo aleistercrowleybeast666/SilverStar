@@ -1,4 +1,6 @@
 #include "app_tasks.h"
+#include "system_mag_rotation_if.h"
+#include "platform_time.h"
 
 #include <stddef.h>
 #include <string.h>
@@ -267,6 +269,7 @@ void AppTask_Device(void *argument)
         const SystemStartupReport *report;
 
         SystemStartup_ProcessDevices();
+        if (SYSTEM_MAG_ROTATION_ENABLED != 0U) { SystemMagRotation_Service(PlatformTime_Us()); }
         report = SystemStartup_GetReport();
         SILVERSTAR_ASSERT_OBJECT(report, SystemStartupReport,
                                 SILVERSTAR_ASSERT_MODULE_APP);

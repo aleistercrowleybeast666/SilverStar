@@ -71,6 +71,25 @@ SystemDeviceResult UbxSystemAdapter_Init(UbxSystemAdapter *adapter,
     return SYSTEM_DEVICE_OK;
 }
 
+SystemDeviceResult UbxSystemAdapter_InitConfigured(UbxSystemAdapter *adapter,
+    PlatformUartId uart, UbxReceiverModel model, SystemGnssDynamicModel dynamic_model)
+{
+    uint8_t wire;
+    SystemDeviceResult result;
+    switch (dynamic_model)
+    {
+        case SYSTEM_GNSS_DYNAMIC_MODEL_PORTABLE: wire = 0U; break;
+        case SYSTEM_GNSS_DYNAMIC_MODEL_STATIONARY: wire = 2U; break;
+        case SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_1G: wire = 6U; break;
+        case SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_2G: wire = 7U; break;
+        case SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G: wire = 8U; break;
+        default: return SYSTEM_DEVICE_UNSUPPORTED;
+    }
+    result = UbxSystemAdapter_Init(adapter, uart, model);
+    if (result == SYSTEM_DEVICE_OK) { adapter->receiver.target_dynamic_model = wire; }
+    return result;
+}
+
 static SystemDeviceResult UbxSystemAdapter_ProcessOwned(UbxSystemAdapter *adapter)
 {
     uint8_t bytes[UBX_RECEIVER_INPUT_MAX];
@@ -191,8 +210,15 @@ static SystemDeviceResult UbxSystemAdapter_ProfileConfigGet(UbxSystemAdapter *ad
     config->requested_mask = UBX_ADAPTER_CONFIG_MASK;
     config->navigation_rate_hz = 1000U / adapter->receiver.profile->measurement_ms;
     config->constellation_mask = adapter->receiver.profile->constellation_mask;
-    config->dynamic_model = (adapter->receiver.profile->dynamic_model == 8U) ?
-        SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G : SYSTEM_GNSS_DYNAMIC_MODEL_PORTABLE;
+    switch (adapter->receiver.target_dynamic_model)
+    {
+        case 0U: config->dynamic_model = SYSTEM_GNSS_DYNAMIC_MODEL_PORTABLE; break;
+        case 2U: config->dynamic_model = SYSTEM_GNSS_DYNAMIC_MODEL_STATIONARY; break;
+        case 6U: config->dynamic_model = SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_1G; break;
+        case 7U: config->dynamic_model = SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_2G; break;
+        case 8U: config->dynamic_model = SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G; break;
+        default: return SYSTEM_DEVICE_UNSUPPORTED;
+    }
     config->output_protocol = SYSTEM_GNSS_OUTPUT_PROTOCOL_UBX;
     config->enabled_message_mask = SYSTEM_GNSS_MESSAGE_NAV_PVT;
     return SYSTEM_DEVICE_OK;

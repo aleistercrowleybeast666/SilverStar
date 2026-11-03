@@ -817,6 +817,26 @@ def Project_Validate(model: ProjectModel, catalog: PluginCatalog) -> ProjectVali
         return ProjectValidationResult(
             (ValidationIssue("error", "device_variant", str(error)),)
         )
+    # Boot broadcasts one SystemGnssConfig to all configurable receivers.
+    # Mixing saved profiles would overwrite the secondary target or reject
+    # its readback; surface the actual instance ids before generation.
+    gnss_targets = {}
+    for instance in model.device_instances:
+        declaration = catalog.InstanceIdComponent_Get(instance.instance_id).metadata.get("runtime_defaults", {})
+        target = declaration.get("SYSTEM_DEVICE_CLASS_GNSS", {}).get("SYSTEM_GNSS_DYNAMIC_MODEL")
+        if target is not None:
+            gnss_targets[instance.instance_id] = target
+    if len(set(gnss_targets.values())) > 1:
+        details = ", ".join(f"{instance}={value}" for instance, value in gnss_targets.items())
+        issues.append(ValidationIssue("error", "GNSS_BOOT_MODEL_CONFLICT",
+            f"The startup command shares one GNSS dynamic model. {details}. "
+            "Select matching profiles in each GNSS hardware property before generation."))
+    if "silverstar.installation.mag_rotation" in model.ComponentIds_Get():
+        from silverstar_fccg.project.mag_rotation import MagRotationConfiguration_Validate
+        try:
+            MagRotationConfiguration_Validate(model, catalog)
+        except ValueError as error:
+            issues.append(ValidationIssue("error", "MAG_ROTATION_CONFIGURATION", str(error)))
     issues.extend(SensorInstallationIssues_Get(model, catalog))
     from silverstar_fccg.project.telemetry import TelemetryProfile_Issues
     issues.extend(ValidationIssue('error', code, message) for code, message in TelemetryProfile_Issues(model, catalog))

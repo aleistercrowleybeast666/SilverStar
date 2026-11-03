@@ -84,6 +84,7 @@ typedef struct
     Mmc5983maSample sample;
     Mmc5983maState state;
     uint64_t operation_started_us;
+    uint64_t magnetic_trigger_us; /* Beginning of this completed one-shot, before temperature phase. */
     uint64_t last_sample_us;
     uint32_t error_count;
     uint32_t sequence;

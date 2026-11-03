@@ -129,7 +129,7 @@
       "configure_on_boot": true,
       "navigation_rate_hz": 5,
       "target_baud": 115200,
-      "dynamic_model": "portable_ground_test",
+      "dynamic_model": "SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G",
       "persistent_layer_default": "RAM",
       "conditional_persistence": {
         "zh_CN": "默认仅 RAM；本驱动不支持独立读回 M8 非易失层，显式持久化返回 UNSUPPORTED，不发送 CFG-CFG",
@@ -156,7 +156,7 @@
     "runtime_defaults": {
       "SYSTEM_DEVICE_CLASS_GNSS": {
         "SYSTEM_GNSS_NAVIGATION_RATE_HZ": 5,
-        "SYSTEM_GNSS_DYNAMIC_MODEL": "SYSTEM_GNSS_DYNAMIC_MODEL_PORTABLE"
+        "SYSTEM_GNSS_DYNAMIC_MODEL": "SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G"
       }
     }
   },
@@ -172,5 +172,30 @@
     "chipset": "UBX-M8",
     "driver": "NEO-M8N Driver"
   },
-  "transports": []
+  "transports": [],
+  "device_variants": {
+    "airborne_4g": {
+      "interface": "uart",
+      "profile": "airborne_4g",
+      "overrides": {
+        "name": "NEO-M8N"
+      }
+    },
+    "portable_ground_test": {
+      "interface": "uart",
+      "profile": "portable_ground_test",
+      "overrides": {
+        "metadata": {
+          "initialization": {
+            "dynamic_model": "SYSTEM_GNSS_DYNAMIC_MODEL_PORTABLE"
+          },
+          "runtime_defaults": {
+            "SYSTEM_DEVICE_CLASS_GNSS": {
+              "SYSTEM_GNSS_DYNAMIC_MODEL": "SYSTEM_GNSS_DYNAMIC_MODEL_PORTABLE"
+            }
+          }
+        }
+      }
+    }
+  }
 }

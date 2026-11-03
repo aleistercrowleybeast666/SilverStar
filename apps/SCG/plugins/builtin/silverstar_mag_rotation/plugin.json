@@ -1,0 +1,112 @@
+{
+  "schema_version": 0,
+  "id": "silverstar.installation.mag_rotation",
+  "name": "Magnetometer rotation relative to selected IMU (experimental)",
+  "type": "algorithm",
+  "class": "mag_rotation",
+  "version": "0.1.3",
+  "requires": {
+    "components": [
+      {
+        "id": "silverstar.core.0_1_0",
+        "optional": false
+      }
+    ],
+    "resources": [],
+    "capabilities": []
+  },
+  "provides": [
+    "installation.mag_rotation.experimental"
+  ],
+  "build": {
+    "sources": [
+      "Algorithm/Installation/MagRotation/Src/mag_rotation.c",
+      "Algorithm/Installation/MagRotation/Src/mag_rotation_runtime.c"
+    ],
+    "include_dirs": [
+      "Algorithm/Installation/MagRotation/Inc"
+    ],
+    "defines": [
+      "SYSTEM_MAG_ROTATION_ENABLED=1"
+    ]
+  },
+  "payload": {
+    "roots": [
+      "Algorithm/Installation/MagRotation",
+      "Tests/Host"
+    ]
+  },
+  "metadata": {
+    "experimental": true,
+    "default_enabled": false,
+    "hardware_qualification": "NOT PROVEN",
+    "source_origins": {
+      "default": "release_candidate_20261103"
+    },
+    "sslog_events": {
+      "mag_rotation_base": {
+        "event_id": 50,
+        "name": "MAG_ROTATION_BASE",
+        "argument_encoding": "hamilton_smallest3_s10_v1",
+        "frame": "intrinsic magnetic sensor to fixed selected IMU body",
+        "arg1": "runtime_update_revision",
+        "time": "MCU monotonic microseconds",
+        "frame_from": "calibrated_mag_sensor",
+        "frame_to": "selected_imu_body"
+      },
+      "mag_rotation_estimate": {
+        "event_id": 51,
+        "name": "MAG_ROTATION_ESTIMATE",
+        "argument_encoding": "hamilton_smallest3_s10_v1",
+        "frame": "fixed magnetic reference to selected IMU body",
+        "arg1": "runtime_update_revision",
+        "time": "MCU monotonic microseconds",
+        "frame_from": "fixed_mag_reference",
+        "frame_to": "selected_imu_body"
+      },
+      "mag_rotation_adopted": {
+        "event_id": 52,
+        "name": "MAG_ROTATION_ADOPTED",
+        "argument_encoding": "hamilton_smallest3_s10_v1",
+        "frame": "intrinsic magnetic sensor to selected IMU body",
+        "arg1": "runtime_update_revision",
+        "time": "MCU monotonic microseconds",
+        "frame_from": "calibrated_mag_sensor",
+        "frame_to": "selected_imu_body"
+      },
+      "mag_rotation_fixed": {
+        "event_id": 53,
+        "name": "MAG_ROTATION_FIXED",
+        "argument_encoding": "hamilton_smallest3_s10_v1",
+        "frame": "intrinsic magnetic sensor to fixed selected IMU body",
+        "arg1": "runtime_update_revision",
+        "time": "MCU monotonic microseconds",
+        "frame_from": "calibrated_mag_sensor",
+        "frame_to": "selected_imu_body"
+      },
+      "mag_rotation_quality": {
+        "event_id": 54,
+        "name": "MAG_ROTATION_QUALITY",
+        "argument_encoding": "mag_rotation_quality_v1",
+        "frame": "quality of the current time-series window",
+        "arg1": "runtime_update_revision",
+        "time": "MCU monotonic microseconds",
+        "frame_from": "window",
+        "frame_to": "window",
+        "quality_codes": {
+          "0": "waiting",
+          "1": "training",
+          "2": "candidate",
+          "3": "accepted",
+          "4": "unobservable",
+          "5": "disturbed",
+          "6": "stale",
+          "7": "wrong_source"
+        },
+        "arg0": "bits 0..7 quality code, 8..23 relative RMS x 10000, 24..31 pair count",
+        "residual_scale": 10000,
+        "residual_unknown": 65535
+      }
+    }
+  }
+}

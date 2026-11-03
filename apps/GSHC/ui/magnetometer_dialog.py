@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QLabel, QProgressBar, QPushButton, QVBoxLayout, QWidget,
 )
 
+from services.magnetometer_maintenance import MagMaintenance_CalibrationPacketBuild
 from services.magnetometer_calibration import (
     MAG_CALIBRATION_MAX_SAMPLES, MAG_CALIBRATION_MIN_OCTANT_SAMPLES,
     MAG_CALIBRATION_MIN_SAMPLES, MagCalibration_Fit, MagCalibrationFitStatus,
@@ -49,12 +50,16 @@ class MagCalibrationDialog(QDialog):
         self.devices_data = ()
         self.collection = self.fit_result = self.last_status = None
         self.fit_worker = None
+        self._connection_epoch = 0
+        self._fit_context = None
         self.pending = ""
         self.read_role = "probe"
         self.capable = self.collecting = self.stopping = False
         self.closing = self.cleanup_done = self._allow_close = False
         self.applied_generation = None
-        self._apply_base = None
+        self._candidate_crc = self._candidate_config = None
+        self._prior_record = None
+        self._saved_receipt = None
         self.saved = False
         self._firmware_lock = ''
         self._collection_start = None
@@ -289,15 +294,24 @@ class MagCalibrationDialog(QDialog):
             return
         worker = _MagFitWorker(self.collection.points, self.reference.value(), self)
         self.fit_worker = worker
+        self._fit_context = (self._connection_epoch, id(self.collection), self.reference.value())
         worker.completed.connect(self._fitted)
-        worker.failed.connect(lambda error: self._message(error, error))
+        worker.failed.connect(self._fit_error)
         worker.finished.connect(self._fit_finished)
         self._message("正在 PC 拟合…", "Fitting on the PC…")
         self._render()
         worker.start()
 
+    def _fit_current(self):
+        return (not self.closing and self.capable and self._fit_context ==
+                (self._connection_epoch, id(self.collection), self.reference.value()))
+
+    def _fit_error(self, error):
+        if self._fit_current():
+            self._message(error, error)
+
     def _fitted(self, result):
-        if self.closing:
+        if not self._fit_current():
             return
         self.fit_result = result
         if result.status is MagCalibrationFitStatus.READY:
@@ -316,7 +330,11 @@ class MagCalibrationDialog(QDialog):
     def _apply(self):
         if not self.apply_ram.isEnabled():
             return
-        self._apply_base = self.last_status.generation
+        device = self._selected()
+        packet = MagMaintenance_CalibrationPacketBuild(device.instance, device.physical_device_id, self.fit_result)
+        self._candidate_crc = int.from_bytes(packet[-4:], "little")
+        self._candidate_config = self.last_status.configuration_digest
+        self._prior_record = (self.last_status.generation, self.last_status.intrinsic_crc)
         self.applied_generation = None
         self.saved = False
         self._send("apply", lambda: self.transport.apply(self._selected(), self.fit_result))
@@ -411,32 +429,56 @@ class MagCalibrationDialog(QDialog):
         self._firmware_lock = ''
         self.last_status = status
         if self.read_role == "probe":
-            self.capable = True
-            self._message("磁校准接口已响应，可开始采集。", "Magnetic calibration interface responded; collection is available.")
-        elif self.read_role == "apply":
-            if (status.state != "APPLIED" or status.generation == self._apply_base
-                    or status.pending or status.failed or status.load_error != "OK"):
-                raise ValueError("New RAM calibration generation was not confirmed")
-            self.applied_generation = status.generation
-            self._message("RAM 已生效；尚未保存，断电会丢失。", "Applied in RAM; not saved and may be lost on power-off.")
-        elif self.read_role == "save":
-            if status.state != "APPLIED" or status.generation != self.applied_generation:
-                self.applied_generation = None
-                raise ValueError("Calibration generation changed; RAM identity is unconfirmed")
-            # SAVE retains previous failure fields until the new owner write
-            # completes. A pending retry is not a terminal result for this SAVE.
-            if not status.pending and (status.failed or status.load_error != "OK"):
-                raise ValueError("Device persistence failed: " + status.load_error)
-            if status.saved and not status.pending:
-                self.saved = True
-                self._message("已保存：READ 已确认同一 generation，saved=1、pending=0。",
-                              "Saved: READ confirmed the same generation, saved=1 and pending=0.")
+            self.capable = status.intrinsic_crc is not None
+            if status.load_error != "OK" or status.failed:
+                self._message("设备校准读回报告存储错误，请查看状态。", "Device calibration readback reports a storage error.")
+            elif not self.capable:
+                self._message("固件缺少校准身份读回，请更新固件。", "Update the firmware to read back calibration identity.")
+            elif status.boot_loaded:
+                receipt = (status.instance, status.physical_device_id, status.configuration_digest,
+                           status.intrinsic_crc, status.generation)
+                if receipt == self._saved_receipt:
+                    self._message("启动已加载，设备读回与上次保存记录一致。", "Loaded at boot and matched the last saved record.")
+                else:
+                    self._message("设备已在启动时加载保存的校准。", "Device loaded its saved calibration at boot.")
             else:
-                self._message("保存处理中；尚未确认持久化。", "Save pending; persistence is not confirmed yet.")
+                self._message("磁校准接口已响应，可开始采集。", "Magnetic calibration interface responded; collection is available.")
+        elif self.read_role == "apply":
+            if (status.state != "APPLIED" or status.intrinsic_crc != self._candidate_crc
+                    or (self._candidate_config not in (None, 0, status.configuration_digest))
+                    or status.generation != 0 or status.saved or status.boot_loaded
+                    or status.pending or status.failed or status.load_error != "OK"):
+                raise ValueError("RAM candidate CRC and state were not confirmed")
+            self._candidate_config = status.configuration_digest
+            self.applied_generation = 0
+            self._message("设备读回已确认 RAM 校准，可保存到设备。", "RAM calibration read back. It can now be saved to the device.")
+        elif self.read_role == "save":
+            if (status.failed or status.load_error != "OK" or status.state != "APPLIED"
+                    or status.intrinsic_crc != self._candidate_crc or status.configuration_digest != self._candidate_config
+                    or status.boot_loaded):
+                self.applied_generation = None
+                raise ValueError("Storage failed or device calibration identity changed")
+            if status.saved and not status.pending and status.generation > 0:
+                previous, previous_crc = self._prior_record
+                if status.generation < previous or (status.generation == previous and previous_crc != status.intrinsic_crc):
+                    self.applied_generation = None
+                    raise ValueError("Persistent generation did not match this calibration")
+                self.saved = True
+                self.applied_generation = status.generation
+                self._saved_receipt = (status.instance, status.physical_device_id, status.configuration_digest,
+                                       status.intrinsic_crc, status.generation)
+                self._message(f"设备已保存并读回校准，代次 {status.generation}。",
+                              f"Device saved and read back calibration generation {status.generation}.")
+            elif not status.saved and status.generation == 0:
+                self._message("设备正在保存，等待完成读回。", "Waiting for the device to finish saving.")
                 self.save_poll.start()
+            else:
+                self.applied_generation = None
+                raise ValueError("Inconsistent persistence generation")
 
     def _connection(self, connected, detail):
         if not connected:
+            self._connection_epoch += 1
             self._firmware_lock = ''
             self._CollectionClock_Stop()
             self.save_poll.stop()
@@ -486,7 +528,9 @@ class MagCalibrationDialog(QDialog):
             if device_status.pending:
                 persistence = self.text("保存处理中", "save pending")
             elif device_status.failed or device_status.load_error != "OK":
-                persistence = self.text("保存失败，仅 RAM", "save failed; RAM only")
+                persistence = self.text("保存失败，查看当前设备读回", "save failed; inspect current device readback")
+            elif device_status.boot_loaded:
+                persistence = self.text("重启已加载", "loaded at boot")
             elif device_status.saved:
                 persistence = self.text("已保存", "saved")
             else:

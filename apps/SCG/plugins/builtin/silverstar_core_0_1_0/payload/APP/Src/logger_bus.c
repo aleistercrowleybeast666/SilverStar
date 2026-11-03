@@ -480,6 +480,24 @@ LoggerBusResult LoggerBus_EventPush(
         &record, sizeof(record), 0U);
 }
 
+LoggerBusResult LoggerBus_RotationEventPush(uint64_t timestamp_us, FlightLogEventId event_id,
+    uint32_t arg0, uint32_t arg1)
+{
+    FlightLogEventRecord record = {0};
+    if (event_id < FLIGHT_LOG_EVENT_MAG_ROTATION_BASE || event_id > FLIGHT_LOG_EVENT_MAG_ROTATION_QUALITY)
+    { return LOGGER_BUS_RESULT_BAD_PARAM; }
+    if (LoggerBus_PushStateGet() != LOGGER_BUS_RESULT_OK ||
+        LoggerBus_StartupStateGet() != LOGGER_STREAMING_READY ||
+        SystemLogPolicy_ShouldEmitAt(FLIGHT_LOG_RECORD_EVENT, timestamp_us) == 0U)
+    { return LOGGER_BUS_RESULT_BAD_STATE; }
+    record.event_id=event_id; record.arg0=arg0; record.arg1=arg1;
+    LoggerBusResult result=LoggerBus_RecordPush(FLIGHT_LOG_RECORD_EVENT,timestamp_us,0U,
+        &record,sizeof(record),0U);
+    if (result == LOGGER_BUS_RESULT_OK)
+    { SystemLogPolicy_EmissionTimeRecord(FLIGHT_LOG_RECORD_EVENT,timestamp_us); }
+    return result;
+}
+
 LoggerBusResult LoggerBus_StatsPush(
     uint64_t timestamp_us, const FlightLogStatsRecord *record)
 {

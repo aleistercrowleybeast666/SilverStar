@@ -1,5 +1,6 @@
 #include "mmc5983ma_adapter.h"
 #include "system_installation_capture_if.h"
+#include "system_mag_rotation_if.h"
 
 #include <stddef.h>
 #include <string.h>
@@ -133,10 +134,18 @@ SystemDeviceResult Mmc5983maAdapter_Start(Mmc5983maAdapter *adapter)
     return SYSTEM_DEVICE_OK;
 }
 
+static void Mmc5983maAdapter_SourceLost(void)
+{
+    if (SYSTEM_MAG_ROTATION_ENABLED != 0U) { SystemMagRotation_SourceLost(); }
+    if (SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U)
+    { SystemInstallationCapture_ProviderMag(NULL, 0ULL, 0ULL); }
+}
+
 SystemDeviceResult Mmc5983maAdapter_Stop(Mmc5983maAdapter *adapter)
 {
     if (adapter == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     adapter->health.started = 0U;
+    Mmc5983maAdapter_SourceLost();
     adapter->health.online = 0U;
     adapter->health.healthy = 0U;
     return SYSTEM_DEVICE_OK;
@@ -155,8 +164,15 @@ static void Mmc5983maAdapter_CapturePublish(const Mmc5983maAdapter *adapter)
      * endpoint identity and body mapping are NOT established by that fact. */
     if (Mmc5983maAdapter_LatestSampleGet(adapter, &sample) != SYSTEM_DEVICE_OK)
     {
+        Mmc5983maAdapter_SourceLost();
         SystemInstallationCapture_MagObserve(NULL, NULL, PlatformTime_Us());
         return;
+    }
+    if (SYSTEM_MAG_ROTATION_ENABLED != 0U) {
+        SystemMagRotation_MagObserve(&sample, adapter->core.magnetic_trigger_us, PlatformTime_Us());
+    }
+    if (SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U) {
+        SystemInstallationCapture_ProviderMag(&sample, adapter->core.magnetic_trigger_us, PlatformTime_Us());
     }
     SystemInstallationCapture_MagObserve(&sample, &proof, PlatformTime_Us());
 }
@@ -177,11 +193,12 @@ SystemDeviceResult Mmc5983maAdapter_Process(Mmc5983maAdapter *adapter)
             adapter->core.sample.receive_timestamp_us;
         adapter->health.online = 1U;
         adapter->health.healthy = 1U;
-        if (SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U)
+        if ((SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U) || (SYSTEM_MAG_ROTATION_ENABLED != 0U))
         { Mmc5983maAdapter_CapturePublish(adapter); }
         return SYSTEM_DEVICE_OK;
     }
     if (result == Mmc5983maStepPending) { return SYSTEM_DEVICE_NOT_READY; }
+    Mmc5983maAdapter_SourceLost();
     adapter->health.online = 0U;
     adapter->health.healthy = 0U;
     if (result == Mmc5983maStepMeasurementTimeout)

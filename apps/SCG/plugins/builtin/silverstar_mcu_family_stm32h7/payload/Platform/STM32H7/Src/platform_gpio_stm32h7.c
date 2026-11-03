@@ -1,6 +1,7 @@
 #include "platform_gpio.h"
 
 #include "platform_critical.h"
+#include "platform_time.h"
 #include "platform_stm32h7_resources.h"
 #include "stm32h7xx_hal.h"
 
@@ -11,12 +12,14 @@ typedef struct
     volatile uint32_t irq_count;
     uint32_t consumed_irq_count;
     uint8_t irq_enabled;
+    uint8_t edge_watch;
     uint8_t resource_loaded;
 } PlatformGpioContext;
 
 _Static_assert(SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT <= PLATFORM_GPIO_COUNT,
                "GPIO context capacity exceeds the platform interface");
 static PlatformGpioContext s_gpio[SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT];
+static uint64_t s_edge_us[SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT];
 
 static PlatformGpioContext *PlatformGpio_ContextGet(PlatformGpioId id)
 {
@@ -79,6 +82,24 @@ uint8_t PlatformGpio_IrqConsume(PlatformGpioId id)
     return pending;
 }
 
+PlatformResult PlatformGpio_ConsumedEdgeGet(PlatformGpioId id, uint32_t *number, uint64_t *time_us)
+{
+    PlatformGpioContext *context = PlatformGpio_ContextGet(id);
+    if (PLATFORM_GPIO_EDGE_TIME_ENABLED == 0U) { return PLATFORM_NOT_READY; }
+    if (context == NULL || number == NULL || time_us == NULL) { return PLATFORM_INVALID_ARGUMENT; }
+    PlatformCriticalState lock = PlatformCritical_Enter();
+    context->edge_watch = 1U;
+    if (context->irq_enabled == 0U || s_edge_us[id] == 0ULL ||
+        context->irq_count != context->consumed_irq_count) {
+        PlatformCritical_Exit(lock);
+        return PLATFORM_NOT_READY;
+    }
+    *number = context->irq_count;
+    *time_us = s_edge_us[id];
+    PlatformCritical_Exit(lock);
+    return PLATFORM_OK;
+}
+
 void HAL_GPIO_EXTI_Callback(uint16_t gpio_pin)
 {
     PlatformGpioContext *context;
@@ -90,6 +111,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t gpio_pin)
         if ((context != NULL) && (context->irq_enabled != 0U) &&
             (context->pin == gpio_pin))
         {
+            if (PLATFORM_GPIO_EDGE_TIME_ENABLED != 0U && context->edge_watch != 0U)
+            { s_edge_us[index] = PlatformTime_Us(); }
             context->irq_count++;
         }
     }

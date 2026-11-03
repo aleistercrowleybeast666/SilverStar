@@ -68,6 +68,11 @@ typedef enum
     FLIGHT_LOG_EVENT_NAV_FUSION_STATE_CHANGE, /* 0x2F; live supervisor transitions only */
     FLIGHT_LOG_EVENT_STAGE_ENTER, /* 0x30; arg0 stable stage hash, arg1 transition sequence */
     FLIGHT_LOG_EVENT_STAGE_EXIT, /* 0x31; original MCU transition timestamp */
+    FLIGHT_LOG_EVENT_MAG_ROTATION_BASE = 0x32U,
+    FLIGHT_LOG_EVENT_MAG_ROTATION_ESTIMATE = 0x33U,
+    FLIGHT_LOG_EVENT_MAG_ROTATION_ADOPTED = 0x34U,
+    FLIGHT_LOG_EVENT_MAG_ROTATION_FIXED = 0x35U,
+    FLIGHT_LOG_EVENT_MAG_ROTATION_QUALITY = 0x36U,
     FLIGHT_LOG_EVENT_ID_LIMIT /* exclusive bound; never serialized */
 } FlightLogEventId;
 

@@ -327,6 +327,9 @@ def test_joint_sensor_adapters_compile_with_real_interfaces(tmp_path: Path) -> N
         fields = " ".join(types[kinds[item["requirement"]]] + " " + item["member"] + ";" for item in manifest_data["metadata"]["instance_resource_binding"]["fields"])
         if folder.startswith("silverstar_device_imu_"):
             fields += " int8_t axis_map[3];"
+        if folder in {"silverstar_device_gnss_neo_m8n", "silverstar_device_gnss_max_m10s",
+                      "silverstar_device_gnss_neo_f10n"}:
+            fields += " uint8_t dynamic_model;"
         resource_lines += [f"#define {binding.count_symbol} 2U", f"typedef struct {{ {fields} }} {binding.struct_type};", f"SystemDeviceResult {binding.accessor}(uint8_t instance, {binding.struct_type} *resources);"]
     resource_lines.append("#endif")
     (tmp_path / "project_resources.h").write_text("\n".join(resource_lines) + "\n", encoding="utf-8")

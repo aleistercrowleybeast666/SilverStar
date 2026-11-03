@@ -382,6 +382,21 @@ void SystemInstallationActive_LoadFaultSet(SystemInstallationActiveResult result
     PlatformCritical_Exit(lock);
 }
 
+SystemInstallationActiveResult SystemInstallationActive_MagBaseGet(uint8_t instance,
+    uint32_t generation,uint32_t crc,float matrix[9])
+{
+    if(matrix==NULL){return SystemInstallationActiveResult_Invalid;}
+    PlatformCriticalState lock=PlatformCritical_Enter();
+    if(!s_status.active){PlatformCritical_Exit(lock);return SystemInstallationActiveResult_NotPresent;}
+    if(s_status.pending||s_dependency_invalid||instance!=s_active_record[36]||
+       generation!=Active_U32(&s_active_record[48])||crc!=Active_U32(&s_active_record[28])){
+        PlatformCritical_Exit(lock);return SystemInstallationActiveResult_DependencyChanged;
+    }
+    /* Active_Validate admits only identity R_GA. The record R_AM maps the
+     * intrinsically corrected field to this selected common accel/gyro basis. */
+    for(uint8_t i=0U;i<9U;i++){matrix[i]=Active_F32(&s_active_record[188U+4U*i]);}
+    PlatformCritical_Exit(lock);return SystemInstallationActiveResult_Ok;
+}
 SystemInstallationActiveResult SystemInstallationActive_MagTransform(uint8_t instance,
     uint32_t parent_generation,uint32_t parent_crc,const float input[3],float output[3])
 {

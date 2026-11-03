@@ -28,6 +28,12 @@ typedef enum
 
 PlatformResult PlatformGpio_Write(PlatformGpioId id, uint8_t logical_high);
 PlatformResult PlatformGpio_Read(PlatformGpioId id, uint8_t *logical_high);
+#ifndef PLATFORM_GPIO_EDGE_TIME_ENABLED
+#define PLATFORM_GPIO_EDGE_TIME_ENABLED 0U
+#endif
+/* Synchronized F4/H7 experimental path, samples the serviced DRDY edge.
+ * The first read arms this pin for subsequent IRQ timestamps. */
+PlatformResult PlatformGpio_ConsumedEdgeGet(PlatformGpioId id, uint32_t *number, uint64_t *time_us);
 uint8_t PlatformGpio_IrqConsume(PlatformGpioId id);
 
 #endif /* __PLATFORM_GPIO_H */

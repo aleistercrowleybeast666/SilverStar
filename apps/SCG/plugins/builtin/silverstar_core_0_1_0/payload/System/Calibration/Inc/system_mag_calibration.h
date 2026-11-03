@@ -34,6 +34,7 @@ typedef struct
     uint8_t saved;
     uint8_t save_pending;
     uint8_t save_failed;
+    uint8_t boot_loaded;
     SystemMagCalibrationResult load_error;
 } SystemMagCalibrationStatus;
 

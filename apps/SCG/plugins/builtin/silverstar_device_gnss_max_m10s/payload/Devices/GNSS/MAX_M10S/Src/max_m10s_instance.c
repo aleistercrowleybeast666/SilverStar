@@ -17,7 +17,8 @@ SystemDeviceResult MaxM10sGnssInstance_Init(uint8_t instance)
     ProjectMaxM10sResources resources;
     if (instance >= PROJECT_MAX_M10S_INSTANCE_COUNT) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     if (ProjectMaxM10sResources_Get(instance, &resources) != SYSTEM_DEVICE_OK) { return SYSTEM_DEVICE_NOT_PRESENT; }
-    return UbxSystemAdapter_Init(&s_contexts[instance], resources.uart, UBX_RECEIVER_MAX_M10S);
+    return UbxSystemAdapter_InitConfigured(&s_contexts[instance], resources.uart, UBX_RECEIVER_MAX_M10S,
+        (SystemGnssDynamicModel)resources.dynamic_model);
 }
 
 SystemDeviceResult MaxM10sGnssInstance_Start(uint8_t instance)

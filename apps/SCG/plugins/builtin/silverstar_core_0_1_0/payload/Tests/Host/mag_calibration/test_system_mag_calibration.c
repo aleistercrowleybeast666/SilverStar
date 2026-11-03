@@ -417,7 +417,7 @@ static void Test_StoredAndClear(void)
     TEST_CHECK(SystemMagCalibration_StatusGet(0U, &status) == SystemMagCalibrationResult_Ok);
     TEST_CHECK(status.active == 0U);
     TEST_CHECK(SystemMagCalibration_StatusGet(1U, &status) == SystemMagCalibrationResult_Ok);
-    TEST_CHECK(status.saved == 1U && status.generation == 4U && status.physical_device_id == 12U);
+    TEST_CHECK(status.saved == 1U && status.boot_loaded == 1U && status.generation == 4U && status.physical_device_id == 12U);
     TEST_CHECK(SystemMagCalibration_ClearRequest(1U) == SystemMagCalibrationResult_Ok);
     TEST_CHECK(SystemMagCalibration_PendingGet(&instance, packet, &request) == SystemMagCalibrationResult_Ok);
     TEST_CHECK(instance == 1U && packet[0] == 0U);
@@ -525,6 +525,14 @@ static void Test_ReplacementFailure(void)
 
 int main(int argc, char **argv)
 {
+#if defined(SILVERSTAR_MAG_TF_TEST) && !defined(SILVERSTAR_MAG_CAL_ARM_LINK_ONLY)
+    if (argc == 4)
+    {
+        TestTf_PcPacket(argv[1], argv[2], argv[3]);
+        TEST_CHECK(s_critical_depth == 0U);
+        return 0;
+    }
+#endif
     TEST_CHECK(argc == 2);
 #if defined(SILVERSTAR_MAG_TF_TEST)
     if (strncmp(argv[1], "tf_", 3U) == 0) { TestTf_Run(argv[1]); }

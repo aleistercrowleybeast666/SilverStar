@@ -345,6 +345,9 @@ def GeneratedFiles_Render(
     files.update(MissionProcessFiles_Render(model, catalog))
     from silverstar_fccg.generator.control_research import ControlResearchFiles_Render
     files.update(ControlResearchFiles_Render(model, catalog))
+    if "silverstar.installation.mag_rotation" in model.ComponentIds_Get():
+        from silverstar_fccg.project.mag_rotation import MagRotationConfiguration_Validate
+        MagRotationConfiguration_Validate(model, catalog)
     if "silverstar.installation.capture" in model.ComponentIds_Get():
         files["Generated/Inc/project_installation_capture.h"] = _InstallationCaptureHeader_Render(model,catalog)
     if decoder_profile is not None:
@@ -786,6 +789,10 @@ def _DeviceBuildCapabilitiesHeader_Render(model: ProjectModel, catalog: PluginCa
     if not isinstance(bindings, list):
         raise ValueError("Target device build capabilities must be an array")
     definitions: dict[str, str] = {}
+    if (set(model.ComponentIds_Get()) & {"silverstar.installation.capture", "silverstar.installation.mag_rotation"}
+            and any(item.plugin == "silverstar.device.imu.bmi088" and item.profile == "bosch_sync_400_hz"
+                    for item in model.device_instances)):
+        definitions["PLATFORM_GPIO_EDGE_TIME_ENABLED"] = "1U"
     imu_entries = [entry for entry in entries if entry.get("class") == "SYSTEM_DEVICE_CLASS_IMU"]
     definitions["SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED"] = (
         "1U" if model.build.compact_mode and len(imu_entries) == 1
@@ -1406,6 +1413,8 @@ def _InstanceResourceDeclarations_Render(
         if binding.accessor == "ProjectJy901bResources_Get":
             fields.append("    uint16_t installation_orientation;")
             fields.append("    uint8_t module_variant;")
+        if binding.accessor in ('ProjectNeoM8nResources_Get', 'ProjectMaxM10sResources_Get', 'ProjectNeoF10nResources_Get'):
+            fields.append("    uint8_t dynamic_model;")
         if manifest.component_id in RAW_IMU_MOUNT_PLUGINS:
             fields.append("    int8_t axis_map[3];")
         sections.append(
@@ -1477,6 +1486,9 @@ def _InstanceResourcesSource_Render(
                            "jy901s": 1, "jy901s_mag_capture": 1}[instance.profile]
                 values.append(f".installation_orientation = {orientation}U")
                 values.append(f".module_variant = {variant}U")
+            if binding.accessor in ('ProjectNeoM8nResources_Get', 'ProjectMaxM10sResources_Get', 'ProjectNeoF10nResources_Get'):
+                declared = catalog.InstanceIdComponent_Get(instance.instance_id).metadata["runtime_defaults"]["SYSTEM_DEVICE_CLASS_GNSS"]["SYSTEM_GNSS_DYNAMIC_MODEL"]
+                values.append(f".dynamic_model = {declared}")
             if manifest.component_id in RAW_IMU_MOUNT_PLUGINS:
                 axes = RawImuAxisMap_Get(instance.mount_nose_axis, instance.mount_x_axis)
                 values.append(".axis_map = { " + ", ".join(map(str, axes)) + " }")
@@ -1500,7 +1512,10 @@ def _InstanceResourcesSource_Render(
             "}"
         )
     body = "\n\n".join(sections)
-    return f"""#include "project_resources.h"
+    gnss_include = ('\n#include "system_gnss_if.h"' if any(instance.plugin in {
+        "silverstar.device.gnss.neo_m8n", "silverstar.device.gnss.max_m10s", "silverstar.device.gnss.neo_f10n"
+    } for instance in model.device_instances) else "")
+    return f"""#include "project_resources.h"{gnss_include}
 
 {AUTOGEN_C_COMMENT}
 
@@ -2268,9 +2283,11 @@ def LogDecoderProfile_Render(
         "raw_channel_id_templates": _LogRawChannelTemplates_Get(
             metadata, schema
         ),
-        "event_catalog": _LogCatalogSection_Get(
-            metadata, schema, "event_catalog"
-        ),
+        "event_catalog": {
+            **_LogCatalogSection_Get(metadata, schema, "event_catalog"),
+            **(catalog.Component_Get("silverstar.installation.mag_rotation").metadata["sslog_events"]
+                if "silverstar.installation.mag_rotation" in model.ComponentIds_Get() else {}),
+        },
         "enum_catalog": _LogCatalogSection_Get(
             metadata, schema, "enum_catalog"
         ),

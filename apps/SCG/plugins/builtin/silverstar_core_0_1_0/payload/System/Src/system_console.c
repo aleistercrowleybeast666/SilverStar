@@ -28,6 +28,7 @@
 #include "system_lifecycle.h"
 #include "system_magnetometer_if.h"
 #include "system_mag_calibration.h"
+#include "system_mag_rotation_if.h"
 #include "system_output_if.h"
 #include "system_power_if.h"
 #include "system_profile.h"
@@ -4717,7 +4718,7 @@ static SystemConsoleExecuteResult SystemConsole_MagCalStatusExecute(
     SILVERSTAR_ASSERT(status.saved <= 1U, SILVERSTAR_ASSERT_MODULE_SYSTEM,
         SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
     (void)CommonFormat_Print(response, capacity,
-        "OK %s CAL state=%s generation=%lu physical_device_id=%u instance=%u saved=%u pending=%u failed=%u load_error=%s",
+        "OK %s CAL state=%s generation=%lu physical_device_id=%u instance=%u saved=%u pending=%u failed=%u load_error=%s crc=%lu cfg=%lu loaded=%u",
         parsed->module_text,
         (status.active != 0U) ? "APPLIED" : "EMPTY",
         (unsigned long)status.generation,
@@ -4726,7 +4727,9 @@ static SystemConsoleExecuteResult SystemConsole_MagCalStatusExecute(
         (unsigned int)status.saved,
         (unsigned int)status.save_pending,
         (unsigned int)status.save_failed,
-        SystemConsole_MagCalResultText(status.load_error));
+        SystemConsole_MagCalResultText(status.load_error),
+        (unsigned long)status.intrinsic_crc, (unsigned long)status.configuration_digest,
+        (unsigned int)status.boot_loaded);
     return SYSTEM_CONSOLE_EXECUTE_OK;
 }
 
@@ -4742,6 +4745,11 @@ static SystemConsoleExecuteResult SystemConsole_MagCalExecute(
     { return SystemConsole_MagCalStatusExecute(parsed, response, capacity); }
     if (strcmp(parsed->subcommand, "READ") == 0)
     { return SystemConsole_MagCalStatusExecute(parsed, response, capacity); }
+    if (strcmp(parsed->subcommand, "ROTATION") == 0 && parsed->instance_id == 0U) {
+        if (SYSTEM_MAG_ROTATION_ENABLED != 0U) { SystemMagRotation_StatusWrite(response,capacity); }
+        else { (void)CommonFormat_Print(response,capacity,"OK MAG 0 ROT enabled=0"); }
+        return SYSTEM_CONSOLE_EXECUTE_OK;
+    }
     if (strcmp(parsed->subcommand, "APPLY") == 0)
     {
         result = (parsed->extra == NULL) ?

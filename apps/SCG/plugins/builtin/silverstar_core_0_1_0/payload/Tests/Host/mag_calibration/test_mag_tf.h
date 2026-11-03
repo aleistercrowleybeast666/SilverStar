@@ -456,6 +456,54 @@ static void TestTf_ServiceContract(uint8_t completion)
     TEST_CHECK(0U); /* The corrupted internal contract must not return. */
 }
 
+#if !defined(SILVERSTAR_MAG_CAL_ARM_LINK_ONLY)
+/* Each invocation starts with fresh BSS. Only the two device-port slot
+ * byte images cross the process boundary; all envelopes and payloads are
+ * written, re-read, verified and loaded by the production storage code. */
+static void TestTf_PcPacket(const char *mode, const char *hex, const char *path)
+{
+    SystemMagCalibrationStatus status;
+    SystemMagnetometerSample sample;
+    FILE *slots;
+    Test_Reset(1U);
+    if (strcmp(mode, "tf_pc_save") == 0)
+    {
+        TestTf_LoadFinish();
+        TEST_CHECK(SystemMagCalibration_PacketApply(0U, hex) == SystemMagCalibrationResult_Ok);
+        TEST_CHECK(SystemMagCalibration_StatusGet(0U, &status) == SystemMagCalibrationResult_Ok);
+        TEST_CHECK(status.active && !status.saved && !status.boot_loaded && status.generation == 0U);
+        TEST_CHECK(SystemMagCalibration_SaveRequest(0U) == SystemMagCalibrationResult_Ok);
+        SystemMagCalibrationStorage_Service();
+        slots = fopen(path, "wb");
+        TEST_CHECK(slots != NULL);
+        TEST_CHECK(fwrite(s_tf_lengths, sizeof(s_tf_lengths), 1U, slots) == 1U);
+        TEST_CHECK(fwrite(s_tf_slots, sizeof(s_tf_slots), 1U, slots) == 1U);
+    }
+    else
+    {
+        TEST_CHECK(strcmp(mode, "tf_pc_reboot") == 0);
+        slots = fopen(path, "rb");
+        TEST_CHECK(slots != NULL);
+        TEST_CHECK(fread(s_tf_lengths, sizeof(s_tf_lengths), 1U, slots) == 1U);
+        TEST_CHECK(fread(s_tf_slots, sizeof(s_tf_slots), 1U, slots) == 1U);
+        TEST_CHECK(s_tf_lengths[0] <= sizeof(s_tf_slots[0]) &&
+                   s_tf_lengths[1] <= sizeof(s_tf_slots[1]) && fgetc(slots) == EOF);
+        TestTf_LoadFinish();
+    }
+    TEST_CHECK(fclose(slots) == 0);
+    TEST_CHECK(SystemMagCalibration_StatusGet(0U, &status) == SystemMagCalibrationResult_Ok);
+    TEST_CHECK(status.active && status.saved && !status.save_pending && !status.save_failed &&
+               status.boot_loaded == (uint8_t)(strcmp(mode, "tf_pc_reboot") == 0));
+    sample = Test_SampleGet(0U);
+    TEST_CHECK(SystemMagCalibration_SampleApply(0U, &sample) == SystemMagCalibrationResult_Ok);
+    (void)printf("readback %u %lu %lu %lu %u %.8f %.8f %.8f\n",
+        (unsigned)status.physical_device_id, (unsigned long)status.generation,
+        (unsigned long)status.intrinsic_crc, (unsigned long)status.configuration_digest,
+        (unsigned)status.boot_loaded, (double)sample.magnetic_field_b_uT[0],
+        (double)sample.magnetic_field_b_uT[1], (double)sample.magnetic_field_b_uT[2]);
+}
+#endif
+
 static void TestTf_Run(const char *mode)
 {
     Test_Reset(1U);

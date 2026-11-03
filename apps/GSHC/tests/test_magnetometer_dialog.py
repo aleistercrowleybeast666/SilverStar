@@ -81,8 +81,9 @@ class MagWire(MockTransport):
             assert zlib.crc32(self.last_packet[:80]) == int.from_bytes(self.last_packet[80:], "little")
             assert self.last_packet[2:6] == bytes((42, 0, 3, 0))
             if self.mode != "apply_no_effect":
-                self.generation += 1
+                self.generation = 0
                 self.applied, self.saved, self.save_pending = True, False, False
+                self.save_failed = False
             return "OK MAG 3 CAL action=APPLY accepted=1"
         if parts[2:] == ["CAL", "SAVE"]:
             self.save_pending = True
@@ -97,13 +98,15 @@ class MagWire(MockTransport):
                     self.save_pending = False
                     self.save_failed = self.mode == "save_fail"
                     self.saved = not self.save_failed
+                    if self.saved: self.generation = 7
             generation = self.generation + int(self.mode == "changed" and self.save_reads > 0)
+            crc = int.from_bytes(self.last_packet[-4:], "little") if self.last_packet and self.applied else 0
             physical = 42 if self.applied else 0
             instance = 3 if self.applied else 0
             return (f"OK MAG 3 CAL state={'APPLIED' if self.applied else 'EMPTY'} generation={generation} "
                     f"physical_device_id={physical} instance={instance} saved={int(self.saved)} "
                     f"pending={int(self.save_pending)} failed={int(self.save_failed)} "
-                    f"load_error={'STORAGE_ERROR' if self.save_failed else 'OK'}")
+                    f"load_error={'STORAGE_ERROR' if self.save_failed else 'OK'} crc={crc} cfg=99 loaded=0")
         raise AssertionError(command)
 
     def check_alive(self):
@@ -214,7 +217,7 @@ def test_full_workflow_requires_explicit_apply_save_and_read_confirmation_and_pr
     controller.file_transfer._submit_download(None, list_only=True)
     assert not any(c == "LOGFILE ENTER" for c in wire.commands[len(before):])
     dialog.apply_ram.click()
-    wait_for(lambda: dialog.applied_generation == 1 and not dialog.pending)
+    wait_for(lambda: dialog.applied_generation == 0 and not dialog.pending)
     assert not dialog.saved and "RAM" in dialog.status.text()
     assert "尚未保存" in dialog.device_state.text()
     dialog.save_device.click()
@@ -239,8 +242,8 @@ def test_save_failure_does_not_claim_persistence_and_retains_only_ram_confirmati
     dialog = applied_dialog(gui)
     dialog.save_device.click()
     wait_for(lambda: gui[3].save_failed and not dialog.pending)
-    assert not dialog.saved and dialog.applied_generation == 1
-    assert "RAM" in dialog.status.text() and "保存失败" in dialog.status.text()
+    assert not dialog.saved and dialog.applied_generation is None
+    assert "保存未确认" in dialog.status.text()
     assert "保存失败" in dialog.device_state.text()
 
 
@@ -251,11 +254,12 @@ def test_save_retry_waits_for_new_pending_completion_despite_previous_failure_fl
     dialog.save_device.click()
     wait_for(lambda: wire.save_failed and not dialog.pending)
     assert not dialog.saved
-    # The firmware SaveRequest retains historical failure fields while pending.
+    # Failed storage rolls back the candidate in production. Retry requires
+    # a fresh explicit APPLY and a matching RAM CRC readback first.
     wire.mode = "ok"
+    dialog.apply_ram.click()
+    wait_for(lambda: dialog.applied_generation == 0 and not dialog.pending)
     dialog.save_device.click()
-    wait_for(lambda: wire.save_reads == 1 and not dialog.pending)
-    assert wire.save_pending and wire.save_failed and not dialog.saved
     wait_for(lambda: dialog.saved)
     assert not wire.save_pending and not wire.save_failed
     assert wire.commands.count("MAG 3 CAL SAVE") == 2

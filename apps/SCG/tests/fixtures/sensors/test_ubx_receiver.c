@@ -255,9 +255,9 @@ int main(void)
     mock.drop_ack=1U;
     assert(UbxReceiver_Init(&receiver,&port,UBX_RECEIVER_NEO_F10N,1U,2U,0U)==UBX_RECEIVER_BUSY);
     Mock_Run(&receiver,&mock); assert(receiver.state==UBX_RECEIVER_READY);
-    /* Nine nonzero F10 values differ from the empty Flash fixture: the three
-     * newly configured constellations add three real writes. No key repeats. */
-    assert(mock.nvm_writes == 9U);
+    /* Ten F10 keys differ from empty Flash, including DYNMODEL=8 and the
+     * three requested constellations. Verify one write per changed key. */
+    assert(mock.nvm_writes == 10U && mock.key_writes[2][5] == 1U && mock.values[2][5] == 8U);
     for (uint8_t i=0U; i<12U; i++) { assert(mock.key_writes[2][i] <= 1U); }
     Mock_Factory(&mock,UbxReceiver_ProfileGet(UBX_RECEIVER_NEO_F10N)); mock.corrupt_readback=1U;
     assert(UbxReceiver_Init(&receiver,&port,UBX_RECEIVER_NEO_F10N,1U,2U,0U)==UBX_RECEIVER_BUSY);

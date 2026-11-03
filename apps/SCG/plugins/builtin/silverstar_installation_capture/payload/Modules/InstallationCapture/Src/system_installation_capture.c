@@ -1,4 +1,9 @@
+#include "platform_critical.h"
+#include "platform_time.h"
+#include "system_source_selector.h"
+#include "system_installation_capture_if.h"
 #include "system_installation_capture.h"
+#include "system_mag_rotation_if.h"
 #include "common_format.h"
 #include "system_console_if.h"
 #include <stddef.h>
@@ -147,15 +152,6 @@ static uint8_t InstallationWire_ProofValid(const SystemInstallationCaptureProof 
         proof->raw_definition_known==1U&&proof->physical_body_units_known==1U&&proof->uncertainty_us!=UINT32_MAX);
 }
 
-uint8_t SystemInstallationCapture_ActiveQualifiedGet(float R_GA[9])
-{
-    /* Existing profiles 2/3 expose decode-time proxies, unknown native
-     * continuity/epoch and no R_GA authority. A packet bit cannot qualify
-     * those providers. No physical-provider implementation exists yet. */
-    (void)R_GA;
-    return 0U;
-}
-
 void SystemInstallationCapture_ImuObserve(const SystemImuSample *sample,const SystemInstallationCaptureProof *proof,uint64_t now_us)
 {
     InstallationCaptureSample value;InstallationCaptureResult result;uint8_t i;
@@ -267,11 +263,14 @@ static uint8_t InstallationWire_Inspection(const InstallationWireTokens *tokens,
     uint32_t cursor;
     if(strcmp(tokens->part[1],"CAPS")==0){
         if(count==2U){
-            (void)CommonFormat_Print(out,capacity,"OK INSTALL CAPS maintenance=0.1 supported=1 install_contract=1 face_auto=1 check_only=1 sample_format=1 max_request=191 max_line=511 train_pairs=%u holdout_pairs=%u pair_capacity=4096 offline=%u contract_supported=1 capture_available=%u apply_supported=0 save_supported=0 active_record=3 reason=%s",
+            float axes[9];
+            uint8_t active=(uint8_t)(s_wire.offline==0U&&SystemInstallationCapture_ActiveQualifiedGet(axes));
+            (void)CommonFormat_Print(out,capacity,"OK INSTALL CAPS maintenance=0.1 supported=1 install_contract=1 face_auto=1 check_only=1 sample_format=1 max_request=191 max_line=511 train_pairs=%u holdout_pairs=%u pair_capacity=4096 offline=%u contract_supported=1 capture_available=%u apply_supported=%u save_supported=%u active_record=3 reason=%s",
                 s_wire.configured?(unsigned int)s_wire.train_pairs:3U,
                 s_wire.configured?(unsigned int)s_wire.holdout_pairs:3U,(unsigned int)s_wire.offline,
                 (s_wire.configured!=0U&&s_wire.offline!=0U)?1U:0U,
-                (s_wire.configured!=0U&&s_wire.offline!=0U)?"SYNTHETIC_ONLY":"SOURCE_QUALIFICATION");
+                (unsigned int)active,(unsigned int)active,
+                (s_wire.configured!=0U&&s_wire.offline!=0U)?"SYNTHETIC_ONLY":(active?"QUALIFIED_FIXED_APPLY":"SOURCE_QUALIFICATION"));
         }
         return 1U;
     }
@@ -353,4 +352,98 @@ void SystemInstallationCapture_Process(uint64_t now_us)
     if(result!=InstallationCaptureResult_Ok){return;}
     committed=InstallationCapture_EventCommit((uint8_t)(SystemConsoleDevice_Write((const uint8_t *)line,length)==SYSTEM_DEVICE_OK));
     if(committed!=InstallationCaptureResult_Ok){InstallationCapture_SourceLost();}
+}
+
+/* These observations qualify the common accel/gyro axis convention for the
+ * fixed SSIC consumer. They do not certify native motion-to-IRQ delay, an
+ * offline capture session, or a physical installation on an actual board. */
+typedef struct
+{
+    uint64_t imu_us, mag_us;
+    uint32_t imu_epoch, imu_sequence, edge, mag_sequence;
+    uint16_t imu_physical, mag_physical;
+    uint8_t imu_ready, mag_ready;
+} InstallationProvider;
+static InstallationProvider s_provider;
+
+void SystemInstallationCapture_ProviderImu(uint32_t source, uint32_t epoch, uint32_t sequence,
+                                           uint32_t edge, uint64_t time_us, uint8_t valid)
+{
+    uint8_t selected;
+    SystemDeviceDescriptor descriptor;
+    uint8_t admitted =
+        (uint8_t)(valid == 1U && epoch != 0U && sequence != 0U && time_us != 0ULL &&
+                  SystemSourceSelector_ImuActiveInstanceGet(&selected) == SYSTEM_DEVICE_OK &&
+                  selected == source &&
+                  SystemDescriptor_DeviceFind(SYSTEM_DEVICE_CLASS_IMU, selected, &descriptor) ==
+                      SYSTEM_DEVICE_OK &&
+                  descriptor.physical_device_id != 0U);
+    PlatformCriticalState lock = PlatformCritical_Enter();
+    s_provider.imu_ready =
+        (uint8_t)(admitted && s_provider.imu_physical == descriptor.physical_device_id &&
+                  s_provider.imu_epoch == epoch && s_provider.edge + 1U == edge &&
+                  s_provider.imu_sequence + 1U == sequence && time_us > s_provider.imu_us &&
+                  time_us - s_provider.imu_us <= 4500ULL);
+    s_provider.imu_epoch = epoch;
+    s_provider.imu_sequence = sequence;
+    s_provider.edge = edge;
+    s_provider.imu_us = time_us;
+    s_provider.imu_physical = admitted ? descriptor.physical_device_id : 0U;
+    PlatformCritical_Exit(lock);
+}
+
+void SystemInstallationCapture_ProviderMag(const SystemMagnetometerSample *sample,
+                                           uint64_t trigger_us, uint64_t available_us)
+{
+    SystemDeviceDescriptor descriptor;
+    uint8_t admitted =
+        (uint8_t)(sample != NULL && trigger_us != 0ULL &&
+                  sample->sample_timestamp_us > trigger_us &&
+                  sample->sample_timestamp_us - trigger_us <= 18000ULL &&
+                  available_us >= sample->sample_timestamp_us &&
+                  available_us - sample->sample_timestamp_us <= 30000ULL &&
+                  (sample->valid_mask & (SYSTEM_MAG_VALID_RAW | SYSTEM_MAG_VALID_PHYSICAL_UNIT |
+                                         SYSTEM_MAG_VALID_CALIBRATED)) ==
+                      (SYSTEM_MAG_VALID_RAW | SYSTEM_MAG_VALID_PHYSICAL_UNIT) &&
+                  sample->calibration_valid == 0U && sample->sequence != 0U &&
+                  SystemDescriptor_DeviceFind(SYSTEM_DEVICE_CLASS_MAGNETOMETER, sample->instance_id,
+                                              &descriptor) == SYSTEM_DEVICE_OK &&
+                  descriptor.physical_device_id != 0U &&
+                  (sample->physical_device_id == 0U ||
+                   sample->physical_device_id == descriptor.physical_device_id) &&
+                  (sample->descriptor_id == 0U ||
+                   sample->descriptor_id == descriptor.descriptor_id));
+    PlatformCriticalState lock = PlatformCritical_Enter();
+    s_provider.mag_ready =
+        (uint8_t)(admitted && s_provider.mag_physical == descriptor.physical_device_id &&
+                  s_provider.mag_sequence + 1U == sample->sequence && s_provider.mag_us != 0ULL &&
+                  sample->sample_timestamp_us > s_provider.mag_us &&
+                  sample->sample_timestamp_us - s_provider.mag_us <= 150000ULL);
+    s_provider.mag_sequence = admitted ? sample->sequence : 0U;
+    s_provider.mag_us = admitted ? sample->sample_timestamp_us : 0ULL;
+    s_provider.mag_physical = admitted ? descriptor.physical_device_id : 0U;
+    PlatformCritical_Exit(lock);
+}
+
+uint8_t SystemInstallationCapture_ActiveQualifiedGet(float R_GA[9])
+{
+    if (R_GA == NULL)
+    {
+        return 0U;
+    }
+    uint64_t now = PlatformTime_Us();
+    PlatformCriticalState lock = PlatformCritical_Enter();
+    uint8_t qualified = (uint8_t)(s_provider.imu_ready && s_provider.mag_ready &&
+                                  s_provider.imu_physical != 0U && s_provider.mag_physical != 0U &&
+                                  now >= s_provider.imu_us && now - s_provider.imu_us <= 4500ULL &&
+                                  now >= s_provider.mag_us && now - s_provider.mag_us <= 150000ULL);
+    PlatformCritical_Exit(lock);
+    if (qualified)
+    {
+        for (uint8_t i = 0U; i < 9U; i++)
+        {
+            R_GA[i] = (i % 4U) == 0U ? 1.0f : 0.0f;
+        }
+    }
+    return qualified;
 }

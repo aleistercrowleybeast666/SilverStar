@@ -157,6 +157,7 @@ static Mmc5983maStepResult Mmc5983ma_MagneticRead(Mmc5983maContext *context, uin
             bytes, 7U) != Mmc5983maBusOk)
     { return Mmc5983ma_Fail(context, Mmc5983maStepBusError); }
     (void)memset(&context->sample, 0, sizeof(context->sample));
+    context->magnetic_trigger_us = context->operation_started_us;
     context->sample.sample_timestamp_us = now_us;
     context->sample.receive_timestamp_us = now_us;
     for (index = 0U; index < 3U; index++)

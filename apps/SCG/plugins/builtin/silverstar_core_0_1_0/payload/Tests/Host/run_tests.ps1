@@ -339,8 +339,14 @@ function Invoke-HostTest {
     if ($Name -match '^(system_alignment($|_)|system_calibration_|runtime_commands$|runtime_startup$|fault_hook$|calibration_build_gate_)') {
         $Sources += "$repoRoot\Tests\Host\installation_calibration_unit_boundary.c"
     }
+    if ($script:hostGraphDefinitions.Contains('SYSTEM_MAG_ROTATION_ENABLED') -and
+        $Name -ne 'mag_rotation_runtime') {
+        # Existing isolated unit jobs do not receive magnetic data or adopt a
+        # rotation. The enabled runtime job below uses the real two owning C files.
+        $Sources += "$repoRoot\Tests\Host\mag_rotation_unit_boundary.c"
+    }
     if ($script:hostGraphDefinitions.Contains('SYSTEM_INSTALLATION_CAPTURE_ENABLED') -and
-        $Name -ne 'installation_active_integration') {
+        $Name -notin @('installation_active_integration','mag_rotation_runtime')) {
         # These legacy units explicitly model no active installation record.
         # The separate enabled integration job uses the actual owner/wire/CAL/
         # Logger code; this boundary never substitutes for that evidence.
@@ -1647,6 +1653,14 @@ Invoke-HostTest -Name 'golden_sample' -Sources (@(
     "$repoRoot\Tests\Host\generate_golden_sample.c",
     "$repoRoot\Generated\Src\project_log_decoder_profile.c"
 ) + $sslogSources)
+
+if ($script:hostGraphDefinitions.Contains('SYSTEM_MAG_ROTATION_ENABLED')) {
+    Invoke-HostTest -Name 'mag_rotation_runtime' -Sources @(
+        "$repoRoot\Tests\Host\test_mag_rotation_runtime.c",
+        "$repoRoot\Algorithm\Installation\MagRotation\Src\mag_rotation.c",
+        "$repoRoot\Algorithm\Installation\MagRotation\Src\mag_rotation_runtime.c"
+    ) -ExtraCompilerArgs @("-I$repoRoot\Algorithm\Installation\MagRotation\Inc")
+}
 
 # Complete owning installation transaction plus explicitly synthetic physical,
 # lifecycle and media facades; no macro disabling the selected plugin.

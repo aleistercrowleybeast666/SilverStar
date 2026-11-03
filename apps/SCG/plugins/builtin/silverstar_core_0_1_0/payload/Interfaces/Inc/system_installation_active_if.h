@@ -52,6 +52,8 @@ SystemInstallationActiveResult SystemInstallationActive_SaveComplete(uint32_t re
     uint8_t success,uint32_t committed_generation,const uint8_t *readback,uint16_t length);
 SystemInstallationActiveResult SystemInstallationActive_StoredLoad(
     const uint8_t *record,uint16_t length,uint32_t committed_generation);
+SystemInstallationActiveResult SystemInstallationActive_MagBaseGet(uint8_t instance,
+    uint32_t generation,uint32_t crc,float matrix[9]);
 SystemInstallationActiveResult SystemInstallationActive_MagTransform(uint8_t instance,
     uint32_t parent_generation,uint32_t parent_crc,const float input[3],float output[3]);
 uint8_t SystemInstallationActive_RuntimeReady(uint32_t generation);
@@ -71,6 +73,9 @@ static inline SystemInstallationActiveResult SystemInstallationActive_SaveComple
 static inline SystemInstallationActiveResult SystemInstallationActive_SnapshotGet(
     uint8_t record[SYSTEM_INSTALLATION_ACTIVE_BYTES],uint32_t *generation)
 { (void)record;(void)generation;return SystemInstallationActiveResult_NotPresent; }
+static inline SystemInstallationActiveResult SystemInstallationActive_MagBaseGet(uint8_t instance,
+    uint32_t generation,uint32_t crc,float matrix[9])
+{(void)instance;(void)generation;(void)crc;(void)matrix;return SystemInstallationActiveResult_NotPresent;}
 static inline SystemInstallationActiveResult SystemInstallationActive_MagTransform(uint8_t instance,
     uint32_t generation,uint32_t crc,const float input[3],float output[3])
 {(void)instance;(void)generation;(void)crc;(void)input;(void)output;return SystemInstallationActiveResult_Unsupported;}

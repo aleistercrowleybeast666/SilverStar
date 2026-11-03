@@ -28,6 +28,10 @@ typedef struct
     uint8_t physical_body_units_known;
 } SystemInstallationCaptureProof;
 
+void SystemInstallationCapture_ProviderImu(uint32_t source,uint32_t epoch,uint32_t sequence,
+    uint32_t edge,uint64_t time_us,uint8_t valid);
+void SystemInstallationCapture_ProviderMag(const SystemMagnetometerSample *sample,
+    uint64_t trigger_us,uint64_t available_us);
 #if (SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U)
 SystemDeviceResult SystemInstallationCapture_StartClaim(uint8_t from_alignment,uint32_t *token);
 void SystemInstallationCapture_StartRelease(uint32_t token,uint8_t restore_alignment);

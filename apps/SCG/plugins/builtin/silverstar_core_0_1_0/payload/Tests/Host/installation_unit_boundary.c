@@ -9,6 +9,12 @@ void SystemInstallationCapture_ImuObserve(const SystemImuSample *sample,const Sy
 {(void)sample;(void)proof;(void)now;}
 void SystemInstallationCapture_MagObserve(const SystemMagnetometerSample *sample,const SystemInstallationCaptureProof *proof,uint64_t now)
 {(void)sample;(void)proof;(void)now;}
+void SystemInstallationCapture_ProviderImu(uint32_t source,uint32_t epoch,uint32_t sequence,
+    uint32_t edge,uint64_t time_us,uint8_t valid)
+{(void)source;(void)epoch;(void)sequence;(void)edge;(void)time_us;(void)valid;}
+void SystemInstallationCapture_ProviderMag(const SystemMagnetometerSample *sample,
+    uint64_t trigger,uint64_t available)
+{(void)sample;(void)trigger;(void)available;}
 void SystemInstallationCapture_Process(uint64_t now){(void)now;}
 uint8_t SystemInstallationCapture_CommandBlocked(void){return 0U;}
 void SystemInstallationCapture_ExecuteLine(const char *line,char *response,uint16_t capacity,uint64_t now)

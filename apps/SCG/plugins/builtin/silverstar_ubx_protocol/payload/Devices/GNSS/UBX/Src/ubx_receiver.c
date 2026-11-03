@@ -33,10 +33,10 @@
  * F10 keys/wait: UBX-23002975 R02 section 4.9.20 (ACK then 0.5 s). */
 static const UbxReceiverProfile s_profiles[UBX_RECEIVER_MODEL_COUNT] =
 {
-    {"NEO-M8N", "PROTVER=18.", 9600U, 115200U, 200U, 0U, 1U, 0U, 7U, 1U},
+    {"NEO-M8N", "PROTVER=18.", 9600U, 115200U, 200U, 8U, 1U, 0U, 7U, 1U},
     {"NEO-M9N", "PROTVER=27.", 38400U, 921600U, 40U, 8U, 0U, 6U, 7U, 1U},
-    {"MAX-M10S", "PROTVER=34.", 9600U, 115200U, 200U, 0U, 0U, 2U, 7U, 1U},
-    {"NEO-F10N", "PROTVER=40.", 38400U, 115200U, 200U, 0U, 0U, 6U, 7U, 0U}
+    {"MAX-M10S", "PROTVER=34.", 9600U, 115200U, 200U, 8U, 0U, 2U, 7U, 1U},
+    {"NEO-F10N", "PROTVER=40.", 38400U, 115200U, 200U, 8U, 0U, 6U, 7U, 0U}
 };
 
 static const uint32_t s_keys[UBX_MODERN_ITEM_COUNT] =
@@ -90,7 +90,7 @@ static uint32_t UbxReceiver_TargetValue(const UbxReceiver *receiver)
     {
         case 2U: return 0U;
         case 3U: return receiver->profile->measurement_ms;
-        case 5U: return receiver->profile->dynamic_model;
+        case 5U: return receiver->target_dynamic_model;
         case 10U: return 0U;
         case 11U: return receiver->profile->target_baud;
         default: return 1U;
@@ -158,6 +158,7 @@ UbxReceiverResult UbxReceiver_Init(UbxReceiver *receiver,
     memset(receiver, 0, sizeof(*receiver));
     receiver->port = *port;
     receiver->profile = profile;
+    receiver->target_dynamic_model = profile->dynamic_model;
     receiver->requested_persistent_layer = persistent_layer;
     receiver->state = UBX_RECEIVER_IDENTIFY;
     receiver->now_us = now_us;
@@ -601,7 +602,7 @@ static UbxReceiverResult UbxReceiver_LegacyReceive(UbxReceiver *receiver)
             if ((expected[0] != 1U) || (expected[1] != 7U)) { return UBX_RECEIVER_BAD_FRAME; }
             expected[3] = 1U;
             break;
-        case 2U: expected[2] = receiver->profile->dynamic_model; break;
+        case 2U: expected[2] = receiver->target_dynamic_model; break;
         case 3U:
         {
             UbxReceiverResult result = UbxReceiver_LegacySignalsResolve(receiver, expected, length);

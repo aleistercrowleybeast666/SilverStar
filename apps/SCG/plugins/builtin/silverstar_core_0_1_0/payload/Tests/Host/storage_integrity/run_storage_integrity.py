@@ -174,6 +174,11 @@ def StorageIntegrity_Run(project: Path, compiler: str, sf6_compact: bool = False
     definitions["SYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED"] = (
         "-DSYSTEM_BUILD_IMU_EPOCH_QUALIFICATION_ENABLED=0U")
     print("FCCG_HOST_FIXTURE|storage_writer|logical sensor records; physical epoch path not exercised", flush=True)
+    if "SYSTEM_MAG_ROTATION_ENABLED" in definitions:
+        # This logger/writer unit receives synthetic records without a live
+        # gyro/magnetometer pair. The emitted mag_rotation_runtime job covers
+        # actual candidate fitting, adoption and loss with the same definitions.
+        logger_sources.append(project / "Tests/Host/mag_rotation_unit_boundary.c")
     if "SYSTEM_INSTALLATION_CAPTURE_ENABLED" in definitions:
         logger_sources.append(project / "Tests/Host/installation_unit_boundary.c")
         logger_sources.append(project / "Tests/Host/installation_unit_lease_boundary.c")

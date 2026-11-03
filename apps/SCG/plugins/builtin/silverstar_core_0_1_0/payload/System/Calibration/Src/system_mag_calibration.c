@@ -1,4 +1,5 @@
 #include "system_mag_calibration.h"
+#include "system_mag_rotation_if.h"
 
 #include <math.h>
 #include <string.h>
@@ -260,6 +261,7 @@ static void SystemMagCalibration_EntrySet(
         { entry->correction.matrix[row][column] = values[3U + row * 3U + column]; }
     }
     entry->status.generation = generation;
+    entry->status.boot_loaded = 0U;
     entry->status.configuration_digest = SystemDescriptor_ConfigDigestGet();
     entry->status.intrinsic_crc =
         SystemMagCalibration_U32Read(&packet[SYSTEM_MAG_CAL_BODY_BYTES]);
@@ -454,6 +456,7 @@ static SystemMagCalibrationResult SystemMagCalibration_ClearRequestOwned(
     entry->status.active = 0U;
     entry->status.saved = 0U;
     entry->status.generation = 0U;
+    entry->status.boot_loaded = 0U;
     entry->status.intrinsic_crc = 0U;
     entry->status.save_failed = 0U;
     entry->status.load_error = SystemMagCalibrationResult_Ok;
@@ -528,6 +531,7 @@ static SystemMagCalibrationResult SystemMagCalibration_SelectionSet(uint8_t inst
         entry->status.active = 0U;
         entry->status.saved = 0U;
         entry->status.generation = generation;
+        entry->status.boot_loaded = 0U;
         entry->status.intrinsic_crc = 0U;
         entry->status.load_error = SystemMagCalibrationResult_Ok;
     }
@@ -613,6 +617,7 @@ static SystemMagCalibrationResult SystemMagCalibration_StoredLoad(
     SystemMagCalibration_IdentitySet(&s_mag_calibration[instance_id], &descriptor);
     (void)memcpy(s_mag_calibration[instance_id].committed, packet, SYSTEM_MAG_CAL_PACKET_BYTES);
     s_mag_calibration[instance_id].committed_generation = generation;
+    s_mag_calibration[instance_id].status.boot_loaded = calibration_present;
     PlatformCritical_Exit(state);
     return SystemMagCalibrationResult_Ok;
 }
@@ -776,6 +781,44 @@ static SystemMagCalibrationResult SystemMagCalibration_VectorCorrect(
     return SystemMagCalibrationResult_Ok;
 }
 
+/* The expensive intrinsic matrix calculation is complete. Recheck its
+ * identity in the same short publication transaction as the selected fixed
+ * or online rotation so a simultaneous replacement cannot label stale data. */
+static SystemMagCalibrationResult SystemMagCalibration_VectorPublish(
+    const SystemDeviceDescriptor *descriptor, uint32_t generation, uint32_t crc,
+    float corrected[3], SystemMagnetometerSample *sample)
+{
+    const uint8_t instance = sample->instance_id;
+    uint8_t rotated = 0U;
+    PlatformCriticalState state = PlatformCritical_Enter();
+    const SystemMagCalibrationStatus *status = &s_mag_calibration[instance].status;
+    if (!status->active || status->generation != generation || status->intrinsic_crc != crc ||
+        !SystemMagCalibration_IdentityMatches(&s_mag_calibration[instance], descriptor))
+    {
+        PlatformCritical_Exit(state);
+        return SystemMagCalibrationResult_NotReady;
+    }
+    if (SYSTEM_MAG_ROTATION_ENABLED != 0U)
+    {
+        rotated = SystemMagRotation_TryApply(instance, generation, crc, sample->sequence,
+            sample->sample_timestamp_us, corrected);
+    }
+    if (!rotated && SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U &&
+        SystemInstallationActive_MagTransform(instance, generation, crc, corrected, corrected)
+            != SystemInstallationActiveResult_Ok)
+    {
+        PlatformCritical_Exit(state);
+        return SystemMagCalibrationResult_NotReady;
+    }
+    (void)memcpy(sample->magnetic_field_b_uT, corrected, sizeof(sample->magnetic_field_b_uT));
+    sample->calibration_valid = 1U;
+    sample->valid_mask |= SYSTEM_MAG_VALID_CALIBRATED;
+    sample->physical_device_id = descriptor->physical_device_id;
+    sample->descriptor_id = descriptor->descriptor_id;
+    PlatformCritical_Exit(state);
+    return SystemMagCalibrationResult_Ok;
+}
+
 SystemMagCalibrationResult SystemMagCalibration_SampleApply(
     uint8_t instance_id, SystemMagnetometerSample *sample)
 {
@@ -816,18 +859,6 @@ SystemMagCalibrationResult SystemMagCalibration_SampleApply(
     result = SystemMagCalibration_VectorCorrect(&calibration,
         sample->magnetic_field_b_uT, corrected);
     if (result != SystemMagCalibrationResult_Ok) { return result; }
-    if (SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U) {
-        if (SystemInstallationActive_MagTransform(instance_id,parent_generation,parent_crc,
-                corrected,corrected)!=SystemInstallationActiveResult_Ok)
-        { return SystemMagCalibrationResult_NotReady; }
-    }
-    /* Publish only after the complete vector passed numerical checks. The
-     * sample is caller-owned; failures leave all its bytes unchanged. */
-    (void)memcpy(sample->magnetic_field_b_uT, corrected, sizeof(corrected));
-    sample->calibration_valid = 1U;
-    sample->valid_mask |= SYSTEM_MAG_VALID_CALIBRATED;
-    sample->physical_device_id = descriptor.physical_device_id;
-    sample->descriptor_id = descriptor.descriptor_id;
-    sample->instance_id = instance_id;
-    return SystemMagCalibrationResult_Ok;
+    return SystemMagCalibration_VectorPublish(&descriptor, parent_generation, parent_crc,
+        corrected, sample);
 }

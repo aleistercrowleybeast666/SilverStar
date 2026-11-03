@@ -118,6 +118,9 @@ class MagCalibrationStatus:
     pending: bool
     failed: bool
     load_error: str
+    intrinsic_crc: int | None = None
+    configuration_digest: int | None = None
+    boot_loaded: bool = False
 
 
 def MagStatus_Parse(response: str, device: MagCalibrationDevice) -> MagCalibrationStatus:
@@ -132,10 +135,18 @@ def MagStatus_Parse(response: str, device: MagCalibrationDevice) -> MagCalibrati
     empty_identity = state == "EMPTY" and physical == 0 and instance == 0
     if not empty_identity and (physical, instance) != (device.physical_device_id, device.instance):
         raise ValueError("Magnetic calibration physical identity changed")
+    extended = {"crc", "cfg", "loaded"}
+    if fields.keys() & extended and not extended <= fields.keys():
+        raise ValueError("Incomplete calibration identity readback")
+    loaded = bool(_uint(fields, "loaded", 1)) if "loaded" in fields else False
+    if loaded and (state != "APPLIED" or not _uint(fields, "saved", 1) or not _uint(fields, "generation")):
+        raise ValueError("Inconsistent boot calibration readback")
     return MagCalibrationStatus(
         state, _uint(fields, "generation"), physical, instance,
         bool(_uint(fields, "saved", 1)), bool(_uint(fields, "pending", 1)),
         bool(_uint(fields, "failed", 1)), fields["load_error"],
+        _uint(fields, "crc") if "crc" in fields else None,
+        _uint(fields, "cfg") if "cfg" in fields else None, loaded,
     )
 
 

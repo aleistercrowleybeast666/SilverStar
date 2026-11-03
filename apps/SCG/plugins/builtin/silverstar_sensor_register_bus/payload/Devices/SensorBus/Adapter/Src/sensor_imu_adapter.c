@@ -1,4 +1,6 @@
 #include "sensor_imu_adapter.h"
+#include "system_mag_rotation_if.h"
+#include "system_installation_capture_if.h"
 #include "silverstar_assert.h"
 
 #include <stddef.h>
@@ -134,9 +136,26 @@ SystemDeviceResult SensorImuAdapter_Start(SensorImuAdapter *adapter)
     return SYSTEM_DEVICE_OK;
 }
 
+static void SensorImuAdapter_QualifiedSourceLost(const SensorImuAdapter *adapter)
+{
+    if ((SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U || SYSTEM_MAG_ROTATION_ENABLED != 0U) &&
+        adapter->driver.profile != NULL && adapter->driver.profile->sync_pair_required != 0U)
+    {
+        if (SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U)
+        {
+            SystemInstallationCapture_ProviderImu(adapter->driver.source_id, 0U, 0U, 0U, 0ULL, 0U);
+        }
+        if (SYSTEM_MAG_ROTATION_ENABLED != 0U)
+        {
+            SystemMagRotation_SourceLost();
+        }
+    }
+}
+
 SystemDeviceResult SensorImuAdapter_Stop(SensorImuAdapter *adapter)
 {
     if (adapter == NULL) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
+    SensorImuAdapter_QualifiedSourceLost(adapter);
     adapter->started = 0U;
     adapter->health.started = 0U;
     adapter->health.healthy = 0U;
@@ -280,6 +299,25 @@ static SystemDeviceResult SensorImuAdapter_ReadAndPublish(SensorImuAdapter *adap
             return SYSTEM_DEVICE_VERIFY_FAILED;
         }
     }
+    if ((SYSTEM_MAG_ROTATION_ENABLED != 0U || SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U) &&
+        adapter->driver.profile->sync_pair_required != 0U) {
+        uint32_t ready_edge = 0U, gyro_edge = 0U;
+        uint64_t ready_us = 0ULL, gyro_us = 0ULL, end_us = PlatformTime_Us();
+        uint8_t ok = (uint8_t)(adapter->driver.profile_verified != 0U &&
+            sample.quality_flags == 0U &&
+            PlatformGpio_ConsumedEdgeGet(adapter->spi_resources.auxiliary_drdy, &gyro_edge, &gyro_us) == PLATFORM_OK &&
+            PlatformGpio_ConsumedEdgeGet(adapter->spi_resources.drdy, &ready_edge, &ready_us) == PLATFORM_OK &&
+            gyro_edge != 0U && gyro_us <= ready_us && ready_us - gyro_us <= 2500ULL &&
+            ready_us <= now_us && end_us >= now_us && end_us - ready_us <= 2500ULL);
+        if (SYSTEM_INSTALLATION_CAPTURE_ENABLED != 0U) {
+            SystemInstallationCapture_ProviderImu(sample.source_id,sample.config_generation,sample.sequence,
+                ready_edge,ready_us,ok);
+        }
+        if (SYSTEM_MAG_ROTATION_ENABLED != 0U) {
+            SystemMagRotation_ImuObserve(sample.source_id,sample.config_generation,sample.sequence,
+                ready_edge,ready_us,sample.gyro_b_radps,ok);
+        }
+    }
     sample.quality_flags |= SENSOR_IMU_QUALITY_TIME_UNCERTAIN;
     SensorImuAdapter_Publish(adapter, &sample);
     return SYSTEM_DEVICE_OK;
@@ -333,6 +371,8 @@ SystemDeviceResult SensorImuAdapter_Process(SensorImuAdapter *adapter)
         adapter->health.error_count++;
     }
     PlatformCritical_Exit(lock);
+    if (result != SYSTEM_DEVICE_OK && result != SYSTEM_DEVICE_NOT_READY)
+    { SensorImuAdapter_QualifiedSourceLost(adapter); }
     return result;
 }
 

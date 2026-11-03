@@ -120,6 +120,7 @@ typedef struct
 {
     UbxReceiverPort port;
     const UbxReceiverProfile *profile;
+    uint8_t target_dynamic_model; /* UBX wire code for this instance. */
     UbxReceiverState state;
     UbxReceiverResult result;
     UbxReceiverSample latest;

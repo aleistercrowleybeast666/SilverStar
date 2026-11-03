@@ -61,3 +61,16 @@ def test_collection_bounds_storage_and_reuses_existing_solver_quality():
     fit = sphere.fit(50)
     assert fit.status is MagCalibrationFitStatus.READY and min(fit.octant_counts) >= 4
     np.testing.assert_allclose(fit.hard_iron_uT, (12, -8, 3), atol=.01)
+
+
+def test_persistent_boot_origin_requires_matching_active_identity():
+    from services.magnetometer_workflow import MagCalibrationDevice, MagStatus_Parse
+    import pytest
+    device=MagCalibrationDevice(3,42,"MMC")
+    line="OK MAG 3 CAL state=APPLIED generation=7 physical_device_id=42 instance=3 saved=1 pending=0 failed=0 load_error=OK crc=17 cfg=99 loaded=1"
+    status=MagStatus_Parse(line,device)
+    assert status.boot_loaded and (status.generation,status.intrinsic_crc,status.configuration_digest)==(7,17,99)
+    for invalid in (line.replace("saved=1","saved=0"), line.replace("generation=7","generation=0"),
+                    line.replace("cfg=99 ",""),line.replace("physical_device_id=42","physical_device_id=9")):
+        with pytest.raises(ValueError):
+            MagStatus_Parse(invalid,device)

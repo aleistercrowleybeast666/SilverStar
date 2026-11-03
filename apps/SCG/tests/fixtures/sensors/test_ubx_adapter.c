@@ -34,11 +34,11 @@ void PlatformUart_Process(PlatformUartId id)
 SystemDeviceResult SystemGnssQuality_Evaluate(SystemGnssSample *sample, uint64_t now)
 { (void)sample; (void)now; return SYSTEM_DEVICE_OK; }
 
-static void Adapter_Init(UbxSystemAdapter *adapter, UbxReceiverModel model)
+static void Adapter_InitModel(UbxSystemAdapter *adapter, UbxReceiverModel model, SystemGnssDynamicModel dynamic_model)
 {
     s_adapter = adapter; s_now = 0U; s_epoch = 0U; s_silent = 0U;
     Mock_Factory(&s_mock, UbxReceiver_ProfileGet(model));
-    assert(UbxSystemAdapter_Init(adapter, PLATFORM_UART_1, model) == SYSTEM_DEVICE_OK);
+    assert(UbxSystemAdapter_InitConfigured(adapter, PLATFORM_UART_1, model, dynamic_model) == SYSTEM_DEVICE_OK);
     adapter->started = 1U;
     for (unsigned i = 0U; i < 10000U && adapter->receiver.state != UBX_RECEIVER_READY; i++)
     { SystemDeviceResult r = UbxSystemAdapter_Process(adapter); assert(r == SYSTEM_DEVICE_OK || r == SYSTEM_DEVICE_NOT_READY); PlatformTime_DelayMs(1U); }
@@ -53,7 +53,14 @@ static void Adapter_Test(UbxReceiverModel model)
     SystemGnssConfig actual;
     SystemGnssConfigTransactionReport transaction;
     SystemDeviceConfigReport report;
-    Adapter_Init(&adapter, model);
+    Adapter_InitModel(&adapter, model, SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G);
+    assert(adapter.receiver.readback.dynamic_model == 8U);
+    assert(UbxSystemAdapter_ConfigGet(&adapter, &actual) == SYSTEM_DEVICE_OK);
+    assert(actual.dynamic_model == SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G);
+    Adapter_InitModel(&adapter, model, SYSTEM_GNSS_DYNAMIC_MODEL_PORTABLE);
+    assert(adapter.receiver.readback.dynamic_model == 0U);
+    assert(UbxSystemAdapter_ConfigGet(&adapter, &actual) == SYSTEM_DEVICE_OK);
+    assert(actual.dynamic_model == SYSTEM_GNSS_DYNAMIC_MODEL_PORTABLE);
     uint32_t writes = s_mock.writes;
     uint32_t sends = s_mock.sends;
     assert(UbxSystemAdapter_HardwareConfigRead(&adapter, &hardware) == SYSTEM_DEVICE_OK);
@@ -87,7 +94,7 @@ static void Adapter_Test(UbxReceiverModel model)
     assert(s_mock.writes == writes && adapter.maintenance_owner == 0U);
     assert(adapter.receiver.readback.measurement_ms == 1000U);
     assert(UbxSystemAdapter_ConfigGet(&adapter, &actual) == SYSTEM_DEVICE_NOT_READY);
-    Adapter_Init(&adapter, model); s_silent = 1U; writes = s_mock.writes;
+    Adapter_InitModel(&adapter, model, SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G); s_silent = 1U; writes = s_mock.writes;
     assert(UbxSystemAdapter_HardwareConfigRead(&adapter, &hardware) == SYSTEM_DEVICE_VERIFY_FAILED);
     assert(hardware.read_result == SYSTEM_GNSS_CONFIG_READ_TIMEOUT && hardware.valid_mask == 0U);
     assert(s_mock.writes == writes && adapter.maintenance_owner == 0U);

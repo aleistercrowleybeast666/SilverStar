@@ -17,7 +17,8 @@ SystemDeviceResult NeoF10nGnssInstance_Init(uint8_t instance)
     ProjectNeoF10nResources resources;
     if (instance >= PROJECT_NEO_F10N_INSTANCE_COUNT) { return SYSTEM_DEVICE_INVALID_ARGUMENT; }
     if (ProjectNeoF10nResources_Get(instance, &resources) != SYSTEM_DEVICE_OK) { return SYSTEM_DEVICE_NOT_PRESENT; }
-    return UbxSystemAdapter_Init(&s_contexts[instance], resources.uart, UBX_RECEIVER_NEO_F10N);
+    return UbxSystemAdapter_InitConfigured(&s_contexts[instance], resources.uart, UBX_RECEIVER_NEO_F10N,
+        (SystemGnssDynamicModel)resources.dynamic_model);
 }
 
 SystemDeviceResult NeoF10nGnssInstance_Start(uint8_t instance)

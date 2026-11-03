@@ -17,6 +17,8 @@ typedef struct
     uint8_t maintenance_owner;
 } UbxSystemAdapter;
 
+SystemDeviceResult UbxSystemAdapter_InitConfigured(UbxSystemAdapter *adapter,
+    PlatformUartId uart, UbxReceiverModel model, SystemGnssDynamicModel dynamic_model);
 SystemDeviceResult UbxSystemAdapter_Init(UbxSystemAdapter *adapter,
     PlatformUartId uart, UbxReceiverModel model);
 SystemDeviceResult UbxSystemAdapter_Process(UbxSystemAdapter *adapter);

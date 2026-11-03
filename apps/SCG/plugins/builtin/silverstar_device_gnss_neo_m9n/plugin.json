@@ -130,7 +130,9 @@
         "headers": [
           "neo_m9n_instance.h"
         ],
-        "operations": {"RecoveryBusyGet": "NeoM9nGnssInstance_RecoveryBusyGet"},
+        "operations": {
+          "RecoveryBusyGet": "NeoM9nGnssInstance_RecoveryBusyGet"
+        },
         "pass_instance": true
       }
     },
@@ -258,5 +260,30 @@
     "chipset": "UBX-M9",
     "driver": "NEO-M9N Driver"
   },
-  "transports": []
+  "transports": [],
+  "device_variants": {
+    "airborne_4g": {
+      "interface": "uart",
+      "profile": "airborne_4g",
+      "overrides": {
+        "name": "NEO-M9N"
+      }
+    },
+    "portable_ground_test": {
+      "interface": "uart",
+      "profile": "portable_ground_test",
+      "overrides": {
+        "metadata": {
+          "initialization": {
+            "dynamic_model": "SYSTEM_GNSS_DYNAMIC_MODEL_PORTABLE"
+          },
+          "runtime_defaults": {
+            "SYSTEM_DEVICE_CLASS_GNSS": {
+              "SYSTEM_GNSS_DYNAMIC_MODEL": "SYSTEM_GNSS_DYNAMIC_MODEL_PORTABLE"
+            }
+          }
+        }
+      }
+    }
+  }
 }
