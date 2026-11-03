@@ -989,12 +989,19 @@ def _WorkspaceOwnedPackages_Get(known_ids: set[str]) -> list[dict[str, Any]]:
     """Retain explicitly FCCG-owned packages absent from the old reference."""
     packages: list[dict[str, Any]] = []
     owners = {"fccg_joint_navigation", "fccg_joint_sensor_library"}
+    sensor_maintenance_packages = {
+        ("silverstar.installation.mag_rotation", "release_candidate_20261103"),
+        ("silverstar.installation.capture", "installation_capture_0_1_3"),
+        ("silverstar.device.magnetometer.mmc5983ma", "silverstar_mmc5983ma_datasheet_implementation"),
+        ("silverstar.mcu_family.stm32h7", "silverstar_h743zi_static_candidate"),
+    }
     for path in sorted((WORKSPACE_ROOT / "plugins" / "builtin").glob("*/plugin.json")):
         manifest = json.loads(path.read_text(encoding="utf-8"))
         if manifest["id"] in known_ids:
             continue
         origin = manifest.get("metadata", {}).get("source_origins", {}).get("default")
-        if origin in owners:
+        package_identity = (manifest["id"], origin)
+        if origin in owners or package_identity in sensor_maintenance_packages:
             if any(item["manifest"]["id"] == manifest["id"] for item in packages):
                 raise RuntimeError(f"Duplicate workspace package identity: {manifest['id']}")
             packages.append({"manifest": manifest, "workspace_owned_package": True,
@@ -1059,6 +1066,10 @@ def _Components_Get(
             "Tools/software_stack_review.md",
             "System/User/system_user_config.h",
             "Interfaces/Inc/system_installation_capture_if.h",
+            "Interfaces/Inc/system_mag_rotation_if.h",
+            "System/Calibration/Inc/system_mag_calibration.h",
+            "Tests/Host/mag_calibration/test_system_mag_calibration.c",
+            "Tests/Host/mag_calibration/test_mag_tf.h",
             "System/Alignment/Inc/system_alignment.h",
             "Tests/Host/installation_unit_lease_boundary.c",
             "Tests/Host/installation_start_unit_boundary.c",
@@ -2835,6 +2846,19 @@ def _Components_Get(
         component_id = component["manifest"]["id"]
         slug = component_id.replace(".", "_")
         builtin_manifest_path = WORKSPACE_ROOT / "plugins" / "builtin" / slug / "plugin.json"
+        if component_id == "silverstar.device.gnss.neo_m9n" and builtin_manifest_path.is_file():
+            # The older reference has one boot profile. Retain the selectable
+            # flight and explicit portable variants of the owning device.
+            owner = json.loads(builtin_manifest_path.read_text(encoding="utf-8"))
+            component["manifest"]["device_variants"] = owner["device_variants"]
+            for key in ("initialization", "runtime_defaults"):
+                component["manifest"]["metadata"][key] = owner["metadata"][key]
+        sensor_owned_paths = {
+            "silverstar.mcu_family.stm32f4": ("Platform/STM32F4/Src/platform_gpio_stm32f4.c",),
+            "silverstar.platform.api": ("Platform/Inc/platform_gpio.h",),
+        }
+        for relative in sensor_owned_paths.get(component_id, ()):
+            component["fccg_owned_files"][relative] = f"plugins/builtin/{slug}/payload/{relative}"
         if component["manifest"]["type"] == "algorithm" and builtin_manifest_path.is_file():
             owned_manifest = json.loads(builtin_manifest_path.read_text(encoding="utf-8"))
             for key in ("algorithm_revision", "gnss_integrity_revision", "navigation_contract", "retired_parameter_ids"):
