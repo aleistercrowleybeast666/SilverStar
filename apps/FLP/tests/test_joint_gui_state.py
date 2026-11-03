@@ -56,7 +56,9 @@ def test_range_shell_1000_700_language_theme_and_pointer(qtbot, tmp_path, langua
         app.setFont(QFont(QFontDatabase.applicationFontFamilies(font_id)[0], 10))
     Theme_Apply(app, theme)
     window = MainWindow(builtin_registry())
-    qtbot.addWidget(window)
+    # This test owns an unsaved synthetic project. Dispose of the draft on
+    # teardown even when a layout or pointer assertion fails before close().
+    qtbot.addWidget(window, before_close_func=lambda owned: owned._Project_SetDirty(False))
     opened = NavigationPair_Open(tmp_path/'pair', flight_samples=101)
     window._LogOpenResult_Set(opened, ProjectDocument())
     window.Language_Apply(language)

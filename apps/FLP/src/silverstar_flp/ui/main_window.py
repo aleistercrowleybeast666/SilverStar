@@ -905,7 +905,6 @@ class MainWindow(QMainWindow):
                 return False
             self._pending_new_project_path = None
         self.custom_decoder_banner.hide()
-        self.time_range.show()
         for index in range(self.navigation_list.count()):
             item = self.navigation_list.item(index)
             item.setFlags(item.flags() | Qt.ItemFlag.ItemIsEnabled)
