@@ -17,7 +17,7 @@ resource_prefixes = (
 resource_files = [name for name in tracked if name and (
     name.startswith(resource_prefixes) or name in {
         "VERSION", "versions.json", "tools/silverstar_version.py", "tools/silverstar_mission_profile.py", "tools/silverstar_mission_process.py", "tools/silverstar_mission_functions.py", "contracts/mission_functions_v1.json", "contracts/function_parameters_v1.json", "contracts/mission_profile_v3.json", "contracts/mission_profile_v1.json", "contracts/mission_profile_v2.json", "contracts/mission_process_v1.json", "contracts/mission_process_v2.json", "contracts/body_frame_v1.json", "apps/SCG/main.py", "apps/FLP/main.py", "apps/GSHC/main.py",
-        "apps/GSHC/app.py", "apps/GSHC/config.py",
+        "apps/GSHC/app.py", "apps/GSHC/config.py", "apps/GSHC/mission_profile.py",
     })]
 resource_files = [name for name in resource_files if name not in {"apps/SCG/tools/compare_reference_project.py", "apps/SCG/tools/nrf24_validate.py"}]
 resources = [(str(repository / name), str(Path(name).parent)) for name in resource_files]
@@ -56,6 +56,10 @@ for app, package in [("SCG", "silverstar_fccg.app.application"), ("GSHC", "app")
     # The analysis still discovers its external imports; only its own PYZ entries
     # are removed, so __file__ and original relative resource paths stay valid.
     first_party = [row for row in a.pure if Path(row[1]).is_relative_to(repository / "apps") and ".venv" not in Path(row[1]).parts]
+    missing_sources = {Path(source).relative_to(repository).as_posix()
+                       for _, source, _ in first_party} - set(resource_files)
+    if missing_sources:
+        raise RuntimeError("First-party imports missing from portable resources: " + ", ".join(sorted(missing_sources)))
     removed[app] = [row[0] for row in first_party]
     a.pure = [row for row in a.pure if row not in first_party]
     # QtGui's default hook collects optional PDF/virtual-keyboard plugins.
