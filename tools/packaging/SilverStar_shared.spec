@@ -124,3 +124,12 @@ collection = COLLECT(*executables, *[a.binaries for a in analyses],
     *[a.datas for a in analyses], strip=False, upx=False, name="SilverStar")
 Path(os.environ["SILVERSTAR_PACKAGE_EVIDENCE"]).joinpath("first-party-pyz-removal.json").write_text(
     json.dumps(removed, indent=2), encoding="utf-8")
+
+# Archive the inputs after the actual hook/exclusion decisions. This lets the
+# candidate inventory attribute shared namespaces to their matching wheel RECORD.
+runtime_inputs = sorted({(kind, destination, str(source))
+    for analysis in analyses
+    for kind, entries in (("module", analysis.pure), ("binary", analysis.binaries), ("data", analysis.datas))
+    for destination, source, _type in entries if source})
+Path(os.environ["SILVERSTAR_PACKAGE_EVIDENCE"]).joinpath("resolved-runtime-inputs.json").write_text(
+    json.dumps(runtime_inputs, ensure_ascii=False), encoding="utf-8")
