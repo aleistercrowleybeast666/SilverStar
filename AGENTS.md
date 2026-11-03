@@ -6,7 +6,7 @@ Use the repository naming style: noun, underscore, capitalized verb phrase (for 
 
 SCG (compatible Python package `silverstar_fccg`; historical document namespace `docs/FCCG`): preserve declarative plugins, source-graph ownership, generated-file boundaries, workspace path safety, storage integrity, interrupt/DMA safety and explicit hardware verification. Imported CubeMX files are not FCCG source. Normal generation must not overwrite user-owned project payloads. Read [FCCG architecture](docs/FCCG/ARCHITECTURE.md) and [runtime safety](docs/FCCG/platform/details/RUNTIME_SAFETY.md) for detailed constraints.
 
-GSHC: AIR M0 and command/controller readiness are authoritative. An ACK does not imply READY. Keep serial/protocol processing off the GUI thread and maintain bounded queues and diagnostics. Read [AIR protocol](docs/GSHC/AIR_PROTOCOL.md) and [GSHC architecture](docs/GSHC/UPPER_COMPUTER_ARCHITECTURE.md).
+GSHC: Active SS-TM-S and command/controller readiness are authoritative; historical AIR M0 parsing is read-only compatibility. An ACK does not imply READY. Keep maintenance protocol ownership explicit, serial/protocol processing off the GUI thread, and bounded queues and diagnostics. Read [AIR protocol](docs/GSHC/AIR_PROTOCOL.md) and [GSHC architecture](docs/GSHC/UPPER_COMPUTER_ARCHITECTURE.md).
 
 FLP: source logs and recorded datasets are immutable. Production opening requires the exact `.ssdecoder` and Descriptor through `LogOpenCoordinator`; do not add fallback decoding or treat offline defaults as recorded. Keep trusted container plugins separate from declarative decoder data. Read [FLP architecture](docs/FLP/Architecture.md) and [decoder contract](docs/FLP/Decoder_Profile_Package.md).
 

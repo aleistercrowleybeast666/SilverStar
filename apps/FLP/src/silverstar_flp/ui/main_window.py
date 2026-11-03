@@ -114,20 +114,14 @@ class MainWindow(QMainWindow):
         theme: str = "light",
         initial_path: Path | None = None,
         initial_decoder_path: Path | None = None,
-        initial_auto_find: bool = False,
+        initial_auto_find: bool = True,
+        initial_decoder_roots: tuple[Path, ...] | None = None,
         plugin_manager: TrustedContainerPluginManager | None = None,
         path_preferences: PathPreferences | None = None,
     ) -> None:
         super().__init__()
         self._registry = registry
-        self._path_preferences = path_preferences or PathPreferences(
-            Path(
-                QStandardPaths.writableLocation(
-                    QStandardPaths.StandardLocation.AppLocalDataLocation
-                )
-            )
-            / "path_preferences.json"
-        )
+        self._path_preferences = path_preferences or PathPreferences.Product_Open()
         self._last_import_directory: Path | None = None
         self._silverstar_project_root: Path | None = None
         self._plugin_manager = plugin_manager or TrustedContainerPluginManager(
@@ -184,6 +178,7 @@ class MainWindow(QMainWindow):
                     initial_path,
                     decoder_path=initial_decoder_path,
                     auto_find=initial_auto_find,
+                    decoder_roots=initial_decoder_roots,
                 ),
             )
 
@@ -551,7 +546,8 @@ class MainWindow(QMainWindow):
         path: Path,
         *,
         decoder_path: Path | None = None,
-        auto_find: bool = False,
+        auto_find: bool = True,
+        decoder_roots: tuple[Path, ...] | None = None,
     ) -> None:
         source_path = Path(path)
         if source_path.is_dir():
@@ -578,6 +574,7 @@ class MainWindow(QMainWindow):
             self.Log_Open(
                 source_path,
                 auto_find=True,
+                decoder_roots=decoder_roots,
                 source_mode=LogOpenSourceMode.FOLDER_SEARCH,
             )
         else:
@@ -600,6 +597,7 @@ class MainWindow(QMainWindow):
         *,
         decoder_path: Path | None = None,
         auto_find: bool = False,
+        decoder_roots: tuple[Path, ...] | None = None,
         source_mode: LogOpenSourceMode = LogOpenSourceMode.MANUAL,
         project: ProjectDocument | None = None,
         allow_unverified_decoder: bool = False,
@@ -619,7 +617,8 @@ class MainWindow(QMainWindow):
             task_directory=source_path.parent if auto_find else None,
             source_mode=source_mode,
             allow_unverified_decoder=allow_unverified_decoder,
-            decoder_search_directories=self._path_preferences.DecoderDirectories_Get(),
+            decoder_search_directories=(self._path_preferences.DecoderDirectories_Get()
+                                        if decoder_roots is None else decoder_roots),
         )
         self.status_label.setText(self._translator.Text_Get("status.loading"))
         worker = FunctionWorker(lambda context: self._LogOpen_Run(request, context))
@@ -1491,13 +1490,15 @@ class MainWindow(QMainWindow):
     def _LogOpen_Error(self, message: str, log_path: Path | None = None) -> None:
         self._pending_new_project_path = None
         code = message.partition(":")[0].strip()
-        if log_path is not None and code in (
-            "decoder_profile_exact_match_missing", "decoder_profile_match_ambiguous",
-            "decoder_package_open_failed", "decoder_package_path_required",
-            "decoder_discovery_limit_reached",
+        if log_path is not None and (
+            code.startswith(("decoder_package_", "decoder_profile_", "decoder_generation_profile_"))
+            or code == "decoder_discovery_limit_reached"
         ):
             self.import_dialog.Paths_Set(log_path=log_path)
-            self.import_dialog.result_label.setText(message)
+            self.import_dialog.result_label.setTextFormat(Qt.TextFormat.PlainText)
+            self.import_dialog.result_label.setText(
+                self._translator.Text_Get("import.exact_decoder_repair") + "\n" + message
+            )
             self.import_dialog.result_label.show()
             self.import_dialog.open()
             return

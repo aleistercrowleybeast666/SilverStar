@@ -83,7 +83,7 @@ class ReceivePipelineDiagnostics:
 class ReceivePipeline:
     """Pure protocol core used by the background worker and stress tests."""
 
-    def __init__(self, *, recovery_connection: int = 0) -> None:
+    def __init__(self, *, recovery_connection: int = 0, telemetry_reconnect=None) -> None:
         if type(recovery_connection) is not int or recovery_connection < 0:
             raise ValueError("recovery_connection_invalid")
         self._recovery_connection = recovery_connection
@@ -94,13 +94,17 @@ class ReceivePipeline:
         self.air_frames = 0
         self.air_parse_errors = 0
         self.capability_context: AirCapabilityMessage | None = None
+        self._legacy_capability: AirCapabilityMessage | None = None
         self.unsupported_profile_id: int | None = None
         self._mission_tracking = False
         self._last_flight_time_ms: int | None = None
         self._received_flight_packets = 0
         self._estimated_lost_packets = 0
         self._ingress_ordinal = 0
-        self._telemetry = TelemetrySession()
+        self._telemetry = TelemetrySession(telemetry_reconnect)
+
+    def ReconnectFacts_Get(self):
+        return self._telemetry.ReconnectFacts_Get()
 
     def feed(self, data: bytes, host_rx_monotonic_ns: int | None = None) -> list[ProtocolEvent]:
         if not data:
@@ -160,21 +164,22 @@ class ReceivePipeline:
             telemetry_snapshot = None
             if tm_frame is not None:
                 previous_boot = self._telemetry.boot_session
-                telemetry_result = self._telemetry.Frame_Observe(tm_frame, rx_ns)
+                if parsed_gsp.radio_backend == 'nrf24l01p':
+                    telemetry_result = TelemetryObserveResult.ReadOnly
+                else:
+                    telemetry_result = self._telemetry.Frame_Observe(tm_frame, rx_ns)
                 telemetry_snapshot = self._telemetry.Snapshot_Get()
                 if previous_boot != self._telemetry.boot_session:
                     self.capability_context = None
-                    self.unsupported_profile_id = None
                     self._mission_reset()
             accepted = tm_frame is None or telemetry_result is TelemetryObserveResult.Accepted
 
             if accepted and isinstance(air_message, AirCapabilityMessage):
-                if air_message.profile_supported:
-                    self.capability_context = air_message
-                    self.unsupported_profile_id = None
+                if tm_frame is None:
+                    self._legacy_capability = air_message if air_message.profile_supported else None
+                    self.unsupported_profile_id = None if air_message.profile_supported else air_message.air_profile_id
                 else:
-                    self.capability_context = None
-                    self.unsupported_profile_id = air_message.air_profile_id
+                    self.capability_context = air_message
 
             if (
                 accepted and isinstance(air_message, AirStatusMessage)
@@ -188,7 +193,9 @@ class ReceivePipeline:
                     self._mission_reset(active=True)
                 packet_stats = self._flight_packet_track(air_message.time_ms)
 
-            context = self.capability_context if accepted else None
+            context = self._legacy_capability if tm_frame is None else self.capability_context
+            if not accepted:
+                context = None
             if isinstance(air_message, (AirPreflightStateMessage, AirFlightStateMessage)):
                 if context is not None and context.air_profile_id == AIR_PROFILE_COMPACT_V0:
                     try:

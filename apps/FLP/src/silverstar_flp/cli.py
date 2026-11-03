@@ -51,13 +51,18 @@ def _Json_Default(value: Any) -> Any:
 def _Dataset_Parse(options: argparse.Namespace) -> tuple[PluginRegistry, LogOpenResult]:
     registry = builtin_registry()
     coordinator = LogOpenCoordinator(registry)
+    automatic = options.decoder is None
+    directories = tuple(options.decoder_search_dir)
+    if automatic and not directories:
+        from silverstar_flp.core.path_preferences import PathPreferences
+        directories = PathPreferences.Product_Open().DecoderDirectories_Get()
     result = coordinator.Open(
         LogOpenRequest(
             log_path=options.path,
             decoder_package_path=options.decoder,
-            auto_find=bool(options.auto_find),
-            task_directory=options.path.parent if options.auto_find else None,
-            decoder_search_directories=tuple(getattr(options, 'decoder_search_dir', ())),
+            auto_find=automatic,
+            task_directory=options.path.parent if automatic else None,
+            decoder_search_directories=directories,
             source_mode=LogOpenSourceMode.CLI,
         )
     )
@@ -262,6 +267,8 @@ def _Command_Gui(options: argparse.Namespace) -> int:
         arguments.extend(("--decoder", str(options.decoder)))
     if options.auto_find:
         arguments.append("--auto-find")
+    for directory in options.decoder_search_dir:
+        arguments.extend(("--decoder-search-dir", str(directory)))
     return gui_main(arguments)
 
 
@@ -277,10 +284,10 @@ def _Command_ProjectCache(options: argparse.Namespace) -> int:
     return 0
 
 
-def _DecoderArguments_Add(parser: argparse.ArgumentParser, *, required: bool) -> None:
+def _DecoderArguments_Add(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('--decoder-search-dir', type=Path, action='append', default=[],
                         help='additional configured project directory (maximum four; bounded exact search)')
-    group = parser.add_mutually_exclusive_group(required=required)
+    group = parser.add_mutually_exclusive_group()
     group.add_argument("--decoder", type=Path, help="exact .ssdecoder package")
     group.add_argument(
         "--auto-find",
@@ -294,12 +301,12 @@ def _Parser_Create() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
     inspect_parser = subparsers.add_parser("inspect", help="parse and print log metadata")
     inspect_parser.add_argument("path", type=Path)
-    _DecoderArguments_Add(inspect_parser, required=True)
+    _DecoderArguments_Add(inspect_parser)
     inspect_parser.set_defaults(handler=_Command_Inspect)
 
     replay_parser = subparsers.add_parser("replay", help="run a navigation replay")
     replay_parser.add_argument("path", type=Path)
-    _DecoderArguments_Add(replay_parser, required=True)
+    _DecoderArguments_Add(replay_parser)
     replay_parser.add_argument("--algorithm", default="pure_ins")
     replay_parser.add_argument(
         "--mode",
@@ -320,7 +327,7 @@ def _Parser_Create() -> argparse.ArgumentParser:
     export_parser = subparsers.add_parser("export", help="export all available channels")
     export_parser.add_argument("path", type=Path)
     export_parser.add_argument("output", type=Path)
-    _DecoderArguments_Add(export_parser, required=True)
+    _DecoderArguments_Add(export_parser)
     export_parser.add_argument("--language", choices=("zh_CN", "en_US"), default="zh_CN")
     export_parser.add_argument("--theme", choices=("light", "dark"), default="light")
     export_parser.add_argument("--no-gif", action="store_true")
@@ -328,7 +335,7 @@ def _Parser_Create() -> argparse.ArgumentParser:
 
     gui_parser = subparsers.add_parser("gui", help="open the desktop application")
     gui_parser.add_argument("path", nargs="?", type=Path)
-    _DecoderArguments_Add(gui_parser, required=False)
+    _DecoderArguments_Add(gui_parser)
     gui_parser.set_defaults(handler=_Command_Gui)
     cache_parser = subparsers.add_parser("project-cache", help="inspect local cache bytes or drop the reusable parse reference")
     cache_parser.add_argument("path", type=Path)

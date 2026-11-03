@@ -1,6 +1,6 @@
-# SilverStar FLP 0.1.2 使用说明
+# SilverStar FLP 使用说明
 
-FLP 是只读日志解析、导航重算、比较与导出应用。产品版本取根 VERSION；`.ssflp` 项目仍为 **v3**，SSLOG container 仍为 **0.0**，exact `.ssdecoder` 与 project semantics 为 **1.2**，不随产品版本机械升级。
+FLP 用于只读日志解析、导航重算、比较与导出。产品版本见根 VERSION。日志容器、解码包和工程各有自己的版本，受支持的组合见[解码包合同](Decoder_Profile_Package.md)。
 
 ## 安装和启动
 
@@ -11,11 +11,13 @@ FLP 是只读日志解析、导航重算、比较与导出应用。产品版本�
 .\.venv\Scripts\python.exe FLP.py --version
 ```
 
-本分发不提供 EXE、安装器、Python/Qt 或用户日志。
+Windows 候选包解压后运行 `FLP.exe`，将同目录的 `_internal` 一起保留。
 
 ## FLP：输入、exact decoder 与项目
 
-输入必须是 **一个** `.BIN` / `.sslog` 日志，以及与其 Descriptor 身份精确匹配的 `.ssdecoder` 1.2。不要重命名不同 decoder 来尝试匹配。生产打开统一经 `LogOpenCoordinator`，不提供 Descriptor-less、旧 decoder 1.0、固定默认 parser 或文件名猜测回退。
+选择一个 `.BIN` 或 `.sslog`，将生成工程的 `.ssdecoder` 放在日志同目录即可自动匹配。FLP 通过 `LogOpenCoordinator` 核对 Descriptor 身份。缺包、身份冲突或包损坏时，按提示选择正确的包，再继续打开。CLI 的 inspect、replay、export 使用相同的精确匹配规则。
+
+任务快照只显示记录中的任务、参数、校准及对应身份。复制任务目录时保留同目录内的 `snapNN.0` 和 `snapNN.1` 文件。缺件或校验失败时，快照页会说明原因。对声明磁力计旋转事件的解码包，事件表显示四元数、坐标系、更新号和质量，并保留原始参数。
 
 推荐从 FLP 的 **Open SilverStar Project Folder** 打开 SCG 项目根：使用根 decoder，逐个选择 `Log/` 中日志。也可手动导入一组日志/decoder，或打开 `.ssflp` 项目；后者保留源文件引用、解码身份、重算参数与界面状态，不嵌入或覆盖源日志。源日志与 decoder 按只读输入处理。
 

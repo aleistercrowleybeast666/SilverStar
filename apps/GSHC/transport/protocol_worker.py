@@ -75,6 +75,7 @@ class ProtocolWorker(QThread):
         queue_capacity: int = PROTOCOL_INPUT_QUEUE_MAX_CHUNKS,
         ui_mailbox_capacity: int = 4096,
         recovery_cache_path=None,
+        telemetry_reconnect=None,
         parent=None,
     ) -> None:
         super().__init__(parent)
@@ -89,7 +90,7 @@ class ProtocolWorker(QThread):
         self._ui_coalesced_events = 0
         self._accepting = True
         self._accept_lock = threading.Lock()
-        self._pipeline = ReceivePipeline(recovery_connection=self.session_generation)
+        self._pipeline = ReceivePipeline(recovery_connection=self.session_generation, telemetry_reconnect=telemetry_reconnect)
         self._recovery_session = self.session_generation << 32
         self._recovery_position = RecoveryPosition()
         self._recovery_cache_path = recovery_cache_path
@@ -99,6 +100,11 @@ class ProtocolWorker(QThread):
         self._max_processing_lag_ms = 0.0
         self._warning = ""
         self._last_queue_warning_ns = 0
+
+    def StoppedFacts_Get(self):
+        if self.isRunning():
+            raise RuntimeError("stop the receive worker before transferring session facts")
+        return self._pipeline.ReconnectFacts_Get(), self._recovery_position.absolute
 
     @property
     def queue_depth(self) -> int:

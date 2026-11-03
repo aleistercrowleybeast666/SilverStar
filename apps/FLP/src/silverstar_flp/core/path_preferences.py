@@ -22,6 +22,14 @@ class PathPreferences:
     def __init__(self, path: Path) -> None:
         self.path = Path(path)
 
+    @classmethod
+    def Product_Open(cls):
+        from PySide6.QtCore import QStandardPaths
+        from silverstar_flp.app.version import PRODUCT_NAME
+
+        root = Path(QStandardPaths.writableLocation(QStandardPaths.StandardLocation.GenericDataLocation))
+        return cls(root / "SilverStar" / PRODUCT_NAME / "path_preferences.json")
+
     def DefaultProjectRoot_Get(self) -> Path | None:
         try:
             document = json.loads(self.path.read_text(encoding="utf-8"))

@@ -6,6 +6,7 @@ from enum import Enum
 
 class TelemetryObserveResult(str, Enum):
     Accepted = 'accepted'
+    ReadOnly = 'read_only'
     Duplicate = 'duplicate'
     Retired = 'retired_session'
     Conflict = 'identity_conflict'
@@ -14,16 +15,16 @@ class TelemetryObserveResult(str, Enum):
 @dataclass(frozen=True)
 class TelemetrySnapshot:
     """Immutable presentation facts produced by the ordered receive owner."""
-    boot_session: int | None
-    profile: str | None
-    passive: bool
-    current_mission_key: tuple
-    last_stage_id: int | None
-    history_complete: bool
-    missions: tuple
-    health: tuple | None
-    health_received_ns: int | None
-    last_phase_key: tuple
+    boot_session: int | None = None
+    profile: str | None = None
+    passive: bool = True
+    current_mission_key: tuple = (-1, -1)
+    last_stage_id: int | None = None
+    history_complete: bool = False
+    missions: tuple = ()
+    health: tuple | None = None
+    health_received_ns: int | None = None
+    last_phase_key: tuple = (-1, -1)
 
     def HealthSnapshot_Get(self, now_ns):
         return _HealthSnapshot_Get(self.health, self.health_received_ns, now_ns)
@@ -41,12 +42,27 @@ def _HealthSnapshot_Get(health, received_ns, now_ns):
     return result
 
 
+@dataclass(frozen=True)
+class TelemetryReconnectFacts:
+    """Anti-replay and direction facts transferred only after the receiver stops."""
+    boot_session: int | None
+    profile: str | None
+    downlink_only: bool
+    last_cap_us: int
+    retired: tuple
+    sequence_high: int | None
+    sequence_index: int
+    received_sequences: tuple
+    sequences: tuple
+    event_floor_id: int
+
+
 class TelemetrySession:
-    def __init__(self):
+    def __init__(self, reconnect: TelemetryReconnectFacts | None = None):
         self.boot_session = None
         self.profile = None
         self.passive = True
-        self.phase_floor_us = 0
+        self._last_cap_us = 0
         self._downlink_only = False
         self.retired = deque(maxlen=16)
         self.events = OrderedDict()
@@ -64,7 +80,28 @@ class TelemetrySession:
         self.health = None
         self.health_received_ns = None
 
+        if reconnect is not None:
+            self.boot_session, self.profile = reconnect.boot_session, reconnect.profile
+            self._downlink_only = reconnect.downlink_only
+            self._last_cap_us = reconnect.last_cap_us
+            self.retired.extend(reconnect.retired)
+            self._sequence_high = reconnect.sequence_high
+            self._sequence_index = reconnect.sequence_index
+            self._received_sequences.update(reconnect.received_sequences)
+            self.sequences.update(reconnect.sequences)
+            self.event_floor_id = reconnect.event_floor_id
+
+    def ReconnectFacts_Get(self):
+        return TelemetryReconnectFacts(
+            self.boot_session, self.profile, self._downlink_only, self._last_cap_us,
+            tuple(self.retired), self._sequence_high, self._sequence_index,
+            tuple(self._received_sequences.items()), tuple(self.sequences.items()),
+            max(self.events, default=self.event_floor_id),
+        )
+
     def Frame_Observe(self, frame, received_ns):
+        if frame.profile != 'S' or not frame.known or frame.message_type == 0x30:
+            return TelemetryObserveResult.ReadOnly
         if self.boot_session != frame.boot_session:
             if frame.boot_session in self.retired:
                 return TelemetryObserveResult.Retired
@@ -72,7 +109,7 @@ class TelemetrySession:
                 self.retired.append(self.boot_session)
             self.boot_session, self.profile = frame.boot_session, frame.profile
             self.passive = True
-            self.phase_floor_us = 0
+            self._last_cap_us = 0
             self._downlink_only = False
             self.events.clear()
             self.sequences.clear()
@@ -92,15 +129,15 @@ class TelemetrySession:
             return sequence_result
         fields = frame.values
         if frame.message_type == 0x12:
-            if not self._downlink_only and fields['advertised_monotonic_us'] > self.phase_floor_us:
+            advertised = fields['advertised_monotonic_us']
+            if self.profile == 'S' and not self._downlink_only and advertised > self._last_cap_us:
+                self._last_cap_us = advertised
                 self.passive = False
-        elif frame.message_type == 0x10:
-            self.phase_floor_us = max(self.phase_floor_us, fields['time_ms'] * 1000)
-            self.passive = self.profile == 'S'
-            self._downlink_only = self.passive
-        elif frame.message_type == 0x40 and fields['command_id'] == 1 and fields['result'] == 0:
-            self.phase_floor_us = max(self.phase_floor_us, fields['time_ms'] * 1000)
-            if self.profile == 'S': self.passive = self._downlink_only = True
+        elif frame.message_type == 0x10 or (
+            frame.message_type == 0x40 and fields['command_id'] == 1 and fields['result'] == 0
+        ):
+            self.passive = True
+            self._downlink_only = True
         elif frame.message_type == 0x19:
             self.health, self.health_received_ns = dict(fields), received_ns
         elif frame.message_type == 0x20:
@@ -123,10 +160,11 @@ class TelemetrySession:
                     if self.current_mission_key > self.last_stage_key:
                         self.last_stage_id = None
                         self.last_stage_key = self.current_mission_key
-            if code in (3, 4, 5, 6, 0x100, 0x101):
-                self.phase_floor_us = max(self.phase_floor_us, fields['occurred_us'])
-                if self.profile == 'S': self.passive = self._downlink_only = True
+            # Stage range events also occur in READY before START. Only a
+            # mission lifecycle fact, accepted START or flight data seals uplink.
             if code in (3, 4, 5, 6):
+                self.passive = True
+                self._downlink_only = True
                 self.last_phase_key = max(self.last_phase_key, (fields['occurred_us'], key))
             if code == 0x100 and (fields['occurred_us'], key) > self.last_stage_key:
                 self.last_stage_id = fields['stage_id'] or None

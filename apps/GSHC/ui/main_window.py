@@ -1440,6 +1440,7 @@ class MainWindow(QMainWindow):
         )
         self.pages.setTabText(self.pages.indexOf(self.maintenance_scroll), self.i18n.tr("page.maintenance"))
         self.maintenance_page.retranslate()
+        self.recovery_panel.retranslate_ui()
         self.btn_mag_calibration.setText(Text(self.i18n, '磁力计校准', 'Magnetometer calibration'))
         self.btn_installation_calibration.setText(Text(self.i18n, '安装标定', 'Installation calibration'))
         if self.on_mag_retranslate is not None:
@@ -2187,7 +2188,7 @@ class MainWindow(QMainWindow):
     def _build_post_process_page(self) -> QWidget:
         page = QWidget()
         root = QVBoxLayout(page)
-        self.recovery_panel = RecoveryPanel(page)
+        self.recovery_panel = RecoveryPanel(page, i18n=self.i18n)
         root.addWidget(self.recovery_panel)
         self._declared_mission_profile = None
         self._mission_profile_error = ''

@@ -1,7 +1,6 @@
 """Validate real saved projects with the published standalone JSON Schema."""
 
 from copy import deepcopy
-from dataclasses import replace
 import json
 from pathlib import Path
 import zipfile
@@ -11,12 +10,11 @@ from jsonschema import Draft202012Validator
 
 from silverstar_fccg.app.service import FccgService
 from silverstar_fccg.app.source_export import SourcePackage_Export
-from silverstar_fccg.core.nis_probability import NisInput_Create
 from silverstar_fccg.generator.render import GeneratedFiles_Render
 from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
 from silverstar_fccg.project.folder_contract import ProjectRoot_Save
 from silverstar_fccg.project.model import (
-    GroundRadioConfiguration, ProjectModel_Parse, ProjectModelError,
+    ProjectModel_Parse, ProjectModelError, PROJECT_TARGET_SCOPE_FORMAT_VERSION,
     PROJECT_FORMAT_VERSION, PROJECT_GROUND_RADIOS_FORMAT_VERSION,
     PROJECT_RADIO_VARIANTS_FORMAT_VERSION, PROJECT_FEATURE_TIERS_FORMAT_VERSION,
     PROJECT_NIS_INPUT_FORMAT_VERSION, PROJECT_NATIVE_USB_FORMAT_VERSION,
@@ -25,11 +23,8 @@ from silverstar_fccg.project.model import (
     RAW_IMU_MOUNT_PLUGINS, RAW_IMU_NOSE_AXIS_MAPS,
 )
 from silverstar_fccg.project.mission_process import MissionProcess_Default
-from silverstar_fccg.project.native_usb import NativeUsbReference
 from silverstar_fccg.project.reference import ReferenceProject_Create
-from silverstar_fccg.project.sensor_installation import SensorInstallationConfiguration, SensorPosition
 from silverstar_fccg.project.validation import Project_Validate
-from test_f103_ground_reference import _GroundF103Model_Get
 
 
 @pytest.fixture(scope="module")
@@ -45,50 +40,18 @@ def validator(schema):
 
 
 def _Document_Get(version, catalog):
-    model = ReferenceProject_Create("SchemaCompatibility", catalog=catalog)
-    model.format_version = version
-    if version in (15, 20):
-        model.ground_target = _GroundF103Model_Get(catalog).ground_target
-        ground = model.ground_target
-        model.ground_target = replace(ground, radio_instances=(GroundRadioConfiguration(
-            "radio0", ground.radio_plugin, ground.module_variant, ground.tx_power_dbm),))
-    if version in (16, 20):
-        radio = catalog.Component_Get("silverstar.device.telemetry.sx1281").radio
-        module = next(iter(radio.modules))
-        power = radio.modules[module]["supported_tx_powers_dbm"][0]
-        model.device_instances = [replace(item, module_variant=module, tx_power_dbm=power)
-                                  if item.instance_id == "telemetry0" else item for item in model.device_instances]
-    if version in (17, 20):
-        model.build = replace(model.build, feature_tier="standard")
-    if version in (18, 20):
-        owner = catalog.Component_Get(model.strategies["estimator"])
-        parameter = next(item for item in owner.algorithm_parameters if item.nis_df)
-        model.algorithm_parameters[owner.component_id][parameter.parameter_id] = NisInput_Create(0.95, parameter.nis_df)
-    if version in (19, 20):
-        model.native_usb = NativeUsbReference("D:/native-reference", "a" * 64)
-    if version == 20:
-        model.sensor_installation = SensorInstallationConfiguration("CAD datum O; +X flange mark; +Y right hand; +Z nose")
-        model.device_instances = [replace(item, position_body_m=SensorPosition(0.01, -0.02, 1.5))
-                                  if item.instance_id in ("imu0", "gnss0") else item for item in model.device_instances]
-        preset = model.Dictionary_Get()
-        preset["build"].pop("feature_tier")
-        model.feature_tier_presets["full"] = preset
-    if version == 21:
-        model.build = replace(model.build, magnetometer_enabled=False)
-    if version == 22:
-        model.mission_process = MissionProcess_Default()
-        model.sensor_installation = SensorInstallationConfiguration(schema_version=2)
-        model.device_instances = [replace(item, plugin='silverstar.device.imu.bmi088',
-            mount_x_axis='y_positive', position_body_m=SensorPosition(0.02, -0.03, 0.1))
-            if item.instance_id == 'imu0' else item for item in model.device_instances]
-    if version == 23:
-        from silverstar_fccg.project.mission_functions import Functions_Derive
-        model.mission_functions = Functions_Derive(model,catalog)
-    document = model.Dictionary_Get()
-    assert document["format_version"] == version
-    # The public schema describes JSON, including list-normalized inventory
-    # metadata, rather than Python tuple-backed in-memory board snapshots.
-    return json.loads(json.dumps(document))
+    if version == PROJECT_TARGET_SCOPE_FORMAT_VERSION:
+        return json.loads(json.dumps(ReferenceProject_Create('CurrentSchema', catalog=catalog).Dictionary_Get()))
+    fixture = Path(__file__).parent / 'fixtures/project_format_14_23' / f'v{version}.json'
+    return json.loads(fixture.read_text(encoding='utf8'))
+
+
+def _CurrentDocument_Get(document):
+    expected = deepcopy(document)
+    if expected['format_version'] < PROJECT_TARGET_SCOPE_FORMAT_VERSION:
+        expected['format_version'] = PROJECT_TARGET_SCOPE_FORMAT_VERSION
+        expected['ground_target'].pop('enabled')
+    return expected
 
 
 def test_published_schema_tracks_supported_versions_and_shared_installation_contract(schema):
@@ -99,8 +62,8 @@ def test_published_schema_tracks_supported_versions_and_shared_installation_cont
         PROJECT_SENSOR_INSTALLATION_FORMAT_VERSION,
         PROJECT_OPTIONAL_RESOURCES_FORMAT_VERSION,
         PROJECT_MISSION_PROCESS_FORMAT_VERSION,
-        PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION,
-    ] == list(range(14, 24))
+        PROJECT_MISSION_FUNCTIONS_FORMAT_VERSION, PROJECT_TARGET_SCOPE_FORMAT_VERSION,
+    ] == list(range(14, 25))
     assert {"alignment", "flight_tx_power_dbm", "ground_target"} <= set(schema["required"])
     hardware = schema["properties"]["hardware"]
     assert set(hardware["required"]) <= set(hardware["properties"])
@@ -115,11 +78,11 @@ def test_published_schema_tracks_supported_versions_and_shared_installation_cont
         assert set(constraint['then']['properties']['plugin']['enum']) == RAW_IMU_MOUNT_PLUGINS
 
 
-@pytest.mark.parametrize("version", range(14, 24))
+@pytest.mark.parametrize("version", range(14, 25))
 def test_real_serializer_outputs_pass_schema_and_parser(version, validator, builtin_catalog):
     document = _Document_Get(version, builtin_catalog)
     validator.validate(document)
-    assert ProjectModel_Parse(deepcopy(document)).Dictionary_Get() == document
+    assert ProjectModel_Parse(deepcopy(document)).Dictionary_Get() == _CurrentDocument_Get(document)
 
 
 def test_format22_example_and_all_explicit_right_hand_mounts(validator, builtin_catalog):
@@ -135,7 +98,7 @@ def test_format22_example_and_all_explicit_right_hand_mounts(validator, builtin_
                 with pytest.raises(ProjectModelError): ProjectModel_Parse(deepcopy(document))
             else:
                 validator.validate(document)
-                assert ProjectModel_Parse(deepcopy(document)).Dictionary_Get() == document
+                assert ProjectModel_Parse(deepcopy(document)).Dictionary_Get() == _CurrentDocument_Get(document)
 
 
 @pytest.mark.parametrize('field', ['mission_process', 'mount_x_axis'])
@@ -271,7 +234,14 @@ def test_production_open_save_and_generation_use_parser_and_no_compensation_clai
     tmp_path, workspace_root, builtin_catalog, validator, monkeypatch,
 ):
     service = FccgService(workspace_root)
-    model = ProjectModel_Parse(_Document_Get(20, builtin_catalog))
+    historical = _Document_Get(20, builtin_catalog)
+    # This test covers the independent coordinate contract. With the optional
+    # retired transport present, saving must instead reject before creating files.
+    with pytest.raises(ValueError, match='MCU native USB CDC has been retired'):
+        ProjectRoot_Save(ProjectModel_Parse(historical), tmp_path / 'retired')
+    assert not (tmp_path / 'retired').exists()
+    del historical['native_usb']
+    model = ProjectModel_Parse(historical)
     read_text = Path.read_text
     schema_path = workspace_root / "schemas/project.schema.json"
     def read_without_schema(path, *args, **kwargs):

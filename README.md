@@ -39,7 +39,7 @@ $env:SILVERSTAR_GSHC_DATA_ROOT = Join-Path $env:LOCALAPPDATA 'SilverStar_GSHC_Da
 | 工具 | 可以做什么 | 使用说明 |
 |---|---|---|
 | **SCG** · System Configuration & Generation | 选择传感器、导航算法、遥测链路和任务参数，检查引脚与外设资源，生成 STM32 飞控/地面站工程与配套解码包 | [SCG 指南](docs/public/SCG/README.md) |
-| **GSHC** · Ground Station Host Computer | 接收 AIR M0 遥测，显示准备状态、三维姿态、轨迹和任务事件，记录会话并导出数据、图表与姿态动画 | [GSHC 指南](docs/public/GSHC/README.md) |
+| **GSHC** · Ground Station Host Computer | 接收 SS-TM-S 遥测，显示准备状态、三维姿态、轨迹和任务事件，记录会话并导出数据、图表与姿态动画 | [GSHC 指南](docs/public/GSHC/README.md) |
 | **FLP** · Flight Log Processor | 精确配对日志与解码器，检查完整性，查看轨迹、曲线与滤波器内部数据，离线复算、比较并导出分析结果 | [FLP 指南](docs/public/FLP/README.md) |
 
 ### SCG：从配置到工程
@@ -109,7 +109,7 @@ FLP 要求原始 `.BIN` / `.sslog` 与 Descriptor 身份匹配的 `.ssdecoder`�
 
 开发版本统一登记于[版本清单](versions.json)，唯一手填产品号仍在根 `VERSION`。运行 `python -B tools/silverstar_version.py` 可查看解析后的应用、协议、格式和插件版本；规则与兼容边界见[版本管理](docs/public/shared/VERSION_MANAGEMENT.md)。
 
-v0.1.2 的实测配置包括 STM32F407 飞控和 STM32F103 串口地面站，覆盖台架、手持与抛体采集，尚不构成火箭飞行验证。原生 USB CDC 的 F103/C071 路径仍属实验范围，普通生成入口受限，尚未完成对应 USB 硬件的上板验证。磁力计工作流、InEKF、维护协议等 0.1.3 开发内容以各自说明和验收状态为准。Android 保持开发版及真实 USB/控制门禁，DeviceService 是 mock-only 原型；两者均不在 v0.1.2 桌面包内。
+v0.1.2 的实测配置包括 STM32F407 飞控和 STM32F103 串口地面站，覆盖台架、手持与抛体采集，尚不构成火箭飞行验证。0.1.3 候选的地面站 PC 接口使用 UART 或外部 USB-UART 桥。原生 CDC 工程须重新选择 UART 和资源。磁力计工作流、InEKF、维护协议等 0.1.3 开发内容以各自说明和验收状态为准。Android 保持开发版及真实 USB/控制门禁，DeviceService 是 mock-only 原型；两者均不在 v0.1.2 桌面包内。
 
 各项检查的适用范围见[版本与证据边界](docs/public/shared/VERSIONS_AND_EVIDENCE.md)和[软件验证说明](docs/public/SOFTWARE_VERIFICATION.md)。
 

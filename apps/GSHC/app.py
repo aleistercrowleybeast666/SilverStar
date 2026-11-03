@@ -1007,6 +1007,7 @@ class Controller(QObject):
         self.data_dir = self.data_root / "data"
         self.logger = AsyncJsonlLogger(self.log_dir, auto_start_session=False)
 
+        self._telemetry_reconnect = None
         self._connection_generation = 0
         self._state_generation = 0
         self.state = FlightControllerState(session_generation=self._next_state_generation())
@@ -1095,10 +1096,9 @@ class Controller(QObject):
         self._controller_time_ms = None
         self._controller_rollback_ms = None
         recovery = self.state.recovery
-        telemetry = self.state.telemetry
-        if telemetry.boot_session is not None: telemetry.passive = True
+        recovery.Connection_End()
         self.state = FlightControllerState(
-            recovery=recovery, telemetry=telemetry,
+            recovery=recovery,
             session_generation=self._next_state_generation(),
             connected=connected,
             connection_text=connection_text,
@@ -1215,7 +1215,8 @@ class Controller(QObject):
             return
 
         self.protocol_worker = ProtocolWorker(generation, self.logger,
-            recovery_cache_path=self.data_dir / 'recovery-last-wgs84.json')
+            recovery_cache_path=self.data_dir / 'recovery-last-wgs84.json',
+            telemetry_reconnect=self._telemetry_reconnect)
         self.protocol_worker.diagnostics_ready.connect(
             self.on_protocol_diagnostics,
             Qt.QueuedConnection,
@@ -1278,6 +1279,8 @@ class Controller(QObject):
                 self.state.receive_health.warning = self.state.connection_text
                 self.state.touch()
                 return
+            self._telemetry_reconnect, last_absolute = protocol_worker.StoppedFacts_Get()
+            self.state.recovery.Connection_End(last_absolute)
             self.protocol_worker = None
 
         if self.logger.session_active:
@@ -1414,7 +1417,9 @@ class Controller(QObject):
                 self._handle_gs_status(event.parsed_gsp)
             elif isinstance(event.parsed_gsp, GspAck):
                 self._handle_gsp_ack(event.parsed_gsp)
-            if event.air_message is not None:
+            # Historical AIR frames remain available to the logger and replay.
+            # Only the active wire session can enter the command handshake.
+            if event.air_message is not None and event.tm_frame is not None:
                 self._handle_air_message(event.air_message, event)
         sample = batch.recovery_sample
         if sample is not None:

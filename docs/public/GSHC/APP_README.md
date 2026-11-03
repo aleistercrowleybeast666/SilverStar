@@ -1,5 +1,10 @@
 # SilverStar_GSHC 开发与发布说明
 
+0.1.3 候选使用 SS-TM-S 和地面站 UART。打开 GSHC，连接匹配的 COM 口和波特率，然后查看预飞状态、任务监视或定位找回。维护页的飞控串口提供磁力计维护与日志读出。当前操作与来源说明见[共用操作路线](../USER_WORKFLOW.md)和[接收架构](UPPER_COMPUTER_ARCHITECTURE.md)。
+
+下文保留 0.1.2 的 AIR M0 操作背景，用于理解历史记录。当前串口接收器只对活动 SS-TM-S 会话发起握手。
+
+
 本工程的正式应用名称为 **SilverStar_GSHC**，用于连接 SilverStar 飞控与地面站。当前实现以
 [`docs/AIR_PROTOCOL.md`](AIR_PROTOCOL.md) 为唯一 AIR 协议依据，适配：
 

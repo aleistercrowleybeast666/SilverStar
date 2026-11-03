@@ -351,12 +351,12 @@ class OverviewPage(QWidget):
             values = (
                 f"{(event.timestamp_us - start) * 1.0e-6:.6f}",
                 event_text,
-                str(event.arg0),
+                event.decoded_value or str(event.arg0),
                 str(event.arg1),
             )
             for column, value in enumerate(values):
                 item = QTableWidgetItem(value)
-                item.setToolTip(event.name)
+                item.setToolTip(f"{event.name}\n{event.decoded_value}\nraw {event.arg0}, {event.arg1}" if event.decoded_value else event.name)
                 if event.name == "MISSION_START":
                     item.setBackground(QColor("#2563EB"))
                     item.setForeground(QColor("#FFFFFF"))

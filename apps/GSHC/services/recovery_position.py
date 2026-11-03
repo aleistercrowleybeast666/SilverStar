@@ -54,6 +54,13 @@ class RecoveryPosition:
         self.sample = None
         self.confirmed_session = None
         self.absolute = None
+        self._absolute_from_connection = False
+
+    def Connection_End(self, last_absolute=None):
+        if last_absolute is not None:
+            self.absolute = last_absolute
+        self._absolute_from_connection = False
+        self.confirmed_session = None
 
     def Position_Observe(self, session, time_ms, position, received_ns, *, source, sequence=0):
         if (type(session) is not int or session < 0 or type(time_ms) is not int
@@ -100,6 +107,7 @@ class RecoveryPosition:
             fields['ellipsoid_height_mm'] if fields['position_flags'] & 2 else None,
             age, fields['horizontal_accuracy_cm'], fields['position_flags'], fields['satellite_count'],
             received_ns, source)
+        self._absolute_from_connection = True
         return RecoveryObserveResult.Accepted
 
     def Frame_Confirm(self, confirmed):
@@ -113,7 +121,7 @@ class RecoveryPosition:
             return {"kind": "wgs84", "sample": absolute, "latitude": latitude, "longitude": longitude,
                 "age_s": None if absolute.age_s is None else absolute.age_s + elapsed,
                 "receive_age_s": elapsed, "frame_confirmed": False,
-                "source_current": bool(connected and current_session == absolute.session and not absolute.restored),
+                "source_current": bool(connected and self._absolute_from_connection and current_session == absolute.session and not absolute.restored),
                 "map_url": f"https://www.openstreetmap.org/?mlat={latitude:.7f}&mlon={longitude:.7f}#map=17/{latitude:.7f}/{longitude:.7f}"}
         sample = self.sample
         if sample is None:
@@ -194,6 +202,7 @@ class RecoveryPosition:
         except (ValueError, TypeError, KeyError, OverflowError):
             return RecoveryCacheResult.Invalid
         self.absolute = sample
+        self._absolute_from_connection = False
         return RecoveryCacheResult.Loaded
 
 
@@ -210,7 +219,7 @@ def Recovery_Text(snapshot):
             f"定位年龄 {age_text}；最近定位收包 {snapshot['receive_age_s']:.1f} s 前\n"
             f"水平精度参考 {accuracy}；高度 {height}\n"
             f"来源 {sample.source}；卫星数 {'未知' if sample.satellites == 255 else sample.satellites}；"
-            f"{'历史缓存' if sample.restored else '保留点' if sample.flags & 16 else '当前定位样本'}；"
+            f"{'历史缓存' if sample.restored else '历史连接样本' if not snapshot['source_current'] else '设备保留点' if sample.flags & 16 else '当前连接样本'}；"
             f"{'当前连接' if snapshot['source_current'] else '保留 / 断线或先前会话'}\n"
             f"boot_session={sample.session:08X}；帧序号={sample.sequence}\n"
             "ENU 为辅助相对轨迹；本坐标不代表已确认的实际落点。\n" + snapshot['map_url'])

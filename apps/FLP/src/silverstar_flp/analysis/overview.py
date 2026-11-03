@@ -17,6 +17,7 @@ class TimelineEvent:
     category: str
     arg0: int = 0
     arg1: int = 0
+    decoded_value: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -585,6 +586,7 @@ def FlightSummary_Build(dataset: FlightDataset) -> FlightSummary:
             ),
             arg0=int(record.payload["arg0"]),
             arg1=int(record.payload["arg1"]),
+            decoded_value=str(record.payload.get("rotation_display", "")),
         )
         for record in sorted(dataset.Records_Get("EVENT"), key=lambda item: item.timestamp_us)
     )

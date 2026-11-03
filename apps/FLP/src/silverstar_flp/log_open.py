@@ -296,8 +296,14 @@ class LogOpenCoordinator:
                 paths.setdefault(path, None)
         matches = DecoderProfileMatcher(self._ContainerPlugins_Get(), package_limits=self.package_limits).Match(log_path, tuple(paths))
         if len(matches.matches) != 1:
-            raise DecoderProfileError('decoder_profile_match_ambiguous' if matches.matches else
-                'decoder_profile_exact_match_missing', 'Descriptor identity required; no filename/version fallback')
+            if matches.matches:
+                raise DecoderProfileError('decoder_profile_match_ambiguous', 'Several distinct packages match the Descriptor')
+            details = ['Descriptor identity required']
+            for candidate, reason in list(matches.errors.items())[:4]:
+                details.append(f'{candidate.name}: {reason[:240]}')
+            if len(matches.errors) > 4:
+                details.append(f'{len(matches.errors) - 4} more rejected candidates')
+            raise DecoderProfileError('decoder_profile_exact_match_missing', '\n'.join(details))
         return matches.matches[0].package.source_path
 
     def Open(

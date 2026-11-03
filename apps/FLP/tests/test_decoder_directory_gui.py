@@ -118,3 +118,29 @@ def test_failed_exact_open_keeps_log_in_manual_chooser(window, tmp_path):
     assert window.import_dialog.source_type_combo.currentData() == 'manual'
     assert not window.import_dialog.custom_decoder_check.isChecked()
     window.import_dialog.reject()
+
+
+def test_open_single_log_automatically_finds_exact_package(window, tmp_path, monkeypatch):
+    log, package = pair(tmp_path)
+    window._path_preferences.DecoderDirectories_Set((package.parent,))
+    requests = []
+    monkeypatch.setattr(window, '_Task_Start', lambda worker, *callbacks: requests.append(worker))
+    window.Path_Open(log)
+    assert len(requests) == 1
+    assert not window.import_dialog.isVisible()
+
+
+@pytest.mark.parametrize('code', ['decoder_profile_hash_mismatch', 'decoder_package_zip_invalid'])
+def test_wrong_or_broken_package_keeps_selected_log_for_repair(window, tmp_path, code, monkeypatch):
+    log = tmp_path / 'mission.sslog'
+    # Avoid a modal loop on the old error path. The expected result is the
+    # strict pair chooser with actionable diagnostics and no dataset publication.
+    errors = []
+    monkeypatch.setattr(window, '_Error_Show', errors.append)
+    window._LogOpen_Error(code + ':fixture', log)
+    assert window.import_dialog.isVisible()
+    assert window.import_dialog.path_edit.text() == str(log)
+    assert code in window.import_dialog.result_label.text()
+    assert not errors
+    assert not window.import_dialog.custom_decoder_check.isChecked()
+    window.import_dialog.reject()

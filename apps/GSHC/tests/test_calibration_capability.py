@@ -324,10 +324,13 @@ def test_downlink_pause_does_not_hide_gsp_progress_or_erase_handshake(window):
     pipeline = ReceivePipeline()
     def deliver(wire):
         controller.on_protocol_batch(ProtocolBatch(1, tuple(pipeline.feed(wire))))
-    deliver(air_rx(bytes.fromhex("12 2a 00 01 87 0f 10 d0 07")))
+    from test_ss_tm import cap, packet
+    deliver(air_rx(cap(42)))
     pending = controller.pending_capability_ack
-    deliver(air_rx(bytes((0x40, 1, pending.command_seq, 5, 0, 100, 0, 0, 0))))
-    deliver(air_rx(bytes.fromhex("13 02 02 12 00 ff 00 10 0b")))
+    deliver(air_rx(packet('ACK', 43, acked_sequence=pending.command_seq, command_id=5, result=0, time_ms=100)))
+    # The active CAP excludes reserved mask bits. A raw M0 CAP is archived
+    # without granting control; the legacy mask handling has separate coverage.
+    deliver(air_rx(bytes((1, 0x13, 44, 0, 123, 0, 0, 0)) + bytes.fromhex("02 12 00 ff 00 10 0b")))
     controller.send_cal_start(1)
     controller._on_serial_bytes_sent(1, 16)
     deliver(build_gsp_frame(4, bytes((3, 0, 0))))
@@ -349,7 +352,7 @@ def test_downlink_pause_does_not_hide_gsp_progress_or_erase_handshake(window):
     with patch("ui.main_window.time_monotonic_ns", return_value=last_air + 5_000_000_000):
         window.link_details_dialog.render(controller.state)
     details = window.link_details_dialog.details_text.toPlainText()
-    assert "Unknown calibration capability bits (diagnostic only): 0x80" in details
+    assert controller.state.capability.calibration_mode_mask == 7
     assert "Last AIR downlink age: 5000 ms" in details
     assert "PREFLIGHT_STATUS RX / last snapshot age: 1 /" in details
     assert "GS TX / RX / CRC: 9 / 4 / 0" in details

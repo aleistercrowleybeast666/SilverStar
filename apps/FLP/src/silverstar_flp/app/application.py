@@ -45,7 +45,11 @@ def _Arguments_Parse(arguments: list[str]) -> argparse.Namespace:
     parser.add_argument("--lang", choices=("zh_CN", "en_US"))
     parser.add_argument("--theme", choices=("light", "dark"))
     parser.add_argument("--version", action="version", version=__version__)
+    parser.add_argument("--decoder-search-dir", type=Path, action="append", default=[])
     options = parser.parse_args(arguments)
+    if len(options.decoder_search_dir) > 4 or (options.decoder_search_dir and
+            (options.path is None or options.decoder is not None or options.path.suffix.casefold() not in (".bin", ".sslog"))):
+        parser.error("--decoder-search-dir requires a log and at most four directories for exact lookup")
     if options.path is None and (options.decoder is not None or options.auto_find):
         parser.error("--decoder/--auto-find requires a log path")
     if (
@@ -102,7 +106,8 @@ def main(arguments: list[str] | None = None) -> int:
         theme=theme,
         initial_path=initial_path,
         initial_decoder_path=options.decoder,
-        initial_auto_find=bool(options.auto_find),
+        initial_auto_find=options.auto_find or options.decoder is None,
+        initial_decoder_roots=tuple(options.decoder_search_dir) or None,
     )
     window.show()
     logging.info("%s %s started; log=%s", PRODUCT_NAME, __version__, log_path)

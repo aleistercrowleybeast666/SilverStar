@@ -9,7 +9,7 @@ from typing import Iterable
 
 from config import MAX_LIVE_POINTS, PLOT_WINDOW_SECONDS, UI_EVENT_HISTORY_LIMIT
 from services.mission_trajectory import MissionTrajectoryHistory
-from services.telemetry_session import TelemetrySession
+from services.telemetry_session import TelemetrySnapshot
 from services.recovery_position import RecoveryPosition
 from services.navigation_state import NavigationState
 from protocol.air import AirCapabilityMessage, AirSensorStatusMessage
@@ -458,7 +458,7 @@ class ReceiveHealth:
 
 @dataclass
 class FlightControllerState:
-    telemetry: TelemetrySession = field(default_factory=TelemetrySession)
+    telemetry: TelemetrySnapshot = field(default_factory=TelemetrySnapshot)
     session_generation: int = 0
     recovery: RecoveryPosition = field(default_factory=RecoveryPosition)
     recovery_current_session: int | None = None

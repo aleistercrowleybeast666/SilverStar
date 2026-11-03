@@ -17,6 +17,7 @@ from silverstar_flp.core.semantic_context import (
     DecoderPackageIdentity,
 )
 from silverstar_flp.decoder_profiles.errors import DecoderProfileError
+from silverstar_flp.decoder_profiles.mag_rotation import RotationEvent_FieldsGet
 from silverstar_flp.decoder_profiles.package import DecoderProfilePackage
 
 _EVENT_NAMES = {
@@ -407,24 +408,19 @@ def _Events_Adapt(
         event_id = int(record.payload.get("event_id", 0))
         arg0 = int(record.payload.get("arg0", 0))
         arg1 = int(record.payload.get("arg1", 0))
-        adapted.append(
-            replace(
-                record,
-                payload={
-                    **dict(record.payload),
-                    "event_name": event_names.get(
-                        event_id,
-                        f"UNKNOWN_EVENT_0x{event_id:02X}",
-                    ),
-                    "event_semantics": event_semantics.get(
-                        event_id,
-                        MappingProxyType({}),
-                    ),
-                    "arg0_float": _PayloadFloat_Get(arg0),
-                    "arg1_float": _PayloadFloat_Get(arg1),
-                },
-            )
-        )
+        declaration = event_semantics.get(event_id, MappingProxyType({}))
+        payload = dict(record.payload)
+        payload["event_name"] = event_names.get(event_id, f"UNKNOWN_EVENT_0x{event_id:02X}")
+        payload["event_semantics"] = declaration
+        rotation = RotationEvent_FieldsGet(event_id, declaration, arg0, arg1)
+        if rotation:
+            payload.pop("arg0_float", None)
+            payload.pop("arg1_float", None)
+            payload.update(rotation)
+        else:
+            payload["arg0_float"] = _PayloadFloat_Get(arg0)
+            payload["arg1_float"] = _PayloadFloat_Get(arg1)
+        adapted.append(replace(record, payload=payload))
     result = dict(records)
     result["EVENT"] = tuple(adapted)
     return result

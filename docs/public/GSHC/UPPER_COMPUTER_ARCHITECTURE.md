@@ -29,7 +29,7 @@ SerialWorker不访问Widget/协议；ProtocolWorker不访问Widget；MainWindow�
 ## 3. Session/Handshake
 Controller是Capability/command/session唯一状态所有者。第一次兼容Capability绑定会话；更新seq在未握手时替换pending Capability ACK。握手成功后迟到Capability只做诊断，不自动清空状态或rollover日志。新飞控会话通过明确断开/重连建立。
 
-上述 Controller 握手规则保留用于历史 AIR M0。SS-TM 的接收语义由后台
+历史 AIR M0 保留字节解析与记录。连接中的主动命令握手由 SS-TM-S 帧驱动。SS-TM 的接收语义由后台
 `ReceivePipeline` 的 `TelemetrySession` 唯一判定，再通过不可变快照提供给
 Controller；UI 不在合并之后重新判定同一帧。日志的物理换算只使用当前已接纳
 boot 的合格 CAP。retired boot、重复或过期 CAP 仍归档原始包，不生成新的物理结论；
@@ -79,3 +79,5 @@ JSONL记录整个会话；EventHistory和实时曲线是有界GUI缓存。实时
 ## Session recovery update (2026-10-01)
 
 The controller now permits automatic local session invalidation on BOOT or confirmed rollback of boot-relative preflight telemetry time. It rebinds a fresh state model, preserves event history, cancels transactions and negotiates Capability again. It never automatically replays business commands. Unknown Capability cannot be acknowledged by a preflight snapshot. Read AIR_PROTOCOL.md for priority, timestamp-domain and stale-packet limitations. SELFTEST_COMPLETE text includes pass/fail; only the preflight snapshot supplies current system readiness and block reason.
+
+设备报告的任务阶段 ENTER/EXIT 可在预飞出现，也可重发。地面固件与 GSHC 均以成功的 START ACK、MISSION_START 至 LANDED 生命周期事件或 FLIGHT_DATA 锁定该 boot 的下行方向。已锁定 boot 收到 CAP 时继续保持被动。连接结束后，协议 worker 在排空后移交有限的防重放与方向事实。新连接从空的展示快照开始，需重新确认 CAP 与 READY。缓存坐标保留接收年龄和来源。
