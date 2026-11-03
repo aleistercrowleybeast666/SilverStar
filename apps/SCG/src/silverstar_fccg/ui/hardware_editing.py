@@ -7,7 +7,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from silverstar_fccg.ui.main_window import _ProjectDisplayState
-from silverstar_fccg.app.usb_ground_flow import UsbGroundBound_Is, RELEASE_NOTICE, UsbGroundReimportIssue_Get
 from copy import deepcopy
 from dataclasses import replace
 from PySide6.QtCore import QTimer
@@ -539,14 +538,6 @@ class HardwareEditingActions:
             requirements["resources"] = tuple(resources)
             requirements["fixed_resources"] = {"radio0:" + key: value
                                                for key, value in requirements["fixed_resources"].items()}
-        if UsbGroundBound_Is(model):
-            # The private runtime uses its own exact role ABI. Display those
-            # imported fixed bindings rather than inventing legacy plugin roles.
-            kinds = {'spi': 'spi', 'nss': 'gpio_output', 'reset': 'gpio_output',
-                     'busy': 'gpio_input', 'dio1': 'gpio_interrupt'}
-            requirements['resources'] = tuple((key, kinds.get(key.rsplit(':', 1)[-1], 'unsupported'))
-                                              for key in model.ground_target.resource_assignments)
-            requirements['fixed_resources'] = dict(model.ground_target.resource_assignments)
         flight_instance = model.DeviceInstance_Get(model.air_link.flight_radio_instance)
         try:
             flight_manifest = (
@@ -599,10 +590,6 @@ class HardwareEditingActions:
         if ground.hardware.inventory.get("timebase", {}).get("kind") == "systick":
             platform = replace(platform, timebase_status="SysTick / HAL_IncTick")
         self.ground_target_page.Platform_Set(platform)
-        if UsbGroundBound_Is(model):
-            issue = UsbGroundReimportIssue_Get(model)
-            self.ground_target_page.generate_button.setEnabled(not issue)
-            self.ground_target_page.generate_button.setToolTip(issue or RELEASE_NOTICE)
 
     def _GroundRadios_Change(self, radios, active: str) -> None:
         def change(candidate: ProjectModel) -> None:

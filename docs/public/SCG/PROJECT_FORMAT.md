@@ -1,5 +1,9 @@
 # SilverStar Project Format
 
+### 历史地面站串口配置
+
+格式 19 的原生 CDC 引用、旧 `ground_target.pc_interface=usb_cdc` 和带 CDC 生成源的硬件清单仅用于识别旧工程。打开这类工程会提示迁移，保存和生成会报告具体原因。选取地面站硬件属性，在“设备与接口”明确选择 UART 和实际串口资源，核对导入工程或板卡声明的波特率，再应用并保存。尚有 CDC 源时，请在单独位置准备普通 UART CubeMX 工程再导入。取消或 Esc 保留原文件。普通 PC 串口和 CH340 等外置 USB-UART 都通过该 UART 配置。
+
 当前开发产品为 **0.1.3 development**，稳定发布仍为 **0.1.2**。当前工程格式为 **24**，兼容版本化迁移的旧格式，以 `project/model.py` 和 `schemas/project.schema.json` 为准。读取迁移作用于内存模型，原始文件在用户保存前保持不变。项目包括 Flight 配置、独立 `ground_target`、唯一 `air_link`、alignment、设备实例、算法实际参数及日志策略。
 
 | 格式 | 扩展身份 |

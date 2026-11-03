@@ -6,11 +6,11 @@ from uuid import uuid4
 from PySide6.QtCore import Qt, Signal, QSignalBlocker, QTimer
 from PySide6.QtWidgets import (QDialog, QDialogButtonBox, QDoubleSpinBox,
     QFormLayout, QFrame, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QPushButton,
-    QSpinBox, QToolButton, QVBoxLayout, QWidget, QBoxLayout, QMessageBox, QScrollArea)
+    QSpinBox, QToolButton, QVBoxLayout, QWidget, QBoxLayout, QMessageBox, QScrollArea, QMenu)
 
 from silverstar_fccg.project.mission_process import (
     ACTIONS, EVENTS, SIGNALS, MissionProcess_Default, MissionProcess_FirmwareDefault, MissionProcess_Require)
-from silverstar_fccg.ui.committed_spin import EnterCommittedDoubleSpinBox
+from silverstar_fccg.ui.committed_spin import EnterCommittedDoubleSpinBox, EnterCommittedSpinBox
 from silverstar_fccg.ui.touch_scroll import TouchScroll_Enable
 from silverstar_fccg.ui.widgets import StandardComboBox, CollapsibleSection
 
@@ -57,11 +57,12 @@ class MissionStageEditor(QWidget):
         self.operator.addItems(('>=', '<='))
         self.operator.setCurrentText(stage['condition']['operator'])
         form.addRow(text('process.operator'), self.operator)
-        self.number = QDoubleSpinBox()
+        self.number = EnterCommittedDoubleSpinBox()
         self.number.setDecimals(6)
         self.number.setRange(-1e7, 1e7)
-        self.number.setValue(stage['condition']['value'] if stage['condition']['signal'] != 'event' else 0)
+        self.number.CommittedValue_Set(stage['condition']['value'] if stage['condition']['signal'] != 'event' else 0)
         self.number.valueChanged.connect(lambda _value: setattr(self, '_numeric_edited', True))
+        self.number.committed.connect(lambda _value: setattr(self, '_numeric_edited', True))
         form.addRow(text('process.threshold'), self.number)
         self.event_combo = StandardComboBox()
         for event in EVENTS:
@@ -74,10 +75,10 @@ class MissionStageEditor(QWidget):
             self.event_combo.model().item(self.event_combo.count() - 1).setEnabled(False)
         self.event_combo.setCurrentIndex(max(0, self.event_combo.findData(event_value)))
         form.addRow(text('process.event'), self.event_combo)
-        self.hold = QSpinBox()
+        self.hold = EnterCommittedSpinBox()
         self.hold.setRange(0, 3600000)
         self.hold.setSuffix(' ms')
-        self.hold.setValue(stage['hold_ms'])
+        self.hold.CommittedValue_Set(stage['hold_ms'])
         form.addRow(text('process.hold'), self.hold)
         self.action = StandardComboBox()
         for action in ACTIONS:
@@ -338,20 +339,20 @@ class MissionProcessPanel(QGroupBox):
         features.setObjectName('phaseFunctions_' + identity)
         features.setTextFormat(Qt.TextFormat.PlainText)
         row.addWidget(features, 1)
-        actions = QHBoxLayout()
+        menu_button = QToolButton(card)
+        menu_button.setText('⋯')
+        menu_button.setAccessibleName(text('workspace.checks.target_more'))
+        menu_button.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+        menu = QMenu(menu_button)
         for label, key, enabled, callback in (
             ('←', 'workflow.move_earlier', index > 0, lambda _c=False, selected=identity: self.Stage_Move(selected, -1)),
             ('→', 'workflow.move_later', index + 1 < len(self._process['stages']), lambda _c=False, selected=identity: self.Stage_Move(selected, 1)),
             ('×', 'workflow.remove_stage', len(self._process['stages']) > 1, lambda _c=False, selected=identity: self.Stage_Remove(selected))):
-            button = QToolButton(card)
-            button.setObjectName('phaseTool')
-            button.setText(label)
-            button.setToolTip(text(key))
-            button.setAccessibleName(text(key))
-            button.setEnabled(enabled)
-            button.clicked.connect(callback)
-            actions.addWidget(button)
-        row.addLayout(actions)
+            action = menu.addAction(text(key))
+            action.setEnabled(enabled)
+            action.triggered.connect(callback)
+        menu_button.setMenu(menu)
+        row.addWidget(menu_button, 0, Qt.AlignmentFlag.AlignRight)
         self.stages_layout.addWidget(card)
         self.cards[identity] = card
 

@@ -125,7 +125,7 @@ def Architecture_Check(root: Path) -> dict:
     return graph
 
 
-def Host_Check(root: Path, compiler: str, *, extra_usb_sources: tuple[str, ...] = (), extra_bridge_sources: tuple[str, ...] = (), extra_includes: tuple[str, ...] = ()) -> None:
+def Host_Check(root: Path, compiler: str, *, extra_bridge_sources: tuple[str, ...] = (), extra_includes: tuple[str, ...] = ()) -> None:
     # Execute generated bridge sources with bounded RX and PC busy/error injection.
     build = root / 'build/ground-host'
     build.mkdir(parents=True, exist_ok=True)
@@ -150,36 +150,16 @@ def Host_Check(root: Path, compiler: str, *, extra_usb_sources: tuple[str, ...] 
         harness = build / 'uart_dma.c'
         harness.write_text((tests / 'uart_dma.c').read_text(encoding='utf-8').replace('huart1', handle[1]), encoding='utf-8')
         cases.append(('uart_dma', [str(adapter), str(root / 'Common/Src/silverstar_assert.c')], harness))
-    elif 'CDC_Transmit_FS' in text:
-        shutil.copyfile(tests / 'usb_cdc_if.h', build / 'usbd_cdc_if.h')
-        shutil.copyfile(tests / 'usb_device.h', build / 'usb_device.h')
-        shutil.copyfile(tests / 'usb_main.h', build / 'main.h')
-        (build / 'usbd_conf.h').write_text('/* Host configuration stub. */\n', encoding='utf-8')
-        cases.append(('usb_cdc', [str(adapter), str(root / 'Common/Src/silverstar_assert.c')], tests / 'usb_cdc.c'))
-        cases.append(('usb_session', [str(adapter), *bridge], tests / 'usb_session.c'))
-        cases.append(('usb_backpressure', [str(adapter), *bridge], tests / 'ground_backpressure.c'))
     else:
         raise ValueError('No host harness for selected PC transport; acceptance blocked')
     for name, sources, harness in cases:
-        if name.startswith('usb_'):
-            # Native runtime publication has its own lifecycle Host harness;
-            # these existing transport cases exercise an already-ready owner.
-            sources = sources + list(extra_usb_sources)
-        if name == 'usb_session':
-            shutil.copyfile(tests / 'usb_session_main.h', build / 'main.h')
-        if name == 'usb_backpressure':
-            shutil.copyfile(tests / 'usb_main.h', build / 'main.h')
         executable = build / (name + '.exe')
-        flags = ['-DGROUND_TEST_USB'] if name == 'usb_backpressure' else []
-        Command_Run(common + flags + sources + [str(harness), '-o', str(executable)], root)
-        if name in ('backpressure', 'usb_backpressure'):
+        Command_Run(common + sources + [str(harness), '-o', str(executable)], root)
+        if name == 'backpressure':
             for scenario in ('idle', 'burst', 'radio', 'mixed', 'slow', 'sessions', 'queued-reset', 'budget', 'error', 'error-reset'):
                 Command_Run([str(executable), scenario], root)
         else:
             Command_Run([str(executable)], root)
-        if name == 'usb_session':
-            for scenario in ('control', 'read-reset', 'delivery-reset', 'normal'):
-                Command_Run([str(executable), scenario], root)
         print('PASS host ' + name)
     print(f'PASS {len(cases)} generated-source host executables; HAL/radio are mocks, no MCU recovery proof')
 

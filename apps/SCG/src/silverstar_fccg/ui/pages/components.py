@@ -1550,6 +1550,8 @@ class FlightConfigurationPage(ScrollableLocalizedPage):
         self.telemetry_protocol_group = self.Group_Create(
             "group.telemetry_protocol", self.telemetry_protocol_form
         )
+        self.telemetry_protocol_group.setParent(self)
+        self.telemetry_protocol_group.hide()
         self.mission_strategy_form = QFormLayout()
         self.mission_strategy_group = self.Group_Create(
             "group.mission_strategy", self.mission_strategy_form

@@ -140,23 +140,26 @@ def test_modal_condition_and_shared_interval_survive_reopen(workspace_window, tm
     assert _Snapshot(window._model) == before and not changes
     assert window.workflow_page.stage_panel.condition_editor is None
     def Apply(dialog):
-        from test_workflow_connections import _InFunction
         dialog.stage_editor.name_edit.setText('Stable coast identity')
         dialog.stage_editor.signal_combo.setCurrentIndex(dialog.stage_editor.signal_combo.findData('stage_elapsed_s'))
         dialog.stage_editor.number.setValue(1.123456)
-        def Function(child):
-            section = child.bindings[0]._sections['telemetry.range']
-            form = section.body.layout()
-            start = form.itemAt(0, form.ItemRole.FieldRole).widget()
-            stop = form.itemAt(1, form.ItemRole.FieldRole).widget()
-            start.setCurrentIndex(start.findData(('stage_enter', 'ascent')))
-            stop.setCurrentIndex(stop.findData(('stage_exit', 'coast')))
-        _InFunction(dialog, 'telemetry', Function)
         dialog.accept()
         assert dialog.result() == QDialog.DialogCode.Accepted, dialog.error.text()
     _Capsule_Click(window, 'coast', Apply)
     _Events_Flush(qapp)
     assert len(changes) == 1
+    def Function(child):
+        section = child.bindings[0]._sections['telemetry.range']
+        form = section.body.layout()
+        start = form.itemAt(0, form.ItemRole.FieldRole).widget()
+        stop = form.itemAt(1, form.ItemRole.FieldRole).widget()
+        start.setCurrentIndex(start.findData(('stage_enter', 'ascent')))
+        stop.setCurrentIndex(stop.findData(('stage_exit', 'coast')))
+        child.accept()
+        assert child.result() == QDialog.DialogCode.Accepted, child.error.text()
+    _Function_Click(window, 'telemetry', Function)
+    _Events_Flush(qapp)
+    assert len(changes) == 2
     coast = next(row for row in window._model.mission_process['stages'] if row['stage_id'] == 'coast')
     assert coast['name'] == 'Stable coast identity' and coast['condition']['value'] == 1.123456
     function = next(row for row in window._model.mission_functions['functions'] if row['instance_id'] == 'telemetry')
@@ -273,22 +276,24 @@ def test_normal_capsule_cancel_discards_parameters_and_ranges(workspace_window, 
     window._Project_Refresh()
     before = _Snapshot(window._model)
     def Discard(dialog):
-        from test_workflow_connections import _InFunction
-        dialog.stage_editor.name_edit.setText('Keyboard coast draft')
-        def Parameters(child):
-            owner = child._draft.strategies['ins']
-            child._Parameters_Reveal(owner)
-            editor = child.parameters.editors[(owner, 'mechanization_aggregation')]
-            editor.CommittedValue_Set(1)
-            child._Parameter_Set(owner, 'mechanization_aggregation', 1)
-        _InFunction(dialog, 'ins', Parameters)
         if close_kind == 'escape':
             QTest.keyClick(dialog, Qt.Key.Key_Escape)
         elif close_kind == 'close':
             dialog.close()
         else:
             dialog.reject()
-    _Capsule_Click(window, 'ascent', Discard)
+    def Stage(dialog):
+        dialog.stage_editor.name_edit.setText('Keyboard coast draft')
+        Discard(dialog)
+    def Function(dialog):
+        owner = dialog._draft.strategies['ins']
+        dialog._Parameters_Reveal(owner)
+        editor = dialog.parameters.editors[(owner, 'mechanization_aggregation')]
+        editor.CommittedValue_Set(1)
+        dialog._Parameter_Set(owner, 'mechanization_aggregation', 1)
+        Discard(dialog)
+    _Capsule_Click(window, 'ascent', Stage)
+    _Function_Click(window, 'ins', Function)
     _Events_Flush(qapp)
     assert _Snapshot(window._model) == before
     window.workflow_page.stage_panel.Stage_Select('ready')
@@ -309,24 +314,18 @@ def test_invalid_range_keeps_draft_and_referenced_stage_cannot_be_removed(worksp
     panel = window.workflow_page.stage_panel
     panel.Stage_Remove('ascent')
     assert panel.error.text() and _Snapshot(window._model) == before
-    def Invalid(dialog):
-        from test_workflow_connections import _InFunction
-        dialog.stage_editor.name_edit.setText('Keep this draft')
-        def Range(child):
-            form = child.bindings[0]._sections['recording.range'].body.layout()
-            start = form.itemAt(0, form.ItemRole.FieldRole).widget()
-            stop = form.itemAt(1, form.ItemRole.FieldRole).widget()
-            start.setCurrentIndex(start.findData(('stage_enter', 'coast')))
-            stop.setCurrentIndex(stop.findData(('stage_exit', 'ascent')))
-            child.accept()
-            assert child.result() != QDialog.DialogCode.Accepted
-            assert child.error.text()
-            assert tuple(start.currentData()) == ('stage_enter', 'coast')
-            child.reject()
-        _InFunction(dialog, 'recording', Range, apply=False)
-        assert dialog.stage_editor.name_edit.text() == 'Keep this draft'
-        dialog.reject()
-    _Capsule_Click(window, 'coast', Invalid)
+    def Range(child):
+        form = child.bindings[0]._sections['recording.range'].body.layout()
+        start = form.itemAt(0, form.ItemRole.FieldRole).widget()
+        stop = form.itemAt(1, form.ItemRole.FieldRole).widget()
+        start.setCurrentIndex(start.findData(('stage_enter', 'coast')))
+        stop.setCurrentIndex(stop.findData(('stage_exit', 'ascent')))
+        child.accept()
+        assert child.result() != QDialog.DialogCode.Accepted
+        assert child.error.text()
+        assert tuple(start.currentData()) == ('stage_enter', 'coast')
+        child.reject()
+    _Function_Click(window, 'recording', Range)
     _Events_Flush(qapp)
     assert _Snapshot(window._model) == before and not errors
 

@@ -5,15 +5,11 @@
   "type": "mcu",
   "class": "stm32c0",
   "version": "0.1.0",
-  "description": "Exact non-N C071FBP6 TSSOP20 mini Ground USB software contract, imported native HAL/CMSIS/startup/linker only.",
+  "description": "STM32C071FBP6 TSSOP20 device identity and memory metadata; no integrated Ground transport profile.",
   "requires": {
     "components": [
       {
         "id": "silverstar.mcu_family.stm32c0",
-        "optional": false
-      },
-      {
-        "id": "silverstar.usb_cdc.stm32c071_mini",
         "optional": false
       }
     ],
@@ -106,7 +102,7 @@
       }
     ],
     "build_target": {
-      "profile": "C071_Mini_Ground_USB"
+      "profile": "STM32C071FBP6"
     }
   }
 }

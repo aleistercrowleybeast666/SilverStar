@@ -51,11 +51,6 @@ def RadioTransaction_IssuesGet(model, catalog):
         issues.extend(AirLinkIssues_Get(model, catalog, target_scope='flight'))
     if model.ground_target.radio_plugin:
         issues.extend(AirLinkIssues_Get(model, catalog, target_scope='ground'))
-        if ('STM32C071' in model.ground_target.hardware.mcu.upper()
-                and model.ground_target.module_variant != 'e28_2g4m12sx'):
-            from silverstar_fccg.project.air_link import AirLinkIssue
-            issues.append(AirLinkIssue('GROUND_USB_RADIO_UNSUPPORTED',
-                'The admitted C071 USB configuration requires E28-2G4M12SX.'))
     return tuple(dict.fromkeys(issues))
 
 

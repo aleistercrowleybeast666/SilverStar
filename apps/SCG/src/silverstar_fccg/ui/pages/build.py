@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from PySide6.QtCore import QSignalBlocker, Signal, Qt
+from PySide6.QtCore import QSignalBlocker, Signal, Qt, QEvent, QTimer
 from PySide6.QtWidgets import (
     QApplication,
     QFormLayout,
@@ -17,6 +17,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QListWidget,
     QListWidgetItem,
+    QWidget, QScrollArea,
 )
 
 from silverstar_fccg.ui.touch_scroll import TouchScroll_Enable
@@ -27,7 +28,6 @@ from silverstar_fccg.project.artifact_memory import (ArtifactMemorySummary_Decod
     ArtifactMemoryMarginLevel_Get, ArtifactMemoryReportSummary_Decode)
 from silverstar_fccg.project.artifact_stack import ArtifactStackReportSummary_Decode
 from silverstar_fccg.ui.pages.base import ScrollableLocalizedPage
-from silverstar_fccg.ui.pages.native_usb import NativeUsbPanel
 from silverstar_fccg.ui.widgets import (
     CollapsibleSection,
 )
@@ -38,6 +38,7 @@ class BuildPage(ScrollableLocalizedPage):
     detectionRequested = Signal()
     actionRequested = Signal(str)
     memoryLayoutChanged = Signal(str)
+    optionsRequested = Signal()
 
     _PRIMARY_ACTIONS: tuple[tuple[str, str], ...] = ()
     _TARGET_ACTIONS = (
@@ -98,7 +99,6 @@ class BuildPage(ScrollableLocalizedPage):
         self.configuration_group = self.Group_Create("group.build_configuration", summary_layout)
 
         self.action_buttons: dict[str, QPushButton] = {}
-        self.native_usb = NativeUsbPanel(translator.language)
         self.target_status_labels: dict[str, QLabel] = {}
         self.target_summary_labels: dict[str, QLabel] = {}
         self.target_action_layouts = {}
@@ -106,6 +106,12 @@ class BuildPage(ScrollableLocalizedPage):
         self.target_stack_values = {}
         self.target_stack_sections = {}
         self.target_stack_details = {}
+        self.target_cards = {}
+        self.target_build_labels = {}
+        self.target_grid = QGridLayout()
+        self.target_grid.setColumnStretch(0, 1)
+        self.target_grid.setColumnStretch(1, 1)
+        self.root_layout.addLayout(self.target_grid)
         for target, group_key in (
             ("flight", "group.flight_build"),
             ("ground", "group.ground_build_target"),
@@ -119,6 +125,10 @@ class BuildPage(ScrollableLocalizedPage):
             summary.setTextFormat(Qt.TextFormat.PlainText)
             target_layout.addWidget(summary)
             self.target_summary_labels[target] = summary
+            build_label = QLabel()
+            build_label.setWordWrap(True)
+            self.target_build_labels[target] = build_label
+            target_layout.addWidget(build_label)
             target_layout.addWidget(self.target_memory_values[target])
             stack_summary = QLabel()
             stack_summary.setWordWrap(True)
@@ -147,12 +157,15 @@ class BuildPage(ScrollableLocalizedPage):
                     secondary_actions.addWidget(button, 0, secondary_actions.count())
             target_layout.addLayout(actions)
             target_layout.addWidget(secondary)
-            self.root_layout.addWidget(self.Group_Create(group_key, target_layout))
+            card = self.Group_Create(group_key, target_layout)
+            target_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+            self.target_cards[target] = card
+            self.target_grid.addWidget(card, len(self.target_cards) - 1, 0)
 
 
         advanced_layout = QVBoxLayout()
-        advanced_layout.addWidget(self.configuration_group)
-        advanced_layout.addWidget(self.native_usb)
+        self.configuration_group.setParent(self)
+        self.configuration_group.hide()
         quality_label = QLabel()
         quality_label.setObjectName("sectionLabel")
         self.Text_Register(quality_label, "build.section.quality")
@@ -272,8 +285,12 @@ class BuildPage(ScrollableLocalizedPage):
         self.tool_status_group = self.Group_Create(
             "build.section.toolchain", tool_status_layout
         )
-        self.root_layout.insertWidget(1, self.tool_status_group)
+        self.tool_status_group.setParent(self)
+        self.tool_status_group.hide()
         detect_row = QHBoxLayout()
+        self.tools_summary = QLabel(self)
+        self.tools_summary.setWordWrap(True)
+        detect_row.addWidget(self.tools_summary, 1)
         self.detect_button = QPushButton()
         self.detect_button.setMinimumWidth(120)
         self.Text_Register(self.detect_button, "action.detect_toolchain")
@@ -281,13 +298,16 @@ class BuildPage(ScrollableLocalizedPage):
             lambda _checked=False: self.detectionRequested.emit()
         )
         detect_row.addWidget(self.detect_button)
+        self.options_button = QPushButton(self)
+        self.Text_Register(self.options_button, 'build.options.title')
+        self.options_button.clicked.connect(self.optionsRequested)
+        detect_row.addWidget(self.options_button)
         self.install_guide_button = self._ActionButton_Create(
             "tool_install_guide", "action.install_guide"
         )
         self.install_guide_button.setMinimumWidth(120)
-        detect_row.addWidget(self.install_guide_button)
-        detect_row.addStretch(1)
-        self.root_layout.insertLayout(2, detect_row)
+        advanced_layout.addWidget(self.install_guide_button)
+        self.root_layout.insertLayout(1, detect_row)
         self.advanced_section = CollapsibleSection(expanded=False)
         self.advanced_section.BodyLayout_Set(advanced_layout)
         self.advanced_group = self.advanced_section
@@ -299,9 +319,10 @@ class BuildPage(ScrollableLocalizedPage):
         self.build_log.setObjectName("buildLog")
         self.build_log.setReadOnly(True)
         self.build_log.setMaximumBlockCount(20_000)
-        self.build_log.setMinimumHeight(220)
+        self.build_log.setMinimumHeight(90)
+        self.build_log.setMaximumHeight(170)
         log_layout.addWidget(self.build_log)
-        advanced_layout.addWidget(self.Group_Create("group.build_log", log_layout))
+        self.root_layout.addWidget(self.Group_Create("group.build_log", log_layout))
         detail_layout = QVBoxLayout()
         self.build_detail_log = QPlainTextEdit()
         TouchScroll_Enable(self.build_detail_log)
@@ -334,12 +355,32 @@ class BuildPage(ScrollableLocalizedPage):
         self.QualityResults_Set(())
         self.GeneratedProject_Set(False)
         self.FirmwareArtifact_Set("", "")
+        self._viewport = self.findChild(QScrollArea).viewport()
+        self._viewport.installEventFilter(self)
+
+    def eventFilter(self, watched, event):
+        if watched is getattr(self, '_viewport', None) and event.type() == QEvent.Type.Resize:
+            QTimer.singleShot(0, self, self._Cards_Arrange)
+        return super().eventFilter(watched, event)
+
+    def _Cards_Arrange(self):
+        wide = self._viewport.width() >= 920
+        if getattr(self, '_wide_cards', None) == wide:
+            return
+        self._wide_cards = wide
+        for index, card in enumerate(self.target_cards.values()):
+            self.target_grid.addWidget(card, 0 if wide else index, index if wide else 0,
+                                       1, 1 if wide else 2)
 
     def Issues_Set(self,issues):
         self.issues_list.clear()
         errors=sum(issue.level=='error' for issue in issues)
         warnings=sum(issue.level=='warning' for issue in issues)
-        self.issue_summary.setText(self._translator.Text_Get('workspace.checks.issue_summary',errors=errors,warnings=warnings))
+        model = getattr(self, '_configuration_model', None)
+        empty = model is not None and all(hardware.mode == 'unselected' or
+            hardware.mode == 'custom' and not hardware.snapshot_id for hardware in (model.hardware, model.ground_target.hardware))
+        self.issue_summary.setText(self._translator.Text_Get('build.empty.next') if empty else
+            self._translator.Text_Get('workspace.checks.issue_summary',errors=errors,warnings=warnings))
         self.issues_section.Title_Set(self._translator.Text_Get('workspace.checks.issues'))
         for issue in issues:
             item=QListWidgetItem('['+issue.level+'] '+issue.code+' · '+issue.message)
@@ -388,6 +429,9 @@ class BuildPage(ScrollableLocalizedPage):
     def Tools_Set(self, tools: Iterable[ToolchainToolView]) -> None:
         self._tools = tuple(tools)
         by_id = {tool.tool_id: tool for tool in self._tools}
+        self.tools_summary.setText('  ·  '.join(self._translator.Text_Get('tool.' + tool) + ' ' +
+            self._translator.Text_Get('tool.status.' + (by_id[tool].status if tool in by_id else 'not_checked'))
+            for tool in ('compiler', 'make', 'host_gcc')))
         for tool_id, label in self.tool_status_labels.items():
             tool = by_id.get(tool_id)
             status = tool.status if tool is not None else "not_checked"
@@ -432,14 +476,13 @@ class BuildPage(ScrollableLocalizedPage):
         self._ActionTooltips_Apply()
 
     def Targets_Set(self, *, flight_generated: bool, ground_configured: bool,
-                    ground_generated: bool, usb_candidate: bool = False,
+                    ground_generated: bool,
                     flight_current: bool = True, ground_current: bool = True) -> None:
         self._target_generated = {
             "flight": flight_generated, "ground": ground_generated,
         }
         self._ground_configured = ground_configured
         self._target_current = {'flight': flight_current, 'ground': ground_current}
-        self._usb_candidate = usb_candidate
         self._TargetActions_Update()
 
     def _TargetActions_Update(self) -> None:
@@ -458,12 +501,9 @@ class BuildPage(ScrollableLocalizedPage):
             for action, _key in self._TARGET_ACTIONS:
                 enabled = generated and configured
                 if action == "build":
-                    enabled = enabled and current and statuses.get("compiler") == "found" and (
-                        (target == 'ground' and getattr(self, '_usb_candidate', False))
-                        or statuses.get("make") == "found")
+                    enabled = enabled and current and statuses.get("compiler") == "found" and statuses.get("make") == "found"
                 elif action == "clean":
-                    enabled = enabled and ((target == 'ground' and getattr(self, '_usb_candidate', False))
-                                           or statuses.get("make") == "found")
+                    enabled = enabled and statuses.get("make") == "found"
                 self.action_buttons[f"{target}_{action}"].setEnabled(enabled)
 
     def QualityResults_Set(self, records: Iterable[object]) -> None:
@@ -505,6 +545,11 @@ class BuildPage(ScrollableLocalizedPage):
             for record in records
         }
         artifact = by_task.get("artifact_check")
+        state = states.get('artifact_check')
+        self.target_build_labels[target].setText(self._translator.Text_Get('build.artifact') + ' · ' +
+            self._translator.Text_Get('quality.target.' + state if state else
+                ('quality.result.passed' if getattr(artifact, 'result', '') == 'passed' else 'quality.result.failed')
+                if selected and artifact else 'quality.result.not_run'))
         self._MemoryReport_Show(target, artifact, selected, states.get('artifact_check', ''))
         self._StackReport_Show(target, by_task.get('stack_report'), selected, states.get('stack_report', ''))
         for task, label in labels.items():
@@ -755,7 +800,6 @@ class BuildPage(ScrollableLocalizedPage):
 
     def Language_Apply(self, translator: Translator) -> None:
         super().Language_Apply(translator)
-        self.native_usb.Language_Set(translator.language)
         for index in range(self.memory_layout_combo.count()):
             self.memory_layout_combo.setItemText(index, translator.Text_Get("memory.layout." + self.memory_layout_combo.itemData(index)))
         self.advanced_section.Title_Set(translator.Text_Get("group.advanced_build"))

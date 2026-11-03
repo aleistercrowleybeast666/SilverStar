@@ -2,7 +2,7 @@
 from copy import deepcopy
 
 from PySide6.QtCore import Qt, Signal, QTimer, QEvent
-from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QMenu,
     QGroupBox, QScrollArea, QMessageBox, QFrame)
 
 from silverstar_fccg.project.mission_functions import Functions_Derive, FunctionsCatalog_Get, FunctionCoverage_Get, Functions_Issues
@@ -42,7 +42,7 @@ class FlightWorkflowPage(ScrollableLocalizedPage):
         strip.addWidget(self.summary_label, 1)
         self.library_button = QPushButton(self.summary_strip)
         self.library_button.setObjectName('primaryButton')
-        self.library_button.clicked.connect(lambda: self.Reveal(self.shared))
+        self.library_button.clicked.connect(self._Library_Open)
         strip.addWidget(self.library_button)
         self.root_layout.addWidget(self.summary_strip)
         self.root_layout.addWidget(self.stage_panel)
@@ -105,6 +105,18 @@ class FlightWorkflowPage(ScrollableLocalizedPage):
         self.overview_label.setTextFormat(Qt.TextFormat.PlainText)
         self.overview.body.layout().addWidget(self.overview_label)
         self.root_layout.addStretch(1)
+        # The workspace is an execution overview. Editors operate on one private
+        # property transaction; retained backing views supply no live form here.
+        for section in self.sections.values():
+            section.hide()
+        self.option_buttons = {}
+        options = QHBoxLayout()
+        for scope in ('algorithms', 'preparation', 'protocols'):
+            button = QPushButton(self)
+            button.clicked.connect(lambda _checked=False, selected=scope: self._Options_Open(selected))
+            self.option_buttons[scope] = button
+            options.addWidget(button)
+        self.root_layout.insertLayout(self.root_layout.indexOf(self.coverage_group) + 1, options)
         for owner in (legacy, navigation):
             owner.hide()
             owner.setParent(self)
@@ -112,6 +124,38 @@ class FlightWorkflowPage(ScrollableLocalizedPage):
         self.stage_panel.editRequested.connect(self._StageDialog_Open)
         self.stage_panel.stageAddRequested.connect(self._StageAddDialog_Open)
         self.Language_Apply(translator)
+
+    def _Library_Open(self):
+        if self._model is None:
+            return
+        menu = QMenu(self.library_button)
+        instances = {row['plugin_id']: row['instance_id'] for row in Functions_Derive(self._model, self._catalog)['functions']}
+        for row in FunctionsCatalog_Get(self._catalog):
+            plugin = row['plugin_id']
+            instance = instances.get(plugin)
+            component = self._catalog.Component_Get(plugin)
+            if not instance and component.selection is None and plugin not in self._model.ComponentIds_Get():
+                continue
+            action = menu.addAction(row['name'].get(self._translator.language, plugin))
+            if instance:
+                action.triggered.connect(lambda _checked=False, identity=instance: self._FunctionDialog_Open(identity))
+            else:
+                action.triggered.connect(lambda _checked=False, identity=plugin: self.functionAddRequested.emit(identity))
+        menu.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
+        menu.popup(self.library_button.mapToGlobal(self.library_button.rect().bottomLeft()))
+
+    def _Options_Open(self, scope):
+        from silverstar_fccg.ui.workflow_properties import WorkflowPropertiesDialog
+        context = getattr(self, '_display', None)
+        if context is None:
+            return
+        original = self._model.Dictionary_Get()
+        dialog = WorkflowPropertiesDialog(self._translator, context, self._catalog, scope, self)
+        if dialog.exec() and self._model.Dictionary_Get() == original:
+            candidate = dialog.Configuration_Get()
+            if candidate.Dictionary_Get() != original:
+                self.configurationChanged.emit(candidate)
+        dialog.deleteLater()
 
     def _Process_Validate(self, process):
         if self._model is None:
@@ -146,11 +190,16 @@ class FlightWorkflowPage(ScrollableLocalizedPage):
         drafts = {row['instance_id']: row for row in pending['functions']} if pending else None
         dialog = MissionStageTransactionDialog(self._translator, snapshot, self._catalog, identity, self,
                                                function_drafts=drafts, stage_only=True)
-        if dialog.exec() == QDialog.DialogCode.Accepted:
-            self.configurationChanged.emit(dialog.Configuration_Get())
+        original = self._model.Dictionary_Get()
+        if dialog.exec() == QDialog.DialogCode.Accepted and self._model.Dictionary_Get() == original:
+            candidate = dialog.Configuration_Get()
+            if candidate.Dictionary_Get() != original:
+                self.configurationChanged.emit(candidate)
+            if dialog.next_function:
+                QTimer.singleShot(0, self, lambda identity=dialog.next_function: self._FunctionDialog_Open(identity))
         dialog.deleteLater()
 
-    def _FunctionDialog_Open(self, identity):
+    def _FunctionDialog_Open(self, identity, proposed=None):
         if self._model is None:
             return
         from PySide6.QtWidgets import QDialog
@@ -158,10 +207,13 @@ class FlightWorkflowPage(ScrollableLocalizedPage):
         stage = self.stage_panel.selected_stage_id or self.stage_panel._process['stages'][0]['stage_id']
         pending = self.PendingFunctions_Collect()
         drafts = {row['instance_id']: row for row in pending['functions']} if pending else None
-        dialog = MissionStageTransactionDialog(self._translator, self._model, self._catalog,
-            stage, self, function_drafts=drafts, function_id=identity)
-        if dialog.exec() == QDialog.DialogCode.Accepted:
-            self.configurationChanged.emit(dialog.Configuration_Get())
+        original = self._model.Dictionary_Get()
+        dialog = MissionStageTransactionDialog(self._translator, proposed or self._model, self._catalog,
+            stage, self, function_drafts=drafts, function_id=identity, display=getattr(self, '_display', None))
+        if dialog.exec() == QDialog.DialogCode.Accepted and self._model.Dictionary_Get() == original:
+            candidate = dialog.Configuration_Get()
+            if candidate.Dictionary_Get() != original:
+                self.configurationChanged.emit(candidate)
         dialog.deleteLater()
 
     def _SelectedFunction_Get(self):
@@ -284,9 +336,13 @@ class FlightWorkflowPage(ScrollableLocalizedPage):
         for group in self.navigation._content.findChildren(QGroupBox,options=Qt.FindChildOption.FindDirectChildrenOnly):
             selected=group.objectName() in ('algorithmParameters_'+owner,'sharedAlgorithmParameters')
             group.setVisible(selected)
-        if expand:
-            self.parameters.toggle_button.setChecked(True)
-            self.Reveal(self.parameters)
+        if expand and self._model is not None:
+            declarations = {row['plugin_id']: row.get('parameter_owner') for row in FunctionsCatalog_Get(self._catalog)}
+            match = next((row for row in Functions_Derive(self._model, self._catalog)['functions']
+                          if declarations.get(row['plugin_id']) == owner), None)
+            if match:
+                self.coverage.Function_Select(match['instance_id'])
+                self.Reveal(self.function_buttons['parameters'])
 
     def Pending_Commit(self):
         # Stage changes exist only inside a modal transaction until confirmation.
@@ -350,6 +406,8 @@ class FlightWorkflowPage(ScrollableLocalizedPage):
         self.estimation_definition.Title_Set(translator.Text_Get('workflow.algorithm_selection'))
         self.parameters.Title_Set(translator.Text_Get('workflow.parameters'))
         self.library_button.setText(translator.Text_Get('workflow.open_library'))
+        for scope, button in self.option_buttons.items():
+            button.setText(translator.Text_Get('workflow.options.' + scope))
         self.coverage_group.setTitle(translator.Text_Get('workflow.execution_map'))
         self.coverage_hint.setText(translator.Text_Get('workflow.execution_map_hint'))
         for key, button in self.function_buttons.items():

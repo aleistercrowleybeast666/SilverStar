@@ -1,5 +1,7 @@
 # USB CDC transport development — 0.1.3
 
+> Historical development record (2026-10-13). The current SCG product uses UART and external USB-UART. The native CDC candidate and its commands described below have been retired. See [project migration](../../../docs/public/SCG/PROJECT_FORMAT.md).
+
 This development branch adds an experimental, protocol-independent integration
 kit. It does not change the frozen 0.1.2 release, existing private Ground target
 admission, or grant firmware/hardware acceptance.

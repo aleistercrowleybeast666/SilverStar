@@ -308,7 +308,6 @@ class GroundTargetPage(BoardHardwarePage):
         self.pc_interface = StandardComboBox()
         self.pc_interface.addItem("—", "")
         self.pc_interface.addItem("UART Serial", "uart")
-        self.pc_interface.addItem("USB CDC Virtual Serial", "usb_cdc")
         self.pc_interface.currentIndexChanged.connect(
             lambda: self.configurationChanged.emit("pc_interface", self.pc_interface.currentData())
         )
@@ -471,6 +470,7 @@ class GroundTargetPage(BoardHardwarePage):
             "ground.uart_binding_source",
             physical=selected_uart.metadata.get("physical_resource", selected_uart.resource_id),
             resource=selected_uart.resource_id,
+            baud=selected_uart.metadata.get("baud_rate") or "—",
             source=ground.hardware.source_label or ground.board or ground.hardware.source_kind,
         ) if selected_uart is not None else "")
         with QSignalBlocker(self.activity_led_enabled):

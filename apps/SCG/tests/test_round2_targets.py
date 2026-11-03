@@ -12,7 +12,6 @@ from silverstar_fccg.generator.multi_target import (
     TargetGeneration_Apply,
     TargetScope,
     _PcAdapter_Render,
-    _UsbCallback_Integrate,
 )
 from silverstar_fccg.hardware.cubemx import CubeMxImporter
 from silverstar_fccg.hardware.inventory import CubeMxInventory_Parse
@@ -24,7 +23,7 @@ from silverstar_fccg.project.air_link import (
 )
 from silverstar_fccg.project.folder_contract import ProjectRoot_Save
 from silverstar_fccg.project.model import (
-    PROJECT_FORMAT_VERSION,
+    PROJECT_TARGET_SCOPE_FORMAT_VERSION,
     DeviceInstance,
     GroundTargetConfiguration,
     HardwareConfiguration,
@@ -88,7 +87,7 @@ def test_two_targets_have_independent_hardware_and_serialization(builtin_catalog
     assert model.hardware is not model.ground_target.hardware
     assert model.resource_assignments is not model.ground_target.resource_assignments
     restored = ProjectModel_Parse(model.Dictionary_Get())
-    assert restored.format_version == PROJECT_FORMAT_VERSION
+    assert restored.format_version == PROJECT_TARGET_SCOPE_FORMAT_VERSION
     assert restored.ground_target == model.ground_target
     assert restored.air_link == model.air_link
     assert restored.hardware == model.hardware
@@ -124,22 +123,22 @@ def test_one_bmi088_plugin_resolves_mixed_interfaces_without_duplicate_sources(
 
 def test_air_link_readiness_rejects_missing_and_incompatible_radios(builtin_catalog) -> None:
     model = _GroundBoardProject_Get(builtin_catalog)
-    assert not AirLinkIssues_Get(model, builtin_catalog)
+    assert not AirLinkIssues_Get(model, builtin_catalog, target_scope="all")
     model.air_link = replace(model.air_link, frequency_hz=2400000000)
     assert "AIR_LINK_FREQUENCY_OUT_OF_RANGE" in {
-        issue.code for issue in AirLinkIssues_Get(model, builtin_catalog)
+        issue.code for issue in AirLinkIssues_Get(model, builtin_catalog, target_scope="all")
     }
     model.air_link = replace(model.air_link, frequency_hz=2473000000, spreading_factor=7)
     assert "AIR_LINK_PHY_INCOMPATIBLE" in {
-        issue.code for issue in AirLinkIssues_Get(model, builtin_catalog)
+        issue.code for issue in AirLinkIssues_Get(model, builtin_catalog, target_scope="all")
     }
     model.air_link = replace(model.air_link, spreading_factor=10, packet_mtu=65)
     assert "AIR_LINK_MTU_TOO_SMALL" in {
-        issue.code for issue in AirLinkIssues_Get(model, builtin_catalog)
+        issue.code for issue in AirLinkIssues_Get(model, builtin_catalog, target_scope="all")
     }
     model.ground_target = replace(model.ground_target, radio_plugin="")
     assert "AIR_LINK_NO_RADIO" in {
-        issue.code for issue in AirLinkIssues_Get(model, builtin_catalog)
+        issue.code for issue in AirLinkIssues_Get(model, builtin_catalog, target_scope="all")
     }
     model.ground_target = replace(model.ground_target, radio_plugin="test.ground.radio")
     reference = builtin_catalog.Component_Get("silverstar.device.telemetry.sx1281")
@@ -159,17 +158,17 @@ def test_air_link_readiness_rejects_missing_and_incompatible_radios(builtin_cata
         model.air_link, incompatible.radio
     )
     assert "AIR_LINK_FAMILY_MISMATCH" in {
-        issue.code for issue in AirLinkIssues_Get(model, incompatible)
+        issue.code for issue in AirLinkIssues_Get(model, incompatible, target_scope="all")
     }
     separate_band = OtherRadioCatalog(replace(
         reference.radio, frequency_min_hz=2500000000, frequency_max_hz=2500000000
     ))
     assert "AIR_LINK_FREQUENCY_OUT_OF_RANGE" in {
-        issue.code for issue in AirLinkIssues_Get(model, separate_band)
+        issue.code for issue in AirLinkIssues_Get(model, separate_band, target_scope="all")
     }
     model.air_link = replace(model.air_link, flight_radio_instance="missing")
     assert "AIR_LINK_NO_RADIO" in {
-        issue.code for issue in AirLinkIssues_Get(model, separate_band)
+        issue.code for issue in AirLinkIssues_Get(model, separate_band, target_scope="all")
     }
     flight_only = ReferenceProject_Create("FlightOnlyAir", catalog=builtin_catalog)
     flight_only.air_link = replace(flight_only.air_link, crc_enabled=False)
@@ -178,7 +177,7 @@ def test_air_link_readiness_rejects_missing_and_incompatible_radios(builtin_cata
     }
 
 
-def test_ground_pc_interface_requires_uart_or_usb_cdc_capability(builtin_catalog) -> None:
+def test_ground_pc_interface_requires_uart_and_rejects_legacy_cdc(builtin_catalog) -> None:
     model = _GroundBoardProject_Get(builtin_catalog)
     assert not GroundTargetIssues_Get(model, builtin_catalog)
     model.ground_target = replace(model.ground_target, pc_resource="")
@@ -186,7 +185,7 @@ def test_ground_pc_interface_requires_uart_or_usb_cdc_capability(builtin_catalog
         issue.code for issue in GroundTargetIssues_Get(model, builtin_catalog)
     }
     model.ground_target = replace(model.ground_target, pc_interface="usb_cdc")
-    assert "GROUND_USB_CDC_UNAVAILABLE" in {
+    assert "GROUND_NATIVE_CDC_RETIRED" in {
         issue.code for issue in GroundTargetIssues_Get(model, builtin_catalog)
     }
     hardware = replace(
@@ -203,52 +202,16 @@ def test_ground_pc_interface_requires_uart_or_usb_cdc_capability(builtin_catalog
         ),
     )
     model.ground_target = replace(model.ground_target, hardware=hardware)
-    assert "GROUND_USB_CDC_UNAVAILABLE" not in {
+    assert "GROUND_NATIVE_CDC_RETIRED" in {
         issue.code for issue in GroundTargetIssues_Get(model, builtin_catalog)
     }
 
 
-def test_usb_cdc_adapter_uses_the_same_gsp_byte_stream(
-    builtin_catalog, tmp_path: Path,
-) -> None:
-    model = _GroundBoardProject_Get(builtin_catalog)
-    model.ground_target = replace(model.ground_target, pc_interface="usb_cdc")
-    adapter = _PcAdapter_Render(model)
-    assert "PcByteStream_Read" in adapter
-    assert "PcByteStream_Write" in adapter
-    assert "CDC_Transmit_FS" in adapter
-    assert "USBD_BUSY" in adapter
-    assert "s_rx_overflow_count" in adapter
-    assert "PcByteStream_OverflowCount_Get" in adapter
-    callback = (
-        b'#include "usbd_cdc_if.h"\n'
-        b"static int8_t CDC_Init_FS(void) {\n/* USER CODE BEGIN 3 */\n/* USER CODE END 3 */\n}\n"
-        b"static int8_t CDC_DeInit_FS(void) {\n/* USER CODE BEGIN 4 */\n/* USER CODE END 4 */\n}\n"
-        b"static int8_t CDC_Receive_FS(uint8_t *Buf, uint32_t *Len)\n"
-        b"{\n  /* USER CODE BEGIN 6 */\n"
-        b"  USBD_CDC_ReceivePacket(&hUsbDeviceFS);\n"
-        b"  /* USER CODE END 6 */\n  return USBD_OK;\n}\n"
-    )
-    integrated = _UsbCallback_Integrate(callback)
-    assert b"PcByteStream_OnUsbReceive(Buf, (uint16_t)*Len)" in integrated
-    assert b"USBD_CDC_ReceivePacket" in integrated
-    usb_root = tmp_path / "USB_DEVICE/App"
-    usb_root.mkdir(parents=True)
-    (usb_root / "usbd_cdc_if.c").write_bytes(callback)
-    assert "USB_DEVICE/App/usbd_cdc_if.c" in CubeMxImporter._GeneratedFiles_Get(
-        tmp_path
-    )
-    board = builtin_catalog.Component_Get("silverstar.board.silverstar_0_5")
-    assert board.board is not None
-    ioc = (
-        board.package_root / board.board.ioc_file
-    ).read_text(encoding="utf-8")
-    usb_inventory = CubeMxInventory_Parse(
-        ioc + "\nMcu.IP99=USB_DEVICE\nUSB_DEVICE.CLASS_NAME=CDC\n",
-        generated_files={"USB_DEVICE/App/usbd_cdc_if.c": callback.decode()},
-    )
-    assert usb_inventory.usb_cdc
-    assert any(item.kind == "usb_cdc" for item in usb_inventory.HardwareResources_Get())
+def test_usb_cdc_import_is_a_rejection_fact_not_a_selectable_resource():
+    inventory = CubeMxInventory_Parse("Mcu.IP0=USB_DEVICE\nUSB_DEVICE.CLASS_NAME=CDC\n",
+        generated_files={"USB_DEVICE/App/usbd_cdc_if.c": "int CDC_Receive_FS(void);"})
+    assert inventory.usb_cdc
+    assert not any(item.kind == 'usb_cdc' for item in inventory.HardwareResources_Get())
 
 
 def test_standalone_ground_ioc_import_is_pending_generation(

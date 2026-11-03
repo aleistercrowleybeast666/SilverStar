@@ -21,27 +21,6 @@ static void TxAccept(uint8_t *data, uint16_t length)
     memcpy(tx_copy, data, length); retained = data; tx_length = length; pending = 1U;
 }
 
-#if defined(GROUND_TEST_USB)
-#include "usbd_cdc_if.h"
-uint32_t usb_test_mask;
-USBD_HandleTypeDef hUsbDeviceFS;
-static USBD_CDC_HandleTypeDef usb_class;
-uint8_t CDC_Transmit_FS(uint8_t *data, uint16_t length)
-{
-    assert(usb_test_mask == 1U); write_calls++;
-    if (fail_write) { if (fail_write == 2U) { PcByteStream_OnUsbReset(); } return USBD_FAIL; }
-    TxAccept(data, length); usb_class.TxState = 1U; return USBD_OK;
-}
-static void Feed(const uint8_t *data, uint16_t length) { PcByteStream_OnUsbReceive(data, length); }
-static void Connect(uint8_t value)
-{
-    connected = value; pending = 0U; usb_class.TxState = 0U;
-    cancelled_acknowledgements = forwarded - acknowledgements;
-    hUsbDeviceFS.dev_state = value ? USBD_STATE_CONFIGURED : 0U;
-    hUsbDeviceFS.pClassData = value ? &usb_class : NULL;
-    PcByteStream_OnUsbReset();
-}
-#else
 static uint8_t rx[512], tx_owned[70];
 static uint16_t rx_head, rx_tail;
 static uint32_t session;
@@ -74,8 +53,6 @@ PcByteStreamWriteResult PcByteStream_WriteSession(const uint8_t *data, uint16_t 
     assert(length <= sizeof(tx_owned)); memcpy(tx_owned, data, length);
     TxAccept(tx_owned, length); return PC_BYTE_STREAM_WRITE_OK;
 }
-#endif
-
 uint8_t GroundRadio_MetricsSupportedGet(void) { return 1U; }
 GroundRadioResult GroundRadio_Init(void) { return GROUND_RADIO_OK; }
 void GroundRadio_Process(void) { }
@@ -108,9 +85,6 @@ static void Complete(void)
         }
     }
     assert(frames == 1U); pending = 0U;
-#if defined(GROUND_TEST_USB)
-    usb_class.TxState = 0U;
-#endif
 }
 
 static GroundBridgeResult Step(uint32_t advance)
@@ -203,9 +177,7 @@ int main(int argc, char **argv)
     {
         uint8_t noise[128] = {0U}; Feed(noise, sizeof(noise));
         assert(Step(1U) == GROUND_BRIDGE_OK);
-#if !defined(GROUND_TEST_USB)
         assert(read_bytes == 64U && (unsigned)(rx_head - rx_tail) == 64U);
-#endif
         assert(Step(1U) == GROUND_BRIDGE_OK); Commands(1U); Drain(); assert(forwarded == 1U);
     }
     else

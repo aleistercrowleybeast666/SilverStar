@@ -25,7 +25,6 @@ def test_ground_usb_capacity_cannot_be_inferred_from_virtual_baud(builtin_catalo
     model.ground_target = replace(
         model.ground_target,  pc_interface="usb_cdc", baudrate=230400,
     )
-    plan = GroundPcCapacity_Resolve(model)
-    assert plan.serial_bytes_per_second is None
-    assert plan.maximum_full_air_rx_frames_per_second is None
-    assert plan.qualification == "USB_CDC_CAPACITY_UNQUALIFIED"
+    import pytest
+    with pytest.raises(ValueError, match='unbound'):
+        GroundPcCapacity_Resolve(model)

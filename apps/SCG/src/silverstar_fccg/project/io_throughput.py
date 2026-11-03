@@ -41,9 +41,4 @@ def GroundPcCapacity_Resolve(model: ProjectModel) -> GroundPcCapacity:
             capacity // tx_bytes, capacity // rx_bytes,
             "OFFERED_LOAD_UNDECLARED",
         )
-    if ground.pc_interface == "usb_cdc":
-        return GroundPcCapacity(
-            ground.pc_interface, None, tx_bytes, rx_bytes,
-            None, None, "USB_CDC_CAPACITY_UNQUALIFIED",
-        )
     raise ValueError("Ground PC interface is unbound")

@@ -184,7 +184,10 @@ def AirLinkIssues_Get(model: ProjectModel, catalog: PluginCatalog, *, target_sco
 
 def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple[AirLinkIssue, ...]:
     ground = model.ground_target
+    from silverstar_fccg.project.retired_cdc import MIGRATION_NOTICE, NativeCdcMigration_Required
     issues = list(AirLinkIssues_Get(model, catalog, target_scope="ground"))
+    if NativeCdcMigration_Required(model):
+        issues.append(AirLinkIssue("GROUND_NATIVE_CDC_RETIRED", MIGRATION_NOTICE))
     from silverstar_fccg.project.ground_radios import GroundRadiosRuntimeIssue_Get
     runtime_issue = GroundRadiosRuntimeIssue_Get(ground, catalog)
     if runtime_issue is not None:
@@ -257,23 +260,9 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
             issues.append(AirLinkIssue(
                 "GROUND_UART_UNBOUND", "Ground UART must match selected baudrate and 8N1 RX/TX"
             ))
-    elif ground.pc_interface == "usb_cdc":
-        usb_sources = {source.rsplit("/", 1)[-1].casefold()
-                       for source in ground.hardware.build_sources}
-        required_usb_sources = {
-            "usb_device.c", "usbd_cdc_if.c", "usbd_desc.c", "usbd_conf.c",
-            "usbd_core.c", "usbd_ctlreq.c", "usbd_ioreq.c", "usbd_cdc.c",
-        }
-        if not ground.hardware.inventory.get("usb_cdc") or not any(
-            resource.kind == "usb_cdc" for resource in available.values()
-        ) or not required_usb_sources.issubset(usb_sources):
-            issues.append(AirLinkIssue(
-                "GROUND_USB_CDC_UNAVAILABLE",
-                "Ground CubeMX hardware lacks USB Device CDC sources or capability",
-            ))
     else:
         issues.append(AirLinkIssue(
-            "GROUND_PC_INTERFACE_UNBOUND", "Ground PC interface must be UART or USB CDC"
+            "GROUND_PC_INTERFACE_UNBOUND", "Select UART and an assigned serial resource"
         ))
     from silverstar_fccg.project.model import GroundRadioConfigurations_Get
     configurations = GroundRadioConfigurations_Get(ground)
@@ -286,13 +275,6 @@ def GroundTargetIssues_Get(model: ProjectModel, catalog: PluginCatalog) -> tuple
         pc_pins = pc_resource.metadata.get("pins", {})
         if isinstance(pc_pins, dict):
             occupied_pins.update((str(pin), "pc_interface") for pin in pc_pins.values() if pin)
-    if ground.pc_interface == "usb_cdc":
-        frontend_bindings.extend(("pc_interface", item.metadata, item.resource_id)
-            for item in available.values() if item.kind == "usb_cdc")
-        for item in available.values():
-            pins = item.metadata.get("pins", {})
-            if item.kind == "usb_cdc" and isinstance(pins, dict):
-                occupied_pins.update((str(pin), "pc_interface") for pin in pins.values() if pin)
     for configuration in configurations:
         try:
             radio = catalog.Component_Get(configuration.plugin)

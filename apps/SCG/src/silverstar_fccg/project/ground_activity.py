@@ -47,9 +47,6 @@ def GroundActivityLedIssues_Get(ground, catalog=None):
     identifiers = set(ground.resource_assignments.values())
     if ground.pc_interface == "uart":
         identifiers.add(ground.pc_resource)
-    elif ground.pc_interface == "usb_cdc":
-        identifiers.update(resource.resource_id for resource in ground.hardware.resources
-                           if resource.kind == "usb_cdc")
     for identity in identifiers:
         if identity in available:
             occupied.update(_ResourceClaims_Get(available[identity]))

@@ -1,11 +1,11 @@
 {
   "schema_version": 0,
   "id": "silverstar.mcu_family.stm32c0",
-  "name": "STM32C071 mini Ground USB backend",
+  "name": "STM32C0 platform resources",
   "type": "mcu_family",
   "class": "stm32c0",
   "version": "0.1.1",
-  "description": "Exact C071FBP6 fixed mini profile; native CubeMX HAL/CMSIS ownership and pinned classic CDC companion. Experimental software support only.",
+  "description": "Exact STM32C071FBP6 platform resource bindings for existing custom hardware metadata.",
   "requires": {
     "components": [
       {
@@ -48,8 +48,7 @@
     "display_names": {
       "zh_CN": "STM32C0 系列后端",
       "en_US": "STM32C0 Family Backend"
-    },
-    "usb_control_policy": "GET current seven-byte prefix bounded by host IN maximum; SET setup/data exact-seven validation; real EP0 failures stall without success ACK"
+    }
   },
   "platform": {
     "abi": {
@@ -172,9 +171,8 @@
     "support": {
       "level": "experimental",
       "limitations": [
-        "Only STM32C071FBP6 mini fixed pins, Ground classic CDC USB mode",
-        "No Flight, UART PC transport, USBX or general C0 promise",
-        "USB suspend power and hardware validation remain unproven"
+        "Retained STM32C071FBP6 resource and device identity for historical imports.",
+        "No current Flight or Ground firmware generation profile."
       ]
     }
   }

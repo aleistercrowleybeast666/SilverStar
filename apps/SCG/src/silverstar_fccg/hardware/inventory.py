@@ -122,17 +122,13 @@ class HardwareInventory:
         # fields here so a freshly detected inventory is byte-semantically
         # identical to the same inventory after save/reload.
         values = asdict(self)
+        values.pop("usb_cdc", None)  # Read-only rejection fact, never a selectable capability.
         if not self.sdio_shared_dma_bound:
             values.pop("sdio_shared_dma_bound")
         return json.loads(json.dumps(values, ensure_ascii=False))
 
     def HardwareResources_Get(self) -> tuple[HardwareResource, ...]:
         resources: list[HardwareResource] = []
-        if self.usb_cdc:
-            resources.append(HardwareResource(
-                "USB_CDC", "usb_cdc", {"capabilities": ["usb.device", "usb.cdc"],
-                                         "physical_resource": "USB Device CDC"}
-            ))
         groups = (
             (self.uarts, "platform_uart.h", "huart"),
             (self.spis, "platform_spi.h", "hspi"),
@@ -1190,7 +1186,7 @@ def CubeMxInventory_Parse(
         path.replace("\\", "/").lower().endswith("usbd_cdc_if.c")
         for path in normalized_generated_files
     )
-    usb_cdc = usb_device_selected and cdc_class_selected and cdc_source_present
+    usb_cdc = (usb_device_selected and cdc_class_selected) or cdc_source_present
     pins: list[PinInventory] = []
     for key, signal in values.items():
         if not key.endswith(".Signal"):

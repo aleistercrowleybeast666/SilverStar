@@ -20,6 +20,9 @@ def ProjectRoot_Save(
     model: ProjectModel, project_root: Path, *, create_new: bool = False,
 ) -> Path:
     """Save the shared project without implicitly generating either target."""
+    from silverstar_fccg.project.retired_cdc import MIGRATION_NOTICE, NativeCdcMigration_Required
+    if NativeCdcMigration_Required(model):
+        raise ValueError(MIGRATION_NOTICE)
     policy = WorkspacePolicy(project_root)
     root = policy.root
     project_file = root / PROJECT_FILENAME

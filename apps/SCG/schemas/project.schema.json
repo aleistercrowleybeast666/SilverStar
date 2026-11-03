@@ -29,7 +29,7 @@
     "sensor_installation": {"oneOf": [{"$ref": "#/$defs/sensorInstallation"}, {"$ref": "#/$defs/navigationInstallation"}]},
     "mission_process": {"$ref": "#/$defs/missionProcess"},
     "mission_functions": {"$ref": "#/$defs/missionFunctions"},
-    "native_usb": {"$ref": "#/$defs/nativeUsb"},
+    "native_usb": {"$ref": "#/$defs/nativeUsb", "deprecated": true, "readOnly": true, "description": "Historical input only. Select an explicit UART resource to migrate before saving or generating."},
     "feature_tier_presets": {
       "type": "object", "additionalProperties": false,
       "properties": {

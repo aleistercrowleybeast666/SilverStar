@@ -111,11 +111,9 @@ class CubeMxImporter:
 
         progress(4, False)
         resources = inventory.HardwareResources_Get()
-        if target == "ground":
-            resources = tuple(replace(resource, metadata={
-                **resource.metadata, "pins": {"dm": "PA11", "dp": "PA12"},
-                "interrupt": "USB_LP_CAN1_RX0_IRQn" if actual_mcu == "STM32F103C8T6" else "OTG_FS_IRQn",
-            }) if resource.kind == "usb_cdc" else resource for resource in resources)
+        if inventory.usb_cdc:
+            from silverstar_fccg.project.retired_cdc import MIGRATION_NOTICE
+            raise CubeMxImportError(MIGRATION_NOTICE)
         capabilities = tuple(
             sorted({f"peripheral.{resource.kind}" for resource in resources})
         )
@@ -136,11 +134,10 @@ class CubeMxImporter:
         source_files = self._SourceFiles_Get(root, ground=target == "ground")
         ground_inputs = None
         if target == "ground":
-            from silverstar_fccg.hardware.cubemx_ground import GroundCubeInputs_Get, GroundUsbConfiguration_Validate
+            from silverstar_fccg.hardware.cubemx_ground import GroundCubeInputs_Get
 
             try:
                 ground_inputs = GroundCubeInputs_Get(root, actual_mcu)
-                GroundUsbConfiguration_Validate(root, ioc_text, actual_mcu)
             except ValueError as error:
                 raise CubeMxImportError(str(error)) from error
             except (OSError, UnicodeError) as error:
@@ -161,10 +158,6 @@ class CubeMxImporter:
             root / "Core" / "Src",
             root / "FATFS" / "App",
             root / "FATFS" / "Target",
-            root / "USB_DEVICE" / "App",
-            root / "USB_DEVICE" / "Target",
-            root / "Middlewares" / "ST" / "STM32_USB_Device_Library" / "Core" / "Src",
-            root / "Middlewares" / "ST" / "STM32_USB_Device_Library" / "Class" / "CDC" / "Src",
         )
         build_sources = tuple(
             f"{prefix}/{path.relative_to(root).as_posix()}"
@@ -176,16 +169,12 @@ class CubeMxImporter:
         if not generated_layout:
             warnings = (*warnings, "CubeMX .ioc imported; generate CubeMX project sources before firmware generation")
         # The imported tree is retained as an auditable snapshot, but only
-        # Controlled application/board-generated code and the CubeMX USB
-        # Device middleware enter the source graph. HAL, CMSIS, startup and
+        # selected application, peripheral and storage sources enter the source graph. HAL, CMSIS, startup and
         # linker ownership remains with the matched Platform plugin.
         include_dirs = tuple(
             f"{prefix}/{relative}"
             for relative in (
                 "Core/Inc", "FATFS/App", "FATFS/Target",
-                "USB_DEVICE/App", "USB_DEVICE/Target",
-                "Middlewares/ST/STM32_USB_Device_Library/Core/Inc",
-                "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc",
             )
             if (root / Path(*relative.split("/"))).is_dir()
         )

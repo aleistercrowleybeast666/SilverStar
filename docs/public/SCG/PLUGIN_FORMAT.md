@@ -1,5 +1,11 @@
 # Plugin Format
 
+### 地面站 PC 串口与实验能力
+
+地面站由目标的 UART 资源声明实际串口和波特率。支持 DMA 的 MCU 平台通过 `pc_uart_dma_adapter=stm32_hal_receive_to_idle` 声明对应 HAL 适配。共享字节流接口保留 UART 的会话、背压和重置语义。原生 MCU CDC 插件和候选导出不属于当前插件目录。
+
+实验磁力计相对旋转由可选组件 `silverstar.installation.mag_rotation` 及其声明依赖控制。工程明确选择此组件后，生成器验证同步 BMI088、双 DRDY、MMC5983MA、维护和日志条件；未选择时仍使用常规固定安装。
+
 当前 Device manifest 可声明 device_variants：一个真实芯片插件对应接口和运行 profile 的有限 overlay，物理芯片身份由公共 manifest 唯一声明。Radio Device 另声明物理频段、PHY 和模块 variant，详见[Device variants](../shared/DEVICE_VARIANTS.md)与[AIR Link](../shared/AIR_LINK.md)。以下 format 12 描述为历史上下文。
 
 ## 当前配置与版本

@@ -79,4 +79,3 @@
 | `protocol` | `silverstar.protocol.telemetry.air_m0` | `0.1.0` | [plugin.json](../../../apps/SCG/plugins/builtin/silverstar_protocol_telemetry_air_m0/plugin.json) |
 | `core` | `silverstar.sensor.register_bus` | `0.1.0` | [plugin.json](../../../apps/SCG/plugins/builtin/silverstar_sensor_register_bus/plugin.json) |
 | `core` | `silverstar.sensor.ubx` | `0.1.0` | [plugin.json](../../../apps/SCG/plugins/builtin/silverstar_ubx_protocol/plugin.json) |
-| `platform_api` | `silverstar.usb_cdc.stm32c071_mini` | `0.1.1` | [plugin.json](../../../apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/plugin.json) |

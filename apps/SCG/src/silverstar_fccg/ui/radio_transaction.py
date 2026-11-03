@@ -12,12 +12,14 @@ from silverstar_fccg.project.radio_transaction import (
     RadioTransaction_Commit, RadioTransaction_EndpointSet, RadioTransaction_IssuesGet)
 from silverstar_fccg.project.radio_variants import FlightRadioConfiguration_Get
 from silverstar_fccg.ui.pages.targets import AirLinkPage
+from silverstar_fccg.ui.committed_spin import NumericDrafts_Collect
 from silverstar_fccg.ui.widgets import StandardComboBox
 
 
 class RadioTransactionDialog(QDialog):
     def __init__(self, translator, model, catalog, parent=None):
         super().__init__(parent)
+        self.setProperty('collectNumericDrafts', True)
         self._draft = deepcopy(model)
         self._catalog = catalog
         self._result = None
@@ -175,6 +177,8 @@ class RadioTransactionDialog(QDialog):
                            or self._translator.Text_Get('radio.transaction.valid'))
 
     def accept(self):
+        if not NumericDrafts_Collect(self, self.error, self._translator.Text_Get('editor.invalid_number')):
+            return
         candidate = deepcopy(self._draft)
         # Read pending spin-box text before the modal transaction commits.
         for field, widget in self.editor.fields.items():

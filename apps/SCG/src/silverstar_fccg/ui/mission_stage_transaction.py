@@ -1,5 +1,6 @@
 """Modal workflow edit. Every child edits a private ProjectModel snapshot."""
 from copy import deepcopy
+from silverstar_fccg.ui.committed_spin import NumericDrafts_Collect
 from dataclasses import replace
 
 from PySide6.QtCore import Qt
@@ -19,8 +20,9 @@ from silverstar_fccg.project.mission_process import MissionProcess_Default, Miss
 
 class MissionStageTransactionDialog(QDialog):
     def __init__(self, translator, model, catalog, stage_id, parent=None, *, function_drafts=None,
-                 stage_only=False, function_id=None):
+                 stage_only=False, function_id=None, display=None):
         super().__init__(parent)
+        self.setProperty('collectNumericDrafts', True)
         self._original = deepcopy(model)
         self._draft = deepcopy(model)
         original_functions = {row['instance_id']: row for row in Functions_Derive(model, catalog)['functions']}
@@ -31,6 +33,8 @@ class MissionStageTransactionDialog(QDialog):
         self._initial_process = deepcopy(self._draft.mission_process)
         self._catalog = catalog
         self._result = None
+        self.next_function = None
+        self.record_editor = None
         self._translator = translator
         self._stage_only = stage_only
         self._function_id = function_id
@@ -150,12 +154,26 @@ class MissionStageTransactionDialog(QDialog):
         record_note = QLabel(text('workflow.transaction.shared'), records.body)
         record_note.setWordWrap(True)
         records_layout.addWidget(record_note)
-        self.record_checks = []
+        
         record_streams = (self._draft.logging_streams if not stage_only and
                           (not function_id or selected_function['category'] == 'recording') else ())
-        for stream in record_streams:
-            check = QCheckBox(stream.record, records); check.setChecked(stream.enabled)
-            records_layout.addWidget(check); self.record_checks.append(check)
+        if record_streams and display is None:
+            # A standalone inspector has no authoritative availability/cadence
+            # view. Keep these recorded choices read-only in that context.
+            for stream in record_streams:
+                check = QCheckBox(stream.record, records)
+                check.setChecked(stream.enabled)
+                check.setEnabled(False)
+                records_layout.addWidget(check)
+        if record_streams and display is not None:
+            from silverstar_fccg.ui.pages.components import FlightConfigurationPage
+            self.record_editor = FlightConfigurationPage(translator)
+            self.record_editor.setParent(self)
+            self.record_editor.hide()
+            self.record_editor.LoggingProtocolEnabled_Set(self._draft.protocols.get('logging') is not None)
+            self.record_editor.Streams_Set(display.logging_streams)
+            records_layout.addWidget(self.record_editor.logging_group)
+            self.record_editor.logging_group.show()
         if 'records' in self.groups:
             self.groups['records'].body.layout().addWidget(records)
         else:
@@ -168,7 +186,8 @@ class MissionStageTransactionDialog(QDialog):
                 if stage_id not in FunctionCoverage_Get(function, stage_ids, process):
                     continue
                 name = declarations.get(function['plugin_id'], {}).get('name', {}).get(translator.language, function['instance_id'])
-                button = QPushButton(name, references)
+                button = QPushButton(text('workflow.stage.apply_open_function', name=name), references)
+                button.setObjectName('stageReference_' + function['instance_id'])
                 button.clicked.connect(lambda _checked=False, identity=function['instance_id']:
                                        self._FunctionDialog_Open(identity, stage_id))
                 references_body.addWidget(button)
@@ -186,12 +205,10 @@ class MissionStageTransactionDialog(QDialog):
         buttons.accepted.connect(self.accept); buttons.rejected.connect(self.reject); root.addWidget(buttons)
 
     def _FunctionDialog_Open(self, identity, stage_id):
-        dialog = MissionStageTransactionDialog(self._translator, self._draft, self._catalog,
-            stage_id, self, function_id=identity, function_drafts=self._pending_function_drafts)
-        if dialog.exec() == QDialog.DialogCode.Accepted:
-            self._draft = dialog.Configuration_Get()
-            self._pending_function_drafts.pop(identity, None)
-        dialog.deleteLater()
+        self.next_function = identity
+        self.accept()
+        if self.result() != QDialog.DialogCode.Accepted:
+            self.next_function = None
 
     def _Group_Reveal(self, group):
         if isinstance(group, CollapsibleSection):
@@ -271,6 +288,8 @@ class MissionStageTransactionDialog(QDialog):
             break
 
     def accept(self):
+        if not NumericDrafts_Collect(self, self.error, self._translator.Text_Get('editor.invalid_number')):
+            return
         process = self.stage_editor.Process_Collect()
         if process is None: return
         candidate = deepcopy(self._draft)
@@ -315,9 +334,9 @@ class MissionStageTransactionDialog(QDialog):
             candidate.mission_process = None
         if self._original.mission_functions is None and candidate.mission_functions == Functions_Derive(self._original, self._catalog):
             candidate.mission_functions = None
-        if self.record_checks:
-            candidate.logging_streams = [replace(row, enabled=check.isChecked())
-                                        for row, check in zip(candidate.logging_streams, self.record_checks)]
+        if self.record_editor is not None:
+            from silverstar_fccg.ui.log_stream_draft import LoggingSnapshot_Apply
+            LoggingSnapshot_Apply(candidate, self.record_editor.Streams_Get())
         self._result = candidate
         super().accept()
 

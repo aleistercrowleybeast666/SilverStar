@@ -7,7 +7,7 @@ import pytest
 
 from silverstar_fccg.core.workspace import WorkspacePolicy
 from silverstar_fccg.hardware.cubemx import CubeMxImporter, CubeMxImportError
-from silverstar_fccg.hardware.cubemx_ground import GroundCubeInputs_Get, _UsbClock_Validate
+from silverstar_fccg.hardware.cubemx_ground import GroundCubeInputs_Get
 from silverstar_fccg.generator.source_graph import SourceGraph_Resolve
 from silverstar_fccg.generator.multi_target import _GroundModel_Get
 from silverstar_fccg.generator.assembler import ProjectAssembler, ProjectAssemblerError
@@ -98,17 +98,3 @@ def test_import_policy_is_allowed_for_ground_only(builtin_catalog):
                 source_policy="imported_tree_authoritative")
     assert PlatformCompatibilityErrors_Get(mcu, **args)
     assert not PlatformCompatibilityErrors_Get(mcu, allow_ground_imported=True, **args)
-
-
-@pytest.mark.parametrize("f1,clock,old,new", [
-    (True, "PLLSource = RCC_PLLSOURCE_HSE; HSEPredivValue = RCC_HSE_PREDIV_DIV1; PLLMUL = RCC_PLL_MUL9;", "MUL9", "MUL8"),
-    (False, "PLLSource = RCC_PLLSOURCE_HSE; PLLM = 8; PLLN = 336; PLLQ = 7;", "PLLQ = 7", "PLLQ = 8"),
-])
-def test_usb_clock_is_calculated_from_generated_hse_and_pll(tmp_path, f1, clock, old, new):
-    main = tmp_path / "Core/Src/main.c"
-    main.parent.mkdir(parents=True)
-    main.write_text(clock, encoding="utf8")
-    _UsbClock_Validate(tmp_path, "#define HSE_VALUE 8000000U", f1)
-    main.write_text(clock.replace(old, new), encoding="utf8")
-    with pytest.raises(ValueError, match="48000000"):
-        _UsbClock_Validate(tmp_path, "#define HSE_VALUE 8000000U", f1)

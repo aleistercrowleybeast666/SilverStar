@@ -101,11 +101,9 @@ def _UserSection_Insert(source: str, section: str, insertion: str, *, empty: boo
     return source[:match.start()] + start + "\n" + body + "\n" + end + source[match.end():]
 
 
-def _Main_Integrate(content: bytes, *, usb: bool = False) -> bytes:
+def _Main_Integrate(content: bytes) -> bytes:
     source = content.decode("utf-8-sig")
     source = _UserSection_Insert(source, "Includes", '#include "ground_bridge.h"', empty=True)
-    if usb:
-        source = _UserSection_Insert(source, "Includes", '#include "pc_byte_stream.h"', empty=False)
     source = _UserSection_Insert(
         source, "2", "  if (GroundBridge_Init() != GROUND_BRIDGE_OK) { Error_Handler(); }",
         empty=True,
@@ -165,42 +163,16 @@ def _VerifiedBoardMain_Prepare(content: bytes, board) -> bytes:
     return source.encode("utf-8")
 
 
-def _UsbCallback_Integrate(content: bytes) -> bytes:
-    source = content.decode("utf-8-sig")
-    source = _UserSection_Insert(
-        source, "INCLUDES", '#include "pc_byte_stream.h"', empty=False
-    ) if "/* USER CODE BEGIN INCLUDES */" in source else source.replace(
-        '#include "usbd_cdc_if.h"', '#include "usbd_cdc_if.h"\n#include "pc_byte_stream.h"', 1
-    )
-    marker = "/* USER CODE BEGIN 6 */"
-    if marker not in source or "CDC_Receive_FS" not in source:
-        raise ValueError("CubeMX USB CDC callback lacks a supported receive hook")
-    source = source.replace(marker, marker + "\n  PcByteStream_OnUsbReceive(Buf, (uint16_t)*Len);", 1)
-    for section in ("3", "4"):
-        # Init/DeInit exist in both old and new classic CDC templates. Refuse
-        # an unfamiliar template instead of silently losing lifecycle handling.
-        if f"/* USER CODE BEGIN {section} */" not in source:
-            raise ValueError("CubeMX USB CDC callback lacks a supported Init/DeInit hook")
-        marker = f"/* USER CODE BEGIN {section} */"
-        source = source.replace(marker, marker + "\n  PcByteStream_OnUsbReset();", 1)
-    return source.encode("utf-8")
 
 
-def _UsbConf_Integrate(content: bytes) -> bytes:
-    source = content.decode("utf-8-sig")
-    source = _UserSection_Insert(source, "Includes", '#include "pc_byte_stream.h"', empty=False)
-    for event in ("Reset", "DevDisconnected"):
-        pattern = r"(?m)^([ \t]*USBD_LL_" + event + r"\([^\n]+\);)[ \t]*\r?$"
-        source, count = re.subn(pattern, r"\1\n  PcByteStream_OnUsbReset();", source)
-        if count != 1:
-            raise ValueError(f"CubeMX USB configuration lacks one classic {event} lifecycle call")
-    return source.encode("utf-8")
 
 
 def _PcAdapter_Render(model: ProjectModel, family=None) -> str:
     ground = model.ground_target
     if ground.pc_interface == "uart":
         resources = {resource.resource_id: resource for resource in ground.hardware.resources}
+        if ground.pc_resource not in resources or resources[ground.pc_resource].kind != 'uart':
+            raise ValueError('Select a Ground UART resource before generating the PC transport')
         handle = str(resources[ground.pc_resource].metadata.get("handle", ""))
         if re.fullmatch(r"huart[0-9]+", handle) is None:
             raise ValueError("Ground UART handle is unavailable from CubeMX inventory")
@@ -253,8 +225,7 @@ uint32_t PcByteStream_OverflowCount_Get(void)
     return 0U;
 }}
 """ + PcUartSession_Render()
-    from silverstar_fccg.generator.ground_pc_usb_cdc import PcUsbCdc_Render
-    return PcUsbCdc_Render()
+    raise ValueError("Ground PC transport requires UART and its assigned serial resource; native USB CDC has been retired")
 
 
 def _Makefile_Render(
@@ -362,15 +333,12 @@ $(BUILD_DIR)/%.o: %.s
 def GroundFiles_Render(
     model: ProjectModel, catalog: PluginCatalog, internal_policy: WorkspacePolicy,
 ) -> dict[str, bytes]:
-    if (model.ground_target.hardware.mcu == "STM32C071FBP6" or
-            any(key in model.ground_target.hardware.inventory for key in
-            ("native_complete_classic_cdc", "native_ground_backend", "usb_ground_c071_native"))):
-        raise ValueError("Native complete classic CDC admission is experimental; "
-                         "runtime adapter/compiled closure/ABI/radio timing NOT PROVEN. "
-                         "Normal firmware generation is blocked; legacy import is unchanged.")
     issues = GroundTargetIssues_Get(model, catalog)
     if issues:
         raise ValueError("; ".join(f"{issue.code}: {issue.message}" for issue in issues))
+    from silverstar_fccg.project.retired_cdc import MIGRATION_NOTICE, NativeCdcMigration_Required
+    if NativeCdcMigration_Required(model):
+        raise ValueError(MIGRATION_NOTICE)
     ground = model.ground_target
     ground_model = _GroundModel_Get(model, catalog)
     catalog = catalog.ProjectView_Get(ground_model)
@@ -433,16 +401,7 @@ def GroundFiles_Render(
         files[main_path] = _VerifiedBoardMain_Prepare(
             files[main_path], catalog.Component_Get(ground.board)
         )
-    files[main_path] = _Main_Integrate(files[main_path], usb=ground.pc_interface == "usb_cdc")
-    if ground.pc_interface == "usb_cdc":
-        callback_paths = [path for path in files if path.endswith("/usbd_cdc_if.c")]
-        if len(callback_paths) != 1:
-            raise ValueError("Ground CubeMX hardware has no unique usbd_cdc_if.c")
-        files[callback_paths[0]] = _UsbCallback_Integrate(files[callback_paths[0]])
-        conf_paths = [path for path in files if path.endswith("/usbd_conf.c")]
-        if len(conf_paths) != 1:
-            raise ValueError("Ground CubeMX hardware has no unique usbd_conf.c")
-        files[conf_paths[0]] = _UsbConf_Integrate(files[conf_paths[0]])
+    files[main_path] = _Main_Integrate(files[main_path])
 
     files["Generated/Inc/project_resources.h"] = _ResourceHeader_Render(
         ground_model, catalog
@@ -479,8 +438,13 @@ def GroundFiles_Render(
           if "/Adapter/" not in path and not path.startswith(("FATFS/", "Middlewares/Third_Party/FatFs/"))),
         "Generated/Inc", "Common/Inc", "Interfaces/Inc", "Platform/Inc",
     ]))
+    gpio_defines = ()
+    if ground_model.mcu_family == 'silverstar.mcu_family.stm32f4':
+        from silverstar_fccg.generator.render import _PlatformGpioContextCount_Get
+        gpio_defines = (f'SILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT={_PlatformGpioContextCount_Get(ground_model, catalog)}U',)
     defines = tuple(dict.fromkeys([
         "SILVERSTAR_AIR_LINK_ENABLED=1", *base_graph.defines,
+        *gpio_defines,
         # Ground transfers bounded AIR frames; the established HAL option still
         # accommodates a full 255-byte radio payload plus its command header.
         "AIR_LINK_HAL_BUFFER_SIZE=260",
@@ -492,9 +456,6 @@ def GroundFiles_Render(
     if missing_sources:
         raise ValueError("Ground source graph has missing files: " + ", ".join(missing_sources))
     required_irqs = ground.hardware.inventory.get("ground_cubemx_base", {}).get("required_irq_handlers", [])
-    if ground.pc_interface == "usb_cdc":
-        required_irqs = list(dict.fromkeys([*required_irqs,
-            "USB_LP_CAN1_RX0_IRQHandler" if family.component_id.endswith("stm32f1") else "OTG_FS_IRQHandler"]))
     graph = {
         "sources": sources, "asm_sources": base_graph.asm_sources,
         "include_dirs": includes, "defines": defines,
@@ -567,6 +528,9 @@ def TargetGeneration_Apply(
     progress_callback: GenerationProgressCallback | None = None,
 ) -> TargetGenerationResult:
     scope = TargetScope(scope)
+    from silverstar_fccg.project.retired_cdc import MIGRATION_NOTICE, NativeCdcMigration_Required
+    if NativeCdcMigration_Required(model):
+        raise ValueError(MIGRATION_NOTICE)
     output_policy = WorkspacePolicy(project_root)
     root = output_policy.root
     project_file = root / PROJECT_FILENAME

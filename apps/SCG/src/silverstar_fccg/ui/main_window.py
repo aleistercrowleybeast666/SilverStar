@@ -3,12 +3,8 @@ from __future__ import annotations
 import json
 import hashlib
 from silverstar_fccg.project.mission_profile import MissionProfile_Build, MissionProfile_Write
-from silverstar_fccg.app.usb_ground_flow import (
-    UsbGroundBound_Is, UsbGroundFlow_Import, UsbGroundFlow_Run,
-    UsbGroundOutput_Get, UsbGroundQuality_Run, UsbGroundRefresh_Inspect, RELEASE_NOTICE, RELEASE_STATUS,
-    UsbGroundReimportIssue_Get, REIMPORT_STATUS,
-)
-from silverstar_fccg.app.native_ground import NativeGroundProjectImportResult
+from silverstar_fccg.project.retired_cdc import NativeCdcMigration_Required
+from silverstar_fccg.ui.log_stream_draft import LoggingSnapshot_Apply
 import logging
 import os
 import re
@@ -232,12 +228,6 @@ class MainWindow(HardwareEditingActions, QMainWindow):
         self._theme = theme if theme in {"light", "dark"} else "light"
         self._thread_pool = QThreadPool.globalInstance()
         self._active_worker: FunctionWorker | None = None
-        self._usb_refresh_epoch = 0
-        self._usb_refresh_pending = None
-        self._usb_refresh_worker = None
-        self._usb_refresh_timer = QTimer(self)
-        self._usb_refresh_timer.setSingleShot(True)
-        self._usb_refresh_timer.timeout.connect(self._UsbGroundRefresh_Start)
         self._worker_result_callback: Callable[[Any], None] | None = None
         self._worker_error_callback: Callable[[object], None] | None = None
         self._worker_line_callback: Callable[[str], None] | None = None
@@ -584,10 +574,10 @@ class MainWindow(HardwareEditingActions, QMainWindow):
             self._LogDecoderProfileExport_Request
         )
         self.build_page.detectionRequested.connect(self._Toolchains_Detect)
+        self.build_page.optionsRequested.connect(self._BuildOptions_Open)
         self.build_page.issueActivated.connect(lambda issue:self._ValidationIssue_Navigate((issue,)))
         self.build_page.actionRequested.connect(self._Build_Request)
         self.build_page.memoryLayoutChanged.connect(self._MemoryLayout_Change)
-        self.build_page.native_usb.actionRequested.connect(self._NativeUsb_Request)
         self.devices_page.featureTierChanged.connect(self._FeatureTier_Change)
         self.devices_page.optionalResourceChanged.connect(self._OptionalResource_Change)
         self.plugin_manager_dialog.panel.installRequested.connect(
@@ -836,7 +826,6 @@ class MainWindow(HardwareEditingActions, QMainWindow):
 
     def _Project_Display(self, display: _ProjectDisplayState) -> None:
         self._ValidationIssue_Clear()
-        self.build_page.native_usb.Reference_Set(display.model.native_usb)
         self._displaying_model = True
         try:
             self.algorithm_parameters_page.Configuration_Set(
@@ -936,7 +925,6 @@ class MainWindow(HardwareEditingActions, QMainWindow):
             else:
                 self.algorithm_parameters_page.RatePlan_Set(rate_plan)
             project_root = self._project_root
-            usb_reimport_issue = UsbGroundReimportIssue_Get(display.model)
             current_targets = {target: bool(project_root and ProjectTargetGenerated_IsCurrent(
                 display.model, self._service.catalog, project_root / directory, target))
                 for target, directory in (('flight', 'Flight_Controller'), ('ground', 'Ground_Station'))}
@@ -944,11 +932,9 @@ class MainWindow(HardwareEditingActions, QMainWindow):
                 flight_generated=bool(
                     project_root and (project_root / "Flight_Controller" / "Makefile").is_file()
                 ),
-                ground_configured=display.model.ground_target.hardware.mode != "unselected" and not usb_reimport_issue,
-                usb_candidate=UsbGroundBound_Is(display.model),
+                ground_configured=display.model.ground_target.hardware.mode != "unselected",
                 ground_generated=bool(
-                    project_root and not UsbGroundBound_Is(display.model)
-                    and (project_root / "Ground_Station" / "Makefile").is_file()
+                    project_root and (project_root / "Ground_Station" / "Makefile").is_file()
                 ),
                 flight_current=current_targets['flight'], ground_current=current_targets['ground'],
             )
@@ -958,11 +944,6 @@ class MainWindow(HardwareEditingActions, QMainWindow):
             )
             self.build_page.QualityResults_Set(display.quality_results)
             self._TargetQualityResults_Refresh(display.model, current_targets=current_targets)
-            if UsbGroundBound_Is(display.model):
-                self.build_page.target_status_labels['ground'].setText(
-                    REIMPORT_STATUS if usb_reimport_issue else RELEASE_STATUS)
-                self.build_page.target_status_labels['ground'].setToolTip(
-                    usb_reimport_issue or RELEASE_NOTICE)
             self.power10_export_button.setEnabled(
                 self._project_root is not None and Power10Report_Load(self._project_root / FLIGHT_DIRECTORY) is not None)
             self.legacy_migration_button.setVisible(bool(ReleaseCompatibilityIssues_Get(display.model)))
@@ -974,6 +955,7 @@ class MainWindow(HardwareEditingActions, QMainWindow):
             from silverstar_fccg.project.validation import Project_Validate
             checks=Project_Validate(display.model,self._service.catalog)
             self.build_page.Issues_Set(checks.issues)
+            self.workflow_page._display = display
             self.workflow_page.Configuration_Set(display.model,self._service.catalog)
             self._HeaderProject_Refresh(display.model)
         finally:
@@ -993,16 +975,10 @@ class MainWindow(HardwareEditingActions, QMainWindow):
             page.generate_button.setToolTip(
                 self._translator.Text_Get('target.generation.ready') if result.ready else
                 '\n'.join(issue.message for issue in result.issues))
-            if not result.ready and not (target == 'ground' and UsbGroundBound_Is(model)):
+            if not result.ready:
                 label = self.build_page.target_status_labels[target]
                 label.setText(self._translator.Text_Get('target.generation.blocked'))
                 label.setToolTip('\n'.join(issue.message for issue in result.issues))
-        # Native USB remains its separately labeled private candidate workflow.
-        if UsbGroundBound_Is(model):
-            issue = UsbGroundReimportIssue_Get(model)
-            self.ground_target_page.generate_button.setEnabled(
-                not issue and self._active_worker is None)
-            self.ground_target_page.generate_button.setToolTip(issue or RELEASE_NOTICE)
         self.hardware_workspace.Readiness_Set(readiness)
 
     def _LoggingViews_Get(
@@ -1136,28 +1112,7 @@ class MainWindow(HardwareEditingActions, QMainWindow):
             )
         )
 
-    @staticmethod
-    def _LoggingSnapshot_Apply(
-        model: ProjectModel,
-        stream_views: tuple[LoggingStreamView, ...],
-    ) -> None:
-        if model.build.logging_profile != "all_streams":
-            return
-        if stream_views:
-            retained = {stream.record: stream for stream in model.logging_streams}
-            model.logging_streams = [
-                retained[stream.stream_id]
-                if ((not FeatureTier_LogRecordAllowed(model, stream.stream_id) or
-                     FeatureTier_LogRecordRequired(model, stream.stream_id)) and stream.stream_id in retained)
-                else LogStreamConfig(
-                    record=stream.stream_id,
-                    enabled=stream.enabled,
-                    policy=stream.policy,
-                    decimation=stream.decimation,
-                    period_us=stream.period_us,
-                )
-                for stream in stream_views
-            ]
+    _LoggingSnapshot_Apply = staticmethod(LoggingSnapshot_Apply)
 
     def _LoggingState_Apply(self, model: ProjectModel) -> None:
         self._LoggingSnapshot_Apply(
@@ -1594,6 +1549,7 @@ class MainWindow(HardwareEditingActions, QMainWindow):
             dialog.deleteLater()
             return
         candidate, import_path = dialog.Configuration_Get(), dialog.ImportPath_Get()
+        open_radio = dialog.open_shared_radio
         dialog.deleteLater()
         def publish(configuration):
             if self._project_root != project or self._model.Dictionary_Get() != original:
@@ -1602,20 +1558,19 @@ class MainWindow(HardwareEditingActions, QMainWindow):
             def apply(current):
                 for field in fields(configuration):
                     setattr(current, field.name, deepcopy(getattr(configuration, field.name)))
-            self._ProjectConfiguration_Change(apply, logging_availability_changed=True,
-                                              include_workflow_drafts=False)
+            if configuration.Dictionary_Get() != original:
+                result = self._ProjectConfiguration_Change(apply, logging_availability_changed=True,
+                                                          include_workflow_drafts=False)
+                if result is None:
+                    return
+            if open_radio:
+                QTimer.singleShot(0, self, self._AirLinkTransaction_Open)
 
         if not import_path:
             publish(candidate)
             return
 
         def imported(result):
-            if isinstance(result, NativeGroundProjectImportResult):
-                if self._project_root != project or self._model.Dictionary_Get() != original:
-                    self._Error_Show(self._translator.Text_Get('hardware.editor.stale'))
-                    return
-                self._GroundCubeMxImport_Complete(result)
-                return
             if target == 'flight':
                 candidate.board = ''
                 candidate.hardware = result.hardware
@@ -1626,12 +1581,12 @@ class MainWindow(HardwareEditingActions, QMainWindow):
                     result.inventory, vendor='STM32', provider='stm32_cubemx'), self._service.catalog)
                 candidate.ground_target = replace(candidate.ground_target,
                     mcu=match.selected.component_id, board='', hardware=result.hardware,
-                    resource_assignments={}, pc_resource='')
+                    resource_assignments={}, pc_resource='',
+                    pc_interface='usb_cdc' if NativeCdcMigration_Required(self._model)
+                    else candidate.ground_target.pc_interface)
             publish(candidate)
 
         def importing(context):
-            if target == 'ground' and candidate.ground_target.pc_interface == 'usb_cdc':
-                return UsbGroundFlow_Import(self._service, Path(import_path), candidate, context)
             return self._service.CubeMxProject_Import(Path(import_path), candidate,
                 risk_acknowledged=True, target=target)
         self.Task_Run(importing, imported)
@@ -1689,34 +1644,13 @@ class MainWindow(HardwareEditingActions, QMainWindow):
         if not selected:
             return
         model, project, service = deepcopy(self._model), self._project_root, self._service
-        if model.ground_target.pc_interface != 'usb_cdc':
-            # Preserve the established UART/legacy callback API.
-            self.Task_Run(lambda context: service.CubeMxProject_Import(
-                Path(selected), model, risk_acknowledged=True, target="ground"),
-                self._GroundCubeMxImport_Complete)
-            return
         def complete(result):
-            if self._UsbGroundRequest_Current(model, project):
+            if self._ProjectSnapshot_Current(model, project):
                 self._GroundCubeMxImport_Complete(result)
-        def error(exception):
-            if self._UsbGroundRequest_Current(model, project):
-                self._Error_Show(exception)
-        self.Task_Run(
-            lambda context: UsbGroundFlow_Import(service, Path(selected), model, context),
-            complete, error,
-        )
+        self.Task_Run(lambda context: service.CubeMxProject_Import(
+            Path(selected), model, risk_acknowledged=True, target="ground"), complete)
 
     def _GroundCubeMxImport_Complete(self, result) -> None:
-        if isinstance(result, NativeGroundProjectImportResult):
-            # The backend returns the complete bound model. Reconciliation through
-            # legacy MCU selection would clear resources or invent CDC capability.
-            display = self._ProjectDisplayState_Build(result.model)
-            self._Project_Display(display)
-            self._model = result.model
-            self._project_state = ProjectLifecycleState.DIRTY
-            self._generation_plan = None
-            self.status_label.setText(RELEASE_STATUS)
-            return
         from silverstar_fccg.hardware.platform import (
             DetectedMcuFacts_FromInventory,
             PlatformMatch_Resolve,
@@ -1811,9 +1745,9 @@ class MainWindow(HardwareEditingActions, QMainWindow):
     def _WorkflowTransaction_Apply(self, configuration):
         def Apply(candidate):
             for key in ('mission_process', 'mission_functions', 'algorithm_parameters', 'logging_streams',
-                        'capability_source_overrides'):
+                        'capability_source_overrides', 'strategies', 'modes', 'mode_parameters', 'alignment', 'protocols', 'base_components'):
                 setattr(candidate, key, deepcopy(getattr(configuration, key)))
-        self._ProjectConfiguration_Change(Apply, include_workflow_drafts=False)
+        self._ProjectConfiguration_Change(Apply, include_workflow_drafts=False, logging_availability_changed=True)
 
     def _MissionProcessChanges_Apply(self):
         if not self._mission_process_pending:return
@@ -1860,29 +1794,30 @@ class MainWindow(HardwareEditingActions, QMainWindow):
         QTimer.singleShot(0,self,lambda:self._FunctionAdd_Apply(plugin_id))
 
     def _FunctionAdd_Apply(self,plugin_id):
-        from silverstar_fccg.project.mission_functions import Functions_Derive,FunctionsCanonical_Get,Function_Create
-        existing=next((row for row in Functions_Derive(self._model,self._service.catalog)['functions'] if row['plugin_id']==plugin_id),None)
+        from silverstar_fccg.project.mission_functions import Functions_Derive, FunctionsCanonical_Get
+        current = Functions_Derive(self._model, self._service.catalog)
+        existing = next((row for row in current['functions'] if row['plugin_id'] == plugin_id), None)
         if existing:
-            for editor in self.workflow_page.function_editors:editor.Reveal(existing['instance_id'])
+            self.workflow_page._FunctionDialog_Open(existing['instance_id'])
             return
-        def change(candidate):
-            manifest=self._service.catalog.Component_Get(plugin_id)
-            existing=Functions_Derive(candidate,self._service.catalog)
+        candidate = deepcopy(self._model)
+        manifest = self._service.catalog.Component_Get(plugin_id)
+        try:
             if manifest.selection is not None and manifest.selection.slot in candidate.strategies:
-                candidate.strategies[manifest.selection.slot]=plugin_id
+                candidate.strategies[manifest.selection.slot] = plugin_id
             elif plugin_id not in candidate.ComponentIds_Get():
                 raise ValueError(self._translator.Text_Get('workflow.function.select_owner'))
-            reconciled=self._service.ProjectConfiguration_Reconcile(candidate).model
-            canonical=FunctionsCanonical_Get(reconciled,self._service.catalog)
-            function=next((row for row in canonical['functions'] if row['plugin_id']==plugin_id),None)
-            if function is None:raise ValueError(self._translator.Text_Get('workflow.function.select_owner'))
-            values=[row for row in existing['functions'] if row['instance_id']!=function['instance_id']]
-            values.append(function)
-            candidate.strategies=reconciled.strategies
-            candidate.algorithm_parameters=reconciled.algorithm_parameters
-            candidate.base_components=reconciled.base_components
-            candidate.mission_functions={'schema_version':1,'functions':values}
-        self._ProjectConfiguration_Change(change)
+            candidate = self._service.ProjectConfiguration_Reconcile(candidate).model
+            canonical = FunctionsCanonical_Get(candidate, self._service.catalog)
+            function = next((row for row in canonical['functions'] if row['plugin_id'] == plugin_id), None)
+            if function is None:
+                raise ValueError(self._translator.Text_Get('workflow.function.select_owner'))
+            rows = [row for row in current['functions'] if row['instance_id'] != function['instance_id']]
+            candidate.mission_functions = {**current, 'functions': [*rows, function]}
+        except (ValueError, TypeError) as error:
+            self._Error_Show(error)
+            return
+        self.workflow_page._FunctionDialog_Open(function['instance_id'], candidate)
 
     def _Function_Remove(self,identity):
         def change(candidate):
@@ -2106,9 +2041,6 @@ class MainWindow(HardwareEditingActions, QMainWindow):
 
     def _GenerateOrApply_Request(self) -> None:
         if not self._WorkflowDrafts_Commit(): return
-        if UsbGroundBound_Is(self._model):
-            self._UsbGroundOperation_Request('generate')
-            return
         self._ProjectModel_Sync()
         if self._project_root is None:
             self._Error_Show(self._translator.Text_Get("error.output_required"))
@@ -2351,8 +2283,8 @@ class MainWindow(HardwareEditingActions, QMainWindow):
                 if key[0] in issue.message and key[1] in issue.message),None)
             if matching:
                 self.workflow_page.Parameters_Select(matching[0])
-                target=self.algorithm_parameters_page.editors[matching]
-            else:target=self.workflow_page.parameters
+                target=self.workflow_page.function_buttons['parameters']
+            else:target=self.workflow_page.option_buttons['algorithms']
         elif code.startswith("device"):
             target = next(
                 iter(self.devices_page.device_combos.values()),
@@ -2478,7 +2410,7 @@ class MainWindow(HardwareEditingActions, QMainWindow):
             source_bytes = descriptor.read_bytes()
             loaded = self._service.Project_Open(path)
             # Keep legacy navigation until the user deliberately creates a copy.
-            if ReleaseCompatibilityIssues_Get(loaded) or UsbGroundBound_Is(loaded):
+            if ReleaseCompatibilityIssues_Get(loaded) or NativeCdcMigration_Required(loaded):
                 reconciled = loaded
             else:
                 opening = deepcopy(loaded)
@@ -2900,14 +2832,20 @@ class MainWindow(HardwareEditingActions, QMainWindow):
             return True
         return False
 
+    def _BuildOptions_Open(self):
+        from silverstar_fccg.ui.build_options_dialog import BuildOptionsDialog
+        original = self._model.Dictionary_Get()
+        dialog = BuildOptionsDialog(self._translator, self._model, self.build_page._tools, self)
+        if dialog.exec() == QDialog.DialogCode.Accepted and self._model.Dictionary_Get() == original:
+            paths, layout = dialog.paths, dialog.memory.currentData()
+            if paths != self._model.build.tool_paths or layout != self._model.build.memory_layout:
+                def change(candidate):
+                    candidate.build = replace(candidate.build, tool_paths=paths, memory_layout=layout)
+                self._ProjectConfiguration_Change(change)
+        dialog.deleteLater()
+
     def _Targets_Generate(self, action_text: str) -> None:
         if not self._WorkflowDrafts_Commit(): return
-        if UsbGroundBound_Is(self._model) and action_text in {'generate_ground', 'generate_all'}:
-            if action_text == 'generate_all':
-                self._Error_Show('USB candidate and Flight generation require their separate existing target actions')
-                return
-            self._UsbGroundOperation_Request('generate')
-            return
         if self._active_worker is not None:
             return
         if self.algorithm_parameters_page.alignment_editor.draft_dirty:
@@ -3129,11 +3067,6 @@ class MainWindow(HardwareEditingActions, QMainWindow):
         for target in ("flight", "ground"):
             records = ()
             states = {}
-            if target == 'ground' and UsbGroundBound_Is(displayed):
-                self._UsbGroundRefresh_Request(displayed)
-                continue
-            if target == 'ground':
-                self._UsbGroundRefresh_Invalidate()
             try:
                 root, model = self._TargetQualityInputs_Get(target)
                 records = self._service.QualityResults_Get(root)
@@ -3163,113 +3096,19 @@ class MainWindow(HardwareEditingActions, QMainWindow):
                     self._translator.Text_Get("quality.target.unavailable"))
             self.build_page.TargetQualityResults_Set(target, records, states)
 
-    def _NativeUsb_Request(self, action: str) -> None:
-        if self._active_worker is not None:
-            self._Error_Show(self._translator.Text_Get("error.background_task_active"))
-            return
-        self._ProjectModel_Sync()
-        model, project, service = deepcopy(self._model), self._project_root, self._service
-        panel = self.build_page.native_usb
-        zh = self._translator.language == "zh_CN"
-        if action == "inspect":
-            selected = QFileDialog.getExistingDirectory(self, "选择完整 CubeMX CDC 工程" if zh else "Select complete CubeMX CDC project")
-            if not selected:
-                return
-            operation = lambda context: service.NativeUsb_Inspect(Path(selected), context)
-        elif model.native_usb is None:
-            return
-        elif action == "prepare":
-            selected, _filter = QFileDialog.getSaveFileName(self, "选择新的独立工程目录" if zh else "Choose a new separate project directory")
-            if not selected:
-                return
-            operation = lambda context: service.NativeUsb_Prepare(model.native_usb, Path(selected), context)
-        elif action in {"compile", "analyze"}:
-            operation = lambda context: service.NativeUsb_Build(model.native_usb, model.build.gcc_path, context,
-                analyzer=action == "analyze")
-        elif action == "refresh":
-            operation = lambda context: service.NativeUsb_Refresh(model.native_usb, context)
-        else:
-            return
-        def complete(outcome):
-            if self._UsbGroundRequest_Current(model, project):
-                self._model.native_usb = outcome.reference
-                self._project_state = ProjectLifecycleState.DIRTY
-                self._generation_plan = None
-                panel.Outcome_Set(outcome)
-                self._HeaderProject_Refresh()
-        def error(exception):
-            if self._UsbGroundRequest_Current(model, project):
-                panel.Failure_Set(exception)
-                self._Error_Show(exception)
-        self.Task_Run(operation, complete, error, line_callback=self.build_page.BuildDetailLog_Append)
 
-    def _UsbGroundRequest_Current(self, model, project) -> bool:
+    def _ProjectSnapshot_Current(self, model, project) -> bool:
         return (not self._close_after_worker and project == self._project_root and
                 model.Dictionary_Get() == self._model.Dictionary_Get())
 
-    def _UsbGroundRefresh_Invalidate(self) -> None:
-        self._usb_refresh_epoch += 1
-        self._usb_refresh_pending = None
-        self._usb_refresh_timer.stop()
-        if self._usb_refresh_worker is not None:
-            self._usb_refresh_worker.Worker_Cancel()
 
-    def _UsbGroundRefresh_Request(self, model) -> None:
-        self._UsbGroundRefresh_Invalidate()
-        self.build_page.TargetQualityResults_Set('ground', (),
-            {task: 'unavailable' for task in QUALITY_TASKS})
-        issue = UsbGroundReimportIssue_Get(model)
-        self.build_page.target_quality_status['ground'].setText(issue or RELEASE_STATUS)
-        self.build_page.target_quality_status['ground'].setToolTip(issue or RELEASE_NOTICE)
-        if issue:
-            return
-        if self._project_root is None or self._close_after_worker:
-            return
-        self._usb_refresh_pending = (self._usb_refresh_epoch,
-            deepcopy(model), self._project_root)
-        # Owned Qt timer: no queued lambda can start work after destruction.
-        self._usb_refresh_timer.start(0)
 
-    def _UsbGroundRefresh_Start(self) -> None:
-        if self._active_worker is not None or self._close_after_worker:
-            return
-        request = self._usb_refresh_pending
-        if request is None:
-            return
-        self._usb_refresh_pending = None
-        epoch, model, project = request
-        service = self._service
-        def inspect(context):
-            return UsbGroundRefresh_Inspect(service, model, project, context)
-        def complete(result):
-            if epoch != self._usb_refresh_epoch or not self._UsbGroundRequest_Current(model, project):
-                return
-            self.build_page.Targets_Set(
-                flight_generated=(project / FLIGHT_DIRECTORY / 'Makefile').is_file(),
-                ground_configured=model.ground_target.hardware.mode != "unselected",
-                ground_generated=result.output is not None, usb_candidate=True)
-            states = result.states if result.output is not None else {
-                task: 'unavailable' for task in QUALITY_TASKS}
-            self.build_page.TargetQualityResults_Set('ground', result.records, states)
-            self.build_page.target_status_labels['ground'].setText(RELEASE_STATUS)
-            self.build_page.target_quality_status['ground'].setText(RELEASE_STATUS)
-            self.build_page.target_quality_status['ground'].setToolTip(RELEASE_NOTICE +
-                ('\n' + result.error if result.error else ''))
-        def error(exception):
-            if epoch == self._usb_refresh_epoch and self._UsbGroundRequest_Current(model, project):
-                self.build_page.target_quality_status['ground'].setToolTip(RELEASE_NOTICE + '\n' + str(exception))
-        if self.Task_Run(inspect, complete, error):
-            self._usb_refresh_worker = self._active_worker
 
     def _QualityChecks_Request(self, action: BuildAction) -> None:
         if self._active_worker is not None:
             self._Error_Show(self._translator.Text_Get("error.background_task_active"))
             return
         selected = self.build_page.QualityTargets_Get()
-        issue = UsbGroundReimportIssue_Get(self._model)
-        if 'ground' in selected and issue:
-            self._Error_Show(issue)
-            return
         self._TargetQualityResults_Refresh()
         if not selected:
             self.status_label.setText(self._translator.Text_Get("quality.target.none"))
@@ -3299,33 +3138,30 @@ class MainWindow(HardwareEditingActions, QMainWindow):
         self.build_page.BuildDetailLog_Set("")
         self._active_quality_targets = selected
         self._active_quality_action = action.value
-        usb_model, usb_project = deepcopy(self._model), self._project_root
+        requested_model, requested_project = deepcopy(self._model), self._project_root
         def quality_run(context):
             outcomes = []
             for target, root, model in inputs:
                 context.Cancel_RaiseIfRequested()
-                if target == 'ground' and UsbGroundBound_Is(usb_model):
-                    outcomes.append(UsbGroundQuality_Run(self._service, usb_model, usb_project, action, context))
-                    continue
-                if not ProjectTargetGenerated_IsCurrent(usb_model, self._service.catalog, root, target):
+                if not ProjectTargetGenerated_IsCurrent(requested_model, self._service.catalog, root, target):
                     outcome = TargetQualityResult(target, root, model, None, '', 0.0,
                         'Target inputs or plugin payload changed; regenerate this target before checking')
                     context.Line_Report('FCCG_QUALITY|' + json.dumps(dict(target=target, kind='done',
                         succeeded=False, error=outcome.error)))
                 else:
                     outcome = QualityBatch_Run(((target, root, model),), action, context).targets[0]
-                    if not ProjectTargetGenerated_IsCurrent(usb_model, self._service.catalog, root, target):
+                    if not ProjectTargetGenerated_IsCurrent(requested_model, self._service.catalog, root, target):
                         outcome = replace(outcome, input_sha256='',
                             error='Target provenance changed during check; result is NOT PROVEN')
                 outcomes.append(outcome)
             return QualityBatchResult(tuple(outcomes))
         def complete(batch):
-            if self._UsbGroundRequest_Current(usb_model, usb_project):
+            if self._ProjectSnapshot_Current(requested_model, requested_project):
                 self._QualityChecks_Complete(batch)
             else:
                 self._active_quality_targets = ()
         def error(exception):
-            if self._UsbGroundRequest_Current(usb_model, usb_project):
+            if self._ProjectSnapshot_Current(requested_model, requested_project):
                 self._QualityChecks_Error(exception)
             else:
                 self._active_quality_targets = ()
@@ -3394,9 +3230,6 @@ class MainWindow(HardwareEditingActions, QMainWindow):
             if outcome.target not in unavailable and outcome.succeeded:
                 self.build_page.TargetQualityProgress_Set(outcome.target, 1.0,
                     self._translator.Text_Get("quality.target.completed"), succeeded=True)
-        if UsbGroundBound_Is(self._model) and any(outcome.target == 'ground' for outcome in batch.targets):
-            self.build_page.target_quality_status['ground'].setText(RELEASE_STATUS)
-            self.build_page.target_quality_status['ground'].setToolTip(RELEASE_NOTICE)
         self._project_state = ProjectLifecycleState.READY if batch.succeeded else ProjectLifecycleState.ERROR
         self.status_label.setText(self._translator.Text_Get("quality.target.completed" if batch.succeeded else "quality.target.failed"))
         self.power10_export_button.setEnabled(self._project_root is not None and
@@ -3409,95 +3242,9 @@ class MainWindow(HardwareEditingActions, QMainWindow):
         self._project_state = ProjectLifecycleState.ERROR
         self._active_quality_targets = ()
 
-    def _UsbGroundOperation_Request(self, operation: str) -> None:
-        if self._active_worker is not None:
-            return
-        issue = UsbGroundReimportIssue_Get(self._model)
-        if issue:
-            self._Error_Show(issue)
-            return
-        if self.algorithm_parameters_page.alignment_editor.draft_dirty:
-            self._Error_Show(self._translator.Text_Get('alignment.confirm_before_generation'))
-            return
-        self._ProjectModel_Sync()
-        if self._project_root is None:
-            self._Project_SaveAs()
-            if self._project_root is None:
-                return
-        self.build_page.BuildLog_Set('')
-        model, project = deepcopy(self._model), self._project_root
-        def complete(result):
-            if not self._UsbGroundRequest_Current(model, project):
-                return
-            self._Project_Refresh()
-            self.status_label.setText(f'USB {result.result.value}; formal release BLOCKED')
-            self.build_page.BuildLog_Append(RELEASE_NOTICE)
-        def error(exception):
-            if self._UsbGroundRequest_Current(model, project):
-                self._Build_Error(exception)
-        service = self._service
-        self.Task_Run(lambda context: UsbGroundFlow_Run(service, model, project, operation, context),
-                      complete, error, line_callback=self._BuildLine_Append)
 
-    def _UsbGroundTargetAction_Request(self, operation: str) -> None:
-        issue = UsbGroundReimportIssue_Get(self._model)
-        if issue:
-            self._Error_Show(issue)
-            return
-        if operation == 'build':
-            self._UsbGroundOperation_Request('build')
-            return
-        if self._project_root is None:
-            self._Error_Show(self._translator.Text_Get('error.generate_before_open'))
-            return
-        model, project, service = deepcopy(self._model), self._project_root, self._service
-        def validate(context):
-            output = UsbGroundOutput_Get(service, model, project,
-                compiled=operation == 'artifact_check', task_context=context)
-            context.Cancel_RaiseIfRequested()
-            if operation == 'clean':
-                policy = WorkspacePolicy(output)
-                build = policy.Path_Resolve('build', allow_root=False)
-                if build.exists():
-                    policy.Tree_Remove(build)
-                WorkspacePolicy(project).Path_Resolve('.fccg/usb-candidate.json', allow_root=False).unlink()
-            return output
-        def complete(output):
-            if not self._UsbGroundRequest_Current(model, project):
-                return
-            if operation == 'open_folder':
-                if not QDesktopServices.openUrl(QUrl.fromLocalFile(str(output))):
-                    raise ValueError('Could not open USB candidate folder')
-            elif operation == 'open_vscode':
-                candidates = [shutil.which('Code.exe')]
-                for variable, suffix in (('LOCALAPPDATA', 'Programs/Microsoft VS Code/Code.exe'),
-                                         ('ProgramFiles', 'Microsoft VS Code/Code.exe'),
-                                         ('ProgramFiles(x86)', 'Microsoft VS Code/Code.exe')):
-                    base = os.environ.get(variable)
-                    if base:
-                        candidates.append(str(Path(base) / suffix))
-                executable = next((path for path in candidates if path and Path(path).is_file()), None)
-                if not executable:
-                    raise ValueError('VS Code executable unavailable; use Open Folder')
-                subprocess.Popen([executable, str(output)], shell=False,
-                    creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0)
-            elif operation == 'artifact_check':
-                self.build_page.BuildLog_Append(f'USB exact-model native.elf + analyzer ELF and receipt hashes verified: {output}\n' + RELEASE_NOTICE)
-                self.status_label.setText('USB software artifacts verified; formal release BLOCKED')
-            elif operation == 'clean':
-                self._Project_Refresh()
-                self.status_label.setText('USB compiler products cleaned; generate/build a new candidate')
-            else:
-                raise ValueError('Unknown USB target action')
-        def error(exception):
-            if self._UsbGroundRequest_Current(model, project):
-                self._Error_Show(exception)
-        self.Task_Run(validate, complete, error)
 
     def _TargetAction_Request(self, action_text: str) -> None:
-        if action_text.startswith('ground_') and UsbGroundBound_Is(self._model):
-            self._UsbGroundTargetAction_Request(action_text.removeprefix('ground_'))
-            return
         target, separator, operation = action_text.partition("_")
         if not separator or target not in {"flight", "ground"}:
             return
@@ -4367,11 +4114,6 @@ class MainWindow(HardwareEditingActions, QMainWindow):
             outcome = ("cancelled", None, "")
             self.status_label.setText(self._translator.Text_Get("status.task_cancelled"))
             self._QualityChecks_Cancel()
-        is_usb_refresh = worker is self._usb_refresh_worker and worker is not None
-        if is_usb_refresh:
-            self._usb_refresh_worker = None
-        elif outcome is None or outcome[0] != 'result':
-            self._UsbGroundRefresh_Invalidate()
         self._active_worker = None
         self._worker_result_callback = None
         self._worker_error_callback = None
@@ -4426,8 +4168,6 @@ class MainWindow(HardwareEditingActions, QMainWindow):
         self._progress_hide_timer.start(350)
         if closing:
             QTimer.singleShot(0, self, self.close)
-        else:
-            self._UsbGroundRefresh_Start()
 
     def _TaskOutcome_Dispatch(
         self,
@@ -4460,7 +4200,6 @@ class MainWindow(HardwareEditingActions, QMainWindow):
             self.progress_bar.setVisible(False)
 
     def _Task_Cancel(self) -> None:
-        self._UsbGroundRefresh_Invalidate()
         worker = self._active_worker or self._completion_worker
         if worker is not None:
             worker.Worker_Cancel()
@@ -4483,7 +4222,6 @@ class MainWindow(HardwareEditingActions, QMainWindow):
             *self.build_page.action_buttons.values(),
             *self.build_page.quality_target_checks.values(),
             self.build_page.detect_button,
-            *self.build_page.native_usb.buttons.values(),
         )
         if not enabled:
             self._action_enabled_snapshot = {
@@ -4722,12 +4460,10 @@ class MainWindow(HardwareEditingActions, QMainWindow):
                 event.ignore()
                 return
             self._close_after_worker = True
-            self._UsbGroundRefresh_Invalidate()
             self._active_worker.Worker_Cancel()
             event.ignore()
             return
         if not self._WorkspaceDrafts_DiscardConfirm():
             event.ignore();return
-        self._UsbGroundRefresh_Invalidate()
         self._close_after_worker = True
         event.accept()

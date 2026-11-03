@@ -156,12 +156,6 @@ PcByteStreamWriteResult PcByteStream_Write(const uint8_t *data,
     return PC_BYTE_STREAM_WRITE_OK;
 }
 
-void PcByteStream_OnUsbReceive(const uint8_t *data, uint16_t length)
-{
-    (void)data;
-    (void)length;
-}
-
 uint32_t PcByteStream_OverflowCount_Get(void)
 {
     return s_rx_overflow_count;

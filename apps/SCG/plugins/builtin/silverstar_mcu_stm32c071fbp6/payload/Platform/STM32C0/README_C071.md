@@ -1,1 +1,1 @@
-Exact STM32C071FBP6 mini Ground USB software profile. HAL/CMSIS/startup/linker are exclusively from the complete native CubeMX input. Pinned classic CDC is separately owned and audited. Hardware and USB suspend power remain unverified.
+STM32C071FBP6 device identity and memory metadata are retained for historical project recognition. Current Ground UART firmware generation supports the specified F103C8T6 and F407VET6 configurations.

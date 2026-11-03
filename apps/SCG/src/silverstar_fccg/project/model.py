@@ -2339,6 +2339,9 @@ def ProjectModel_Load(path: Path) -> ProjectModel:
 
 
 def ProjectModel_Save(model: ProjectModel, path: Path, policy: WorkspacePolicy) -> Path:
+    from silverstar_fccg.project.retired_cdc import MIGRATION_NOTICE, NativeCdcMigration_Required
+    if NativeCdcMigration_Required(model):
+        raise ProjectModelError(MIGRATION_NOTICE)
     serialized = json.dumps(
         model.Dictionary_Get(), ensure_ascii=False, indent=2, sort_keys=False
     ) + "\n"

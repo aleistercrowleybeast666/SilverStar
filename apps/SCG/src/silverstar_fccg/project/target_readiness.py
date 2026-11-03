@@ -35,6 +35,9 @@ def TargetReadiness_Get(model, catalog, target: str) -> TargetReadiness:
     if hardware.mode == 'unselected' or (hardware.mode == 'custom' and not hardware.snapshot_id):
         issues.insert(0, AirLinkIssue('TARGET_HARDWARE_UNBOUND',
                                     'Select a PCB or import the complete CubeMX project.'))
+    from silverstar_fccg.project.retired_cdc import MIGRATION_NOTICE, NativeCdcMigration_Required
+    if NativeCdcMigration_Required(model):
+        issues.insert(0, AirLinkIssue('GROUND_NATIVE_CDC_RETIRED', MIGRATION_NOTICE))
     # Preserve the canonical issues without depending on different issue classes
     # having the same dataclass equality semantics.
     unique = {(issue.code, issue.message): issue for issue in issues}

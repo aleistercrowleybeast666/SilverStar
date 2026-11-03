@@ -50,6 +50,7 @@
     ]
   },
   "metadata": {
+    "pc_uart_dma_adapter": "stm32_hal_receive_to_idle",
     "vendor": "STM32",
     "family": "STM32F4",
     "source_policy": "plugin_payload_authoritative",

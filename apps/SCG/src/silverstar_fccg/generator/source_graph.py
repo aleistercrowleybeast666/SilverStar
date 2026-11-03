@@ -102,8 +102,11 @@ def _ModuleProviderActive_Is(
 
 
 def SourceGraph_Resolve(model: ProjectModel, catalog: PluginCatalog) -> SourceGraph:
-    if model.mcu == "silverstar.mcu.stm32c071fbp6" and model.core != "silverstar.core.ground.0_1_0":
-        raise SourceGraphError("Exact C071 mini backend supports only its private Ground recipe")
+    from silverstar_fccg.project.retired_cdc import MIGRATION_NOTICE, NativeCdcHardware_Is
+    if NativeCdcHardware_Is(model.hardware):
+        raise SourceGraphError(MIGRATION_NOTICE)
+    if model.mcu == "silverstar.mcu.stm32c071fbp6":
+        raise SourceGraphError('C071 historical target has no supported UART generation profile')
     catalog = catalog.ProjectView_Get(model)
     ground_base = model.hardware.inventory.get("ground_cubemx_base", {})
     imported_ground = (
