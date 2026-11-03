@@ -1,0 +1,769 @@
+{
+  "scope": "Simulated input and SD media, generated logger and FatFs, production FLP CLI",
+  "log_sha256": "942358074e96ccaaefb1921c75d19f5f83d7ba24b0c76b448fcb3b5d1f16ce68",
+  "package_sha256": "2895ad3f1c9d8c7933567e7632776aa1b996c9d2f526622f07a752cd019cd305",
+  "before_after_input_hashes_checked": true,
+  "cli_exit": 0,
+  "record_counts": {
+    "EVENT": 54,
+    "ALIGNMENT_RESULT": 1,
+    "CALIBRATION_RESULT": 1,
+    "DECODER_PROFILE_DESCRIPTOR": 1,
+    "SYSTEM_CONFIG": 1,
+    "DEVICE_DESCRIPTOR": 12,
+    "ALGORITHM_DESCRIPTOR": 4,
+    "LOG_STREAM_DESCRIPTOR": 43,
+    "MISSION_CONFIG": 2,
+    "INITIAL_STATE": 1,
+    "STATS": 41,
+    "IMU_CORRECTED": 15466,
+    "GNSS_NATIVE": 7734,
+    "BARO_NATIVE": 7734,
+    "MAG_NATIVE": 7696,
+    "ESTIMATOR": 1288,
+    "MISSION_SNAPSHOT_IDENTITY": 1
+  },
+  "snapshot_header": {
+    "base_instance": 0,
+    "mission_id": 1,
+    "snapshot_sequence": 1,
+    "profile_id": 12,
+    "configuration_digest": 2592854741,
+    "firmware_version": "0.1.3.0",
+    "build_tag": "SILV0103",
+    "imu_rate_hz": 200,
+    "mechanization_subsamples": 2,
+    "navigation_rate_hz": 100,
+    "imu_source_instance": 0,
+    "gnss_source_instance": 0,
+    "calibration_generation": 1,
+    "imu_correction_hash": 652087222,
+    "mag_calibration_generation": 0,
+    "mag_calibration_set_hash": 105389361,
+    "commit_generation": 1
+  },
+  "calibration": {
+    "generation": 1,
+    "mode": 0,
+    "ready": 1,
+    "axes": [
+      {
+        "accel_bias_mps2": 0.0,
+        "accel_scale": 1.0,
+        "gyro_bias_radps": 0.0,
+        "gyro_scale": 1.0
+      },
+      {
+        "accel_bias_mps2": 0.0,
+        "accel_scale": 1.0,
+        "gyro_bias_radps": 0.0,
+        "gyro_scale": 1.0
+      },
+      {
+        "accel_bias_mps2": 0.0,
+        "accel_scale": 1.0,
+        "gyro_bias_radps": 0.0,
+        "gyro_scale": 1.0
+      }
+    ],
+    "mag_generation": 0,
+    "mag_hash": 0,
+    "mag_set_hash": 105389361,
+    "mag_instances": [],
+    "active_installation": null
+  },
+  "parameters": [
+    {
+      "key_hash": 262437877,
+      "value_bits": 1092385505,
+      "kind": 1,
+      "value": 9.779999732971191
+    },
+    {
+      "key_hash": 1474794593,
+      "value_bits": 2,
+      "kind": 2,
+      "value": 2
+    },
+    {
+      "key_hash": 1563491054,
+      "value_bits": 1092385505,
+      "kind": 1,
+      "value": 9.779999732971191
+    },
+    {
+      "key_hash": 1281966829,
+      "value_bits": 1082130432,
+      "kind": 1,
+      "value": 4.0
+    },
+    {
+      "key_hash": 1097413020,
+      "value_bits": 1082130432,
+      "kind": 1,
+      "value": 4.0
+    },
+    {
+      "key_hash": 1013524925,
+      "value_bits": 1091567616,
+      "kind": 1,
+      "value": 9.0
+    },
+    {
+      "key_hash": 939707313,
+      "value_bits": 1048576000,
+      "kind": 1,
+      "value": 0.25
+    },
+    {
+      "key_hash": 755153504,
+      "value_bits": 1048576000,
+      "kind": 1,
+      "value": 0.25
+    },
+    {
+      "key_hash": 1208149217,
+      "value_bits": 1048576000,
+      "kind": 1,
+      "value": 0.25
+    },
+    {
+      "key_hash": 4186839035,
+      "value_bits": 1069547520,
+      "kind": 1,
+      "value": 1.5
+    },
+    {
+      "key_hash": 4069395702,
+      "value_bits": 1069547520,
+      "kind": 1,
+      "value": 1.5
+    },
+    {
+      "key_hash": 3918397131,
+      "value_bits": 1073741824,
+      "kind": 1,
+      "value": 2.0
+    },
+    {
+      "key_hash": 3391182423,
+      "value_bits": 1069547520,
+      "kind": 1,
+      "value": 1.5
+    },
+    {
+      "key_hash": 1866815545,
+      "value_bits": 1075838976,
+      "kind": 1,
+      "value": 2.5
+    },
+    {
+      "key_hash": 2084115006,
+      "value_bits": 1041865114,
+      "kind": 1,
+      "value": 0.15000000596046448
+    },
+    {
+      "key_hash": 1706279869,
+      "value_bits": 1075838976,
+      "kind": 1,
+      "value": 2.5
+    },
+    {
+      "key_hash": 3206099656,
+      "value_bits": 1087656428,
+      "kind": 1,
+      "value": 6.635000228881836
+    },
+    {
+      "key_hash": 2485689837,
+      "value_bits": 1093484413,
+      "kind": 1,
+      "value": 10.82800006866455
+    },
+    {
+      "key_hash": 2917230265,
+      "value_bits": 1091787817,
+      "kind": 1,
+      "value": 9.210000038146973
+    },
+    {
+      "key_hash": 2236604848,
+      "value_bits": 1096617558,
+      "kind": 1,
+      "value": 13.815999984741211
+    },
+    {
+      "key_hash": 1992641778,
+      "value_bits": 1094026527,
+      "kind": 1,
+      "value": 11.345000267028809
+    },
+    {
+      "key_hash": 1292273063,
+      "value_bits": 1099047109,
+      "kind": 1,
+      "value": 16.266000747680664
+    },
+    {
+      "key_hash": 3312098096,
+      "value_bits": 1092616192,
+      "kind": 1,
+      "value": 10.0
+    },
+    {
+      "key_hash": 3183818994,
+      "value_bits": 1071644672,
+      "kind": 1,
+      "value": 1.75
+    },
+    {
+      "key_hash": 2992753289,
+      "value_bits": 300,
+      "kind": 2,
+      "value": 300
+    },
+    {
+      "key_hash": 238412024,
+      "value_bits": 0,
+      "kind": 2,
+      "value": 0
+    },
+    {
+      "key_hash": 3298287804,
+      "value_bits": 270,
+      "kind": 2,
+      "value": 270
+    },
+    {
+      "key_hash": 2318156661,
+      "value_bits": 0,
+      "kind": 2,
+      "value": 0
+    },
+    {
+      "key_hash": 1530442920,
+      "value_bits": 1,
+      "kind": 2,
+      "value": 1
+    },
+    {
+      "key_hash": 887611805,
+      "value_bits": 120,
+      "kind": 2,
+      "value": 120
+    },
+    {
+      "key_hash": 999686747,
+      "value_bits": 1092616192,
+      "kind": 1,
+      "value": 10.0
+    },
+    {
+      "key_hash": 1582493460,
+      "value_bits": 1082130432,
+      "kind": 1,
+      "value": 4.0
+    },
+    {
+      "key_hash": 1173760606,
+      "value_bits": 2000,
+      "kind": 2,
+      "value": 2000
+    },
+    {
+      "key_hash": 2132618202,
+      "value_bits": 5000,
+      "kind": 2,
+      "value": 5000
+    },
+    {
+      "key_hash": 2597296482,
+      "value_bits": 8000,
+      "kind": 2,
+      "value": 8000
+    },
+    {
+      "key_hash": 1342567872,
+      "value_bits": 1082130432,
+      "kind": 1,
+      "value": 4.0
+    },
+    {
+      "key_hash": 1727428447,
+      "value_bits": 1086324736,
+      "kind": 1,
+      "value": 6.0
+    },
+    {
+      "key_hash": 954534873,
+      "value_bits": 1067030938,
+      "kind": 1,
+      "value": 1.2000000476837158
+    },
+    {
+      "key_hash": 354672552,
+      "value_bits": 1,
+      "kind": 2,
+      "value": 1
+    },
+    {
+      "key_hash": 1145008485,
+      "value_bits": 1,
+      "kind": 2,
+      "value": 1
+    },
+    {
+      "key_hash": 1154531394,
+      "value_bits": 1,
+      "kind": 2,
+      "value": 1
+    },
+    {
+      "key_hash": 1534266890,
+      "value_bits": 300,
+      "kind": 2,
+      "value": 300
+    }
+  ],
+  "exact_decoder_parameter_names": {
+    "262437877": {
+      "component": "silverstar.algorithm.ins.coning2_sculling2",
+      "name": "gravity_mps2",
+      "unit": "m/s^2"
+    },
+    "1474794593": {
+      "component": "silverstar.algorithm.ins.coning2_sculling2",
+      "name": "mechanization_aggregation",
+      "unit": "samples"
+    },
+    "1563491054": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "gravity_mps2",
+      "unit": "m/s^2"
+    },
+    "1281966829": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "p0_position_e",
+      "unit": "m^2"
+    },
+    "1097413020": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "p0_position_n",
+      "unit": "m^2"
+    },
+    "1013524925": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "p0_position_u",
+      "unit": "m^2"
+    },
+    "939707313": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "p0_velocity_e",
+      "unit": "m^2/s^2"
+    },
+    "755153504": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "p0_velocity_n",
+      "unit": "m^2/s^2"
+    },
+    "1208149217": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "p0_velocity_u",
+      "unit": "m^2/s^2"
+    },
+    "4186839035": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "process_accel_std_e",
+      "unit": "m/s^2"
+    },
+    "4069395702": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "process_accel_std_n",
+      "unit": "m/s^2"
+    },
+    "3918397131": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "process_accel_std_u",
+      "unit": "m/s^2"
+    },
+    "3391182423": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "gnss_position_std_horizontal",
+      "unit": "m"
+    },
+    "1866815545": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "gnss_position_std_vertical",
+      "unit": "m"
+    },
+    "2084115006": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "gnss_velocity_std",
+      "unit": "m/s"
+    },
+    "1706279869": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "baro_std_m",
+      "unit": "m"
+    },
+    "3206099656": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "nis_1d_soft",
+      "unit": "1"
+    },
+    "2485689837": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "nis_1d_hard",
+      "unit": "1"
+    },
+    "2917230265": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "nis_2d_soft",
+      "unit": "1"
+    },
+    "2236604848": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "nis_2d_hard",
+      "unit": "1"
+    },
+    "1992641778": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "nis_3d_soft",
+      "unit": "1"
+    },
+    "1292273063": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "nis_3d_hard",
+      "unit": "1"
+    },
+    "3312098096": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "nis_max_r_scale",
+      "unit": "1"
+    },
+    "3183818994": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "gnss_velocity_vertical_scale",
+      "unit": "1"
+    },
+    "2992753289": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "gnss_reacquire_outage_ms",
+      "unit": "ms"
+    },
+    "238412024": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "gnss_position_measurement_delay_ms",
+      "unit": "ms"
+    },
+    "3298287804": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "gnss_velocity_measurement_delay_ms",
+      "unit": "ms"
+    },
+    "2318156661": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "baro_measurement_delay_ms",
+      "unit": "ms"
+    },
+    "1530442920": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "gnss_integrity_enable",
+      "unit": "1"
+    },
+    "887611805": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "gnss_integrity_max_gap_ms",
+      "unit": "ms"
+    },
+    "999686747": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "gnss_integrity_error_threshold_m",
+      "unit": "m"
+    },
+    "1582493460": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "gnss_integrity_recovery_threshold_m",
+      "unit": "m"
+    },
+    "1173760606": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "gnss_integrity_suspect_duration_ms",
+      "unit": "ms"
+    },
+    "2132618202": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "gnss_integrity_reject_duration_ms",
+      "unit": "ms"
+    },
+    "2597296482": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "gnss_integrity_recovery_duration_ms",
+      "unit": "ms"
+    },
+    "1342567872": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "gnss_integrity_position_r_scale",
+      "unit": "1"
+    },
+    "1727428447": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "gnss_integrity_hacc_max_m",
+      "unit": "m"
+    },
+    "954534873": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "gnss_integrity_sacc_max_mps",
+      "unit": "m/s"
+    },
+    "354672552": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "nis_soft_enabled",
+      "unit": "1"
+    },
+    "1145008485": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "nis_hard_enabled",
+      "unit": "1"
+    },
+    "1154531394": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "fusion_timing_mode",
+      "unit": "1"
+    },
+    "1534266890": {
+      "component": "silverstar.algorithm.estimator.kf6",
+      "name": "fusion_horizon_ms",
+      "unit": "ms"
+    }
+  },
+  "devices": [
+    {
+      "descriptor": 1,
+      "physical": 6,
+      "device_class": 1,
+      "instance": 0,
+      "driver": 1,
+      "flags": 15,
+      "capabilities": 1,
+      "rate": 200,
+      "driver_hash": 2918196354,
+      "model_hash": 1399398777
+    },
+    {
+      "descriptor": 2,
+      "physical": 17,
+      "device_class": 2,
+      "instance": 0,
+      "driver": 1,
+      "flags": 9,
+      "capabilities": 2,
+      "rate": 25,
+      "driver_hash": 3344033936,
+      "model_hash": 2833875767
+    },
+    {
+      "descriptor": 3,
+      "physical": 6,
+      "device_class": 3,
+      "instance": 0,
+      "driver": 1,
+      "flags": 5,
+      "capabilities": 8,
+      "rate": 200,
+      "driver_hash": 2918196354,
+      "model_hash": 1399398777
+    },
+    {
+      "descriptor": 4,
+      "physical": 6,
+      "device_class": 5,
+      "instance": 0,
+      "driver": 1,
+      "flags": 5,
+      "capabilities": 16,
+      "rate": 200,
+      "driver_hash": 2918196354,
+      "model_hash": 1399398777
+    },
+    {
+      "descriptor": 5,
+      "physical": 23,
+      "device_class": 6,
+      "instance": 0,
+      "driver": 1,
+      "flags": 1,
+      "capabilities": 32,
+      "rate": 0,
+      "driver_hash": 1013773754,
+      "model_hash": 3299270692
+    },
+    {
+      "descriptor": 6,
+      "physical": 24,
+      "device_class": 7,
+      "instance": 0,
+      "driver": 1,
+      "flags": 1,
+      "capabilities": 64,
+      "rate": 0,
+      "driver_hash": 2458191957,
+      "model_hash": 3366581252
+    },
+    {
+      "descriptor": 7,
+      "physical": 26,
+      "device_class": 8,
+      "instance": 0,
+      "driver": 1,
+      "flags": 1,
+      "capabilities": 128,
+      "rate": 50,
+      "driver_hash": 2088064833,
+      "model_hash": 4012411728
+    },
+    {
+      "descriptor": 8,
+      "physical": 27,
+      "device_class": 9,
+      "instance": 0,
+      "driver": 1,
+      "flags": 5,
+      "capabilities": 256,
+      "rate": 0,
+      "driver_hash": 4029564373,
+      "model_hash": 981160821
+    },
+    {
+      "descriptor": 9,
+      "physical": 27,
+      "device_class": 10,
+      "instance": 0,
+      "driver": 1,
+      "flags": 5,
+      "capabilities": 256,
+      "rate": 0,
+      "driver_hash": 1840251920,
+      "model_hash": 3447489699
+    },
+    {
+      "descriptor": 10,
+      "physical": 28,
+      "device_class": 11,
+      "instance": 0,
+      "driver": 1,
+      "flags": 7,
+      "capabilities": 512,
+      "rate": 0,
+      "driver_hash": 2687566292,
+      "model_hash": 821951161
+    },
+    {
+      "descriptor": 11,
+      "physical": 28,
+      "device_class": 12,
+      "instance": 0,
+      "driver": 1,
+      "flags": 5,
+      "capabilities": 512,
+      "rate": 0,
+      "driver_hash": 2345255758,
+      "model_hash": 946914129
+    },
+    {
+      "descriptor": 12,
+      "physical": 0,
+      "device_class": 13,
+      "instance": 0,
+      "driver": 1,
+      "flags": 9,
+      "capabilities": 0,
+      "rate": 1000000,
+      "driver_hash": 372190356,
+      "model_hash": 2917174658
+    }
+  ],
+  "algorithms": [
+    {
+      "descriptor": 1,
+      "algorithm_class": 1,
+      "instance": 0,
+      "algorithm": 4,
+      "flags": 9,
+      "configuration_digest": 2592789205,
+      "name_hash": 1905111985
+    },
+    {
+      "descriptor": 2,
+      "algorithm_class": 2,
+      "instance": 0,
+      "algorithm": 0,
+      "flags": 9,
+      "configuration_digest": 2592723669,
+      "name_hash": 2050197373
+    },
+    {
+      "descriptor": 3,
+      "algorithm_class": 3,
+      "instance": 0,
+      "algorithm": 0,
+      "flags": 9,
+      "configuration_digest": 2592658133,
+      "name_hash": 2553059079
+    },
+    {
+      "descriptor": 4,
+      "algorithm_class": 4,
+      "instance": 0,
+      "algorithm": 1,
+      "flags": 9,
+      "configuration_digest": 2593116885,
+      "name_hash": 2177099094
+    }
+  ],
+  "verified_sources": [
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\root\\fatfs-final\\valid-input\\snap00.0",
+      "sha256": "571e4f95a9ac23eca96fdcb8d7457d90df6d0432e24a3381a8add5db0bcb46ee",
+      "generation": 1,
+      "instance": 0
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\root\\fatfs-final\\valid-input\\snap01.0",
+      "sha256": "386713de784f743b7801c392db2c9becfb5539d9bba05ee66aad7e9e0587273d",
+      "generation": 1,
+      "instance": 1
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\root\\fatfs-final\\valid-input\\snap02.0",
+      "sha256": "68e19ba72f2e88e2b0ede9bbff943647293a1f3e46b0e8e5f06bce64e287529a",
+      "generation": 1,
+      "instance": 2
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\root\\fatfs-final\\valid-input\\snap03.0",
+      "sha256": "59c68c4547ed30855d21903d8eee3aa0c0aabcdc17ef26e5727aeab925060fb0",
+      "generation": 1,
+      "instance": 3
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\root\\fatfs-final\\valid-input\\snap04.0",
+      "sha256": "e6187ab5b5a41f40da694b2a215b3dc0a7ec27162c933b878552fad6bd5a5100",
+      "generation": 1,
+      "instance": 4
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\root\\fatfs-final\\valid-input\\snap05.0",
+      "sha256": "cd7737915c3c8ea69600a72bbe60d8d289792fe35d999525a680b3430eb5f540",
+      "generation": 1,
+      "instance": 5
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\root\\fatfs-final\\valid-input\\snap06.0",
+      "sha256": "20b11c51de92635a206321e7bbe06b2abaf8196418a851bf33cf97e3f750c6d2",
+      "generation": 1,
+      "instance": 6
+    }
+  ]
+}

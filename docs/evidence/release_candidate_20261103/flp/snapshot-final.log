@@ -1,0 +1,444 @@
+EEEEEEEEE.......EEEEEE.E.EEEE....EE                                      [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_preferences_preserve_other_settings_and_bound_search _
+
+item = <Function test_preferences_preserve_other_settings_and_bound_search>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+_ ERROR at setup of test_manual_blank_decoder_requests_exact_discovery_and_custom_still_requires_package _
+
+item = <Function test_manual_blank_decoder_requests_exact_discovery_and_custom_still_requires_package>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+_ ERROR at setup of test_normal_gui_routes_directories_to_actual_exact_coordinator _
+
+item = <Function test_normal_gui_routes_directories_to_actual_exact_coordinator>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+_ ERROR at setup of test_missing_explicit_manual_package_cannot_silently_use_good_cache _
+
+item = <Function test_missing_explicit_manual_package_cannot_silently_use_good_cache>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+_ ERROR at setup of test_project_gui_recovers_missing_source_by_exact_cache_and_configured_directory _
+
+item = <Function test_project_gui_recovers_missing_source_by_exact_cache_and_configured_directory>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+____ ERROR at setup of test_failed_exact_open_keeps_log_in_manual_chooser _____
+
+item = <Function test_failed_exact_open_keeps_log_in_manual_chooser>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+__ ERROR at setup of test_open_single_log_automatically_finds_exact_package ___
+
+item = <Function test_open_single_log_automatically_finds_exact_package>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+_ ERROR at setup of test_wrong_or_broken_package_keeps_selected_log_for_repair[decoder_profile_hash_mismatch] _
+
+item = <Function test_wrong_or_broken_package_keeps_selected_log_for_repair[decoder_profile_hash_mismatch]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+_ ERROR at setup of test_wrong_or_broken_package_keeps_selected_log_for_repair[decoder_package_zip_invalid] _
+
+item = <Function test_wrong_or_broken_package_keeps_selected_log_for_repair[decoder_package_zip_invalid]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+___ ERROR at setup of test_complete_recorded_snapshot_and_exact_identity[2] ___
+
+item = <Function test_complete_recorded_snapshot_and_exact_identity[2]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+___ ERROR at setup of test_complete_recorded_snapshot_and_exact_identity[3] ___
+
+item = <Function test_complete_recorded_snapshot_and_exact_identity[3]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+___ ERROR at setup of test_complete_recorded_snapshot_and_exact_identity[4] ___
+
+item = <Function test_complete_recorded_snapshot_and_exact_identity[4]>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+_ ERROR at setup of test_snapshot_parser_rejects_truncation_unknown_version_and_nonfinite _
+
+item = <Function test_snapshot_parser_rejects_truncation_unknown_version_and_nonfinite>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+_ ERROR at setup of test_real_log_coordinator_attaches_snapshot_and_preserves_log_on_bad_object _
+
+item = <Function test_real_log_coordinator_attaches_snapshot_and_preserves_log_on_bad_object>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+_ ERROR at setup of test_active_snapshot_keeps_recorded_identity_and_checks_actual_baseline _
+
+item = <Function test_active_snapshot_keeps_recorded_identity_and_checks_actual_baseline>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+_ ERROR at setup of test_verified_actual_object_decoder_shows_structured_readonly_tabs _
+
+item = <Function test_verified_actual_object_decoder_shows_structured_readonly_tabs>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+_ ERROR at setup of test_active_installation_presents_recorded_matrices_and_archive_identity _
+
+item = <Function test_active_installation_presents_recorded_matrices_and_archive_identity>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+________ ERROR at setup of test_legacy12_and_new13_members_and_hashes _________
+
+item = <Function test_legacy12_and_new13_members_and_hashes>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+_ ERROR at setup of test_object_catalog_tamper_detected_even_after_checksums_refresh _
+
+item = <Function test_object_catalog_tamper_detected_even_after_checksums_refresh>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+________ ERROR at setup of test_old_schema_cannot_smuggle_sixth_member ________
+
+item = <Function test_old_schema_cannot_smuggle_sixth_member>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+____________ ERROR at setup of test_actual_scg_generator_to_flp13 _____________
+
+item = <Function test_actual_scg_generator_to_flp13>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+_ ERROR at setup of test_automatic13_exact_cache_then_project_directory_and_explicit_priority _
+
+item = <Function test_automatic13_exact_cache_then_project_directory_and_explicit_priority>
+
+    @pytest.hookimpl(wrapper=True, tryfirst=True)
+    def pytest_runtest_setup(item):
+        """
+        Hook called after before test setup starts, to start capturing exceptions
+        as early as possible.
+        """
+        capture_enabled = _is_exception_capture_enabled(item)
+        if capture_enabled:
+            item.qt_exception_capture_manager = _QtExceptionCaptureManager()
+            item.qt_exception_capture_manager.start()
+>       result = yield
+                 ^^^^^
+E       PermissionError: [WinError 5] �ܾ����ʡ�: 'C:\\Users\\chdxm\\AppData\\Local\\Temp\\pytest-of-chdxm'
+
+.venv\Lib\site-packages\pytestqt\plugin.py:178: PermissionError
+=========================== short test summary info ===========================
+ERROR apps\FLP\tests\test_decoder_directory_gui.py::test_preferences_preserve_other_settings_and_bound_search
+ERROR apps\FLP\tests\test_decoder_directory_gui.py::test_manual_blank_decoder_requests_exact_discovery_and_custom_still_requires_package
+ERROR apps\FLP\tests\test_decoder_directory_gui.py::test_normal_gui_routes_directories_to_actual_exact_coordinator
+ERROR apps\FLP\tests\test_decoder_directory_gui.py::test_missing_explicit_manual_package_cannot_silently_use_good_cache
+ERROR apps\FLP\tests\test_decoder_directory_gui.py::test_project_gui_recovers_missing_source_by_exact_cache_and_configured_directory
+ERROR apps\FLP\tests\test_decoder_directory_gui.py::test_failed_exact_open_keeps_log_in_manual_chooser
+ERROR apps\FLP\tests\test_decoder_directory_gui.py::test_open_single_log_automatically_finds_exact_package
+ERROR apps\FLP\tests\test_decoder_directory_gui.py::test_wrong_or_broken_package_keeps_selected_log_for_repair[decoder_profile_hash_mismatch]
+ERROR apps\FLP\tests\test_decoder_directory_gui.py::test_wrong_or_broken_package_keeps_selected_log_for_repair[decoder_package_zip_invalid]
+ERROR apps\FLP\tests\test_mission_snapshot_view.py::test_complete_recorded_snapshot_and_exact_identity[2]
+ERROR apps\FLP\tests\test_mission_snapshot_view.py::test_complete_recorded_snapshot_and_exact_identity[3]
+ERROR apps\FLP\tests\test_mission_snapshot_view.py::test_complete_recorded_snapshot_and_exact_identity[4]
+ERROR apps\FLP\tests\test_mission_snapshot_view.py::test_snapshot_parser_rejects_truncation_unknown_version_and_nonfinite
+ERROR apps\FLP\tests\test_mission_snapshot_view.py::test_real_log_coordinator_attaches_snapshot_and_preserves_log_on_bad_object
+ERROR apps\FLP\tests\test_mission_snapshot_view.py::test_active_snapshot_keeps_recorded_identity_and_checks_actual_baseline
+ERROR apps\FLP\tests\test_mission_snapshot_gui.py::test_verified_actual_object_decoder_shows_structured_readonly_tabs
+ERROR apps\FLP\tests\test_mission_snapshot_gui.py::test_active_installation_presents_recorded_matrices_and_archive_identity
+ERROR apps\FLP\tests\test_object_catalog13.py::test_legacy12_and_new13_members_and_hashes
+ERROR apps\FLP\tests\test_object_catalog13.py::test_object_catalog_tamper_detected_even_after_checksums_refresh
+ERROR apps\FLP\tests\test_object_catalog13.py::test_old_schema_cannot_smuggle_sixth_member
+ERROR apps\FLP\tests\test_object_catalog13.py::test_actual_scg_generator_to_flp13
+ERROR apps\FLP\tests\test_object_catalog13.py::test_automatic13_exact_cache_then_project_directory_and_explicit_priority
+13 passed, 22 errors in 12.48s

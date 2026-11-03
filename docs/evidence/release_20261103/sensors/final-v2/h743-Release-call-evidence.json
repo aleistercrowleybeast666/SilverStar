@@ -1,0 +1,358 @@
+{
+  "model": "h743",
+  "configuration": "Release",
+  "elf_sha256": "85edc2ec6b78dac6a009438076efdbe5a1cdc598f681cecf150d86ef6ec1e087",
+  "tools": "D:/Arm GNU Toolchain/14.3 rel1/bin",
+  "scope": "Exact linked symbol/IRQ evidence and representative direct paths. Each .su is one local frame. Missing indirect, archive, exception and preemption closure precludes a strict bound.",
+  "vectors": {
+    "EXTI2_IRQHandler": {
+      "irq": 8,
+      "thumb_address": "0x80501c5"
+    },
+    "EXTI3_IRQHandler": {
+      "irq": 9,
+      "thumb_address": "0x80501cd"
+    }
+  },
+  "persistent_symbols": [
+    "2401b660 00000060 b s_edge_us",
+    "240340e8 00000188 b s_rotation"
+  ],
+  "paths": {
+    "AppTask_Device -> SystemMagRotation_MagObserve": [
+      {
+        "symbol": "AppTask_Device",
+        "frame": {
+          "source": "APP/Src/device_task.c",
+          "bytes": 280,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "SystemStartup_ProcessDevices",
+        "frame": {
+          "source": "System/Src/system_startup.c",
+          "bytes": 272,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "SystemMagnetometer_Process",
+        "frame": {
+          "source": "System/Src/system_source_selector.c",
+          "bytes": 24,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "ProjectMagnetometerInstance_Process",
+        "frame": {
+          "source": "Generated/Src/project_device_instances.c",
+          "bytes": 0,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "Mmc5983maI2cMagnetometerInstance_Process",
+        "frame": {
+          "source": "Devices/Magnetometer/MMC5983MA/Adapter/Src/mmc5983ma_i2c_instance.c",
+          "bytes": 0,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "Mmc5983maAdapter_Process",
+        "frame": {
+          "source": "Devices/Magnetometer/MMC5983MA/Adapter/Src/mmc5983ma_adapter.c",
+          "bytes": 216,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "SystemMagRotation_MagObserve",
+        "frame": {
+          "source": "Algorithm/Installation/MagRotation/Src/mag_rotation_runtime.c",
+          "bytes": 272,
+          "classification": "static"
+        }
+      }
+    ],
+    "AppTask_Device -> MagRotation_Step": [
+      {
+        "symbol": "AppTask_Device",
+        "frame": {
+          "source": "APP/Src/device_task.c",
+          "bytes": 280,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "SystemStartup_ProcessDevices",
+        "frame": {
+          "source": "System/Src/system_startup.c",
+          "bytes": 272,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "SystemMagnetometer_Process",
+        "frame": {
+          "source": "System/Src/system_source_selector.c",
+          "bytes": 24,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "ProjectMagnetometerInstance_Process",
+        "frame": {
+          "source": "Generated/Src/project_device_instances.c",
+          "bytes": 0,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "Mmc5983maI2cMagnetometerInstance_Process",
+        "frame": {
+          "source": "Devices/Magnetometer/MMC5983MA/Adapter/Src/mmc5983ma_i2c_instance.c",
+          "bytes": 0,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "Mmc5983maAdapter_Process",
+        "frame": {
+          "source": "Devices/Magnetometer/MMC5983MA/Adapter/Src/mmc5983ma_adapter.c",
+          "bytes": 216,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "SystemMagRotation_MagObserve",
+        "frame": {
+          "source": "Algorithm/Installation/MagRotation/Src/mag_rotation_runtime.c",
+          "bytes": 272,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "MagRotation_Step",
+        "frame": {
+          "source": "Algorithm/Installation/MagRotation/Src/mag_rotation.c",
+          "bytes": 208,
+          "classification": "static"
+        }
+      }
+    ],
+    "AppTask_Device -> LoggerBus_RotationEventPush": [
+      {
+        "symbol": "AppTask_Device",
+        "frame": {
+          "source": "APP/Src/device_task.c",
+          "bytes": 280,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "SystemMagRotation_Service",
+        "frame": {
+          "source": "Algorithm/Installation/MagRotation/Src/mag_rotation_runtime.c",
+          "bytes": 16,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "Rotation_FallbackFlush.part.0",
+        "frame": {
+          "source": "Algorithm/Installation/MagRotation/Src/mag_rotation_runtime.c",
+          "bytes": 16,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "LoggerBus_RotationEventPush",
+        "frame": {
+          "source": "APP/Src/logger_bus.c",
+          "bytes": 56,
+          "classification": "static"
+        }
+      }
+    ],
+    "AppTask_Device -> SystemMagRotation_ImuObserve": [
+      {
+        "symbol": "AppTask_Device",
+        "frame": {
+          "source": "APP/Src/device_task.c",
+          "bytes": 280,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "SystemStartup_ProcessDevices",
+        "frame": {
+          "source": "System/Src/system_startup.c",
+          "bytes": 272,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "SystemImu_Process",
+        "frame": {
+          "source": "System/Src/system_source_selector.c",
+          "bytes": 16,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "ProjectImuInstance_Process",
+        "frame": {
+          "source": "Generated/Src/project_device_instances.c",
+          "bytes": 0,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "Bmi088Sync400ImuInstance_Process",
+        "frame": {
+          "source": "Devices/IMU/BMI088_SYNC400/Adapter/Src/bmi088_sync400_instance.c",
+          "bytes": 0,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "SensorImuAdapter_Process",
+        "frame": {
+          "source": "Devices/SensorBus/Adapter/Src/sensor_imu_adapter.c",
+          "bytes": 168,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "SystemMagRotation_ImuObserve",
+        "frame": {
+          "source": "Algorithm/Installation/MagRotation/Src/mag_rotation_runtime.c",
+          "bytes": 160,
+          "classification": "static"
+        }
+      }
+    ],
+    "AppTask_Serial -> SystemMagRotation_StatusWrite": [
+      {
+        "symbol": "AppTask_Serial",
+        "frame": {
+          "source": "APP/Src/serial_task.c",
+          "bytes": 8,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "SystemConsole_Process",
+        "frame": {
+          "source": "System/Src/system_console.c",
+          "bytes": 392,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "SystemConsole_ExecuteLine",
+        "frame": {
+          "source": "System/Src/system_console_dispatch.c",
+          "bytes": 16,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "SystemConsole_CommandsExecute",
+        "frame": {
+          "source": "System/Src/system_console.c",
+          "bytes": 1712,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "SystemMagRotation_StatusWrite",
+        "frame": {
+          "source": "Algorithm/Installation/MagRotation/Src/mag_rotation_runtime.c",
+          "bytes": 96,
+          "classification": "static"
+        }
+      }
+    ],
+    "EXTI2_IRQHandler -> PlatformTime_Us": [
+      {
+        "symbol": "EXTI2_IRQHandler",
+        "frame": {
+          "source": "HardwareGenerated/STM32CubeMX/Core/Src/sensor_fixture_irq.c",
+          "bytes": 0,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "HAL_GPIO_EXTI_IRQHandler",
+        "frame": {
+          "source": "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_gpio.h",
+          "bytes": 8,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "HAL_GPIO_EXTI_Callback",
+        "frame": {
+          "source": "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_gpio.h",
+          "bytes": 0,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "PlatformTime_Us",
+        "frame": {
+          "source": "Platform/STM32H7/Src/platform_time_stm32h7.c",
+          "bytes": 32,
+          "classification": "static"
+        }
+      }
+    ],
+    "EXTI3_IRQHandler -> PlatformTime_Us": [
+      {
+        "symbol": "EXTI3_IRQHandler",
+        "frame": {
+          "source": "HardwareGenerated/STM32CubeMX/Core/Src/sensor_fixture_irq.c",
+          "bytes": 0,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "HAL_GPIO_EXTI_IRQHandler",
+        "frame": {
+          "source": "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_gpio.h",
+          "bytes": 8,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "HAL_GPIO_EXTI_Callback",
+        "frame": {
+          "source": "Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_gpio.h",
+          "bytes": 0,
+          "classification": "static"
+        }
+      },
+      {
+        "symbol": "PlatformTime_Us",
+        "frame": {
+          "source": "Platform/STM32H7/Src/platform_time_stm32h7.c",
+          "bytes": 32,
+          "classification": "static"
+        }
+      }
+    ]
+  },
+  "su_sha256": {
+    "System\\Calibration\\Src\\system_mag_calibration.su": "f6e676cdca015e218f0f9285caaf98837f50c5d58d092e8eaf8077a72a93ce16",
+    "Platform\\STM32H7\\Src\\platform_gpio_stm32h7.su": "c3aefafb1dfa67ec9fc4c9d3e29147ca06754923c9fc8eab729844ab00678e1a",
+    "Devices\\SensorBus\\Adapter\\Src\\sensor_imu_adapter.su": "59f95f9a38d98d128ff9e4b5da910c986c9bbbfbf7a175c4ccb4df2e75eb4b20",
+    "Devices\\Magnetometer\\MMC5983MA\\Adapter\\Src\\mmc5983ma_adapter.su": "521da31f13071e354cb0a113834e5a23762c933740a262c8d1421ba70a1f295a",
+    "Algorithm\\Installation\\MagRotation\\Src\\mag_rotation.su": "1379113e63272abc540ca87484af3dc315ae9e67d37799ce4584f8d18bfe9164",
+    "Algorithm\\Installation\\MagRotation\\Src\\mag_rotation_runtime.su": "8ffe3600e821b7c0673059653a966eb53765a268429a60e125546f6fb788a30b"
+  },
+  "assembly_sha256": "96b36169810418b626c8276f5d3e790f65c57bda7a9438cb66d7136963f79d76"
+}

@@ -1,0 +1,3 @@
+			160 按钮 (disabled, settable, string) 开始采集 ID: QApplication.MagCalibrationDialog.QPushButton
+			162 按钮 (disabled, settable, string) 应用至 RAM ID: QApplication.MagCalibrationDialog.QPushButton
+			163 按钮 (disabled, settable, string) 保存至设备 ID: QApplication.MagCalibrationDialog.QPushButton

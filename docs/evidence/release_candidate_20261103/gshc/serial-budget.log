@@ -1,0 +1,34 @@
+{
+  "scope": "Synthetic Host streams and file-service peer. No COM port opened. Wire time excludes scheduling and device/storage latency.",
+  "telemetry": {
+    "frames": 1024,
+    "wire_frame_bytes": 65,
+    "example_rate_hz": 5,
+    "stream_bytes_per_second": 325,
+    "host_parse_seconds": 0.14425219999998262,
+    "baud_8n1": 230400,
+    "read_chunk": 4096,
+    "read_timeout_s": 0.02,
+    "input_queue_chunks": 1024
+  },
+  "maintenance_mag": {
+    "samples": 1200,
+    "sample_hz": 20,
+    "actual_bytes": 142730,
+    "max_line_including_crlf": 120,
+    "line_capacity": 192,
+    "stream_bytes_per_second": 2378.8333333333335,
+    "host_parse_seconds": 0.028191599999900063
+  },
+  "log_export": {
+    "payload_bytes": 1048580,
+    "block_payload": 512,
+    "maximum_delimited_frame": 565,
+    "verified_blocks": 2049,
+    "whole_sha256": "4868200248495f6a111edabff76180cd3f02ddc23664bce1eb8b4b02912c09df",
+    "counted_wire_bytes": 1408490,
+    "ideal_sequential_wire_seconds_8n1": 61.13237847222222,
+    "configured_timeout_s": 2,
+    "host_mock_download_seconds": 0.36565559999985453
+  }
+}

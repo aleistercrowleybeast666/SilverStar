@@ -1,0 +1,26 @@
+{
+  "model": "installation",
+  "configuration": "Debug",
+  "elf_sha256": "5dc2a160be5b542e5f107fe5eeeadb3953c51d6f5fadd2510c098b95bd57bd37",
+  "tools": "D:/Arm GNU Toolchain/14.3 rel1/bin",
+  "scope": "Exact linked symbol/IRQ evidence and representative direct paths. Each .su is one local frame. Missing indirect, archive, exception and preemption closure precludes a strict bound.",
+  "vectors": {},
+  "persistent_symbols": [
+    "20017538 00000028 b s_provider"
+  ],
+  "paths": {
+    "AppTask_Device -> SystemMagRotation_MagObserve": [],
+    "AppTask_Device -> MagRotation_Step": [],
+    "AppTask_Device -> LoggerBus_RotationEventPush": [],
+    "AppTask_Device -> SystemMagRotation_ImuObserve": [],
+    "AppTask_Serial -> SystemMagRotation_StatusWrite": [],
+    "EXTI2_IRQHandler -> PlatformTime_Us": [],
+    "EXTI3_IRQHandler -> PlatformTime_Us": []
+  },
+  "su_sha256": {
+    "System\\Calibration\\Src\\system_mag_calibration.su": "3e2fd40671b7f539d97b3a33316f2832009238c499e8321e282ce97a8aaf861c",
+    "Platform\\STM32F4\\Src\\platform_gpio_stm32f4.su": "1a80452864d79f58fe3f84529cdb9f2cd1585a0c6b5e170466140c06e41e5b91",
+    "Modules\\InstallationCapture\\Src\\system_installation_capture.su": "199580ec4f872edff75a692e34da6c1b900a14fab6e8ad38d6c7a74169606cb8"
+  },
+  "assembly_sha256": "e4cf0e9c40a0c8496b830bc3c95aff46428d7c5a84f8622fb80915e079fa5e17"
+}

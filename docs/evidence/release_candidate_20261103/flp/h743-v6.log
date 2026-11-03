@@ -1,0 +1,55 @@
+{
+  "scope": "Generated project decoder, synthetic SSLOG records; declared defaults are never supplied as Recorded snapshot values.",
+  "model": "D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\v6\\h743\\SilverStar.ssproject",
+  "model_sha256": "0120a019f2aee9ecf30a9e183f4d1c19936aacfa9ebad16d1466d6ebf2a339a2",
+  "decoder": "D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\v6\\h743\\H743ZI_eskf20_x1.ssdecoder",
+  "decoder_sha256": "6be39e914463c051930cf1ac6d6202273bd8d0bd2f2ebdd536054f94d72b0ea6",
+  "log": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\root\\h743-flp-v6\\mission\\SYNTHETIC_RC.sslog",
+  "log_sha256": "221100889fa57ab9db5be49569beaef1816fbc9b373ab69c28c2f9ee0628fa26",
+  "descriptor_payload_hex": "010003000000000093a2aad50022afce60e1994151ac831105afa44d9dd9cc8bd15cce60736621171072c2de4f324a6e7b0108021f232a850000000000000000",
+  "compiled_rotation": {
+    "command": [
+      "gcc",
+      "-std=c11",
+      "-O2",
+      "-shared",
+      "-fPIC",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "-fanalyzer",
+      "-ID:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\v6\\h743\\Flight_Controller\\Algorithm\\Installation\\MagRotation\\Inc",
+      "D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\v6\\h743\\Flight_Controller\\Algorithm\\Installation\\MagRotation\\Src\\mag_rotation.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\root\\h743-flp-v6\\mag_rotation.dll"
+    ],
+    "source": "fcc151107eadd099a2b8a940f32f0656ac60a6fea9252ac28207de758d200049",
+    "header": "78c19cd7ba5cbdc66d332148af26a6a4a950ced3581939ec1c38ff0c1a19b645",
+    "library": "29a795958ba8700506680c0ee840a605f03dd9e213f1b65145bd38c203722914",
+    "q": [
+      0.9238795325,
+      0.0,
+      0.0,
+      -0.3826834324
+    ],
+    "word": 783286272
+  },
+  "automatic": "exact_generation_profile",
+  "cli": [
+    "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "-B",
+    "-m",
+    "silverstar_flp.cli",
+    "inspect",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\root\\h743-flp-v6\\mission\\SYNTHETIC_RC.sslog"
+  ],
+  "exit": 0,
+  "recorded_events": [
+    "MISSION_START",
+    "MAG_ROTATION_ADOPTED",
+    "MAG_ROTATION_QUALITY"
+  ],
+  "recorded_snapshot_status": "unavailable"
+}

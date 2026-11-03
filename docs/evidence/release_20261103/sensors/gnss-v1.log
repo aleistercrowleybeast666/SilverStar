@@ -1,0 +1,140 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+________________________ test_joint_ubx_actual_c_mock _________________________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release-20261103/sensors/gnss-v1/test_joint_ubx_actual_c_mock0')
+
+    def test_joint_ubx_actual_c_mock(tmp_path: Path) -> None:
+        source = BUILTIN / "silverstar_ubx_protocol/payload/Devices/GNSS/UBX"
+        binary = tmp_path / "ubx.exe"
+        command = [_Compiler_Get(), "-std=c11", "-Wall", "-Wextra", "-Werror", "-pedantic", "-I" + str(source / "Inc"), str(source / "Src/ubx_receiver.c"), str(FIXTURES / "test_ubx_receiver.c"), "-o", str(binary)]
+        _Command_Run(command, tmp_path, "compile")
+>       output = _Command_Run([str(binary)], tmp_path, "run")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_joint_sensor_library.py:251: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+command = ['D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\gnss-v1\\test_joint_ubx_actual_c_mock0\\ubx.exe']
+directory = WindowsPath('D:/python_software/SilverStar/.work/release-20261103/sensors/gnss-v1/test_joint_ubx_actual_c_mock0')
+label = 'run'
+
+    def _Command_Run(command: list[str], directory: Path, label: str) -> str:
+        if "gcc" in Path(command[0]).name:
+            # Explicit adapter paths moved without changing their test contracts.
+            # Keep old fixture builders usable; log the actual canonical command.
+            adapters = {
+                "sensor_imu_adapter.c", "sensor_imu_spi_adapter.c",
+                "bmp280_adapter.c", "bmp280_i2c_instance.c", "bmp280_spi_instance.c",
+                "mpu6050_instance.c", "persistent_storage.c", "storage_service.c",
+                "log_sink_service.c", "mission_snapshot.c", "mag_calibration_storage.c",
+            }
+            relocated = []
+            for arg in command:
+                path = Path(arg)
+                if path.name in adapters and path.parent.name == "Src" and not path.is_file():
+                    candidate = path.parent.parent / "Adapter/Src" / path.name
+                    assert candidate.is_file(), candidate
+                    arg = str(candidate)
+                relocated.append(arg)
+            command = relocated
+            for plugin, relative in (
+                ("silverstar_sensor_register_bus", "Devices/SensorBus"),
+                ("silverstar_device_barometer_bmp280", "Devices/Barometer/BMP280"),
+                ("silverstar_device_imu_mpu6050", "Devices/IMU/MPU6050"),
+                ("silverstar_device_storage_sd_sdio_fatfs", "Devices/Storage/SdSdioFatFs"),
+            ):
+                command += ["-I" + str(BUILTIN / plugin / "payload" / relative / "Adapter/Inc")]
+            common = BUILTIN / "silverstar_core_0_1_0/payload/Common"
+            command = command + ["-I" + str(common / "Inc")]
+            if "-c" in command:
+                command += ["-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wundef", "-Wformat=2", "-Wdouble-promotion", "-Wcast-align", "-Wcast-qual", "-Wstrict-prototypes", "-Wmissing-prototypes", "-Wswitch-enum", "-Wvla"]
+            if "-c" not in command and not any("test_jy901b_quality.c" in arg for arg in command):
+                command = command + [str(common / "Src/silverstar_assert.c")]
+        result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, check=False)
+        output = result.stdout + result.stderr
+        (directory / (label + ".txt")).write_text(
+            json.dumps(command) + "\n" + output + f"\nexit_code={result.returncode}\n",
+            encoding="utf-8",
+        )
+>       assert result.returncode == 0, output
+E       AssertionError: Assertion failed: mock.nvm_writes == 9U, file D:\python_software\SilverStar\apps\SCG\tests\fixtures\sensors\test_ubx_receiver.c, line 260
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\gnss-v1\\test_joint_ubx_act...tes == 9U, file D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\sensors\\test_ubx_receiver.c, line 260\n').returncode
+
+apps\SCG\tests\test_joint_sensor_library.py:227: AssertionError
+_________________ test_joint_ubx_adapter_actual_transactions __________________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release-20261103/sensors/gnss-v1/test_joint_ubx_adapter_actual_0')
+
+    def test_joint_ubx_adapter_actual_transactions(tmp_path: Path) -> None:
+        source = BUILTIN / "silverstar_ubx_protocol/payload/Devices/GNSS/UBX"
+        core = BUILTIN / "silverstar_core_0_1_0/payload"
+        includes = [source / "Inc", core / "Interfaces/Inc", core / "System/Inc",
+                    PLATFORM_API_INCLUDES]
+        binary = tmp_path / "ubx_adapter.exe"
+        command = [_Compiler_Get(), "-std=c11", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+        command += ["-I" + str(path) for path in includes]
+        command += [str(source / "Src/ubx_receiver.c"), str(source / "Src/ubx_system_adapter.c"),
+                    str(FIXTURES / "test_ubx_adapter.c"), "-o", str(binary)]
+        _Command_Run(command, tmp_path, "compile")
+>       output = _Command_Run([str(binary)], tmp_path, "run")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+apps\SCG\tests\test_joint_sensor_library.py:267: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+command = ['D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\gnss-v1\\test_joint_ubx_adapter_actual_0\\ubx_adapter.exe']
+directory = WindowsPath('D:/python_software/SilverStar/.work/release-20261103/sensors/gnss-v1/test_joint_ubx_adapter_actual_0')
+label = 'run'
+
+    def _Command_Run(command: list[str], directory: Path, label: str) -> str:
+        if "gcc" in Path(command[0]).name:
+            # Explicit adapter paths moved without changing their test contracts.
+            # Keep old fixture builders usable; log the actual canonical command.
+            adapters = {
+                "sensor_imu_adapter.c", "sensor_imu_spi_adapter.c",
+                "bmp280_adapter.c", "bmp280_i2c_instance.c", "bmp280_spi_instance.c",
+                "mpu6050_instance.c", "persistent_storage.c", "storage_service.c",
+                "log_sink_service.c", "mission_snapshot.c", "mag_calibration_storage.c",
+            }
+            relocated = []
+            for arg in command:
+                path = Path(arg)
+                if path.name in adapters and path.parent.name == "Src" and not path.is_file():
+                    candidate = path.parent.parent / "Adapter/Src" / path.name
+                    assert candidate.is_file(), candidate
+                    arg = str(candidate)
+                relocated.append(arg)
+            command = relocated
+            for plugin, relative in (
+                ("silverstar_sensor_register_bus", "Devices/SensorBus"),
+                ("silverstar_device_barometer_bmp280", "Devices/Barometer/BMP280"),
+                ("silverstar_device_imu_mpu6050", "Devices/IMU/MPU6050"),
+                ("silverstar_device_storage_sd_sdio_fatfs", "Devices/Storage/SdSdioFatFs"),
+            ):
+                command += ["-I" + str(BUILTIN / plugin / "payload" / relative / "Adapter/Inc")]
+            common = BUILTIN / "silverstar_core_0_1_0/payload/Common"
+            command = command + ["-I" + str(common / "Inc")]
+            if "-c" in command:
+                command += ["-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wundef", "-Wformat=2", "-Wdouble-promotion", "-Wcast-align", "-Wcast-qual", "-Wstrict-prototypes", "-Wmissing-prototypes", "-Wswitch-enum", "-Wvla"]
+            if "-c" not in command and not any("test_jy901b_quality.c" in arg for arg in command):
+                command = command + [str(common / "Src/silverstar_assert.c")]
+        result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, check=False)
+        output = result.stdout + result.stderr
+        (directory / (label + ".txt")).write_text(
+            json.dumps(command) + "\n" + output + f"\nexit_code={result.returncode}\n",
+            encoding="utf-8",
+        )
+>       assert result.returncode == 0, output
+E       AssertionError: Assertion failed: mock.nvm_writes == 9U, file D:\python_software\SilverStar\apps\SCG\tests\fixtures\sensors\test_ubx_receiver.c, line 260
+E         
+E       assert 3221226505 == 0
+E        +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\gnss-v1\\test_joint_ubx_ada...tes == 9U, file D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\sensors\\test_ubx_receiver.c, line 260\n').returncode
+
+apps\SCG\tests\test_joint_sensor_library.py:227: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_joint_sensor_library.py::test_joint_ubx_actual_c_mock
+FAILED apps\SCG\tests\test_joint_sensor_library.py::test_joint_ubx_adapter_actual_transactions
+2 failed, 38 deselected in 11.32s

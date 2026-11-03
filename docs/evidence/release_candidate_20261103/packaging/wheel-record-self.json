@@ -1,0 +1,9 @@
+{
+  "wheel_record_self": "numpy-2.4.1.dist-info/RECORD",
+  "wheel_name": "numpy",
+  "wheel_version": "2.4.1",
+  "sha256": "1de9ef1a14f710df782379501ddbe10889ea243b527c281dc9bdd0e69b462814",
+  "reason": "Wheel RECORD lists itself with an empty digest. Unique wheel path and collected bytes match.",
+  "distribution_count": 34,
+  "scope": "Actual resolved modules, data and binaries; license records are inside the candidate."
+}

@@ -1,0 +1,106 @@
+[
+  {
+    "part": "neo_m8n",
+    "saved_profile": "",
+    "generated": "SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G",
+    "binding": "per-instance resource field + typed adapter",
+    "header_sha256": "2074a14f0f72ef430a20d722380dd8c80513979cb33910f794527703998a5855",
+    "resources_sha256": "46f1477d9d5a31d900a14a7edc0b16f38769965d089ad47f886bdbc7c9257f0d",
+    "gnss_c": [
+      "Devices/GNSS/NEO_M8N/Src/neo_m8n_instance.c",
+      "Devices/GNSS/UBX/Src/ubx_receiver.c",
+      "Devices/GNSS/UBX/Src/ubx_system_adapter.c"
+    ]
+  },
+  {
+    "part": "neo_m8n",
+    "saved_profile": "portable_ground_test",
+    "generated": "SYSTEM_GNSS_DYNAMIC_MODEL_PORTABLE",
+    "binding": "per-instance resource field + typed adapter",
+    "header_sha256": "11e5478b00c2169657840bc338a1a99ce926066b3a6adb6ec1c78190c9a612aa",
+    "resources_sha256": "d60aac35de1e7fb43fe1adb8a6d3603e32e2184d18a9c6da4bdbf3fa5f1e0e1b",
+    "gnss_c": [
+      "Devices/GNSS/NEO_M8N/Src/neo_m8n_instance.c",
+      "Devices/GNSS/UBX/Src/ubx_receiver.c",
+      "Devices/GNSS/UBX/Src/ubx_system_adapter.c"
+    ]
+  },
+  {
+    "part": "neo_m9n",
+    "saved_profile": "",
+    "generated": "SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G",
+    "binding": "system startup broadcasts to dedicated M9 driver",
+    "header_sha256": "73267cf664e1dfbbdc7f4eb33f6bad8457aab0997d25924f8320646ca3e4d138",
+    "resources_sha256": "8852c1e2ec19f7a08c938544be25ebb2201bda3a6bf31dcbd742d09f72c3f8a2",
+    "gnss_c": [
+      "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_system_adapter.c",
+      "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_startup.c"
+    ]
+  },
+  {
+    "part": "neo_m9n",
+    "saved_profile": "portable_ground_test",
+    "generated": "SYSTEM_GNSS_DYNAMIC_MODEL_PORTABLE",
+    "binding": "system startup broadcasts to dedicated M9 driver",
+    "header_sha256": "22be00be287191b4d4f7f9f03a88c094790590f895b1d76d279a5ec7c50d87ee",
+    "resources_sha256": "8852c1e2ec19f7a08c938544be25ebb2201bda3a6bf31dcbd742d09f72c3f8a2",
+    "gnss_c": [
+      "Devices/GNSS/NEO_M9N/Src/neo_m9n_device.c",
+      "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_system_adapter.c",
+      "Devices/GNSS/NEO_M9N/Adapter/Src/neo_m9n_startup.c"
+    ]
+  },
+  {
+    "part": "max_m10s",
+    "saved_profile": "",
+    "generated": "SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G",
+    "binding": "per-instance resource field + typed adapter",
+    "header_sha256": "2074a14f0f72ef430a20d722380dd8c80513979cb33910f794527703998a5855",
+    "resources_sha256": "18e4185a9750ec8814acc671b136ea0028aa8ca45993fded5c5087d0d6fb34a1",
+    "gnss_c": [
+      "Devices/GNSS/MAX_M10S/Src/max_m10s_instance.c",
+      "Devices/GNSS/UBX/Src/ubx_receiver.c",
+      "Devices/GNSS/UBX/Src/ubx_system_adapter.c"
+    ]
+  },
+  {
+    "part": "max_m10s",
+    "saved_profile": "portable_ground_test",
+    "generated": "SYSTEM_GNSS_DYNAMIC_MODEL_PORTABLE",
+    "binding": "per-instance resource field + typed adapter",
+    "header_sha256": "11e5478b00c2169657840bc338a1a99ce926066b3a6adb6ec1c78190c9a612aa",
+    "resources_sha256": "95a21d4d0f8787ab515c8f5dcf4df2b5f28504c7d648265e79309ba4fe4d7bb8",
+    "gnss_c": [
+      "Devices/GNSS/MAX_M10S/Src/max_m10s_instance.c",
+      "Devices/GNSS/UBX/Src/ubx_receiver.c",
+      "Devices/GNSS/UBX/Src/ubx_system_adapter.c"
+    ]
+  },
+  {
+    "part": "neo_f10n",
+    "saved_profile": "",
+    "generated": "SYSTEM_GNSS_DYNAMIC_MODEL_AIRBORNE_4G",
+    "binding": "per-instance resource field + typed adapter",
+    "header_sha256": "2074a14f0f72ef430a20d722380dd8c80513979cb33910f794527703998a5855",
+    "resources_sha256": "d71a453dcb2da156ad9d991495170d8b2352c7ad6689b0622854dfbdaee53998",
+    "gnss_c": [
+      "Devices/GNSS/NEO_F10N/Src/neo_f10n_instance.c",
+      "Devices/GNSS/UBX/Src/ubx_receiver.c",
+      "Devices/GNSS/UBX/Src/ubx_system_adapter.c"
+    ]
+  },
+  {
+    "part": "neo_f10n",
+    "saved_profile": "portable_ground_test",
+    "generated": "SYSTEM_GNSS_DYNAMIC_MODEL_PORTABLE",
+    "binding": "per-instance resource field + typed adapter",
+    "header_sha256": "11e5478b00c2169657840bc338a1a99ce926066b3a6adb6ec1c78190c9a612aa",
+    "resources_sha256": "3a06187929149fd14b789e7a68dd8002a2e63f64ec55328391a75e982e01b568",
+    "gnss_c": [
+      "Devices/GNSS/NEO_F10N/Src/neo_f10n_instance.c",
+      "Devices/GNSS/UBX/Src/ubx_receiver.c",
+      "Devices/GNSS/UBX/Src/ubx_system_adapter.c"
+    ]
+  }
+]

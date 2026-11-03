@@ -1,0 +1,23 @@
+{
+  "input_sha256": "68c147808ec8f6570ef321b8eb18f180c32441c6b7b6335782c27ff5fe7d5cbc",
+  "authority_sha256": "9d46ce350daa39ca00369411fedc12509f3c065949ca788cb4fce7c6193a5bdd",
+  "changed": {
+    "silverstar.core.0_1_0": {
+      "before": {
+        "manifest_sha256": "4784850a31cf93453627d5b541beb2b7fbbf801718114f76d9a28bccd640d33e",
+        "payload_sha256": "0e8c93803788f810376c56a08340ee489cda58377e5442a375cb34d88b3295e8",
+        "templates_sha256": "ad41501060e36d17205e4670a90b76c1ada8d2dccc10ca965e6b86539b96db88"
+      },
+      "after": {
+        "manifest_sha256": "4784850a31cf93453627d5b541beb2b7fbbf801718114f76d9a28bccd640d33e",
+        "payload_sha256": "09813d4bceaf0f5067e29e275ce8d3fe70006b79e960986a603c28fae3b4b7b5",
+        "templates_sha256": "ad41501060e36d17205e4670a90b76c1ada8d2dccc10ca965e6b86539b96db88"
+      }
+    }
+  },
+  "compared": [
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\targets-v2\\test_async_gui_terminal_uses_b0\\Ground_Station\\Generated\\ground_target_metadata.json",
+    "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\targets-v2\\test_async_gui_terminal_uses_b1\\Ground_Station\\Generated\\ground_target_metadata.json"
+  ],
+  "observation": "Sequential quality fixtures constructed from the same model on both sides of a concurrent core payload edit. The first Ground result was blocked at the normal generated-target identity check."
+}

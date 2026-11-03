@@ -1,0 +1,1 @@
+										176 文本 工程：SilverStar_F407_Reference_Generated；SHA-256：b4559b96ed998ce02507a7b6da01c6ccb5c01ab54148e9fdbea3a4e0f30ccc5e 设备生效状态未核对；该文件不改变实时状态、READY 或命令权限。 配置的任务阶段：就绪 → 任务开始 → 动力上升 → 无动力滑行 → 预开伞等待 → 开伞请求 → 下降 → 已落地（桌面参考，固件生效状态未核对） ID: QApplication.MainWindow.QWidget.QSplitter.pageTabs.qt_tabwidget_stackedwidget.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel

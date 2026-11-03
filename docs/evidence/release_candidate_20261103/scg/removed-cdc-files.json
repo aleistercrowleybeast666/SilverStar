@@ -1,0 +1,590 @@
+{
+  "apps/SCG/src/silverstar_fccg/app/native_ground.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "bf5d375caa9025745250896eac3c82e6eaf312f7b3ae6d2ecb0c5b46d5d17a21"
+  },
+  "apps/SCG/src/silverstar_fccg/app/native_usb.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "8b4c46fdc09d28d1dcffd782ff1e450d0b78114f639f97fca1e58ed251b67843"
+  },
+  "apps/SCG/src/silverstar_fccg/app/usb_ground.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "81bbd526154950698f6186f4fec51657181bee9ba6f15c712cdc4ee1aecfe296"
+  },
+  "apps/SCG/src/silverstar_fccg/app/usb_ground_flow.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "8fb15bb2cc395198b6ff921ba099c8a2f4d85482c7e15e5b2505f93780e13462"
+  },
+  "apps/SCG/src/silverstar_fccg/app/usb_transport.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "d36899fead176dec62f29a32019fe45861ca05f44bf1e8a80192183006c40482"
+  },
+  "apps/SCG/src/silverstar_fccg/build/native_compile.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "de5f026a69b130bbca92899c24b82a586afb97e48d87ae513206bf59870ea691"
+  },
+  "apps/SCG/src/silverstar_fccg/build/native_usb.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "a184463cb839d2be6fbe8107f638aaa57bfacef24d798d8388c056e5a3cfb87a"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/c071_candidate.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "bd1b707ebee36e88a86a6660016d9fa14d634557b6673bc6daf49dd018088fdb"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/c071_lifecycle.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "82f136110a0b4063f10feea29d7c5b57513e731810d9e18a32328a20e63130f5"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/c071_recipe.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "d507af633ca155f6d2b0f28e03c346c661a73a8bdca118d0adf9420253a1364a"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/ground_c071_usb.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "f5347a85392762d372306e31518c73137d4544e391018a292e5e8b15a3577f59"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/ground_pc_usb_cdc.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "66de0524170473c964a031418ad0ab4b1455d00640c3477584cec865adf649d7"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/ground_usb_control.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "7ce657f80efa15a1f62548abafbc2501b7e9a0c78dc90884dcbac760c84dfed5"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/native_clock.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "db31a5ce4e5d027f21b33e7387b274727c98b32d5e9149975b1dd1244d60ab52"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/native_clock_probe.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "b7aa04c6e04365b53f13f350b5a93ee2f26e46ba7b3ca2690a2c509ba0c1d449"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/native_clock_tim.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "97424f3dff316320e95fdacc6731a2ec59432947b8a8aebd7f854e4b2d3ac53b"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/native_control.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "995c2811a7d0670ce207ed23a82904cfae2d350109009ed2934832636a595e2d"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/native_ground.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "76de656acb2e9b55a989e2c100f5d19292a70cd74836162bd69f4b88358ee369"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/native_hal.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "2688a42da428b05129327f9e87d0bcc83ea55933ca9f243aa3c2a1b72cc9b443"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/native_no_heap.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "a208751819dad6f92d34d189b1014cbb0519c3e7033f7f77e99f22866ba85a24"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/native_pc.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "2f058aa4eb70c6dc45a83f7666e3b41fc159e93669a4aa9a8fbcf479d426193d"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/native_platform.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "a7327b35e02639e4803c2dd899cfc1c732c19062af4e0e47c46a7fdbba1af2d5"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/native_radio.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "de8779b75efa9baa02e217d6e432b12a140f27721b06652ec829c35435b5254a"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/native_runtime.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "f87343cdbee25a8b3714a16044d7c865fc8d2ec6410e59d88c9c0398d8ea80f1"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/native_usb_config.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "216886049ecabd256b7935cd4577826371a401ac602d10b936b799fb56814130"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/native_usb_data.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "49a3c29253e43cf18ef268c8d2979c7623d77a01bcbac9060df3ef0706223e88"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/native_usb_graph.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "fd6ab868d038adb26d223bfe033f7205a6f87eff4cc9dea8e587904aad4052ff"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/native_usb_indexed.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "146944c2ea60d88b5d04ce856eeae45d136886475e4327fbcfa88ec76fad0042"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/usb_cdc_integration.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "6c9cd288fba476e72ad726984ed26d7dd32b1012b19579c06aae11f91aacf187"
+  },
+  "apps/SCG/src/silverstar_fccg/generator/usb_cdc_transport.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "8e24afa217fe9b90553befbebc2666381614f9a242c14129e8f6fa046c608aeb"
+  },
+  "apps/SCG/src/silverstar_fccg/hardware/c071_mini.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "89f98dabb6516e20ac8f754053a0babf327365af79f592e1bbf3ecf7b1846caa"
+  },
+  "apps/SCG/src/silverstar_fccg/hardware/native_classic_cdc.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "2b4dbc5ecb17bae5f626981d2af58e638a1803246bc1969908f9a19706020958"
+  },
+  "apps/SCG/src/silverstar_fccg/hardware/native_machine_contract.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "10dbb135a85f99479ae39119be777ebd192151ad48b20af54a549229e3832a1e"
+  },
+  "apps/SCG/src/silverstar_fccg/hardware/usb_transport_capabilities.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "b6fd149d30bc6f068328ab1b27271c337f33322522afd7dc9cf7a87b1c1bd335"
+  },
+  "apps/SCG/src/silverstar_fccg/hardware/usb_transport_profiles.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "7fdcef40a5a53aa4be78b031663ac7fb365e8b94c474d114f716ddc5ed15efc5"
+  },
+  "apps/SCG/src/silverstar_fccg/ui/pages/native_usb.py": {
+    "reason": "CDC-only implementation and dependency closure",
+    "sha256": "d451c4146937933b5b83ba5436ac8e602644b18a6e4af015e478def48bdac111"
+  },
+  "apps/SCG/src/silverstar_fccg/hardware/usb_profiles/f103-device-facts.json": {
+    "reason": "pinned CDC-only build and device profiles",
+    "sha256": "7c4ec3cb53e16dc856fdfcc6f87f0be8889df2403e870d719b65b0f4329f3126"
+  },
+  "apps/SCG/src/silverstar_fccg/hardware/usb_profiles/c071-native-profile.json": {
+    "reason": "pinned CDC-only build and device profiles",
+    "sha256": "5c9ad2ccaae3b0bd4a81c00e5c450610f48c82b7d5958c9587b921be82d29589"
+  },
+  "apps/SCG/src/silverstar_fccg/hardware/usb_profiles/c071-device-facts.json": {
+    "reason": "pinned CDC-only build and device profiles",
+    "sha256": "b48d9ea209c362f7ba0a662a8c695a8ec0e3d659bd26b96b7700d962d397a014"
+  },
+  "apps/SCG/src/silverstar_fccg/hardware/usb_profiles/c071-companion-manifest.json": {
+    "reason": "pinned CDC-only build and device profiles",
+    "sha256": "8835f4c76e6ea94ceeccf742ec59665157ddf2a089a4a361ad25b2671afcc6d7"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Reviewed/Class/CDC/Src/usbd_cdc.c": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "aef992bfe1774b750790e8e5dc0dc1b8aae97f9a05084f03f9530bd81db53dde"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "a6c2dfc99fabefe4db7c4c145b4ab87d6b992e3fbd15cc65ecc1c7f9d2086f78"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_cdc_if.h": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "1833c814cff004bb16dd5ff2698bf0209eb72493b62759685772d9b665ff9e5c"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "5229bac9e3df38c7602b3d8790e73ebfff4395da011fb8fac57aaea48a48b407"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/companion-manifest.json": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "8835f4c76e6ea94ceeccf742ec59665157ddf2a089a4a361ad25b2671afcc6d7"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_ioreq.c": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "2613da8858008ccbcf47669845ac6a7d1dd7c5075b19f946fa16399d86d508a2"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_desc_template.c": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "5bc71ab2e28075699d4e808bd3c33cdaaaa5daa1ed9513b6c473b1a02f32cd42"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/USB_Device/App/usb_device.c": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "a9f8c728661aedd10724a2ff1938a28a69ce0308cfd5359a8534f95afda25993"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Upstream/README.md": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "a2d8c5ccd48fa3d55445b5ddb0c9c54e27cca6321b4e39771e1e26c09c34da5d"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/USB_Device/Target/usbd_conf.h": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "352473d22d7ddb5da5a6a443effe9b0d4591122f73ed4bf1cab01a7e012ffaf0"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_cdc_if.c": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "917736bf53803912785894fef3d78408a2ed5612345952b9432eb8fcc0ab2af5"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "7df0e6888230c6e0e4af31278853ae1accdf5728288ab2d1a1190a5692157038"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Upstream/LICENSE.md": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "effc9e8a8ebe8de11cef6d0afc2cad395c8fd039aa6b522495c4f99c71f2a796"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "3ea35b19e264217c3bd1d433c75f4e093930ea83cdf63aa88aee77748a9fc7dc"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_desc.h": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "1c6b04d788a92da35def548a68ad74ee5a6bc9a95bd286b431f4ce361895a2ab"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Reviewed/Core/Src/usbd_core.c": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "e1091db93fd530c8dd05c58b7ec5544ad12a832b0f5847d41ff5647890b78f77"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "8a2d44f0cc1c34c21eb75e01cec568b45b901678fba9ca2dc3b0c9a9f0364e7c"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Upstream/Release_Notes.html": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "f5467658b7cd75abb53602c8c2bf3a3247f3e99c1ee31ffa4ec50c2d6ae6bb84"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/USB_Device/App/usbd_desc.c": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "cb4a5f84594d7ff44fd2b772a83a8e9bff07a110be846f372b2df3cc7a000c05"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_conf_template.c": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "ba1530b4ddb11b3f4b3f03c0c9d270110f9eb40f21f32b1038bd85f8c0692e9d"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/USB_Device/Target/usbd_conf.c": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "8135a146b684745bac67a69d8ca257101c0855d7ce187a423c00f7e1255b4e3b"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/USB_Device/App/usb_device.h": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "e9e59db9ef7b117940d7f3a7c7e56c321ddd45cd50e4845648942b6eaf76751f"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "f8897c9b47f97b6ca78c72b857d20fb2a2b0d85091a2362799165cdfa863e3cc"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc_if_template.c": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "fecdea035bf4662755b18fb53f528e4d6ff58ee138d3f823e447b3b8210909e9"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "21647e3c0537a8d56cd67cc67951206f7a84501acd74d0c8a827c13e192183c5"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/.gitattributes": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/native-profile.json": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "5c9ad2ccaae3b0bd4a81c00e5c450610f48c82b7d5958c9587b921be82d29589"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "5f1c211ed991e074589c82bc52571357a268f36776111d99a85539df53fd80f0"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_conf_template.h": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "e699363b680368bbd4d2e034a2b0b723ee839581a27b10a88c717302a02ce118"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_desc_template.h": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "4802cc5149b8a5ac414d10b83e5023a5d8501634d3a02e5e2dcedf0299e5602a"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Reviewed/Patches/usbd_core-ep0-v1.patch": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "b778b780d734d7de23e257adf9a2d7ac99e5f1436aa6a822d217e8099103fb11"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc_if_template.h": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "6ea2d95f93f3393c84a72a96a99e2534d176337295a69b6692b189dfdfeeb05f"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Reviewed/Patches/usbd_cdc-ep0-v1.patch": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "96d9c89e79f30999b92b983bc7461ce3129d3eaf6ee44e2972491e2650124c10"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Reviewed/Patches/usbd_ioreq-ep0-v1.patch": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "96c12dde975cf95fadd2075555a3d0e88020a93c4e8a0596f04158aa400ec9ef"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "1588736a66291a09de7aa69a5945574566413fefb84c0a7896dc088d174086a9"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/Release_Notes.html": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "1fb25224779455645ae94416380923936ca6449165242ae33217d52120261974"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/README.md": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "6055dcc368ca2b6a49e617470a20baf04f482f890322c789c1d5a471449d2f37"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/plugin.json": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "c1477e9ab97c9be5e7196c47110d017e3202132fb10cb8de10cfc8cfaf305a3b"
+  },
+  "apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/LICENSE.md": {
+    "reason": "dedicated C071 CDC provider (all tracked payload files)",
+    "sha256": "2925956f5c102172a6ee52deb66a6e878a9940062d82aeef3841647e21596501"
+  },
+  "apps/SCG/plugins/builtin/silverstar_mcu_family_stm32c0/payload/Platform/STM32C0/Inc/pc_c071_control.h": {
+    "reason": "C071 USB adapter only; MCU and common platform bindings retained",
+    "sha256": "a638dc76210164816014e9fdfd390dd1f5f3097f76ecb0839b60a0a9db08d659"
+  },
+  "apps/SCG/plugins/builtin/silverstar_mcu_family_stm32c0/payload/Platform/STM32C0/Inc/pc_c071_usb.h": {
+    "reason": "C071 USB adapter only; MCU and common platform bindings retained",
+    "sha256": "d39e62601176bf1b17ef67498a11b7ff4a45b80159c33abfc3a0e7f65766be94"
+  },
+  "apps/SCG/plugins/builtin/silverstar_mcu_family_stm32c0/payload/Platform/STM32C0/Src/usbd_cdc_if.c": {
+    "reason": "C071 USB adapter only; MCU and common platform bindings retained",
+    "sha256": "a447cf7b8ce345d4a290a570d4167010ba5ada52a566345567c915c6ff97dcda"
+  },
+  "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tests/Host/usb_cdc.c": {
+    "reason": "retired native candidate and CDC-only generated Host harness",
+    "sha256": "b65a9f72cd3f69b45e816d3c57dc18f3e045f87a796a5bb03baa3ae91c0e7429"
+  },
+  "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tests/Host/usb_cdc_if.h": {
+    "reason": "retired native candidate and CDC-only generated Host harness",
+    "sha256": "45efbbfffd5f5c4b770c00ece28a452b30cc76d39c035d4a8c2df7eae1d863df"
+  },
+  "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tests/Host/usb_device.h": {
+    "reason": "retired native candidate and CDC-only generated Host harness",
+    "sha256": "2e1fa27d0bd22f308a0951928da03f08a4cf4b5fb9c7db6c3b0bb8a754d54345"
+  },
+  "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tests/Host/usb_main.h": {
+    "reason": "retired native candidate and CDC-only generated Host harness",
+    "sha256": "ac95e653dee2ddadc0238719ab93909b6488cb7d1fa3686068c28ecebe2aeada"
+  },
+  "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tests/Host/usb_session.c": {
+    "reason": "retired native candidate and CDC-only generated Host harness",
+    "sha256": "95d8da726ee2c3f227ac8400dbf1db14781a00a1e04a7c1f0e66513bd673cd40"
+  },
+  "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tests/Host/usb_session_main.h": {
+    "reason": "retired native candidate and CDC-only generated Host harness",
+    "sha256": "a48c0e2a4a289d9dd3913edfa0075da4423707e1ccf3c8fc2b05aa0f4f6e60c6"
+  },
+  "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_c071_candidate.py": {
+    "reason": "retired native candidate and CDC-only generated Host harness",
+    "sha256": "9bcf0257370aae393d2fb1980856887143c6d468135501ca7628c228eeca116e"
+  },
+  "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_native_ground.py": {
+    "reason": "retired native candidate and CDC-only generated Host harness",
+    "sha256": "d9c4ee572c62469160cb8c95024c2cd12ba0c96e696dbd87f67b2a2ec3b1aa73"
+  },
+  "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/check_native_probe.py": {
+    "reason": "retired native candidate and CDC-only generated Host harness",
+    "sha256": "e89f9a2efe38ee9f86434f56e18463c48894453f09e3b330ac70b8f08fcf094d"
+  },
+  "apps/SCG/plugins/builtin/silverstar_core_ground_0_1_0/payload/Tools/ground_c071_contract.py": {
+    "reason": "retired native candidate and CDC-only generated Host harness",
+    "sha256": "9a410dcf83164a39267115627b7bb7afa030ddfd652cd9445e26885b0f9b4259"
+  },
+  "apps/SCG/tests/test_ground_usb_cdc_ring.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "88b69c0431e76b7a076210b4466218a8ea0965d4e5502befff9ec3c9605ed1c1"
+  },
+  "apps/SCG/tests/test_native_artifact_inventory.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "5ad30e08450e5805a13158af14787543316d089528459e49d2db6f0e96e37b90"
+  },
+  "apps/SCG/tests/test_native_classic_cdc.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "6e788fa2c22319b51426c2bd9fee8e71e41aa99e96fd473ee05504d20cb24d59"
+  },
+  "apps/SCG/tests/test_native_clock.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "f0fe13d9bcaff863e0f71f378388846276860d2dbf9da42f1cdd5c30c7436fb7"
+  },
+  "apps/SCG/tests/test_native_clock_tim.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "6c7da4f0f4ba0a73a17b9181df0901d4231eea631524b6fab726241396f3fb0a"
+  },
+  "apps/SCG/tests/test_native_clock_tim_callers.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "4987378d15dafa28d32b8505384cbe47f9bad161ce5e21010e3e4f3031002953"
+  },
+  "apps/SCG/tests/test_native_clock_tim_lifecycle.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "de182416d4ab7be510e04ecbc0a1cac3218ab44492e1256676bc7e185b158e3d"
+  },
+  "apps/SCG/tests/test_native_clock_tim_phase.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "b6bdd8ee3e28d82a251d1613612ec5c8a8ba4000e75d6c49ae63f3369a7fcc73"
+  },
+  "apps/SCG/tests/test_native_control_faults.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "a3409536bd0beeaa68e7c378d997889c431474d93c1be9cd59043e1e561bfbbf"
+  },
+  "apps/SCG/tests/test_native_control_normal.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "4845e52d462612200ab81447b5b518132249e67ba08ce25e8606bce21e1fb763"
+  },
+  "apps/SCG/tests/test_native_derivatives.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "03a4a7dea7ae6f958941fa68944348ddd3272bca9c942731473e273b6f375ecb"
+  },
+  "apps/SCG/tests/test_native_ground_backend.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "ec8685772cd0d86bf4552f316ae3f969c9c51324ef19eb497026304a0c69d862"
+  },
+  "apps/SCG/tests/test_native_ground_data_path.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "c6e82d20191c5b53406c8ef8787af31cc1f45a56143de3a6c24803daf783fcee"
+  },
+  "apps/SCG/tests/test_native_hal.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "2907ff604afd15f266169f7d1c679d71e0a9e3fa3885de3a3110e6b08b0889b6"
+  },
+  "apps/SCG/tests/test_native_machine_contract.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "3bd97998ad34790d1b843194affff0865d1fad31cea6af55b9cf551d27698d3e"
+  },
+  "apps/SCG/tests/test_native_no_heap.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "a6690ee83bd7369c514bb34fc815749468b2548f5c7268780fce197b2f1eb516"
+  },
+  "apps/SCG/tests/test_native_pc.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "90a361d003d1269e3f994641092f9370342b63f299cf03fdd2dbf176db823173"
+  },
+  "apps/SCG/tests/test_native_platform.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "8db903e64ef3beb30a9eb0a79b78478906ddb47596f07991f5cebf6eb34837cb"
+  },
+  "apps/SCG/tests/test_native_probe_gate.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "f8dae7934076cf5e2731663ee5ba0540555220bc52a01191ec2d2f4cd6ec8488"
+  },
+  "apps/SCG/tests/test_native_radio.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "59088cb053633a8bf4a52afca7ad44f40557475bd7c2bcb4dd4ba13b5c43a3c2"
+  },
+  "apps/SCG/tests/test_native_runtime.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "fce9598501c0ab3380d5c4762630008fe0ecf1a6c44dde6cfa2007883c3abe58"
+  },
+  "apps/SCG/tests/test_native_usb_config.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "667970fb2b5485a86826c8136c0593033354e7a67f930f98646db8655840206f"
+  },
+  "apps/SCG/tests/test_native_usb_data.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "b711c59fd6ea698b725d98042d16af6db26f303e11765ad30c0195a510d36bb2"
+  },
+  "apps/SCG/tests/test_native_usb_indexed.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "2843a15d9800afa5e7d9d1b5e30111c7831e189c8606892abfc2c85bc3f5e805"
+  },
+  "apps/SCG/tests/test_native_usb_indexed_ll.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "73f9fd74710073b866638ed5bafe9cae7289fff74951677dd0f454c9fcacaede"
+  },
+  "apps/SCG/tests/test_native_usb_ll.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "17ae09504ca051651f57148e9f5acf2e830a44b01e035d2b7c2d8bfea1e85d49"
+  },
+  "apps/SCG/tests/test_native_usb_workflow.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "d130d8d25747d3b27f50c1dc876c28b568e90c07eec6536e8694b353937971e1"
+  },
+  "apps/SCG/tests/test_usb_ground_backend.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "1f7439d0d2778bf8f84b31c8bfede9bbb6c325d3cdad0a6385ff491ec423fdf0"
+  },
+  "apps/SCG/tests/test_usb_gui_async.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "5a40819d5501df5365986c90ecdf4ded808eaf0aa9941db70d9a201ee0599b02"
+  },
+  "apps/SCG/tests/test_usb_gui_flow.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "0783e1763bee4b8ad27d9cc3b720b3ca71868995bafb36be34a6f4ab293b220e"
+  },
+  "apps/SCG/tests/test_usb_lifecycle_normal.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "334fe7b50d234602b911fbc39130ada50aebe497a18ea9443ee3fccdd0697b05"
+  },
+  "apps/SCG/tests/test_usb_resource_owners.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "18fe8e38bc0cbfc193a9005a9c4d51d07a3d4f3f8e78ae4e9a45358081176aeb"
+  },
+  "apps/SCG/tests/test_usb_transport.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "ea1fee96035bcc4e12ba27f7d691e459f9ccedc4fdc64379a793996b29ebed47"
+  },
+  "apps/SCG/tests/test_usb_transport_capabilities.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "07c0c3a05375d071998644cb4ae86dbb1ae8a617816b869c0426793ebd201be4"
+  },
+  "apps/SCG/tests/test_usb_transport_control.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "092ee52695b25e160858918b2b0a2a2ecc148a9e753c9c6e7cd60ca358bd1ff1"
+  },
+  "apps/SCG/tests/test_usb_transport_integration.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "7fc97978a386f0eeb3f050e59592b0ee1a1a21b4784472c605b75124aebc0fb7"
+  },
+  "apps/SCG/tests/usb_descriptor_cases.py": {
+    "reason": "retired executable suite specific to deleted CDC owners; historical results preserved, explicit migration tests replace product admission",
+    "sha256": "1661bea0316e4046a1e29874039e8960d094a0ca085d918dec1ecce9540fad5c"
+  },
+  "apps/SCG/tests/fixtures/ground_cdc/usbd_cdc_if_f103.c": {
+    "reason": "CDC callback fixtures",
+    "sha256": "ae28e72d8a1f51db0c80c9ac3f6775c01023af39fd9f5b30ab239b0dfe6b663a"
+  },
+  "apps/SCG/tests/fixtures/ground_cdc/usbd_cdc_if_f407.c": {
+    "reason": "CDC callback fixtures",
+    "sha256": "9b0d5bc7dd87d80c2b86d725bd789805a6ef5b8c33541a0a54164ea15e21f76d"
+  },
+  "apps/SCG/tools/validation/c071_artifact_check.py": {
+    "reason": "private CDC candidate CLI, probes and prototype C071 CDC-based UART companion; ordinary UART and DMA generators retained",
+    "sha256": "cdf7c6304465465738307e376c9b2862a9d03e804e23193623fd0745d215cf8a"
+  },
+  "apps/SCG/tools/validation/c071_backpressure_host.py": {
+    "reason": "private CDC candidate CLI, probes and prototype C071 CDC-based UART companion; ordinary UART and DMA generators retained",
+    "sha256": "55ee00ae8069ae9be936b9eaf608faa46a13a3dc3a59388d760b25c54d6176b3"
+  },
+  "apps/SCG/tools/validation/c071_callback_test.py": {
+    "reason": "private CDC candidate CLI, probes and prototype C071 CDC-based UART companion; ordinary UART and DMA generators retained",
+    "sha256": "85aae31c44c1085dcc316e22f2f3cd2b6f12f9d62900cfaddf3ea1042f162bc8"
+  },
+  "apps/SCG/tools/validation/c071_fetch.py": {
+    "reason": "private CDC candidate CLI, probes and prototype C071 CDC-based UART companion; ordinary UART and DMA generators retained",
+    "sha256": "606628445c781f14dba47e0e699dfbfab9d007506fee5c51ec104a7545afebd4"
+  },
+  "apps/SCG/tools/validation/c071_ground_candidate.py": {
+    "reason": "private CDC candidate CLI, probes and prototype C071 CDC-based UART companion; ordinary UART and DMA generators retained",
+    "sha256": "f0a93fe4e73428b2a5af131ab4413ca9b51fb7533ef7bcdd15f326cef92dfeb5"
+  },
+  "apps/SCG/tools/validation/c071_loop_contract_test.py": {
+    "reason": "private CDC candidate CLI, probes and prototype C071 CDC-based UART companion; ordinary UART and DMA generators retained",
+    "sha256": "da58036373c586fd17529ea0f5b6b00fe7d0a75c653044fd2a53f239dea9afa0"
+  },
+  "apps/SCG/tools/validation/c071_loop_exception_proposal.py": {
+    "reason": "private CDC candidate CLI, probes and prototype C071 CDC-based UART companion; ordinary UART and DMA generators retained",
+    "sha256": "924f685b0749ec2de07c0295ab220d219cf33521fea1e57c1522762437df8750"
+  },
+  "apps/SCG/tools/validation/c071_main_integrate.py": {
+    "reason": "private CDC candidate CLI, probes and prototype C071 CDC-based UART companion; ordinary UART and DMA generators retained",
+    "sha256": "fe41bfdce85b11b3e56d3a9279cf9ec468502add28ac1115b42c5e7e5726e264"
+  },
+  "apps/SCG/tools/validation/c071_main_test.py": {
+    "reason": "private CDC candidate CLI, probes and prototype C071 CDC-based UART companion; ordinary UART and DMA generators retained",
+    "sha256": "edcc7b17813317fdf7410023e2c791477309ab1f1bc6e59b096970e33bb9358e"
+  },
+  "apps/SCG/tools/validation/c071_pc_uart_it.py": {
+    "reason": "private CDC candidate CLI, probes and prototype C071 CDC-based UART companion; ordinary UART and DMA generators retained",
+    "sha256": "d1759478d48b423b89441f7ab4893166f4010aedeaf042d24468eca7f827d36b"
+  },
+  "apps/SCG/tools/validation/c071_recovery_host.py": {
+    "reason": "private CDC candidate CLI, probes and prototype C071 CDC-based UART companion; ordinary UART and DMA generators retained",
+    "sha256": "94348f989d7f0eca1000b3195434b27950dd7fcc8c1a3b1c0c780a547c81d6db"
+  },
+  "apps/SCG/tools/validation/c071_uart_host.py": {
+    "reason": "private CDC candidate CLI, probes and prototype C071 CDC-based UART companion; ordinary UART and DMA generators retained",
+    "sha256": "d989ce11d77275c8f9d1adab9d8354684c26a2de6b4987b3bfae915510f4e100"
+  },
+  "apps/SCG/tools/validation/c071_uart_negative.py": {
+    "reason": "private CDC candidate CLI, probes and prototype C071 CDC-based UART companion; ordinary UART and DMA generators retained",
+    "sha256": "69ede28228ab799a1b353ebb51a7d5836c785b5a67b70771aed99ff55a8365ae"
+  },
+  "apps/SCG/tools/validation/native_classic_cdc_compile.py": {
+    "reason": "private CDC candidate CLI, probes and prototype C071 CDC-based UART companion; ordinary UART and DMA generators retained",
+    "sha256": "7427c6ecb6bb3e04afb514e1e35bc5ad5acee9905886f968c3061a6de8b78bc2"
+  },
+  "apps/SCG/tools/validation/usb_transport_baseline.py": {
+    "reason": "private CDC candidate CLI, probes and prototype C071 CDC-based UART companion; ordinary UART and DMA generators retained",
+    "sha256": "f67a612f324458cdb9c4399f7bebcd9f0487913b034e266ebf89d6c843c22078"
+  },
+  "apps/SCG/tools/validation/usb_transport_validate.py": {
+    "reason": "private CDC candidate CLI, probes and prototype C071 CDC-based UART companion; ordinary UART and DMA generators retained",
+    "sha256": "876685315425c696fbe09dbaab5df8142696043947ce3e3ea2eeae7ce04eab60"
+  }
+}

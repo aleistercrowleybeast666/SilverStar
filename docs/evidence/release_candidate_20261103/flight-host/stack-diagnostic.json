@@ -1,0 +1,55 @@
+{
+  "scope": "Post-rejection diagnostic from the unmodified historical inspect_case.py; no admission or new exception. The emitted strict stack gate remains exit 2 for both cases.",
+  "sx1278": {
+    "gate": "Changed or unknown complete callback binding source: APP/Src/device_task.c",
+    "capture_sha256": "8264bff9c329e64eed084b0c4408ba5b8806f212c06cc4f65168414f77d91c40",
+    "msp_configured": 2304,
+    "diagnostic_msp_bytes": 1932,
+    "tasks": {
+      "Device": {
+        "configured": 2560,
+        "diagnostic_chain_bytes": 1912,
+        "context": 256
+      },
+      "INS": {
+        "configured": 3072,
+        "diagnostic_chain_bytes": 2188,
+        "context": 256
+      },
+      "Estimator": {
+        "configured": 4096,
+        "diagnostic_chain_bytes": 2492,
+        "context": 256
+      },
+      "Flight": {
+        "configured": 4096,
+        "diagnostic_chain_bytes": 3448,
+        "context": 256
+      },
+      "Logger": {
+        "configured": 3072,
+        "diagnostic_chain_bytes": 1608,
+        "context": 256
+      },
+      "Serial": {
+        "configured": 6144,
+        "diagnostic_chain_bytes": 4796,
+        "context": 256
+      },
+      "Telemetry": {
+        "configured": 4096,
+        "diagnostic_chain_bytes": 2012,
+        "context": 256
+      },
+      "Idle": {
+        "configured": 512,
+        "diagnostic_chain_bytes": 0,
+        "context": 256
+      }
+    }
+  },
+  "sx1281": {
+    "capture_completed": false,
+    "diagnostic": "ValueError: Unproved reachable stack: ('AppTask_Device', 'SystemStartup_ProcessDevices', 'SystemGnss_Process', 'ProjectGnssInstance_Process', 'NeoM9nGnssInstance_Process', 'NeoM9nGnssAdapter_Process', 'NeoM9nStartup_Tick', 'SystemDeviceStartup_Tick')"
+  }
+}

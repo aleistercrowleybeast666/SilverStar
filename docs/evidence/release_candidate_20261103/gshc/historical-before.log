@@ -1,0 +1,28 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_historical_radio_frames_do_not_send_or_change_active_scales _______
+
+    def test_historical_radio_frames_do_not_send_or_change_active_scales():
+        from protocol.receive_pipeline import ReceivePipeline
+        from transport.protocol_worker import ProtocolBatch
+        from test_receive_pipeline import air_rx_gsp, capability_frame
+        from test_tm_receive_order import flight_log
+        controller = make_controller()
+        controller._connection_generation = 4
+        parser = ReceivePipeline()
+        historic = bytearray(capability_frame())
+        historic[6] = 32
+        def receive_batch(raw):
+            events = parser.feed(air_rx_gsp(bytes(raw)))
+            controller.on_protocol_batch(ProtocolBatch(4, tuple(events)))
+            return events[0]
+        receive_batch(historic)
+>       assert not controller.worker.sent
+E       AssertionError: assert not [b'\xa5Z\x03\n\t0\x00\x05\x00\x00\x00\x00\x01\x00\xc1\x18']
+E        +  where [b'\xa5Z\x03\n\t0\x00\x05\x00\x00\x00\x00\x01\x00\xc1\x18'] = <test_start_ack_state.FakeWorker object at 0x0000012ECC597B60>.sent
+E        +    where <test_start_ack_state.FakeWorker object at 0x0000012ECC597B60> = <app.Controller(0x12eca86b4a0) at 0x0000012ECC697640>.worker
+
+apps\GSHC\tests\test_release_telemetry_direction.py:143: AssertionError
+=========================== short test summary info ===========================
+FAILED apps/GSHC/tests/test_release_telemetry_direction.py::test_historical_radio_frames_do_not_send_or_change_active_scales
+1 failed, 6 deselected in 6.02s

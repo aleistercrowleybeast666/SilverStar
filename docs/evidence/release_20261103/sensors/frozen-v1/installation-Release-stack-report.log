@@ -1,0 +1,20 @@
+mingw32-make: Entering directory 'D:/python_software/SilverStar/.work/release-20261103/sensors/v5/installation/Flight_Controller'
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_maintenance_uart.ps1
+Maintenance UART source/IOC matched 230400/8N1; no source overwritten
+"FCCG_BUILD_ARTIFACT|ELF|build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.elf"
+python Tools/check_task_stacks.py --config Release --memory-layout legacy --prefix "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-"
+FCCG_PROGRESS|STACK_REPORT|PLAN|1
+FCCG_PROGRESS|STACK_REPORT|BEGIN|1|1|ELF and stack budget
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\release-20261103\sensors\v5\installation\Flight_Controller\Tools\check_task_stacks.py", line 5658, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "D:\python_software\SilverStar\.work\release-20261103\sensors\v5\installation\Flight_Controller\Tools\check_task_stacks.py", line 5638, in main
+    report = StackReport_Build(root, arguments.config, arguments.prefix, arguments.memory_layout)
+  File "D:\python_software\SilverStar\.work\release-20261103\sensors\v5\installation\Flight_Controller\Tools\check_task_stacks.py", line 5521, in StackReport_Build
+    binding_source_proofs = BindingSources_Verify(root, sources, build, prefix)
+  File "D:\python_software\SilverStar\.work\release-20261103\sensors\v5\installation\Flight_Controller\Tools\check_task_stacks.py", line 5052, in BindingSources_Verify
+    raise ValueError("Changed or unknown complete callback binding source: " + path)
+ValueError: Changed or unknown complete callback binding source: APP/Src/device_task.c
+mingw32-make: *** [Makefile:219: stack-report] Error 1
+mingw32-make: Leaving directory 'D:/python_software/SilverStar/.work/release-20261103/sensors/v5/installation/Flight_Controller'

@@ -1,0 +1,14 @@
+{
+  "timeUTC": "2026-11-03T15:08:27.2065091Z",
+  "stopped": [
+    {
+      "ProcessId": 23936,
+      "CommandLine": "\"D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe\" -X utf8 docs/evidence/release_20261103/sensors/gates.py v5 installation frozen-v1"
+    },
+    {
+      "ProcessId": 24552,
+      "CommandLine": "\"D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe\" -X utf8 docs/evidence/release_20261103/sensors/gates.py v6 h743 frozen-v1"
+    }
+  ],
+  "reason": "v5 installation architecture rejects standalone provider; v6 H743 rule4 rejects 62 LOC step. Replaced by complete fresh v7. Already completed gates remain individually recorded, interrupted analyzer/debug not accepted."
+}

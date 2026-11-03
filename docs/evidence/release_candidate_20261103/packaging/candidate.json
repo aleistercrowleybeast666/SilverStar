@@ -1,0 +1,15 @@
+{
+  "code_commit": "187010202685111fa0653b4fa4641e83140d7cfc",
+  "archive": "D:\\python_software\\SilverStar\\dist\\rc1103c\\SilverStar_0_1_3_RC_20261103_Windows_x64.zip",
+  "sha256": "54fa9f18761bf67ddb4571b6427b21b2905fe0ba103582b693a41c918faadfed",
+  "bytes": 240544021,
+  "bundle": "D:\\python_software\\SilverStar\\dist\\rc1103c\\SilverStar",
+  "runtime_input_count": 7553,
+  "verified_first_party_resources": 2275,
+  "executable_sha256": {
+    "SCG.exe": "166e17e1d87378f6fd06ddc032384721d1975481482c996058cd1a9e1bfa8ec0",
+    "GSHC.exe": "61c900dc3fdbb5ecc40de398aa435885bcb355a949f23a013c8ecdba13206665",
+    "FLP.exe": "721ef9d11d2703992ee65f3c9de77180d18874a2d18eaae23856ebe1dcbd87b8"
+  },
+  "unmatched_site_inputs": 1
+}

@@ -1,0 +1,33 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\assembler.py", line 428, in _DesiredFiles_Get
+    storage_replacement = H7StorageInputs_Validate(
+        render_model, self.catalog, hardware_files or {}, project_root)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\h7_storage.py", line 74, in H7StorageInputs_Validate
+    raise ValueError("H7 storage replacement input is unreviewed or modified: " + relative)
+ValueError: H7 storage replacement input is unreviewed or modified: HardwareGenerated/STM32CubeMX/Core/Src/stm32h7xx_it.c
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\docs\evidence\release_20261103\sensors\generate.py", line 81, in <module>
+    print(TargetGeneration_Apply(model,service.catalog,WorkspacePolicy(SCG),dest,TargetScope.FLIGHT),flush=True)
+          ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\multi_target.py", line 595, in TargetGeneration_Apply
+    plan = assembler.Plan(flight_model, flight_root)
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\assembler.py", line 98, in Plan
+    return ProjectAssembler(self.internal_policy, resolved_catalog, self.policy).Plan(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        model, project_root
+        ^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\assembler.py", line 116, in Plan
+    desired, _ownership = self._DesiredFiles_Get(
+                          ~~~~~~~~~~~~~~~~~~~~~~^
+        model, destination, hardware_files
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\python_software\SilverStar\apps\SCG\src\silverstar_fccg\generator\assembler.py", line 431, in _DesiredFiles_Get
+    raise ProjectAssemblerError(str(error)) from error
+silverstar_fccg.generator.assembler.ProjectAssemblerError: H7 storage replacement input is unreviewed or modified: HardwareGenerated/STM32CubeMX/Core/Src/stm32h7xx_it.c

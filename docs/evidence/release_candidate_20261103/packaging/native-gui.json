@@ -1,0 +1,36 @@
+{
+  "code_commit": "187010202685111fa0653b4fa4641e83140d7cfc",
+  "archive_sha256": "54fa9f18761bf67ddb4571b6427b21b2905fe0ba103582b693a41c918faadfed",
+  "executables": {
+    "SCG.exe": "166e17e1d87378f6fd06ddc032384721d1975481482c996058cd1a9e1bfa8ec0",
+    "GSHC.exe": "61c900dc3fdbb5ecc40de398aa435885bcb355a949f23a013c8ecdba13206665",
+    "FLP.exe": "721ef9d11d2703992ee65f3c9de77180d18874a2d18eaae23856ebe1dcbd87b8"
+  },
+  "qt_input_scale_factors": {
+    "SCG": "1.0 at OS 125%",
+    "GSHC and FLP": "1.2 at OS 125%"
+  },
+  "log_sha256_after_gui": "942358074e96ccaaefb1921c75d19f5f83d7ba24b0c76b448fcb3b5d1f16ce68",
+  "scg_export_loaded_in_gshc": "c961420403ae2bb95d20f8d21e133124e29e21c378c3e4e5d344adeaf2686b9e",
+  "screens_and_observations": {
+    "final-flp-overview.jpg": "fbaba3fffdc1cce86e1926f709ab11a99b48febbc89724f2ebe615160506474b",
+    "final-flp-parameters.jpg": "3fbe9b8acf6c576ad72494d43c68973d6799a503817e7daca1aef23bedc41ca7",
+    "final-flp.state.txt": "422681adacb22b554f250582599e136d3ccfbf9ef08f1d0d670e4cffa2f4770f",
+    "final-gshc-declaration.jpg": "6b19ecf0ec5928f39f84d53c30e0a37aba778368f8e610e36caeac6d08fcfebe",
+    "final-gshc-declaration.state.txt": "20f6ee736341f8e0c0c82d70dafc79b9fab642fad2f2945b69c7ee065a3614e0",
+    "final-gshc-mag.jpg": "681bd367b14e7a92c0719fbaf6412759288b1995ab6081218112692d54fcc56d",
+    "final-gshc-mag.state.txt": "417f68f03c2ea56f784299b4fcf8a3b14f9a28038c86a10445721564ca6208a1",
+    "final-gshc-recovery.jpg": "f47e7ff2ba4e944be5b1a089724e4a601604aa800143b126c8f9bbb23635051e",
+    "final-gshc.jpg": "616d02de97af63db5ea11f50fde0ba7c592f7e5ff7b7ac9bae27d95fc46d9485",
+    "final-scg-build.jpg": "25f7bfb39f149eb7cdd0efc75be7c2aed4ccc3034ee32701a69fc33a6e29cd3f",
+    "final-scg-build.state.txt": "b633910c6d7af6d2f910b91004477973ed1a1003cc329410dad531c9a40b7c0e",
+    "final-scg-hardware.jpg": "aec5c5aac6ee1672e9d40835662227aa38f0574c411dc73ca871904f4c74df87",
+    "final-scg-workflow.jpg": "2fdaf3b264c08435fad1562626c66be538e197a5198b66de123b54193498d9b6"
+  },
+  "notes": [
+    "SCG three pages, both Generate buttons disabled on the initial custom targets.",
+    "GSHC disconnected, native 3D displayed, read-only SCG declaration loaded, calibration writes disabled.",
+    "FLP opened exact decoder, overview hid time range, structured recorded parameters displayed.",
+    "Only isolated test drafts discarded. All three windows closed."
+  ]
+}

@@ -1,0 +1,73 @@
+FFF                                                                      [100%]
+================================== FAILURES ===================================
+_____ test_stage_events_on_either_side_of_cap_keep_preflight_link[False] ______
+
+first_cap = False
+
+    @pytest.mark.parametrize("first_cap", [False, True])
+    def test_stage_events_on_either_side_of_cap_keep_preflight_link(first_cap):
+        controller = make_controller()
+        if first_cap:
+            receive(controller, cap(0))
+        for seq, code in enumerate((0x100, 0x100, 0x101), 1):
+            identity = 1 if code == 0x100 else 2
+            receive(controller, event(identity, seq, code=code, occurred=10))
+        receive(controller, cap(4, timestamp=4_000_000))
+>       assert not controller.state.telemetry.passive
+E       AssertionError: assert not True
+E        +  where True = TelemetrySnapshot(boot_session=123, profile='S', passive=True, current_mission_key=(-1, -1), last_stage_id=None, history_complete=False, missions=(), health=None, health_received_ns=None, last_phase_key=(-1, -1)).passive
+E        +    where TelemetrySnapshot(boot_session=123, profile='S', passive=True, current_mission_key=(-1, -1), last_stage_id=None, history_complete=False, missions=(), health=None, health_received_ns=None, last_phase_key=(-1, -1)) = FlightControllerState(telemetry=TelemetrySnapshot(boot_session=123, profile='S', passive=True, current_mission_key=(-1...0, expected_flight_packets=0, packet_loss_rate=0.0, mission_first_time_ms=None, latest_flight_time_ms=None, revision=0).telemetry
+E        +      where FlightControllerState(telemetry=TelemetrySnapshot(boot_session=123, profile='S', passive=True, current_mission_key=(-1...0, expected_flight_packets=0, packet_loss_rate=0.0, mission_first_time_ms=None, latest_flight_time_ms=None, revision=0) = <app.Controller(0x206280c4f00) at 0x0000020629F8C7C0>.state
+
+apps\GSHC\tests\test_release_telemetry_direction.py:19: AssertionError
+______ test_stage_events_on_either_side_of_cap_keep_preflight_link[True] ______
+
+first_cap = True
+
+    @pytest.mark.parametrize("first_cap", [False, True])
+    def test_stage_events_on_either_side_of_cap_keep_preflight_link(first_cap):
+        controller = make_controller()
+        if first_cap:
+            receive(controller, cap(0))
+        for seq, code in enumerate((0x100, 0x100, 0x101), 1):
+            identity = 1 if code == 0x100 else 2
+            receive(controller, event(identity, seq, code=code, occurred=10))
+        receive(controller, cap(4, timestamp=4_000_000))
+>       assert not controller.state.telemetry.passive
+E       AssertionError: assert not True
+E        +  where True = TelemetrySnapshot(boot_session=123, profile='S', passive=True, current_mission_key=(-1, -1), last_stage_id=None, history_complete=False, missions=(), health=None, health_received_ns=None, last_phase_key=(-1, -1)).passive
+E        +    where TelemetrySnapshot(boot_session=123, profile='S', passive=True, current_mission_key=(-1, -1), last_stage_id=None, history_complete=False, missions=(), health=None, health_received_ns=None, last_phase_key=(-1, -1)) = FlightControllerState(telemetry=TelemetrySnapshot(boot_session=123, profile='S', passive=True, current_mission_key=(-1...0, expected_flight_packets=0, packet_loss_rate=0.0, mission_first_time_ms=None, latest_flight_time_ms=None, revision=0).telemetry
+E        +      where FlightControllerState(telemetry=TelemetrySnapshot(boot_session=123, profile='S', passive=True, current_mission_key=(-1...0, expected_flight_packets=0, packet_loss_rate=0.0, mission_first_time_ms=None, latest_flight_time_ms=None, revision=0) = <app.Controller(0x206280c5bd0) at 0x0000020629F1FB80>.state
+
+apps\GSHC\tests\test_release_telemetry_direction.py:19: AssertionError
+_____ test_telemetry_disconnect_preserves_position_but_clears_live_facts ______
+
+    def test_telemetry_disconnect_preserves_position_but_clears_live_facts():
+        controller = make_controller()
+        controller.window = SimpleNamespace(bind_runtime_model=lambda *args, **kwargs: None)
+        controller._state_generation = 1
+        receive(controller, cap(0))
+        from test_ss_tm import position
+        receive(controller, position(1))
+        before = controller.state.telemetry
+>       controller._replace_state(connected=False, connection_text='disconnected')
+
+apps\GSHC\tests\test_release_telemetry_direction.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+apps\GSHC\app.py:1099: in _replace_state
+    if telemetry.boot_session is not None: telemetry.passive = True
+                                           ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = TelemetrySnapshot(boot_session=123, profile='S', passive=False, current_mission_key=(-1, -1), last_stage_id=None, history_complete=False, missions=(), health=None, health_received_ns=None, last_phase_key=(-1, -1))
+name = 'passive', value = True
+
+>   ???
+E   dataclasses.FrozenInstanceError: cannot assign to field 'passive'
+
+<string>:24: FrozenInstanceError
+=========================== short test summary info ===========================
+FAILED apps/GSHC/tests/test_release_telemetry_direction.py::test_stage_events_on_either_side_of_cap_keep_preflight_link[False]
+FAILED apps/GSHC/tests/test_release_telemetry_direction.py::test_stage_events_on_either_side_of_cap_keep_preflight_link[True]
+FAILED apps/GSHC/tests/test_release_telemetry_direction.py::test_telemetry_disconnect_preserves_position_but_clears_live_facts
+3 failed in 6.19s

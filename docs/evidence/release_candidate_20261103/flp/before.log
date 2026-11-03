@@ -1,0 +1,80 @@
+FFF                                                                      [100%]
+================================== FAILURES ===================================
+___________ test_open_single_log_automatically_finds_exact_package ____________
+
+window = <silverstar_flp.ui.main_window.MainWindow(0x1a063c8d9a0) at 0x000001A07E54FAC0>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-release-20261103/root/flp-pre/test_open_single_log_automatic0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001A0673F3230>
+
+    def test_open_single_log_automatically_finds_exact_package(window, tmp_path, monkeypatch):
+        log, package = pair(tmp_path)
+        window._path_preferences.DecoderDirectories_Set((package.parent,))
+        requests = []
+        monkeypatch.setattr(window, '_Task_Start', lambda worker, *callbacks: requests.append(worker))
+        window.Path_Open(log)
+>       assert len(requests) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+apps\FLP\tests\test_decoder_directory_gui.py:129: AssertionError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QFontDatabase: Cannot find font directory C:/Users/chdxm/AppData/Local/Programs/Python/Python314/Lib/site-packages/PySide6/lib/fonts.
+Note that Qt no longer ships fonts. Deploy some (from https://dejavu-fonts.github.io/ for example) or switch to fontconfig.
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QtWarningMsg: This plugin does not support propagateSizeHints()
+_ test_wrong_or_broken_package_keeps_selected_log_for_repair[decoder_profile_hash_mismatch] _
+
+window = <silverstar_flp.ui.main_window.MainWindow(0x1a0000ad950) at 0x000001A07F993200>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-release-20261103/root/flp-pre/test_wrong_or_broken_package_k0')
+code = 'decoder_profile_hash_mismatch'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001A07E5CEFD0>
+
+    @pytest.mark.parametrize('code', ['decoder_profile_hash_mismatch', 'decoder_package_zip_invalid'])
+    def test_wrong_or_broken_package_keeps_selected_log_for_repair(window, tmp_path, code, monkeypatch):
+        log = tmp_path / 'mission.sslog'
+        # Avoid a modal loop on the old error path. The expected result is the
+        # strict pair chooser with actionable diagnostics and no dataset publication.
+        errors = []
+        monkeypatch.setattr(window, '_Error_Show', errors.append)
+        window._LogOpen_Error(code + ':fixture', log)
+>       assert window.import_dialog.isVisible()
+E       assert False
+E        +  where False = <built-in method isVisible of ImportDialog object at 0x000001A07E54CC00>()
+E        +    where <built-in method isVisible of ImportDialog object at 0x000001A07E54CC00> = <silverstar_flp.ui.pages.export_settings.ImportDialog(0x1a004568400) at 0x000001A07E54CC00>.isVisible
+E        +      where <silverstar_flp.ui.pages.export_settings.ImportDialog(0x1a004568400) at 0x000001A07E54CC00> = <silverstar_flp.ui.main_window.MainWindow(0x1a0000ad950) at 0x000001A07F993200>.import_dialog
+
+apps\FLP\tests\test_decoder_directory_gui.py:141: AssertionError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+_ test_wrong_or_broken_package_keeps_selected_log_for_repair[decoder_package_zip_invalid] _
+
+window = <silverstar_flp.ui.main_window.MainWindow(0x1a004deb0a0) at 0x000001A07FE71C80>
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/0.1.3-release-20261103/root/flp-pre/test_wrong_or_broken_package_k1')
+code = 'decoder_package_zip_invalid'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001A07FE1CB90>
+
+    @pytest.mark.parametrize('code', ['decoder_profile_hash_mismatch', 'decoder_package_zip_invalid'])
+    def test_wrong_or_broken_package_keeps_selected_log_for_repair(window, tmp_path, code, monkeypatch):
+        log = tmp_path / 'mission.sslog'
+        # Avoid a modal loop on the old error path. The expected result is the
+        # strict pair chooser with actionable diagnostics and no dataset publication.
+        errors = []
+        monkeypatch.setattr(window, '_Error_Show', errors.append)
+        window._LogOpen_Error(code + ':fixture', log)
+>       assert window.import_dialog.isVisible()
+E       assert False
+E        +  where False = <built-in method isVisible of ImportDialog object at 0x000001A007F752C0>()
+E        +    where <built-in method isVisible of ImportDialog object at 0x000001A007F752C0> = <silverstar_flp.ui.pages.export_settings.ImportDialog(0x1a0049d9fc0) at 0x000001A007F752C0>.isVisible
+E        +      where <silverstar_flp.ui.pages.export_settings.ImportDialog(0x1a0049d9fc0) at 0x000001A007F752C0> = <silverstar_flp.ui.main_window.MainWindow(0x1a004deb0a0) at 0x000001A07FE71C80>.import_dialog
+
+apps\FLP\tests\test_decoder_directory_gui.py:141: AssertionError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+=========================== short test summary info ===========================
+FAILED apps\FLP\tests\test_decoder_directory_gui.py::test_open_single_log_automatically_finds_exact_package
+FAILED apps\FLP\tests\test_decoder_directory_gui.py::test_wrong_or_broken_package_keeps_selected_log_for_repair[decoder_profile_hash_mismatch]
+FAILED apps\FLP\tests\test_decoder_directory_gui.py::test_wrong_or_broken_package_keeps_selected_log_for_repair[decoder_package_zip_invalid]
+3 failed, 6 deselected in 22.31s

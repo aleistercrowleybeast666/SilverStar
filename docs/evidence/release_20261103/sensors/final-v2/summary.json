@@ -1,0 +1,462 @@
+{
+  "production_commit": "724030c4744886b148a55954bfe0580c575c9bff",
+  "cases": {
+    "f407": {
+      "version": "v5",
+      "active_components": [
+        "silverstar.core.0_1_0",
+        "silverstar.platform.api",
+        "silverstar.mcu_family.stm32f4",
+        "silverstar.mcu.stm32f407vet6",
+        "silverstar.board.silverstar_0_5",
+        "silverstar.os.freertos_11_3_0",
+        "silverstar.device.imu.jy901b",
+        "silverstar.device.gnss.neo_m9n",
+        "silverstar.device.telemetry.sx1281",
+        "silverstar.device.console.uart",
+        "silverstar.device.storage.sd_sdio_fatfs",
+        "silverstar.device.sensor.input_voltage",
+        "silverstar.device.actuator.launch_ignition",
+        "silverstar.device.actuator.parachute_pyro",
+        "silverstar.device.indicator.system_status",
+        "silverstar.algorithm.common",
+        "silverstar.algorithm.alignment.common",
+        "silverstar.algorithm.calibration",
+        "silverstar.flight_logic.cycle.reference",
+        "silverstar.flight_logic.deployment.multi_trigger",
+        "silverstar.flight_logic.landing.baro_imu_window",
+        "silverstar.flight_logic.mission_action.gpio_output_service",
+        "silverstar.flight_logic.indicator.gpio_status_service",
+        "silverstar.algorithm.alignment.vector_constraints",
+        "silverstar.algorithm.estimator.kf6",
+        "silverstar.algorithm.ins.coning2_sculling2",
+        "silverstar.flight_logic.landing.baro_imu_window_strategy",
+        "silverstar.protocol.logging.sslog_0_0",
+        "silverstar.protocol.maintenance.serial_0_0",
+        "silverstar.protocol.telemetry.ss_tm",
+        "silverstar.environment.vscode_eide_gcc"
+      ],
+      "identity": {
+        "SilverStar.ssproject": "1f3e2c0d380d2e797771aa3fcf3456357e49c0fe08a9210fa4d0295f1158a1e7",
+        "ReleaseSensor_f407.ssdecoder": "f55c037af42f92d84b889cee3b2d4a5b103ffed6f59e058acb4ae26ddcecb154",
+        "Flight_Controller/Generated/project_sources.mk": "1ffa60b5fe2c61ad46f17149df84391461ff02ba9e48de0ac7ec845c3a3c62fc",
+        "Flight_Controller/Makefile": "5e152a552fbb93aec373a9807ef9887eba476899addf1d5edbae6d93efb51279",
+        "Flight_Controller/.fccg/ownership.json": "665a7acca1a399a4674eb8d593f36639d12675c801ad97013708a2b7093321a6"
+      },
+      "gates": [
+        {
+          "config": "CONFIG=Release",
+          "target": "all",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Release",
+          "target": "architecture-check",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Release",
+          "target": "power10-check",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Release",
+          "target": "artifact-check",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Release",
+          "target": "stack-report",
+          "exit_code": 2
+        },
+        {
+          "config": "CONFIG=Release",
+          "target": "static-analysis",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Debug",
+          "target": "all",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Debug",
+          "target": "artifact-check",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Debug",
+          "target": "stack-report",
+          "exit_code": 2
+        }
+      ],
+      "memory": {
+        "Release": [
+          {
+            "name": "FLASH",
+            "used": 360172,
+            "phys_free": 164116,
+            "budget_free": null
+          },
+          {
+            "name": "RAM",
+            "used": 101676,
+            "phys_free": 29396,
+            "budget_free": 724
+          },
+          {
+            "name": "CCMRAM",
+            "used": 62656,
+            "phys_free": 2880,
+            "budget_free": null
+          }
+        ],
+        "Debug": [
+          {
+            "name": "FLASH",
+            "used": 380076,
+            "phys_free": 144212,
+            "budget_free": null
+          },
+          {
+            "name": "RAM",
+            "used": 101812,
+            "phys_free": 29260,
+            "budget_free": 588
+          },
+          {
+            "name": "CCMRAM",
+            "used": 62656,
+            "phys_free": 2880,
+            "budget_free": null
+          }
+        ]
+      },
+      "logs": "frozen-v1",
+      "strict_complete": false
+    },
+    "installation": {
+      "version": "v7",
+      "active_components": [
+        "silverstar.core.0_1_0",
+        "silverstar.platform.api",
+        "silverstar.mcu_family.stm32f4",
+        "silverstar.mcu.stm32f407vet6",
+        "silverstar.board.silverstar_0_5",
+        "silverstar.os.freertos_11_3_0",
+        "silverstar.device.imu.jy901b",
+        "silverstar.device.gnss.neo_m9n",
+        "silverstar.device.telemetry.sx1281",
+        "silverstar.device.console.uart",
+        "silverstar.device.storage.sd_sdio_fatfs",
+        "silverstar.device.sensor.input_voltage",
+        "silverstar.device.actuator.launch_ignition",
+        "silverstar.device.actuator.parachute_pyro",
+        "silverstar.device.indicator.system_status",
+        "silverstar.algorithm.common",
+        "silverstar.algorithm.alignment.common",
+        "silverstar.algorithm.calibration",
+        "silverstar.flight_logic.cycle.reference",
+        "silverstar.flight_logic.deployment.multi_trigger",
+        "silverstar.flight_logic.landing.baro_imu_window",
+        "silverstar.flight_logic.mission_action.gpio_output_service",
+        "silverstar.flight_logic.indicator.gpio_status_service",
+        "silverstar.installation.capture",
+        "silverstar.algorithm.alignment.vector_constraints",
+        "silverstar.algorithm.estimator.kf6",
+        "silverstar.algorithm.ins.coning2_sculling2",
+        "silverstar.flight_logic.landing.baro_imu_window_strategy",
+        "silverstar.protocol.logging.sslog_0_0",
+        "silverstar.protocol.maintenance.serial_0_0",
+        "silverstar.protocol.telemetry.ss_tm",
+        "silverstar.environment.vscode_eide_gcc"
+      ],
+      "identity": {
+        "SilverStar.ssproject": "61e217f3bd79f3184bc83aa589f17f5869bb22de26f7338ff8c59578d2b7f2f3",
+        "ReleaseSensor_installation.ssdecoder": "072cb38d36293fe8975f65040e7a9d5acfea57ca4ef88429f2ca5ffdcdf68b19",
+        "Flight_Controller/Generated/project_sources.mk": "81220849ab8229a1b90a21e0486f5c0279ae44ea03d8e8074f6b24a9fadf336f",
+        "Flight_Controller/Makefile": "5e152a552fbb93aec373a9807ef9887eba476899addf1d5edbae6d93efb51279",
+        "Flight_Controller/.fccg/ownership.json": "5f80acfdccbfeac066398bf3a90756e44a5251dddeeada7e62b55204ead3e9b1"
+      },
+      "gates": [
+        {
+          "config": "CONFIG=Release",
+          "target": "all",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Release",
+          "target": "architecture-check",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Release",
+          "target": "power10-check",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Release",
+          "target": "artifact-check",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Release",
+          "target": "stack-report",
+          "exit_code": 2
+        },
+        {
+          "config": "CONFIG=Release",
+          "target": "static-analysis",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Debug",
+          "target": "all",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Debug",
+          "target": "artifact-check",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Debug",
+          "target": "stack-report",
+          "exit_code": 2
+        }
+      ],
+      "memory": {
+        "Release": [
+          {
+            "name": "FLASH",
+            "used": 412804,
+            "phys_free": 111484,
+            "budget_free": null
+          },
+          {
+            "name": "RAM",
+            "used": 101884,
+            "phys_free": 29188,
+            "budget_free": 516
+          },
+          {
+            "name": "CCMRAM",
+            "used": 65072,
+            "phys_free": 464,
+            "budget_free": null
+          }
+        ],
+        "Debug": [
+          {
+            "name": "FLASH",
+            "used": 430884,
+            "phys_free": 93404,
+            "budget_free": null
+          },
+          {
+            "name": "RAM",
+            "used": 102020,
+            "phys_free": 29052,
+            "budget_free": 380
+          },
+          {
+            "name": "CCMRAM",
+            "used": 65072,
+            "phys_free": 464,
+            "budget_free": null
+          }
+        ]
+      },
+      "logs": "final-v2",
+      "strict_complete": false
+    },
+    "h743": {
+      "version": "v7",
+      "active_components": [
+        "silverstar.core.0_1_0",
+        "silverstar.platform.api",
+        "silverstar.mcu_family.stm32h7",
+        "silverstar.mcu.stm32h743zit6",
+        "silverstar.os.freertos_11_3_0_cm7",
+        "silverstar.device.imu.bmi088",
+        "silverstar.device.gnss.neo_m9n",
+        "silverstar.device.barometer.bmp390",
+        "silverstar.device.magnetometer.mmc5983ma",
+        "silverstar.device.telemetry.sx1281",
+        "silverstar.device.console.uart",
+        "silverstar.device.storage.sdmmc_fatfs_h7",
+        "silverstar.device.actuator.launch_ignition",
+        "silverstar.algorithm.common",
+        "silverstar.algorithm.alignment.common",
+        "silverstar.algorithm.calibration",
+        "silverstar.flight_logic.cycle.reference",
+        "silverstar.flight_logic.deployment.multi_trigger",
+        "silverstar.flight_logic.landing.baro_imu_window",
+        "silverstar.flight_logic.mission_action.gpio_output_service",
+        "silverstar.flight_logic.indicator.gpio_status_service",
+        "silverstar.sensor.register_bus",
+        "silverstar.algorithm.augmented.common",
+        "silverstar.installation.mag_rotation",
+        "silverstar.algorithm.alignment.gravity_known_yaw",
+        "silverstar.algorithm.estimator.eskf20",
+        "silverstar.algorithm.ins.coning2_sculling2",
+        "silverstar.flight_logic.landing.stillness",
+        "silverstar.protocol.logging.sslog_0_0",
+        "silverstar.protocol.maintenance.serial_0_0",
+        "silverstar.protocol.telemetry.ss_tm",
+        "silverstar.environment.vscode_eide_gcc",
+        "silverstar.hardware_provider.stm32_cubemx"
+      ],
+      "identity": {
+        "SilverStar.ssproject": "0120a019f2aee9ecf30a9e183f4d1c19936aacfa9ebad16d1466d6ebf2a339a2",
+        "H743ZI_eskf20_x1.ssdecoder": "6be39e914463c051930cf1ac6d6202273bd8d0bd2f2ebdd536054f94d72b0ea6",
+        "Flight_Controller/Generated/project_sources.mk": "f901cd5751756b5280010047b189f1d705be35ec0a19d380465ef501f96fb009",
+        "Flight_Controller/Makefile": "a57a063929951c4c149fcf2b577ef2b1130c4b7bca110a7b86a223452ec81f9f",
+        "Flight_Controller/.fccg/ownership.json": "4961f1584424eba7354e02746bbe69e608e05a7bfbe765570ee06e6fe6ca848f"
+      },
+      "gates": [
+        {
+          "config": "CONFIG=Release",
+          "target": "all",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Release",
+          "target": "architecture-check",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Release",
+          "target": "power10-check",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Release",
+          "target": "artifact-check",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Release",
+          "target": "stack-report",
+          "exit_code": 2
+        },
+        {
+          "config": "CONFIG=Release",
+          "target": "static-analysis",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Debug",
+          "target": "all",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Debug",
+          "target": "artifact-check",
+          "exit_code": 0
+        },
+        {
+          "config": "CONFIG=Debug",
+          "target": "stack-report",
+          "exit_code": 2
+        }
+      ],
+      "memory": {
+        "Release": [
+          {
+            "name": "FLASH",
+            "used": 390028,
+            "phys_free": 1707124,
+            "budget_free": null
+          },
+          {
+            "name": "RAM",
+            "used": 220988,
+            "phys_free": 303300,
+            "budget_free": null
+          },
+          {
+            "name": "DTCMRAM",
+            "used": 8192,
+            "phys_free": 122880,
+            "budget_free": null
+          },
+          {
+            "name": "RAM_D2",
+            "used": 0,
+            "phys_free": 294912,
+            "budget_free": null
+          },
+          {
+            "name": "RAM_D3",
+            "used": 0,
+            "phys_free": 65536,
+            "budget_free": null
+          },
+          {
+            "name": "ITCMRAM",
+            "used": 0,
+            "phys_free": 65536,
+            "budget_free": null
+          }
+        ],
+        "Debug": [
+          {
+            "name": "FLASH",
+            "used": 405732,
+            "phys_free": 1691420,
+            "budget_free": null
+          },
+          {
+            "name": "RAM",
+            "used": 221112,
+            "phys_free": 303176,
+            "budget_free": null
+          },
+          {
+            "name": "DTCMRAM",
+            "used": 8192,
+            "phys_free": 122880,
+            "budget_free": null
+          },
+          {
+            "name": "RAM_D2",
+            "used": 0,
+            "phys_free": 294912,
+            "budget_free": null
+          },
+          {
+            "name": "RAM_D3",
+            "used": 0,
+            "phys_free": 65536,
+            "budget_free": null
+          },
+          {
+            "name": "ITCMRAM",
+            "used": 0,
+            "phys_free": 65536,
+            "budget_free": null
+          }
+        ]
+      },
+      "logs": "final-v2",
+      "strict_complete": false
+    }
+  },
+  "storage_status": 0,
+  "h743_runtime_host_exit": 0,
+  "installation_fixed_host_exit": 0,
+  "h743_runtime_claim": "Selected runtime plus automatically invoked logger/storage integrity. Full emitted Host suite was not run.",
+  "row_counts": {
+    "online_and_saved_profiles": 8,
+    "combined_sensor_native_and_generation": 52,
+    "calibration_gui_workflow": 20,
+    "storage_with_serial": 49
+  },
+  "limitations": [
+    "Strict whole-program stack refused on each build. No reviewed seal added.",
+    "Critical contracts not proven globally. No MCU, physical GNSS, IMU, magnetometer, card, flight, time bound or electrical verification.",
+    "Complete offline installation capture uses separate session/native boot and measurement-time proof. Online uses serviced IRQ/conversion brackets.",
+    "Mixed configurable GNSS boot dynamics rejected with the actual instance ids and requested modes."
+  ]
+}

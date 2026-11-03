@@ -1,0 +1,48 @@
+{
+  "unmatched_paths": [
+    "D:\\python_software\\SilverStar\\.venv\\Lib\\site-packages\\numpy-2.4.1.dist-info\\RECORD"
+  ],
+  "multiply_owned": {
+    "C:\\Users\\chdxm\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\PySide6\\__init__.py": [
+      "PySide6",
+      "PySide6_Addons",
+      "PySide6_Essentials"
+    ]
+  },
+  "packages": {
+    "PyOpenGL": 2258,
+    "PyOpenGL-accelerate": 10,
+    "PySide6": 1,
+    "PySide6_Addons": 1,
+    "PySide6_Essentials": 143,
+    "PyYAML": 18,
+    "Pygments": 336,
+    "certifi": 4,
+    "cffi": 17,
+    "charset-normalizer": 10,
+    "colorama": 6,
+    "contourpy": 10,
+    "cycler": 1,
+    "defusedxml": 10,
+    "kiwisolver": 3,
+    "llvmlite": 32,
+    "matplotlib": 312,
+    "numba": 319,
+    "numpy": 179,
+    "packaging": 15,
+    "pillow": 88,
+    "psutil": 5,
+    "pycparser": 11,
+    "pyinstaller": 4,
+    "pyinstaller-hooks-contrib": 0,
+    "pyparsing": 11,
+    "pyqtgraph": 298,
+    "pyserial": 14,
+    "python-dateutil": 16,
+    "scipy": 583,
+    "setuptools": 162,
+    "shiboken6": 4,
+    "six": 1,
+    "typing_extensions": 1
+  }
+}

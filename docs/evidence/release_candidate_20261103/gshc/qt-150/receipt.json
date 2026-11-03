@@ -1,0 +1,52 @@
+{
+  "scope": "Qt offscreen, empty hardware inventory, default disconnected state",
+  "language": "en_US",
+  "theme": "dark",
+  "windows": [
+    {
+      "window": "preflight",
+      "pixels": [
+        1536,
+        1152
+      ],
+      "device_pixel_ratio": 1.5,
+      "sha256": "5fce26cbf7582fca854f6e5c8f71cee5103dae30b6c3c46e58158a5b1f77030d"
+    },
+    {
+      "window": "flight",
+      "pixels": [
+        1536,
+        1152
+      ],
+      "device_pixel_ratio": 1.5,
+      "sha256": "6cfcc2e04da53186a3433a9b712b1c4cae2fc9fcb9717ec53f6ec13241f842e4"
+    },
+    {
+      "window": "recovery",
+      "pixels": [
+        1536,
+        1152
+      ],
+      "device_pixel_ratio": 1.5,
+      "sha256": "0eaad5ea106bbc62321957462165aaceb4e685ecc52e53587de3e88c4961a859"
+    },
+    {
+      "window": "maintenance",
+      "pixels": [
+        1536,
+        1152
+      ],
+      "device_pixel_ratio": 1.5,
+      "sha256": "790d680ef03d36b1cdaac9d7de52e9c289b756b2a63b8560b64ad784ad74ae5b"
+    },
+    {
+      "window": "mag-calibration",
+      "pixels": [
+        960,
+        1020
+      ],
+      "device_pixel_ratio": 1.5,
+      "sha256": "99b8f3d98ab05345ba5659f5b1981ba0e9c4a9507c1bbe5cc85ce5549e56e06d"
+    }
+  ]
+}

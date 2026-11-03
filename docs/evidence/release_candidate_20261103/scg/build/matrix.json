@@ -1,0 +1,921 @@
+{
+  "baseline_git": "8a25f99e7096df94cbf46b83bf4049a55e43a887",
+  "cases": [
+    {
+      "banks": [
+        {
+          "budget_free_bytes": null,
+          "name": "FLASH",
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 47688,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 17848,
+          "used_percent": 27.23388671875
+        },
+        {
+          "budget_free_bytes": null,
+          "name": "RAM",
+          "physical_capacity_bytes": 20480,
+          "physical_free_bytes": 15108,
+          "reserved_bytes": 1028,
+          "review_budget_bytes": null,
+          "used_bytes": 5372,
+          "used_percent": 26.23046875
+        }
+      ],
+      "compiled_c_count": 37,
+      "elf_map_bin": {
+        "build/analysis/ground.bin": "3eaa1abea4252971c6a37ae422b58791547f9630beff1dc6d692af1216afe9f2",
+        "build/analysis/ground.elf": "895b98b3e5b00bdc9ee311d596fdb16e0b0dc8c6759df4729a3a6f4dd9462333",
+        "build/analysis/ground.map": "fbcff5402c6dafc10928a0dc2604c83564a0b19b9c0661c2416aa0b3ce60ea58",
+        "build/ground-artifact.bin": "3eaa1abea4252971c6a37ae422b58791547f9630beff1dc6d692af1216afe9f2",
+        "build/ground-vector.bin": "e52176bd0b3e0c6a55bea02530d3eddd43e745f73a19fcd8e12c0ff9988eed2e",
+        "build/ground.bin": "3eaa1abea4252971c6a37ae422b58791547f9630beff1dc6d692af1216afe9f2",
+        "build/ground.elf": "895b98b3e5b00bdc9ee311d596fdb16e0b0dc8c6759df4729a3a6f4dd9462333",
+        "build/ground.map": "241f6591a96927f35a8a8b69ed1d9491398f5b1972f5455a78e37be835dce012"
+      },
+      "epoch": "matrix-v1/f103-sx1278",
+      "exit": {
+        "all": 0,
+        "architecture-check": 0,
+        "artifact-check": 0,
+        "host-tests": 0,
+        "power10-check": 0,
+        "static-analysis": 0
+      },
+      "files_hashed": 221,
+      "graph_sha256": "73273984ddbb2c85eded9e3acb5f292a6e3eb82872b00bcffb231fd8362afb3b",
+      "latest_scope": false,
+      "linked_heap_or_stack_claim": "NOT_PROVEN",
+      "mcu": "STM32F103C8T6",
+      "memory_report": "matrix-v1-f103-sx1278-memory.json",
+      "model_sha256": "be9eb01d8dca00247e793ac5275b9475c858a86b1bbd1ec4b7bc39ad2aadd29e",
+      "radio": {
+        "bandwidth_hz": 125000,
+        "family": "sx127x",
+        "frequency_hz": 433000000
+      },
+      "selected_native_cdc_sources": [],
+      "software_fixture": "representative independent CubeMX fixture",
+      "target": "ground"
+    },
+    {
+      "banks": [
+        {
+          "budget_free_bytes": null,
+          "name": "FLASH",
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 36516,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 29020,
+          "used_percent": 44.281005859375
+        },
+        {
+          "budget_free_bytes": null,
+          "name": "RAM",
+          "physical_capacity_bytes": 20480,
+          "physical_free_bytes": 13828,
+          "reserved_bytes": 1028,
+          "review_budget_bytes": null,
+          "used_bytes": 6652,
+          "used_percent": 32.48046875
+        }
+      ],
+      "compiled_c_count": 39,
+      "elf_map_bin": {
+        "build/analysis/ground.bin": "1bbb01a547035dd588be3af3ef4127ec7f3b5667a84b544de7690050eccc6854",
+        "build/analysis/ground.elf": "5b651d0e8810be0c61bdfe0d10e701cac1c980a1b5b139a295b20357c9454d32",
+        "build/analysis/ground.map": "be995b3e5461af9d33e45a7aff50ab330ace443a8331519c542d7f9662aea977",
+        "build/ground-artifact.bin": "1bbb01a547035dd588be3af3ef4127ec7f3b5667a84b544de7690050eccc6854",
+        "build/ground-vector.bin": "c378d30a09d39225fe23de9fd6a6138de1dacfa2d9534363afb84197b4150814",
+        "build/ground.bin": "1bbb01a547035dd588be3af3ef4127ec7f3b5667a84b544de7690050eccc6854",
+        "build/ground.elf": "5b651d0e8810be0c61bdfe0d10e701cac1c980a1b5b139a295b20357c9454d32",
+        "build/ground.map": "8f0ddc4872503aa7cd2c8db92c6fc2a14ac01707ff67ad7c1297665b49e2dfe9"
+      },
+      "epoch": "matrix-v1/f103-sx1281",
+      "exit": {
+        "all": 0,
+        "architecture-check": 0,
+        "artifact-check": 0,
+        "host-tests": 0,
+        "power10-check": 0,
+        "static-analysis": 0
+      },
+      "files_hashed": 178,
+      "graph_sha256": "279893c853d9a7e2eab441d29eac99e0e4884cce684bb29c51150b1c9b68b44a",
+      "latest_scope": false,
+      "linked_heap_or_stack_claim": "NOT_PROVEN",
+      "mcu": "STM32F103C8T6",
+      "memory_report": "matrix-v1-f103-sx1281-memory.json",
+      "model_sha256": "d1b64196824ea9e1ed8a3d562bfaacb6bbeae6413bfd9cef082e0f1c7ef938d9",
+      "radio": {
+        "bandwidth_hz": 800000,
+        "family": "sx128x",
+        "frequency_hz": 2473000000
+      },
+      "selected_native_cdc_sources": [],
+      "software_fixture": "declared reference PCB",
+      "target": "ground"
+    },
+    {
+      "banks": [
+        {
+          "budget_free_bytes": null,
+          "name": "FLASH",
+          "physical_capacity_bytes": 524288,
+          "physical_free_bytes": 504624,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 19664,
+          "used_percent": 3.7506103515625
+        },
+        {
+          "budget_free_bytes": null,
+          "name": "RAM",
+          "physical_capacity_bytes": 131072,
+          "physical_free_bytes": 126136,
+          "reserved_bytes": 2052,
+          "review_budget_bytes": null,
+          "used_bytes": 4936,
+          "used_percent": 3.765869140625
+        },
+        {
+          "budget_free_bytes": null,
+          "name": "CCMRAM",
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 65536,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 0,
+          "used_percent": 0.0
+        }
+      ],
+      "compiled_c_count": 49,
+      "elf_map_bin": {
+        "build/analysis/ground.bin": "1ce12e012190ad4c382045448a2a2b340b2bfab318c10f001a02632937688c1e",
+        "build/analysis/ground.elf": "48d93a50d3d0b233cf977299bc524bf8ebd8622ff771184256ebc529f7df3bf4",
+        "build/analysis/ground.map": "02325809c1ceef4cd7546356b57dd83bf884a25f334cd8585170abccfe159533",
+        "build/ground-artifact.bin": "1ce12e012190ad4c382045448a2a2b340b2bfab318c10f001a02632937688c1e",
+        "build/ground-vector.bin": "9bd3486ea55b187e34257570c5cc236ae016df6882ad6d400aa468206d031eea",
+        "build/ground.bin": "1ce12e012190ad4c382045448a2a2b340b2bfab318c10f001a02632937688c1e",
+        "build/ground.elf": "48d93a50d3d0b233cf977299bc524bf8ebd8622ff771184256ebc529f7df3bf4",
+        "build/ground.map": "10a35fa769a88011b7d22179f6bdc05a4d7a7254ad8e7f1053748caf72c0f8e4"
+      },
+      "epoch": "matrix-v2/f407-sx1278",
+      "exit": {
+        "all": 0,
+        "architecture-check": 0,
+        "artifact-check": 0,
+        "host-tests": 0,
+        "power10-check": 0,
+        "static-analysis": 0
+      },
+      "files_hashed": 196,
+      "graph_sha256": "df5ef9502e335518a358899160d469b79481375c919bd2c4a546ec879d924f56",
+      "latest_scope": false,
+      "linked_heap_or_stack_claim": "NOT_PROVEN",
+      "mcu": "STM32F407VET6",
+      "memory_report": "matrix-v2-f407-sx1278-memory.json",
+      "model_sha256": "e2b11830fff6c98a9e495fd31c3bd213016b51c6c0cf9e9341bd4425bde6bcb1",
+      "radio": {
+        "bandwidth_hz": 125000,
+        "family": "sx127x",
+        "frequency_hz": 433000000
+      },
+      "selected_native_cdc_sources": [],
+      "software_fixture": "representative independent CubeMX fixture",
+      "target": "ground"
+    },
+    {
+      "banks": [
+        {
+          "budget_free_bytes": null,
+          "name": "FLASH",
+          "physical_capacity_bytes": 524288,
+          "physical_free_bytes": 494460,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 29828,
+          "used_percent": 5.689239501953125
+        },
+        {
+          "budget_free_bytes": null,
+          "name": "RAM",
+          "physical_capacity_bytes": 131072,
+          "physical_free_bytes": 124908,
+          "reserved_bytes": 2052,
+          "review_budget_bytes": null,
+          "used_bytes": 6164,
+          "used_percent": 4.7027587890625
+        },
+        {
+          "budget_free_bytes": null,
+          "name": "CCMRAM",
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 65536,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 0,
+          "used_percent": 0.0
+        }
+      ],
+      "compiled_c_count": 51,
+      "elf_map_bin": {
+        "build/analysis/ground.bin": "46e1bd419dbfbadfd2ba5466f88cd55411c74c58980ef536b8490b36f5e1e142",
+        "build/analysis/ground.elf": "7eef006e24ebb9e4afae087e0316a7fab381c454a9924141b968ba8232dc43f6",
+        "build/analysis/ground.map": "4f838bdf15e25323031fe8beab4c8634ce899323029673a6e7a46778e603eb02",
+        "build/ground-artifact.bin": "46e1bd419dbfbadfd2ba5466f88cd55411c74c58980ef536b8490b36f5e1e142",
+        "build/ground-vector.bin": "df05f87fb3fb29a46314aafbf42a25bd5186971a809c0bc39120afe0b6ab3f2f",
+        "build/ground.bin": "46e1bd419dbfbadfd2ba5466f88cd55411c74c58980ef536b8490b36f5e1e142",
+        "build/ground.elf": "7eef006e24ebb9e4afae087e0316a7fab381c454a9924141b968ba8232dc43f6",
+        "build/ground.map": "b63b05c84700eaf94aa039964a3364eae787175d0be63063674f52e0909bdefb"
+      },
+      "epoch": "matrix-v2/f407-sx1281",
+      "exit": {
+        "all": 0,
+        "architecture-check": 0,
+        "artifact-check": 0,
+        "host-tests": 0,
+        "power10-check": 0,
+        "static-analysis": 0
+      },
+      "files_hashed": 223,
+      "graph_sha256": "68c9adc3362d41baaca609275535c8f5e694092f3d7a20437c82a27508d41a18",
+      "latest_scope": false,
+      "linked_heap_or_stack_claim": "NOT_PROVEN",
+      "mcu": "STM32F407VET6",
+      "memory_report": "matrix-v2-f407-sx1281-memory.json",
+      "model_sha256": "cee0f9e2f38cf630c9300da75ffd73d6dec61e95028303562058352f9e5af17a",
+      "radio": {
+        "bandwidth_hz": 800000,
+        "family": "sx128x",
+        "frequency_hz": 2473000000
+      },
+      "selected_native_cdc_sources": [],
+      "software_fixture": "representative independent CubeMX fixture",
+      "target": "ground"
+    },
+    {
+      "banks": [
+        {
+          "budget_free_bytes": null,
+          "name": "FLASH",
+          "physical_capacity_bytes": 524288,
+          "physical_free_bytes": 175908,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 348380,
+          "used_percent": 66.44821166992188
+        },
+        {
+          "budget_free_bytes": 9972,
+          "name": "RAM",
+          "physical_capacity_bytes": 131072,
+          "physical_free_bytes": 38644,
+          "reserved_bytes": 2308,
+          "review_budget_bytes": 102400,
+          "used_bytes": 92428,
+          "used_percent": 70.5169677734375
+        },
+        {
+          "budget_free_bytes": null,
+          "name": "CCMRAM",
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 2880,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 62656,
+          "used_percent": 95.60546875
+        }
+      ],
+      "compiled_c_count": 167,
+      "elf_map_bin": {
+        "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.bin": "c057ca5dc6106f93c020ed5e3ecdfeaf17f8913f1d7167987e654df6cbe1ff80",
+        "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.elf": "555322119673ba796da09fd93913a22b035b108d5ea82078e2d393ba526e5fbc",
+        "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.map": "768490b3521dd6e824b4dfbbf3e9eaaf01ccf80820fee7fac6027243828ef6b8",
+        "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_3.bin": "c057ca5dc6106f93c020ed5e3ecdfeaf17f8913f1d7167987e654df6cbe1ff80",
+        "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_3.elf": "787675371519cb4a70b6863d48220d2c5159bc5fb790202330241e9397db6ffd",
+        "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_3.map": "c0ab7a16341f8c761c77837d2079cc50d34cc8e685d0f24022ef531bf1fbcd61"
+      },
+      "epoch": "flight-v1/f407-sx1278",
+      "exit": {
+        "all": 0,
+        "architecture-check": 0,
+        "artifact-check": 0,
+        "power10-check": 0,
+        "stack-report": 2,
+        "static-analysis": 0
+      },
+      "files_hashed": 785,
+      "graph_sha256": "84f1112371bfea5b64aabc0167021bc87ff6289f1d6d2123d9d89f0ec0a05b23",
+      "latest_scope": false,
+      "linked_heap_or_stack_claim": "NOT_PROVEN",
+      "mcu": "STM32F407VET6",
+      "memory_report": "flight-v1-f407-sx1278-memory.json",
+      "model_sha256": "3eb296479421602e55ed3cf072b70bd14d28cf6d775991ecbf3bf95c2f89038d",
+      "radio": {
+        "bandwidth_hz": 125000,
+        "family": "sx127x",
+        "frequency_hz": 433000000
+      },
+      "selected_native_cdc_sources": [],
+      "software_fixture": "representative independent CubeMX fixture",
+      "target": "flight"
+    },
+    {
+      "banks": [
+        {
+          "budget_free_bytes": null,
+          "name": "FLASH",
+          "physical_capacity_bytes": 524288,
+          "physical_free_bytes": 164284,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 360004,
+          "used_percent": 68.66531372070312
+        },
+        {
+          "budget_free_bytes": 724,
+          "name": "RAM",
+          "physical_capacity_bytes": 131072,
+          "physical_free_bytes": 29396,
+          "reserved_bytes": 2304,
+          "review_budget_bytes": 102400,
+          "used_bytes": 101676,
+          "used_percent": 77.5726318359375
+        },
+        {
+          "budget_free_bytes": null,
+          "name": "CCMRAM",
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 2880,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 62656,
+          "used_percent": 95.60546875
+        }
+      ],
+      "compiled_c_count": 169,
+      "elf_map_bin": {
+        "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.bin": "c7c787ea4329608153b64e2c992a321288592bfa2c15558c0594fde81015e71a",
+        "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.elf": "4e34dc461ca8f7d2d31bf50eeea80db76e0b192c02fd17b4ef2fdb41a7d6525f",
+        "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.map": "7b51484dd9b25d416408e75e60d68d0cd73fb4875e9c2c38ac489cd4bb11bc44",
+        "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_3.bin": "c7c787ea4329608153b64e2c992a321288592bfa2c15558c0594fde81015e71a",
+        "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_3.elf": "948dd109129fe42239273f0290b0536af7d049111044617f2c1ae4e09bad2a04",
+        "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_3.map": "2a3c7df7d8be8179e29504dffd8435a0aa847ab88c0f7bc15e8b89063aa6b3b2"
+      },
+      "epoch": "flight-v1/f407-sx1281",
+      "exit": {
+        "all": 0,
+        "architecture-check": 0,
+        "artifact-check": 0,
+        "power10-check": 0,
+        "stack-report": 2,
+        "static-analysis": 0
+      },
+      "files_hashed": 706,
+      "graph_sha256": "1ffa60b5fe2c61ad46f17149df84391461ff02ba9e48de0ac7ec845c3a3c62fc",
+      "latest_scope": false,
+      "linked_heap_or_stack_claim": "NOT_PROVEN",
+      "mcu": "STM32F407VET6",
+      "memory_report": "flight-v1-f407-sx1281-memory.json",
+      "model_sha256": "2db69eadcb2b22b82bf68d040e24e6d45dfe0545ec1e37f7a4975938629c8e39",
+      "radio": {
+        "bandwidth_hz": 800000,
+        "family": "sx128x",
+        "frequency_hz": 2473000000
+      },
+      "selected_native_cdc_sources": [],
+      "software_fixture": "declared reference PCB",
+      "target": "flight"
+    },
+    {
+      "banks": [
+        {
+          "budget_free_bytes": null,
+          "name": "FLASH",
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 47688,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 17848,
+          "used_percent": 27.23388671875
+        },
+        {
+          "budget_free_bytes": null,
+          "name": "RAM",
+          "physical_capacity_bytes": 20480,
+          "physical_free_bytes": 15108,
+          "reserved_bytes": 1028,
+          "review_budget_bytes": null,
+          "used_bytes": 5372,
+          "used_percent": 26.23046875
+        }
+      ],
+      "changed_inputs": {
+        "Platform/Inc/platform_gpio.h": {
+          "after": "3c7825903ea62e959784af13f69b5f71a564dba5e49b41a2b2883b3a0e8ae1b1",
+          "before": "ca867c982f2c9341843f21b4a0c8e674166d54b9025750efe1425f985853f5e0"
+        }
+      },
+      "compared_original": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\matrix-v1\\f103-sx1278\\project\\Ground_Station",
+      "compiled_c_count": 37,
+      "elf_map_bin": {
+        "build/analysis/ground.bin": "3eaa1abea4252971c6a37ae422b58791547f9630beff1dc6d692af1216afe9f2",
+        "build/analysis/ground.elf": "895b98b3e5b00bdc9ee311d596fdb16e0b0dc8c6759df4729a3a6f4dd9462333",
+        "build/analysis/ground.map": "fbcff5402c6dafc10928a0dc2604c83564a0b19b9c0661c2416aa0b3ce60ea58",
+        "build/ground-artifact.bin": "3eaa1abea4252971c6a37ae422b58791547f9630beff1dc6d692af1216afe9f2",
+        "build/ground-vector.bin": "e52176bd0b3e0c6a55bea02530d3eddd43e745f73a19fcd8e12c0ff9988eed2e",
+        "build/ground.bin": "3eaa1abea4252971c6a37ae422b58791547f9630beff1dc6d692af1216afe9f2",
+        "build/ground.elf": "895b98b3e5b00bdc9ee311d596fdb16e0b0dc8c6759df4729a3a6f4dd9462333",
+        "build/ground.map": "241f6591a96927f35a8a8b69ed1d9491398f5b1972f5455a78e37be835dce012"
+      },
+      "epoch": "matrix-v3/f103-sx1278",
+      "exit": {
+        "all": 0,
+        "architecture-check": 0,
+        "artifact-check": 0,
+        "host-tests": 0,
+        "power10-check": 0,
+        "static-analysis": 0
+      },
+      "files_hashed": 221,
+      "graph_sha256": "73273984ddbb2c85eded9e3acb5f292a6e3eb82872b00bcffb231fd8362afb3b",
+      "latest_scope": true,
+      "linked_heap_or_stack_claim": "NOT_PROVEN",
+      "mcu": "STM32F103C8T6",
+      "memory_report": "matrix-v3-f103-sx1278-memory.json",
+      "model_sha256": "be9eb01d8dca00247e793ac5275b9475c858a86b1bbd1ec4b7bc39ad2aadd29e",
+      "new_input_count": 189,
+      "old_input_count": 189,
+      "radio": {
+        "bandwidth_hz": 125000,
+        "family": "sx127x",
+        "frequency_hz": 433000000
+      },
+      "selected_native_cdc_sources": [],
+      "software_fixture": "representative independent CubeMX fixture",
+      "target": "ground"
+    },
+    {
+      "banks": [
+        {
+          "budget_free_bytes": null,
+          "name": "FLASH",
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 36516,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 29020,
+          "used_percent": 44.281005859375
+        },
+        {
+          "budget_free_bytes": null,
+          "name": "RAM",
+          "physical_capacity_bytes": 20480,
+          "physical_free_bytes": 13828,
+          "reserved_bytes": 1028,
+          "review_budget_bytes": null,
+          "used_bytes": 6652,
+          "used_percent": 32.48046875
+        }
+      ],
+      "changed_inputs": {
+        "Platform/Inc/platform_gpio.h": {
+          "after": "3c7825903ea62e959784af13f69b5f71a564dba5e49b41a2b2883b3a0e8ae1b1",
+          "before": "ca867c982f2c9341843f21b4a0c8e674166d54b9025750efe1425f985853f5e0"
+        }
+      },
+      "compared_original": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\matrix-v1\\f103-sx1281\\project\\Ground_Station",
+      "compiled_c_count": 39,
+      "elf_map_bin": {
+        "build/analysis/ground.bin": "1bbb01a547035dd588be3af3ef4127ec7f3b5667a84b544de7690050eccc6854",
+        "build/analysis/ground.elf": "5b651d0e8810be0c61bdfe0d10e701cac1c980a1b5b139a295b20357c9454d32",
+        "build/analysis/ground.map": "be995b3e5461af9d33e45a7aff50ab330ace443a8331519c542d7f9662aea977",
+        "build/ground-artifact.bin": "1bbb01a547035dd588be3af3ef4127ec7f3b5667a84b544de7690050eccc6854",
+        "build/ground-vector.bin": "c378d30a09d39225fe23de9fd6a6138de1dacfa2d9534363afb84197b4150814",
+        "build/ground.bin": "1bbb01a547035dd588be3af3ef4127ec7f3b5667a84b544de7690050eccc6854",
+        "build/ground.elf": "5b651d0e8810be0c61bdfe0d10e701cac1c980a1b5b139a295b20357c9454d32",
+        "build/ground.map": "8f0ddc4872503aa7cd2c8db92c6fc2a14ac01707ff67ad7c1297665b49e2dfe9"
+      },
+      "epoch": "matrix-v3/f103-sx1281",
+      "exit": {
+        "all": 0,
+        "architecture-check": 0,
+        "artifact-check": 0,
+        "host-tests": 0,
+        "power10-check": 0,
+        "static-analysis": 0
+      },
+      "files_hashed": 178,
+      "graph_sha256": "279893c853d9a7e2eab441d29eac99e0e4884cce684bb29c51150b1c9b68b44a",
+      "latest_scope": true,
+      "linked_heap_or_stack_claim": "NOT_PROVEN",
+      "mcu": "STM32F103C8T6",
+      "memory_report": "matrix-v3-f103-sx1281-memory.json",
+      "model_sha256": "d1b64196824ea9e1ed8a3d562bfaacb6bbeae6413bfd9cef082e0f1c7ef938d9",
+      "new_input_count": 163,
+      "old_input_count": 163,
+      "radio": {
+        "bandwidth_hz": 800000,
+        "family": "sx128x",
+        "frequency_hz": 2473000000
+      },
+      "selected_native_cdc_sources": [],
+      "software_fixture": "declared reference PCB",
+      "target": "ground"
+    },
+    {
+      "banks": [
+        {
+          "budget_free_bytes": null,
+          "name": "FLASH",
+          "physical_capacity_bytes": 524288,
+          "physical_free_bytes": 504624,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 19664,
+          "used_percent": 3.7506103515625
+        },
+        {
+          "budget_free_bytes": null,
+          "name": "RAM",
+          "physical_capacity_bytes": 131072,
+          "physical_free_bytes": 126136,
+          "reserved_bytes": 2052,
+          "review_budget_bytes": null,
+          "used_bytes": 4936,
+          "used_percent": 3.765869140625
+        },
+        {
+          "budget_free_bytes": null,
+          "name": "CCMRAM",
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 65536,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 0,
+          "used_percent": 0.0
+        }
+      ],
+      "changed_inputs": {},
+      "compared_original": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\matrix-v2\\f407-sx1278\\project\\Ground_Station",
+      "compiled_c_count": 49,
+      "elf_map_bin": {
+        "build/analysis/ground.bin": "1ce12e012190ad4c382045448a2a2b340b2bfab318c10f001a02632937688c1e",
+        "build/analysis/ground.elf": "48d93a50d3d0b233cf977299bc524bf8ebd8622ff771184256ebc529f7df3bf4",
+        "build/analysis/ground.map": "02325809c1ceef4cd7546356b57dd83bf884a25f334cd8585170abccfe159533",
+        "build/ground-artifact.bin": "1ce12e012190ad4c382045448a2a2b340b2bfab318c10f001a02632937688c1e",
+        "build/ground-vector.bin": "9bd3486ea55b187e34257570c5cc236ae016df6882ad6d400aa468206d031eea",
+        "build/ground.bin": "1ce12e012190ad4c382045448a2a2b340b2bfab318c10f001a02632937688c1e",
+        "build/ground.elf": "48d93a50d3d0b233cf977299bc524bf8ebd8622ff771184256ebc529f7df3bf4",
+        "build/ground.map": "10a35fa769a88011b7d22179f6bdc05a4d7a7254ad8e7f1053748caf72c0f8e4"
+      },
+      "epoch": "matrix-v3/f407-sx1278",
+      "exit": {},
+      "files_hashed": 196,
+      "graph_sha256": "df5ef9502e335518a358899160d469b79481375c919bd2c4a546ec879d924f56",
+      "identical_to_original_gate_epoch": "matrix-v2/f407-sx1278",
+      "latest_scope": true,
+      "linked_heap_or_stack_claim": "NOT_PROVEN",
+      "mcu": "STM32F407VET6",
+      "memory_report": "matrix-v3-f407-sx1278-memory.json",
+      "model_sha256": "e2b11830fff6c98a9e495fd31c3bd213016b51c6c0cf9e9341bd4425bde6bcb1",
+      "new_input_count": 171,
+      "old_input_count": 171,
+      "radio": {
+        "bandwidth_hz": 125000,
+        "family": "sx127x",
+        "frequency_hz": 433000000
+      },
+      "selected_native_cdc_sources": [],
+      "software_fixture": "representative independent CubeMX fixture",
+      "target": "ground"
+    },
+    {
+      "banks": [
+        {
+          "budget_free_bytes": null,
+          "name": "FLASH",
+          "physical_capacity_bytes": 524288,
+          "physical_free_bytes": 494460,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 29828,
+          "used_percent": 5.689239501953125
+        },
+        {
+          "budget_free_bytes": null,
+          "name": "RAM",
+          "physical_capacity_bytes": 131072,
+          "physical_free_bytes": 124908,
+          "reserved_bytes": 2052,
+          "review_budget_bytes": null,
+          "used_bytes": 6164,
+          "used_percent": 4.7027587890625
+        },
+        {
+          "budget_free_bytes": null,
+          "name": "CCMRAM",
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 65536,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 0,
+          "used_percent": 0.0
+        }
+      ],
+      "changed_inputs": {},
+      "compared_original": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\matrix-v2\\f407-sx1281\\project\\Ground_Station",
+      "compiled_c_count": 51,
+      "elf_map_bin": {
+        "build/analysis/ground.bin": "46e1bd419dbfbadfd2ba5466f88cd55411c74c58980ef536b8490b36f5e1e142",
+        "build/analysis/ground.elf": "7eef006e24ebb9e4afae087e0316a7fab381c454a9924141b968ba8232dc43f6",
+        "build/analysis/ground.map": "4f838bdf15e25323031fe8beab4c8634ce899323029673a6e7a46778e603eb02",
+        "build/ground-artifact.bin": "46e1bd419dbfbadfd2ba5466f88cd55411c74c58980ef536b8490b36f5e1e142",
+        "build/ground-vector.bin": "df05f87fb3fb29a46314aafbf42a25bd5186971a809c0bc39120afe0b6ab3f2f",
+        "build/ground.bin": "46e1bd419dbfbadfd2ba5466f88cd55411c74c58980ef536b8490b36f5e1e142",
+        "build/ground.elf": "7eef006e24ebb9e4afae087e0316a7fab381c454a9924141b968ba8232dc43f6",
+        "build/ground.map": "b63b05c84700eaf94aa039964a3364eae787175d0be63063674f52e0909bdefb"
+      },
+      "epoch": "matrix-v3/f407-sx1281",
+      "exit": {},
+      "files_hashed": 223,
+      "graph_sha256": "68c9adc3362d41baaca609275535c8f5e694092f3d7a20437c82a27508d41a18",
+      "identical_to_original_gate_epoch": "matrix-v2/f407-sx1281",
+      "latest_scope": true,
+      "linked_heap_or_stack_claim": "NOT_PROVEN",
+      "mcu": "STM32F407VET6",
+      "memory_report": "matrix-v3-f407-sx1281-memory.json",
+      "model_sha256": "cee0f9e2f38cf630c9300da75ffd73d6dec61e95028303562058352f9e5af17a",
+      "new_input_count": 198,
+      "old_input_count": 198,
+      "radio": {
+        "bandwidth_hz": 800000,
+        "family": "sx128x",
+        "frequency_hz": 2473000000
+      },
+      "selected_native_cdc_sources": [],
+      "software_fixture": "representative independent CubeMX fixture",
+      "target": "ground"
+    },
+    {
+      "banks": [
+        {
+          "budget_free_bytes": null,
+          "name": "FLASH",
+          "physical_capacity_bytes": 524288,
+          "physical_free_bytes": 175724,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 348564,
+          "used_percent": 66.48330688476562
+        },
+        {
+          "budget_free_bytes": 9972,
+          "name": "RAM",
+          "physical_capacity_bytes": 131072,
+          "physical_free_bytes": 38644,
+          "reserved_bytes": 2308,
+          "review_budget_bytes": 102400,
+          "used_bytes": 92428,
+          "used_percent": 70.5169677734375
+        },
+        {
+          "budget_free_bytes": null,
+          "name": "CCMRAM",
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 2880,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 62656,
+          "used_percent": 95.60546875
+        }
+      ],
+      "changed_inputs": {
+        "APP/Src/device_task.c": {
+          "after": "207b91dec3ecbbbb5459e2073d7d53ff947b74909f05935a2f66ad6ba2573a0e",
+          "before": "5eba97840c5fe9e510a4d1848f0e60cec51c4a2745e581593cba7221a6f699ab"
+        },
+        "Generated/Src/project_log_decoder_profile.c": {
+          "after": "1c474e3d23e486905716d3112f365f25478cbcdf685e477d884d968bc7539f16",
+          "before": "85f1487e6cf46c998b99d4bfe463b351f52123a4fa82aba174543e8c83068e7a"
+        },
+        "Interfaces/Inc/system_mag_rotation_if.h": {
+          "after": "6508b316a721dbeb4af1ea90ce1439000595923d0fad96d9f4c982c923915d7a",
+          "before": "ad725f48f6e148c7359474e4c30fd33e4c6c15fb79b91a58efb0103137d73046"
+        },
+        "System/Calibration/Src/system_mag_calibration.c": {
+          "after": "d4962997d0e27f89e7e2b0e1209c7a756424ab7d01d77a6ddfcee0993fe81e3e",
+          "before": "5bd4077668ef500583d525772510e39708abcd0afe60d5494c9c1657c53a0a2c"
+        },
+        "System/Src/system_console.c": {
+          "after": "1dc872a1f38517d0fed21ca5bfb2f8a740e8fa40ffd12dc84f5d93c97e525c87",
+          "before": "8681976f3402d819ae5deebfbcea7a5d200400240d2fc067c518e191a789cbdd"
+        },
+        "Tests/Host/installation_unit_boundary.c": {
+          "after": "c84fda340452eed0a0670d0c8d3d00e375be4001c0b3297bdbfd4107b0a2e3a0",
+          "before": "9bad12c88f0d8cad34cbb970ba63f1c17caf831fdeb78bebbdf3f2e26f586ed9"
+        },
+        "Tests/Host/mag_calibration/test_mag_tf.h": {
+          "after": "c9bb1dcb675e20ea90d59f6430bd1139c6bde7872949adf8c8f77071da3e1ee4",
+          "before": "96315d5b99503bdfab07b426996d453765d56d12ce4af386e8f2e623d1b4f86b"
+        },
+        "Tests/Host/mag_calibration/test_system_mag_calibration.c": {
+          "after": "84863c86c7cbab18149eb95cc4229b8f9757ad87dca5e9b06c3c1929a2bea325",
+          "before": "aabf802a4edf1d0adc510b727f1513705091998cd3d184085792015f77dee25b"
+        },
+        "Tests/Host/run_tests.ps1": {
+          "after": "588a87b697fa6d5c4c98bc554144a125a08586151acde76968499070409f64fc",
+          "before": "663ef3768fcf638ec2432e4991dc498acfa83c18821cf6c27ec354396df5a5f9"
+        },
+        "Tests/Host/storage_integrity/run_storage_integrity.py": {
+          "after": "1d2dacd4ccfdb3fddf13312596832e24df808fd1e36a44f8b2392d8b07721488",
+          "before": "2f2c36485b0316e9b964b04d9b843d384cfd85dd69951e11d8a89c6cb91bef15"
+        }
+      },
+      "compared_original": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\flight-v1\\f407-sx1278\\project\\Flight_Controller",
+      "compiled_c_count": 167,
+      "elf_map_bin": {
+        "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.bin": "d4ef3c08ad371f301b5001f3900a754fb4af8eef870d629e3ae3e731249f2c88",
+        "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.elf": "07acb122b9eaab87cf5bbcd6bae155a027ad41194285deb7326b404098df3a19",
+        "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.map": "3b3115c728d43f82037f73e308557a9386544dc172fecfda794bcd2488a19c93",
+        "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_3.bin": "d4ef3c08ad371f301b5001f3900a754fb4af8eef870d629e3ae3e731249f2c88",
+        "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_3.elf": "be022f87e7c1c85dbe2364896dfad6dd8ff1dae57bb8e95d8c678d6ba4224946",
+        "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_3.map": "963e4c9748d3aeb245debe1887362ffca06afb68d107553a5f345a2ff43958b5"
+      },
+      "epoch": "flight-v2/f407-sx1278",
+      "exit": {
+        "all": 0,
+        "architecture-check": 0,
+        "artifact-check": 0,
+        "power10-check": 0,
+        "stack-report": 2,
+        "static-analysis": 0
+      },
+      "files_hashed": 785,
+      "graph_sha256": "84f1112371bfea5b64aabc0167021bc87ff6289f1d6d2123d9d89f0ec0a05b23",
+      "latest_scope": true,
+      "linked_heap_or_stack_claim": "NOT_PROVEN",
+      "mcu": "STM32F407VET6",
+      "memory_report": "flight-v2-f407-sx1278-memory.json",
+      "model_sha256": "1df77540d29872fc4146985afa4b4829e395105c37a111024b31782b5a9ab9ee",
+      "new_input_count": 696,
+      "old_input_count": 696,
+      "radio": {
+        "bandwidth_hz": 125000,
+        "family": "sx127x",
+        "frequency_hz": 433000000
+      },
+      "selected_native_cdc_sources": [],
+      "software_fixture": "representative independent CubeMX fixture",
+      "target": "flight"
+    },
+    {
+      "banks": [
+        {
+          "budget_free_bytes": null,
+          "name": "FLASH",
+          "physical_capacity_bytes": 524288,
+          "physical_free_bytes": 164116,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 360172,
+          "used_percent": 68.69735717773438
+        },
+        {
+          "budget_free_bytes": 724,
+          "name": "RAM",
+          "physical_capacity_bytes": 131072,
+          "physical_free_bytes": 29396,
+          "reserved_bytes": 2304,
+          "review_budget_bytes": 102400,
+          "used_bytes": 101676,
+          "used_percent": 77.5726318359375
+        },
+        {
+          "budget_free_bytes": null,
+          "name": "CCMRAM",
+          "physical_capacity_bytes": 65536,
+          "physical_free_bytes": 2880,
+          "reserved_bytes": 0,
+          "review_budget_bytes": null,
+          "used_bytes": 62656,
+          "used_percent": 95.60546875
+        }
+      ],
+      "changed_inputs": {
+        "APP/Src/device_task.c": {
+          "after": "207b91dec3ecbbbb5459e2073d7d53ff947b74909f05935a2f66ad6ba2573a0e",
+          "before": "5eba97840c5fe9e510a4d1848f0e60cec51c4a2745e581593cba7221a6f699ab"
+        },
+        "Generated/Src/project_log_decoder_profile.c": {
+          "after": "381dfdaa44bb239b6024f5d0807514100fec692f91b685508dc5b44fbf28bc14",
+          "before": "f6039d6eaf40c6d380665f83c0978b8beb3d1b53e55437dc4831666888894761"
+        },
+        "Interfaces/Inc/system_mag_rotation_if.h": {
+          "after": "6508b316a721dbeb4af1ea90ce1439000595923d0fad96d9f4c982c923915d7a",
+          "before": "ad725f48f6e148c7359474e4c30fd33e4c6c15fb79b91a58efb0103137d73046"
+        },
+        "System/Calibration/Src/system_mag_calibration.c": {
+          "after": "d4962997d0e27f89e7e2b0e1209c7a756424ab7d01d77a6ddfcee0993fe81e3e",
+          "before": "5bd4077668ef500583d525772510e39708abcd0afe60d5494c9c1657c53a0a2c"
+        },
+        "System/Src/system_console.c": {
+          "after": "1dc872a1f38517d0fed21ca5bfb2f8a740e8fa40ffd12dc84f5d93c97e525c87",
+          "before": "8681976f3402d819ae5deebfbcea7a5d200400240d2fc067c518e191a789cbdd"
+        },
+        "Tests/Host/installation_unit_boundary.c": {
+          "after": "c84fda340452eed0a0670d0c8d3d00e375be4001c0b3297bdbfd4107b0a2e3a0",
+          "before": "9bad12c88f0d8cad34cbb970ba63f1c17caf831fdeb78bebbdf3f2e26f586ed9"
+        },
+        "Tests/Host/mag_calibration/test_mag_tf.h": {
+          "after": "c9bb1dcb675e20ea90d59f6430bd1139c6bde7872949adf8c8f77071da3e1ee4",
+          "before": "96315d5b99503bdfab07b426996d453765d56d12ce4af386e8f2e623d1b4f86b"
+        },
+        "Tests/Host/mag_calibration/test_system_mag_calibration.c": {
+          "after": "84863c86c7cbab18149eb95cc4229b8f9757ad87dca5e9b06c3c1929a2bea325",
+          "before": "aabf802a4edf1d0adc510b727f1513705091998cd3d184085792015f77dee25b"
+        },
+        "Tests/Host/run_tests.ps1": {
+          "after": "588a87b697fa6d5c4c98bc554144a125a08586151acde76968499070409f64fc",
+          "before": "663ef3768fcf638ec2432e4991dc498acfa83c18821cf6c27ec354396df5a5f9"
+        },
+        "Tests/Host/storage_integrity/run_storage_integrity.py": {
+          "after": "1d2dacd4ccfdb3fddf13312596832e24df808fd1e36a44f8b2392d8b07721488",
+          "before": "2f2c36485b0316e9b964b04d9b843d384cfd85dd69951e11d8a89c6cb91bef15"
+        }
+      },
+      "compared_original": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\flight-v1\\f407-sx1281\\project\\Flight_Controller",
+      "compiled_c_count": 169,
+      "elf_map_bin": {
+        "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.bin": "3d7d24e4319b3769539316a311cdae5eaf81783e3415b1ea91e93e6f9aa7ec2e",
+        "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.elf": "6ebd080c6e6d50bac28dc5109661dca3b0ebeb4166008b434aed10260eaa7e71",
+        "build/FCCG/SilverStar_F407/Release/SilverStar_0_1_3.map": "b5f6adeb2cb80df4ca2652a520d0ec5989087d51b08fa9f507034bb0e23d3245",
+        "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_3.bin": "3d7d24e4319b3769539316a311cdae5eaf81783e3415b1ea91e93e6f9aa7ec2e",
+        "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_3.elf": "5a5d7499b8530df74192b64cb758a8f8a8b3d86da495c54d41119acb407563a3",
+        "build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_3.map": "ac0c0bc930de6faa645e261f27a8b64c3d70819a9db5cacd333989a0d909d377"
+      },
+      "epoch": "flight-v2/f407-sx1281",
+      "exit": {
+        "all": 0,
+        "architecture-check": 0,
+        "artifact-check": 0,
+        "power10-check": 0,
+        "stack-report": 2,
+        "static-analysis": 0
+      },
+      "files_hashed": 706,
+      "graph_sha256": "1ffa60b5fe2c61ad46f17149df84391461ff02ba9e48de0ac7ec845c3a3c62fc",
+      "latest_scope": true,
+      "linked_heap_or_stack_claim": "NOT_PROVEN",
+      "mcu": "STM32F407VET6",
+      "memory_report": "flight-v2-f407-sx1281-memory.json",
+      "model_sha256": "d218ea456fe01df688505257b36682d2273e5994a5e18b4ee7dfbcd3d50e57e1",
+      "new_input_count": 650,
+      "old_input_count": 650,
+      "radio": {
+        "bandwidth_hz": 800000,
+        "family": "sx128x",
+        "frequency_hz": 2473000000
+      },
+      "selected_native_cdc_sources": [],
+      "software_fixture": "declared reference PCB",
+      "target": "flight"
+    }
+  ],
+  "final_source": "Final normal catalog and model after 2026-11-03 default Flight/Ground owners froze. Exact target bytes are in per-output inventories, rather than an assertion that all Git working files were clean.",
+  "format": 1,
+  "generated_while_dirty": true,
+  "superseded_cases": [
+    {
+      "epoch": "matrix-v1/f407-sx1278",
+      "exit": {
+        "all": 2,
+        "architecture-check": 0,
+        "artifact-check": 2,
+        "host-tests": 2,
+        "power10-check": 2,
+        "static-analysis": 2
+      },
+      "software_fixture": "representative independent CubeMX fixture",
+      "target": "ground"
+    },
+    {
+      "epoch": "matrix-v1/f407-sx1281",
+      "exit": {
+        "all": 2,
+        "architecture-check": 0,
+        "artifact-check": 2,
+        "host-tests": 2,
+        "power10-check": 2,
+        "static-analysis": 2
+      },
+      "software_fixture": "representative independent CubeMX fixture",
+      "target": "ground"
+    }
+  ],
+  "uart_gui_code_commit_after_runs": "99533471730641da658218bce439e64d1721a04c"
+}

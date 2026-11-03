@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-03",
+  "SilverStar": {
+    "checkout": "D:/python_software/SilverStar",
+    "branch": "feature/usb-transport-0.1.3-20261013",
+    "remote": "GitHub_SilverStar",
+    "starting_local_and_remote_head": "8a25f99e7096df94cbf46b83bf4049a55e43a887",
+    "preexisting_tracked_change": "AGENTS.md: existing active SS-TM-S / read-only historical M0 correction, included as requested",
+    "preexisting_untracked_excluded": [
+      "docs/evidence/astra_0_1_3_20261027/",
+      "docs/evidence/cleanup_20261028/",
+      "work_build_candidates_20261006.csv",
+      "work_inventory_20261006.txt",
+      "work_subtree_classification_20261006.csv"
+    ]
+  },
+  "Underline_RETLDC": {
+    "checkout": "D:/python_software/Underline_RETLDC",
+    "starting_branch": "main",
+    "starting_local_and_remote_head": "351ab0b0167eb37bd6312c2bde79181d6225e97f",
+    "delivery_branch": "codex/release-candidate-20261103",
+    "preexisting_untracked_excluded": ["docs/Repository_Showcase_Review_20261016.md"]
+  },
+  "integration_scope": "Retain the existing Underline motor-test-package export. TreeDiagram has no changes in this task."
+}

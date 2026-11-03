@@ -1,0 +1,78 @@
+.FF....                                                                  [100%]
+================================== FAILURES ===================================
+_____________________ test_estimator_and_runtime[runtime] _____________________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release-20261103/sensors/rotation-v3/test_estimator_and_runtime_run0')
+mode = 'runtime'
+
+    @pytest.mark.parametrize("mode",["math","runtime","confirmed_fixed"])
+    def test_estimator_and_runtime(tmp_path,mode):
+        includes=[MATH/'Inc',CORE/'Tests/Host/mag_calibration',CORE/'Interfaces/Inc',CORE/'Common/Inc',
+            CORE/'System/Inc',CORE/'System/Inertial/Inc',CORE/'System/Calibration/Inc',CORE/'APP/Inc',CORE/'System/User',
+            BUILTIN/'silverstar_platform_api/payload/Platform/Inc',
+            BUILTIN/'silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG/Inc',
+            BUILTIN/'silverstar_algorithm_calibration/payload/Algorithm/Calibration/Inc']
+        src=[MATH/'Src/mag_rotation.c']
+        if mode=='math':
+            src.append(SCG/'tests/fixtures/sensors/test_mag_rotation.c')
+        else:
+            src.extend([MATH/'Src/mag_rotation_runtime.c',PLUGIN/'Tests/Host/test_mag_rotation_runtime.c'])
+        exe=tmp_path/'rotation.exe'
+        command=[shutil.which('gcc'),'-std=c11','-O2','-Wall','-Wextra','-Wpedantic','-Werror','-Wconversion',
+            '-Wsign-conversion','-Wshadow','-Wundef','-Wdouble-promotion','-Wstrict-prototypes','-Wmissing-prototypes',
+            '-fanalyzer','-DSYSTEM_MAG_ROTATION_ENABLED=1U',
+            '-DSYSTEM_INSTALLATION_CAPTURE_ENABLED='+('1U' if mode=='confirmed_fixed' else '0U'),
+            *['-I'+str(p) for p in includes],*[str(p) for p in src],'-lm','-o',str(exe)]
+        rows=[]
+        for stage,invocation in [('compile',command),('run',[str(exe)])]:
+            with (tmp_path/(stage+'.log')).open('wb') as output:
+                result=subprocess.run(invocation,stdout=output,stderr=subprocess.STDOUT,timeout=90)
+            rows.append({'command':invocation,'exit_code':result.returncode})
+            (tmp_path/'commands.json').write_text(json.dumps({'sources':{str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in src},'rows':rows},indent=2),encoding='utf8')
+>           assert result.returncode==0,(tmp_path/(stage+'.log')).read_text(encoding='utf8',errors='replace')
+E           AssertionError: Assertion failed: s_adopted>0U&&applied>0U&&s_log_revision>0U&&SystemMagRotation_ProviderQualified(axes), file D:\python_software\SilverStar\apps\SCG\plugins\builtin\silverstar_mag_rotation\payload\Tests\Host\test_mag_rotation_runtime.c, line 114
+E             
+E           assert 3221226505 == 0
+E            +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\rotation-v3\\test_estimator_and_runtime_run0\\rotation.exe'], returncode=3221226505).returncode
+
+apps\SCG\tests\test_release_mag_rotation.py:39: AssertionError
+_________________ test_estimator_and_runtime[confirmed_fixed] _________________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release-20261103/sensors/rotation-v3/test_estimator_and_runtime_con0')
+mode = 'confirmed_fixed'
+
+    @pytest.mark.parametrize("mode",["math","runtime","confirmed_fixed"])
+    def test_estimator_and_runtime(tmp_path,mode):
+        includes=[MATH/'Inc',CORE/'Tests/Host/mag_calibration',CORE/'Interfaces/Inc',CORE/'Common/Inc',
+            CORE/'System/Inc',CORE/'System/Inertial/Inc',CORE/'System/Calibration/Inc',CORE/'APP/Inc',CORE/'System/User',
+            BUILTIN/'silverstar_platform_api/payload/Platform/Inc',
+            BUILTIN/'silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG/Inc',
+            BUILTIN/'silverstar_algorithm_calibration/payload/Algorithm/Calibration/Inc']
+        src=[MATH/'Src/mag_rotation.c']
+        if mode=='math':
+            src.append(SCG/'tests/fixtures/sensors/test_mag_rotation.c')
+        else:
+            src.extend([MATH/'Src/mag_rotation_runtime.c',PLUGIN/'Tests/Host/test_mag_rotation_runtime.c'])
+        exe=tmp_path/'rotation.exe'
+        command=[shutil.which('gcc'),'-std=c11','-O2','-Wall','-Wextra','-Wpedantic','-Werror','-Wconversion',
+            '-Wsign-conversion','-Wshadow','-Wundef','-Wdouble-promotion','-Wstrict-prototypes','-Wmissing-prototypes',
+            '-fanalyzer','-DSYSTEM_MAG_ROTATION_ENABLED=1U',
+            '-DSYSTEM_INSTALLATION_CAPTURE_ENABLED='+('1U' if mode=='confirmed_fixed' else '0U'),
+            *['-I'+str(p) for p in includes],*[str(p) for p in src],'-lm','-o',str(exe)]
+        rows=[]
+        for stage,invocation in [('compile',command),('run',[str(exe)])]:
+            with (tmp_path/(stage+'.log')).open('wb') as output:
+                result=subprocess.run(invocation,stdout=output,stderr=subprocess.STDOUT,timeout=90)
+            rows.append({'command':invocation,'exit_code':result.returncode})
+            (tmp_path/'commands.json').write_text(json.dumps({'sources':{str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in src},'rows':rows},indent=2),encoding='utf8')
+>           assert result.returncode==0,(tmp_path/(stage+'.log')).read_text(encoding='utf8',errors='replace')
+E           AssertionError: Assertion failed: s_adopted>0U&&applied>0U&&s_log_revision>0U&&SystemMagRotation_ProviderQualified(axes), file D:\python_software\SilverStar\apps\SCG\plugins\builtin\silverstar_mag_rotation\payload\Tests\Host\test_mag_rotation_runtime.c, line 114
+E             
+E           assert 3221226505 == 0
+E            +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\rotation-v3\\test_estimator_and_runtime_con0\\rotation.exe'], returncode=3221226505).returncode
+
+apps\SCG\tests\test_release_mag_rotation.py:39: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_release_mag_rotation.py::test_estimator_and_runtime[runtime]
+FAILED apps\SCG\tests\test_release_mag_rotation.py::test_estimator_and_runtime[confirmed_fixed]
+2 failed, 5 passed in 22.17s

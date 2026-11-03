@@ -1,0 +1,3 @@
+known signed rotation 1.000, accepted=10 unobservable=0 qdot=1.00000012 rms=0.000191
+known signed rotation -1.000, accepted=10 unobservable=0 qdot=1.00000000 rms=0.000191
+known signed rotation 1.000, accepted=0 unobservable=24 qdot=0.98378778 rms=0.000000

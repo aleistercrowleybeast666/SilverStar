@@ -1,0 +1,9 @@
+2026-11-03T22:49:48.7447810+08:00
+D:/Arm GNU Toolchain/14.3 rel1/bin\arm-none-eabi-gcc.exe
+arm-none-eabi-gcc.exe (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623
+D:/msys64/ucrt64/bin\gcc.exe
+gcc.exe (Rev5, Built by MSYS2 project) 16.1.0
+D:/msys64/ucrt64/bin\mingw32-make.exe
+GNU Make 4.4.1
+Python 3.14.0
+6.10.1 9.1.1

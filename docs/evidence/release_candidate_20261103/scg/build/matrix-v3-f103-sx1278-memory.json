@@ -1,0 +1,132 @@
+{
+  "artifacts": {
+    "contract": {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\matrix-v3\\f103-sx1278\\project\\Ground_Station\\Generated\\memory_contract.json",
+      "sha256": "7f89455c92aba34bbd724008770a9a73925d7a7b3391490e98405d6c2c5f5f71"
+    },
+    "elf": {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\matrix-v3\\f103-sx1278\\project\\Ground_Station\\build\\ground.elf",
+      "sha256": "895b98b3e5b00bdc9ee311d596fdb16e0b0dc8c6759df4729a3a6f4dd9462333"
+    },
+    "linker": {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\matrix-v3\\f103-sx1278\\project\\Ground_Station\\STM32F103XX_FLASH.ld",
+      "sha256": "45ae86cc16571cb1547d80d8e2f2490e5668cd85a3feaa3ca9413da74e10e0d9"
+    },
+    "map": {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\matrix-v3\\f103-sx1278\\project\\Ground_Station\\build\\ground.map",
+      "sha256": "241f6591a96927f35a8a8b69ed1d9491398f5b1972f5455a78e37be835dce012"
+    }
+  },
+  "compiler": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+  "elf_modified_at_utc": "2026-11-03T15:15:55.631341+00:00",
+  "errors": [],
+  "generation_input_sha256": "c50bd0fe8089f97dafe5c3479c5f9c26eb842537eaf910ff7d630c8a5923f25f",
+  "map_consistency": "checked",
+  "mcu": "STM32F103C8T6",
+  "mcu_flags": [
+    "-mcpu=cortex-m3",
+    "-mthumb",
+    "-mfloat-abi=soft"
+  ],
+  "mcu_manifest_sha256": "3119226ecc59a45bb022019146eebacdcef5b57a9ff612fb058e33b70e426bcc",
+  "memory_layout": "legacy",
+  "regions": [
+    {
+      "allocated_span_bytes": 17848,
+      "budget_free_bytes": null,
+      "budget_used_percent": null,
+      "free_percent": 72.76611328125,
+      "linker_capacity_bytes": 65536,
+      "linker_free_bytes": 47688,
+      "name": "FLASH",
+      "origin": 134217728,
+      "physical_capacity_bytes": 65536,
+      "physical_free_bytes": 47688,
+      "reserved_bytes": 0,
+      "reserved_included_in_used": true,
+      "review_budget_bytes": null,
+      "sections": [
+        {
+          "address": 134217728,
+          "bytes": 268,
+          "role": "run",
+          "section": ".isr_vector"
+        },
+        {
+          "address": 134217996,
+          "bytes": 16368,
+          "role": "run",
+          "section": ".text"
+        },
+        {
+          "address": 134234364,
+          "bytes": 1192,
+          "role": "run",
+          "section": ".rodata"
+        },
+        {
+          "address": 134235556,
+          "bytes": 4,
+          "role": "run",
+          "section": ".init_array"
+        },
+        {
+          "address": 134235560,
+          "bytes": 4,
+          "role": "run",
+          "section": ".fini_array"
+        },
+        {
+          "address": 134235564,
+          "bytes": 12,
+          "role": "load",
+          "section": ".data"
+        }
+      ],
+      "used_bytes": 17848,
+      "used_percent": 27.23388671875
+    },
+    {
+      "allocated_span_bytes": 5376,
+      "budget_free_bytes": null,
+      "budget_used_percent": null,
+      "free_percent": 73.76953125,
+      "linker_capacity_bytes": 20480,
+      "linker_free_bytes": 15108,
+      "name": "RAM",
+      "origin": 536870912,
+      "physical_capacity_bytes": 20480,
+      "physical_free_bytes": 15108,
+      "reserved_bytes": 1028,
+      "reserved_included_in_used": true,
+      "review_budget_bytes": null,
+      "sections": [
+        {
+          "address": 536870912,
+          "bytes": 12,
+          "role": "run",
+          "section": ".data"
+        },
+        {
+          "address": 536870928,
+          "bytes": 4332,
+          "role": "run",
+          "section": ".bss"
+        },
+        {
+          "address": 536875260,
+          "bytes": 1028,
+          "role": "run",
+          "section": "._user_heap_stack"
+        }
+      ],
+      "used_bytes": 5372,
+      "used_percent": 26.23046875
+    }
+  ],
+  "reported_at_utc": "2026-11-03T15:18:29.072107+00:00",
+  "schema": "silverstar.memory-report/1",
+  "stack_proof": "NOT_PROVEN",
+  "target": "ground",
+  "target_profile": ""
+}

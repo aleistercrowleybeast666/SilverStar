@@ -1,0 +1,30 @@
+{
+  "source_sha256": "f0998ba7ef44144cf55291dbb74090eb2ef51203d99064ae63784207115bb6eb",
+  "fixture_sha256": "fdf5e9dd973837617e87022924e9ff7dfa94c22633fd45cf7dc512eac4ae9362",
+  "rows": [
+    {
+      "command": [
+        "gcc",
+        "-std=c11",
+        "-O2",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-Wl,--gc-sections",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-fanalyzer",
+        "-DSYSTEM_INSTALLATION_CAPTURE_ENABLED=1U",
+        "D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\v7\\installation\\Flight_Controller\\Modules\\InstallationCapture\\Src\\system_installation_capture.c",
+        "D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\sensors\\test_native_qualification.c",
+        "-lm",
+        "-o",
+        "D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\native-qual-v1\\qualification.exe"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\v7\\installation\\Flight_Controller\\Modules\\InstallationCapture\\Src\\system_installation_capture.c:1:10: fatal error: platform_critical.h: No such file or directory\n    1 | #include \"platform_critical.h\"\n      |          ^~~~~~~~~~~~~~~~~~~~~\ncompilation terminated.\nD:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\sensors\\test_native_qualification.c:3:10: fatal error: system_installation_capture_if.h: No such file or directory\n    3 | #include \"system_installation_capture_if.h\"\n      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\ncompilation terminated.\n"
+    }
+  ]
+}

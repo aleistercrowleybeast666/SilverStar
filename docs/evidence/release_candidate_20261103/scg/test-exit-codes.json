@@ -1,0 +1,50 @@
+{
+  "gui-v1.log": {
+    "exit": 0
+  },
+  "gui-v2.log": {
+    "exit": 1
+  },
+  "gui-v3.log": {
+    "exit": 1
+  },
+  "gui-v4.log": {
+    "exit": 0
+  },
+  "properties-v1.log": {
+    "exit": 1
+  },
+  "properties-v2.log": {
+    "exit": 0
+  },
+  "schema-v2.log": {
+    "exit": 0
+  },
+  "targets-v1.log": {
+    "exit": 1
+  },
+  "targets-v2.log": {
+    "exit": 1
+  },
+  "uart-v1.log": {
+    "exit": 1
+  },
+  "uart-v2.log": {
+    "exit": 0
+  },
+  "input-protection.log": {
+    "exit": 0
+  },
+  "library-probe.log": {
+    "exit": 0
+  },
+  "capture-final-125.log": {
+    "exit": 0
+  },
+  "capture-final-150.log": {
+    "exit": 0
+  },
+  "targets-v3.log": {
+    "exit": 0
+  }
+}

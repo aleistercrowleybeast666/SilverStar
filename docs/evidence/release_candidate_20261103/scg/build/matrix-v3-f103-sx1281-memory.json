@@ -1,0 +1,138 @@
+{
+  "artifacts": {
+    "contract": {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\matrix-v3\\f103-sx1281\\project\\Ground_Station\\Generated\\memory_contract.json",
+      "sha256": "cca70bb811c4fc5f0bf4806079070ffd811311dde6fc263af0f8a36b171b4e9f"
+    },
+    "elf": {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\matrix-v3\\f103-sx1281\\project\\Ground_Station\\build\\ground.elf",
+      "sha256": "5b651d0e8810be0c61bdfe0d10e701cac1c980a1b5b139a295b20357c9454d32"
+    },
+    "linker": {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\matrix-v3\\f103-sx1281\\project\\Ground_Station\\STM32F103XX_FLASH.ld",
+      "sha256": "45ae86cc16571cb1547d80d8e2f2490e5668cd85a3feaa3ca9413da74e10e0d9"
+    },
+    "map": {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\matrix-v3\\f103-sx1281\\project\\Ground_Station\\build\\ground.map",
+      "sha256": "8f0ddc4872503aa7cd2c8db92c6fc2a14ac01707ff67ad7c1297665b49e2dfe9"
+    }
+  },
+  "compiler": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+  "elf_modified_at_utc": "2026-11-03T15:09:57.068381+00:00",
+  "errors": [],
+  "generation_input_sha256": "68c147808ec8f6570ef321b8eb18f180c32441c6b7b6335782c27ff5fe7d5cbc",
+  "map_consistency": "checked",
+  "mcu": "STM32F103C8T6",
+  "mcu_flags": [
+    "-mcpu=cortex-m3",
+    "-mthumb",
+    "-mfloat-abi=soft"
+  ],
+  "mcu_manifest_sha256": "3119226ecc59a45bb022019146eebacdcef5b57a9ff612fb058e33b70e426bcc",
+  "memory_layout": "legacy",
+  "regions": [
+    {
+      "allocated_span_bytes": 29024,
+      "budget_free_bytes": null,
+      "budget_used_percent": null,
+      "free_percent": 55.718994140625,
+      "linker_capacity_bytes": 65536,
+      "linker_free_bytes": 36516,
+      "name": "FLASH",
+      "origin": 134217728,
+      "physical_capacity_bytes": 65536,
+      "physical_free_bytes": 36516,
+      "reserved_bytes": 0,
+      "reserved_included_in_used": true,
+      "review_budget_bytes": null,
+      "sections": [
+        {
+          "address": 134217728,
+          "bytes": 268,
+          "role": "run",
+          "section": ".isr_vector"
+        },
+        {
+          "address": 134218000,
+          "bytes": 27488,
+          "role": "run",
+          "section": ".text"
+        },
+        {
+          "address": 134245488,
+          "bytes": 1236,
+          "role": "run",
+          "section": ".rodata"
+        },
+        {
+          "address": 134246724,
+          "bytes": 8,
+          "role": "run",
+          "section": ".ARM"
+        },
+        {
+          "address": 134246732,
+          "bytes": 4,
+          "role": "run",
+          "section": ".init_array"
+        },
+        {
+          "address": 134246736,
+          "bytes": 4,
+          "role": "run",
+          "section": ".fini_array"
+        },
+        {
+          "address": 134246740,
+          "bytes": 12,
+          "role": "load",
+          "section": ".data"
+        }
+      ],
+      "used_bytes": 29020,
+      "used_percent": 44.281005859375
+    },
+    {
+      "allocated_span_bytes": 6656,
+      "budget_free_bytes": null,
+      "budget_used_percent": null,
+      "free_percent": 67.51953125,
+      "linker_capacity_bytes": 20480,
+      "linker_free_bytes": 13828,
+      "name": "RAM",
+      "origin": 536870912,
+      "physical_capacity_bytes": 20480,
+      "physical_free_bytes": 13828,
+      "reserved_bytes": 1028,
+      "reserved_included_in_used": true,
+      "review_budget_bytes": null,
+      "sections": [
+        {
+          "address": 536870912,
+          "bytes": 12,
+          "role": "run",
+          "section": ".data"
+        },
+        {
+          "address": 536870928,
+          "bytes": 5612,
+          "role": "run",
+          "section": ".bss"
+        },
+        {
+          "address": 536876540,
+          "bytes": 1028,
+          "role": "run",
+          "section": "._user_heap_stack"
+        }
+      ],
+      "used_bytes": 6652,
+      "used_percent": 32.48046875
+    }
+  ],
+  "reported_at_utc": "2026-11-03T15:13:47.018422+00:00",
+  "schema": "silverstar.memory-report/1",
+  "stack_proof": "NOT_PROVEN",
+  "target": "ground",
+  "target_profile": ""
+}

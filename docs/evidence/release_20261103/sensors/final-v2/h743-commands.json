@@ -1,0 +1,119 @@
+[
+  {
+    "command": [
+      "mingw32-make",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\v7\\h743\\Flight_Controller",
+      "-j5",
+      "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+      "CONFIG=Release",
+      "all"
+    ],
+    "exit_code": 0,
+    "duration_s": 355.05
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\v7\\h743\\Flight_Controller",
+      "-j5",
+      "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+      "CONFIG=Release",
+      "architecture-check"
+    ],
+    "exit_code": 0,
+    "duration_s": 61.47
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\v7\\h743\\Flight_Controller",
+      "-j5",
+      "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+      "CONFIG=Release",
+      "power10-check"
+    ],
+    "exit_code": 0,
+    "duration_s": 75.89
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\v7\\h743\\Flight_Controller",
+      "-j5",
+      "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+      "CONFIG=Release",
+      "artifact-check"
+    ],
+    "exit_code": 0,
+    "duration_s": 19.14
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\v7\\h743\\Flight_Controller",
+      "-j5",
+      "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+      "CONFIG=Release",
+      "stack-report"
+    ],
+    "exit_code": 2,
+    "duration_s": 33.88
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\v7\\h743\\Flight_Controller",
+      "-j5",
+      "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+      "CONFIG=Release",
+      "static-analysis"
+    ],
+    "exit_code": 0,
+    "duration_s": 297.55
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\v7\\h743\\Flight_Controller",
+      "-j5",
+      "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+      "CONFIG=Debug",
+      "all"
+    ],
+    "exit_code": 0,
+    "duration_s": 249.16
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\v7\\h743\\Flight_Controller",
+      "-j5",
+      "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+      "CONFIG=Debug",
+      "artifact-check"
+    ],
+    "exit_code": 0,
+    "duration_s": 18.38
+  },
+  {
+    "command": [
+      "mingw32-make",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\release-20261103\\sensors\\v7\\h743\\Flight_Controller",
+      "-j5",
+      "GCC_PATH=D:/Arm GNU Toolchain/14.3 rel1/bin",
+      "CONFIG=Debug",
+      "stack-report"
+    ],
+    "exit_code": 2,
+    "duration_s": 40.42
+  }
+]

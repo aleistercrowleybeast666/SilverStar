@@ -1,0 +1,4 @@
+										132 文本 配置待完成 · 暂不可生成 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										141 按钮 (disabled, settable, string) 生成 / 更新飞控工程 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.primaryButton
+										143 文本 配置待完成 · 暂不可生成 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										152 按钮 (disabled, settable, string) 生成 / 更新地面站工程 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.primaryButton

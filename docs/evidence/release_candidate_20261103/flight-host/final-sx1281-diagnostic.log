@@ -1,0 +1,20 @@
+final-sx1281 Traceback (most recent call last):
+  File "D:\python_software\SilverStar\docs\evidence\software_completion_20261101\stack\v3\inspect_case.py", line 104, in <module>
+    report = Inspect_Run(args.project.resolve(), args.configuration, args.name)
+  File "D:\python_software\SilverStar\docs\evidence\software_completion_20261101\stack\v3\inspect_case.py", line 87, in Inspect_Run
+    'diagnostic_tasks': {label: {'budget': Budget_Get(entry), 'configured': graph['sizes'][stack],
+                                           ~~~~~~~~~~^^^^^^^
+  File "D:\python_software\SilverStar\docs\evidence\software_completion_20261101\stack\v3\inspect_case.py", line 77, in Budget_Get
+    children = [Budget_Get(child, visiting + (node,)) for child in sorted(graph['edges'].get(node, ()))]
+                ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\docs\evidence\software_completion_20261101\stack\v3\inspect_case.py", line 77, in Budget_Get
+    children = [Budget_Get(child, visiting + (node,)) for child in sorted(graph['edges'].get(node, ()))]
+                ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python_software\SilverStar\docs\evidence\software_completion_20261101\stack\v3\inspect_case.py", line 77, in Budget_Get
+    children = [Budget_Get(child, visiting + (node,)) for child in sorted(graph['edges'].get(node, ()))]
+                ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  [Previous line repeated 4 more times]
+  File "D:\python_software\SilverStar\docs\evidence\software_completion_20261101\stack\v3\inspect_case.py", line 75, in Budget_Get
+    raise ValueError('Unproved reachable stack: ' + repr(visiting + (node,)))
+ValueError: Unproved reachable stack: ('AppTask_Device', 'SystemStartup_ProcessDevices', 'SystemGnss_Process', 'ProjectGnssInstance_Process', 'NeoM9nGnssInstance_Process', 'NeoM9nGnssAdapter_Process', 'NeoM9nStartup_Tick', 'SystemDeviceStartup_Tick')
+

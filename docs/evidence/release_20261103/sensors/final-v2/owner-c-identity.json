@@ -1,0 +1,241 @@
+{
+  "f407": {
+    "verified_sources": {
+      "APP/Inc/logger_bus.h": {
+        "sha256": "0d4b7c8671a293c4416eb58300846429749301f679d1bd70d64e49484c727b3d",
+        "git_blob": "c88bc98c5d23a40d1f5e96e3520e3cdcc547d5ed"
+      },
+      "APP/Src/device_task.c": {
+        "sha256": "207b91dec3ecbbbb5459e2073d7d53ff947b74909f05935a2f66ad6ba2573a0e",
+        "git_blob": "4e0045134452e809168a83d4fcde10fb01ef230f"
+      },
+      "APP/Src/logger_bus.c": {
+        "sha256": "657063074c9f8a82266e56e1740ff2562b589dee7603128b08d58c5bbfaa172a",
+        "git_blob": "d5ea6ff0ac81b420d3636efc92d5a343e5c0b9ea"
+      },
+      "Interfaces/Inc/system_installation_active_if.h": {
+        "sha256": "526945e164cef3e35d8857fdd9051ab393abb16cbccc0a45fe027fedfb16c7ae",
+        "git_blob": "cc40b1415ea793ca70ea8f7b6b3e3d39d26f5de8"
+      },
+      "Interfaces/Inc/system_installation_capture_if.h": {
+        "sha256": "7649b44823111b20e0feedb4639711714cb341ecfb1156193eee8a21812fd463",
+        "git_blob": "39fd8172f07d0d3561d08d1b8d240fa2d4734ba1"
+      },
+      "Interfaces/Inc/system_mag_rotation_if.h": {
+        "sha256": "6508b316a721dbeb4af1ea90ce1439000595923d0fad96d9f4c982c923915d7a",
+        "git_blob": "f40340611952b165aa7bad453f2926fc0265b46d"
+      },
+      "System/Calibration/Inc/system_mag_calibration.h": {
+        "sha256": "7bb33d9a786a1090202f01e8bfa9a9613f7d54cf4635eca10c8b30c282a97720",
+        "git_blob": "5419bc991b7fbfefbf90faf2b2fa28aecf73ac98"
+      },
+      "System/Calibration/Src/system_mag_calibration.c": {
+        "sha256": "d4962997d0e27f89e7e2b0e1209c7a756424ab7d01d77a6ddfcee0993fe81e3e",
+        "git_blob": "d96a248ef41110cff2ab2743c6536e6ed29b443e"
+      },
+      "System/Src/system_console.c": {
+        "sha256": "1dc872a1f38517d0fed21ca5bfb2f8a740e8fa40ffd12dc84f5d93c97e525c87",
+        "git_blob": "647349d9a168070476d9fc5e15d86462c111a769"
+      },
+      "Tests/Host/installation_unit_boundary.c": {
+        "sha256": "c84fda340452eed0a0670d0c8d3d00e375be4001c0b3297bdbfd4107b0a2e3a0",
+        "git_blob": "70b07f8d629321783c409264f81502384aff2292"
+      },
+      "Tests/Host/mag_calibration/test_mag_tf.h": {
+        "sha256": "c9bb1dcb675e20ea90d59f6430bd1139c6bde7872949adf8c8f77071da3e1ee4",
+        "git_blob": "e98c4fb1e0e6e4ba26091ee58d5430599b8797f7"
+      },
+      "Tests/Host/mag_calibration/test_system_mag_calibration.c": {
+        "sha256": "84863c86c7cbab18149eb95cc4229b8f9757ad87dca5e9b06c3c1929a2bea325",
+        "git_blob": "0690b0d209c7a7c4eade5b154ead0ba426dff15f"
+      },
+      "Platform/STM32F4/Src/platform_gpio_stm32f4.c": {
+        "sha256": "d3ab3a8c660aa1c98294ce79fe1713f74c5bff37423e58d4cd8b4dfc30526688",
+        "git_blob": "b7328174cedfc7cae23c8c8ab6ec0f6405533cd3"
+      },
+      "Platform/Inc/platform_gpio.h": {
+        "sha256": "3c7825903ea62e959784af13f69b5f71a564dba5e49b41a2b2883b3a0e8ae1b1",
+        "git_blob": "82fc2a52d380928b3b5ac2eb5ee176d7ce4e7f19"
+      },
+      "Protocol/SSLOG/Inc/sslog_protocol.h": {
+        "sha256": "21761e52517a546d83a0d0a824d32ee90becef429fa833125392ae23e33e8474",
+        "git_blob": "43822e7ed1f62f91933a1965a8bbad02a38cab10"
+      }
+    },
+    "bounds": "The three projects are different exact models and generated epochs. Compare active changed C/headers to their owning working bytes + canonical Git commit. Project metadata additionally bound by generated decoder/project hashes."
+  },
+  "installation": {
+    "verified_sources": {
+      "APP/Inc/logger_bus.h": {
+        "sha256": "0d4b7c8671a293c4416eb58300846429749301f679d1bd70d64e49484c727b3d",
+        "git_blob": "c88bc98c5d23a40d1f5e96e3520e3cdcc547d5ed"
+      },
+      "APP/Src/device_task.c": {
+        "sha256": "207b91dec3ecbbbb5459e2073d7d53ff947b74909f05935a2f66ad6ba2573a0e",
+        "git_blob": "4e0045134452e809168a83d4fcde10fb01ef230f"
+      },
+      "APP/Src/logger_bus.c": {
+        "sha256": "657063074c9f8a82266e56e1740ff2562b589dee7603128b08d58c5bbfaa172a",
+        "git_blob": "d5ea6ff0ac81b420d3636efc92d5a343e5c0b9ea"
+      },
+      "Interfaces/Inc/system_installation_active_if.h": {
+        "sha256": "526945e164cef3e35d8857fdd9051ab393abb16cbccc0a45fe027fedfb16c7ae",
+        "git_blob": "cc40b1415ea793ca70ea8f7b6b3e3d39d26f5de8"
+      },
+      "Interfaces/Inc/system_installation_capture_if.h": {
+        "sha256": "7649b44823111b20e0feedb4639711714cb341ecfb1156193eee8a21812fd463",
+        "git_blob": "39fd8172f07d0d3561d08d1b8d240fa2d4734ba1"
+      },
+      "Interfaces/Inc/system_mag_rotation_if.h": {
+        "sha256": "6508b316a721dbeb4af1ea90ce1439000595923d0fad96d9f4c982c923915d7a",
+        "git_blob": "f40340611952b165aa7bad453f2926fc0265b46d"
+      },
+      "System/Calibration/Inc/system_mag_calibration.h": {
+        "sha256": "7bb33d9a786a1090202f01e8bfa9a9613f7d54cf4635eca10c8b30c282a97720",
+        "git_blob": "5419bc991b7fbfefbf90faf2b2fa28aecf73ac98"
+      },
+      "System/Calibration/Src/system_mag_calibration.c": {
+        "sha256": "d4962997d0e27f89e7e2b0e1209c7a756424ab7d01d77a6ddfcee0993fe81e3e",
+        "git_blob": "d96a248ef41110cff2ab2743c6536e6ed29b443e"
+      },
+      "System/Src/system_console.c": {
+        "sha256": "1dc872a1f38517d0fed21ca5bfb2f8a740e8fa40ffd12dc84f5d93c97e525c87",
+        "git_blob": "647349d9a168070476d9fc5e15d86462c111a769"
+      },
+      "Tests/Host/installation_unit_boundary.c": {
+        "sha256": "c84fda340452eed0a0670d0c8d3d00e375be4001c0b3297bdbfd4107b0a2e3a0",
+        "git_blob": "70b07f8d629321783c409264f81502384aff2292"
+      },
+      "Tests/Host/mag_calibration/test_mag_tf.h": {
+        "sha256": "c9bb1dcb675e20ea90d59f6430bd1139c6bde7872949adf8c8f77071da3e1ee4",
+        "git_blob": "e98c4fb1e0e6e4ba26091ee58d5430599b8797f7"
+      },
+      "Tests/Host/mag_calibration/test_system_mag_calibration.c": {
+        "sha256": "84863c86c7cbab18149eb95cc4229b8f9757ad87dca5e9b06c3c1929a2bea325",
+        "git_blob": "0690b0d209c7a7c4eade5b154ead0ba426dff15f"
+      },
+      "Modules/InstallationCapture/Src/installation_active.c": {
+        "sha256": "982d061a995636e62cc02212adfff658f0bb5f96a89cd290805a3840841369c0",
+        "git_blob": "794a06119bda04d158b323adf8fd3a960bae5e61"
+      },
+      "Modules/InstallationCapture/Src/system_installation_capture.c": {
+        "sha256": "f0998ba7ef44144cf55291dbb74090eb2ef51203d99064ae63784207115bb6eb",
+        "git_blob": "2dd0d032767c36e3041b466494977491a9fa1396"
+      },
+      "Platform/STM32F4/Src/platform_gpio_stm32f4.c": {
+        "sha256": "d3ab3a8c660aa1c98294ce79fe1713f74c5bff37423e58d4cd8b4dfc30526688",
+        "git_blob": "b7328174cedfc7cae23c8c8ab6ec0f6405533cd3"
+      },
+      "Platform/Inc/platform_gpio.h": {
+        "sha256": "3c7825903ea62e959784af13f69b5f71a564dba5e49b41a2b2883b3a0e8ae1b1",
+        "git_blob": "82fc2a52d380928b3b5ac2eb5ee176d7ce4e7f19"
+      },
+      "Protocol/SSLOG/Inc/sslog_protocol.h": {
+        "sha256": "21761e52517a546d83a0d0a824d32ee90becef429fa833125392ae23e33e8474",
+        "git_blob": "43822e7ed1f62f91933a1965a8bbad02a38cab10"
+      }
+    },
+    "bounds": "The three projects are different exact models and generated epochs. Compare active changed C/headers to their owning working bytes + canonical Git commit. Project metadata additionally bound by generated decoder/project hashes."
+  },
+  "h743": {
+    "verified_sources": {
+      "APP/Inc/logger_bus.h": {
+        "sha256": "0d4b7c8671a293c4416eb58300846429749301f679d1bd70d64e49484c727b3d",
+        "git_blob": "c88bc98c5d23a40d1f5e96e3520e3cdcc547d5ed"
+      },
+      "APP/Src/device_task.c": {
+        "sha256": "207b91dec3ecbbbb5459e2073d7d53ff947b74909f05935a2f66ad6ba2573a0e",
+        "git_blob": "4e0045134452e809168a83d4fcde10fb01ef230f"
+      },
+      "APP/Src/logger_bus.c": {
+        "sha256": "657063074c9f8a82266e56e1740ff2562b589dee7603128b08d58c5bbfaa172a",
+        "git_blob": "d5ea6ff0ac81b420d3636efc92d5a343e5c0b9ea"
+      },
+      "Interfaces/Inc/system_installation_active_if.h": {
+        "sha256": "526945e164cef3e35d8857fdd9051ab393abb16cbccc0a45fe027fedfb16c7ae",
+        "git_blob": "cc40b1415ea793ca70ea8f7b6b3e3d39d26f5de8"
+      },
+      "Interfaces/Inc/system_installation_capture_if.h": {
+        "sha256": "7649b44823111b20e0feedb4639711714cb341ecfb1156193eee8a21812fd463",
+        "git_blob": "39fd8172f07d0d3561d08d1b8d240fa2d4734ba1"
+      },
+      "Interfaces/Inc/system_mag_rotation_if.h": {
+        "sha256": "6508b316a721dbeb4af1ea90ce1439000595923d0fad96d9f4c982c923915d7a",
+        "git_blob": "f40340611952b165aa7bad453f2926fc0265b46d"
+      },
+      "System/Calibration/Inc/system_mag_calibration.h": {
+        "sha256": "7bb33d9a786a1090202f01e8bfa9a9613f7d54cf4635eca10c8b30c282a97720",
+        "git_blob": "5419bc991b7fbfefbf90faf2b2fa28aecf73ac98"
+      },
+      "System/Calibration/Src/system_mag_calibration.c": {
+        "sha256": "d4962997d0e27f89e7e2b0e1209c7a756424ab7d01d77a6ddfcee0993fe81e3e",
+        "git_blob": "d96a248ef41110cff2ab2743c6536e6ed29b443e"
+      },
+      "System/Src/system_console.c": {
+        "sha256": "1dc872a1f38517d0fed21ca5bfb2f8a740e8fa40ffd12dc84f5d93c97e525c87",
+        "git_blob": "647349d9a168070476d9fc5e15d86462c111a769"
+      },
+      "Tests/Host/installation_unit_boundary.c": {
+        "sha256": "c84fda340452eed0a0670d0c8d3d00e375be4001c0b3297bdbfd4107b0a2e3a0",
+        "git_blob": "70b07f8d629321783c409264f81502384aff2292"
+      },
+      "Tests/Host/mag_calibration/test_mag_tf.h": {
+        "sha256": "c9bb1dcb675e20ea90d59f6430bd1139c6bde7872949adf8c8f77071da3e1ee4",
+        "git_blob": "e98c4fb1e0e6e4ba26091ee58d5430599b8797f7"
+      },
+      "Tests/Host/mag_calibration/test_system_mag_calibration.c": {
+        "sha256": "84863c86c7cbab18149eb95cc4229b8f9757ad87dca5e9b06c3c1929a2bea325",
+        "git_blob": "0690b0d209c7a7c4eade5b154ead0ba426dff15f"
+      },
+      "Devices/Magnetometer/MMC5983MA/Adapter/Src/mmc5983ma_adapter.c": {
+        "sha256": "7eb3c3e46905a1f32d77723ae48cd2060275339d65ca5c3118260def679085c0",
+        "git_blob": "9a4fa1f0412c96870fd27bb29923d73cd8c6e4d4"
+      },
+      "Devices/Magnetometer/MMC5983MA/Inc/mmc5983ma_core.h": {
+        "sha256": "a9619959c3717afb6653b0560b2d3dab1ab7294b567b594b50bfc42a936d5487",
+        "git_blob": "402d3e49f1c0398934c52db51b669d6c3793c7f2"
+      },
+      "Devices/Magnetometer/MMC5983MA/Src/mmc5983ma_core.c": {
+        "sha256": "0bd3ebbace2e9492e012c3fe79df4d4f18e41a78c58bb21d9ed9ba3c55263054",
+        "git_blob": "09669412cddc0e3d6964b9a041954df6e70166f6"
+      },
+      "Algorithm/Installation/MagRotation/Inc/mag_rotation.h": {
+        "sha256": "78c19cd7ba5cbdc66d332148af26a6a4a950ced3581939ec1c38ff0c1a19b645",
+        "git_blob": "a801a13397ddc01f6084bea5a2ae06ab0486b6b8"
+      },
+      "Algorithm/Installation/MagRotation/Src/mag_rotation.c": {
+        "sha256": "961c739d76011bb21160a217de0593b9fcb183ef23ad7c2158d244f804812dd2",
+        "git_blob": "7ac5f1b30842a2797eab19ee13ad6e9a2592ed64"
+      },
+      "Algorithm/Installation/MagRotation/Src/mag_rotation_runtime.c": {
+        "sha256": "688af211728a807fe7c6c0dc6696b4aa1f2277946f0ad16cf6982f3c3a001ab4",
+        "git_blob": "ea48f2563b03c205dd09b07c067419412e7a3ace"
+      },
+      "Tests/Host/mag_rotation_unit_boundary.c": {
+        "sha256": "6b40688aa43f4bef5c4b0015aa5bfe7960b30209ad00d6f0f0c4e8f0dc5ba511",
+        "git_blob": "a56a8c43a6709db1891d8886ee189d1ad9d787aa"
+      },
+      "Tests/Host/test_mag_rotation_runtime.c": {
+        "sha256": "9a2e0bf0c49e6f2a1cc24664a7bbd85867ce174169eec3a31db5af995816e070",
+        "git_blob": "d51a062e1dd22a02260eff8e9384858e2eeefe04"
+      },
+      "Platform/STM32H7/Src/platform_gpio_stm32h7.c": {
+        "sha256": "329ba295e0ab5d53932b368d420eeaf535ada9737514d5e9941cbe44fae972f0",
+        "git_blob": "dc65023787611c8711f375af9c377b2d4f678e47"
+      },
+      "Platform/Inc/platform_gpio.h": {
+        "sha256": "3c7825903ea62e959784af13f69b5f71a564dba5e49b41a2b2883b3a0e8ae1b1",
+        "git_blob": "82fc2a52d380928b3b5ac2eb5ee176d7ce4e7f19"
+      },
+      "Protocol/SSLOG/Inc/sslog_protocol.h": {
+        "sha256": "21761e52517a546d83a0d0a824d32ee90becef429fa833125392ae23e33e8474",
+        "git_blob": "43822e7ed1f62f91933a1965a8bbad02a38cab10"
+      },
+      "Devices/SensorBus/Adapter/Src/sensor_imu_adapter.c": {
+        "sha256": "9046bd41c06dad0997f10821747abbe158572958dbf2fbae5acb1bb91a48b92f",
+        "git_blob": "f84be6876939c1b684813c4da7d2ba7f161903f1"
+      }
+    },
+    "bounds": "The three projects are different exact models and generated epochs. Compare active changed C/headers to their owning working bytes + canonical Git commit. Project metadata additionally bound by generated decoder/project hashes."
+  }
+}

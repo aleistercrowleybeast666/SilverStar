@@ -1,0 +1,48 @@
+...F...............                                                      [100%]
+================================== FAILURES ===================================
+_ test_save_retry_waits_for_new_pending_completion_despite_previous_failure_flag _
+
+gui = (<PySide6.QtWidgets.QApplication(0x2432a8ad7a0) at 0x000002432DA88180>, <ui.main_window.MainWindow(0x24346fa9df0) at 0...<app.Controller(0x243481146d0) at 0x0000024347971840>, <test_magnetometer_dialog.MagWire object at 0x00000243463CE2C0>)
+
+    def test_save_retry_waits_for_new_pending_completion_despite_previous_failure_flag(gui):
+        wire = gui[3]
+        wire.mode = "save_fail"
+        dialog = applied_dialog(gui)
+        dialog.save_device.click()
+        wait_for(lambda: wire.save_failed and not dialog.pending)
+        assert not dialog.saved
+        # The firmware SaveRequest retains historical failure fields while pending.
+        wire.mode = "ok"
+        dialog.save_device.click()
+>       wait_for(lambda: wire.save_reads == 1 and not dialog.pending)
+
+apps\GSHC\tests\test_magnetometer_dialog.py:259: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+predicate = <function test_save_retry_waits_for_new_pending_completion_despite_previous_failure_flag.<locals>.<lambda> at 0x0000024346574BF0>
+seconds = 5
+
+    def wait_for(predicate, seconds=5):
+        deadline = time.monotonic() + seconds
+        while not predicate() and time.monotonic() < deadline:
+            QTest.qWait(10)
+>       assert predicate()
+E       assert False
+E        +  where False = <function test_save_retry_waits_for_new_pending_completion_despite_previous_failure_flag.<locals>.<lambda> at 0x0000024346574BF0>()
+
+apps\GSHC\tests\test_magnetometer_dialog.py:27: AssertionError
+---------------------------- Captured Qt messages -----------------------------
+QtWarningMsg: QOpenGLWidget is not supported on this platform.
+QtWarningMsg: This plugin does not support propagateSizeHints()
+QtWarningMsg: This plugin does not support createPlatformOpenGLContext!
+QtWarningMsg: QOpenGLWidget: Failed to create context
+QtWarningMsg: This plugin does not support propagateSizeHints()
+QtWarningMsg: This plugin does not support createPlatformOpenGLContext!
+QtWarningMsg: QOpenGLWidget: Failed to create context
+QtWarningMsg: This plugin does not support createPlatformOpenGLContext!
+QtWarningMsg: QOpenGLWidget: Failed to create context
+QtWarningMsg: This plugin does not support propagateSizeHints()
+QtWarningMsg: This plugin does not support raise()
+=========================== short test summary info ===========================
+FAILED apps/GSHC/tests/test_magnetometer_dialog.py::test_save_retry_waits_for_new_pending_completion_despite_previous_failure_flag
+1 failed, 18 passed in 38.68s

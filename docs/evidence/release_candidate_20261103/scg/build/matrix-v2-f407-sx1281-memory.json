@@ -1,0 +1,157 @@
+{
+  "artifacts": {
+    "contract": {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\matrix-v2\\f407-sx1281\\project\\Ground_Station\\Generated\\memory_contract.json",
+      "sha256": "c142bb39fe3cd5c1ec7bb9100507cd30440d6548dbfefd4a6cd411c71f6f440e"
+    },
+    "elf": {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\matrix-v2\\f407-sx1281\\project\\Ground_Station\\build\\ground.elf",
+      "sha256": "7eef006e24ebb9e4afae087e0316a7fab381c454a9924141b968ba8232dc43f6"
+    },
+    "linker": {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\matrix-v2\\f407-sx1281\\project\\Ground_Station\\HardwareGenerated\\STM32CubeMX\\STM32F407XX_FLASH.ld",
+      "sha256": "498166bd9ecfba722c36d9f1821b89773b86d8093e13af1d5483c7507080c8e1"
+    },
+    "map": {
+      "path": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\scg\\matrix-v2\\f407-sx1281\\project\\Ground_Station\\build\\ground.map",
+      "sha256": "b63b05c84700eaf94aa039964a3364eae787175d0be63063674f52e0909bdefb"
+    }
+  },
+  "compiler": "arm-none-eabi-gcc (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623",
+  "elf_modified_at_utc": "2026-11-03T14:14:00.266037+00:00",
+  "errors": [],
+  "generation_input_sha256": "59be3135c8bc1bc38e129e0e0daec36c0341dc9eeeae3bbd142bdba2aeb92690",
+  "map_consistency": "checked",
+  "mcu": "STM32F407VET6",
+  "mcu_flags": [
+    "-mcpu=cortex-m4",
+    "-mthumb",
+    "-mfpu=fpv4-sp-d16",
+    "-mfloat-abi=hard"
+  ],
+  "mcu_manifest_sha256": "1b1a062811663dc07da0e4fc9b2eb8ae2ae0733254d233fac66a1ff925f9ef45",
+  "memory_layout": "legacy",
+  "regions": [
+    {
+      "allocated_span_bytes": 29828,
+      "budget_free_bytes": null,
+      "budget_used_percent": null,
+      "free_percent": 94.31076049804688,
+      "linker_capacity_bytes": 524288,
+      "linker_free_bytes": 494460,
+      "name": "FLASH",
+      "origin": 134217728,
+      "physical_capacity_bytes": 524288,
+      "physical_free_bytes": 494460,
+      "reserved_bytes": 0,
+      "reserved_included_in_used": true,
+      "review_budget_bytes": null,
+      "sections": [
+        {
+          "address": 134217728,
+          "bytes": 392,
+          "role": "run",
+          "section": ".isr_vector"
+        },
+        {
+          "address": 134218120,
+          "bytes": 28184,
+          "role": "run",
+          "section": ".text"
+        },
+        {
+          "address": 134246304,
+          "bytes": 1224,
+          "role": "run",
+          "section": ".rodata"
+        },
+        {
+          "address": 134247528,
+          "bytes": 8,
+          "role": "run",
+          "section": ".ARM"
+        },
+        {
+          "address": 134247536,
+          "bytes": 4,
+          "role": "run",
+          "section": ".init_array"
+        },
+        {
+          "address": 134247540,
+          "bytes": 4,
+          "role": "run",
+          "section": ".fini_array"
+        },
+        {
+          "address": 134247544,
+          "bytes": 12,
+          "role": "load",
+          "section": ".data"
+        }
+      ],
+      "used_bytes": 29828,
+      "used_percent": 5.689239501953125
+    },
+    {
+      "allocated_span_bytes": 6168,
+      "budget_free_bytes": null,
+      "budget_used_percent": null,
+      "free_percent": 95.2972412109375,
+      "linker_capacity_bytes": 131072,
+      "linker_free_bytes": 124908,
+      "name": "RAM",
+      "origin": 536870912,
+      "physical_capacity_bytes": 131072,
+      "physical_free_bytes": 124908,
+      "reserved_bytes": 2052,
+      "reserved_included_in_used": true,
+      "review_budget_bytes": null,
+      "sections": [
+        {
+          "address": 536870912,
+          "bytes": 12,
+          "role": "run",
+          "section": ".data"
+        },
+        {
+          "address": 536870928,
+          "bytes": 4100,
+          "role": "run",
+          "section": ".bss"
+        },
+        {
+          "address": 536875028,
+          "bytes": 2052,
+          "role": "run",
+          "section": "._user_heap_stack"
+        }
+      ],
+      "used_bytes": 6164,
+      "used_percent": 4.7027587890625
+    },
+    {
+      "allocated_span_bytes": 0,
+      "budget_free_bytes": null,
+      "budget_used_percent": null,
+      "free_percent": 100.0,
+      "linker_capacity_bytes": 65536,
+      "linker_free_bytes": 65536,
+      "name": "CCMRAM",
+      "origin": 268435456,
+      "physical_capacity_bytes": 65536,
+      "physical_free_bytes": 65536,
+      "reserved_bytes": 0,
+      "reserved_included_in_used": true,
+      "review_budget_bytes": null,
+      "sections": [],
+      "used_bytes": 0,
+      "used_percent": 0.0
+    }
+  ],
+  "reported_at_utc": "2026-11-03T14:14:47.816661+00:00",
+  "schema": "silverstar.memory-report/1",
+  "stack_proof": "NOT_PROVEN",
+  "target": "ground",
+  "target_profile": ""
+}

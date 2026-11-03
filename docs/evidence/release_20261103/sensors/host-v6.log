@@ -1,0 +1,116 @@
+...............................................F...                      [100%]
+================================== FAILURES ===================================
+___________ test_joint_sensor_adapters_compile_with_real_interfaces ___________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/release-20261103/sensors/host-v6/test_joint_sensor_adapters_com0')
+
+    def test_joint_sensor_adapters_compile_with_real_interfaces(tmp_path: Path) -> None:
+        from silverstar_fccg.generator.render import _BuildModeDefinition_Render
+        from silverstar_fccg.project.model import BuildOptions
+    
+        # This independent native adapter matrix explicitly exercises ordinary mode.
+        (tmp_path / "project_device_build_capabilities.h").write_text(
+            "#ifndef __PROJECT_DEVICE_BUILD_CAPABILITIES_H\n"
+            "#define __PROJECT_DEVICE_BUILD_CAPABILITIES_H\n\n" +
+            _BuildModeDefinition_Render(BuildOptions(compact_mode=False)) + "\n\n#endif\n", encoding="utf-8"
+        )
+        folders = ["silverstar_sensor_register_bus", "silverstar_ubx_protocol"]
+        imu_names = IMU_MODELS + SPECIAL_IMU_MODELS + SPI_IMU_MODELS + SYNC_IMU_MODELS
+        folders += [_ImuVariant_Get(name)[0] for name in imu_names]
+        folders += ["silverstar_device_gnss_" + name for name in GNSS_MODELS]
+        includes = [tmp_path, PLATFORM_API_INCLUDES]
+        includes += [BUILTIN / "silverstar_core_0_1_0/payload" / name / "Inc" for name in ("Interfaces", "System", "Common")]
+        sources: list[Path] = []
+        resource_lines = ['#ifndef __PROJECT_RESOURCES_H', '#define __PROJECT_RESOURCES_H', '#include "system_device_types.h"', '#include "platform_i2c.h"', '#include "platform_uart.h"', '#include "platform_time.h"', '#include "platform_spi.h"', '#include "platform_gpio.h"']
+        for index, folder in enumerate(folders):
+            manifest = (
+                _ImuVariant_Get(imu_names[index - 2])[1]
+                if 2 <= index < 2 + len(imu_names)
+                else PluginManifest_Load(BUILTIN / folder / "plugin.json")
+            )
+            includes.extend(manifest.payload_root / name for name in manifest.build.include_dirs)
+            sources.extend(manifest.payload_root / name for name in manifest.build.sources)
+            binding = manifest.instance_resource_binding
+            if binding is None:
+                continue
+            manifest_data = json.loads((BUILTIN / folder / "plugin.json").read_text(encoding="utf-8"))
+            if 2 <= index < 2 + len(imu_names) and "device_variants" in manifest_data:
+                _, _, interface, profile = _ImuVariant_Get(imu_names[index - 2])
+                variant_id = next(
+                    key for key, value in manifest_data["device_variants"].items()
+                    if value["interface"] == interface and value["profile"] == profile
+                )
+                from silverstar_fccg.plugins.manifest import _VariantOverlay_Apply
+                _VariantOverlay_Apply(manifest_data, manifest_data["device_variants"][variant_id]["overrides"])
+            kinds = {item["name"]: item["kind"] for item in manifest_data["requires"]["resources"]}
+            types = {"uart": "PlatformUartId", "i2c": "PlatformI2cId", "spi": "PlatformSpiId", "time": "PlatformTimeId", "gpio_output": "PlatformGpioId", "gpio_interrupt": "PlatformGpioId"}
+            fields = " ".join(types[kinds[item["requirement"]]] + " " + item["member"] + ";" for item in manifest_data["metadata"]["instance_resource_binding"]["fields"])
+            if folder.startswith("silverstar_device_imu_"):
+                fields += " int8_t axis_map[3];"
+            resource_lines += [f"#define {binding.count_symbol} 2U", f"typedef struct {{ {fields} }} {binding.struct_type};", f"SystemDeviceResult {binding.accessor}(uint8_t instance, {binding.struct_type} *resources);"]
+        resource_lines.append("#endif")
+        (tmp_path / "project_resources.h").write_text("\n".join(resource_lines) + "\n", encoding="utf-8")
+        for index, source in enumerate(sources):
+            command = [_Compiler_Get(), "-std=c11", "-Wall", "-Wextra", "-Werror", "-pedantic"]
+            command.extend("-I" + str(path) for path in includes)
+            command += ["-c", str(source), "-o", str(tmp_path / f"sensor_{index}.o")]
+>           _Command_Run(command, tmp_path, f"adapter_{index}")
+
+apps\SCG\tests\test_joint_sensor_library.py:337: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+command = ['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-Wall', '-Wextra', '-Werror', '-pedantic', ...]
+directory = WindowsPath('D:/python_software/SilverStar/.work/release-20261103/sensors/host-v6/test_joint_sensor_adapters_com0')
+label = 'adapter_55'
+
+    def _Command_Run(command: list[str], directory: Path, label: str) -> str:
+        if "gcc" in Path(command[0]).name:
+            # Explicit adapter paths moved without changing their test contracts.
+            # Keep old fixture builders usable; log the actual canonical command.
+            adapters = {
+                "sensor_imu_adapter.c", "sensor_imu_spi_adapter.c",
+                "bmp280_adapter.c", "bmp280_i2c_instance.c", "bmp280_spi_instance.c",
+                "mpu6050_instance.c", "persistent_storage.c", "storage_service.c",
+                "log_sink_service.c", "mission_snapshot.c", "mag_calibration_storage.c",
+            }
+            relocated = []
+            for arg in command:
+                path = Path(arg)
+                if path.name in adapters and path.parent.name == "Src" and not path.is_file():
+                    candidate = path.parent.parent / "Adapter/Src" / path.name
+                    assert candidate.is_file(), candidate
+                    arg = str(candidate)
+                relocated.append(arg)
+            command = relocated
+            for plugin, relative in (
+                ("silverstar_sensor_register_bus", "Devices/SensorBus"),
+                ("silverstar_device_barometer_bmp280", "Devices/Barometer/BMP280"),
+                ("silverstar_device_imu_mpu6050", "Devices/IMU/MPU6050"),
+                ("silverstar_device_storage_sd_sdio_fatfs", "Devices/Storage/SdSdioFatFs"),
+            ):
+                command += ["-I" + str(BUILTIN / plugin / "payload" / relative / "Adapter/Inc")]
+            common = BUILTIN / "silverstar_core_0_1_0/payload/Common"
+            command = command + ["-I" + str(common / "Inc")]
+            if "-c" in command:
+                command += ["-Wconversion", "-Wsign-conversion", "-Wshadow", "-Wundef", "-Wformat=2", "-Wdouble-promotion", "-Wcast-align", "-Wcast-qual", "-Wstrict-prototypes", "-Wmissing-prototypes", "-Wswitch-enum", "-Wvla"]
+            if "-c" not in command and not any("test_jy901b_quality.c" in arg for arg in command):
+                command = command + [str(common / "Src/silverstar_assert.c")]
+        result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, check=False)
+        output = result.stdout + result.stderr
+        (directory / (label + ".txt")).write_text(
+            json.dumps(command) + "\n" + output + f"\nexit_code={result.returncode}\n",
+            encoding="utf-8",
+        )
+>       assert result.returncode == 0, output
+E       AssertionError: D:\python_software\SilverStar\apps\SCG\plugins\builtin\silverstar_device_gnss_neo_m8n\payload\Devices\GNSS\NEO_M8N\Src\neo_m8n_instance.c: In function 'NeoM8nGnssInstance_Init':
+E         D:\python_software\SilverStar\apps\SCG\plugins\builtin\silverstar_device_gnss_neo_m8n\payload\Devices\GNSS\NEO_M8N\Src\neo_m8n_instance.c:21:42: error: 'ProjectNeoM8nResources' has no member named 'dynamic_model'
+E            21 |         (SystemGnssDynamicModel)resources.dynamic_model);
+E               |                                          ^
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\msys64\\ucrt64\\bin\\gcc.EXE', '-std=c11', '-Wall', '-Wextra', '-Werror', '-pedantic', '-I... 21 |         (SystemGnssDynamicModel)resources.dynamic_model);\n      |                                          ^\n").returncode
+
+apps\SCG\tests\test_joint_sensor_library.py:227: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_joint_sensor_library.py::test_joint_sensor_adapters_compile_with_real_interfaces
+1 failed, 50 passed in 180.11s (0:03:00)

@@ -1,0 +1,11 @@
+{
+  "sha256": "54fa9f18761bf67ddb4571b6427b21b2905fe0ba103582b693a41c918faadfed",
+  "code_commit": "187010202685111fa0653b4fa4641e83140d7cfc",
+  "unpacked": "C:\\Users\\chdxm\\AppData\\Local\\Temp\\sr1103r3\\SilverStar",
+  "verified_members": 3423,
+  "executables": {
+    "FLP.exe": "721ef9d11d2703992ee65f3c9de77180d18874a2d18eaae23856ebe1dcbd87b8",
+    "GSHC.exe": "61c900dc3fdbb5ecc40de398aa435885bcb355a949f23a013c8ecdba13206665",
+    "SCG.exe": "166e17e1d87378f6fd06ddc032384721d1975481482c996058cd1a9e1bfa8ec0"
+  }
+}

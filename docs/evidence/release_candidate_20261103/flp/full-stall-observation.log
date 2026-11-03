@@ -1,0 +1,2 @@
+['get_async_stack_trace', 'get_stack_trace']
+[_remote_debugging.ThreadInfo(thread_id=19424, frame_info=[_remote_debugging.FrameInfo(filename='D:\\python_software\\SilverStar\\apps\\FLP\\src\\silverstar_flp\\ui\\main_window.py', lineno=1704, funcname='MainWindow._ProjectChanges_Confirm'), _remote_debugging.FrameInfo(filename='D:\\python_software\\SilverStar\\apps\\FLP\\src\\silverstar_flp\\ui\\main_window.py', lineno=1898, funcname='MainWindow.closeEvent')])]

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\docs\evidence\release_20261103\sensors\gnss_render.py", line 28, in <module>
+    assert valid.valid,valid
+           ^^^^^^^^^^^
+AssertionError: ProjectValidationResult(issues=(ValidationIssue(level='error', code='resource', message='Resource contract mismatch for gnss0:data: uart.baud.exact requires 115200, got 921600'),))

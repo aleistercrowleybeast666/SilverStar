@@ -1,0 +1,33 @@
+{
+  "rows": [
+    {
+      "command": [
+        ".work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_pc_save",
+        "01010b00000000004041000000c1000040408e375e3f0b2aa8bd0924903c0b2aa8bde9a5973f0c30c0bc0924903c0c30c0bc4f3b6d3f00004842c3659d2800006029669bb63f4b4a4c4b4b4c4a4b58026ce174cc",
+        ".work\\release-20261103\\sensors\\pc-v2\\storage-port-slots.bin"
+      ],
+      "exit_code": 0,
+      "status": "readback 11 1 3430211948 324478056 0 0.75659823 2.21700883 2.75073314"
+    },
+    {
+      "command": [
+        ".work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_pc_reboot",
+        "-",
+        ".work\\release-20261103\\sensors\\pc-v2\\storage-port-slots.bin"
+      ],
+      "exit_code": 0,
+      "status": "readback 11 1 3430211948 324478056 1 0.75659823 2.21700883 2.75073314"
+    }
+  ],
+  "packet_hex": "01010b00000000004041000000c1000040408e375e3f0b2aa8bd0924903c0b2aa8bde9a5973f0c30c0bc0924903c0c30c0bc4f3b6d3f00004842c3659d2800006029669bb63f4b4a4c4b4b4c4a4b58026ce174cc",
+  "expected_vector": [
+    0.7565982404691914,
+    2.217008797653955,
+    2.7507331378299145
+  ],
+  "slots_sha256": "959e9da2a2d7a78c7c2e24e1e026ba99a68188d5a61a2fc69d9164e60b2801a8",
+  "host_exe_sha256": "369098e80e982762d770cb5dfdb3c89564bc22e1d40f80f6dec6245332a1c7bb",
+  "scope": "Real PC solver/codec, C decode/apply, real A/B persistence service, fresh-process boot reload. Simulated slot hardware."
+}

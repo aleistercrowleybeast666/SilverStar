@@ -1,0 +1,23 @@
+Window: "Unhandled exception in script", App: GSHC.exe.
+	0 对话框 Unhandled exception in script Secondary Actions: Raise
+		1 图像
+		2 文本 Failed to execute script 'entry_GSHC' due to unhandled exception: No module named 'mission_profile'
+		3 编辑 Failed to execute script 'entry_GSHC' due to unhandled exception: No module named 'mission_profile' Value: Traceback (most recent call last): File "entry_GSHC.py", line 10, in <module> File "<frozen runpy>", line 287, in run_path File "<frozen runpy>", line 98, in _run_module_code File "<frozen runpy>", line 88, in _run_code File "C:\Users\chdxm\AppData\Local\Temp\sr1103q\SilverStar\_internal\apps\GSHC\main.py", line 1, in <module> from app import main File "C:\Users\chdxm\AppData\Local\Temp\sr1103q\SilverStar\_internal\apps\GSHC\app.py", line 85, in <module> from ui.main_window import MainWindow File "C:\Users\chdxm\AppData\Local\Temp\sr1103q\SilverStar\_internal\apps\GSHC\ui\main_window.py", line 8, in <module> from mission_profile import MissionProfile_Read, MissionTrace_Read ModuleNotFoundError: No module named 'mission_profile'
+			4 滚动条 (settable, float) 垂直滚动条 Value: 0 ID: NonClientVerticalScrollBar
+				5 按钮 上一行 ID: UpButton
+				6 缩略图 位置 ID: ScrollbarThumb
+				7 按钮 向下翻页 ID: DownPageButton
+				8 按钮 下一行 ID: DownButton
+			9 滚动条 (settable, float) 水平滚动条 Value: 0 ID: NonClientHorizontalScrollBar
+				10 按钮 左移一列 ID: UpButton
+				11 缩略图 位置 ID: ScrollbarThumb
+				12 按钮 向右翻页 ID: DownPageButton
+				13 按钮 右移一列 ID: DownButton
+			14 缩略图 (disabled)
+		15 按钮 Close ID: 1
+		16 标题栏 (settable, string) Value: Unhandled exception in script
+			17 菜单栏 系统 ID: MenuBar
+				18 菜单项 系统
+			19 按钮 关闭
+
+The focused UI element is 0 对话框 Unhandled exception in script Secondary Actions: Raise.

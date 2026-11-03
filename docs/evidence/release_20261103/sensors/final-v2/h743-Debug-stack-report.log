@@ -1,0 +1,23 @@
+mingw32-make: Entering directory 'D:/python_software/SilverStar/.work/release-20261103/sensors/v7/h743/Flight_Controller'
+powershell -NoProfile -ExecutionPolicy Bypass -File Tools/check_maintenance_uart.ps1
+Maintenance UART source/IOC matched 921600/8N1; no source overwritten
+"FCCG_BUILD_ARTIFACT|ELF|build/FCCG/SilverStar_H743ZI/Debug/SilverStar_0_1_3.elf"
+python Tools/check_task_stacks.py --config Debug --memory-layout legacy --prefix "D:/Arm GNU Toolchain/14.3 rel1/bin/arm-none-eabi-"
+FCCG_PROGRESS|STACK_REPORT|PLAN|1
+FCCG_PROGRESS|STACK_REPORT|BEGIN|1|1|ELF and stack budget
+Traceback (most recent call last):
+  File "D:\python_software\SilverStar\.work\release-20261103\sensors\v7\h743\Flight_Controller\Tools\check_task_stacks.py", line 5658, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "D:\python_software\SilverStar\.work\release-20261103\sensors\v7\h743\Flight_Controller\Tools\check_task_stacks.py", line 5638, in main
+    report = StackReport_Build(root, arguments.config, arguments.prefix, arguments.memory_layout)
+  File "D:\python_software\SilverStar\.work\release-20261103\sensors\v7\h743\Flight_Controller\Tools\check_task_stacks.py", line 5516, in StackReport_Build
+    callback_bindings = MpuCallbackBindings_Resolve(
+        root, sources, instructions, edges, indirect, nm, prefix, elf)
+  File "D:\python_software\SilverStar\.work\release-20261103\sensors\v7\h743\Flight_Controller\Tools\check_task_stacks.py", line 104, in MpuCallbackBindings_Resolve
+    return BmiCallbackBindings_Resolve(root, sources, instructions, edges, indirect, nm, prefix, elf)
+  File "D:\python_software\SilverStar\.work\release-20261103\sensors\v7\h743\Flight_Controller\Tools\check_task_stacks.py", line 232, in BmiCallbackBindings_Resolve
+    raise ValueError("Missing selected BMI088 I2C binding source: " + path)
+ValueError: Missing selected BMI088 I2C binding source: Devices/IMU/BMI088/Adapter/Src/bmi088_instance.c
+mingw32-make: *** [Makefile:219: stack-report] Error 1
+mingw32-make: Leaving directory 'D:/python_software/SilverStar/.work/release-20261103/sensors/v7/h743/Flight_Controller'

@@ -1,0 +1,4 @@
+HOST cases=0 passed=0 failed=0 compile_exit=1
+ANALYZER exit=1 ARM_UNIT_LINK exit=1
+CRITICAL_CONTRACT_REVIEW NOT_PROVEN; full generated gates and hardware not run
+Evidence: D:\python_software\SilverStar\.work\dev013_mag_tf_20261103\v2\results.json

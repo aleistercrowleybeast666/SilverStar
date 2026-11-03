@@ -1,0 +1,15 @@
+................................F
+================================== FAILURES ===================================
+__________ test_kf6_stationary_replay_has_finite_positive_covariance __________
+apps\FLP\tests\test_algorithms.py:90: in test_kf6_stationary_replay_has_finite_positive_covariance
+    result = plugin.run(
+apps\FLP\src\silverstar_flp\plugins\algorithms\kf6\plugin.py:1065: in run
+    algorithm_revision = self.ProcessModelRevision_Resolve(dataset, request)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps\FLP\src\silverstar_flp\plugins\algorithms\kf6\plugin.py:1468: in ProcessModelRevision_Resolve
+    raise ValueError("kf6_algorithm_revision_missing")
+E   ValueError: kf6_algorithm_revision_missing
+=========================== short test summary info ===========================
+FAILED apps\FLP\tests\test_algorithms.py::test_kf6_stationary_replay_has_finite_positive_covariance
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 32 passed in 24.05s

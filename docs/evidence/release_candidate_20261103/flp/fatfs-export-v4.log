@@ -1,0 +1,4 @@
+writer {'HOST_GENERATED.sslog': 4004794, 'Round2Targets.ssdecoder': 189096, 'run.log': 1812, 'snap00.0': 191, 'snap01.0': 338, 'snap02.0': 26, 'snap03.0': 90, 'snap04.0': 404, 'snap05.0': 26, 'snap06.0': 94, 'snap07.0': 66}
+objects {'Round2Targets.ssdecoder': 189096, 'run.log': 129, 'snap00.0': 21, 'snap00.1': 191, 'snap01.0': 338, 'snap02.0': 26, 'snap03.0': 90, 'snap04.0': 404, 'snap05.0': 26, 'snap06.0': 94, 'snap07.0': 66, 'snap08.0': 191, 'snap09.0': 338, 'snap10.0': 26, 'snap11.0': 90, 'snap12.0': 404, 'snap13.0': 26, 'snap14.0': 94}
+valid-input {'HOST_GENERATED.sslog': 4004794, 'Round2Targets.ssdecoder': 189096, 'run.log': 1812, 'snap00.0': 191, 'snap01.0': 338, 'snap02.0': 26, 'snap03.0': 90, 'snap04.0': 404, 'snap05.0': 26, 'snap06.0': 94, 'snap07.0': 66}
+host_executable edba6f5b68afeb37421921cf13b02dfcfc57968f4d8dc62bfadc7cc11fd47f82

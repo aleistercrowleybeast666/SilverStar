@@ -1,0 +1,95 @@
+{
+  "scope": "Source Qt offscreen; actual firmware writer with synthetic input",
+  "log_sha256": "652a2ee93c7f0594ab49f75e8c3b227b8d48e4d377d1ce76d0f43710c38c8868",
+  "screens": [
+    {
+      "screen": "overview",
+      "pixels": [
+        1375,
+        950
+      ],
+      "device_pixel_ratio": 1.25,
+      "sha256": "67d5735899ac1917ab2ab61b8d8307a3b03ab76b5706e6e8f38ec41d58579184"
+    },
+    {
+      "screen": "recorded-0",
+      "pixels": [
+        1125,
+        775
+      ],
+      "device_pixel_ratio": 1.25,
+      "sha256": "da53c29bec67e7177c03ddf1f760bd167af9975f92ede102773802d27056271b",
+      "tab": "任务"
+    },
+    {
+      "screen": "recorded-1",
+      "pixels": [
+        1125,
+        775
+      ],
+      "device_pixel_ratio": 1.25,
+      "sha256": "7260961280ee1e145353ab29e4113990ff59423112951e51ef1f3a18ac55c093",
+      "tab": "无线"
+    },
+    {
+      "screen": "recorded-2",
+      "pixels": [
+        1125,
+        775
+      ],
+      "device_pixel_ratio": 1.25,
+      "sha256": "4ca79c936ae46d4629a0561caea42b8443d1f2f02f9c844b4386983c73282f75",
+      "tab": "对准"
+    },
+    {
+      "screen": "recorded-3",
+      "pixels": [
+        1125,
+        775
+      ],
+      "device_pixel_ratio": 1.25,
+      "sha256": "aff335d8fcef120b2cf89841a11848a86eeb69fcb682eab085a02485be53c2f3",
+      "tab": "设备"
+    },
+    {
+      "screen": "recorded-4",
+      "pixels": [
+        1125,
+        775
+      ],
+      "device_pixel_ratio": 1.25,
+      "sha256": "fef08a352960dbc0432fe550440d9b70969230809db99da8f6f92e2f04f546d5",
+      "tab": "算法"
+    },
+    {
+      "screen": "recorded-5",
+      "pixels": [
+        1125,
+        775
+      ],
+      "device_pixel_ratio": 1.25,
+      "sha256": "4309e6411e5b3cf6b9f2437a7b52e76a5840aac4d70c1d2b0cf68734da6c8b99",
+      "tab": "参数"
+    },
+    {
+      "screen": "recorded-6",
+      "pixels": [
+        1125,
+        775
+      ],
+      "device_pixel_ratio": 1.25,
+      "sha256": "08f8e9f8254800024792b0886d37d291d4f95fd8b63aa01a8fd8f6cdc0cf15a9",
+      "tab": "校准"
+    },
+    {
+      "screen": "recorded-7",
+      "pixels": [
+        1125,
+        775
+      ],
+      "device_pixel_ratio": 1.25,
+      "sha256": "5c1694673f11baf4ea5540da5bc3dd1aec08b5149c5f472c48f34d2191b375c8",
+      "tab": "来源与身份"
+    }
+  ]
+}

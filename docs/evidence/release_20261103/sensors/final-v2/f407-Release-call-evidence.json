@@ -1,0 +1,23 @@
+{
+  "model": "f407",
+  "configuration": "Release",
+  "elf_sha256": "dce229edf47f86cad99700b5374755be6f365c7b1545d98a19d28d8336ef4ffa",
+  "tools": "D:/Arm GNU Toolchain/14.3 rel1/bin",
+  "scope": "Exact linked symbol/IRQ evidence and representative direct paths. Each .su is one local frame. Missing indirect, archive, exception and preemption closure precludes a strict bound.",
+  "vectors": {},
+  "persistent_symbols": [],
+  "paths": {
+    "AppTask_Device -> SystemMagRotation_MagObserve": [],
+    "AppTask_Device -> MagRotation_Step": [],
+    "AppTask_Device -> LoggerBus_RotationEventPush": [],
+    "AppTask_Device -> SystemMagRotation_ImuObserve": [],
+    "AppTask_Serial -> SystemMagRotation_StatusWrite": [],
+    "EXTI2_IRQHandler -> PlatformTime_Us": [],
+    "EXTI3_IRQHandler -> PlatformTime_Us": []
+  },
+  "su_sha256": {
+    "System\\Calibration\\Src\\system_mag_calibration.su": "c7c9d2288f87896c2b3912d74de830cf2c1acd4f31a9dbaa795c5886710825e2",
+    "Platform\\STM32F4\\Src\\platform_gpio_stm32f4.su": "e7097441cd85e295ad70bdd62c9c9ecd69c4ec2af55063b0512f0e5769e88132"
+  },
+  "assembly_sha256": "fba25ac25117c123e5a7040b0696a3a6dbb67a1bfe6ec44eb6185281fa7f101c"
+}

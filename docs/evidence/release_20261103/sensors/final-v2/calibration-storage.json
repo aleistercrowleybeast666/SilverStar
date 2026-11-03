@@ -1,0 +1,1034 @@
+{
+  "owner": "dev013_mag_tf_20261103",
+  "purpose": "Isolated calibration unit red/green, not firmware acceptance",
+  "utc": "2026-11-03T14:53:43.906074+00:00",
+  "python": "3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "source_commit": "8d01a53b5f492a8ef01dcf9d7f48136cb23c3eb6",
+  "sources": [
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Calibration\\Src\\system_mag_calibration.c",
+      "sha256": "d4962997d0e27f89e7e2b0e1209c7a756424ab7d01d77a6ddfcee0993fe81e3e",
+      "snapshot": "source\\system_mag_calibration.c"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\System\\Calibration\\Inc\\system_mag_calibration.h",
+      "sha256": "7bb33d9a786a1090202f01e8bfa9a9613f7d54cf4635eca10c8b30c282a97720",
+      "snapshot": "source\\system_mag_calibration.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_magnetometer_if.h",
+      "sha256": "f23f3a726d45ec999e246f37541dc00256a3ebd749cfc0242382ad6cac6c6068",
+      "snapshot": "source\\system_magnetometer_if.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_device_types.h",
+      "sha256": "9bdaf1805b43c9148ad357bff0067c1938db8a2be26b5205dcfaa54790b86e4d",
+      "snapshot": "source\\system_device_types.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_navigation_provenance.h",
+      "sha256": "d96d16e0e6e1ca5229e3cb0fff44f3537645259e9531329bc49d874162883f66",
+      "snapshot": "source\\system_navigation_provenance.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_mag_rotation_if.h",
+      "sha256": "6508b316a721dbeb4af1ea90ce1439000595923d0fad96d9f4c982c923915d7a",
+      "snapshot": "source\\system_mag_rotation_if.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_installation_active_if.h",
+      "sha256": "526945e164cef3e35d8857fdd9051ab393abb16cbccc0a45fe027fedfb16c7ae",
+      "snapshot": "source\\system_installation_active_if.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_installation_capture_if.h",
+      "sha256": "7649b44823111b20e0feedb4639711714cb341ecfb1156193eee8a21812fd463",
+      "snapshot": "source\\system_installation_capture_if.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_imu_if.h",
+      "sha256": "ae5f475d1319c813c0efb7d900c90deff1a7b57b4bd15e90d5c867c8c7cdf635",
+      "snapshot": "source\\system_imu_if.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_imu_epoch_if.h",
+      "sha256": "d568ef886fd6d295da73225a671441025ba61ee535ff4f6df74a25312af57cc1",
+      "snapshot": "source\\system_imu_epoch_if.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_descriptor_if.h",
+      "sha256": "929da3ffb37a1264bbb4d49a1b8f9546bc624690b0c915819a236e683a0c5057",
+      "snapshot": "source\\system_descriptor_if.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_installation_calibration_if.h",
+      "sha256": "d615be406a6802503c0a69749e52bcf60a56e2c8000fb48788d5ff79660f2d0f",
+      "snapshot": "source\\system_installation_calibration_if.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc\\silverstar_assert.h",
+      "sha256": "aa35382c4395e5a71bc80a71944498c6aaefe4bf4fa65a63fa00bc2c67cb0452",
+      "snapshot": "source\\silverstar_assert.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Common\\Inc\\silverstar_compiler.h",
+      "sha256": "3d66165f468e3e7263ebb6d72b6c217a042dd337be39e170ffb83487815ffd57",
+      "snapshot": "source\\silverstar_compiler.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_critical.h",
+      "sha256": "77f0d7141c4cf906171cf6c0019130949385d6e51e1ed9475c4ee50140157875",
+      "snapshot": "source\\platform_critical.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_platform_api\\payload\\Platform\\Inc\\platform_memory.h",
+      "sha256": "138e3073e9885025f3435418398601ee840da17d81f2019574e892df941b6d13",
+      "snapshot": "source\\platform_memory.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\mag_calibration\\project_device_instances.h",
+      "sha256": "bab7355a9befa7a89df4fb4ae34fa2f0570602aa249bfbed2ae4a1cd7b4cf885",
+      "snapshot": "source\\project_device_instances.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\mag_calibration\\test_system_mag_calibration.c",
+      "sha256": "84863c86c7cbab18149eb95cc4229b8f9757ad87dca5e9b06c3c1929a2bea325",
+      "snapshot": "source\\test_system_mag_calibration.c"
+    },
+    {
+      "path": "apps\\SCG\\tools\\validation\\mag_calibration_validate.py",
+      "sha256": "a8d11bbfc2942f7cf6404f08c07139ee0fbe245bc7aa77a4fbc19c7cc51192bb",
+      "snapshot": "source\\mag_calibration_validate.py"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Tests\\Host\\mag_calibration\\test_mag_tf.h",
+      "sha256": "c9bb1dcb675e20ea90d59f6430bd1139c6bde7872949adf8c8f77071da3e1ee4",
+      "snapshot": "source\\test_mag_tf.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_storage_if.h",
+      "sha256": "2740c6a84829b332c3e921331b5c674831229092522fb2196cd040789c5d08b7",
+      "snapshot": "source\\system_storage_if.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\Interfaces\\Inc\\system_mag_calibration_storage_if.h",
+      "sha256": "58b592e5c412f7e3cec4c49bf35d8ff1d6e69e227ac2ea5b486fad3dfa43ded5",
+      "snapshot": "source\\system_mag_calibration_storage_if.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_device_storage_sd_sdio_fatfs\\payload\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Inc\\persistent_storage.h",
+      "sha256": "d5e40353c42468ff5c8c3998a7299cbc56756880a2023e6f7691b3a2f35701e2",
+      "snapshot": "source\\persistent_storage.h"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_device_storage_sd_sdio_fatfs\\payload\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Src\\persistent_storage.c",
+      "sha256": "574f1b189e88baf9fa829803408955b7a591a8045c1eda854e323aff8cc3035f",
+      "snapshot": "source\\persistent_storage.c"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_device_storage_sd_sdio_fatfs\\payload\\Devices\\Storage\\SdSdioFatFs\\Adapter\\Src\\mag_calibration_storage.c",
+      "sha256": "cd75ff143c62f17323ecaac87d5e05d9ac0b5c0b9eace57064e96818d0d1a312",
+      "snapshot": "source\\mag_calibration_storage.c"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Src\\serial_task.c",
+      "sha256": "139079359a3e48942f476fb9a69deb6acf7bc6b99b8af6673b50e3c6bf944e41",
+      "snapshot": "source\\serial_task.c"
+    },
+    {
+      "path": "apps\\SCG\\plugins\\builtin\\silverstar_core_0_1_0\\payload\\APP\\Inc\\serial_task.h",
+      "sha256": "de323d753d25a0672ced06f6451629284905a3819f3e0e42cf568ea76e0b65d6",
+      "snapshot": "source\\serial_task.h"
+    }
+  ],
+  "commands": [
+    {
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "gcc.EXE (Rev5, Built by MSYS2 project) 16.1.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-O1",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-Wconversion",
+        "-Wsign-conversion",
+        "-Wshadow",
+        "-Wundef",
+        "-Wformat=2",
+        "-Wdouble-promotion",
+        "-Wcast-align",
+        "-Wcast-qual",
+        "-Wstrict-prototypes",
+        "-Wmissing-prototypes",
+        "-Wswitch-enum",
+        "-Wvla",
+        "-DSILVERSTAR_MAG_TF_TEST=1",
+        "-DSILVERSTAR_MAG_TF_SERIAL=1",
+        "-I",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source\\system_mag_calibration.c",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source\\persistent_storage.c",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source\\mag_calibration_storage.c",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source\\serial_task.c",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source\\test_system_mag_calibration.c",
+        "-lm",
+        "-o",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "absent_clear"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|absent_clear\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "absent_save"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|absent_save\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "absent_status"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|absent_status\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "absent_complete"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|absent_complete\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "absent_fault"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|absent_fault\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "absent_inputs"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|absent_inputs\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "provider_disabled"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|provider_disabled\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "provider_wrong_class"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|provider_wrong_class\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "provider_wrong_instance"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|provider_wrong_instance\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "provider_zero_identity"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|provider_zero_identity\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "provider_raw_only"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|provider_raw_only\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "provider_unsupported"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|provider_unsupported\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "provider_timeout"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|provider_timeout\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "provider_not_present"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|provider_not_present\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "wrong_packet"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|wrong_packet\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "wrong_sample"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|wrong_sample\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "wrong_sample_descriptor"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|wrong_sample_descriptor\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "wrong_sample_instance"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|wrong_sample_instance\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "sample_atomic"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|sample_atomic\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "normal"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|normal\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "save_failure"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|save_failure\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "stored_clear"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|stored_clear\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "capability_loss"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|capability_loss\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "changed_identity"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|changed_identity\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "double_correction"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|double_correction\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "replacement_failure"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|replacement_failure\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_replacement"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_replacement\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_torn"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_torn\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_crc"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_crc\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_verify"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_verify\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_config"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_config\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_sensor"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_sensor\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_endpoint"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_endpoint\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_driver"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_driver\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_model"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_model\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_legacy"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_legacy\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_no_card"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_no_card\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_before_save"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_before_save\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_clear_failure"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_clear_failure\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_corrupt"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_corrupt\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_envelope"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_envelope\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_pending_identity"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_pending_identity\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_boot_load"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_boot_load\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_selected_read_io"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_selected_read_io\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_selected_read_crc"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_selected_read_crc\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_selected_read_missing"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_selected_read_missing\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_load_fault_contract"
+      ],
+      "exit_code": 0,
+      "stdout": "EXPECTED_TERMINAL_ASSERT|module=5|reason=5|line=34\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_completion_contract"
+      ],
+      "exit_code": 0,
+      "stdout": "EXPECTED_TERMINAL_ASSERT|module=5|reason=6|line=45\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_host.exe",
+        "tf_serial"
+      ],
+      "exit_code": 0,
+      "stdout": "PASS|tf_serial\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-O1",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-Wconversion",
+        "-Wsign-conversion",
+        "-Wshadow",
+        "-Wundef",
+        "-Wformat=2",
+        "-Wdouble-promotion",
+        "-Wcast-align",
+        "-Wcast-qual",
+        "-Wstrict-prototypes",
+        "-Wmissing-prototypes",
+        "-Wswitch-enum",
+        "-Wvla",
+        "-fanalyzer",
+        "-I",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source",
+        "-c",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source\\system_mag_calibration.c",
+        "-o",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\system_mag_calibration.c.analyzer.o"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-O1",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-Wconversion",
+        "-Wsign-conversion",
+        "-Wshadow",
+        "-Wundef",
+        "-Wformat=2",
+        "-Wdouble-promotion",
+        "-Wcast-align",
+        "-Wcast-qual",
+        "-Wstrict-prototypes",
+        "-Wmissing-prototypes",
+        "-Wswitch-enum",
+        "-Wvla",
+        "-fanalyzer",
+        "-I",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source",
+        "-c",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source\\persistent_storage.c",
+        "-o",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\persistent_storage.c.analyzer.o"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-O1",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-Wconversion",
+        "-Wsign-conversion",
+        "-Wshadow",
+        "-Wundef",
+        "-Wformat=2",
+        "-Wdouble-promotion",
+        "-Wcast-align",
+        "-Wcast-qual",
+        "-Wstrict-prototypes",
+        "-Wmissing-prototypes",
+        "-Wswitch-enum",
+        "-Wvla",
+        "-fanalyzer",
+        "-I",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source",
+        "-c",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source\\mag_calibration_storage.c",
+        "-o",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_storage.c.analyzer.o"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+        "-std=c11",
+        "-O1",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-Wconversion",
+        "-Wsign-conversion",
+        "-Wshadow",
+        "-Wundef",
+        "-Wformat=2",
+        "-Wdouble-promotion",
+        "-Wcast-align",
+        "-Wcast-qual",
+        "-Wstrict-prototypes",
+        "-Wmissing-prototypes",
+        "-Wswitch-enum",
+        "-Wvla",
+        "-fanalyzer",
+        "-I",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source",
+        "-c",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source\\serial_task.c",
+        "-o",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\serial_task.c.analyzer.o"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-gcc.EXE",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "arm-none-eabi-gcc.EXE (Arm GNU Toolchain 14.3.Rel1 (Build arm-14.174)) 14.3.1 20250623\nCopyright (C) 2024 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "D:\\Arm GNU Toolchain\\14.3 rel1\\bin\\arm-none-eabi-gcc.EXE",
+        "-std=c11",
+        "-O1",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-Wconversion",
+        "-Wsign-conversion",
+        "-Wshadow",
+        "-Wundef",
+        "-Wformat=2",
+        "-Wdouble-promotion",
+        "-Wcast-align",
+        "-Wcast-qual",
+        "-Wstrict-prototypes",
+        "-Wmissing-prototypes",
+        "-Wswitch-enum",
+        "-Wvla",
+        "-DSILVERSTAR_MAG_TF_TEST=1",
+        "-DSILVERSTAR_MAG_TF_SERIAL=1",
+        "-mcpu=cortex-m4",
+        "-mthumb",
+        "-mfpu=fpv4-sp-d16",
+        "-mfloat-abi=hard",
+        "-fstack-usage",
+        "-DSILVERSTAR_MAG_CAL_ARM_LINK_ONLY=1",
+        "-I",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source\\system_mag_calibration.c",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source\\persistent_storage.c",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source\\mag_calibration_storage.c",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source\\serial_task.c",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\source\\test_system_mag_calibration.c",
+        "-nostartfiles",
+        "-Wl,-e,main",
+        "-Wl,--fatal-warnings",
+        "-Wl,-Map=D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_arm.map",
+        "-lm",
+        "-o",
+        "D:\\python_software\\SilverStar\\.work\\dev013_mag_tf_20261103\\v5\\mag_calibration_arm.elf"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "cases": [
+    {
+      "case": "absent_clear",
+      "exit_code": 0
+    },
+    {
+      "case": "absent_save",
+      "exit_code": 0
+    },
+    {
+      "case": "absent_status",
+      "exit_code": 0
+    },
+    {
+      "case": "absent_complete",
+      "exit_code": 0
+    },
+    {
+      "case": "absent_fault",
+      "exit_code": 0
+    },
+    {
+      "case": "absent_inputs",
+      "exit_code": 0
+    },
+    {
+      "case": "provider_disabled",
+      "exit_code": 0
+    },
+    {
+      "case": "provider_wrong_class",
+      "exit_code": 0
+    },
+    {
+      "case": "provider_wrong_instance",
+      "exit_code": 0
+    },
+    {
+      "case": "provider_zero_identity",
+      "exit_code": 0
+    },
+    {
+      "case": "provider_raw_only",
+      "exit_code": 0
+    },
+    {
+      "case": "provider_unsupported",
+      "exit_code": 0
+    },
+    {
+      "case": "provider_timeout",
+      "exit_code": 0
+    },
+    {
+      "case": "provider_not_present",
+      "exit_code": 0
+    },
+    {
+      "case": "wrong_packet",
+      "exit_code": 0
+    },
+    {
+      "case": "wrong_sample",
+      "exit_code": 0
+    },
+    {
+      "case": "wrong_sample_descriptor",
+      "exit_code": 0
+    },
+    {
+      "case": "wrong_sample_instance",
+      "exit_code": 0
+    },
+    {
+      "case": "sample_atomic",
+      "exit_code": 0
+    },
+    {
+      "case": "normal",
+      "exit_code": 0
+    },
+    {
+      "case": "save_failure",
+      "exit_code": 0
+    },
+    {
+      "case": "stored_clear",
+      "exit_code": 0
+    },
+    {
+      "case": "capability_loss",
+      "exit_code": 0
+    },
+    {
+      "case": "changed_identity",
+      "exit_code": 0
+    },
+    {
+      "case": "double_correction",
+      "exit_code": 0
+    },
+    {
+      "case": "replacement_failure",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_replacement",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_torn",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_crc",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_verify",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_config",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_sensor",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_endpoint",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_driver",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_model",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_legacy",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_no_card",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_before_save",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_clear_failure",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_corrupt",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_envelope",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_pending_identity",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_boot_load",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_selected_read_io",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_selected_read_crc",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_selected_read_missing",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_load_fault_contract",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_completion_contract",
+      "exit_code": 0
+    },
+    {
+      "case": "tf_serial",
+      "exit_code": 0
+    }
+  ],
+  "critical_contract_review": "NOT_PROVEN",
+  "generated_power10": "NOT_RUN: no full generated project in this batch",
+  "full_firmware_host": "NOT_RUN: shared entry/fixtures outside assigned scope",
+  "full_firmware_arm": "NOT_RUN: optional ARM result is a unit link only",
+  "hardware": "NOT_RUN: no hardware operations authorized",
+  "host_compile_exit": 0,
+  "gcc_analyzer_exit": 0,
+  "arm_unit_compile_link_exit": 0,
+  "live_sources_unchanged": true,
+  "passed": 49,
+  "failed": 0,
+  "exit_code": 0
+}
