@@ -23,6 +23,16 @@ _LABELS = {
     'saved_generation':'持久化代次','record_crc32':'记录 CRC32',
     'raw_archive_sha256':'原始归档 SHA-256','stable_dependency_sha256':'稳定依赖 SHA-256',
     'hardware_verified':'硬件验证','recorded_source_frame_qualified':'记录中声明的来源坐标系资格',
+    'base_instance': '快照起始实例', 'profile_id': '配置编号',
+    'imu_source_instance': 'IMU 来源实例', 'gnss_source_instance': 'GNSS 来源实例',
+    'calibration_generation': 'IMU 校准代次', 'imu_correction_hash': 'IMU 校正摘要',
+    'mag_calibration_generation': '磁力计校准代次', 'mag_calibration_set_hash': '磁校准集摘要',
+    'descriptor': '描述符编号', 'device_class': '设备类别', 'driver': '驱动编号',
+    'flags': '标志位', 'capabilities': '能力位', 'rate': '采样率',
+    'driver_hash': '驱动摘要', 'model_hash': '型号摘要', 'algorithm_class': '算法类别',
+    'name_hash': '名称摘要', 'key_hash': '参数键摘要', 'value': '值', 'axes': '各轴校正',
+    'mag_generation': '磁校准代次', 'mag_hash': '磁校准摘要',
+    'mag_set_hash': '磁校准集摘要', 'mag_instances': '磁力计实例',
 }
 
 
@@ -38,6 +48,7 @@ class MissionSnapshotDialog(QDialog):
         self.status.setTextFormat(Qt.TextFormat.PlainText)
         layout.addWidget(self.status)
         self.tabs = QTabWidget()
+        self.tabs.tabBar().setStyleSheet("QTabBar::tab { min-width: 0px; padding: 6px 9px; }")
         layout.addWidget(self.tabs, 1)
         snapshot = snapshot if isinstance(snapshot, dict) else {}
         state = snapshot.get('status', 'unavailable')
@@ -47,10 +58,35 @@ class MissionSnapshotDialog(QDialog):
             for key, label in [('header', '任务'), ('radio', '无线'), ('alignment', '对准'),
                     ('devices', '设备'), ('algorithms', '算法'), ('parameters', '参数'),
                     ('calibration', '校准'), ('sources', '来源与身份')]:
-                self._Section_Add(label if self._zh else key.replace('_', ' ').title(), snapshot.get(key, {}))
+                title = label if self._zh else key.replace('_', ' ').title()
+                if key == 'parameters':
+                    self._Parameters_Add(title, snapshot.get(key, ()), snapshot.get('parameter_dictionary', {}))
+                else:
+                    self._Section_Add(title, snapshot.get(key, {}))
         buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
+        buttons.button(QDialogButtonBox.StandardButton.Close).setText(translator.Text_Get('action.close'))
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
+
+    def _Parameters_Add(self, title, rows, dictionary):
+        table = QTableWidget(len(rows), 4)
+        table.setHorizontalHeaderLabels(['参数', '记录值', '单位', '记录键 / 类型'] if self._zh else
+                                        ['Parameter', 'Recorded value', 'Unit', 'Recorded key / type'])
+        table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        table.verticalHeader().hide()
+        table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        for index, row in enumerate(rows):
+            declaration = dictionary.get(str(row['key_hash']), {})
+            fields = (declaration.get('name', '—'), str(row['value']), declaration.get('unit') or '—',
+                      f"0x{row['key_hash']:08X} / {row['kind']}")
+            for column, text in enumerate(fields):
+                item = QTableWidgetItem(text)
+                item.setToolTip((declaration.get('component', '') + '/' + text) if declaration and column == 0 else text)
+                table.setItem(index, column, item)
+        for column in (1, 2, 3):
+            table.resizeColumnToContents(column)
+        self.tabs.addTab(table, title)
 
     def _Section_Add(self, label, value):
         rows = []

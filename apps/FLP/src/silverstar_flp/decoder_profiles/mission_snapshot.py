@@ -102,6 +102,24 @@ def MissionSnapshot_Read(directory: Path, identity, *, object_catalog=None):
     return result
 
 
+def _ParameterDictionary_Build(groups, recorded):
+    """Names and units come from the exact decoder. Values remain recorded facts."""
+    candidates = {}
+    for group in groups:
+        for parameter in group['parameters']:
+            key = group['component'] + '/' + parameter['id']
+            digest = SnapshotHash_Get(key.encode('utf-8'))
+            kind = {'float32': 1, 'int32': 2}.get(parameter['storage_type'])
+            entry = (kind, {'component': group['component'], 'name': parameter['id'], 'unit': parameter['unit']})
+            candidates[digest] = None if digest in candidates else entry
+    labels = {}
+    for row in recorded:
+        entry = candidates.get(row['key_hash'])
+        if entry and entry[0] == row['kind']:
+            labels[str(row['key_hash'])] = entry[1]
+    return labels
+
+
 def MissionSnapshot_Attach(dataset, package):
     identities = [item for item in dataset.Records_Get('MISSION_SNAPSHOT_IDENTITY')
                   if item.payload.get('ready') == 1]
@@ -111,6 +129,8 @@ def MissionSnapshot_Attach(dataset, package):
         try:
             result = MissionSnapshot_Read(dataset.source_path.parent,identity,
                                            object_catalog=package.object_catalog)
+            result['parameter_dictionary'] = _ParameterDictionary_Build(
+                package.semantics.raw_metadata.get('firmware_algorithm_parameters', ()), result['parameters'])
         except (ValueError,OSError,KeyError,UnicodeError) as error:
             result = {'status':'invalid','reason':str(error)}
     return replace(dataset,metadata={**dataset.metadata,'mission_snapshot':result})
