@@ -1,0 +1,539 @@
+{
+  "reference_collection": 1953,
+  "distinct_started": 1953,
+  "unstarted": [],
+  "distinct_original_outcomes": {
+    "passed": 1678,
+    "failed": 85,
+    "skipped": 32,
+    "error": 155,
+    "interrupted": 3
+  },
+  "segments": [
+    {
+      "journal": "full-bounded-1.jsonl",
+      "started": 1525,
+      "finished": 1524,
+      "distinct_test_outcomes": {
+        "passed": 1288,
+        "failed": 72,
+        "skipped": 24,
+        "error": 140,
+        "interrupted": 1
+      },
+      "interrupted": [
+        "tests/test_offline_diagnostics.py::test_project_excludes_analysis_only_diagnostics"
+      ]
+    },
+    {
+      "journal": "continued-1.jsonl",
+      "started": 109,
+      "finished": 108,
+      "distinct_test_outcomes": {
+        "passed": 107,
+        "failed": 1,
+        "interrupted": 1
+      },
+      "interrupted": [
+        "tests/test_project_artifact_boundaries.py::test_reader_rejects_nonregular_or_reparse_before_open[fifo]"
+      ]
+    },
+    {
+      "journal": "continued-2.jsonl",
+      "started": 1,
+      "finished": 0,
+      "distinct_test_outcomes": {
+        "interrupted": 1
+      },
+      "interrupted": [
+        "tests/test_project_artifact_boundaries.py::test_reader_rejects_nonregular_or_reparse_before_open[reparse]"
+      ]
+    },
+    {
+      "journal": "continued-3.jsonl",
+      "started": 318,
+      "finished": 318,
+      "distinct_test_outcomes": {
+        "passed": 283,
+        "failed": 12,
+        "error": 15,
+        "skipped": 8
+      },
+      "interrupted": []
+    }
+  ],
+  "scope": "Disjoint first attempts on original collection. Separate processes and source epochs; no single completed passing suite.",
+  "by_file": {
+    "tests/test_actual_parameters.py": {
+      "passed": 27
+    },
+    "tests/test_algorithms.py": {
+      "passed": 9,
+      "failed": 1
+    },
+    "tests/test_analysis_source.py": {
+      "passed": 3
+    },
+    "tests/test_artifact_alias_reuse.py": {
+      "passed": 1
+    },
+    "tests/test_artifact_byte_progress.py": {
+      "passed": 5
+    },
+    "tests/test_audit_block_artifacts.py": {
+      "passed": 17
+    },
+    "tests/test_baro_recorded_diagnostics.py": {
+      "failed": 15,
+      "passed": 2
+    },
+    "tests/test_baro_recorded_diagnostics_gui.py": {
+      "failed": 4
+    },
+    "tests/test_cache_generation_ownership.py": {
+      "passed": 1
+    },
+    "tests/test_clean_workspace.py": {
+      "passed": 7
+    },
+    "tests/test_closeout.py": {
+      "passed": 2
+    },
+    "tests/test_cloud_lifecycle_20261005.py": {
+      "passed": 9,
+      "failed": 4
+    },
+    "tests/test_comparison_contracts.py": {
+      "passed": 18
+    },
+    "tests/test_comparison_sampling.py": {
+      "passed": 10
+    },
+    "tests/test_comparison_sampling_gui.py": {
+      "failed": 1
+    },
+    "tests/test_current_log_manual.py": {
+      "skipped": 1
+    },
+    "tests/test_custom_review_v2.py": {
+      "passed": 12
+    },
+    "tests/test_decoder_directory_gui.py": {
+      "passed": 9
+    },
+    "tests/test_decoder_profiles.py": {
+      "passed": 47
+    },
+    "tests/test_display_quality.py": {
+      "passed": 33
+    },
+    "tests/test_eskf15.py": {
+      "passed": 15
+    },
+    "tests/test_eskf15_acceptance.py": {
+      "passed": 15
+    },
+    "tests/test_eskf15_baro_time.py": {
+      "passed": 65
+    },
+    "tests/test_eskf15_c_parity.py": {
+      "skipped": 1
+    },
+    "tests/test_eskf15_golden.py": {
+      "skipped": 2
+    },
+    "tests/test_eskf15_native_parity.py": {
+      "skipped": 8
+    },
+    "tests/test_eskf15_product.py": {
+      "passed": 1
+    },
+    "tests/test_eskf15_records.py": {
+      "passed": 1,
+      "skipped": 1
+    },
+    "tests/test_estimator_visualization.py": {
+      "passed": 5,
+      "failed": 2
+    },
+    "tests/test_export_theme.py": {
+      "passed": 5
+    },
+    "tests/test_export_without_navigation.py": {
+      "passed": 12
+    },
+    "tests/test_firmware_aggregation_contract.py": {
+      "passed": 16
+    },
+    "tests/test_fixed_lag_contract.py": {
+      "passed": 5
+    },
+    "tests/test_flight_state_pages.py": {
+      "passed": 7
+    },
+    "tests/test_full_task_trajectory_export_20261005.py": {
+      "passed": 3
+    },
+    "tests/test_fusion_current_native_parity.py": {
+      "skipped": 2,
+      "error": 12
+    },
+    "tests/test_fusion_current_project_audit.py": {
+      "failed": 10,
+      "passed": 42
+    },
+    "tests/test_fusion_current_state.py": {
+      "passed": 37
+    },
+    "tests/test_fusion_horizon.py": {
+      "passed": 13,
+      "error": 6
+    },
+    "tests/test_fusion_horizon_backend_wire.py": {
+      "skipped": 1
+    },
+    "tests/test_fusion_horizon_identity.py": {
+      "passed": 28
+    },
+    "tests/test_fusion_horizon_records.py": {
+      "passed": 41
+    },
+    "tests/test_fusion_timing_contract.py": {
+      "passed": 50
+    },
+    "tests/test_fusion_timing_records_v2.py": {
+      "passed": 44
+    },
+    "tests/test_fusion_timing_ui.py": {
+      "passed": 9
+    },
+    "tests/test_generated_aggregation_pair.py": {
+      "skipped": 6
+    },
+    "tests/test_gl_object_lifetime.py": {
+      "passed": 3
+    },
+    "tests/test_gnss_export_dependencies.py": {
+      "passed": 7
+    },
+    "tests/test_gnss_integrity.py": {
+      "passed": 15
+    },
+    "tests/test_gnss_integrity_display.py": {
+      "passed": 6
+    },
+    "tests/test_gnss_reacquisition_identity.py": {
+      "passed": 13
+    },
+    "tests/test_gui_algorithm_labels_20261005.py": {
+      "passed": 1
+    },
+    "tests/test_gui_release_identity.py": {
+      "passed": 2
+    },
+    "tests/test_gui_smoke.py": {
+      "passed": 8,
+      "failed": 1
+    },
+    "tests/test_header_field_blockers.py": {
+      "passed": 2,
+      "failed": 2
+    },
+    "tests/test_horizon_backend_numerics.py": {
+      "failed": 12
+    },
+    "tests/test_horizon_execution.py": {
+      "error": 36
+    },
+    "tests/test_horizon_inputs.py": {
+      "passed": 17
+    },
+    "tests/test_horizon_native_log_open.py": {
+      "error": 2
+    },
+    "tests/test_horizon_recorded_bodies.py": {
+      "error": 24
+    },
+    "tests/test_horizon_result.py": {
+      "passed": 7
+    },
+    "tests/test_horizon_timeline.py": {
+      "passed": 15
+    },
+    "tests/test_horizontal_trajectory.py": {
+      "passed": 12
+    },
+    "tests/test_i18n_consistency.py": {
+      "passed": 2
+    },
+    "tests/test_import_export_messages.py": {
+      "passed": 6
+    },
+    "tests/test_integrity_parameters.py": {
+      "passed": 2
+    },
+    "tests/test_joint_c_golden.py": {
+      "skipped": 1
+    },
+    "tests/test_joint_gui_state.py": {
+      "passed": 1,
+      "failed": 5
+    },
+    "tests/test_joint_ranges.py": {
+      "passed": 14
+    },
+    "tests/test_kf6_field_analysis.py": {
+      "passed": 3
+    },
+    "tests/test_kf6_horizon.py": {
+      "passed": 3,
+      "error": 60
+    },
+    "tests/test_kf6_outage.py": {
+      "passed": 7,
+      "failed": 1
+    },
+    "tests/test_kf6_process_model.py": {
+      "passed": 7
+    },
+    "tests/test_kf6_process_model_identity.py": {
+      "passed": 19
+    },
+    "tests/test_kf6_replay_failure_publication.py": {
+      "passed": 38
+    },
+    "tests/test_kf6_retired_parameter_precision.py": {
+      "passed": 14,
+      "failed": 7
+    },
+    "tests/test_landing_display_onset.py": {
+      "passed": 3
+    },
+    "tests/test_landing_time_window.py": {
+      "passed": 18
+    },
+    "tests/test_legacy_writer_recovery_state.py": {
+      "passed": 5
+    },
+    "tests/test_magnetometer_decoder_routes.py": {
+      "passed": 12
+    },
+    "tests/test_measurement_diagnostics.py": {
+      "failed": 2,
+      "passed": 1
+    },
+    "tests/test_measurement_plot_layout.py": {
+      "passed": 8
+    },
+    "tests/test_mission_folder_import.py": {
+      "passed": 7
+    },
+    "tests/test_mission_profile.py": {
+      "passed": 6
+    },
+    "tests/test_mission_snapshot_gui.py": {
+      "passed": 4
+    },
+    "tests/test_mission_snapshot_view.py": {
+      "passed": 7
+    },
+    "tests/test_mission_trajectory.py": {
+      "passed": 9,
+      "failed": 3
+    },
+    "tests/test_navigation_body_inputs.py": {
+      "passed": 35
+    },
+    "tests/test_navigation_c_journal.py": {
+      "passed": 6
+    },
+    "tests/test_navigation_diagnostics.py": {
+      "passed": 2
+    },
+    "tests/test_navigation_firmware_configuration.py": {
+      "passed": 53
+    },
+    "tests/test_navigation_integrity_parity.py": {
+      "skipped": 1
+    },
+    "tests/test_navigation_plugins.py": {
+      "passed": 31
+    },
+    "tests/test_navigation_quality_gain.py": {
+      "passed": 51,
+      "failed": 1
+    },
+    "tests/test_navigation_revision_contract.py": {
+      "passed": 9
+    },
+    "tests/test_nis_gate_contract.py": {
+      "passed": 8
+    },
+    "tests/test_nis_groups.py": {
+      "failed": 1
+    },
+    "tests/test_nis_probability.py": {
+      "passed": 140
+    },
+    "tests/test_numerical_runtime_guard.py": {
+      "passed": 10
+    },
+    "tests/test_object_catalog13.py": {
+      "passed": 9
+    },
+    "tests/test_offline_diagnostics.py": {
+      "passed": 4,
+      "interrupted": 1
+    },
+    "tests/test_open_refresh_once.py": {
+      "passed": 1
+    },
+    "tests/test_optional_gnss_replay.py": {
+      "passed": 23,
+      "failed": 1
+    },
+    "tests/test_optional_secondary_source.py": {
+      "passed": 30
+    },
+    "tests/test_overview_analysis.py": {
+      "passed": 10
+    },
+    "tests/test_overview_json.py": {
+      "passed": 2
+    },
+    "tests/test_packaged_fusion_contracts.py": {
+      "passed": 6
+    },
+    "tests/test_path_preferences.py": {
+      "passed": 12
+    },
+    "tests/test_plot_menu_lifetime.py": {
+      "passed": 2
+    },
+    "tests/test_primary_source_policy.py": {
+      "passed": 10
+    },
+    "tests/test_progress_visible_counts.py": {
+      "passed": 1
+    },
+    "tests/test_project_artifact_boundaries.py": {
+      "passed": 17,
+      "interrupted": 2
+    },
+    "tests/test_project_artifacts.py": {
+      "passed": 13
+    },
+    "tests/test_project_export.py": {
+      "passed": 16
+    },
+    "tests/test_project_save_lifecycle.py": {
+      "passed": 4
+    },
+    "tests/test_project_save_path_boundary.py": {
+      "passed": 2
+    },
+    "tests/test_project_stage_progress.py": {
+      "passed": 5
+    },
+    "tests/test_project_stage_progress_gui.py": {
+      "passed": 16
+    },
+    "tests/test_quality_revision_selection.py": {
+      "passed": 5,
+      "failed": 1
+    },
+    "tests/test_record_block_artifacts.py": {
+      "passed": 24
+    },
+    "tests/test_recorded_age_reference.py": {
+      "passed": 8
+    },
+    "tests/test_recorded_mag_rotation.py": {
+      "passed": 7
+    },
+    "tests/test_replay_lifecycle_boundaries.py": {
+      "passed": 7,
+      "failed": 4
+    },
+    "tests/test_replay_mode_and_errors.py": {
+      "passed": 7
+    },
+    "tests/test_replay_page.py": {
+      "failed": 2,
+      "passed": 4
+    },
+    "tests/test_run_deletion.py": {
+      "passed": 14
+    },
+    "tests/test_run_recovery_provenance.py": {
+      "passed": 18
+    },
+    "tests/test_serialization_progress.py": {
+      "passed": 1
+    },
+    "tests/test_sf6_current_state.py": {
+      "error": 6,
+      "passed": 7,
+      "failed": 1
+    },
+    "tests/test_sf6_recorded.py": {
+      "skipped": 1
+    },
+    "tests/test_sf6_replay.py": {
+      "error": 6,
+      "passed": 14,
+      "failed": 2
+    },
+    "tests/test_silverstar_project_root.py": {
+      "passed": 2
+    },
+    "tests/test_sparse_preflight.py": {
+      "failed": 1,
+      "passed": 1
+    },
+    "tests/test_ss0007_manual.py": {
+      "skipped": 3
+    },
+    "tests/test_ss0014_manual.py": {
+      "skipped": 1
+    },
+    "tests/test_ss_test_0_manual.py": {
+      "skipped": 3
+    },
+    "tests/test_sslog_parser.py": {
+      "passed": 11
+    },
+    "tests/test_startup_error_visibility.py": {
+      "passed": 4
+    },
+    "tests/test_task_cancellation_20261005.py": {
+      "error": 3,
+      "passed": 4
+    },
+    "tests/test_task_publication_thread_affinity.py": {
+      "passed": 2
+    },
+    "tests/test_timestamp_semantics.py": {
+      "passed": 25
+    },
+    "tests/test_touch_scroll.py": {
+      "passed": 17,
+      "failed": 1
+    },
+    "tests/test_two_source_comparison.py": {
+      "passed": 2
+    },
+    "tests/test_user_custom_decoder.py": {
+      "passed": 4
+    },
+    "tests/test_velocity_variance_comparison.py": {
+      "passed": 27
+    },
+    "tests/test_version.py": {
+      "passed": 2
+    },
+    "tests/test_worker_retirement.py": {
+      "passed": 3
+    }
+  }
+}

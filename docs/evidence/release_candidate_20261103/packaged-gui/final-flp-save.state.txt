@@ -1,0 +1,2 @@
+				13 文本 HostCandidate ID: QApplication.MainWindow.centralRoot.headerBar.headerProject
+			170 文本 Project saved: C:\Users\chdxm\AppData\Local\Temp\sr1103save\HostCandidate.ssflp (numerical artifacts: 0.51 MB) ID: QApplication.MainWindow.QStatusBar.QLabel

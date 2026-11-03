@@ -1,0 +1,26 @@
+{
+  "scope": "Actual portable SCG Open Project -> Generate Ground -> Build firmware, independent initially model-only workspace",
+  "external_project": "D:\\python_software\\SilverStar\\.work\\0.1.3-release-20261103\\packaging\\final-v3\\gui-ground-project\\Ground_Station",
+  "source_input_sha256": "d1b64196824ea9e1ed8a3d562bfaacb6bbeae6413bfd9cef082e0f1c7ef938d9",
+  "source_input_unchanged": true,
+  "GUI_model_after_save_sha256": "fa782c69fabeafdbc0d2d37d3871b90daa8efd0700ba254223297a8bd42f6f84",
+  "graph_sha256": "279893c853d9a7e2eab441d29eac99e0e4884cce684bb29c51150b1c9b68b44a",
+  "graph_matches_matrix": true,
+  "files": {
+    "build/ground.bin": {
+      "sha256": "1bbb01a547035dd588be3af3ef4127ec7f3b5667a84b544de7690050eccc6854",
+      "bytes": 29024,
+      "same_bytes_as_command_line_matrix": true
+    },
+    "build/ground.elf": {
+      "sha256": "5b651d0e8810be0c61bdfe0d10e701cac1c980a1b5b139a295b20357c9454d32",
+      "bytes": 59704,
+      "same_bytes_as_command_line_matrix": true
+    },
+    "build/ground.map": {
+      "sha256": "8f0ddc4872503aa7cd2c8db92c6fc2a14ac01707ff67ad7c1297665b49e2dfe9",
+      "bytes": 208839,
+      "same_bytes_as_command_line_matrix": true
+    }
+  }
+}

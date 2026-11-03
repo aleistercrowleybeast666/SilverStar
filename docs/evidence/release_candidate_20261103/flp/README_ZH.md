@@ -23,3 +23,5 @@
 ## 全套测试的比较范围
 
 完整 FLP 测试同时包含历史离线算法、模拟数据集和长运行导出测试。已从基线独立复现的七例及短路径对照另行记录。[基线对照](baseline-review/README_ZH.md)
+
+分段执行的 1953 个节点、互斥分类、各项前提与单独复验在[完整回归说明](suite-review/README_ZH.md)和[逐项非通过清单](suite-review/nonpasses.json)中。

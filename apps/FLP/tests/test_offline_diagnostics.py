@@ -13,6 +13,7 @@ from PySide6.QtCore import QSettings
 
 from silverstar_flp.core.context import TaskCancelledError, TaskContext
 from silverstar_flp.core.i18n import Translator
+from silverstar_flp.core.project import ProjectDocument
 from silverstar_flp.plugins.algorithms.kf6.diagnostics import (
     DiagnosticResult_Export,
     Kf6DiagnosticOptions,
@@ -30,9 +31,13 @@ from tests.test_kf6_field_analysis import Measurement_Create
 
 
 @pytest.fixture
-def diagnostic_dataset(tmp_path):
-    opened = NavigationPair_Open(tmp_path / "pair", flight_samples=401)
-    base = opened.dataset
+def diagnostic_pair(tmp_path):
+    return NavigationPair_Open(tmp_path / "pair", flight_samples=401)
+
+
+@pytest.fixture
+def diagnostic_dataset(diagnostic_pair):
+    base = diagnostic_pair.dataset
     records = []
     baro = []
     for i in range(90):
@@ -178,7 +183,7 @@ def test_replay_product_removes_legacy_diagnostics_page(qtbot, language, diagnos
 
 
 def test_project_excludes_analysis_only_diagnostics(
-    qtbot, monkeypatch, tmp_path, diagnostic_dataset
+    qtbot, monkeypatch, tmp_path, diagnostic_pair, diagnostic_dataset
 ):
     import silverstar_flp.ui.main_window as module
 
@@ -188,9 +193,12 @@ def test_project_excludes_analysis_only_diagnostics(
     )
     window = MainWindow(builtin_registry())
     monkeypatch.setattr(window, "_ProjectChanges_Confirm", lambda: True)
+    save_errors = []
+    monkeypatch.setattr(window, "_Error_Show", save_errors.append)
     qtbot.addWidget(window)
-    window._Dataset_Set(diagnostic_dataset)
-    _ProjectIdentity_Set(window, diagnostic_dataset.source_path, tmp_path)
+    # Project/cache persistence consumes the original exact source pair.
+    # Extra measurements in the independent fixture are diagnostic inputs.
+    window._LogOpenResult_Set(diagnostic_pair, ProjectDocument())
     page = window.replay_page
     page.algorithm_combo.setCurrentIndex(
         page.algorithm_combo.findData("silverstar.algorithm.kf6")
@@ -205,9 +213,22 @@ def test_project_excludes_analysis_only_diagnostics(
     window._Replay_ResultSet(result)
     assert page._ActualValues_Get()["gnss_position_std_vertical"] == 4
     project_path = tmp_path / "test.ssflp"
-    window._Project_Write(project_path)
+    assert window._Project_Write(project_path), save_errors
     text = project_path.read_text()
     assert "baro_effective_sigma" not in text
     assert "analysis_only" not in text
     assert len(json.loads(text)["replay_configurations"]) == 1
     assert list(tmp_path.rglob("*.ssdecoder"))
+
+
+def test_project_save_rejects_fabricated_parse_identity(qtbot, monkeypatch, tmp_path, diagnostic_pair):
+    window = MainWindow(builtin_registry())
+    qtbot.addWidget(window, before_close_func=lambda owned: owned._Project_SetDirty(False))
+    save_errors = []
+    monkeypatch.setattr(window, "_Error_Show", save_errors.append)
+    window._Dataset_Set(diagnostic_pair.dataset)
+    _ProjectIdentity_Set(window, diagnostic_pair.dataset.source_path, tmp_path)
+    target = tmp_path / "rejected.ssflp"
+    assert not window._Project_Write(target)
+    assert save_errors == ["parse_cache_source_identity_invalid"]
+    assert not target.is_file()

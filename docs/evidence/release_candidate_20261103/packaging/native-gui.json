@@ -15,6 +15,8 @@
   "screens_and_observations": {
     "final-flp-overview.jpg": "fbaba3fffdc1cce86e1926f709ab11a99b48febbc89724f2ebe615160506474b",
     "final-flp-parameters.jpg": "3fbe9b8acf6c576ad72494d43c68973d6799a503817e7daca1aef23bedc41ca7",
+    "final-flp-reopen.state.txt": "c96c2335c6886a003b492efc8d5d5a6ebc67aebb64e9c739229872fa7e69af9a",
+    "final-flp-save.state.txt": "0d6bf97f63cb29e882f7e16bcaf1df68b691cf1126edb34dc2d8697050c267fd",
     "final-flp.state.txt": "422681adacb22b554f250582599e136d3ccfbf9ef08f1d0d670e4cffa2f4770f",
     "final-gshc-declaration.jpg": "6b19ecf0ec5928f39f84d53c30e0a37aba778368f8e610e36caeac6d08fcfebe",
     "final-gshc-declaration.state.txt": "20f6ee736341f8e0c0c82d70dafc79b9fab642fad2f2945b69c7ee065a3614e0",
@@ -24,6 +26,8 @@
     "final-gshc.jpg": "616d02de97af63db5ea11f50fde0ba7c592f7e5ff7b7ac9bae27d95fc46d9485",
     "final-scg-build.jpg": "25f7bfb39f149eb7cdd0efc75be7c2aed4ccc3034ee32701a69fc33a6e29cd3f",
     "final-scg-build.state.txt": "b633910c6d7af6d2f910b91004477973ed1a1003cc329410dad531c9a40b7c0e",
+    "final-scg-generated.state.txt": "47cf65dfbcc77bcde84b9a1b8fa1739b4a394e330beac7077366d020ee6ec18e",
+    "final-scg-ground-build.txt": "b0dfaa2d96778ee681e7fa98c23dc0c5cca6b7bd7799de50081783b079154d99",
     "final-scg-hardware.jpg": "aec5c5aac6ee1672e9d40835662227aa38f0574c411dc73ca871904f4c74df87",
     "final-scg-workflow.jpg": "2fdaf3b264c08435fad1562626c66be538e197a5198b66de123b54193498d9b6"
   },
@@ -32,5 +36,9 @@
     "GSHC disconnected, native 3D displayed, read-only SCG declaration loaded, calibration writes disabled.",
     "FLP opened exact decoder, overview hid time range, structured recorded parameters displayed.",
     "Only isolated test drafts discarded. All three windows closed."
+  ],
+  "additional_workflows": [
+    "Open independent F103 project in SCG, generate Ground_Station, run real build and match CLI ELF/map/BIN byte-for-byte.",
+    "Save parsed dataset using FLP Save As, close program, reopen .ssflp in a second process and confirm the exact decoder and 40080 records."
   ]
 }

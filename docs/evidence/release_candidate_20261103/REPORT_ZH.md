@@ -1,5 +1,7 @@
 # SilverStar Windows 发布候选 · 2026-11-03
 
+任务按 11 月 3 日的发布候选 prompt 启动，最终便携界面和回归验收到北京时间 11 月 4 日凌晨。历史收据保留各自日期。
+
 SilverStar 从 `feature/usb-transport-0.1.3-20261013` 的 `8a25f99e7096df94cbf46b83bf4049a55e43a887` 继续。Underline 从 `main` 的 `351ab0b0167eb37bd6312c2bde79181d6225e97f` 建立 `codex/release-candidate-20261103`。TreeDiagram 沿用已有的电机数据交换合同。本次验证使用软件目标、模拟输入和 Windows 桌面，设备端操作留待台架执行。
 
 | Windows 便携包 | 源码与身份 |
@@ -18,6 +20,10 @@ SilverStar 从 `feature/usb-transport-0.1.3-20261013` 的 `8a25f99e7096df94cbf46
 正常运行三个独立的 PyInstaller Analysis、PYZ 和 EXE，再合并公共库。2275 个第一方文件与提交核对，最终 ZIP 的 3423 个成员在另一目录重新解压并逐项验证。依赖清单按实际收集的文件归属到 34 个分发包。NumPy 的 RECORD 自身没有内嵌自身哈希，另行核对唯一归属路径及收集前后字节。[构建收据](packaging/candidate.json) · [解压收据](packaging/unpacked.json) · [许可证文件归属补查](packaging/wheel-record-self.json) · [各次完整构建的日志及清单](packaging/complete-packaging-logs.zip)
 
 在最终解压目录分别启动三套 EXE。SCG 两个未导入目标显示同样的阻塞原因，两个生成按钮均禁用。GSHC 在串口断开的情况下正确禁止采集、应用、保存，并通过普通文件选择器读取 SCG 导出的 `.ssmission`。FLP 以英文深色打开最终 F407 的实际生成日志，显示精确包、40080 条有效记录、0 个 CRC/解码错误，可打开记录参数、单位和键。关闭了本次未保存的测试草稿，三个程序均退出。[三程序身份与截图哈希](packaging/native-gui.json) · [SCG 检查与生成](packaged-gui/final-scg-build.jpg) · [GSHC 任务快照](packaged-gui/final-gshc-declaration.jpg) · [磁校准](packaged-gui/final-gshc-mag.jpg) · [FLP 记录参数](packaged-gui/final-flp-parameters.jpg)
+
+在一个起初仅含工程模型的独立目录中，再用最终 `SCG.exe` 打开 F103/SX1281 项目副本。从“生成 / 更新地面站工程”到“构建固件”完整操作一次，三个产物与命令行构型的 ELF、map、BIN 逐字节相同。BIN 共 29024 字节，SHA-256 为 `1bbb01a547035dd588be3af3ef4127ec7f3b5667a84b544de7690050eccc6854`。原始模型哈希未变。[独立输出和输入核对](packaging/ground-from-gui.json) · [GUI 构建命令与成功状态](packaged-gui/final-scg-ground-build.txt)
+
+通过最终 `FLP.exe` 的“另存为”保留解析数据，实际写入 `HostCandidate.ssflp` 及其缓存。关闭程序后用第二个独立进程打开该工程，再次看到原始 40080 条记录、原包 SHA 和 exact match。[工程与解析缓存身份](packaging/project-from-gui.json) · [保存](packaged-gui/final-flp-save.state.txt) · [重新打开](packaged-gui/final-flp-reopen.state.txt)
 
 两次实测直接发现交付问题。Windows 初次收集的绝对路径过长，改用较短候选目录。首个能压缩的中间包缺少 GSHC 的 `mission_profile.py`，实际 EXE 无法启动。修复了清单，并让打包入口拒绝移出 PYZ 后没有随包源文件的第一方模块。真实 FLP 的旧概览会错误显示时间范围栏，也已通过页面 owner 修复，修后四种语言/主题组合全部通过。[GSHC 修改前的异常](packaged-gui/gshc-before.txt) · [FLP 修改前](packaged-gui/flp-before-range.jpg) · [修后的概览](packaged-gui/final-flp-overview.jpg) · [四种组合](flp/range-final.log)
 
@@ -44,6 +50,10 @@ SilverStar 从 `feature/usb-transport-0.1.3-20261013` 的 `8a25f99e7096df94cbf46
 从 SilverStar 仓库根运行 `.\.venv\Scripts\python.exe SCG.py`、`GSHC.py` 或 `FLP.py` 可启动相应的源码应用。固件生成后在 `Flight_Controller` 运行 `mingw32-make all`、`host-tests`、`architecture-check`、`power10-check`、`static-analysis`、`artifact-check`、`stack-report` 等对应目标，使用门禁日志记录的工具链。[软件构型与命令](scg/README_ZH.md) · [工作目录及所有权](WORKSPACE.md)
 
 ## 资格边界
+
+**FLP 扩展回归尚未通过。** 首次大范围执行在无头 Qt 测试的未保存草稿对话框中停住。增加仅作用于临时测试草稿的清理后，以短路径、逐测试记录和限时分段覆盖最初收集的 1953 个不同用例。按节点去重，将 setup/teardown 报错优先计为错误，得到 **1678 通过、85 测试主体失败、155 错误、32 跳过、3 中断**。各段加载的源码身份分别保留。两个中断的文件类型保护用例在隔离复测中通过，修后的时间栏四例也单独通过，均不回填总数。[逐节点收据](flp/suite-review/nonoverlap-summary.json) · [分段报告及隔离复测](flp/suite-review/README_ZH.md) · [时间栏修后复验](flp/range-final.log)
+
+一个仍可复现的保存失败来自直接将旧 KF6 分析专用结果交给内部结果入口。其身份不满足正式重算结果的持久化合同，尝试保存会返回 `project_result_input_identity_mismatch`；在基线和本轮均有反例。普通日志另存和重开已用最终 EXE 验证。部分其他红灯涉及旧模拟对象、算法修订号、外部生成样本位置和 Windows 路径；只对实际独立复验的样本作出归因。旧 ESKF Host 夹具还缺少 `SystemMissionProcess_LoggingActiveGet` 的链接提供者，对应数值回放缺少新的 ESKF trace。[代表性基线对照](flp/baseline-review/README_ZH.md) · [分析专用保存反例及全部日志](flp/suite-review/run-outputs.zip)
 
 Flight 的严格栈门禁要求所选编译输入、回调、运行库、任务、MSP 和中断嵌套均有对应审阅。历史通过的十个构型有各自的封存身份，不能覆盖本轮变化。即使某一任务计算出的余量为正，整项仍以当前严格检查器退出码为准。Power-of-Ten 文本扫描中的关键语义合同也需单独审阅。[本轮栈输入差异](scg/build/stack-closure-delta.json) · [历史证明范围](../software_completion_20261101/stack/v5/DELIVERY_ZH.md)
 

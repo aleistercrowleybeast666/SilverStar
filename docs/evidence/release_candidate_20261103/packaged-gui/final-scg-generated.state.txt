@@ -1,0 +1,5 @@
+										222 按钮 (disabled, settable, string) 构建固件 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QPushButton
+										228 文本 已生成 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										229 文本 Ground Station 0.5 · MCU STM32F103C8T6 · 请求固件版本 0.1.3 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QLabel
+										233 按钮 (settable, string) 构建固件 ID: QApplication.MainWindow.centralRoot.QWidget.QStackedWidget.BuildPage.QScrollArea.qt_scrollarea_viewport.QWidget.QGroupBox.QPushButton
+			50 文本 已生成 Target: Ground_Station ID: QApplication.MainWindow.QStatusBar.QLabel

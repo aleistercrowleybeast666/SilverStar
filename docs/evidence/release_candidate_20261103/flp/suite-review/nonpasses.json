@@ -1,0 +1,3545 @@
+[
+  {
+    "node": "tests/test_algorithms.py::test_kf6_stationary_replay_has_finite_positive_covariance",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   ValueError: kf6_algorithm_revision_missing"
+    ]
+  },
+  {
+    "node": "tests/test_baro_recorded_diagnostics.py::test_measurement_only_baro_diagnostics_use_actual_application_time_and_sorted_values",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_baro_recorded_diagnostics.py::test_legacy_diagnostic_only_and_old_measurement_layout_keep_legacy_roles",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_baro_recorded_diagnostics.py::test_measurement_stream_wins_over_diagnostic_snapshot_without_filling_holes",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_baro_recorded_diagnostics.py::test_result_semantics_do_not_plot_uncomputed_innovation_or_nis[0-True-True]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_baro_recorded_diagnostics.py::test_result_semantics_do_not_plot_uncomputed_innovation_or_nis[1-True-True]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_baro_recorded_diagnostics.py::test_result_semantics_do_not_plot_uncomputed_innovation_or_nis[2-True-True]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_baro_recorded_diagnostics.py::test_result_semantics_do_not_plot_uncomputed_innovation_or_nis[3-False-True]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_baro_recorded_diagnostics.py::test_result_semantics_do_not_plot_uncomputed_innovation_or_nis[4-False-True]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_baro_recorded_diagnostics.py::test_result_semantics_do_not_plot_uncomputed_innovation_or_nis[255-False-False]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_baro_recorded_diagnostics.py::test_invalid_measurements_have_no_valid_diagnostic_points[overrides0]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_baro_recorded_diagnostics.py::test_invalid_measurements_have_no_valid_diagnostic_points[overrides1]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_baro_recorded_diagnostics.py::test_invalid_measurements_have_no_valid_diagnostic_points[overrides2]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_baro_recorded_diagnostics.py::test_missing_diagnostic_boundary_fields_never_invent_time_or_validity[valid_mask]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_baro_recorded_diagnostics.py::test_missing_diagnostic_boundary_fields_never_invent_time_or_validity[update_result]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_baro_recorded_diagnostics.py::test_missing_diagnostic_boundary_fields_never_invent_time_or_validity[estimator_present_timestamp_us]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_baro_recorded_diagnostics_gui.py::test_measurement_only_baro_gui_and_png_have_exact_valid_points[light-zh_CN]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_baro_recorded_diagnostics_gui.py::test_measurement_only_baro_gui_and_png_have_exact_valid_points[light-en_US]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_baro_recorded_diagnostics_gui.py::test_measurement_only_baro_gui_and_png_have_exact_valid_points[dark-zh_CN]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_baro_recorded_diagnostics_gui.py::test_measurement_only_baro_gui_and_png_have_exact_valid_points[dark-en_US]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[cancel-replay]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'object' object has no attribute 'metadata'"
+    ]
+  },
+  {
+    "node": "tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[cancel-export]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'object' object has no attribute 'metadata'"
+    ]
+  },
+  {
+    "node": "tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[error-replay]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'object' object has no attribute 'metadata'"
+    ]
+  },
+  {
+    "node": "tests/test_cloud_lifecycle_20261005.py::test_real_start_updates_local_global_terminal[error-export]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'object' object has no attribute 'metadata'"
+    ]
+  },
+  {
+    "node": "tests/test_comparison_sampling_gui.py::test_kf_display_curves_overlay_recorded_and_selected_with_full_source",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   ValueError: kf6_algorithm_revision_missing"
+    ]
+  },
+  {
+    "node": "tests/test_current_log_manual.py::test_current_log_display_and_quality_acceptance",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_eskf15_c_parity.py::test_actual_c_float32_against_float64_reference",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_eskf15_golden.py::test_actual_c_producer_exact_decoder_and_15_state_replay[False]",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_eskf15_golden.py::test_actual_c_producer_exact_decoder_and_15_state_replay[True]",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_eskf15_native_parity.py::test_prediction_rejection_at_trim_boundary_preserves_authoritative_history[clipped]",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_eskf15_native_parity.py::test_prediction_rejection_at_trim_boundary_preserves_authoritative_history[nan]",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_eskf15_native_parity.py::test_prediction_rejection_at_trim_boundary_preserves_authoritative_history[covariance]",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_eskf15_native_parity.py::test_prediction_rejection_at_trim_boundary_preserves_authoritative_history[prefix_covariance]",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_eskf15_native_parity.py::test_multiple_prefix_commit_and_capacity_rejection_are_bounded",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_eskf15_native_parity.py::test_actual_c_mid_interval_delayed_replay[10000]",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_eskf15_native_parity.py::test_actual_c_mid_interval_delayed_replay[4000]",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_eskf15_native_parity.py::test_actual_c_windows_gaps_duplicates_late_epochs_and_ttl",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_eskf15_records.py::test_actual_c_record_codec_catalog_and_fragment_roundtrip",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_estimator_visualization.py::test_fake_eskf_and_magnetometer_need_no_state_page_code_change",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   assert 'kf6.' not in 'class State...r_Select()\\n'",
+      "E     ",
+      "E     'kf6.' is contained here:",
+      "E       class StateEstimationPage(QWidget):"
+    ]
+  },
+  {
+    "node": "tests/test_estimator_visualization.py::test_configured_without_valid_updates_keeps_blank_plots_and_nis_thresholds",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_fusion_current_native_parity.py::test_actual_eskf_current_backend_trace_matches_state_covariance_and_timing",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_fusion_current_native_parity.py::test_actual_kf_current_backend_trace_matches_state_covariance_and_timing",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O0-0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   Failed: new current parity prerequisite missing: select actual SCG root and GCC"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O0-1]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   Failed: new current parity prerequisite missing: select actual SCG root and GCC"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O0-2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   Failed: new current parity prerequisite missing: select actual SCG root and GCC"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O0-3]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   Failed: new current parity prerequisite missing: select actual SCG root and GCC"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O0-4]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   Failed: new current parity prerequisite missing: select actual SCG root and GCC"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_native_parity.py::test_current_nis_rejection_is_completed_attempt_with_unchanged_full_p[-O0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   Failed: new current parity prerequisite missing: select actual SCG root and GCC"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O2-0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   Failed: new current parity prerequisite missing: select actual SCG root and GCC"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O2-1]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   Failed: new current parity prerequisite missing: select actual SCG root and GCC"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O2-2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   Failed: new current parity prerequisite missing: select actual SCG root and GCC"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O2-3]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   Failed: new current parity prerequisite missing: select actual SCG root and GCC"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_native_parity.py::test_current_present_full_state_and_225_p_match_actual_c_kernel[-O2-4]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   Failed: new current parity prerequisite missing: select actual SCG root and GCC"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_native_parity.py::test_current_nis_rejection_is_completed_attempt_with_unchanged_full_p[-O2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   Failed: new current parity prerequisite missing: select actual SCG root and GCC"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_project_audit.py::test_only_two_estimators_gain_optional_integer_timing_parameter[kf6]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: assert ('int', 1, 0, 2, '1', False) == ('int', 1, 0, 1, '1', False)",
+      "E     ",
+      "E     At index 3 diff: 2 != 1",
+      "E     "
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_project_audit.py::test_only_two_estimators_gain_optional_integer_timing_parameter[eskf15]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: assert ('int', 1, 0, 2, '1', False) == ('int', 1, 0, 1, '1', False)",
+      "E     ",
+      "E     At index 3 diff: 2 != 1",
+      "E     "
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_project_audit.py::test_pre_activation_schema_identities_remain_accepted_but_unknown_does_not[kf6]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: assert '0.3.0-firmware-SILV0013' == '0.2.0-firmware-SILV0008'",
+      "E     ",
+      "E     - 0.2.0-firmware-SILV0008",
+      "E     ?   ^                  ^^"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_project_audit.py::test_pre_activation_schema_identities_remain_accepted_but_unknown_does_not[eskf15]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: assert '1.1.0' == '1.0.0'",
+      "E     ",
+      "E     - 1.0.0",
+      "E     + 1.1.0"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_project_audit.py::test_saved_configuration_preserves_absence_or_exact_selected_mode[None-kf6]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   ValueError: project_parameter_schema_mismatch"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_project_audit.py::test_saved_configuration_preserves_absence_or_exact_selected_mode[None-eskf15]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   ValueError: project_parameter_schema_mismatch"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_project_audit.py::test_saved_configuration_preserves_absence_or_exact_selected_mode[0-kf6]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   ValueError: project_parameter_schema_mismatch"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_project_audit.py::test_saved_configuration_preserves_absence_or_exact_selected_mode[0-eskf15]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   ValueError: project_parameter_schema_mismatch"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_project_audit.py::test_saved_configuration_preserves_absence_or_exact_selected_mode[1-kf6]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   ValueError: project_parameter_schema_mismatch"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_current_project_audit.py::test_saved_configuration_preserves_absence_or_exact_selected_mode[1-eskf15]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   ValueError: project_parameter_schema_mismatch"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_horizon.py::test_forward_primary_output_and_every_p_entry_match_real_c[-O0-30000-120]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Select actual SCG source root; no backend parity skip or fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_horizon.py::test_forward_primary_output_and_every_p_entry_match_real_c[-O0-32500-120]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Select actual SCG source root; no backend parity skip or fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_horizon.py::test_forward_primary_output_and_every_p_entry_match_real_c[-O0-10000-120]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Select actual SCG source root; no backend parity skip or fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_horizon.py::test_forward_primary_output_and_every_p_entry_match_real_c[-O2-30000-120]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Select actual SCG source root; no backend parity skip or fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_horizon.py::test_forward_primary_output_and_every_p_entry_match_real_c[-O2-32500-120]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Select actual SCG source root; no backend parity skip or fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_horizon.py::test_forward_primary_output_and_every_p_entry_match_real_c[-O2-10000-120]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Select actual SCG source root; no backend parity skip or fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_fusion_horizon_backend_wire.py::test_both_actual_backends_wire_boundaries",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_generated_aggregation_pair.py::test_real_generated_package_production_open_cache_roundtrip_and_replay[existing-silverstar.algorithm.kf6]",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_generated_aggregation_pair.py::test_real_generated_package_production_open_cache_roundtrip_and_replay[imported-silverstar.algorithm.kf6]",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_generated_aggregation_pair.py::test_real_generated_package_production_open_cache_roundtrip_and_replay[pure-silverstar.algorithm.pure_ins]",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_generated_aggregation_pair.py::test_real_generated_package_production_open_cache_roundtrip_and_replay[eskf-silverstar.algorithm.estimator.eskf15]",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_generated_aggregation_pair.py::test_real_generated_package_rejects_wrong_identity_and_recorded_configuration[identity]",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_generated_aggregation_pair.py::test_real_generated_package_rejects_wrong_identity_and_recorded_configuration[recorded_aggregation]",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_gui_smoke.py::test_five_page_gui_and_top_bar_accept_a_parsed_dataset",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: assert 'v0.1.3' == 'v0.1.1'",
+      "E     ",
+      "E     - v0.1.1",
+      "E     ?      ^"
+    ]
+  },
+  {
+    "node": "tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[light-en_US]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   assert 10 <= 8",
+      "E    +  where 10 = <built-in method horizontalAdvance of PySide6.QtGui.QFontMetrics object at 0x000002809E09FAC0>(' *')",
+      "E    +    where <built-in method horizontalAdvance of PySide6.QtGui.QFontMetrics object at 0x000002809E09FAC0> = <PySide6.QtGui.QFontMetrics object at 0x000002809E09FAC0>.horizontalAdvance",
+      "E    +      where <PySide6.QtGui.QFontMetrics object at 0x000002809E09FAC0> = <built-in method fontMetrics of ProjectHeaderLabel object at 0x00000280896832C0>()"
+    ]
+  },
+  {
+    "node": "tests/test_header_field_blockers.py::test_header_actual_geometry_and_dirty_suffix[dark-en_US]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   assert 10 <= 8",
+      "E    +  where 10 = <built-in method horizontalAdvance of PySide6.QtGui.QFontMetrics object at 0x000002808ACFFF80>(' *')",
+      "E    +    where <built-in method horizontalAdvance of PySide6.QtGui.QFontMetrics object at 0x000002808ACFFF80> = <PySide6.QtGui.QFontMetrics object at 0x000002808ACFFF80>.horizontalAdvance",
+      "E    +      where <PySide6.QtGui.QFontMetrics object at 0x000002808ACFFF80> = <built-in method fontMetrics of ProjectHeaderLabel object at 0x00000280907B5A00>()"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O0-1-kf]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O0-2-eskf]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O2-1-kf]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[0-O2-2-eskf]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O0-1-kf]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O0-2-eskf]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O2-1-kf]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[9-O2-2-eskf]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O0-1-kf]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O0-2-eskf]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O2-1-kf]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_backend_numerics.py::test_actual_backend_complete_output_covariance_uses_recorded_prepared_r[11-O2-2-eskf]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual1]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual3]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual4]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual5]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual6]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual7]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual8]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual9]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual10]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_execution_returns_full_covariance_and_explicit_unknown_health[actual11]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual1]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual3]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual4]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual5]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual6]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual7]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual8]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual9]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual10]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_explicit_what_if_lag_is_separate_and_unreconstructible_noise_changes_block[actual11]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual1]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual3]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual4]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual5]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual6]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual7]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual8]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual9]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual10]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_execution.py::test_recorded_lag_actual_cannot_disagree_with_identity_even_during_warmup[actual11]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_native_log_open.py::test_native_exact_log_open_recorded_and_explicit_what_if[kf6]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Select fresh native backend compile receipts; native log proof is unavailable",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_native_log_open.py::test_native_exact_log_open_recorded_and_explicit_what_if[eskf15]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Select fresh native backend compile receipts; native log proof is unavailable",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual1]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual3]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual4]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual5]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual6]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual7]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual8]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual9]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual10]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_complete_recorded_inputs_and_initial_state_match_every_c_output[actual11]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual1]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual3]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual4]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual5]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual6]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual7]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual8]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual9]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual10]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_horizon_recorded_bodies.py::test_recorded_source_and_body_sequence_mismatch_are_rejected_before_execution[actual11]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit fresh source/configuration evidence required: SILVERSTAR_HORIZON_RECORDED_TRACE_ROOT",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_joint_c_golden.py::test_generated_c_log_exact_decoder_replay_and_mechanization",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[light-zh_CN]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   assert not True",
+      "E    +  where True = <built-in method isVisible of TimeRangeBar object at 0x000002808AA386C0>()",
+      "E    +    where <built-in method isVisible of TimeRangeBar object at 0x000002808AA386C0> = <silverstar_flp.ui.time_range.TimeRangeBar(0x28100f943d0) at 0x000002808AA386C0>.isVisible"
+    ]
+  },
+  {
+    "node": "tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[light-en_US]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   assert not True",
+      "E    +  where True = <built-in method isVisible of TimeRangeBar object at 0x00000280FE0C54C0>()",
+      "E    +    where <built-in method isVisible of TimeRangeBar object at 0x00000280FE0C54C0> = <silverstar_flp.ui.time_range.TimeRangeBar(0x280c38f1960) at 0x00000280FE0C54C0>.isVisible"
+    ]
+  },
+  {
+    "node": "tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[dark-zh_CN]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   assert not True",
+      "E    +  where True = <built-in method isVisible of TimeRangeBar object at 0x0000028096C350C0>()",
+      "E    +    where <built-in method isVisible of TimeRangeBar object at 0x0000028096C350C0> = <silverstar_flp.ui.time_range.TimeRangeBar(0x280c38d0930) at 0x0000028096C350C0>.isVisible"
+    ]
+  },
+  {
+    "node": "tests/test_joint_gui_state.py::test_range_shell_1000_700_language_theme_and_pointer[dark-en_US]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   assert not True",
+      "E    +  where True = <built-in method isVisible of TimeRangeBar object at 0x00000280FD4F2F40>()",
+      "E    +    where <built-in method isVisible of TimeRangeBar object at 0x00000280FD4F2F40> = <silverstar_flp.ui.time_range.TimeRangeBar(0x281055c66c0) at 0x00000280FD4F2F40>.isVisible"
+    ]
+  },
+  {
+    "node": "tests/test_joint_gui_state.py::test_project_reopens_selected_what_if_identity_and_exact_time_range",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   Failed: DID NOT RAISE ValueError"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_every_primary_output_state_covariance_and_completion_matches_actual_c[-O0-10000]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_every_primary_output_state_covariance_and_completion_matches_actual_c[-O0-30000]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_every_primary_output_state_covariance_and_completion_matches_actual_c[-O0-32500]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1.0-0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1.0-1]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1.0-2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1.0-3]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1.0-4]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-2.2-1.0-0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-2.2-1.0-1]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-2.2-1.0-2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-2.2-1.0-3]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-2.2-1.0-4]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-5.0-1.0-0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-5.0-1.0-1]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-5.0-1.0-2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-5.0-1.0-3]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-5.0-1.0-4]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1000.0-1.0-0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1000.0-1.0-1]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1000.0-1.0-2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1000.0-1.0-3]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1000.0-1.0-4]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1e+30-0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1e+30-1]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1e+30-2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1e+30-3]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O0-1.0-1e+30-4]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_output_never_feedback_and_corrupt_primary_fault_preserves_output[-O0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_completion_backpressure_and_duplicate_receipts_preserve_ownership[-O0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_every_primary_output_state_covariance_and_completion_matches_actual_c[-O2-10000]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_every_primary_output_state_covariance_and_completion_matches_actual_c[-O2-30000]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_every_primary_output_state_covariance_and_completion_matches_actual_c[-O2-32500]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1.0-0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1.0-1]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1.0-2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1.0-3]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1.0-4]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-2.2-1.0-0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-2.2-1.0-1]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-2.2-1.0-2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-2.2-1.0-3]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-2.2-1.0-4]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-5.0-1.0-0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-5.0-1.0-1]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-5.0-1.0-2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-5.0-1.0-3]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-5.0-1.0-4]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1000.0-1.0-0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1000.0-1.0-1]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1000.0-1.0-2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1000.0-1.0-3]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1000.0-1.0-4]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1e+30-0]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1e+30-1]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1e+30-2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1e+30-3]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_normal_soft_hard_and_vanishing_gain_are_explicit_outcomes[-O2-1.0-1e+30-4]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_output_never_feedback_and_corrupt_primary_fault_preserves_output[-O2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_horizon.py::test_completion_backpressure_and_duplicate_receipts_preserve_ownership[-O2]",
+    "status": "error",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: Explicit actual SCG source is required; no native parity fallback",
+      "E   assert None"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_outage.py::test_old_project_identity_and_new_integer_parameter_are_compatible",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   ValueError: project_parameter_schema_mismatch"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_retired_parameter_precision.py::test_recorded_and_unchanged_what_if_use_firmware_baseline",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   KeyError: 'nis_soft_enabled'"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_retired_parameter_precision.py::test_same_declared_binary32_value_is_accepted[gnss_integrity_recovery_threshold_m]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   KeyError: 'nis_soft_enabled'"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_retired_parameter_precision.py::test_same_declared_binary32_value_is_accepted[gnss_integrity_hacc_max_m]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   KeyError: 'nis_soft_enabled'"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_retired_parameter_precision.py::test_same_declared_binary32_value_is_accepted[gnss_integrity_sacc_max_mps]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   KeyError: 'nis_soft_enabled'"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_retired_parameter_precision.py::test_missing_or_unknown_float32_declaration_remains_conservative[None]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   KeyError: 'nis_soft_enabled'"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_retired_parameter_precision.py::test_missing_or_unknown_float32_declaration_remains_conservative[float64]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   KeyError: 'nis_soft_enabled'"
+    ]
+  },
+  {
+    "node": "tests/test_kf6_retired_parameter_precision.py::test_missing_or_unknown_float32_declaration_remains_conservative[int32]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   KeyError: 'nis_soft_enabled'"
+    ]
+  },
+  {
+    "node": "tests/test_measurement_diagnostics.py::test_recorded_group_sigma_and_distinct_ages_from_exact_timestamps",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'record_version'"
+    ]
+  },
+  {
+    "node": "tests/test_measurement_diagnostics.py::test_recorded_effective_unavailable_without_complete_firmware_parameters",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'record_version'"
+    ]
+  },
+  {
+    "node": "tests/test_mission_trajectory.py::test_replay_stops_at_landing_and_preserves_post_landing_raw_data[Kf6AlgorithmPlugin]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   ValueError: kf6_algorithm_revision_missing"
+    ]
+  },
+  {
+    "node": "tests/test_mission_trajectory.py::test_post_landing_inputs_do_not_change_pre_landing_replay[Kf6AlgorithmPlugin]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   ValueError: kf6_algorithm_revision_missing"
+    ]
+  },
+  {
+    "node": "tests/test_mission_trajectory.py::test_replay_without_landing_runs_to_valid_input_end[Kf6AlgorithmPlugin]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   ValueError: kf6_algorithm_revision_missing"
+    ]
+  },
+  {
+    "node": "tests/test_navigation_integrity_parity.py::test_c_receiver_native_stream_matches_python_at_every_epoch",
+    "status": "skipped",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_navigation_quality_gain.py::test_real_plugin_selects_gain_qualification_only_for_revision3[3]",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   KeyError: 'nis_soft_enabled'"
+    ]
+  },
+  {
+    "node": "tests/test_nis_groups.py::test_recorded_group_nis_and_results_are_distinct_in_state_view",
+    "status": "failed",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'types.SimpleNamespace' object has no attribute 'devices'"
+    ]
+  },
+  {
+    "node": "tests/test_offline_diagnostics.py::test_project_excludes_analysis_only_diagnostics",
+    "status": "interrupted",
+    "segment": "full-bounded-1.jsonl",
+    "phases": {
+      "setup": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_optional_gnss_replay.py::test_full_kf6_without_gnss_replays_finite_prediction_and_baro[3]",
+    "status": "failed",
+    "segment": "continued-1.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   KeyError: 'nis_soft_enabled'"
+    ]
+  },
+  {
+    "node": "tests/test_project_artifact_boundaries.py::test_reader_rejects_nonregular_or_reparse_before_open[fifo]",
+    "status": "interrupted",
+    "segment": "continued-1.jsonl",
+    "phases": {
+      "setup": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_project_artifact_boundaries.py::test_reader_rejects_nonregular_or_reparse_before_open[reparse]",
+    "status": "interrupted",
+    "segment": "continued-2.jsonl",
+    "phases": {
+      "setup": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_quality_revision_selection.py::test_revision3_actual_parameter_bound_and_retired_override",
+    "status": "failed",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: assert 34 == 30",
+      "E    +  where 34 = len((ParameterSpec(parameter_id='gravity_mps2', kind='float', default=9.78, minimum=1.0, maximum=20.0, unit='m/s^2', description_code='', choices=(), label_key='parameter.gravity_mps2', group_key='parameter_group.process_model', tooltip_key='parameter.tooltip.gravity_mps2', step=0.01, representation='value', precision=6, order=0, required=True, greater_than='', nis_df=0), ParameterSpec(parameter_id='p0_position_e', kind='float', default=4.0, minimum=0.001, maximum=1000000.0, unit='m^2', description_code='', choices=(), label_key='parameter.p0_position_e', group_key='parameter_group.initial_covariance', tooltip_key='parameter.tooltip.p0_position_e', step=0.01, representation='covariance_diagonal', precision=6, order=1, required=True, greater_than='', nis_df=0), ParameterSpec(parameter_id='p0_position_n', kind='float', default=4.0, minimum=0.001, maximum=1000000.0, unit='m^2', description_code='', choices=(), label_key='parameter.p0_position_n', group_key='parameter_group.initial_covariance', tooltip_key='parameter.tooltip.p0_position_n', step=0.01, representation='covariance_diagonal', precision=6, order=2, required=True, greater_than='', nis_df=0), ParameterSpec(parameter_id='p0_position_u', kind='float', default=9.0, minimum=0.001, maximum=1000000.0, unit='m^2', description_code='', choices=(), label_key='parameter.p0_position_u', group_key='parameter_group.initial_covariance', tooltip_key='parameter.tooltip.p0_position_u', step=0.01, representation='covariance_diagonal', precision=6, order=3, required=True, greater_than='', nis_df=0), ParameterSpec(parameter_id='p0_velocity_e', kind='float', default=0.25, minimum=0.001, maximum=1000000.0, unit='m^2/s^2', description_code='', choices=(), label_key='parameter.p0_velocity_e', group_key='parameter_group.initial_covariance', tooltip_key='parameter.tooltip.p0_velocity_e', step=0.01, representation='covariance_diagonal', precision=6, order=4, required=True, greater_than='', nis_df=0), ParameterSpec(parameter_id='p0_velocity_n', kind='float', default=0.25, minimum=0.001, maximum=1000000.0, unit='m^2/s^2', description_code='', choices=(), label_key='parameter.p0_velocity_n', group_key='parameter_group.initial_covariance', tooltip_key='parameter.tooltip.p0_velocity_n', step=0.01, representation='covariance_diagonal', precision=6, order=5, required=True, greater_than='', nis_df=0), ...))"
+    ]
+  },
+  {
+    "node": "tests/test_replay_lifecycle_boundaries.py::test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker[False]",
+    "status": "failed",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'object' object has no attribute 'metadata'"
+    ]
+  },
+  {
+    "node": "tests/test_replay_lifecycle_boundaries.py::test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker[True]",
+    "status": "failed",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'object' object has no attribute 'metadata'"
+    ]
+  },
+  {
+    "node": "tests/test_replay_lifecycle_boundaries.py::test_queued_replay_result_is_not_published_after_cancellation[cancel]",
+    "status": "failed",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'object' object has no attribute 'metadata'"
+    ]
+  },
+  {
+    "node": "tests/test_replay_lifecycle_boundaries.py::test_queued_replay_result_is_not_published_after_cancellation[accepted_close]",
+    "status": "failed",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AttributeError: 'object' object has no attribute 'metadata'"
+    ]
+  },
+  {
+    "node": "tests/test_replay_page.py::test_replay_uses_fixed_corrected_imu_and_translates_every_visible_field",
+    "status": "failed",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: assert 40 == 38",
+      "E    +  where 40 = len({'gravity_mps2': <PySide6.QtWidgets.QLabel(0x2656bd80120) at 0x0000026564A48300>, 'p0_position_e': <PySide6.QtWidgets.QLabel(0x2656bd7e470) at 0x0000026564A48800>, 'p0_position_n': <PySide6.QtWidgets.QLabel(0x2656bd80b40) at 0x0000026564A4AB00>, 'p0_position_u': <PySide6.QtWidgets.QLabel(0x2656bd80ea0) at 0x0000026564A4A600>, ...})",
+      "E    +    where {'gravity_mps2': <PySide6.QtWidgets.QLabel(0x2656bd80120) at 0x0000026564A48300>, 'p0_position_e': <PySide6.QtWidgets.QLabel(0x2656bd7e470) at 0x0000026564A48800>, 'p0_position_n': <PySide6.QtWidgets.QLabel(0x2656bd80b40) at 0x0000026564A4AB00>, 'p0_position_u': <PySide6.QtWidgets.QLabel(0x2656bd80ea0) at 0x0000026564A4A600>, ...} = <silverstar_flp.ui.pages.replay.ReplayPage(0x2656bd78440) at 0x0000026560F624C0>._parameter_labels"
+    ]
+  },
+  {
+    "node": "tests/test_replay_page.py::test_what_if_groups_dirty_and_reset_use_recorded_configuration",
+    "status": "failed",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   assert 16 == 14",
+      "E    +  where 16 = <built-in method rowCount of PySide6.QtWidgets.QFormLayout object at 0x0000026565AC3A00>()",
+      "E    +    where <built-in method rowCount of PySide6.QtWidgets.QFormLayout object at 0x0000026565AC3A00> = <PySide6.QtWidgets.QFormLayout(0x265588f13c0) at 0x0000026565AC3A00>.rowCount",
+      "E    +      where <PySide6.QtWidgets.QFormLayout(0x265588f13c0) at 0x0000026565AC3A00> = <silverstar_flp.ui.pages.replay.ReplayPage(0x2656bd83720) at 0x000002654D474900>.common_parameters_form"
+    ]
+  },
+  {
+    "node": "tests/test_sf6_current_state.py::test_current_state_c_parity_delayed_groups_order_duplicates_and_wrap[0.0]",
+    "status": "error",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\\\python_software\\\\SilverStar\\\\apps\\\\FCCG\\\\plugins\\\\builtin\\\\silverstar_algorithm_estimator_sf6\\\\payload\\\\Algorithm\\\\Estimator\\\\SF6\\\\Src\\\\navigation_sf6.c'"
+    ]
+  },
+  {
+    "node": "tests/test_sf6_current_state.py::test_current_state_c_parity_delayed_groups_order_duplicates_and_wrap[0.2]",
+    "status": "error",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\\\python_software\\\\SilverStar\\\\apps\\\\FCCG\\\\plugins\\\\builtin\\\\silverstar_algorithm_estimator_sf6\\\\payload\\\\Algorithm\\\\Estimator\\\\SF6\\\\Src\\\\navigation_sf6.c'"
+    ]
+  },
+  {
+    "node": "tests/test_sf6_current_state.py::test_current_state_c_parity_delayed_groups_order_duplicates_and_wrap[1.0]",
+    "status": "error",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\\\python_software\\\\SilverStar\\\\apps\\\\FCCG\\\\plugins\\\\builtin\\\\silverstar_algorithm_estimator_sf6\\\\payload\\\\Algorithm\\\\Estimator\\\\SF6\\\\Src\\\\navigation_sf6.c'"
+    ]
+  },
+  {
+    "node": "tests/test_sf6_current_state.py::test_current_state_c_parity_epoch_age_and_transactional_numeric_guards",
+    "status": "error",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\\\python_software\\\\SilverStar\\\\apps\\\\FCCG\\\\plugins\\\\builtin\\\\silverstar_algorithm_estimator_sf6\\\\payload\\\\Algorithm\\\\Estimator\\\\SF6\\\\Src\\\\navigation_sf6.c'"
+    ]
+  },
+  {
+    "node": "tests/test_sf6_current_state.py::test_revision2_updates_latest_boundary_without_replaying_velocity_history",
+    "status": "error",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\\\python_software\\\\SilverStar\\\\apps\\\\FCCG\\\\plugins\\\\builtin\\\\silverstar_algorithm_estimator_sf6\\\\payload\\\\Algorithm\\\\Estimator\\\\SF6\\\\Src\\\\navigation_sf6.c'"
+    ]
+  },
+  {
+    "node": "tests/test_sf6_current_state.py::test_revision2_plugin_current_boundary_no_replay_metrics_and_retired_knob_rejection",
+    "status": "error",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\\\python_software\\\\SilverStar\\\\apps\\\\FCCG\\\\plugins\\\\builtin\\\\silverstar_algorithm_estimator_sf6\\\\payload\\\\Algorithm\\\\Estimator\\\\SF6\\\\Src\\\\navigation_sf6.c'"
+    ]
+  },
+  {
+    "node": "tests/test_sf6_current_state.py::test_gui_and_saved_project_preserve_revision_specific_parameter_contract",
+    "status": "failed",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: assert '0.1.0-c-core-revision1' == '0.2.0-c-core-revision2'",
+      "E     ",
+      "E     - 0.2.0-c-core-revision2",
+      "E     ?   ^                  ^"
+    ]
+  },
+  {
+    "node": "tests/test_sf6_recorded.py::test_actual_sf6_backend_exact_decoder_and_recorded_sources",
+    "status": "skipped",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_sf6_replay.py::test_c_oracle_fixed_lag_groups_duplicates_stale_and_window[0.0]",
+    "status": "error",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   RuntimeError: D:\\python_software\\SilverStar\\apps\\FLP\\tests\\fixtures\\sf6_revision1\\navigation_sf6.c:2:10: fatal error: silverstar_assert.h: No such file or directory",
+      "E       2 | #include \"silverstar_assert.h\"",
+      "E         |          ^~~~~~~~~~~~~~~~~~~~~",
+      "E   compilation terminated."
+    ]
+  },
+  {
+    "node": "tests/test_sf6_replay.py::test_c_oracle_fixed_lag_groups_duplicates_stale_and_window[0.2]",
+    "status": "error",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   RuntimeError: D:\\python_software\\SilverStar\\apps\\FLP\\tests\\fixtures\\sf6_revision1\\navigation_sf6.c:2:10: fatal error: silverstar_assert.h: No such file or directory",
+      "E       2 | #include \"silverstar_assert.h\"",
+      "E         |          ^~~~~~~~~~~~~~~~~~~~~",
+      "E   compilation terminated."
+    ]
+  },
+  {
+    "node": "tests/test_sf6_replay.py::test_c_oracle_fixed_lag_groups_duplicates_stale_and_window[1.0]",
+    "status": "error",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   RuntimeError: D:\\python_software\\SilverStar\\apps\\FLP\\tests\\fixtures\\sf6_revision1\\navigation_sf6.c:2:10: fatal error: silverstar_assert.h: No such file or directory",
+      "E       2 | #include \"silverstar_assert.h\"",
+      "E         |          ^~~~~~~~~~~~~~~~~~~~~",
+      "E   compilation terminated."
+    ]
+  },
+  {
+    "node": "tests/test_sf6_replay.py::test_c_oracle_600ms_event_capacity_zero_gain_and_failed_commit",
+    "status": "error",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   RuntimeError: D:\\python_software\\SilverStar\\apps\\FLP\\tests\\fixtures\\sf6_revision1\\navigation_sf6.c:2:10: fatal error: silverstar_assert.h: No such file or directory",
+      "E       2 | #include \"silverstar_assert.h\"",
+      "E         |          ^~~~~~~~~~~~~~~~~~~~~",
+      "E   compilation terminated."
+    ]
+  },
+  {
+    "node": "tests/test_sf6_replay.py::test_c_oracle_equal_time_group_order_and_sequence_wrap",
+    "status": "error",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   RuntimeError: D:\\python_software\\SilverStar\\apps\\FLP\\tests\\fixtures\\sf6_revision1\\navigation_sf6.c:2:10: fatal error: silverstar_assert.h: No such file or directory",
+      "E       2 | #include \"silverstar_assert.h\"",
+      "E         |          ^~~~~~~~~~~~~~~~~~~~~",
+      "E   compilation terminated."
+    ]
+  },
+  {
+    "node": "tests/test_sf6_replay.py::test_plugin_order_optional_gnss_no_covariance_and_cross_algorithm_what_if",
+    "status": "failed",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: assert ['Pure INS', ...ffline)', ...] == ['Pure INS', ...6', 'ESKF_15']",
+      "E     ",
+      "E     Left contains 3 more items, first extra item: 'ESKF20 (offline)'",
+      "E     "
+    ]
+  },
+  {
+    "node": "tests/test_sf6_replay.py::test_plugin_adopted_initial_velocity_and_group_delivery_match_c_oracle",
+    "status": "error",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   RuntimeError: D:\\python_software\\SilverStar\\apps\\FLP\\tests\\fixtures\\sf6_revision1\\navigation_sf6.c:2:10: fatal error: silverstar_assert.h: No such file or directory",
+      "E       2 | #include \"silverstar_assert.h\"",
+      "E         |          ^~~~~~~~~~~~~~~~~~~~~",
+      "E   compilation terminated."
+    ]
+  },
+  {
+    "node": "tests/test_sf6_replay.py::test_sf6_parameter_form_starts_with_ordered_gains",
+    "status": "failed",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: assert None == 'parameter_group.sf6_gain'",
+      "E    +  where None = <built-in method currentData of StandardComboBox object at 0x0000026565205640>()",
+      "E    +    where <built-in method currentData of StandardComboBox object at 0x0000026565205640> = <silverstar_flp.ui.widgets.StandardComboBox(0x2655e13fdb0) at 0x0000026565205640>.currentData",
+      "E    +      where <silverstar_flp.ui.widgets.StandardComboBox(0x2655e13fdb0) at 0x0000026565205640> = <silverstar_flp.ui.pages.replay.ReplayPage(0x26566280160) at 0x0000026565207C80>.parameter_group_combo"
+    ]
+  },
+  {
+    "node": "tests/test_sparse_preflight.py::test_sparse_120_seconds_import_replay_pages_and_export",
+    "status": "failed",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   ValueError: parameter_missing:configuration_json"
+    ]
+  },
+  {
+    "node": "tests/test_ss0007_manual.py::test_ss0007_real_log_landing_horizon_and_bounds",
+    "status": "skipped",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_ss0007_manual.py::test_ss0007_real_log_recorded_recomputed_and_what_if_marker_lifecycle",
+    "status": "skipped",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_ss0007_manual.py::test_ss0007_real_log_gui_worker_exports_gif_manifest_and_metadata_plots",
+    "status": "skipped",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_ss0014_manual.py::test_ss0014_current_log_compatibility_gate",
+    "status": "skipped",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_ss_test_0_manual.py::test_ss_test_0_real_package_discovery_manual_import_and_cache",
+    "status": "skipped",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_ss_test_0_manual.py::test_ss_test_0_real_golden_matches_expected_exactly",
+    "status": "skipped",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_ss_test_0_manual.py::test_ss_test_0_real_dataset_existing_gui_and_csv_json_export_smoke",
+    "status": "skipped",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "skipped",
+      "teardown": "passed"
+    },
+    "first_error_lines": []
+  },
+  {
+    "node": "tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[dialog_rejected]",
+    "status": "error",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "failed"
+    },
+    "first_error_lines": [
+      "E   pytestqt.exceptions.TimeoutError: waitUntil timed out in 10000 milliseconds",
+      "E   pytestqt.exceptions.TimeoutError: waitUntil timed out in 10000 milliseconds"
+    ]
+  },
+  {
+    "node": "tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[directory_changed]",
+    "status": "error",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "failed"
+    },
+    "first_error_lines": [
+      "E   pytestqt.exceptions.TimeoutError: waitUntil timed out in 10000 milliseconds",
+      "E   pytestqt.exceptions.TimeoutError: waitUntil timed out in 10000 milliseconds"
+    ]
+  },
+  {
+    "node": "tests/test_task_cancellation_20261005.py::test_folder_discovery_publication_respects_gui_request_lifetime[queued_result_cancelled]",
+    "status": "error",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "failed"
+    },
+    "first_error_lines": [
+      "E   pytestqt.exceptions.TimeoutError: waitUntil timed out in 10000 milliseconds",
+      "E   pytestqt.exceptions.TimeoutError: waitUntil timed out in 10000 milliseconds"
+    ]
+  },
+  {
+    "node": "tests/test_touch_scroll.py::test_window_scroll_coverage_and_graphics_exclusions",
+    "status": "failed",
+    "segment": "continued-3.jsonl",
+    "phases": {
+      "setup": "passed",
+      "call": "failed",
+      "teardown": "passed"
+    },
+    "first_error_lines": [
+      "E   AssertionError: avgParamList",
+      "E   assert False",
+      "E    +  where False = <built-in method hasScroller of Shiboken.ObjectType object at 0x000002652D97EE50>(<PySide6.QtWidgets.QWidget(0x2654e07e220, name=\"qt_scrollarea_viewport\") at 0x0000026560FA60C0>)",
+      "E    +    where <built-in method hasScroller of Shiboken.ObjectType object at 0x000002652D97EE50> = QScroller.hasScroller"
+    ]
+  }
+]
