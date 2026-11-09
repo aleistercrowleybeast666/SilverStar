@@ -1,0 +1,18 @@
+name: Repository artifact hygiene
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  changed-blobs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Check changed files only
+        env:
+          DIFF_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: python tools/check_repository_artifacts.py --base "$DIFF_BASE"

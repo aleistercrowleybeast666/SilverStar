@@ -12,4 +12,15 @@ Windows 10/11 supplies the unversioned ICU imported by this Qt wheel. Exclude PA
 
 After COLLECT, stage public documentation and original dependency license texts. Record any portable provenance JSON or document-link mapping with source and distribution hashes; application Python/C/H code must remain byte-for-byte unchanged. Keep temporary QA executables and evidence outside the final ZIP. This configuration does not itself publish, move tags, or sanitize Git history.
 
-For the 2026-11-03 candidate, [build_candidate.ps1](../../docs/evidence/release_candidate_20261103/build_candidate.ps1) runs the ordinary spec and then `stage_candidate.py`. Supply new destination and evidence directories, a PyInstaller working directory, and the 0.1.2 portable archive that carries the original upstream notices. The staging step checks the notice versions, verifies the collected first-party files against the committed checkout, and records the archive and executable SHA-256 values in `candidate.json`.
+The active [build_candidate.ps1](build_candidate.ps1) runs the ordinary spec and then `stage_candidate.py`. Supply new destination, evidence and working directories, an explicit build tag, and the 0.1.2 portable archive that carries the original upstream notices. The staging step checks notice versions, verifies collected first-party files against the committed checkout, and records archive and executable SHA-256 values in `candidate.json`. The dated 2026-11-03 script and its results remain historical evidence.
+
+```powershell
+./tools/packaging/build_candidate.ps1 `
+  -BuildTag gui-convergence-20261110 `
+  -Destination "$PWD/dist/gui-convergence-20261110" `
+  -Evidence "$PWD/.work/gui-convergence-20261110/package/evidence" `
+  -BuildWork "$PWD/.work/gui-convergence-20261110/package/build" `
+  -NoticeWitness 'D:/SilverStar_Archive/retained_inputs/SilverStar_0_1_2_Windows_Portable.zip'
+```
+
+The external notice witness is an exact hash-verified copy; do not remove the last copy before extracting and validating an equivalent original-notice input. Build outputs stay outside tracked source. `tools/check_repository_artifacts.py --base <commit>` checks only changed Git blobs; necessary small vendor/fixture exceptions are explained in `tools/repository_artifacts.json`, and never exempt workspace paths or the size limit.

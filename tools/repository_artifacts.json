@@ -1,0 +1,14 @@
+[
+  {
+    "path": "apps/FLP/tests/fixtures/*",
+    "reason": "Small exact log/decoder regression inputs belong to the owning application; size and workspace checks still apply."
+  },
+  {
+    "path": "apps/SCG/tests/fixtures/*",
+    "reason": "Small generated format regression inputs; retain their provenance and licenses. Size and workspace checks still apply."
+  },
+  {
+    "path": "apps/SCG/plugins/builtin/*/payload/*",
+    "reason": "Owning plugin may contain necessary vendor/firmware input blobs. Never exempts build directories or size limits."
+  }
+]

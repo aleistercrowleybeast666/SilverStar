@@ -1,5 +1,8 @@
 .venv/
 .work/
+.qa/
+.test-tmp/
+.codex-remote-attachments/
 # Durable local copies of frozen evidence; tracked audit lives under docs/field/.
 /release-evidence/
 apps/*/.work/
