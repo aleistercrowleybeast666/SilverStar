@@ -1851,6 +1851,12 @@ class MainWindow(HardwareEditingActions, QMainWindow):
             preview_model = deepcopy(self._model.Dictionary_Get())
             control_option = None
             control_candidate = None
+            control_requested = False
+
+            def ControlTaskOption_Record(checked):
+                nonlocal control_requested
+                control_requested = bool(checked)
+
             bundle = path.lower().endswith('.sstuning.json') or _filter.startswith('TreeDiagram')
             if bundle:
                 from silverstar_fccg.project.tuning_bundle import TuningBundle_Read, TuningBundle_Preview, TuningBundle_Apply
@@ -1871,6 +1877,10 @@ class MainWindow(HardwareEditingActions, QMainWindow):
                     control_option = QCheckBox(self._translator.Text_Get('workflow.import.control_task'), self)
                     control_option.setObjectName('includeControlResearchTask')
                     control_option.setChecked(False)
+                    # QMessageBox owns this widget and may delete it before
+                    # exec returns. Capture the user's choice while it lives;
+                    # only ordinary Python state crosses the modal boundary.
+                    control_option.toggled.connect(ControlTaskOption_Record)
                     try:
                         control_candidate = TuningBundle_ControlTaskAttach(self._model, self._service.catalog, value)
                     except ValueError as error:
@@ -1889,7 +1899,7 @@ class MainWindow(HardwareEditingActions, QMainWindow):
             if answer!=QMessageBox.StandardButton.Apply:return
             if self._model.Dictionary_Get() != preview_model:
                 raise ValueError(self._translator.Text_Get('workflow.import.stale'))
-            include_control = control_option is not None and control_option.isChecked() and control_candidate is not None
+            include_control = control_requested and control_candidate is not None
             updated = (control_candidate if include_control else
                        TuningBundle_Apply(self._model,self._service.catalog,value) if bundle else
                        ParameterProfile_Apply(self._model,self._service.catalog,plugin_id,value))
