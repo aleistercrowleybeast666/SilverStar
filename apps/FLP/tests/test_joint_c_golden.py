@@ -44,16 +44,18 @@ def test_generated_c_log_exact_decoder_replay_and_mechanization(tmp_path):
     assert plugin.availability(dataset).available
     result = plugin.run(dataset, ReplayRequest())
     integrity = result.diagnostics.get("gnss_integrity")
-    assert integrity and integrity["revision"] == 2
-    assert integrity["recorded_mask_mismatches"] == 0
-    assert integrity["recorded_r_mismatches"] == 0
-    what_if = plugin.run(dataset, ReplayRequest(
-        mode=ReplayMode.WHAT_IF,
-        parameters={"gnss_integrity_error_threshold_m": 20.0},
-    ))
-    assert what_if.diagnostics["gnss_integrity"]["position_disabled_count"] < (
-        integrity["position_disabled_count"]
-    )
+    assert integrity and integrity["revision"] == 3
+    assert integrity["quality_input_scope"] == "recorded_v2"
+    assert integrity["health_quality_scale_unavailable"]
+    assert not dataset.Records_Get("NAV_QUALITY")
+    # This kernel harness records actual admitted mask/R, not the current
+    # packet-policy execution. v2 replay must not reconstruct that missing
+    # evidence or silently accept a quality-policy WhatIf change.
+    with pytest.raises(ValueError, match="fusion_timing_v2_quality_recompute_unavailable"):
+        plugin.run(dataset, ReplayRequest(
+            mode=ReplayMode.WHAT_IF,
+            parameters={"gnss_integrity_error_threshold_m": 20.0},
+        ))
     from silverstar_flp.analysis.gnss_integrity_stream import GnssIntegrityStream_Build
     decisions = GnssIntegrityStream_Build(dataset, result.parameters, consumed_only=True)
     for record in dataset.Records_Get("GNSS_MEASUREMENT"):
@@ -80,15 +82,18 @@ def test_generated_c_log_exact_decoder_replay_and_mechanization(tmp_path):
         )
     events = [row for row in dataset.Records_Get("EVENT")
               if int(row.payload["event_id"]) == 0x2E]
-    assert len(events) == len(integrity["transitions"])
-    for event, (timestamp, before, after, reason, sequence) in zip(
-        events, integrity["transitions"], strict=True
-    ):
+    # Independently check the legacy integrity helper actually called by this
+    # synthetic C producer. This is not a revision-3 packet-policy parity claim.
+    transitions = [decision for decision in decisions.decisions
+                   if decision.state != decision.previous_state]
+    assert len(events) == len(transitions)
+    for event, decision in zip(events, transitions, strict=True):
         arg0 = int(event.payload["arg0"])
-        assert event.timestamp_us == timestamp
-        assert event.payload["arg1"] == sequence
+        assert event.timestamp_us == decision.timestamp_us
+        assert event.payload["arg1"] == decision.sequence
         assert (arg0 & 0xFF, (arg0 >> 8) & 0xFF,
-                (arg0 >> 16) & 0xFF) == (before, after, reason)
+                (arg0 >> 16) & 0xFF) == (
+                    decision.previous_state, decision.state, decision.reason)
     assert (
         result.fidelity == ReplayFidelity.APPROXIMATE
     )  # Bounded tested scope, no universal EXACT.
@@ -119,16 +124,20 @@ def test_generated_c_log_exact_decoder_replay_and_mechanization(tmp_path):
     )
     names = {path.name for path in exported.files}
     for kind in (
-        "GNSS_Horizontal_Consistency_Error",
         "GNSS_Vertical_Consistency_Error",
         "GNSS_Receiver_Information",
     ):
         assert any(kind in name for name in names)
     assert not any("GNSS_Position_Vs_Integrated_Velocity" in name for name in names)
+    assert not any("GNSS_Horizontal_Consistency_Error" in name for name in names)
+    assert [(item.item_id, item.skipped_reason) for item in exported.skipped] == [
+        ("gnss_integrity:GNSS_Horizontal_Consistency_Error",
+         "recorded_revision3_nav_quality_unavailable")
+    ]
+    assert not exported.failures
     labels = {item.localized_name for item in exported.generated
               if item.item_id.startswith("gnss_integrity:")}
     assert labels == {
-        "GNSS Horizontal Consistency Error",
         "GNSS Vertical Consistency Error",
         "GNSS Receiver Information",
     }

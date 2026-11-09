@@ -24,6 +24,21 @@ static NavigationReplayContext s_replay;
 static NavigationReplayStorage s_storage;
 static float s_q[4] = {1.0f, 0.0f, 0.0f, 0.0f};
 
+static SystemFusionExecutionResult Golden_ExecutionGet(uint8_t result)
+{
+    switch ((NavigationReplayResult)result)
+    {
+        case NAV_REPLAY_OK: return SYSTEM_FUSION_EXEC_COMPLETE;
+        case NAV_REPLAY_HISTORY_MISS: return SYSTEM_FUSION_EXEC_HISTORY_MISS;
+        case NAV_REPLAY_OVERFLOW: return SYSTEM_FUSION_EXEC_CAPACITY;
+        case NAV_REPLAY_EPOCH_MISMATCH: return SYSTEM_FUSION_EXEC_EPOCH_MISMATCH;
+        case NAV_REPLAY_DISCONTINUITY: return SYSTEM_FUSION_EXEC_DISCONTINUITY;
+        case NAV_REPLAY_NUMERIC_ERROR: return SYSTEM_FUSION_EXEC_NUMERIC_ERROR;
+        case NAV_REPLAY_WORK_LIMIT: return SYSTEM_FUSION_EXEC_WORK_LIMIT;
+        default: return SYSTEM_FUSION_EXEC_INVALID;
+    }
+}
+
 static void Golden_Write(const FlightLogRecord *record)
 {
     uint8_t bytes[FLIGHT_LOG_MAX_RECORD_SIZE];
@@ -310,11 +325,23 @@ static void Golden_Gnss(uint64_t now, uint32_t sequence)
         !Golden_IntegrityApply(now, sequence, &event, m)) { exit(6); }
     m->position_measurement_timestamp_us = now - SYSTEM_ESTIMATOR_GNSS_POSITION_MEASUREMENT_DELAY_MS * 1000ULL;
     m->velocity_measurement_timestamp_us = now - SYSTEM_ESTIMATOR_GNSS_VELOCITY_MEASUREMENT_DELAY_MS * 1000ULL;
+    m->fusion_timing_mode = SYSTEM_FUSION_TIMING_LEGACY_REPLAY;
+    m->position_source_timestamp_us = m->position_measurement_timestamp_us;
+    m->velocity_source_timestamp_us = m->velocity_measurement_timestamp_us;
+    m->position_timing_flags = SYSTEM_FUSION_SOURCE_RESOLVED | SYSTEM_FUSION_DELAY_FALLBACK;
+    m->velocity_timing_flags = SYSTEM_FUSION_SOURCE_RESOLVED | SYSTEM_FUSION_DELAY_FALLBACK;
     /* This fixture uses the reference project's older velocity / current position. */
     event.kind = NAV_REPLAY_VELOCITY;
     event.measurement_timestamp_us = m->velocity_measurement_timestamp_us;
     m->velocity_operation_sequence = ++s_operation;
     m->velocity_replay_result = (uint8_t)NavigationReplay_Insert(&s_replay, &s_kf, &event, &outcome);
+    m->velocity_execution_result = (uint8_t)Golden_ExecutionGet(m->velocity_replay_result);
+    if ((m->velocity_replay_result == NAV_REPLAY_OK) &&
+        (outcome.velocity_groups.horizontal_attempted || outcome.velocity_groups.vertical_attempted))
+    {
+        m->velocity_application_timestamp_us = event.measurement_timestamp_us;
+        m->velocity_timing_flags |= SYSTEM_FUSION_APPLICATION_EPOCH_VALID;
+    }
     m->group_update_result[2] = (uint8_t)outcome.velocity_groups.horizontal_result;
     m->group_update_result[3] = (uint8_t)outcome.velocity_groups.vertical_result;
     memcpy(m->group_nis + 2, outcome.group_nis + 2, 2 * sizeof(float));
@@ -323,6 +350,13 @@ static void Golden_Gnss(uint64_t now, uint32_t sequence)
     event.measurement_timestamp_us = m->position_measurement_timestamp_us;
     m->position_operation_sequence = ++s_operation;
     m->position_replay_result = (uint8_t)NavigationReplay_Insert(&s_replay, &s_kf, &event, &outcome);
+    m->position_execution_result = (uint8_t)Golden_ExecutionGet(m->position_replay_result);
+    if ((m->position_replay_result == NAV_REPLAY_OK) &&
+        (outcome.position_groups.horizontal_attempted || outcome.position_groups.vertical_attempted))
+    {
+        m->position_application_timestamp_us = event.measurement_timestamp_us;
+        m->position_timing_flags |= SYSTEM_FUSION_APPLICATION_EPOCH_VALID;
+    }
     m->group_update_result[0] = (uint8_t)outcome.position_groups.horizontal_result;
     m->group_update_result[1] = (uint8_t)outcome.position_groups.vertical_result;
     memcpy(m->group_nis, outcome.group_nis, 2 * sizeof(float));
@@ -360,6 +394,16 @@ static void Golden_Baro(uint64_t now, uint32_t sequence)
     m->estimator_present_timestamp_us = now; m->operation_sequence = ++s_operation;
     m->replay_epoch = s_replay.epoch;
     m->replay_result = (uint8_t)NavigationReplay_Insert(&s_replay, &s_kf, &event, &outcome);
+    m->fusion_timing_mode = SYSTEM_FUSION_TIMING_LEGACY_REPLAY;
+    m->source_id = SYSTEM_FUSION_BAROMETER_SOURCE;
+    m->source_timestamp_us = event.measurement_timestamp_us;
+    m->timing_flags = SYSTEM_FUSION_SOURCE_RESOLVED | SYSTEM_FUSION_DELAY_FALLBACK;
+    m->execution_result = (uint8_t)Golden_ExecutionGet(m->replay_result);
+    if (m->replay_result == NAV_REPLAY_OK)
+    {
+        m->application_timestamp_us = event.measurement_timestamp_us;
+        m->timing_flags |= SYSTEM_FUSION_APPLICATION_EPOCH_VALID;
+    }
     m->update_result = (uint8_t)outcome.barometer; m->nis = outcome.baro_nis;
     m->innovation_m = outcome.baro_innovation; m->replay_generation = s_replay.diagnostics.replay_count;
     Golden_Write(&record);
@@ -421,6 +465,8 @@ static int Golden_FlightStep(uint32_t index, InsInertialContext *frontend)
 
 int main(int argc, char **argv)
 {
+    /* This producer calls the legacy replay kernel, never a current executor. */
+    if (SYSTEM_FUSION_TIMING_MODE != SYSTEM_FUSION_TIMING_LEGACY_REPLAY) { return 7; }
     s_reanchor_scenario = (uint8_t)(argc == 3 && strcmp(argv[2], "reanchor") == 0);
     s_integrity_scenario = (uint8_t)(argc == 3 && strcmp(argv[2], "integrity") == 0);
     if ((argc != 2 && argc != 3) || (s_file = fopen(argv[1], "wb")) == NULL) { return 1; }

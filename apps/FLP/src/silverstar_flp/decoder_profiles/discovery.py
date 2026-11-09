@@ -151,15 +151,18 @@ class TaskDirectoryScanner:
         self, selected: Path, root: Path
     ) -> TaskDirectoryDiscovery:
         """Use the project contract without traversing generated firmware trees."""
-        log_root = root / "Log"
         logs: list[Path] = []
         packages: list[Path] = []
         scanned_count = 0
         scanned_bytes = 0
         limit_reached = False
         pending = [(root, 0)]
-        if log_root.is_dir() and not log_root.is_symlink():
-            pending.insert(0, (log_root, 0))
+        # Saved mission data uses Log; the generator's Host codec fixture uses
+        # Logs/Golden. Both are owned log roots, unlike generated firmware trees.
+        for name in ("Log", "Logs"):
+            log_root = root / name
+            if log_root.is_dir() and not log_root.is_symlink():
+                pending.insert(0, (log_root, 0))
         while pending:
             directory, depth = pending.pop()
             try:

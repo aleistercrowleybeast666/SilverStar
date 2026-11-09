@@ -6,10 +6,13 @@
 #include "sslog_protocol.h"
 #include "system_user_config.h"
 
+/* Deterministic Host codec sample, not a hardware calibration or flight log.
+ * The explicit NONE calibration below is an identity model for these inputs. */
 static const FlightLogRecordType s_golden_record_types[] =
 {
     FLIGHT_LOG_RECORD_DECODER_PROFILE_DESCRIPTOR,
     FLIGHT_LOG_RECORD_SYSTEM_CONFIG,
+    FLIGHT_LOG_RECORD_CALIBRATION_RESULT,
     FLIGHT_LOG_RECORD_DEVICE_DESCRIPTOR,
     FLIGHT_LOG_RECORD_LOG_STREAM_DESCRIPTOR,
     FLIGHT_LOG_RECORD_IMU_CORRECTED,
@@ -62,12 +65,26 @@ static void GoldenSample_RecordPrepare(
             record->payload.system_config.version[0] = 0U;
             record->payload.system_config.version[1] = 0U;
             record->payload.system_config.version[2] = SILVERSTAR_VERSION_PATCH;
-            record->payload.system_config.profile_id = 1UL;
-            record->payload.system_config.configured_imu_rate_hz = 100U;
+            record->payload.system_config.profile_id = SYSTEM_PROFILE_ID;
+            record->payload.system_config.configured_imu_rate_hz = 200U;
             record->payload.system_config.configured_gnss_rate_hz = 10U;
+            record->payload.system_config.mechanization_subsample_count =
+                SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT;
+            record->payload.system_config.mechanization_min_sample_rate_hz = 50U;
+            record->payload.system_config.mechanization_max_sample_rate_hz = 500U;
             record->payload.system_config.device_descriptor_count = 13U;
             record->payload.system_config.log_stream_descriptor_count =
                 SSLOG_RECORD_COUNT;
+            break;
+        case FLIGHT_LOG_RECORD_CALIBRATION_RESULT:
+            record->payload.calibration_result.source_id = 1U;
+            record->payload.calibration_result.state = 4U;
+            record->payload.calibration_result.ready = 1U;
+            for (uint8_t axis = 0U; axis < 3U; axis++)
+            {
+                record->payload.calibration_result.accel_scale[axis] = 1.0f;
+                record->payload.calibration_result.gyro_scale[axis] = 1.0f;
+            }
             break;
         case FLIGHT_LOG_RECORD_DEVICE_DESCRIPTOR:
             record->payload.device_descriptor.descriptor_id = 1U;
@@ -90,8 +107,10 @@ static void GoldenSample_RecordPrepare(
             record->payload.imu_corrected.sequence = sequence;
             record->payload.imu_corrected.sample_timestamp_us =
                 record->timestamp_us;
-            record->payload.imu_corrected.accel_b_mps2[2] = 9.80665f;
-            record->payload.imu_corrected.valid_mask = 0x3FUL;
+            record->payload.imu_corrected.receive_timestamp_us = record->timestamp_us;
+            record->payload.imu_corrected.accel_b_mps2[2] = SYSTEM_INS_GRAVITY_MPS2;
+            record->payload.imu_corrected.valid_mask = 3U;
+            record->payload.imu_corrected.correction_valid = 1U;
             break;
         case FLIGHT_LOG_RECORD_GNSS_NATIVE:
             record->payload.gnss_native.source_descriptor_id = 2U;
@@ -164,13 +183,17 @@ static int GoldenSample_FileWrite(const char *path)
     file = fopen(path, "wb");
     if (file == NULL) { return 1; }
     (void)memset(&header, 0, sizeof(header));
-    header.profile_id = 1U;
-    header.nominal_imu_rate_hz = 100U;
-    header.nominal_ins_rate_hz = 100U;
-    header.position_axis_order[0] = 0U;
+    header.profile_id = SYSTEM_LOG_PROFILE_ID;
+    header.nominal_imu_rate_hz = 200U;
+    header.nominal_ins_rate_hz = 200U / SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT;
+    header.mechanization_subsample_count = SYSTEM_MECHANIZATION_SUBSAMPLE_COUNT;
+    header.coordinate_frame = 1U;
+    header.quaternion_order = 1U;
+    header.quaternion_semantics = 1U;
+    header.position_axis_order[0] = 3U;
     header.position_axis_order[1] = 1U;
     header.position_axis_order[2] = 2U;
-    header.local_gravity_mps2 = 9.80665f;
+    header.local_gravity_mps2 = SYSTEM_INS_GRAVITY_MPS2;
     header.firmware_version[2] = SILVERSTAR_VERSION_PATCH;
     if (FlightLog_FileHeaderSerialize(&header, buffer, sizeof(buffer), &size) !=
         FLIGHT_LOG_SERIALIZE_RESULT_OK)

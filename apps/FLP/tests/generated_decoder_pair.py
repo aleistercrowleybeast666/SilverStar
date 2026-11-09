@@ -23,6 +23,10 @@ def GeneratedPair_Build(decoder: Path, directory: Path, *, aggregation=2, wrong_
     frontend = parameters['silverstar.algorithm.ins.coning2_sculling2']
     gravity = frontend['gravity_mps2']
     backend = parameters.get('silverstar.algorithm.estimator.kf6', parameters.get('silverstar.algorithm.estimator.eskf15', {}))
+    if backend:
+        # This deliberately sparse, synthetic fixture exercises the established
+        # replay input path. Present-executor proof uses the actual C producers.
+        assert backend['fusion_timing_mode'] == 1
     p0 = [backend.get('p0_'+group+'_'+axis,1.0) for group in ('position','velocity') for axis in 'enu']
     records = {r['name']:r for r in catalog['records']}
     builder = SyntheticSslogBuilder()
@@ -62,6 +66,29 @@ def GeneratedPair_Build(decoder: Path, directory: Path, *, aggregation=2, wrong_
         add('IMU_CORRECTED',timestamp,{'sample_timestamp_us':timestamp,'receive_timestamp_us':timestamp,'sequence':index+1,'source_id':1,'virtual_imu_id':1,'valid_mask':3,'correction_valid':1,'accel_b_mps2':[0,0,gravity],'gyro_b_radps':[0,0,0]},3)
         if eskf and index and index%2==0:
             add('ESKF15_BODY_INPUT',timestamp,{'interval_start_timestamp_us':timestamp-10000,'interval_end_timestamp_us':timestamp,'sequence':index//2,'source_id':1,'calibration_generation':1,'dt_s':0.01,'body_accel_mps2':[0,0,gravity]*2,'body_gyro_radps':[0]*6})
+        if backend and index == 2:
+            # Explicit synthetic zero observations at this body boundary; no
+            # missing v2 execution/source identity is supplied by the opener.
+            timing = {'sample_timestamp_us': timestamp, 'receive_timestamp_us': timestamp,
+                      'measurement_timestamp_us': timestamp, 'application_timestamp_us': timestamp,
+                      'fusion_timing_mode': 1, 'timing_flags': 7, 'execution_result': 0,
+                      'source_id': 1, 'calibration_generation': 1}
+            if eskf:
+                for group in range(5):
+                    add('ESKF15_MEASUREMENT', timestamp, {
+                        **timing, 'evaluation_timestamp_us': timestamp, 'epoch': 1,
+                        'source_sequence': 1, 'operation_sequence': group + 1,
+                        'group': group, 'physically_valid': 1, 'admitted': 1,
+                        'base_variance': [1, 1], 'effective_variance': [1, 1],
+                        'quality_scale': 1, 'consistency_scale': 1, 'robust_scale': 1,
+                    })
+            else:
+                add('BARO_MEASUREMENT', timestamp, {
+                    **timing, 'source_timestamp_us': timestamp,
+                    'estimator_present_timestamp_us': timestamp, 'replay_epoch': 1,
+                    'sequence': 1, 'operation_sequence': 1, 'variance_m2': 1,
+                    'valid_mask': 3, 'measurement_timestamp_trusted': 1,
+                })
     log = builder.File_Write(directory/'SYNTHETIC_GENERATED_DECODER.BIN')
     assert hashlib.sha256(decoder.read_bytes()).hexdigest() == original
     return log, package

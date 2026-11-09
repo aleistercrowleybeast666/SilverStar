@@ -167,7 +167,11 @@ int main(int argc, char **argv)
             FlightLogEskf15MeasurementRecord *m=&record.payload.eskf15_measurement;
             m->sample_timestamp_us=m->receive_timestamp_us=m->measurement_timestamp_us=
                 m->evaluation_timestamp_us=s_state.timestamp_us;
-            m->operation_sequence=step*5U+group; m->epoch=1U; m->calibration_generation=1U;
+            m->operation_sequence=(step/10U-1U)*5U+group+1U;
+            m->epoch=1U; m->calibration_generation=1U;
+            /* Mode0 barometry is one logical estimator producer, separate
+             * from the legacy IMU-source alias used by the mode1 kernel log. */
+            m->source_id=(group==4U && SYSTEM_FUSION_TIMING_MODE==0U) ? 1U : 0U;
             m->application_timestamp_us=s_state.timestamp_us;
             m->fusion_timing_mode=SYSTEM_FUSION_TIMING_MODE;
             m->timing_flags=7U; /* Resolved, applied, trusted MCU source epoch. */

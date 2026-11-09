@@ -35,7 +35,13 @@ def test_real_generated_package_production_open_cache_roundtrip_and_replay(tmp_p
     plugin=next(p for p in registry.algorithms if p.metadata.plugin_id==algorithm)
     result=plugin.run(opened.dataset,ReplayRequest(mode=ReplayMode.RECORDED_CONFIGURATION,input_source='corrected_imu'))
     assert result.channels
-    assert all(np.all(np.isfinite(series.values)) for series in result.channels.values())
+    for name, series in result.channels.items():
+        # Diagnostic R/scale can be explicitly unavailable in this sparse
+        # fixture; a nonfinite value must never be published as a valid row.
+        assert np.all(np.isfinite(series.values[series.valid])), name
+    for name in ('navigation.position_enu', 'navigation.velocity_enu', 'attitude.q_nb'):
+        series = result.channels[name]
+        assert series.valid.all() and np.isfinite(series.values).all(), name
     assert all(hashlib.sha256(path.read_bytes()).hexdigest()==digest for path,digest in before.items())
     if algorithm=='silverstar.algorithm.pure_ins':
         assert result.diagnostics['firmware_build_parameters']=={'mechanization_aggregation':2}

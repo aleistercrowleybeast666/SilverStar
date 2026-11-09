@@ -20,15 +20,18 @@ def test_project_root_scans_only_canonical_decoder_and_log_tree(tmp_path: Path) 
     second = logs / "SS0001.sslog"
     first.write_bytes(b"first")
     second.write_bytes(b"second")
+    golden = root / "Logs" / "Golden" / "Mission_golden.sslog"
+    golden.parent.mkdir(parents=True)
+    golden.write_bytes(b"synthetic codec fixture")
     vendor = root / "Flight_Controller" / "Drivers"
     vendor.mkdir(parents=True)
     (vendor / "fake.ssdecoder").write_bytes(b"vendor")
     (vendor / "fake.BIN").write_bytes(b"vendor")
 
     found = TaskDirectoryScanner().Scan(root)
-    assert set(found.log_paths) == {first.resolve(), second.resolve()}
+    assert set(found.log_paths) == {first.resolve(), second.resolve(), golden.resolve()}
     assert found.decoder_package_paths == (decoder.resolve(),)
-    assert found.scanned_file_count == 3
+    assert found.scanned_file_count == 4
 
 
 def test_project_root_default_export_stays_beside_selected_log(tmp_path: Path) -> None:

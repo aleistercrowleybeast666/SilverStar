@@ -4408,6 +4408,7 @@ def _GoldenExpected_Render(
     included_names = (
         "DECODER_PROFILE_DESCRIPTOR",
         "SYSTEM_CONFIG",
+        "CALIBRATION_RESULT",
         "DEVICE_DESCRIPTOR",
         "LOG_STREAM_DESCRIPTOR",
         "IMU_CORRECTED",

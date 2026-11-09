@@ -10,7 +10,8 @@ from typing import Any
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 import pytest
-from PySide6.QtWidgets import QApplication
+from PySide6.QtCore import QTimer
+from PySide6.QtWidgets import QApplication, QMessageBox
 
 from silverstar_flp.decoder_profiles import (
     DecoderProfileCache,
@@ -217,8 +218,13 @@ def test_ss_test_0_real_golden_matches_expected_exactly(tmp_path: Path) -> None:
         package.generation_profile_sha256
     )[:16]
 
+    frontend = next(
+        row for row in package.semantics.raw_metadata['firmware_algorithm_parameters']
+        if row['component'] == 'silverstar.algorithm.ins.coning2_sculling2'
+    )
+    gravity = next(row['value'] for row in frontend['parameters'] if row['id'] == 'gravity_mps2')
     checks = (
-        ("IMU_NATIVE", "accel_b_mps2", 9.80665),
+        ("IMU_CORRECTED", "accel_b_mps2", gravity),
         ("GNSS_NATIVE", "latitude_e7", 320000000.0),
         ("BARO_NATIVE", "pressure_pa", 101325.0),
     )
@@ -233,10 +239,16 @@ def test_ss_test_0_real_golden_matches_expected_exactly(tmp_path: Path) -> None:
         assert series is not None
         assert float(series.values[0][-1] if series.values.ndim > 1 else series.values[0]) \
             == pytest.approx(expected_value)
-        endpoint = endpoints[int(record.payload["source_descriptor_id"])]
-        assert series.metadata["descriptor_id"] == endpoint["descriptor_id"]
-        assert series.metadata["physical_device_id"] == endpoint["physical_device_id"]
-        assert series.metadata["instance_id"] == endpoint["instance_id"]
+        if record_name == "IMU_CORRECTED":
+            calibration = dataset.semantic_context.calibration
+            assert record.payload['source_id'] == calibration.source_id
+            assert record.payload['virtual_imu_id'] == calibration.virtual_imu_id
+            assert record.payload['correction_valid'] == 1
+        else:
+            endpoint = endpoints[int(record.payload["source_descriptor_id"])]
+            assert series.metadata["descriptor_id"] == endpoint["descriptor_id"]
+            assert series.metadata["physical_device_id"] == endpoint["physical_device_id"]
+            assert series.metadata["instance_id"] == endpoint["instance_id"]
 
 
 def test_ss_test_0_real_dataset_existing_gui_and_csv_json_export_smoke(
@@ -255,7 +267,7 @@ def test_ss_test_0_real_dataset_existing_gui_and_csv_json_export_smoke(
         selected_channels = tuple(
             _ChannelId_Get(package, dataset, record_name, field_name)
             for record_name, field_name in (
-                ("IMU_NATIVE", "accel_b_mps2"),
+                ("IMU_CORRECTED", "accel_b_mps2"),
                 ("GNSS_NATIVE", "latitude_e7"),
                 ("BARO_NATIVE", "pressure_pa"),
             )
@@ -286,4 +298,20 @@ def test_ss_test_0_real_dataset_existing_gui_and_csv_json_export_smoke(
         )
         assert manifest.ManifestPath_Get() is not None
     finally:
-        window.close()
+        # Language/theme changes are persisted UI state; exercise the actual
+        # close guard rather than leaving its modal question unattended.
+        discarded = []
+
+        def _Unsaved_Discard() -> None:
+            dialog = window.findChild(QMessageBox)
+            assert dialog is not None
+            dialog.button(QMessageBox.StandardButton.Discard).click()
+            discarded.append(True)
+
+        if window._project_dirty:
+            QTimer.singleShot(0, _Unsaved_Discard)
+            assert window.close()
+            assert discarded
+        else:
+            assert window.close()
+        app.processEvents()

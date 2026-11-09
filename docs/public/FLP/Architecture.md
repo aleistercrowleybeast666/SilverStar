@@ -67,6 +67,10 @@ limits. Invalid frames never reach the dynamic payload decoder. The damaged byte
 raw hex remain diagnostic evidence; there is no payload repair or legacy parser fallback.
 
 Decoder-profile discovery is bounded by file count, byte count, recursion depth and parent depth.
+When opening a SilverStar project root, only its root decoder packages and the
+`Log` / `Logs` trees are scanned. `Logs/Golden` contains synthetic Host codec
+fixtures; finding one does not make it a hardware recording. Generated firmware
+and third-party directories remain excluded from project-root discovery.
 Matching uses the logged `DECODER_PROFILE_DESCRIPTOR` and requires package/container identity plus
 generation-profile, Record Catalog, and Project Semantics hashes simultaneously. There is one
 `exact_generation_profile` mode and no ranking/fallback. Manual import validates before copying
