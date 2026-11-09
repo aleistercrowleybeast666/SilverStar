@@ -58,12 +58,13 @@ def executable(request,project,tmp_path_factory):
         'Common/Src/silverstar_assert.c','System/Src/system_log_policy.c','System/Src/system_profile.c',
         'System/Src/system_navigation_profile.c','System/Src/system_estimator_profile.c',
         'System/Src/system_navigation_health.c','System/Src/system_gnss_quality.c','System/Src/system_time.c',
-        'System/Src/system_gnss_receipt.c']]
+        'System/Src/system_gnss_receipt.c','System/Src/system_mission_process.c']]
     sources += [KERNEL/'Src/navigation_eskf.c',KERNEL/'Src/navigation_eskf_horizon.c',
         KERNEL/'Src/navigation_eskf_recovery.c',
         COMMON/'Src/geodesy_local.c',COMMON/'Src/navigation_quality.c',PROTOCOL/'Src/sslog_records.c',
         PROTOCOL/'Src/sslog_protocol.c']
-    sources += [project/'Generated/Src'/p for p in ['project_metadata.c','project_log_decoder_profile.c','project_log_config.c']]
+    sources += [project/'Generated/Src'/p for p in ['project_metadata.c','project_log_decoder_profile.c',
+        'project_log_config.c','project_mission_process.c']]
     compiler = shutil.which('gcc');assert compiler, 'Actual GCC is required'
     target = output/'eskf_horizon_backend.exe'
     native = os.environ.get('SILVERSTAR_HORIZON_NATIVE_CONFIGURATION') == '1'

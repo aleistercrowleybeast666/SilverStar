@@ -1,0 +1,39 @@
+{
+  "source": "D:/python_software/SilverStar_GSHC_Android/build",
+  "destination": "D:/DevelopmentToolchains/SilverStarAndroid",
+  "groups": {
+    "toolchain": {
+      "count": 11972,
+      "bytes": 582265945,
+      "verified": true
+    },
+    "gradle-user": {
+      "count": 4758,
+      "bytes": 816119626,
+      "verified": true
+    },
+    "android-user": {
+      "count": 213,
+      "bytes": 243523060,
+      "verified": true
+    },
+    "test-maven": {
+      "count": 4,
+      "bytes": 213433269,
+      "verified": true
+    },
+    "python-deps": {
+      "count": 209,
+      "bytes": 2440974,
+      "verified": true
+    },
+    "setup": {
+      "count": 5,
+      "bytes": 454952,
+      "verified": true
+    }
+  },
+  "manifest_sha256": "acdf90fcb1241e4bfd863990510830c59306d11cc6686d58a4e9c94684eba3d5",
+  "key_material_location": "External private android-user directory; no key bytes committed",
+  "original_deleted": false
+}

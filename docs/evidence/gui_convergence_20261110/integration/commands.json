@@ -1,0 +1,138 @@
+[
+  {
+    "label": "ordinary-preview",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "silverstar_fccg.project.tuning_bundle",
+      "preview",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\base.ssproject",
+      "D:\\python_software\\TreeDiagram\\.test-tmp\\gui-convergence-20261110\\delivery\\run.sstuning.json"
+    ],
+    "exit": 0,
+    "seconds": 6.2449812999984715
+  },
+  {
+    "label": "ordinary-apply",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "silverstar_fccg.project.tuning_bundle",
+      "apply",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\base.ssproject",
+      "D:\\python_software\\TreeDiagram\\.test-tmp\\gui-convergence-20261110\\delivery\\run.sstuning.json",
+      "--output",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\ordinary.ssproject"
+    ],
+    "exit": 0,
+    "seconds": 5.197772400002577
+  },
+  {
+    "label": "ordinary-compile",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "-O2",
+      "-fanalyzer",
+      "-ID:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\ordinary\\Flight_Controller\\Generated\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\ordinary\\Flight_Controller\\APP\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\ordinary\\Flight_Controller\\Interfaces\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\ordinary\\Flight_Controller\\System\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\ordinary\\Flight_Controller\\Platform\\Inc",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\ordinary-consumer.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\ordinary-consumer.exe"
+    ],
+    "exit": 0,
+    "seconds": 2.873378500000399
+  },
+  {
+    "label": "ordinary-consumer",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\ordinary-consumer.exe"
+    ],
+    "exit": 0,
+    "seconds": 0.16835569999966538
+  },
+  {
+    "label": "research-preview",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "silverstar_fccg.project.tuning_bundle",
+      "preview",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\base.ssproject",
+      "D:\\python_software\\TreeDiagram\\.test-tmp\\gui-convergence-20261110\\delivery\\run.sstuning.json",
+      "--include-control-task"
+    ],
+    "exit": 0,
+    "seconds": 7.399451299999782
+  },
+  {
+    "label": "research-apply",
+    "command": [
+      "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "-m",
+      "silverstar_fccg.project.tuning_bundle",
+      "apply",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\base.ssproject",
+      "D:\\python_software\\TreeDiagram\\.test-tmp\\gui-convergence-20261110\\delivery\\run.sstuning.json",
+      "--include-control-task",
+      "--output",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\research.ssproject"
+    ],
+    "exit": 0,
+    "seconds": 7.414486800000304
+  },
+  {
+    "label": "research-compile",
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\gcc.EXE",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-pedantic",
+      "-O2",
+      "-fanalyzer",
+      "-ID:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\research\\Flight_Controller\\Generated\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\research\\Flight_Controller\\APP\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\research\\Flight_Controller\\Interfaces\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\research\\Flight_Controller\\System\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\research\\Flight_Controller\\Platform\\Inc",
+      "-ID:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\research\\Flight_Controller\\Algorithm\\Control\\PID\\Inc",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\research\\Flight_Controller\\Algorithm\\Control\\PID\\Src\\control_pid.c",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\research\\Flight_Controller\\Algorithm\\Control\\PID\\Src\\control_pid_project.c",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\research\\Flight_Controller\\Generated\\Src\\project_control_research.c",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\research-consumer.c",
+      "-lm",
+      "-o",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\research-consumer.exe"
+    ],
+    "exit": 0,
+    "seconds": 4.028049299995473
+  },
+  {
+    "label": "research-consumer",
+    "command": [
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\integration\\research-consumer.exe"
+    ],
+    "exit": 0,
+    "seconds": 0.25972170000022743
+  },
+  {
+    "label": "source-commit",
+    "command": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit": 0,
+    "seconds": 0.17336359999899287
+  }
+]

@@ -1,0 +1,74 @@
+{
+  "source": "apps/GSHC_Android; exact existing migrated source, no Android implementation changes",
+  "toolchain_root": "D:/DevelopmentToolchains/SilverStarAndroid/toolchain",
+  "cache_root": "D:/DevelopmentToolchains/SilverStarAndroid",
+  "jdk": "Microsoft OpenJDK 21.0.12.101-hotspot",
+  "gradle": "8.13",
+  "build": {
+    "exit": 0,
+    "tasks_executed": 58,
+    "elapsed": "2m43s",
+    "operations": [
+      "assembleDebug",
+      "lintDebug",
+      "testDebugUnitTest"
+    ]
+  },
+  "unit_tests": {
+    "suites": 3,
+    "tests": 14,
+    "failures": 0,
+    "errors": 0
+  },
+  "lint": {
+    "Warning": 7
+  },
+  "apk": {
+    "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\android-build\\app\\outputs\\apk\\debug\\app-debug.apk",
+    "size": 2479069,
+    "sha256": "7e2d2118c0da9ef0b9643e3335fe63f782ac626b3cfa785771ebebed10605b66"
+  },
+  "additional": {
+    "core_assertions": 56,
+    "rx_frames": 152,
+    "pc_records": 456,
+    "shared_logfile_assertions": 287,
+    "storage_assertions": 113,
+    "shared_schema_assertions": 56,
+    "pc_compatibility_exit": 0
+  },
+  "failed_attempt": "Initial PC compatibility wrapper omitted external BUILD_ROOT; expected generated input absent. Repeated with exact actual BuildRoot and passed; original log retained.",
+  "limits": "Offline software/fixture/debug signing only. No SDK download, new license acceptance, physical USB/control or release signing.",
+  "logs": [
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\android-build.log",
+      "size": 4268,
+      "sha256": "586bc2c0d8fc96a83c32d7428664fe4bc4f7ef238b66ce836875805c7e2a588b"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\android-core.log",
+      "size": 262,
+      "sha256": "24cd5e1ea8e7f8c9d296279e1c1ac2b410f16d7932c58f85ec29c08179a804e4"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\android-storage.log",
+      "size": 90,
+      "sha256": "2e6da2a7b7456ad6a971ced952b10ed026130b8b4f85547baa1e830f559bbddc"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\android-pc.log",
+      "size": 1004,
+      "sha256": "4f5fa12b7944cf341eff12c6b3b940460f625f526bbb025e4d57df0bb7de8edc"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\android-pc-v2.log",
+      "size": 225,
+      "sha256": "45469b01136598b49b0ed62cf760d85e00179032457e74203b46cd4e4b9032c4"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\android-export.log",
+      "size": 131,
+      "sha256": "bf509f26329b90173eeb95a4b1cc28008b1af74be1476854e5e7882caaa78829"
+    }
+  ]
+}

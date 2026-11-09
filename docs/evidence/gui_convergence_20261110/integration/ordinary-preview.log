@@ -1,0 +1,85 @@
+{
+  "changes": [
+    {
+      "plugin_id": "silverstar.algorithm.ins.coning2_sculling2",
+      "parameter_id": "gravity_mps2",
+      "before": 9.78,
+      "after": 9.779999732971191,
+      "unit": "m/s^2",
+      "shared": true
+    },
+    {
+      "plugin_id": "silverstar.algorithm.estimator.kf6",
+      "parameter_id": "gravity_mps2",
+      "before": 9.78,
+      "after": 9.779999732971191,
+      "unit": "m/s^2",
+      "shared": true
+    },
+    {
+      "plugin_id": "silverstar.algorithm.estimator.kf6",
+      "parameter_id": "gnss_velocity_std",
+      "before": 0.15,
+      "after": 0.15000000596046448,
+      "unit": "m/s",
+      "shared": false
+    },
+    {
+      "plugin_id": "silverstar.algorithm.estimator.kf6",
+      "parameter_id": "nis_1d_soft",
+      "before": 6.635,
+      "after": 6.635000228881836,
+      "unit": "1",
+      "shared": false
+    },
+    {
+      "plugin_id": "silverstar.algorithm.estimator.kf6",
+      "parameter_id": "nis_1d_hard",
+      "before": 10.828,
+      "after": 10.82800006866455,
+      "unit": "1",
+      "shared": false
+    },
+    {
+      "plugin_id": "silverstar.algorithm.estimator.kf6",
+      "parameter_id": "nis_2d_soft",
+      "before": 9.21,
+      "after": 9.210000038146973,
+      "unit": "1",
+      "shared": false
+    },
+    {
+      "plugin_id": "silverstar.algorithm.estimator.kf6",
+      "parameter_id": "nis_2d_hard",
+      "before": 13.816,
+      "after": 13.815999984741211,
+      "unit": "1",
+      "shared": false
+    },
+    {
+      "plugin_id": "silverstar.algorithm.estimator.kf6",
+      "parameter_id": "nis_3d_soft",
+      "before": 11.345,
+      "after": 11.345000267028809,
+      "unit": "1",
+      "shared": false
+    },
+    {
+      "plugin_id": "silverstar.algorithm.estimator.kf6",
+      "parameter_id": "nis_3d_hard",
+      "before": 16.266,
+      "after": 16.266000747680664,
+      "unit": "1",
+      "shared": false
+    }
+  ],
+  "control_deployable": false,
+  "control_status": "research only; optional 10 ms mission task, body-Y torque in N*m at 1 N*m/core-output unit; memory sink, no electrical actuator driver",
+  "limitations": [
+    "Control records are research-only: firmware scheduling requires explicit opt-in to a matching SCG adapter; electrical output and hardware qualification are not provided.",
+    "Scalar profiles propose pinned target defaults plus the simulated gravity binding; they do not certify full backend parity.",
+    "KF6 host adapter uses current-state updates on arrival; no delayed replay is claimed.",
+    "Non-INS/KF6 tuning is retained as research; no unverified firmware scalar profile is exported.",
+    "Initial pose and zero launch velocity are explicit simulation priors; no sensor or hardware qualification is claimed."
+  ]
+}

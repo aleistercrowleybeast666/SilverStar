@@ -1,0 +1,8 @@
+{
+  "bundle": "D:\\python_software\\TreeDiagram\\.test-tmp\\gui-convergence-20261110\\delivery\\run.sstuning.json",
+  "bundle_sha256": "ab27c43327d51c0c26988c26c3a2d5699c10ce7872592276d24750c95f6580b8",
+  "run_id": "4008f769-9d31-4182-bee5-7477845b5870",
+  "source_commit": "284c66349000195656352530c8a8c696cdec86d9",
+  "scope": "Production CLI preview/apply, generated scalar consumers/decoder and PID mathematical backend; task/ARM/stack separate",
+  "hardware_tested": false
+}
