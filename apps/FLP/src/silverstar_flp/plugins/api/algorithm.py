@@ -369,6 +369,13 @@ class AlgorithmPlugin(ABC):
     def ParameterSchemaCompatible_Is(self, identity: str) -> bool:
         return identity == self.metadata.ParameterSchemaIdentity_Get()
 
+    def CovarianceStorageCompatible_Is(
+        self, series: TimeSeries, group: StateGroupSpec, *,
+        recorded_solution_id: str | None = None,
+    ) -> bool:
+        """Admit only published physical storage; plugins own legacy semantics."""
+        return series.quantity == "covariance" and series.unit == "mixed"
+
     def _FirmwareParameters_Get(self, dataset: FlightDataset) -> Mapping[str, Any]:
         if not self.FirmwareMember_Is(dataset) or dataset.semantic_context is None:
             return MappingProxyType({})

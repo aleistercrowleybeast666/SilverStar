@@ -1,7 +1,7 @@
-"""Staged optional timing parameter and historical project boundary tests.
+"""Current timing parameters and historical project identity boundary tests.
 
 The captured old values are synthetic OFFLINE configuration, never recorded data.
-Full v2 Recorded/What-if numerical audit awaits the actual backend trace fixture.
+Numerical v2/horizon parity is covered by the separate actual Host trace tests.
 """
 from copy import deepcopy
 from dataclasses import replace
@@ -118,10 +118,10 @@ def test_only_two_estimators_gain_optional_integer_timing_parameter(name):
     plugin = _Plugin_Get(name)
     spec = next(p for p in plugin.metadata.parameter_schema if p.parameter_id == "fusion_timing_mode")
     assert (spec.kind, spec.default, spec.minimum, spec.maximum, spec.unit, spec.required) == (
-        "int", 1, 0, 1, "1", False)
-    for value in (0, 1):
+        "int", 1, 0, 2, "1", False)
+    for value in (0, 1, 2):
         spec.Value_Validate(value)
-    for value in (True, False, 2, -1, .0, "0"):
+    for value in (True, False, 3, -1, .0, "0"):
         with pytest.raises(ValueError):
             spec.Value_Validate(value)
 
@@ -140,7 +140,7 @@ def test_sf6_pureins_have_no_timing_mode():
 def test_pre_activation_schema_identities_remain_accepted_but_unknown_does_not(name):
     before = _Before_Get()[name]
     plugin = _Plugin_Get(name)
-    assert plugin.metadata.version == before["plugin_version"]
+    assert plugin.metadata.version != before["plugin_version"]
     for identity in before["accepted_schema_identities"]:
         assert plugin.ParameterSchemaCompatible_Is(identity)
     assert not plugin.ParameterSchemaCompatible_Is("0" * 64)
@@ -154,7 +154,7 @@ def _Configuration_Create(name, mode=None):
         values["fusion_timing_mode"] = mode
     return {
         "algorithm_id": plugin.metadata.plugin_id,
-        "algorithm_version": before["plugin_version"],
+        "algorithm_version": plugin.metadata.version,
         "mode": ReplayMode.OFFLINE.value,
         "input_source": "corrected_imu",
         "actual_values": values,
@@ -165,7 +165,7 @@ def _Configuration_Create(name, mode=None):
 
 
 @pytest.mark.parametrize("name", ["kf6", "eskf15"])
-@pytest.mark.parametrize("mode", [None, 0, 1])
+@pytest.mark.parametrize("mode", [None, 0, 1, 2])
 def test_saved_configuration_preserves_absence_or_exact_selected_mode(tmp_path, name, mode):
     configuration = _Configuration_Create(name, mode)
     ReplayConfiguration_Validate(configuration)
@@ -197,10 +197,22 @@ def test_old_recorded_values_do_not_gain_an_offline_default(tmp_path, name):
 
 
 @pytest.mark.parametrize("name", ["kf6", "eskf15"])
-def test_project_cannot_select_unimplemented_delayed_predictor(name):
-    configuration = _Configuration_Create(name, 2)
-    with pytest.raises(ValueError):
+def test_old_algorithm_implementation_identity_is_not_silently_upgraded(name):
+    configuration = _Configuration_Create(name)
+    configuration['algorithm_version'] = _Before_Get()[name]['plugin_version']
+    with pytest.raises(ValueError, match='schema_mismatch'):
         ReplayConfiguration_Validate(configuration)
+
+
+@pytest.mark.parametrize("name", ["kf6", "eskf15"])
+def test_project_horizon_mode_validates_integer_horizon_bounds(name):
+    configuration = _Configuration_Create(name, 2)
+    ReplayConfiguration_Validate(configuration)
+    for value in (9, 551, 300.5, True):
+        invalid = deepcopy(configuration)
+        invalid['actual_values']['fusion_horizon_ms'] = value
+        with pytest.raises(ValueError):
+            ReplayConfiguration_Validate(invalid)
 
 
 def _EskfSynthetic_Create(tmp_path, recorded_mode=0):

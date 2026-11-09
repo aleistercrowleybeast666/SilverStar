@@ -592,12 +592,8 @@ class StateEstimationPage(QWidget):
             self._translator, self._resolver, self._secondary_source_id)
 
     def _CovarianceSeries_Get(self, group: StateGroupSpec, *, reference: bool = False) -> TimeSeries | None:
-        source = self._estimator_source
-        legacy_kf6 = bool(source and source.kind == AnalysisSourceKind.RECORDED
-                          and source.recorded_solution_id == "kf6"
-                          and source.algorithm_id == "silverstar.algorithm.kf6")
         primary = self._Covariance_Select(self._Series_Get(group.covariance_channel), group,
-                                          legacy_recorded_kf6=legacy_kf6)
+                                          self._estimator_source)
         if not reference or self._resolver is None or self._secondary_source_id is None:
             return primary if not reference else None
         spec = self._SecondaryVisualization_Get()
@@ -605,34 +601,21 @@ class StateEstimationPage(QWidget):
                       if (item.group_id, item.unit, item.component_names) ==
                          (group.group_id, group.unit, group.component_names)), None) if spec else None
         other_source = self._resolver.Source_Get(self._secondary_source_id)
-        other_legacy = bool(other_source.kind == AnalysisSourceKind.RECORDED
-                            and other_source.recorded_solution_id == "kf6"
-                            and other_source.algorithm_id == "silverstar.algorithm.kf6")
         secondary = (self._Covariance_Select(
             self._resolver.Series_Get(other.covariance_channel, self._secondary_source_id), other,
-            legacy_recorded_kf6=other_legacy)
+            other_source)
             if other else None)
         return self._Reference_Check(primary, secondary)
 
-    @staticmethod
-    def _Covariance_Select(series: TimeSeries | None, group: StateGroupSpec, *,
-                           legacy_recorded_kf6: bool = False) -> TimeSeries | None:
-        if series is None:
+    def _Covariance_Select(self, series: TimeSeries | None, group: StateGroupSpec,
+                           source: AnalysisSource | None) -> TimeSeries | None:
+        if series is None or source is None:
             return None
-        published = series.quantity == "covariance" and series.unit == "mixed"
-        # Older exact decoders label ESTIMATOR.covariance_diagonal as generic
-        # scalar data. Only the selected recorded KF6 channel and its audited
-        # six-state storage contract supply the missing physical metadata.
-        legacy = (legacy_recorded_kf6
-                  and group.covariance_channel == "kf6.covariance.diagonal"
-                  and series.values.ndim == 2 and series.values.shape[1] == 6
-                  and series.quantity == "dimensionless" and series.unit == "1"
-                  and series.columns == ("PxE", "PxN", "PxU", "PvE", "PvN", "PvU")
-                  and (group.group_id, group.unit, group.component_names,
-                       group.covariance_diagonal_indices) in (
-                      ("position", "m", ("E", "N", "U"), (0, 1, 2)),
-                      ("velocity", "m/s", ("E", "N", "U"), (3, 4, 5))))
-        if not published and not legacy:
+        plugin = self._registry.Algorithm_Get(source.algorithm_id)
+        if not plugin.CovarianceStorageCompatible_Is(
+            series, group, recorded_solution_id=(source.recorded_solution_id
+                if source.kind == AnalysisSourceKind.RECORDED else None)
+        ):
             return None
         # Published diagonal storage is mixed-unit; the plugin group owns the
         # indices and squared physical units of this selected block.

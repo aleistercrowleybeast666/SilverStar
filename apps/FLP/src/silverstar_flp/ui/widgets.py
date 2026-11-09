@@ -82,7 +82,15 @@ class ProjectHeaderLabel(QLabel):
             metrics.horizontalAdvance("…" + suffix) + margins.left() + margins.right()
         )
         width = max(0, self.contentsRect().width() - metrics.horizontalAdvance(suffix))
-        self.setText(metrics.elidedText(self._full_name, Qt.TextElideMode.ElideRight, width) + suffix)
+        text = metrics.elidedText(self._full_name, Qt.TextElideMode.ElideRight, width) + suffix
+        # Mixed-font names can round beyond the requested elision width. Check
+        # the complete rendered string, including the dirty suffix. Each retry
+        # reduces the nonnegative pixel budget, so this cannot spin unchanged.
+        while width > 0 and metrics.horizontalAdvance(text) > self.contentsRect().width():
+            excess = metrics.horizontalAdvance(text) - self.contentsRect().width()
+            width = max(0, width - max(1, excess))
+            text = metrics.elidedText(self._full_name, Qt.TextElideMode.ElideRight, width) + suffix
+        self.setText(text)
 
     def resizeEvent(self, event) -> None:
         super().resizeEvent(event)

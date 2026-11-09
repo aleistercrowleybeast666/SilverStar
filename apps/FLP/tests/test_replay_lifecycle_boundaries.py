@@ -156,12 +156,16 @@ def test_task_result_publication_requires_current_uncancelled_worker(state):
 
 @pytest.mark.parametrize("close_accepted", [False, True])
 def test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker(
-    qtbot, monkeypatch, close_accepted
+    qtbot, monkeypatch, tmp_path, close_accepted
 ):
     registry = builtin_registry()
     window = MainWindow(registry)
     qtbot.addWidget(window)
-    window._dataset = object()
+    from silverstar_flp.core.project import ProjectDocument
+    from tests.synthetic_parameter_navigation import NavigationPair_Open
+    window._LogOpenResult_Set(
+        NavigationPair_Open(tmp_path / "pair", flight_samples=7), ProjectDocument()
+    )
     entered, release = threading.Event(), threading.Event()
     calls, errors, published = [], [], []
     plugin = registry.Algorithm_Get("silverstar.algorithm.estimator.eskf15")
@@ -171,7 +175,7 @@ def test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker(
         entered.set()
         assert release.wait(5)
         context.Cancel_RaiseIfRequested()
-        return "tiny-mock-result"
+        return tiny_result()
 
     monkeypatch.setattr(plugin, "run", gated)
     monkeypatch.setattr(window, "_Replay_ResultSet", published.append)
@@ -191,7 +195,9 @@ def test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker(
         window._Project_New()
         event = QCloseEvent()
         window.closeEvent(event)
-        assert event.isAccepted() == close_accepted
+        # Accepted user intent cancels first and closes after worker retirement.
+        assert not event.isAccepted()
+        assert getattr(first, "close_after_task", False) == close_accepted
         assert first.context.cancellation_event.is_set() == close_accepted
         assert window._active_worker is first
         window._Replay_Start(plugin.metadata.plugin_id, ReplayRequest())
@@ -208,7 +214,10 @@ def test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker(
         window._Replay_Start(plugin.metadata.plugin_id, ReplayRequest())
         qtbot.waitUntil(lambda: window._active_worker is None, timeout=5000)
         assert calls == [plugin.metadata.plugin_id] * 2
-        assert published == ["tiny-mock-result"]
+        assert len(published) == 1
+        assert (
+            published[0].diagnostics["input_identity"] == window._dataset.metadata["parse_identity"]
+        )
     finally:
         release.set()
         qtbot.waitUntil(lambda: window._active_worker is None, timeout=5000)
@@ -219,12 +228,18 @@ def test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker(
 
 
 @pytest.mark.parametrize("action", ["cancel", "accepted_close"])
-def test_queued_replay_result_is_not_published_after_cancellation(qtbot, monkeypatch, action):
+def test_queued_replay_result_is_not_published_after_cancellation(
+    qtbot, monkeypatch, tmp_path, action
+):
     """Desired behavior; exercises only the result-emitted / GUI-not-yet-serviced race."""
     registry = builtin_registry()
     window = MainWindow(registry)
     qtbot.addWidget(window)
-    window._dataset = object()
+    from silverstar_flp.core.project import ProjectDocument
+    from tests.synthetic_parameter_navigation import NavigationPair_Open
+    window._LogOpenResult_Set(
+        NavigationPair_Open(tmp_path / "pair", flight_samples=7), ProjectDocument()
+    )
     entered, release, emitted = threading.Event(), threading.Event(), threading.Event()
     plugin = registry.Algorithm_Get("silverstar.algorithm.estimator.eskf15")
 
@@ -252,7 +267,8 @@ def test_queued_replay_result_is_not_published_after_cancellation(qtbot, monkeyp
         else:
             event = QCloseEvent()
             window.closeEvent(event)
-            assert event.isAccepted()
+            assert not event.isAccepted()
+            assert worker.close_after_task
         assert worker.context.cancellation_event.is_set()
         qtbot.waitUntil(lambda: window._active_worker is None, timeout=5000)
         print(

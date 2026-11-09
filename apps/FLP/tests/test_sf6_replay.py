@@ -143,6 +143,9 @@ def test_plugin_order_optional_gnss_no_covariance_and_cross_algorithm_what_if(da
         "SF6",
         "KF_6",
         "ESKF_15",
+        "ESKF20 (offline)",
+        "InEKF15 (Invariant, offline)",
+        "InEKF20 (Invariant, offline)",
     ]
     plugin = Sf6AlgorithmPlugin()
     assert not plugin.ConfigurationAvailability_Get(dataset).recorded_available
@@ -374,8 +377,10 @@ def test_sf6_parameter_form_starts_with_ordered_gains(dataset):
     page.Dataset_Set(dataset)
     page.algorithm_combo.setCurrentIndex(page.algorithm_combo.findData("silverstar.algorithm.sf6"))
     app.processEvents()
-    assert page.parameter_group_combo.currentData() == "parameter_group.sf6_gain"
-    assert page.parameters_form.rowCount() == 6
+    # All six gains now belong to the visible common form, not an advanced tab.
+    assert page.parameter_group_combo.count() == 0
+    assert page.parameters_form.rowCount() == 0
+    assert page.common_parameters_form.rowCount() == 7
     assert list(page._parameter_widgets)[:6] == [
         "gain_ve",
         "gain_vn",

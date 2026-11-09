@@ -85,7 +85,10 @@ def test_quaternion_error_is_sign_invariant_and_propagation_is_right_multiplied(
     assert np.allclose(yaw, (np.sqrt(0.5), 0.0, 0.0, np.sqrt(0.5)), atol=2.0e-6)
 
 
-def test_kf6_stationary_replay_has_finite_positive_covariance(stationary_dataset) -> None:
+def test_kf6_stationary_replay_has_finite_positive_covariance(stationary_dataset, tmp_path) -> None:
+    from tests.parameter_fixtures import SyntheticParameters_Attach
+
+    stationary_dataset = SyntheticParameters_Attach(stationary_dataset, tmp_path / "parameters")
     plugin = Kf6AlgorithmPlugin()
     result = plugin.run(
         stationary_dataset,

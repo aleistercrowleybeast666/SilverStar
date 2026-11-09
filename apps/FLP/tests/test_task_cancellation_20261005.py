@@ -25,7 +25,9 @@ def test_folder_discovery_publication_respects_gui_request_lifetime(qtbot, tmp_p
     path_b.mkdir()
     started, release, emitted = Event(), Event(), Event()
     published, errors = [], []
-    old_dataset = object()
+    from tests.synthetic_parameter_navigation import NavigationPair_Open
+
+    old_dataset = NavigationPair_Open(tmp_path / "prior").dataset
     window._dataset = old_dataset
     old_project = window._project
     window._pending_new_project_path = tmp_path / "pending.ssflp"

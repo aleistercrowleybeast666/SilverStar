@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import os
 
+import pytest
+
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from PySide6.QtWidgets import QApplication
 
@@ -34,13 +36,27 @@ def test_sparse_120_seconds_import_replay_pages_and_export(tmp_path):
     results = {}
     store = ReplayResultStore()
     registry = builtin_registry()
+    replayed, explicit_only = [], []
     for plugin in registry.algorithms:
         mode = (
             ReplayMode.RECORDED_CONFIGURATION
             if plugin.FirmwareMember_Is(dataset)
             else ReplayMode.WHAT_IF
         )
-        result = plugin.run(dataset, ReplayRequest(mode=mode))
+        request = ReplayRequest(mode=mode)
+        if any(
+            spec.parameter_id == "configuration_json"
+            for spec in plugin.metadata.parameter_schema
+        ):
+            # Independent reference estimators cannot invent configuration or
+            # body-input assumptions from this legacy sparse log. Their full
+            # explicit-input workflow has its own test_navigation_plugins suite.
+            with pytest.raises(ValueError, match="parameter_missing:configuration_json"):
+                plugin.run(dataset, request)
+            explicit_only.append(plugin.metadata.display_name)
+            continue
+        result = plugin.run(dataset, request)
+        replayed.append(plugin.metadata.display_name)
         assert result.fidelity != ReplayFidelity.UNAVAILABLE
         assert not result.missing_inputs
         assert result.channels
@@ -48,6 +64,9 @@ def test_sparse_120_seconds_import_replay_pages_and_export(tmp_path):
         entry = store.Result_Add(result, algorithm_name=plugin.metadata.display_name)
         if plugin.metadata.plugin_id.endswith("kf6"):
             store.ActiveSource_Set(entry.source_id)
+    assert replayed == ["Pure INS", "SF6", "KF_6", "ESKF_15"]
+    assert explicit_only == ["ESKF20 (offline)", "InEKF15 (Invariant, offline)",
+                             "InEKF20 (Invariant, offline)"]
     app = QApplication.instance() or QApplication([])
     translator = Translator("en_US")
     resolver = ChannelResolver(dataset, store)

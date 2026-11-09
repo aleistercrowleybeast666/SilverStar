@@ -23,6 +23,7 @@ from silverstar_flp.plugins.algorithms.pure_ins.plugin import PureInsAlgorithmPl
 from silverstar_flp.plugins.api.algorithm import ReplayMode, ReplayRequest
 from silverstar_flp.plugins.log_parsers.sslog0.plugin import Sslog0ParserPlugin
 from tests.sslog_synthetic import START_TIMESTAMP_US, AnalysisFlight_Build
+from tests.parameter_fixtures import SyntheticParameters_Attach
 
 
 @pytest.mark.parametrize(
@@ -40,6 +41,7 @@ def test_replay_stops_at_landing_and_preserves_post_landing_raw_data(
             landing_after_update_count=6,
         )
     )
+    dataset = SyntheticParameters_Attach(dataset, tmp_path / "parameters")
     landing = START_TIMESTAMP_US + 120_100
     raw = dataset.Series_Get("imu.corrected.accel_b")
     assert raw is not None
@@ -85,6 +87,8 @@ def test_post_landing_inputs_do_not_change_pre_landing_replay(
         )
     )
 
+    reference = SyntheticParameters_Attach(reference, tmp_path / "reference_parameters")
+    extended = SyntheticParameters_Attach(extended, tmp_path / "extended_parameters")
     reference_result = plugin_type().run(
         reference,
         ReplayRequest(
@@ -124,6 +128,7 @@ def test_replay_without_landing_runs_to_valid_input_end(
             update_count=10,
         )
     )
+    dataset = SyntheticParameters_Attach(dataset, tmp_path / "parameters")
     result = plugin_type().run(
         dataset,
         ReplayRequest(

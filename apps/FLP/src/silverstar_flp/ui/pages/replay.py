@@ -331,14 +331,29 @@ class ReplayPage(QWidget):
                 f"{AlgorithmName_Display(plugin.metadata.display_name)} · {' / '.join(tags)}",
             )
 
-    def _Algorithm_Refresh(self) -> None:
+    def _Algorithm_Refresh(self, *, mode: ReplayMode | None = None) -> None:
         self._ParameterForm_Clear()
         for widget in (*self._parameter_labels.values(), *self._parameter_widgets.values()):
             widget.deleteLater()
         self._parameter_widgets = {}
         self._parameter_labels = {}
         self._parameter_specs = {}
-        plugin = self._CurrentPlugin_Get()
+        plugin = self._registry.Algorithm_Get(str(self.algorithm_combo.currentData()))
+        recorded_available = (
+            self._dataset is not None
+            and plugin.ConfigurationAvailability_Get(self._dataset).recorded_available
+        )
+        if mode is None:
+            mode = self._mode_preferences.get(
+                plugin.metadata.plugin_id,
+                ReplayMode.RECORDED_CONFIGURATION if recorded_available else ReplayMode.OFFLINE,
+            )
+        if mode == ReplayMode.RECORDED_CONFIGURATION and not recorded_available:
+            mode = ReplayMode.OFFLINE
+        # Choose the implementation only after the requested mode is fixed.
+        # A revision-changing mode selection must not restore the old preference.
+        selector = getattr(plugin, "PluginForDataset_Get", None)
+        plugin = selector(self._dataset, mode) if selector else plugin
         self._parameter_algorithm_version = plugin.metadata.version
         self.quality_policy_combo.blockSignals(True)
         self.quality_policy_combo.clear()
@@ -357,16 +372,6 @@ class ReplayPage(QWidget):
             for key, value in plugin.OfflineParameters_Get().items()
             if isinstance(value, (int, float, str)) and not isinstance(value, bool)
         }
-        recorded_available = (
-            self._dataset is not None
-            and plugin.ConfigurationAvailability_Get(self._dataset).recorded_available
-        )
-        mode = self._mode_preferences.get(
-            plugin.metadata.plugin_id,
-            ReplayMode.RECORDED_CONFIGURATION if recorded_available else ReplayMode.OFFLINE,
-        )
-        if mode == ReplayMode.RECORDED_CONFIGURATION and not recorded_available:
-            mode = ReplayMode.OFFLINE
         self.mode_combo.blockSignals(True)
         self.mode_combo.setCurrentIndex(max(self.mode_combo.findData(mode), 0))
         self.mode_combo.blockSignals(False)
@@ -573,7 +578,7 @@ class ReplayPage(QWidget):
     def _Mode_Refresh(self) -> None:
         if (getattr(self, "_parameter_algorithm_version", None)
                 != self._CurrentPlugin_Get().metadata.version):
-            self._Algorithm_Refresh()
+            self._Algorithm_Refresh(mode=ReplayMode(self.mode_combo.currentData()))
             return
         mode = self.mode_combo.currentData()
         what_if = mode == ReplayMode.WHAT_IF
@@ -742,11 +747,11 @@ class ReplayPage(QWidget):
             raise ValueError("project_algorithm_semantics_mismatch")
         plugin.Parameters_Resolve(self._dataset, request)
         plugin.ProcessModelRevision_Resolve(self._dataset, request, required=False)
+        self._mode_preferences[str(configuration["algorithm_id"])] = request.mode
         self.algorithm_combo.setCurrentIndex(
             self.algorithm_combo.findData(configuration["algorithm_id"])
         )
         self.mode_combo.setCurrentIndex(self.mode_combo.findData(request.mode))
-        self._mode_preferences[str(configuration["algorithm_id"])] = request.mode
         key = (str(configuration["algorithm_id"]), request.mode)
         if request.process_model_revision is not None:
             self._process_model_preferences[key] = request.process_model_revision

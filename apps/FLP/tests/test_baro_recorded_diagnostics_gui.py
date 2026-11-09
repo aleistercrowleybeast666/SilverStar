@@ -78,7 +78,7 @@ def test_measurement_only_baro_gui_and_png_have_exact_valid_points(
     )
     series, _ = _StableSeries_Adapt(
         dataset,
-        SimpleNamespace(semantics=SimpleNamespace(canonical_channels=())),
+        SimpleNamespace(semantics=SimpleNamespace(canonical_channels=(), devices={})),
     )
     parameters = dict(Kf6AlgorithmPlugin().OfflineParameters_Get())
     series.update(RecordedMeasurementChannels_Build(dataset.records, parameters))

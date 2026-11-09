@@ -85,6 +85,15 @@ def test_window_scroll_coverage_and_graphics_exclusions(application, tmp_path, m
     from silverstar_flp.plugins.registry import builtin_registry
     from silverstar_flp.ui import main_window
     from silverstar_flp.ui.plugin_manager import PluginManagerDialog
+    def graphics_owned(widget):
+        # QWidget.isAncestorOf stops at window boundaries such as QMenu;
+        # QObject ownership continues through both nested plot-control menus.
+        owner = widget.parent()
+        while owner is not None:
+            if isinstance(owner, QGraphicsView):
+                return True
+            owner = owner.parent()
+        return False
     monkeypatch.setattr(main_window, "QSettings", lambda *args: QSettings(
         str(tmp_path / "ui.ini"), QSettings.Format.IniFormat))
     window = main_window.MainWindow(builtin_registry())
@@ -99,6 +108,12 @@ def test_window_scroll_coverage_and_graphics_exclusions(application, tmp_path, m
             assert QScroller.hasScroller(area.viewport())
         for cls in (QListWidget, QTableWidget, QTreeWidget, QPlainTextEdit, QTextEdit):
             for widget in window.findChildren(cls):
+                if graphics_owned(widget):
+                    # pyqtgraph's own averaging/control menus are children of
+                    # its graphics view, not FLP page content. Its gestures
+                    # remain owned by pyqtgraph, including nested menu lists.
+                    assert not QScroller.hasScroller(widget.viewport())
+                    continue
                 assert QScroller.hasScroller(widget.viewport()), widget.objectName()
         for cls in (QPushButton, QSpinBox, QSlider, QComboBox, QGraphicsView):
             for widget in window.findChildren(cls):

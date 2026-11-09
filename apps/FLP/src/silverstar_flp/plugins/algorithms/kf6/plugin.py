@@ -964,6 +964,27 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
         )
         return identity == legacy.ParameterSchemaIdentity_Get()
 
+    def CovarianceStorageCompatible_Is(
+        self, series: TimeSeries, group: StateGroupSpec, *,
+        recorded_solution_id: str | None = None,
+    ) -> bool:
+        if super().CovarianceStorageCompatible_Is(
+            series, group, recorded_solution_id=recorded_solution_id
+        ):
+            return True
+        # Exact older decoders expose ESTIMATOR.covariance_diagonal as generic
+        # scalar storage. This audited six-state contract belongs to KF6, not
+        # the generic GUI or arbitrary replay output with matching dimensions.
+        return (recorded_solution_id == "kf6"
+                and group.covariance_channel == "kf6.covariance.diagonal"
+                and series.values.ndim == 2 and series.values.shape[1] == 6
+                and series.quantity == "dimensionless" and series.unit == "1"
+                and series.columns == ("PxE", "PxN", "PxU", "PvE", "PvN", "PvU")
+                and (group.group_id, group.unit, group.component_names,
+                     group.covariance_diagonal_indices) in (
+                    ("position", "m", ("E", "N", "U"), (0, 1, 2)),
+                    ("velocity", "m/s", ("E", "N", "U"), (3, 4, 5))))
+
     def availability(
         self, dataset: FlightDataset, input_source: str | None = None
     ) -> AlgorithmAvailability:

@@ -99,6 +99,13 @@ velocity, attitude-error, gyro-bias, or accelerometer-bias groups therefore does
 change. Standard Export consumes the same entries and writes one engineering plot per group as
 `sqrt(Pii)` in that group's physical unit; it never combines state groups with different units.
 
+`AlgorithmPlugin.CovarianceStorageCompatible_Is(series, group, recorded_solution_id=...)`
+owns GUI admission of the storage metadata. Its default accepts only a published
+`quantity="covariance", unit="mixed"` diagonal. An audited legacy interpretation
+belongs to its algorithm plugin and must validate the complete storage/source
+contract. The GUI supplies a recorded solution ID only for a recorded source;
+it does not attach that interpretation to recomputed data or mutate input series.
+
 Each `MeasurementGroupSpec` declares:
 
 - stable measurement-group ID, translated label, dimension, and component names;

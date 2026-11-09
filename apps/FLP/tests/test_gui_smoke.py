@@ -69,12 +69,16 @@ def test_runtime_diagnostics_log_version_python_package_and_export_path(
 def test_five_page_gui_and_top_bar_accept_a_parsed_dataset(
     tmp_path: Path,
     monkeypatch,
+    qtbot,
 ) -> None:
     application = QApplication.instance() or QApplication([])
     dataset = _DisplayDataset_Parse(
         AnalysisFlight_Build(tmp_path / "SYNTHETIC_gui_source.BIN")
     )
     window = MainWindow(builtin_registry())
+    qtbot.addWidget(window, before_close_func=lambda owned: owned._Project_SetDirty(False))
+    errors = []
+    monkeypatch.setattr(window, "_Error_Show", errors.append)
     window._Dataset_Set(dataset)
     _ProjectIdentity_Set(window, dataset.source_path, tmp_path)
     window.show()
@@ -82,7 +86,7 @@ def test_five_page_gui_and_top_bar_accept_a_parsed_dataset(
     assert window.pages.count() == 5
     assert window.windowTitle() == PRODUCT_NAME
     assert window.title_label.text() == "SilverStar 飞行日志解析器"
-    assert window.version_label.text() == f"v{__version__}" == "v0.1.1"
+    assert window.version_label.text() == f"v{__version__}"
     assert window.credit_label.text() == "辰星引力开发"
     assert window.project_name_label.text() == "未保存工程"
     assert window.project_name_label.toolTip() == ""
@@ -91,7 +95,7 @@ def test_five_page_gui_and_top_bar_accept_a_parsed_dataset(
     assert not hasattr(window, "timeline_slider")
     assert not hasattr(window, "attitude_page")
     assert not hasattr(window, "navigation_page")
-    assert window.flight_page.tabs.count() == 6
+    assert window.flight_page.tabs.count() == 7
     assert window.state_estimation_page.tabs.count() == 6
     for row, visible in enumerate((False, False, True, True, False)):
         window.navigation_list.setCurrentRow(row)
@@ -155,6 +159,7 @@ def test_five_page_gui_and_top_bar_accept_a_parsed_dataset(
             window.save_project_action,
         window.save_project_as_action,
         window.default_root_action,
+        window.decoder_directories_action,
         window.import_action,
         window.export_action,
         window.exit_action,
@@ -180,24 +185,40 @@ def test_five_page_gui_and_top_bar_accept_a_parsed_dataset(
         for column in range(window.plugin_manager_dialog.table.columnCount())
     }
     assert any("Pure INS" in cell for cell in plugin_cells)
-    assert any("KF_6" in cell for cell in plugin_cells)
+    assert any("KF6" in cell for cell in plugin_cells)
     assert any("SSLOG0" in cell for cell in plugin_cells)
     window.plugin_manager_dialog.reject()
     window._About_Show()
     application.processEvents()
     assert window.about_dialog.isVisible()
     assert window.about_dialog.product_label.text() == "SilverStar 飞行日志解析器"
-    assert window.about_dialog.version_label.text() == "版本 0.1.1"
+    assert window.about_dialog.version_label.text() == f"版本 {__version__}"
     assert "离线算法复算" in window.about_dialog.description_label.text()
     assert window.about_dialog.windowTitle() == "SilverStar FLP"
     window.about_dialog.reject()
+    # Display-only legacy fixtures are deliberately not exact input identities.
+    # Exercise the production save action with a real, immutable matching pair.
+    from silverstar_flp.core.project import ProjectDocument
+    from tests.synthetic_parameter_navigation import NavigationPair_Open
+    opened = NavigationPair_Open(tmp_path / "save_pair", flight_samples=21)
+    window._LogOpenResult_Set(opened, ProjectDocument())
     saved_as_path = tmp_path / "SYNTHETIC_gui_project_copy.ssflp"
     monkeypatch.setattr(
         QFileDialog,
         "getSaveFileName",
         lambda *args, **kwargs: (str(saved_as_path), "SilverStar project (*.ssflp)"),
     )
+    from PySide6.QtWidgets import QCheckBox, QDialogButtonBox
+    save_choices = []
+    def accept_save_options():
+        dialog = application.activeModalWidget()
+        save_choices.append(dialog.findChild(QCheckBox).isChecked())
+        dialog.findChild(QDialogButtonBox).button(QDialogButtonBox.StandardButton.Save).click()
+    QTimer.singleShot(0, accept_save_options)
     window.save_project_as_action.trigger()
+    qtbot.waitUntil(lambda: window._active_worker is None, timeout=30000)
+    assert save_choices == [True]
+    assert not errors
     assert saved_as_path.is_file()
     assert window._project.project_path == saved_as_path.resolve()
     assert window.project_name_label.text() == saved_as_path.stem
@@ -290,8 +311,13 @@ def test_five_page_gui_and_top_bar_accept_a_parsed_dataset(
         == Qt.ScrollBarPolicy.ScrollBarAsNeeded
     )
     window.navigation_list.setCurrentRow(1)
-    window.replay_page.algorithm_combo.setCurrentIndex(1)
-    window.replay_page.mode_combo.setCurrentIndex(1)
+    window.replay_page.algorithm_combo.setCurrentIndex(
+        window.replay_page.algorithm_combo.findData("silverstar.algorithm.kf6"))
+    from silverstar_flp.plugins.api.algorithm import ReplayMode
+    window.replay_page.mode_combo.setCurrentIndex(
+        window.replay_page.mode_combo.findData(ReplayMode.WHAT_IF))
+    window.replay_page.advanced_button.setChecked(True)
+    window.replay_page._AdvancedParameters_Set(True)
     application.processEvents()
     assert window.replay_page.scroll_area.verticalScrollBar().maximum() > 0
     assert window.overview_page.scroll_area.widgetResizable()
@@ -312,7 +338,8 @@ def test_five_page_gui_and_top_bar_accept_a_parsed_dataset(
                 assert max(rect.center().y() for rect in rectangles) - min(
                     rect.center().y() for rect in rectangles) <= 2
                 for index, rect in enumerate(rectangles):
-                    assert all(not rect.intersects(other) for other in rectangles[index + 1:])
+                    assert all(not rect.intersects(other) for other in rectangles[index + 1:]), (
+                        language, dirty, width, index, rectangles)
                 label = window.project_name_label
                 text = label.text()
                 assert text.endswith(" *") is dirty

@@ -16,7 +16,10 @@ The log input boundary has two user-managed layers:
    partitions and channels. Both documents are pure data in one checksummed ZIP.
 
 Algorithm Plugins remain a separate internal extension point for complete navigation and
-state-estimation algorithms. The built-ins are ordered Pure INS, SF6, KF_6 and ESKF_15. A decoder package describes
+state-estimation algorithms. The built-ins are ordered Pure INS, SF6, KF_6, ESKF_15,
+ESKF20 (offline), InEKF15 (Invariant, offline), and InEKF20 (Invariant, offline). The last three remain
+independent reference implementations with explicit input/configuration requirements;
+their presence does not establish MCU equivalence. A decoder package describes
 recorded data but never supplies executable algorithm behavior. Plotting, export, project
 persistence, Data Explorer, deploy replay, landing replay, and GUI code remain Core services.
 
@@ -90,6 +93,18 @@ State Estimation contains no KF6 channel IDs. It resolves the active estimator's
 covariance, innovation, NIS, measurement diagnostics, and a generic update-event table from
 `StateGroupSpec`/`MeasurementGroupSpec`. Pure INS has no estimator visualization spec. Future
 ESKF_15/24 state or sensor groups are plugin metadata changes, not page changes.
+
+Plugins own covariance storage admission through `CovarianceStorageCompatible_Is`.
+The default requires published covariance/mixed-unit metadata. The KF6 plugin alone
+admits its audited older recorded six-state storage, with exact columns, shape,
+units, group indices, and recorded solution identity; a recomputed or foreign
+source cannot acquire that legacy interpretation. The GUI never changes the source
+series to provide missing metadata.
+
+The replay mode is fixed before choosing a revision-specific plugin and building
+its form. For a historical SF6 dataset, Recorded/What-if retain revision 1 while
+explicit Offline selects revision 2. Form refresh and saved configuration restore
+must preserve the selected mode and its matching parameter schema.
 
 The GNSS horizontal consistency page and PNG export share a display-only
 revision-3 evidence model. Recorded sources use `NAV_QUALITY` evaluation times,

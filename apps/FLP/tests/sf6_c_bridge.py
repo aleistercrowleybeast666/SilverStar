@@ -62,7 +62,7 @@ def Library_Build(directory, *, revision=1):
     if not compiler:
         raise FileNotFoundError("SF6 oracle requires an actual gcc compiler")
     root = Path(__file__).resolve().parents[2]
-    payload = root / "FCCG/plugins/builtin"
+    payload = root / "SCG/plugins/builtin"
     sf6 = Path(__file__).parent / "fixtures/sf6_revision1"
     context_type = Context
     if revision == 2:

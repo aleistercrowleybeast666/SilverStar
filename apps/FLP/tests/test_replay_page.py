@@ -75,12 +75,15 @@ def test_replay_uses_fixed_corrected_imu_and_translates_every_visible_field(
     assert page.parameters_group.title() == "假设参数"
     assert page.Fidelity_Text_Get(ReplayFidelity.EXACT) == "完整复现"
     assert page.Fidelity_Text_Get(ReplayFidelity.UNAVAILABLE) == "不可复算"
-    assert len(page._parameter_labels) == 38
+    assert set(page._parameter_labels) == {
+        spec.parameter_id for spec in builtin_registry().Algorithm_Get(
+            "silverstar.algorithm.kf6").metadata.parameter_schema
+    }
     assert page._parameter_widgets["nis_soft_enabled"].value() == 1
     assert page._parameter_widgets["nis_hard_enabled"].value() == 1
     assert page.parameter_group_combo.count() == 3
     assert page.parameter_group_combo.currentText() == "初始不确定度"
-    assert page.common_parameters_form.rowCount() == 14
+    assert page.common_parameters_form.rowCount() == 16
     assert page.parameters_form.rowCount() == 6
     assert not page.advanced_button.isChecked() and not page.advanced_parameters.isVisible()
     assert page._parameter_widgets["nis_soft_enabled"].isVisible()
@@ -149,7 +152,7 @@ def test_what_if_groups_dirty_and_reset_use_recorded_configuration(
         "Consistency Gating",
         "GNSS Position Self-Check",
     ]
-    assert page.common_parameters_form.rowCount() == 14
+    assert page.common_parameters_form.rowCount() == 16
     for axis, expected in zip("enu", recorded_process, strict=True):
         assert math.isclose(
             page._parameter_widgets[f"process_accel_std_{axis}"].value(),

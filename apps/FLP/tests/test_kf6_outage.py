@@ -161,7 +161,11 @@ def test_old_project_identity_and_new_integer_parameter_are_compatible():
     from silverstar_flp.plugins.algorithms.kf6.plugin import Kf6AlgorithmPlugin
 
     plugin = Kf6AlgorithmPlugin()
-    additions = {"gnss_reacquire_outage_ms", "gnss_velocity_vertical_scale"}
+    # Reconstruct the actual pre-outage schema. Later optional timing/NIS
+    # additions did not exist in that historical identity either.
+    additions = {"gnss_reacquire_outage_ms", "gnss_velocity_vertical_scale",
+                 "nis_soft_enabled", "nis_hard_enabled", "fusion_timing_mode",
+                 "fusion_horizon_ms"}
     legacy = replace(
         plugin.metadata,
         parameter_schema=tuple(

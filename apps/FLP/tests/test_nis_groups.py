@@ -42,7 +42,7 @@ def test_recorded_group_nis_and_results_are_distinct_in_state_view(tmp_path):
     dataset = replace(dataset, records={
         **dataset.records, "GNSS_MEASUREMENT": tuple(measurements),
     })
-    package = SimpleNamespace(semantics=SimpleNamespace(canonical_channels=()))
+    package = SimpleNamespace(semantics=SimpleNamespace(canonical_channels=(), devices={}))
     series, _aliases = _StableSeries_Adapt(dataset, package)
     dataset = replace(dataset, series=series)
     assert dataset.Series_Get("kf6.recorded.nis.position_en").values.tolist() == [2., 3.]

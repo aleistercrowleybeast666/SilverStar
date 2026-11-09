@@ -94,10 +94,12 @@ def test_project_reopens_selected_what_if_identity_and_exact_time_range(qtbot, t
     qtbot.addWidget(first)
     first._LogOpenResult_Set(opened, ProjectDocument())
     plugin = registry.Algorithm_Get('silverstar.algorithm.kf6')
-    # This legacy synthetic pair has no recorded process revision. An
-    # executable What-if must choose one explicitly; preserve that rejection.
+    # A separately incomplete semantic context must still refuse numerical
+    # replay. The normal exact pair now declares its real synthetic revision.
+    unknown = NavigationPair_Open(tmp_path / 'unknown_revision', flight_samples=101,
+                                  kf6_revision=None).dataset
     with pytest.raises(ValueError, match='kf6_algorithm_revision_missing'):
-        plugin.run(opened.dataset, ReplayRequest(mode=ReplayMode.WHAT_IF,
+        plugin.run(unknown, ReplayRequest(mode=ReplayMode.WHAT_IF,
                                                 parameters={'baro_std_m':6}))
     result = Replay_Execute(plugin, opened.dataset, ReplayRequest(mode=ReplayMode.WHAT_IF,
                                                     parameters={'baro_std_m':6},

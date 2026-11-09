@@ -214,7 +214,10 @@ def test_historical_dataset_keeps_revision1_and_explicit_offline_selects_revisio
 
 
 def test_gui_and_saved_project_preserve_revision_specific_parameter_contract(tmp_path):
+    from PySide6.QtCore import Qt
+    from PySide6.QtTest import QTest
     from PySide6.QtWidgets import QApplication
+
     from silverstar_flp.core.i18n import Translator
     from silverstar_flp.core.project import ReplayConfiguration_Validate
     from silverstar_flp.plugins.registry import builtin_registry
@@ -232,8 +235,13 @@ def test_gui_and_saved_project_preserve_revision_specific_parameter_contract(tmp
     assert legacy["algorithm_version"] == "0.1.0-c-core-revision1"
     assert set(DELAY_IDS) <= set(page._parameter_widgets)
     ReplayConfiguration_Validate(legacy)
-    page.mode_combo.setCurrentIndex(page.mode_combo.findData(ReplayMode.OFFLINE))
+    # A real keyboard selection emits currentIndexChanged before activated.
+    # Rebuilding a revision-specific form must preserve that selected mode.
+    page.show()
+    page.mode_combo.setFocus()
+    QTest.keyClick(page.mode_combo, Qt.Key.Key_Up)
     app.processEvents()
+    assert page.mode_combo.currentData() == ReplayMode.OFFLINE
     current = page.Configuration_Get()
     assert current["algorithm_version"] == "0.2.0-c-core-revision2"
     assert not set(DELAY_IDS) & set(page._parameter_widgets)

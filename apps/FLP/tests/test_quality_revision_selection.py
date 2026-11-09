@@ -52,8 +52,11 @@ def test_revision3_actual_parameter_bound_and_retired_override(tmp_path):
     dataset = NavigationPair_Open(tmp_path / "input").dataset
     plugin = builtin_registry().Algorithm_Get("silverstar.algorithm.kf6")
     runtime = plugin.RuntimeParameterSchema_Get(dataset, 3)
-    assert len(runtime) == 30
-    assert len(plugin.RuntimeParameterSchema_Get(dataset, 2)) == 36
+    # The four optional NIS/timing fields remain present for both revisions.
+    assert len(runtime) == 34
+    assert len(plugin.RuntimeParameterSchema_Get(dataset, 2)) == 40
+    assert {"nis_soft_enabled", "nis_hard_enabled", "fusion_timing_mode",
+            "fusion_horizon_ms"} <= {spec.parameter_id for spec in runtime}
     with pytest.raises(ValueError, match="parameter_retired_revision3"):
         plugin._Parameters_Resolve(
             dataset,

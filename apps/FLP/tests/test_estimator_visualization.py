@@ -286,6 +286,7 @@ def _FakeResult_Create() -> AlgorithmResult:
             timestamps,
             np.tile(np.linspace(0.01, 0.15, 15), (4, 1)),
             columns=tuple(f"P{index}" for index in range(15)),
+            unit="mixed", quantity="covariance",
         ),
         "fake.covariance.upper_triangle": _Series(
             timestamps,
@@ -296,6 +297,7 @@ def _FakeResult_Create() -> AlgorithmResult:
                 ]
             ),
             columns=tuple(f"P{index}" for index in range(120)),
+            unit="mixed", quantity="covariance",
         ),
         "fake.update_result": _Series(
             timestamps,

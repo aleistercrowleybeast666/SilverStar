@@ -163,7 +163,11 @@ def test_real_start_updates_local_global_terminal(qtbot, monkeypatch, window, tm
         raise ValueError("audit_terminal_error")
     surface = window.replay_page if page == "replay" else window.export_dialog
     surface.result_label.setText(window._translator.Text_Get(f"{page}.running"))
-    window._dataset = object()
+    from silverstar_flp.core.project import ProjectDocument
+    from tests.synthetic_parameter_navigation import NavigationPair_Open
+
+    # Real replay/export admission now requires an exact opened source and resolver.
+    window._LogOpenResult_Set(NavigationPair_Open(tmp_path / "input"), ProjectDocument())
     if page == "replay":
         plugin = window._registry.Algorithm_Get("silverstar.algorithm.pure_ins")
         monkeypatch.setattr(plugin, "run", lambda dataset, request, context: work(context))
