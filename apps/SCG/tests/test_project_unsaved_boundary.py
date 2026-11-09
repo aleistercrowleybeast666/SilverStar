@@ -1,5 +1,7 @@
 """Applied configuration and private drafts survive actual close/open decisions."""
 from copy import deepcopy
+import threading
+import time
 
 import pytest
 from PySide6.QtCore import QTimer
@@ -118,3 +120,49 @@ def test_open_cancel_and_read_only_browsing_preserve_savedness(workspace_window,
     assert not window._ProjectFile_DirtyGet()
     assert window.current_project_value.text() == window._model.identity.name
     assert not errors
+
+
+def test_cancel_after_worker_shutdown_allows_next_result(workspace_window, tmp_path, qapp):
+    window, errors = workspace_window
+    _SavedProject_Open(window, tmp_path)
+    _Configuration_Change(window)
+    changed = deepcopy(window._model.Dictionary_Get())
+    window.show()
+    _Events_Flush(qapp)
+    window._MessageBox_Exec = MainWindow._MessageBox_Exec.__get__(window)
+    release = threading.Event()
+    callbacks, decisions = [], []
+    timer = QTimer(window)
+    timer.setInterval(10)
+    def Respond():
+        box = QApplication.activeModalWidget()
+        if not isinstance(box, QMessageBox):
+            return
+        answer = (QMessageBox.StandardButton.Yes if box.button(QMessageBox.StandardButton.Yes)
+            else QMessageBox.StandardButton.Cancel)
+        decisions.append(answer)
+        box.button(answer).click()
+        release.set()
+    timer.timeout.connect(Respond)
+    try:
+        assert window.Task_Run(lambda _context: (release.wait(2), 'cancelled')[1], callbacks.append)
+        timer.start()
+        assert not window.close()
+        deadline = time.monotonic() + 5
+        while (window._active_worker is not None or len(decisions) < 2) and time.monotonic() < deadline:
+            _Events_Flush(qapp)
+            time.sleep(.01)
+        assert decisions == [QMessageBox.StandardButton.Yes, QMessageBox.StandardButton.Cancel]
+        assert window.isVisible() and not window._close_after_worker
+        assert callbacks == [] and window._model.Dictionary_Get() == changed
+        assert window.Task_Run(lambda _context: 'next result', callbacks.append)
+        deadline = time.monotonic() + 5
+        while window._active_worker is not None and time.monotonic() < deadline:
+            _Events_Flush(qapp)
+            time.sleep(.01)
+        assert callbacks == ['next result'] and window.isVisible()
+        assert not errors
+    finally:
+        release.set()
+        timer.stop()
+        timer.deleteLater()

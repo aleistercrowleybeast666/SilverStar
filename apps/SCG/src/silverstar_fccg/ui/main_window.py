@@ -4511,6 +4511,9 @@ class MainWindow(HardwareEditingActions, QMainWindow):
             event.ignore()
             return
         if not self._WorkspaceDrafts_DiscardConfirm():
+            # A cancelled close may follow asynchronous worker cancellation.
+            # The window remains usable and later results must be publishable.
+            self._close_after_worker = False
             event.ignore();return
         self._close_after_worker = True
         event.accept()
