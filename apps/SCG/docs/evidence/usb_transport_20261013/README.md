@@ -13,7 +13,7 @@ Physical USB operation and deployment acceptance remain **NOT PROVEN**.
 - [index.json](index.json) binds current source, run snapshots, native inputs,
   actual retained libraries, generated files, linked images, function stack
   frames and every archived record by SHA-256.
-- [audit-records.zip](audit-records.zip) retains 177 compact records: complete
+- [audit-records.zip](https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/apps/SCG/docs/evidence/usb_transport_20261013/audit-records.zip) retains 177 compact records: complete
   top-level logs and commands, source snapshots, failure history, native backend
   command logs/receipts, configuration, emitted gate, license/version files and
   the collection script. It contains no compiled firmware or SDK tree.
@@ -106,3 +106,7 @@ Use `PYTHONDONTWRITEBYTECODE=1`, `PYTHONUTF8=1`,
 `PYTHONIOENCODING=utf8`, and the recorded GCC/ARM toolchain on PATH. The validator
 sets the child environment explicitly and never executes an imported Makefile.
 Its fresh generated outputs are separate from the user's final candidate.
+
+2026-11-10 归档位置更新：以下大文件已迁出当前工作树，历史内容及原 SHA-256 不变；可从固定提交下载，或按 [冷归档清单](https://github.com/aleistercrowleybeast666/SilverStar/blob/feature/usb-transport-0.1.3-20261013/docs/evidence/gui_convergence_20261110/cold_archive_manifest.json)恢复。
+
+- [audit-records.zip](https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/apps/SCG/docs/evidence/usb_transport_20261013/audit-records.zip)

@@ -58,3 +58,7 @@ hardware timing, navigation accuracy or flight qualification. No hardware was us
 
 The separate logger scheduling trial is outside this batch and is not committed
 or accepted through these results. No frozen release, GSHC or USB source is changed.
+
+2026-11-10 归档位置更新：以下大文件已迁出当前工作树，历史内容及原 SHA-256 不变；可从固定提交下载，或按 [冷归档清单](https://github.com/aleistercrowleybeast666/SilverStar/blob/feature/usb-transport-0.1.3-20261013/docs/evidence/gui_convergence_20261110/cold_archive_manifest.json)恢复。
+
+- [evidence.zip](https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/algorithm_memory_closeout_20261015/evidence.zip)

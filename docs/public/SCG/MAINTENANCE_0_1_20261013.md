@@ -177,3 +177,7 @@ QA, not evidence of a physical target connection or a flashed firmware update.
 ## 2026-10-17 本地维护源码合入
 
 完整命令、字段、状态机、整行背压和软件/硬件证据边界见 [维护协议 0.1 完整实现说明](../../../apps/SCG/plugins/builtin/silverstar_protocol_maintenance_serial_0_0/docs/MAINTENANCE_PROTOCOL_0_1.md)。普通源码入口为仓库根的 `python apps/GSHC/main.py`。本次未发布、未再次连接硬件；原 R04 实板结论只覆盖原精确镜像，不能移用于含当前导航/USB 源码的新生成固件。
+
+2026-11-10 归档位置更新：以下大文件已迁出当前工作树，历史内容及原 SHA-256 不变；可从固定提交下载，或按 [冷归档清单](https://github.com/aleistercrowleybeast666/SilverStar/blob/feature/usb-transport-0.1.3-20261013/docs/evidence/gui_convergence_20261110/cold_archive_manifest.json)恢复。
+
+- [evidence.zip](https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/apps/SCG/docs/evidence/maintenance_0_1_20261013/evidence.zip)

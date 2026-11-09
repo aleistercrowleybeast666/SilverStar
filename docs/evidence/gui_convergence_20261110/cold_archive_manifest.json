@@ -1,0 +1,416 @@
+{
+  "archive": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\historical-evidence.zip",
+  "archive_sha256": "258a3d0e1c2caa36d477b173c2f32514a801caec1682b3fc3e38652903f5db61",
+  "archive_bytes": 382210525,
+  "original_logical_bytes": 389657470,
+  "restored_and_verified": true,
+  "source_deleted": true,
+  "files": [
+    {
+      "path": "apps/SCG/docs/evidence/m9n_int32min_20261021_v1/validation.zip",
+      "size": 4056162,
+      "sha256": "47099c540ff4cb9628af2bbdaef09750eadc4d1c464190a1a7df2302a03380b8",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "apps/SCG/docs/evidence/m9n_int32min_20261021_v1",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\apps\\SCG\\docs\\evidence\\m9n_int32min_20261021_v1\\validation.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/apps/SCG/docs/evidence/m9n_int32min_20261021_v1/validation.zip"
+    },
+    {
+      "path": "apps/SCG/docs/evidence/maintenance_0_1_20261013/evidence.zip",
+      "size": 6718055,
+      "sha256": "fcd1f03568d6f8c70c639ad83c0c075bdec6a42fd3b828a966996065fd07afc5",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "apps/SCG/docs/evidence/maintenance_0_1_20261013",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\apps\\SCG\\docs\\evidence\\maintenance_0_1_20261013\\evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/apps/SCG/docs/evidence/maintenance_0_1_20261013/evidence.zip"
+    },
+    {
+      "path": "apps/SCG/docs/evidence/scg-freeze-contract-repair-20261010/artifacts/Flight/build/FCCG/SilverStar_F407/Release/SilverStar_0_1_2.elf",
+      "size": 3326380,
+      "sha256": "c3f97585bfcf496e63216aca20c7b091bec8960347971941eae4872f1a882d06",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "apps/SCG/docs/evidence/scg-freeze-contract-repair-20261010/artifacts/Flight/build/FCCG/SilverStar_F407/Release",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\apps\\SCG\\docs\\evidence\\scg-freeze-contract-repair-20261010\\artifacts\\Flight\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_2.elf",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/apps/SCG/docs/evidence/scg-freeze-contract-repair-20261010/artifacts/Flight/build/FCCG/SilverStar_F407/Release/SilverStar_0_1_2.elf"
+    },
+    {
+      "path": "apps/SCG/docs/evidence/scg-freeze-contract-repair-20261010/artifacts/Flight/build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.elf",
+      "size": 3326560,
+      "sha256": "e66e2249dd63ca6c0db7a19511c355cddc0ac5074873979e5f1ff0798466abd6",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "apps/SCG/docs/evidence/scg-freeze-contract-repair-20261010/artifacts/Flight/build/FCCG/SilverStar_F407/StaticAnalysis/Release",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\apps\\SCG\\docs\\evidence\\scg-freeze-contract-repair-20261010\\artifacts\\Flight\\build\\FCCG\\SilverStar_F407\\StaticAnalysis\\Release\\SilverStar_0_1_2.elf",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/apps/SCG/docs/evidence/scg-freeze-contract-repair-20261010/artifacts/Flight/build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.elf"
+    },
+    {
+      "path": "apps/SCG/docs/evidence/scg-freeze-contract-repair-20261010/baseline/artifacts/Flight/build/FCCG/SilverStar_F407/Release/SilverStar_0_1_2.elf",
+      "size": 3326404,
+      "sha256": "7d5085821c5d57826cad2488dbec2e48d10e9e3dbf4bab538f7637aefb9271ac",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "apps/SCG/docs/evidence/scg-freeze-contract-repair-20261010/baseline/artifacts/Flight/build/FCCG/SilverStar_F407/Release",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\apps\\SCG\\docs\\evidence\\scg-freeze-contract-repair-20261010\\baseline\\artifacts\\Flight\\build\\FCCG\\SilverStar_F407\\Release\\SilverStar_0_1_2.elf",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/apps/SCG/docs/evidence/scg-freeze-contract-repair-20261010/baseline/artifacts/Flight/build/FCCG/SilverStar_F407/Release/SilverStar_0_1_2.elf"
+    },
+    {
+      "path": "apps/SCG/docs/evidence/scg-freeze-contract-repair-20261010/baseline/artifacts/Flight/build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.elf",
+      "size": 3326584,
+      "sha256": "5e58675aa8f9dfc5ba5f2c784fd8d31c734129da40583c2dcea6401f172d64c2",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "apps/SCG/docs/evidence/scg-freeze-contract-repair-20261010/baseline/artifacts/Flight/build/FCCG/SilverStar_F407/StaticAnalysis/Release",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\apps\\SCG\\docs\\evidence\\scg-freeze-contract-repair-20261010\\baseline\\artifacts\\Flight\\build\\FCCG\\SilverStar_F407\\StaticAnalysis\\Release\\SilverStar_0_1_2.elf",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/apps/SCG/docs/evidence/scg-freeze-contract-repair-20261010/baseline/artifacts/Flight/build/FCCG/SilverStar_F407/StaticAnalysis/Release/SilverStar_0_1_2.elf"
+    },
+    {
+      "path": "apps/SCG/docs/evidence/uart_maintenance_20261013/evidence.zip",
+      "size": 5808577,
+      "sha256": "c2095535ba5de47bc59f89ed7b309008728887f1546ee33a4a3f132e33f1c85a",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "apps/SCG/docs/evidence/uart_maintenance_20261013",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\apps\\SCG\\docs\\evidence\\uart_maintenance_20261013\\evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/apps/SCG/docs/evidence/uart_maintenance_20261013/evidence.zip"
+    },
+    {
+      "path": "apps/SCG/docs/evidence/usb_transport_20261013/audit-records.zip",
+      "size": 1144942,
+      "sha256": "80e7cc429a839ce97547bccd72af1150a064da79afc3f6afe303d09d3e570f61",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "apps/SCG/docs/evidence/usb_transport_20261013",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\apps\\SCG\\docs\\evidence\\usb_transport_20261013\\audit-records.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/apps/SCG/docs/evidence/usb_transport_20261013/audit-records.zip"
+    },
+    {
+      "path": "docs/FCCG/FIELD_INTEGRATION_20261002/upstream_SS_RadioHandshake_2_rf2g_Evidence.zip",
+      "size": 3454633,
+      "sha256": "b86df613996acf3ebba49b8b2d81874935bbef4c8985ed1b788c51297442cb58",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/FIELD_INTEGRATION_20261002",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\FIELD_INTEGRATION_20261002\\upstream_SS_RadioHandshake_2_rf2g_Evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/FIELD_INTEGRATION_20261002/upstream_SS_RadioHandshake_2_rf2g_Evidence.zip"
+    },
+    {
+      "path": "docs/FCCG/auto_memory_layout_20261002/checkpoint_resume/completed_artifacts.zip",
+      "size": 8920496,
+      "sha256": "43188d812ea599f78a68c2fa39a1947a864cfb6c96cda5e0bd89e919c907d7f6",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/auto_memory_layout_20261002/checkpoint_resume",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\auto_memory_layout_20261002\\checkpoint_resume\\completed_artifacts.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/auto_memory_layout_20261002/checkpoint_resume/completed_artifacts.zip"
+    },
+    {
+      "path": "docs/FCCG/auto_memory_layout_20261002/checkpoint_resume2/completed_artifacts.zip",
+      "size": 19278256,
+      "sha256": "c827e819a9777e9a52801ea52e8d2dccf7e4f49d9b28d999a2dbf863be55003a",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/auto_memory_layout_20261002/checkpoint_resume2",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\auto_memory_layout_20261002\\checkpoint_resume2\\completed_artifacts.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/auto_memory_layout_20261002/checkpoint_resume2/completed_artifacts.zip"
+    },
+    {
+      "path": "docs/FCCG/auto_memory_layout_20261002/final_evidence/sources_artifacts_logs.zip",
+      "size": 73043447,
+      "sha256": "604831464443126e1ddd5a43d5329d7b0e842e80938b8187ef9dac4de44d3600",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/auto_memory_layout_20261002/final_evidence",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\auto_memory_layout_20261002\\final_evidence\\sources_artifacts_logs.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/auto_memory_layout_20261002/final_evidence/sources_artifacts_logs.zip"
+    },
+    {
+      "path": "docs/FCCG/auto_memory_layout_20261002/integrated_v2/sources_artifacts.zip",
+      "size": 36568340,
+      "sha256": "fe17be7c52b5cbdbbe4ff57a4aeeb8a067e59c450bf364415ce5dd1db1165b63",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/auto_memory_layout_20261002/integrated_v2",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\auto_memory_layout_20261002\\integrated_v2\\sources_artifacts.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/auto_memory_layout_20261002/integrated_v2/sources_artifacts.zip"
+    },
+    {
+      "path": "docs/FCCG/gui_userflow_20261002/final_v1/evidence.zip",
+      "size": 6938970,
+      "sha256": "d4a060f5567e944e0e38fca52c0c4c072146028e35f2e023e93e59720695867c",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/gui_userflow_20261002/final_v1",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\gui_userflow_20261002\\final_v1\\evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/gui_userflow_20261002/final_v1/evidence.zip"
+    },
+    {
+      "path": "docs/FCCG/gui_userflow_20261002/final_v1/evidence_final.zip",
+      "size": 7016712,
+      "sha256": "114e15fb07fa2b6ee84c204fd53b0f670201dd396aa8906c3c769006cef45a58",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/gui_userflow_20261002/final_v1",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\gui_userflow_20261002\\final_v1\\evidence_final.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/gui_userflow_20261002/final_v1/evidence_final.zip"
+    },
+    {
+      "path": "docs/FCCG/platform/evidence/SF6_MPU_B_config_intent/mpu_b_config_intent_checkpoint.zip",
+      "size": 3192141,
+      "sha256": "b3700b10899ad56d058757bc6d1f532fc32659cd0fdac4d0d22b65c52123919d",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/platform/evidence/SF6_MPU_B_config_intent",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\platform\\evidence\\SF6_MPU_B_config_intent\\mpu_b_config_intent_checkpoint.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/platform/evidence/SF6_MPU_B_config_intent/mpu_b_config_intent_checkpoint.zip"
+    },
+    {
+      "path": "docs/FCCG/platform/evidence/SF6_RET6_fixture_closure/fixture_closure_evidence.zip",
+      "size": 6261223,
+      "sha256": "26d01f56540e3416afe58f04e73738e6310144b3768b7902f1b383f2b4b6b74e",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/platform/evidence/SF6_RET6_fixture_closure",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\platform\\evidence\\SF6_RET6_fixture_closure\\fixture_closure_evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/platform/evidence/SF6_RET6_fixture_closure/fixture_closure_evidence.zip"
+    },
+    {
+      "path": "docs/FCCG/platform/evidence/SF6_RET6_i2c_deadline/i2c_deadline_evidence.zip",
+      "size": 6534173,
+      "sha256": "65ddfc77d91b1f072f8fbd448723cd38bfa1ea11098925d3552f379073308a19",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/platform/evidence/SF6_RET6_i2c_deadline",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\platform\\evidence\\SF6_RET6_i2c_deadline\\i2c_deadline_evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/platform/evidence/SF6_RET6_i2c_deadline/i2c_deadline_evidence.zip"
+    },
+    {
+      "path": "docs/FCCG/platform/evidence/SF6_RET6_logging_profile/logging_profile_evidence.zip",
+      "size": 16305316,
+      "sha256": "f775b122b37af353e6071c82bbd379ca12adc15cddd45562fdf15c975f6374d6",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/platform/evidence/SF6_RET6_logging_profile",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\platform\\evidence\\SF6_RET6_logging_profile\\logging_profile_evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/platform/evidence/SF6_RET6_logging_profile/logging_profile_evidence.zip"
+    },
+    {
+      "path": "docs/FCCG/platform/evidence/SF6_RET6_mpu_build_mode_contract/mpu_build_mode_contract_increment.zip",
+      "size": 3766890,
+      "sha256": "2aebcc93400407ab2d35b09f9c129695df83c7c2f22fd0a1d772caa0798fd297",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/platform/evidence/SF6_RET6_mpu_build_mode_contract",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\platform\\evidence\\SF6_RET6_mpu_build_mode_contract\\mpu_build_mode_contract_increment.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/platform/evidence/SF6_RET6_mpu_build_mode_contract/mpu_build_mode_contract_increment.zip"
+    },
+    {
+      "path": "docs/FCCG/platform/evidence/SF6_RET6_mpu_recovery_prototype/mpu_recovery_prototype_evidence.zip",
+      "size": 3358075,
+      "sha256": "cdb193b5e292ec0a1d8247f302f75d9308bf7a002cbc52378294a801df7ecd24",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/platform/evidence/SF6_RET6_mpu_recovery_prototype",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\platform\\evidence\\SF6_RET6_mpu_recovery_prototype\\mpu_recovery_prototype_evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/platform/evidence/SF6_RET6_mpu_recovery_prototype/mpu_recovery_prototype_evidence.zip"
+    },
+    {
+      "path": "docs/FCCG/platform/evidence/SF6_RET6_mpu_recovery_stage_a/mpu_recovery_stage_a_evidence.zip",
+      "size": 3824338,
+      "sha256": "f19dd88885b024ed9bcba75ccf1165eb43e3671dbbcace859ddc6f034e6c31ef",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/platform/evidence/SF6_RET6_mpu_recovery_stage_a",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\platform\\evidence\\SF6_RET6_mpu_recovery_stage_a\\mpu_recovery_stage_a_evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/platform/evidence/SF6_RET6_mpu_recovery_stage_a/mpu_recovery_stage_a_evidence.zip"
+    },
+    {
+      "path": "docs/FCCG/platform/evidence/SF6_RET6_phase3/phase3_complete_evidence.zip",
+      "size": 4214786,
+      "sha256": "9f22f4f8c4e21b333a40ac9a2ef6968dc195b44e212ec468b51b3c14da114cff",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/platform/evidence/SF6_RET6_phase3",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\platform\\evidence\\SF6_RET6_phase3\\phase3_complete_evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/platform/evidence/SF6_RET6_phase3/phase3_complete_evidence.zip"
+    },
+    {
+      "path": "docs/FCCG/platform/evidence/SF6_RET6_sdio_clock/sdio_clock_evidence.zip",
+      "size": 2994111,
+      "sha256": "cc55286e7fb6851c862a6952293aa504d9b8e7567fc09dbb5d71d95ee6f3dc7a",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/platform/evidence/SF6_RET6_sdio_clock",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\platform\\evidence\\SF6_RET6_sdio_clock\\sdio_clock_evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/platform/evidence/SF6_RET6_sdio_clock/sdio_clock_evidence.zip"
+    },
+    {
+      "path": "docs/FCCG/platform/evidence/SF6_RET6_software_fix/software_fix_evidence.zip",
+      "size": 8157180,
+      "sha256": "2e9d06c3b1527f5b653755a2db7142a8a491a638edc3dbbbd7ea56b087e83dc7",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/platform/evidence/SF6_RET6_software_fix",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\platform\\evidence\\SF6_RET6_software_fix\\software_fix_evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/platform/evidence/SF6_RET6_software_fix/software_fix_evidence.zip"
+    },
+    {
+      "path": "docs/FCCG/platform/evidence/SF6_RFT6_compile_baseline/rft6_compile_checkpoint.zip",
+      "size": 4026420,
+      "sha256": "5f626aab26474cf64142e2173d043951ac3723ad1bd9d85e3c7463764aa4e414",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/platform/evidence/SF6_RFT6_compile_baseline",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\platform\\evidence\\SF6_RFT6_compile_baseline\\rft6_compile_checkpoint.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/platform/evidence/SF6_RFT6_compile_baseline/rft6_compile_checkpoint.zip"
+    },
+    {
+      "path": "docs/FCCG/sf6_stage3_20261002/FinalSingleEvidence_v8/KF6_Delay10.zip",
+      "size": 4754267,
+      "sha256": "ca0d945e5cbc65750c77f5b63621d0431c6782147bafc184db837e15b8e8a9f2",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/sf6_stage3_20261002/FinalSingleEvidence_v8",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\sf6_stage3_20261002\\FinalSingleEvidence_v8\\KF6_Delay10.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/sf6_stage3_20261002/FinalSingleEvidence_v8/KF6_Delay10.zip"
+    },
+    {
+      "path": "docs/FCCG/sf6_stage3_20261002/FinalSingleEvidence_v8/SF6_Delay10.zip",
+      "size": 4611504,
+      "sha256": "fc088fdc17678020b4a53091f436965bc58e1c76bad804f7c23c4e0d89262dee",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/FCCG/sf6_stage3_20261002/FinalSingleEvidence_v8",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\FCCG\\sf6_stage3_20261002\\FinalSingleEvidence_v8\\SF6_Delay10.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/sf6_stage3_20261002/FinalSingleEvidence_v8/SF6_Delay10.zip"
+    },
+    {
+      "path": "docs/evidence/algorithm_memory_closeout_20261015/evidence.zip",
+      "size": 6296074,
+      "sha256": "a4adb365548d317e55d6d013a19d7689fe9033ca21d56a55c06a40c798d30138",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/evidence/algorithm_memory_closeout_20261015",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\evidence\\algorithm_memory_closeout_20261015\\evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/algorithm_memory_closeout_20261015/evidence.zip"
+    },
+    {
+      "path": "docs/evidence/algorithm_timing_closeout_20261015/evidence.zip",
+      "size": 21149532,
+      "sha256": "a9f1a25eff0ee2d7fa67ae4ae7cf6f8ae93eb95de4be330205da632f43f4c3df",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/evidence/algorithm_timing_closeout_20261015",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\evidence\\algorithm_timing_closeout_20261015\\evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/algorithm_timing_closeout_20261015/evidence.zip"
+    },
+    {
+      "path": "docs/evidence/eskf15_covariance_scale_20261015/evidence.zip",
+      "size": 2300230,
+      "sha256": "bfdbd39bdfabbb0843e9428c227458274326ee50377b34aafeb0df5a6e481f91",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/evidence/eskf15_covariance_scale_20261015",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\evidence\\eskf15_covariance_scale_20261015\\evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/eskf15_covariance_scale_20261015/evidence.zip"
+    },
+    {
+      "path": "docs/evidence/flp_export_boundary_20261016/evidence.zip",
+      "size": 2044242,
+      "sha256": "01b70f2d1c44ab0a4fcb10ba7e9c9e0d5e18ea144fdf003ab37bb01515488209",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/evidence/flp_export_boundary_20261016",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\evidence\\flp_export_boundary_20261016\\evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/flp_export_boundary_20261016/evidence.zip"
+    },
+    {
+      "path": "docs/evidence/flp_regressions_20261016/execution.zip",
+      "size": 1455858,
+      "sha256": "e3a73f4550ac13c04c5b65197f7893385017be5d917dc4902ae5eb3da2aeb4c1",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/evidence/flp_regressions_20261016",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\evidence\\flp_regressions_20261016\\execution.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/flp_regressions_20261016/execution.zip"
+    },
+    {
+      "path": "docs/evidence/fusion_horizon_development_20261016/evidence.zip",
+      "size": 3519579,
+      "sha256": "3b12e336729d8be78d5d42fe1768e9c117a9bb9337c1bb75b304ac2e1dd619a6",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/evidence/fusion_horizon_development_20261016",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\evidence\\fusion_horizon_development_20261016\\evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/fusion_horizon_development_20261016/evidence.zip"
+    },
+    {
+      "path": "docs/evidence/gui_followup_0_1_2_20261008/evidence.zip",
+      "size": 2664145,
+      "sha256": "074d864f6f5b5c07c139af73d99260accfec270d375fb60794d04e0759f0c550",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/evidence/gui_followup_0_1_2_20261008",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\evidence\\gui_followup_0_1_2_20261008\\evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/gui_followup_0_1_2_20261008/evidence.zip"
+    },
+    {
+      "path": "docs/evidence/native_usb_workflow_20261015/evidence.zip",
+      "size": 5884598,
+      "sha256": "e56970d3112424d4f5ef40e8e69f11fa302a4a706002e873c37f53f69c307061",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/evidence/native_usb_workflow_20261015",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\evidence\\native_usb_workflow_20261015\\evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/native_usb_workflow_20261015/evidence.zip"
+    },
+    {
+      "path": "docs/evidence/navigation_horizon_stack_binding_20261016/inputs.zip",
+      "size": 1296556,
+      "sha256": "1d8193013da0cee1738922e269b18af5e0a813da2c5791afc1f8386c833dc9b5",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/evidence/navigation_horizon_stack_binding_20261016",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\evidence\\navigation_horizon_stack_binding_20261016\\inputs.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/navigation_horizon_stack_binding_20261016/inputs.zip"
+    },
+    {
+      "path": "docs/evidence/navigation_horizon_stack_binding_20261016/inputs_unique.zip",
+      "size": 1295553,
+      "sha256": "b4113c1ba2d2eafa3140762bfdf27202cfbf4a722e191cbb3e092941ac1620ba",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/evidence/navigation_horizon_stack_binding_20261016",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\evidence\\navigation_horizon_stack_binding_20261016\\inputs_unique.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/navigation_horizon_stack_binding_20261016/inputs_unique.zip"
+    },
+    {
+      "path": "docs/evidence/navigation_horizon_stack_binding_20261016/validation.zip",
+      "size": 2591328,
+      "sha256": "7ab9350b967b59e0e530942fe7a11ca4f6c32e5a93b46617d0436616e64fd5fd",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/evidence/navigation_horizon_stack_binding_20261016",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\evidence\\navigation_horizon_stack_binding_20261016\\validation.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/navigation_horizon_stack_binding_20261016/validation.zip"
+    },
+    {
+      "path": "docs/evidence/navigation_performance_20261015/navigation_performance_evidence_20261015.zip",
+      "size": 1124904,
+      "sha256": "848f478e4232f18687e22d197cb39f7187691a08db0934d2e739964e2bc3a4f7",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/evidence/navigation_performance_20261015",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\evidence\\navigation_performance_20261015\\navigation_performance_evidence_20261015.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/navigation_performance_20261015/navigation_performance_evidence_20261015.zip"
+    },
+    {
+      "path": "docs/evidence/navigation_receipt_default_off_20261016/inputs.zip",
+      "size": 2954525,
+      "sha256": "e2037546f63d54487838b4695a3a126918709c19986d87a4ed9101e796cd8e84",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/evidence/navigation_receipt_default_off_20261016",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\evidence\\navigation_receipt_default_off_20261016\\inputs.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/navigation_receipt_default_off_20261016/inputs.zip"
+    },
+    {
+      "path": "docs/evidence/navigation_receipt_default_off_20261016/validation.zip",
+      "size": 60353962,
+      "sha256": "6102c5e2ff70f43ddfe2ea23bc0d088865eba29704e2563112bcd6c957fbe422",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/evidence/navigation_receipt_default_off_20261016",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\evidence\\navigation_receipt_default_off_20261016\\validation.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/navigation_receipt_default_off_20261016/validation.zip"
+    },
+    {
+      "path": "docs/evidence/nis_probability_20261014/evidence.zip",
+      "size": 14247929,
+      "sha256": "461d1cebac68982cf6f56876ddb9f0e5f1fcaf4f92def3ca689dcefc2381730a",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/evidence/nis_probability_20261014",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\evidence\\nis_probability_20261014\\evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/nis_probability_20261014/evidence.zip"
+    },
+    {
+      "path": "docs/evidence/target_elf_20261014/evidence.zip",
+      "size": 2223513,
+      "sha256": "bcad3afccbebe9bfd87297d97c1c11540d90719ee331da04a83b15cbcdcf2ea3",
+      "containing_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+      "configuration_scope": "docs/evidence/target_elf_20261014",
+      "restore_location": "D:\\SilverStar_Archive\\20261110\\cold-evidence\\restored\\docs\\evidence\\target_elf_20261014\\evidence.zip",
+      "public_source": "https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/target_elf_20261014/evidence.zip"
+    }
+  ],
+  "scope": "Cold historical evidence only; exact original reports and failures remain unchanged. Public fixed-commit references retain original access.",
+  "deletion_receipt": {
+    "time": "2026-11-10T03:21:32.6859971+08:00",
+    "count": 44,
+    "logical_bytes": 389657470,
+    "d_free_before": 30242631680,
+    "d_free_after": 30632288256,
+    "interval_free_delta": 389656576,
+    "physical_note": "Drive free-space interval only; concurrent builds and archives prevent exclusive attribution."
+  }
+}

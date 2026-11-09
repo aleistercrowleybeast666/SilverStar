@@ -17,3 +17,7 @@ Critical-contract and whole-program stack acceptance remain NOT PROVEN. No ports
 probes, hardware, FINAL/UNDERLINE projects, frozen releases, push or tags were used
 or changed. USB expansion remains deferred. No cleanup is authorized by this
 inventory. See [the review record](../../../../../docs/public/SCG/MAINTENANCE_0_1_20261013.md).
+
+2026-11-10 归档位置更新：以下大文件已迁出当前工作树，历史内容及原 SHA-256 不变；可从固定提交下载，或按 [冷归档清单](https://github.com/aleistercrowleybeast666/SilverStar/blob/feature/usb-transport-0.1.3-20261013/docs/evidence/gui_convergence_20261110/cold_archive_manifest.json)恢复。
+
+- [evidence.zip](https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/apps/SCG/docs/evidence/maintenance_0_1_20261013/evidence.zip)

@@ -66,3 +66,8 @@ Workflow v1 字段夹具错误；v2 自有长等待停止；v3 timed faulthandle
 `preservation.json` 重新核对冻结 Single 的 ZIP/ELF/BIN/HEX/MAP 全部未变；Auto 八个工程的归档内 C/H/S/LD（522 或 528 个/工程）逐文件与冻结目录一致。此范围不同于原先“609 个全部来源文件”，这里没有声称其余扩展名本轮也逐文件检查。main 未变。原始冻结 Delay10 硬件候选及 Auto 生成目录均未写。
 
 硬件超时、无线迟到 ACK/Capability、GNSS 无接收、完整关键契约审查、真实 Windows 桌面鼠标/3D、STM32 栈余量/WCET、飞行精度与资格验证均仍未由此切片证明。父线程正在处理真实无线原始包，后续由其证据决定修复；本轮没有增加无线超时或集成未审 Baro。
+
+2026-11-10 归档位置更新：以下大文件已迁出当前工作树，历史内容及原 SHA-256 不变；可从固定提交下载，或按 [冷归档清单](https://github.com/aleistercrowleybeast666/SilverStar/blob/feature/usb-transport-0.1.3-20261013/docs/evidence/gui_convergence_20261110/cold_archive_manifest.json)恢复。
+
+- [evidence.zip](https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/gui_userflow_20261002/final_v1/evidence.zip)
+- [evidence_final.zip](https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/FCCG/gui_userflow_20261002/final_v1/evidence_final.zip)

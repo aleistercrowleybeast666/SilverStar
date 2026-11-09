@@ -38,3 +38,7 @@ All failed authoring/build/test attempts and completed skip details remain in th
 Guide: docs/public/SCG/NIS_PROBABILITY_0_1_3.md. Primary numerical contract: contracts/nis_probability_v1.json. Evidence archive includes complete available command/result logs, versions, configurations, source snapshots/patch, exact before/after traces, interface matrix, screenshots, generated numeric headers, ELF/map/descriptor hashes and inventories. Large task-owned generated outputs remain in .work/dev013_nis01 and apps/SCG/.work/dev013_nis01; no cleanup was performed/authorized.
 
 Frozen v0.1.2 tag object942f20ef64df3cb1aa65be7349361c409418aa0f/commitc31c13cc0686a56a3184d4f207fd3816c5d39696 and the three pre-existing user lists are reverified unchanged. Source logs/decoder archives/source fixtures/formal prior evidence were not removed or rewritten. Manual critical-contract acceptance and historical regression gaps remain open. A software gate pass does not claim complete compliance or board/flight qualification.
+
+2026-11-10 归档位置更新：以下大文件已迁出当前工作树，历史内容及原 SHA-256 不变；可从固定提交下载，或按 [冷归档清单](https://github.com/aleistercrowleybeast666/SilverStar/blob/feature/usb-transport-0.1.3-20261013/docs/evidence/gui_convergence_20261110/cold_archive_manifest.json)恢复。
+
+- [evidence.zip](https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/nis_probability_20261014/evidence.zip)

@@ -12,7 +12,7 @@
 ## 可复核的执行结果
 
 每次实际执行的命令、工作目录、UTC 时间、退出码及完整 stdout/stderr 位于
-[evidence.zip](evidence.zip) 的 `task/<attempt>.json/.log`。不将下面不同范围拼成未执行的全仓库通过。
+[evidence.zip](https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/target_elf_20261014/evidence.zip) 的 `task/<attempt>.json/.log`。不将下面不同范围拼成未执行的全仓库通过。
 
 | 尝试 | 范围 | 结果 |
 |---|---|---|
@@ -109,3 +109,7 @@ v0.1.2 tag 对象保持 `942f20ef64df3cb1aa65be7349361c409418aa0f`，
 
 ST-Link/OpenOCD 最小后续阶段见操作文档；两独立项目仅只读调查，来源文件哈希保存在本轮
 `migration_survey.json`，不混入此 ELF 提交。没有真实 ST-Link 验证，没有迁移后构建宣称。
+
+2026-11-10 归档位置更新：以下大文件已迁出当前工作树，历史内容及原 SHA-256 不变；可从固定提交下载，或按 [冷归档清单](https://github.com/aleistercrowleybeast666/SilverStar/blob/feature/usb-transport-0.1.3-20261013/docs/evidence/gui_convergence_20261110/cold_archive_manifest.json)恢复。
+
+- [evidence.zip](https://github.com/aleistercrowleybeast666/SilverStar/blob/e143188dbad9ca0a70dfdc27f52b4226a370cfe8/docs/evidence/target_elf_20261014/evidence.zip)
