@@ -247,6 +247,8 @@ class MainWindow(HardwareEditingActions, QMainWindow):
         self._progress_hide_timer.timeout.connect(self._Progress_CompletionHide)
         self._component_views: tuple[ComponentView, ...] = ()
         self._model: ProjectModel = self._service.ProjectDraft_Create("SilverStar")
+        # File persistence is independent of generation readiness and editor drafts.
+        self._saved_model_snapshot = deepcopy(self._model.Dictionary_Get())
         self._project_root: Path | None = None
         self._legacy_source_bytes: bytes | None = None
         self._generation_plan: GenerationPlan | None = None
@@ -2350,23 +2352,41 @@ class MainWindow(HardwareEditingActions, QMainWindow):
             except (OSError, ValueError) as error:
                 self._Error_Show(error)
 
+    def _ProjectFile_DirtyGet(self, model: ProjectModel | None = None) -> bool:
+        return (model or self._model).Dictionary_Get() != self._saved_model_snapshot
+
+    def _WorkspaceDrafts_PendingGet(self) -> bool:
+        editor = self.workflow_page.stage_panel.condition_editor
+        try:
+            functions_pending = self.workflow_page.PendingFunctions_Collect() is not None
+        except (TypeError, ValueError):
+            functions_pending = True  # Invalid text is still a private draft.
+        return bool((editor is not None and editor._dirty) or functions_pending
+            or self._mission_process_pending or self._pending_functions is not None
+            or self._pending_strategy_changes or self._pending_mode_changes
+            or self._pending_mode_parameter_changes or self._pending_logging_streams is not None
+            or self.algorithm_parameters_page.alignment_editor.draft_dirty)
+
     def _WorkspaceDrafts_DiscardConfirm(self):
-        editor=self.workflow_page.stage_panel.condition_editor
-        dirty=(editor is not None and editor._dirty) or self.workflow_page.PendingFunctions_Collect() is not None
-        if not dirty and not self._mission_process_pending and self._pending_functions is None:return True
+        if not self._WorkspaceDrafts_PendingGet() and not self._ProjectFile_DirtyGet():
+            return True
         answer=self._MessageBox_Exec(QMessageBox.Icon.Question,PRODUCT_NAME,
-            self._translator.Text_Get('workflow.pending_context'),
+            self._translator.Text_Get('project.unsaved_confirm'),
             QMessageBox.StandardButton.Save | QMessageBox.StandardButton.Discard | QMessageBox.StandardButton.Cancel,
             QMessageBox.StandardButton.Cancel)
-        if answer==QMessageBox.StandardButton.Cancel:return False
+        if answer not in (QMessageBox.StandardButton.Save, QMessageBox.StandardButton.Discard):
+            return False
         if answer==QMessageBox.StandardButton.Save:
             self._Project_Save()
-            if self._project_root is None:return False
+            if (self._project_root is None or self._ProjectFile_DirtyGet()
+                    or self._WorkspaceDrafts_PendingGet()):
+                return False
             try:
                 saved=self._service.Project_Open(self._project_root)
                 if saved.Dictionary_Get()!=self._model.Dictionary_Get():return False
             except Exception:return False
         self._EditQueues_Clear()
+        self.algorithm_parameters_page.alignment_editor.Draft_Discard()
         self._Project_Refresh()
         return True
 
@@ -2395,6 +2415,7 @@ class MainWindow(HardwareEditingActions, QMainWindow):
         self._EditQueues_Clear()
         self.algorithm_parameters_page.alignment_editor.Draft_Discard()
         self._model = model
+        self._saved_model_snapshot = deepcopy(model.Dictionary_Get())
         self._logging_transport_choice = None
         self._logging_transport_streams = None
         self._project_root = project_root
@@ -2435,6 +2456,7 @@ class MainWindow(HardwareEditingActions, QMainWindow):
             self._EditQueues_Clear()
             self.algorithm_parameters_page.alignment_editor.Draft_Discard()
             self._model = reconciled
+            self._saved_model_snapshot = deepcopy(loaded.Dictionary_Get())
             self._logging_transport_choice = None
             self._logging_transport_streams = None
             self._legacy_source_bytes = source_bytes
@@ -2559,6 +2581,7 @@ class MainWindow(HardwareEditingActions, QMainWindow):
         except Exception as error:
             self._Error_Show(error)
             return
+        self._saved_model_snapshot = deepcopy(self._model.Dictionary_Get())
         self._project_state = ProjectLifecycleState.DIRTY
         self._Project_Refresh()
         self.status_label.setText(self._translator.Text_Get(
@@ -2567,6 +2590,8 @@ class MainWindow(HardwareEditingActions, QMainWindow):
 
     def _Project_Save_Complete(self, result: ApplyResult) -> None:
         self._project_root = result.project_root
+        self._saved_model_snapshot = deepcopy(
+            self._service.Project_Open(result.project_root).Dictionary_Get())
         self._project_state = ProjectLifecycleState.READY
         self._generation_plan = None
         self.status_label.setText(
@@ -2609,6 +2634,7 @@ class MainWindow(HardwareEditingActions, QMainWindow):
 
     def _Project_SaveAs_Complete(self, destination: Path) -> None:
         self._project_root = destination
+        self._saved_model_snapshot = deepcopy(self._model.Dictionary_Get())
         self._project_state = ProjectLifecycleState.DRAFT
         self._generation_plan = None
         self._Project_Refresh()
@@ -2899,9 +2925,13 @@ class MainWindow(HardwareEditingActions, QMainWindow):
         except Exception as error:
             self._Error_Show(error)
             return
+        self._saved_model_snapshot = deepcopy(model.Dictionary_Get())
+        self._HeaderProject_Refresh()
 
         def generated(result) -> None:
             self._model.log_decoder_profile = model.log_decoder_profile
+            # The worker persisted its own fixed model; never mark newer edits saved.
+            self._saved_model_snapshot = deepcopy(model.Dictionary_Get())
             self._Project_Refresh()
             self.status_label.setText(
                 self._translator.Text_Get("status.targets_generated")
@@ -4268,7 +4298,10 @@ class MainWindow(HardwareEditingActions, QMainWindow):
     def _HeaderProject_Refresh(self, model: ProjectModel | None = None) -> None:
         displayed_model = model or self._model
         path = str(self._project_root) if self._project_root is not None else "—"
-        self.current_project_value.setText(displayed_model.identity.name)
+        unsaved = self._ProjectFile_DirtyGet(displayed_model)
+        file_status = self._translator.Text_Get('project.file_unsaved' if unsaved else 'project.file_saved')
+        self.current_project_value.setText(displayed_model.identity.name + (' · ' + file_status if unsaved else ''))
+        self.setWindowTitle(PRODUCT_NAME + (' *' if unsaved else ''))
         self.current_project_value.setToolTip(
             self._translator.Text_Get(
                 "project.state_tooltip",
@@ -4276,7 +4309,7 @@ class MainWindow(HardwareEditingActions, QMainWindow):
                 state=self._translator.Text_Get(
                     f"project.state.{self._project_state.value}"
                 ),
-            )
+            ) + '\n' + file_status
         )
 
     def _Language_Selected(self) -> None:
