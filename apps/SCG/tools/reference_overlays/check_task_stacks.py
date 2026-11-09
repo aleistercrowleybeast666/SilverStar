@@ -2,8 +2,8 @@
 
 No LTO is used by the generated Make project. Inline frames are already in .su.
 All direct calls and cross-function branches are conservatively nested, including
-tail calls (overestimates). Linked library frames without .su use the sum of all
-constant stack decrements/pushes in disassembly, also an overestimate. Unknown
+tail calls (overestimates). Linked library frames without .su use a bounded
+machine-code stack/control-flow analysis. Unknown
 indirect calls, dynamic frames, recursion and unaccounted SP writes fail closed.
 This is a worst-known static budget, not a hardware high-water measurement.
 """
@@ -11,10 +11,22 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import re
 import subprocess
 from pathlib import Path
+
+_arm_spec = importlib.util.spec_from_file_location("silverstar_stack_arm", Path(__file__).with_name("stack_arm.py"))
+_arm = importlib.util.module_from_spec(_arm_spec)
+_arm_spec.loader.exec_module(_arm)
+_review_spec = importlib.util.spec_from_file_location("silverstar_stack_review", Path(__file__).with_name("stack_review.py"))
+_review = importlib.util.module_from_spec(_review_spec)
+_review_spec.loader.exec_module(_review)
+_runtime_spec = importlib.util.spec_from_file_location("silverstar_stack_runtime", Path(__file__).with_name("stack_runtime.py"))
+_runtime = importlib.util.module_from_spec(_runtime_spec)
+_runtime_spec.loader.exec_module(_runtime)
+SOFTWARE_REVIEW_SHA256 = "bf1b7cd9606b57ed4b14e6d7a71607d5869221d70c50e923cf4ab5fe76ad3872"
 
 TASKS = {
     "Device": ("AppTask_Device", "s_device_stack"),
@@ -44,8 +56,12 @@ MIN_MARGIN_BYTES = 256
 
 
 def Command_Read(command: list[str], root: Path) -> str:
-    return subprocess.run(command, cwd=root, check=True, capture_output=True,
-                          text=True, encoding="utf-8", errors="strict").stdout
+    output = subprocess.run(command, cwd=root, check=True, capture_output=True).stdout
+    # readelf emits DW_AT_const_value byte arrays verbatim, even when those
+    # bytes are not UTF-8. Preserve each byte for the ASCII DIE/ABI parser;
+    # replacement/ignored bytes would conceal a malformed proof input.
+    dwarf = Path(command[0]).stem.endswith('readelf') and '--debug-dump=info' in command
+    return output.decode('latin1' if dwarf else 'utf-8', errors='strict')
 
 
 def RegisterBytes_Get(registers: str, width: int) -> int:
@@ -191,18 +207,38 @@ def MpuCallbackBindings_Resolve(root, sources, instructions, edges, indirect, nm
 
 
 def BmiCallbackBindings_Resolve(root, sources, instructions, edges, indirect, nm, prefix, elf):
-    """Exact raw-I2C BMI088 profile, including its two real optional callbacks.
+    """Exact selected raw-I2C or SYNC400-I2C immutable BMI088 profile.
 
     The common bodies below are unchanged from the MPU binding review. BMI088
     adds a fixed gyro-address preparation and a bounded 14-byte split read.
     This resolves targets only; complete compilation-input checks still run.
-    SPI/sync profiles and arbitrary profile injection are not admitted.
+    SYNC400 uses its separately reviewed fixed three-callback profile. SPI,
+    mixed profile sources and arbitrary profile injection are not admitted.
     """
     imu = "Devices/SensorBus/Src/sensor_imu.c"
     bus = "Devices/SensorBus/Src/sensor_register_bus.c"
     adapter = "Devices/SensorBus/Adapter/Src/sensor_imu_adapter.c"
     instance = "Devices/IMU/BMI088/Adapter/Src/bmi088_instance.c"
     profile = "Devices/IMU/BMI088/Src/bmi088_device.c"
+    sync_instance = "Devices/IMU/BMI088_SYNC400/Adapter/Src/bmi088_sync400_instance.c"
+    synchronized = sync_instance in sources
+    instance_function, getter, symbol = "Bmi088ImuInstance_Init", "Bmi088_ProfileGet", "s_profile"
+    instance_hash = "3a7ff8f4b38533887128115ba3446d23c75584c31bf6c5105d628febc996eb0f"
+    profile_hash = "6a14e88d610063b460a0bf2f2f095f8846c87da51c6fe46fdda3baf6022a208f"
+    profile_callbacks = ("Bmi088_Prepare", "Bmi088_FrameRead", None)
+    if synchronized:
+        if any(path in sources for path in (instance, profile)) or any("/BMI088_SPI/" in path or "/BMI088_SYNC400_SPI/" in path for path in sources):
+            raise ValueError("Mixed BMI088 profile initialization sources")
+        instance = sync_instance
+        profile = "Devices/SensorBus/Src/sensor_bmi088_sync.c"
+        instance_function = "Bmi088Sync400ImuInstance_Init"
+        instance_hash = "191ad5c8b42e3b15206b8d08e83752fdf491f1d83f17bc7bf3b48d67cae8bbdd"
+        profile_hash = "0552f0f6286bb7e73fa1cecf66fb27f257c38b51219cd21b2a0c7a4057b9494e"
+        getter, symbol = "SensorBmi088Sync_ProfileGet", "s_sync_profile"
+        profile_callbacks = ("SensorBmi088Sync_Prepare", "SensorBmi088Sync_FrameRead", "SensorBmi088Sync_Readback")
+        wrapper = "Devices/IMU/BMI088_SYNC400/Src/bmi088_sync400_device.c"
+        if wrapper not in sources or BindingSourceHash_Get((root / wrapper).read_text(encoding="utf8")) != "bfbf9d81f3db4f819733dbd074f7f0e80487b5feb2bf80a611aed0184690da22":
+            raise ValueError("Unreviewed BMI088 SYNC400 profile getter")
     reviewed = {
         imu: {"SensorImu_Init": "da3bd34fc08e65fb32e5a72b68f60a0f2a08eafd2c630a92914621c949878453",
               "SensorImu_Verify": "8b6786ccf36eec5eddabb1878139eb463d345eefa88a573e34c7ddf8bf7a3a04",
@@ -212,7 +248,7 @@ def BmiCallbackBindings_Resolve(root, sources, instructions, edges, indirect, nm
               "SensorRegister_Write": "b08b754cf52dc6558f9d3af40ea3db36a09331df7774ba3a96987f62bfd82929"},
         adapter: {"SensorImuAdapter_PrepareI2c": "652772579357ed30ad767d5d49a6888a691e30ea07b5addd7f12a89b76b4c1a4",
                   "SensorImuAdapter_InitI2c": "61fd64c667c57a0f98244e77aca30db1872b684475f71e729062dc2d3d093047"},
-        instance: {"Bmi088ImuInstance_Init": "3a7ff8f4b38533887128115ba3446d23c75584c31bf6c5105d628febc996eb0f"},
+        instance: {instance_function: instance_hash},
     }
     proofs = []
     for path, bodies in reviewed.items():
@@ -223,8 +259,8 @@ def BmiCallbackBindings_Resolve(root, sources, instructions, edges, indirect, nm
             if hashlib.sha256(FunctionBody_Get(text, name).encode()).hexdigest() != expected:
                 raise ValueError("Changed reviewed BMI088 binding body: " + name)
         proofs.append({"source": path, "sha256": hashlib.sha256(text.encode()).hexdigest()})
-    if profile not in sources or BindingSourceHash_Get((root / profile).read_text(encoding="utf8")) != "6a14e88d610063b460a0bf2f2f095f8846c87da51c6fe46fdda3baf6022a208f":
-        raise ValueError("Unreviewed complete BMI088 raw-I2C profile")
+    if profile not in sources or BindingSourceHash_Get((root / profile).read_text(encoding="utf8")) != profile_hash:
+        raise ValueError("Unreviewed complete BMI088 I2C profile")
     header = re.sub(r"/\*.*?\*/", "", (root / "Devices/SensorBus/Inc/sensor_imu.h").read_text(encoding="utf8"), flags=re.DOTALL)
     layout = ("constchar*name;uint8_tregister_width;uint8_ti2c_dummy_bytes;"
               "uint8_tauxiliary_address_7bit;uint8_tspi_dummy_bytes;"
@@ -232,30 +268,36 @@ def BmiCallbackBindings_Resolve(root, sources, instructions, edges, indirect, nm
               "SensorImuPrepareprepare;SensorImuFrameReadframe_read;SensorImuExtraVerifyextra_verify;")
     if layout not in re.sub(r"\s+", "", header):
         raise ValueError("Changed BMI088 profile callback ABI")
-    symbols = [parts for line in nm.splitlines() if len(parts := line.split()) == 4 and parts[3] == "s_profile"]
+    symbols = [parts for line in nm.splitlines() if len(parts := line.split()) == 4 and parts[3] == symbol]
     if len(symbols) != 1 or symbols[0][2] != "r" or int(symbols[0][1], 16) != 188:
         raise ValueError("BMI088 profile must be one linked read-only table")
     address = int(symbols[0][0], 16)
     functions = {parts[3]: int(parts[0], 16) for line in nm.splitlines() if len(parts := line.split()) == 4}
     expected = []
-    for name in ("Bmi088_Prepare", "Bmi088_FrameRead"):
+    for name in profile_callbacks:
+        if name is None:
+            expected.append(0)
+            continue
         if name not in instructions or name not in functions:
             raise ValueError("Missing concrete BMI088 callback: " + name)
         expected.append(functions[name] | 1)
     data = TableBytes_Get(root, prefix, elf, address, 28)
-    if [int.from_bytes(data[offset:offset + 4], "little") for offset in (16, 20, 24)] != [*expected, 0]:
+    if [int.from_bytes(data[offset:offset + 4], "little") for offset in (16, 20, 24)] != expected:
         raise ValueError("Linked BMI088 optional callback slots differ from reviewed profile")
-    words = {int(args, 16) for op, args in instructions.get("Bmi088_ProfileGet", []) if op == ".word"}
+    words = {int(args, 16) for op, args in instructions.get(getter, []) if op == ".word"}
     if address not in words:
         raise ValueError("Linked BMI088 getter does not return its reviewed table")
-    for callee, callers in {"SensorImu_Init": {"SensorImuAdapter_PrepareI2c"},
-                            "SensorImuAdapter_PrepareI2c": {"SensorImuAdapter_InitI2c"},
-                            "SensorImuAdapter_InitI2c": {"Bmi088ImuInstance_Init"},
-                            "Bmi088_ProfileGet": {"Bmi088ImuInstance_Init"}}.items():
+    initialization = {"SensorImu_Init": {"SensorImuAdapter_PrepareI2c"},
+                      "SensorImuAdapter_PrepareI2c": {"SensorImuAdapter_InitI2c"},
+                      "SensorImuAdapter_InitI2c": {instance_function},
+                      getter: {"Bmi088Sync400_ProfileGet"} if synchronized else {instance_function}}
+    if synchronized:
+        initialization["Bmi088Sync400_ProfileGet"] = {instance_function}
+    for callee, callers in initialization.items():
         if {name for name, calls in edges.items() if callee in calls} != callers:
             raise ValueError("Unreviewed BMI088 initialization callers: " + callee)
-    resolved = {"SensorImu_ProcessConfigure": "Bmi088_Prepare", "SensorImu_Read": "Bmi088_FrameRead",
-                "SensorImu_Verify": None, "SensorRegister_Read": "SensorImuAdapter_ReadRegister",
+    resolved = {"SensorImu_ProcessConfigure": profile_callbacks[0], "SensorImu_Read": profile_callbacks[1],
+                "SensorImu_Verify": profile_callbacks[2], "SensorRegister_Read": "SensorImuAdapter_ReadRegister",
                 "SensorRegister_Write": "SensorImuAdapter_WriteRegister"}
     for caller, callee in resolved.items():
         if caller not in indirect or len(IndirectSites_Get(instructions[caller])) != 1:
@@ -265,8 +307,8 @@ def BmiCallbackBindings_Resolve(root, sources, instructions, edges, indirect, nm
                 raise ValueError("Missing concrete BMI088 bus target: " + callee)
             edges[caller].add(callee)
         indirect.remove(caller)
-    return [{"kind": "immutable_bmi088_raw_i2c", "profile_address": hex(address),
-             "null_callbacks": ["extra_verify"], "resolved_edges": resolved,
+    return [{"kind": "immutable_bmi088_sync400_i2c" if synchronized else "immutable_bmi088_raw_i2c", "profile_address": hex(address),
+             "null_callbacks": [] if synchronized else ["extra_verify"], "resolved_edges": resolved,
              "reviewed_sources": proofs, "compilation_input_acceptance": "requires separate complete closure"}]
 
 
@@ -5105,7 +5147,12 @@ def BindingSources_Verify(root, sources, build, prefix="arm-none-eabi-"):
                        "dependencies": dependencies, "compiled_input_sha256": closure})
     return proofs
 
-def BindingHeader_Verify(root, path):
+def BindingHeader_Verify(root, path, software_review=None):
+    if software_review is not None:
+        digest = _review.FileHash_Get(_review.InputPath_Get(root, path), source=True)
+        if software_review['case']['source_inputs'].get(path) != digest:
+            raise ValueError('Changed complete software header closure: ' + path)
+        return digest
     (root / path).resolve().relative_to(root.resolve())
     if not (root / path).is_file():
         raise ValueError("Changed or missing reviewed callback compilation input: " + path)
@@ -5118,7 +5165,7 @@ def BindingHeader_Verify(root, path):
 
 def IndirectSites_Get(rows):
     return [(op, args) for op, args in rows
-            if (op == "blx" and "<" not in args) or (op.startswith("bx") and args.strip() != "lr")]
+            if _arm.Instruction_IsIndirect(op, args)]
 
 
 def CallbackSlot_Get(rows, index):
@@ -5169,6 +5216,7 @@ def StackGraph_Load(root: Path, config: str, prefix: str, memory_layout: str = "
         raise ValueError("Expected exactly one linked ELF in the selected configuration")
     elf = elfs[0]
     disassembly = Command_Read([prefix + "objdump", "-d", str(elf)], root)
+    symbol_table = Command_Read([prefix + "objdump", "-t", str(elf)], root)
     nm = Command_Read([prefix + "nm", "-S", "--defined-only", str(elf)], root)
     sizes = {parts[3]: int(parts[1], 16) for line in nm.splitlines()
              if len(parts := line.split()) == 4}
@@ -5194,50 +5242,49 @@ def StackGraph_Load(root: Path, config: str, prefix: str, memory_layout: str = "
             frames[name] = max(frames.get(name, 0), int(count))
             if kind not in ("static", "dynamic,bounded"):
                 unbounded.add(name)
-    instructions: dict[str, list[tuple[str, str]]] = {}
-    for line in disassembly.splitlines():
-        if match := re.match(r"^[0-9a-f]+ <([^>]+)>:", line):
-            name = match[1]
-            instructions[name] = []
-        elif match := re.match(r"^\s*[0-9a-f]+:\s+(?:[0-9a-f]{4,8}\s+)+(\S+)\s*(.*)", line):
-            instructions[name].append((match[1], match[2]))
-
+    function_entries = _arm.Assembly_Parse(disassembly, symbol_table)
+    instructions = {name: [(row[2], row[3]) for row in entry["rows"]] + entry["literals"]
+                    for name, entry in function_entries.items()}
     edges: dict[str, set[str]] = {}
     indirect: set[str] = set()
     library_frames: dict[str, int] = {}
-    for name, rows in instructions.items():
-        edges[name] = set()
-        frame = 0
-        for op, args in rows:
-            if (
-                (op.startswith("b") or op in ("cbz", "cbnz"))
-                and (match := re.search(r"<([^>+]+)(?:\+[^>]+)?>", args))
-                and (match[1] != name or op in ("bl", "bl.w", "blx"))
-                and match[1] in instructions
-            ):
-                edges[name].add(match[1])
-            if (op == "blx" and "<" not in args) or (op.startswith("bx") and args.strip() != "lr"):
-                indirect.add(name)
-            if name in frames:
-                continue
-            if op.startswith(("push", "stmdb")) and "{" in args:
-                frame += RegisterBytes_Get(args[args.index("{"):], 4)
-            elif op.startswith("vpush"):
-                frame += RegisterBytes_Get(args, 8 if "d" in args else 4)
-            elif op.startswith("sub") and re.match(r"sp,\s*(?:sp,\s*)?#", args):
-                frame += int(re.search(r"#(0x[0-9a-f]+|\d+)", args)[1], 0)
-            elif re.search(r"\[sp,\s*#-(0x[0-9a-f]+|\d+)\]!", args):
-                frame += int(re.search(r"#-(0x[0-9a-f]+|\d+)", args)[1], 0)
-            elif re.search(r"\[sp[^\]]*\]!", args) or re.match(r"sp,", args) and op.startswith(("sub", "mov", "bic")):
-                unbounded.add(name)
-        if name not in frames:
-            frames[name] = frame
-            library_frames[name] = frame
+    assembly_proofs = {name: _arm.Function_Analyze(name, entry, function_entries)
+                       for name, entry in function_entries.items()}
+    # Establish non-returning machine-code paths, starting with actual UDF or
+    # closed loops. A call to such a path does not fall through into a literal
+    # pool. This is derived from the ELF, never from a name allowlist.
+    no_return = set()
+    while True:
+        proven = {name for name, proof in assembly_proofs.items()
+                  if not proof["returns"] and not proof["tail_returns"] and not proof["indirect"]}
+        added = proven - no_return
+        if not added:
+            break
+        no_return.update(added)
+        affected = {name for name, proof in assembly_proofs.items() if proof["edges"] & added}
+        for name in affected:
+            assembly_proofs[name] = _arm.Function_Analyze(name, function_entries[name], function_entries, no_return)
+    for name, entry in function_entries.items():
+        proof = assembly_proofs[name]
+        edges[name] = proof["edges"]
+        if proof["indirect"]:
+            indirect.add(name)
+        if proof["unknown_sp"]:
+            unbounded.add(name)
+        reported_name = entry["symbol_name"]
+        if reported_name in unbounded:
+            unbounded.add(name)
+        if reported_name not in frames:
+            library_frames[name] = proof["frame_bytes"]
+        # Compiler frame reports and linked SP operations must agree on a safe
+        # upper bound; naked/inline assembly cannot silently earn a zero frame.
+        frames[name] = max(frames.get(reported_name, 0), proof["frame_bytes"])
 
     return {"build": build, "elf": elf, "nm": nm, "sizes": sizes,
             "sources": sources, "su_paths": su_paths, "instructions": instructions,
             "frames": frames, "edges": edges, "indirect": indirect,
-            "unbounded": unbounded, "library_frames": library_frames}
+            "unbounded": unbounded, "library_frames": library_frames,
+            "function_entries": function_entries, "assembly_proofs": assembly_proofs}
 
 
 def StackDiagnostic_Build(root: Path, config: str, prefix: str, memory_layout: str = "legacy") -> dict:
@@ -5327,12 +5374,15 @@ def StartupCallbackSites_Resolve(instructions, edges, indirect, startup_tables, 
     return result
 
 
-def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str = "legacy") -> dict:
-    graph = StackGraph_Load(root, config, prefix, memory_layout)
-    build, elf, nm = graph["build"], graph["elf"], graph["nm"]
-    sizes, sources, su_paths = graph["sizes"], graph["sources"], graph["su_paths"]
-    instructions, frames, edges = graph["instructions"], graph["frames"], graph["edges"]
-    indirect, unbounded, library_frames = graph["indirect"], graph["unbounded"], graph["library_frames"]
+def ApplicationCallbacks_Resolve(root, graph, config, prefix, software_review=None):
+    """Resolve exact linked application tables; full source admission is separate.
+
+    The production caller first validates the complete sealed input case. A
+    review tool may inspect these bindings on a candidate, but this function
+    alone grants neither a stack budget nor whole-firmware acceptance.
+    """
+    sources, instructions = graph["sources"], graph["instructions"]
+    edges, indirect, nm, elf = (graph[key] for key in ("edges", "indirect", "nm", "elf"))
     callback_site_bindings = []
     sd_sources = [source for source in sources if source.endswith("/sd_diskio.c") or
                   source == "Platform/STM32F1Flight/Src/sd_diskio_stm32f1flight.c"]
@@ -5380,7 +5430,7 @@ def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str =
                     "Middlewares/Third_Party/FatFs/src/ff_gen_drv.c": "0fc75735ced23deb5ba70713ec41bb75883a886deaa2bbabb7589e2305925bb3",
                     "Middlewares/Third_Party/FatFs/src/diskio.c": "77ac8b08957b2c7b3e4f9401c37727c87a660ed589f0ce9e6520faf6ab91a574",
                 }
-            BindingHeader_Verify(root, "Middlewares/Third_Party/FatFs/src/ff_gen_drv.h")
+            BindingHeader_Verify(root, "Middlewares/Third_Party/FatFs/src/ff_gen_drv.h", software_review)
             for path, expected in reviewed_fatfs.items():
                 if path not in sources:
                     raise ValueError("Missing selected F1 FatFs binding source")
@@ -5451,7 +5501,7 @@ def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str =
                              repr(sorted(startup_callers)))
         if "System/Src/system_device_startup.c" not in sources:
             raise ValueError("Missing complete reviewed startup controller source")
-        BindingHeader_Verify(root, "System/Inc/system_device_startup.h")
+        BindingHeader_Verify(root, "System/Inc/system_device_startup.h", software_review)
         callbacks: set[str] = set()
         startup_tables = []
         for source_name in selected_startup_sources:
@@ -5497,7 +5547,31 @@ def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str =
     callback_bindings = MpuCallbackBindings_Resolve(
         root, sources, instructions, edges, indirect, nm, prefix, elf)
 
-    binding_source_proofs = BindingSources_Verify(root, sources, build, prefix)
+    return callback_site_bindings, callback_bindings
+
+
+def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str = "legacy") -> dict:
+    graph = StackGraph_Load(root, config, prefix, memory_layout)
+    software_review = _review.Inputs_Verify(root, graph, config, prefix, Command_Read,
+        Path(__file__).with_name('software_stack_inputs.json'), SOFTWARE_REVIEW_SHA256)
+    build, elf, nm = graph["build"], graph["elf"], graph["nm"]
+    sizes, sources, su_paths = graph["sizes"], graph["sources"], graph["su_paths"]
+    instructions, frames, edges = graph["instructions"], graph["frames"], graph["edges"]
+    indirect, unbounded, library_frames = graph["indirect"], graph["unbounded"], graph["library_frames"]
+    callback_site_bindings, callback_bindings = ApplicationCallbacks_Resolve(
+        root, graph, config, prefix, software_review)
+
+    runtime_proofs = None
+    if software_review is None:
+        binding_source_proofs = BindingSources_Verify(root, sources, build, prefix)
+    else:
+        binding_source_proofs = software_review['source_proofs']
+        runtime_proofs = {
+            'hal': _runtime.HalCallbacks_Resolve(root, graph, prefix, Command_Read, CallbackSlot_Get,
+                       review=software_review['case']['runtime_contract']['hal']),
+            'port': _runtime.PortStackPointers_Resolve(root, graph),
+            'crt': _runtime.CrtCallbacks_Resolve(root, graph, prefix, TableBytes_Get),
+        }
 
     def Closure_Get(name: str) -> set[str]:
         seen: set[str] = set()
@@ -5550,9 +5624,29 @@ def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str =
         } == {TASKS[row["task"]][0] for row in tasks},
     }
     reachable = set().union(*(Closure_Get(TASKS[row["task"]][0]) for row in tasks))
+    whole_program = None
+    if software_review is not None:
+        runtime_proofs['control_task'] = _runtime.ControlTask_Verify(root, graph,
+            software_review['case']['runtime_contract']['control_task'], Closure_Get)
+        whole_program = _runtime.WholeProgram_Build(root, graph,
+            software_review['case']['runtime_contract']['exceptions'], prefix,
+            TableBytes_Get, Budget_Get, MIN_MARGIN_BYTES)
+        reachable.update(Closure_Get('Reset_Handler'))
+        for vector in whole_program['vectors']:
+            for target in vector['targets']:
+                reachable.update(Closure_Get(target))
     return {"schema": "silverstar.stack-budget/1", "configuration": config,
             "elf": str(elf.relative_to(root)), "elf_sha256": hashlib.sha256(elf.read_bytes()).hexdigest(),
             "checker_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            "analysis_tools_sha256": {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
+                for name in sorted({'stack_arm.py', 'stack_runtime.py', 'stack_review.py',
+                             'software_stack_inputs.json', 'software_stack_review.md'} |
+                    ({Path(software_review['case']['review_document']).name} if software_review else set()))},
+            "software_review": ({'case': software_review['case']['name'],
+                'revision': software_review['review_revision'],
+                'document': Path(software_review['case']['review_document']).name,
+                'document_sha256': software_review['case']['review_document_sha256']}
+                if software_review else None),
             "compiler": Command_Read([prefix + "gcc", "--version"], root).splitlines()[0],
             "su_files": len(su_paths), "minimum_margin_bytes": MIN_MARGIN_BYTES,
             "callback_bindings": callback_bindings,
@@ -5560,11 +5654,16 @@ def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str =
             "binding_review_revision": binding_source_proofs[0].get("review_revision", BINDING_REVIEW_REVISION) if binding_source_proofs else BINDING_REVIEW_REVISION,
             "binding_source_proofs": binding_source_proofs,
             "callback_site_bindings": callback_site_bindings,
-            "whole_program_stack_acceptance": "NOT PROVEN: MSP/main/ISR nesting and hardware margins require separate evidence",
+            "whole_program_stack_acceptance": ('SOFTWARE BOUND PASS' if whole_program and whole_program['passes'] and
+                all(checks.values()) and all(row['passes'] for row in tasks)
+                else 'SOFTWARE BOUND FAIL' if whole_program else
+                'NOT PROVEN: MSP/main/ISR nesting and hardware margins require separate evidence'),
+            "main_msp_exceptions": whole_program, "runtime_proofs": runtime_proofs,
             "method": __doc__, "checks": checks, "tasks": tasks,
             "library_frames": {name: count for name, count in sorted(library_frames.items()) if name in reachable},
             "hardware_high_water_marks": "not measured; collect target task high-water marks before hardware acceptance",
-            "passes": all(checks.values()) and all(row["passes"] for row in tasks)}
+            "passes": all(checks.values()) and all(row["passes"] for row in tasks) and
+                (whole_program is None or whole_program['passes'])}
 
 
 def main() -> int:
@@ -5596,6 +5695,11 @@ def main() -> int:
         print(f"{row['task']}: configured={row['configured_bytes']} estimate={row['worst_known_bytes']} margin={row['margin_bytes']}")
     print(json.dumps(report["checks"], indent=2))
     if report["passes"]:
+        print(report['whole_program_stack_acceptance'])
+        if report['whole_program_stack_acceptance'] != 'SOFTWARE BOUND PASS':
+            return 2
+        msp = report['main_msp_exceptions']
+        print(f"MSP/main/ISR: configured={msp['configured_bytes']} estimate={msp['worst_known_bytes']} margin={msp['margin_bytes']}")
         print("FCCG_PROGRESS|STACK_REPORT|DONE|1|1|ELF and stack budget")
         return 0
     return 1

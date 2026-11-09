@@ -4,6 +4,18 @@ from pathlib import Path
 
 import pytest
 
+
+def test_readelf_binary_constant_bytes_do_not_hide_or_corrupt_abi_text(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    from test_stack_budget import stacks
+    raw = b'DW_AT_const_value: \xf3}m\xb8_@\xe9\nDW_AT_data_member_location: 60\n'
+    monkeypatch.setattr(stacks.subprocess, 'run', lambda *args, **kwargs: SimpleNamespace(stdout=raw))
+    text = stacks.Command_Read(['arm-none-eabi-readelf', '--debug-dump=info', 'firmware.elf'], tmp_path)
+    assert text.encode('latin1') == raw
+    assert 'DW_AT_data_member_location: 60' in text
+    with pytest.raises(UnicodeDecodeError):
+        stacks.Command_Read(['arm-none-eabi-nm', 'firmware.elf'], tmp_path)
+
 _path = Path(__file__).resolve().parents[1] / "plugins/builtin/silverstar_core_0_1_0/payload/Tools/stack_runtime.py"
 _spec = importlib.util.spec_from_file_location("stack_runtime_unit", _path)
 runtime = importlib.util.module_from_spec(_spec)

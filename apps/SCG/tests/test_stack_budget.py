@@ -320,7 +320,9 @@ def test_product_patch_binding_accepts_only_authorized_complete_header(tmp_path,
 
 
 def test_source_only_review_cannot_grant_a_compiled_dependency_closure(tmp_path, monkeypatch):
-    payload = Path(__file__).resolve().parents[1] / 'plugins/builtin/silverstar_core_0_1_0/payload'
+    # Exercise the historical source-only grant, not a later logger revision
+    # which must first fail the separate whole-source identity check.
+    payload = Path(__file__).parent / 'fixtures/stack_logger_review_20261101'
     relative = 'APP/Src/logger_bus.c'
     destination = tmp_path / relative
     destination.parent.mkdir(parents=True)
@@ -424,7 +426,9 @@ def test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input(tmp_
         owner = base / 'plugins/builtin/silverstar_flight_logic_cycle_reference/payload'
     else:
         owner = base / 'plugins/builtin/silverstar_core_0_1_0/payload'
-    if relative in ('FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c',
+    if relative in ('APP/Inc/logger_bus.h', 'APP/Src/logger_bus.c'):
+        text = (base / 'tests/fixtures/stack_logger_review_20261101' / relative).read_text(encoding='utf8')
+    elif relative in ('FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c',
                     'System/Src/system_console.c'):
         with zipfile.ZipFile(base / 'tests/fixtures/stack_review_20261025.zip') as archive:
             text = archive.read(relative).decode('utf8')

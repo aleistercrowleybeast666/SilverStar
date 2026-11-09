@@ -1,0 +1,18 @@
+{
+  "source_commit": "8a25f99e7096df94cbf46b83bf4049a55e43a887",
+  "scope": "Historical exact logger source binding fixture; no current firmware proof",
+  "files": [
+    {
+      "path": "APP/Inc/logger_bus.h",
+      "owner_path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Inc/logger_bus.h",
+      "sha256": "177693ced2587d2e9f3931fb5c726a2c67125c23b0f29165fba8b7630397e0e6",
+      "normalized_binding_sha256": "177693ced2587d2e9f3931fb5c726a2c67125c23b0f29165fba8b7630397e0e6"
+    },
+    {
+      "path": "APP/Src/logger_bus.c",
+      "owner_path": "apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/APP/Src/logger_bus.c",
+      "sha256": "cb78a66a89d19e4497c33e69cffe07b5fcd545c0a3060a0622b0ca1941384082",
+      "normalized_binding_sha256": "cb78a66a89d19e4497c33e69cffe07b5fcd545c0a3060a0622b0ca1941384082"
+    }
+  ]
+}
