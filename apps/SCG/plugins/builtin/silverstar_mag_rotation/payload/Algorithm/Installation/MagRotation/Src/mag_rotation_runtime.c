@@ -10,6 +10,7 @@
 #include "platform_critical.h"
 #include "platform_memory.h"
 #include "platform_time.h"
+#include "silverstar_assert.h"
 #include <math.h>
 #include <string.h>
 
@@ -38,6 +39,24 @@ typedef struct
     uint8_t head, count, valid, initialized, qualified, base_known, reset_requested;
 } RotationRuntime;
 static PLATFORM_CPU_FAST_BSS RotationRuntime s_rotation;
+
+/* DeviceTask alone mutates history. Validate its stored bounds before any
+ * indexed access or service publication; readers lose qualification first. */
+static void Rotation_HistoryValidate(void)
+{
+    if (s_rotation.head >= ROTATION_HISTORY_COUNT || s_rotation.count > ROTATION_HISTORY_COUNT)
+    {
+        PlatformCriticalState lock = PlatformCritical_Enter();
+        s_rotation.valid = 0U;
+        s_rotation.qualified = 0U;
+        s_rotation.reset_requested = 1U;
+        PlatformCritical_Exit(lock);
+    }
+    SILVERSTAR_ASSERT(s_rotation.head < ROTATION_HISTORY_COUNT,
+                      SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_INDEX_RANGE);
+    SILVERSTAR_ASSERT(s_rotation.count <= ROTATION_HISTORY_COUNT,
+                      SILVERSTAR_ASSERT_MODULE_ALGORITHM, SILVERSTAR_ASSERT_REASON_STATE_INVARIANT);
+}
 
 static uint8_t Rotation_Log(uint64_t time_us, FlightLogEventId event, uint32_t value,
                             uint32_t revision)
@@ -174,6 +193,7 @@ void SystemMagRotation_ImuObserve(uint32_t source, uint32_t epoch, uint32_t sequ
     float gyro[3];
     uint32_t generation;
     uint16_t physical;
+    Rotation_HistoryValidate();
     PlatformCriticalState start_lock = PlatformCritical_Enter();
     uint8_t reset = s_rotation.reset_requested;
     PlatformCritical_Exit(start_lock);
@@ -474,6 +494,7 @@ void SystemMagRotation_MagObserve(const SystemMagnetometerSample *sample, uint64
 {
     SystemMagCalibrationStatus status;
     float field[3], base_q[4], at_mid[3], rate[3] = {0.0f, 0.0f, 0.0f};
+    Rotation_HistoryValidate();
     if (!Rotation_RawFieldValid(sample) || trigger == 0ULL ||
         sample->sample_timestamp_us <= trigger ||
         sample->sample_timestamp_us - trigger > ROTATION_MAX_CONVERSION_US ||
@@ -572,6 +593,7 @@ uint8_t SystemMagRotation_TryApply(uint8_t instance, uint32_t generation, uint32
 
 void SystemMagRotation_Service(uint64_t now_us)
 {
+    Rotation_HistoryValidate();
     Rotation_FallbackFlush(now_us);
     PlatformCriticalState lock = PlatformCritical_Enter();
     uint8_t reset = s_rotation.reset_requested;

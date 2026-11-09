@@ -1,9 +1,15 @@
 """Sealed exact compilation and linked-artifact review, never self-enrollment."""
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 import re
 import shutil
+
+_manifest_spec = importlib.util.spec_from_file_location(
+    'silverstar_stack_manifest', Path(__file__).with_name('stack_manifest.py'))
+_manifest = importlib.util.module_from_spec(_manifest_spec)
+_manifest_spec.loader.exec_module(_manifest)
 
 
 def FileHash_Get(path, *, source=False):
@@ -102,11 +108,7 @@ def ReviewDocument_Verify(root, case):
 
 
 def Inputs_Verify(root, graph, configuration, prefix, command_read, manifest_path, manifest_sha256):
-    if not manifest_path.is_file() or FileHash_Get(manifest_path) != manifest_sha256:
-        raise ValueError("Unreviewed software stack manifest")
-    review = json.loads(manifest_path.read_text(encoding="utf8"))
-    if review.get("schema") != "silverstar.software-stack-inputs/1":
-        raise ValueError("Unsupported software stack proof schema")
+    review = _manifest.Manifest_Load(root, manifest_path, manifest_sha256)
     target = json.loads((root / "SilverStar.ssproject").read_text(encoding="utf8"))["build"]["target_profile"]
     declarations = {"Makefile", *(path.relative_to(root).as_posix() for path in root.rglob("*.mk")
         if path.relative_to(root).parts[0] not in ("build", ".git", ".fccg"))}
@@ -136,7 +138,8 @@ def Inputs_Verify(root, graph, configuration, prefix, command_read, manifest_pat
     if ToolchainInputs_Get(root, graph, prefix, command_read) != case['toolchain_files']:
         raise ValueError('Changed or incomplete reviewed compiler/library input closure')
     ReviewDocument_Verify(root, case)
-    return {"case": case, "review_revision": review["review_revision"], "source_proofs": [
+    return {"case": case, "review_revision": review["review_revision"],
+        "case_file": review['sealed_case_files'].get(case['name']), "source_proofs": [
         {"source": source, "normalized_source_sha256": hashes[source],
          "review_revision": review["review_revision"], "review_case": case["name"]}
         for source in graph["sources"]]}

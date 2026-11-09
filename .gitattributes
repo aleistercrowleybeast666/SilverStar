@@ -42,11 +42,14 @@ docs/evidence/logger_health_retest_20261008/** -text
 # H743 frozen input contracts, source provenance and recorded results are byte-exact.
 apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/h743_stack_inputs.json -text
 apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_inputs.json -text
+apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_cases/*.json -text
 apps/SCG/plugins/builtin/silverstar_mcu_family_stm32h7/payload/Drivers/** -text
 apps/SCG/plugins/builtin/silverstar_mcu_family_stm32h7/payload/Middlewares/Third_Party/FatFs/** -text
 apps/SCG/plugins/builtin/silverstar_os_freertos_11_3_0_cm7/payload/ThirdParty/** -text
 apps/SCG/tests/fixtures/h743_static/** -text
 apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_review.md -text
 apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_review_20261110.md -text
+apps/SCG/plugins/builtin/silverstar_core_0_1_0/payload/Tools/software_stack_review_20261110_current.md -text
 apps/SCG/tests/fixtures/stack_logger_review_20261101/** -text
+docs/evidence/gui_convergence_20261110/scg/** -text
 docs/evidence/software_completion_20261101/** -text whitespace=cr-at-eol

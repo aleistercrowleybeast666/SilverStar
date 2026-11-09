@@ -129,7 +129,7 @@ def _SoftwareReport_Write(root):
     document.write_bytes(b'Synthetic source/object review, not MCU evidence.\n')
     review = dict(case='synthetic-reviewed-input', revision='synthetic', document=document.name,
                   document_sha256=hashlib.sha256(document.read_bytes()).hexdigest())
-    manifest = dict(review_revision=review['revision'], cases=[dict(name=review['case'],
+    manifest = dict(schema='silverstar.software-stack-inputs/1', review_revision=review['revision'], cases=[dict(name=review['case'],
         configuration='Release', compiler='fixture', review_document='Tools/' + document.name,
         review_document_sha256=review['document_sha256'], compiled_artifacts={
             'fixture.elf': report['elf_sha256']})])
@@ -186,3 +186,34 @@ def test_software_claim_requires_exact_tools_case_and_consistent_msp(tmp_path, c
     if change == 'tools_shape': report['analysis_tools_sha256'] = list(report['analysis_tools_sha256'])
     path.write_text(json.dumps(report), encoding='utf8')
     assert ArtifactStackReportSummary_Encode('FIRMWARE_STACK_REPORT|' + str(path), tmp_path) == ''
+
+
+@pytest.mark.parametrize('change', ('none', 'case_bytes', 'unselected_missing', 'report_identity'))
+def test_split_case_report_uses_complete_sealed_index(tmp_path, change):
+    path, report = _SoftwareReport_Write(tmp_path)
+    tools = tmp_path/'Tools'
+    manifest_path = tools/'software_stack_inputs.json'
+    manifest = json.loads(manifest_path.read_bytes())
+    rows = []
+    for name in (manifest['cases'][0]['name'], 'unselected-case'):
+        case = dict(manifest['cases'][0], name=name)
+        item = tools/'software_stack_cases'/(name+'.json')
+        item.parent.mkdir(exist_ok=True)
+        item.write_text(json.dumps(case), encoding='utf8')
+        rows.append(dict(name=name, path=item.relative_to(tmp_path).as_posix(),
+                         sha256=hashlib.sha256(item.read_bytes()).hexdigest()))
+    manifest.update(schema='silverstar.software-stack-inputs/2', cases=rows)
+    manifest_path.write_text(json.dumps(manifest), encoding='utf8')
+    (tools/'stack_manifest.py').write_text('synthetic parser identity only; never executed', encoding='utf8')
+    report['analysis_tools_sha256'] = {item.name: hashlib.sha256(item.read_bytes()).hexdigest()
+        for item in tools.iterdir() if item.is_file() and item.name != 'check_task_stacks.py'}
+    report['software_review']['case_file'] = {key: rows[0][key] for key in ('path', 'sha256')}
+    if change == 'case_bytes': (tmp_path/rows[0]['path']).write_text('changed reviewed source closure')
+    if change == 'unselected_missing': (tmp_path/rows[1]['path']).unlink()
+    if change == 'report_identity': report['software_review']['case_file']['sha256'] = '0'*64
+    path.write_text(json.dumps(report), encoding='utf8')
+    summary = ArtifactStackReportSummary_Encode('FIRMWARE_STACK_REPORT|'+str(path), tmp_path)
+    if change == 'none':
+        assert ArtifactStackReportSummary_Decode(summary)['software_review']['case_file'] == report['software_review']['case_file']
+    else:
+        assert summary == ''

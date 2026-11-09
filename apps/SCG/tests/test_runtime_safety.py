@@ -124,7 +124,7 @@ def test_runtime_sources_survive_reference_import(monkeypatch, workspace_root):
         "silverstar.os.freertos_11_3_0"]["fccg_owned_files"]
     for relative in (
         "Tools/check_task_stacks.py", "Tools/stack_arm.py", "Tools/stack_runtime.py",
-        "Tools/stack_review.py", "Tools/software_stack_inputs.json", "Tools/software_stack_review.md", "Tools/h743_stack_inputs.json",
+        "Tools/stack_review.py", "Tools/stack_manifest.py", "Tools/software_stack_inputs.json", "Tools/software_stack_review.md", "Tools/h743_stack_inputs.json",
         "APP/Inc/control_research.h", "APP/Src/control_research.c",
         "APP/Src/control_research_runtime.c", "Interfaces/Inc/system_navigation_provenance.h",
         "Tests/Host/test_control_research.c", "Tests/Host/test_control_provenance.c",
@@ -136,6 +136,15 @@ def test_runtime_sources_survive_reference_import(monkeypatch, workspace_root):
         assert relative not in core["reference_files"]
         if relative.startswith("APP/Src/"):
             assert relative in core["manifest"]["build"]["sources"]
+    import hashlib
+    from silverstar_fccg.project.stack_manifest import Manifest_Load
+    owner = workspace_root/'plugins/builtin/silverstar_core_0_1_0/payload'
+    index = owner/'Tools/software_stack_inputs.json'
+    review = Manifest_Load(owner, index, hashlib.sha256(index.read_bytes()).hexdigest())
+    for relative in {*[row['path'] for row in review['sealed_case_files'].values()],
+                     *[row['review_document'] for row in review['cases']]}:
+        assert core['fccg_owned_files'][relative] == 'plugins/builtin/silverstar_core_0_1_0/payload/'+relative
+        assert relative not in core['reference_files'] and relative not in core['overlay_files']
     mcu = components["silverstar.mcu.stm32f407vet6"]
     for relative in ("Platform/STM32F4/Src/platform_gpio_stm32f4.c", "STM32F407XX_FLASH.ld"):
         assert (workspace_root / mcu["fccg_owned_files"][relative]).is_file()
@@ -164,9 +173,16 @@ def test_runtime_generation_includes_stack_report(runtime_project, workspace_roo
     assert "-fstack-usage" in makefile
     assert "stack-report: all" in makefile
     for name in ("check_task_stacks.py", "stack_arm.py", "stack_runtime.py",
-                 "stack_review.py", "software_stack_inputs.json", "software_stack_review.md", "h743_stack_inputs.json"):
+                 "stack_review.py", "stack_manifest.py", "software_stack_inputs.json", "software_stack_review.md", "h743_stack_inputs.json"):
         assert (project / "Tools" / name).read_bytes() == (
             workspace_root / "plugins/builtin/silverstar_core_0_1_0/payload/Tools" / name).read_bytes()
+    import hashlib
+    from silverstar_fccg.project.stack_manifest import Manifest_Load
+    index = project/'Tools/software_stack_inputs.json'
+    review = Manifest_Load(project, index, hashlib.sha256(index.read_bytes()).hexdigest())
+    for row in review['sealed_case_files'].values():
+        assert (project/row['path']).read_bytes() == (
+            workspace_root/'plugins/builtin/silverstar_core_0_1_0/payload'/row['path']).read_bytes()
 
 
 @pytest.mark.parametrize("extra", ("all: stack-report\n", "all:\n\tpython generate.py\n"))

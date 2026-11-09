@@ -26,7 +26,7 @@ _review_spec.loader.exec_module(_review)
 _runtime_spec = importlib.util.spec_from_file_location("silverstar_stack_runtime", Path(__file__).with_name("stack_runtime.py"))
 _runtime = importlib.util.module_from_spec(_runtime_spec)
 _runtime_spec.loader.exec_module(_runtime)
-SOFTWARE_REVIEW_SHA256 = "bf1b7cd9606b57ed4b14e6d7a71607d5869221d70c50e923cf4ab5fe76ad3872"
+SOFTWARE_REVIEW_SHA256 = "79df3c621cbfe6a3a44f2d933b9eba56efd680811b54c6a54834ef7376c32c96"
 
 TASKS = {
     "Device": ("AppTask_Device", "s_device_stack"),
@@ -5639,13 +5639,14 @@ def StackReport_Build(root: Path, config: str, prefix: str, memory_layout: str =
             "elf": str(elf.relative_to(root)), "elf_sha256": hashlib.sha256(elf.read_bytes()).hexdigest(),
             "checker_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
             "analysis_tools_sha256": {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
-                for name in sorted({'stack_arm.py', 'stack_runtime.py', 'stack_review.py',
+                for name in sorted({'stack_arm.py', 'stack_runtime.py', 'stack_review.py', 'stack_manifest.py',
                              'software_stack_inputs.json', 'software_stack_review.md'} |
                     ({Path(software_review['case']['review_document']).name} if software_review else set()))},
             "software_review": ({'case': software_review['case']['name'],
                 'revision': software_review['review_revision'],
                 'document': Path(software_review['case']['review_document']).name,
-                'document_sha256': software_review['case']['review_document_sha256']}
+                'document_sha256': software_review['case']['review_document_sha256'],
+                'case_file': software_review.get('case_file')}
                 if software_review else None),
             "compiler": Command_Read([prefix + "gcc", "--version"], root).splitlines()[0],
             "su_files": len(su_paths), "minimum_margin_bytes": MIN_MARGIN_BYTES,

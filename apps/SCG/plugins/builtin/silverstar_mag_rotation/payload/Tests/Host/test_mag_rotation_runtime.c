@@ -20,7 +20,8 @@
 static uint64_t s_now;
 static uint32_t s_epoch = 1U, s_cal_generation = 9U, s_last_packed, s_log_revision;
 static unsigned s_adopted, s_fallback, s_locked;
-static uint8_t s_deny_log, s_selected;
+static unsigned s_denied_adoptions;
+static uint8_t s_deny_log, s_selected, s_deny_adoption;
 static const float s_bias[3] = {3.0f, -2.0f, 1.0f};
 static const float s_scale[3] = {1.1f, 0.9f, 1.05f};
 
@@ -106,6 +107,11 @@ LoggerBusResult LoggerBus_RotationEventPush(uint64_t time, FlightLogEventId even
     }
     if (event == FLIGHT_LOG_EVENT_MAG_ROTATION_ADOPTED)
     {
+        if (s_deny_adoption != 0U)
+        {
+            s_denied_adoptions++;
+            return LOGGER_BUS_RESULT_FULL;
+        }
         s_last_packed = arg0;
         s_adopted++;
         s_log_revision = arg1;
@@ -161,11 +167,12 @@ static void Frame(unsigned i, const float history[3], SystemMagnetometerSample *
         sample->raw[k] = (int32_t)lroundf(sample->magnetic_field_b_uT[k] * (16384.0f / 100.0f));
     }
 }
-int main(void)
+int main(int argc, char *argv[])
 {
     float field[3] = {24.0f, -17.0f, 37.0f}, history[3][3] = {{0}}, intrinsic[3], axes[9];
     SystemMagnetometerSample sample;
     unsigned applied = 0U;
+    s_deny_adoption = (uint8_t)(argc == 2 && strcmp(argv[1], "adoption-full") == 0);
     for (unsigned i = 1U; i <= 16000U; i++)
     {
         s_now = 1000000ULL + 2500ULL * i;
@@ -198,8 +205,27 @@ int main(void)
         assert(!SystemMagRotation_TryApply(0U, 7U, 20U, sample.sequence, sample.sample_timestamp_us,
                                            intrinsic));
     }
+    if (s_deny_adoption != 0U)
+    {
+        assert(s_denied_adoptions > 0U && s_adopted == 0U && applied == 0U);
+        assert(!SystemMagRotation_TryApply(0U, 7U, 19U, sample.sequence,
+                                           sample.sample_timestamp_us, intrinsic));
+        puts("PASS full adoption queue never publishes an unrecorded rotation");
+        return 0;
+    }
     assert(s_adopted > 0U && applied > 0U && s_log_revision > 0U &&
            SystemMagRotation_ProviderQualified(axes));
+    if (argc == 2 && strcmp(argv[1], "stop") == 0)
+    {
+        float unchanged[3];
+        (void)memcpy(unchanged, intrinsic, sizeof(unchanged));
+        SystemMagRotation_SourceLost();
+        assert(!SystemMagRotation_ProviderQualified(axes));
+        assert(!SystemMagRotation_TryApply(0U, 7U, 19U, sample.sequence,
+                                           sample.sample_timestamp_us, intrinsic));
+        assert(memcmp(unchanged, intrinsic, sizeof(unchanged)) == 0 && s_locked == 0U);
+        puts("PASS maintenance Stop revokes before DeviceTask service without output mutation");
+    }
     /* Loss of logging cannot hold the old accepted rotation active. On
      * recovery the queued FIXED/QUALITY retain the time and revision. */
     s_deny_log = 1U;

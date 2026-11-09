@@ -12,7 +12,7 @@ CORE=BUILTIN/'silverstar_core_0_1_0/payload'
 PLUGIN=BUILTIN/'silverstar_mag_rotation/payload'
 MATH=PLUGIN/'Algorithm/Installation/MagRotation'
 
-@pytest.mark.parametrize("mode",["math","runtime","confirmed_fixed"])
+@pytest.mark.parametrize("mode",["math","runtime","confirmed_fixed","maintenance_stop","blocked_adoption"])
 def test_estimator_and_runtime(tmp_path,mode):
     includes=[MATH/'Inc',CORE/'Tests/Host/mag_calibration',CORE/'Interfaces/Inc',CORE/'Common/Inc',
         CORE/'System/Inc',CORE/'System/Inertial/Inc',CORE/'System/Calibration/Inc',CORE/'APP/Inc',CORE/'System/User',
@@ -23,7 +23,8 @@ def test_estimator_and_runtime(tmp_path,mode):
     if mode=='math':
         src.append(SCG/'tests/fixtures/sensors/test_mag_rotation.c')
     else:
-        src.extend([MATH/'Src/mag_rotation_runtime.c',PLUGIN/'Tests/Host/test_mag_rotation_runtime.c'])
+        src.extend([MATH/'Src/mag_rotation_runtime.c',PLUGIN/'Tests/Host/test_mag_rotation_runtime.c',
+                    CORE/'Common/Src/silverstar_assert.c'])
     exe=tmp_path/'rotation.exe'
     command=[shutil.which('gcc'),'-std=c11','-O2','-Wall','-Wextra','-Wpedantic','-Werror','-Wconversion',
         '-Wsign-conversion','-Wshadow','-Wundef','-Wdouble-promotion','-Wstrict-prototypes','-Wmissing-prototypes',
@@ -31,7 +32,8 @@ def test_estimator_and_runtime(tmp_path,mode):
         '-DSYSTEM_INSTALLATION_CAPTURE_ENABLED='+('1U' if mode=='confirmed_fixed' else '0U'),
         *['-I'+str(p) for p in includes],*[str(p) for p in src],'-lm','-o',str(exe)]
     rows=[]
-    for stage,invocation in [('compile',command),('run',[str(exe)])]:
+    run = [str(exe)] + ({'maintenance_stop': ['stop'], 'blocked_adoption': ['adoption-full']}.get(mode, []))
+    for stage,invocation in [('compile',command),('run',run)]:
         with (tmp_path/(stage+'.log')).open('wb') as output:
             result=subprocess.run(invocation,stdout=output,stderr=subprocess.STDOUT,timeout=90)
         rows.append({'command':invocation,'exit_code':result.returncode})
@@ -72,3 +74,29 @@ def test_mixed_saved_gnss_models_are_not_broadcast_over_one_another(builtin_cata
     for value in (first.instance_id, "portable_bench", "AIRBORNE_4G", "PORTABLE"):
         assert value in issues[0].message
     assert path.read_bytes() == original
+
+
+@pytest.mark.parametrize('corruption', ['head', 'count'])
+def test_corrupt_rotation_history_fails_before_access_or_publication(tmp_path, corruption):
+    includes = [MATH/'Inc', MATH/'Src', PLUGIN/'Tests/Host', CORE/'Common/Src',
+        CORE/'Tests/Host/mag_calibration', CORE/'Interfaces/Inc', CORE/'Common/Inc',
+        CORE/'System/Inc', CORE/'System/Inertial/Inc', CORE/'System/Calibration/Inc',
+        CORE/'APP/Inc', CORE/'System/User', BUILTIN/'silverstar_platform_api/payload/Platform/Inc',
+        BUILTIN/'silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG/Inc',
+        BUILTIN/'silverstar_algorithm_calibration/payload/Algorithm/Calibration/Inc']
+    source = SCG/'tests/fixtures/mag_rotation_state_contract.c'
+    exe = tmp_path/'rotation-state.exe'
+    command = [shutil.which('gcc'), '-std=c11', '-O2', '-Wall', '-Wextra', '-Wpedantic', '-Werror',
+        '-fanalyzer', '-DSYSTEM_MAG_ROTATION_ENABLED=1U', '-DSYSTEM_INSTALLATION_CAPTURE_ENABLED=0U',
+        *['-I'+str(p) for p in includes], str(source), str(MATH/'Src/mag_rotation.c'), '-lm', '-o', str(exe)]
+    records = []
+    inputs = [source, MATH/'Src/mag_rotation_runtime.c', MATH/'Src/mag_rotation.c',
+              CORE/'Common/Src/silverstar_assert.c', PLUGIN/'Tests/Host/test_mag_rotation_runtime.c']
+    for stage, invocation in [('compile', command), ('run', [str(exe), corruption])]:
+        result = subprocess.run(invocation, capture_output=True, timeout=90)
+        (tmp_path/(stage+'.log')).write_bytes(result.stdout + result.stderr)
+        records.append({'command': invocation, 'exit_code': result.returncode})
+        (tmp_path/'commands.json').write_text(json.dumps({'rows': records,
+            'scope': 'Real owner and fault record; Host-only terminal trap interception',
+            'sources': {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}}, indent=2), encoding='utf8')
+        assert result.returncode == 0, (result.stdout + result.stderr).decode('utf8', errors='replace')

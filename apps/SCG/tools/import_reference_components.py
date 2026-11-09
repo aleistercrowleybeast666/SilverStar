@@ -29,6 +29,7 @@ from silverstar_fccg.app.version import (  # noqa: E402
 )
 from silverstar_fccg.core.workspace import WorkspacePolicy  # noqa: E402
 from silverstar_fccg.plugins.catalog import PluginCatalog  # noqa: E402
+from silverstar_fccg.project.stack_manifest import Manifest_Load  # noqa: E402
 
 BUILTIN_ROOT = WORKSPACE_ROOT / "plugins" / "builtin"
 REFERENCE_OVERLAY_ROOT = WORKSPACE_ROOT / "tools" / "reference_overlays"
@@ -45,7 +46,7 @@ RUNTIME_SAFETY_CORE_FILES = (
     "Tests/Host/test_runtime_startup.c", "Tests/Host/test_runtime_commands.c",
     "Tests/Host/test_fault_hook.c", "Tests/Host/test_calibration_build_gate.c",
     "Tools/check_task_stacks.py", "Tools/check_architecture.ps1",
-    "Tools/stack_arm.py", "Tools/stack_runtime.py", "Tools/stack_review.py",
+    "Tools/stack_arm.py", "Tools/stack_runtime.py", "Tools/stack_review.py", "Tools/stack_manifest.py",
     "Tools/software_stack_inputs.json", "Tools/software_stack_review.md", "Tools/h743_stack_inputs.json",
 )
 
@@ -1173,6 +1174,17 @@ def _Components_Get(
             "Tools/validate_sslog_record_catalog.py",
         )
     }
+    # Review data remains owned by SCG, including every sealed split case and
+    # its historical review document. Reference import must not replace or
+    # silently omit these files when rebuilding the core package.
+    stack_index = core_source_root / 'payload/Tools/software_stack_inputs.json'
+    stack_review = Manifest_Load(core_source_root / 'payload', stack_index,
+                                hashlib.sha256(stack_index.read_bytes()).hexdigest())
+    stack_owned = {'Tools/stack_manifest.py',
+                   *(row['review_document'] for row in stack_review['cases']),
+                   *(row['path'] for row in stack_review['sealed_case_files'].values())}
+    core_fccg_owned_files.update({relative: f'{core_source_relative}/payload/{relative}'
+                                 for relative in stack_owned})
     core_fccg_owned_files["Tools/sslog_audit.py"] = "tools/sslog_audit.py"
     board_sources = [path for path in first_party if path.startswith("Core/")]
     board_sources += _ManifestValues_Get(reference, "Board/SilverStar_0_5/module.mk", "C_SOURCES")
@@ -1304,7 +1316,7 @@ def _Components_Get(
         )
     )
     components[-1]["manifest"]["metadata"]["source_origins"].update(
-        {relative: "fccg_runtime_safety" for relative in RUNTIME_SAFETY_CORE_FILES}
+        {relative: "fccg_runtime_safety" for relative in {*RUNTIME_SAFETY_CORE_FILES, *stack_owned}}
     )
     components.append(
         _Component(

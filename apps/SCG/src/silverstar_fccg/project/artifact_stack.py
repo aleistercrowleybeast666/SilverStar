@@ -7,6 +7,7 @@ from pathlib import Path, PurePosixPath
 import re
 
 from silverstar_fccg.core.workspace import WorkspacePolicy, WorkspacePolicyError
+from silverstar_fccg.project.stack_manifest import Manifest_Load
 
 
 _PREFIX = "artifact_stack_v1="
@@ -63,7 +64,8 @@ def ArtifactStackReportSummary_Encode(output: str, expected_root: Path) -> str:
                     return ''
                 tools[name] = {'path': str(source), 'sha256': digest}
             review = report['software_review']
-            manifest = json.loads(Path(tools['software_stack_inputs.json']['path']).read_bytes())
+            manifest = Manifest_Load(expected_root, Path(tools['software_stack_inputs.json']['path']),
+                                     tools['software_stack_inputs.json']['sha256'])
             cases = [case for case in manifest['cases'] if case['name'] == review['case'] and
                      case['configuration'] == report['configuration']]
             if (len(cases) != 1 or manifest['review_revision'] != review['revision'] or
@@ -72,6 +74,10 @@ def ArtifactStackReportSummary_Encode(output: str, expected_root: Path) -> str:
                     cases[0]['compiled_artifacts'].get(relative.name) != report['elf_sha256'] or
                     cases[0]['compiler'] != report['compiler'] or
                     tools[review['document']]['sha256'] != review['document_sha256']):
+                return ''
+            case_file = manifest['sealed_case_files'].get(review['case'])
+            if case_file is not None and (report.get('software_review', {}).get('case_file') != case_file or
+                                         'stack_manifest.py' not in tools):
                 return ''
             value.update(analysis_tools=tools, software_review=review,
                          main_msp_exceptions={key: report['main_msp_exceptions'][key] for key in _MSP_FIELDS})
@@ -149,6 +155,15 @@ def ArtifactStackReportSummary_Decode(summary: str) -> dict | None:
                     any(type(review[key]) is not str or not 1 <= len(review[key]) <= 256
                         for key in ('case', 'revision', 'document', 'document_sha256')) or
                     tools[review['document']]['sha256'] != review['document_sha256']):
+                return None
+            case_file = review.get('case_file')
+            if case_file is not None and (type(case_file) is not dict or
+                    set(case_file) != {'path', 'sha256'} or
+                    re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,127}', review['case']) is None or
+                    case_file['path'] != 'Tools/software_stack_cases/' + review['case'] + '.json' or
+                    type(case_file['sha256']) is not str or
+                    re.fullmatch(r'[0-9a-f]{64}', case_file['sha256']) is None or
+                    'stack_manifest.py' not in tools):
                 return None
             expected = expected and msp['passes']
             if (scope == 'SOFTWARE BOUND PASS') != expected:

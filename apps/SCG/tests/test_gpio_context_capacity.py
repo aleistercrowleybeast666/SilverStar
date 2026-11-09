@@ -131,3 +131,38 @@ int main(void)
     result = subprocess.run([str(executable)], text=True, capture_output=True, timeout=20)
     (tmp_path / "run.log").write_text(result.stdout + result.stderr, encoding="utf8")
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+@pytest.mark.parametrize('family,capacity', [('f4', 9), ('f4', 96), ('h7', 9), ('h7', 96)])
+def test_consumed_edge_snapshot_preserves_sequence_time_and_irq_state(tmp_path, workspace_root, family, capacity):
+    builtin = workspace_root / 'plugins/builtin'
+    platform = builtin / ('silverstar_mcu_family_stm32' + family) / 'payload/Platform' / ('STM32' + family.upper())
+    source = platform / 'Src' / ('platform_gpio_stm32' + family + '.c')
+    api = builtin / 'silverstar_platform_api/payload/Platform/Inc'
+    header = tmp_path / ('stm32' + family + 'xx_hal.h')
+    header.write_text('''#include <stdint.h>
+typedef struct { uint16_t value; } GPIO_TypeDef;
+typedef enum { GPIO_PIN_RESET, GPIO_PIN_SET } GPIO_PinState;
+void HAL_GPIO_WritePin(GPIO_TypeDef *, uint16_t, GPIO_PinState);
+GPIO_PinState HAL_GPIO_ReadPin(GPIO_TypeDef *, uint16_t);
+void HAL_GPIO_EXTI_Callback(uint16_t);
+''', encoding='utf8')
+    harness = Path(__file__).parent / 'fixtures/gpio_consumed_edge.c'
+    compiler = shutil.which('gcc')
+    assert compiler, 'Actual Host GCC is required'
+    executable = tmp_path / 'edge.exe'
+    command = [compiler, '-std=c11', '-O2', '-Wall', '-Wextra', '-Werror', '-pedantic', '-fanalyzer',
+               '-DPLATFORM_GPIO_EDGE_TIME_ENABLED=1U', f'-DSILVERSTAR_PLATFORM_GPIO_CONTEXT_COUNT={capacity}U',
+               '-DGPIO_BACKEND_SOURCE="' + source.name + '"',
+               '-DTEST_GPIO_RESOURCE=PlatformStm32' + family + 'GpioResource',
+               '-DTEST_GPIO_RESOURCE_GET=PlatformStm32' + family + 'Resource_GpioGet',
+               *['-I' + str(p) for p in (tmp_path, source.parent, platform / 'Inc', api)],
+               str(harness), '-o', str(executable)]
+    compiled = subprocess.run(command, capture_output=True, text=True, timeout=60)
+    (tmp_path / 'compile.log').write_text(compiled.stdout + compiled.stderr, encoding='utf8')
+    (tmp_path / 'command.json').write_text(json.dumps({'command': command, 'exit_code': compiled.returncode,
+        'inputs': {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in (harness, source, header)}}, indent=2), encoding='utf8')
+    assert compiled.returncode == 0, compiled.stdout + compiled.stderr
+    result = subprocess.run([str(executable)], capture_output=True, text=True, timeout=10)
+    (tmp_path / 'run.log').write_text(result.stdout + result.stderr, encoding='utf8')
+    assert result.returncode == 0, result.stdout + result.stderr

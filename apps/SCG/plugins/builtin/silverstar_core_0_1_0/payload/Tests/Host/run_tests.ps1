@@ -1659,7 +1659,8 @@ if ($script:hostGraphDefinitions.Contains('SYSTEM_MAG_ROTATION_ENABLED')) {
         "$repoRoot\Tests\Host\test_mag_rotation_runtime.c",
         "$repoRoot\Algorithm\Installation\MagRotation\Src\mag_rotation.c",
         "$repoRoot\Algorithm\Installation\MagRotation\Src\mag_rotation_runtime.c"
-    ) -ExtraCompilerArgs @("-I$repoRoot\Algorithm\Installation\MagRotation\Inc")
+    ) -ExtraCompilerArgs @('-fanalyzer', "-I$repoRoot\Algorithm\Installation\MagRotation\Inc") `
+        -RunArguments @('normal', 'stop', 'adoption-full')
 }
 
 # Complete owning installation transaction plus explicitly synthetic physical,
