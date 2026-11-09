@@ -977,8 +977,12 @@ class MainWindow(HardwareEditingActions, QMainWindow):
                 '\n'.join(issue.message for issue in result.issues))
             if not result.ready:
                 label = self.build_page.target_status_labels[target]
-                label.setText(self._translator.Text_Get('target.generation.blocked'))
+                reasons = tuple(dict.fromkeys(issue.message for issue in result.issues))
+                label.setText(self._translator.Text_Get('target.generation.blocked') + '\n' +
+                              '\n'.join(reasons[:2]))
                 label.setToolTip('\n'.join(issue.message for issue in result.issues))
+            else:
+                self.build_page.target_status_labels[target].setToolTip('')
         self.hardware_workspace.Readiness_Set(readiness)
 
     def _LoggingViews_Get(

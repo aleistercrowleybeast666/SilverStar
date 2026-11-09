@@ -5,6 +5,8 @@ from pathlib import Path
 import sys
 import traceback
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'src'))
+
 from PySide6.QtCore import QCoreApplication, QEvent, QObject, QTimer, Qt
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QMessageBox, QWidget

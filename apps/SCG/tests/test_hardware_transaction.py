@@ -62,8 +62,10 @@ def test_ordinary_window_admission_and_request_do_not_create_project(qapp, works
         for tool in ('compiler', 'make', 'host_gcc')))
     assert not window.board_hardware_page.generate_button.isEnabled()
     assert not window.ground_target_page.generate_button.isEnabled()
-    assert all(label.text() == window._translator.Text_Get('target.generation.blocked')
-               for label in window.build_page.target_status_labels.values())
+    for label in window.build_page.target_status_labels.values():
+        lines = label.text().splitlines()
+        assert lines[0] == window._translator.Text_Get('target.generation.blocked')
+        assert len(lines) > 1 and all(lines[1:])  # Missing inputs remain visible after tool refresh.
     workspace = window.hardware_workspace
     assert workspace.root_layout.indexOf(workspace.link_group) > workspace.root_layout.indexOf(workspace.target_grid)
     assert workspace.root_layout.indexOf(workspace.device_group) > workspace.root_layout.indexOf(workspace.link_group)

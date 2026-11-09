@@ -73,7 +73,9 @@ class FunctionBindingsEditor(QWidget):
             identity=function['instance_id'];declaration=self._declarations.get(function['plugin_id'],{})
             status=FunctionCoverage_Get(function,stage_ids,process).get(stage_id,'inactive')
             name=declaration.get('name',{}).get(self._translator.language,function['plugin_id'])
-            card=QGroupBox(name if self._shared_only else name+' · '+text('workflow.coverage.'+status), self)
+            single = self._transactional and self._instance_ids is not None and len(functions) == 1
+            card = (QWidget(self) if single else
+                    QGroupBox(name if self._shared_only else name+' · '+text('workflow.coverage.'+status), self))
             card.setObjectName('functionCard_'+identity)
             card_layout=QVBoxLayout(card)
             section=CollapsibleSection(text('workflow.function.details'), parent=card,
@@ -81,6 +83,12 @@ class FunctionBindingsEditor(QWidget):
             section.setObjectName('functionDetails_'+identity)
             section.ExpandedChanged.connect(lambda expanded,key=identity:self._expanded.__setitem__(key,expanded))
             body=QVBoxLayout(section.body)
+            if single:
+                card_layout.setContentsMargins(0, 0, 0, 0)
+                section.toggle_button.setChecked(True)
+                section.toggle_button.hide()
+                section.body.setObjectName('functionEditorBody')
+                body.setContentsMargins(0, 0, 0, 0)
             summary=QLabel(text('workflow.function.compact_summary',
                 mode=text('workflow.execution.'+function['execution']),
                 start=self._BoundaryText_Get(function['start']),stop=self._BoundaryText_Get(function['stop'])))
@@ -90,17 +98,21 @@ class FunctionBindingsEditor(QWidget):
             modified=sum(model.algorithm_parameters.get(owner,{}).get(parameter.parameter_id,parameter.default)!=parameter.default
                 for parameter in manifest.algorithm_parameters) if manifest else 0
             source=QLabel(text('workflow.parameter_source',count=modified));source.setWordWrap(True)
+            if modified:
+                card_layout.addWidget(source)
             inputs=', '.join(key+' → '+value for key,value in function['input_bindings'].items()) or '—'
             bindings=QLabel(text('workflow.function.bindings',inputs=inputs,output=function['output'],
                 timing=text('workflow.parameter_timing.'+declaration.get('parameter_timing','build_only'))))
             bindings.setWordWrap(True);bindings.setTextFormat(Qt.TextFormat.PlainText)
             issue_text='\n'.join(issue.code+': '+issue.message for issue in self._issues if issue.function_id == identity)
             issues=QLabel(issue_text);issues.setWordWrap(True);issues.setTextFormat(Qt.TextFormat.PlainText)
+            issues.setVisible(bool(issue_text))
             card_layout.addWidget(issues)
             self._RangeEditor_Add(body,function,declaration)
             diagnostics = CollapsibleSection(text('workflow.function.interface_details'), parent=section.body)
             technical = QVBoxLayout(diagnostics.body)
-            technical.addWidget(source)
+            if not modified:
+                technical.addWidget(source)
             technical.addWidget(bindings)
             identity_label = QLabel(identity + ' · ' + function['plugin_id'] + ' · v' + declaration.get('version', '?'), diagnostics.body)
             identity_label.setWordWrap(True)
@@ -150,8 +162,11 @@ class FunctionBindingsEditor(QWidget):
         if self._transactional:
             section.toggle_button.setChecked(True)
             section.toggle_button.hide()
+            section.body.setObjectName('functionEditorBody')
         section.ExpandedChanged.connect(lambda expanded,key=range_key:self._expanded.__setitem__(key,expanded))
         layout=QFormLayout(section.body)
+        if self._transactional:
+            layout.setContentsMargins(0, 0, 0, 0)
         layout.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
         draft=self._range_drafts.get(function['instance_id'],function)
         start=self._BoundaryCombo_Create(draft['start']);stop=self._BoundaryCombo_Create(draft['stop'],stop=True)

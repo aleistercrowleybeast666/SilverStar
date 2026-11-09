@@ -79,22 +79,41 @@ class MissionStageTransactionDialog(QDialog):
         basic = QGroupBox(text('workflow.group.condition'), content)
         QVBoxLayout(basic).addWidget(self.stage_editor); layout.addWidget(basic)
         self.groups = {'condition': basic}
-        basic.setVisible(function_id is None)
+        basic.setVisible(not function_id)
+        # Stage entry actions belong to this same private stage draft. They
+        # must be explicitly laid out in the ordinary capsule transaction;
+        # an unparented layout must never decide whether a safety action exists.
+        stage_actions = QGroupBox(text('workflow.group.stage_actions'), content)
+        QVBoxLayout(stage_actions).addWidget(self.stage_editor.actions_widget)
+        stage_actions.setVisible(not function_id)
+        if not function_id:
+            layout.addWidget(stage_actions)
+            self.groups['stage_actions'] = stage_actions
         self.bindings = []
         all_functions = Functions_Derive(self._draft, catalog)['functions']
         selected_function = next((row for row in all_functions if row['instance_id'] == function_id), None)
+        declarations = {row['plugin_id']: row for row in FunctionsCatalog_Get(catalog)}
         if function_id and selected_function is None:
             raise ValueError('FUNCTION_UNKNOWN: ' + function_id)
         if function_id:
-            heading.setText(text('workflow.function_properties') + ' · ' + function_id)
+            function_name = declarations.get(selected_function['plugin_id'], {}).get('name', {}).get(
+                translator.language, function_id)
+            heading.setText(text('workflow.function_properties') + ' · ' + function_name)
+            self.setWindowTitle(heading.text())
+            note.setText(text('workflow.transaction.hint') + '\n' + text('workflow.transaction.shared'))
+            jump.setContentsMargins(0, 0, 0, 0)
         for key, categories in (('estimation', ('estimation', 'preparation')),
                                 ('control', ('control',)), ('records', ('recording', 'telemetry'))):
             if stage_only or (selected_function and selected_function['category'] not in categories):
                 continue
             group = CollapsibleSection(text('workflow.group.' + key), expanded=True, parent=content)
             group_body = QVBoxLayout(group.body)
-            if key == 'control' and not function_id:
-                group_body.addWidget(self.stage_editor.actions_widget)
+            if function_id:
+                # A single shared instance already has a dialog title. Keep
+                # its canonical editor, without another category disclosure.
+                group.toggle_button.hide()
+                group.body.setObjectName('functionEditorBody')
+                group_body.setContentsMargins(0, 0, 0, 0)
             self.groups[key] = group
             editor = FunctionBindingsEditor(translator, categories, group, transactional=True,
                                              instance_ids=(function_id,) if function_id else None)
@@ -111,7 +130,7 @@ class MissionStageTransactionDialog(QDialog):
             group_body.addWidget(editor); layout.addWidget(group)
             self.bindings.append(editor)
         for key, group in self.groups.items():
-            if key == 'condition' and function_id:
+            if function_id:
                 continue
             button = QPushButton(text('workflow.group.' + key), self)
             button.clicked.connect(lambda _checked=False, selected=group: self._Group_Reveal(selected))
@@ -119,7 +138,6 @@ class MissionStageTransactionDialog(QDialog):
         self.parameters = NavigationConfigurationPage(translator)
         self.parameters.setParent(self)
         self.parameters.hide()
-        declarations = {row['plugin_id']: row for row in FunctionsCatalog_Get(catalog)}
         parameter_owner = declarations.get(selected_function['plugin_id'], {}).get('parameter_owner') if selected_function else None
         owners = tuple(owner for owner in AlgorithmParameterOwners_Get(self._draft, catalog)
                        if not stage_only and (not function_id or owner.component_id == parameter_owner))
@@ -291,7 +309,15 @@ class MissionStageTransactionDialog(QDialog):
         if not NumericDrafts_Collect(self, self.error, self._translator.Text_Get('editor.invalid_number')):
             return
         process = self.stage_editor.Process_Collect()
-        if process is None: return
+        if process is None:
+            # Keep a stage error beside the stable Apply/Cancel controls,
+            # even when the corresponding form is outside the viewport.
+            self.error.setText(self.stage_editor.error.text())
+            if (self.stage_editor.action.currentData() == 'request_recovery' and
+                    self.stage_editor.target.currentData() not in self.stage_editor._targets):
+                self.scroll.ensureWidgetVisible(self.stage_editor.target, 8, 12)
+                self.stage_editor.target.setFocus(Qt.FocusReason.OtherFocusReason)
+            return
         candidate = deepcopy(self._draft)
         # Collect committed widget values synchronously; queued UI refresh
         # signals cannot race the final transaction copy.

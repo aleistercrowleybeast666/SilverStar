@@ -1,7 +1,4 @@
-"""Read bounded task budgets tied to the exact linked ELF and checker.
-
-This report does not prove main/MSP/ISR nesting or hardware high-water marks.
-"""
+"""Read task and reviewed MSP bounds tied to actual artifacts, never hardware measurements."""
 from __future__ import annotations
 
 import hashlib
@@ -13,6 +10,11 @@ from silverstar_fccg.core.workspace import WorkspacePolicy, WorkspacePolicyError
 
 
 _PREFIX = "artifact_stack_v1="
+_ANALYSIS_TOOLS = {'stack_arm.py', 'stack_runtime.py', 'stack_review.py',
+                   'software_stack_inputs.json', 'software_stack_review.md'}
+_MSP_FIELDS = ('configured_bytes', 'main_reset_bytes', 'priority_levels', 'priority_bits',
+               'exception_frame_bytes', 'maximum_configurable_handler_bytes',
+               'fixed_handler_bytes', 'worst_known_bytes', 'margin_bytes', 'passes')
 
 
 def ArtifactStackReportSummary_Encode(output: str, expected_root: Path) -> str:
@@ -48,6 +50,31 @@ def ArtifactStackReportSummary_Encode(output: str, expected_root: Path) -> str:
             artifacts[name] = {"path": str(artifact_path), "sha256": digest}
         value = {key: report[key] for key in ("configuration", "compiler", "minimum_margin_bytes",
                  "tasks", "checks", "passes", "whole_program_stack_acceptance")}
+        if report['whole_program_stack_acceptance'] in ('SOFTWARE BOUND PASS', 'SOFTWARE BOUND FAIL'):
+            hashes = report['analysis_tools_sha256']
+            if type(hashes) is not dict or not _ANALYSIS_TOOLS <= set(hashes) or len(hashes) > 8:
+                return ''
+            tools = {}
+            for name, digest in hashes.items():
+                if not re.fullmatch(r'[A-Za-z0-9_]+\.(py|json|md)', name):
+                    return ''
+                source = policy.Path_Resolve('Tools/' + name, allow_root=False)
+                if hashlib.sha256(source.read_bytes()).hexdigest() != digest:
+                    return ''
+                tools[name] = {'path': str(source), 'sha256': digest}
+            review = report['software_review']
+            manifest = json.loads(Path(tools['software_stack_inputs.json']['path']).read_bytes())
+            cases = [case for case in manifest['cases'] if case['name'] == review['case'] and
+                     case['configuration'] == report['configuration']]
+            if (len(cases) != 1 or manifest['review_revision'] != review['revision'] or
+                    cases[0]['review_document'] != 'Tools/' + review['document'] or
+                    cases[0]['review_document_sha256'] != review['document_sha256'] or
+                    cases[0]['compiled_artifacts'].get(relative.name) != report['elf_sha256'] or
+                    cases[0]['compiler'] != report['compiler'] or
+                    tools[review['document']]['sha256'] != review['document_sha256']):
+                return ''
+            value.update(analysis_tools=tools, software_review=review,
+                         main_msp_exceptions={key: report['main_msp_exceptions'][key] for key in _MSP_FIELDS})
         value.update(target="flight", report_path=str(path),
                      report_sha256=hashlib.sha256(raw).hexdigest(), artifacts=artifacts)
         summary = _PREFIX + json.dumps(value, ensure_ascii=False, separators=(",", ":"))
@@ -63,7 +90,9 @@ def ArtifactStackReportSummary_Decode(summary: str) -> dict | None:
         value = json.loads(summary[len(_PREFIX):])
         if value["target"] != "flight" or type(value["passes"]) is not bool:
             return None
-        if not str(value["whole_program_stack_acceptance"]).startswith("NOT PROVEN:"):
+        scope = value["whole_program_stack_acceptance"]
+        software = scope in ('SOFTWARE BOUND PASS', 'SOFTWARE BOUND FAIL')
+        if not software and not str(scope).startswith("NOT PROVEN:"):
             return None
         minimum = value["minimum_margin_bytes"]
         if type(minimum) is not int or minimum < 0:
@@ -95,6 +124,35 @@ def ArtifactStackReportSummary_Decode(summary: str) -> dict | None:
             if sum(frame['frame_bytes'] for frame in chain) != task['call_chain_bytes']:
                 return None
         expected = all(value["checks"].values()) and all(task["passes"] for task in value["tasks"])
+        if software:
+            if minimum < 256 or any(task['context_bytes'] < 256 for task in value['tasks']):
+                return None
+            msp = value['main_msp_exceptions']
+            if (set(msp) != set(_MSP_FIELDS) or any(type(msp[key]) is not int or msp[key] < 0
+                    for key in _MSP_FIELDS if key not in ('passes', 'margin_bytes')) or
+                    type(msp['margin_bytes']) is not int or type(msp['passes']) is not bool or
+                    msp['configured_bytes'] <= 0 or msp['priority_bits'] != 4 or
+                    msp['priority_levels'] not in (4, 16) or msp['exception_frame_bytes'] != 108):
+                return None
+            worst = (msp['main_reset_bytes'] + msp['priority_levels'] *
+                     (msp['maximum_configurable_handler_bytes'] + msp['exception_frame_bytes']) +
+                     msp['fixed_handler_bytes'] + 2 * msp['exception_frame_bytes'])
+            if (msp['worst_known_bytes'] != worst or msp['margin_bytes'] != msp['configured_bytes'] - worst or
+                    msp['passes'] != (msp['margin_bytes'] >= minimum)):
+                return None
+            tools = value['analysis_tools']
+            review = value['software_review']
+            if (type(tools) is not dict or not _ANALYSIS_TOOLS <= set(tools) or len(tools) > 8 or
+                    any(not re.fullmatch(r'[A-Za-z0-9_]+\.(py|json|md)', name) or
+                        type(item['path']) is not str or
+                        not re.fullmatch(r'[0-9a-f]{64}', item['sha256']) for name, item in tools.items()) or
+                    any(type(review[key]) is not str or not 1 <= len(review[key]) <= 256
+                        for key in ('case', 'revision', 'document', 'document_sha256')) or
+                    tools[review['document']]['sha256'] != review['document_sha256']):
+                return None
+            expected = expected and msp['passes']
+            if (scope == 'SOFTWARE BOUND PASS') != expected:
+                return None
         if value["passes"] != expected:
             return None
         if (type(value['artifacts']) is not dict or set(value['artifacts']) != {'elf', 'checker'} or

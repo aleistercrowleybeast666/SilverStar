@@ -93,3 +93,64 @@ def test_stage_reference_finishes_before_shared_function_dialog(workspace_window
     _Events_Flush(qapp)
     assert seen == ['stage', 'ins', 1]
     assert next(row for row in window._model.mission_process['stages'] if row['stage_id'] == 'coast')['name'] == 'Coast renamed'
+
+
+def test_capsule_action_and_target_share_stage_transaction_and_reopen(workspace_window, qapp, tmp_path):
+    window, errors = workspace_window
+    window._model = window._service.ReferenceProject_Create('Stage action owner')
+    window._model.mission_process = MissionProcess_FirmwareDefault(
+        acceleration_detection=True, recovery=True, recovery_target='parachute_pyro0')
+    window._Project_Refresh()
+    window.navigation_list.setCurrentRow(1)
+    window.show()
+    _Events_Flush(qapp)
+    original = deepcopy(window._model.Dictionary_Get())
+    stage = next(row for row in window._model.mission_process['stages']
+                 if row['action']['kind'] == 'request_recovery')
+    identity, target = stage['stage_id'], stage['action']['target']
+
+    def Cancel(dialog):
+        assert dialog._stage_only and dialog._function_id is None
+        editor = dialog.stage_editor
+        assert editor.actions_widget.isVisible()
+        parent = editor.actions_widget.parentWidget()
+        assert parent.layout().indexOf(editor.actions_widget) >= 0
+        assert editor.action.currentData() == 'request_recovery'
+        assert editor.target.currentData() == target and editor.target.isEnabled()
+        editor.action.setCurrentIndex(editor.action.findData('none'))
+        assert not editor.target.isEnabled()
+        editor.name_edit.setText('Cancelled action')
+        QTest.keyClick(dialog, Qt.Key.Key_Escape)
+
+    _Capsule_Click(window, identity, Cancel)
+    _Events_Flush(qapp)
+    assert window._model.Dictionary_Get() == original
+
+    def Apply(dialog):
+        editor = dialog.stage_editor
+        assert editor.actions_widget.isVisible() and editor.action.isVisible()
+        editor.name_edit.setText('Explicit recovery request')
+        editor.target.setCurrentIndex(editor.target.findData(''))
+        dialog.accept()
+        assert dialog.result() != QDialog.DialogCode.Accepted
+        assert dialog.error.text() and dialog.error.isVisible()
+        assert window._model.Dictionary_Get() == original
+        editor.target.setCurrentIndex(editor.target.findData(target))
+        dialog.accept()
+        assert dialog.result() == QDialog.DialogCode.Accepted, dialog.error.text()
+
+    _Capsule_Click(window, identity, Apply)
+    _Events_Flush(qapp)
+    root = window._service.ProjectRoot_Save(window._model, tmp_path / 'recovery-stage')
+    window._Project_Open(root)
+
+    def Reopen(dialog):
+        editor = dialog.stage_editor
+        assert editor.name_edit.text() == 'Explicit recovery request'
+        assert editor.action.currentData() == 'request_recovery'
+        assert editor.target.currentData() == target
+        assert editor.actions_widget.isVisible()
+        dialog.reject()
+
+    _Capsule_Click(window, identity, Reopen)
+    assert not errors

@@ -55,6 +55,8 @@ def test_resource_card_shows_all_target_banks_and_stale_state(qapp, tmp_path):
     assert all(name in page.ground_memory_value.text() for name in ('FLASH', 'DTCMRAM', 'RAM_D2'))
     assert '786,432' in page.ground_memory_value.text()
     assert '4,688' in page.ground_memory_value.text()
+    assert 'Build source: configuration not recorded' in page.ground_memory_value.text()
+    assert 'elf / map' in page.ground_memory_value.text()
     assert page.ground_memory_value.property('statusLevel') == 'error'  # Budget margin < 10%, even with more physical RAM.
     assert 'DTCMRAM' not in page.memory_margin_value.text()
     page.TargetQualityResults_Set('ground', [record], {'artifact_check': 'stale'})

@@ -120,3 +120,69 @@ def test_stack_inputs_include_compiler_stack_products_and_route_real_make_target
     after = QualityInputHash_Get(root, target, 'stack_report')
     report.write_text('{"fixture":false}')
     assert after != QualityInputHash_Get(root, target, 'stack_report')
+
+
+def _SoftwareReport_Write(root):
+    path, report = _Report_Write(root)
+    tools = root / 'Tools'
+    document = tools / 'software_stack_review_current.md'
+    document.write_bytes(b'Synthetic source/object review, not MCU evidence.\n')
+    review = dict(case='synthetic-reviewed-input', revision='synthetic', document=document.name,
+                  document_sha256=hashlib.sha256(document.read_bytes()).hexdigest())
+    manifest = dict(review_revision=review['revision'], cases=[dict(name=review['case'],
+        configuration='Release', compiler='fixture', review_document='Tools/' + document.name,
+        review_document_sha256=review['document_sha256'], compiled_artifacts={
+            'fixture.elf': report['elf_sha256']})])
+    (tools / 'software_stack_inputs.json').write_text(json.dumps(manifest), encoding='utf8')
+    for name in ('stack_arm.py', 'stack_runtime.py', 'stack_review.py', 'software_stack_review.md'):
+        (tools / name).write_text('synthetic ' + name, encoding='utf8')
+    hashes = {item.name: hashlib.sha256(item.read_bytes()).hexdigest()
+              for item in tools.iterdir() if item.name != 'check_task_stacks.py'}
+    msp = dict(configured_bytes=4096, main_reset_bytes=500, priority_levels=4, priority_bits=4,
+               exception_frame_bytes=108, maximum_configurable_handler_bytes=100,
+               fixed_handler_bytes=0, worst_known_bytes=1548, margin_bytes=2548, passes=True)
+    report.update(whole_program_stack_acceptance='SOFTWARE BOUND PASS',
+                  main_msp_exceptions=msp, analysis_tools_sha256=hashes, software_review=review)
+    path.write_text(json.dumps(report), encoding='utf8')
+    return path, report
+
+
+def test_reviewed_software_bound_is_visible_and_failed_msp_is_preserved(qapp, tmp_path):
+    from silverstar_fccg.core.i18n import Translator
+    from silverstar_fccg.ui.pages.build import BuildPage
+    path, report = _SoftwareReport_Write(tmp_path)
+    summary = ArtifactStackReportSummary_Encode('FIRMWARE_STACK_REPORT|' + str(path), tmp_path)
+    assert ArtifactStackReportSummary_Decode(summary)['main_msp_exceptions']['margin_bytes'] == 2548
+    record = SimpleNamespace(task='stack_report', summary=summary, result='passed', timestamp='', details='', duration=0)
+    page = BuildPage(Translator('en_US'))
+    page.TargetQualityResults_Set('flight', [record], {})
+    assert 'software bounds passed' in page.target_stack_values['flight'].text()
+    assert 'not measured' in page.target_stack_values['flight'].text()
+    assert 'MSP / main / ISR' in page.target_stack_details['flight'].text()
+    report['main_msp_exceptions'].update(configured_bytes=1600, margin_bytes=52, passes=False)
+    report.update(passes=False, whole_program_stack_acceptance='SOFTWARE BOUND FAIL')
+    path.write_text(json.dumps(report), encoding='utf8')
+    record.summary = ArtifactStackReportSummary_Encode('FIRMWARE_STACK_REPORT|' + str(path), tmp_path)
+    assert ArtifactStackReportSummary_Decode(record.summary)['passes'] is False
+    record.result = 'failed'
+    page.TargetQualityResults_Set('flight', [record], {})
+    assert 'software bound failed' in page.target_stack_values['flight'].text()
+    page.close()
+
+
+@pytest.mark.parametrize('change', ('scope', 'msp_sum', 'msp_margin', 'msp_flag', 'tool',
+                                  'manifest_case', 'review_document', 'compiler', 'minimum', 'tools_shape'))
+def test_software_claim_requires_exact_tools_case_and_consistent_msp(tmp_path, change):
+    path, report = _SoftwareReport_Write(tmp_path)
+    if change == 'scope': report['whole_program_stack_acceptance'] = 'PASS'
+    if change == 'msp_sum': report['main_msp_exceptions']['worst_known_bytes'] -= 1
+    if change == 'msp_margin': report['main_msp_exceptions']['margin_bytes'] += 1
+    if change == 'msp_flag': report['main_msp_exceptions']['passes'] = False
+    if change == 'tool': (tmp_path / 'Tools/stack_arm.py').write_text('changed analyzer')
+    if change == 'manifest_case': report['software_review']['case'] = 'not-an-admitted-case'
+    if change == 'review_document': report['software_review']['document_sha256'] = '0' * 64
+    if change == 'compiler': report['compiler'] = 'different compiler'
+    if change == 'minimum': report['minimum_margin_bytes'] = 0
+    if change == 'tools_shape': report['analysis_tools_sha256'] = list(report['analysis_tools_sha256'])
+    path.write_text(json.dumps(report), encoding='utf8')
+    assert ArtifactStackReportSummary_Encode('FIRMWARE_STACK_REPORT|' + str(path), tmp_path) == ''

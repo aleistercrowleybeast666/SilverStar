@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
+from pathlib import Path
 
 from PySide6.QtCore import QSignalBlocker, Signal, Qt, QEvent, QTimer
 from PySide6.QtWidgets import (
@@ -118,6 +119,8 @@ class BuildPage(ScrollableLocalizedPage):
         ):
             target_layout = QVBoxLayout()
             status_label = QLabel()
+            status_label.setWordWrap(True)
+            status_label.setTextFormat(Qt.TextFormat.PlainText)
             self.target_status_labels[target] = status_label
             target_layout.addWidget(status_label)
             summary = QLabel()
@@ -611,8 +614,10 @@ class BuildPage(ScrollableLocalizedPage):
                 label.setProperty("statusLevel", "success" if passed else "error")
                 if task == 'stack_report':
                     stack = ArtifactStackReportSummary_Decode(raw_summary)
+                    software = stack and stack['whole_program_stack_acceptance'] == 'SOFTWARE BOUND PASS'
                     label.setText(self._translator.Text_Get(
-                        'stack.tasks_passed' if passed and stack and stack['passes'] else 'stack.unverified'))
+                        ('stack.software_passed' if software else 'stack.tasks_passed')
+                        if passed and stack and stack['passes'] else 'stack.unverified'))
                     label.setProperty('statusLevel', 'warning' if passed and stack and stack['passes'] else 'error')
                 label.setToolTip(
                     self._translator.Text_Get(
@@ -644,17 +649,24 @@ class BuildPage(ScrollableLocalizedPage):
             label.setProperty('statusLevel', 'warning' if state == 'stale' else 'info')
             return
         passed = getattr(record, 'result', '') == 'passed' and report['passes']
-        label.setText(self._translator.Text_Get('stack.tasks_passed' if passed else 'stack.tasks_failed'))
+        software = report['whole_program_stack_acceptance'] in ('SOFTWARE BOUND PASS', 'SOFTWARE BOUND FAIL')
+        label.setText(self._translator.Text_Get(
+            ('stack.software_passed' if passed else 'stack.software_failed') if software else
+            ('stack.tasks_passed' if passed else 'stack.tasks_failed')))
         label.setProperty('statusLevel', 'warning' if passed else 'error')
         headers = [self._translator.Text_Get('stack.column.' + key)
                    for key in ('task', 'known', 'configured', 'margin')]
         rows = ['<tr>' + ''.join('<th align="left">' + html.escape(text) + '</th>' for text in headers) + '</tr>']
-        for task in report['tasks']:
+        budgets = list(report['tasks'])
+        if software:
+            budgets.append(dict(report['main_msp_exceptions'], task='MSP / main / ISR'))
+        for task in budgets:
             cells = (task['task'], f"{task['worst_known_bytes']:,}", f"{task['configured_bytes']:,}",
                      f"{task['margin_bytes']:,} ({task['margin_bytes'] / task['configured_bytes'] * 100:.1f}%)")
             rows.append('<tr>' + ''.join('<td>' + html.escape(text) + '</td>' for text in cells) + '</tr>')
         detail.setText('<table cellspacing="8">' + ''.join(rows) + '</table><p>' +
-            html.escape(self._translator.Text_Get('stack.scope', minimum=report['minimum_margin_bytes'])) + '</p>')
+            html.escape(self._translator.Text_Get('stack.software_scope' if software else 'stack.scope',
+                                                 minimum=report['minimum_margin_bytes'])) + '</p>')
         detail.setToolTip(json.dumps(report['tasks'], ensure_ascii=False, indent=2))
         label.setToolTip(report['report_path'] + '\nSHA256 ' + report['report_sha256'] + '\n' +
                          json.dumps(report['artifacts'], ensure_ascii=False, indent=2))
@@ -704,6 +716,13 @@ class BuildPage(ScrollableLocalizedPage):
                     remaining=f'{budget_remaining:,}', capacity=f"{region['review_budget_bytes']:,}")))
             details.append(json.dumps(region, ensure_ascii=False, indent=2))
         lines.append(html.escape(self._translator.Text_Get('memory.static_only')))
+        artifacts = report.get('artifacts', {})
+        elf = Path(artifacts.get('elf', {}).get('path', ''))
+        map_file = Path(artifacts.get('map', {}).get('path', ''))
+        if elf.name and map_file.name:
+            configuration = elf.parent.name if elf.parent.name in ('Release', 'Debug') else self._translator.Text_Get('memory.configuration_unknown')
+            lines.append(html.escape(self._translator.Text_Get('memory.source',
+                configuration=configuration, elf=elf.name, map=map_file.name)))
         if report['errors']:
             lines.append(html.escape(' · '.join(report['errors'])))
         label.setText('<br>'.join(lines))
