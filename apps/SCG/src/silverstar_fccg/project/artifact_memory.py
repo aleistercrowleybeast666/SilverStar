@@ -39,6 +39,12 @@ def ArtifactMemoryReportSummary_Encode(output: str, expected_root: Path, target:
         value['report_path'] = str(path.resolve())
         value['report_sha256'] = hashlib.sha256(path.read_bytes()).hexdigest()
         value['artifacts'] = artifacts
+        # Generated builds place an optional memory-layout directory after the
+        # configuration. Bind identity to the verified ELF below this project,
+        # not an arbitrary ancestor called Release or the current UI selection.
+        elf_parts = Path(artifacts['elf']['path']).resolve().relative_to(expected_root.resolve()).parts
+        value['configuration'] = (elf_parts[3] if len(elf_parts) in (5, 6) and
+            elf_parts[:2] == ('build', 'FCCG') and elf_parts[3] in ('Release', 'Debug') else '')
         summary = 'artifact_memory_v1=' + json.dumps(value, ensure_ascii=False, separators=(',', ':'))
         return summary if ArtifactMemoryReportSummary_Decode(summary) else ''
     except (OSError, ValueError, KeyError, TypeError, WorkspacePolicyError):
@@ -51,6 +57,8 @@ def ArtifactMemoryReportSummary_Decode(summary: str) -> dict | None:
     try:
         value = json.loads(summary.partition('=')[2])
         if value['target'] not in ('flight', 'ground') or not isinstance(value['mcu'], str):
+            return None
+        if value.get('configuration', '') not in ('', 'Release', 'Debug'):
             return None
         if not re.fullmatch(r'[0-9a-f]{64}', value['generation_input_sha256']):
             return None

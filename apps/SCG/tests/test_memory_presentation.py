@@ -2,6 +2,7 @@
 import hashlib
 import json
 from types import SimpleNamespace
+import pytest
 
 from silverstar_fccg.project.artifact_memory import (
     ArtifactMemoryReportSummary_Encode, ArtifactMemoryReportSummary_Decode)
@@ -62,4 +63,26 @@ def test_resource_card_shows_all_target_banks_and_stale_state(qapp, tmp_path):
     page.TargetQualityResults_Set('ground', [record], {'artifact_check': 'stale'})
     assert 'DTCMRAM' not in page.ground_memory_value.text()
     assert page.ground_memory_value.property('statusLevel') == 'warning'
+    page.close()
+
+
+@pytest.mark.parametrize('configuration', ('Release', 'Debug'))
+@pytest.mark.parametrize('layout', ('', 'auto'))
+def test_configuration_comes_from_verified_generated_artifact_path(qapp, tmp_path, configuration, layout):
+    from silverstar_fccg.ui.pages.build import BuildPage
+    from silverstar_fccg.core.i18n import Translator
+    path, report = _Report_Write(tmp_path)
+    build = tmp_path/'build/FCCG/Fixture'/configuration/layout
+    build.mkdir(parents=True)
+    for name in ('elf', 'map'):
+        artifact = build/('fixture.'+name)
+        artifact.write_text('actual bound identity fixture '+name)
+        report['artifacts'][name] = {'path': str(artifact), 'sha256': hashlib.sha256(artifact.read_bytes()).hexdigest()}
+    path.write_text(json.dumps(report), encoding='utf8')
+    summary = ArtifactMemoryReportSummary_Encode('FIRMWARE_MEMORY_REPORT|'+str(path), tmp_path)
+    assert ArtifactMemoryReportSummary_Decode(summary)['configuration'] == configuration
+    record = SimpleNamespace(task='artifact_check', summary=summary, result='passed', timestamp='', details='', duration=0)
+    page = BuildPage(Translator('en_US'))
+    page.TargetQualityResults_Set('flight', [record], {})
+    assert 'Build source: '+configuration in page.memory_margin_value.text()
     page.close()

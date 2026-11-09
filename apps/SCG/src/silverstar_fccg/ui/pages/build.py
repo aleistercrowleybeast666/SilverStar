@@ -720,7 +720,7 @@ class BuildPage(ScrollableLocalizedPage):
         elf = Path(artifacts.get('elf', {}).get('path', ''))
         map_file = Path(artifacts.get('map', {}).get('path', ''))
         if elf.name and map_file.name:
-            configuration = elf.parent.name if elf.parent.name in ('Release', 'Debug') else self._translator.Text_Get('memory.configuration_unknown')
+            configuration = report.get('configuration') or self._translator.Text_Get('memory.configuration_unknown')
             lines.append(html.escape(self._translator.Text_Get('memory.source',
                 configuration=configuration, elf=elf.name, map=map_file.name)))
         if report['errors']:
