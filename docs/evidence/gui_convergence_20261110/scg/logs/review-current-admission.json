@@ -1,0 +1,25 @@
+{
+  "status": "reviewed candidate A admitted; delivery acceptance still requires independent B rebuild",
+  "previous_manifest_sha256": "bf1b7cd9606b57ed4b14e6d7a71607d5869221d70c50e923cf4ab5fe76ad3872",
+  "manifest_sha256": "423bee95699abe1561ccd49a80325a2bd3978e729a44014e6f19babacbee148e",
+  "review_document_sha256": "46ef720651ad9b52190074fd31970ad7bbb9b24ef63822395ff7bddd4153ce9d",
+  "unchanged_original_cases": 16,
+  "new_reviewed_cases": [
+    {
+      "case": "convergence-current-20261110-h7-Release",
+      "inspection_sha256": "118fd3a04c114caa8d6fe02d1801003109fc2f2a8d12930efaa4e93e89d2795b"
+    },
+    {
+      "case": "convergence-current-20261110-h7-Debug",
+      "inspection_sha256": "0aecf72fcf3ba44e4625eb10dd3e0adc9fcefc9d0ca1f8a25c1ca40f99d79a57"
+    },
+    {
+      "case": "convergence-current-20261110-research-Release",
+      "inspection_sha256": "51dabbb5f59908d1262e01c7aadf58e372461510c5c1fcc6e33b956fd0955df2"
+    },
+    {
+      "case": "convergence-current-20261110-research-Debug",
+      "inspection_sha256": "3cf1e7a8e46c64ea6e6348b9b1796075d77697e7635045740e948c971f23cdf3"
+    }
+  ]
+}

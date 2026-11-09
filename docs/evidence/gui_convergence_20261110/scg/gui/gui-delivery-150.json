@@ -1,0 +1,80 @@
+{
+  "mode": "Qt offscreen; production capsule/function buttons; not native desktop evidence",
+  "language": "en_US",
+  "theme": "dark",
+  "scale": "1.5",
+  "model_unchanged": true,
+  "surfaces": [
+    {
+      "name": "hardware",
+      "logical_size": [
+        980,
+        700
+      ],
+      "pixel_size": [
+        1470,
+        1050
+      ],
+      "sha256": "a6b2251a7ab347a0783b66666e38ba0f49349d55cbc9142c6627c7b6d9ee1fa6",
+      "visible_footer_buttons": []
+    },
+    {
+      "name": "workflow",
+      "logical_size": [
+        980,
+        700
+      ],
+      "pixel_size": [
+        1470,
+        1050
+      ],
+      "sha256": "86244ed752bf0bfbacd899155bf8bfbe5327bca4fcc4865859a1923c01b25f88",
+      "visible_footer_buttons": []
+    },
+    {
+      "name": "generation",
+      "logical_size": [
+        980,
+        700
+      ],
+      "pixel_size": [
+        1470,
+        1050
+      ],
+      "sha256": "7ae6944b0a48cf45a402a295b12caa610861b4ef506db4ecca4c6ade303e32b7",
+      "visible_footer_buttons": []
+    },
+    {
+      "name": "stage",
+      "logical_size": [
+        720,
+        620
+      ],
+      "pixel_size": [
+        1080,
+        930
+      ],
+      "sha256": "dd12e14c044d7f8d332c28557d716dbf55c641c6d2547302acc37243f48082da",
+      "visible_footer_buttons": [
+        "Apply stage configuration",
+        "Cancel"
+      ]
+    },
+    {
+      "name": "shared-ins",
+      "logical_size": [
+        720,
+        620
+      ],
+      "pixel_size": [
+        1080,
+        930
+      ],
+      "sha256": "1141f060ac20ce56d5d8e05b19afc2a0c820628a195f681c18d03726a0e21ca7",
+      "visible_footer_buttons": [
+        "Apply",
+        "Cancel"
+      ]
+    }
+  ]
+}

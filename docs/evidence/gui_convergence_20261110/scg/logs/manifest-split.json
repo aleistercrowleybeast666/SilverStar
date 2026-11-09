@@ -1,0 +1,28 @@
+{
+  "scope": "Lossless representation migration, not another ARM compilation or new case admission.",
+  "original_manifest_sha256": "423bee95699abe1561ccd49a80325a2bd3978e729a44014e6f19babacbee148e",
+  "split_index_sha256": "79df3c621cbfe6a3a44f2d933b9eba56efd680811b54c6a54834ef7376c32c96",
+  "case_count": 20,
+  "unchanged_case_canonical_sha256": {
+    "f407-Release": "4545cd157b015b12abb96473ea1838b00d7d71607d1f4693c61a0bdb64341626",
+    "f407-Debug": "5da7a81d4401d63aa4105d9b83f62aae5971603ea8fc04a964e709c66cb52fc9",
+    "installation-Release": "4e7991fe3ec3a51a9c319cbbd894044eaae01c7091ff6bad8594d4708e0473c6",
+    "installation-Debug": "e3e2d795f922e8a0b818db7585c830fca0435c62f7deded4c728292fdfab4e68",
+    "h743-Release": "e0d5ad6202872f0602f350bc529d30b6b2c85a6cdeb1080a3cd2c1bd08ced91a",
+    "h743-Debug": "46260e7f0c9708ee5ca844396668cbcc23c6c9af80e95fe97412f2f1e3b47fed",
+    "pid-Release": "7b31fe04b1161d67214238e8a6b04eaee6f7265b2c3cace838585e5848c16882",
+    "pid-Debug": "ecf618e228b00890b5b4682527e7c1dd0731c9b6915b374f2b7565336b6c1efc",
+    "lqr-Release": "a71f290ab9f4a20419e68d5ea604110298a6d0d1e6cf5e66a826fb1960bfb04d",
+    "lqr-Debug": "4b0e8756b708483531c7b84a653197ae04cf0ba123fd9e069dfc597313d4225f",
+    "convergence-20261110-f4-Release": "bdc0b3aa9dd753b44677e9457e41722bb366226a02bbf5911d32cb731ad77742",
+    "convergence-20261110-f4-Debug": "4b3da04984a894f2074f12e7c689e186da6c40a11bfe661facd2daf7cc339c7e",
+    "convergence-20261110-capture-Release": "4dca1fbcc519460a3b911c91840a5852d174749249b4ae81e4547d83e3ff9670",
+    "convergence-20261110-capture-Debug": "3cd76e3562f55b210d6c7a859bdadf1c8ce86b5824eddf95c729ab506a6f001b",
+    "convergence-20261110-h7-Release": "bca7824f3971aead3072b16fe172553a76e1e5aac9453531e5086fba524e547d",
+    "convergence-20261110-h7-Debug": "5a775e544cfc4e0b36a9a95d76474da8388c7282a68516d917d8b74f643c95d4",
+    "convergence-current-20261110-h7-Release": "4e8b9883c2cac4541973f92adad59ca30511f25bbee61f14b914ca1774ab3390",
+    "convergence-current-20261110-h7-Debug": "f4211cd3eff8d5cdb6fc2eb1020afa2f1b666b0d58ede41d2f9d856dc09da5a7",
+    "convergence-current-20261110-research-Release": "53f4f9bce1cc0d72a26c25c5e44e60373d23da02d8f25f3a8677854d5d74bf78",
+    "convergence-current-20261110-research-Debug": "86ae6628449ad786098f22d1d23a9827fda425878bc30733aa4915d4be41451a"
+  }
+}

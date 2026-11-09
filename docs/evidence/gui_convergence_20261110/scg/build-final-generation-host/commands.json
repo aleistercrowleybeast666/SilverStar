@@ -1,0 +1,43 @@
+[
+  {
+    "case": [
+      "h7",
+      "Release"
+    ],
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\final-generation\\h7\\Flight_Controller",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "HOST_CC=D:\\msys64\\ucrt64\\bin\\gcc.exe",
+      "host-tests"
+    ],
+    "exit_code": 0,
+    "seconds": 651.642,
+    "log": "h7-Release-host-tests.log",
+    "scope": "complete emitted target",
+    "log_sha256": "5289eebb1b6c85d7bf21c9eef731cd96216859de06cf823777945f2c5738b72c"
+  },
+  {
+    "case": [
+      "research",
+      "Release"
+    ],
+    "command": [
+      "powershell",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-Command",
+      "& 'D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\final-generation\\research\\Flight_Controller\\Tests\\Host\\run_tests.ps1' -HostCompiler 'D:\\msys64\\ucrt64\\bin\\gcc.exe' -Only @('lifecycle_logging','control_provenance','control_research')"
+    ],
+    "exit_code": 0,
+    "seconds": 375.773,
+    "log": "research-Release-host-tests.log",
+    "scope": "selected controller/provenance/lifecycle Host",
+    "log_sha256": "112483c516c4ad1b5b9c1dc73ea20985457c75f1a495179f86aa5cb51b52dade"
+  }
+]

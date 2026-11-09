@@ -1,0 +1,78 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+___ test_corrupt_rotation_history_fails_before_access_or_publication[head] ____
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/gui-convergence-20261110/scg/rotation-state-before/test_corrupt_rotation_history_0')
+corruption = 'head'
+
+    @pytest.mark.parametrize('corruption', ['head', 'count'])
+    def test_corrupt_rotation_history_fails_before_access_or_publication(tmp_path, corruption):
+        includes = [MATH/'Inc', MATH/'Src', PLUGIN/'Tests/Host', CORE/'Common/Src',
+            CORE/'Tests/Host/mag_calibration', CORE/'Interfaces/Inc', CORE/'Common/Inc',
+            CORE/'System/Inc', CORE/'System/Inertial/Inc', CORE/'System/Calibration/Inc',
+            CORE/'APP/Inc', CORE/'System/User', BUILTIN/'silverstar_platform_api/payload/Platform/Inc',
+            BUILTIN/'silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG/Inc',
+            BUILTIN/'silverstar_algorithm_calibration/payload/Algorithm/Calibration/Inc']
+        source = SCG/'tests/fixtures/mag_rotation_state_contract.c'
+        exe = tmp_path/'rotation-state.exe'
+        command = [shutil.which('gcc'), '-std=c11', '-O2', '-Wall', '-Wextra', '-Wpedantic', '-Werror',
+            '-fanalyzer', '-DSYSTEM_MAG_ROTATION_ENABLED=1U', '-DSYSTEM_INSTALLATION_CAPTURE_ENABLED=0U',
+            *['-I'+str(p) for p in includes], str(source), str(MATH/'Src/mag_rotation.c'), '-lm', '-o', str(exe)]
+        records = []
+        inputs = [source, MATH/'Src/mag_rotation_runtime.c', MATH/'Src/mag_rotation.c',
+                  CORE/'Common/Src/silverstar_assert.c', PLUGIN/'Tests/Host/test_mag_rotation_runtime.c']
+        for stage, invocation in [('compile', command), ('run', [str(exe), corruption])]:
+            result = subprocess.run(invocation, capture_output=True, timeout=90)
+            (tmp_path/(stage+'.log')).write_bytes(result.stdout + result.stderr)
+            records.append({'command': invocation, 'exit_code': result.returncode})
+            (tmp_path/'commands.json').write_text(json.dumps({'rows': records,
+                'scope': 'Real owner and fault record; Host-only terminal trap interception',
+                'sources': {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}}, indent=2), encoding='utf8')
+>           assert result.returncode == 0, (result.stdout + result.stderr).decode('utf8', errors='replace')
+E           AssertionError: Assertion failed: !"corrupt history state returned without the required fail-stop", file D:\python_software\SilverStar\apps\SCG\tests\fixtures\mag_rotation_state_contract.c, line 53
+
+E             
+E           assert 3221226505 == 0
+E            +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\rotation-state-before\\...l-stop", file D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\mag_rotation_state_contract.c, line 53\r\n').returncode
+
+apps\SCG\tests\test_release_mag_rotation.py:101: AssertionError
+___ test_corrupt_rotation_history_fails_before_access_or_publication[count] ___
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/gui-convergence-20261110/scg/rotation-state-before/test_corrupt_rotation_history_1')
+corruption = 'count'
+
+    @pytest.mark.parametrize('corruption', ['head', 'count'])
+    def test_corrupt_rotation_history_fails_before_access_or_publication(tmp_path, corruption):
+        includes = [MATH/'Inc', MATH/'Src', PLUGIN/'Tests/Host', CORE/'Common/Src',
+            CORE/'Tests/Host/mag_calibration', CORE/'Interfaces/Inc', CORE/'Common/Inc',
+            CORE/'System/Inc', CORE/'System/Inertial/Inc', CORE/'System/Calibration/Inc',
+            CORE/'APP/Inc', CORE/'System/User', BUILTIN/'silverstar_platform_api/payload/Platform/Inc',
+            BUILTIN/'silverstar_protocol_logging_sslog_0_0/payload/Protocol/SSLOG/Inc',
+            BUILTIN/'silverstar_algorithm_calibration/payload/Algorithm/Calibration/Inc']
+        source = SCG/'tests/fixtures/mag_rotation_state_contract.c'
+        exe = tmp_path/'rotation-state.exe'
+        command = [shutil.which('gcc'), '-std=c11', '-O2', '-Wall', '-Wextra', '-Wpedantic', '-Werror',
+            '-fanalyzer', '-DSYSTEM_MAG_ROTATION_ENABLED=1U', '-DSYSTEM_INSTALLATION_CAPTURE_ENABLED=0U',
+            *['-I'+str(p) for p in includes], str(source), str(MATH/'Src/mag_rotation.c'), '-lm', '-o', str(exe)]
+        records = []
+        inputs = [source, MATH/'Src/mag_rotation_runtime.c', MATH/'Src/mag_rotation.c',
+                  CORE/'Common/Src/silverstar_assert.c', PLUGIN/'Tests/Host/test_mag_rotation_runtime.c']
+        for stage, invocation in [('compile', command), ('run', [str(exe), corruption])]:
+            result = subprocess.run(invocation, capture_output=True, timeout=90)
+            (tmp_path/(stage+'.log')).write_bytes(result.stdout + result.stderr)
+            records.append({'command': invocation, 'exit_code': result.returncode})
+            (tmp_path/'commands.json').write_text(json.dumps({'rows': records,
+                'scope': 'Real owner and fault record; Host-only terminal trap interception',
+                'sources': {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in inputs}}, indent=2), encoding='utf8')
+>           assert result.returncode == 0, (result.stdout + result.stderr).decode('utf8', errors='replace')
+E           AssertionError: Assertion failed: !"corrupt history state returned without the required fail-stop", file D:\python_software\SilverStar\apps\SCG\tests\fixtures\mag_rotation_state_contract.c, line 53
+
+E             
+E           assert 3221226505 == 0
+E            +  where 3221226505 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\rotation-state-before\\...l-stop", file D:\\python_software\\SilverStar\\apps\\SCG\\tests\\fixtures\\mag_rotation_state_contract.c, line 53\r\n').returncode
+
+apps\SCG\tests\test_release_mag_rotation.py:101: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_release_mag_rotation.py::test_corrupt_rotation_history_fails_before_access_or_publication[head]
+FAILED apps\SCG\tests\test_release_mag_rotation.py::test_corrupt_rotation_history_fails_before_access_or_publication[count]
+2 failed, 10 deselected in 26.84s

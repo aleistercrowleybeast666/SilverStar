@@ -1,0 +1,57 @@
+{
+  "source_commit": "e143188dbad9ca0a70dfdc27f52b4226a370cfe8",
+  "source_manifest_sha256": "f690aa010de40dbd68d5e7a79c789495836d499a55fa54c671e328d95891f7af",
+  "current_index_sha256": "79df3c621cbfe6a3a44f2d933b9eba56efd680811b54c6a54834ef7376c32c96",
+  "original_cases": [
+    {
+      "name": "f407-Release",
+      "equal": true,
+      "canonical_sha256": "4545cd157b015b12abb96473ea1838b00d7d71607d1f4693c61a0bdb64341626"
+    },
+    {
+      "name": "f407-Debug",
+      "equal": true,
+      "canonical_sha256": "5da7a81d4401d63aa4105d9b83f62aae5971603ea8fc04a964e709c66cb52fc9"
+    },
+    {
+      "name": "installation-Release",
+      "equal": true,
+      "canonical_sha256": "4e7991fe3ec3a51a9c319cbbd894044eaae01c7091ff6bad8594d4708e0473c6"
+    },
+    {
+      "name": "installation-Debug",
+      "equal": true,
+      "canonical_sha256": "e3e2d795f922e8a0b818db7585c830fca0435c62f7deded4c728292fdfab4e68"
+    },
+    {
+      "name": "h743-Release",
+      "equal": true,
+      "canonical_sha256": "e0d5ad6202872f0602f350bc529d30b6b2c85a6cdeb1080a3cd2c1bd08ced91a"
+    },
+    {
+      "name": "h743-Debug",
+      "equal": true,
+      "canonical_sha256": "46260e7f0c9708ee5ca844396668cbcc23c6c9af80e95fe97412f2f1e3b47fed"
+    },
+    {
+      "name": "pid-Release",
+      "equal": true,
+      "canonical_sha256": "7b31fe04b1161d67214238e8a6b04eaee6f7265b2c3cace838585e5848c16882"
+    },
+    {
+      "name": "pid-Debug",
+      "equal": true,
+      "canonical_sha256": "ecf618e228b00890b5b4682527e7c1dd0731c9b6915b374f2b7565336b6c1efc"
+    },
+    {
+      "name": "lqr-Release",
+      "equal": true,
+      "canonical_sha256": "a71f290ab9f4a20419e68d5ea604110298a6d0d1e6cf5e66a826fb1960bfb04d"
+    },
+    {
+      "name": "lqr-Debug",
+      "equal": true,
+      "canonical_sha256": "4b0e8756b708483531c7b84a653197ae04cf0ba123fd9e069dfc597313d4225f"
+    }
+  ]
+}

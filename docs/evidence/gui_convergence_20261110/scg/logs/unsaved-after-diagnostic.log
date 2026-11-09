@@ -1,0 +1,30 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\.venv\Scripts\python.exe
+cachedir: .work\pytest-cache
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\SCG
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 6 items
+
+apps\SCG\tests\test_project_unsaved_boundary.py::test_applied_model_close_uses_real_save_discard_cancel[4194304] PASSED
+apps\SCG\tests\test_project_unsaved_boundary.py::test_applied_model_close_uses_real_save_discard_cancel[8388608] PASSED
+apps\SCG\tests\test_project_unsaved_boundary.py::test_applied_model_close_uses_real_save_discard_cancel[2048] PASSED
+apps\SCG\tests\test_project_unsaved_boundary.py::test_failed_close_save_retains_applied_model_and_file PASSED
+apps\SCG\tests\test_project_unsaved_boundary.py::test_save_as_cancel_does_not_accept_close PASSED
+apps\SCG\tests\test_project_unsaved_boundary.py::test_open_cancel_and_read_only_browsing_preserve_savedness FAILED
+
+================================== FAILURES ===================================
+_________ test_open_cancel_and_read_only_browsing_preserve_savedness __________
+apps\SCG\tests\test_project_unsaved_boundary.py:119: in test_open_cancel_and_read_only_browsing_preserve_savedness
+    assert 'Unsaved' not in window.current_project_value.text()
+E   AssertionError: assert 'Unsaved' not in 'UnsavedBoundary'
+E     
+E     'Unsaved' is contained here:
+E       UnsavedBoundary
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_project_unsaved_boundary.py::test_open_cancel_and_read_only_browsing_preserve_savedness - AssertionError: assert 'Unsaved' not in 'UnsavedBoundary'
+  
+  'Unsaved' is contained here:
+    UnsavedBoundary
+=================== 1 failed, 5 passed in 102.00s (0:01:42) ===================

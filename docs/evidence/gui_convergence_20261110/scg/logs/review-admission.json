@@ -1,0 +1,35 @@
+{
+  "status": "reviewed candidate A admitted; delivery acceptance still requires independent B rebuild",
+  "previous_manifest_sha256": "f690aa010de40dbd68d5e7a79c789495836d499a55fa54c671e328d95891f7af",
+  "manifest_sha256": "bf1b7cd9606b57ed4b14e6d7a71607d5869221d70c50e923cf4ab5fe76ad3872",
+  "review_document_sha256": "33f44aa6334b75b72c66f7d0724ba491bee5625ef68286fd3d31c8a069e87bc1",
+  "unchanged_original_cases": 10,
+  "new_reviewed_cases": [
+    {
+      "case": "convergence-20261110-f4-Release",
+      "inspection_sha256": "4ef04e1e5d25c9e17b3e09209ad5c093edb97e0ad4f17575b81e49347013da27"
+    },
+    {
+      "case": "convergence-20261110-f4-Debug",
+      "inspection_sha256": "671c51fd827c10bc925b1c40ef37eb91671cd4de240a3be55788b3db68eab2e3"
+    },
+    {
+      "case": "convergence-20261110-capture-Release",
+      "inspection_sha256": "d03ba35dcb9a59cc7ed43f2298eaf8caacd5b7d9a214f6c82d0e1f5930380986"
+    },
+    {
+      "case": "convergence-20261110-capture-Debug",
+      "inspection_sha256": "606c78a702ad7e7bec067ca2c59faf9a034dc708e1832d4a670ba66132ad3cce"
+    },
+    {
+      "case": "convergence-20261110-h7-Release",
+      "inspection_sha256": "8756f51a8b72bb881dc83606ad7f6c5bc7b038e1596d92600d4815bd01f2e644"
+    },
+    {
+      "case": "convergence-20261110-h7-Debug",
+      "inspection_sha256": "e48404993db0f494de10aa478e7dbc70087b5a14b925ad0ae711c29cbef431f1"
+    }
+  ],
+  "candidate_schema_correction": "control_task key corrected before any independent B generation or acceptance; control data unchanged",
+  "pre_correction_manifest_sha256": "258e346a9beb561f266f1d9ba90140c4c761f820067c5bd4bb78f8e58c599009"
+}

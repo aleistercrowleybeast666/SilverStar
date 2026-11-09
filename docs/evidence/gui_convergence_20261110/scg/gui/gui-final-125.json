@@ -1,0 +1,80 @@
+{
+  "mode": "Qt offscreen; production capsule/function buttons; not native desktop evidence",
+  "language": "zh_CN",
+  "theme": "light",
+  "scale": "1.25",
+  "model_unchanged": true,
+  "surfaces": [
+    {
+      "name": "hardware",
+      "logical_size": [
+        980,
+        700
+      ],
+      "pixel_size": [
+        1225,
+        875
+      ],
+      "sha256": "c1d65627c5810fe2e90b1bbf7089092b0d5f07e7221d7130268d72bda39c4f08",
+      "visible_footer_buttons": []
+    },
+    {
+      "name": "workflow",
+      "logical_size": [
+        980,
+        700
+      ],
+      "pixel_size": [
+        1225,
+        875
+      ],
+      "sha256": "4d9640e4e56044dd723370ea21305cb0be64fc77e089745a598c8ac529ea363c",
+      "visible_footer_buttons": []
+    },
+    {
+      "name": "generation",
+      "logical_size": [
+        980,
+        700
+      ],
+      "pixel_size": [
+        1225,
+        875
+      ],
+      "sha256": "c1d6904ee91cf54730916de2ba246b4ca0855496638c1349ce6fe1f7fd4e3fbe",
+      "visible_footer_buttons": []
+    },
+    {
+      "name": "stage",
+      "logical_size": [
+        720,
+        620
+      ],
+      "pixel_size": [
+        900,
+        775
+      ],
+      "sha256": "53bd98c1fcec9ecd9cac67218b48a4dc0c513696389da0c24a6c04555e61ff65",
+      "visible_footer_buttons": [
+        "确认阶段配置",
+        "取消"
+      ]
+    },
+    {
+      "name": "shared-ins",
+      "logical_size": [
+        720,
+        620
+      ],
+      "pixel_size": [
+        900,
+        775
+      ],
+      "sha256": "93cba90f46152a2b355dcb844e6014baaf181a3afc6e1c723821db7c5db8ef13",
+      "visible_footer_buttons": [
+        "应用",
+        "取消"
+      ]
+    }
+  ]
+}

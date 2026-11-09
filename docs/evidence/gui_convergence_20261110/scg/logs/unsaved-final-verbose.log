@@ -1,0 +1,19 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\.venv\Scripts\python.exe
+cachedir: .work\pytest-cache
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\SCG
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 8 items
+
+apps\SCG\tests\test_project_unsaved_boundary.py::test_applied_model_close_uses_real_save_discard_cancel[4194304] PASSED
+apps\SCG\tests\test_project_unsaved_boundary.py::test_applied_model_close_uses_real_save_discard_cancel[8388608] PASSED
+apps\SCG\tests\test_project_unsaved_boundary.py::test_applied_model_close_uses_real_save_discard_cancel[2048] PASSED
+apps\SCG\tests\test_project_unsaved_boundary.py::test_failed_close_save_retains_applied_model_and_file PASSED
+apps\SCG\tests\test_project_unsaved_boundary.py::test_save_as_cancel_does_not_accept_close PASSED
+apps\SCG\tests\test_project_unsaved_boundary.py::test_open_cancel_and_read_only_browsing_preserve_savedness PASSED
+apps\SCG\tests\test_gui_qa_repair.py::test_close_waits_for_worker_and_does_not_dispatch_cancelled_result PASSED
+apps\SCG\tests\test_device_capability_architecture.py::test_gui_save_as_action_creates_draft_project_root PASSED
+
+======================== 8 passed in 137.01s (0:02:17) ========================

@@ -1,0 +1,103 @@
+........................................................................ [ 64%]
+.......F.......FF.......................                                 [100%]
+================================== FAILURES ===================================
+_____ test_source_only_review_cannot_grant_a_compiled_dependency_closure ______
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/gui-convergence-20261110/scg/stack-tests/test_source_only_review_cannot0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001DC8AD0A270>
+
+    def test_source_only_review_cannot_grant_a_compiled_dependency_closure(tmp_path, monkeypatch):
+        payload = Path(__file__).resolve().parents[1] / 'plugins/builtin/silverstar_core_0_1_0/payload'
+        relative = 'APP/Src/logger_bus.c'
+        destination = tmp_path / relative
+        destination.parent.mkdir(parents=True)
+        destination.write_bytes((payload / relative).read_bytes())
+        build = tmp_path / 'build'
+        (build / 'APP/Src').mkdir(parents=True)
+        (build / 'APP/Src/logger_bus.d').write_text('fixture.o: ' + relative + '\n', encoding='utf8')
+        import hashlib
+        monkeypatch.setitem(stacks.BINDING_DEPENDENCIES_V2, relative, [hashlib.sha256(relative.encode()).hexdigest()])
+>       with pytest.raises(ValueError, match='paired source/compiler input closure'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'paired source/compiler input closure'
+E         Actual message: 'Changed or unknown complete callback binding source: APP/Src/logger_bus.c'
+
+apps\SCG\tests\test_stack_budget.py:333: AssertionError
+_ test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input[APP/Inc/logger_bus.h] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/gui-convergence-20261110/scg/stack-tests/test_uart_review_accepts_exact0')
+relative = 'APP/Inc/logger_bus.h'
+
+    @pytest.mark.parametrize('relative', [
+        'APP/Inc/logger_bus.h', 'APP/Src/logger_bus.c', 'APP/Src/logger_task.c',
+        'Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c',
+        'FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c',
+        'Generated/Src/project_log_decoder_profile.c', 'Generated/Src/project_metadata.c',
+        'System/Inc/system_lifecycle.h', 'System/Inc/system_log_file.h',
+        'System/Src/system_console.c', 'System/Src/system_log_file.c'])
+    def test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input(tmp_path, relative):
+        base = Path(__file__).resolve().parents[1]
+        if relative.startswith('Generated/'):
+            owner = base / 'tests/fixtures/stack_uart_identity_20261013'
+        elif relative.startswith('Devices/'):
+            owner = base / 'plugins/builtin/silverstar_device_storage_sd_sdio_fatfs/payload'
+        elif relative.startswith('FlightLogic/'):
+            owner = base / 'plugins/builtin/silverstar_flight_logic_cycle_reference/payload'
+        else:
+            owner = base / 'plugins/builtin/silverstar_core_0_1_0/payload'
+        if relative in ('FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c',
+                        'System/Src/system_console.c'):
+            with zipfile.ZipFile(base / 'tests/fixtures/stack_review_20261025.zip') as archive:
+                text = archive.read(relative).decode('utf8')
+        else:
+            text = (owner / relative).read_text(encoding='utf8')
+>       assert stacks.BindingSourceHash_Get(text) in stacks.BindingSourceVersions_Get(relative)
+E       assert '5e4f880a9b52820f9bacc7f935362d1e4c2e20fdb19f4328428301fef54602a2' in ['608975eef353579ad65f8cd265dda883f57e54701f50255786dd2a69934e98ac', '077d47330fd6563a410a242864d580468722f8d3f4daae4f...402e952daf8e16929d1464ba1f72cbbc1e8c12e524e3737b1', '177693ced2587d2e9f3931fb5c726a2c67125c23b0f29165fba8b7630397e0e6']
+E        +  where '5e4f880a9b52820f9bacc7f935362d1e4c2e20fdb19f4328428301fef54602a2' = <function BindingSourceHash_Get at 0x000001DC898EF110>('#ifndef __LOGGER_BUS_H\n#define __LOGGER_BUS_H\n\n#include <stdint.h>\n\n#include "sslog_protocol.h"\n#include "proje...ticPush(\n    uint64_t timestamp_us, const FlightLogLandingDiagnosticRecord *record);\n\n#endif /* __LOGGER_BUS_H */\n')
+E        +    where <function BindingSourceHash_Get at 0x000001DC898EF110> = stacks.BindingSourceHash_Get
+E        +  and   ['608975eef353579ad65f8cd265dda883f57e54701f50255786dd2a69934e98ac', '077d47330fd6563a410a242864d580468722f8d3f4daae4f...402e952daf8e16929d1464ba1f72cbbc1e8c12e524e3737b1', '177693ced2587d2e9f3931fb5c726a2c67125c23b0f29165fba8b7630397e0e6'] = <function BindingSourceVersions_Get at 0x000001DC898EF060>('APP/Inc/logger_bus.h')
+E        +    where <function BindingSourceVersions_Get at 0x000001DC898EF060> = stacks.BindingSourceVersions_Get
+
+apps\SCG\tests\test_stack_budget.py:433: AssertionError
+_ test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input[APP/Src/logger_bus.c] _
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/gui-convergence-20261110/scg/stack-tests/test_uart_review_accepts_exact1')
+relative = 'APP/Src/logger_bus.c'
+
+    @pytest.mark.parametrize('relative', [
+        'APP/Inc/logger_bus.h', 'APP/Src/logger_bus.c', 'APP/Src/logger_task.c',
+        'Devices/Storage/SdSdioFatFs/Adapter/Src/log_file_storage.c',
+        'FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c',
+        'Generated/Src/project_log_decoder_profile.c', 'Generated/Src/project_metadata.c',
+        'System/Inc/system_lifecycle.h', 'System/Inc/system_log_file.h',
+        'System/Src/system_console.c', 'System/Src/system_log_file.c'])
+    def test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input(tmp_path, relative):
+        base = Path(__file__).resolve().parents[1]
+        if relative.startswith('Generated/'):
+            owner = base / 'tests/fixtures/stack_uart_identity_20261013'
+        elif relative.startswith('Devices/'):
+            owner = base / 'plugins/builtin/silverstar_device_storage_sd_sdio_fatfs/payload'
+        elif relative.startswith('FlightLogic/'):
+            owner = base / 'plugins/builtin/silverstar_flight_logic_cycle_reference/payload'
+        else:
+            owner = base / 'plugins/builtin/silverstar_core_0_1_0/payload'
+        if relative in ('FlightLogic/FlightCycle/Src/silverstar_flight_cycle.c',
+                        'System/Src/system_console.c'):
+            with zipfile.ZipFile(base / 'tests/fixtures/stack_review_20261025.zip') as archive:
+                text = archive.read(relative).decode('utf8')
+        else:
+            text = (owner / relative).read_text(encoding='utf8')
+>       assert stacks.BindingSourceHash_Get(text) in stacks.BindingSourceVersions_Get(relative)
+E       assert '32bb739432329618348a58bb449fee8da46f879693046fbb1820867d68533931' in ['c7f63361c7c815a79eb14ca6c25ab8eb57b06180f9761f21f9f77cee198838cd', '694acdf52db1cc042022cea3fb5c999b305eccb7a3511e24...cd873a3b310c624d9c047606d142d1ff96b03f621ce890f7b', 'cb78a66a89d19e4497c33e69cffe07b5fcd545c0a3060a0622b0ca1941384082']
+E        +  where '32bb739432329618348a58bb449fee8da46f879693046fbb1820867d68533931' = <function BindingSourceHash_Get at 0x000001DC898EF110>('#include "logger_bus.h"\n\n#include <stddef.h>\n#include <string.h>\n\n#include "common_spsc_queue.h"\n#include "plat...cordPush(\n        FLIGHT_LOG_RECORD_LANDING_DIAGNOSTIC, timestamp_us, 0U,\n        record, sizeof(*record), 0U);\n}\n')
+E        +    where <function BindingSourceHash_Get at 0x000001DC898EF110> = stacks.BindingSourceHash_Get
+E        +  and   ['c7f63361c7c815a79eb14ca6c25ab8eb57b06180f9761f21f9f77cee198838cd', '694acdf52db1cc042022cea3fb5c999b305eccb7a3511e24...cd873a3b310c624d9c047606d142d1ff96b03f621ce890f7b', 'cb78a66a89d19e4497c33e69cffe07b5fcd545c0a3060a0622b0ca1941384082'] = <function BindingSourceVersions_Get at 0x000001DC898EF060>('APP/Src/logger_bus.c')
+E        +    where <function BindingSourceVersions_Get at 0x000001DC898EF060> = stacks.BindingSourceVersions_Get
+
+apps\SCG\tests\test_stack_budget.py:433: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_stack_budget.py::test_source_only_review_cannot_grant_a_compiled_dependency_closure
+FAILED apps\SCG\tests\test_stack_budget.py::test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input[APP/Inc/logger_bus.h]
+FAILED apps\SCG\tests\test_stack_budget.py::test_uart_review_accepts_exact_owner_and_rejects_changed_complete_input[APP/Src/logger_bus.c]
+3 failed, 109 passed in 23.68s

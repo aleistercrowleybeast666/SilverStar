@@ -1,0 +1,32 @@
+{
+  "command": [
+    "D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+    "-u",
+    "-X",
+    "utf8",
+    "-m",
+    "pytest",
+    "apps/SCG/tests/test_mission_critical_contracts.py",
+    "apps/SCG/tests/test_mission_process_native.py",
+    "apps/SCG/tests/test_control_research.py",
+    "apps/SCG/tests/test_runtime_safety.py::test_runtime_generation_includes_stack_report",
+    "--basetemp",
+    "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\task-contract-tests",
+    "-q",
+    "-s",
+    "-ra",
+    "--tb=short"
+  ],
+  "exit_code": 0,
+  "seconds": 247.243,
+  "test_file_sha256": {
+    "apps/SCG/tests/test_mission_critical_contracts.py": "2bbc94be69e7f8b015e2f5ccdab4dec7530695fd131a4ee421c588c5e30becef",
+    "apps/SCG/tests/test_mission_process_native.py": "7a21a91e8bf682adb3d19c600c8b297fc5747b42d26f294b5c6e798107263721",
+    "apps/SCG/tests/test_control_research.py": "3a9f22ba7cb18f2c9a075824cf4b6f25311e60296c792cbefdc4c80318a91110",
+    "apps/SCG/tests/test_runtime_safety.py::test_runtime_generation_includes_stack_report": "e4bc9a072f559d1eb88183230aa6bfb4edf85f20eaa871ea90ef6439c4e9212e"
+  },
+  "host_compiler": "gcc.exe (Rev5, Built by MSYS2 project) 16.1.0",
+  "host_compiler_sha256": "f96a3bdb1d3a3967b309d75c7413399391e857b5be4cb17162572ed66f6772a0",
+  "log_sha256": "58f14997c240ed53d17c44c63304dc7195cb2766bf4b2722eceb939d8054e3fc",
+  "scope": "Software Host: complete three files plus normal-generation ownership/stack-report fixture; no hardware."
+}

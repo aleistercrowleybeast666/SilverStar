@@ -1,0 +1,67 @@
+..................................................FF...........          [100%]
+================================== FAILURES ===================================
+______ test_ordinary_window_admission_and_request_do_not_create_project _______
+
+qapp = <PySide6.QtWidgets.QApplication(0x1fb599968f0) at 0x000001FB5EC48C40>
+workspace_root = WindowsPath('D:/python_software/SilverStar/apps/SCG')
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/gui-convergence-20261110/scg/gui-tests/test_ordinary_window_admission0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001FB636FD940>
+
+    def test_ordinary_window_admission_and_request_do_not_create_project(qapp, workspace_root, tmp_path, monkeypatch):
+        window = MainWindow(SettingsStore(tmp_path/'settings.ini'), service=FccgService(workspace_root))
+        window._toolchain_checked = True
+        window.show(); qapp.processEvents()
+        before = deepcopy(window._model.Dictionary_Get())
+        calls = []
+        window._Error_Show = lambda *args: calls.append(args)
+        monkeypatch.setattr(QFileDialog, 'getExistingDirectory', lambda *_args: pytest.fail('unready request opened output chooser'))
+        for target, page in (('flight', window.board_hardware_page), ('ground', window.ground_target_page)):
+            assert not page.generate_button.isEnabled()
+            window._Targets_Generate('generate_' + target)
+        assert len(calls) == 2
+        assert window._project_root is None
+        assert window._model.Dictionary_Get() == before
+        window._Actions_SetEnabled(False); window._Actions_SetEnabled(True)
+        assert window._active_worker is None
+        # Reproduce the completion order: restored controls, then the asynchronous
+        # tool-result presenter. Tool presence must not erase configuration reasons.
+        from types import SimpleNamespace
+        window._Toolchains_Show(tuple(SimpleNamespace(tool_id=tool, command=tool,
+            path='test/'+tool, version='test', available=True, compatible=True, target='test')
+            for tool in ('compiler', 'make', 'host_gcc')))
+        assert not window.board_hardware_page.generate_button.isEnabled()
+        assert not window.ground_target_page.generate_button.isEnabled()
+>       assert all(label.text() == window._translator.Text_Get('target.generation.blocked')
+                   for label in window.build_page.target_status_labels.values())
+E       assert False
+E        +  where False = all(<generator object test_ordinary_window_admission_and_request_do_not_create_project.<locals>.<genexpr> at 0x000001FB63B4B010>)
+
+apps\SCG\tests\test_hardware_transaction.py:65: AssertionError
+____________ test_real_qapplication_exits_after_both_target_drafts ____________
+
+tmp_path = WindowsPath('D:/python_software/SilverStar/.work/gui-convergence-20261110/scg/gui-tests/test_real_qapplication_exits_a0')
+
+    def test_real_qapplication_exits_after_both_target_drafts(tmp_path):
+        import json
+        import os
+        import subprocess
+        import sys
+        fixture = Path(__file__).parent/'fixtures/hardware_dialog_lifecycle.py'
+        process = subprocess.run([sys.executable, str(fixture), str(tmp_path/'lifecycle')],
+            env=dict(os.environ, QT_QPA_PLATFORM='offscreen'), capture_output=True, text=True,
+            encoding='utf8', errors='replace', timeout=45)
+>       assert process.returncode == 0, process.stdout + '\n' + process.stderr
+E       AssertionError: 
+E         Traceback (most recent call last):
+E           File "D:\python_software\SilverStar\apps\SCG\tests\fixtures\hardware_dialog_lifecycle.py", line 12, in <module>
+E             from silverstar_fccg.core.settings import SettingsStore
+E         ModuleNotFoundError: No module named 'silverstar_fccg'
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe', 'D:\\python_software\\SilverStar...  from silverstar_fccg.core.settings import SettingsStore\nModuleNotFoundError: No module named \'silverstar_fccg\'\n').returncode
+
+apps\SCG\tests\test_hardware_transaction.py:83: AssertionError
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_hardware_transaction.py::test_ordinary_window_admission_and_request_do_not_create_project
+FAILED apps\SCG\tests\test_hardware_transaction.py::test_real_qapplication_exits_after_both_target_drafts
+2 failed, 61 passed in 500.41s (0:08:20)

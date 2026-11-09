@@ -1,0 +1,13 @@
+normal/error output transaction PASS
+.normal/error output transaction PASS
+.bounded fail-stop before publication: event-count reason=3 PASS
+.bounded fail-stop before publication: active-count reason=3 PASS
+.bounded fail-stop before publication: navigation-count reason=3 PASS
+.bounded fail-stop before publication: active-terminated reason=5 PASS
+.bounded fail-stop before publication: event-future reason=7 PASS
+.bounded fail-stop before publication: event-order reason=7 PASS
+.bounded fail-stop before publication: ready-mask reason=2 PASS
+.bounded fail-stop before publication: mission-flag reason=5 PASS
+.termination retains safe stop and reports configuration failure PASS
+....................................................................................
+94 passed in 244.00s (0:04:04)

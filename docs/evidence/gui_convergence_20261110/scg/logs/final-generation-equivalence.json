@@ -1,0 +1,342 @@
+[
+  {
+    "name": "f4",
+    "compiled_b": ".work/gui-convergence-20261110/scg/b/f4/Flight_Controller",
+    "new_generation": ".work/gui-convergence-20261110/scg/final-generation/f4/Flight_Controller",
+    "sealed_case": "convergence-20261110-f4-Release",
+    "source_count": 506,
+    "source_inputs_equal": true,
+    "declaration_count": 21,
+    "build_declarations_equal": true,
+    "identity_sha256": {
+      "Generated/project_sources.mk": "1ffa60b5fe2c61ad46f17149df84391461ff02ba9e48de0ac7ec845c3a3c62fc",
+      "Generated/project_semantics.json": "f37d6db85f40e97b4e326bda17d0980070e4836cd70eb92b20603d297f4e0a68",
+      "Generated/Src/project_metadata.c": "5b6fc15e6d45baa2ae92a04f450feccc879df95296af9df1f192e4e418880506",
+      "Generated/Src/project_log_decoder_profile.c": "6b522822eae6f6a2fdefcca5073af286e9bda37b5b8e26da50057158bc4f5b41",
+      ".fccg/version_identity.json": "6e86793b98b7bfe332733666f91058213f0041ef6a2db225835f78c06951fc70",
+      "GuiConvergence_f4.ssdecoder": "e492febf374c44536bd7bbb1ab98ad3d6ec5a140c03d97ced834f4444c549d73"
+    },
+    "ownership_metadata_equal": false,
+    "project_configuration_equal": true,
+    "component_provenance_changes": {
+      "silverstar.core.0_1_0": {
+        "before_payload_digest": "853996a8960426d13b861a3ffd8ceb1103f2fb5eef5c66029a8243073ed45c5f",
+        "after_payload_digest": "0c61e38fd07e171b4045f93d009671c462fee4ba2a45bfd06860f44a2f43d0b2",
+        "changed_files": {
+          "Tests/Host/generate_golden_sample.c": {
+            "before": "fe234cac583db28393c8b40104c72ad5cdb9e393f33d2547a0c5f3466523a566",
+            "after": "2976c228f6c8748dd381d9e3686ef87eec7446bf1e247a2b16c37c9447fee234"
+          },
+          "Tests/Host/run_tests.ps1": {
+            "before": "588a87b697fa6d5c4c98bc554144a125a08586151acde76968499070409f64fc",
+            "after": "f04cb5896f7ef712225a3be14a59fea1f61148174220776b4c98d178345c599d"
+          },
+          "Tools/check_task_stacks.py": {
+            "before": "e6564440d4724b06ae883f9c17f804e90abc13b298830f6cde17233d22d55396",
+            "after": "da80b3e048679168569576c5fac5df790e9080e2ca907d7d880b9707dffb205f"
+          },
+          "Tools/software_stack_cases/convergence-20261110-capture-Debug.json": {
+            "before": null,
+            "after": "c11016e591cb71e23fbd248431d92cd11de467eda46688ed73ec236a41ce976f"
+          },
+          "Tools/software_stack_cases/convergence-20261110-capture-Release.json": {
+            "before": null,
+            "after": "a80817288e5406fb7c057132c049e6bd3a60d0feae90172cced1f0dc974b38f0"
+          },
+          "Tools/software_stack_cases/convergence-20261110-f4-Debug.json": {
+            "before": null,
+            "after": "6f883f1080a839f29618a6f33cfe8e7627266a4fdd6759e2d3f90c6477c49748"
+          },
+          "Tools/software_stack_cases/convergence-20261110-f4-Release.json": {
+            "before": null,
+            "after": "2a791036f48184f31fe655bffe8c94d7695cca45185a68589145ee26e7feeabe"
+          },
+          "Tools/software_stack_cases/convergence-20261110-h7-Debug.json": {
+            "before": null,
+            "after": "d65fdaba1d31eac6f3fa004588d193c84341da4934bb6436b25d82e5886f35da"
+          },
+          "Tools/software_stack_cases/convergence-20261110-h7-Release.json": {
+            "before": null,
+            "after": "50eeb4ce3f748084959eb50e34c3010abe58e7bdbdd8f35c4c2cf95d77638378"
+          },
+          "Tools/software_stack_cases/convergence-current-20261110-h7-Debug.json": {
+            "before": null,
+            "after": "f02cae60024b73fc53b17753ad2605fc03cbc8fadac47dd6208ab6330f5551e0"
+          },
+          "Tools/software_stack_cases/convergence-current-20261110-h7-Release.json": {
+            "before": null,
+            "after": "67497ee561caf59eb7f305b39536b1a6ad8afdcfb934ad6bfe549ad4959d3d93"
+          },
+          "Tools/software_stack_cases/convergence-current-20261110-research-Debug.json": {
+            "before": null,
+            "after": "5fd9a5db91fc80eb065debdd04a35d3b58a5b2e843ce308f390467db209616f9"
+          },
+          "Tools/software_stack_cases/convergence-current-20261110-research-Release.json": {
+            "before": null,
+            "after": "56302022015568c28fc3618bae900c91e58ac4b22fe2060d8294c99db60fae92"
+          },
+          "Tools/software_stack_cases/f407-Debug.json": {
+            "before": null,
+            "after": "cb3cd809617b385812da2f2f06f7f59f68335c7b25e7eda88a978ebb50d8ecfb"
+          },
+          "Tools/software_stack_cases/f407-Release.json": {
+            "before": null,
+            "after": "4e0e30f2cd7200cac3f2142bb2e04c9bc0a5c26b8365c79af408098a6702421f"
+          },
+          "Tools/software_stack_cases/h743-Debug.json": {
+            "before": null,
+            "after": "a71844bb7e3317c7f398427914894a63d371bfa809e56c4d25f76d188cbdefb6"
+          },
+          "Tools/software_stack_cases/h743-Release.json": {
+            "before": null,
+            "after": "62f71e2d23f2f1b6afc29b0e869bae0666472f23df1f8ce6790982b10b893b5f"
+          },
+          "Tools/software_stack_cases/installation-Debug.json": {
+            "before": null,
+            "after": "04dfb473e85f0fc5b5f5c98ed399d07c97fa5e8473dbed916554c36dd8ff672d"
+          },
+          "Tools/software_stack_cases/installation-Release.json": {
+            "before": null,
+            "after": "1421ebd39397306aeea96f0b6555ed2ef6f2bd3f38150b135b180dd9e1535213"
+          },
+          "Tools/software_stack_cases/lqr-Debug.json": {
+            "before": null,
+            "after": "ac7fdc4713b6ef985004edbe03cfb2d206561ab034db76c7cce848de7cfe7159"
+          },
+          "Tools/software_stack_cases/lqr-Release.json": {
+            "before": null,
+            "after": "c703aa23689d77224eabe5fb2a576a0661404f6ea3183f5b50fa8ebcc4e8e13e"
+          },
+          "Tools/software_stack_cases/pid-Debug.json": {
+            "before": null,
+            "after": "17693e77fa6a326a2793cfb0c90f28c3f4d134934e002208dfedcb514e48a2ab"
+          },
+          "Tools/software_stack_cases/pid-Release.json": {
+            "before": null,
+            "after": "8c177e28590cb89b87417d5c1c76fafb13d24104bc01508360700fae0b5e2fad"
+          },
+          "Tools/software_stack_inputs.json": {
+            "before": "bf1b7cd9606b57ed4b14e6d7a71607d5869221d70c50e923cf4ab5fe76ad3872",
+            "after": "79df3c621cbfe6a3a44f2d933b9eba56efd680811b54c6a54834ef7376c32c96"
+          },
+          "Tools/software_stack_review_20261110_current.md": {
+            "before": null,
+            "after": "46ef720651ad9b52190074fd31970ad7bbb9b24ef63822395ff7bddd4153ce9d"
+          },
+          "Tools/stack_manifest.py": {
+            "before": null,
+            "after": "7723c6a21ea515568018b00cce9815691e7062560d40d903771ffc86802ae712"
+          },
+          "Tools/stack_review.py": {
+            "before": "21238fceb96ed797111711551d9732593938a57b750269ed0321a7ba8414c7a4",
+            "after": "ee5ebdbb69ce1764017507bb7d4c6a8b48e54e8672c6e2c8fbdafd70882eeac7"
+          }
+        }
+      }
+    },
+    "note": "Golden/Tools ownership changes do not change the verified compiled inputs or decoder. No new compile claimed."
+  },
+  {
+    "name": "capture",
+    "compiled_b": ".work/gui-convergence-20261110/scg/b/capture/Flight_Controller",
+    "new_generation": ".work/gui-convergence-20261110/scg/final-generation/capture/Flight_Controller",
+    "sealed_case": "convergence-20261110-capture-Release",
+    "source_count": 527,
+    "source_inputs_equal": true,
+    "declaration_count": 21,
+    "build_declarations_equal": true,
+    "identity_sha256": {
+      "Generated/project_sources.mk": "81220849ab8229a1b90a21e0486f5c0279ae44ea03d8e8074f6b24a9fadf336f",
+      "Generated/project_semantics.json": "c239dd98ae9e0ea4eb77103e5314e131846a0afcce61082d1bece55bb6bea09c",
+      "Generated/Src/project_metadata.c": "f1a1a5ae3e61c879efd949eb5631c1fbb610160b1e8b8dd41bd61eb84bbdd99b",
+      "Generated/Src/project_log_decoder_profile.c": "7cec643c0f6599707d2749edf1b69c8e36b6a22d415ef5a002e2073b207e6981",
+      ".fccg/version_identity.json": "6e86793b98b7bfe332733666f91058213f0041ef6a2db225835f78c06951fc70",
+      "GuiConvergence_capture.ssdecoder": "3b0b78e3b942a3b768d19f3063195305ae2cfdffb7a1fbb5ce3b3bd07fdb8dfd"
+    },
+    "ownership_metadata_equal": false,
+    "project_configuration_equal": true,
+    "component_provenance_changes": {
+      "silverstar.core.0_1_0": {
+        "before_payload_digest": "853996a8960426d13b861a3ffd8ceb1103f2fb5eef5c66029a8243073ed45c5f",
+        "after_payload_digest": "0c61e38fd07e171b4045f93d009671c462fee4ba2a45bfd06860f44a2f43d0b2",
+        "changed_files": {
+          "Tests/Host/generate_golden_sample.c": {
+            "before": "fe234cac583db28393c8b40104c72ad5cdb9e393f33d2547a0c5f3466523a566",
+            "after": "2976c228f6c8748dd381d9e3686ef87eec7446bf1e247a2b16c37c9447fee234"
+          },
+          "Tests/Host/run_tests.ps1": {
+            "before": "588a87b697fa6d5c4c98bc554144a125a08586151acde76968499070409f64fc",
+            "after": "f04cb5896f7ef712225a3be14a59fea1f61148174220776b4c98d178345c599d"
+          },
+          "Tools/check_task_stacks.py": {
+            "before": "e6564440d4724b06ae883f9c17f804e90abc13b298830f6cde17233d22d55396",
+            "after": "da80b3e048679168569576c5fac5df790e9080e2ca907d7d880b9707dffb205f"
+          },
+          "Tools/software_stack_cases/convergence-20261110-capture-Debug.json": {
+            "before": null,
+            "after": "c11016e591cb71e23fbd248431d92cd11de467eda46688ed73ec236a41ce976f"
+          },
+          "Tools/software_stack_cases/convergence-20261110-capture-Release.json": {
+            "before": null,
+            "after": "a80817288e5406fb7c057132c049e6bd3a60d0feae90172cced1f0dc974b38f0"
+          },
+          "Tools/software_stack_cases/convergence-20261110-f4-Debug.json": {
+            "before": null,
+            "after": "6f883f1080a839f29618a6f33cfe8e7627266a4fdd6759e2d3f90c6477c49748"
+          },
+          "Tools/software_stack_cases/convergence-20261110-f4-Release.json": {
+            "before": null,
+            "after": "2a791036f48184f31fe655bffe8c94d7695cca45185a68589145ee26e7feeabe"
+          },
+          "Tools/software_stack_cases/convergence-20261110-h7-Debug.json": {
+            "before": null,
+            "after": "d65fdaba1d31eac6f3fa004588d193c84341da4934bb6436b25d82e5886f35da"
+          },
+          "Tools/software_stack_cases/convergence-20261110-h7-Release.json": {
+            "before": null,
+            "after": "50eeb4ce3f748084959eb50e34c3010abe58e7bdbdd8f35c4c2cf95d77638378"
+          },
+          "Tools/software_stack_cases/convergence-current-20261110-h7-Debug.json": {
+            "before": null,
+            "after": "f02cae60024b73fc53b17753ad2605fc03cbc8fadac47dd6208ab6330f5551e0"
+          },
+          "Tools/software_stack_cases/convergence-current-20261110-h7-Release.json": {
+            "before": null,
+            "after": "67497ee561caf59eb7f305b39536b1a6ad8afdcfb934ad6bfe549ad4959d3d93"
+          },
+          "Tools/software_stack_cases/convergence-current-20261110-research-Debug.json": {
+            "before": null,
+            "after": "5fd9a5db91fc80eb065debdd04a35d3b58a5b2e843ce308f390467db209616f9"
+          },
+          "Tools/software_stack_cases/convergence-current-20261110-research-Release.json": {
+            "before": null,
+            "after": "56302022015568c28fc3618bae900c91e58ac4b22fe2060d8294c99db60fae92"
+          },
+          "Tools/software_stack_cases/f407-Debug.json": {
+            "before": null,
+            "after": "cb3cd809617b385812da2f2f06f7f59f68335c7b25e7eda88a978ebb50d8ecfb"
+          },
+          "Tools/software_stack_cases/f407-Release.json": {
+            "before": null,
+            "after": "4e0e30f2cd7200cac3f2142bb2e04c9bc0a5c26b8365c79af408098a6702421f"
+          },
+          "Tools/software_stack_cases/h743-Debug.json": {
+            "before": null,
+            "after": "a71844bb7e3317c7f398427914894a63d371bfa809e56c4d25f76d188cbdefb6"
+          },
+          "Tools/software_stack_cases/h743-Release.json": {
+            "before": null,
+            "after": "62f71e2d23f2f1b6afc29b0e869bae0666472f23df1f8ce6790982b10b893b5f"
+          },
+          "Tools/software_stack_cases/installation-Debug.json": {
+            "before": null,
+            "after": "04dfb473e85f0fc5b5f5c98ed399d07c97fa5e8473dbed916554c36dd8ff672d"
+          },
+          "Tools/software_stack_cases/installation-Release.json": {
+            "before": null,
+            "after": "1421ebd39397306aeea96f0b6555ed2ef6f2bd3f38150b135b180dd9e1535213"
+          },
+          "Tools/software_stack_cases/lqr-Debug.json": {
+            "before": null,
+            "after": "ac7fdc4713b6ef985004edbe03cfb2d206561ab034db76c7cce848de7cfe7159"
+          },
+          "Tools/software_stack_cases/lqr-Release.json": {
+            "before": null,
+            "after": "c703aa23689d77224eabe5fb2a576a0661404f6ea3183f5b50fa8ebcc4e8e13e"
+          },
+          "Tools/software_stack_cases/pid-Debug.json": {
+            "before": null,
+            "after": "17693e77fa6a326a2793cfb0c90f28c3f4d134934e002208dfedcb514e48a2ab"
+          },
+          "Tools/software_stack_cases/pid-Release.json": {
+            "before": null,
+            "after": "8c177e28590cb89b87417d5c1c76fafb13d24104bc01508360700fae0b5e2fad"
+          },
+          "Tools/software_stack_inputs.json": {
+            "before": "bf1b7cd9606b57ed4b14e6d7a71607d5869221d70c50e923cf4ab5fe76ad3872",
+            "after": "79df3c621cbfe6a3a44f2d933b9eba56efd680811b54c6a54834ef7376c32c96"
+          },
+          "Tools/software_stack_review_20261110_current.md": {
+            "before": null,
+            "after": "46ef720651ad9b52190074fd31970ad7bbb9b24ef63822395ff7bddd4153ce9d"
+          },
+          "Tools/stack_manifest.py": {
+            "before": null,
+            "after": "7723c6a21ea515568018b00cce9815691e7062560d40d903771ffc86802ae712"
+          },
+          "Tools/stack_review.py": {
+            "before": "21238fceb96ed797111711551d9732593938a57b750269ed0321a7ba8414c7a4",
+            "after": "ee5ebdbb69ce1764017507bb7d4c6a8b48e54e8672c6e2c8fbdafd70882eeac7"
+          }
+        }
+      }
+    },
+    "note": "Golden/Tools ownership changes do not change the verified compiled inputs or decoder. No new compile claimed."
+  },
+  {
+    "name": "h7",
+    "compiled_b": ".work/gui-convergence-20261110/scg/current-b/h7/Flight_Controller",
+    "new_generation": ".work/gui-convergence-20261110/scg/final-generation/h7/Flight_Controller",
+    "sealed_case": "convergence-current-20261110-h7-Release",
+    "source_count": 606,
+    "source_inputs_equal": true,
+    "declaration_count": 16,
+    "build_declarations_equal": true,
+    "identity_sha256": {
+      "Generated/project_sources.mk": "f901cd5751756b5280010047b189f1d705be35ec0a19d380465ef501f96fb009",
+      "Generated/project_semantics.json": "05afa44d9dd9cc8bd15cce6073662117f2f01804d25b66114bc6073ecb794988",
+      "Generated/Src/project_metadata.c": "ba323ef55dfa9d4a1b2e91cef9704b384bb049d631191094e53709958c642a40",
+      "Generated/Src/project_log_decoder_profile.c": "1575f038e0fc4a3a33c3f3e2c6636bc0c2f4a15498289c3c58913f3dd47fcafd",
+      ".fccg/version_identity.json": "6e86793b98b7bfe332733666f91058213f0041ef6a2db225835f78c06951fc70",
+      "H743ZI_eskf20_x1.ssdecoder": "6be39e914463c051930cf1ac6d6202273bd8d0bd2f2ebdd536054f94d72b0ea6"
+    },
+    "ownership_metadata_equal": false,
+    "project_configuration_equal": true,
+    "component_provenance_changes": {
+      "silverstar.core.0_1_0": {
+        "before_payload_digest": "fd971e4252261dfb6f32b0fbc34f46dcc007e49c703e510d1efa2d9601719dac",
+        "after_payload_digest": "0c61e38fd07e171b4045f93d009671c462fee4ba2a45bfd06860f44a2f43d0b2",
+        "changed_files": {
+          "Tests/Host/generate_golden_sample.c": {
+            "before": "fe234cac583db28393c8b40104c72ad5cdb9e393f33d2547a0c5f3466523a566",
+            "after": "2976c228f6c8748dd381d9e3686ef87eec7446bf1e247a2b16c37c9447fee234"
+          }
+        }
+      }
+    },
+    "note": "Golden/Tools ownership changes do not change the verified compiled inputs or decoder. No new compile claimed."
+  },
+  {
+    "name": "research",
+    "compiled_b": ".work/gui-convergence-20261110/scg/current-b/research/Flight_Controller",
+    "new_generation": ".work/gui-convergence-20261110/scg/final-generation/research/Flight_Controller",
+    "sealed_case": "convergence-current-20261110-research-Release",
+    "source_count": 510,
+    "source_inputs_equal": true,
+    "declaration_count": 21,
+    "build_declarations_equal": true,
+    "identity_sha256": {
+      "Generated/project_sources.mk": "b6fbc2f648c2dd3f04a757d6c25c68e5ed33d1fbe2acba58b611eb98a64e5de6",
+      "Generated/project_semantics.json": "7ec642b667c9a72c7bbe17203e4de5d2310a1c90c8efbe8790ae61bde38a1ffc",
+      "Generated/Src/project_metadata.c": "492ff8b65ba2a5f8aa18ef87e7bd50dec218a80cf98116b2ab255daf61351ded",
+      "Generated/Src/project_log_decoder_profile.c": "23fc700f3bce8efa164559e2d2c488c17851c9bde094bfd275d54fa776916922",
+      ".fccg/version_identity.json": "6e86793b98b7bfe332733666f91058213f0041ef6a2db225835f78c06951fc70",
+      "GuiConvergence_PID.ssdecoder": "ce047eb243ad627d729e1619c1a72ad02889eeb3f3948f31b863be7b8b80c85f"
+    },
+    "ownership_metadata_equal": false,
+    "project_configuration_equal": true,
+    "component_provenance_changes": {
+      "silverstar.core.0_1_0": {
+        "before_payload_digest": "fd971e4252261dfb6f32b0fbc34f46dcc007e49c703e510d1efa2d9601719dac",
+        "after_payload_digest": "0c61e38fd07e171b4045f93d009671c462fee4ba2a45bfd06860f44a2f43d0b2",
+        "changed_files": {
+          "Tests/Host/generate_golden_sample.c": {
+            "before": "fe234cac583db28393c8b40104c72ad5cdb9e393f33d2547a0c5f3466523a566",
+            "after": "2976c228f6c8748dd381d9e3686ef87eec7446bf1e247a2b16c37c9447fee234"
+          }
+        }
+      }
+    },
+    "note": "Golden/Tools ownership changes do not change the verified compiled inputs or decoder. No new compile claimed."
+  }
+]

@@ -1,0 +1,37 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0 -- D:\python_software\SilverStar\.venv\Scripts\python.exe
+cachedir: .work\pytest-cache
+PySide6 6.10.1 -- Qt runtime 6.10.1 -- Qt compiled 6.10.1
+rootdir: D:\python_software\SilverStar\apps\SCG
+configfile: pyproject.toml
+plugins: qt-4.5.0
+collecting ... collected 6 items / 3 deselected / 3 selected
+
+apps\SCG\tests\test_project_unsaved_boundary.py::test_applied_model_close_uses_real_save_discard_cancel[4194304] FAILED
+apps\SCG\tests\test_project_unsaved_boundary.py::test_applied_model_close_uses_real_save_discard_cancel[8388608] FAILED
+apps\SCG\tests\test_project_unsaved_boundary.py::test_applied_model_close_uses_real_save_discard_cancel[2048] FAILED
+
+================================== FAILURES ===================================
+_______ test_applied_model_close_uses_real_save_discard_cancel[4194304] _______
+apps\SCG\tests\test_project_unsaved_boundary.py:60: in test_applied_model_close_uses_real_save_discard_cancel
+    assert observed, 'Applied configuration must be protected by a real close confirmation'
+E   AssertionError: Applied configuration must be protected by a real close confirmation
+E   assert []
+_______ test_applied_model_close_uses_real_save_discard_cancel[8388608] _______
+apps\SCG\tests\test_project_unsaved_boundary.py:60: in test_applied_model_close_uses_real_save_discard_cancel
+    assert observed, 'Applied configuration must be protected by a real close confirmation'
+E   AssertionError: Applied configuration must be protected by a real close confirmation
+E   assert []
+________ test_applied_model_close_uses_real_save_discard_cancel[2048] _________
+apps\SCG\tests\test_project_unsaved_boundary.py:60: in test_applied_model_close_uses_real_save_discard_cancel
+    assert observed, 'Applied configuration must be protected by a real close confirmation'
+E   AssertionError: Applied configuration must be protected by a real close confirmation
+E   assert []
+=========================== short test summary info ===========================
+FAILED apps\SCG\tests\test_project_unsaved_boundary.py::test_applied_model_close_uses_real_save_discard_cancel[4194304] - AssertionError: Applied configuration must be protected by a real close confirmation
+assert []
+FAILED apps\SCG\tests\test_project_unsaved_boundary.py::test_applied_model_close_uses_real_save_discard_cancel[8388608] - AssertionError: Applied configuration must be protected by a real close confirmation
+assert []
+FAILED apps\SCG\tests\test_project_unsaved_boundary.py::test_applied_model_close_uses_real_save_discard_cancel[2048] - AssertionError: Applied configuration must be protected by a real close confirmation
+assert []
+================= 3 failed, 3 deselected in 67.92s (0:01:07) ==================

@@ -1,0 +1,134 @@
+[
+  {
+    "case": [
+      "research",
+      "Release"
+    ],
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\current-b\\research\\Flight_Controller",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "HOST_CC=D:\\msys64\\ucrt64\\bin\\gcc.exe",
+      "power10-check"
+    ],
+    "exit_code": 0,
+    "seconds": 28.798,
+    "log": "research-Release-power10-check.log",
+    "scope": "complete emitted target",
+    "log_sha256": "b6fafdd10867f29f0af7d85f94697637ab0d4f76c91e19cb459c3f132dc0942e"
+  },
+  {
+    "case": [
+      "research",
+      "Release"
+    ],
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\current-b\\research\\Flight_Controller",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "HOST_CC=D:\\msys64\\ucrt64\\bin\\gcc.exe",
+      "architecture-check"
+    ],
+    "exit_code": 0,
+    "seconds": 31.053,
+    "log": "research-Release-architecture-check.log",
+    "scope": "complete emitted target",
+    "log_sha256": "469e4f6f1d2109de1e58d76c3be5623816bbf7c124e51283bbd92bb1301334e7"
+  },
+  {
+    "case": [
+      "research",
+      "Release"
+    ],
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\current-b\\research\\Flight_Controller",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "HOST_CC=D:\\msys64\\ucrt64\\bin\\gcc.exe",
+      "static-analysis"
+    ],
+    "exit_code": 0,
+    "seconds": 253.491,
+    "log": "research-Release-static-analysis.log",
+    "scope": "complete emitted target",
+    "log_sha256": "edcc338fcc8c39dbb47f0f858eca4f65139864385e85a1e877a1e04838a051ff"
+  },
+  {
+    "case": [
+      "h7",
+      "Release"
+    ],
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\current-b\\h7\\Flight_Controller",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "HOST_CC=D:\\msys64\\ucrt64\\bin\\gcc.exe",
+      "power10-check"
+    ],
+    "exit_code": 0,
+    "seconds": 28.019,
+    "log": "h7-Release-power10-check.log",
+    "scope": "complete emitted target",
+    "log_sha256": "7b0b7f5677bebe6f70abd0d845d702ad4e084a8604793f47f636ac53eafa02f1"
+  },
+  {
+    "case": [
+      "h7",
+      "Release"
+    ],
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\current-b\\h7\\Flight_Controller",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "HOST_CC=D:\\msys64\\ucrt64\\bin\\gcc.exe",
+      "architecture-check"
+    ],
+    "exit_code": 0,
+    "seconds": 31.99,
+    "log": "h7-Release-architecture-check.log",
+    "scope": "complete emitted target",
+    "log_sha256": "36a8e35220e2db023e3d692d92d8f81e8b9d640477622a8b8e1d9555e489944b"
+  },
+  {
+    "case": [
+      "h7",
+      "Release"
+    ],
+    "command": [
+      "D:\\msys64\\ucrt64\\bin\\mingw32-make.exe",
+      "-C",
+      "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\current-b\\h7\\Flight_Controller",
+      "-j2",
+      "CONFIG=Release",
+      "GCC_PATH=D:\\Arm GNU Toolchain\\14.3 rel1\\bin",
+      "PYTHON=D:\\python_software\\SilverStar\\.venv\\Scripts\\python.exe",
+      "HOST_CC=D:\\msys64\\ucrt64\\bin\\gcc.exe",
+      "static-analysis"
+    ],
+    "exit_code": 0,
+    "seconds": 277.762,
+    "log": "h7-Release-static-analysis.log",
+    "scope": "complete emitted target",
+    "log_sha256": "8676af1520336f2cc4ad42f3e8886b20f3e4a1fb8319132f1150f274b987b745"
+  }
+]
