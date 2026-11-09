@@ -194,6 +194,16 @@ the implementation ID nor fidelity is silently upgraded.
 
 ## Project and audit boundary
 
+Legacy analysis-only diagnostics remain session results with their separate diagnostic export.
+Saving an `.ssflp` excludes those temporary results and their configuration, without removing them
+from the open session or changing normal replay input/engine identity checks. If a temporary
+diagnostic was selected, the saved project selects recorded data on reopening. Normal replay and
+What-if runs still require the exact input identity assigned by `Replay_Execute`.
+
+Older exact parameter packages may omit optional NIS enable and fusion timing fields. Revision-3
+runtime validation checks every present value and every required field while preserving those
+omissions; it does not invent recorded values from current defaults.
+
 `.ssflp` v3 contains exactly one `log_reference`, decoder source/cache references, complete
 package/generation/Catalog/Semantics hashes, container ID/version, exact match mode, replay
 settings, notes, and UI state. Old versions are rejected. Save uses a same-directory temporary

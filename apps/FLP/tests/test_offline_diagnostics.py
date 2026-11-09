@@ -211,6 +211,9 @@ def test_project_excludes_analysis_only_diagnostics(
         analysis_options=Kf6DiagnosticOptions(baro_effective_sigma_m=2),
     )
     window._Replay_ResultSet(result)
+    entries_before = window._replay_store.Entries_Get()
+    temporary_source = entries_before[-1].source_id
+    window._replay_store.ActiveSource_Set(temporary_source)
     assert page._ActualValues_Get()["gnss_position_std_vertical"] == 4
     project_path = tmp_path / "test.ssflp"
     assert window._Project_Write(project_path), save_errors
@@ -219,6 +222,13 @@ def test_project_excludes_analysis_only_diagnostics(
     assert "analysis_only" not in text
     assert len(json.loads(text)["replay_configurations"]) == 1
     assert list(tmp_path.rglob("*.ssdecoder"))
+    assert window._replay_store.Entries_Get() == entries_before
+    assert window._replay_store.ActiveSource_Get().source_id == temporary_source
+    from silverstar_flp.core.project import Project_Load
+
+    restored = Project_Load(project_path)
+    assert restored.restored_results == ()
+    assert restored.ui_state["analysis_source"] == "recorded"
 
 
 def test_project_save_rejects_fabricated_parse_identity(qtbot, monkeypatch, tmp_path, diagnostic_pair):

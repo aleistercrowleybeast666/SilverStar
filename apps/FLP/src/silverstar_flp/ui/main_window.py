@@ -1584,12 +1584,25 @@ class MainWindow(QMainWindow):
                 save_data_and_results=self._project.save_data_and_results if save_data is None else save_data)
             project.ui_state["page_index"] = self.navigation_list.currentRow()
             project.ui_state["time_range"] = self.time_range.controller.model.State_Get()
+            # Legacy diagnostic runs have a separate export contract, not a
+            # replayable project configuration. Keep them in this session while
+            # saving only normal results with their original input identities.
+            all_entries = self._replay_store.Entries_Get()
+            entries = tuple(entry for entry in all_entries if not entry.analysis_only)
+            temporary_sources = {entry.source_id for entry in all_entries if entry.analysis_only}
+            for entry in all_entries:
+                if entry.analysis_only:
+                    project.replay_configurations.pop(entry.result_id, None)
+            active_source = self._replay_store.ActiveSource_Get().source_id
             project.ui_state["analysis_source"] = (
-                self._replay_store.ActiveSource_Get().source_id
+                ReplayResultStore.RECORDED_SOURCE_ID if active_source in temporary_sources
+                else active_source
             )
-            project.ui_state["secondary_source"] = self._secondary_source_id
+            project.ui_state["secondary_source"] = (
+                None if self._secondary_source_id in temporary_sources else self._secondary_source_id
+            )
             project.replay_configurations["draft"] = self.replay_page.Configuration_Get()
-            for entry in self._replay_store.Entries_Get():
+            for entry in entries:
                 project.replay_configurations[entry.result_id] = {
                     "algorithm_id": entry.algorithm_id,
                     "algorithm_version": entry.algorithm_version,
@@ -1608,7 +1621,6 @@ class MainWindow(QMainWindow):
                     saved_configuration["quality_policy_revision"] = entry.diagnostics[
                         "quality_policy_override"
                     ]
-            entries = self._replay_store.Entries_Get()
             store = ReplayResultStore()
             for entry in entries:
                 store.Result_Add(entry.result, algorithm_name=entry.algorithm_name,

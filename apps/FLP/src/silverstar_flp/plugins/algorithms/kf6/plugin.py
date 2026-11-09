@@ -1514,7 +1514,10 @@ class Kf6AlgorithmPlugin(AlgorithmPlugin):
                 if not same_value:
                     raise ValueError(f"parameter_retired_revision3:{name}")
             for name, spec in runtime.items():
-                spec.Value_Validate(parameters[name])
+                if name in parameters:
+                    spec.Value_Validate(parameters[name])
+                elif spec.required:
+                    raise ValueError(f"parameter_missing:{name}")
         if revision == 0:
             for name, default in self.OfflineParameters_Get().items():
                 if name.startswith("gnss_integrity_"):

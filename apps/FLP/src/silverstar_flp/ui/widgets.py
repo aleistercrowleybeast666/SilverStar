@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from PySide6.QtCore import QPoint, Qt
+from PySide6.QtCore import QEvent, QPoint, Qt
 from PySide6.QtWidgets import QAbstractItemView, QComboBox, QStyle, QLabel, QSizePolicy
 
 from silverstar_flp.ui.touch_scroll import TouchScroll_Enable
@@ -75,9 +75,20 @@ class ProjectHeaderLabel(QLabel):
     def _Text_Refresh(self) -> None:
         suffix = " *" if self._dirty else ""
         metrics = self.fontMetrics()
+        margins = self.contentsMargins()
+        # Reserve the visible name ellipsis and unsaved marker at small widths;
+        # an Ignored size policy otherwise permits a narrower label than '*'.
+        self.setMinimumWidth(
+            metrics.horizontalAdvance("…" + suffix) + margins.left() + margins.right()
+        )
         width = max(0, self.contentsRect().width() - metrics.horizontalAdvance(suffix))
         self.setText(metrics.elidedText(self._full_name, Qt.TextElideMode.ElideRight, width) + suffix)
 
     def resizeEvent(self, event) -> None:
         super().resizeEvent(event)
         self._Text_Refresh()
+
+    def changeEvent(self, event) -> None:
+        super().changeEvent(event)
+        if event.type() in (QEvent.Type.FontChange, QEvent.Type.StyleChange):
+            self._Text_Refresh()

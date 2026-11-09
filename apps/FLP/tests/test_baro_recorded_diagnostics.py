@@ -61,7 +61,7 @@ def _Adapt(records, *, legacy=False):
             else ()
         ),
     )
-    package = SimpleNamespace(semantics=SimpleNamespace(canonical_channels=()))
+    package = SimpleNamespace(semantics=SimpleNamespace(canonical_channels=(), devices={}))
     return _StableSeries_Adapt(dataset, package)
 
 

@@ -18,7 +18,10 @@ def dataset(tmp_path_factory):
 
     data = NavigationPair_Open(tmp_path_factory.mktemp("synthetic"), flight_samples=3).dataset
     metadata = dict(data.semantic_context.raw_metadata)
-    metadata["metadata_declarations"] = {"navigation_replay": {"gnss_integrity_revision": 3}}
+    metadata["metadata_declarations"] = {
+        **metadata["metadata_declarations"],
+        "navigation_replay": {"gnss_integrity_revision": 3},
+    }
     metadata["firmware_algorithm_parameters"] = [
         {
             **group,
@@ -55,6 +58,12 @@ def test_recorded_and_unchanged_what_if_use_firmware_baseline(dataset):
         ),
     )
     assert unchanged == recorded
+    # Optional controls introduced after this exact package stay absent; a
+    # runtime schema review must not invent recorded values or index missing keys.
+    assert "nis_soft_enabled" not in recorded
+    assert "nis_hard_enabled" not in recorded
+    assert "fusion_timing_mode" not in recorded
+    assert "fusion_horizon_ms" not in recorded
 
 
 @pytest.mark.parametrize("mode", [ReplayMode.OFFLINE, ReplayMode.WHAT_IF])

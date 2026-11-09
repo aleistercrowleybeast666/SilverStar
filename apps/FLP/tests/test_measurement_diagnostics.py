@@ -11,7 +11,7 @@ from silverstar_flp.analysis.measurement_diagnostics import (
 
 
 def _Record(name, payload):
-    return SimpleNamespace(record_name=name, payload=payload,
+    return SimpleNamespace(record_name=name, record_version=1, payload=payload,
                            timestamp_us=1_000_000, record_sequence=1)
 
 
