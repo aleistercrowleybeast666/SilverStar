@@ -182,3 +182,87 @@ def test_retirement_refuses_junction_before_removing_any_run_file(tmp_path):
     result, count = WorkspaceClean_RetireTests(root, (".codex_pytest_old",))
     assert result == WorkspaceCleanResult.REFUSED and count == 0
     assert generated.exists() and sentinel.exists()
+
+
+def test_reviewed_plan_roundtrip_change_refusal_and_repeat(tmp_path):
+    from tools.clean_workspace import WorkspaceClean_PlanLoad, WorkspaceClean_PlanSave
+
+    root = _Repository_Create(tmp_path)
+    path = _File_Write(root, "build/report.png")
+    plan = WorkspaceClean_Plan(root, owner="synthetic image output")
+    receipt = tmp_path / "plan.json"
+    WorkspaceClean_PlanSave(plan, receipt)
+    restored = WorkspaceClean_PlanLoad(root, receipt)
+    path.write_text("changed", encoding="utf8")
+    assert WorkspaceClean_Apply(root, restored) == (WorkspaceCleanResult.REFUSED, ())
+    assert path.read_text() == "changed"
+    fresh = WorkspaceClean_Plan(root)
+    assert WorkspaceClean_Apply(root, fresh)[0] == WorkspaceCleanResult.APPLIED
+    assert WorkspaceClean_Apply(root, fresh) == (WorkspaceCleanResult.APPLIED, ())
+    assert WorkspaceClean_Apply(root, WorkspaceClean_Plan(root)) == (WorkspaceCleanResult.APPLIED, ())
+
+
+def test_monorepo_scope_preserves_siblings_source_build_and_active_task(tmp_path):
+    root = _Repository_Create(tmp_path)
+    app = root / "apps/FLP"
+    own = _File_Write(root, "apps/FLP/build/report.png")
+    other = _File_Write(root, "apps/SCG/build/report.png")
+    source = _File_Write(root, "apps/SCG/src/silverstar_fccg/build/runner.py")
+    input_file = _File_Write(root, "apps/FLP/build/input.tdmotor.json")
+    plan = WorkspaceClean_Plan(root, app)
+    assert own in plan and other not in plan and source not in plan and input_file not in plan
+    lock = _File_Write(root, "apps/FLP/.cleanup-active")
+    assert WorkspaceClean_Apply(root, plan) == (WorkspaceCleanResult.REFUSED, ())
+    assert own.exists() and not WorkspaceClean_Plan(root, app)
+    lock.unlink()
+    assert WorkspaceClean_Apply(root, plan)[0] == WorkspaceCleanResult.APPLIED
+    assert all(path.exists() for path in (other, source, input_file))
+
+
+@pytest.mark.parametrize("cwd_is_app", (False, True))
+def test_cli_monorepo_default_preview_from_root_or_subdirectory(tmp_path, monkeypatch, capsys, cwd_is_app):
+    import tools.clean_workspace as module
+
+    root = _Repository_Create(tmp_path)
+    own = _File_Write(root, "apps/FLP/build/report.png")
+    _File_Write(root, "apps/SCG/build/other.png")
+    script = root / "apps/FLP/tools/clean_workspace.py"
+    script.parent.mkdir()
+    monkeypatch.setattr(module, "__file__", str(script))
+    monkeypatch.setattr("sys.argv", [str(script), "--dry-run"])
+    monkeypatch.chdir(root / "apps/FLP" if cwd_is_app else root)
+    assert module.WorkspaceClean_Main() == 0
+    output = capsys.readouterr().out
+    assert "apps/FLP/build/report.png" in output
+    assert "apps/SCG" not in output and own.exists()
+
+
+def test_scope_outside_repository_and_tampered_plan_refused(tmp_path):
+    import json
+    from tools.clean_workspace import WorkspaceClean_PlanLoad, WorkspaceClean_PlanSave
+
+    root = _Repository_Create(tmp_path)
+    _File_Write(root, "build/report.png")
+    with pytest.raises(ValueError):
+        WorkspaceClean_Plan(root, tmp_path)
+    plan_file = tmp_path / "plan.json"
+    WorkspaceClean_PlanSave(WorkspaceClean_Plan(root), plan_file)
+    document = json.loads(plan_file.read_text())
+    document["records"][0]["path"] = "../outside.png"
+    plan_file.write_text(json.dumps(document))
+    with pytest.raises(ValueError, match="cleanup_plan_path_invalid"):
+        WorkspaceClean_PlanLoad(root, plan_file)
+
+
+def test_nested_repository_and_later_worktree_identity_are_protected(tmp_path):
+    root = _Repository_Create(tmp_path)
+    generated = _File_Write(root, "build/nested/build/report.png")
+    plan = WorkspaceClean_Plan(root)
+    nested = root / "build/nested"
+    # A .git file also marks a worktree; no checkout beneath it belongs to this plan.
+    (nested / ".git").write_text("gitdir: external-owner", encoding="utf8")
+    assert generated not in WorkspaceClean_Plan(root)
+    with pytest.raises(ValueError, match="cleanup_scope_is_nested_repository"):
+        WorkspaceClean_Plan(root, nested / "build")
+    assert WorkspaceClean_Apply(root, plan) == (WorkspaceCleanResult.REFUSED, ())
+    assert generated.exists()
