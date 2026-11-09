@@ -1247,6 +1247,13 @@ def test_message_box_buttons_are_localized(tmp_path: Path, qapp) -> None:
         )
         assert box.button(QMessageBox.StandardButton.Yes).text() == "是"
         assert box.button(QMessageBox.StandardButton.No).text() == "否"
+        save_box = window._MessageBox_Create(QMessageBox.Icon.Question, "title", "text",
+            QMessageBox.StandardButton.Save | QMessageBox.StandardButton.Discard | QMessageBox.StandardButton.Cancel,
+            QMessageBox.StandardButton.Cancel)
+        assert save_box.button(QMessageBox.StandardButton.Save).text() == "保存"
+        assert save_box.button(QMessageBox.StandardButton.Discard).text() == "丢弃"
+        assert save_box.defaultButton() is save_box.button(QMessageBox.StandardButton.Cancel)
+        assert save_box.buttonRole(save_box.button(QMessageBox.StandardButton.Discard)) == QMessageBox.ButtonRole.DestructiveRole
         details_box = window._MessageBox_Create(
             QMessageBox.Icon.Critical,
             "title",
