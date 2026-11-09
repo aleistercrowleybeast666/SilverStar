@@ -14,7 +14,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[3]
 SCG = ROOT / 'apps/SCG'
 TD = ROOT.parent / 'TreeDiagram'
-BUNDLE = TD / '.test-tmp/gui-convergence-20261110/delivery/run.sstuning.json'
+BUNDLE = TD / 'dist/gui-convergence-20261110/delivery/run.sstuning.json'
 WORK = ROOT / '.work/gui-convergence-20261110/integration'
 EVIDENCE = Path(__file__).parent / 'integration'
 sys.path[:0] = [str(SCG / 'src'), str(TD / 'src')]

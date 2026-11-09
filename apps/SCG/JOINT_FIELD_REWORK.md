@@ -43,7 +43,7 @@
 - 完整 pytest、Ruff、双语主题、最小窗口、高 DPI、工程恢复与实际 C golden 对照已通过。
   有限 golden 仍不足以宣称所有日志 EXACT，产品保持 APPROXIMATE，详见 FLP 根 VALIDATION.md。
 
-FLP 文档：`D:/python_software/SilverStar_FLP/docs/Field_Log_Replay.md`。
+FLP 文档：[Field_Log_Replay.md](../../docs/FLP/Field_Log_Replay.md)。
 
 ## GSHC
 
@@ -58,7 +58,7 @@ FLP 文档：`D:/python_software/SilverStar_FLP/docs/Field_Log_Replay.md`。
 - 验证覆盖时长边界、真实分页/编码/末尾帧、取消与目录；既有 protocol/Golden、telemetry、
   command、ACK、serial、GUI、touch、高 DPI、docs、headless 与打包结果见 GSHC 根 VALIDATION.md。
 
-GSHC 文档：`D:/python_software/SilverStar_GSHC/docs/TIME_EXPORT.md`。
+GSHC 文档：[TIME_EXPORT.md](../../docs/GSHC/TIME_EXPORT.md)。
 
 ## Existing Time Synchronization vs Fixed-Lag Replay
 

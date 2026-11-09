@@ -30,4 +30,8 @@ $env:SILVERSTAR_ANDROID_PYTHON_DEPS = "$env:SILVERSTAR_ANDROID_CACHE_ROOT/python
 
 APK 输出在 `<BuildRoot>/app/outputs/apk/debug/app-debug.apk`。不要依赖原工程绝对源码路径。
 真实 USB、设备删除/控制与跨连接续传仍关闭；Robolectric 和 fixture 测试不是手机/硬件验收。
-原来源源码在验证后以可恢复方式保留，未永久删除来源目录。详见迁入报告。
+旧 `D:/python_software/SilverStar_GSHC_Android` 外壳已于 2026-11-10 在逐文件归档、
+实际恢复和散列核验后删除。源码历史、独有文件和迁移清单位于
+`D:/SilverStar_Archive/20261110/retired/SilverStar_GSHC_Android`；工具链和私有 key
+保留在上述外部位置。删除后用新的 BuildRoot 再次离线执行三项 Gradle 任务，
+58 个任务均成功；详情见[本轮构建证据](../../docs/evidence/gui_convergence_20261110/android_validation.json)。

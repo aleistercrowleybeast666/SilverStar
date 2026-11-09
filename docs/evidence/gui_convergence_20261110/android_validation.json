@@ -70,5 +70,37 @@
       "size": 131,
       "sha256": "bf509f26329b90173eeb95a4b1cc28008b1af74be1476854e5e7882caaa78829"
     }
-  ]
+  ],
+  "after_cleanup": {
+    "source_checkout_absent": true,
+    "exit": 0,
+    "elapsed": "2m57s",
+    "tasks_executed": 58,
+    "operations": [
+      "assembleDebug",
+      "lintDebug",
+      "testDebugUnitTest"
+    ],
+    "build_root": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\android-postcleanup-build",
+    "unit_tests": {
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "lint": {
+      "Warning": 7
+    },
+    "apk": {
+      "path": "D:\\python_software\\SilverStar\\dist\\gui-convergence-20261110-android\\app-debug.apk",
+      "size": 2479069,
+      "sha256": "7e2d2118c0da9ef0b9643e3335fe63f782ac626b3cfa785771ebebed10605b66"
+    },
+    "log": {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\root\\android-postcleanup-build.log",
+      "size": 4292,
+      "sha256": "325b06ef2b121c48dbfefc7e1287ce70add6d1b7b4b541b55a0ff8b4d19802cc"
+    },
+    "scope": "Fresh offline software build after old checkout removal; no physical-device claim"
+  }
 }
