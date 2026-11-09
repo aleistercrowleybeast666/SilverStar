@@ -196,7 +196,9 @@ def _Target_Validate(
             return False
         if path.suffix.casefold() in _PROTECTED_SUFFIXES:
             return False
-        if path.name.casefold().endswith((".tdmotor.json", ".sstuning.json")):
+        if path.name.casefold().endswith((
+            ".tdmotor.json", ".sstuning.json", ".tdrun.json", ".retldc.json",
+        )):
             return False
         if path.is_file() and _Evidence_Preserve(parts, path):
             return False

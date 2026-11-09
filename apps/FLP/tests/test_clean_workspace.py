@@ -68,6 +68,30 @@ def test_apply_rechecks_index_and_rejects_outside_target(tmp_path):
     assert path.exists() and outside.exists()
 
 
+def test_compound_exchange_and_project_inputs_survive_generated_scopes(tmp_path):
+    root = _Repository_Create(tmp_path)
+    protected = [
+        _File_Write(root, f"{folder}/actual_{index}{suffix}")
+        for folder in ("build", "src/pkg/__pycache__")
+        for index, suffix in enumerate((
+            ".tdmotor.json", ".sstuning.json", ".tdrun.json", ".retldc.json",
+            ".TDMOTOR.JSON", ".SSTUNING.JSON", ".TDRUN.JSON", ".RETLDC.JSON",
+        ))
+    ]
+    generated = _File_Write(root, "build/diagnostic.json")
+    plan = WorkspaceClean_Plan(root)
+    assert generated in plan
+    assert all(path not in plan for path in protected)
+    # Explicitly adding a protected input to a reviewed plan must fail atomically.
+    assert WorkspaceClean_Apply(root, (*plan, protected[0])) == (
+        WorkspaceCleanResult.REFUSED, ()
+    )
+    assert generated.exists() and all(path.exists() for path in protected)
+    assert WorkspaceClean_Apply(root, plan)[0] == WorkspaceCleanResult.APPLIED
+    assert not generated.exists()
+    assert all(path.read_text(encoding="utf8") == "preserve-or-clean" for path in protected)
+
+
 def test_symlink_escape_and_replaced_parent_are_refused(tmp_path):
     root = _Repository_Create(tmp_path)
     generated = _File_Write(root, "build/report.png")
