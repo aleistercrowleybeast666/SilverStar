@@ -10,6 +10,7 @@ import numpy as np
 import pytest
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QCloseEvent
+from shiboken6 import isValid
 from silverstar_flp.core.analysis_source import ReplayResultStore
 from silverstar_flp.core.dataset import FlightDataset, TimeSeries
 from silverstar_flp.core.diagnostics import ParserDiagnostics
@@ -18,6 +19,7 @@ from silverstar_flp.plugins.api.algorithm import AlgorithmResult, ReplayFidelity
 from silverstar_flp.plugins.registry import builtin_registry
 from silverstar_flp.ui.main_window import MainWindow
 from silverstar_flp.ui.pages.replay import ReplayPage
+from tests.gui_lifecycle import MainWindow_Register
 
 
 def tiny_dataset(name):
@@ -160,7 +162,7 @@ def test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker(
 ):
     registry = builtin_registry()
     window = MainWindow(registry)
-    qtbot.addWidget(window)
+    MainWindow_Register(qtbot, window)
     from silverstar_flp.core.project import ProjectDocument
     from tests.synthetic_parameter_navigation import NavigationPair_Open
     window._LogOpenResult_Set(
@@ -211,20 +213,26 @@ def test_repeat_cancel_close_and_switch_do_not_launch_a_second_worker(
         assert published == []
         assert errors.count("another_background_task_is_running") == 8
         assert errors[-1] == window._translator.Text_Get("status.task_cancelled")
-        window._Replay_Start(plugin.metadata.plugin_id, ReplayRequest())
-        qtbot.waitUntil(lambda: window._active_worker is None, timeout=5000)
-        assert calls == [plugin.metadata.plugin_id] * 2
-        assert len(published) == 1
-        assert (
-            published[0].diagnostics["input_identity"] == window._dataset.metadata["parse_identity"]
-        )
+        if close_accepted:
+            qtbot.waitUntil(lambda: not isValid(window), timeout=5000)
+            assert calls == [plugin.metadata.plugin_id] and not published
+        else:
+            assert isValid(window)
+            window._Replay_Start(plugin.metadata.plugin_id, ReplayRequest())
+            qtbot.waitUntil(lambda: window._active_worker is None, timeout=5000)
+            assert calls == [plugin.metadata.plugin_id] * 2
+            assert len(published) == 1
+            assert (
+                published[0].diagnostics["input_identity"] == window._dataset.metadata["parse_identity"]
+            )
     finally:
         release.set()
         qtbot.waitUntil(lambda: window._active_worker is None, timeout=5000)
         window._project_dirty = False
         window._dataset = None
         monkeypatch.setattr(window, "_ProjectChanges_Confirm", lambda: True)
-        window.close()
+        if isValid(window):
+            window.close()
 
 
 @pytest.mark.parametrize("action", ["cancel", "accepted_close"])
@@ -234,7 +242,7 @@ def test_queued_replay_result_is_not_published_after_cancellation(
     """Desired behavior; exercises only the result-emitted / GUI-not-yet-serviced race."""
     registry = builtin_registry()
     window = MainWindow(registry)
-    qtbot.addWidget(window)
+    MainWindow_Register(qtbot, window)
     from silverstar_flp.core.project import ProjectDocument
     from tests.synthetic_parameter_navigation import NavigationPair_Open
     window._LogOpenResult_Set(
@@ -271,19 +279,16 @@ def test_queued_replay_result_is_not_published_after_cancellation(
             assert worker.close_after_task
         assert worker.context.cancellation_event.is_set()
         qtbot.waitUntil(lambda: window._active_worker is None, timeout=5000)
-        print(
-            action,
-            "after cancelled queued result: entries=",
-            len(window._replay_store.Entries_Get()),
-            ", status=",
-            window.status_label.text(),
-            ", active_worker=",
-            window._active_worker,
-        )
         assert window._replay_store.Entries_Get() == ()
+        if action == "accepted_close":
+            qtbot.waitUntil(lambda: not isValid(window), timeout=5000)
+        else:
+            assert isValid(window)
+            assert window.status_label.text() == window._translator.Text_Get("status.task_cancelled")
     finally:
         release.set()
         qtbot.waitUntil(lambda: window._active_worker is None, timeout=5000)
         window._project_dirty = False
         window._dataset = None
-        window.close()
+        if isValid(window):
+            window.close()

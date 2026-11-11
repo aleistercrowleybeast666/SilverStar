@@ -6,6 +6,7 @@ import pytest
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QCloseEvent
 from PySide6.QtWidgets import QMessageBox
+from shiboken6 import isValid
 
 from silverstar_flp.decoder_profiles.discovery import TaskDirectoryDiscovery
 from silverstar_flp.export.service import FlightExporter, ExportOptions
@@ -13,21 +14,24 @@ from silverstar_flp.plugins.api.algorithm import ReplayRequest
 from silverstar_flp.plugins.registry import builtin_registry
 from silverstar_flp.ui.main_window import MainWindow
 from silverstar_flp.ui.workers import FunctionWorker
+from tests.gui_lifecycle import MainWindow_Register
 
 
 @pytest.fixture
 def window(qtbot, monkeypatch):
     w = MainWindow(builtin_registry())
-    qtbot.addWidget(w)
+    MainWindow_Register(qtbot, w)
     # Keep unexpected errors observable without a blocking modal dialog.
     w.audit_errors = []
     monkeypatch.setattr(w, "_Error_Show", w.audit_errors.append)
     yield w
-    w._project_dirty = False
-    w.import_dialog.reject()
-    w.export_dialog.reject()
-    w._dataset = None
-    w.close()
+    # pytest-qt may already have accepted close and destroyed the native tree.
+    if isValid(w):
+        w._project_dirty = False
+        w.import_dialog.reject()
+        w.export_dialog.reject()
+        w._dataset = None
+        w.close()
 
 
 def finish(qtbot, w):

@@ -4,16 +4,18 @@ import pytest
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QCloseEvent
 from PySide6.QtWidgets import QMessageBox
+from shiboken6 import isValid
 from silverstar_flp.core.project import Project_Load
 from silverstar_flp.plugins.registry import builtin_registry
 from silverstar_flp.ui.main_window import MainWindow
 from tests.test_project_artifact_boundaries import _SmallRun
+from tests.gui_lifecycle import MainWindow_Register
 
 @pytest.mark.parametrize('case',['clean_close','cancel_close_option','cancel_after_commit','snapshot_removed'])
 def test_save_lifecycle_respects_request_cancel_and_commit(qtbot,tmp_path,monkeypatch,case):
     import silverstar_flp.ui.main_window as module
     opened,document,store=_SmallRun(tmp_path)
-    window=MainWindow(builtin_registry());qtbot.addWidget(window)
+    window=MainWindow(builtin_registry());MainWindow_Register(qtbot, window)
     window._LogOpenResult_Set(opened,document)
     window._replay_store.Result_Add(store.Entries_Get()[0].result)
     errors=[];monkeypatch.setattr(window,'_Error_Show',errors.append)
@@ -48,8 +50,13 @@ def test_save_lifecycle_respects_request_cancel_and_commit(qtbot,tmp_path,monkey
     finally:
         release.set()
         qtbot.waitUntil(lambda:window._active_worker is None,timeout=15000)
-        window._Project_SetDirty(False)
+        if isValid(window):
+            window._Project_SetDirty(False)
     assert not errors and target.is_file()
+    if case == 'clean_close':
+        qtbot.waitUntil(lambda: not isValid(window), timeout=5000)
+    else:
+        assert isValid(window)
     if case=='cancel_after_commit':
         assert window._project.project_path==target.resolve()
         assert not window._project.save_data_and_results
@@ -59,4 +66,5 @@ def test_save_lifecycle_respects_request_cancel_and_commit(qtbot,tmp_path,monkey
         saved=Project_Load(target)
         assert saved.parse_artifact is not None
         assert len(ProjectResults_Load(saved).Entries_Get())==1
-    window.close()
+    if isValid(window):
+        window.close()

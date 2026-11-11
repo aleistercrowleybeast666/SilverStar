@@ -17,6 +17,7 @@ from silverstar_flp.plugins.api.algorithm import ReplayMode, ReplayRequest
 from silverstar_flp.plugins.registry import builtin_registry
 from tests.synthetic_parameter_navigation import NavigationPair_Open
 from tests.test_project_artifacts import _Document_Build, _Assert_Result
+from tests.gui_lifecycle import MainWindow_Register
 
 
 @pytest.fixture(scope='module')
@@ -169,7 +170,7 @@ def test_gui_cancel_delete_primary_secondary_busy_and_undo(qtbot, tmp_path, smal
     from silverstar_flp.ui.main_window import MainWindow
     from silverstar_flp.core.project import ProjectDocument
     opened, results = small_runs
-    window = MainWindow(builtin_registry()); qtbot.addWidget(window)
+    window = MainWindow(builtin_registry()); MainWindow_Register(qtbot, window)
     errors = []; monkeypatch.setattr(window, '_Error_Show', errors.append)
     window._LogOpenResult_Set(opened, ProjectDocument())
     entries = [window._replay_store.Result_Add(result) for result in results]
@@ -210,7 +211,7 @@ def test_gui_saved_recovery_runs_off_gui_thread_and_reopen_retains_missing_prima
     Project_Save(document, document.project_path, replay_store=store, dataset=opened.dataset)
     loaded = Project_Load(document.project_path)
     loaded.restored_results = ProjectResults_Load(loaded).Entries_Get()
-    window = module.MainWindow(builtin_registry()); qtbot.addWidget(window)
+    window = module.MainWindow(builtin_registry()); MainWindow_Register(qtbot, window)
     errors = []; monkeypatch.setattr(window, '_Error_Show', errors.append)
     window._LogOpenResult_Set(opened, loaded)
     assert window._replay_store.ActiveSource_Get().source_id == entries[1].source_id

@@ -19,6 +19,7 @@ from silverstar_flp.plugins.api.algorithm import ReplayMode, ReplayRequest
 from silverstar_flp.plugins.registry import builtin_registry
 from tests.synthetic_parameter_navigation import NavigationPair_Open
 from tests.test_project_artifacts import _Document_Build
+from tests.gui_lifecycle import MainWindow_Register
 
 
 def _SmallRun(tmp_path, algorithm='silverstar.algorithm.pure_ins'):
@@ -178,7 +179,7 @@ def test_configuration_only_missing_primary_stays_unavailable(qtbot,tmp_path,mon
     document.ui_state={'analysis_source':entry.source_id}
     document.save_data_and_results=False
     Project_Save(document,document.project_path,dataset=opened.dataset,replay_store=store)
-    window=MainWindow(builtin_registry());qtbot.addWidget(window)
+    window=MainWindow(builtin_registry());MainWindow_Register(qtbot, window)
     errors=[];monkeypatch.setattr(window,'_Error_Show',errors.append)
     monkeypatch.setattr(window,'_ProjectChanges_Confirm',lambda:True)
     monkeypatch.setattr(window,'_Replay_Start',lambda *_:pytest.fail('No automatic replay'))
@@ -237,7 +238,7 @@ def test_background_save_captures_option_and_keeps_gui_responsive(qtbot,tmp_path
     from silverstar_flp.core.project import ProjectDocument
     from silverstar_flp.ui.main_window import MainWindow
     opened,document,store=_SmallRun(tmp_path)
-    window=MainWindow(builtin_registry());qtbot.addWidget(window)
+    window=MainWindow(builtin_registry());MainWindow_Register(qtbot, window)
     errors=[];monkeypatch.setattr(window,'_Error_Show',errors.append)
     monkeypatch.setattr(window,'_ProjectChanges_Confirm',lambda:True)
     window._LogOpenResult_Set(opened,ProjectDocument())
@@ -259,7 +260,7 @@ def test_unsaved_close_save_waits_for_background_transaction(qtbot,tmp_path,monk
     from PySide6.QtWidgets import QMessageBox
     from silverstar_flp.ui.main_window import MainWindow
     opened,document,_=_SmallRun(tmp_path)
-    window=MainWindow(builtin_registry());qtbot.addWidget(window)
+    window=MainWindow(builtin_registry());MainWindow_Register(qtbot, window)
     window._LogOpenResult_Set(opened,document)
     window._Project_SetDirty(True)
     errors=[];monkeypatch.setattr(window,'_Error_Show',errors.append)

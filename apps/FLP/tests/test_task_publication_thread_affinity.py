@@ -8,11 +8,12 @@ from PySide6.QtWidgets import QApplication
 from silverstar_flp.plugins.registry import builtin_registry
 from silverstar_flp.ui.main_window import MainWindow
 from silverstar_flp.ui.workers import FunctionWorker
+from tests.gui_lifecycle import MainWindow_Register
 
 
 def test_real_qthreadpool_result_publication_runs_on_gui_thread(qtbot, monkeypatch):
     window = MainWindow(builtin_registry())
-    qtbot.addWidget(window)
+    MainWindow_Register(qtbot, window)
     gui_thread = QApplication.instance().thread()
     gui_python_thread = threading.get_ident()
     observations = {}
@@ -66,7 +67,7 @@ def test_completed_worker_releases_its_payload_after_gc(qtbot):
         pass
 
     window = MainWindow(builtin_registry())
-    qtbot.addWidget(window)
+    MainWindow_Register(qtbot, window)
     payload = Payload()
     reference = weakref.ref(payload)
     worker = FunctionWorker(lambda context, captured=payload: "tiny-done")

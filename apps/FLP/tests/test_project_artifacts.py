@@ -17,6 +17,7 @@ from silverstar_flp.plugins.api.algorithm import ReplayMode, ReplayRequest
 from silverstar_flp.plugins.registry import builtin_registry
 from tests.synthetic_parameter_navigation import NavigationPair_Open
 from tests.test_project_export import _ProjectDocument_Build
+from tests.gui_lifecycle import MainWindow_Register
 
 
 def _Document_Build(opened, path):
@@ -176,7 +177,7 @@ def test_gui_reopen_restores_every_run_and_two_sources_without_replay(qtbot, tmp
     from silverstar_flp.ui.main_window import MainWindow
     opened = NavigationPair_Open(tmp_path / 'pair', flight_samples=41)
     registry = builtin_registry()
-    first = MainWindow(registry); qtbot.addWidget(first)
+    first = MainWindow(registry); MainWindow_Register(qtbot, first)
     # Assertion failures must not block pytest-qt teardown on a save dialog.
     first._ProjectChanges_Confirm = lambda: True
     errors = []; monkeypatch.setattr(first, '_Error_Show', errors.append)
@@ -200,7 +201,7 @@ def test_gui_reopen_restores_every_run_and_two_sources_without_replay(qtbot, tmp
     first._project_dirty = False; first.close()
     for cls in {type(plugin) for plugin in registry.algorithms}:
         monkeypatch.setattr(cls, 'run', lambda *args: pytest.fail('GUI reopen must not replay'))
-    second = MainWindow(registry); qtbot.addWidget(second)
+    second = MainWindow(registry); MainWindow_Register(qtbot, second)
     second._ProjectChanges_Confirm = lambda: True
     monkeypatch.setattr(second, '_Error_Show', errors.append)
     second._Project_Open(path)

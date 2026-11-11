@@ -257,6 +257,12 @@ that worker is uncancelled; cancel/accepted-close requests do not admit a previo
 emitted result after the GUI queue resumes. Active ownership is still released
 only at worker completion, without terminating numerical threads.
 
+An accepted close destroys the native main-window widget tree. Cancelling the
+unsaved-changes prompt keeps that tree alive; a busy close remains deferred until
+the real runnable returns and its callbacks retire. A closed window is not a
+hidden reusable editor, so opening another window cannot accumulate its plots,
+dialogs or global-style participants.
+
 Replay modes retain explicit user selections per algorithm. Automatic fallback
 when recorded configuration is unavailable does not overwrite those preferences.
 Without a preference, Recorded is selected when available, otherwise Offline.

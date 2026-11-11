@@ -14,12 +14,13 @@ from silverstar_flp.plugins.algorithms.pure_ins.mechanization import (
 from silverstar_flp.ui.main_window import MainWindow
 from silverstar_flp.ui.workers import FunctionWorker
 from silverstar_flp.plugins.registry import builtin_registry
+from tests.gui_lifecycle import MainWindow_Register
 
 
 @pytest.mark.parametrize("scenario", ["dialog_rejected", "directory_changed", "queued_result_cancelled"])
 def test_folder_discovery_publication_respects_gui_request_lifetime(qtbot, tmp_path, monkeypatch, scenario):
     window = MainWindow(builtin_registry())
-    qtbot.addWidget(window)
+    MainWindow_Register(qtbot, window)
     path_a, path_b = tmp_path / "a", tmp_path / "b"
     path_a.mkdir()
     path_b.mkdir()

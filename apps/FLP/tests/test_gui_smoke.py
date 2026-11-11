@@ -28,6 +28,7 @@ from silverstar_flp.ui.main_window import MainWindow
 from silverstar_flp.ui.widgets import StandardComboBox
 from tests.sslog_synthetic import AnalysisFlight_Build
 from tests.test_project_export import _DisplayDataset_Parse
+from tests.gui_lifecycle import MainWindow_Register
 
 
 def _ProjectIdentity_Set(window: MainWindow, source_path: Path, root: Path) -> None:
@@ -76,7 +77,7 @@ def test_five_page_gui_and_top_bar_accept_a_parsed_dataset(
         AnalysisFlight_Build(tmp_path / "SYNTHETIC_gui_source.BIN")
     )
     window = MainWindow(builtin_registry())
-    qtbot.addWidget(window, before_close_func=lambda owned: owned._Project_SetDirty(False))
+    MainWindow_Register(qtbot, window, before_close_func=lambda owned: owned._Project_SetDirty(False))
     errors = []
     monkeypatch.setattr(window, "_Error_Show", errors.append)
     window._Dataset_Set(dataset)

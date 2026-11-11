@@ -11,12 +11,13 @@ from silverstar_flp.plugins.registry import builtin_registry
 from silverstar_flp.ui.main_window import MainWindow
 from silverstar_flp.ui.theme import Theme_Apply
 from tests.synthetic_parameter_navigation import NavigationPair_Open
+from tests.gui_lifecycle import MainWindow_Register
 
 
 def test_header_project_has_readable_pixels_and_elides_long_names(qtbot, tmp_path):
     app = QApplication.instance()
     window = MainWindow(builtin_registry())
-    qtbot.addWidget(window)
+    MainWindow_Register(qtbot, window)
     window.resize(1000, 700)
     window.show()
     for theme in ("light", "dark"):
@@ -58,7 +59,7 @@ def test_range_shell_1000_700_language_theme_and_pointer(qtbot, tmp_path, langua
     window = MainWindow(builtin_registry())
     # This test owns an unsaved synthetic project. Dispose of the draft on
     # teardown even when a layout or pointer assertion fails before close().
-    qtbot.addWidget(window, before_close_func=lambda owned: owned._Project_SetDirty(False))
+    MainWindow_Register(qtbot, window, before_close_func=lambda owned: owned._Project_SetDirty(False))
     opened = NavigationPair_Open(tmp_path/'pair', flight_samples=101)
     window._LogOpenResult_Set(opened, ProjectDocument())
     window.Language_Apply(language)
@@ -91,7 +92,7 @@ def test_project_reopens_selected_what_if_identity_and_exact_time_range(qtbot, t
     registry = builtin_registry()
     opened = NavigationPair_Open(tmp_path/'pair', flight_samples=101)
     first = MainWindow(registry)
-    qtbot.addWidget(first)
+    MainWindow_Register(qtbot, first)
     first._LogOpenResult_Set(opened, ProjectDocument())
     plugin = registry.Algorithm_Get('silverstar.algorithm.kf6')
     # A separately incomplete semantic context must still refuse numerical
@@ -117,7 +118,7 @@ def test_project_reopens_selected_what_if_identity_and_exact_time_range(qtbot, t
     assert saved.replay_configurations[entry.result_id]['process_model_revision'] == 2
     first.close()
     second = MainWindow(registry)
-    qtbot.addWidget(second)
+    MainWindow_Register(qtbot, second)
     errors=[]
     second._Error_Show = errors.append
     saved.restored_results = ProjectResults_Load(saved).Entries_Get()

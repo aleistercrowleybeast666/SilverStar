@@ -7,6 +7,7 @@ from threading import Event, get_ident
 import pytest
 from PySide6.QtCore import QSettings, Qt
 from PySide6.QtGui import QCloseEvent
+from shiboken6 import isValid
 
 from silverstar_flp.core.project import Project_Save, Project_Load
 from silverstar_flp.decoder_profiles.discovery import DecoderProfileCache
@@ -14,6 +15,7 @@ from silverstar_flp.decoder_profiles.parser import DecoderProfileParserPlugin
 from silverstar_flp.plugins.registry import builtin_registry
 from silverstar_flp.ui.main_window import MainWindow
 from tests.test_project_artifact_boundaries import _SmallRun
+from tests.gui_lifecycle import MainWindow_Register
 
 
 @pytest.fixture(scope='module')
@@ -30,7 +32,7 @@ def private_settings(monkeypatch, tmp_path):
 
 @pytest.fixture
 def window(qtbot, monkeypatch, tmp_path, private_settings):
-    result = MainWindow(builtin_registry()); qtbot.addWidget(result)
+    result = MainWindow(builtin_registry()); MainWindow_Register(qtbot, result)
     result._log_open_coordinator.cache = DecoderProfileCache(tmp_path/'decoder')
     result.test_errors = []; monkeypatch.setattr(result, '_Error_Show', result.test_errors.append)
     result.test_values = []; result.test_reports = []; result.test_threads = []
@@ -47,7 +49,9 @@ def window(qtbot, monkeypatch, tmp_path, private_settings):
     if result._active_worker is not None:
         result._active_worker.Worker_Cancel()
         qtbot.waitUntil(lambda: result._active_worker is None, timeout=15000)
-    result._Project_SetDirty(False); result.close()
+    if isValid(result):
+        result._Project_SetDirty(False)
+        result.close()
 
 
 def _Document(small_input):
@@ -57,12 +61,20 @@ def _Document(small_input):
     return opened, document, store
 
 
-def _Finished(qtbot, window, *, success):
+def _Finished(qtbot, window, *, success, closed=False):
     qtbot.waitUntil(lambda: window._active_worker is None, timeout=15000)
     assert window.test_values == sorted(window.test_values)
     assert all(0 <= value <= 1000 for value in window.test_values)
     assert all(value < 1 for value, _ in window.test_reports)
-    assert window.progress_bar.value() == 1000 if success else window.progress_bar.value() < 1000
+    assert window.test_values
+    # Preserve the final GUI-emitted value after accepted close destroys its widgets.
+    if closed:
+        qtbot.waitUntil(lambda: not isValid(window), timeout=5000)
+        final_value = window.test_values[-1]
+    else:
+        assert isValid(window)
+        final_value = window.progress_bar.value()
+    assert final_value == 1000 if success else final_value < 1000
     assert all(thread == get_ident() for thread in window.test_threads)
 
 
@@ -140,7 +152,7 @@ def test_cancelled_or_closed_open_never_publishes_complete(qtbot, tmp_path, smal
         else:
             event = QCloseEvent(); window.closeEvent(event); assert not event.isAccepted()
     finally: release.set()
-    _Finished(qtbot, window, success=False)
+    _Finished(qtbot, window, success=False, closed=action == 'close')
     assert window._project is previous and window._dataset is None
 
 
@@ -230,7 +242,7 @@ def test_slow_array_save_keeps_gui_responsive_and_atomic(qtbot, tmp_path, small_
             assert not event.isAccepted()
     finally:
         release.set()
-    _Finished(qtbot, window, success=action != 'cancel')
+    _Finished(qtbot, window, success=action != 'cancel', closed=action == 'close')
     if action != 'cancel':
         assert Project_Load(path).save_data_and_results
         assert any('|' in code for _, code in window.test_reports)

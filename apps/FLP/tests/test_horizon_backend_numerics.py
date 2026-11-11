@@ -96,9 +96,29 @@ def _Engine_Build(dataset, algorithm):
     statuses = dataset.Records_Get('FUSION_HORIZON_STATUS')
     first = statuses[0].payload
     if algorithm == 1:
-        assert dataset.Records_Get('ESTIMATOR')[0].timestamp_us == 1005000
         p0 = [parameters['p0_' + group + '_' + axis]
               for group in ('position', 'velocity') for axis in ('e', 'n', 'u')]
+        snapshots = dataset.Records_Get('ESTIMATOR')
+        initial = snapshots[0]
+        # The owning fixture now exercises the mission's actual initialization
+        # writer before the first prediction. Validate that exact bootstrap;
+        # never silently filter timestamp-zero or seed from a later output.
+        assert initial.timestamp_us == 0
+        assert initial.payload['operation_sequence'] == 0
+        assert initial.payload['replay_epoch'] == first['epoch']
+        assert initial.payload['initialized'] == initial.payload['mission_running'] == 1
+        np.testing.assert_array_equal(initial.payload['position_enu_m'], np.zeros(3))
+        np.testing.assert_array_equal(initial.payload['velocity_enu_mps'], np.zeros(3))
+        np.testing.assert_array_equal(initial.payload['q_nb'], [1., 0., 0., 0.])
+        np.testing.assert_array_equal(initial.payload['covariance_diagonal'], np.float32(p0))
+        initial_p = dataset.Records_Get('KF6_FULL_P')[0]
+        assert initial_p.timestamp_us == 0
+        np.testing.assert_array_equal(initial_p.payload['covariance_upper_triangle'],
+                                      np.diag(np.float32(p0))[np.triu_indices(6)])
+        first_step = dataset.Records_Get('ESTIMATOR_STEP')[0]
+        assert snapshots[1].timestamp_us == first_step.payload['interval_end_timestamp_us'] == 1005000
+        assert first_step.payload['operation_sequence'] == 1
+        assert first_step.payload['replay_epoch'] == first['epoch']
         state = Kf6Filter.Kf6_Create(algorithm_revision=2,
             process_accel_std_mps2=np.array([parameters['process_accel_std_' + axis] for axis in ('e', 'n', 'u')]),
             p0_diagonal=np.array(p0), initial_velocity_enu_mps=np.zeros(3),

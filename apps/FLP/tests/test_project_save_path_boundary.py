@@ -9,6 +9,7 @@ from silverstar_flp.core.project import Project_Load, ProjectResults_Load
 from silverstar_flp.plugins.registry import builtin_registry
 from silverstar_flp.ui.main_window import MainWindow
 from tests.test_project_artifact_boundaries import _SmallRun
+from tests.gui_lifecycle import MainWindow_Register
 
 
 @pytest.mark.skipif(os.name != 'nt', reason='Windows filesystem access boundary')
@@ -17,7 +18,7 @@ def test_long_artifact_path_failure_is_actionable_and_preserves_old_project(
         qtbot, tmp_path, monkeypatch, background):
     opened, document, store = _SmallRun(tmp_path)
     window = MainWindow(builtin_registry())
-    qtbot.addWidget(window)
+    MainWindow_Register(qtbot, window)
     window.Language_Apply('zh_CN')
     window._LogOpenResult_Set(opened, document)
     entry = window._replay_store.Result_Add(store.Entries_Get()[0].result)

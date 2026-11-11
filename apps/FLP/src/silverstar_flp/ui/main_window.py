@@ -120,6 +120,9 @@ class MainWindow(QMainWindow):
         path_preferences: PathPreferences | None = None,
     ) -> None:
         super().__init__()
+        # Accepted close owns the native widget tree's lifetime. Cancelled or
+        # worker-deferred closes remain ignored by closeEvent and stay alive.
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose, True)
         self._registry = registry
         self._path_preferences = path_preferences or PathPreferences.Product_Open()
         self._last_import_directory: Path | None = None

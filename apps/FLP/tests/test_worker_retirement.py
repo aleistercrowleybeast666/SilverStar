@@ -5,10 +5,12 @@ import pytest
 from PySide6.QtCore import QObject, QSettings, QThread, Qt, Slot
 from PySide6.QtGui import QCloseEvent
 from PySide6.QtWidgets import QApplication
+from shiboken6 import isValid
 
 from silverstar_flp.plugins.registry import builtin_registry
 from silverstar_flp.ui.main_window import MainWindow
 from silverstar_flp.ui.workers import FunctionWorker, WorkerRetireResult
+from tests.gui_lifecycle import MainWindow_Register
 
 
 @pytest.fixture
@@ -16,10 +18,11 @@ def window(qtbot, monkeypatch, tmp_path):
     import silverstar_flp.ui.main_window as module
     monkeypatch.setattr(module, 'QSettings', lambda *args:
                         QSettings(str(tmp_path/'private.ini'), QSettings.Format.IniFormat))
-    result = MainWindow(builtin_registry()); qtbot.addWidget(result)
+    result = MainWindow(builtin_registry()); MainWindow_Register(qtbot, result)
     yield result
-    result._Project_SetDirty(False)
-    result.close()
+    if isValid(result):
+        result._Project_SetDirty(False)
+        result.close()
 
 
 class Receipt(QObject):

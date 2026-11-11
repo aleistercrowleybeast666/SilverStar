@@ -28,6 +28,7 @@ from silverstar_flp.ui.pages.replay import ReplayPage
 from tests.synthetic_parameter_navigation import NavigationPair_Open, SyntheticOperations_Attach
 from tests.test_gui_smoke import _ProjectIdentity_Set
 from tests.test_kf6_field_analysis import Measurement_Create
+from tests.gui_lifecycle import MainWindow_Register
 
 
 @pytest.fixture
@@ -195,7 +196,7 @@ def test_project_excludes_analysis_only_diagnostics(
     monkeypatch.setattr(window, "_ProjectChanges_Confirm", lambda: True)
     save_errors = []
     monkeypatch.setattr(window, "_Error_Show", save_errors.append)
-    qtbot.addWidget(window)
+    MainWindow_Register(qtbot, window)
     # Project/cache persistence consumes the original exact source pair.
     # Extra measurements in the independent fixture are diagnostic inputs.
     window._LogOpenResult_Set(diagnostic_pair, ProjectDocument())
@@ -233,7 +234,7 @@ def test_project_excludes_analysis_only_diagnostics(
 
 def test_project_save_rejects_fabricated_parse_identity(qtbot, monkeypatch, tmp_path, diagnostic_pair):
     window = MainWindow(builtin_registry())
-    qtbot.addWidget(window, before_close_func=lambda owned: owned._Project_SetDirty(False))
+    MainWindow_Register(qtbot, window, before_close_func=lambda owned: owned._Project_SetDirty(False))
     save_errors = []
     monkeypatch.setattr(window, "_Error_Show", save_errors.append)
     window._Dataset_Set(diagnostic_pair.dataset)

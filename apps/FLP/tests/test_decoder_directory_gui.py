@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 from PySide6.QtCore import QSettings
+from shiboken6 import isValid
 
 from silverstar_flp.core.context import TaskContext
 from silverstar_flp.core.i18n import Translator
@@ -15,6 +16,7 @@ from silverstar_flp.ui.main_window import MainWindow
 from silverstar_flp.ui.pages.export_settings import ImportDialog
 from tests.sslog_synthetic import START_TIMESTAMP_US, Event_Payload, SyntheticSslogBuilder
 from tests.test_decoder_profiles import _Package_Write, _DescriptorPayload_Build, _CalibrationNonePayload_Build
+from tests.gui_lifecycle import MainWindow_Register
 
 
 def pair(tmp_path):
@@ -64,9 +66,11 @@ def window(qtbot, monkeypatch, tmp_path):
     monkeypatch.setattr(module, 'QSettings', lambda *args: QSettings(str(tmp_path / 'private.ini'), QSettings.Format.IniFormat))
     result = MainWindow(builtin_registry(), path_preferences=PathPreferences(tmp_path / 'preferences.json'))
     result._log_open_coordinator.cache = DecoderProfileCache(tmp_path / 'cache')
-    qtbot.addWidget(result)
+    MainWindow_Register(qtbot, result)
     yield result
-    result._Project_SetDirty(False); result.close()
+    if isValid(result):
+        result._Project_SetDirty(False)
+        result.close()
 
 
 def test_normal_gui_routes_directories_to_actual_exact_coordinator(window, tmp_path, monkeypatch):
