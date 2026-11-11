@@ -4,6 +4,8 @@ Run the existing Python environment's `-m PyInstaller` with `SilverStar_shared.s
 
 Three independent Analysis/PYZ/EXE objects feed one COLLECT. Conflicting dependency bytes at a shared destination fail the build. First-party application modules are analyzed to discover dependencies, then distributed as unchanged source at their original apps/src paths, preserving relative VERSION/contracts/plugin/resource lookups. The normal main.py files run via dedicated packaging entries; application code is not patched.
 
+Use a short output root. Before Analysis, the spec checks the existing first-party resource list against the actual Windows destination; before COLLECT it also checks the resolved data and binary destinations from all three analyses. Ordinary Windows paths must fit within 259 UTF-16 code units before the terminating NUL. An overlong path fails with the exact destination and asks for a shorter `--distpath` (`-Destination` below); filenames and resources are not shortened or removed. Extract the delivered ZIP below a similarly short directory, such as `D:/Apps`, because a longer extraction root can exceed the same limit.
+
 Unused Qt PDF and virtual-keyboard plugins and their QtQuick/QML dependencies are excluded. Python/Qt dependencies stay dynamically loadable in `_internal`; do not combine separately collected dist directories. The final license inventory must derive from all three actual Analysis TOCs and collected output, not a source-only list.
 
 The collection refuses to run when D free space is below 8 GiB. Inspect space before every large build/archive/extraction step. Offline QA and receipts belong outside the shipped distribution.
@@ -17,7 +19,7 @@ The active [build_candidate.ps1](build_candidate.ps1) runs the ordinary spec and
 ```powershell
 ./tools/packaging/build_candidate.ps1 `
   -BuildTag gui-convergence-20261110 `
-  -Destination "$PWD/dist/gui-convergence-20261110" `
+  -Destination "$PWD/dist/gcf1111" `
   -Evidence "$PWD/.work/gui-convergence-20261110/package/evidence" `
   -BuildWork "$PWD/.work/gui-convergence-20261110/package/build" `
   -NoticeWitness 'D:/SilverStar_Archive/retained_inputs/SilverStar_0_1_2_Windows_Portable.zip'

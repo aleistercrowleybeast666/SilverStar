@@ -20,6 +20,12 @@ resource_files = [name for name in tracked if name and (
         "apps/GSHC/app.py", "apps/GSHC/config.py", "apps/GSHC/mission_profile.py",
     })]
 resource_files = [name for name in resource_files if name not in {"apps/SCG/tools/compare_reference_project.py", "apps/SCG/tools/nrf24_validate.py"}]
+bundle_name = "SilverStar"
+contents_directory = "_internal"
+collection_contents = Path(DISTPATH).resolve() / bundle_name / contents_directory
+DestinationPaths_Validate = runpy.run_path(str(Path(SPECPATH) / "path_limits.py"))["DestinationPaths_Validate"]
+# Reject predictable first-party failures before any of the three analyses.
+DestinationPaths_Validate(collection_contents, resource_files)
 resources = [(str(repository / name), str(Path(name).parent)) for name in resource_files]
 analyses = []
 executables = []
@@ -109,9 +115,12 @@ for app, package in [("SCG", "silverstar_fccg.app.application"), ("GSHC", "app")
             VarFileInfo([VarStruct("Translation", [1033,1200])])])
     exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name=app, version=resource,
         debug=False, strip=False, upx=False, console=False,
-        contents_directory="_internal", disable_windowed_traceback=False)
+        contents_directory=contents_directory, disable_windowed_traceback=False)
     analyses.append(a)
     executables.append(exe)
+# Hooks add dependency paths, so validate their actual final destinations too.
+DestinationPaths_Validate(collection_contents,
+    (name for a in analyses for name, source, kind in [*a.binaries, *a.datas]))
 # Refuse a shared destination name if the analyses resolve different file bytes.
 seen = {}
 for a in analyses:
@@ -125,7 +134,7 @@ import shutil
 if shutil.disk_usage(repository).free < 8 * 1024**3:
     raise RuntimeError("D free space below 8 GiB; collection stopped")
 collection = COLLECT(*executables, *[a.binaries for a in analyses],
-    *[a.datas for a in analyses], strip=False, upx=False, name="SilverStar")
+    *[a.datas for a in analyses], strip=False, upx=False, name=bundle_name)
 Path(os.environ["SILVERSTAR_PACKAGE_EVIDENCE"]).joinpath("first-party-pyz-removal.json").write_text(
     json.dumps(removed, indent=2), encoding="utf-8")
 
