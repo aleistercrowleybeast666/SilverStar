@@ -1,0 +1,152 @@
+{
+  "recorded_utc": "2026-11-11T12:21:57.444076+00:00",
+  "scope": "Two archived ST license presentation resources and one retired historical license link; no license text edits.",
+  "scan_before": {
+    "documents_considered": 573,
+    "relative_links_checked": 1501,
+    "broken": [
+      {
+        "source": "docs/evidence/software_completion_20261101/usb/native-licenses/f103/Package_license.md",
+        "target": "_htmresc/st_logo_2020.png",
+        "resolved": "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\usb\\native-licenses\\f103\\_htmresc\\st_logo_2020.png"
+      },
+      {
+        "source": "docs/evidence/software_completion_20261101/usb/native-licenses/f407/Package_license.md",
+        "target": "_htmresc/st_logo_2020.png",
+        "resolved": "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\usb\\native-licenses\\f407\\_htmresc\\st_logo_2020.png"
+      },
+      {
+        "source": "docs/public/licenses/README.md",
+        "target": "../../../apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/LICENSE.md",
+        "resolved": "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_usb_cdc_stm32c071_mini\\payload\\HardwareGenerated\\C071ClassicCDC\\Middlewares\\ST\\STM32_USB_Device_Library\\LICENSE.md"
+      }
+    ],
+    "postcleanup_files": 14,
+    "postcleanup_artifacts": 6,
+    "postcleanup_errors": []
+  },
+  "scan_after_assets": {
+    "documents_considered": 573,
+    "relative_links_checked": 1501,
+    "broken": [
+      {
+        "source": "docs/public/licenses/README.md",
+        "target": "../../../apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/LICENSE.md",
+        "resolved": "D:\\python_software\\SilverStar\\apps\\SCG\\plugins\\builtin\\silverstar_usb_cdc_stm32c071_mini\\payload\\HardwareGenerated\\C071ClassicCDC\\Middlewares\\ST\\STM32_USB_Device_Library\\LICENSE.md"
+      }
+    ],
+    "postcleanup_files": 14,
+    "postcleanup_artifacts": 6,
+    "postcleanup_errors": []
+  },
+  "source_package": "C:\\Users\\chdxm\\STM32Cube\\Repository\\STM32Cube_FW_H7_V1.12.1",
+  "source_package_license": {
+    "path": "C:\\Users\\chdxm\\STM32Cube\\Repository\\STM32Cube_FW_H7_V1.12.1\\Package_license.md",
+    "size": 15287,
+    "sha256": "5843f80eed84b8b154715b13e629bd96e8f586e8ad55738e244ed5cf6f7897ee"
+  },
+  "source_note": "Unmodified ST presentation PNGs already installed with STM32Cube H7 V1.12.1; also byte-identical in installed STM32Cube C0 V1.4.1. They restore the shared ST logo/favicon references only; this is not a claim that F1/F4 firmware or license content was updated.",
+  "assets": [
+    {
+      "source": {
+        "path": "C:\\Users\\chdxm\\STM32Cube\\Repository\\STM32Cube_FW_H7_V1.12.1\\_htmresc\\st_logo_2020.png",
+        "size": 7520,
+        "sha256": "f01658de11fbcee4975440ed59f48841d4f881d3f99d897398d868c8613e5220"
+      },
+      "crosscheck": {
+        "path": "C:\\Users\\chdxm\\STM32Cube\\Repository\\STM32Cube_FW_C0_V1.4.1\\_htmresc\\st_logo_2020.png",
+        "size": 7520,
+        "sha256": "f01658de11fbcee4975440ed59f48841d4f881d3f99d897398d868c8613e5220"
+      },
+      "destinations": [
+        {
+          "path": "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\usb\\native-licenses\\f103\\_htmresc\\st_logo_2020.png",
+          "size": 7520,
+          "sha256": "f01658de11fbcee4975440ed59f48841d4f881d3f99d897398d868c8613e5220"
+        },
+        {
+          "path": "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\usb\\native-licenses\\f407\\_htmresc\\st_logo_2020.png",
+          "size": 7520,
+          "sha256": "f01658de11fbcee4975440ed59f48841d4f881d3f99d897398d868c8613e5220"
+        }
+      ]
+    },
+    {
+      "source": {
+        "path": "C:\\Users\\chdxm\\STM32Cube\\Repository\\STM32Cube_FW_H7_V1.12.1\\_htmresc\\favicon.png",
+        "size": 4126,
+        "sha256": "c9a37d7e5f2cba478a45515b77b08f7d9c5ae214fdf3aaaeb8eeee14a5d294d8"
+      },
+      "crosscheck": {
+        "path": "C:\\Users\\chdxm\\STM32Cube\\Repository\\STM32Cube_FW_C0_V1.4.1\\_htmresc\\favicon.png",
+        "size": 4126,
+        "sha256": "c9a37d7e5f2cba478a45515b77b08f7d9c5ae214fdf3aaaeb8eeee14a5d294d8"
+      },
+      "destinations": [
+        {
+          "path": "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\usb\\native-licenses\\f103\\_htmresc\\favicon.png",
+          "size": 4126,
+          "sha256": "c9a37d7e5f2cba478a45515b77b08f7d9c5ae214fdf3aaaeb8eeee14a5d294d8"
+        },
+        {
+          "path": "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\usb\\native-licenses\\f407\\_htmresc\\favicon.png",
+          "size": 4126,
+          "sha256": "c9a37d7e5f2cba478a45515b77b08f7d9c5ae214fdf3aaaeb8eeee14a5d294d8"
+        }
+      ]
+    }
+  ],
+  "original_license_texts_unchanged": [
+    {
+      "path": "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\usb\\native-licenses\\f103\\Package_license.md",
+      "size": 11754,
+      "sha256": "5d0016458729aeb4501e604bb8fa8385e1b258b0113af3c6915532cfb945817b"
+    },
+    {
+      "path": "D:\\python_software\\SilverStar\\docs\\evidence\\software_completion_20261101\\usb\\native-licenses\\f407\\Package_license.md",
+      "size": 30874,
+      "sha256": "2fe52ca80ec3d84064631a051a914b418aa65b9126ae5131ea323213a8be5aa2"
+    }
+  ],
+  "public_link": {
+    "state": "applied; complete current-document-links gate exit 0",
+    "source": {
+      "path": "D:\\python_software\\SilverStar\\docs\\public\\licenses\\README.md",
+      "size": 6732,
+      "sha256": "efb5ef40f5729c096dee4e66242620ca6e5543cdd83e5892df1d37f1af8565e8"
+    },
+    "patch": {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\public-license-link.patch",
+      "size": 1906,
+      "sha256": "5a1e0d0594f801b7681fe58957e6bb3108fe11ed8354a3a8619971246efd422a"
+    },
+    "replacement": {
+      "path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\public-license-README.pending.md",
+      "size": 6823,
+      "sha256": "54cec4a8c1fee6bedcdfab1a3ae1a7e409b9a81fccbc70144bac5488d192a447"
+    },
+    "target": "https://github.com/aleistercrowleybeast666/SilverStar/blob/838f148059020b05d0de4a735332abf830f8b953/apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/LICENSE.md",
+    "target_git_blob": "5f9caee9ff5289d63761c5d0c58ae6fc38639b62",
+    "target_sha256": "2925956f5c102172a6ee52deb66a6e878a9940062d82aeef3841647e21596501",
+    "target_size": 4976,
+    "applied_sha256": "54cec4a8c1fee6bedcdfab1a3ae1a7e409b9a81fccbc70144bac5488d192a447"
+  },
+  "validation_note": "The unchanged integration test scanned all current Markdown document links and passed; no test exclusion, license-body edit or gate change.",
+  "scan_final": {
+    "documents_considered": 573,
+    "relative_links_checked": 1500,
+    "broken": [],
+    "postcleanup_files": 14,
+    "postcleanup_artifacts": 6,
+    "postcleanup_errors": []
+  },
+  "validation": {
+    "cwd": "D:\\python_software\\SilverStar",
+    "command": ".venv/Scripts/python.exe -m pytest tests/integration/test_monorepo_baseline.py::test_current_document_links_resolve -q -o cache_dir=.work/gui-convergence-20261110/scg/doc-links-cache --basetemp=.work/gui-convergence-20261110/scg/doc-links-pytest",
+    "exit": 0,
+    "log_path": "D:\\python_software\\SilverStar\\.work\\gui-convergence-20261110\\scg\\document-links-final.log",
+    "log": ".                                                                        [100%]\n1 passed in 3.05s\n",
+    "log_sha256": "2666c398832dc91b0ce4bcf19b52e474c2942ebe094e98db3a906eb1f7151a15",
+    "completed_utc": "2026-11-11T12:23:06.750507+00:00"
+  }
+}

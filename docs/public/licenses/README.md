@@ -14,7 +14,7 @@
 | CMSIS device F4、F407 startup、Flight system 模板 | v2.6.11，commit `0fa0e489e053fa1ca7790bb40b4d76458f64c55d` | [官方 Apache-2.0](CMSIS_DEVICE_F4_2.6.11_LICENSE.txt) | system 原样；startup 保留已有 CCM/DMA 初始化扩展，见修改记录 |
 | CMSIS Core | ARM CMSIS_5 5.4.0/5.9.0 中对应 Core/Include 字节 | 三个 family 插件已带完整 Apache-2.0 文本 | 72 个 Core 文件原样或仅换行不同；不把 Core 版本宏当整体 SDK 版本 |
 | C071 classic CDC App/Target | stm32c0-classic-coremw-apps commit `334655ed5eb719db18fa5990a5044332eeca59dc` | [完整 Applications SLA0044](ST_C071_APPLICATIONS_LICENSE.txt) | 8 个文件与官方逐字节相同，已建立路径映射 |
-| C071 USB middleware 与其派生副本 | stm32-mw-usb-device v2.11.5 | [现有完整 SLA0044](../../../apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/LICENSE.md) | middleware 原样；Reviewed 三副本保留同上游许可范围，已有修改记录 |
+| C071 USB middleware 与其派生副本 | stm32-mw-usb-device v2.11.5 | [现有完整 SLA0044](https://github.com/aleistercrowleybeast666/SilverStar/blob/838f148059020b05d0de4a735332abf830f8b953/apps/SCG/plugins/builtin/silverstar_usb_cdc_stm32c071_mini/payload/HardwareGenerated/C071ClassicCDC/Middlewares/ST/STM32_USB_Device_Library/LICENSE.md) | middleware 原样；Reviewed 三副本保留同上游许可范围，已有修改记录 |
 
 SLA0044 的 ST 处理器用途范围及不得把 ST 软件置于 Apache/BSD/MIT 等开源条款下的条件保持独立。这里不会给 ST 代码增加 Apache 授权。上述许可映射也不构成 USB EP0 安全审查或正常入口放行；入口继续 BLOCKED，候选继续 EXPERIMENTAL。
 
